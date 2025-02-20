@@ -17,7 +17,12 @@ public interface IServerToolsService
     /// <summary>
     /// GetDirectory
     /// </summary>
-    public Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectory(ToolsFilesRequestModel req);
+    public Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectoryData(ToolsFilesRequestModel req);
+
+    /// <summary>
+    /// Существует директория
+    /// </summary>
+    public Task<ResponseBaseModel> DirectoryExist(string remoteDirectory);
 
     /// <summary>
     /// Обновить файл (или создать, если его нет)

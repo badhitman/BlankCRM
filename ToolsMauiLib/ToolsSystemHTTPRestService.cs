@@ -18,7 +18,7 @@ public class ToolsSystemHTTPRestService(IHttpClientFactory HttpClientFactory, Ap
     public async Task<ResponseBaseModel> PartUpload(SessionFileRequestModel req)
     {
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Tools.ToString());
-        
+
         MultipartFormDataContent form = new()
         {
             { new ByteArrayContent(req.Data, 0, req.Data.Length), "uploadedFile", Path.GetFileName(req.FileName) }
@@ -67,10 +67,10 @@ public class ToolsSystemHTTPRestService(IHttpClientFactory HttpClientFactory, Ap
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectory(ToolsFilesRequestModel req)
+    public async Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectoryData(ToolsFilesRequestModel req)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Tools.ToString());
-        using HttpResponseMessage response = await client.PostAsJsonAsync($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{GlobalStaticConstants.Routes.API_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.TOOLS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.DIRECTORY_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.GET_ACTION_NAME}", req);
+        using HttpResponseMessage response = await client.PostAsJsonAsync($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{GlobalStaticConstants.Routes.API_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.TOOLS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.DIRECTORY_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.GET_ACTION_NAME}-{GlobalStaticConstants.Routes.DATA_ACTION_NAME}", req);
         string rj = await response.Content.ReadAsStringAsync();
         TResponseModel<List<ToolsFilesResponseModel>> res = JsonConvert.DeserializeObject<TResponseModel<List<ToolsFilesResponseModel>>>(rj)!;
 
@@ -91,10 +91,20 @@ public class ToolsSystemHTTPRestService(IHttpClientFactory HttpClientFactory, Ap
     }
 
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DirectoryExist(string remoteDirectory)
+    {
+        using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Tools.ToString());
+        string q = $"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{GlobalStaticConstants.Routes.API_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.TOOLS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.DIRECTORY_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.CHECK_ACTION_NAME}";
+        using HttpResponseMessage response = await client.PostAsJsonAsync(q, remoteDirectory);
+        string rj = await response.Content.ReadAsStringAsync();
+        return JsonConvert.DeserializeObject<ResponseBaseModel>(rj)!;
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<ExpressProfileResponseModel>> GetMe(CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Tools.ToString());
-        
+
         TResponseModel<ExpressProfileResponseModel> res = await client.GetStringAsync<ExpressProfileResponseModel>($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{GlobalStaticConstants.Routes.API_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.INFO_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.MY_CONTROLLER_NAME}", cancellationToken: cancellationToken);
 
         if (string.IsNullOrWhiteSpace(res.Response?.UserName))
@@ -133,5 +143,5 @@ public class ToolsSystemHTTPRestService(IHttpClientFactory HttpClientFactory, Ap
         httpClient.Dispose();
         string sd = response.Content.ReadAsStringAsync().Result;
         return JsonConvert.DeserializeObject<TResponseModel<string>>(sd)!;
-    }    
+    }
 }

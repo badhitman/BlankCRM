@@ -270,9 +270,19 @@ public class ToolsController(
     /// <remarks>
     /// Роль: <see cref="ExpressApiRolesEnum.SystemRoot"/>
     /// </remarks>
-    [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.DIRECTORY_CONTROLLER_NAME}/{Routes.GET_ACTION_NAME}"), LoggerNolog]
-    public Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectory(ToolsFilesRequestModel req)
-        => toolsRepo.GetDirectory(req);
+    [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.DIRECTORY_CONTROLLER_NAME}/{Routes.GET_ACTION_NAME}-{Routes.DATA_ACTION_NAME}"), LoggerNolog]
+    public Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectoryData(ToolsFilesRequestModel req)
+        => toolsRepo.GetDirectoryData(req);
+
+    /// <summary>
+    /// Существование директории
+    /// </summary>
+    /// <remarks>
+    /// Роль: <see cref="ExpressApiRolesEnum.SystemRoot"/>
+    /// </remarks>
+    [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.DIRECTORY_CONTROLLER_NAME}/{Routes.CHECK_ACTION_NAME}"), LoggerNolog]
+    public Task<ResponseBaseModel> DirectoryExist([FromBody] string directoryPath)
+        => toolsRepo.DirectoryExist(directoryPath);
 
     /// <summary>
     /// Удалить файл

@@ -26,22 +26,18 @@ public partial class SyncDirectoriesRulesComponent : BlazorBusyComponentBaseMode
     IDialogService DialogService { get; set; } = default!;
 
 
-    SyncDirectoryModelDB[] SyncDirectories { get; set; } = default!;
+    SyncDirectoryModelDB[] SyncDirectories { get; set; } = [];
 
-    async Task CreateSyncRule()
+    async Task OpenSyncRule(int ruleId = 0)
     {
         DialogOptions options = new() { BackgroundClass = "my-custom-class" };
-
-        /*
-         var parameters = new DialogParameters<SyncDirectoryDialogComponent>
+        DialogParameters<SyncDirectoryDialogComponent> parameters = new()
         {
-            { x => x.ContentText, "Your computer seems very slow, click the download button to download free RAM." },
-            { x => x.ButtonText, "Download" },
-            { x => x.Color, Color.Info }
+            { x => x.SyncRuleId, ruleId },
         };
-         */
 
-        _ = await DialogService.ShowAsync<SyncDirectoryDialogComponent>("Синхронизация папок/файлов", options);
+        IDialogReference dialog = await DialogService.ShowAsync<SyncDirectoryDialogComponent>("Синхронизация папок/файлов", parameters, options);
+        DialogResult? res = await  dialog.Result;
         await ReloadDirectories();
     }
 

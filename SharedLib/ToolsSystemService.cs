@@ -13,7 +13,7 @@ namespace SharedLib;
 public class ToolsSystemService : IServerToolsService
 {
     /// <inheritdoc/>
-    public Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectory(ToolsFilesRequestModel req)
+    public Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectoryData(ToolsFilesRequestModel req)
     {
         TResponseModel<List<ToolsFilesResponseModel>> res = new();
 
@@ -45,6 +45,16 @@ public class ToolsSystemService : IServerToolsService
             }).ToList();
         }
         return Task.FromResult(res);
+    }
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> DirectoryExist(string remoteDirectory)
+    {
+        DirectoryInfo _di = new(remoteDirectory);
+        if (!_di.Exists)
+            ResponseBaseModel.CreateError($"Папки {remoteDirectory} ({_di.FullName}) не существует");
+
+        return Task.FromResult(ResponseBaseModel.CreateSuccess("Папка существует на сервере"));
     }
 
     /// <inheritdoc/>
@@ -135,5 +145,5 @@ public class ToolsSystemService : IServerToolsService
         }
 
         return Task.FromResult(res);
-    }    
+    }
 }

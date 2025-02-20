@@ -190,4 +190,22 @@ public class ToolsAppManager(IDbContextFactory<ToolsAppContext> toolsDbFactory) 
 
         return ResponseBaseModel.CreateInfo("Синхронизация успешно обновлена");
     }
+
+    /// <inheritdoc/>
+    public async Task<SyncDirectoryModelDB> ReadSyncDirectory(int syncDirId)
+    {
+        using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
+        return await context
+            .SyncDirectories
+            .FirstAsync(x => x.Id == syncDirId);
+    }
+
+    /// <inheritdoc/>
+    public async Task<ExeCommandModelDB> ReadExeCommand(int comId)
+    {
+        using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
+        return await context
+            .ExeCommands
+            .FirstAsync(x => x.Id == comId);
+    }
 }

@@ -24,6 +24,9 @@ public interface IToolsAppManager
     public Task<SyncDirectoryModelDB[]> GetSyncDirectoriesForConfig(int confId);
 
     /// <inheritdoc/>
+    public Task<SyncDirectoryModelDB> ReadSyncDirectory(int syncDirId);
+
+    /// <inheritdoc/>
     public Task<ResponseBaseModel> UpdateOrCreateSyncDirectory(SyncDirectoryModelDB req);
 
     /// <inheritdoc/>
@@ -32,6 +35,9 @@ public interface IToolsAppManager
 
     /// <inheritdoc/>
     public Task<ExeCommandModelDB[]> GetExeCommandsForConfig(int confId);
+
+    /// <inheritdoc/>
+    public Task<ExeCommandModelDB> ReadExeCommand(int comId);
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> UpdateOrCreateExeCommand(ExeCommandModelDB req);

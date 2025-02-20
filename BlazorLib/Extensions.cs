@@ -73,6 +73,10 @@ public static class Extensions
         => SnackbarRepo.Add(message, Severity.Error, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
 
     /// <inheritdoc/>
+    public static void Success(this ISnackbar SnackbarRepo, string message)
+        => SnackbarRepo.Add(message, Severity.Success, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+
+    /// <inheritdoc/>
     public static void Error(this ISnackbar SnackbarRepo, List<ValidationResult> ValidationResults)
         => ValidationResults.ForEach(x => SnackbarRepo.Add(x.ErrorMessage ?? "-error-", Severity.Error, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow));
 

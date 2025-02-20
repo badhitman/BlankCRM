@@ -3,33 +3,41 @@
 
 @* <SyncFilesComponent Parent="this" /> *@
 
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+}
+
 <div class="d-grid gap-2 mb-2">
-    <button @onclick="CreateSyncRule" class="btn btn-primary" type="button">Добавить</button>
-</div>
-<div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">List group item heading</h5>
-            <small>3 days ago</small>
-        </div>
-        <p class="mb-1">Some placeholder content in a paragraph.</p>
-        <small>And some small print.</small>
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">List group item heading</h5>
-            <small class="text-body-secondary">3 days ago</small>
-        </div>
-        <p class="mb-1">Some placeholder content in a paragraph.</p>
-        <small class="text-body-secondary">And some muted small print.</small>
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">List group item heading</h5>
-            <small class="text-body-secondary">3 days ago</small>
-        </div>
-        <p class="mb-1">Some placeholder content in a paragraph.</p>
-        <small class="text-body-secondary">And some muted small print.</small>
-    </a>
+    <button @onclick="() => OpenSyncRule()" class="btn btn-primary" type="button">Добавить</button>
 </div>
 
+@if (SyncDirectories.Length == 0)
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Нет ни одного правила синхронизации.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Добавьте <cite @onclick="() => OpenSyncRule()" title="обмен файлами и папками с удалённой системой">правило синхронизации</cite>
+        </figcaption>
+    </figure>
+}
+else
+{
+    <div class="list-group">
+        @foreach (SyncDirectoryModelDB dir in SyncDirectories)
+        {
+            <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h6 @onclick="() => OpenSyncRule(dir.Id)" style="cursor:pointer;" class="mb-1 link-primary text-decoration-underline">
+                        @(string.IsNullOrWhiteSpace(dir.Name) ? "-без имени-" : dir.Name)
+                    </h6>
+                    <small style="cursor:pointer;" class="link-success text-decoration-underline">выполнить</small>
+                </div>
+                <p class="mb-1">local: @dir.LocalDirectory</p>
+                <small>remote: @dir.RemoteDirectory</small>
+            </div>
+        }
+    </div>
+}
