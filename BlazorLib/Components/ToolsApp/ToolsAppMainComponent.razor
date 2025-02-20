@@ -27,7 +27,7 @@
             </select>
             @if (SelectedConfId != 0)
             {
-                <button @onclick="() => SetActiveHandler(0)" class="btn btn-outline-secondary" type="button">Создать новый</button>
+                <button @onclick="() => SetActiveHandler(0)" class="btn btn-outline-secondary" type="button">Добавить новое подключение</button>
             }
             else if (AllTokens.Length != 0)
             {
@@ -76,7 +76,7 @@
                     </div>
                 </MudTabPanel>
                 <MudTabPanel Text="Файлы/Папки">
-                    <SyncFilesComponent ParentPage="this" />
+                    <SyncDirectoriesRulesComponent />                    
                 </MudTabPanel>
                 <MudTabPanel Text="Команды">
                     <ExeCommandsComponent ParentPage="this" />
@@ -84,7 +84,7 @@
                 <MudTabPanel Text="Логи">
                     <LogsComponent />
                 </MudTabPanel>
-                <MudTabPanel Text="КЛАДР 4.0">
+                <MudTabPanel Disabled Text="КЛАДР 4.0">
                     КЛАДР 4.0
                 </MudTabPanel>
             </MudTabs>

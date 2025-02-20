@@ -3,11 +3,8 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using System.Security.Cryptography;
 using Microsoft.Extensions.Logging;
-using System.IO.Compression;
 using SharedLib;
-using BlazorLib;
 
 namespace BlazorLib.Components.ToolsApp;
 
@@ -30,7 +27,8 @@ public partial class SyncFilesComponent : BlazorBusyComponentBaseModel
     /// Home page
     /// </summary>
     [Parameter, EditorRequired]
-    public required ToolsAppMainComponent ParentPage { get; set; }
+    public required SyncDirectoriesRulesComponent Parent { get; set; }
+
 
     private string searchStringQuery = "";
 

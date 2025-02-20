@@ -173,34 +173,7 @@
 </div> *@
 
 
-@* <div class="my-3">
-    <div class="row g-3 align-items-center my-1">
-        <div class="col-auto">
-            <label for="inputLocalDir" class="col-form-label">Локальная папка</label>
-        </div>
-        <div class="col">
-            <input disabled="@(IsBusyProgress || HoldPage)" type="text" id="inputLocalDir" class="form-control" aria-describedby="localDirHelpInline" @bind-value="configEdit.LocalDirectory" @bind-value:event="oninput">
-        </div>
-        <div class="col-auto">
-            <span id="localDirHelpInline" class="form-text">
-                Данные, отправляемые на удалённый сервер.
-            </span>
-        </div>
-    </div>
-    <div class="row g-3 align-items-center my-1">
-        <div class="col-auto">
-            <label for="inputRemoteDir" class="col-form-label">Удалённая папка</label>
-        </div>
-        <div class="col">
-            <input disabled="@(IsBusyProgress || HoldPage)" type="text" id="inputRemoteDir" class="form-control" aria-describedby="remoteHelpInline" @bind-value="configEdit.RemoteDirectory" @bind-value:event="oninput">
-        </div>
-        <div class="col-auto">
-            <span id="remoteHelpInline" class="form-text">
-                Принимающая папка на удалённом сервере.
-            </span>
-        </div>
-    </div>
-</div> *@
+
 
            @*  
 @if (checkDir is null)

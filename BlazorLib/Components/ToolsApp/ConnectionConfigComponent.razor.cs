@@ -37,7 +37,11 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
     /// <summary>
     /// Форма изменена?
     /// </summary>
-    public bool IsEdited => ApiConnect.Name != Name || ApiConnect.TokenAccess != TokenAccess || ApiConnect.AddressBaseUri != AddressBaseUri;
+    public bool IsEdited =>
+        ApiConnect.Name != Name ||
+        ApiConnect.HeaderName != HeaderName ||
+        ApiConnect.TokenAccess != TokenAccess ||
+        ApiConnect.AddressBaseUri != AddressBaseUri;
 
     /// <summary>
     /// Форма может быть сохранена?
@@ -126,7 +130,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
         SnackbarRepo.ShowMessagesResponse(GetMe.Messages);
 
         if (!testForm && ExpFormRef is not null && GetMe.Success())
-           await ExpFormRef.CollapseAsync();
+            await ExpFormRef.CollapseAsync();
 
         Parent.StateHasChangedCall();
     }
