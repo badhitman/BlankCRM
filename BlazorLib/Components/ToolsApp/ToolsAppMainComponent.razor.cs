@@ -16,7 +16,7 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
     IClientHTTPRestService RestClientRepo { get; set; } = default!;
 
     [Inject]
-    IToolsAppManager ToolsApp { get; set; } = default!;
+    IToolsAppManager AppManagerRepo { get; set; } = default!;
 
     [Inject]
     ApiRestConfigModelDB ApiConnect { get; set; } = default!;
@@ -35,7 +35,7 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
             return;
         }
         await SetBusy();
-        ResponseBaseModel res = await ToolsApp.DeleteConfig(ApiConnect.Id);
+        ResponseBaseModel res = await AppManagerRepo.DeleteConfig(ApiConnect.Id);
         deleteInit = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
@@ -57,7 +57,7 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
     public async Task SetActiveHandler(int selectedConfId)
     {
         await SetBusy();
-        AllTokens = await ToolsApp.GetAllConfigurations();
+        AllTokens = await AppManagerRepo.GetAllConfigurations();
 
         if (selectedConfId == 0)
             ApiConnect.Empty();
@@ -78,7 +78,7 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
     async Task InitSelector()
     {
         await SetBusy();
-        AllTokens = await ToolsApp.GetAllConfigurations();
+        AllTokens = await AppManagerRepo.GetAllConfigurations();
         await SetActiveHandler(AllTokens.OrderBy(x => x.Name).FirstOrDefault()?.Id ?? 0);
         await SetBusy(false);
     }

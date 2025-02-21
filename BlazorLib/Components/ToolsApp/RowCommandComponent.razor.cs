@@ -5,6 +5,9 @@
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using MudBlazor;
+using Microsoft.Extensions.Options;
+using static MudBlazor.CategoryTypes;
 
 namespace BlazorLib.Components.ToolsApp;
 
@@ -16,61 +19,86 @@ public partial class RowCommandComponent : BlazorBusyComponentBaseModel
     [Inject]
     IClientHTTPRestService ToolsExtRepo { get; set; } = default!;
 
+    [Inject]
+    ApiRestConfigModelDB ApiConnect { get; set; } = default!;
 
-    /// <summary>
-    /// Row index
-    /// </summary>
+    [Inject]
+    IServerToolsService ToolsLocalRepo { get; set; } = default!;
+
+    [Inject]
+    IToolsAppManager AppManagerRepo { get; set; } = default!;
+
+    [Inject]
+    IDialogService DialogRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public int RowIndex { get; set; }
+    public required ExeCommandModelDB CurrentCommand { get; set; }
 
-    /// <summary>
-    /// Owner component
-    /// </summary>
+    /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required ExeCommandsComponent OwnerComponent { get; set; }
+    public required Action ReloadCommandsHandle { get; set; }
 
 
-    ExeCommandModelDB CurrentCommand = default!;
-
+    ExeCommandModelDB OriginCommand = default!;
 
     async Task RunCommand()
     {
         await SetBusy();
-        //await OwnerComponent.SetBusy();
-        //TResponseModel<string> res = await ToolsExtRepo.ExeCommand(MauiProgram.ExeCommands.Response![RowIndex]);
-        //SnackbarRepo.ShowMessagesResponse(res.Messages);
+        TResponseModel<string> res = await ToolsExtRepo.ExeCommand(CurrentCommand);
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
-        //await OwnerComponent.SetBusy(false);
+        DialogParameters<ResultExeCommandComponent> parameters = new()
+        {
+            { x => x.ShellOutput, res.Response },
+            { x => x.CurrentCommand, OriginCommand },
+        };
+
+        DialogOptions options = new()
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Medium,
+            FullWidth = true,
+        };
+
+        await DialogRepo.ShowAsync<ResultExeCommandComponent>("Shell/cmd", parameters, options);
     }
 
     void CancelEdit()
     {
-        //CurrentCommand = GlobalTools.CreateDeepCopy(MauiProgram.ExeCommands.Response![RowIndex])!;
+        CurrentCommand = GlobalTools.CreateDeepCopy(OriginCommand)!;
     }
 
     async Task SaveRow()
     {
         await SetBusy();
-        //await OwnerComponent.SetBusy();
-        //MauiProgram.ExeCommands.Response![RowIndex] = GlobalTools.CreateDeepCopy(CurrentCommand)!;
-        //await MauiProgram.SaveCommands(MauiProgram.ExeCommands.Response!);
-        //await OwnerComponent.SetBusy(false);
+        ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateExeCommand(CurrentCommand);
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        OriginCommand = GlobalTools.CreateDeepCopy(CurrentCommand)!;
         await SetBusy(false);
+        ReloadCommandsHandle();
+
     }
 
     async Task DeleteCommand()
     {
         await SetBusy();
-        //await OwnerComponent.SetBusy();
-        //MauiProgram.ExeCommands.Response!.RemoveAt(RowIndex);
-        //await MauiProgram.SaveCommands(MauiProgram.ExeCommands.Response!);
-        //await OwnerComponent.SetBusy(false);
+        ResponseBaseModel res = await AppManagerRepo.DeleteExeCommand(CurrentCommand.Id);
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
+        ReloadCommandsHandle();
     }
 
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
-        //CurrentCommand = GlobalTools.CreateDeepCopy(MauiProgram.ExeCommands.Response![RowIndex])!;
+        OriginCommand = GlobalTools.CreateDeepCopy(CurrentCommand)!;
     }
+
+    bool IsEdited =>
+        OriginCommand.Name != CurrentCommand.Name ||
+        OriginCommand.FileName != CurrentCommand.FileName ||
+        OriginCommand.Arguments != CurrentCommand.Arguments
+        ;
 }

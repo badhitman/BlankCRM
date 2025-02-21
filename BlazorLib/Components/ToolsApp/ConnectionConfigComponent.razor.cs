@@ -5,7 +5,6 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
-using System.Threading.Tasks;
 
 namespace BlazorLib.Components.ToolsApp;
 
@@ -18,7 +17,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
     ApiRestConfigModelDB ApiConnect { get; set; } = default!;
 
     [Inject]
-    IToolsAppManager ToolsApp { get; set; } = default!;
+    IToolsAppManager AppManagerRepo { get; set; } = default!;
 
     [Inject]
     IClientHTTPRestService RestClientRepo { get; set; } = default!;
@@ -147,7 +146,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
             HeaderName = HeaderName,
         };
         await SetBusy();
-        TResponseModel<int> res = await ToolsApp.UpdateOrCreateConfig(req);
+        TResponseModel<int> res = await AppManagerRepo.UpdateOrCreateConfig(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
         if (res.Success())

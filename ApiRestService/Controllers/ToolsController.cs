@@ -94,9 +94,7 @@ public class ToolsController(
         }
         else
         {
-            FilePartMetadataModel[] partsFiles = sessionUploadPart.FilePartsMetadata
-                .Where(x => !x.PartFileId.Equals(fileToken))
-                .ToArray();
+            FilePartMetadataModel[] partsFiles = [.. sessionUploadPart.FilePartsMetadata.Where(x => !x.PartFileId.Equals(fileToken))];
 
             int _countMarkers = 0;
             await Task.WhenAll(partsFiles.Select(x => Task.Run(async () =>
@@ -165,8 +163,6 @@ public class ToolsController(
         }
 
         return ResponseBaseModel.CreateSuccess("Done!");
-
-        // return await toolsRepo.PartUpload(new(sessionToken, fileToken, ms.ToArray(), uploadedFile.FileName.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar).Trim()));
     }
 
     /// <summary>

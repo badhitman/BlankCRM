@@ -3,11 +3,11 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
-using SharedLib;
-using System.IO.Compression;
-using System.Runtime.Versioning;
 using System.Security.Cryptography;
+using Microsoft.Extensions.Logging;
+using System.Runtime.Versioning;
+using System.IO.Compression;
+using SharedLib;
 
 namespace BlazorLib.Components.ToolsApp;
 
@@ -18,7 +18,7 @@ namespace BlazorLib.Components.ToolsApp;
 public partial class SyncManageComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IToolsAppManager ToolsApp { get; set; } = default!;
+    IToolsAppManager AppManagerRepo { get; set; } = default!;
 
     [Inject]
     IClientHTTPRestService RestClientRepo { get; set; } = default!;

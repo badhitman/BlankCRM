@@ -38,4 +38,16 @@ public class ExeCommandModelDB : ApiRestBaseModel
     {
         return $"{FileName} {Arguments}".GetHashCode();
     }
+
+    /// <inheritdoc/>
+    public static ExeCommandModelDB BuildEmpty(int psrentId)
+    {
+        return new()
+        {
+            ParentId = psrentId,
+            Name = string.Empty,
+            FileName = string.Empty,
+            Arguments = string.Empty,
+        };
+    }
 }

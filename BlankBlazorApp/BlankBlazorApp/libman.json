@@ -29,6 +29,10 @@
     {
       "library": "ckeditor5@43.2.0",
       "destination": "wwwroot/lib/ckeditor5/"
+    },
+    {
+      "library": "highlight.js@11.11.1",
+      "destination": "wwwroot/lib/highlight.js/"
     }
   ]
 }

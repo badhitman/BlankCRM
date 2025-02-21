@@ -4,7 +4,6 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
-using BlazorLib;
 
 namespace BlazorLib.Components.ToolsApp;
 
@@ -14,10 +13,16 @@ namespace BlazorLib.Components.ToolsApp;
 public partial class ExeCommandsComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
+    ApiRestConfigModelDB ApiConnect { get; set; } = default!;
+
+    [Inject]
     IServerToolsService ToolsLocalRepo { get; set; } = default!;
 
     [Inject]
     IClientHTTPRestService ToolsExtRepo { get; set; } = default!;
+
+    [Inject]
+    IToolsAppManager AppManagerRepo { get; set; } = default!;
 
 
     /// <summary>
@@ -26,19 +31,36 @@ public partial class ExeCommandsComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public required ToolsAppMainComponent ParentPage { get; set; }
 
-    private ExeCommandModelDB newCommand = new() { FileName = "", Arguments = "", Name = "" };
-        
+
+    ExeCommandModelDB[] ExeCommands { get; set; } = [];
+
+    private ExeCommandModelDB newCommand = default!;
+
+    async void ReloadCommands()
+    {
+        await SetBusy();
+        ExeCommands = await AppManagerRepo.GetExeCommandsForConfig(ApiConnect.Id);
+        await SetBusy(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        newCommand = ExeCommandModelDB.BuildEmpty(ApiConnect.Id);
+        ReloadCommands();
+    }
 
     async Task AddNewCommand()
     {
-        //MauiProgram.ExeCommands.Response ??= [];
-        //MauiProgram.ExeCommands.Response.Add(newCommand);
         //await ParentPage.HoldPageUpdate(true);
         await SetBusy();
-        //await MauiProgram.SaveCommands(MauiProgram.ExeCommands.Response);
-        //await ParentPage.HoldPageUpdate(false);
-        //newCommand = new() { FileName = "", Arguments = "", Name = "" };
-        await SetBusy(false);
-        //SnackbarRepo.ShowMessagesResponse(MauiProgram.ExeCommands.Messages);
+        ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateExeCommand(newCommand);
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        
+        if(res.Success())
+            newCommand = ExeCommandModelDB.BuildEmpty(ApiConnect.Id);
+
+        ReloadCommands();
     }
 }

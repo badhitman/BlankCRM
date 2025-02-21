@@ -20,7 +20,7 @@ public partial class SyncDirectoriesRulesComponent : BlazorBusyComponentBaseMode
     IClientHTTPRestService RestClientRepo { get; set; } = default!;
 
     [Inject]
-    IToolsAppManager ToolsApp { get; set; } = default!;
+    IToolsAppManager AppManagerRepo { get; set; } = default!;
 
     [Inject]
     IDialogService DialogService { get; set; } = default!;
@@ -54,7 +54,7 @@ public partial class SyncDirectoriesRulesComponent : BlazorBusyComponentBaseMode
     async Task ReloadDirectories()
     {
         await SetBusy();
-        SyncDirectories = await ToolsApp.GetSyncDirectoriesForConfig(ApiConnect.Id);
+        SyncDirectories = await AppManagerRepo.GetSyncDirectoriesForConfig(ApiConnect.Id);
         await SetBusy(false);
     }
 

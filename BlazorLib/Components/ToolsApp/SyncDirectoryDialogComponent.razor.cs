@@ -17,7 +17,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
     ApiRestConfigModelDB ApiConnect { get; set; } = default!;
 
     [Inject]
-    IToolsAppManager ToolsApp { get; set; } = default!;
+    IToolsAppManager AppManagerRepo { get; set; } = default!;
 
     [Inject]
     IClientHTTPRestService RestClientRepo { get; set; } = default!;
@@ -73,7 +73,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
             return;
         }
         await SetBusy();
-        ResponseBaseModel res = await ToolsApp.DeleteSyncDirectory(SyncDir.Id);
+        ResponseBaseModel res = await AppManagerRepo.DeleteSyncDirectory(SyncDir.Id);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
         MudDialog.Close(DialogResult.Ok(true));
@@ -90,7 +90,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
             Id = SyncDir?.Id ?? 0
         };
         await SetBusy();
-        ResponseBaseModel res = await ToolsApp.UpdateOrCreateSyncDirectory(req);
+        ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateSyncDirectory(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
 
@@ -157,7 +157,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
         if (SyncRuleId != 0)
         {
             await SetBusy();
-            SyncDir = await ToolsApp.ReadSyncDirectory(SyncRuleId);
+            SyncDir = await AppManagerRepo.ReadSyncDirectory(SyncRuleId);
             await SetBusy(false);
         }
         else
