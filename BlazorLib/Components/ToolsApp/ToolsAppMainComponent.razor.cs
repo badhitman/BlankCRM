@@ -25,7 +25,23 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
     ApiRestConfigModelDB[] AllTokens = [];
     ConnectionConfigComponent? configRef;
 
-    //int? _selectedOfferId;
+    bool deleteInit;
+
+    async Task DeleteConnectionConfig()
+    {
+        if (!deleteInit)
+        {
+            deleteInit = true;
+            return;
+        }
+        await SetBusy();
+        ResponseBaseModel res = await ToolsApp.DeleteConfig(ApiConnect.Id);
+        deleteInit = false;
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusy(false);
+        await InitSelector();
+    }
+
     /// <summary>
     /// SelectedOfferId
     /// </summary>
@@ -55,10 +71,17 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
         await SetBusy(false);
     }
 
+    async Task InitSelector()
+    {
+        await SetBusy();
+        AllTokens = await ToolsApp.GetAllConfigurations();
+        SelectedConfId = AllTokens.OrderBy(x => x.Name).FirstOrDefault()?.Id ?? 0;
+        await SetBusy(false);
+    }
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        AllTokens = await ToolsApp.GetAllConfigurations();
-        SelectedConfId = AllTokens.OrderBy(x => x.Name).FirstOrDefault()?.Id ?? 0;
+        await InitSelector();
     }
 }

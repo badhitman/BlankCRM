@@ -73,10 +73,22 @@
                                     <span class="badge text-bg-primary mx-1">@_r</span>
                                 }
                         </div>
+                        @if (ApiConnect.Id > 0)
+                        {
+                            <div class="card-footer text-body-secondary">
+                                <div class="d-grid gap-2">
+                                    <button @onclick="DeleteConnectionConfig" type="button" class="btn btn-@(deleteInit ? "" : "outline-")danger">@(deleteInit ? "Подтвердить удаление" : "Удаление")</button>
+                                    @if (deleteInit)
+                                    {
+                                        <button @onclick="() => deleteInit = false" class="btn btn-primary" type="button">Отмена удаления</button>
+                                    }
+                                </div>
+                            </div>
+                        }
                     </div>
                 </MudTabPanel>
                 <MudTabPanel Text="Файлы/Папки">
-                    <SyncDirectoriesRulesComponent />                    
+                    <SyncDirectoriesRulesComponent />
                 </MudTabPanel>
                 <MudTabPanel Text="Команды">
                     <ExeCommandsComponent ParentPage="this" />
@@ -88,6 +100,18 @@
                     КЛАДР 4.0
                 </MudTabPanel>
             </MudTabs>
+        }
+        else if (ApiConnect.Id > 0)
+        {
+            <div class="card-footer text-body-secondary">
+                <div class="d-grid gap-2">
+                    <button @onclick="DeleteConnectionConfig" type="button" class="btn btn-@(deleteInit ? "" : "outline-")danger">@(deleteInit ? "Подтвердить удаление" : "Удаление")</button>
+                    @if (deleteInit)
+                    {
+                        <button @onclick="() => deleteInit = false" class="btn btn-primary" type="button">Отмена удаления</button>
+                    }
+                </div>
+            </div>
         }
     </div>
 </div>
