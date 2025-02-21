@@ -9,8 +9,11 @@ using DbcLib;
 namespace ToolsMauiLib;
 
 /// <summary>
-/// ToolsAppManager
+/// Управление настройками для управления удалённого системами
 /// </summary>
+/// <remarks>
+/// Токены, синхронизации, логи
+/// </remarks>
 public class ToolsAppManager(IDbContextFactory<ToolsAppContext> toolsDbFactory) : IToolsAppManager
 {
     /// <inheritdoc/>

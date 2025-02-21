@@ -87,6 +87,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
             Name = Name ?? string.Empty,
             RemoteDirectory = RemoteDirectory,
             ParentId = ApiConnect.Id,
+            Id = SyncDir?.Id ?? 0
         };
         await SetBusy();
         ResponseBaseModel res = await ToolsApp.UpdateOrCreateSyncDirectory(req);

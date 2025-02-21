@@ -28,6 +28,16 @@ public partial class SyncDirectoriesRulesComponent : BlazorBusyComponentBaseMode
 
     SyncDirectoryModelDB[] SyncDirectories { get; set; } = [];
 
+    SyncDirectoryModelDB? SelectedSyncDir { get; set; }
+
+    async void CloseCommandAction()
+    {
+        SelectedSyncDir = null;
+        await SetBusy();
+        await ReloadDirectories();
+        await SetBusy(false);
+    }
+
     async Task OpenSyncRule(int ruleId = 0)
     {
         DialogOptions options = new() { BackgroundClass = "my-custom-class" };

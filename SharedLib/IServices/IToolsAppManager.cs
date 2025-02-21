@@ -4,7 +4,12 @@
 
 namespace SharedLib;
 
-/// <inheritdoc/>
+/// <summary>
+/// Управление настройками для управления удалённого системами
+/// </summary>
+/// <remarks>
+/// Токены, синхронизации, логи
+/// </remarks>
 public interface IToolsAppManager
 {
     /// <inheritdoc/>

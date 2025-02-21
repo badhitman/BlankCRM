@@ -1,21 +1,34 @@
-﻿@using BlazorLib
-@using SharedLib
-
-@inherits BlazorBusyComponentBaseModel
-
-<h4>Синхронизация папок</h4>
+﻿@inherits BlazorBusyComponentBaseModel
 
 @if (IsBusyProgress)
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate="IndeterminateProgress" Class="my-3" Value="ValueProgress" />
+    <figure class="text-center mx-2">
+        <blockquote class="blockquote">
+            <p>Не уходите со страницы и не закрывайте приложение.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Дождитесь <cite title="пока не закончится операция">окончания</cite> обработки
+        </figcaption>
+    </figure>
 }
 
-<div class="row row-cols-1 row-cols-md-2 g-4">
+<h4>
+    Синхронизация папок/файлов
+    <small class="text-body-secondary">сравнение по имени, размеру и md5 хешу</small>
+</h4>
+
+<div class="d-grid gap-2 mb-2">
+    <button disabled="@IsBusyProgress" @onclick="CloseCommand" class="btn btn-outline-warning" type="button">Вернуться в справочник</button>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 g-4 mb-2">
     <div class="col">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Локальный каталог</h5>
-                @* @if (localScanBusy)
+                <h6 class="card-subtitle mb-2 text-body-secondary">@SyncDirectory.LocalDirectory</h6>
+                @if (localScanBusy)
                 {
                     <div class="text-center">
                         <div class="spinner-border" role="status">
@@ -23,7 +36,13 @@
                         </div>
                     </div>
                 }
-                else if (localScan?.Response is not null)
+                else if (localScan is null)
+                {
+                    <p class="card-text">
+                        Данные не загружены.
+                    </p>
+                }
+                else if (localScan.Response is not null)
                 {
                     <dl class="row">
                         <dt class="col-sm-3">Файлов всего</dt>
@@ -37,10 +56,8 @@
                 }
                 else
                 {
-                    <p class="card-text">
-                        Данные отсутствуют.
-                    </p>
-                } *@
+                    <StatusMessage Messages="@localScan.Messages" />
+                }
             </div>
         </div>
     </div>
@@ -48,7 +65,8 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Удалённый каталог</h5>
-               @*  @if (remoteScanBusy)
+                <h6 class="card-subtitle mb-2 text-body-secondary">@SyncDirectory.RemoteDirectory</h6>
+                @if (remoteScanBusy)
                 {
                     <div class="text-center">
                         <div class="spinner-border" role="status">
@@ -56,7 +74,13 @@
                         </div>
                     </div>
                 }
-                else if (remoteScan?.Response is not null)
+                else if (remoteScan is null)
+                {
+                    <p class="card-text">
+                        Данные не загружены.
+                    </p>
+                }
+                else if (remoteScan.Response is not null)
                 {
                     <dl class="row">
                         <dt class="col-sm-3">Файлов всего</dt>
@@ -70,16 +94,14 @@
                 }
                 else
                 {
-                    <p class="card-text">
-                        Данные отсутствуют.
-                    </p>
-                } *@
+                    <StatusMessage Messages="@remoteScan.Messages" />
+                }
             </div>
         </div>
     </div>
 </div>
 
-@* @if (forDelete is not null && forUpdateOrAdd is not null)
+@if (forDelete is not null && forUpdateOrAdd is not null)
 {
     if (forDelete.Length == 0)
     {
@@ -89,7 +111,7 @@
     }
     else
     {
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-body">
                 <MudTable Items="@forDelete.OrderBy(x => x.ScopeName)" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<ToolsFilesResponseModel,bool>(FilterFunc1)">
                     <ToolBarContent>
@@ -122,7 +144,7 @@
     }
     else
     {
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-body">
                 <MudTable Items="@forUpdateOrAdd.OrderBy(x => x.ScopeName)" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<ToolsFilesResponseModel,bool>(FilterFunc1)">
                     <ToolBarContent>
@@ -159,9 +181,9 @@
             </div>
         </div>
     }
-} *@
+}
 
-@* <div class="d-grid gap-2 mt-3">
+<div class="d-grid gap-2 mt-3">
     @if (forDelete is null || forUpdateOrAdd is null)
     {
         <button disabled="@(IsBusyProgress || remoteScanBusy || localScanBusy)" @onclick="SyncRun" class="btn btn-primary" type="button">@(IsBusyProgress ? "Сравнение данных..." : "Сравнить содержимое папок") </button>
@@ -170,36 +192,4 @@
     {
         <button disabled="@(IsBusyProgress || (forDelete.Length == 0 && forUpdateOrAdd.Length == 0))" @onclick="Send" class="btn btn-primary" type="button">@(IsBusyProgress ? "Отправка..." : ((forDelete.Length == 0 && forUpdateOrAdd.Length == 0) ? "Папки синхронизированы." : "Отправить!"))</button>
     }
-</div> *@
-
-
-
-
-           @*  
-@if (checkDir is null)
-            {
-                <figure class="text-center">
-                    <blockquote class="blockquote">
-                        <p>Данные отсутсвуют.</p>
-                    </blockquote>
-                    <figcaption class="blockquote-footer">
-                        Проверьте <cite title="Настройки">Настройки</cite>
-                    </figcaption>
-                </figure>
-            }
-            else if (!configEdit.Equals(MauiProgram.ConfigStore.Response))
-            {
-                <figure class="text-center">
-                    <blockquote class="blockquote">
-                        <p>Настройки изменены.</p>
-                    </blockquote>
-                    <figcaption class="blockquote-footer">
-                        Сохраните <cite title="Настройки">Настройки</cite>
-                    </figcaption>
-                </figure>
-            }
-            else
-            {
-
-            }
-           *@
+</div>
