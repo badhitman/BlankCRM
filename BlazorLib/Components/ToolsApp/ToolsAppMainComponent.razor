@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="card-body">
-        <ConnectionConfigComponent @ref="configRef" Parent="this" />
+        <ConnectionConfigComponent @ref="configRef" Parent="this" @key="ApiConnect.Id" />
         @if (AllTokens.Length == 0)
         {
             <figure class="text-center">
@@ -67,7 +67,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Карточка клиента</h5>
                             <h6 class="card-subtitle mb-2 text-body-secondary">@configRef.GetMe.Response.UserName</h6>
-                            @if (configRef.GetMe.Response.Roles is not null)
+                            @if (configRef.GetMe?.Response.Roles is not null)
                                 @foreach (string _r in configRef.GetMe.Response.Roles)
                                 {
                                     <span class="badge text-bg-primary mx-1">@_r</span>

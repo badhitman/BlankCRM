@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
+using System.Threading.Tasks;
 
 namespace BlazorLib.Components.ToolsApp;
 
@@ -165,9 +166,11 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
     }
 
     /// <inheritdoc/>
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         base.OnInitialized();
         ResetForm();
+        if (ApiConnect.Id != 0)
+           await TestConnect();
     }
 }
