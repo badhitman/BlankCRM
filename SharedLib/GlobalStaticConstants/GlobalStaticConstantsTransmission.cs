@@ -54,22 +54,22 @@ public static partial class GlobalStaticConstants
         /// Проверка 2FA токена
         /// </summary>
         public readonly static string CheckToken2FAReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.TWOFACTOR_CONTROLLER_NAME}-{Routes.TOKEN_CONTROLLER_NAME}", Routes.CHECK_ACTION_NAME);
-        
+
         /// <summary>
         /// Чтение 2fa токена (из кеша)
         /// </summary>
         public readonly static string ReadToken2FAReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, Routes.TWOFACTOR_CONTROLLER_NAME, $"{Routes.TOKEN_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
-        
+
         /// <summary>
         /// Генерация (и отправка на Email++) 2fa токена
         /// </summary>
         public readonly static string GenerateToken2FAReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.TWOFACTOR_CONTROLLER_NAME}-{Routes.AUTHORIZE_CONTROLLER_NAME}", $"{Routes.GENERATE_ACTION_NAME}-{Routes.TOKEN_CONTROLLER_NAME}");
-        
+
         /// <summary>
         /// Извлекает связанные логины для указанного <param ref="userId"/>
         /// </summary>
         public readonly static string GetUserLoginsReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.USER_CONTROLLER_NAME}-{Routes.LOGINS_ACTION_NAME}", Routes.GET_ACTION_NAME);
-        
+
         /// <summary>
         /// Возвращает флаг, указывающий, действителен ли данный password для указанного userId
         /// </summary>
@@ -77,12 +77,12 @@ public static partial class GlobalStaticConstants
         /// true, если указанный password соответствует для userId, в противном случае значение false.
         /// </returns>
         public readonly static string CheckUserPasswordReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.USER_CONTROLLER_NAME}-{Routes.PASSWORD_CONTROLLER_NAME}", Routes.CHECK_ACTION_NAME);
-        
+
         /// <summary>
         /// Удалить Identity данные пользователя
         /// </summary>
         public readonly static string DeleteUserDataReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.USER_CONTROLLER_NAME}-{Routes.DATA_ACTION_NAME}", Routes.DELETE_ACTION_NAME);
-        
+
         /// <summary>
         /// Получает флаг, указывающий, есть ли у пользователя пароль
         /// </summary>
@@ -332,7 +332,7 @@ public static partial class GlobalStaticConstants
 
         /// <inheritdoc/>
         public readonly static string SetWebConfigHelpdeskReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TELEGRAM_CONTROLLER_NAME, $"{Routes.WEB_CONTROLLER_NAME}_{Routes.CONFIGURATION_CONTROLLER_NAME}", $"{Routes.SET_ACTION_NAME}-of-{Routes.HELPDESK_CONTROLLER_NAME}");
-#endregion
+        #endregion
 
         #region Constructor
         #region projects
@@ -781,7 +781,7 @@ public static partial class GlobalStaticConstants
 
         /// <inheritdoc/>
         public readonly static string GoToPageForRowReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TOOLS_CONTROLLER_NAME, $"{Routes.LOGS_ACTION_NAME}-{Routes.PAGE_ACTION_NAME}", $"{Routes.GOTO_ACTION_NAME}-for-{Routes.RECORD_CONTROLLER_NAME}");
-        
+
         /// <inheritdoc/>
         public readonly static string MetadataLogsReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TOOLS_CONTROLLER_NAME, Routes.LOGS_ACTION_NAME, Routes.METADATA_CONTROLLER_NAME);
 
@@ -800,7 +800,7 @@ public static partial class GlobalStaticConstants
         /// <remarks>
         /// Общий размер и количество группируется по AppName
         /// </remarks>
-        public readonly static string FilesAreaGetMetadataReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.STORAGE_CONTROLLER_NAME, $"{Routes.FILES_CONTROLLER_NAME}-{Routes.AREAS_CONTROLLER_NAME}", $"{Routes.GET_ACTION_NAME}-{Routes.METADATA_CONTROLLER_NAME}");
+        public readonly static string FilesAreaGetMetadataReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.STORAGE_CONTROLLER_NAME, $"{Routes.FILES_CONTROLLER_NAME}-{Routes.AREAS_CONTROLLER_NAME}", $"{Routes.METADATA_CONTROLLER_NAME}-{Routes.CALCULATE_ACTION_NAME}");
 
         /// <inheritdoc/>
         public readonly static string SaveCloudParameterReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CLOUD_CONTROLLER_NAME, Routes.PROPERTY_CONTROLLER_NAME, Routes.SET_ACTION_NAME);
@@ -819,6 +819,18 @@ public static partial class GlobalStaticConstants
 
         /// <inheritdoc/>
         public readonly static string FindCloudParameterReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CLOUD_CONTROLLER_NAME, Routes.PROPERTY_CONTROLLER_NAME, Routes.FIND_ACTION_NAME);
+        #endregion
+
+
+        #region kladr
+        /// <inheritdoc/>
+        public readonly static string ClearTempKladrReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.TEMP_CONTROLLER_NAME}", Routes.CLEAR_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string GetMetadataKladrReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.KLADR_CONTROLLER_NAME, Routes.METADATA_CONTROLLER_NAME, Routes.CALCULATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UploadPartTempKladrReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.KLADR_CONTROLLER_NAME, Routes.TEMP_CONTROLLER_NAME, $"{Routes.UPLOAD_ACTION_NAME}-{Routes.PART_CONTROLLER_NAME}");
         #endregion
     }
 }

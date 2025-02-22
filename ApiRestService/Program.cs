@@ -19,7 +19,6 @@ using OpenTelemetry.Trace;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using DbcLib;
-using Microsoft.AspNetCore.Authorization;
 
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
@@ -125,20 +124,18 @@ builder.Services.AddScoped<RolesAuthorizationFilter>();
 
 builder.Services.AddScoped<ExpressUserPermissionModel>();
 
-// Add services to the container.
-#region MQ Transmission (remote methods call)
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
-builder.Services.AddSingleton<IRabbitClient>(x =>
-    new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
-                x.GetRequiredService<ILogger<RabbitClient>>(),
-                appName));
+#region MQ Transmission (remote methods call)
+builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 //
 builder.Services
     .AddScoped<IWebTransmission, WebTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()
     .AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
     .AddScoped<ICommerceTransmission, CommerceTransmission>()
-    .AddScoped<IStorageTransmission, StorageTransmission>();
+    .AddScoped<IStorageTransmission, StorageTransmission>()
+    .AddScoped<IKladrService, KladrServiceTransmission>()
+    ;
 #endregion
 
 // Custom metrics for the application

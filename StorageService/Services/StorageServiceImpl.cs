@@ -16,7 +16,12 @@ using DbcLib;
 
 namespace StorageService;
 
-/// <inheritdoc/>
+/// <summary>
+/// Хранилище параметров приложений
+/// </summary>
+/// <remarks>
+/// Значения/данные сериализуются в JSON строку при сохранении и десерализируются при чтении
+/// </remarks>
 public class StorageServiceImpl(
     IDbContextFactory<StorageContext> cloudParametersDbFactory,
     IDbContextFactory<NLogsContext> logsDbFactory,

@@ -13,11 +13,11 @@ public class TelegramTransmission(IRabbitClient rabbitClient) : ITelegramTransmi
 {
     /// <inheritdoc/>
     public async Task<List<ChatTelegramModelDB>> ChatsFindForUser(long[] usersTelegramIds)
-        => await rabbitClient.MqRemoteCall<List<ChatTelegramModelDB>>(GlobalStaticConstants.TransmissionQueues.ChatsFindForUserTelegramReceive, usersTelegramIds) ?? new();
+        => await rabbitClient.MqRemoteCall<List<ChatTelegramModelDB>>(GlobalStaticConstants.TransmissionQueues.ChatsFindForUserTelegramReceive, usersTelegramIds) ?? [];
 
     /// <inheritdoc/>
     public async Task<List<ChatTelegramModelDB>> ChatsReadTelegram(long[] chats_ids)
-        => await rabbitClient.MqRemoteCall<List<ChatTelegramModelDB>>(GlobalStaticConstants.TransmissionQueues.ChatsReadTelegramReceive, chats_ids) ?? new();
+        => await rabbitClient.MqRemoteCall<List<ChatTelegramModelDB>>(GlobalStaticConstants.TransmissionQueues.ChatsReadTelegramReceive, chats_ids) ?? [];
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelect(TPaginationRequestModel<string?> req)

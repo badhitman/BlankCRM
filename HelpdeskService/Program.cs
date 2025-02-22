@@ -1,4 +1,3 @@
-using Transmission.Receives.helpdesk;
 using Microsoft.EntityFrameworkCore;
 using NLog.Extensions.Logging;
 using RemoteCallLib;
@@ -6,7 +5,6 @@ using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
-using HelpdeskService;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Hosting;
 using OpenTelemetry;
@@ -116,24 +114,20 @@ public class Program
 
         builder.Services.AddMemoryCache();
 
-        #region MQ Transmission (remote methods call)
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
-        builder.Services.AddSingleton<IRabbitClient>(x =>
-        new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
-                    x.GetRequiredService<ILogger<RabbitClient>>(),
-                    appName));
+        #region MQ Transmission (remote methods call)
+        builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
         //
         builder.Services.AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
-    .AddScoped<IWebTransmission, WebTransmission>()
-    .AddScoped<ITelegramTransmission, TelegramTransmission>()
-    .AddScoped<ICommerceTransmission, CommerceTransmission>()
-    .AddScoped<IHelpdeskService, HelpdeskImplementService>()
-    .AddScoped<IStorageTransmission, StorageTransmission>()
-    .AddScoped<IIdentityTransmission, IdentityTransmission>()
-    ;
+            .AddScoped<IWebTransmission, WebTransmission>()
+            .AddScoped<ITelegramTransmission, TelegramTransmission>()
+            .AddScoped<ICommerceTransmission, CommerceTransmission>()
+            .AddScoped<IHelpdeskService, HelpdeskImplementService>()
+            .AddScoped<IStorageTransmission, StorageTransmission>()
+            .AddScoped<IIdentityTransmission, IdentityTransmission>()
+            ;
         // 
         builder.Services.HelpdeskRegisterMqListeners();
-        //  
         #endregion
 
         // Custom metrics for the application

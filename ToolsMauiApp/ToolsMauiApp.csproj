@@ -67,6 +67,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="9.0.40" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.2" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="11.0.0" />
 		<PackageReference Include="MudBlazor" Version="8.2.0" />
 		<PackageReference Include="System.Private.Uri" Version="4.3.2" />
 		<PackageReference Include="System.Text.Json" Version="9.0.2" />
@@ -81,6 +82,12 @@
 
 	<ItemGroup>
 		<Folder Include="wwwroot\libs\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Update="wwwroot\js\site.js">
+	    <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

@@ -108,7 +108,7 @@ public class Program
             options.Configuration = builder.Configuration.GetConnectionString($"RedisConnectionString{_modePrefix}");
         })
         .AddSingleton<IManualCustomCacheService, ManualCustomCacheService>();
-        
+
 
         string connectionIdentityString = builder.Configuration.GetConnectionString($"IdentityConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'IdentityConnection{_modePrefix}' not found.");
         builder.Services.AddDbContextFactory<IdentityAppDbContext>(opt =>
@@ -169,17 +169,9 @@ public class Program
         // Scoped
         builder.Services.AddScoped<IIdentityTools, IdentityTools>();
 
-        //builder.Services
-        //   .AddScoped<UserManager<ApplicationUser>>()
-        //   //.AddScoped<RoleManager<ApplicationUser>>()
-        //   ;
-
-        #region MQ Transmission (remote methods call)
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
-        builder.Services.AddSingleton<IRabbitClient>(x =>
-            new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
-                        x.GetRequiredService<ILogger<RabbitClient>>(),
-                        appName));
+        #region MQ Transmission (remote methods call)
+        builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 
         builder.Services
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
@@ -190,7 +182,7 @@ public class Program
 
         builder.Services.IdentityRegisterMqListeners();
         #endregion
-                
+
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");
         OpenTelemetryBuilder otel = builder.Services.AddOpenTelemetry();
@@ -213,7 +205,7 @@ public class Program
             tracing.AddHttpClientInstrumentation();
             tracing.AddSource($"OTel.{appName}");
         });
-        
+
         builder.Services.AddOptions();
 
         IHost host = builder.Build();

@@ -111,19 +111,16 @@ builder.Services.AddDbContextFactory<CommerceContext>(opt =>
 
 builder.Services.AddMemoryCache();
 
-#region MQ Transmission (remote methods call)
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
-builder.Services.AddSingleton<IRabbitClient>(x =>
-    new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
-                x.GetRequiredService<ILogger<RabbitClient>>(),
-                appName));
+#region MQ Transmission (remote methods call)
+builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 //
 builder.Services.AddScoped<IWebTransmission, WebTransmission>()
-.AddScoped<ITelegramTransmission, TelegramTransmission>()
-.AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
-.AddScoped<IStorageTransmission, StorageTransmission>()
-.AddScoped<IIdentityTransmission, IdentityTransmission>()
-;
+    .AddScoped<ITelegramTransmission, TelegramTransmission>()
+    .AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
+    .AddScoped<IStorageTransmission, StorageTransmission>()
+    .AddScoped<IIdentityTransmission, IdentityTransmission>()
+    ;
 //
 builder.Services.CommerceRegisterMqListeners();
 #endregion

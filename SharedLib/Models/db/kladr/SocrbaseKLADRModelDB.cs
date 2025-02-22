@@ -9,7 +9,7 @@ namespace SharedLib;
 
 /// <inheritdoc/>
 [Index(nameof(SCNAME)), Index(nameof(SOCRNAME)), Index(nameof(KOD_T_ST)), Index(nameof(LEVEL))]
-public class SocrbaseKLADRModelDB
+public class SocrbaseKLADRModelDB : SocrbaseKLADRModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -18,15 +18,14 @@ public class SocrbaseKLADRModelDB
     public int Id { get; set; }
 
     /// <inheritdoc/>
-    [Required, StringLength(5)]
-    public required string LEVEL { get; set; }
-    /// <inheritdoc/>
-    [Required, StringLength(10)]
-    public required string SCNAME { get; set; }
-    /// <inheritdoc/>
-    [Required, StringLength(29)]
-    public required string SOCRNAME { get; set; }
-    /// <inheritdoc/>
-    [Required, StringLength(3)]
-    public required string KOD_T_ST { get; set; }
+    public static SocrbaseKLADRModelDB Build(SocrbaseKLADRModel x)
+    {
+        return new()
+        {
+            KOD_T_ST = x.KOD_T_ST,
+            LEVEL = x.LEVEL,
+            SCNAME = x.SCNAME,
+            SOCRNAME = x.SOCRNAME,
+        };
+    }
 }

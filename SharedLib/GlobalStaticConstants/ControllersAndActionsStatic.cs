@@ -410,6 +410,16 @@ public static partial class GlobalStaticConstants
         public const string CLOUD_CONTROLLER_NAME = "cloud";
 
         /// <summary>
+        /// КЛАДР 4.0
+        /// </summary>
+        public const string KLADR_CONTROLLER_NAME = "kladr";
+
+        /// <summary>
+        /// Temporary
+        /// </summary>
+        public const string TEMP_CONTROLLER_NAME = "temp";
+
+        /// <summary>
         /// Property
         /// </summary>
         public const string PROPERTY_CONTROLLER_NAME = "property";
@@ -1015,6 +1025,11 @@ public static partial class GlobalStaticConstants
         /// Get
         /// </summary>
         public const string GET_ACTION_NAME = "get";
+
+        /// <summary>
+        /// Calculate
+        /// </summary>
+        public const string CALCULATE_ACTION_NAME = "calculate";
 
         /// <summary>
         /// Flush

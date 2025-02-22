@@ -219,7 +219,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
                     zip.Dispose();
                     ms = new MemoryStream(File.ReadAllBytes(archive));
 
-                    TResponseModel<PartUploadSessionModel> sessionPartUpload = await RestClientRepo.PartUploadSessionStart(new PartUploadSessionStartRequestModel()
+                    TResponseModel<PartUploadSessionModel> sessionPartUpload = await RestClientRepo.FilePartUploadSessionStart(new PartUploadSessionStartRequestModel()
                     {
                         RemoteDirectory = SyncDirectory.RemoteDirectory,
                         FileSize = ms.Length,
@@ -256,7 +256,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
                             ms.Position = fileMd.PartFilePositionStart;
                             byte[] _buff = new byte[fileMd.PartFileSize];
                             ms.Read(_buff, 0, _buff.Length);
-                            ResponseBaseModel _subRest = await RestClientRepo.PartUpload(new SessionFileRequestModel(sessionPartUpload.Response.SessionId, fileMd.PartFileId, _buff, Path.GetFileName(tFile.FullName), fileMd.PartFileIndex));
+                            ResponseBaseModel _subRest = await RestClientRepo.FilePartUpload(new SessionFileRequestModel(sessionPartUpload.Response.SessionId, fileMd.PartFileId, _buff, Path.GetFileName(tFile.FullName), fileMd.PartFileIndex));
                             if (!_subRest.Success())
                                 SnackbarRepo.ShowMessagesResponse(_subRest.Messages);
 

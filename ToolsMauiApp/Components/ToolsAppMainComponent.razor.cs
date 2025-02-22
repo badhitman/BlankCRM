@@ -3,9 +3,11 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using BlazorLib.Components.ToolsApp;
+using BlazorLib;
 using SharedLib;
 
-namespace BlazorLib.Components.ToolsApp;
+namespace ToolsMauiApp.Components;
 
 /// <summary>
 /// ToolsAppMainComponent

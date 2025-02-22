@@ -3,8 +3,9 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components.Forms;
+using BlazorLib;
 
-namespace BlazorLib.Components.ToolsApp;
+namespace ToolsMauiApp.Components;
 
 /// <summary>
 /// KladrUploadComponent

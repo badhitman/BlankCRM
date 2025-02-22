@@ -26,6 +26,7 @@ note for DbPostgreLib "Если используется другая СУБД, тогда указатели  от [Serve
     RemoteCallLib <|-- TelegramBotService
 	DbPostgreLib <|-- TelegramBotService
     RemoteCallLib <|-- StorageService
+    RemoteCallLib <|-- KladrService
     RemoteCallLib <|-- ConstructorService
     RemoteCallLib <|-- HelpdeskService
 	DbPostgreLib <|-- HelpdeskService
@@ -74,6 +75,9 @@ note for DbPostgreLib "Если используется другая СУБД, тогда указатели  от [Serve
     }
     class StorageService{
         @Микросервис - Файлы/Тэги/CMS
+    }
+    class KladrService{
+        @Микросервис - КЛАДР 4.0
     }
     class ConstructorService{
         @Микросервис - ВебКонструктор/ВебФормы

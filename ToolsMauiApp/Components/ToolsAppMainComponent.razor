@@ -1,5 +1,8 @@
+@using BlazorLib.Components.ToolsApp
+@using BlazorLib.Components
 @using BlazorLib
 @using MudBlazor
+@using SharedLib
 
 @inherits BlazorBusyComponentBaseModel
 
@@ -36,7 +39,7 @@
         </div>
     </div>
     <div class="card-body">
-        <ConnectionConfigComponent @ref="configRef" Parent="this" @key="ApiConnect.Id" />
+        <ConnectionConfigComponent @ref="configRef" @key="ApiConnect.Id" ParentUpdate="StateHasChanged" SetActiveHandler="(int e) => InvokeAsync((async () => await SetActiveHandler(e)))" />
         @if (AllTokens.Length == 0)
         {
             <figure class="text-center">
@@ -97,7 +100,7 @@
                     <ExeCommandsComponent ParentPage="this" />
                 </MudTabPanel>
                 <MudTabPanel Disabled="!IsDebug" Text="ÊËÀÄÐ 4.0">
-                   <KladrUploadComponent />
+                    <KladrUploadComponent />
                 </MudTabPanel>
             </MudTabs>
         }

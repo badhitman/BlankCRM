@@ -3,7 +3,7 @@
 
 @inherits BlazorBusyComponentBaseModel
 
-<h3>Синхронизация папок</h3>
+<h3>Выполнение команд на удалённом сервере</h3>
 
 @if (IsBusyProgress)
 {
@@ -21,7 +21,6 @@ else
 {
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Удалённые команды</h5>
             <div class="input-group my-2 border border-warning">
                 <span class="input-group-text">Новая команда:</span>
                 <input @bind-value="@newCommand.FileName" @bind-value:event="oninput" type="text" aria-label="File Name" placeholder="FileName" class="form-control">

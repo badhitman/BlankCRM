@@ -1,18 +1,16 @@
 using Microsoft.EntityFrameworkCore;
-using Transmission.Receives.storage;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using MongoDB.Driver;
-using StorageService;
+using OpenTelemetry;
 using RemoteCallLib;
 using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
-using OpenTelemetry;
-using System.Diagnostics.Metrics;
-using OpenTelemetry.Trace;
-using OpenTelemetry.Metrics;
 
 namespace StorageService;
 
@@ -117,25 +115,25 @@ public class Program
 #endif
             });
 
-        builder.Services
-        .AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
-            .AddScoped<ICommerceTransmission, CommerceTransmission>();
-
-        #region MQ Transmission (remote methods call)
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
+        #region MQ Transmission (remote methods call)
         builder.Services
             .AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 
         builder.Services
-        .AddScoped<IWebTransmission, WebTransmission>()
+            .AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
-            .AddScoped<ISerializeStorage, StorageServiceImpl>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
+            .AddScoped<ICommerceTransmission, CommerceTransmission>()
+            .AddScoped<IWebTransmission, WebTransmission>()
             ;
         //
         builder.Services.StorageRegisterMqListeners();
-        //
         #endregion
+
+        builder.Services
+            .AddScoped<ISerializeStorage, StorageServiceImpl>()
+            ;
 
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");

@@ -11,19 +11,11 @@ namespace SharedLib;
 /// BaseKladrModel
 /// </summary>
 [Index(nameof(NAME)), Index(nameof(CODE))]
-public class BaseKladrModel
+public class BaseKladrModel : BaseKladrScopedModel
 {
     /// <summary>
     /// Идентификатор/Key
     /// </summary>
     [Key]
     public int Id { get; set; }
-
-    /// <inheritdoc/>
-    [Required, StringLength(40)]
-    public required string NAME { get; set; }
-
-    /// <inheritdoc/>
-    [Required, StringLength(17)]
-    public required string CODE { get; set; }
 }

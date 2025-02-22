@@ -25,7 +25,11 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required ToolsAppMainComponent Parent { get; set; }
+    public required Action ParentUpdate { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter,EditorRequired]
+    public required Action<int> SetActiveHandler { get; set; }
 
 
     /// <summary>
@@ -132,7 +136,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
         if (!testForm && ExpFormRef is not null && GetMe.Success())
             await ExpFormRef.CollapseAsync();
 
-        Parent.StateHasChangedCall();
+        ParentUpdate();
     }
 
     async Task SaveToken()
@@ -150,7 +154,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
         if (res.Success())
-            await Parent.SetActiveHandler(req.Id > 0 ? req.Id : res.Response);
+            SetActiveHandler(req.Id > 0 ? req.Id : res.Response);
     }
 
     /// <summary>

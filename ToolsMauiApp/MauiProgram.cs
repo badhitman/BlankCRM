@@ -3,11 +3,11 @@
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.Logging;
+using CommunityToolkit.Maui;
 using MudBlazor.Services;
-using Newtonsoft.Json;
+using ToolsMauiLib;
 using SharedLib;
 using DbcLib;
-using ToolsMauiLib;
 
 namespace ToolsMauiApp;
 
@@ -28,11 +28,12 @@ public static class MauiProgram
 #endif
         });
 
-
-        builder.UseMauiApp<App>().ConfigureFonts(fonts =>
-        {
-            fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-        });
+        builder.UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+            });
         builder.Services.AddMauiBlazorWebView();
         builder.Services.AddMudServices();
 
@@ -46,11 +47,11 @@ public static class MauiProgram
         builder.Services.AddScoped<IClientHTTPRestService, ToolsSystemHTTPRestService>();
         builder.Services.AddScoped<IServerToolsService, ToolsSystemService>();
 
-        builder.Services.AddHttpClient(HttpClientsNamesEnum.Tools.ToString(), cc =>
+        /*builder.Services.AddHttpClient(HttpClientsNamesEnum.Tools.ToString(), cc =>
         {
             //cc.BaseAddress = new Uri(_conf.AddressBaseUri ?? "localhost");
-            cc.DefaultRequestHeaders.Add(_conf.HeaderName, _conf.TokenAccess);
-        });
+            //cc.DefaultRequestHeaders.Add(_conf.HeaderName, _conf.TokenAccess);
+        });*/
         // #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();

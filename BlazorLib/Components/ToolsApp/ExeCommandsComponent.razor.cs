@@ -25,13 +25,6 @@ public partial class ExeCommandsComponent : BlazorBusyComponentBaseModel
     IToolsAppManager AppManagerRepo { get; set; } = default!;
 
 
-    /// <summary>
-    /// Home page
-    /// </summary>
-    [Parameter, EditorRequired]
-    public required ToolsAppMainComponent ParentPage { get; set; }
-
-
     ExeCommandModelDB[] ExeCommands { get; set; } = [];
 
     private ExeCommandModelDB newCommand = default!;

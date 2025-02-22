@@ -41,6 +41,7 @@ note for DbPostgreLib "Если используется другая СУБД, 
     RemoteCallLib <|-- TelegramBotService
 	DbPostgreLib <|-- TelegramBotService
     RemoteCallLib <|-- StorageService
+    RemoteCallLib <|-- KladrService
     RemoteCallLib <|-- ConstructorService
     RemoteCallLib <|-- HelpdeskService
 	DbPostgreLib <|-- HelpdeskService
@@ -89,6 +90,9 @@ note for DbPostgreLib "Если используется другая СУБД, 
     }
     class StorageService{
         @Микросервис - Файлы/Тэги/CMS
+    }
+    class KladrService{
+        @Микросервис - КЛАДР 4.0
     }
     class ConstructorService{
         @Микросервис - ВебКонструктор/ВебФормы
@@ -161,6 +165,10 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 
 #### [ConstructorService](https://github.com/badhitman/BlankCRM/tree/main/ConstructorService)
 - Решение для создания форм и документов. В режиме WEB редактора можно создать документ любой сложности (поля, формы, табы, таблицы) и использовать эти схемы для создания сессий (уникальные ссылки) которые можно передавать пользователям. По таким ссылкам/сессиям пользователь увидит созданный документ что бы заполнить его данными.
+
+#### [Классификатор адресов](https://github.com/badhitman/BlankCRM/tree/main/KladrService)
+- КЛАДР 4.0 от ГНИВЦ. Официальная база данных адресов загружается в систему
+- Заполнение/обновление справочника при помощи штатной win/android утилиты
 
 > все службы должны быть настроены, запущены вместе и соединены общим RabbitMQ и Redis. В противном случае в MQ очередях будут копиться запросы без ответов и функционал местами будет недоступен если ответственная служба не будет обрабатывать запросы.
 

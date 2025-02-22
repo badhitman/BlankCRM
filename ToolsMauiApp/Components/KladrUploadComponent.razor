@@ -1,4 +1,6 @@
-﻿@inherits BlazorBusyComponentBaseModel
+﻿@using BlazorLib
+@using SharedLib
+@inherits BlazorBusyComponentBaseModel
 
 <h3>Классификатор адресов</h3>
 <p>Загрузка данных КЛАДР 4.0 на удалённый сервер</p>
@@ -12,7 +14,6 @@
         <button @onclick="() => { loadedFiles.Clear(); _inputFileId = Guid.NewGuid().ToString(); }" disabled="@IsBusyProgress" class="btn btn-light" type="button">Сброс</button>
     }
 </div>
-
 
 @if (loadedFiles.Count != 0)
 {
