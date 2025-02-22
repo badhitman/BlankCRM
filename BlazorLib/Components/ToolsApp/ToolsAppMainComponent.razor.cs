@@ -27,6 +27,12 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
 
     bool deleteInit;
 
+#if DEBUG
+    bool IsDebug = true;
+#else
+    bool IsDebug = false;
+#endif
+
     async Task DeleteConnectionConfig()
     {
         if (!deleteInit)
@@ -68,10 +74,6 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
         }
 
         configRef?.ResetForm();
-
-        //if (configRef is not null)
-        //    await configRef.TestConnect();
-
         await SetBusy(false);
     }
 
