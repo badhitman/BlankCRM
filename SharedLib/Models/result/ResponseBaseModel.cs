@@ -34,7 +34,7 @@ public class ResponseBaseModel
     /// <summary>
     /// Сообщение со статусными сообщениями
     /// </summary>
-    public static ResponseBaseModel Create(IEnumerable<ResultMessage> messages) => new() { Messages = new List<ResultMessage>(messages) };
+    public static ResponseBaseModel Create(IEnumerable<ResultMessage> messages) => new() { Messages = [.. messages] };
 
 
 
@@ -78,7 +78,7 @@ public class ResponseBaseModel
     public static List<ResultMessage> SuccessMessage(string msg) => [new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg }];
 
     /// <inheritdoc/>
-    public static ResponseBaseModel CreateSuccess(IEnumerable<string> messages) => new() { Messages = messages.Select(msg => new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg }).ToList() }; //[new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg }] };
+    public static ResponseBaseModel CreateSuccess(IEnumerable<string> messages) => new() { Messages = [.. messages.Select(msg => new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg })] };
 
     /// <summary>
     /// Добавить сообщение об успешном выполнении операции

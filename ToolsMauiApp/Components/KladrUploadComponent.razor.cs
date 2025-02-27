@@ -4,6 +4,8 @@
 
 using Microsoft.AspNetCore.Components.Forms;
 using BlazorLib;
+using Microsoft.AspNetCore.Components;
+using SharedLib;
 
 namespace ToolsMauiApp.Components;
 
@@ -12,6 +14,10 @@ namespace ToolsMauiApp.Components;
 /// </summary>
 public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
 {
+    [Inject]
+    IClientHTTPRestService remoteClient { get; set; } = default!;
+
+
     private string _inputFileId = Guid.NewGuid().ToString();
     private readonly List<IBrowserFile> loadedFiles = [];
 

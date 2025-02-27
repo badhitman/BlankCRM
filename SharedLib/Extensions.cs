@@ -7,9 +7,7 @@ using Newtonsoft.Json;
 
 namespace SharedLib;
 
-/// <summary>
-/// Расширение DateTime
-/// </summary>
+/// <inheritdoc/>
 public static class Extensions
 {
     /// <summary>
@@ -73,5 +71,15 @@ public static class Extensions
         }
 
         return res;
+    }
+
+    /// <summary>
+    /// SubArray
+    /// </summary>
+    public static T[] SubArray<T>(this T[] data, int index, int length)
+    {
+        T[] result = new T[length];
+        Array.Copy(data, index, result, 0, length);
+        return result;
     }
 }

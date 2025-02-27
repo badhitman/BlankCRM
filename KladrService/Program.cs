@@ -1,14 +1,14 @@
-using NLog.Extensions.Logging;
-using SharedLib;
-using NLog;
 using Microsoft.EntityFrameworkCore;
-using DbcLib;
-using RemoteCallLib;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
-using OpenTelemetry;
+using NLog.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using RemoteCallLib;
+using OpenTelemetry;
+using SharedLib;
+using DbcLib;
+using NLog;
 
 namespace KladrService;
 
@@ -16,7 +16,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = Host.CreateApplicationBuilder(args);
+        HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
         Logger logger = LogManager.GetCurrentClassLogger();
         builder.AddServiceDefaults();
@@ -96,12 +96,6 @@ public class Program
         builder.Services
             .AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 
-        //builder.Services
-        //.AddScoped<IWebTransmission, WebTransmission>()
-        //    .AddScoped<ITelegramTransmission, TelegramTransmission>()
-        //    .AddScoped<IIdentityTransmission, IdentityTransmission>()
-        //    ;
-
         builder.Services.KladrRegisterMqListeners();
         #endregion
         builder.Services
@@ -131,8 +125,7 @@ public class Program
             tracing.AddSource($"OTel.{appName}");
         });
 
-
-        var host = builder.Build();
+        IHost host = builder.Build();
         host.Run();
     }
 }

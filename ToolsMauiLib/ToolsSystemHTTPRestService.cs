@@ -2,12 +2,12 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstants;
 using System.Net.Http.Json;
 using Newtonsoft.Json;
+using ToolsMauiApp;
 using System.Text;
 using SharedLib;
-using static SharedLib.GlobalStaticConstants;
-using ToolsMauiApp;
 
 namespace ToolsMauiLib;
 
