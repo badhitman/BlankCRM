@@ -1,5 +1,6 @@
 ﻿@using SharedLib
 @using System.Data
+@using System.Text
 @using ToolsMauiLib
 
 <div class="ms-2 me-auto">
@@ -9,7 +10,7 @@
 <span title="последнее изменение" class="badge text-bg-primary rounded-pill">@FileViewElement.LastModified</span>
 
 @if (DemoTable.Columns is not null)
-{
+{    
     <table class="table">
         <thead>
             <tr>

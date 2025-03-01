@@ -8,6 +8,7 @@ using MudBlazor.Services;
 using ToolsMauiLib;
 using SharedLib;
 using DbcLib;
+using System.Text;
 
 namespace ToolsMauiApp;
 
@@ -19,7 +20,7 @@ public static class MauiProgram
     {
         MauiAppBuilder builder = MauiApp.CreateBuilder();
         //
-
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         builder.Services.AddDbContextFactory<ToolsAppContext>(opt =>
         {
 #if DEBUG

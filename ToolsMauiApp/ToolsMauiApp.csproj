@@ -70,6 +70,9 @@
 		<PackageReference Include="CommunityToolkit.Maui" Version="11.0.0" />
 		<PackageReference Include="MudBlazor" Version="8.2.0" />
 		<PackageReference Include="System.Private.Uri" Version="4.3.2" />
+		<PackageReference Include="System.Text.Encoding" Version="4.3.0" />
+		<PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.2" />
+		<PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />
 		<PackageReference Include="System.Text.Json" Version="9.0.2" />
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
 	</ItemGroup>

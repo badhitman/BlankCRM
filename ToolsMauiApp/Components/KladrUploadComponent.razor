@@ -1,59 +1,8 @@
-﻿@using BlazorLib
+﻿@using System.Text
+@using BlazorLib
 @using SharedLib
 
 @inherits BlazorBusyComponentBaseModel
-
-<h3>Классификатор адресов</h3>
-<p>Загрузка данных КЛАДР 4.0 на удалённый сервер</p>
-
-@if (IsBusyProgress)
-{
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Temporary</th>
-                <th scope="col">Production</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">KLADR</th>
-                <td>@tmp?.ObjectsCount</td>
-                <td>@prod?.ObjectsCount</td>
-            </tr>
-            <tr>
-                <th scope="row">STREET</th>
-                <td>@tmp?.StreetsCount</td>
-                <td>@prod?.StreetsCount</td>
-            </tr>
-            <tr>
-                <th scope="row">DOMA</th>
-                <td>@tmp?.DomaCount</td>
-                <td>@prod?.DomaCount</td>
-            </tr>
-            <tr>
-                <th scope="row">NAMEMAP</th>
-                <td>@tmp?.NamesCount</td>
-                <td>@prod?.NamesCount</td>
-            </tr>
-            <tr>
-                <th scope="row">SOCRBASE</th>
-                <td>@tmp?.SocrbasesCount</td>
-                <td>@prod?.SocrbasesCount</td>
-            </tr>
-            <tr>
-                <th scope="row">ALTNAMES</th>
-                <td>@tmp?.AltnamesCount</td>
-                <td>@prod?.AltnamesCount</td>
-            </tr>
-        </tbody>
-    </table>
-}
 
 <label for="exampleFormControlInputFile" class="form-label">Добавьте файлы классификатора (*.dbf):</label>
 <div class="input-group mb-3">
@@ -67,12 +16,19 @@ else
 
 @if (loadedFiles.Count != 0)
 {
+    <MudSelect T="string" Label="Кодировка" @bind-Value="SelectedEncoding">
+        @foreach (EncodingInfo enc in Encoding.GetEncodings())
+        {
+            <MudSelectItem T="string" Value="@enc.Name">@enc.Name</MudSelectItem>
+        }
+    </MudSelect>
+    <br />
     <code>Выбранные файлы (@(GlobalTools.SizeDataAsString(loadedFiles.Sum(x => x.Size)))):</code>
     <ol class="list-group list-group-numbered mb-2">
         @foreach (IBrowserFile FileViewElement in loadedFiles)
         {
             <li class="list-group-item d-flex justify-content-between align-items-start">
-                <KladrFileViewComponent FileViewElement="FileViewElement" />
+                <KladrFileViewComponent FileViewElement="FileViewElement" InitHandle="InitHandleAction" />
             </li>
         }
     </ol>

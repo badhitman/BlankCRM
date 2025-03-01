@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components.Forms;
 using BlazorLib;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
@@ -21,7 +21,26 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
     private string _inputFileId = Guid.NewGuid().ToString();
     private readonly List<IBrowserFile> loadedFiles = [];
 
-    MetadataKladrModel? tmp, prod;
+    List<KladrFileViewComponent> ViewsChilds = [];
+
+    string _value = "cp866";
+    string SelectedEncoding
+    {
+        get => _value;
+        set
+        {
+            _value = value;
+            foreach (KladrFileViewComponent item in ViewsChilds)
+            {
+                InvokeAsync(async () => { await item.SeedDemo(_value); });
+            }
+        }
+    }
+
+    void InitHandleAction(KladrFileViewComponent sender)
+    {
+        ViewsChilds.Add(sender);
+    }
 
     void SelectFilesChange(InputFileChangeEventArgs e)
     {
@@ -58,14 +77,4 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
         await SetBusy(false);
     }
 
-    /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-
-        await SetBusy();
-        await Task.WhenAll([Task.Run(async () => tmp = await remoteClient.GetMetadataKladr(new() { ForTemporary = true })),
-            Task.Run(async () => prod = await remoteClient.GetMetadataKladr(new() { ForTemporary = false }))]);
-        await SetBusy(false);
-    }
 }

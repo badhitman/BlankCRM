@@ -12,7 +12,7 @@ namespace ToolsMauiLib;
 
 public partial class ParseDBF
 {
-    public Encoding CurrentEncoding { get; set; } = Encoding.Default;
+    public Encoding CurrentEncoding { get; set; } = Encoding.GetEncoding("cp866");
 
     BinaryReader? recReader;
     byte[]? buffer;
