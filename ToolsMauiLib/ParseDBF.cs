@@ -10,62 +10,66 @@ using SharedLib;
 
 namespace ToolsMauiLib;
 
-public partial class ToolParseDBF
+public partial class ParseDBF
 {
     public Encoding CurrentEncoding { get; set; } = Encoding.Default;
 
-    BinaryReader recReader;
-    readonly BinaryReader br;
-    byte[] buffer;
+    BinaryReader? recReader;
+    byte[]? buffer;
+    ArrayList? Columns;
 
     string? year, month, day;
     long lDate, lTime;
-    int fieldIndex, cur_num_row;
+    int fieldIndex, cur_num_row, dbfHeaderSize, FieldDescriptorHeaderSize;
 
     GCHandle handle;
     DBFHeader header;
 
-    readonly ArrayList Columns;
-    readonly List<object[]> DataList;
-    readonly DataTable DataTableCache;
+    List<object[]>? DataList;
+    DataTable? DataTableCache;
 
+    MemoryStream? DbfFile;
 
-    readonly bool _dataBaseReady = false;
-    public bool DataBaseReady => _dataBaseReady && br?.BaseStream.CanRead == true;
-    public bool CanReadNextRow => DataBaseReady && cur_num_row < CountRows;
-
-    public long LengthFile => DataBaseReady && br is not null
-        ? br.BaseStream.Length
-        : -1;
-
-    public int CountRows => DataBaseReady
-        ? header.numRecords
-        : -1;
-
-    public ToolParseDBF(string dbfFile)
+    public async Task Init(Stream _dbfFile)
     {
-        if (!File.Exists(dbfFile))
-            throw new FileNotFoundException($"Файл dbf не найден: {dbfFile}", dbfFile);
-
         DataTableCache = new DataTable();
-        br = new BinaryReader(File.OpenRead(dbfFile));
-        buffer = br.ReadBytes(Marshal.SizeOf<DBFHeader>());
+
+        DbfFile = new();
+        await _dbfFile.CopyToAsync(DbfFile);
+        DbfFile.Seek(0, SeekOrigin.Begin);
+
+        dbfHeaderSize = Marshal.SizeOf<DBFHeader>();
+        FieldDescriptorHeaderSize = Marshal.SizeOf<FieldDescriptor>();
+
+        DataList = new List<object[]>(header.numRecords);
+
+        buffer = new byte[dbfHeaderSize];
+        await DbfFile.ReadExactlyAsync(buffer, 0, dbfHeaderSize);
 
         handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
         header = Marshal.PtrToStructure<DBFHeader>(handle.AddrOfPinnedObject());
         handle.Free();
 
         Columns = [];
-        while (13 != br.PeekChar())
+        buffer = new byte[1];
+        await DbfFile.ReadExactlyAsync(buffer, 0, 1);
+
+        while (buffer.Length == 1 && 13 != buffer[0])
         {
-            buffer = br.ReadBytes(Marshal.SizeOf<FieldDescriptor>());
+            DbfFile.Seek(DbfFile.Position - 1, SeekOrigin.Begin);
+            buffer = new byte[FieldDescriptorHeaderSize];
+            await DbfFile.ReadExactlyAsync(buffer, 0, FieldDescriptorHeaderSize);
+
             handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
             Columns.Add(Marshal.PtrToStructure<FieldDescriptor>(handle.AddrOfPinnedObject()));
             handle.Free();
+            buffer = new byte[1];
+            await DbfFile.ReadExactlyAsync(buffer, 0, 1);
         }
 
-        br.BaseStream.Seek(header.headerLen + 1, SeekOrigin.Begin);
-        buffer = br.ReadBytes(header.recordLen);
+        DbfFile.Seek(header.headerLen + 1, SeekOrigin.Begin);
+        buffer = new byte[header.recordLen];
+        await DbfFile.ReadExactlyAsync(buffer, 0, header.recordLen);
         recReader = new BinaryReader(new MemoryStream(buffer));
         foreach (FieldDescriptor field in Columns)
         {
@@ -73,8 +77,6 @@ public partial class ToolParseDBF
             DataColumn col = new(field.fieldName, typeof(string));
             DataTableCache.Columns.Add(col);
         }
-        DataList = new List<object[]>(CountRows);
-        _dataBaseReady = true;
     }
 
     /// <summary>
@@ -82,33 +84,40 @@ public partial class ToolParseDBF
     /// </summary>
     /// <param name="limit_row"></param>
     /// <returns></returns>
-    public DataTable GetRandomRowsAsDataTable(int limit_row, bool del_row_inc = true)
+    public async Task<(DataTable TableData, ArrayList Columns)> GetRandomRowsAsDataTable(int limit_row, bool del_row_inc = true)
     {
+        if (DbfFile is null)
+            throw new Exception("db file not set");
+
+        if (DataTableCache is null)
+            throw new Exception("data table not init");
+
+        if (Columns is null)
+            throw new Exception("columns table not created");
+
         DataTableCache.Rows.Clear();
 
-        if (!DataBaseReady)
-            throw new Exception("DataBase not ready");
-
-        if (CountRows <= 0)
-            return StructureDB;
+        if (header.numRecords <= 0)
+            return (StructureDB, Columns);
 
         if (limit_row <= 5)
             limit_row = 5;
-        if (CountRows < limit_row)
-            limit_row = CountRows;
+        if (header.numRecords < limit_row)
+            limit_row = header.numRecords;
 
         limit_row = Math.Min(55, limit_row);
 
-        long old_file_position = br.BaseStream.Position;
-        br.BaseStream.Seek(header.headerLen, SeekOrigin.Begin);
+        long old_file_position = DbfFile.Position;
+        DbfFile.Seek(header.headerLen, SeekOrigin.Begin);
         Random rnd = new();
-        rnd.Next(0, CountRows - 1);
+        rnd.Next(0, header.numRecords - 1);
         DataRow row;
         for (int counter = 0; counter <= limit_row; counter++)
         {
-            long random_position_row = rnd.Next(0, CountRows - 1) * header.recordLen;
-            br.BaseStream.Position = header.headerLen + random_position_row;
-            buffer = br.ReadBytes(header.recordLen);
+            long random_position_row = rnd.Next(0, header.numRecords - 1) * header.recordLen;
+            DbfFile.Seek(header.headerLen + random_position_row, SeekOrigin.Begin);
+            buffer = new byte[header.recordLen];
+            await DbfFile.ReadExactlyAsync(buffer, 0, header.recordLen);
             recReader = new BinaryReader(new MemoryStream(buffer));
             if (recReader.ReadChar() == '*')
             {
@@ -193,22 +202,35 @@ public partial class ToolParseDBF
             recReader.Close();
             DataTableCache.Rows.Add(row);
         }
-        br.BaseStream.Seek(old_file_position, SeekOrigin.Begin);
-        return DataTableCache;
+        DbfFile.Seek(old_file_position, SeekOrigin.Begin);
+        return (DataTableCache, Columns);
     }
 
-    public void Transit(bool inc_del)
+    public async Task Transit(bool inc_del)
     {
+        if (DbfFile is null)
+            throw new Exception("db file not set");
+
+        if (DataTableCache is null)
+            throw new Exception("data table not init");
+
+        if (Columns is null)
+            throw new Exception("columns table not created");
+
+        DataList ??= [];
+        DataTableCache.Rows.Clear();
+
         //string table_name = "table_" + new System.Text.RegularExpressions.Regex(@"\W").Replace(System.IO.Path.GetFileName(FileOutputName), "_");        
-        br.BaseStream.Seek(header.headerLen, SeekOrigin.Begin);
+        DbfFile.Seek(header.headerLen, SeekOrigin.Begin);
         string[] s_row;
         int data_list_Count = 0, del_rows_count = 0;
 
         byte[] readed_data_tmp;
-        for (int counter = 0; counter <= CountRows - 1; counter++)
+        for (int counter = 0; counter <= header.numRecords - 1; counter++)
         {
             cur_num_row = counter;
-            buffer = br.ReadBytes(header.recordLen);
+            buffer = new byte[header.recordLen];
+            await DbfFile.ReadExactlyAsync(buffer, 0, header.recordLen);
             if (buffer.Length == 0)
             {
                 return;
@@ -398,7 +420,7 @@ public partial class ToolParseDBF
         get
         {
             DataTable empty_dt = new();
-            if (!DataBaseReady || DataTableCache is null)
+            if (DataTableCache is null)
                 return empty_dt;
 
             foreach (DataColumn col in DataTableCache.Columns)
