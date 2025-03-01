@@ -8,11 +8,12 @@ using ToolsMauiLib;
 using System.Collections;
 using System.Data;
 using System.Text;
+using BlazorLib;
 
 namespace ToolsMauiApp.Components;
 
 /// <inheritdoc/>
-public partial class KladrFileViewComponent
+public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
 {
     /// <summary>
     /// FileViewElement
@@ -32,11 +33,12 @@ public partial class KladrFileViewComponent
     /// <inheritdoc/>
     public async Task SeedDemo(string value = "cp866")
     {
+        await SetBusy();
         using Stream sm = FileViewElement.OpenReadStream(long.MaxValue);
         ParseDBF parser = new() { CurrentEncoding = Encoding.GetEncoding(value) };
         await parser.Init(sm);
-        DemoTable = await parser.GetRandomRowsAsDataTable(10);
-        StateHasChanged();
+        DemoTable = await parser.GetRandomRowsAsDataTable(5);
+        await SetBusy(false);
     }
 
     /// <inheritdoc/>

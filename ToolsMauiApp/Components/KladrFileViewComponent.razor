@@ -1,16 +1,25 @@
-﻿@using SharedLib
+﻿@using BlazorLib
+@using SharedLib
 @using System.Data
 @using System.Text
 @using ToolsMauiLib
 
+@inherits BlazorBusyComponentBaseModel
+
 <div class="ms-2 me-auto">
-    <div class="fw-bold">@FileViewElement.Name</div>
+    <div class="fw-bold">@FileViewElement.Name
+    @if (IsBusyProgress)
+    {
+        <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+    }</div>
     @GlobalTools.SizeDataAsString(FileViewElement.Size)
 </div>
-<span title="последнее изменение" class="badge text-bg-primary rounded-pill">@FileViewElement.LastModified</span>
+<span title="последнее изменение" class="badge text-bg-primary rounded-pill">
+    @FileViewElement.LastModified
+</span>
 
 @if (DemoTable.Columns is not null)
-{    
+{
     <table class="table">
         <thead>
             <tr>

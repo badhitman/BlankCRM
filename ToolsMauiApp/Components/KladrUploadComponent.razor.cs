@@ -30,10 +30,10 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
         set
         {
             _value = value;
-            foreach (KladrFileViewComponent item in ViewsChilds)
-            {
-                InvokeAsync(async () => { await item.SeedDemo(_value); });
-            }
+
+            InvokeAsync(async () => await SetBusy());            
+            InvokeAsync(async () => await Task.WhenAll(ViewsChilds.Select(x => Task.Run(async () => await x.SeedDemo(_value)))));
+            InvokeAsync(async () => await SetBusy(false));
         }
     }
 
