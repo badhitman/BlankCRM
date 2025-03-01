@@ -2,9 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components;
+using BlazorLib;
 using SharedLib;
 
 namespace ToolsMauiApp.Components;
@@ -14,14 +13,10 @@ namespace ToolsMauiApp.Components;
 /// </summary>
 public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
 {
-    [Inject]
-    IClientHTTPRestService remoteClient { get; set; } = default!;
-
-
     private string _inputFileId = Guid.NewGuid().ToString();
     private readonly List<IBrowserFile> loadedFiles = [];
 
-    List<KladrFileViewComponent> ViewsChilds = [];
+    private readonly List<KladrFileViewComponent> ViewsChilds = [];
 
     string _value = "cp866";
     string SelectedEncoding
@@ -31,7 +26,7 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
         {
             _value = value;
 
-            InvokeAsync(async () => await SetBusy());            
+            InvokeAsync(async () => await SetBusy());
             InvokeAsync(async () => await Task.WhenAll(ViewsChilds.Select(x => Task.Run(async () => await x.SeedDemo(_value)))));
             InvokeAsync(async () => await SetBusy(false));
         }
@@ -57,24 +52,11 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
             throw new Exception();
 
         await SetBusy();
-        //MemoryStream ms;
-        foreach (IBrowserFile fileBrowser in loadedFiles)
-        {
-            //ms = new();
-            //await fileBrowser.OpenReadStream(maxAllowedSize: 1024 * 18 * 1024).CopyToAsync(ms);
-
-            //    req.Payload = ms.ToArray();
-            //    req.ContentType = fileBrowser.ContentType;
-            //    req.FileName = fileBrowser.Name;
-
-            //await ms.DisposeAsync();
-            //    res = await FilesRepo.SaveFile(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
-            //    SnackbarRepo.ShowMessagesResponse(res.Messages);
-        }
-
+        await Task.WhenAll(ViewsChilds.Select(x => Task.Run(async () => await x.UploadData())));
         loadedFiles.Clear();
         _inputFileId = Guid.NewGuid().ToString();
         await SetBusy(false);
     }
 
+    
 }

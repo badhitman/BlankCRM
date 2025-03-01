@@ -5,10 +5,9 @@
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
 using ToolsMauiLib;
-using System.Collections;
-using System.Data;
 using System.Text;
 using BlazorLib;
+using SharedLib;
 
 namespace ToolsMauiApp.Components;
 
@@ -28,17 +27,22 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     public required Action<KladrFileViewComponent> InitHandle { get; set; }
 
 
-    (DataTable TableData, ArrayList Columns) DemoTable = default!;
+    (List<object[]> TableData, FieldDescriptorBase[] Columns) DemoTable = default!;
+
+    string currentEncoding = "cp866";
 
     /// <inheritdoc/>
-    public async Task SeedDemo(string value = "cp866")
+    public async Task SeedDemo(string enc = "cp866")
     {
+        currentEncoding = enc;
         await SetBusy();
         using Stream sm = FileViewElement.OpenReadStream(long.MaxValue);
-        ParseDBF parser = new() { CurrentEncoding = Encoding.GetEncoding(value) };
+        ParseDBF parser = new() { CurrentEncoding = Encoding.GetEncoding(currentEncoding) };
         await parser.Init(sm);
         DemoTable = await parser.GetRandomRowsAsDataTable(5);
-        await SetBusy(false);
+        //(List<object[]> TableData, SharedLib.FieldDescriptorBase[] Columns) v = await parser.GetRandomRowsAsDataTable(5);
+        //string v = JsonConvert.SerializeObject(DemoTable.Columns.ToArray().Cast<FieldDescriptor>().Select(x => new { x.fieldName, x.fieldType, x.fieldLen }));
+
     }
 
     /// <inheritdoc/>
@@ -47,5 +51,27 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
         await base.OnInitializedAsync();
         await SeedDemo();
         InitHandle(this);
+    }
+
+    /// <inheritdoc/>
+    public async Task UploadData()
+    {
+        await SetBusy();
+        using Stream sm = FileViewElement.OpenReadStream(long.MaxValue);
+        ParseDBF parser = new() { CurrentEncoding = Encoding.GetEncoding(currentEncoding) };
+        await parser.Init(sm);
+        await parser.UploadData(true, UploadPart, FinishUpload);
+        await SetBusy(false);
+    }
+
+    // List<object[]> TableData
+    async void UploadPart(FieldDescriptorBase[] Columns, List<object[]> tableData)
+    {
+
+    }
+
+    async void FinishUpload(int totalRows)
+    {
+
     }
 }

@@ -10,6 +10,16 @@ namespace SharedLib;
 public class UploadPartTempKladrModel
 {
     /// <summary>
+    /// Columns
+    /// </summary>
+    public FieldDescriptorBase[]? Columns { get; set; }
+
+    /// <summary>
+    /// RowsData
+    /// </summary>
+    public List<object[]>? RowsData { get; set; }
+    /*
+    /// <summary>
     /// Altnames
     /// </summary>
     public AltnameKLADRModel[]? AltnamesPart { get; set; }
@@ -37,5 +47,5 @@ public class UploadPartTempKladrModel
     /// <summary>
     /// Houses
     /// </summary>
-    public HouseKLADRModel[]? HousesPart { get; set; }
+    public HouseKLADRModel[]? HousesPart { get; set; }*/
 }

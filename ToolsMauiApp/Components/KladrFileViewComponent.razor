@@ -7,38 +7,40 @@
 @inherits BlazorBusyComponentBaseModel
 
 <div class="ms-2 me-auto">
-    <div class="fw-bold">@FileViewElement.Name
-    @if (IsBusyProgress)
-    {
-        <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
-    }</div>
+    <div class="fw-bold">
+        @FileViewElement.Name
+        @if (IsBusyProgress)
+        {
+            <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+        }
+    </div>
     @GlobalTools.SizeDataAsString(FileViewElement.Size)
+    @if (DemoTable.Columns is not null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    @foreach (FieldDescriptorBase col in DemoTable.Columns)
+                    {
+                        <th scope="col">@col.FieldName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (object[] row in DemoTable.TableData)
+                {
+                    int i = 0;
+                    <tr>
+                        @foreach (FieldDescriptorBase col in DemoTable.Columns)
+                        {
+                            <td>@row[i++].ToString()</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
 <span title="последнее изменение" class="badge text-bg-primary rounded-pill">
     @FileViewElement.LastModified
 </span>
-
-@if (DemoTable.Columns is not null)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                @foreach (FieldDescriptor col in DemoTable.Columns)
-                {
-                    <th scope="col">@col.fieldName</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (DataRow row in DemoTable.TableData.Rows)
-            {
-                <tr>
-                    @foreach (FieldDescriptor col in DemoTable.Columns)
-                    {
-                        <td>@row[col.fieldName].ToString()</td>
-                    }
-                </tr>
-            }
-        </tbody>
-    </table>
-}

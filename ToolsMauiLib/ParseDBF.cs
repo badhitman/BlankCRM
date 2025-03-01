@@ -5,7 +5,6 @@
 using System.Runtime.InteropServices;
 using System.Collections;
 using System.Text;
-using System.Data;
 using SharedLib;
 
 namespace ToolsMauiLib;
@@ -16,7 +15,7 @@ public partial class ParseDBF
 
     BinaryReader? recReader;
     byte[]? buffer;
-    ArrayList? Columns;
+    readonly ArrayList Columns = [];
 
     string? year, month, day;
     long lDate, lTime;
@@ -25,15 +24,12 @@ public partial class ParseDBF
     GCHandle handle;
     DBFHeader header;
 
-    List<object[]>? DataList;
-    DataTable? DataTableCache;
+    readonly List<object[]> DataList = [];
 
     MemoryStream? DbfFile;
 
     public async Task Init(Stream _dbfFile)
     {
-        DataTableCache = new DataTable();
-
         DbfFile = new();
         await _dbfFile.CopyToAsync(DbfFile);
         DbfFile.Seek(0, SeekOrigin.Begin);
@@ -41,7 +37,7 @@ public partial class ParseDBF
         dbfHeaderSize = Marshal.SizeOf<DBFHeader>();
         FieldDescriptorHeaderSize = Marshal.SizeOf<FieldDescriptor>();
 
-        DataList = new List<object[]>(header.numRecords);
+        DataList.Clear();
 
         buffer = new byte[dbfHeaderSize];
         await DbfFile.ReadExactlyAsync(buffer, 0, dbfHeaderSize);
@@ -50,7 +46,7 @@ public partial class ParseDBF
         header = Marshal.PtrToStructure<DBFHeader>(handle.AddrOfPinnedObject());
         handle.Free();
 
-        Columns = [];
+        Columns.Clear();
         buffer = new byte[1];
         await DbfFile.ReadExactlyAsync(buffer, 0, 1);
 
@@ -74,8 +70,8 @@ public partial class ParseDBF
         foreach (FieldDescriptor field in Columns)
         {
             //number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
-            DataColumn col = new(field.fieldName, typeof(string));
-            DataTableCache.Columns.Add(col);
+            //DataColumn col = new(field.fieldName, typeof(string));
+            //DataTableCache.Columns.Add(col);
         }
     }
 
@@ -84,21 +80,18 @@ public partial class ParseDBF
     /// </summary>
     /// <param name="limit_row"></param>
     /// <returns></returns>
-    public async Task<(DataTable TableData, ArrayList Columns)> GetRandomRowsAsDataTable(int limit_row, bool del_row_inc = true)
+    public async Task<(List<object[]> TableData, FieldDescriptorBase[] Columns)> GetRandomRowsAsDataTable(int limit_row, bool del_row_inc = true)
     {
         if (DbfFile is null)
             throw new Exception("db file not set");
 
-        if (DataTableCache is null)
-            throw new Exception("data table not init");
-
-        if (Columns is null)
-            throw new Exception("columns table not created");
-
-        DataTableCache.Rows.Clear();
-
+        DataList.Clear();
+        FieldDescriptor[] _fields;
         if (header.numRecords <= 0)
-            return (StructureDB, Columns);
+        {
+            _fields = [.. Columns.ToArray().Cast<FieldDescriptor>()];
+            return (DataList, _fields.Select(FieldDescriptorBase.Build).ToArray());
+        }
 
         if (limit_row <= 5)
             limit_row = 5;
@@ -111,7 +104,7 @@ public partial class ParseDBF
         DbfFile.Seek(header.headerLen, SeekOrigin.Begin);
         Random rnd = new();
         rnd.Next(0, header.numRecords - 1);
-        DataRow row;
+        //DataRow row;
         for (int counter = 0; counter <= limit_row; counter++)
         {
             long random_position_row = rnd.Next(0, header.numRecords - 1) * header.recordLen;
@@ -125,7 +118,7 @@ public partial class ParseDBF
                     continue;
             }
             fieldIndex = 0;
-            row = DataTableCache.NewRow();
+
             foreach (FieldDescriptor field in Columns)
             {
                 switch (field.fieldType)
@@ -134,29 +127,29 @@ public partial class ParseDBF
                         string number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
                         if (IsNumber(number))
                         {
-                            row[fieldIndex] = number;
+                            //row[fieldIndex] = number;
                         }
                         else
                         {
-                            row[fieldIndex] = "0";
+                            //row[fieldIndex] = "0";
                         }
                         break;
                     case 'C': // String
-                        row[fieldIndex] = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));//row[fieldIndex] = CurrEnc.GetString(recReader.ReadBytes(field.fieldLen));
+                        //row[fieldIndex] = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));//row[fieldIndex] = CurrEnc.GetString(recReader.ReadBytes(field.fieldLen));
                         break;
 
                     case 'D': // Date (YYYYMMDD)
                         year = CurrentEncoding.GetString(recReader.ReadBytes(4));
                         month = CurrentEncoding.GetString(recReader.ReadBytes(2));
                         day = CurrentEncoding.GetString(recReader.ReadBytes(2));
-                        row[fieldIndex] = DBNull.Value;
+                        //row[fieldIndex] = DBNull.Value;
                         try
                         {
                             if (IsNumber(year) && IsNumber(month) && IsNumber(day))
                             {
                                 if (int.Parse(year) > 1900)
                                 {
-                                    row[fieldIndex] = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day)).ToString();
+                                    //row[fieldIndex] = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day)).ToString();
                                 }
                             }
                         }
@@ -170,17 +163,17 @@ public partial class ParseDBF
                         // Time is hours * 3600000L + minutes * 60000L + Seconds * 1000L (Milliseconds since midnight)
                         lDate = recReader.ReadInt32();
                         lTime = recReader.ReadInt32() * 10000L;
-                        row[fieldIndex] = JulianToDateTime(lDate).AddTicks(lTime).ToString();
+                        //row[fieldIndex] = JulianToDateTime(lDate).AddTicks(lTime).ToString();
                         break;
 
                     case 'L': // Boolean (Y/N)
                         if ('Y' == recReader.ReadByte())
                         {
-                            row[fieldIndex] = "true";
+                            //row[fieldIndex] = "true";
                         }
                         else
                         {
-                            row[fieldIndex] = "false";
+                            //row[fieldIndex] = "false";
                         }
 
                         break;
@@ -189,36 +182,37 @@ public partial class ParseDBF
                         number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
                         if (IsNumber(number))
                         {
-                            row[fieldIndex] = number;
+                            //row[fieldIndex] = number;
                         }
                         else
                         {
-                            row[fieldIndex] = "0.0";
+                            //row[fieldIndex] = "0.0";
                         }
                         break;
                 }
                 fieldIndex++;
             }
             recReader.Close();
-            DataTableCache.Rows.Add(row);
+            //DataTableCache.Rows.Add(row);
         }
         DbfFile.Seek(old_file_position, SeekOrigin.Begin);
-        return (DataTableCache, Columns);
+        _fields = [.. Columns.ToArray().Cast<FieldDescriptor>()];
+
+        return (DataList, _fields.Select(FieldDescriptorBase.Build).ToArray());
     }
 
-    public async Task Transit(bool inc_del)
+    public async Task UploadData(bool inc_del, Action<FieldDescriptorBase[], List<object[]>> uploadPart, Action<int> finishUpload)
     {
         if (DbfFile is null)
             throw new Exception("db file not set");
 
-        if (DataTableCache is null)
+        if (DataList is null)
             throw new Exception("data table not init");
 
         if (Columns is null)
             throw new Exception("columns table not created");
 
-        DataList ??= [];
-        DataTableCache.Rows.Clear();
+        DataList.Clear();
 
         //string table_name = "table_" + new System.Text.RegularExpressions.Regex(@"\W").Replace(System.IO.Path.GetFileName(FileOutputName), "_");        
         DbfFile.Seek(header.headerLen, SeekOrigin.Begin);
@@ -331,27 +325,9 @@ public partial class ParseDBF
 
             }
         }
-
-        //if (fsWrite != null)
-        //    fsWrite.Close();
-        //else
-        //    my_stream.Close();
     }
 
-    /*private void WriteXML(string[] s_arr)
-    {
-        string result_string = "<row ";
-        int field_index = -1;
-        int s_arr_Length = s_arr.Length - 1;
-        foreach (FieldDescriptor field in fields)
-        {
-            field_index++;
-            result_string += field.fieldName + "=\"" + s_arr[field_index] + "\"\t";
-            if (field_index == s_arr_Length)
-                result_string = result_string.TrimEnd() + "/>";
-        }
-        //bw.Write(g.StringToByte("\t\t" + result_string + "\n"));
-    }
+    /*
     private string NamesFieldsSQL(bool ForCreateTable, string separator = ", ", string quote = "`")
     {
         string returned_data = "";
@@ -400,35 +376,7 @@ public partial class ParseDBF
         return returned_data;
     }
 
-    void Write(string[] strings, string separator = ", ", string left_blok = "(", string right_blok = "),")
-    {
-        //string result_string = left_blok;
-        //foreach (string s in strings)
-        //    result_string += s + separator;
-        //result_string = result_string.Trim();
-        //result_string = result_string.Substring(0, result_string.Length - 1);
-        //result_string += right_blok;
-        //result_string = result_string.Trim();
-        //if (fsWrite != null)
-        //    fsWrite.WriteLine(result_string);
-        //else
-        //    bw.Write(g.StringToByte(result_string + "\n"));
-    }*/
-
-    public DataTable StructureDB
-    {
-        get
-        {
-            DataTable empty_dt = new();
-            if (DataTableCache is null)
-                return empty_dt;
-
-            foreach (DataColumn col in DataTableCache.Columns)
-                empty_dt.Columns.Add(new DataColumn(col.ColumnName, col.DataType));
-
-            return empty_dt;
-        }
-    }
+    */
 
     static bool IsNumber(string numberString)
     {

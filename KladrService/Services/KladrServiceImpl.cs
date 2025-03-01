@@ -64,23 +64,23 @@ public class KladrServiceImpl(
     {
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
 
-        if(req.StreetsPart is not null && req.StreetsPart.Length != 0)
-         await context.temp_StreetsKLADR.AddRangeAsync(req.StreetsPart.Select(StreetKLADRModelDB.Build));
+        //if(req.StreetsPart is not null && req.StreetsPart.Length != 0)
+        // await context.temp_StreetsKLADR.AddRangeAsync(req.StreetsPart.Select(StreetKLADRModelDB.Build));
 
-        if (req.SocrbasesPart is not null && req.SocrbasesPart.Length != 0)
-            await context.temp_SocrbasesKLADR.AddRangeAsync(req.SocrbasesPart.Select(SocrbaseKLADRModelDB.Build));
+        //if (req.SocrbasesPart is not null && req.SocrbasesPart.Length != 0)
+        //    await context.temp_SocrbasesKLADR.AddRangeAsync(req.SocrbasesPart.Select(SocrbaseKLADRModelDB.Build));
 
-        if (req.ObjectsPart is not null && req.ObjectsPart.Length != 0)
-            await context.temp_ObjectsKLADR.AddRangeAsync(req.ObjectsPart.Select(ObjectKLADRModelDB.Build));
+        //if (req.ObjectsPart is not null && req.ObjectsPart.Length != 0)
+        //    await context.temp_ObjectsKLADR.AddRangeAsync(req.ObjectsPart.Select(ObjectKLADRModelDB.Build));
 
-        if (req.NamesPart is not null && req.NamesPart.Length != 0)
-            await context.temp_NamesMapsKLADR.AddRangeAsync(req.NamesPart.Select(NameMapKLADRModelDB.Build));
+        //if (req.NamesPart is not null && req.NamesPart.Length != 0)
+        //    await context.temp_NamesMapsKLADR.AddRangeAsync(req.NamesPart.Select(NameMapKLADRModelDB.Build));
 
-        if (req.AltnamesPart is not null && req.AltnamesPart.Length != 0)
-            await context.temp_AltnamesKLADR.AddRangeAsync(req.AltnamesPart.Select(AltnameKLADRModelDB.Build));
+        //if (req.AltnamesPart is not null && req.AltnamesPart.Length != 0)
+        //    await context.temp_AltnamesKLADR.AddRangeAsync(req.AltnamesPart.Select(AltnameKLADRModelDB.Build));
 
-        if (req.HousesPart is not null && req.HousesPart.Length != 0)
-            await context.temp_HousesKLADR.AddRangeAsync(req.HousesPart.Select(HouseKLADRModelDB.Build));
+        //if (req.HousesPart is not null && req.HousesPart.Length != 0)
+        //    await context.temp_HousesKLADR.AddRangeAsync(req.HousesPart.Select(HouseKLADRModelDB.Build));
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
