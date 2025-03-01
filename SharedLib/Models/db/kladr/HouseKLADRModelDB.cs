@@ -2,29 +2,26 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
-/// <inheritdoc/>
-[Index(nameof(STATUS))]
-public class ObjectKLADRModelDB : RootKLADRModelDB
+/// <summary>
+/// Дом
+/// </summary>
+public class HouseKLADRModelDB : RootKLADRModelDB
 {
     /// <inheritdoc/>
-    [Required, StringLength(1)]
-    public required string STATUS { get; set; }
+    public required string KORP { get; set; }
 
     /// <inheritdoc/>
-    public static ObjectKLADRModelDB Build(ObjectKLADRModel x)
+    public static HouseKLADRModelDB Build(HouseKLADRModel x)
     {
         return new()
         {
-            STATUS = x.STATUS,
-
             CODE = x.CODE,
             GNINMB = x.GNINMB,
             INDEX = x.INDEX,
+            KORP = x.KORP,
             NAME = x.NAME,
             OCATD = x.OCATD,
             SOCR = x.SOCR,

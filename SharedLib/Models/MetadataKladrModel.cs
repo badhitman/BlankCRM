@@ -33,4 +33,9 @@ public class MetadataKladrModel : ResponseBaseModel
     /// Streets
     /// </summary>
     public int StreetsCount { get; set; }
+
+    /// <summary>
+    /// Streets
+    /// </summary>
+    public int DomaCount { get; set; }
 }

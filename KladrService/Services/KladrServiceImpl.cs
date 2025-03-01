@@ -28,6 +28,7 @@ public class KladrServiceImpl(
                 ObjectsCount = await context.temp_ObjectsKLADR.CountAsync(),
                 SocrbasesCount = await context.temp_SocrbasesKLADR.CountAsync(),
                 StreetsCount = await context.temp_StreetsKLADR.CountAsync(),
+                DomaCount = await context.temp_HousesKLADR.CountAsync(),
             };
         }
 
@@ -38,6 +39,7 @@ public class KladrServiceImpl(
             ObjectsCount = await context.ObjectsKLADR.CountAsync(),
             SocrbasesCount = await context.SocrbasesKLADR.CountAsync(),
             StreetsCount = await context.StreetsKLADR.CountAsync(),
+            DomaCount = await context.HousesKLADR.CountAsync(),
         };
     }
 
@@ -52,6 +54,7 @@ public class KladrServiceImpl(
         await context.temp_ObjectsKLADR.ExecuteDeleteAsync();
         await context.temp_NamesMapsKLADR.ExecuteDeleteAsync();
         await context.temp_AltnamesKLADR.ExecuteDeleteAsync();
+        await context.temp_HousesKLADR.ExecuteDeleteAsync();
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
@@ -75,7 +78,10 @@ public class KladrServiceImpl(
 
         if (req.AltnamesPart is not null && req.AltnamesPart.Length != 0)
             await context.temp_AltnamesKLADR.AddRangeAsync(req.AltnamesPart.Select(AltnameKLADRModelDB.Build));
-         
+
+        if (req.HousesPart is not null && req.HousesPart.Length != 0)
+            await context.temp_HousesKLADR.AddRangeAsync(req.HousesPart.Select(HouseKLADRModelDB.Build));
+
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 }

@@ -14,63 +14,40 @@ public partial class ToolParseDBF
 {
     public Encoding CurrentEncoding { get; set; } = Encoding.Default;
 
-    BinaryReader recReader, br;
+    BinaryReader recReader;
+    readonly BinaryReader br;
     byte[] buffer;
 
-    string? number, year, month, day;
+    string? year, month, day;
     long lDate, lTime;
     int fieldIndex, cur_num_row;
-
-    ArrayList fields;
-    List<object[]>? data_list;
 
     GCHandle handle;
     DBFHeader header;
 
-    DataTable dt;
-    DataRow? row;
+    readonly ArrayList Columns;
+    readonly List<object[]> DataList;
+    readonly DataTable DataTableCache;
 
 
-    private readonly bool _dataBaseReady = false;
+    readonly bool _dataBaseReady = false;
     public bool DataBaseReady => _dataBaseReady && br?.BaseStream.CanRead == true;
+    public bool CanReadNextRow => DataBaseReady && cur_num_row < CountRows;
 
-    public long Length_File
-    {
-        get
-        {
-            if (!DataBaseReady || br is null)
-                return -1;
+    public long LengthFile => DataBaseReady && br is not null
+        ? br.BaseStream.Length
+        : -1;
 
-            return ((FileStream)br.BaseStream).Length;
-        }
-    }
-    public int CountRows
-    {
-        get
-        {
-            if (!DataBaseReady)
-                return -1;
-
-            return header.numRecords;
-        }
-    }
-    public bool CanReadNextRow
-    {
-        get
-        {
-            if (!DataBaseReady)
-                return false;
-
-            return cur_num_row < CountRows;
-        }
-    }
+    public int CountRows => DataBaseReady
+        ? header.numRecords
+        : -1;
 
     public ToolParseDBF(string dbfFile)
     {
         if (!File.Exists(dbfFile))
             throw new FileNotFoundException($"Файл dbf не найден: {dbfFile}", dbfFile);
 
-        dt = new DataTable();
+        DataTableCache = new DataTable();
         br = new BinaryReader(File.OpenRead(dbfFile));
         buffer = br.ReadBytes(Marshal.SizeOf<DBFHeader>());
 
@@ -78,84 +55,162 @@ public partial class ToolParseDBF
         header = Marshal.PtrToStructure<DBFHeader>(handle.AddrOfPinnedObject());
         handle.Free();
 
-        fields = [];
+        Columns = [];
         while (13 != br.PeekChar())
         {
             buffer = br.ReadBytes(Marshal.SizeOf<FieldDescriptor>());
             handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-            fields.Add(Marshal.PtrToStructure<FieldDescriptor>(handle.AddrOfPinnedObject()));
+            Columns.Add(Marshal.PtrToStructure<FieldDescriptor>(handle.AddrOfPinnedObject()));
             handle.Free();
         }
 
-        ((FileStream)br.BaseStream).Seek(header.headerLen + 1, SeekOrigin.Begin);
+        br.BaseStream.Seek(header.headerLen + 1, SeekOrigin.Begin);
         buffer = br.ReadBytes(header.recordLen);
         recReader = new BinaryReader(new MemoryStream(buffer));
-        foreach (FieldDescriptor field in fields)
+        foreach (FieldDescriptor field in Columns)
         {
-            number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
+            //number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
             DataColumn col = new(field.fieldName, typeof(string));
-            dt.Columns.Add(col);
+            DataTableCache.Columns.Add(col);
         }
-        data_list = new List<object[]>(CountRows);
+        DataList = new List<object[]>(CountRows);
         _dataBaseReady = true;
     }
 
-    public void SaveAs(string FileOutputName, string type_file, bool inc_del, Action<int, string> UpdateStatus)
+    /// <summary>
+    /// Не более 55
+    /// </summary>
+    /// <param name="limit_row"></param>
+    /// <returns></returns>
+    public DataTable GetRandomRowsAsDataTable(int limit_row, bool del_row_inc = true)
     {
-        string table_name = "table_" + new System.Text.RegularExpressions.Regex(@"\W").Replace(System.IO.Path.GetFileName(FileOutputName), "_");
-        type_file = type_file.ToLower();
-        if (type_file != "my.sql" && type_file != "csv" && type_file != "xml")
+        DataTableCache.Rows.Clear();
+
+        if (!DataBaseReady)
+            throw new Exception("DataBase not ready");
+
+        if (CountRows <= 0)
+            return StructureDB;
+
+        if (limit_row <= 5)
+            limit_row = 5;
+        if (CountRows < limit_row)
+            limit_row = CountRows;
+
+        limit_row = Math.Min(55, limit_row);
+
+        long old_file_position = br.BaseStream.Position;
+        br.BaseStream.Seek(header.headerLen, SeekOrigin.Begin);
+        Random rnd = new();
+        rnd.Next(0, CountRows - 1);
+        DataRow row;
+        for (int counter = 0; counter <= limit_row; counter++)
         {
-            //System.Windows.MessageBox.Show(OwnerWin, "Не известный тип сохраняемого файла", "Ошибка");
-            return;
+            long random_position_row = rnd.Next(0, CountRows - 1) * header.recordLen;
+            br.BaseStream.Position = header.headerLen + random_position_row;
+            buffer = br.ReadBytes(header.recordLen);
+            recReader = new BinaryReader(new MemoryStream(buffer));
+            if (recReader.ReadChar() == '*')
+            {
+                if (!del_row_inc)
+                    continue;
+            }
+            fieldIndex = 0;
+            row = DataTableCache.NewRow();
+            foreach (FieldDescriptor field in Columns)
+            {
+                switch (field.fieldType)
+                {
+                    case 'N':  // Number
+                        string number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
+                        if (IsNumber(number))
+                        {
+                            row[fieldIndex] = number;
+                        }
+                        else
+                        {
+                            row[fieldIndex] = "0";
+                        }
+                        break;
+                    case 'C': // String
+                        row[fieldIndex] = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));//row[fieldIndex] = CurrEnc.GetString(recReader.ReadBytes(field.fieldLen));
+                        break;
+
+                    case 'D': // Date (YYYYMMDD)
+                        year = CurrentEncoding.GetString(recReader.ReadBytes(4));
+                        month = CurrentEncoding.GetString(recReader.ReadBytes(2));
+                        day = CurrentEncoding.GetString(recReader.ReadBytes(2));
+                        row[fieldIndex] = DBNull.Value;
+                        try
+                        {
+                            if (IsNumber(year) && IsNumber(month) && IsNumber(day))
+                            {
+                                if (int.Parse(year) > 1900)
+                                {
+                                    row[fieldIndex] = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day)).ToString();
+                                }
+                            }
+                        }
+                        catch
+                        { }
+
+                        break;
+
+                    case 'T': // Timestamp, 8 bytes - two integers, first for date, second for time
+                        // Date is the number of days since 01/01/4713 BC (Julian Days)
+                        // Time is hours * 3600000L + minutes * 60000L + Seconds * 1000L (Milliseconds since midnight)
+                        lDate = recReader.ReadInt32();
+                        lTime = recReader.ReadInt32() * 10000L;
+                        row[fieldIndex] = JulianToDateTime(lDate).AddTicks(lTime).ToString();
+                        break;
+
+                    case 'L': // Boolean (Y/N)
+                        if ('Y' == recReader.ReadByte())
+                        {
+                            row[fieldIndex] = "true";
+                        }
+                        else
+                        {
+                            row[fieldIndex] = "false";
+                        }
+
+                        break;
+
+                    case 'F':
+                        number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
+                        if (IsNumber(number))
+                        {
+                            row[fieldIndex] = number;
+                        }
+                        else
+                        {
+                            row[fieldIndex] = "0.0";
+                        }
+                        break;
+                }
+                fieldIndex++;
+            }
+            recReader.Close();
+            DataTableCache.Rows.Add(row);
         }
-        //my_stream = new FileStream(FileOutputName, FileMode.Create, FileAccess.Write);
-        //if (type_file == "csv")
-        //    fsWrite = new StreamWriter(my_stream, Encoding.UTF8, 1024 * 64);
-        //bw = new BinaryWriter(my_stream);
-        //switch (type_file)
-        //{
-        //    case "my.sql":
-        //        bw.Write(g.StringToByte(
-        //        "-- DBF - conversion  into XML, SQL, CSV, ..." + "\n" +
-        //        "-- " + g.preficsBildProgramm + "\n" +
-        //        "-- https://sourceforge.net/projects/dbf-to-mysql-csv-xml/" + "\n" +
-        //        "-- Datetime create dump: " + DateTime.Now.ToString("dd MM yyyy | HH:mm:ss") + "\n" +
-        //        "/*!50503 SET NAMES utf8mb4 */;" + "\n" +
-        //        "-- --------------------------------------------------------" + "\n" +
-        //        "-- " + "\n" +
-        //        "-- `" + table_name + "`\n" +
-        //        "-- " + "\n" +
-        //        "" + "\n" +
-        //        "CREATE TABLE IF NOT EXISTS `" + table_name + "` (" + "\n" +
-        //        fields_as_string_for_create + "\n" +
-        //        ") ENGINE=MyISAM DEFAULT CHARSET=utf8;" + "\n" + "\n" +
-        //        "-- " + "\n" +
-        //        "-- Dump data table `" + table_name + "` (" + CountRows + " Records)" + "\n" +
-        //        "-- " + "\n" + "\n"));
-        //        break;
-        //    case "csv":
-        //        fsWrite.WriteLine(NamesFieldsSQL(false, ";", ""));
-        //        break;
-        //    case "xml":
-        //        bw.Write(g.StringToByte("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n\t<" + new System.Text.RegularExpressions.Regex(@"\W").Replace(System.IO.Path.GetFileNameWithoutExtension(FileOutputName), "_") + ">\n"));
-        //        break;
-        //}
-        
-        //my_stream.Close();
-        ((FileStream)br.BaseStream).Seek(header.headerLen, SeekOrigin.Begin);
+        br.BaseStream.Seek(old_file_position, SeekOrigin.Begin);
+        return DataTableCache;
+    }
+
+    public void Transit(bool inc_del)
+    {
+        //string table_name = "table_" + new System.Text.RegularExpressions.Regex(@"\W").Replace(System.IO.Path.GetFileName(FileOutputName), "_");        
+        br.BaseStream.Seek(header.headerLen, SeekOrigin.Begin);
         string[] s_row;
         int data_list_Count = 0, del_rows_count = 0;
 
         byte[] readed_data_tmp;
         for (int counter = 0; counter <= CountRows - 1; counter++)
         {
-            cur_num_row = counter ;
+            cur_num_row = counter;
             buffer = br.ReadBytes(header.recordLen);
             if (buffer.Length == 0)
             {
-                FlushData(type_file, table_name);
-                //fsWrite.Close();
                 return;
             }
 
@@ -167,14 +222,14 @@ public partial class ToolParseDBF
                     continue;
             }
             fieldIndex = 0;
-            s_row = new string[fields.Count];
-            foreach (FieldDescriptor field in fields)
+            s_row = new string[Columns.Count];
+            foreach (FieldDescriptor field in Columns)
             {
                 readed_data_tmp = recReader.ReadBytes(field.fieldLen);
                 switch (field.fieldType)
                 {
                     case 'N':
-                        number = CurrentEncoding.GetString(readed_data_tmp);
+                        string number = CurrentEncoding.GetString(readed_data_tmp);
                         if (IsNumber(number))
                         {
                             s_row[fieldIndex] = number;
@@ -246,160 +301,19 @@ public partial class ToolParseDBF
             }
             recReader.Close();
             data_list_Count++;
-            data_list.Add(s_row);
+            DataList.Add(s_row);
             if (data_list_Count > 5000)
             {
                 data_list_Count = 0;
-                FlushData(type_file, table_name);
-                int curr_count_data_lines = data_list.Count;
-                //OwnerWin.Dispatcher.Invoke(UpdateStatus, new object[] { counter, string.Format(g.dict["MessParseCountRows"].ToString() + (del_rows_count > 0 ? g.dict["MessParseCountDeletedRows"].ToString() : "") + " " + g.dict["MessParseCounSizeOtputFile"].ToString(), counter, g.SizeFileAsString(bw.BaseStream.Length), del_rows_count) });
+                int curr_count_data_lines = DataList.Count;
+
             }
         }
-        FlushData(type_file, table_name);
 
         //if (fsWrite != null)
         //    fsWrite.Close();
         //else
         //    my_stream.Close();
-    }
-
-    private void FlushData(string type_file, string table_name)
-    {
-        if (data_list.Count == 0)
-            return;
-
-        //if (type_file == "my.sql")
-        //    bw.Write(g.StringToByte("INSERT INTO `" + table_name + "` (" + fields_as_string_for_insert + ") VALUES\n"));
-        //int data_list_count = data_list.Count;
-        //foreach (string[] s in data_list)
-        //{
-        //    data_list_count--;
-        //    if (type_file == "my.sql")
-        //        Write(s, ", ", "(", ")" + (data_list_count == 0 ? ";" : ","));
-        //    else if (type_file == "csv")
-        //        Write(s, ";", "", "");
-        //    else
-        //        WriteXML(s);
-        //}
-        data_list.Clear();
-    }
-
-    /// <summary>
-    /// Не более 55
-    /// </summary>
-    /// <param name="limit_row"></param>
-    /// <returns></returns>
-    public DataTable GetRandomRowsAsDataTable(int limit_row, bool del_row_inc = true)
-    {
-        if (!DataBaseReady)
-            return new DataTable();
-
-        if (CountRows <= 0)
-            return StructureDB;
-
-        if (limit_row <= 5)
-            limit_row = 5;
-        if (CountRows < limit_row)
-            limit_row = CountRows;
-
-        limit_row = Math.Min(55, limit_row);
-
-        dt.Rows.Clear();
-        long old_file_position = ((FileStream)br.BaseStream).Position;
-        ((FileStream)br.BaseStream).Seek(header.headerLen, SeekOrigin.Begin);
-        Random rnd = new();
-        rnd.Next(0, CountRows - 1);
-        for (int counter = 0; counter <= limit_row; counter++)
-        {
-            long random_position_row = (rnd.Next(0, CountRows - 1) * header.recordLen);
-            br.BaseStream.Position = (header.headerLen + random_position_row);
-            buffer = br.ReadBytes(header.recordLen);
-            recReader = new BinaryReader(new MemoryStream(buffer));
-            if (recReader.ReadChar() == '*')
-            {
-                if (!del_row_inc)
-                    continue;
-            }
-            fieldIndex = 0;
-            row = dt.NewRow();
-            foreach (FieldDescriptor field in fields)
-            {
-                switch (field.fieldType)
-                {
-                    case 'N':  // Number
-                        number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
-                        if (IsNumber(number))
-                        {
-                            row[fieldIndex] = number;
-                        }
-                        else
-                        {
-                            row[fieldIndex] = "0";
-                        }
-                        break;
-                    case 'C': // String
-                        row[fieldIndex] = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));//row[fieldIndex] = CurrEnc.GetString(recReader.ReadBytes(field.fieldLen));
-                        break;
-
-                    case 'D': // Date (YYYYMMDD)
-                        year = CurrentEncoding.GetString(recReader.ReadBytes(4));
-                        month = CurrentEncoding.GetString(recReader.ReadBytes(2));
-                        day = CurrentEncoding.GetString(recReader.ReadBytes(2));
-                        row[fieldIndex] = DBNull.Value;
-                        try
-                        {
-                            if (IsNumber(year) && IsNumber(month) && IsNumber(day))
-                            {
-                                if (int.Parse(year) > 1900)
-                                {
-                                    row[fieldIndex] = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day)).ToString();
-                                }
-                            }
-                        }
-                        catch
-                        { }
-
-                        break;
-
-                    case 'T': // Timestamp, 8 bytes - two integers, first for date, second for time
-                        // Date is the number of days since 01/01/4713 BC (Julian Days)
-                        // Time is hours * 3600000L + minutes * 60000L + Seconds * 1000L (Milliseconds since midnight)
-                        lDate = recReader.ReadInt32();
-                        lTime = recReader.ReadInt32() * 10000L;
-                        row[fieldIndex] = JulianToDateTime(lDate).AddTicks(lTime).ToString();
-                        break;
-
-                    case 'L': // Boolean (Y/N)
-                        if ('Y' == recReader.ReadByte())
-                        {
-                            row[fieldIndex] = "true";
-                        }
-                        else
-                        {
-                            row[fieldIndex] = "false";
-                        }
-
-                        break;
-
-                    case 'F':
-                        number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
-                        if (IsNumber(number))
-                        {
-                            row[fieldIndex] = number;
-                        }
-                        else
-                        {
-                            row[fieldIndex] = "0.0";
-                        }
-                        break;
-                }
-                fieldIndex++;
-            }
-            recReader.Close();
-            dt.Rows.Add(row);
-        }
-        ((FileStream)br.BaseStream).Seek(old_file_position, SeekOrigin.Begin);
-        return dt;
     }
 
     /*private void WriteXML(string[] s_arr)
@@ -484,10 +398,10 @@ public partial class ToolParseDBF
         get
         {
             DataTable empty_dt = new();
-            if (!DataBaseReady || dt is null)
+            if (!DataBaseReady || DataTableCache is null)
                 return empty_dt;
 
-            foreach (DataColumn col in dt.Columns)
+            foreach (DataColumn col in DataTableCache.Columns)
                 empty_dt.Columns.Add(new DataColumn(col.ColumnName, col.DataType));
 
             return empty_dt;

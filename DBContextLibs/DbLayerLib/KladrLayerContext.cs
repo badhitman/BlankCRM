@@ -59,6 +59,8 @@ public partial class KladrLayerContext : DbContext
     /// <inheritdoc/>
     public DbSet<StreetKLADRModelDB> StreetsKLADR { get; set; } = default!;
 
+    /// <inheritdoc/>
+    public DbSet<HouseKLADRModelDB> HousesKLADR { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -75,4 +77,7 @@ public partial class KladrLayerContext : DbContext
 
     /// <inheritdoc/>
     public DbSet<StreetKLADRModelDB> temp_StreetsKLADR { get; set; } = default!;
+
+    /// <inheritdoc/>
+    public DbSet<HouseKLADRModelDB> temp_HousesKLADR { get; set; } = default!;
 }

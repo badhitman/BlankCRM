@@ -33,4 +33,9 @@ public class UploadPartTempKladrModel
     /// Streets
     /// </summary>
     public RootKLADRModel[]? StreetsPart { get; set; }
+
+    /// <summary>
+    /// Houses
+    /// </summary>
+    public HouseKLADRModel[]? HousesPart { get; set; }
 }

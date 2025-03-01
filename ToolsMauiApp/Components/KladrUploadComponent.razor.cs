@@ -21,10 +21,11 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
     private string _inputFileId = Guid.NewGuid().ToString();
     private readonly List<IBrowserFile> loadedFiles = [];
 
+    MetadataKladrModel? tmp, prod;
+
     void SelectFilesChange(InputFileChangeEventArgs e)
     {
         loadedFiles.Clear();
-
         foreach (IBrowserFile file in e.GetMultipleFiles())
         {
             loadedFiles.Add(file);
@@ -54,6 +55,17 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
 
         loadedFiles.Clear();
         _inputFileId = Guid.NewGuid().ToString();
+        await SetBusy(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await SetBusy();
+        await Task.WhenAll([Task.Run(async () => tmp = await remoteClient.GetMetadataKladr(new() { ForTemporary = true })),
+            Task.Run(async () => prod = await remoteClient.GetMetadataKladr(new() { ForTemporary = false }))]);
         await SetBusy(false);
     }
 }

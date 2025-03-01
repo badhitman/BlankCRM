@@ -5,7 +5,56 @@
 
 <h3>Классификатор адресов</h3>
 <p>Загрузка данных КЛАДР 4.0 на удалённый сервер</p>
-<hr class="mt-3" />
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Temporary</th>
+                <th scope="col">Production</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">KLADR</th>
+                <td>@tmp?.ObjectsCount</td>
+                <td>@prod?.ObjectsCount</td>
+            </tr>
+            <tr>
+                <th scope="row">STREET</th>
+                <td>@tmp?.StreetsCount</td>
+                <td>@prod?.StreetsCount</td>
+            </tr>
+            <tr>
+                <th scope="row">DOMA</th>
+                <td>@tmp?.DomaCount</td>
+                <td>@prod?.DomaCount</td>
+            </tr>
+            <tr>
+                <th scope="row">NAMEMAP</th>
+                <td>@tmp?.NamesCount</td>
+                <td>@prod?.NamesCount</td>
+            </tr>
+            <tr>
+                <th scope="row">SOCRBASE</th>
+                <td>@tmp?.SocrbasesCount</td>
+                <td>@prod?.SocrbasesCount</td>
+            </tr>
+            <tr>
+                <th scope="row">ALTNAMES</th>
+                <td>@tmp?.AltnamesCount</td>
+                <td>@prod?.AltnamesCount</td>
+            </tr>
+        </tbody>
+    </table>
+}
+
 <label for="exampleFormControlInputFile" class="form-label">Добавьте файлы классификатора (*.dbf):</label>
 <div class="input-group mb-3">
     <InputFile @key=@(_inputFileId) class="form-control" OnChange="SelectFilesChange" id="exampleFormControlInputFile" multiple />
