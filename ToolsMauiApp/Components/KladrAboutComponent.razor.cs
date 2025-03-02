@@ -14,7 +14,7 @@ namespace ToolsMauiApp.Components;
 public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IClientHTTPRestService remoteClient { get; set; } = default!;
+    IClientHTTPRestService RemoteClient { get; set; } = default!;
 
 
     MetadataKladrModel? tmp, prod;
@@ -25,8 +25,8 @@ public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
         await base.OnInitializedAsync();
 
         await SetBusy();
-        await Task.WhenAll([Task.Run(async () => tmp = await remoteClient.GetMetadataKladr(new() { ForTemporary = true })),
-            Task.Run(async () => prod = await remoteClient.GetMetadataKladr(new() { ForTemporary = false }))]);
+        await Task.WhenAll([Task.Run(async () => tmp = await RemoteClient.GetMetadataKladr(new() { ForTemporary = true })),
+            Task.Run(async () => prod = await RemoteClient.GetMetadataKladr(new() { ForTemporary = false }))]);
         await SetBusy(false);
     }
 }

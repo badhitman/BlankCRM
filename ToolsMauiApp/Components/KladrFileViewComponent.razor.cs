@@ -14,6 +14,10 @@ namespace ToolsMauiApp.Components;
 /// <inheritdoc/>
 public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
 {
+    [Inject]
+    IClientHTTPRestService RemoteClient { get; set; } = default!;
+
+
     /// <summary>
     /// FileViewElement
     /// </summary>
@@ -38,7 +42,7 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
         await SetBusy();
         using Stream sm = FileViewElement.OpenReadStream(long.MaxValue);
         ParseDBF parser = new() { CurrentEncoding = Encoding.GetEncoding(currentEncoding) };
-        await parser.Init(sm);
+        await parser.Open(sm);
         DemoTable = await parser.GetRandomRowsAsDataTable(5);
         //(List<object[]> TableData, SharedLib.FieldDescriptorBase[] Columns) v = await parser.GetRandomRowsAsDataTable(5);
         //string v = JsonConvert.SerializeObject(DemoTable.Columns.ToArray().Cast<FieldDescriptor>().Select(x => new { x.fieldName, x.fieldType, x.fieldLen }));
@@ -59,15 +63,14 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
         await SetBusy();
         using Stream sm = FileViewElement.OpenReadStream(long.MaxValue);
         ParseDBF parser = new() { CurrentEncoding = Encoding.GetEncoding(currentEncoding) };
-        await parser.Init(sm);
+        await parser.Open(sm);
         await parser.UploadData(true, UploadPart, FinishUpload);
         await SetBusy(false);
     }
 
-    // List<object[]> TableData
     async void UploadPart(FieldDescriptorBase[] Columns, List<object[]> tableData)
     {
-
+        _ = await RemoteClient.UploadPartTempKladr(new() { Columns = Columns, RowsData = tableData });
     }
 
     async void FinishUpload(int totalRows)

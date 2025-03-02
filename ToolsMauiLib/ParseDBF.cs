@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Collections;
 using System.Text;
 using SharedLib;
+using System.Globalization;
 
 namespace ToolsMauiLib;
 
@@ -28,7 +29,7 @@ public partial class ParseDBF
 
     MemoryStream? DbfFile;
 
-    public async Task Init(Stream _dbfFile)
+    public async Task Open(Stream _dbfFile)
     {
         DbfFile = new();
         await _dbfFile.CopyToAsync(DbfFile);
@@ -216,7 +217,7 @@ public partial class ParseDBF
 
         //string table_name = "table_" + new System.Text.RegularExpressions.Regex(@"\W").Replace(System.IO.Path.GetFileName(FileOutputName), "_");        
         DbfFile.Seek(header.headerLen, SeekOrigin.Begin);
-        string[] s_row;
+        object[] s_row;
         int data_list_Count = 0, del_rows_count = 0;
 
         byte[] readed_data_tmp;
@@ -238,7 +239,7 @@ public partial class ParseDBF
                     continue;
             }
             fieldIndex = 0;
-            s_row = new string[Columns.Count];
+            s_row = new object[Columns.Count];
             foreach (FieldDescriptor field in Columns)
             {
                 readed_data_tmp = recReader.ReadBytes(field.fieldLen);
@@ -246,38 +247,53 @@ public partial class ParseDBF
                 {
                     case 'N':
                         string number = CurrentEncoding.GetString(readed_data_tmp);
+
                         if (IsNumber(number))
                         {
-                            s_row[fieldIndex] = number;
+                            if (field.count > 0)
+                                s_row[fieldIndex] = double.Parse(number);
+                            else
+                            {
+                                number = number
+                                    .Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)
+                                    .Replace(",", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+
+                                s_row[fieldIndex] = int.Parse(number);
+                            }
                         }
                         else
                         {
-                            s_row[fieldIndex] = "0";
+                            s_row[fieldIndex] = 0;
                         }
                         break;
+                    case 'F':
+                        number = CurrentEncoding.GetString(readed_data_tmp);
+                        if (IsNumber(number))
+                        {
+                            number = number
+                                    .Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)
+                                    .Replace(",", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+
+                            s_row[fieldIndex] = decimal.Parse(number);
+                        }
+                        else
+                            s_row[fieldIndex] = 0.0;
+
+                        break;
                     case 'C':
-                        //if (type_file == "my.sql")
-                        //    s_row[fieldIndex] = "'" + g.MySQLEscape(CurrentEncoding.GetString(readed_data_tmp)) + "'";
-                        //else if (type_file == "csv")
-                        //    s_row[fieldIndex] = g.CSVEscape(CurrentEncoding.GetString(readed_data_tmp));
-                        //else if (type_file == "xml")
-                        //    s_row[fieldIndex] = CurrentEncoding.GetString(readed_data_tmp).Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;").Replace("'", "&apos;");
-                        //else
-                        //    throw new NotImplementedException();
+                        s_row[fieldIndex] = CurrentEncoding.GetString(readed_data_tmp);
                         break;
                     case 'D': // Date (YYYYMMDD)
                         year = CurrentEncoding.GetString(readed_data_tmp.SubArray(0, 4));
                         month = CurrentEncoding.GetString(readed_data_tmp.SubArray(4, 2));
                         day = CurrentEncoding.GetString(readed_data_tmp.SubArray(6, 2));
-                        s_row[fieldIndex] = "''";
+                        // s_row[fieldIndex] = ' ';
                         try
                         {
                             if (IsNumber(year) && IsNumber(month) && IsNumber(day))
                             {
-                                if ((int.Parse(year) > 1900))
-                                {
-                                    s_row[fieldIndex] = "'" + new DateTime(int.Parse(year), int.Parse(month), int.Parse(day)).ToString() + "'";
-                                }
+                                if (int.Parse(year) > 1900)
+                                    s_row[fieldIndex] = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
                             }
                         }
                         catch
@@ -288,29 +304,12 @@ public partial class ParseDBF
                         // Time is hours * 3600000L + minutes * 60000L + Seconds * 1000L (Milliseconds since midnight)
                         lDate = BitConverter.ToInt32(readed_data_tmp, 0);
                         lTime = BitConverter.ToInt32(readed_data_tmp, 4);
-                        s_row[fieldIndex] = JulianToDateTime(lDate).AddTicks(lTime).ToString();
+                        s_row[fieldIndex] = JulianToDateTime(lDate).AddTicks(lTime);
                         break;
                     case 'L': // Boolean (Y/N)
-                        if (CurrentEncoding.GetString(readed_data_tmp).ToUpper() == "T")
-                        {
-                            s_row[fieldIndex] = "1";
-                        }
-                        else
-                        {
-                            s_row[fieldIndex] = "0";
-                        }
-
-                        break;
-                    case 'F':
-                        number = CurrentEncoding.GetString(readed_data_tmp);
-                        if (IsNumber(number))
-                        {
-                            s_row[fieldIndex] = number;
-                        }
-                        else
-                        {
-                            s_row[fieldIndex] = "0.0";
-                        }
+                        s_row[fieldIndex] =
+                            CurrentEncoding.GetString(readed_data_tmp).Equals("T", StringComparison.OrdinalIgnoreCase) ||
+                            CurrentEncoding.GetString(readed_data_tmp).Equals("Y", StringComparison.OrdinalIgnoreCase);
                         break;
                 }
                 fieldIndex++;
@@ -321,19 +320,22 @@ public partial class ParseDBF
             if (data_list_Count > 5000)
             {
                 data_list_Count = 0;
-                int curr_count_data_lines = DataList.Count;
-
+                uploadPart([.. Columns.Cast<FieldDescriptorBase>()], DataList);
+                DataList.Clear();
             }
+        }
+        if (DataList.Count != 0)
+        {
+            uploadPart([.. Columns.Cast<FieldDescriptorBase>()], DataList);
+            DataList.Clear();
         }
     }
 
     /*
     private string NamesFieldsSQL(bool ForCreateTable, string separator = ", ", string quote = "`")
     {
-        string returned_data = "";
         foreach (FieldDescriptor field in fields)
         {
-            string type_data = quote + field.fieldName + quote;
             if (ForCreateTable)
             {
                 switch (field.fieldType)
@@ -371,9 +373,7 @@ public partial class ParseDBF
                 returned_data += type_data + separator;
 
         }
-        returned_data = returned_data.Trim();
-        returned_data = returned_data.Substring(0, returned_data.Length - 1);
-        return returned_data;
+        
     }
 
     */

@@ -4,7 +4,6 @@
 
 using Microsoft.AspNetCore.Components.Forms;
 using BlazorLib;
-using SharedLib;
 
 namespace ToolsMauiApp.Components;
 

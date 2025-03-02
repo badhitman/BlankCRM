@@ -12,12 +12,12 @@ public class UploadPartTempKladrModel
     /// <summary>
     /// Columns
     /// </summary>
-    public FieldDescriptorBase[]? Columns { get; set; }
+    public required FieldDescriptorBase[] Columns { get; set; }
 
     /// <summary>
     /// RowsData
     /// </summary>
-    public List<object[]>? RowsData { get; set; }
+    public required List<object[]> RowsData { get; set; }
     /*
     /// <summary>
     /// Altnames
