@@ -52,9 +52,9 @@ public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
         //        Logger.LogDebug($"{nameof(SetBusy)}:{is_busy}");
         //#endif
         _isBusyProgress = is_busy;
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
         await Task.Delay(1, token);
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
     }
 
     /// <summary>

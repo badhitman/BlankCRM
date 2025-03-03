@@ -22,7 +22,10 @@
                 <tr>
                     @foreach (FieldDescriptorBase col in DemoTable.Columns)
                     {
-                        <th scope="col">@col.FieldName</th>
+                        <th scope="col">
+                            @col.FieldName
+                            <sup title="Тип данных (и длина)" class="ms-1">@col.FieldType (@col.FieldLen)</sup>
+                        </th>
                     }
                 </tr>
             </thead>

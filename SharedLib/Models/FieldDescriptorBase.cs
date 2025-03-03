@@ -23,9 +23,15 @@ public struct FieldDescriptorBase
     {
         return new()
         {
-            FieldLen = x.fieldLen,
             FieldName = x.fieldName,
-            FieldType = x.fieldType
+            FieldType = x.fieldType,
+            FieldLen = x.fieldLen,
         };
+    }
+
+    /// <inheritdoc/>
+    public override readonly string ToString()
+    {
+        return $"{FieldName} /{FieldType} ({FieldLen})";
     }
 }

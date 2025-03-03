@@ -15,7 +15,7 @@ namespace ToolsMauiApp.Components;
 public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IClientHTTPRestService RemoteClient { get; set; } = default!;
+    ParseDBF parser { get; set; } = default!;
 
 
     /// <summary>
@@ -40,13 +40,12 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     {
         currentEncoding = enc;
         await SetBusy();
-        using Stream sm = FileViewElement.OpenReadStream(long.MaxValue);
-        ParseDBF parser = new() { CurrentEncoding = Encoding.GetEncoding(currentEncoding) };
-        await parser.Open(sm);
+        MemoryStream ms = new();
+        await FileViewElement.OpenReadStream(long.MaxValue).CopyToAsync(ms);
+        parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
+        await parser.Open(ms);
         DemoTable = await parser.GetRandomRowsAsDataTable(5);
-        //(List<object[]> TableData, SharedLib.FieldDescriptorBase[] Columns) v = await parser.GetRandomRowsAsDataTable(5);
-        //string v = JsonConvert.SerializeObject(DemoTable.Columns.ToArray().Cast<FieldDescriptor>().Select(x => new { x.fieldName, x.fieldType, x.fieldLen }));
-
+        await SetBusy(false);
     }
 
     /// <inheritdoc/>
@@ -61,20 +60,11 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     public async Task UploadData()
     {
         await SetBusy();
-        using Stream sm = FileViewElement.OpenReadStream(long.MaxValue);
-        ParseDBF parser = new() { CurrentEncoding = Encoding.GetEncoding(currentEncoding) };
-        await parser.Open(sm);
-        await parser.UploadData(true, UploadPart, FinishUpload);
+        MemoryStream ms = new();
+        await FileViewElement.OpenReadStream(long.MaxValue).CopyToAsync(ms);
+        parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
+        //await parser.Open(ms);
+        await parser.UploadData(true);
         await SetBusy(false);
-    }
-
-    async void UploadPart(FieldDescriptorBase[] Columns, List<object[]> tableData)
-    {
-        _ = await RemoteClient.UploadPartTempKladr(new() { Columns = Columns, RowsData = tableData });
-    }
-
-    async void FinishUpload(int totalRows)
-    {
-
     }
 }

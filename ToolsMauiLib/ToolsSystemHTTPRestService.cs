@@ -54,7 +54,6 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect) : HttpC
         HttpResponseMessage response = await httpClient.PostAsync(routeUri, form);
 
         response.EnsureSuccessStatusCode();
-        httpClient.Dispose();
         string rj = await response.Content.ReadAsStringAsync();
 
         return JsonConvert.DeserializeObject<ResponseBaseModel>(rj)!;
@@ -135,7 +134,6 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect) : HttpC
         }
 
         using HttpClient httpClient = GetClient();
-
         MultipartFormDataContent form = new()
         {
             { new ByteArrayContent(bytes, 0, bytes.Length), "uploadedFile", fileScopeName }
@@ -147,7 +145,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect) : HttpC
         HttpResponseMessage response = await httpClient.PostAsync(routeUri, form);
 
         response.EnsureSuccessStatusCode();
-        httpClient.Dispose();
+        
         string sd = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<TResponseModel<string>>(sd)!;
     }
@@ -163,7 +161,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect) : HttpC
 
         HttpResponseMessage response = await httpClient.DeleteAsync(routeUri);
         response.EnsureSuccessStatusCode();
-        httpClient.Dispose();
+        
         string sd = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<ResponseBaseModel>(sd)!;
     }
@@ -176,7 +174,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect) : HttpC
 
         HttpResponseMessage response = await httpClient.PostAsJsonAsync(routeUri, req);
         response.EnsureSuccessStatusCode();
-        httpClient.Dispose();
+        
         string sd = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<MetadataKladrModel>(sd)!;
     }
@@ -189,7 +187,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect) : HttpC
 
         HttpResponseMessage response = await httpClient.PostAsJsonAsync(routeUri, req);
         response.EnsureSuccessStatusCode();
-        httpClient.Dispose();
+        
         string sd = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<ResponseBaseModel>(sd)!;
     }

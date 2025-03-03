@@ -10,17 +10,16 @@ using System.Globalization;
 
 namespace ToolsMauiLib;
 
-public partial class ParseDBF
+public partial class ParseDBF(IClientHTTPRestService RemoteClient)
 {
     public Encoding CurrentEncoding { get; set; } = Encoding.GetEncoding("cp866");
 
-    BinaryReader? recReader;
     byte[]? buffer;
     readonly ArrayList Columns = [];
 
     string? year, month, day;
     long lDate, lTime;
-    int fieldIndex, cur_num_row, dbfHeaderSize, FieldDescriptorHeaderSize;
+    int fieldIndex, dbfHeaderSize, FieldDescriptorHeaderSize;
 
     GCHandle handle;
     DBFHeader header;
@@ -29,10 +28,9 @@ public partial class ParseDBF
 
     MemoryStream? DbfFile;
 
-    public async Task Open(Stream _dbfFile)
+    public async Task Open(MemoryStream _dbfFile)
     {
-        DbfFile = new();
-        await _dbfFile.CopyToAsync(DbfFile);
+        DbfFile = _dbfFile;
         DbfFile.Seek(0, SeekOrigin.Begin);
 
         dbfHeaderSize = Marshal.SizeOf<DBFHeader>();
@@ -65,15 +63,15 @@ public partial class ParseDBF
         }
 
         DbfFile.Seek(header.headerLen + 1, SeekOrigin.Begin);
-        buffer = new byte[header.recordLen];
-        await DbfFile.ReadExactlyAsync(buffer, 0, header.recordLen);
-        recReader = new BinaryReader(new MemoryStream(buffer));
-        foreach (FieldDescriptor field in Columns)
-        {
-            //number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
-            //DataColumn col = new(field.fieldName, typeof(string));
-            //DataTableCache.Columns.Add(col);
-        }
+        /*buffer = new byte[header.recordLen];
+       await DbfFile.ReadExactlyAsync(buffer, 0, header.recordLen);
+      recReader = new BinaryReader(new MemoryStream(buffer));
+       foreach (FieldDescriptor field in Columns)
+       {
+           //number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
+           //DataColumn col = new(field.fieldName, typeof(string));
+           //DataTableCache.Columns.Add(col);
+       }*/
     }
 
     /// <summary>
@@ -105,7 +103,8 @@ public partial class ParseDBF
         DbfFile.Seek(header.headerLen, SeekOrigin.Begin);
         Random rnd = new();
         rnd.Next(0, header.numRecords - 1);
-        //DataRow row;
+        object[] s_row;
+        BinaryReader recReader;
         for (int counter = 0; counter <= limit_row; counter++)
         {
             long random_position_row = rnd.Next(0, header.numRecords - 1) * header.recordLen;
@@ -119,7 +118,7 @@ public partial class ParseDBF
                     continue;
             }
             fieldIndex = 0;
-
+            s_row = new object[Columns.Count];
             foreach (FieldDescriptor field in Columns)
             {
                 switch (field.fieldType)
@@ -127,30 +126,26 @@ public partial class ParseDBF
                     case 'N':  // Number
                         string number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
                         if (IsNumber(number))
-                        {
-                            //row[fieldIndex] = number;
-                        }
+                            s_row[fieldIndex] = number;
                         else
-                        {
-                            //row[fieldIndex] = "0";
-                        }
+                            s_row[fieldIndex] = "0";
                         break;
                     case 'C': // String
-                        //row[fieldIndex] = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));//row[fieldIndex] = CurrEnc.GetString(recReader.ReadBytes(field.fieldLen));
+                        s_row[fieldIndex] = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));//s_row[fieldIndex] = CurrEnc.GetString(recReader.ReadBytes(field.fieldLen));
                         break;
 
                     case 'D': // Date (YYYYMMDD)
                         year = CurrentEncoding.GetString(recReader.ReadBytes(4));
                         month = CurrentEncoding.GetString(recReader.ReadBytes(2));
                         day = CurrentEncoding.GetString(recReader.ReadBytes(2));
-                        //row[fieldIndex] = DBNull.Value;
+                        s_row[fieldIndex] = DBNull.Value;
                         try
                         {
                             if (IsNumber(year) && IsNumber(month) && IsNumber(day))
                             {
                                 if (int.Parse(year) > 1900)
                                 {
-                                    //row[fieldIndex] = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day)).ToString();
+                                    s_row[fieldIndex] = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
                                 }
                             }
                         }
@@ -164,37 +159,29 @@ public partial class ParseDBF
                         // Time is hours * 3600000L + minutes * 60000L + Seconds * 1000L (Milliseconds since midnight)
                         lDate = recReader.ReadInt32();
                         lTime = recReader.ReadInt32() * 10000L;
-                        //row[fieldIndex] = JulianToDateTime(lDate).AddTicks(lTime).ToString();
+                        s_row[fieldIndex] = JulianToDateTime(lDate).AddTicks(lTime);
                         break;
 
                     case 'L': // Boolean (Y/N)
                         if ('Y' == recReader.ReadByte())
-                        {
-                            //row[fieldIndex] = "true";
-                        }
+                            s_row[fieldIndex] = "true";
                         else
-                        {
-                            //row[fieldIndex] = "false";
-                        }
+                            s_row[fieldIndex] = "false";
 
                         break;
 
                     case 'F':
                         number = CurrentEncoding.GetString(recReader.ReadBytes(field.fieldLen));
                         if (IsNumber(number))
-                        {
-                            //row[fieldIndex] = number;
-                        }
+                            s_row[fieldIndex] = number;
                         else
-                        {
-                            //row[fieldIndex] = "0.0";
-                        }
+                            s_row[fieldIndex] = "0.0";
                         break;
                 }
                 fieldIndex++;
             }
             recReader.Close();
-            //DataTableCache.Rows.Add(row);
+            DataList.Add(s_row);
         }
         DbfFile.Seek(old_file_position, SeekOrigin.Begin);
         _fields = [.. Columns.ToArray().Cast<FieldDescriptor>()];
@@ -202,7 +189,7 @@ public partial class ParseDBF
         return (DataList, _fields.Select(FieldDescriptorBase.Build).ToArray());
     }
 
-    public async Task UploadData(bool inc_del, Action<FieldDescriptorBase[], List<object[]>> uploadPart, Action<int> finishUpload)
+    public async Task UploadData(bool inc_del)
     {
         if (DbfFile is null)
             throw new Exception("db file not set");
@@ -219,11 +206,10 @@ public partial class ParseDBF
         DbfFile.Seek(header.headerLen, SeekOrigin.Begin);
         object[] s_row;
         int data_list_Count = 0, del_rows_count = 0;
-
+        BinaryReader recReader;
         byte[] readed_data_tmp;
         for (int counter = 0; counter <= header.numRecords - 1; counter++)
         {
-            cur_num_row = counter;
             buffer = new byte[header.recordLen];
             await DbfFile.ReadExactlyAsync(buffer, 0, header.recordLen);
             if (buffer.Length == 0)
@@ -281,7 +267,7 @@ public partial class ParseDBF
 
                         break;
                     case 'C':
-                        s_row[fieldIndex] = CurrentEncoding.GetString(readed_data_tmp);
+                        s_row[fieldIndex] = CurrentEncoding.GetString(readed_data_tmp).Trim();
                         break;
                     case 'D': // Date (YYYYMMDD)
                         year = CurrentEncoding.GetString(readed_data_tmp.SubArray(0, 4));
@@ -308,8 +294,8 @@ public partial class ParseDBF
                         break;
                     case 'L': // Boolean (Y/N)
                         s_row[fieldIndex] =
-                            CurrentEncoding.GetString(readed_data_tmp).Equals("T", StringComparison.OrdinalIgnoreCase) ||
-                            CurrentEncoding.GetString(readed_data_tmp).Equals("Y", StringComparison.OrdinalIgnoreCase);
+                            CurrentEncoding.GetString(readed_data_tmp).StartsWith("Y", StringComparison.OrdinalIgnoreCase) ||
+                            CurrentEncoding.GetString(readed_data_tmp).StartsWith("T", StringComparison.OrdinalIgnoreCase);
                         break;
                 }
                 fieldIndex++;
@@ -320,13 +306,21 @@ public partial class ParseDBF
             if (data_list_Count > 5000)
             {
                 data_list_Count = 0;
-                uploadPart([.. Columns.Cast<FieldDescriptorBase>()], DataList);
+                _ = await RemoteClient.UploadPartTempKladr(new()
+                {
+                    Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
+                    RowsData = DataList
+                });
                 DataList.Clear();
             }
         }
         if (DataList.Count != 0)
         {
-            uploadPart([.. Columns.Cast<FieldDescriptorBase>()], DataList);
+            _ = await RemoteClient.UploadPartTempKladr(new()
+            {
+                Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
+                RowsData = DataList
+            });
             DataList.Clear();
         }
     }
