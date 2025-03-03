@@ -30,7 +30,7 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public required Action<KladrFileViewComponent> InitHandle { get; set; }
 
-
+    int NumRecordsTotal, numRecordProgress;
     (List<object[]> TableData, FieldDescriptorBase[] Columns) DemoTable = default!;
     MemoryStream ms = default!;
     string currentEncoding = "cp866";
@@ -52,7 +52,7 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
         await SetBusy();
         ms = new();
         await FileViewElement.OpenReadStream(long.MaxValue).CopyToAsync(ms);
-        await parser.Open(ms);
+        NumRecordsTotal = await parser.Open(ms);
         await SeedDemo();
         await SetBusy(false);
         InitHandle(this);
@@ -61,10 +61,17 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     public async Task UploadData()
     {
+        numRecordProgress = 1;
         await SetBusy();
         parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
-        //await parser.Open(ms);
+        parser.PartUploadNotify += ParserPartUploadNotify;
         await parser.UploadData(true);
         await SetBusy(false);
+    }
+
+    private void ParserPartUploadNotify(int recordNum)
+    {
+        numRecordProgress = recordNum;
+        InvokeAsync(StateHasChanged);
     }
 }

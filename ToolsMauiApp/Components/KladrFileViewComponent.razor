@@ -15,6 +15,10 @@
         }
     </div>
     @GlobalTools.SizeDataAsString(FileViewElement.Size)
+    @if (numRecordProgress != 0)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="@((NumRecordsTotal /100 * numRecordProgress) < 10)" Value="@numRecordProgress" Class="my-7" Max="NumRecordsTotal" />
+    }
     @if (DemoTable.Columns is not null)
     {
         <table class="table">

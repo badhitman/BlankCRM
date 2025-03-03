@@ -14,7 +14,7 @@
 //        });
 //}
 
-export class DOMCleanup {
+class DOMCleanup {
     static observer;
 
     static createObserver() {

@@ -12,6 +12,9 @@ namespace ToolsMauiLib;
 
 public partial class ParseDBF(IClientHTTPRestService RemoteClient)
 {
+    public delegate void PartUploadHandler(int recordNum);
+    public event PartUploadHandler? PartUploadNotify;
+
     public Encoding CurrentEncoding { get; set; } = Encoding.GetEncoding("cp866");
 
     byte[]? buffer;
@@ -28,7 +31,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
 
     MemoryStream? DbfFile;
 
-    public async Task Open(MemoryStream _dbfFile)
+    public async Task<int> Open(MemoryStream _dbfFile)
     {
         DbfFile = _dbfFile;
         DbfFile.Seek(0, SeekOrigin.Begin);
@@ -72,6 +75,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
            //DataColumn col = new(field.fieldName, typeof(string));
            //DataTableCache.Columns.Add(col);
        }*/
+        return header.numRecords;
     }
 
     /// <summary>
@@ -186,7 +190,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
         DbfFile.Seek(old_file_position, SeekOrigin.Begin);
         _fields = [.. Columns.ToArray().Cast<FieldDescriptor>()];
 
-        return (DataList, _fields.Select(FieldDescriptorBase.Build).ToArray());
+        return (GlobalTools.CreateDeepCopy(DataList)!, _fields.Select(FieldDescriptorBase.Build).ToArray());
     }
 
     public async Task UploadData(bool inc_del)
@@ -303,7 +307,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
             recReader.Close();
             data_list_Count++;
             DataList.Add(s_row);
-            if (data_list_Count > 1000)
+            if (data_list_Count >= 1000)
             {
                 data_list_Count = 0;
                 _ = await RemoteClient.UploadPartTempKladr(new()
@@ -312,6 +316,8 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
                     RowsData = DataList
                 });
                 DataList.Clear();
+                if (PartUploadNotify is not null)
+                    PartUploadNotify(counter);
             }
         }
         if (DataList.Count != 0)
@@ -322,6 +328,8 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
                 RowsData = DataList
             });
             DataList.Clear();
+            if (PartUploadNotify is not null)
+                PartUploadNotify(header.numRecords);
         }
     }
 
