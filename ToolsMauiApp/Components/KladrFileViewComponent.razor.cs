@@ -32,18 +32,15 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
 
 
     (List<object[]> TableData, FieldDescriptorBase[] Columns) DemoTable = default!;
-
+    MemoryStream ms = default!;
     string currentEncoding = "cp866";
 
     /// <inheritdoc/>
     public async Task SeedDemo(string enc = "cp866")
     {
         currentEncoding = enc;
-        await SetBusy();
-        MemoryStream ms = new();
-        await FileViewElement.OpenReadStream(long.MaxValue).CopyToAsync(ms);
         parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
-        await parser.Open(ms);
+        await SetBusy();
         DemoTable = await parser.GetRandomRowsAsDataTable(5);
         await SetBusy(false);
     }
@@ -52,7 +49,12 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        await SetBusy();
+        ms = new();
+        await FileViewElement.OpenReadStream(long.MaxValue).CopyToAsync(ms);
+        await parser.Open(ms);
         await SeedDemo();
+        await SetBusy(false);
         InitHandle(this);
     }
 
@@ -60,8 +62,6 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     public async Task UploadData()
     {
         await SetBusy();
-        MemoryStream ms = new();
-        await FileViewElement.OpenReadStream(long.MaxValue).CopyToAsync(ms);
         parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
         //await parser.Open(ms);
         await parser.UploadData(true);

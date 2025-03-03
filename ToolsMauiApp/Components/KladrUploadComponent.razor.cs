@@ -39,6 +39,7 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
     void SelectFilesChange(InputFileChangeEventArgs e)
     {
         loadedFiles.Clear();
+        ViewsChilds.Clear();
         foreach (IBrowserFile file in e.GetMultipleFiles())
         {
             loadedFiles.Add(file);

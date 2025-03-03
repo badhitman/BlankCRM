@@ -37,6 +37,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
         FieldDescriptorHeaderSize = Marshal.SizeOf<FieldDescriptor>();
 
         DataList.Clear();
+        Columns.Clear();
 
         buffer = new byte[dbfHeaderSize];
         await DbfFile.ReadExactlyAsync(buffer, 0, dbfHeaderSize);
@@ -45,7 +46,6 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
         header = Marshal.PtrToStructure<DBFHeader>(handle.AddrOfPinnedObject());
         handle.Free();
 
-        Columns.Clear();
         buffer = new byte[1];
         await DbfFile.ReadExactlyAsync(buffer, 0, 1);
 
@@ -303,7 +303,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
             recReader.Close();
             data_list_Count++;
             DataList.Add(s_row);
-            if (data_list_Count > 5000)
+            if (data_list_Count > 1000)
             {
                 data_list_Count = 0;
                 _ = await RemoteClient.UploadPartTempKladr(new()
