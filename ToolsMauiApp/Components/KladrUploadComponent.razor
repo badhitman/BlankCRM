@@ -11,7 +11,7 @@
 <label for="exampleFormControlInputFile" class="form-label">Добавьте файлы классификатора (*.dbf):</label>
 <div class="input-group mb-3">
     <InputFile @key=@(_inputFileId) class="form-control" OnChange="SelectFilesChange" id="exampleFormControlInputFile" multiple />
-    <button @onclick="SendFile" disabled="@(IsBusyProgress || loadedFiles.Count == 0)" class="btn btn-outline-secondary" type="button">@(loadedFiles.Count == 0 ? "Выберете файл для отправки..." : "Отправить")</button>
+    <button @onclick="SendFile" disabled="@(IsBusyProgress || loadedFiles.Count == 0 || !CanSend)" class="btn btn-outline-secondary" type="button">@(loadedFiles.Count == 0 ? "Выберете файл для отправки..." : "Отправить")</button>
     @if (loadedFiles.Count != 0)
     {
         <button @onclick="() => { loadedFiles.Clear(); _inputFileId = Guid.NewGuid().ToString(); }" disabled="@IsBusyProgress" class="btn btn-light" type="button">Сброс</button>

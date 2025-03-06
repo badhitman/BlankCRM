@@ -20,12 +20,12 @@
         <span>Загрузка: @numRecordProgress из @NumRecordsTotal</span>
         <MudProgressLinear Color="Color.Primary" Indeterminate="@((NumRecordsTotal /100 * numRecordProgress) < 10)" Value="@numRecordProgress" Class="my-7" Max="NumRecordsTotal" />
     }
-    @if (DemoTable.Columns is not null)
+    @if (DemoTable?.Columns is not null)
     {
         <table class="table">
             <thead>
                 <tr>
-                    @foreach (FieldDescriptorBase col in DemoTable.Columns)
+                    @foreach (FieldDescriptorBase col in DemoTable.Value.Columns)
                     {
                         <th scope="col">
                             @col.FieldName
@@ -35,11 +35,11 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (object[] row in DemoTable.TableData)
+                @foreach (object[] row in DemoTable.Value.TableData)
                 {
                     int i = 0;
                     <tr>
-                        @foreach (FieldDescriptorBase col in DemoTable.Columns)
+                        @foreach (FieldDescriptorBase col in DemoTable.Value.Columns)
                         {
                             <td>@row[i++].ToString()</td>
                         }
@@ -47,6 +47,17 @@
                 }
             </tbody>
         </table>
+    }
+    else if (!IsBusyProgress)
+    {
+        <figure class="text-center">
+            <blockquote class="blockquote">
+                <p>Данные не загружены.</p>
+            </blockquote>
+            <figcaption class="blockquote-footer">
+                Отсутствует <cite title="Source Title">demo seed</cite>
+            </figcaption>
+        </figure>
     }
 </div>
 <span title="последнее изменение" class="badge text-bg-primary rounded-pill">

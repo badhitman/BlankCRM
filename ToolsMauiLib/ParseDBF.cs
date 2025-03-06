@@ -30,9 +30,11 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
     readonly List<object[]> DataList = [];
 
     MemoryStream? DbfFile;
+    string? fileName;
 
-    public async Task<int> Open(MemoryStream _dbfFile)
+    public async Task<int> Open(MemoryStream _dbfFile, string name)
     {
+        fileName = name;
         DbfFile = _dbfFile;
         DbfFile.Seek(0, SeekOrigin.Begin);
 
@@ -204,6 +206,9 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
         if (Columns is null)
             throw new Exception("columns table not created");
 
+        if(string.IsNullOrWhiteSpace(fileName))
+            throw new Exception("FileName IsNullOrWhiteSpace");
+
         DataList.Clear();
 
         //string table_name = "table_" + new System.Text.RegularExpressions.Regex(@"\W").Replace(System.IO.Path.GetFileName(FileOutputName), "_");        
@@ -313,7 +318,8 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
                 _ = await RemoteClient.UploadPartTempKladr(new()
                 {
                     Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
-                    RowsData = DataList
+                    RowsData = DataList,
+                    TableName = fileName,
                 });
                 DataList.Clear();
                 if (PartUploadNotify is not null)
@@ -325,7 +331,8 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
             _ = await RemoteClient.UploadPartTempKladr(new()
             {
                 Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
-                RowsData = DataList
+                RowsData = DataList,
+                TableName = fileName,
             });
             DataList.Clear();
             if (PartUploadNotify is not null)

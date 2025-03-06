@@ -60,7 +60,7 @@ public class KladrServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTempKladrModel req)
+    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req)
     {
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
 

@@ -15,7 +15,16 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
     private string _inputFileId = Guid.NewGuid().ToString();
     private readonly List<IBrowserFile> loadedFiles = [];
 
-    private readonly List<KladrFileViewComponent> ViewsChilds = [];
+    private readonly List<(KladrFileViewComponent ParentComponent, string FileName)> ViewsChilds = [];
+
+    bool CanSend
+    {
+        get
+        {
+            return loadedFiles.All(x => KladrFileViewComponent.KladrFiles.Any(y => $"{y}.dbf".Equals(x.Name, StringComparison.OrdinalIgnoreCase))) &&
+                KladrFileViewComponent.KladrFiles.All(x => loadedFiles.Any(y => y.Name.Equals($"{x}.dbf", StringComparison.OrdinalIgnoreCase)));
+        }
+    }
 
     string _value = "cp866";
     string SelectedEncoding
@@ -26,12 +35,12 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
             _value = value;
 
             InvokeAsync(async () => await SetBusy());
-            InvokeAsync(async () => await Task.WhenAll(ViewsChilds.Select(x => Task.Run(async () => await x.SeedDemo(_value)))));
+            InvokeAsync(async () => await Task.WhenAll(ViewsChilds.Select(x => Task.Run(async () => await x.ParentComponent.SeedDemo(_value)))));
             InvokeAsync(async () => await SetBusy(false));
         }
     }
 
-    void InitHandleAction(KladrFileViewComponent sender)
+    void InitHandleAction((KladrFileViewComponent ParentComponent, string FileName) sender)
     {
         ViewsChilds.Add(sender);
     }
@@ -52,11 +61,9 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
             throw new Exception();
 
         await SetBusy();
-        await Task.WhenAll(ViewsChilds.Select(x => Task.Run(async () => await x.UploadData())));
+        await Task.WhenAll(ViewsChilds.Select(x => Task.Run(async () => await x.ParentComponent.UploadData())));
         loadedFiles.Clear();
         _inputFileId = Guid.NewGuid().ToString();
         await SetBusy(false);
     }
-
-    
 }

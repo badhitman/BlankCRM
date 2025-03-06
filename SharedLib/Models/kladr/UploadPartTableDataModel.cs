@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// Загрузка порции данных КЛАДР 4.0
+/// Загрузка порции данных
 /// </summary>
-public class UploadPartTempKladrModel
+public class UploadPartTableDataModel
 {
     /// <summary>
     /// Columns
@@ -18,6 +18,12 @@ public class UploadPartTempKladrModel
     /// RowsData
     /// </summary>
     public required List<object[]> RowsData { get; set; }
+
+    /// <summary>
+    /// Имя таблицы
+    /// </summary>
+    public required string TableName { get; set; }
+    
     /*
     /// <summary>
     /// Altnames
@@ -47,5 +53,6 @@ public class UploadPartTempKladrModel
     /// <summary>
     /// Houses
     /// </summary>
-    public HouseKLADRModel[]? HousesPart { get; set; }*/
+    public HouseKLADRModel[]? HousesPart { get; set; }
+    */
 }

@@ -20,6 +20,6 @@ public class KladrServiceTransmission(IRabbitClient rabbitClient) : IKladrServic
         => await rabbitClient.MqRemoteCall<MetadataKladrModel>(GlobalStaticConstants.TransmissionQueues.GetMetadataKladrReceive, req) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTempKladrModel req)
+    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req)
         => await rabbitClient.MqRemoteCall<MetadataKladrModel>(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive, req) ?? new();
 }

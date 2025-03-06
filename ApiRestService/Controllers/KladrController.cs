@@ -5,7 +5,6 @@
 using static SharedLib.GlobalStaticConstants;
 using Microsoft.AspNetCore.Mvc;
 using SharedLib;
-using DocumentFormat.OpenXml.InkML;
 
 namespace ApiRestService.Controllers;
 
@@ -18,9 +17,11 @@ public class KladrController(IKladrService kladrRepo) : ControllerBase
 {
     /// <inheritdoc/>
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}/{Routes.UPLOAD_ACTION_NAME}-{Routes.PART_CONTROLLER_NAME}"), LoggerNolog]
-    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTempKladrModel req)
+    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req)
     {
-        return await kladrRepo.UploadPartTempKladr(req);
+        return Enum.TryParse(req.TableName, true, out KladrFilesEnum currentKladrElement)
+            ? await kladrRepo.UploadPartTempKladr(req)
+            : ResponseBaseModel.CreateError($"Имя таблицы `{req.TableName}` не валидное. Разрешённые имена: {string.Join(", ", Enum.GetNames<KladrFilesEnum>().Select(x => $"{x}.dbf"))}");
     }
 
     /// <inheritdoc/>

@@ -22,5 +22,5 @@ public interface IKladrService
     /// <summary>
     /// Загрузить порцию данных КЛАДР 4.0
     /// </summary>
-    public Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTempKladrModel req);
+    public Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req);
 }

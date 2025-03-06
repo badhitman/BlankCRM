@@ -10,13 +10,13 @@ namespace Transmission.Receives.kladr;
 
 /// <inheritdoc/>
 public class UploadPartTempKladrReceive(ILogger<UploadPartTempKladrReceive> LoggerRepo, IKladrService kladrRepo)
-    : IResponseReceive<UploadPartTempKladrModel?, ResponseBaseModel?>
+    : IResponseReceive<UploadPartTableDataModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(UploadPartTempKladrModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(UploadPartTableDataModel? req)
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

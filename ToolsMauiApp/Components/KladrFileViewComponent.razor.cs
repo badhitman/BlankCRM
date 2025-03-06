@@ -28,10 +28,16 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     /// InitHandle
     /// </summary>
     [Parameter, EditorRequired]
-    public required Action<KladrFileViewComponent> InitHandle { get; set; }
+    public required Action<(KladrFileViewComponent ParentComponent,string FileName)> InitHandle { get; set; }
+
+
+    /// <inheritdoc/>
+    public static readonly string[] KladrFiles = [.. Enum.GetNames<KladrFilesEnum>()];
+
 
     int NumRecordsTotal, numRecordProgress;
-    (List<object[]> TableData, FieldDescriptorBase[] Columns) DemoTable = default!;
+    (List<object[]> TableData, FieldDescriptorBase[] Columns)? DemoTable;
+
     MemoryStream ms = default!;
     string currentEncoding = "cp866";
 
@@ -40,7 +46,10 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     {
         currentEncoding = enc;
         parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
-        await SetBusy();
+
+        if (!IsBusyProgress)
+            await SetBusy();
+
         DemoTable = await parser.GetRandomRowsAsDataTable(5);
         await SetBusy(false);
     }
@@ -49,13 +58,16 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        if (!KladrFiles.Any(x => x.Equals($"{FileViewElement.Name}.dbf", StringComparison.OrdinalIgnoreCase)))
+            return;
+
         await SetBusy();
         ms = new();
         await FileViewElement.OpenReadStream(long.MaxValue).CopyToAsync(ms);
-        NumRecordsTotal = await parser.Open(ms);
+        NumRecordsTotal = await parser.Open(ms, FileViewElement.Name);
         await SeedDemo();
-        await SetBusy(false);
-        InitHandle(this);
+        InitHandle((this, FileViewElement.Name));
     }
 
     /// <inheritdoc/>

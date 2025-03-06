@@ -180,7 +180,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect) : HttpC
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTempKladrModel req)
+    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req)
     {
         using HttpClient httpClient = GetClient();
         string routeUri = $"/{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}/{Routes.UPLOAD_ACTION_NAME}-{Routes.PART_CONTROLLER_NAME}";
