@@ -12,7 +12,7 @@ public class UploadPartTableDataModel
     /// <summary>
     /// Columns
     /// </summary>
-    public required FieldDescriptorBase[] Columns { get; set; }
+    public required List<FieldDescriptorBase> Columns { get; set; }
 
     /// <summary>
     /// RowsData
@@ -23,36 +23,4 @@ public class UploadPartTableDataModel
     /// Имя таблицы
     /// </summary>
     public required string TableName { get; set; }
-    
-    /*
-    /// <summary>
-    /// Altnames
-    /// </summary>
-    public AltnameKLADRModel[]? AltnamesPart { get; set; }
-
-    /// <summary>
-    /// Names
-    /// </summary>
-    public NameMapKLADRModel[]? NamesPart { get; set; }
-
-    /// <summary>
-    /// Objects KLADR
-    /// </summary>
-    public ObjectKLADRModel[]? ObjectsPart { get; set; }
-
-    /// <summary>
-    /// Socrbases
-    /// </summary>
-    public SocrbaseKLADRModel[]? SocrbasesPart { get; set; }
-
-    /// <summary>
-    /// Streets
-    /// </summary>
-    public RootKLADRModel[]? StreetsPart { get; set; }
-
-    /// <summary>
-    /// Houses
-    /// </summary>
-    public HouseKLADRModel[]? HousesPart { get; set; }
-    */
 }

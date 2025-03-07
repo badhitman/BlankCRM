@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Kladr
 {
     [DbContext(typeof(KladrContext))]
-    [Migration("20250301054605_KladrContext002")]
-    partial class KladrContext002
+    [Migration("20250307123708_KladrContext001")]
+    partial class KladrContext001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,7 +55,35 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("OLDCODE");
 
-                    b.ToTable("AltnameKLADRModelDB");
+                    b.ToTable("AltnamesKLADR");
+                });
+
+            modelBuilder.Entity("SharedLib.AltnameTempKLADRModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("LEVEL")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("character varying(1)");
+
+                    b.Property<string>("NEWCODE")
+                        .IsRequired()
+                        .HasMaxLength(19)
+                        .HasColumnType("character varying(19)");
+
+                    b.Property<string>("OLDCODE")
+                        .IsRequired()
+                        .HasMaxLength(19)
+                        .HasColumnType("character varying(19)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempAltnamesKLADR");
                 });
 
             modelBuilder.Entity("SharedLib.HouseKLADRModelDB", b =>
@@ -68,8 +96,8 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.Property<string>("CODE")
                         .IsRequired()
-                        .HasMaxLength(17)
-                        .HasColumnType("character varying(17)");
+                        .HasMaxLength(19)
+                        .HasColumnType("character varying(19)");
 
                     b.Property<string>("GNINMB")
                         .IsRequired()
@@ -121,7 +149,63 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("UNO");
 
-                    b.ToTable("HouseKLADRModelDB");
+                    b.ToTable("HousesKLADR");
+                });
+
+            modelBuilder.Entity("SharedLib.HouseTempKLADRModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CODE")
+                        .IsRequired()
+                        .HasMaxLength(19)
+                        .HasColumnType("character varying(19)");
+
+                    b.Property<string>("GNINMB")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("character varying(4)");
+
+                    b.Property<string>("INDEX")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("character varying(6)");
+
+                    b.Property<string>("KORP")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NAME")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("OCATD")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("character varying(11)");
+
+                    b.Property<string>("SOCR")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("UNO")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("character varying(4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CODE");
+
+                    b.HasIndex("NAME");
+
+                    b.ToTable("TempHousesKLADR");
                 });
 
             modelBuilder.Entity("SharedLib.NameMapKLADRModelDB", b =>
@@ -134,8 +218,8 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.Property<string>("CODE")
                         .IsRequired()
-                        .HasMaxLength(17)
-                        .HasColumnType("character varying(17)");
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)");
 
                     b.Property<string>("NAME")
                         .IsRequired()
@@ -162,7 +246,44 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("SHNAME");
 
-                    b.ToTable("NameMapKLADRModelDB");
+                    b.ToTable("NamesMapsKLADR");
+                });
+
+            modelBuilder.Entity("SharedLib.NameMapTempKLADRModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CODE")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)");
+
+                    b.Property<string>("NAME")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("SCNAME")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("SHNAME")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CODE");
+
+                    b.HasIndex("NAME");
+
+                    b.ToTable("TempNamesMapsKLADR");
                 });
 
             modelBuilder.Entity("SharedLib.ObjectKLADRModelDB", b =>
@@ -175,8 +296,8 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.Property<string>("CODE")
                         .IsRequired()
-                        .HasMaxLength(17)
-                        .HasColumnType("character varying(17)");
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)");
 
                     b.Property<string>("GNINMB")
                         .IsRequired()
@@ -231,7 +352,64 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("UNO");
 
-                    b.ToTable("ObjectKLADRModelDB");
+                    b.ToTable("ObjectsKLADR");
+                });
+
+            modelBuilder.Entity("SharedLib.ObjectTempKLADRModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CODE")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)");
+
+                    b.Property<string>("GNINMB")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("character varying(4)");
+
+                    b.Property<string>("INDEX")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("character varying(6)");
+
+                    b.Property<string>("NAME")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("OCATD")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("character varying(11)");
+
+                    b.Property<string>("SOCR")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("STATUS")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("character varying(1)");
+
+                    b.Property<string>("UNO")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("character varying(4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CODE");
+
+                    b.HasIndex("NAME");
+
+                    b.ToTable("TempObjectsKLADR");
                 });
 
             modelBuilder.Entity("SharedLib.SocrbaseKLADRModelDB", b =>
@@ -272,7 +450,40 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("SOCRNAME");
 
-                    b.ToTable("SocrbaseKLADRModelDB");
+                    b.ToTable("SocrbasesKLADR");
+                });
+
+            modelBuilder.Entity("SharedLib.SocrbaseTempKLADRModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("KOD_T_ST")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
+
+                    b.Property<string>("LEVEL")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("character varying(5)");
+
+                    b.Property<string>("SCNAME")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("SOCRNAME")
+                        .IsRequired()
+                        .HasMaxLength(29)
+                        .HasColumnType("character varying(29)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempSocrbasesKLADR");
                 });
 
             modelBuilder.Entity("SharedLib.StreetKLADRModelDB", b =>
@@ -334,7 +545,59 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("UNO");
 
-                    b.ToTable("StreetKLADRModelDB");
+                    b.ToTable("StreetsKLADR");
+                });
+
+            modelBuilder.Entity("SharedLib.StreetTempKLADRModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CODE")
+                        .IsRequired()
+                        .HasMaxLength(17)
+                        .HasColumnType("character varying(17)");
+
+                    b.Property<string>("GNINMB")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("character varying(4)");
+
+                    b.Property<string>("INDEX")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("character varying(6)");
+
+                    b.Property<string>("NAME")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("OCATD")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("character varying(11)");
+
+                    b.Property<string>("SOCR")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("UNO")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("character varying(4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CODE");
+
+                    b.HasIndex("NAME");
+
+                    b.ToTable("TempStreetsKLADR");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,8 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <inheritdoc/>
-[Index(nameof(SHNAME)), Index(nameof(SCNAME))]
-public class NameMapKLADRModelDB : BaseKladrModel
+public class NameMapKLADRModelDTO : BaseKladrModel
 {
     /// <inheritdoc/>
     [Required, StringLength(40)]
@@ -20,7 +19,7 @@ public class NameMapKLADRModelDB : BaseKladrModel
     public required string SCNAME { get; set; }
 
     /// <inheritdoc/>
-    public static NameMapKLADRModelDB Build(NameMapKLADRModel x)
+    public static NameMapTempKLADRModelDB Build(NameMapKLADRModel x)
     {
         return new()
         {
@@ -30,4 +29,17 @@ public class NameMapKLADRModelDB : BaseKladrModel
             SHNAME = x.SHNAME,
         };
     }
+}
+
+/// <inheritdoc/>
+[Index(nameof(SHNAME)), Index(nameof(SCNAME))]
+public class NameMapKLADRModelDB : NameMapKLADRModelDTO
+{
+
+}
+
+/// <inheritdoc/>
+public class NameMapTempKLADRModelDB : NameMapKLADRModelDTO
+{
+
 }

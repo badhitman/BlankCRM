@@ -9,7 +9,7 @@ Update-Database -Context StorageContext -Project DbPostgreLib -StartupProject St
 ```
 
 ```
-Add-Migration KladrContext003 -Context KladrContext -Project DbPostgreLib -StartupProject KladrService
+Add-Migration KladrContext002 -Context KladrContext -Project DbPostgreLib -StartupProject KladrService
 Update-Database -Context KladrContext -Project DbPostgreLib -StartupProject KladrService
 ```
 

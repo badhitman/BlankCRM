@@ -8,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <inheritdoc/>
-[Index(nameof(SOCR)), Index(nameof(INDEX)), Index(nameof(GNINMB)), Index(nameof(UNO)), Index(nameof(OCATD))]
 public class RootKLADRModelDB : BaseKladrModel
 {
     /// <inheritdoc/>

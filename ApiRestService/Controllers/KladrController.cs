@@ -19,9 +19,7 @@ public class KladrController(IKladrService kladrRepo) : ControllerBase
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}/{Routes.UPLOAD_ACTION_NAME}-{Routes.PART_CONTROLLER_NAME}"), LoggerNolog]
     public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req)
     {
-        return Enum.TryParse(req.TableName, true, out KladrFilesEnum currentKladrElement)
-            ? await kladrRepo.UploadPartTempKladr(req)
-            : ResponseBaseModel.CreateError($"Имя таблицы `{req.TableName}` не валидное. Разрешённые имена: {string.Join(", ", Enum.GetNames<KladrFilesEnum>().Select(x => $"{x}.dbf"))}");
+        return await kladrRepo.UploadPartTempKladr(req);
     }
 
     /// <inheritdoc/>

@@ -8,8 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <inheritdoc/>
-[Index(nameof(SCNAME)), Index(nameof(SOCRNAME)), Index(nameof(KOD_T_ST)), Index(nameof(LEVEL))]
-public class SocrbaseKLADRModelDB : SocrbaseKLADRModel
+public class AltnameKLADRModelDTO : AltnameKLADRModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -18,14 +17,26 @@ public class SocrbaseKLADRModelDB : SocrbaseKLADRModel
     public int Id { get; set; }
 
     /// <inheritdoc/>
-    public static SocrbaseKLADRModelDB Build(SocrbaseKLADRModel x)
+    public static AltnameTempKLADRModelDB Build(AltnameKLADRModel x)
     {
         return new()
         {
-            KOD_T_ST = x.KOD_T_ST,
             LEVEL = x.LEVEL,
-            SCNAME = x.SCNAME,
-            SOCRNAME = x.SOCRNAME,
+            NEWCODE = x.NEWCODE,
+            OLDCODE = x.OLDCODE,
         };
     }
+}
+
+/// <inheritdoc/>
+[Index(nameof(OLDCODE)), Index(nameof(NEWCODE)), Index(nameof(LEVEL))]
+public class AltnameKLADRModelDB : AltnameKLADRModelDTO
+{
+    
+}
+
+/// <inheritdoc/>
+public class AltnameTempKLADRModelDB : AltnameKLADRModelDTO
+{
+    
 }

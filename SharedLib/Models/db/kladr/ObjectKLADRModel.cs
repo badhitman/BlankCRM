@@ -8,15 +8,14 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <inheritdoc/>
-[Index(nameof(STATUS))]
-public class ObjectKLADRModelDB : RootKLADRModelDB
+public class ObjectKLADRModelDTO : RootKLADRModelDB
 {
     /// <inheritdoc/>
     [Required, StringLength(1)]
     public required string STATUS { get; set; }
 
     /// <inheritdoc/>
-    public static ObjectKLADRModelDB Build(ObjectKLADRModel x)
+    public static ObjectTempKLADRModelDB Build(ObjectKLADRModel x)
     {
         return new()
         {
@@ -31,4 +30,18 @@ public class ObjectKLADRModelDB : RootKLADRModelDB
             UNO = x.UNO,
         };
     }
+}
+
+/// <inheritdoc/>
+[Index(nameof(STATUS))]
+[Index(nameof(SOCR)), Index(nameof(INDEX)), Index(nameof(GNINMB)), Index(nameof(UNO)), Index(nameof(OCATD))]
+public class ObjectKLADRModelDB : ObjectKLADRModelDTO
+{
+
+}
+
+/// <inheritdoc/>
+public class ObjectTempKLADRModelDB : ObjectKLADRModelDTO
+{
+
 }

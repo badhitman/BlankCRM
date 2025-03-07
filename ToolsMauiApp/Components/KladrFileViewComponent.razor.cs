@@ -15,7 +15,10 @@ namespace ToolsMauiApp.Components;
 public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    ParseDBF parser { get; set; } = default!;
+    ParseDBF Parser { get; set; } = default!;
+
+    [Inject]
+    IClientHTTPRestService RemoteClient { get; set; } = default!;
 
 
     /// <summary>
@@ -28,7 +31,7 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     /// InitHandle
     /// </summary>
     [Parameter, EditorRequired]
-    public required Action<(KladrFileViewComponent ParentComponent,string FileName)> InitHandle { get; set; }
+    public required Action<(KladrFileViewComponent ParentComponent, string FileName)> InitHandle { get; set; }
 
 
     /// <inheritdoc/>
@@ -45,12 +48,12 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     public async Task SeedDemo(string enc = "cp866")
     {
         currentEncoding = enc;
-        parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
+        Parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
 
         if (!IsBusyProgress)
             await SetBusy();
 
-        DemoTable = await parser.GetRandomRowsAsDataTable(5);
+        DemoTable = await Parser.GetRandomRowsAsDataTable(5);
         await SetBusy(false);
     }
 
@@ -59,13 +62,13 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     {
         await base.OnInitializedAsync();
 
-        if (!KladrFiles.Any(x => x.Equals($"{FileViewElement.Name}.dbf", StringComparison.OrdinalIgnoreCase)))
+        if (!KladrFiles.Any(x => $"{x}.dbf".Equals(FileViewElement.Name, StringComparison.OrdinalIgnoreCase)))
             return;
 
         await SetBusy();
         ms = new();
         await FileViewElement.OpenReadStream(long.MaxValue).CopyToAsync(ms);
-        NumRecordsTotal = await parser.Open(ms, FileViewElement.Name);
+        NumRecordsTotal = await Parser.Open(ms, FileViewElement.Name);
         await SeedDemo();
         InitHandle((this, FileViewElement.Name));
     }
@@ -75,9 +78,11 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     {
         numRecordProgress = 1;
         await SetBusy();
-        parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
-        parser.PartUploadNotify += ParserPartUploadNotify;
-        await parser.UploadData(true);
+        await RemoteClient.ClearTempKladr();
+        Parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
+        Parser.PartUploadNotify += ParserPartUploadNotify;
+        await Parser.UploadData(true);
+        Parser.PartUploadNotify -= ParserPartUploadNotify;
         await SetBusy(false);
     }
 

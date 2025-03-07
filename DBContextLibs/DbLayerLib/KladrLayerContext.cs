@@ -63,21 +63,22 @@ public partial class KladrLayerContext : DbContext
     public DbSet<HouseKLADRModelDB> HousesKLADR { get; set; } = default!;
 
 
-    /// <inheritdoc/>
-    public DbSet<AltnameKLADRModelDB> temp_AltnamesKLADR { get; set; } = default!;
 
     /// <inheritdoc/>
-    public DbSet<NameMapKLADRModelDB> temp_NamesMapsKLADR { get; set; } = default!;
+    public DbSet<AltnameTempKLADRModelDB> TempAltnamesKLADR { get; set; } = default!;
 
     /// <inheritdoc/>
-    public DbSet<ObjectKLADRModelDB> temp_ObjectsKLADR { get; set; } = default!;
+    public DbSet<NameMapTempKLADRModelDB> TempNamesMapsKLADR { get; set; } = default!;
 
     /// <inheritdoc/>
-    public DbSet<SocrbaseKLADRModelDB> temp_SocrbasesKLADR { get; set; } = default!;
+    public DbSet<ObjectTempKLADRModelDB> TempObjectsKLADR { get; set; } = default!;
 
     /// <inheritdoc/>
-    public DbSet<StreetKLADRModelDB> temp_StreetsKLADR { get; set; } = default!;
+    public DbSet<SocrbaseTempKLADRModelDB> TempSocrbasesKLADR { get; set; } = default!;
 
     /// <inheritdoc/>
-    public DbSet<HouseKLADRModelDB> temp_HousesKLADR { get; set; } = default!;
+    public DbSet<StreetTempKLADRModelDB> TempStreetsKLADR { get; set; } = default!;
+
+    /// <inheritdoc/>
+    public DbSet<HouseTempKLADRModelDB> TempHousesKLADR { get; set; } = default!;
 }
