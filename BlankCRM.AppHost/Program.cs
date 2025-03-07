@@ -143,7 +143,6 @@ public class Program
             ;
 
         IResourceBuilder<ProjectResource> kladrService = builder.AddProject<Projects.KladrService>("kladreservice")
-            .WithReference(builder.AddConnectionString($"NlogsConnection{_modePrefix}"))
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithReference(builder.AddConnectionString($"KladrConnection{_modePrefix}"))
