@@ -15,7 +15,7 @@ public class BaseKladrScopedModel
 {
     /// <inheritdoc/>
     [Required, StringLength(40)]
-    public required string NAME { get; set; }
+    public virtual required string NAME { get; set; }
 
     /// <inheritdoc/>
     [Required, StringLength(13)]

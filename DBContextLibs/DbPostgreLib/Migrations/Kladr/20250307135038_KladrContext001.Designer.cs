@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Kladr
 {
     [DbContext(typeof(KladrContext))]
-    [Migration("20250307123708_KladrContext001")]
+    [Migration("20250307135038_KladrContext001")]
     partial class KladrContext001
     {
         /// <inheritdoc />
@@ -111,7 +111,8 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.Property<string>("KORP")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<string>("NAME")
                         .IsRequired()
@@ -177,7 +178,8 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.Property<string>("KORP")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<string>("NAME")
                         .IsRequired()
@@ -218,13 +220,13 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.Property<string>("CODE")
                         .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("character varying(13)");
+                        .HasMaxLength(17)
+                        .HasColumnType("character varying(17)");
 
                     b.Property<string>("NAME")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<string>("SCNAME")
                         .IsRequired()
@@ -259,13 +261,13 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.Property<string>("CODE")
                         .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("character varying(13)");
+                        .HasMaxLength(17)
+                        .HasColumnType("character varying(17)");
 
                     b.Property<string>("NAME")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<string>("SCNAME")
                         .IsRequired()

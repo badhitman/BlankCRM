@@ -18,6 +18,7 @@ public class HouseKLADRModelDTO : RootKLADRModelDB
     public override required string CODE { get; set; }
 
     /// <inheritdoc/>
+    [Required, StringLength(10)]
     public required string KORP { get; set; }
 
     /// <inheritdoc/>

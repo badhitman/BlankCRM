@@ -39,7 +39,7 @@ namespace DbPostgreLib.Migrations.Kladr
                     UNO = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false),
                     OCATD = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
                     CODE = table.Column<string>(type: "character varying(19)", maxLength: 19, nullable: false),
-                    KORP = table.Column<string>(type: "text", nullable: false)
+                    KORP = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,10 +52,10 @@ namespace DbPostgreLib.Migrations.Kladr
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    NAME = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
-                    CODE = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
+                    CODE = table.Column<string>(type: "character varying(17)", maxLength: 17, nullable: false),
                     SHNAME = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
-                    SCNAME = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false)
+                    SCNAME = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    NAME = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,7 +145,7 @@ namespace DbPostgreLib.Migrations.Kladr
                     UNO = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false),
                     OCATD = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
                     CODE = table.Column<string>(type: "character varying(19)", maxLength: 19, nullable: false),
-                    KORP = table.Column<string>(type: "text", nullable: false)
+                    KORP = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -158,10 +158,10 @@ namespace DbPostgreLib.Migrations.Kladr
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    NAME = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
-                    CODE = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
+                    CODE = table.Column<string>(type: "character varying(17)", maxLength: 17, nullable: false),
                     SHNAME = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
-                    SCNAME = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false)
+                    SCNAME = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    NAME = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false)
                 },
                 constraints: table =>
                 {

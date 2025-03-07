@@ -78,7 +78,6 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     {
         numRecordProgress = 1;
         await SetBusy();
-        await RemoteClient.ClearTempKladr();
         Parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
         Parser.PartUploadNotify += ParserPartUploadNotify;
         await Parser.UploadData(true);
