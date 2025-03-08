@@ -19,7 +19,7 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
 
 
     /// <summary>
-    /// FileViewElement
+    /// OwnerComponent
     /// </summary>
     [Parameter, EditorRequired]
     public required IBrowserFile FileViewElement { get; set; }
@@ -28,7 +28,7 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     /// InitHandle
     /// </summary>
     [Parameter, EditorRequired]
-    public required Action<(KladrFileViewComponent ParentComponent, string FileName)> InitHandle { get; set; }
+    public required KladrUploadComponent OwnerComponent { get; set; }
 
 
     /// <inheritdoc/>
@@ -62,17 +62,21 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
         if (!KladrFiles.Any(x => $"{x}.dbf".Equals(FileViewElement.Name, StringComparison.OrdinalIgnoreCase)))
             return;
 
+        OwnerComponent.ChildBusyVote(1);
+        OwnerComponent.InitHandleAction((this, FileViewElement.Name));
+
         await SetBusy();
         ms = new();
         await FileViewElement.OpenReadStream(long.MaxValue).CopyToAsync(ms);
         NumRecordsTotal = await Parser.Open(ms, FileViewElement.Name);
         await SeedDemo();
-        InitHandle((this, FileViewElement.Name));
+        OwnerComponent.ChildBusyVote(-1);
     }
 
     /// <inheritdoc/>
     public async Task UploadData()
     {
+        OwnerComponent.ChildBusyVote(1);
         numRecordProgress = 1;
         await SetBusy();
         Parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
@@ -80,6 +84,7 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
         await Parser.UploadData(true);
         Parser.PartUploadNotify -= ParserPartUploadNotify;
         await SetBusy(false);
+        OwnerComponent.ChildBusyVote(-1);
     }
 
     private void ParserPartUploadNotify(int recordNum)

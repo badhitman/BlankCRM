@@ -9,19 +9,24 @@
 <div class="ms-2 me-auto">
     <div class="fw-bold">
         @FileViewElement.Name
+        @if (NumRecordsTotal != 0)
+        {
+            <sup title="Количество строк в таблице" class="ps-2">@NumRecordsTotal</sup>
+        }
         @if (IsBusyProgress)
         {
-            <MudProgressCircular Class="ms-2" Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+            <MudProgressCircular Class="ms-2" Color="Color.Info" Size="Size.Small" Indeterminate="true" />
         }
     </div>
     @GlobalTools.SizeDataAsString(FileViewElement.Size)
     @{
-        int percentageVal = NumRecordsTotal / 100 * numRecordProgress;
+        double _nrt = NumRecordsTotal;
+        double percentageVal = NumRecordsTotal == 0 ? 0 : (numRecordProgress / (_nrt / 100));
     }
     @if (numRecordProgress != 0)
     {
-        <span class="ps-2">Загрузка (@percentageVal%): @numRecordProgress из @NumRecordsTotal</span>
-        <MudProgressLinear Color="Color.Primary" Indeterminate="@((percentageVal) < 2)" Value="@numRecordProgress" Class="my-7" Max="NumRecordsTotal" />
+        <span class="ps-2">Загрузка (@Math.Round(percentageVal, 2)%): @numRecordProgress из @NumRecordsTotal</span>
+        <MudProgressLinear Color="Color.Primary" Indeterminate="@(percentageVal != 0 && percentageVal < 2)" Value="@numRecordProgress" Class="my-7" Max="NumRecordsTotal" />
     }
     @if (DemoTable?.Columns is not null)
     {

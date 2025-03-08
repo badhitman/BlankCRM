@@ -27,11 +27,12 @@ public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
     [Inject]
     public ISnackbar SnackbarRepo { get; set; } = default!;
 
+
     bool _isBusyProgress;
     /// <summary>
     /// Компонент занят отправкой REST запроса и обработки ответа
     /// </summary>
-    public bool IsBusyProgress
+    public virtual bool IsBusyProgress
     {
         get => _isBusyProgress;
         set
@@ -61,7 +62,7 @@ public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
     /// Уведомляет компонент об изменении его состояния.
     /// Когда применимо, это вызовет повторную визуализацию компонента.
     /// </summary>
-    public virtual void StateHasChangedCall() => StateHasChanged();
+    public virtual void StateHasChangedCall() => InvokeAsync(StateHasChanged);
 
     /// <summary>
     /// Signals to a System.Threading.CancellationToken that it should be canceled.

@@ -10,17 +10,17 @@
 }
 <label for="exampleFormControlInputFile" class="form-label">Добавьте файлы классификатора (*.dbf):</label>
 <div class="input-group mb-3">
-    <InputFile @key=@(_inputFileId) class="form-control" OnChange="SelectFilesChange" id="exampleFormControlInputFile" multiple />
+    <InputFile @key=@(_inputFileId) disabled="@(IsBusyProgress || loadedFiles.Count != 0)" class="form-control" OnChange="SelectFilesChange" id="exampleFormControlInputFile" multiple />
     <button @onclick="SendFile" disabled="@(IsBusyProgress || loadedFiles.Count == 0 || !CanSend)" class="btn btn-outline-secondary" type="button">@(loadedFiles.Count == 0 ? "Выберете файл для отправки..." : "Отправить")</button>
     @if (loadedFiles.Count != 0)
     {
-        <button @onclick="() => { loadedFiles.Clear(); _inputFileId = Guid.NewGuid().ToString(); }" disabled="@IsBusyProgress" class="btn btn-light" type="button">Сброс</button>
+        <button @onclick="() => { loadedFiles.Clear(); _inputFileId = Guid.NewGuid().ToString(); }" disabled="@(IsBusyProgress )" class="btn btn-light" type="button">Сброс</button>
     }
 </div>
 
 @if (loadedFiles.Count != 0)
 {
-    <MudSelect T="string" Label="Кодировка" @bind-Value="SelectedEncoding">
+    <MudSelect T="string" Label="Кодировка" @bind-Value="SelectedEncoding" disabled="@(IsBusyProgress || loadedFiles.Count == 0 || !CanSend )">
         @foreach (EncodingInfo enc in Encoding.GetEncodings())
         {
             <MudSelectItem T="string" Value="@enc.Name">@enc.Name</MudSelectItem>
@@ -32,7 +32,7 @@
         @foreach (IBrowserFile FileViewElement in loadedFiles)
         {
             <li class="list-group-item d-flex justify-content-between align-items-start">
-                <KladrFileViewComponent FileViewElement="FileViewElement" InitHandle="InitHandleAction" />
+                <KladrFileViewComponent @key="@($"file_{FileViewElement.Name}")" FileViewElement="FileViewElement" OwnerComponent="this" />
             </li>
         }
     </ol>

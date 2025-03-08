@@ -77,7 +77,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
            //DataColumn col = new(field.fieldName, typeof(string));
            //DataTableCache.Columns.Add(col);
        }*/
-        return header.numRecords;
+        return header.numRecords - 1;
     }
 
     /// <summary>
@@ -206,7 +206,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
         if (Columns is null)
             throw new Exception("columns table not created");
 
-        if(string.IsNullOrWhiteSpace(fileName))
+        if (string.IsNullOrWhiteSpace(fileName))
             throw new Exception("FileName IsNullOrWhiteSpace");
 
         DataList.Clear();

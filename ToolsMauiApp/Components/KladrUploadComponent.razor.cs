@@ -3,8 +3,8 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components.Forms;
-using BlazorLib;
 using Microsoft.AspNetCore.Components;
+using BlazorLib;
 using SharedLib;
 
 namespace ToolsMauiApp.Components;
@@ -16,6 +16,7 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IClientHTTPRestService RemoteClient { get; set; } = default!;
+
 
     private string _inputFileId = Guid.NewGuid().ToString();
     private readonly List<IBrowserFile> loadedFiles = [];
@@ -45,7 +46,24 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
         }
     }
 
-    void InitHandleAction((KladrFileViewComponent ParentComponent, string FileName) sender)
+
+    int ChildsVotesBusyBalance = 0;
+    /// <inheritdoc/>
+    public void ChildBusyVote(int voteVal)
+    {
+        Interlocked.Add(ref ChildsVotesBusyBalance, voteVal);
+        StateHasChangedCall();
+    }
+
+    /// <inheritdoc/>
+    public override bool IsBusyProgress 
+    { 
+        get => ChildsVotesBusyBalance != 0 || base.IsBusyProgress; 
+        set => base.IsBusyProgress = value; 
+    }
+
+    /// <inheritdoc/>
+    public void InitHandleAction((KladrFileViewComponent ParentComponent, string FileName) sender)
     {
         ViewsChilds.Add(sender);
     }
