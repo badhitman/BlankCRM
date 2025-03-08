@@ -312,7 +312,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
             recReader.Close();
             data_list_Count++;
             DataList.Add(s_row);
-            if (data_list_Count >= 1000)
+            if (data_list_Count > 1000)
             {
                 data_list_Count = 0;
                 _ = await RemoteClient.UploadPartTempKladr(new()
