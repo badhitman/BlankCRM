@@ -20,12 +20,12 @@
     </div>
     @GlobalTools.SizeDataAsString(FileViewElement.Size)
     @{
-        double _nrt = NumRecordsTotal;
-        double percentageVal = NumRecordsTotal == 0 ? 0 : (numRecordProgress / (_nrt / 100));
+        double percentageVal = CurrentPercentage;
     }
     @if (numRecordProgress != 0)
     {
         <span class="ps-2">Загрузка (@Math.Round(percentageVal, 2)%): @numRecordProgress из @NumRecordsTotal</span>
+        <sup class="ps-2">@_stateInfo</sup>
         <MudProgressLinear Color="Color.Primary" Indeterminate="@(percentageVal != 0 && percentageVal < 2)" Value="@numRecordProgress" Class="my-7" Max="NumRecordsTotal" />
     }
     @if (DemoTable?.Columns is not null)

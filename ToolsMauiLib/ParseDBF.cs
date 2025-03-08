@@ -336,7 +336,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
             });
             DataList.Clear();
             if (PartUploadNotify is not null)
-                PartUploadNotify(header.numRecords);
+                PartUploadNotify(header.numRecords - 1);
         }
     }
 

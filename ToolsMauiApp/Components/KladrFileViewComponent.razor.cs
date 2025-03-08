@@ -36,10 +36,26 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
 
 
     int NumRecordsTotal, numRecordProgress;
+
+    DateTime? startedProgress = null;
+    DateTime? endedProgress = null;
+    string _stateInfo = "";
+
     (List<object[]> TableData, FieldDescriptorBase[] Columns)? DemoTable;
 
     MemoryStream ms = default!;
     string currentEncoding = "cp866";
+
+    double CurrentPercentage
+    {
+        get
+        {
+            double _nrt = NumRecordsTotal;
+            double percentageVal = NumRecordsTotal == 0 ? 0 : (numRecordProgress / (_nrt / 100));
+
+            return percentageVal > 100 ? 100 : percentageVal;
+        }
+    }
 
     /// <inheritdoc/>
     public async Task SeedDemo(string enc = "cp866")
@@ -76,6 +92,7 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     public async Task UploadData()
     {
+        startedProgress = DateTime.Now;
         OwnerComponent.ChildBusyVote(1);
         numRecordProgress = 1;
         await SetBusy();
@@ -83,6 +100,7 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
         Parser.PartUploadNotify += ParserPartUploadNotify;
         await Parser.UploadData(true);
         Parser.PartUploadNotify -= ParserPartUploadNotify;
+        endedProgress = DateTime.Now;
         await SetBusy(false);
         OwnerComponent.ChildBusyVote(-1);
     }
@@ -90,6 +108,26 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     private void ParserPartUploadNotify(int recordNum)
     {
         numRecordProgress = recordNum;
+
+        if (startedProgress is null)
+            _stateInfo = string.Empty;
+        else if (endedProgress is not null)
+            _stateInfo = $"Завершено за: {endedProgress - startedProgress}";
+        else
+        {
+            TimeSpan currentDuration = DateTime.Now - startedProgress.Value;
+            double percentageVal = CurrentPercentage;
+            if (percentageVal == 0)
+                _stateInfo = "Начинаем ...";
+            else if (percentageVal >= 100)
+                _stateInfo = $"Выполнено за {currentDuration:hh\\:mm\\:ss}";
+            else
+            {
+                TimeSpan calcFinal = TimeSpan.FromMilliseconds(currentDuration.TotalMilliseconds / percentageVal * 100);
+                _stateInfo = $" время прошло {currentDuration:hh\\:mm\\:ss} из {calcFinal:hh\\:mm\\:ss} - осталось {calcFinal - currentDuration:hh\\:mm\\:ss}";
+                _stateInfo = $" время прошло {currentDuration:hh\\:mm\\:ss} из {calcFinal:hh\\:mm\\:ss} - осталось {calcFinal - currentDuration:hh\\:mm\\:ss}";
+            }
+        }
         InvokeAsync(StateHasChanged);
     }
 }
