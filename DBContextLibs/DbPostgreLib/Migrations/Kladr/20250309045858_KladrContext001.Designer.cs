@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Kladr
 {
     [DbContext(typeof(KladrContext))]
-    [Migration("20250308040320_KladrContext001")]
+    [Migration("20250309045858_KladrContext001")]
     partial class KladrContext001
     {
         /// <inheritdoc />
@@ -19,6 +19,7 @@ namespace DbPostgreLib.Migrations.Kladr
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("public")
                 .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -55,7 +56,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("OLDCODE");
 
-                    b.ToTable("AltnamesKLADR");
+                    b.ToTable("AltnamesKLADR", "public");
                 });
 
             modelBuilder.Entity("SharedLib.AltnameTempKLADRModelDB", b =>
@@ -83,7 +84,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempAltnamesKLADR");
+                    b.ToTable("TempAltnamesKLADR", "public");
                 });
 
             modelBuilder.Entity("SharedLib.HouseKLADRModelDB", b =>
@@ -136,13 +137,12 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CODE");
+                    b.HasIndex("CODE")
+                        .IsUnique();
 
                     b.HasIndex("GNINMB");
 
                     b.HasIndex("INDEX");
-
-                    b.HasIndex("NAME");
 
                     b.HasIndex("OCATD");
 
@@ -150,7 +150,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("UNO");
 
-                    b.ToTable("HousesKLADR");
+                    b.ToTable("HousesKLADR", "public");
                 });
 
             modelBuilder.Entity("SharedLib.HouseTempKLADRModelDB", b =>
@@ -203,7 +203,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempHousesKLADR");
+                    b.ToTable("TempHousesKLADR", "public");
                 });
 
             modelBuilder.Entity("SharedLib.NameMapKLADRModelDB", b =>
@@ -244,7 +244,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("SHNAME");
 
-                    b.ToTable("NamesMapsKLADR");
+                    b.ToTable("NamesMapsKLADR", "public");
                 });
 
             modelBuilder.Entity("SharedLib.NameMapTempKLADRModelDB", b =>
@@ -277,7 +277,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempNamesMapsKLADR");
+                    b.ToTable("TempNamesMapsKLADR", "public");
                 });
 
             modelBuilder.Entity("SharedLib.ObjectKLADRModelDB", b =>
@@ -330,7 +330,8 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CODE");
+                    b.HasIndex("CODE")
+                        .IsUnique();
 
                     b.HasIndex("GNINMB");
 
@@ -346,7 +347,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("UNO");
 
-                    b.ToTable("ObjectsKLADR");
+                    b.ToTable("ObjectsKLADR", "public");
                 });
 
             modelBuilder.Entity("SharedLib.ObjectTempKLADRModelDB", b =>
@@ -399,7 +400,30 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempObjectsKLADR");
+                    b.ToTable("TempObjectsKLADR", "public");
+                });
+
+            modelBuilder.Entity("SharedLib.RegisterJobTempKladrModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("VoteValue")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("RegistersJobsTempKladr", "public");
                 });
 
             modelBuilder.Entity("SharedLib.SocrbaseKLADRModelDB", b =>
@@ -440,7 +464,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("SOCRNAME");
 
-                    b.ToTable("SocrbasesKLADR");
+                    b.ToTable("SocrbasesKLADR", "public");
                 });
 
             modelBuilder.Entity("SharedLib.SocrbaseTempKLADRModelDB", b =>
@@ -473,7 +497,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempSocrbasesKLADR");
+                    b.ToTable("TempSocrbasesKLADR", "public");
                 });
 
             modelBuilder.Entity("SharedLib.StreetKLADRModelDB", b =>
@@ -521,7 +545,8 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CODE");
+                    b.HasIndex("CODE")
+                        .IsUnique();
 
                     b.HasIndex("GNINMB");
 
@@ -535,7 +560,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasIndex("UNO");
 
-                    b.ToTable("StreetsKLADR");
+                    b.ToTable("StreetsKLADR", "public");
                 });
 
             modelBuilder.Entity("SharedLib.StreetTempKLADRModelDB", b =>
@@ -583,7 +608,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempStreetsKLADR");
+                    b.ToTable("TempStreetsKLADR", "public");
                 });
 #pragma warning restore 612, 618
         }

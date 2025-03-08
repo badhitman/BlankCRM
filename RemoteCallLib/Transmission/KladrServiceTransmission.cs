@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DocumentFormat.OpenXml.Drawing;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -25,6 +24,10 @@ public class KladrServiceTransmission(IRabbitClient rabbitClient) : IKladrServic
         => await rabbitClient.MqRemoteCall<MetadataKladrModel>(GlobalStaticConstants.TransmissionQueues.GetMetadataKladrReceive, req) ?? new();
 
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> RegisterJobTempKladr(RegisterJobTempKladrRequestModel req)
+        => await rabbitClient.MqRemoteCall<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.RegisterJobTempKladrReceive, req, waitResponse: false) ?? new();
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req)
-        => await rabbitClient.MqRemoteCall<MetadataKladrModel>(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive, req) ?? new();
+        => await rabbitClient.MqRemoteCall<MetadataKladrModel>(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive, req, waitResponse: false) ?? new();
 }

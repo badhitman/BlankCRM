@@ -139,10 +139,50 @@ public class KladrServiceImpl(
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> FlushTempKladr()
     {
         loggerRepo.LogInformation($"call > {nameof(FlushTempKladr)}");
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-        return await context.FlushTempKladr();
+
+        try
+        {
+            await context.FlushTempKladr();
+            return ResponseBaseModel.CreateSuccess("Ok");
+        }
+        catch (Exception ex)
+        {
+            return ResponseBaseModel.CreateError(ex);
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> RegisterJobTempKladr(RegisterJobTempKladrRequestModel req)
+    {
+        using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+        if (!await context.RegistersJobsTempKladr.AnyAsync(x => x.Name == req.TableName))
+        {
+            try
+            {
+                await context.RegistersJobsTempKladr.AddAsync(new RegisterJobTempKladrModelDB() { Name = req.TableName, VoteValue = req.VoteVal });
+                await context.SaveChangesAsync();
+            }
+            catch
+            {
+                await context.RegistersJobsTempKladr
+                    .Where(x => x.Name == req.TableName)
+                    .ExecuteUpdateAsync(set =>
+                    set.SetProperty(p =>
+                    p.VoteValue, r => r.VoteValue + req.VoteVal));
+            }
+        }
+        else
+            await context.RegistersJobsTempKladr
+    .Where(x => x.Name == req.TableName)
+    .ExecuteUpdateAsync(set =>
+    set.SetProperty(p =>
+    p.VoteValue, r => r.VoteValue + req.VoteVal));
+
+        return ResponseBaseModel.CreateSuccess("ok");
     }
 }

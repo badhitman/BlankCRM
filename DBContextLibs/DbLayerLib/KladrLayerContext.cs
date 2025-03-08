@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DbLayerLib;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
 
@@ -30,15 +31,42 @@ public abstract partial class KladrLayerContext : DbContext
 #endif
     }
 
+    /// <inheritdoc/>
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.HasDefaultSchema("public");
+    }
+
     /// <summary>
     /// Очистка временных таблиц
     /// </summary>
-    public abstract Task EmptyTemplateTables();
+    public abstract Task EmptyTemplateTables(bool forTemplate = true);
 
     /// <summary>
     /// Переместить данные из временных таблиц в прод
     /// </summary>
-    public abstract Task<ResponseBaseModel> FlushTempKladr();
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "EF1002:Risk of vulnerability to SQL injection.", Justification = "<CustomAttr>")]
+    public async Task FlushTempKladr()
+    {
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await Database.BeginTransactionAsync();
+
+        await EmptyTemplateTables(false);
+        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<StreetKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()}");
+        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<AltnameKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<AltnameTempKLADRModelDB>()}");
+        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<NameMapKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<NameMapTempKLADRModelDB>()}");
+        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<ObjectKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<ObjectTempKLADRModelDB>()}");
+        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<SocrbaseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<SocrbaseTempKLADRModelDB>()}");
+        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<HouseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()}");
+
+        await transaction.CommitAsync();
+    }
+
+
+    /// <summary>
+    /// RegistersJobsTempKladr
+    /// </summary>
+    public DbSet<RegisterJobTempKladrModelDB> RegistersJobsTempKladr { get; set; } = default!;
+
 
     /// <summary>
     /// Altnames содержит сведения о соответствии кодов старых и новых наименований (обозначений домов) в случаях переподчинения 

@@ -14,19 +14,29 @@ namespace DbcLib;
 public partial class KladrContext(DbContextOptions<KladrContext> options) : KladrLayerContext(options)
 {
     /// <inheritdoc/>
-    public override async Task EmptyTemplateTables()
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "EF1002:Risk of vulnerability to SQL injection.", Justification = "<CustomAttr>")]
+    public override async Task EmptyTemplateTables(bool forTemplate = true)
     {
-        await Database.ExecuteSqlAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()}");
-        await Database.ExecuteSqlAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<AltnameTempKLADRModelDB>()}");
-        await Database.ExecuteSqlAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<NameMapTempKLADRModelDB>()}");
-        await Database.ExecuteSqlAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<ObjectTempKLADRModelDB>()}");
-        await Database.ExecuteSqlAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<SocrbaseTempKLADRModelDB>()}");
-        await Database.ExecuteSqlAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()}");
-    }
+        await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<RegisterJobTempKladrModelDB>()}");
 
-    /// <inheritdoc/>
-    public override async Task<ResponseBaseModel> FlushTempKladr()
-    {
-        throw new NotImplementedException();
+        if (forTemplate)
+        {
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()}");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<AltnameTempKLADRModelDB>()}");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<NameMapTempKLADRModelDB>()}");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<ObjectTempKLADRModelDB>()}");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<SocrbaseTempKLADRModelDB>()}");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()}");
+        }
+        else
+        {
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<StreetKLADRModelDB>()}");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<AltnameKLADRModelDB>()}");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<NameMapKLADRModelDB>()}");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<ObjectKLADRModelDB>()}");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<SocrbaseKLADRModelDB>()}");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<HouseKLADRModelDB>()}");
+        }
+
     }
 }

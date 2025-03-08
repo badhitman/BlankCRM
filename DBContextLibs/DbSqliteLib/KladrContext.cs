@@ -13,19 +13,25 @@ namespace DbcLib;
 public partial class KladrContext(DbContextOptions<KladrContext> options) : KladrLayerContext(options)
 {
     /// <inheritdoc/>
-    public override async Task EmptyTemplateTables()
+    public override async Task EmptyTemplateTables(bool forTemplate = true)
     {
-        await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE public.\"{nameof(TempStreetsKLADR)}\" RESTART IDENTITY RESTRICT");
-        await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE public.\"{nameof(TempAltnamesKLADR)}\" RESTART IDENTITY RESTRICT");
-        await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE public.\"{nameof(TempNamesMapsKLADR)}\" RESTART IDENTITY RESTRICT");
-        await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE public.\"{nameof(TempObjectsKLADR)}\" RESTART IDENTITY RESTRICT");
-        await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE public.\"{nameof(TempSocrbasesKLADR)}\" RESTART IDENTITY RESTRICT");
-        await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE public.\"{nameof(TempHousesKLADR)}\" RESTART IDENTITY RESTRICT");
-    }
-
-    /// <inheritdoc/>
-    public override async Task<ResponseBaseModel> FlushTempKladr()
-    {
-        throw new NotImplementedException();
+        if (forTemplate)
+        {
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(TempStreetsKLADR)}\"");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(TempAltnamesKLADR)}\"");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(TempNamesMapsKLADR)}\"");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(TempObjectsKLADR)}\"");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(TempSocrbasesKLADR)}\"");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(TempHousesKLADR)}\"");
+        }
+        else
+        {
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(StreetsKLADR)}\"");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(AltnamesKLADR)}\"");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(NamesMapsKLADR)}\"");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(ObjectsKLADR)}\"");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(SocrbasesKLADR)}\"");
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(HousesKLADR)}\"");
+        }
     }
 }

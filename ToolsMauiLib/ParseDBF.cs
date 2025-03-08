@@ -217,6 +217,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
         int data_list_Count = 0, del_rows_count = 0;
         BinaryReader recReader;
         byte[] readed_data_tmp;
+        
         for (int counter = 0; counter <= header.numRecords - 1; counter++)
         {
             buffer = new byte[header.recordLen];
@@ -321,6 +322,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
                     RowsData = DataList,
                     TableName = fileName,
                 });
+
                 DataList.Clear();
                 if (PartUploadNotify is not null)
                     PartUploadNotify(counter);
@@ -334,59 +336,13 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
                 RowsData = DataList,
                 TableName = fileName,
             });
+
             DataList.Clear();
             if (PartUploadNotify is not null)
                 PartUploadNotify(header.numRecords - 1);
         }
     }
-
-    /*
-    private string NamesFieldsSQL(bool ForCreateTable, string separator = ", ", string quote = "`")
-    {
-        foreach (FieldDescriptor field in fields)
-        {
-            if (ForCreateTable)
-            {
-                switch (field.fieldType)
-                {
-                    case 'N':
-                        if (field.count > 0)
-                        {
-                            type_data += " DECIMAL(" + field.fieldLen + "," + field.count + ")";
-                        }
-                        else
-                        {
-                            type_data += " INT(" + field.fieldLen + ")";
-                        }
-                        break;
-                    case 'C':
-                        type_data += " VARCHAR(" + field.fieldLen + ")";
-                        break;
-                    case 'T':
-                        //col = new DataColumn(field.fieldName, typeof(string));
-                        type_data += " TIME";
-                        break;
-                    case 'D':
-                        type_data += " DATE";
-                        break;
-                    case 'L':
-                        type_data += " BOOLEAN";
-                        break;
-                    case 'F':
-                        type_data += " DOUBLE(" + field.fieldLen + "," + field.count + ")";
-                        break;
-                }
-                returned_data += type_data + " NOT NULL,\n";
-            }
-            else
-                returned_data += type_data + separator;
-
-        }
-        
-    }
-
-    */
-
+    
     static bool IsNumber(string numberString)
     {
         char[] numbers = numberString.ToCharArray();
@@ -421,5 +377,40 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
         double m = q + 2 - 12 * s4;
         double j = 100 * (n - 49) + i + s4;
         return new DateTime(Convert.ToInt32(j), Convert.ToInt32(m), Convert.ToInt32(d));
+    }
+}
+
+class Reader
+{
+    // создаем семафор
+    static Semaphore sem = new Semaphore(3, 3);
+    Thread myThread;
+    int count = 3;// счетчик чтения
+
+    public Reader(int i)
+    {
+        myThread = new Thread(Read);
+        myThread.Name = $"Читатель {i}";
+        myThread.Start();
+    }
+
+    public void Read()
+    {
+        while (count > 0)
+        {
+            sem.WaitOne();  // ожидаем, когда освободиться место
+
+            Console.WriteLine($"{Thread.CurrentThread.Name} входит в библиотеку");
+
+            Console.WriteLine($"{Thread.CurrentThread.Name} читает");
+            Thread.Sleep(1000);
+
+            Console.WriteLine($"{Thread.CurrentThread.Name} покидает библиотеку");
+
+            sem.Release();  // освобождаем место
+
+            count--;
+            Thread.Sleep(1000);
+        }
     }
 }

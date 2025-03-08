@@ -11,8 +11,12 @@ namespace DbPostgreLib.Migrations.Kladr
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "public");
+
             migrationBuilder.CreateTable(
                 name: "AltnamesKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -28,6 +32,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.CreateTable(
                 name: "HousesKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -48,6 +53,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.CreateTable(
                 name: "NamesMapsKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -64,6 +70,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.CreateTable(
                 name: "ObjectsKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -83,7 +90,23 @@ namespace DbPostgreLib.Migrations.Kladr
                 });
 
             migrationBuilder.CreateTable(
+                name: "RegistersJobsTempKladr",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    VoteValue = table.Column<int>(type: "integer", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RegistersJobsTempKladr", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SocrbasesKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -100,6 +123,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.CreateTable(
                 name: "StreetsKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -119,6 +143,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.CreateTable(
                 name: "TempAltnamesKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -134,6 +159,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.CreateTable(
                 name: "TempHousesKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -154,6 +180,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.CreateTable(
                 name: "TempNamesMapsKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -170,6 +197,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.CreateTable(
                 name: "TempObjectsKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -190,6 +218,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.CreateTable(
                 name: "TempSocrbasesKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -206,6 +235,7 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.CreateTable(
                 name: "TempStreetsKLADR",
+                schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -225,166 +255,203 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.CreateIndex(
                 name: "IX_AltnamesKLADR_LEVEL",
+                schema: "public",
                 table: "AltnamesKLADR",
                 column: "LEVEL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AltnamesKLADR_NEWCODE",
+                schema: "public",
                 table: "AltnamesKLADR",
                 column: "NEWCODE");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AltnamesKLADR_OLDCODE",
+                schema: "public",
                 table: "AltnamesKLADR",
                 column: "OLDCODE");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HousesKLADR_CODE",
+                schema: "public",
                 table: "HousesKLADR",
-                column: "CODE");
+                column: "CODE",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_HousesKLADR_GNINMB",
+                schema: "public",
                 table: "HousesKLADR",
                 column: "GNINMB");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HousesKLADR_INDEX",
+                schema: "public",
                 table: "HousesKLADR",
                 column: "INDEX");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HousesKLADR_NAME",
-                table: "HousesKLADR",
-                column: "NAME");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_HousesKLADR_OCATD",
+                schema: "public",
                 table: "HousesKLADR",
                 column: "OCATD");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HousesKLADR_SOCR",
+                schema: "public",
                 table: "HousesKLADR",
                 column: "SOCR");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HousesKLADR_UNO",
+                schema: "public",
                 table: "HousesKLADR",
                 column: "UNO");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NamesMapsKLADR_CODE",
+                schema: "public",
                 table: "NamesMapsKLADR",
                 column: "CODE");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NamesMapsKLADR_NAME",
+                schema: "public",
                 table: "NamesMapsKLADR",
                 column: "NAME");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NamesMapsKLADR_SCNAME",
+                schema: "public",
                 table: "NamesMapsKLADR",
                 column: "SCNAME");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NamesMapsKLADR_SHNAME",
+                schema: "public",
                 table: "NamesMapsKLADR",
                 column: "SHNAME");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ObjectsKLADR_CODE",
+                schema: "public",
                 table: "ObjectsKLADR",
-                column: "CODE");
+                column: "CODE",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ObjectsKLADR_GNINMB",
+                schema: "public",
                 table: "ObjectsKLADR",
                 column: "GNINMB");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ObjectsKLADR_INDEX",
+                schema: "public",
                 table: "ObjectsKLADR",
                 column: "INDEX");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ObjectsKLADR_NAME",
+                schema: "public",
                 table: "ObjectsKLADR",
                 column: "NAME");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ObjectsKLADR_OCATD",
+                schema: "public",
                 table: "ObjectsKLADR",
                 column: "OCATD");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ObjectsKLADR_SOCR",
+                schema: "public",
                 table: "ObjectsKLADR",
                 column: "SOCR");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ObjectsKLADR_STATUS",
+                schema: "public",
                 table: "ObjectsKLADR",
                 column: "STATUS");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ObjectsKLADR_UNO",
+                schema: "public",
                 table: "ObjectsKLADR",
                 column: "UNO");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RegistersJobsTempKladr_Name",
+                schema: "public",
+                table: "RegistersJobsTempKladr",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SocrbasesKLADR_KOD_T_ST",
+                schema: "public",
                 table: "SocrbasesKLADR",
                 column: "KOD_T_ST");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SocrbasesKLADR_LEVEL",
+                schema: "public",
                 table: "SocrbasesKLADR",
                 column: "LEVEL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SocrbasesKLADR_SCNAME",
+                schema: "public",
                 table: "SocrbasesKLADR",
                 column: "SCNAME");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SocrbasesKLADR_SOCRNAME",
+                schema: "public",
                 table: "SocrbasesKLADR",
                 column: "SOCRNAME");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetsKLADR_CODE",
+                schema: "public",
                 table: "StreetsKLADR",
-                column: "CODE");
+                column: "CODE",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetsKLADR_GNINMB",
+                schema: "public",
                 table: "StreetsKLADR",
                 column: "GNINMB");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetsKLADR_INDEX",
+                schema: "public",
                 table: "StreetsKLADR",
                 column: "INDEX");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetsKLADR_NAME",
+                schema: "public",
                 table: "StreetsKLADR",
                 column: "NAME");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetsKLADR_OCATD",
+                schema: "public",
                 table: "StreetsKLADR",
                 column: "OCATD");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetsKLADR_SOCR",
+                schema: "public",
                 table: "StreetsKLADR",
                 column: "SOCR");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StreetsKLADR_UNO",
+                schema: "public",
                 table: "StreetsKLADR",
                 column: "UNO");
         }
@@ -393,40 +460,56 @@ namespace DbPostgreLib.Migrations.Kladr
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AltnamesKLADR");
+                name: "AltnamesKLADR",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "HousesKLADR");
+                name: "HousesKLADR",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "NamesMapsKLADR");
+                name: "NamesMapsKLADR",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "ObjectsKLADR");
+                name: "ObjectsKLADR",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "SocrbasesKLADR");
+                name: "RegistersJobsTempKladr",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "StreetsKLADR");
+                name: "SocrbasesKLADR",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "TempAltnamesKLADR");
+                name: "StreetsKLADR",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "TempHousesKLADR");
+                name: "TempAltnamesKLADR",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "TempNamesMapsKLADR");
+                name: "TempHousesKLADR",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "TempObjectsKLADR");
+                name: "TempNamesMapsKLADR",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "TempSocrbasesKLADR");
+                name: "TempObjectsKLADR",
+                schema: "public");
 
             migrationBuilder.DropTable(
-                name: "TempStreetsKLADR");
+                name: "TempSocrbasesKLADR",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "TempStreetsKLADR",
+                schema: "public");
         }
     }
 }

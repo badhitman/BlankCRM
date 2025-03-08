@@ -41,8 +41,7 @@ public class HouseKLADRModelDTO : RootKLADRModelDB
 /// <summary>
 /// Дом
 /// </summary>
-[Index(nameof(SOCR)), Index(nameof(INDEX)), Index(nameof(GNINMB)), Index(nameof(UNO)), Index(nameof(OCATD))]
-[Index(nameof(NAME)), Index(nameof(CODE))]
+[Index(nameof(SOCR)), Index(nameof(INDEX)), Index(nameof(GNINMB)), Index(nameof(UNO)), Index(nameof(OCATD)), Index(nameof(CODE), IsUnique = true)]
 public class HouseKLADRModelDB : HouseKLADRModelDTO
 {
 

@@ -12,6 +12,8 @@ public static class EntityHelpers
     {
         Microsoft.EntityFrameworkCore.Metadata.IEntityType entityType = context.Model.FindEntityType(typeof(T))!;
         string? schema = entityType.GetDefaultSchema();
-        return $"{schema ?? "(unknown)"}.{entityType.GetTableName()}";
+        return string.IsNullOrWhiteSpace(schema)
+            ? $"\"{entityType.GetTableName()}\""
+            : $"\"{schema}\".\"{entityType.GetTableName()}\"";
     }
 }

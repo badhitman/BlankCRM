@@ -61,11 +61,6 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
                 aboutStatus = "Файлы подготовлены";
                 aboutSubStatus = "можно отправлять данные в БД";
             }
-            //else
-            //{
-            //    aboutStatus = "Данные отправлены на сервер";
-            //    aboutSubStatus = "теперь вы можете обновить основную БД";
-            //}
         }
 
         StateHasChangedCall();
@@ -99,7 +94,7 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
         }
     }
 
-    async Task SendFile()
+    async Task TransferData()
     {
         if (loadedFiles.Count == 0)
             throw new Exception();
