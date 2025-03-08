@@ -18,5 +18,3 @@ public static class ConverterProvider
             value => value.Get(0));
     }
 }
-
-

@@ -8,7 +8,7 @@ using SharedLib;
 namespace DbcLib;
 
 /// <inheritdoc/>
-public partial class KladrLayerContext : DbContext
+public abstract partial class KladrLayerContext : DbContext
 {
     /// <inheritdoc/>
     public KladrLayerContext(DbContextOptions options)
@@ -29,6 +29,11 @@ public partial class KladrLayerContext : DbContext
         options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
 #endif
     }
+
+    /// <summary>
+    /// Очистка временных таблиц
+    /// </summary>
+    public abstract Task EmptyTemplateTables();
 
     /// <summary>
     /// Altnames содержит сведения о соответствии кодов старых и новых наименований (обозначений домов) в случаях переподчинения 

@@ -17,9 +17,6 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
     [Inject]
     ParseDBF Parser { get; set; } = default!;
 
-    [Inject]
-    IClientHTTPRestService RemoteClient { get; set; } = default!;
-
 
     /// <summary>
     /// FileViewElement

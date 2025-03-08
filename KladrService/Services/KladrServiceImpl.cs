@@ -48,14 +48,7 @@ public class KladrServiceImpl(
     {
         loggerRepo.LogInformation($"call > {nameof(ClearTempKladr)}");
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-
-        await context.TempStreetsKLADR.ExecuteDeleteAsync();
-        await context.TempSocrbasesKLADR.ExecuteDeleteAsync();
-        await context.TempObjectsKLADR.ExecuteDeleteAsync();
-        await context.TempNamesMapsKLADR.ExecuteDeleteAsync();
-        await context.TempAltnamesKLADR.ExecuteDeleteAsync();
-        await context.TempHousesKLADR.ExecuteDeleteAsync();
-
+        await context.EmptyTemplateTables();
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
