@@ -35,6 +35,7 @@ public class ObjectKLADRModelDTO : RootKLADRModelDB
 /// <inheritdoc/>
 [Index(nameof(STATUS))]
 [Index(nameof(SOCR)), Index(nameof(INDEX)), Index(nameof(GNINMB)), Index(nameof(UNO)), Index(nameof(OCATD))]
+[Index(nameof(NAME)), Index(nameof(CODE))]
 public class ObjectKLADRModelDB : ObjectKLADRModelDTO
 {
 

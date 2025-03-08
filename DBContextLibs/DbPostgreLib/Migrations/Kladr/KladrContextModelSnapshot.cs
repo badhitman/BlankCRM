@@ -200,10 +200,6 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CODE");
-
-                    b.HasIndex("NAME");
-
                     b.ToTable("TempHousesKLADR");
                 });
 
@@ -277,10 +273,6 @@ namespace DbPostgreLib.Migrations.Kladr
                         .HasColumnType("character varying(40)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CODE");
-
-                    b.HasIndex("NAME");
 
                     b.ToTable("TempNamesMapsKLADR");
                 });
@@ -403,10 +395,6 @@ namespace DbPostgreLib.Migrations.Kladr
                         .HasColumnType("character varying(4)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CODE");
-
-                    b.HasIndex("NAME");
 
                     b.ToTable("TempObjectsKLADR");
                 });
@@ -591,10 +579,6 @@ namespace DbPostgreLib.Migrations.Kladr
                         .HasColumnType("character varying(4)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CODE");
-
-                    b.HasIndex("NAME");
 
                     b.ToTable("TempStreetsKLADR");
                 });

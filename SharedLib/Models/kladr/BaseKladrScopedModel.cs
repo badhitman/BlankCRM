@@ -10,7 +10,6 @@ namespace SharedLib;
 /// <summary>
 /// BaseKladrModel
 /// </summary>
-[Index(nameof(NAME)), Index(nameof(CODE))]
 public class BaseKladrScopedModel
 {
     /// <inheritdoc/>

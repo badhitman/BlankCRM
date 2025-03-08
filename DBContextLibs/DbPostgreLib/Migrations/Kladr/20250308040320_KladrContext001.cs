@@ -387,46 +387,6 @@ namespace DbPostgreLib.Migrations.Kladr
                 name: "IX_StreetsKLADR_UNO",
                 table: "StreetsKLADR",
                 column: "UNO");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TempHousesKLADR_CODE",
-                table: "TempHousesKLADR",
-                column: "CODE");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TempHousesKLADR_NAME",
-                table: "TempHousesKLADR",
-                column: "NAME");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TempNamesMapsKLADR_CODE",
-                table: "TempNamesMapsKLADR",
-                column: "CODE");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TempNamesMapsKLADR_NAME",
-                table: "TempNamesMapsKLADR",
-                column: "NAME");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TempObjectsKLADR_CODE",
-                table: "TempObjectsKLADR",
-                column: "CODE");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TempObjectsKLADR_NAME",
-                table: "TempObjectsKLADR",
-                column: "NAME");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TempStreetsKLADR_CODE",
-                table: "TempStreetsKLADR",
-                column: "CODE");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TempStreetsKLADR_NAME",
-                table: "TempStreetsKLADR",
-                column: "NAME");
         }
 
         /// <inheritdoc />

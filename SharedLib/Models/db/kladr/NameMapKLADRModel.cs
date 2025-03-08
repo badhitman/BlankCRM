@@ -41,6 +41,7 @@ public class NameMapKLADRModelDTO : BaseKladrModel
 
 /// <inheritdoc/>
 [Index(nameof(SHNAME)), Index(nameof(SCNAME))]
+[Index(nameof(NAME)), Index(nameof(CODE))]
 public class NameMapKLADRModelDB : NameMapKLADRModelDTO
 {
 
