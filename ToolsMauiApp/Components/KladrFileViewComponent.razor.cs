@@ -124,8 +124,8 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
             else
             {
                 TimeSpan calcFinal = TimeSpan.FromMilliseconds(currentDuration.TotalMilliseconds / percentageVal * 100);
-                _stateInfo = $" время прошло {currentDuration:hh\\:mm\\:ss} из {calcFinal:hh\\:mm\\:ss} - осталось {calcFinal - currentDuration:hh\\:mm\\:ss}";
-                _stateInfo = $" время прошло {currentDuration:hh\\:mm\\:ss} из {calcFinal:hh\\:mm\\:ss} - осталось {calcFinal - currentDuration:hh\\:mm\\:ss}";
+                _stateInfo = $" время прошло {currentDuration:hh\\:mm\\:ss} из {calcFinal:hh\\:mm\\:ss} (осталось {calcFinal - currentDuration:hh\\:mm\\:ss})";
+                _stateInfo = $" время прошло {currentDuration:hh\\:mm\\:ss} из {calcFinal:hh\\:mm\\:ss} (осталось {calcFinal - currentDuration:hh\\:mm\\:ss})";
             }
         }
         InvokeAsync(StateHasChanged);

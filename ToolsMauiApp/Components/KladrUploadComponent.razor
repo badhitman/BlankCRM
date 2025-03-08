@@ -8,6 +8,19 @@
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
 }
+
+@if (!string.IsNullOrWhiteSpace(aboutStatus))
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>@aboutStatus</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            @aboutSubStatus
+        </figcaption>
+    </figure>
+}
+
 <label for="exampleFormControlInputFile" class="form-label">Добавьте файлы классификатора (*.dbf):</label>
 <div class="input-group mb-3">
     <InputFile @key=@(_inputFileId) disabled="@(IsBusyProgress || loadedFiles.Count != 0)" class="form-control" OnChange="SelectFilesChange" id="exampleFormControlInputFile" multiple />

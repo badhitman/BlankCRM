@@ -7,7 +7,7 @@
     <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
 }
 else
-{
+{    
     <table class="table">
         <thead>
             <tr>
@@ -49,4 +49,5 @@ else
             </tr>
         </tbody>
     </table>
+    <MudButton OnClick="TransitData" Disabled="(IsBusyProgress || tmp is null ||  tmp.DomaCount == 0 ||  tmp.StreetsCount == 0||  tmp.ObjectsCount == 0)" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Транзит данных</MudButton>
 }

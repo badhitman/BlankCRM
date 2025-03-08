@@ -23,4 +23,10 @@ public partial class KladrContext(DbContextOptions<KladrContext> options) : Klad
         await Database.ExecuteSqlAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<SocrbaseTempKLADRModelDB>()}");
         await Database.ExecuteSqlAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()}");
     }
+
+    /// <inheritdoc/>
+    public override async Task<ResponseBaseModel> FlushTempKladr()
+    {
+        throw new NotImplementedException();
+    }
 }

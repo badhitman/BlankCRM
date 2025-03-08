@@ -19,6 +19,14 @@ public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
 
     MetadataKladrModel? tmp, prod;
 
+    async Task TransitData()
+    {
+        await SetBusy();
+        ResponseBaseModel res = await RemoteClient.FlushTempKladr();
+        await SetBusy(false);
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+    }
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {

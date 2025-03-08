@@ -23,6 +23,8 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
 
     private readonly List<(KladrFileViewComponent ParentComponent, string FileName)> ViewsChilds = [];
 
+    string? aboutStatus, aboutSubStatus;
+
     bool CanSend
     {
         get
@@ -52,26 +54,45 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
     public void ChildBusyVote(int voteVal)
     {
         Interlocked.Add(ref ChildsVotesBusyBalance, voteVal);
+        if (voteVal < 0 && ChildsVotesBusyBalance == 0)
+        {
+            if (loadedFiles.Count != 0)
+            {
+                aboutStatus = "Файлы подготовлены";
+                aboutSubStatus = "можно отправлять данные в БД";
+            }
+            //else
+            //{
+            //    aboutStatus = "Данные отправлены на сервер";
+            //    aboutSubStatus = "теперь вы можете обновить основную БД";
+            //}
+        }
+
         StateHasChangedCall();
     }
 
     /// <inheritdoc/>
-    public override bool IsBusyProgress 
-    { 
-        get => ChildsVotesBusyBalance != 0 || base.IsBusyProgress; 
-        set => base.IsBusyProgress = value; 
+    public override bool IsBusyProgress
+    {
+        get => ChildsVotesBusyBalance != 0 || base.IsBusyProgress;
+        set => base.IsBusyProgress = value;
     }
 
     /// <inheritdoc/>
     public void InitHandleAction((KladrFileViewComponent ParentComponent, string FileName) sender)
     {
         ViewsChilds.Add(sender);
+        StateHasChangedCall();
     }
 
     void SelectFilesChange(InputFileChangeEventArgs e)
     {
+        aboutStatus = "Выбранные файлы инициализируются";
+        aboutSubStatus = "дождитесь окончания...";
+
         loadedFiles.Clear();
         ViewsChilds.Clear();
+
         foreach (IBrowserFile file in e.GetMultipleFiles())
         {
             loadedFiles.Add(file);
@@ -83,9 +104,16 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
         if (loadedFiles.Count == 0)
             throw new Exception();
 
+        aboutStatus = "Отправка данных на сервер";
+        aboutSubStatus = "данные записываются в удалённую базу данных";
+
         await SetBusy();
         await RemoteClient.ClearTempKladr();
         await Task.WhenAll(ViewsChilds.Select(x => Task.Run(async () => await x.ParentComponent.UploadData())));
+
+        aboutStatus = "Данные отправлены на сервер";
+        aboutSubStatus = "теперь вы можете обновить основную БД";
+
         loadedFiles.Clear();
         _inputFileId = Guid.NewGuid().ToString();
         await SetBusy(false);

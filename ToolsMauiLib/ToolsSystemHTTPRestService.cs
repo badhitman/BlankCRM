@@ -145,7 +145,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect) : HttpC
         HttpResponseMessage response = await httpClient.PostAsync(routeUri, form);
 
         response.EnsureSuccessStatusCode();
-        
+
         string sd = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<TResponseModel<string>>(sd)!;
     }
@@ -161,7 +161,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect) : HttpC
 
         HttpResponseMessage response = await httpClient.DeleteAsync(routeUri);
         response.EnsureSuccessStatusCode();
-        
+
         string sd = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<ResponseBaseModel>(sd)!;
     }
@@ -174,7 +174,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect) : HttpC
 
         HttpResponseMessage response = await httpClient.PostAsJsonAsync(routeUri, req);
         response.EnsureSuccessStatusCode();
-        
+
         string sd = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<MetadataKladrModel>(sd)!;
     }
@@ -187,7 +187,21 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect) : HttpC
 
         HttpResponseMessage response = await httpClient.PostAsJsonAsync(routeUri, req);
         response.EnsureSuccessStatusCode();
-        
+
+        string sd = await response.Content.ReadAsStringAsync();
+        return JsonConvert.DeserializeObject<ResponseBaseModel>(sd)!;
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> FlushTempKladr()
+    {
+        using HttpClient httpClient = GetClient();
+
+        string routeUri = $"{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}-{Routes.FLUSH_ACTION_NAME}";
+
+        HttpResponseMessage response = await httpClient.DeleteAsync(routeUri);
+        response.EnsureSuccessStatusCode();
+
         string sd = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<ResponseBaseModel>(sd)!;
     }

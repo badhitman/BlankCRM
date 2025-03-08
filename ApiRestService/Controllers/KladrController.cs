@@ -35,4 +35,11 @@ public class KladrController(IKladrService kladrRepo) : ControllerBase
     {
         return await kladrRepo.ClearTempKladr();
     }
+
+    /// <inheritdoc/>
+    [HttpPut($"/{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}-{Routes.FLUSH_ACTION_NAME}")]
+    public async Task<ResponseBaseModel> TransitTempKladr()
+    {
+        return await kladrRepo.FlushTempKladr();
+    }
 }

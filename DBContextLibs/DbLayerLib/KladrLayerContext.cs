@@ -36,6 +36,11 @@ public abstract partial class KladrLayerContext : DbContext
     public abstract Task EmptyTemplateTables();
 
     /// <summary>
+    /// Переместить данные из временных таблиц в прод
+    /// </summary>
+    public abstract Task<ResponseBaseModel> FlushTempKladr();
+
+    /// <summary>
     /// Altnames содержит сведения о соответствии кодов старых и новых наименований (обозначений домов) в случаях переподчинения 
     /// и “сложного” переименования адресных объектов (когда коды записей со старым и новым наименованиями не совпадают).
     /// </summary>

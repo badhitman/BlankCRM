@@ -138,4 +138,11 @@ public class KladrServiceImpl(
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
+
+    public async Task<ResponseBaseModel> FlushTempKladr()
+    {
+        loggerRepo.LogInformation($"call > {nameof(FlushTempKladr)}");
+        using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+        return await context.FlushTempKladr();
+    }
 }

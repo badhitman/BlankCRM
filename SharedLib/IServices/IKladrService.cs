@@ -23,4 +23,9 @@ public interface IKladrService
     /// Загрузить порцию данных КЛАДР 4.0
     /// </summary>
     public Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req);
+
+    /// <summary>
+    /// Транзит данных из временного хранилища в прод
+    /// </summary>
+    public Task<ResponseBaseModel> FlushTempKladr();
 }

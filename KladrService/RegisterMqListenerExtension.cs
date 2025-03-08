@@ -19,9 +19,9 @@ public static class RegisterMqListenerExtension
     {
         return services
             .RegisterMqListener<UploadPartTempKladrReceive,     UploadPartTableDataModel, ResponseBaseModel>()
-            .RegisterMqListener<GetMetadataKladrReceive,    GetMetadataKladrRequestModel, MetadataKladrModel>()
+            .RegisterMqListener<GetMetadataKladrReceive,        GetMetadataKladrRequestModel, MetadataKladrModel>()
             .RegisterMqListener<ClearTempKladrReceive,          object, ResponseBaseModel>()
-            //.RegisterMqListener<,,>()
+            .RegisterMqListener<FlushTempKladrReceive,          object, ResponseBaseModel>()
             ;
     }
 }

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using SharedLib;
 
 namespace DbcLib;
 
@@ -20,5 +21,11 @@ public partial class KladrContext(DbContextOptions<KladrContext> options) : Klad
         await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE public.\"{nameof(TempObjectsKLADR)}\" RESTART IDENTITY RESTRICT");
         await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE public.\"{nameof(TempSocrbasesKLADR)}\" RESTART IDENTITY RESTRICT");
         await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE public.\"{nameof(TempHousesKLADR)}\" RESTART IDENTITY RESTRICT");
+    }
+
+    /// <inheritdoc/>
+    public override async Task<ResponseBaseModel> FlushTempKladr()
+    {
+        throw new NotImplementedException();
     }
 }

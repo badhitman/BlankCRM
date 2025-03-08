@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using SharedLib;
 
 namespace DbcLib;
 
@@ -20,5 +21,11 @@ public partial class KladrContext(DbContextOptions<KladrContext> options) : Klad
         await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(TempObjectsKLADR)}\"");
         await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(TempSocrbasesKLADR)}\"");
         await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE \"{nameof(TempHousesKLADR)}\"");
+    }
+
+    /// <inheritdoc/>
+    public override async Task<ResponseBaseModel> FlushTempKladr()
+    {
+        throw new NotImplementedException();
     }
 }
