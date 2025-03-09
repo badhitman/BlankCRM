@@ -9,6 +9,10 @@
     {
       "library": "tinymce@7.4.0",
       "destination": "wwwroot/libs/tinymce/"
+    },
+    {
+      "library": "bootstrap-icons@1.11.3",
+      "destination": "wwwroot/libs/bootstrap-icons/"
     }
   ]
 }

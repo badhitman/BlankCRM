@@ -19,6 +19,10 @@ public class KladrServiceImpl(
     public async Task<MetadataKladrModel> GetMetadataKladr(GetMetadataKladrRequestModel req)
     {
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+        RegisterJobTempKladrModelDB[] regS = await context.RegistersJobsTempKladr
+            .Where(x => x.VoteValue != 0)
+            .ToArrayAsync();
+
         if (req.ForTemporary)
         {
             return new()
@@ -29,6 +33,7 @@ public class KladrServiceImpl(
                 SocrbasesCount = await context.TempSocrbasesKLADR.CountAsync(),
                 StreetsCount = await context.TempStreetsKLADR.CountAsync(),
                 DomaCount = await context.TempHousesKLADR.CountAsync(),
+                RegistersJobs = regS,
             };
         }
 
@@ -40,6 +45,7 @@ public class KladrServiceImpl(
             SocrbasesCount = await context.SocrbasesKLADR.CountAsync(),
             StreetsCount = await context.StreetsKLADR.CountAsync(),
             DomaCount = await context.HousesKLADR.CountAsync(),
+            RegistersJobs = regS,
         };
     }
 
