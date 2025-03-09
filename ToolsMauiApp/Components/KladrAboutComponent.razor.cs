@@ -27,9 +27,18 @@ public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
         SnackbarRepo.ShowMessagesResponse(res.Messages);
     }
 
+    async Task ClearTempTables()
+    {
+        await SetBusy();
+        ResponseBaseModel res = await RemoteClient.ClearTempKladr();
+        await SetBusy(false);
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        await ReloadData();
+    }
+
     async Task ReloadData()
     {
-await SetBusy();
+        await SetBusy();
         await Task.WhenAll([Task.Run(async () => tmp = await RemoteClient.GetMetadataKladr(new() { ForTemporary = true })),
             Task.Run(async () => prod = await RemoteClient.GetMetadataKladr(new() { ForTemporary = false }))]);
         await SetBusy(false);

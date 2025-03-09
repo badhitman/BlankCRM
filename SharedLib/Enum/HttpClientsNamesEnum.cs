@@ -14,10 +14,10 @@ public enum HttpClientsNamesEnum
     /// </summary>
     Default = 10,
 
-    /*/// <summary>
-    /// Tools
+    /// <summary>
+    /// Kladr
     /// </summary>
-    Tools = 20,*/
+    Kladr = 20,
 
     /// <summary>
     /// Wappi

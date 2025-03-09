@@ -1,4 +1,5 @@
 ﻿@using BlazorLib
+@using SharedLib
 
 @inherits BlazorBusyComponentBaseModel
 
@@ -25,8 +26,12 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Temporary</th>
-                    <th scope="col">Production</th>
+                    <th scope="col">TEMP</th>
+                    <th scope="col">PROD</th>
+                    @if (tmp?.RegistersJobs is not null && tmp.RegistersJobs.Length != 0)
+                    {
+                        <th scope="col">transit</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -34,31 +39,67 @@
                     <th scope="row">KLADR</th>
                     <td>@tmp?.ObjectsCount</td>
                     <td>@prod?.ObjectsCount</td>
+                    @if (tmp?.RegistersJobs is not null && tmp.RegistersJobs.Length != 0)
+                    {
+                        <td>
+                            <sup>@tmp?.RegistersJobs?.FirstOrDefault(x => x.Name.Equals($"{KladrFilesEnum.KLADR}.DBF", StringComparison.OrdinalIgnoreCase))</sup>
+                        </td>
+                    }
                 </tr>
                 <tr>
                     <th scope="row">STREET</th>
                     <td>@tmp?.StreetsCount</td>
                     <td>@prod?.StreetsCount</td>
+                    @if (tmp?.RegistersJobs is not null && tmp.RegistersJobs.Length != 0)
+                    {
+                        <td>
+                            <sup>@tmp?.RegistersJobs?.FirstOrDefault(x => x.Name.Equals($"{KladrFilesEnum.STREET}.DBF", StringComparison.OrdinalIgnoreCase))</sup>
+                        </td>
+                    }
                 </tr>
                 <tr>
                     <th scope="row">DOMA</th>
                     <td>@tmp?.DomaCount</td>
                     <td>@prod?.DomaCount</td>
+                    @if (tmp?.RegistersJobs is not null && tmp.RegistersJobs.Length != 0)
+                    {
+                        <td>
+                            <sup>@tmp?.RegistersJobs?.FirstOrDefault(x => x.Name.Equals($"{KladrFilesEnum.DOMA}.DBF", StringComparison.OrdinalIgnoreCase))</sup>
+                        </td>
+                    }
                 </tr>
                 <tr>
                     <th scope="row">NAMEMAP</th>
                     <td>@tmp?.NamesCount</td>
                     <td>@prod?.NamesCount</td>
+                    @if (tmp?.RegistersJobs is not null && tmp.RegistersJobs.Length != 0)
+                    {
+                        <td>
+                            <sup>@tmp?.RegistersJobs?.FirstOrDefault(x => x.Name.Equals($"{KladrFilesEnum.NAMEMAP}.DBF", StringComparison.OrdinalIgnoreCase))</sup>
+                        </td>
+                    }
                 </tr>
                 <tr>
                     <th scope="row">SOCRBASE</th>
                     <td>@tmp?.SocrbasesCount</td>
                     <td>@prod?.SocrbasesCount</td>
+                    @if (tmp?.RegistersJobs is not null && tmp.RegistersJobs.Length != 0)
+                    {
+                        <td>
+                            <sup>@tmp?.RegistersJobs?.FirstOrDefault(x => x.Name.Equals($"{KladrFilesEnum.SOCRBASE}.DBF", StringComparison.OrdinalIgnoreCase))</sup>
+                        </td>
+                    }
                 </tr>
                 <tr>
                     <th scope="row">ALTNAMES</th>
                     <td>@tmp?.AltnamesCount</td>
                     <td>@prod?.AltnamesCount</td>
+                    @if (tmp?.RegistersJobs is not null && tmp.RegistersJobs.Length != 0)
+                    {
+                        <td>
+                            <sup>@tmp?.RegistersJobs?.FirstOrDefault(x => x.Name.Equals($"{KladrFilesEnum.ALTNAMES}.DBF", StringComparison.OrdinalIgnoreCase))</sup>
+                        </td>
+                    }
                 </tr>
             </tbody>
         </table>
@@ -67,5 +108,10 @@
                    Variant="Variant.Filled"
                    Color="Color.Primary"
                    FullWidth="true">Транзит данных</MudButton>
+        <MudButton OnClick="ClearTempTables"
+                   Disabled="IsBusyProgress"
+                   Variant="Variant.Filled"
+                   Color="Color.Surface"
+                   FullWidth="true">Clear</MudButton>
     </div>
 </div>

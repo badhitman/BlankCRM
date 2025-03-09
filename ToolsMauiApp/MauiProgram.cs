@@ -49,11 +49,11 @@ public static class MauiProgram
         builder.Services.AddScoped<IClientHTTPRestService, ToolsSystemHTTPRestService>();
         builder.Services.AddScoped<IServerToolsService, ToolsSystemService>();
 
-        /*builder.Services.AddHttpClient(HttpClientsNamesEnum.Tools.ToString(), cc =>
+        builder.Services.AddHttpClient(HttpClientsNamesEnum.Kladr.ToString(), cc =>
         {
-            //cc.BaseAddress = new Uri(_conf.AddressBaseUri ?? "localhost");
-            //cc.DefaultRequestHeaders.Add(_conf.HeaderName, _conf.TokenAccess);
-        });*/
+            cc.BaseAddress = new Uri(_conf.AddressBaseUri ?? "localhost");
+            cc.DefaultRequestHeaders.Add(_conf.HeaderName, _conf.TokenAccess);
+        });
         // #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();

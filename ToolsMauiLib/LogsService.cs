@@ -15,7 +15,7 @@ namespace ToolsMauiApp;
 /// LogsService
 /// </summary>
 #pragma warning disable CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
-public class LogsService(ApiRestConfigModelDB _conf) : HttpClientAuth(_conf), ILogsService
+public class LogsService(ApiRestConfigModelDB _conf, IHttpClientFactory HttpClientFactory) : ILogsService
 #pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
 {
     JsonSerializerOptions _serializerOptions = new()
@@ -27,7 +27,7 @@ public class LogsService(ApiRestConfigModelDB _conf) : HttpClientAuth(_conf), IL
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestModel<int> req)
     {
-        using HttpClient _client = GetClient();
+        using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
         string json = System.Text.Json.JsonSerializer.Serialize(req, _serializerOptions);
         StringContent content = new(json, Encoding.UTF8, "application/json");
@@ -42,7 +42,7 @@ public class LogsService(ApiRestConfigModelDB _conf) : HttpClientAuth(_conf), IL
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelect(TPaginationRequestModel<LogsSelectRequestModel> req)
     {
-        using HttpClient _client = GetClient();
+        using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
         string json = System.Text.Json.JsonSerializer.Serialize(req, _serializerOptions);
         StringContent content = new(json, Encoding.UTF8, "application/json");
@@ -56,7 +56,7 @@ public class LogsService(ApiRestConfigModelDB _conf) : HttpClientAuth(_conf), IL
     /// <inheritdoc/>
     public async Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogs(PeriodDatesTimesModel req)
     {
-        using HttpClient _client = GetClient();
+        using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
         string json = System.Text.Json.JsonSerializer.Serialize(req, _serializerOptions);
         StringContent content = new(json, Encoding.UTF8, "application/json");
