@@ -1,3 +1,4 @@
+@using BlazorWebLib.Components.Kladr
 @using BlazorWebLib.Components.ParametersShared
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Authorization
@@ -20,6 +21,8 @@
                     <h5 class="card-title">Регионы, районы, города (населённые пункты)</h5>
                     <h6 class="card-subtitle mb-2 text-body-secondary">Улицу, дом и далее заполняется в конце отдельно</h6>
                     <RubricsManageComponent ContextName="@GlobalStaticConstants.Routes.ADDRESS_CONTROLLER_NAME" />
+                    <hr />
+                    <KladrMainNavComponent />
                 </div>
             </div>
         </MudPaper>

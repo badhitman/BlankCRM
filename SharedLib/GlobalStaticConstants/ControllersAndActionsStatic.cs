@@ -420,6 +420,11 @@ public static partial class GlobalStaticConstants
         public const string TEMP_CONTROLLER_NAME = "temp";
 
         /// <summary>
+        /// Navigation
+        /// </summary>
+        public const string NAVIGATION_CONTROLLER_NAME = "navigation";
+
+        /// <summary>
         /// Job
         /// </summary>
         public const string JOB_CONTROLLER_NAME = "job";

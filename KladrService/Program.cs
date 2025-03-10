@@ -102,6 +102,7 @@ public class Program
         #endregion
         builder.Services
             .AddScoped<IKladrService, KladrServiceImpl>()
+            .AddScoped<IKladrNavigationService, KladrNavigationServiceImpl>()
             ;
 
         // Custom metrics for the application

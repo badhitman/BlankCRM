@@ -12,9 +12,9 @@ namespace KladrService;
 /// КЛАДР 4.0
 /// </summary>
 public class KladrServiceImpl(
-    IDbContextFactory<KladrContext> kladrDbFactory,
-    IHttpClientFactory HttpClientFactory,
-    ILogger<KladrServiceImpl> loggerRepo) : IKladrService
+IDbContextFactory<KladrContext> kladrDbFactory,
+IHttpClientFactory HttpClientFactory,
+ILogger<KladrServiceImpl> loggerRepo) : IKladrService
 {
     /// <inheritdoc/>
     public async Task<MetadataKladrModel> GetMetadataKladr(GetMetadataKladrRequestModel req)
