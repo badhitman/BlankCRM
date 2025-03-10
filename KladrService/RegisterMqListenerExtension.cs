@@ -18,7 +18,7 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection KladrRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<KladrNavigationReceive,     KladrsListRequestModel, List<UniversalBaseModel>>()
+            .RegisterMqListener<KladrNavigationReceive,     KladrsListRequestModel, List<ObjectKLADRModelDB>>()
             .RegisterMqListener<UploadPartTempKladrReceive, UploadPartTableDataModel, ResponseBaseModel>()
             .RegisterMqListener<GetMetadataKladrReceive,    GetMetadataKladrRequestModel, MetadataKladrModel>()
             .RegisterMqListener<ClearTempKladrReceive,      object, ResponseBaseModel>()

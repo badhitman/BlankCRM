@@ -38,7 +38,18 @@ public class ObjectKLADRModelDTO : RootKLADRModelDB
 [Index(nameof(NAME)), Index(nameof(CODE), IsUnique = true)]
 public class ObjectKLADRModelDB : ObjectKLADRModelDTO
 {
-
+    /// <inheritdoc/>
+    public void Update(ObjectKLADRModelDB sender)
+    {
+        NAME = sender.NAME;
+        SOCR = sender.SOCR;
+        GNINMB = sender.GNINMB;
+        UNO = sender.UNO;
+        CODE = sender.CODE;
+        Id = sender.Id;
+        STATUS = sender.STATUS;
+        OCATD = sender.OCATD;
+    }
 }
 
 /// <inheritdoc/>

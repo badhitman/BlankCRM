@@ -12,5 +12,5 @@ public interface IKladrNavigationService
     /// <summary>
     /// Получить objects
     /// </summary>
-    public Task<List<UniversalBaseModel>> ObjectsList(KladrsListRequestModel req);
+    public Task<List<ObjectKLADRModelDB>> ObjectsList(KladrsListRequestModel req);
 }

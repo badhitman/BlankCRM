@@ -26,7 +26,7 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     /// ValueChanged
     /// </summary>
     [Parameter]
-    public TreeViewOptionsModel? SelectedValuesChanged { get; set; }
+    public KladrNavigationTreeViewOptionsModel? SelectedValuesChanged { get; set; }
 
     /// <summary>
     /// Без вложенных узлов
@@ -35,32 +35,21 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     public bool SingleLevelMode { get; set; }
 
 
-    List<TreeItemDataRubricModel> InitialTreeItems { get; set; } = [];
-    void SelectedValuesChangeHandler(IReadOnlyCollection<UniversalBaseModel?> SelectedValues)
+    List<TreeItemDataKladrModel> InitialTreeItems { get; set; } = [];
+    void SelectedValuesChangeHandler(IReadOnlyCollection<ObjectKLADRModelDB?> SelectedValues)
     {
         SelectedValuesChanged?.SelectedValuesChangedHandler(SelectedValues);
     }
 
-    List<TreeItemData<UniversalBaseModel>> ConvertRubrics(IEnumerable<UniversalBaseModel> rubrics)
+    List<TreeItemData<ObjectKLADRModelDB>> ConvertRubrics(IEnumerable<ObjectKLADRModelDB> rubrics)
     {
-        (uint min, uint max) = rubrics.Any(x => x.SortIndex != uint.MaxValue)
-            ? (rubrics.Min(x => x.SortIndex), rubrics.Where(x => x.SortIndex != uint.MaxValue).Max(x => x.SortIndex))
-            : (0, 0);
+
 
         return [.. rubrics.Select(x => {
-                MoveRowStatesEnum mhp;
-            if(x.SortIndex == min && x.SortIndex == max)
-                mhp = MoveRowStatesEnum.Singleton;
-            else if(x.SortIndex == min)
-                mhp = MoveRowStatesEnum.Start;
-            else if(x.SortIndex == max)
-                mhp = MoveRowStatesEnum.End;
-            else
-                mhp = MoveRowStatesEnum.Between;
 
-            TreeItemDataRubricModel _ri = new (x, x.Id == 0 ? Icons.Material.Filled.PlaylistAdd : SelectedValuesChanged is null ? Icons.Material.Filled.CropFree : Icons.Custom.Uncategorized.Folder )
+
+            TreeItemDataKladrModel _ri = new (x, x.Id == 0 ? Icons.Material.Filled.PlaylistAdd : SelectedValuesChanged is null ? Icons.Material.Filled.CropFree : Icons.Custom.Uncategorized.Folder )
                 {
-                    MoveRowState = mhp,
                     Selected = SelectedValuesChanged?.SelectedNodes.Contains(x.Id) == true
                 };
 
@@ -71,54 +60,54 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
         })];
     }
 
-    void ItemUpdAction(UniversalBaseModel sender)
+    void ItemUpdAction(ObjectKLADRModelDB sender)
     {
-        TreeItemDataRubricModel findNode = FindNode(sender.Id, InitialTreeItems) ?? throw new Exception();
-        findNode.Text = sender.Name;
+        TreeItemDataKladrModel findNode = FindNode(sender.Id, InitialTreeItems) ?? throw new Exception();
+        findNode.Text = sender.NAME;
         findNode.Value?.Update(sender);
     }
 
     async void ReloadNodeAction(int parent_id)
     {
-        List<UniversalBaseModel> rubrics = await RequestRubrics(parent_id);
+        List<ObjectKLADRModelDB> rubrics = await RequestRubrics(parent_id);
         if (parent_id > 0)
         {
-            TreeItemDataRubricModel findNode = FindNode(parent_id, InitialTreeItems) ?? throw new Exception();
+            TreeItemDataKladrModel findNode = FindNode(parent_id, InitialTreeItems) ?? throw new Exception();
             findNode.Children = ConvertRubrics(rubrics)!;
         }
         else
         {
-            InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataRubricModel(x))]; //.Cast<TreeItemDataRubricModel>()];
+            InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataKladrModel(x))]; //.Cast<TreeItemDataKladrModel>()];
         }
         await SetBusy(false);
     }
 
-    static TreeItemDataRubricModel? FindNode(int parent_id, IEnumerable<TreeItemDataRubricModel> treeItems)
+    static TreeItemDataKladrModel? FindNode(int parent_id, IEnumerable<TreeItemDataKladrModel> treeItems)
     {
-        TreeItemDataRubricModel? res = treeItems.FirstOrDefault(x => x.Value?.Id == parent_id);
+        TreeItemDataKladrModel? res = treeItems.FirstOrDefault(x => x.Value?.Id == parent_id);
         if (res is not null)
             return res;
 
-        TreeItemDataRubricModel? FindChildNode(List<TreeItemData<UniversalBaseModel?>> children)
+        TreeItemDataKladrModel? FindChildNode(List<TreeItemData<ObjectKLADRModelDB?>> children)
         {
-            TreeItemData<UniversalBaseModel?>? res_child = children.FirstOrDefault(x => x.Value?.Id == parent_id);
+            TreeItemData<ObjectKLADRModelDB?>? res_child = children.FirstOrDefault(x => x.Value?.Id == parent_id);
             if (res_child is not null)
-                return (TreeItemDataRubricModel?)res_child;
+                return (TreeItemDataKladrModel?)res_child;
 
-            foreach (TreeItemData<UniversalBaseModel?> c in children)
+            foreach (TreeItemData<ObjectKLADRModelDB?> c in children)
             {
                 if (c.Children is not null)
                 {
                     res_child = FindChildNode(c.Children);
                     if (res_child is not null)
-                        return (TreeItemDataRubricModel?)res_child;
+                        return (TreeItemDataKladrModel?)res_child;
                 }
             }
 
             return null;
         }
 
-        foreach (TreeItemDataRubricModel _tin in treeItems)
+        foreach (TreeItemDataKladrModel _tin in treeItems)
         {
             if (_tin.Children is not null)
             {
@@ -134,18 +123,18 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected override async void OnInitialized()
     {
-        List<UniversalBaseModel> rubrics = await RequestRubrics();
-        InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataRubricModel(x))];
+        List<ObjectKLADRModelDB> rubrics = await RequestRubrics();
+        InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataKladrModel(x))];
         await SetBusy(false);
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyCollection<TreeItemData<UniversalBaseModel?>>> LoadServerData(UniversalBaseModel? parentValue)
+    public async Task<IReadOnlyCollection<TreeItemData<ObjectKLADRModelDB?>>> LoadServerData(ObjectKLADRModelDB? parentValue)
     {
         ArgumentNullException.ThrowIfNull(parentValue);
 
-        List<UniversalBaseModel> rubrics = await RequestRubrics(parentValue.Id);
-        TreeItemDataRubricModel findNode = FindNode(parentValue.Id, InitialTreeItems) ?? throw new Exception();
+        List<ObjectKLADRModelDB> rubrics = await RequestRubrics(parentValue.Id);
+        TreeItemDataKladrModel findNode = FindNode(parentValue.Id, InitialTreeItems) ?? throw new Exception();
 
         findNode.Children = ConvertRubrics(rubrics)!;
         //if ()
@@ -154,15 +143,12 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
         return findNode.Children;
     }
 
-    async Task<List<UniversalBaseModel>> RequestRubrics(int? parent_id = null)
+    async Task<List<ObjectKLADRModelDB>> RequestRubrics(int? parent_id = null)
     {
         await SetBusy();
-        List<UniversalBaseModel> rest = await KladrNavRepo.ObjectsList(new() { Request = parent_id ?? 0, ContextName = ContextName });
+        List<ObjectKLADRModelDB> rest = await KladrNavRepo.ObjectsList(new() { Request = parent_id ?? 0, ContextName = ContextName });
 
-        rest = [.. rest.OrderBy(x => x.SortIndex)];
-
-        if (SelectedValuesChanged is null)
-            rest.Add(new UniversalBaseModel() { Name = "", SortIndex = uint.MaxValue, ParentId = parent_id });
+        rest = [.. rest.OrderBy(x => x.NAME)];
 
         return rest;
     }

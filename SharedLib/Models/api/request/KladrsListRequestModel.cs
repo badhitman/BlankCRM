@@ -12,5 +12,5 @@ public class KladrsListRequestModel : RubricsListRequestModel
     /// <summary>
     /// FindRequest
     /// </summary>
-    public string? FindRequest { get; set; }
+    public string? FindQuery { get; set; }
 }

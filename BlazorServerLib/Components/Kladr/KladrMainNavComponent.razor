@@ -5,13 +5,13 @@
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-<MudTreeView Style="width: 100%" ServerData="@LoadServerData" Items="@InitialTreeItems" SelectionMode="@(SelectedValuesChanged is null ? SelectionMode.ToggleSelection: SelectionMode.MultiSelection)" T="UniversalBaseModel" SelectedValuesChanged="SelectedValuesChangeHandler">
+<MudTreeView Style="width: 100%" ServerData="@LoadServerData" Items="@InitialTreeItems" SelectionMode="@(SelectedValuesChanged is null ? SelectionMode.ToggleSelection: SelectionMode.MultiSelection)" T="ObjectKLADRModelDB" SelectedValuesChanged="SelectedValuesChangeHandler">
     <ItemTemplate Context="item">
-        <MudTreeViewItem @key="@($"node-rubric-{item.Value?.Id}")" Text="@item.Text" Icon="@item.Icon" IconExpanded="@Icons.Custom.Uncategorized.FolderOpen" Value="item.Value" Items="item.Children?.OrderBy(x => x.Value?.SortIndex).ToList()" CanExpand="item.Expandable" Selected="item.Selected">
+        <MudTreeViewItem @key="@($"node-rubric-{item.Value?.Id}")" Text="@item.Text" Icon="@item.Icon" IconExpanded="@Icons.Custom.Uncategorized.FolderOpen" Value="item.Value" Items="item.Children?.ToList()" CanExpand="item.Expandable" Selected="item.Selected">
             <BodyContent>
                 <CascadingValue Value="ReloadNodeAction">
                     <CascadingValue Value="ItemUpdAction">
-                        <CascadingValue Value="(TreeItemDataRubricModel)item">
+                        <CascadingValue Value="(TreeItemDataKladrModel)item">
                             <KladrNodeEditComponent ReadOnly="@(SelectedValuesChanged is not null)" ContextName="@ContextName" />
                         </CascadingValue>
                     </CascadingValue>
