@@ -28,6 +28,9 @@ public class RabbitMQConfigModel
     public required int Port { get; set; } = 5672;
 
     /// <inheritdoc/>
+    public required int PortManagementPlugin { get; set; } = 15672;
+
+    /// <inheritdoc/>
     public required string ClientProvidedName { get; set; } = "guest-client";
 
     /// <summary>

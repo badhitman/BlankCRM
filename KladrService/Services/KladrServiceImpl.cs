@@ -13,7 +13,6 @@ namespace KladrService;
 /// КЛАДР 4.0
 /// </summary>
 public class KladrServiceImpl(
-    IMemoryCache _memoryCache,
     IDbContextFactory<KladrContext> kladrDbFactory,
     ILogger<KladrServiceImpl> loggerRepo) : IKladrService
 {
@@ -21,10 +20,7 @@ public class KladrServiceImpl(
     public async Task<MetadataKladrModel> GetMetadataKladr(GetMetadataKladrRequestModel req)
     {
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-        RegisterJobTempKladrModelDB[] regS = await context.RegistersJobsTempKladr
-            .Where(x => x.VoteValue != 0)
-            .ToArrayAsync();
-
+        
         if (req.ForTemporary)
         {
             return new()
@@ -35,7 +31,6 @@ public class KladrServiceImpl(
                 SocrbasesCount = await context.TempSocrbasesKLADR.CountAsync(),
                 StreetsCount = await context.TempStreetsKLADR.CountAsync(),
                 DomaCount = await context.TempHousesKLADR.CountAsync(),
-                RegistersJobs = regS,
             };
         }
 
@@ -47,7 +42,6 @@ public class KladrServiceImpl(
             SocrbasesCount = await context.SocrbasesKLADR.CountAsync(),
             StreetsCount = await context.StreetsKLADR.CountAsync(),
             DomaCount = await context.HousesKLADR.CountAsync(),
-            RegistersJobs = regS,
         };
     }
 
@@ -67,8 +61,6 @@ public class KladrServiceImpl(
         bool valid = Enum.TryParse(tableName, true, out KladrFilesEnum currentKladrElement);
         if (!valid)
             return ResponseBaseModel.CreateError($"Имя таблицы `{req.TableName}` не валидное. Разрешённые имена: {string.Join(", ", Enum.GetNames<KladrFilesEnum>().Select(x => $"{x}.dbf"))}"); ;
-
-        await RegisterJobTempKladr(new RegisterJobTempKladrRequestModel() { TableName = req.TableName, VoteVal = -1 });
 
         req.RowsData.RemoveAll(x => x.All(y => y is null || string.IsNullOrWhiteSpace(y.ToString())));
         if (req.RowsData.Count == 0)
@@ -169,38 +161,7 @@ public class KladrServiceImpl(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> RegisterJobTempKladr(RegisterJobTempKladrRequestModel req)
     {
-        string mKey = $"rjtk-{req.TableName}";
-        bool tableExist = _memoryCache.TryGetValue(mKey, out DateTime? cacheValue) && cacheValue.HasValue;
-
-        using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-        if (!tableExist && !await context.RegistersJobsTempKladr.AnyAsync(x => x.Name == req.TableName))
-        {
-            try
-            {
-                await context.RegistersJobsTempKladr.AddAsync(new RegisterJobTempKladrModelDB() { Name = req.TableName, VoteValue = req.VoteVal });
-                await context.SaveChangesAsync();
-            }
-            catch
-            {
-                await context.RegistersJobsTempKladr
-                    .Where(x => x.Name == req.TableName)
-                    .ExecuteUpdateAsync(set =>
-                    set.SetProperty(p =>
-                    p.VoteValue, r => r.VoteValue + req.VoteVal));
-            }
-        }
-        else
-            await context.RegistersJobsTempKladr
-                    .Where(x => x.Name == req.TableName)
-                    .ExecuteUpdateAsync(set =>
-                    set.SetProperty(p =>
-                    p.VoteValue, r => r.VoteValue + req.VoteVal));
-
-        if (!tableExist)
-        {
-            MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(3));
-            _memoryCache.Set(mKey, DateTime.UtcNow, cacheEntryOptions);
-        }
+        
 
         return ResponseBaseModel.CreateSuccess("ok");
     }

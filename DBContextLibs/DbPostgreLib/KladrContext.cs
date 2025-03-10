@@ -17,8 +17,6 @@ public partial class KladrContext(DbContextOptions<KladrContext> options) : Klad
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "EF1002:Risk of vulnerability to SQL injection.", Justification = "<CustomAttr>")]
     public override async Task EmptyTemplateTables(bool forTemplate = true)
     {
-        await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<RegisterJobTempKladrModelDB>()}");
-
         if (forTemplate)
         {
             await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()}");

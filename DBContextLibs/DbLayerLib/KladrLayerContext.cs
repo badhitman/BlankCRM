@@ -63,12 +63,6 @@ public abstract partial class KladrLayerContext : DbContext
 
 
     /// <summary>
-    /// RegistersJobsTempKladr
-    /// </summary>
-    public DbSet<RegisterJobTempKladrModelDB> RegistersJobsTempKladr { get; set; } = default!;
-
-
-    /// <summary>
     /// Altnames содержит сведения о соответствии кодов старых и новых наименований (обозначений домов) в случаях переподчинения 
     /// и “сложного” переименования адресных объектов (когда коды записей со старым и новым наименованиями не совпадают).
     /// </summary>

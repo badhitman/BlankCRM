@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Kladr
 {
     [DbContext(typeof(KladrContext))]
-    [Migration("20250309045858_KladrContext001")]
+    [Migration("20250310095215_KladrContext001")]
     partial class KladrContext001
     {
         /// <inheritdoc />
@@ -401,29 +401,6 @@ namespace DbPostgreLib.Migrations.Kladr
                     b.HasKey("Id");
 
                     b.ToTable("TempObjectsKLADR", "public");
-                });
-
-            modelBuilder.Entity("SharedLib.RegisterJobTempKladrModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("VoteValue")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("RegistersJobsTempKladr", "public");
                 });
 
             modelBuilder.Entity("SharedLib.SocrbaseKLADRModelDB", b =>

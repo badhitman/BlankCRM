@@ -400,29 +400,6 @@ namespace DbPostgreLib.Migrations.Kladr
                     b.ToTable("TempObjectsKLADR", "public");
                 });
 
-            modelBuilder.Entity("SharedLib.RegisterJobTempKladrModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("VoteValue")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("RegistersJobsTempKladr", "public");
-                });
-
             modelBuilder.Entity("SharedLib.SocrbaseKLADRModelDB", b =>
                 {
                     b.Property<int>("Id")

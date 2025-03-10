@@ -90,21 +90,6 @@ namespace DbPostgreLib.Migrations.Kladr
                 });
 
             migrationBuilder.CreateTable(
-                name: "RegistersJobsTempKladr",
-                schema: "public",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    VoteValue = table.Column<int>(type: "integer", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RegistersJobsTempKladr", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SocrbasesKLADR",
                 schema: "public",
                 columns: table => new
@@ -382,13 +367,6 @@ namespace DbPostgreLib.Migrations.Kladr
                 column: "UNO");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RegistersJobsTempKladr_Name",
-                schema: "public",
-                table: "RegistersJobsTempKladr",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_SocrbasesKLADR_KOD_T_ST",
                 schema: "public",
                 table: "SocrbasesKLADR",
@@ -473,10 +451,6 @@ namespace DbPostgreLib.Migrations.Kladr
 
             migrationBuilder.DropTable(
                 name: "ObjectsKLADR",
-                schema: "public");
-
-            migrationBuilder.DropTable(
-                name: "RegistersJobsTempKladr",
                 schema: "public");
 
             migrationBuilder.DropTable(

@@ -19,9 +19,7 @@ public class KladrController(IKladrService kladrRepo) : ControllerBase
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}/{Routes.UPLOAD_ACTION_NAME}-{Routes.PART_CONTROLLER_NAME}"), LoggerNolog]
     public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req)
     {
-        ResponseBaseModel res1 = default!, res2 = default!;
-        await Task.WhenAll([Task.Run(async () => { res1 = await kladrRepo.UploadPartTempKladr(req); }), Task.Run(async () => { res2 = await kladrRepo.RegisterJobTempKladr(new RegisterJobTempKladrRequestModel() { TableName = req.TableName, VoteVal = 1 }); })]);
-        return ResponseBaseModel.Create(res1.Messages.Union(res2.Messages));
+        return await kladrRepo.UploadPartTempKladr(req);
     }
 
     /// <inheritdoc/>

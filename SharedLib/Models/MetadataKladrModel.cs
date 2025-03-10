@@ -38,9 +38,4 @@ public class MetadataKladrModel : ResponseBaseModel
     /// Doma
     /// </summary>
     public int DomaCount { get; set; }
-
-    /// <summary>
-    /// RegistersJobs
-    /// </summary>
-    public RegisterJobTempKladrModelDB[]? RegistersJobs { get; set; }
 }
