@@ -833,9 +833,6 @@ public static partial class GlobalStaticConstants
         public readonly static string UploadPartTempKladrReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.KLADR_CONTROLLER_NAME, Routes.TEMP_CONTROLLER_NAME, $"{Routes.UPLOAD_ACTION_NAME}-{Routes.PART_CONTROLLER_NAME}");
 
         /// <inheritdoc/>
-        public readonly static string RegisterJobTempKladrReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.KLADR_CONTROLLER_NAME, $"{Routes.TEMP_CONTROLLER_NAME}-{Routes.JOB_CONTROLLER_NAME}", $"{Routes.VOTE_ACTION_NAME}-{Routes.REGISTRATION_ACTION_NAME}");
-
-        /// <inheritdoc/>
         public readonly static string FlushTempKladrRecive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.TEMP_CONTROLLER_NAME}", Routes.FLUSH_ACTION_NAME);
         #endregion
     }

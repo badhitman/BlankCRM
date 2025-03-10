@@ -28,9 +28,4 @@ public interface IKladrService
     /// Транзит данных из временного хранилища в прод
     /// </summary>
     public Task<ResponseBaseModel> FlushTempKladr();
-
-    /// <summary>
-    /// Транзит данных из временного хранилища в прод
-    /// </summary>
-    public Task<ResponseBaseModel> RegisterJobTempKladr(RegisterJobTempKladrRequestModel req);
 }

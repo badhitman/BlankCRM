@@ -205,19 +205,5 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpCl
         string sd = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<ResponseBaseModel>(sd)!;
     }
-
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RegisterJobTempKladr(RegisterJobTempKladrRequestModel req)
-    {
-        using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
-
-        string routeUri = $"{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}-{Routes.JOB_CONTROLLER_NAME}/{Routes.VOTE_ACTION_NAME}-{Routes.REGISTRATION_ACTION_NAME}";
-
-        HttpResponseMessage response = await client.PutAsync(routeUri, null);
-        response.EnsureSuccessStatusCode();
-
-        string sd = await response.Content.ReadAsStringAsync();
-        return JsonConvert.DeserializeObject<ResponseBaseModel>(sd)!;
-    }
     #endregion
 }

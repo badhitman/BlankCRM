@@ -23,4 +23,9 @@ public enum HttpClientsNamesEnum
     /// Wappi
     /// </summary>
     Wappi = 30,
+
+    /// <summary>
+    /// RabbitMq rest/api Management
+    /// </summary>
+    RabbitMqManagement = 40,
 }

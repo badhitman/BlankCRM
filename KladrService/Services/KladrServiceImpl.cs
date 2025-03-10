@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
@@ -14,35 +13,47 @@ namespace KladrService;
 /// </summary>
 public class KladrServiceImpl(
     IDbContextFactory<KladrContext> kladrDbFactory,
+    IHttpClientFactory HttpClientFactory,
     ILogger<KladrServiceImpl> loggerRepo) : IKladrService
 {
     /// <inheritdoc/>
     public async Task<MetadataKladrModel> GetMetadataKladr(GetMetadataKladrRequestModel req)
     {
-        using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-        
-        if (req.ForTemporary)
-        {
-            return new()
-            {
-                AltnamesCount = await context.TempAltnamesKLADR.CountAsync(),
-                NamesCount = await context.TempNamesMapsKLADR.CountAsync(),
-                ObjectsCount = await context.TempObjectsKLADR.CountAsync(),
-                SocrbasesCount = await context.TempSocrbasesKLADR.CountAsync(),
-                StreetsCount = await context.TempStreetsKLADR.CountAsync(),
-                DomaCount = await context.TempHousesKLADR.CountAsync(),
-            };
-        }
+        using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.RabbitMqManagement.ToString());
 
-        return new()
+        TResponseModel<List<RabbitMqManagementResponseModel>> resMq = default!;
+        MetadataKladrModel res = default!;
+        IEnumerable<RabbitMqManagementResponseModel>? q = default!;
+
+        await Task.WhenAll([Task.Run(async () =>
         {
+        resMq = await client.GetStringAsync<List<RabbitMqManagementResponseModel>>($"api/queues");
+         q = resMq.Response?
+            .Where(x => x.name?.Equals(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive) == true);
+        }), Task.Run(async () =>
+        {
+
+        using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+
+        res = req.ForTemporary
+            ? new() {
+            AltnamesCount = await context.TempAltnamesKLADR.CountAsync(),
+            NamesCount = await context.TempNamesMapsKLADR.CountAsync(),
+            ObjectsCount = await context.TempObjectsKLADR.CountAsync(),
+            SocrbasesCount = await context.TempSocrbasesKLADR.CountAsync(),
+            StreetsCount = await context.TempStreetsKLADR.CountAsync(),
+            DomaCount = await context.TempHousesKLADR.CountAsync()}
+            : new() {
             AltnamesCount = await context.AltnamesKLADR.CountAsync(),
             NamesCount = await context.NamesMapsKLADR.CountAsync(),
             ObjectsCount = await context.ObjectsKLADR.CountAsync(),
             SocrbasesCount = await context.SocrbasesKLADR.CountAsync(),
             StreetsCount = await context.StreetsKLADR.CountAsync(),
-            DomaCount = await context.HousesKLADR.CountAsync(),
-        };
+            DomaCount = await context.HousesKLADR.CountAsync()};
+        })]);
+
+        res.RabbitMqManagement = q?.FirstOrDefault(x => x.name?.Equals(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive) == true);
+        return res;
     }
 
     /// <inheritdoc/>
@@ -156,13 +167,5 @@ public class KladrServiceImpl(
         {
             return ResponseBaseModel.CreateError(ex);
         }
-    }
-
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RegisterJobTempKladr(RegisterJobTempKladrRequestModel req)
-    {
-        
-
-        return ResponseBaseModel.CreateSuccess("ok");
     }
 }

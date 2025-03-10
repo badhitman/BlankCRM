@@ -23,17 +23,11 @@ public class KladrController(IKladrService kladrRepo) : ControllerBase
     }
 
     /// <inheritdoc/>
-    [HttpPut($"/{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}-{Routes.JOB_CONTROLLER_NAME}/{Routes.VOTE_ACTION_NAME}-{Routes.REGISTRATION_ACTION_NAME}"), LoggerNolog]
-    public async Task<ResponseBaseModel> RegisterJobTempKladr(RegisterJobTempKladrRequestModel req)
-    {
-        return await kladrRepo.RegisterJobTempKladr(req);
-    }
-
-    /// <inheritdoc/>
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.METADATA_CONTROLLER_NAME}/{Routes.CALCULATE_ACTION_NAME}"), LoggerNolog]
     public async Task<MetadataKladrModel> GetMetadataKladr(GetMetadataKladrRequestModel req)
     {
-        return await kladrRepo.GetMetadataKladr(req);
+        MetadataKladrModel res = await kladrRepo.GetMetadataKladr(req);
+        return res;
     }
 
     /// <inheritdoc/>

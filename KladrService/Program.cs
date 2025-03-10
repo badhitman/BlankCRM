@@ -87,6 +87,8 @@ public class Program
         builder.Services.AddMemoryCache();
         builder.Services.AddOptions();
 
+        RabbitMQConfigModel _mqConf = builder.Configuration.GetSection("RabbitMQConfig").Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
+
         string connectionStorage = builder.Configuration.GetConnectionString($"KladrConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'KladrConnection{_modePrefix}' not found.");
         builder.Services.AddDbContextFactory<KladrContext>(opt =>
             opt.UseNpgsql(connectionStorage));
@@ -115,6 +117,14 @@ public class Program
             metrics.AddMeter(greeterMeter.Name);
             // Metrics provides by ASP.NET Core in .NET 8
             metrics.AddMeter("Microsoft.AspNetCore.Hosting");
+        });
+
+        builder.Services.AddHttpClient(HttpClientsNamesEnum.RabbitMqManagement.ToString(), cc =>
+        {
+            cc.BaseAddress = new Uri($"http://{_mqConf.HostName}:{_mqConf.PortManagementPlugin}/");
+            string authenticationString = $"{_mqConf.UserName}:{_mqConf.Password}";
+            string base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(authenticationString));
+            cc.DefaultRequestHeaders.Add("Authorization", $"Basic {base64EncodedAuthenticationString}");
         });
 
         // Add Tracing for ASP.NET Core and our custom ActivitySource and export via OTLP

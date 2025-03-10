@@ -40,7 +40,6 @@ public static class MauiProgram
 
         ApiRestConfigModelDB _conf = ApiRestConfigModelDB.BuildEmpty();
         builder.Services.AddSingleton(sp => _conf);
-        //builder.Services.AddCascadingValue(sp => _conf);
 
         builder.Services.AddScoped<ILogsService, LogsService>();
         builder.Services.AddScoped<IToolsAppManager, ToolsAppManager>();

@@ -38,4 +38,9 @@ public class MetadataKladrModel : ResponseBaseModel
     /// Doma
     /// </summary>
     public int DomaCount { get; set; }
+
+    /// <summary>
+    /// RabbitMqManagement
+    /// </summary>
+    public RabbitMqManagementResponseModel? RabbitMqManagement { get; set; }
 }

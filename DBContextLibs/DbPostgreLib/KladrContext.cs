@@ -35,6 +35,5 @@ public partial class KladrContext(DbContextOptions<KladrContext> options) : Klad
             await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<SocrbaseKLADRModelDB>()}");
             await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<HouseKLADRModelDB>()}");
         }
-
     }
 }
