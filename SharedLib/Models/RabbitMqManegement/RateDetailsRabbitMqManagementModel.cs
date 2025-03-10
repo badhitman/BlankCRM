@@ -1,7 +1,7 @@
 ﻿namespace SharedLib;
 
 /// <inheritdoc/>
-public class RateDetailsRabbitMqManegementModel
+public class RateDetailsRabbitMqManagementModel
 {
     /// <inheritdoc/>
     public double rate { get; set; }

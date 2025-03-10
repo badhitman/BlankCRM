@@ -54,7 +54,7 @@ public class RabbitMqManagementResponseModel
     public int messages { get; set; }
     
     /// <inheritdoc/>
-    public RateDetailsRabbitMqManegementModel? messages_details { get; set; }
+    public RateDetailsRabbitMqManagementModel? messages_details { get; set; }
     
     /// <inheritdoc/>
     public int messages_paged_out { get; set; }
@@ -69,7 +69,7 @@ public class RabbitMqManagementResponseModel
     public int messages_ready { get; set; }
     
     /// <inheritdoc/>
-    public RateDetailsRabbitMqManegementModel? messages_ready_details { get; set; }
+    public RateDetailsRabbitMqManagementModel? messages_ready_details { get; set; }
     
     /// <inheritdoc/>
     public int messages_ready_ram { get; set; }
@@ -78,7 +78,7 @@ public class RabbitMqManagementResponseModel
     public int messages_unacknowledged { get; set; }
     
     /// <inheritdoc/>
-    public RateDetailsRabbitMqManegementModel? messages_unacknowledged_details { get; set; }
+    public RateDetailsRabbitMqManagementModel? messages_unacknowledged_details { get; set; }
     
     /// <inheritdoc/>
     public int messages_unacknowledged_ram { get; set; }
@@ -93,7 +93,7 @@ public class RabbitMqManagementResponseModel
     public int reductions { get; set; }
     
     /// <inheritdoc/>
-    public RateDetailsRabbitMqManegementModel? reductions_details { get; set; }
+    public RateDetailsRabbitMqManagementModel? reductions_details { get; set; }
     
     /// <inheritdoc/>
     public string? state { get; set; }
@@ -108,5 +108,5 @@ public class RabbitMqManagementResponseModel
     public string? vhost { get; set; }
     
     /// <inheritdoc/>
-    public MessageStatsRabbitMqManegementModel? message_stats { get; set; }
+    public MessageStatsRabbitMqManagementsModel? message_stats { get; set; }
 }
