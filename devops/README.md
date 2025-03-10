@@ -1,3 +1,6 @@
+## DevOps
+
+```
 apt-get update -y && upgrade -y && dist-upgrade -y && install git -y
 
 apt-get install wget
@@ -81,3 +84,9 @@ journalctl -f -u constructor.app.service
 journalctl -f -u docker-compose-app.service
 
 systemctl status constructor.app.service
+```
+
+#### Win
+```
+docker run -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest -p 15671:15671  -p 15672:15672  -p 15691:15691  -p 15692:15692  -p 25672:25672  -p 4369:4369  -p 5671:5671  -p 5672:5672  -p 5670:5670 rabbitmq:3-management
+```

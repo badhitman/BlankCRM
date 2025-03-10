@@ -42,7 +42,8 @@ public class RabbitClient : IRabbitClient
         ResponseQueueArguments ??= new()
         {
             { "x-message-ttl", rabbitConf.Value.RemoteCallTimeoutMs },
-            { "x-expires", rabbitConf.Value.RemoteCallTimeoutMs }
+            { "x-expires", rabbitConf.Value.RemoteCallTimeoutMs },
+            { "x-consumer-timeout", rabbitConf.Value.RemoteCallTimeoutMs + 100 },
         };
         factory = new()
         {
@@ -50,7 +51,7 @@ public class RabbitClient : IRabbitClient
             HostName = RabbitConfigRepo.HostName,
             Port = RabbitConfigRepo.Port,
             UserName = RabbitConfigRepo.UserName,
-            Password = RabbitConfigRepo.Password
+            Password = RabbitConfigRepo.Password,
         };
     }
 
