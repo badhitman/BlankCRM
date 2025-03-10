@@ -25,6 +25,7 @@ public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
         ResponseBaseModel res = await RemoteClient.FlushTempKladr();
         await SetBusy(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
+        await ReloadData();
     }
 
     async Task ClearTempTables()
