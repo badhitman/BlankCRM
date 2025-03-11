@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using MudBlazor;
 using SharedLib;
-using Newtonsoft.Json;
 
 namespace BlazorWebLib.Components.Kladr;
 
@@ -44,12 +43,8 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
 
     List<TreeItemData<RootKLADRModelDB>> ConvertCladr(IEnumerable<RootKLADRModelDB> kladrElements)
     {
-
-
         return [.. kladrElements.Select(x => {
-
-
-            TreeItemDataKladrModel _ri = new (x, x.Id == 0 ? Icons.Material.Filled.PlaylistAdd : SelectedValuesChanged is null ? Icons.Material.Filled.CropFree : Icons.Custom.Uncategorized.Folder )
+            TreeItemDataKladrModel _ri = new (x, SelectedValuesChanged is null ? Icons.Material.Filled.CropFree : Icons.Custom.Uncategorized.Folder )
                 {
                     Selected = SelectedValuesChanged?.SelectedNodes.Contains(x.Id) == true
                 };
@@ -138,7 +133,7 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
         TreeItemDataKladrModel findNode = FindNode(parentValue.CODE, InitialTreeItems) ?? throw new Exception();
 
         findNode.Children = ConvertCladr(kladrElements)!;
-        
+
         return findNode.Children;
     }
 
@@ -146,7 +141,8 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     {
         await SetBusy();
         Dictionary<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> rest = await KladrNavRepo.ObjectsList(new() { ParentCode = parent_code });
+        List<RootKLADRModelDB> _res = rest.TreeBuild();
         await SetBusy(false);
-        return rest.SelectMany(x => x.Value).Select(x => x.ToObject<RootKLADRModelDB>()).OrderBy(x => x!.NAME).ToList()!;
+        return _res;
     }
 }

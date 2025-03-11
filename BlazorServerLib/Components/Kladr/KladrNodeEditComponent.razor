@@ -2,14 +2,16 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
+<div @key="DomID" style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
     <MudStack Row="true">
-        <div class="row">
+        <div class="row" title="@MetaType?.DescriptionInfo()">
             <div class="col-auto">
-                <span>@Item.Value!.NAME @Item.Value!.SOCR</span>
+                <span>@Item.Value!.NAME</span> 
+                <sub class="text-@GetCss">@Item.Value!.SOCR</sub>
+                @* <sup>@Item.Value.CODE</sup> *@
             </div>
             @* <div class="col-auto">
-                <button disabled="@(!IsEditedName)" type="button" class="btn btn-outline-info btn-sm">@ItemModel?.STATUS</button>
+                <code>@MetaType?.DescriptionInfo()</code>
             </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-outline-info btn-sm">Отмена</button>
@@ -24,11 +26,12 @@
         <div class="row">
             <div class="col-auto">
                 <div class="hstack">
-                    <MudIconButton Icon="@Icons.Material.Filled.ArrowDropUp"></MudIconButton>
+                    <a href="https://www.pochta.ru/offices/@Item.Value?.INDEX" title="Почтовый индекс" target="_blank">@Item.Value?.INDEX</a>
+                    @* <MudIconButton Icon="@Icons.Material.Filled.ArrowDropUp"></MudIconButton>
                     <MudIconButton Icon="@Icons.Material.Filled.ArrowDropDown"></MudIconButton>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button title="Переименовать элемент" type="button" class="btn btn-outline-info btn-sm bi bi bi-pencil"></button>                        
-                    </div>
+                    </div> *@
                 </div>
             </div>
         </div>

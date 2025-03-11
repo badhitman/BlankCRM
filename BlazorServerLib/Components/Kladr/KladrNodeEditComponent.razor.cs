@@ -35,26 +35,28 @@ public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
     [CascadingParameter, EditorRequired]
     public required TreeItemDataKladrModel Item { get; set; }
 
-
-    RootKLADRModelDB ItemModel = default!;
-
-    /// <inheritdoc/>
-    protected string DomID => $"{Item.Value!.Id}";
-
+    string GetCss => Item.Value is StreetMetaKLADRModel ? "info" : Item.Value is HouseKLADRModelDTO ? "success" : "primary";
 
     /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
+    protected string DomID => $"{GetType().Name}_{Item.Value!.Id}";
+
+    KladrTypesResultsEnum? MetaType;
+
+    /// <inheritdoc/>
+    protected override void OnInitialized()
     {
-        await base.OnInitializedAsync();
-        ItemModel = Item.Value ?? throw new Exception("Item.Value is NULL");
-    }
-
-    /// <inheritdoc/>
-    protected override void OnAfterRender(bool firstRender)
-    {
-        bool need_refresh = ItemModel != Item.Value;
-        ItemModel = Item.Value ?? throw new Exception("Item.Value is NULL");
-        if (need_refresh)
-            StateHasChanged();
+        base.OnInitialized();
+        if(Item.Value is ObjectMetaKLADRModel omm)
+        {
+            MetaType = omm.MetaType;
+        }
+        else if (Item.Value is StreetMetaKLADRModel smm)
+        {
+            MetaType = smm.MetaType;
+        }
+        else// if(Item.Value is HouseKLADRModelDTO)
+        {
+            MetaType = KladrTypesResultsEnum.HousesInStreet;
+        }
     }
 }

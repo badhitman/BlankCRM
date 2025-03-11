@@ -43,3 +43,17 @@ public class StreetTempKLADRModelDB : StreetKLADRModelDTO
 {
 
 }
+
+/// <inheritdoc/>
+public class StreetMetaKLADRModel : StreetKLADRModelDTO
+{
+    /// <inheritdoc/>
+    public KladrTypesResultsEnum MetaType { get; set; }
+
+    /// <inheritdoc/>
+    public StreetMetaKLADRModel Init(KladrTypesResultsEnum _mt)
+    {
+        MetaType = _mt;
+        return this;
+    }
+}

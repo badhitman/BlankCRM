@@ -49,7 +49,8 @@ public abstract partial class KladrLayerContext : DbContext
     public async Task<ObjectKLADRModelDB[]> CitiesInRegion(string regionCode)
     {
         return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}000___000__") && !EF.Functions.ILike(x.CODE, $"{regionCode}___000_____"))
+            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}000___000__") && !EF.Functions.Like(x.CODE, $"{regionCode}___000_____"))
+            .OrderBy(x => x.NAME)
             .ToArrayAsync();
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в регионе
                 $" code LIKE '{codeRegion}000___000__' AND code NOT LIKE '{codeRegion}___000_____' ORDER BY name");*/
@@ -61,7 +62,8 @@ public abstract partial class KladrLayerContext : DbContext
     public async Task<ObjectKLADRModelDB[]> PopPointsInRegion(string regionCode)
     {
         return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}000000_____") && !EF.Functions.ILike(x.CODE, $"{regionCode}______000__"))
+            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}000000_____") && !EF.Functions.Like(x.CODE, $"{regionCode}______000__"))
+            .OrderBy(x => x.NAME)
             .ToArrayAsync();
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в регионе
                 $" code LIKE '{codeRegion}000000_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");*/
@@ -73,7 +75,8 @@ public abstract partial class KladrLayerContext : DbContext
     public async Task<ObjectKLADRModelDB[]> AreasInRegion(string regionCode)
     {
         return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}___000000__") && !EF.Functions.ILike(x.CODE, $"{regionCode}000________"))
+            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}___000000__") && !EF.Functions.Like(x.CODE, $"{regionCode}000________"))
+            .OrderBy(x => x.NAME)
             .ToArrayAsync();
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'area' as typeObj FROM KLADR WHERE " + // районы в регионе
                 $" code LIKE '{codeRegion}___000000__' AND code NOT LIKE '{codeRegion}000________' ORDER BY name");*/
@@ -86,6 +89,7 @@ public abstract partial class KladrLayerContext : DbContext
     {
         return await StreetsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}000000000______"))
+            .OrderBy(x => x.NAME)
             .ToArrayAsync();
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM STREET WHERE " + // street`s в регионе
                 $" (code LIKE '{codeRegion}000000000______') ORDER BY name");*/
@@ -99,10 +103,11 @@ public abstract partial class KladrLayerContext : DbContext
     public async Task<ObjectKLADRModelDB[]> CitiesInArea(string regionCode, string areaCode)
     {
         return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}___000__") && !EF.Functions.ILike(x.CODE, $"{areaCode}___000_____"))
+            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}___000__") && !EF.Functions.Like(x.CODE, $"{regionCode}___000_____"))//6200400000000
+            .OrderBy(x => x.NAME)
             .ToArrayAsync();
-        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в районах
-                $" code LIKE '{codeRegion}{codeRayon}___000__' AND code NOT LIKE '{codeRegion}___000_____'  ORDER BY name");*/
+        /*//queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в районах
+                //    $" code LIKE '{codeRegion}{codeRayon}___000__' AND code NOT LIKE '{codeRegion}___000_____'  ORDER BY name");*/
     }
 
     /// <summary>
@@ -111,7 +116,8 @@ public abstract partial class KladrLayerContext : DbContext
     public async Task<ObjectKLADRModelDB[]> PopPointsInArea(string regionCode, string areaCode)
     {
         return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}000_____") && !EF.Functions.ILike(x.CODE, $"{regionCode}______000__"))
+            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}000_____") && !EF.Functions.Like(x.CODE, $"{regionCode}______000__"))
+            .OrderBy(x => x.NAME)
             .ToArrayAsync();
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в районах
                 $" code LIKE '{codeRegion}{codeRayon}000_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");*/
@@ -125,7 +131,8 @@ public abstract partial class KladrLayerContext : DbContext
     public async Task<ObjectKLADRModelDB[]> PopPointsInCity(string regionCode, string areaCode, string cityCode)
     {
         return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}{cityCode}_____") && !EF.Functions.ILike(x.CODE, $"{regionCode}______000__"))
+            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}{cityCode}_____") && !EF.Functions.Like(x.CODE, $"{regionCode}______000__"))
+            .OrderBy(x => x.NAME)
             .ToArrayAsync();
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в городах
                 $" code LIKE '{codeRegion}{codeRayon}{codeCity}_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");*/
@@ -138,6 +145,7 @@ public abstract partial class KladrLayerContext : DbContext
     {
         return await StreetsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}{cityCode}_________"))
+            .OrderBy(x => x.NAME)
             .ToArrayAsync();
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM KLADR WHERE " + // улицы в городах
                 $" code LIKE '{codeRegion}{codeRayon}{codeCity}_________' ORDER BY name");*/
@@ -152,6 +160,7 @@ public abstract partial class KladrLayerContext : DbContext
     {
         return await StreetsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}{cityCode}{popPointCode}______"))
+            .OrderBy(x => x.NAME)
             .ToArrayAsync();
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM KLADR WHERE " + // улицы в городах
                 $" code LIKE '{codeRegion}{codeRayon}{codeCity}{codeSmallCity}______' ORDER BY name");*/
@@ -162,10 +171,11 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 5.1 дома на улицах
     /// </summary>
-    public async Task<HouseKLADRModelDB[]> HousesInStrin(string regionCode, string areaCode, string cityCode, string popPointCode, string streetCode)
+    public async Task<HouseKLADRModelDB[]> HousesInStrit(string regionCode, string areaCode, string cityCode, string popPointCode, string streetCode)
     {
         return await HousesKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}{cityCode}{popPointCode}{streetCode}____"))
+            .OrderBy(x => x.NAME)
             .ToArrayAsync();
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'home' as typeObj FROM DOMA WHERE " + // дома на улицах
                 $" code LIKE '{codeRegion}{codeRayon}{codeCity}{codeSmallCity}{codeStreet}____' ORDER BY name");*/

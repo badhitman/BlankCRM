@@ -21,7 +21,11 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         if (string.IsNullOrWhiteSpace(req.ParentCode))
         {
             using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-            List<ObjectKLADRModelDB> dataDb = await context.ObjectsKLADR.Where(x => x.CODE.EndsWith("00000000000")).ToListAsync();
+            List<ObjectKLADRModelDB> dataDb = await context
+                .ObjectsKLADR
+                .Where(x => x.CODE.EndsWith("00000000000"))
+                .OrderBy(x => x.NAME)
+                .ToListAsync();
             res.Add(KladrTypesResultsEnum.RootRegions, [.. dataDb.Select(JObject.FromObject)]);
             return res;
         }
@@ -125,8 +129,8 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                HouseKLADRModelDB[] data = await context.HousesInStrin(codeRegion, codeRayon, codeCity, codeSmallCity, codeStreet);
-                dataResponse.TryAdd(KladrTypesResultsEnum.HousesInStrin, [.. data.Select(JObject.FromObject)]);
+                HouseKLADRModelDB[] data = await context.HousesInStrit(codeRegion, codeRayon, codeCity, codeSmallCity, codeStreet);
+                dataResponse.TryAdd(KladrTypesResultsEnum.HousesInStreet, [.. data.Select(JObject.FromObject)]);
                 //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'home' as typeObj FROM DOMA WHERE " + // дома на улицах
                 //    $" code LIKE '{codeRegion}{codeRayon}" + codeCity + codeSmallCity + codeStreet + "____' ORDER BY name");
             }));

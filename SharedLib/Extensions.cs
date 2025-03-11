@@ -10,6 +10,32 @@ namespace SharedLib;
 /// <inheritdoc/>
 public static class Extensions
 {
+    /// <inheritdoc/>
+    public static List<RootKLADRModelDB> TreeBuild(this Dictionary<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> src)
+    {
+        List<RootKLADRModelDB> res = [];
+        foreach (KeyValuePair<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> node in src)
+        {
+            foreach (Newtonsoft.Json.Linq.JObject subNode in node.Value)
+            {
+                switch (node.Key)
+                {
+                    case KladrTypesResultsEnum.StreetsInPopPoint or KladrTypesResultsEnum.StreetsInCity or KladrTypesResultsEnum.StreetsInRegion:
+                        res.Add(subNode.ToObject<StreetMetaKLADRModel>()!.Init(node.Key));
+                        break;
+                    case KladrTypesResultsEnum.HousesInStreet:
+                        res.Add(subNode.ToObject<HouseKLADRModelDTO>()!);
+                        break;
+                    default:
+                        res.Add(subNode.ToObject<ObjectMetaKLADRModel>()!.Init(node.Key));
+                        break;
+                }
+            }
+        }
+
+        return res;
+    }
+
     /// <summary>
     /// GetCustomTime
     /// </summary>

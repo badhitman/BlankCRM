@@ -57,3 +57,17 @@ public class ObjectTempKLADRModelDB : ObjectKLADRModelDTO
 {
 
 }
+
+/// <inheritdoc/>
+public class ObjectMetaKLADRModel : ObjectKLADRModelDTO
+{
+    /// <inheritdoc/>
+    public KladrTypesResultsEnum MetaType { get; set; }
+
+    /// <inheritdoc/>
+    public ObjectMetaKLADRModel Init(KladrTypesResultsEnum _mt)
+    {
+        MetaType = _mt;
+        return this;
+    }
+}
