@@ -42,6 +42,125 @@ public abstract partial class KladrLayerContext : DbContext
     /// </summary>
     public abstract Task EmptyTemplateTables(bool forTemplate = true);
 
+    #region Регион
+    /// <summary>
+    /// 1.1 города в регионе
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> FindCitiesInRegion(string regionCode)
+    {
+        return await ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}000___000__") && !EF.Functions.ILike(x.CODE, $"{regionCode}___000_____"))
+            .ToArrayAsync();
+        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в регионе
+                $" code LIKE '{codeRegion}000___000__' AND code NOT LIKE '{codeRegion}___000_____' ORDER BY name");*/
+    }
+
+    /// <summary>
+    /// 1.2 нас. пункты в регионе
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> PopPointsInRegion(string regionCode)
+    {
+        return await ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}000000_____") && !EF.Functions.ILike(x.CODE, $"{regionCode}______000__"))
+            .ToArrayAsync();
+        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в регионе
+                $" code LIKE '{codeRegion}000000_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");*/
+    }
+
+    /// <summary>
+    /// 1.3 районы в регионе
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> AreasInRegion(string regionCode)
+    {
+        return await ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}___000000__") && !EF.Functions.ILike(x.CODE, $"{regionCode}000________"))
+            .ToArrayAsync();
+        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'area' as typeObj FROM KLADR WHERE " + // районы в регионе
+                $" code LIKE '{codeRegion}___000000__' AND code NOT LIKE '{codeRegion}000________' ORDER BY name");*/
+    }
+
+    /// <summary>
+    /// 1.4 street`s в регионе
+    /// </summary>
+    public async Task<StreetKLADRModelDB[]> StreetsInRegion(string regionCode)
+    {
+        return await StreetsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}000000000______"))
+            .ToArrayAsync();
+        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM STREET WHERE " + // street`s в регионе
+                $" (code LIKE '{codeRegion}000000000______') ORDER BY name");*/
+    }
+    #endregion
+
+    #region Район
+    /// <summary>
+    /// 2.1 города в районах
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> CitiesInArea(string regionCode, string areaCode)
+    {
+        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в районах
+                $" code LIKE '{codeRegion}{codeRayon}___000__' AND code NOT LIKE '{codeRegion}___000_____'  ORDER BY name");*/
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// 2.2 нас. пункты в районах
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> PopPointsInArea(string regionCode, string areaCode)
+    {
+        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в районах
+                $" code LIKE '{codeRegion}{codeRayon}000_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");*/
+        throw new NotImplementedException();
+    }
+    #endregion
+
+    #region Город
+    /// <summary>
+    /// 3.1 нас. пункты в городах
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> PopPointsInCity(string regionCode, string areaCode, string cityCode)
+    {
+        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в городах
+                $" code LIKE '{codeRegion}{codeRayon}" + codeCity + $"_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");*/
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// 3.2 улицы в городах StreetKLADRModelDB
+    /// </summary>
+    public async Task<StreetKLADRModelDB[]> StreetsInCity(string regionCode, string areaCode, string cityCode)
+    {
+        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM KLADR WHERE " + // улицы в городах
+                $" code LIKE '{codeRegion}{codeRayon}" + codeCity + "_________' ORDER BY name");*/
+        throw new NotImplementedException();
+    }
+    #endregion
+
+    #region Нас.пункт
+    /// <summary>
+    /// 4.1 улицы в городах StreetKLADRModelDB
+    /// </summary>
+    public async Task<StreetKLADRModelDB[]> StreetsInPopPoint(string regionCode, string areaCode, string cityCode, string popPointCode)
+    {
+        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM KLADR WHERE " + // улицы в городах
+                $" code LIKE '{codeRegion}{codeRayon}" + codeCity + codeSmallCity + "______' ORDER BY name");*/
+        throw new NotImplementedException();
+    }
+    #endregion
+
+    #region Улица
+    /// <summary>
+    /// 5.1 дома на улицах
+    /// </summary>
+    public async Task<HouseKLADRModelDB[]> HousesInStrin(string regionCode, string areaCode, string cityCode, string popPointCode, string streetCode)
+    {
+        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'home' as typeObj FROM DOMA WHERE " + // дома на улицах
+                $" code LIKE '{codeRegion}{codeRayon}" + codeCity + codeSmallCity + codeStreet + "____' ORDER BY name");*/
+        throw new NotImplementedException();
+    }
+    #endregion
+
+
     /// <summary>
     /// Переместить данные из временных таблиц в прод
     /// </summary>
