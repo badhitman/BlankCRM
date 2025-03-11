@@ -18,12 +18,6 @@ public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
 
 
     /// <summary>
-    /// ReadOnly
-    /// </summary>
-    [Parameter]
-    public bool ReadOnly { get; set; }
-
-    /// <summary>
     /// ContextName
     /// </summary>
     [Parameter, EditorRequired]
@@ -42,14 +36,10 @@ public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
     public required TreeItemDataKladrModel Item { get; set; }
 
 
-    ObjectKLADRModelDB? ItemModel;
-
-    string? itemSystemName;
+    ObjectKLADRModelDB ItemModel = default!;
 
     /// <inheritdoc/>
-    protected string DomID => $"{Item.Value?.Id}";
-
-    bool IsEditedName => itemSystemName != ItemModel?.NAME;
+    protected string DomID => $"{Item.Value!.Id}";
 
 
     /// <inheritdoc/>
@@ -57,15 +47,14 @@ public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
     {
         await base.OnInitializedAsync();
 
-        ItemModel = Item.Value;
-        itemSystemName = ItemModel?.NAME;
+        ItemModel = Item.Value ?? throw new Exception("Item.Value is NULL");
     }
 
     /// <inheritdoc/>
     protected override void OnAfterRender(bool firstRender)
     {
         bool need_refresh = ItemModel != Item.Value;
-        ItemModel = Item.Value;
+        ItemModel = Item.Value ?? throw new Exception("Item.Value is NULL");
         if (need_refresh)
             StateHasChanged();
     }

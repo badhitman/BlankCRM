@@ -123,6 +123,7 @@ public class Program
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<ICommerceTransmission, CommerceTransmission>()
             .AddScoped<IHelpdeskService, HelpdeskImplementService>()
+            .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
             ;

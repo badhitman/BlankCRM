@@ -118,6 +118,7 @@ builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequired
 builder.Services.AddScoped<IWebTransmission, WebTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()
     .AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
+    .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
     .AddScoped<IStorageTransmission, StorageTransmission>()
     .AddScoped<IIdentityTransmission, IdentityTransmission>()
     ;

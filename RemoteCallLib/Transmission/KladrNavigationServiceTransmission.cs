@@ -13,5 +13,5 @@ public class KladrNavigationServiceTransmission(IRabbitClient rabbitClient) : IK
 {
     /// <inheritdoc/>
     public async Task<List<ObjectKLADRModelDB>> ObjectsList(KladrsListRequestModel req)
-        => await rabbitClient.MqRemoteCall<List<ObjectKLADRModelDB>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationListReceive) ?? [];
+        => await rabbitClient.MqRemoteCall<List<ObjectKLADRModelDB>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationListReceive, req) ?? [];
 }

@@ -2,18 +2,18 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%" class="@(!string.IsNullOrWhiteSpace(ItemModel?.STATUS) ? "text-decoration-line-through opacity-25": "")">
+<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%" class="@(ItemModel?.STATUS != "0" ? "text-decoration-line-through opacity-25": "")">
     <MudStack Row="true">
         <div class="row">
             <div class="col-auto">
-                <input @bind-value="itemSystemName" @bind-value:event="oninput" class="form-control form-control-sm@(string.IsNullOrWhiteSpace(itemSystemName) ? " border border-warning-subtle" : "")" autocomplete="off" placeholder="Имя">
+                <input value="@($"{Item.Value!.NAME} {Item.Value!.SOCR}")" class="form-control-plaintext" readonly>
             </div>
-            <div class="col-auto">
-                <button disabled="@(!IsEditedName)" type="button" class="btn btn-outline-info btn-sm">Сохранить</button>
+            @* <div class="col-auto">
+                <button disabled="@(!IsEditedName)" type="button" class="btn btn-outline-info btn-sm">@ItemModel?.STATUS</button>
             </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-outline-info btn-sm">Отмена</button>
-            </div>
+            </div> *@
         </div>
         @* else
         {
@@ -22,7 +22,7 @@
     </MudStack>
     <div style="justify-self: end;">
         <div class="row">
-            @if (!string.IsNullOrWhiteSpace(ItemModel?.STATUS))
+            @if (ItemModel?.STATUS != "0")
             {
                 <div class="col-auto">
                     <p class="lead">
@@ -32,15 +32,12 @@
             }
             <div class="col-auto">
                 <div class="hstack">
-                    @if (!ReadOnly)
-                    {
-                        <MudIconButton Icon="@Icons.Material.Filled.ArrowDropUp"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Filled.ArrowDropDown"></MudIconButton>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button title="Переименовать элемент" type="button" class="btn btn-outline-info btn-sm bi bi bi-pencil"></button>
-                            <button disabled="@IsEditedName" type="button" class="btn btn-outline-@(!string.IsNullOrWhiteSpace(ItemModel?.STATUS) ? "secondary" : "info") btn-sm bi bi-toggle-@(!string.IsNullOrWhiteSpace(ItemModel?.STATUS) ? "off" : "on")"></button>
-                        </div>
-                    }
+                    <MudIconButton Icon="@Icons.Material.Filled.ArrowDropUp"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.ArrowDropDown"></MudIconButton>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button title="Переименовать элемент" type="button" class="btn btn-outline-info btn-sm bi bi bi-pencil"></button>
+                        <button type="button" class="btn btn-outline-@(ItemModel?.STATUS != "0" ? "secondary" : "info") btn-sm bi bi-toggle-@(ItemModel?.STATUS != "0" ? "off" : "on")"></button>
+                    </div>
                 </div>
             </div>
         </div>
