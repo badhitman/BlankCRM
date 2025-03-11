@@ -62,15 +62,15 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
 
     void ItemUpdAction(ObjectKLADRModelDB sender)
     {
-        TreeItemDataKladrModel findNode = FindNode(sender.Id, InitialTreeItems) ?? throw new Exception();
+        TreeItemDataKladrModel findNode = FindNode(sender.CODE, InitialTreeItems) ?? throw new Exception();
         findNode.Text = sender.NAME;
         findNode.Value?.Update(sender);
     }
 
-    async void ReloadNodeAction(int parent_id)
+    async void ReloadNodeAction(string parent_id)
     {
         List<ObjectKLADRModelDB> rubrics = await RequestRubrics(parent_id);
-        if (parent_id > 0)
+        if (!string.IsNullOrWhiteSpace(parent_id))
         {
             TreeItemDataKladrModel findNode = FindNode(parent_id, InitialTreeItems) ?? throw new Exception();
             findNode.Children = ConvertRubrics(rubrics)!;
@@ -82,15 +82,15 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
         await SetBusy(false);
     }
 
-    static TreeItemDataKladrModel? FindNode(int parent_id, IEnumerable<TreeItemDataKladrModel> treeItems)
+    static TreeItemDataKladrModel? FindNode(string parent_id, IEnumerable<TreeItemDataKladrModel> treeItems)
     {
-        TreeItemDataKladrModel? res = treeItems.FirstOrDefault(x => x.Value?.Id == parent_id);
+        TreeItemDataKladrModel? res = treeItems.FirstOrDefault(x => x.Value?.CODE == parent_id);
         if (res is not null)
             return res;
 
         TreeItemDataKladrModel? FindChildNode(List<TreeItemData<ObjectKLADRModelDB?>> children)
         {
-            TreeItemData<ObjectKLADRModelDB?>? res_child = children.FirstOrDefault(x => x.Value?.Id == parent_id);
+            TreeItemData<ObjectKLADRModelDB?>? res_child = children.FirstOrDefault(x => x.Value?.CODE == parent_id);
             if (res_child is not null)
                 return (TreeItemDataKladrModel?)res_child;
 
@@ -133,8 +133,8 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     {
         ArgumentNullException.ThrowIfNull(parentValue);
 
-        List<ObjectKLADRModelDB> rubrics = await RequestRubrics(parentValue.Id);
-        TreeItemDataKladrModel findNode = FindNode(parentValue.Id, InitialTreeItems) ?? throw new Exception();
+        List<ObjectKLADRModelDB> rubrics = await RequestRubrics(parentValue.CODE);
+        TreeItemDataKladrModel findNode = FindNode(parentValue.CODE, InitialTreeItems) ?? throw new Exception();
 
         findNode.Children = ConvertRubrics(rubrics)!;
         //if ()
@@ -143,10 +143,10 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
         return findNode.Children;
     }
 
-    async Task<List<ObjectKLADRModelDB>> RequestRubrics(int? parent_id = null)
+    async Task<List<ObjectKLADRModelDB>> RequestRubrics(string? parent_code = null)
     {
         await SetBusy();
-        List<ObjectKLADRModelDB> rest = await KladrNavRepo.ObjectsList(new() { Request = parent_id ?? 0, ContextName = ContextName });
+        List<ObjectKLADRModelDB> rest = await KladrNavRepo.ObjectsList(new() { ParentCode = parent_code });
 
         rest = [.. rest.OrderBy(x => x.NAME)];
 

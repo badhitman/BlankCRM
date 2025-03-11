@@ -327,9 +327,6 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CODE")
-                        .IsUnique();
-
                     b.HasIndex("GNINMB");
 
                     b.HasIndex("INDEX");
@@ -343,6 +340,9 @@ namespace DbPostgreLib.Migrations.Kladr
                     b.HasIndex("STATUS");
 
                     b.HasIndex("UNO");
+
+                    b.HasIndex("CODE", "STATUS")
+                        .IsUnique();
 
                     b.ToTable("ObjectsKLADR", "public");
                 });

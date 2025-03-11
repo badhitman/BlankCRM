@@ -2,7 +2,7 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%" class="@(ItemModel?.IsDisabled == true ? "text-decoration-line-through opacity-25": "")">
+<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%" class="@(!string.IsNullOrWhiteSpace(ItemModel?.STATUS) ? "text-decoration-line-through opacity-25": "")">
     <MudStack Row="true">
         <div class="row">
             <div class="col-auto">
@@ -22,7 +22,7 @@
     </MudStack>
     <div style="justify-self: end;">
         <div class="row">
-            @if (ItemModel?.IsDisabled == true)
+            @if (!string.IsNullOrWhiteSpace(ItemModel?.STATUS))
             {
                 <div class="col-auto">
                     <p class="lead">
@@ -38,7 +38,7 @@
                         <MudIconButton Icon="@Icons.Material.Filled.ArrowDropDown"></MudIconButton>
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <button title="Переименовать элемент" type="button" class="btn btn-outline-info btn-sm bi bi bi-pencil"></button>
-                            <button disabled="@IsEditedName" type="button" class="btn btn-outline-@(ItemModel?.IsDisabled == true ? "secondary" : "info") btn-sm bi bi-toggle-@(ItemModel?.IsDisabled == true ? "off" : "on")"></button>
+                            <button disabled="@IsEditedName" type="button" class="btn btn-outline-@(!string.IsNullOrWhiteSpace(ItemModel?.STATUS) ? "secondary" : "info") btn-sm bi bi-toggle-@(!string.IsNullOrWhiteSpace(ItemModel?.STATUS) ? "off" : "on")"></button>
                         </div>
                     }
                 </div>

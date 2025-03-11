@@ -35,21 +35,21 @@ public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required Action<UniversalBaseModel> ItemUpdateHandle { get; set; }
+    public required Action<ObjectKLADRModelDB> ItemUpdateHandle { get; set; }
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required TreeItemDataRubricModel Item { get; set; }
+    public required TreeItemDataKladrModel Item { get; set; }
 
 
-    UniversalBaseModel? ItemModel;
+    ObjectKLADRModelDB? ItemModel;
 
     string? itemSystemName;
 
     /// <inheritdoc/>
     protected string DomID => $"{Item.Value?.Id}";
 
-    bool IsEditedName => itemSystemName != ItemModel?.Name;
+    bool IsEditedName => itemSystemName != ItemModel?.NAME;
 
 
     /// <inheritdoc/>
@@ -58,7 +58,7 @@ public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
         await base.OnInitializedAsync();
 
         ItemModel = Item.Value;
-        itemSystemName = ItemModel?.Name;
+        itemSystemName = ItemModel?.NAME;
     }
 
     /// <inheritdoc/>

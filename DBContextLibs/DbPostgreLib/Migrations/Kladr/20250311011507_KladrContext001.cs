@@ -318,10 +318,10 @@ namespace DbPostgreLib.Migrations.Kladr
                 column: "SHNAME");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ObjectsKLADR_CODE",
+                name: "IX_ObjectsKLADR_CODE_STATUS",
                 schema: "public",
                 table: "ObjectsKLADR",
-                column: "CODE",
+                columns: new[] { "CODE", "STATUS" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

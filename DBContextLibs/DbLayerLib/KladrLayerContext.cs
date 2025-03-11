@@ -50,12 +50,12 @@ public abstract partial class KladrLayerContext : DbContext
     {
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await Database.BeginTransactionAsync();
 
-        await TempAltnamesKLADR.ExecuteDeleteAsync();
-        await TempNamesMapsKLADR.ExecuteDeleteAsync();
-        await TempObjectsKLADR.ExecuteDeleteAsync();
-        await TempSocrbasesKLADR.ExecuteDeleteAsync();
-        await TempStreetsKLADR.ExecuteDeleteAsync();
-        await TempHousesKLADR.ExecuteDeleteAsync();
+        await AltnamesKLADR.ExecuteDeleteAsync();
+        await NamesMapsKLADR.ExecuteDeleteAsync();
+        await ObjectsKLADR.ExecuteDeleteAsync();
+        await SocrbasesKLADR.ExecuteDeleteAsync();
+        await StreetsKLADR.ExecuteDeleteAsync();
+        await HousesKLADR.ExecuteDeleteAsync();
 
         await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<StreetKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()}");
         await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<AltnameKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<AltnameTempKLADRModelDB>()}");

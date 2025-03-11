@@ -7,10 +7,10 @@ namespace SharedLib;
 /// <summary>
 /// KladrsListRequestModel
 /// </summary>
-public class KladrsListRequestModel : RubricsListRequestModel
+public class KladrsListRequestModel
 {
     /// <summary>
-    /// FindRequest
+    /// ParentCode
     /// </summary>
-    public string? FindQuery { get; set; }
+    public string? ParentCode { get; set; }
 }

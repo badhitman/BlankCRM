@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Kladr
 {
     [DbContext(typeof(KladrContext))]
-    [Migration("20250310095215_KladrContext001")]
+    [Migration("20250311011507_KladrContext001")]
     partial class KladrContext001
     {
         /// <inheritdoc />
@@ -330,9 +330,6 @@ namespace DbPostgreLib.Migrations.Kladr
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CODE")
-                        .IsUnique();
-
                     b.HasIndex("GNINMB");
 
                     b.HasIndex("INDEX");
@@ -346,6 +343,9 @@ namespace DbPostgreLib.Migrations.Kladr
                     b.HasIndex("STATUS");
 
                     b.HasIndex("UNO");
+
+                    b.HasIndex("CODE", "STATUS")
+                        .IsUnique();
 
                     b.ToTable("ObjectsKLADR", "public");
                 });
