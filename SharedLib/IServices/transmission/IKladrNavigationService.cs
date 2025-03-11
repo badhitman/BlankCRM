@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json.Linq;
+
 namespace SharedLib;
 
 /// <summary>
@@ -12,5 +14,5 @@ public interface IKladrNavigationService
     /// <summary>
     /// Получить objects
     /// </summary>
-    public Task<List<ObjectKLADRModelDB>> ObjectsList(KladrsListRequestModel req);
+    public Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsList(KladrsListRequestModel req);
 }

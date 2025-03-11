@@ -29,14 +29,14 @@ public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required Action<ObjectKLADRModelDB> ItemUpdateHandle { get; set; }
+    public required Action<RootKLADRModelDB> ItemUpdateHandle { get; set; }
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
     public required TreeItemDataKladrModel Item { get; set; }
 
 
-    ObjectKLADRModelDB ItemModel = default!;
+    RootKLADRModelDB ItemModel = default!;
 
     /// <inheritdoc/>
     protected string DomID => $"{Item.Value!.Id}";
@@ -46,7 +46,6 @@ public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
         ItemModel = Item.Value ?? throw new Exception("Item.Value is NULL");
     }
 

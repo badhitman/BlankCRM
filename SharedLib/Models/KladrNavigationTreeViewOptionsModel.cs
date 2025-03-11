@@ -12,7 +12,7 @@ public class KladrNavigationTreeViewOptionsModel
     /// <summary>
     /// SelectedValuesChangedHandler
     /// </summary>
-    public required Action<IReadOnlyCollection<ObjectKLADRModelDB?>> SelectedValuesChangedHandler { get; set; }
+    public required Action<IReadOnlyCollection<RootKLADRModelDB?>> SelectedValuesChangedHandler { get; set; }
 
     /// <summary>
     /// SelectedNodes

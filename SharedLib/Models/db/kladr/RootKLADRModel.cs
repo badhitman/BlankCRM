@@ -29,4 +29,17 @@ public class RootKLADRModelDB : BaseKladrModel
     /// <inheritdoc/>
     [Required, StringLength(11)]
     public required string OCATD { get; set; }
+
+    /// <inheritdoc/>
+    public void Update(RootKLADRModelDB sender)
+    {
+        NAME = sender.NAME;
+        SOCR = sender.SOCR;
+        GNINMB = sender.GNINMB;
+        CODE = sender.CODE;
+        UNO = sender.UNO;
+        INDEX = sender.INDEX;
+        OCATD = sender.OCATD;
+        Id = sender.Id;
+    }
 }

@@ -2,11 +2,11 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%" class="@(ItemModel?.STATUS != "0" ? "text-decoration-line-through opacity-25": "")">
+<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
     <MudStack Row="true">
         <div class="row">
             <div class="col-auto">
-                <input value="@($"{Item.Value!.NAME} {Item.Value!.SOCR}")" class="form-control-plaintext" readonly>
+                <span>@Item.Value!.NAME @Item.Value!.SOCR</span>
             </div>
             @* <div class="col-auto">
                 <button disabled="@(!IsEditedName)" type="button" class="btn btn-outline-info btn-sm">@ItemModel?.STATUS</button>
@@ -22,21 +22,12 @@
     </MudStack>
     <div style="justify-self: end;">
         <div class="row">
-            @if (ItemModel?.STATUS != "0")
-            {
-                <div class="col-auto">
-                    <p class="lead">
-                        Деактивирован.
-                    </p>
-                </div>
-            }
             <div class="col-auto">
                 <div class="hstack">
                     <MudIconButton Icon="@Icons.Material.Filled.ArrowDropUp"></MudIconButton>
                     <MudIconButton Icon="@Icons.Material.Filled.ArrowDropDown"></MudIconButton>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <button title="Переименовать элемент" type="button" class="btn btn-outline-info btn-sm bi bi bi-pencil"></button>
-                        <button type="button" class="btn btn-outline-@(ItemModel?.STATUS != "0" ? "secondary" : "info") btn-sm bi bi-toggle-@(ItemModel?.STATUS != "0" ? "off" : "on")"></button>
+                        <button title="Переименовать элемент" type="button" class="btn btn-outline-info btn-sm bi bi bi-pencil"></button>                        
                     </div>
                 </div>
             </div>

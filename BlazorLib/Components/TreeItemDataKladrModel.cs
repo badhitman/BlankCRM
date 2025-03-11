@@ -10,12 +10,12 @@ namespace BlazorLib;
 /// <summary>
 /// Tree Item Data Kladr
 /// </summary>
-public class TreeItemDataKladrModel : TreeItemData<ObjectKLADRModelDB?>
+public class TreeItemDataKladrModel : TreeItemData<RootKLADRModelDB?>
 {
     /// <summary>
     /// Tree Item Data Kladr
     /// </summary>
-    public TreeItemDataKladrModel(ObjectKLADRModelDB entry, string icon) : base(entry)
+    public TreeItemDataKladrModel(RootKLADRModelDB entry, string icon) : base(entry)
     {
         Text = entry.NAME;
         Icon = icon;
@@ -23,7 +23,7 @@ public class TreeItemDataKladrModel : TreeItemData<ObjectKLADRModelDB?>
     }
 
     /// <inheritdoc/>
-    public TreeItemDataKladrModel(TreeItemData<ObjectKLADRModelDB> x)
+    public TreeItemDataKladrModel(TreeItemData<RootKLADRModelDB> x)
     {
         TreeItemDataKladrModel _sender = (TreeItemDataKladrModel)x!;
         Value = _sender.Value;
@@ -46,20 +46,20 @@ public class TreeItemDataKladrModel : TreeItemData<ObjectKLADRModelDB?>
 
 
     /// <inheritdoc/>
-    public static bool operator ==(TreeItemDataKladrModel? e1, TreeItemData<ObjectKLADRModelDB?> e2)
+    public static bool operator ==(TreeItemDataKladrModel? e1, TreeItemData<RootKLADRModelDB?> e2)
         => (e1 is null && e2 is null) || e1?.Value == e2?.Value;
 
     /// <inheritdoc/>
-    public static bool operator !=(TreeItemDataKladrModel? e1, TreeItemData<ObjectKLADRModelDB?> e2)
+    public static bool operator !=(TreeItemDataKladrModel? e1, TreeItemData<RootKLADRModelDB?> e2)
         => e1?.Value != e2?.Value;
 
 
     /// <inheritdoc/>
-    public static bool operator ==(TreeItemData<ObjectKLADRModelDB?> e1, TreeItemDataKladrModel? e2)
+    public static bool operator ==(TreeItemData<RootKLADRModelDB?> e1, TreeItemDataKladrModel? e2)
         => (e1 is null && e2 is null) || e1?.Value == e2?.Value;
 
     /// <inheritdoc/>
-    public static bool operator !=(TreeItemData<ObjectKLADRModelDB?> e2, TreeItemDataKladrModel? e1)
+    public static bool operator !=(TreeItemData<RootKLADRModelDB?> e2, TreeItemDataKladrModel? e1)
         => e1?.Value != e2?.Value;
 
 

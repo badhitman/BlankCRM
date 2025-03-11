@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using MudBlazor;
 using SharedLib;
+using Newtonsoft.Json;
 
 namespace BlazorWebLib.Components.Kladr;
 
@@ -36,16 +37,16 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
 
 
     List<TreeItemDataKladrModel> InitialTreeItems { get; set; } = [];
-    void SelectedValuesChangeHandler(IReadOnlyCollection<ObjectKLADRModelDB?> SelectedValues)
+    void SelectedValuesChangeHandler(IReadOnlyCollection<RootKLADRModelDB?> SelectedValues)
     {
         SelectedValuesChanged?.SelectedValuesChangedHandler(SelectedValues);
     }
 
-    List<TreeItemData<ObjectKLADRModelDB>> ConvertRubrics(IEnumerable<ObjectKLADRModelDB> rubrics)
+    List<TreeItemData<RootKLADRModelDB>> ConvertCladr(IEnumerable<RootKLADRModelDB> kladrElements)
     {
 
 
-        return [.. rubrics.Select(x => {
+        return [.. kladrElements.Select(x => {
 
 
             TreeItemDataKladrModel _ri = new (x, x.Id == 0 ? Icons.Material.Filled.PlaylistAdd : SelectedValuesChanged is null ? Icons.Material.Filled.CropFree : Icons.Custom.Uncategorized.Folder )
@@ -60,7 +61,7 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
         })];
     }
 
-    void ItemUpdAction(ObjectKLADRModelDB sender)
+    void ItemUpdAction(RootKLADRModelDB sender)
     {
         TreeItemDataKladrModel findNode = FindNode(sender.CODE, InitialTreeItems) ?? throw new Exception();
         findNode.Text = sender.NAME;
@@ -69,15 +70,15 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
 
     async void ReloadNodeAction(string parent_id)
     {
-        List<ObjectKLADRModelDB> rubrics = await RequestRubrics(parent_id);
+        List<RootKLADRModelDB> kladrElements = await RequestKladr(parent_id);
         if (!string.IsNullOrWhiteSpace(parent_id))
         {
             TreeItemDataKladrModel findNode = FindNode(parent_id, InitialTreeItems) ?? throw new Exception();
-            findNode.Children = ConvertRubrics(rubrics)!;
+            findNode.Children = ConvertCladr(kladrElements)!;
         }
         else
         {
-            InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataKladrModel(x))]; //.Cast<TreeItemDataKladrModel>()];
+            InitialTreeItems = [.. ConvertCladr(kladrElements).Select(x => new TreeItemDataKladrModel(x))]; //.Cast<TreeItemDataKladrModel>()];
         }
         await SetBusy(false);
     }
@@ -88,13 +89,13 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
         if (res is not null)
             return res;
 
-        TreeItemDataKladrModel? FindChildNode(List<TreeItemData<ObjectKLADRModelDB?>> children)
+        TreeItemDataKladrModel? FindChildNode(List<TreeItemData<RootKLADRModelDB?>> children)
         {
-            TreeItemData<ObjectKLADRModelDB?>? res_child = children.FirstOrDefault(x => x.Value?.CODE == parent_id);
+            TreeItemData<RootKLADRModelDB?>? res_child = children.FirstOrDefault(x => x.Value?.CODE == parent_id);
             if (res_child is not null)
                 return (TreeItemDataKladrModel?)res_child;
 
-            foreach (TreeItemData<ObjectKLADRModelDB?> c in children)
+            foreach (TreeItemData<RootKLADRModelDB?> c in children)
             {
                 if (c.Children is not null)
                 {
@@ -123,33 +124,29 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected override async void OnInitialized()
     {
-        List<ObjectKLADRModelDB> rubrics = await RequestRubrics();
-        InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataKladrModel(x))];
+        List<RootKLADRModelDB> kladrElements = await RequestKladr();
+        InitialTreeItems = [.. ConvertCladr(kladrElements).Select(x => new TreeItemDataKladrModel(x))];
         await SetBusy(false);
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyCollection<TreeItemData<ObjectKLADRModelDB?>>> LoadServerData(ObjectKLADRModelDB? parentValue)
+    public async Task<IReadOnlyCollection<TreeItemData<RootKLADRModelDB?>>> LoadServerData(RootKLADRModelDB? parentValue)
     {
         ArgumentNullException.ThrowIfNull(parentValue);
 
-        List<ObjectKLADRModelDB> rubrics = await RequestRubrics(parentValue.CODE);
+        List<RootKLADRModelDB> kladrElements = await RequestKladr(parentValue.CODE);
         TreeItemDataKladrModel findNode = FindNode(parentValue.CODE, InitialTreeItems) ?? throw new Exception();
 
-        findNode.Children = ConvertRubrics(rubrics)!;
-        //if ()
-        //    findNode.Children.ForEach(r => { r.Expandable = false; });
-
+        findNode.Children = ConvertCladr(kladrElements)!;
+        
         return findNode.Children;
     }
 
-    async Task<List<ObjectKLADRModelDB>> RequestRubrics(string? parent_code = null)
+    async Task<List<RootKLADRModelDB>> RequestKladr(string? parent_code = null)
     {
         await SetBusy();
-        List<ObjectKLADRModelDB> rest = await KladrNavRepo.ObjectsList(new() { ParentCode = parent_code });
-
-        rest = [.. rest.OrderBy(x => x.NAME)];
-
-        return rest;
+        Dictionary<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> rest = await KladrNavRepo.ObjectsList(new() { ParentCode = parent_code });
+        await SetBusy(false);
+        return rest.SelectMany(x => x.Value).Select(x => x.ToObject<RootKLADRModelDB>()).OrderBy(x => x!.NAME).ToList()!;
     }
 }

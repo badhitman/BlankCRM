@@ -18,11 +18,15 @@
         <MudPaper Class="ma-2" Elevation="3">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Регионы, районы, города (населённые пункты)</h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondary">Улицу, дом и далее заполняется в конце отдельно</h6>
-                    <RubricsManageComponent ContextName="@GlobalStaticConstants.Routes.ADDRESS_CONTROLLER_NAME" />
-                    <hr />
-                    <KladrMainNavComponent />
+                    <h5 class="card-title">Регионы, районы, города (населённые пункты)</h5>                 
+                    <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+                        <MudTabPanel Text="CUSTOM">
+                            <RubricsManageComponent ContextName="@GlobalStaticConstants.Routes.ADDRESS_CONTROLLER_NAME" />
+                        </MudTabPanel>
+                        <MudTabPanel Text="КЛАДР 4.0">
+                            <KladrMainNavComponent />
+                        </MudTabPanel>
+                    </MudTabs>
                 </div>
             </div>
         </MudPaper>
