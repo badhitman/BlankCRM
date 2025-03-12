@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// KladrsListRequestModel
+/// KladrsListModel
 /// </summary>
-public class KladrsListRequestModel
+public class KladrsListModel
 {
     /// <summary>
     /// ParentCode

@@ -15,7 +15,7 @@ namespace KladrService;
 public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbFactory) : IKladrNavigationService
 {
     /// <inheritdoc/>
-    public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsList(KladrsListRequestModel req)
+    public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsList(KladrsListModel req)
     {
         Dictionary<KladrTypesResultsEnum, JObject[]> res = [];
         if (string.IsNullOrWhiteSpace(req.ParentCode))

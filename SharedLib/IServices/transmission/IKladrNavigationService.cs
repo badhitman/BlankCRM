@@ -14,5 +14,5 @@ public interface IKladrNavigationService
     /// <summary>
     /// Получить objects
     /// </summary>
-    public Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsList(KladrsListRequestModel req);
+    public Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsList(KladrsListModel req);
 }

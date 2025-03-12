@@ -10,13 +10,13 @@ namespace Transmission.Receives.kladr;
 
 /// <inheritdoc/>
 public class KladrNavigationReceive(IKladrNavigationService kladrRepo)
-    : IResponseReceive<KladrsListRequestModel?, Dictionary<KladrTypesResultsEnum, JObject[]>?>
+    : IResponseReceive<KladrsListModel?, Dictionary<KladrTypesResultsEnum, JObject[]>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.KladrNavigationListReceive;
 
     /// <inheritdoc/>
-    public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>?> ResponseHandleAction(KladrsListRequestModel? req)
+    public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>?> ResponseHandleAction(KladrsListModel? req)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await kladrRepo.ObjectsList(req);
