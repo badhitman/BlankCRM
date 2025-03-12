@@ -19,6 +19,6 @@ public class KladrNavigationReceive(IKladrNavigationService kladrRepo)
     public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>?> ResponseHandleAction(KladrsListModel? req)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await kladrRepo.ObjectsList(req);
+        return await kladrRepo.ObjectsListForParent(req);
     }
 }

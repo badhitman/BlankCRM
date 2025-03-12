@@ -13,6 +13,6 @@ namespace RemoteCallLib;
 public class KladrNavigationServiceTransmission(IRabbitClient rabbitClient) : IKladrNavigationService
 {
     /// <inheritdoc/>
-    public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsList(KladrsListModel req)
+    public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsListForParent(KladrsListModel req)
         => await rabbitClient.MqRemoteCall<Dictionary<KladrTypesResultsEnum, JObject[]>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationListReceive, req) ?? [];
 }

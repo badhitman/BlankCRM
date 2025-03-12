@@ -10,7 +10,7 @@ namespace SharedLib;
 public class KladrsListModel
 {
     /// <summary>
-    /// ParentCode
+    /// Code (КЛАДР)
     /// </summary>
-    public string? ParentCode { get; set; }
+    public string? Code { get; set; }
 }

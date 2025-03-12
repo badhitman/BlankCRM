@@ -20,6 +20,27 @@ namespace SharedLib;
 /// </summary>
 public static partial class GlobalTools
 {
+    /// <inheritdoc/>
+    public static KladrTypesObjectsEnum ParseKladrTypeObject(string code)
+    {
+        if (Regex.IsMatch(code, @"^..000000000..$")) // регионы
+            return KladrTypesObjectsEnum.RootRegion;
+
+        if (Regex.IsMatch(code, @"^.{5}000000..$") && !Regex.IsMatch(code, @"^..000000000..$")) // районы
+            return KladrTypesObjectsEnum.Area;
+
+        if (Regex.IsMatch(code, @"^.{8}000..$") && !Regex.IsMatch(code, @"^.{5}000.{5}$")) // города
+            return KladrTypesObjectsEnum.City;
+
+        if (code.Length == 13) // нас пункты
+            return KladrTypesObjectsEnum.PopPoint;
+
+        if (code.Length == 17) // улицы
+            return KladrTypesObjectsEnum.Street;
+
+        return KladrTypesObjectsEnum.Home;
+    }
+
     /// <summary>
     /// IsPhoneNumber
     /// </summary>

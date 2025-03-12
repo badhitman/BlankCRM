@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
 namespace SharedLib;

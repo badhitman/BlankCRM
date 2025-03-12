@@ -12,7 +12,7 @@ namespace SharedLib;
 public interface IKladrNavigationService
 {
     /// <summary>
-    /// Получить objects
+    /// Получить элементы по их вышестоящему/предку
     /// </summary>
-    public Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsList(KladrsListModel req);
+    public Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsListForParent(KladrsListModel req);
 }

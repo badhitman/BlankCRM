@@ -156,7 +156,7 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     async Task<List<RootKLADRModelDB>> RequestKladr(string? parent_code = null)
     {
         await SetBusy();
-        Dictionary<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> rest = await KladrNavRepo.ObjectsList(new() { ParentCode = parent_code });
+        Dictionary<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> rest = await KladrNavRepo.ObjectsListForParent(new() { Code = parent_code });
         List<RootKLADRModelDB> _res = rest.KladrBuild();
         await SetBusy(false);
         return _res;
