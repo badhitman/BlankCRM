@@ -824,6 +824,9 @@ public static partial class GlobalStaticConstants
 
         #region kladr
         /// <inheritdoc/>
+        public readonly static string KladrNavigationGetObjectReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.NAVIGATION_CONTROLLER_NAME}", $"{Routes.GET_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
+
+        /// <inheritdoc/>
         public readonly static string KladrNavigationListReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.NAVIGATION_CONTROLLER_NAME}", Routes.LIST_ACTION_NAME);
 
         /// <inheritdoc/>

@@ -14,7 +14,134 @@ namespace KladrService;
 public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbFactory) : IKladrNavigationService
 {
     /// <inheritdoc/>
-    public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsListForParent(KladrsRequestBaseModel req)
+    public async Task<TResponseModel<KladrResponseModel>> ObjectGet(KladrsRequestBaseModel req)
+    {
+        if (string.IsNullOrWhiteSpace(req.Code))
+            throw new NotImplementedException();
+
+        string codeObject = req.Code;
+        string codeRegion = codeObject[..2];
+        string codeRayon = codeObject.Substring(2, 3);
+        string codeCity = codeObject.Substring(5, 3);
+        string codeSmallCity = codeObject.Substring(8, 3);
+
+        string codeStreet = codeObject.Length < 17 ? "" : codeObject.Substring(11, 4);
+        string codeHome = codeObject.Length < 19 ? "" : codeObject.Substring(15, 4);
+
+        ConcurrentDictionary<KladrTypesObjectsEnum, RootKLADRModelDB> dataResponse = [];
+
+        List<(int, string)> socrBases = [];
+
+        List<Task> tasks =
+        [
+            Task.Run(async () => {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                ObjectKLADRModelDB _db = await context.ObjectsKLADR.FirstAsync(x=>x.CODE == $"{codeRegion}00000000000");
+                dataResponse.TryAdd(KladrTypesObjectsEnum.RootRegion, _db);
+                lock(socrBases)
+                    {
+                        socrBases.Add((1, _db.SOCR));
+                    }
+            }),
+        ];
+
+        KladrTypesObjectsEnum objectLevel = GlobalTools.ParseKladrTypeObject(codeObject);
+
+        if (objectLevel > KladrTypesObjectsEnum.RootRegion && codeRayon != "000")
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeRegion}{codeRayon}00000000");
+                if (_db is not null)
+                {
+                    dataResponse.TryAdd(KladrTypesObjectsEnum.Area, _db);
+                    lock (socrBases)
+                    {
+                        socrBases.Add((2, _db.SOCR));
+                    }
+                }
+            }));
+
+        if (objectLevel > KladrTypesObjectsEnum.Area && codeCity != "000")
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeRegion}{codeRayon}{codeCity}00000");
+                if (_db is not null)
+                {
+                    dataResponse.TryAdd(KladrTypesObjectsEnum.City, _db);
+                    lock (socrBases)
+                    {
+                        socrBases.Add((3, _db.SOCR));
+                    }
+                }
+            }));
+
+        if (objectLevel > KladrTypesObjectsEnum.City && codeSmallCity != "000")
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeRegion}{codeRayon}{codeCity}{codeSmallCity}00");
+                if (_db is not null)
+                {
+                    dataResponse.TryAdd(KladrTypesObjectsEnum.PopPoint, _db);
+                    lock (socrBases)
+                    {
+                        socrBases.Add((4, _db.SOCR));
+                    }
+                }
+            }));
+
+        if (objectLevel > KladrTypesObjectsEnum.PopPoint && !string.IsNullOrWhiteSpace(codeStreet) && codeStreet != "0000")
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                StreetKLADRModelDB? _db = await context.StreetsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeRegion}{codeRayon}{codeCity}{codeSmallCity}{codeStreet}00");
+                if (_db is not null)
+                {
+                    dataResponse.TryAdd(KladrTypesObjectsEnum.Street, _db);
+                    lock (socrBases)
+                    {
+                        socrBases.Add((5, _db.SOCR));
+                    }
+                }
+            }));
+
+        if (objectLevel > KladrTypesObjectsEnum.Street && !string.IsNullOrWhiteSpace(codeHome) && codeHome != "0000")
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                HouseKLADRModelDB? _db = await context.HousesKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeRegion}{codeRayon}{codeCity}{codeSmallCity}{codeStreet}{codeHome}");
+                if (_db is not null)
+                {
+                    dataResponse.TryAdd(KladrTypesObjectsEnum.Home, _db);
+                    lock (socrBases)
+                    {
+                        socrBases.Add((6, _db.SOCR));
+                    }
+                }
+            }));
+
+        await Task.WhenAll(tasks);
+        KeyValuePair<KladrTypesObjectsEnum, RootKLADRModelDB>[] dataList = [.. dataResponse.OrderBy(x => x.Key)];
+
+        using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+        SocrbaseKLADRModelDB[] resDb = await context.SocrbasesKLADR.Where(x => socrBases.Any(y => y.Item2 == x.SOCRNAME)).ToArrayAsync();
+
+        return new()
+        {
+            Response = new()
+            {
+                Payload = JObject.FromObject(dataList.First()),
+                Parents = [.. dataList.Skip(1)],
+                Socrbase = resDb,
+                TypeObject = objectLevel
+            }
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsListForParent(KladrFindRequestModel req)
     {
         Dictionary<KladrTypesResultsEnum, JObject[]> res = [];
         if (string.IsNullOrWhiteSpace(req.Code))
@@ -138,7 +265,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
 
         await Task.WhenAll(tasks);
 
-        foreach (KeyValuePair<KladrTypesResultsEnum, JObject[]> v in dataResponse)
+        foreach (KeyValuePair<KladrTypesResultsEnum, JObject[]> v in dataResponse.OrderBy(x => x.Key))
             res.Add(v.Key, v.Value);
 
         return res;

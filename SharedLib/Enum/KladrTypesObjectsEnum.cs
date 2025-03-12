@@ -15,35 +15,35 @@ public enum KladrTypesObjectsEnum
     /// Регион
     /// </summary>
     [Description("Регион")]
-    RootRegion = 0,
+    RootRegion = 10,
 
     /// <summary>
     /// Район
     /// </summary>
     [Description("Район")]
-    Area = 10,
+    Area = 20,
 
     /// <summary>
     /// Город
     /// </summary>
     [Description("Город")]
-    City = 20,
+    City = 30,
 
     /// <summary>
     /// Нас. пункт
     /// </summary>
     [Description("Населённый пункт")]
-    PopPoint = 30,
+    PopPoint = 40,
 
     /// <summary>
     /// Улица
     /// </summary>
     [Description("Улица")]
-    Street = 40,
-    
+    Street = 50,
+
     /// <summary>
     /// Дом
     /// </summary>
     [Description("Дом")]
-    Home = 50,
+    Home = 60,
 }
