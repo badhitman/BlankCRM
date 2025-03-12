@@ -2,17 +2,32 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-<div @key="DomID" style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
+<div data-type-descr="@MetaType?.DescriptionInfo()"
+     data-code="@Item.Value?.CODE" @key="DomID"
+     style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
     <MudStack Row="true">
-        <div class="row" data-type-descr="@MetaType?.DescriptionInfo()" data-code="@Item.Value?.CODE">
+        <div class="row">
             <div class="col-auto">
-                <span>@Item.Value!.NAME</span> 
-                <sub class="text-@GetGetCss()">@Item.Value!.SOCR</sub>
-                @* <sup>@Item.Value.CODE</sup> *@
+                <span>@Item.Value!.NAME</span>
+                <sub class="text-@GetGetCss() me-2">@Item.Value!.SOCR</sub>
+                @if (IsDebug)
+                {
+                    @* <sup>
+                        @Item.Value.CODE
+                        @if (StatusElement != "0")
+                        {
+                            <abbr class="ms-2">@StatusElement</abbr>
+                        }
+                    </sup> *@
+                }
             </div>
-            @* <div class="col-auto">
-                <code>@MetaType?.DescriptionInfo()</code>
-            </div>
+            @if (IsDebug)
+            {
+                @* <div class="col-auto">
+                    <code>@MetaType?.DescriptionInfo()</code>
+                </div> *@
+            }
+            @* 
             <div class="col-auto">
                 <button type="button" class="btn btn-outline-info btn-sm">Отмена</button>
             </div> *@

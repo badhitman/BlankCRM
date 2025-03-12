@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 namespace BlazorWebLib.Components.Kladr;
 
 /// <summary>
-/// KladrNode: Edit
+/// KladrNode
 /// </summary>
-public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
+public partial class KladrNodeComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IKladrNavigationService KladrNavRepo { get; set; } = default!;
@@ -45,6 +45,7 @@ public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
     protected string DomID => $"{GetType().Name}_{Item.Value!.Id}";
 
     KladrTypesResultsEnum? MetaType;
+    string? StatusElement;
 
     async Task GoToMap()
     {
@@ -102,6 +103,7 @@ public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
         if (Item.Value is ObjectMetaKLADRModel omm)
         {
             MetaType = omm.MetaType;
+            StatusElement = omm.STATUS;
         }
         else if (Item.Value is StreetMetaKLADRModel smm)
         {
@@ -112,4 +114,11 @@ public partial class KladrNodeEditComponent : BlazorBusyComponentBaseAuthModel
             MetaType = KladrTypesResultsEnum.HousesInStreet;
         }
     }
+
+
+#if DEBUG
+    bool IsDebug = true;
+#else
+    bool IsDebug = false;
+#endif
 }
