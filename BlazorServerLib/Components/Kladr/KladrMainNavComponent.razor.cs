@@ -41,10 +41,10 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
         SelectedValuesChanged?.SelectedValuesChangedHandler(SelectedValues);
     }
 
-    List<TreeItemData<RootKLADRModelDB>> ConvertCladr(IEnumerable<RootKLADRModelDB> kladrElements)
+    List<TreeItemData<RootKLADRModelDB>> ConvertCladr(IEnumerable<RootKLADRModelDB> kladrElements, TreeItemDataKladrModel? parent)
     {
         return [.. kladrElements.Select(x => {
-            TreeItemDataKladrModel _ri = new (x, SelectedValuesChanged is null ? Icons.Material.Filled.CropFree : Icons.Custom.Uncategorized.Folder )
+            TreeItemDataKladrModel _ri = new (x, SelectedValuesChanged is null ? Icons.Material.Filled.CropFree : Icons.Custom.Uncategorized.Folder, parent: parent )
                 {
                     Selected = SelectedValuesChanged?.SelectedNodes.Contains(x.Id) == true
                 };
@@ -69,11 +69,11 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
         if (!string.IsNullOrWhiteSpace(parent_id))
         {
             TreeItemDataKladrModel findNode = FindNode(parent_id, InitialTreeItems) ?? throw new Exception();
-            findNode.Children = ConvertCladr(kladrElements)!;
+            findNode.Children = ConvertCladr(kladrElements, findNode)!;
         }
         else
         {
-            InitialTreeItems = [.. ConvertCladr(kladrElements).Select(x => new TreeItemDataKladrModel(x))]; //.Cast<TreeItemDataKladrModel>()];
+            InitialTreeItems = [.. ConvertCladr(kladrElements,null).Select(x => new TreeItemDataKladrModel(x))]; //.Cast<TreeItemDataKladrModel>()];
         }
         await SetBusy(false);
     }
@@ -120,7 +120,7 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     protected override async void OnInitialized()
     {
         List<RootKLADRModelDB> kladrElements = await RequestKladr();
-        InitialTreeItems = [.. ConvertCladr(kladrElements).Select(x => new TreeItemDataKladrModel(x))];
+        InitialTreeItems = [.. ConvertCladr(kladrElements,null).Select(x => new TreeItemDataKladrModel(x))];
         await SetBusy(false);
     }
 
@@ -132,7 +132,7 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
         List<RootKLADRModelDB> kladrElements = await RequestKladr(parentValue.CODE);
         TreeItemDataKladrModel findNode = FindNode(parentValue.CODE, InitialTreeItems) ?? throw new Exception();
 
-        findNode.Children = ConvertCladr(kladrElements)!;
+        findNode.Children = ConvertCladr(kladrElements, findNode)!;
 
         return findNode.Children;
     }
@@ -141,7 +141,7 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     {
         await SetBusy();
         Dictionary<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> rest = await KladrNavRepo.ObjectsList(new() { ParentCode = parent_code });
-        List<RootKLADRModelDB> _res = rest.TreeBuild();
+        List<RootKLADRModelDB> _res = rest.KladrBuild();
         await SetBusy(false);
         return _res;
     }

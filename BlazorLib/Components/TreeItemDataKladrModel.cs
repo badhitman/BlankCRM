@@ -13,13 +13,19 @@ namespace BlazorLib;
 public class TreeItemDataKladrModel : TreeItemData<RootKLADRModelDB?>
 {
     /// <summary>
+    /// Parent
+    /// </summary>
+    public TreeItemDataKladrModel? Parent {  get; set; }
+
+    /// <summary>
     /// Tree Item Data Kladr
     /// </summary>
-    public TreeItemDataKladrModel(RootKLADRModelDB entry, string icon) : base(entry)
+    public TreeItemDataKladrModel(RootKLADRModelDB entry, string icon, TreeItemDataKladrModel? parent) : base(entry)
     {
         Text = entry.NAME;
         Icon = icon;
         Expandable = entry.Id > 0;
+        Parent = parent;
     }
 
     /// <inheritdoc/>
@@ -34,6 +40,7 @@ public class TreeItemDataKladrModel : TreeItemData<RootKLADRModelDB?>
         Visible = _sender.Visible;
         Text = _sender.Text;
         Selected = _sender.Selected;
+        Parent = _sender.Parent;
     }
 
     /// <inheritdoc/>

@@ -11,7 +11,7 @@ namespace SharedLib;
 public static class Extensions
 {
     /// <inheritdoc/>
-    public static List<RootKLADRModelDB> TreeBuild(this Dictionary<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> src)
+    public static List<RootKLADRModelDB> KladrBuild(this Dictionary<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> src)
     {
         List<RootKLADRModelDB> res = [];
         foreach (KeyValuePair<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> node in src)

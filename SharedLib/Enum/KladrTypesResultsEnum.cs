@@ -7,12 +7,12 @@ using System.ComponentModel;
 namespace SharedLib;
 
 /// <summary>
-/// KladrTypesResultsEnum
+/// Тип подчинения вышестоящему объекту
 /// </summary>
 public enum KladrTypesResultsEnum
 {
     /// <summary>
-    /// 0 регионы
+    /// 0 [ни кому не подчинено] регионы
     /// </summary>
     [Description("root")]
     RootRegions = 0,

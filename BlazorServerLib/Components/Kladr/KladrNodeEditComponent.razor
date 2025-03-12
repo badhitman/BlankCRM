@@ -4,10 +4,10 @@
 
 <div @key="DomID" style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
     <MudStack Row="true">
-        <div class="row" title="@MetaType?.DescriptionInfo()">
+        <div class="row" data-type-descr="@MetaType?.DescriptionInfo()" data-code="@Item.Value?.CODE">
             <div class="col-auto">
                 <span>@Item.Value!.NAME</span> 
-                <sub class="text-@GetCss">@Item.Value!.SOCR</sub>
+                <sub class="text-@GetGetCss()">@Item.Value!.SOCR</sub>
                 @* <sup>@Item.Value.CODE</sup> *@
             </div>
             @* <div class="col-auto">
@@ -27,8 +27,8 @@
             <div class="col-auto">
                 <div class="hstack">
                     <a href="https://www.pochta.ru/offices/@Item.Value?.INDEX" title="Почтовый индекс" target="_blank">@Item.Value?.INDEX</a>
-                    @* <MudIconButton Icon="@Icons.Material.Filled.ArrowDropUp"></MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Filled.ArrowDropDown"></MudIconButton>
+                    <MudIconButton Class="ms-2" Icon="@Icons.Material.Filled.Map" OnClick="GoToMap"></MudIconButton>
+                    @* <MudIconButton Icon="@Icons.Material.Filled.ArrowDropDown"></MudIconButton>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button title="Переименовать элемент" type="button" class="btn btn-outline-info btn-sm bi bi bi-pencil"></button>                        
                     </div> *@
