@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// KladrsListModel
+/// KladrsRequestBaseModel
 /// </summary>
-public class KladrsListModel
+public class KladrsRequestBaseModel
 {
     /// <summary>
     /// Code (КЛАДР)

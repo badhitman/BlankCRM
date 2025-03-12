@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 using Newtonsoft.Json.Linq;
@@ -15,7 +14,7 @@ namespace KladrService;
 public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbFactory) : IKladrNavigationService
 {
     /// <inheritdoc/>
-    public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsListForParent(KladrsListModel req)
+    public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsListForParent(KladrsRequestBaseModel req)
     {
         Dictionary<KladrTypesResultsEnum, JObject[]> res = [];
         if (string.IsNullOrWhiteSpace(req.Code))
