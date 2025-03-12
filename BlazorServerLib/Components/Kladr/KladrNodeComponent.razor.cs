@@ -40,6 +40,9 @@ public partial class KladrNodeComponent : BlazorBusyComponentBaseAuthModel
     [CascadingParameter, EditorRequired]
     public required TreeItemDataKladrModel Item { get; set; }
 
+    /// <inheritdoc/>
+    [CascadingParameter,EditorRequired]
+    public required KladrMainTreeViewSetModel KladrMainTreeView { get; set; }
 
     /// <inheritdoc/>
     protected string DomID => $"{GetType().Name}_{Item.Value!.Id}";
@@ -100,6 +103,7 @@ public partial class KladrNodeComponent : BlazorBusyComponentBaseAuthModel
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        Item.Notify += EventNotify;
         if (Item.Value is ObjectMetaKLADRModel omm)
         {
             MetaType = omm.MetaType;
@@ -115,10 +119,15 @@ public partial class KladrNodeComponent : BlazorBusyComponentBaseAuthModel
         }
     }
 
+    private void EventNotify(KladrMainTreeViewSetModel message)
+    {
+        StateHasChangedCall();
+    }
 
-#if DEBUG
-    bool IsDebug = true;
-#else
-    bool IsDebug = false;
-#endif
+    /// <inheritdoc/>
+    public override void Dispose()
+    {
+        Item.Notify -= EventNotify;
+        base.Dispose();
+    }
 }

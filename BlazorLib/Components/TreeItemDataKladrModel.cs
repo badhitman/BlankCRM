@@ -13,7 +13,7 @@ namespace BlazorLib;
 public class TreeItemDataKladrModel : TreeItemData<RootKLADRModelDB?>
 {
     /// <inheritdoc/>
-    public delegate void AccountHandler(string message);
+    public delegate void AccountHandler(KladrMainTreeViewSetModel message);
     /// <inheritdoc/>
     public event AccountHandler? Notify;
 
@@ -49,7 +49,7 @@ public class TreeItemDataKladrModel : TreeItemData<RootKLADRModelDB?>
     }
 
     /// <inheritdoc/>
-    public void NotifyActon(string message)
+    public void NotifyActon(KladrMainTreeViewSetModel message)
     {
         if(Notify is not null)
             Notify(message);

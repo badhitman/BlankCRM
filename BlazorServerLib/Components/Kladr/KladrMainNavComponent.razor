@@ -17,6 +17,7 @@
             <MudChip Value="@(nameof(RootKLADRModelDB.CODE))" />
             <MudChip Value="@(nameof(RootKLADRModelDB.OCATD))" />
             <MudChip Value="@(nameof(RootKLADRModelDB.GNINMB))" />
+            <MudChip title="Тип зависимости с вышестоящим/предком" Value="@(nameof(ObjectMetaKLADRModel.MetaType))" />
         </MudChipSet>
     </div>
 </div>
@@ -32,7 +33,9 @@
                 <CascadingValue Value="ReloadNodeAction">
                     <CascadingValue Value="ItemUpdAction">
                         <CascadingValue Value="(TreeItemDataKladrModel)item">
-                            <KladrNodeComponent ContextName="@ContextName" />
+                            <CascadingValue Value="KladrMainTreeViewSet">
+                                <KladrNodeComponent ContextName="@ContextName" />
+                            </CascadingValue>
                         </CascadingValue>
                     </CascadingValue>
                 </CascadingValue>

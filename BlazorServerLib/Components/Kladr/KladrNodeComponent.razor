@@ -3,36 +3,56 @@
 @inherits BlazorBusyComponentBaseAuthModel
 
 <div data-type-descr="@MetaType?.DescriptionInfo()"
-     data-code="@Item.Value?.CODE" @key="DomID"
-     style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
+data-code="@Item.Value?.CODE" @key="DomID"
+style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
     <MudStack Row="true">
         <div class="row">
             <div class="col-auto">
                 <span>@Item.Value!.NAME</span>
                 <sub class="text-@GetGetCss() me-2">@Item.Value!.SOCR</sub>
-                <sup>
-                    @Item.Value.CODE
-                    @if (StatusElement != "0")
-                    {
-                        <abbr class="ms-2">@StatusElement</abbr>
-                    }
-                </sup>
+                @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(Item.Value.CODE)) == true)
+                {
+                    <sup>
+                        @Item.Value.CODE
+                        @if (StatusElement != "0" && !string.IsNullOrWhiteSpace(StatusElement))
+                        {
+                            <abbr class="ms-2">@StatusElement</abbr>
+                        }
+                    </sup>
+                }
+                else if (StatusElement != "0" && !string.IsNullOrWhiteSpace(StatusElement))
+                {
+                    <sup>
+                        [STATUS: <abbr class="ms-2">@StatusElement</abbr>]
+                    </sup>
+                }
             </div>
-            @if (IsDebug)
+            @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(ObjectMetaKLADRModel.MetaType)) == true)
             {
-                @* <div class="col-auto">
+                <div class="col-auto">
                     <code>@MetaType?.DescriptionInfo()</code>
-                </div> *@
+                </div>
             }
-            @* 
+
             <div class="col-auto">
-                <button type="button" class="btn btn-outline-info btn-sm">Отмена</button>
-            </div> *@
+                @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(Item.Value.UNO)) == true)
+                {
+                    <span class="badge text-bg-info me-1">@($"{nameof(Item.Value.UNO)}: {Item.Value.UNO}")</span>
+                }
+                @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(Item.Value.CODE)) == true)
+                {
+                    <span class="badge text-bg-warning me-1">@($"{nameof(Item.Value.CODE)}: {Item.Value.CODE}")</span>
+                }
+                @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(Item.Value.OCATD)) == true)
+                {
+                    <span class="badge text-bg-primary me-1">@($"{nameof(Item.Value.OCATD)}: {Item.Value.OCATD}")</span>
+                }
+                @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(Item.Value.GNINMB)) == true)
+                {
+                    <span class="badge text-bg-success me-1">@($"{nameof(Item.Value.GNINMB)}: {Item.Value.GNINMB}")</span>
+                }
+            </div>
         </div>
-        @* else
-        {
-            <span class="font-monospace">@Item.Text</span>
-        } *@
     </MudStack>
     <div style="justify-self: end;">
         <div class="row">

@@ -36,16 +36,17 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
 
     MudTreeView<RootKLADRModelDB>? treeRef;
 
-    IReadOnlyCollection<string>? _selected;
+    KladrMainTreeViewSetModel KladrMainTreeViewSet = new();
+
     IReadOnlyCollection<string>? SelectedFieldsView
     {
-        get => _selected;
+        get => KladrMainTreeViewSet.SelectedFieldsView;
         set
         {
-            _selected = value;
+            KladrMainTreeViewSet.SelectedFieldsView = value;
             if (treeRef?.Items is not null)
                 foreach (TreeItemDataKladrModel ti in treeRef.Items.Cast<TreeItemDataKladrModel>())
-                    ti.NotifyActon("~ test");
+                    ti.NotifyActon(KladrMainTreeViewSet);
         }
     }
 
