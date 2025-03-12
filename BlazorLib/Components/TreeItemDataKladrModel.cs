@@ -12,6 +12,11 @@ namespace BlazorLib;
 /// </summary>
 public class TreeItemDataKladrModel : TreeItemData<RootKLADRModelDB?>
 {
+    /// <inheritdoc/>
+    public delegate void AccountHandler(string message);
+    /// <inheritdoc/>
+    public event AccountHandler? Notify;
+
     /// <summary>
     /// Parent
     /// </summary>
@@ -41,6 +46,13 @@ public class TreeItemDataKladrModel : TreeItemData<RootKLADRModelDB?>
         Text = _sender.Text;
         Selected = _sender.Selected;
         Parent = _sender.Parent;
+    }
+
+    /// <inheritdoc/>
+    public void NotifyActon(string message)
+    {
+        if(Notify is not null)
+            Notify(message);
     }
 
     /// <inheritdoc/>

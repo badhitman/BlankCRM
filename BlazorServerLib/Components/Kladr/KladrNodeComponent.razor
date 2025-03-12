@@ -10,16 +10,13 @@
             <div class="col-auto">
                 <span>@Item.Value!.NAME</span>
                 <sub class="text-@GetGetCss() me-2">@Item.Value!.SOCR</sub>
-                @if (IsDebug)
-                {
-                    @* <sup>
-                        @Item.Value.CODE
-                        @if (StatusElement != "0")
-                        {
-                            <abbr class="ms-2">@StatusElement</abbr>
-                        }
-                    </sup> *@
-                }
+                <sup>
+                    @Item.Value.CODE
+                    @if (StatusElement != "0")
+                    {
+                        <abbr class="ms-2">@StatusElement</abbr>
+                    }
+                </sup>
             </div>
             @if (IsDebug)
             {

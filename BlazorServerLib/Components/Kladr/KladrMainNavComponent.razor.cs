@@ -34,6 +34,20 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public bool SingleLevelMode { get; set; }
 
+    MudTreeView<RootKLADRModelDB>? treeRef;
+
+    IReadOnlyCollection<string>? _selected;
+    IReadOnlyCollection<string>? SelectedFieldsView
+    {
+        get => _selected;
+        set
+        {
+            _selected = value;
+            if (treeRef?.Items is not null)
+                foreach (TreeItemDataKladrModel ti in treeRef.Items.Cast<TreeItemDataKladrModel>())
+                    ti.NotifyActon("~ test");
+        }
+    }
 
     List<TreeItemDataKladrModel> InitialTreeItems { get; set; } = [];
     void SelectedValuesChangeHandler(IReadOnlyCollection<RootKLADRModelDB?> SelectedValues)
@@ -73,7 +87,7 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
         }
         else
         {
-            InitialTreeItems = [.. ConvertCladr(kladrElements,null).Select(x => new TreeItemDataKladrModel(x))]; //.Cast<TreeItemDataKladrModel>()];
+            InitialTreeItems = [.. ConvertCladr(kladrElements, null).Select(x => new TreeItemDataKladrModel(x))]; //.Cast<TreeItemDataKladrModel>()];
         }
         await SetBusy(false);
     }
@@ -120,8 +134,9 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     protected override async void OnInitialized()
     {
         List<RootKLADRModelDB> kladrElements = await RequestKladr();
-        InitialTreeItems = [.. ConvertCladr(kladrElements,null).Select(x => new TreeItemDataKladrModel(x))];
+        InitialTreeItems = [.. ConvertCladr(kladrElements, null).Select(x => new TreeItemDataKladrModel(x))];
         await SetBusy(false);
+
     }
 
     /// <inheritdoc/>
