@@ -5,12 +5,12 @@
 namespace SharedLib;
 
 /// <summary>
-/// KladrFindRequestModel
+/// KladrSelectRequestModel
 /// </summary>
-public class KladrFindRequestModel : KladrsRequestBaseModel
+public class KladrSelectRequestModel : FindRequestModel
 {
     /// <summary>
-    /// строка поиска
+    /// Применение фильтра к коду
     /// </summary>
-    public string? SearchQuery { get; set; }
+    public string? CodeLikeFilter { get; set; }
 }

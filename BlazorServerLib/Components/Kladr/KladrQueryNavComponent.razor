@@ -1,0 +1,40 @@
+@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table" Loading="IsBusyProgress">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Поиск адреса</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="nr_field" T="KladrResponseModel">Nr</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <KladrSelectRowComponent RowElement="context" />
+    </RowTemplate>
+    <NoRecordsContent>
+        @if (string.IsNullOrWhiteSpace(searchString) || searchString.Trim().Length < 3)
+        {
+            <figure class="text-center">
+                <blockquote class="blockquote">
+                    <p>Введите запрос.</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    Минимальная длина запроса <cite title="Source Title">3 (три) символа</cite>
+                </figcaption>
+            </figure>
+        }
+        else
+        {
+            <MudText>Ни чего не найдено</MudText>
+        }
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Загрузка...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

@@ -20,4 +20,9 @@ public interface IKladrNavigationService
     /// Получить объект и его предков
     /// </summary>
     public Task<TResponseModel<KladrResponseModel>> ObjectGet(KladrsRequestBaseModel req);
+
+    /// <summary>
+    /// ObjectsSelect
+    /// </summary>
+    public Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelect(KladrSelectRequestModel req);
 }

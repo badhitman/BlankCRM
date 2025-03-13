@@ -24,6 +24,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<GetMetadataKladrReceive,    GetMetadataKladrRequestModel, MetadataKladrModel>()
             .RegisterMqListener<ClearTempKladrReceive,      object, ResponseBaseModel>()
             .RegisterMqListener<FlushTempKladrReceive,      object, ResponseBaseModel>()
+            .RegisterMqListener<KladrSelectReceive,         KladrSelectRequestModel, TPaginationResponseModel<KladrResponseModel>>()
             ;
     }
 }

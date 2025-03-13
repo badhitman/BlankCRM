@@ -8,9 +8,9 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Newtonsoft.Json;
+using Telegram.Bot;
 using SharedLib;
 using DbcLib;
-using Telegram.Bot;
 
 namespace TelegramBotService;
 
@@ -279,8 +279,8 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 r.msg.Chat = r.chat;
                 r.msg.From = r.sender;
                 r.msg.Document = r.document;
-                r.msg.Voice = r.voice;  
-                r.msg.Video = r.video;  
+                r.msg.Voice = r.voice;
+                r.msg.Video = r.video;
                 r.msg.Audio = r.audio;
             });
 
@@ -316,6 +316,15 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             return res;
         }
 
+        TResponseModel<TelegramUserBaseModel> tgUser = await IdentityRepo.GetTelegramUser(message.UserTelegramId);
+        if (tgUser.Response is null || !tgUser.Success())
+        {
+            if (tgUser.Success())
+                res.AddError($"Пользователь TG#{message.UserTelegramId} не найден в БД");
+            res.AddRangeMessages(tgUser.Messages);
+            return res;
+        }
+
         ParseMode parse_mode;
         if (Enum.TryParse(typeof(ParseMode), message.ParseModeName, true, out object? parse_mode_out))
             parse_mode = (ParseMode)parse_mode_out;
@@ -326,6 +335,8 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             _logger.LogWarning(msg);
             res.AddWarning(msg);
         }
+
+
 
         ReplyMarkup? replyKB = message.ReplyKeyboard is null
             ? null

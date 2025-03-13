@@ -10,7 +10,7 @@ using SharedLib;
 namespace BlazorWebLib.Components.Kladr;
 
 /// <inheritdoc/>
-public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
+public partial class KladrTreeNavComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IKladrNavigationService KladrNavRepo { get; set; } = default!;
@@ -33,6 +33,7 @@ public partial class KladrMainNavComponent : BlazorBusyComponentBaseModel
     /// </summary>
     [Parameter]
     public bool SingleLevelMode { get; set; }
+
 
     MudTreeView<RootKLADRModelDB>? treeRef;
 

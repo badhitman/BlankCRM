@@ -7,9 +7,6 @@
 @using MudBlazor
 @using SharedLib
 
-@attribute [Authorize(Roles = $"{GlobalStaticConstants.Roles.Admin},{GlobalStaticConstants.Roles.HelpDeskTelegramBotManager},{GlobalStaticConstants.Roles.HelpDeskTelegramBotUnit}")]
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
-
 <MudTabs Style="overflow: auto;" Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
     <MudTabPanel Text="Рубрики">
         <RubricsParametersComponent />
@@ -24,7 +21,7 @@
                             <RubricsManageComponent ContextName="@GlobalStaticConstants.Routes.ADDRESS_CONTROLLER_NAME" />
                         </MudTabPanel>
                         <MudTabPanel Text="КЛАДР 4.0">
-                            <KladrMainNavComponent />
+                            <KladrViewPanelComponent />
                         </MudTabPanel>
                     </MudTabs>
                 </div>

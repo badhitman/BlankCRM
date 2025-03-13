@@ -143,16 +143,42 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     /// <inheritdoc/>
     public async Task<Dictionary<KladrTypesResultsEnum, JObject[]>> ObjectsListForParent(KladrFindRequestModel req)
     {
+        List<Task> tasks = [];
         Dictionary<KladrTypesResultsEnum, JObject[]> res = [];
         if (string.IsNullOrWhiteSpace(req.Code))
         {
-            using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-            List<ObjectKLADRModelDB> dataDb = await context
-                .ObjectsKLADR
-                .Where(x => x.CODE.EndsWith("00000000000"))
-                .OrderBy(x => x.NAME)
-                .ToListAsync();
-            res.Add(KladrTypesResultsEnum.RootRegions, [.. dataDb.Select(JObject.FromObject)]);
+            List<ObjectKLADRModelDB> dataDb = default!;
+            List<string> filterRegions = [];
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                dataDb = await context
+                    .ObjectsKLADR
+                    .Where(x => x.CODE.EndsWith("00000000000"))
+                    .OrderBy(x => x.NAME)
+                    .ToListAsync();
+            }));
+
+            if (!string.IsNullOrWhiteSpace(req.SearchQuery))
+            {
+                tasks.Add(
+                        Task.Run(async () =>
+                        {
+                            using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                            filterRegions = await context
+                                .ObjectsKLADR
+                                .Where(x => EF.Functions.Like(x.NAME, $"%{req.SearchQuery}%"))
+                                .Select(x => x.CODE.Substring(0, 2))
+                                .Union(context.StreetsKLADR.Where(x => EF.Functions.Like(x.NAME, $"%{req.SearchQuery}%")).Select(x => x.CODE.Substring(0, 2)).Distinct())
+                                .Distinct()
+                                .ToListAsync();
+                        })
+                    );
+            }
+
+            await Task.WhenAll(tasks);
+            res.Add(KladrTypesResultsEnum.RootRegions, [.. dataDb.Where(x => filterRegions is null || filterRegions.Count == 0 || filterRegions.Contains(x.CODE[..2])).Select(JObject.FromObject)]);
+
             return res;
         }
 
@@ -165,7 +191,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         string codeHome = codeObject.Length < 19 ? "" : codeObject.Substring(15, 4);
 
         ConcurrentDictionary<KladrTypesResultsEnum, JObject[]> dataResponse = [];
-        List<Task> tasks = [];
+
         KladrTypesObjectsEnum objectLevel = GlobalTools.ParseKladrTypeObject(codeObject);
         if (objectLevel == KladrTypesObjectsEnum.RootRegion) // регионы
         {
@@ -262,12 +288,17 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 //    $" code LIKE '{codeRegion}{codeRayon}" + codeCity + codeSmallCity + codeStreet + "____' ORDER BY name");
             }));
         }
-
         await Task.WhenAll(tasks);
 
         foreach (KeyValuePair<KladrTypesResultsEnum, JObject[]> v in dataResponse.OrderBy(x => x.Key))
             res.Add(v.Key, v.Value);
 
         return res;
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelect(KladrSelectRequestModel req)
+    {
+        throw new NotImplementedException();
     }
 }

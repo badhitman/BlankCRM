@@ -830,6 +830,9 @@ public static partial class GlobalStaticConstants
         public readonly static string KladrNavigationListReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.NAVIGATION_CONTROLLER_NAME}", Routes.LIST_ACTION_NAME);
 
         /// <inheritdoc/>
+        public readonly static string KladrNavigationSelectReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.NAVIGATION_CONTROLLER_NAME}", Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string ClearTempKladrReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.TEMP_CONTROLLER_NAME}", Routes.CLEAR_ACTION_NAME);
 
         /// <inheritdoc/>
