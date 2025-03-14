@@ -16,9 +16,6 @@ namespace BlazorWebLib.Components.Kladr.tree;
 public partial class KladrTreeNodeComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IKladrNavigationService KladrNavRepo { get; set; } = default!;
-
-    [Inject]
     IJSRuntime JSRepo { get; set; } = default!;
 
 
@@ -47,7 +44,7 @@ public partial class KladrTreeNodeComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected string DomID => $"{GetType().Name}_{Item.Value!.Id}";
 
-    KladrTypesResultsEnum? MetaType;
+    KladrChainTypesEnum? MetaType;
     string? StatusElement;
 
     async Task GoToMap()
@@ -75,13 +72,13 @@ public partial class KladrTreeNodeComponent : BlazorBusyComponentBaseAuthModel
         {
             return om.MetaType switch
             {
-                KladrTypesResultsEnum.RootRegions => "secondary",
-                KladrTypesResultsEnum.CitiesInRegion => "primary",
-                KladrTypesResultsEnum.PopPointsInRegion => "primary-emphasis",
-                KladrTypesResultsEnum.AreasInRegion => "danger",
-                KladrTypesResultsEnum.CitiesInArea => "info-emphasis",
-                KladrTypesResultsEnum.PopPointsInArea => "warning-emphasis",
-                KladrTypesResultsEnum.PopPointsInCity => "danger-emphasis",
+                KladrChainTypesEnum.RootRegions => "secondary",
+                KladrChainTypesEnum.CitiesInRegion => "primary",
+                KladrChainTypesEnum.PopPointsInRegion => "primary-emphasis",
+                KladrChainTypesEnum.AreasInRegion => "danger",
+                KladrChainTypesEnum.CitiesInArea => "info-emphasis",
+                KladrChainTypesEnum.PopPointsInArea => "warning-emphasis",
+                KladrChainTypesEnum.PopPointsInCity => "danger-emphasis",
                 _ => "default"
             };
         }
@@ -89,9 +86,9 @@ public partial class KladrTreeNodeComponent : BlazorBusyComponentBaseAuthModel
         {
             return sm.MetaType switch
             {
-                KladrTypesResultsEnum.StreetsInRegion => "warning",
-                KladrTypesResultsEnum.StreetsInCity => "success",
-                KladrTypesResultsEnum.StreetsInPopPoint => "info",
+                KladrChainTypesEnum.StreetsInRegion => "warning",
+                KladrChainTypesEnum.StreetsInCity => "success",
+                KladrChainTypesEnum.StreetsInPopPoint => "info",
                 _ => "default"
             };
         }
@@ -115,7 +112,7 @@ public partial class KladrTreeNodeComponent : BlazorBusyComponentBaseAuthModel
         }
         else// if(Item.Value is HouseKLADRModelDTO)
         {
-            MetaType = KladrTypesResultsEnum.HousesInStreet;
+            MetaType = KladrChainTypesEnum.HousesInStreet;
         }
     }
 

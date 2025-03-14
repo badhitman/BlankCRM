@@ -12,19 +12,19 @@ namespace SharedLib;
 public static class Extensions
 {
     /// <inheritdoc/>
-    public static List<RootKLADRModelDB> KladrBuild(this Dictionary<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> src)
+    public static List<RootKLADRModelDB> KladrBuild(this Dictionary<KladrChainTypesEnum, Newtonsoft.Json.Linq.JObject[]> src)
     {
         List<RootKLADRModelDB> res = [];
-        foreach (KeyValuePair<KladrTypesResultsEnum, Newtonsoft.Json.Linq.JObject[]> node in src)
+        foreach (KeyValuePair<KladrChainTypesEnum, Newtonsoft.Json.Linq.JObject[]> node in src)
         {
             foreach (Newtonsoft.Json.Linq.JObject subNode in node.Value)
             {
                 switch (node.Key)
                 {
-                    case KladrTypesResultsEnum.StreetsInPopPoint or KladrTypesResultsEnum.StreetsInCity or KladrTypesResultsEnum.StreetsInRegion:
+                    case KladrChainTypesEnum.StreetsInPopPoint or KladrChainTypesEnum.StreetsInCity or KladrChainTypesEnum.StreetsInRegion:
                         res.Add(subNode.ToObject<StreetMetaKLADRModel>()!.Init(node.Key));
                         break;
-                    case KladrTypesResultsEnum.HousesInStreet:
+                    case KladrChainTypesEnum.HousesInStreet:
                         res.Add(subNode.ToObject<HouseKLADRModelDTO>()!);
                         break;
                     default:

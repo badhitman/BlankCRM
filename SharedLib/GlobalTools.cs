@@ -21,24 +21,46 @@ namespace SharedLib;
 public static partial class GlobalTools
 {
     /// <inheritdoc/>
-    public static KladrTypesObjectsEnum ParseKladrTypeObject(string code)
+    public static (KladrTypesObjectsEnum Level, KladrChainTypesEnum Chain) ParseKladrTypeObject(string code)
     {
         if (Regex.IsMatch(code, @"^..000000000..$")) // регионы
-            return KladrTypesObjectsEnum.RootRegion;
+            return (KladrTypesObjectsEnum.RootRegion, KladrChainTypesEnum.RootRegions);
 
-        if (Regex.IsMatch(code, @"^.{5}000000..$") && !Regex.IsMatch(code, @"^..000000000..$")) // районы
-            return KladrTypesObjectsEnum.Area;
+        if (Regex.IsMatch(code, @"^.{5}000000..$")) // районы
+            return (KladrTypesObjectsEnum.Area, KladrChainTypesEnum.AreasInRegion);
 
+        string codeRayon = code.Substring(2, 3);
         if (Regex.IsMatch(code, @"^.{8}000..$") && !Regex.IsMatch(code, @"^.{5}000.{5}$")) // города
-            return KladrTypesObjectsEnum.City;
+            return (KladrTypesObjectsEnum.City, codeRayon.Equals("000") ? KladrChainTypesEnum.CitiesInRegion : KladrChainTypesEnum.CitiesInArea);
+
+        string codeCity = code.Substring(5, 3);
 
         if (code.Length == 13) // нас пункты
-            return KladrTypesObjectsEnum.PopPoint;
+        {
+            if (codeRayon.Equals("000") && codeCity.Equals("000"))
+                return (KladrTypesObjectsEnum.PopPoint, KladrChainTypesEnum.PopPointsInRegion);
 
+            if (!codeCity.Equals("000"))
+                return (KladrTypesObjectsEnum.PopPoint, KladrChainTypesEnum.PopPointsInCity);
+
+            return (KladrTypesObjectsEnum.PopPoint, KladrChainTypesEnum.PopPointsInArea);
+        }
+
+        string codeSmallCity = code.Substring(8, 3);
+        
         if (code.Length == 17) // улицы
-            return KladrTypesObjectsEnum.Street;
+        {
 
-        return KladrTypesObjectsEnum.Home;
+            if (codeSmallCity.Equals("000") && codeCity.Equals("000"))
+                return (KladrTypesObjectsEnum.Street, KladrChainTypesEnum.StreetsInRegion);
+
+            if (!codeCity.Equals("000"))
+                return (KladrTypesObjectsEnum.Street, KladrChainTypesEnum.StreetsInCity);
+
+            return (KladrTypesObjectsEnum.Street, KladrChainTypesEnum.StreetsInPopPoint);
+        }
+
+        return (KladrTypesObjectsEnum.Home, KladrChainTypesEnum.HousesInStreet);
     }
 
     /// <summary>

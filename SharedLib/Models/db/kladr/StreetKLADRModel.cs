@@ -48,10 +48,10 @@ public class StreetTempKLADRModelDB : StreetKLADRModelDTO
 public class StreetMetaKLADRModel : StreetKLADRModelDTO
 {
     /// <inheritdoc/>
-    public KladrTypesResultsEnum MetaType { get; set; }
+    public KladrChainTypesEnum MetaType { get; set; }
 
     /// <inheritdoc/>
-    public StreetMetaKLADRModel Init(KladrTypesResultsEnum _mt)
+    public StreetMetaKLADRModel Init(KladrChainTypesEnum _mt)
     {
         MetaType = _mt;
         return this;

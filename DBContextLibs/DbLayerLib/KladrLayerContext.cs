@@ -230,10 +230,10 @@ public abstract partial class KladrLayerContext : DbContext
     public DbSet<NameMapKLADRModelDB> NamesMapsKLADR { get; set; } = default!;
 
     /// <inheritdoc/>
-    public DbSet<ObjectKLADRModelDB> ObjectsKLADR { get; set; } = default!;
+    public DbSet<SocrbaseKLADRModelDB> SocrbasesKLADR { get; set; } = default!;
 
     /// <inheritdoc/>
-    public DbSet<SocrbaseKLADRModelDB> SocrbasesKLADR { get; set; } = default!;
+    public DbSet<ObjectKLADRModelDB> ObjectsKLADR { get; set; } = default!;
 
     /// <inheritdoc/>
     public DbSet<StreetKLADRModelDB> StreetsKLADR { get; set; } = default!;

@@ -8,8 +8,9 @@ using SharedLib;
 namespace BlazorWebLib.Components.Kladr.main;
 
 /// <inheritdoc/>
-public partial class KladrSelectRowComponent
+public partial class KladrRowObjectComponent
 {
-    
-
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required ObjectKLADRModelDB ObjectKLADR { get; set; }
 }

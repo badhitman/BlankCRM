@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Тип подчинения вышестоящему объекту
 /// </summary>
-public enum KladrTypesResultsEnum
+public enum KladrChainTypesEnum
 {
     /// <summary>
     /// 0 [ни кому не подчинено] регионы

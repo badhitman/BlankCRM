@@ -14,7 +14,12 @@ public class KladrResponseBaseModel
     /// <summary>
     /// Тип объекта
     /// </summary>
-    public KladrTypesObjectsEnum TypeObject { get; set; }
+    public required KladrTypesObjectsEnum TypeObject { get; set; }
+
+    /// <summary>
+    /// Тип подчинения
+    /// </summary>
+    public required KladrChainTypesEnum ChainType { get; set; }
 
     /// <summary>
     /// Payload
