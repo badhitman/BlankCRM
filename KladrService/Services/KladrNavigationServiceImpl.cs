@@ -299,6 +299,61 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelect(KladrSelectRequestModel req)
     {
+        List<Task> tasks = [];
+        TPaginationResponseModel<KladrResponseModel> response = new(req) { Response = [] };
+        if (string.IsNullOrWhiteSpace(req.CodeLikeFilter))
+        {
+            List<ObjectKLADRModelDB> dataDb = default!;
+            SocrbaseKLADRModelDB[] socrbases = default!;
+
+            List<string> filterRegions = [];
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                socrbases = await context
+                    .SocrbasesKLADR
+                    .Where(x => x.LEVEL == "1")
+                    .OrderBy(x => x.SCNAME)
+                    .ToArrayAsync();
+            }));
+
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                dataDb = await context
+                    .ObjectsKLADR
+                    .Where(x => x.CODE.EndsWith("00000000000"))
+                    .OrderBy(x => x.NAME)
+                    .ToListAsync();
+            }));
+
+            if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            {
+                tasks.Add(
+                        Task.Run(async () =>
+                        {
+                            using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                            filterRegions = await context
+                                .ObjectsKLADR
+                                .Where(x => EF.Functions.Like(x.NAME, $"%{req.FindQuery}%"))
+                                .Select(x => x.CODE.Substring(0, 2))
+                                .Union(context.StreetsKLADR.Where(x => EF.Functions.Like(x.NAME, $"%{req.FindQuery}%")).Select(x => x.CODE.Substring(0, 2)).Distinct())
+                                .Distinct()
+                                .ToListAsync();
+                        })
+                    );
+            }
+
+            await Task.WhenAll(tasks);
+            
+            IEnumerable<ObjectKLADRModelDB> rowsData = dataDb.Where(x => filterRegions is null || filterRegions.Count == 0 || filterRegions.Contains(x.CODE[..2]));
+            if (rowsData.Any())
+                response.Response.AddRange(rowsData.Select(x => new KladrResponseModel() { Payload = JObject.FromObject(x), Socrbase = [.. socrbases.Where(y => y.SOCRNAME == x.SOCR)] }));
+
+            return response;
+        }
+
+
         throw new NotImplementedException();
     }
 }

@@ -1,0 +1,43 @@
+@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table" Loading="IsBusyProgress">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Поиск адреса</MudText>
+        <MudSpacer />
+        <MudTextField T="string"
+                      ValueChanged="@(s => OnSearch(s))"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @switch (context.TypeObject)
+        {
+            case KladrTypesObjectsEnum.RootRegion or KladrTypesObjectsEnum.Area or KladrTypesObjectsEnum.City or KladrTypesObjectsEnum.PopPoint:
+
+                break;
+            case KladrTypesObjectsEnum.Street:
+
+                break;
+            case KladrTypesObjectsEnum.Home:
+
+                break;
+        }
+        <KladrSelectRowComponent />
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Ни чего не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Загрузка...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

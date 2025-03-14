@@ -7,7 +7,7 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Kladr;
+namespace BlazorWebLib.Components.Kladr.main;
 
 /// <summary>
 /// KladrQueryNavComponent
@@ -16,6 +16,10 @@ public partial class KladrQueryNavComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IKladrNavigationService kladrRepo { get; set; } = default!;
+
+    /// <inheritdoc/>
+    [Parameter]
+    public string? CodeLikeFilter { get; set; }
 
 
     private MudTable<KladrResponseModel>? table;
@@ -26,10 +30,16 @@ public partial class KladrQueryNavComponent : BlazorBusyComponentBaseModel
     /// </summary>
     private async Task<TableData<KladrResponseModel>> ServerReload(TableState state, CancellationToken token)
     {
-        if (string.IsNullOrWhiteSpace(searchString) || searchString.Trim().Length < 3)
-            return new TableData<KladrResponseModel>() { TotalItems = 0, Items = [] };
+        KladrSelectRequestModel req = new()
+        {
+            FindQuery = searchString ?? "",
+            CodeLikeFilter = CodeLikeFilter,
+            PageNum = state.Page,
+            PageSize = state.PageSize,
+        };
+
         await SetBusy(token: token);
-        TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsSelect(new KladrSelectRequestModel() { FindQuery = searchString, });
+        TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsSelect(req);
         await SetBusy(false, token: token);
         return new TableData<KladrResponseModel>() { TotalItems = res.TotalRowsCount, Items = res.Response ?? [] };
     }

@@ -8,12 +8,12 @@ using SharedLib;
 using Microsoft.JSInterop;
 using System.Threading.Tasks;
 
-namespace BlazorWebLib.Components.Kladr;
+namespace BlazorWebLib.Components.Kladr.tree;
 
 /// <summary>
 /// KladrNode
 /// </summary>
-public partial class KladrNodeComponent : BlazorBusyComponentBaseAuthModel
+public partial class KladrTreeNodeComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IKladrNavigationService KladrNavRepo { get; set; } = default!;

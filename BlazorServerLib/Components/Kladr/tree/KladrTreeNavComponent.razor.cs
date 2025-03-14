@@ -7,7 +7,7 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Kladr;
+namespace BlazorWebLib.Components.Kladr.tree;
 
 /// <inheritdoc/>
 public partial class KladrTreeNavComponent : BlazorBusyComponentBaseModel

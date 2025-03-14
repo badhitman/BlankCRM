@@ -5,12 +5,11 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Kladr;
+namespace BlazorWebLib.Components.Kladr.main;
 
 /// <inheritdoc/>
 public partial class KladrSelectRowComponent
 {
-    /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public required KladrResponseModel RowElement { get; set; }
+    
+
 }
