@@ -38,13 +38,13 @@ public partial class KladrTreeNodeComponent : BlazorBusyComponentBaseAuthModel
     public required TreeItemDataKladrModel Item { get; set; }
 
     /// <inheritdoc/>
-    [CascadingParameter,EditorRequired]
+    [CascadingParameter, EditorRequired]
     public required KladrMainTreeViewSetModel KladrMainTreeView { get; set; }
 
     /// <inheritdoc/>
     protected string DomID => $"{GetType().Name}_{Item.Value!.Id}";
 
-    KladrChainTypesEnum? MetaType;
+    CodeKladrModel MetaType = default!;
     string? StatusElement;
 
     async Task GoToMap()
@@ -70,7 +70,7 @@ public partial class KladrTreeNodeComponent : BlazorBusyComponentBaseAuthModel
     {
         if (Item.Value is ObjectMetaKLADRModel om)
         {
-            return om.MetaType switch
+            return MetaType.Chain switch
             {
                 KladrChainTypesEnum.RootRegions => "secondary",
                 KladrChainTypesEnum.CitiesInRegion => "primary",
@@ -84,7 +84,7 @@ public partial class KladrTreeNodeComponent : BlazorBusyComponentBaseAuthModel
         }
         else if (Item.Value is StreetMetaKLADRModel sm)
         {
-            return sm.MetaType switch
+            return MetaType.Chain switch
             {
                 KladrChainTypesEnum.StreetsInRegion => "warning",
                 KladrChainTypesEnum.StreetsInCity => "success",
@@ -101,19 +101,9 @@ public partial class KladrTreeNodeComponent : BlazorBusyComponentBaseAuthModel
     {
         base.OnInitialized();
         Item.Notify += EventNotify;
+        MetaType = GlobalTools.ParseKladrTypeObject(Item.Value!.CODE);
         if (Item.Value is ObjectMetaKLADRModel omm)
-        {
-            MetaType = omm.MetaType;
             StatusElement = omm.STATUS;
-        }
-        else if (Item.Value is StreetMetaKLADRModel smm)
-        {
-            MetaType = smm.MetaType;
-        }
-        else// if(Item.Value is HouseKLADRModelDTO)
-        {
-            MetaType = KladrChainTypesEnum.HousesInStreet;
-        }
     }
 
     private void EventNotify(KladrMainTreeViewSetModel message)

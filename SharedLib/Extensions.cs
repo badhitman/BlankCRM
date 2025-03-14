@@ -22,13 +22,13 @@ public static class Extensions
                 switch (node.Key)
                 {
                     case KladrChainTypesEnum.StreetsInPopPoint or KladrChainTypesEnum.StreetsInCity or KladrChainTypesEnum.StreetsInRegion:
-                        res.Add(subNode.ToObject<StreetMetaKLADRModel>()!.Init(node.Key));
+                        res.Add(subNode.ToObject<StreetMetaKLADRModel>()!);
                         break;
                     case KladrChainTypesEnum.HousesInStreet:
                         res.Add(subNode.ToObject<HouseKLADRModelDTO>()!);
                         break;
                     default:
-                        res.Add(subNode.ToObject<ObjectMetaKLADRModel>()!.Init(node.Key));
+                        res.Add(subNode.ToObject<ObjectMetaKLADRModel>()!);
                         break;
                 }
             }

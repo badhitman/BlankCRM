@@ -15,4 +15,13 @@ public partial class KladrRowStreetComponent
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required StreetKLADRModelDB ObjectKLADR { get; set; }
+
+    CodeKladrModel MetaData = default!;
+
+    /// <inheritdoc/>
+    protected override Task OnInitializedAsync()
+    {
+        MetaData = GlobalTools.ParseKladrTypeObject(ObjectKLADR.CODE);
+        return base.OnInitializedAsync();
+    }
 }

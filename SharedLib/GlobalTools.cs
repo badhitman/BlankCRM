@@ -21,46 +21,157 @@ namespace SharedLib;
 public static partial class GlobalTools
 {
     /// <inheritdoc/>
-    public static (KladrTypesObjectsEnum Level, KladrChainTypesEnum Chain) ParseKladrTypeObject(string code)
+    public static CodeKladrModel ParseKladrTypeObject(string code)
     {
-        if (Regex.IsMatch(code, @"^..000000000..$")) // регионы
-            return (KladrTypesObjectsEnum.RootRegion, KladrChainTypesEnum.RootRegions);
-
-        if (Regex.IsMatch(code, @"^.{5}000000..$")) // районы
-            return (KladrTypesObjectsEnum.Area, KladrChainTypesEnum.AreasInRegion);
-
-        string codeRayon = code.Substring(2, 3);
-        if (Regex.IsMatch(code, @"^.{8}000..$") && !Regex.IsMatch(code, @"^.{5}000.{5}$")) // города
-            return (KladrTypesObjectsEnum.City, codeRayon.Equals("000") ? KladrChainTypesEnum.CitiesInRegion : KladrChainTypesEnum.CitiesInArea);
-
+        string codeRegion = code[..2];
+        string codeArea = code.Substring(2, 3);
         string codeCity = code.Substring(5, 3);
+        string codePopPoint = code.Substring(8, 3);
+        string codeStreet = code.Length < 17 ? "" : code.Substring(11, 4);
+        string codeHome = code.Length < 19 ? "" : code.Substring(15, 4);
+
+        if (KladrRegionCodeRegex().IsMatch(code)) // регионы
+            return new()
+            {
+                CodeOrigin = code,
+                Level = KladrTypesObjectsEnum.RootRegion,
+                Chain = KladrChainTypesEnum.RootRegions,
+                RegionCode = codeRegion,
+                AreaCode = codeArea,
+                CityCode = codeCity,
+                HomeCode = codeHome,
+                PopPointCode = codePopPoint,
+                StreetCode = codeStreet,
+            };
+
+        if (KladrAreaCodeRegex().IsMatch(code)) // районы
+            return new()
+            {
+                CodeOrigin = code,
+                Level = KladrTypesObjectsEnum.Area,
+                Chain = KladrChainTypesEnum.AreasInRegion,
+                RegionCode = codeRegion,
+                AreaCode = codeArea,
+                CityCode = codeCity,
+                HomeCode = codeHome,
+                PopPointCode = codePopPoint,
+                StreetCode = codeStreet,
+            };
+
+        if (KladrCityRegex().IsMatch(code) && !Regex.IsMatch(code, @"^.{5}000.{5}$")) // города
+            return new()
+            {
+                CodeOrigin = code,
+                Level = KladrTypesObjectsEnum.City,
+                Chain = codeArea.Equals("000") ? KladrChainTypesEnum.CitiesInRegion : KladrChainTypesEnum.CitiesInArea,
+                RegionCode = codeRegion,
+                AreaCode = codeArea,
+                CityCode = codeCity,
+                HomeCode = codeHome,
+                PopPointCode = codePopPoint,
+                StreetCode = codeStreet,
+            };
 
         if (code.Length == 13) // нас пункты
         {
-            if (codeRayon.Equals("000") && codeCity.Equals("000"))
-                return (KladrTypesObjectsEnum.PopPoint, KladrChainTypesEnum.PopPointsInRegion);
+            if (codeArea.Equals("000") && codeCity.Equals("000"))
+                return new()
+                {
+                    CodeOrigin = code,
+                    Level = KladrTypesObjectsEnum.PopPoint,
+                    Chain = KladrChainTypesEnum.PopPointsInRegion,
+                    RegionCode = codeRegion,
+                    AreaCode = codeArea,
+                    CityCode = codeCity,
+                    HomeCode = codeHome,
+                    PopPointCode = codePopPoint,
+                    StreetCode = codeStreet,
+                };
 
             if (!codeCity.Equals("000"))
-                return (KladrTypesObjectsEnum.PopPoint, KladrChainTypesEnum.PopPointsInCity);
+                return new()
+                {
+                    CodeOrigin = code,
+                    Level = KladrTypesObjectsEnum.PopPoint,
+                    Chain = KladrChainTypesEnum.PopPointsInCity,
+                    RegionCode = codeRegion,
+                    AreaCode = codeArea,
+                    CityCode = codeCity,
+                    HomeCode = codeHome,
+                    PopPointCode = codePopPoint,
+                    StreetCode = codeStreet,
+                };
 
-            return (KladrTypesObjectsEnum.PopPoint, KladrChainTypesEnum.PopPointsInArea);
+            return new()
+            {
+                CodeOrigin = code,
+                Level = KladrTypesObjectsEnum.PopPoint,
+                Chain = KladrChainTypesEnum.PopPointsInArea,
+                RegionCode = codeRegion,
+                AreaCode = codeArea,
+                CityCode = codeCity,
+                HomeCode = codeHome,
+                PopPointCode = codePopPoint,
+                StreetCode = codeStreet,
+            };
         }
 
-        string codeSmallCity = code.Substring(8, 3);
-        
         if (code.Length == 17) // улицы
         {
-
-            if (codeSmallCity.Equals("000") && codeCity.Equals("000"))
-                return (KladrTypesObjectsEnum.Street, KladrChainTypesEnum.StreetsInRegion);
+            if (codePopPoint.Equals("000") && codeCity.Equals("000"))
+                return new()
+                {
+                    CodeOrigin = code,
+                    Level = KladrTypesObjectsEnum.Street,
+                    Chain = KladrChainTypesEnum.StreetsInRegion,
+                    RegionCode = codeRegion,
+                    AreaCode = codeArea,
+                    CityCode = codeCity,
+                    HomeCode = codeHome,
+                    PopPointCode = codePopPoint,
+                    StreetCode = codeStreet,
+                };
 
             if (!codeCity.Equals("000"))
-                return (KladrTypesObjectsEnum.Street, KladrChainTypesEnum.StreetsInCity);
+                return new()
+                {
+                    CodeOrigin = code,
+                    Level = KladrTypesObjectsEnum.Street,
+                    Chain = KladrChainTypesEnum.StreetsInCity,
+                    RegionCode = codeRegion,
+                    AreaCode = codeArea,
+                    CityCode = codeCity,
+                    HomeCode = codeHome,
+                    PopPointCode = codePopPoint,
+                    StreetCode = codeStreet,
+                };
 
-            return (KladrTypesObjectsEnum.Street, KladrChainTypesEnum.StreetsInPopPoint);
+            return new()
+            {
+                CodeOrigin = code,
+                Level = KladrTypesObjectsEnum.Street,
+                Chain = KladrChainTypesEnum.StreetsInPopPoint,
+                RegionCode = codeRegion,
+                AreaCode = codeArea,
+                CityCode = codeCity,
+                HomeCode = codeHome,
+                PopPointCode = codePopPoint,
+                StreetCode = codeStreet,
+            };
         }
 
-        return (KladrTypesObjectsEnum.Home, KladrChainTypesEnum.HousesInStreet);
+        return new()
+        {
+            CodeOrigin = code,
+            Level = KladrTypesObjectsEnum.Home,
+            Chain = KladrChainTypesEnum.HousesInStreet,
+            RegionCode = codeRegion,
+            AreaCode = codeArea,
+            CityCode = codeCity,
+            HomeCode = codeHome,
+            PopPointCode = codePopPoint,
+            StreetCode = codeStreet,
+        };
     }
 
     /// <summary>
@@ -71,7 +182,7 @@ public static partial class GlobalTools
         if (string.IsNullOrWhiteSpace(number))
             return false;
 
-        return Regex.Match(number, @"^(\+?[0-9]{11})$").Success;
+        return PhoneNumValidateRegex().Match(number).Success;
     }
 
     /// <summary>
@@ -514,6 +625,18 @@ public static partial class GlobalTools
 
     [GeneratedRegex("(?<!^)([A-Z][a-z]|(?<=[a-z])[A-Z0-9])", RegexOptions.Compiled)]
     private static partial Regex MyPascalToKebabCaseRegex();
+
+    [GeneratedRegex(@"^..000000000..$")]
+    private static partial Regex KladrRegionCodeRegex();
+
+    [GeneratedRegex(@"^.{5}000000..$")]
+    private static partial Regex KladrAreaCodeRegex();
+
+    [GeneratedRegex(@"^.{8}000..$")]
+    private static partial Regex KladrCityRegex();
+
+    [GeneratedRegex(@"^(\+?[0-9]{11})$")]
+    private static partial Regex PhoneNumValidateRegex();
 }
 
 /// <summary>

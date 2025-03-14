@@ -2,9 +2,9 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-<div data-type-descr="@MetaType?.DescriptionInfo()"
-data-code="@Item.Value?.CODE" @key="DomID"
-style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
+<div data-type-descr="@GlobalTools.ParseKladrTypeObject(Item.Value!.CODE)"
+     data-code="@Item.Value?.CODE" @key="DomID"
+     style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
     <MudStack Row="true">
         <div class="row">
             <div class="col-auto">
@@ -27,12 +27,6 @@ style="display: grid; grid-template-columns: 1fr auto; align-items: center; widt
                     </sup>
                 }
             </div>
-            @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(ObjectMetaKLADRModel.MetaType)) == true)
-            {
-                <div class="col-auto">
-                    <code>@MetaType?.DescriptionInfo()</code>
-                </div>
-            }
 
             <div class="col-auto">
                 @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(Item.Value.UNO)) == true)

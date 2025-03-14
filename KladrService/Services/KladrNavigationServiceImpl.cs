@@ -19,14 +19,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         if (string.IsNullOrWhiteSpace(req.Code))
             throw new NotImplementedException();
 
-        string codeObject = req.Code;
-        string codeRegion = codeObject[..2];
-        string codeRayon = codeObject.Substring(2, 3);
-        string codeCity = codeObject.Substring(5, 3);
-        string codeSmallCity = codeObject.Substring(8, 3);
-
-        string codeStreet = codeObject.Length < 17 ? "" : codeObject.Substring(11, 4);
-        string codeHome = codeObject.Length < 19 ? "" : codeObject.Substring(15, 4);
+        CodeKladrModel codeParse = GlobalTools.ParseKladrTypeObject(req.Code);
 
         ConcurrentDictionary<KladrTypesObjectsEnum, RootKLADRModelDB> dataResponse = [];
 
@@ -36,7 +29,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         [
             Task.Run(async () => {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB _db = await context.ObjectsKLADR.FirstAsync(x=>x.CODE == $"{codeRegion}00000000000");
+                ObjectKLADRModelDB _db = await context.ObjectsKLADR.FirstAsync(x=>x.CODE == $"{codeParse.RegionCode}00000000000");
                 dataResponse.TryAdd(KladrTypesObjectsEnum.RootRegion, _db);
                 lock(socrBases)
                     {
@@ -45,13 +38,11 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             }),
         ];
 
-        (KladrTypesObjectsEnum Level, KladrChainTypesEnum Chain) objectLevel = GlobalTools.ParseKladrTypeObject(codeObject);
-
-        if (objectLevel.Level > KladrTypesObjectsEnum.RootRegion && codeRayon != "000")
+        if (codeParse.Level > KladrTypesObjectsEnum.RootRegion && codeParse.AreaCode != "000")
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeRegion}{codeRayon}00000000");
+                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}00000000");
                 if (_db is not null)
                 {
                     dataResponse.TryAdd(KladrTypesObjectsEnum.Area, _db);
@@ -62,11 +53,11 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 }
             }));
 
-        if (objectLevel.Level > KladrTypesObjectsEnum.Area && codeCity != "000")
+        if (codeParse.Level > KladrTypesObjectsEnum.Area && codeParse.CityCode != "000")
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeRegion}{codeRayon}{codeCity}00000");
+                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}00000");
                 if (_db is not null)
                 {
                     dataResponse.TryAdd(KladrTypesObjectsEnum.City, _db);
@@ -77,11 +68,11 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 }
             }));
 
-        if (objectLevel.Level > KladrTypesObjectsEnum.City && codeSmallCity != "000")
+        if (codeParse.Level > KladrTypesObjectsEnum.City && codeParse.PopPointCode != "000")
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeRegion}{codeRayon}{codeCity}{codeSmallCity}00");
+                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}{codeParse.PopPointCode}00");
                 if (_db is not null)
                 {
                     dataResponse.TryAdd(KladrTypesObjectsEnum.PopPoint, _db);
@@ -92,11 +83,11 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 }
             }));
 
-        if (objectLevel.Level > KladrTypesObjectsEnum.PopPoint && !string.IsNullOrWhiteSpace(codeStreet) && codeStreet != "0000")
+        if (codeParse.Level > KladrTypesObjectsEnum.PopPoint && !string.IsNullOrWhiteSpace(codeParse.StreetCode) && codeParse.StreetCode != "0000")
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                StreetKLADRModelDB? _db = await context.StreetsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeRegion}{codeRayon}{codeCity}{codeSmallCity}{codeStreet}00");
+                StreetKLADRModelDB? _db = await context.StreetsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}{codeParse.PopPointCode}{codeParse.StreetCode}00");
                 if (_db is not null)
                 {
                     dataResponse.TryAdd(KladrTypesObjectsEnum.Street, _db);
@@ -107,11 +98,11 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 }
             }));
 
-        if (objectLevel.Level > KladrTypesObjectsEnum.Street && !string.IsNullOrWhiteSpace(codeHome) && codeHome != "0000")
+        if (codeParse.Level > KladrTypesObjectsEnum.Street && !string.IsNullOrWhiteSpace(codeParse.HomeCode) && codeParse.HomeCode != "0000")
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                HouseKLADRModelDB? _db = await context.HousesKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeRegion}{codeRayon}{codeCity}{codeSmallCity}{codeStreet}{codeHome}");
+                HouseKLADRModelDB? _db = await context.HousesKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}{codeParse.PopPointCode}{codeParse.StreetCode}{codeParse.HomeCode}");
                 if (_db is not null)
                 {
                     dataResponse.TryAdd(KladrTypesObjectsEnum.Home, _db);
@@ -135,21 +126,20 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 Payload = JObject.FromObject(dataList.First()),
                 Parents = [.. dataList.Skip(1)],
                 Socrbase = resDb,
-                TypeObject = objectLevel.Level,
-                ChainType = objectLevel.Chain,
+                TypeObject = codeParse.Level,
+                ChainType = codeParse.Chain,
             }
         };
     }
 
     /// <inheritdoc/>
-    public async Task<Dictionary<KladrChainTypesEnum, JObject[]>> ObjectsListForParent(KladrFindRequestModel req)
+    public async Task<Dictionary<KladrChainTypesEnum, JObject[]>> ObjectsListForParent(KladrsRequestBaseModel req)
     {
         List<Task> tasks = [];
         Dictionary<KladrChainTypesEnum, JObject[]> res = [];
         if (string.IsNullOrWhiteSpace(req.Code))
         {
             List<ObjectKLADRModelDB> dataDb = default!;
-            List<string> filterRegions = [];
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
@@ -160,46 +150,21 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                     .ToListAsync();
             }));
 
-            if (!string.IsNullOrWhiteSpace(req.SearchQuery))
-            {
-                tasks.Add(
-                        Task.Run(async () =>
-                        {
-                            using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                            filterRegions = await context
-                                .ObjectsKLADR
-                                .Where(x => EF.Functions.Like(x.NAME, $"%{req.SearchQuery}%"))
-                                .Select(x => x.CODE.Substring(0, 2))
-                                .Union(context.StreetsKLADR.Where(x => EF.Functions.Like(x.NAME, $"%{req.SearchQuery}%")).Select(x => x.CODE.Substring(0, 2)).Distinct())
-                                .Distinct()
-                                .ToListAsync();
-                        })
-                    );
-            }
-
             await Task.WhenAll(tasks);
-            res.Add(KladrChainTypesEnum.RootRegions, [.. dataDb.Where(x => filterRegions is null || filterRegions.Count == 0 || filterRegions.Contains(x.CODE[..2])).Select(JObject.FromObject)]);
+            res.Add(KladrChainTypesEnum.RootRegions, [.. dataDb.Select(JObject.FromObject)]);
 
             return res;
         }
 
-        string codeObject = req.Code;
-        string codeRegion = codeObject[..2];
-        string codeRayon = codeObject.Substring(2, 3);
-        string codeCity = codeObject.Substring(5, 3);
-        string codeSmallCity = codeObject.Substring(8, 3);
-        string codeStreet = codeObject.Length < 17 ? "" : codeObject.Substring(11, 4);
-        string codeHome = codeObject.Length < 19 ? "" : codeObject.Substring(15, 4);
-
         ConcurrentDictionary<KladrChainTypesEnum, JObject[]> dataResponse = [];
-
-        (KladrTypesObjectsEnum Level, KladrChainTypesEnum Chain) objectLevel = GlobalTools.ParseKladrTypeObject(codeObject);
-        if (objectLevel.Level == KladrTypesObjectsEnum.RootRegion) // регионы
+        PaginationRequestModel _sq = new () { PageNum = 0, PageSize = int.MaxValue };
+        CodeKladrModel codeMd = GlobalTools.ParseKladrTypeObject(req.Code);
+        if (codeMd.Level == KladrTypesObjectsEnum.RootRegion) // регионы
         {
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB[] data = await context.CitiesInRegion(codeRegion);
+                ObjectKLADRModelDB[] data = await context.CitiesInRegion(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.CitiesInRegion, [.. data.Select(JObject.FromObject)]);
                 //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в регионе
                 //    $" code LIKE '{codeRegion}000___000__' AND code NOT LIKE '{codeRegion}___000_____' ORDER BY name");
@@ -207,7 +172,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB[] data = await context.PopPointsInRegion(codeRegion);
+                ObjectKLADRModelDB[] data = await context.PopPointsInRegion(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.PopPointsInRegion, [.. data.Select(JObject.FromObject)]);
                 //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в регионе
                 //    $" code LIKE '{codeRegion}000000_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");
@@ -215,7 +180,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB[] data = await context.AreasInRegion(codeRegion);
+                ObjectKLADRModelDB[] data = await context.AreasInRegion(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.AreasInRegion, [.. data.Select(JObject.FromObject)]);
                 //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'area' as typeObj FROM KLADR WHERE " + // районы в регионе
                 //    $" code LIKE '{codeRegion}___000000__' AND code NOT LIKE '{codeRegion}000________' ORDER BY name");
@@ -223,18 +188,18 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                StreetKLADRModelDB[] data = await context.StreetsInRegion(codeRegion);
+                StreetKLADRModelDB[] data = await context.StreetsInRegion(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.StreetsInRegion, [.. data.Select(JObject.FromObject)]);
                 //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM STREET WHERE " + // street`s в регионе
                 //    $" (code LIKE '{codeRegion}000000000______') ORDER BY name");
             }));
         }
-        else if (objectLevel.Level == KladrTypesObjectsEnum.Area) //районы
+        else if (codeMd.Level == KladrTypesObjectsEnum.Area) //районы
         {
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB[] data = await context.CitiesInArea(codeRegion, codeRayon);
+                ObjectKLADRModelDB[] data = await context.CitiesInArea(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.CitiesInArea, [.. data.Select(JObject.FromObject)]);
                 //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в районах
                 //    $" code LIKE '{codeRegion}{codeRayon}___000__' AND code NOT LIKE '{codeRegion}___000_____'  ORDER BY name");
@@ -242,18 +207,18 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB[] data = await context.PopPointsInArea(codeRegion, codeRayon);
+                ObjectKLADRModelDB[] data = await context.PopPointsInArea(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.PopPointsInArea, [.. data.Select(JObject.FromObject)]);
                 //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в районах
                 //    $" code LIKE '{codeRegion}{codeRayon}000_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");
             }));
         }
-        else if (objectLevel.Level == KladrTypesObjectsEnum.City) // города в районах
+        else if (codeMd.Level == KladrTypesObjectsEnum.City) // города в районах
         {
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB[] data = await context.PopPointsInCity(codeRegion, codeRayon, codeCity);
+                ObjectKLADRModelDB[] data = await context.PopPointsInCity(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.PopPointsInCity, [.. data.Select(JObject.FromObject)]);
                 //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в городах
                 //    $" code LIKE '{codeRegion}{codeRayon}" + codeCity + $"_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");
@@ -261,29 +226,29 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                StreetKLADRModelDB[] data = await context.StreetsInCity(codeRegion, codeRayon, codeCity);
+                StreetKLADRModelDB[] data = await context.StreetsInCity(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.StreetsInCity, [.. data.Select(JObject.FromObject)]);
                 //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM KLADR WHERE " + // улицы в городах
                 //    $" code LIKE '{codeRegion}{codeRayon}" + codeCity + "_________' ORDER BY name");
             }));
         }
-        else if (objectLevel.Level == KladrTypesObjectsEnum.PopPoint) // нас пункты
+        else if (codeMd.Level == KladrTypesObjectsEnum.PopPoint) // нас пункты
         {
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                StreetKLADRModelDB[] data = await context.StreetsInPopPoint(codeRegion, codeRayon, codeCity, codeSmallCity);
+                StreetKLADRModelDB[] data = await context.StreetsInPopPoint(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.StreetsInPopPoint, [.. data.Select(JObject.FromObject)]);
                 //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM KLADR WHERE " + // улицы в нас. пунктах
                 //    $" code LIKE '{codeRegion}{codeRayon}" + codeCity + codeSmallCity + "______' ORDER BY name");
             }));
         }
-        else if (objectLevel.Level == KladrTypesObjectsEnum.Street) // улицы
+        else if (codeMd.Level == KladrTypesObjectsEnum.Street) // улицы
         {
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                HouseKLADRModelDB[] data = await context.HousesInStrit(codeRegion, codeRayon, codeCity, codeSmallCity, codeStreet);
+                HouseKLADRModelDB[] data = await context.HousesInStrit(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.HousesInStreet, [.. data.Select(JObject.FromObject)]);
                 //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'home' as typeObj FROM DOMA WHERE " + // дома на улицах
                 //    $" code LIKE '{codeRegion}{codeRayon}" + codeCity + codeSmallCity + codeStreet + "____' ORDER BY name");
@@ -307,7 +272,6 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
 
         if (string.IsNullOrWhiteSpace(req.CodeLikeFilter))
         {
-            List<string> filterRegions = [];
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
@@ -318,32 +282,12 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                     .ToArrayAsync();
             }));
 
-            if (!string.IsNullOrWhiteSpace(req.FindQuery))
-            {
-                tasks.Add(
-                        Task.Run(async () =>
-                        {
-                            using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                            filterRegions = await context
-                                .ObjectsKLADR
-                                .Where(x => EF.Functions.Like(x.NAME, $"%{req.FindQuery}%"))
-                                .Select(x => x.CODE.Substring(0, 2))
-                                .Union(context.StreetsKLADR.Where(x => EF.Functions.Like(x.NAME, $"%{req.FindQuery}%")).Select(x => x.CODE.Substring(0, 2)).Distinct())
-                                .Distinct()
-                                .ToListAsync();
-                        })
-                    );
-            }
-
             await Task.WhenAll(tasks);
 
             using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
             IQueryable<ObjectKLADRModelDB> q = context
                 .ObjectsKLADR
                 .Where(x => x.CODE.EndsWith("00000000000"));
-
-            if (filterRegions is not null && filterRegions.Count != 0)
-                q = q.Where(x => filterRegions.Contains(x.CODE.Substring(0, 2)));
 
             response.TotalRowsCount = await q.CountAsync();
             dataDb = await q
@@ -362,7 +306,106 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             return response;
         }
 
+        ConcurrentDictionary<KladrChainTypesEnum, string[]> dataResponse = [];
+        CodeKladrModel codeMd = GlobalTools.ParseKladrTypeObject(req.CodeLikeFilter);
 
-        throw new NotImplementedException();
+        if (codeMd.Level == KladrTypesObjectsEnum.RootRegion) // регионы
+        {
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                ObjectKLADRModelDB[] data = await context.CitiesInRegion(codeMd, req);
+                dataResponse.TryAdd(KladrChainTypesEnum.CitiesInRegion, [.. data.Select(x => x.CODE)]);
+                //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в регионе
+                //    $" code LIKE '{codeRegion}000___000__' AND code NOT LIKE '{codeRegion}___000_____' ORDER BY name");
+            }));
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                ObjectKLADRModelDB[] data = await context.PopPointsInRegion(codeMd, req);
+                dataResponse.TryAdd(KladrChainTypesEnum.PopPointsInRegion, [.. data.Select(x => x.CODE)]);
+                //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в регионе
+                //    $" code LIKE '{codeRegion}000000_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");
+            }));
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                ObjectKLADRModelDB[] data = await context.AreasInRegion(codeMd, req);
+                dataResponse.TryAdd(KladrChainTypesEnum.AreasInRegion, [.. data.Select(x => x.CODE)]);
+                //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'area' as typeObj FROM KLADR WHERE " + // районы в регионе
+                //    $" code LIKE '{codeRegion}___000000__' AND code NOT LIKE '{codeRegion}000________' ORDER BY name");
+            }));
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                StreetKLADRModelDB[] data = await context.StreetsInRegion(codeMd, req);
+                dataResponse.TryAdd(KladrChainTypesEnum.StreetsInRegion, [.. data.Select(x => x.CODE)]);
+                //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM STREET WHERE " + // street`s в регионе
+                //    $" (code LIKE '{codeRegion}000000000______') ORDER BY name");
+            }));
+        }
+        else if (codeMd.Level == KladrTypesObjectsEnum.Area) //районы
+        {
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                ObjectKLADRModelDB[] data = await context.CitiesInArea(codeMd, req);
+                dataResponse.TryAdd(KladrChainTypesEnum.CitiesInArea, [.. data.Select(x => x.CODE)]);
+                //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в районах
+                //    $" code LIKE '{codeRegion}{codeRayon}___000__' AND code NOT LIKE '{codeRegion}___000_____'  ORDER BY name");
+            }));
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                ObjectKLADRModelDB[] data = await context.PopPointsInArea(codeMd, req);
+                dataResponse.TryAdd(KladrChainTypesEnum.PopPointsInArea, [.. data.Select(x => x.CODE)]);
+                //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в районах
+                //    $" code LIKE '{codeRegion}{codeRayon}000_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");
+            }));
+        }
+        else if (codeMd.Level == KladrTypesObjectsEnum.City) // города в районах
+        {
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                ObjectKLADRModelDB[] data = await context.PopPointsInCity(codeMd, req);
+                dataResponse.TryAdd(KladrChainTypesEnum.PopPointsInCity, [.. data.Select(x => x.CODE)]);
+                //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в городах
+                //    $" code LIKE '{codeRegion}{codeRayon}" + codeCity + $"_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");
+            }));
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                StreetKLADRModelDB[] data = await context.StreetsInCity(codeMd, req);
+                dataResponse.TryAdd(KladrChainTypesEnum.StreetsInCity, [.. data.Select(x => x.CODE)]);
+                //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM KLADR WHERE " + // улицы в городах
+                //    $" code LIKE '{codeRegion}{codeRayon}" + codeCity + "_________' ORDER BY name");
+            }));
+        }
+        else if (codeMd.Level == KladrTypesObjectsEnum.PopPoint) // нас пункты
+        {
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                StreetKLADRModelDB[] data = await context.StreetsInPopPoint(codeMd, req);
+                dataResponse.TryAdd(KladrChainTypesEnum.StreetsInPopPoint, [.. data.Select(x => x.CODE)]);
+                //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM KLADR WHERE " + // улицы в нас. пунктах
+                //    $" code LIKE '{codeRegion}{codeRayon}" + codeCity + codeSmallCity + "______' ORDER BY name");
+            }));
+        }
+        else if (codeMd.Level == KladrTypesObjectsEnum.Street) // улицы
+        {
+            tasks.Add(Task.Run(async () =>
+            {
+                using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+                HouseKLADRModelDB[] data = await context.HousesInStrit(codeMd, req);
+                dataResponse.TryAdd(KladrChainTypesEnum.HousesInStreet, [.. data.Select(x => x.CODE)]);
+                //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'home' as typeObj FROM DOMA WHERE " + // дома на улицах
+                //    $" code LIKE '{codeRegion}{codeRayon}" + codeCity + codeSmallCity + codeStreet + "____' ORDER BY name");
+            }));
+        }
+        await Task.WhenAll(tasks);
+
+        return response;
     }
 }

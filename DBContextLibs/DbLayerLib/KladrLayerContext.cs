@@ -46,140 +46,198 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 1.1 города в регионе
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> CitiesInRegion(string regionCode)
+    public IQueryable<ObjectKLADRModelDB> CitiesInRegionQuery(CodeKladrModel codeMd, PaginationRequestModel req)
     {
-        return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}000___000__") && !EF.Functions.Like(x.CODE, $"{regionCode}___000_____"))
-            .OrderBy(x => x.NAME)
-            .ToArrayAsync();
+        return ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____")).OrderBy(x => x.NAME)
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в регионе
                 $" code LIKE '{codeRegion}000___000__' AND code NOT LIKE '{codeRegion}___000_____' ORDER BY name");*/
     }
+    /// <summary>
+    /// 1.1 города в регионе
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> CitiesInRegion(CodeKladrModel codeMd, PaginationRequestModel req)
+        => await CitiesInRegionQuery(codeMd, req).ToArrayAsync();
 
     /// <summary>
     /// 1.2 нас. пункты в регионе
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> PopPointsInRegion(string regionCode)
+    public IQueryable<ObjectKLADRModelDB> PopPointsInRegionQuery(CodeKladrModel codeMd, PaginationRequestModel req)
     {
-        return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}000000_____") && !EF.Functions.Like(x.CODE, $"{regionCode}______000__"))
-            .OrderBy(x => x.NAME)
-            .ToArrayAsync();
+        return ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__")).OrderBy(x => x.NAME)
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в регионе
                 $" code LIKE '{codeRegion}000000_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");*/
     }
+    /// <summary>
+    /// 1.2 нас. пункты в регионе
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> PopPointsInRegion(CodeKladrModel codeMd, PaginationRequestModel req)
+        => await PopPointsInRegionQuery(codeMd, req).ToArrayAsync();
 
     /// <summary>
     /// 1.3 районы в регионе
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> AreasInRegion(string regionCode)
+    public IQueryable<ObjectKLADRModelDB> AreasInRegionQuery(CodeKladrModel codeMd, PaginationRequestModel req)
     {
-        return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}___000000__") && !EF.Functions.Like(x.CODE, $"{regionCode}000________"))
+        return ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000________"))
             .OrderBy(x => x.NAME)
-            .ToArrayAsync();
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'area' as typeObj FROM KLADR WHERE " + // районы в регионе
                 $" code LIKE '{codeRegion}___000000__' AND code NOT LIKE '{codeRegion}000________' ORDER BY name");*/
     }
+    /// <summary>
+    /// 1.3 районы в регионе
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> AreasInRegion(CodeKladrModel codeMd, PaginationRequestModel req)
+        => await AreasInRegionQuery(codeMd, req).ToArrayAsync();
 
     /// <summary>
     /// 1.4 street`s в регионе
     /// </summary>
-    public async Task<StreetKLADRModelDB[]> StreetsInRegion(string regionCode)
+    public IQueryable<StreetKLADRModelDB> StreetsInRegionQuery(CodeKladrModel codeMd, PaginationRequestModel req)
     {
-        return await StreetsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}000000000______"))
+        return StreetsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000000______"))
             .OrderBy(x => x.NAME)
-            .ToArrayAsync();
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM STREET WHERE " + // street`s в регионе
                 $" (code LIKE '{codeRegion}000000000______') ORDER BY name");*/
     }
+    /// <summary>
+    /// 1.4 street`s в регионе
+    /// </summary>
+    public async Task<StreetKLADRModelDB[]> StreetsInRegion(CodeKladrModel codeMd, PaginationRequestModel req)
+        => await StreetsInRegionQuery(codeMd, req).ToArrayAsync();
     #endregion
 
     #region Район
     /// <summary>
     /// 2.1 города в районах
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> CitiesInArea(string regionCode, string areaCode)
+    public IQueryable<ObjectKLADRModelDB> CitiesInAreaQuery(CodeKladrModel codeMd, PaginationRequestModel req)
     {
-        return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}___000__") && !EF.Functions.Like(x.CODE, $"{regionCode}___000_____"))//6200400000000
+        return ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))//6200400000000
             .OrderBy(x => x.NAME)
-            .ToArrayAsync();
-        /*//queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в районах
-                //    $" code LIKE '{codeRegion}{codeRayon}___000__' AND code NOT LIKE '{codeRegion}___000_____'  ORDER BY name");*/
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize)
+            ;
+        //queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'city' as typeObj FROM KLADR WHERE " + // города в районах
+        //    $" code LIKE '{codeRegion}{codeRayon}___000__' AND code NOT LIKE '{codeRegion}___000_____'  ORDER BY name");
     }
+    /// <summary>
+    /// 2.1 города в районах
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> CitiesInArea(CodeKladrModel codeMd, PaginationRequestModel req)
+        => await CitiesInAreaQuery(codeMd, req).ToArrayAsync();
 
     /// <summary>
     /// 2.2 нас. пункты в районах
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> PopPointsInArea(string regionCode, string areaCode)
+    public IQueryable<ObjectKLADRModelDB> PopPointsInAreaQuery(CodeKladrModel codeMd, PaginationRequestModel req)
     {
-        return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}000_____") && !EF.Functions.Like(x.CODE, $"{regionCode}______000__"))
+        return ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}000_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
             .OrderBy(x => x.NAME)
-            .ToArrayAsync();
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize)
+            ;
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в районах
                 $" code LIKE '{codeRegion}{codeRayon}000_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");*/
     }
+    /// <summary>
+    /// 2.2 нас. пункты в районах
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> PopPointsInArea(CodeKladrModel codeMd, PaginationRequestModel req)
+        => await PopPointsInAreaQuery(codeMd, req).ToArrayAsync();
     #endregion
 
     #region Город
     /// <summary>
     /// 3.1 нас. пункты в городах
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> PopPointsInCity(string regionCode, string areaCode, string cityCode)
+    public IQueryable<ObjectKLADRModelDB> PopPointsInCityQuery(CodeKladrModel codeMd, PaginationRequestModel req)
     {
-        return await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}{cityCode}_____") && !EF.Functions.Like(x.CODE, $"{regionCode}______000__"))
+        return ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
             .OrderBy(x => x.NAME)
-            .ToArrayAsync();
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize)
+            ;
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'smallcity' as typeObj FROM KLADR WHERE " + // нас. пункты в городах
                 $" code LIKE '{codeRegion}{codeRayon}{codeCity}_____' AND code NOT LIKE '{codeRegion}______000__' ORDER BY name");*/
     }
+    /// <summary>
+    /// 3.1 нас. пункты в городах
+    /// </summary>
+    public async Task<ObjectKLADRModelDB[]> PopPointsInCity(CodeKladrModel codeMd, PaginationRequestModel req)
+        => await PopPointsInCityQuery(codeMd, req).ToArrayAsync();
 
     /// <summary>
     /// 3.2 улицы в городах
     /// </summary>
-    public async Task<StreetKLADRModelDB[]> StreetsInCity(string regionCode, string areaCode, string cityCode)
-    {
-        return await StreetsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}{cityCode}_________"))
+    public IQueryable<StreetKLADRModelDB> StreetsInCityQuery(CodeKladrModel codeMd, PaginationRequestModel req) => StreetsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_________"))
             .OrderBy(x => x.NAME)
-            .ToArrayAsync();
-        /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM KLADR WHERE " + // улицы в городах
-                $" code LIKE '{codeRegion}{codeRayon}{codeCity}_________' ORDER BY name");*/
-    }
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize)
+           ;
+    /// <summary>
+    /// 3.2 улицы в городах
+    /// </summary>
+    public async Task<StreetKLADRModelDB[]> StreetsInCity(CodeKladrModel codeMd, PaginationRequestModel req)
+        => await StreetsInCityQuery(codeMd, req).ToArrayAsync();
     #endregion
 
     #region Нас.пункт
     /// <summary>
     /// 4.1 улицы в городах StreetKLADRModelDB
     /// </summary>
-    public async Task<StreetKLADRModelDB[]> StreetsInPopPoint(string regionCode, string areaCode, string cityCode, string popPointCode)
+    public IQueryable<StreetKLADRModelDB> StreetsInPopPointQuery(CodeKladrModel codeMd, PaginationRequestModel req)
     {
-        return await StreetsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}{cityCode}{popPointCode}______"))
+        return StreetsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}______"))
             .OrderBy(x => x.NAME)
-            .ToArrayAsync();
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'street' as typeObj FROM KLADR WHERE " + // улицы в городах
                 $" code LIKE '{codeRegion}{codeRayon}{codeCity}{codeSmallCity}______' ORDER BY name");*/
     }
+    /// <summary>
+    /// 4.1 улицы в городах StreetKLADRModelDB
+    /// </summary>
+    public async Task<StreetKLADRModelDB[]> StreetsInPopPoint(CodeKladrModel codeMd, PaginationRequestModel req)
+        => await StreetsInPopPointQuery(codeMd, req).ToArrayAsync();
     #endregion
 
     #region Улица
     /// <summary>
     /// 5.1 дома на улицах
     /// </summary>
-    public async Task<HouseKLADRModelDB[]> HousesInStrit(string regionCode, string areaCode, string cityCode, string popPointCode, string streetCode)
+    public IQueryable<HouseKLADRModelDB> HousesInStritQuery(CodeKladrModel codeMd, PaginationRequestModel req)
     {
-        return await HousesKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{regionCode}{areaCode}{cityCode}{popPointCode}{streetCode}____"))
+        return HousesKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}{codeMd.StreetCode}____"))
             .OrderBy(x => x.NAME)
-            .ToArrayAsync();
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize)
+            ;
         /*queryTextList.Add("SELECT name, socr, code, post_index, gninmb, uno, ocatd, 'home' as typeObj FROM DOMA WHERE " + // дома на улицах
                 $" code LIKE '{codeRegion}{codeRayon}{codeCity}{codeSmallCity}{codeStreet}____' ORDER BY name");*/
     }
+    /// <summary>
+    /// 5.1 дома на улицах
+    /// </summary>
+    public async Task<HouseKLADRModelDB[]> HousesInStrit(CodeKladrModel codeMd, PaginationRequestModel req)
+        => await HousesInStritQuery(codeMd, req).ToArrayAsync();
     #endregion
 
 

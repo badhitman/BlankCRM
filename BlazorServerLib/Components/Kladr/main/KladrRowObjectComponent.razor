@@ -1,4 +1,45 @@
-﻿
+﻿@using MudBlazor
 
-@ObjectKLADR.NAME
-<sub class="ms-1">@ObjectKLADR.SOCR</sub>
+<MudExpansionPanels>
+    <MudExpansionPanel ExpandedChanged="OnExpandedChanged">
+        <TitleContent>
+            <div class="hstack gap-3">
+                @switch (MetaData.Level)
+                {
+                    case KladrTypesObjectsEnum.RootRegion:
+                        <MudIconButton Icon="@Icons.Material.Filled.CenterFocusStrong" Size="Size.Small" />
+                        break;
+                    case KladrTypesObjectsEnum.Area:
+                        <MudIconButton Icon="@Icons.Material.Filled.Assistant" Size="Size.Small" />
+                        break;
+                    case KladrTypesObjectsEnum.City:
+                        <MudIconButton Icon="@Icons.Material.Filled.Business" Size="Size.Small" />
+                        break;
+                    case KladrTypesObjectsEnum.PopPoint:
+                        <MudIconButton Icon="@Icons.Material.Filled.Bungalow" Size="Size.Small" />
+                        break;
+                    default:
+                        <MudIconButton Icon="@Icons.Material.Filled.Error" Color="Color.Error" />
+                        break;
+                }
+
+                @if (ObjectKLADR.SOCR[..1].ToUpper().Equals(ObjectKLADR.SOCR[..1]))
+                {
+                    <span class="font-monospace">@ObjectKLADR.SOCR</span>
+                    <strong>@ObjectKLADR.NAME</strong>
+                }
+                else
+                {
+                    <strong>@ObjectKLADR.NAME</strong>
+                    <sub class="font-monospace">@ObjectKLADR.SOCR</sub>
+                }
+            </div>
+        </TitleContent>
+        <ChildContent>
+            @if (Expanded)
+            {
+                <KladrQueryNavComponent CodeLikeFilter="@ObjectKLADR.CODE" />
+            }
+        </ChildContent>
+    </MudExpansionPanel>
+</MudExpansionPanels>

@@ -4,15 +4,11 @@
 
 <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table" Loading="IsBusyProgress">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Поиск адреса</MudText>
-        <MudSpacer />
-        <MudTextField T="string"
-                      ValueChanged="@(s => OnSearch(s))"
-                      Placeholder="Search"
-                      Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search"
-                      IconSize="Size.Medium"
-                      Class="mt-0"></MudTextField>
+        @if (string.IsNullOrWhiteSpace(CodeLikeFilter))
+        {
+            <MudText Typo="Typo.h6">Классификатор адресов</MudText>
+            <MudSpacer />            
+        }
     </ToolBarContent>
     <HeaderContent>
         <MudTh></MudTh>
@@ -22,13 +18,16 @@
             @switch (context.TypeObject)
             {
                 case KladrTypesObjectsEnum.RootRegion or KladrTypesObjectsEnum.Area or KladrTypesObjectsEnum.City or KladrTypesObjectsEnum.PopPoint:
-                    <KladrRowObjectComponent ObjectKLADR="context.Payload.ToObject<ObjectKLADRModelDB>()" />
+                    ObjectKLADRModelDB obj = context.Payload.ToObject<ObjectKLADRModelDB>() ?? throw new Exception("context.Payload.ToObject<ObjectKLADRModelDB>() - IS NULL");
+                    <KladrRowObjectComponent @key="@($"{CodeLikeFilter}_{obj.CODE}")" ObjectKLADR="obj" />
                     break;
                 case KladrTypesObjectsEnum.Street:
-                    <KladrRowStreetComponent ObjectKLADR="context.Payload.ToObject<StreetKLADRModelDB>()" />
+                    StreetKLADRModelDB street = context.Payload.ToObject<StreetKLADRModelDB>() ?? throw new Exception("context.Payload.ToObject<StreetKLADRModelDB>() - IS NULL");
+                    <KladrRowStreetComponent @key="@($"{CodeLikeFilter}_{street.CODE}")" ObjectKLADR="street" />
                     break;
                 case KladrTypesObjectsEnum.Home:
-                    <KladrRowHomeComponent ObjectKLADR="context.Payload.ToObject<HouseKLADRModelDB>()" />
+                    HouseKLADRModelDB home = context.Payload.ToObject<HouseKLADRModelDB>() ?? throw new Exception("context.Payload.ToObject<HouseKLADRModelDB>() - IS NULL");
+                    <KladrRowHomeComponent @key="@($"{CodeLikeFilter}_{home.CODE}")" ObjectKLADR="home" />
                     break;
             }
         </MudTd>

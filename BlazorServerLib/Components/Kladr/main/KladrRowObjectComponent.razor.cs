@@ -13,4 +13,21 @@ public partial class KladrRowObjectComponent
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required ObjectKLADRModelDB ObjectKLADR { get; set; }
+
+
+    bool Expanded = false;
+
+    CodeKladrModel MetaData = default!;
+
+    /// <inheritdoc/>
+    protected override Task OnInitializedAsync()
+    {
+        MetaData = GlobalTools.ParseKladrTypeObject(ObjectKLADR.CODE);
+        return base.OnInitializedAsync();
+    }
+
+    void OnExpandedChanged(bool newVal)
+    {
+        Expanded = newVal;
+    }
 }

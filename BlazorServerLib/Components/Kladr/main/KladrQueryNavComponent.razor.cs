@@ -23,7 +23,12 @@ public partial class KladrQueryNavComponent : BlazorBusyComponentBaseModel
 
 
     private MudTable<KladrResponseModel>? table;
-    private string? searchString = null;
+
+    /// <inheritdoc/>
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
@@ -32,7 +37,6 @@ public partial class KladrQueryNavComponent : BlazorBusyComponentBaseModel
     {
         KladrSelectRequestModel req = new()
         {
-            FindQuery = searchString ?? "",
             CodeLikeFilter = CodeLikeFilter,
             PageNum = state.Page,
             PageSize = state.PageSize,
@@ -42,12 +46,5 @@ public partial class KladrQueryNavComponent : BlazorBusyComponentBaseModel
         TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsSelect(req);
         await SetBusy(false, token: token);
         return new TableData<KladrResponseModel>() { TotalItems = res.TotalRowsCount, Items = res.Response ?? [] };
-    }
-
-    private async Task OnSearch(string text)
-    {
-        searchString = text;
-        if (table is not null)
-            await table.ReloadServerData();
     }
 }
