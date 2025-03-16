@@ -22,7 +22,7 @@ public partial class KladrRowObjectComponent
     /// <inheritdoc/>
     protected override Task OnInitializedAsync()
     {
-        MetaData = GlobalTools.ParseKladrTypeObject(ObjectKLADR.CODE);
+        MetaData = CodeKladrModel.Build(ObjectKLADR.CODE);
         return base.OnInitializedAsync();
     }
 

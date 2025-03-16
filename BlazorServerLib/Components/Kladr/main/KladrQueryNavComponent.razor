@@ -16,7 +16,7 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd>
-            @switch (GlobalTools.ParseKladrTypeObject(context.Payload.Value<string>("CODE")!).Level)
+            @switch (CodeKladrModel.Build(context.Payload.Value<string>("CODE")!).Level)
             {
                 case KladrTypesObjectsEnum.RootRegion or KladrTypesObjectsEnum.Area or KladrTypesObjectsEnum.City or KladrTypesObjectsEnum.PopPoint:
                     ObjectKLADRModelDB obj = context.Payload.ToObject<ObjectKLADRModelDB>() ?? throw new Exception("context.Payload.ToObject<ObjectKLADRModelDB>() - IS NULL");

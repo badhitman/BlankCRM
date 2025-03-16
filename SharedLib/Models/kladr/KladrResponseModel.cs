@@ -25,4 +25,9 @@ public class KladrResponseModel
     /// Payload
     /// </summary>
     public required JObject Payload { get; set; }
+
+    /// <summary>
+    /// Chain
+    /// </summary>
+    public required KladrChainTypesEnum Chain {  get; set; }
 }

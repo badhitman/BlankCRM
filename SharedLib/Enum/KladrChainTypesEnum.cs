@@ -19,22 +19,22 @@ public enum KladrChainTypesEnum
 
     #region Регион
     /// <summary>
+    /// 1.3 районы в регионе
+    /// </summary>
+    [Description("регион->район")]
+    AreasInRegion = 10,
+
+    /// <summary>
     /// 1.1 города в регионе
     /// </summary>
     [Description("регион->город")]
-    CitiesInRegion = 10,
+    CitiesInRegion = 20,
 
     /// <summary>
     /// 1.2 нас. пункты в регионе
     /// </summary>
     [Description("регион->нас.пункт")]
-    PopPointsInRegion = 20,
-
-    /// <summary>
-    /// 1.3 районы в регионе
-    /// </summary>
-    [Description("регион->район")]
-    AreasInRegion = 30,
+    PopPointsInRegion = 30,
 
     /// <summary>
     /// 1.4 street`s в регионе

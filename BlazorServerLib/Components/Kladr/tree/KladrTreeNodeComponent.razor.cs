@@ -101,7 +101,7 @@ public partial class KladrTreeNodeComponent : BlazorBusyComponentBaseAuthModel
     {
         base.OnInitialized();
         Item.Notify += EventNotify;
-        MetaType = GlobalTools.ParseKladrTypeObject(Item.Value!.CODE);
+        MetaType = CodeKladrModel.Build(Item.Value!.CODE);
         if (Item.Value is ObjectMetaKLADRModel omm)
             StatusElement = omm.STATUS;
     }

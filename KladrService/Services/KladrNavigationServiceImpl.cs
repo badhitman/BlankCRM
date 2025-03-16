@@ -7,7 +7,6 @@ using System.Collections.Concurrent;
 using Newtonsoft.Json.Linq;
 using SharedLib;
 using DbcLib;
-using System.Linq;
 
 namespace KladrService;
 
@@ -20,21 +19,20 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         if (string.IsNullOrWhiteSpace(req.Code))
             throw new NotImplementedException();
 
-        CodeKladrModel codeParse = GlobalTools.ParseKladrTypeObject(req.Code);
-
+        CodeKladrModel codeParse = CodeKladrModel.Build(req.Code);
         ConcurrentDictionary<KladrTypesObjectsEnum, RootKLADRModelDB> dataResponse = [];
 
         List<(int Level, string Socr)> socrBases = [];
-
+        int lvl = 1;
         List<Task> tasks =
         [
             Task.Run(async () => {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB _db = await context.ObjectsKLADR.FirstAsync(x=>x.CODE == $"{codeParse.RegionCode}00000000000");
+                ObjectKLADRModelDB _db = await context.ObjectsKLADR.FirstAsync(x => x.CODE == $"{codeParse.RegionCode}00000000000");
                 dataResponse.TryAdd(KladrTypesObjectsEnum.RootRegion, _db);
                 lock(socrBases)
                     {
-                        socrBases.Add((1, _db.SOCR));
+                        socrBases.Add((lvl++, _db.SOCR));
                     }
             }),
         ];
@@ -43,13 +41,13 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}00000000");
+                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE != codeParse.CodeOrigin && x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}00000000");
                 if (_db is not null)
                 {
                     dataResponse.TryAdd(KladrTypesObjectsEnum.Area, _db);
                     lock (socrBases)
                     {
-                        socrBases.Add((2, _db.SOCR));
+                        socrBases.Add((lvl++, _db.SOCR));
                     }
                 }
             }));
@@ -58,13 +56,13 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}00000");
+                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE != codeParse.CodeOrigin && x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}00000");
                 if (_db is not null)
                 {
                     dataResponse.TryAdd(KladrTypesObjectsEnum.City, _db);
                     lock (socrBases)
                     {
-                        socrBases.Add((3, _db.SOCR));
+                        socrBases.Add((lvl++, _db.SOCR));
                     }
                 }
             }));
@@ -73,13 +71,13 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}{codeParse.PopPointCode}00");
+                ObjectKLADRModelDB? _db = await context.ObjectsKLADR.FirstOrDefaultAsync(x => x.CODE != codeParse.CodeOrigin && x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}{codeParse.PopPointCode}00");
                 if (_db is not null)
                 {
                     dataResponse.TryAdd(KladrTypesObjectsEnum.PopPoint, _db);
                     lock (socrBases)
                     {
-                        socrBases.Add((4, _db.SOCR));
+                        socrBases.Add((lvl++, _db.SOCR));
                     }
                 }
             }));
@@ -88,13 +86,13 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                StreetKLADRModelDB? _db = await context.StreetsKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}{codeParse.PopPointCode}{codeParse.StreetCode}00");
+                StreetKLADRModelDB? _db = await context.StreetsKLADR.FirstOrDefaultAsync(x => x.CODE != codeParse.CodeOrigin && x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}{codeParse.PopPointCode}{codeParse.StreetCode}00");
                 if (_db is not null)
                 {
                     dataResponse.TryAdd(KladrTypesObjectsEnum.Street, _db);
                     lock (socrBases)
                     {
-                        socrBases.Add((5, _db.SOCR));
+                        socrBases.Add((lvl++, _db.SOCR));
                     }
                 }
             }));
@@ -103,13 +101,13 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                HouseKLADRModelDB? _db = await context.HousesKLADR.FirstOrDefaultAsync(x => x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}{codeParse.PopPointCode}{codeParse.StreetCode}{codeParse.HomeCode}");
+                HouseKLADRModelDB? _db = await context.HousesKLADR.FirstOrDefaultAsync(x => x.CODE != codeParse.CodeOrigin && x.CODE == $"{codeParse.RegionCode}{codeParse.AreaCode}{codeParse.CityCode}{codeParse.PopPointCode}{codeParse.StreetCode}{codeParse.HomeCode}");
                 if (_db is not null)
                 {
                     dataResponse.TryAdd(KladrTypesObjectsEnum.Home, _db);
                     lock (socrBases)
                     {
-                        socrBases.Add((6, _db.SOCR));
+                        socrBases.Add((lvl++, _db.SOCR));
                     }
                 }
             }));
@@ -127,6 +125,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 Payload = JObject.FromObject(dataList.Last()),
                 Parents = dataList.Count == 1 ? null : [.. dataList.Take(dataList.Count - 1)],
                 Socrbases = resDb,
+                Chain = codeParse.Chain,
             }
         };
     }
@@ -144,7 +143,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
                 dataDb = await context
                     .ObjectsKLADR
-                    .Where(x => x.CODE.EndsWith("00000000000"))
+                    .Where(x => EF.Functions.Like(x.CODE, "__000000000__"))
                     .OrderBy(x => x.NAME)
                     .ToListAsync();
             }));
@@ -155,9 +154,10 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             return res;
         }
 
+        CodeKladrModel codeMd = CodeKladrModel.Build(req.Code);
         ConcurrentDictionary<KladrChainTypesEnum, JObject[]> dataResponse = [];
         PaginationRequestModel _sq = new() { PageNum = 0, PageSize = int.MaxValue };
-        CodeKladrModel codeMd = GlobalTools.ParseKladrTypeObject(req.Code);
+
         if (codeMd.Level == KladrTypesObjectsEnum.RootRegion) // регионы
         {
             tasks.Add(Task.Run(async () =>
@@ -265,8 +265,10 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelect(KladrSelectRequestModel req)
     {
         TPaginationResponseModel<KladrResponseModel> response = new(req) { Response = [] };
+
         SocrbaseKLADRModelDB[] socrbases = default!;
         List<ObjectKLADRModelDB> dataDb = default!;
+
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
 
         if (string.IsNullOrWhiteSpace(req.CodeLikeFilter))
@@ -279,7 +281,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
 
             IQueryable<ObjectKLADRModelDB> q = context
                 .ObjectsKLADR
-                .Where(x => x.CODE.EndsWith("00000000000"));
+                .Where(x => EF.Functions.Like(x.CODE,"__000000000__"));
 
             response.TotalRowsCount = await q.CountAsync();
             dataDb = await q
@@ -291,55 +293,166 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             response.Response.AddRange(dataDb.Select(x => new KladrResponseModel()
             {
                 Payload = JObject.FromObject(x),
-                Socrbases = [.. socrbases.Where(y => y.SOCRNAME == x.SOCR)]
+                Socrbases = [.. socrbases.Where(y => y.SOCRNAME == x.SOCR)],
+                Chain = CodeKladrModel.Build(x.CODE).Chain,
             }));
             return response;
         }
 
         Dictionary<KladrChainTypesEnum, string[]> dataResponse = [];
-        CodeKladrModel codeMd = GlobalTools.ParseKladrTypeObject(req.CodeLikeFilter);
+        CodeKladrModel codeMd = CodeKladrModel.Build(req.CodeLikeFilter);
         string[] dbRows;
         IQueryable<string> query;
         if (codeMd.Level == KladrTypesObjectsEnum.RootRegion) // регионы
         {
             query = context
-                .CitiesInRegionQuery(codeMd).Select(x => x.CODE)
-                .Union(context.PopPointsInRegionQuery(codeMd).Select(x => x.CODE))
-                .Union(context.AreasInRegionQuery(codeMd).Select(x => x.CODE))
-                .Union(context.StreetsInRegionQuery(codeMd).Select(x => x.CODE))
-                ;
+                .ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE)
+                .Union(context.ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE))
+                .Union(context.ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000________"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE))
+                .Union(context.StreetsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000000______"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE));
+
+            dbRows = await context
+                .ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE)
+                .Union(context.ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE))
+                .Union(context.ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000________"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE))
+                .Union(context.StreetsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000000______"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE))
+                .Skip(req.PageNum * req.PageSize)
+                .Take(req.PageSize)
+                .ToArrayAsync();
         }
         else if (codeMd.Level == KladrTypesObjectsEnum.Area) //районы
-        {
+        {//0100700000000
             query = context
-                .CitiesInAreaQuery(codeMd).Select(x => x.CODE)
-                .Union(context.PopPointsInAreaQuery(codeMd).Select(x => x.CODE));
+                .ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE)
+                .Union(context.ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}000_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE));
+
+            dbRows = await context
+                .ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE)
+                .Union(context.ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}000_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE))
+                .Skip(req.PageNum * req.PageSize)
+                .Take(req.PageSize)
+                .ToArrayAsync();
+#if DEBUG
+            //string[] v1 = await context
+            //    .ObjectsKLADR
+            //    .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))
+            //    .OrderBy(x => x.NAME)
+            //    .Select(x => x.CODE)
+            //    .Skip(req.PageNum * req.PageSize)
+            //    .Take(req.PageSize)
+            //    .ToArrayAsync();
+
+            //var v2 = await context
+            //    .ObjectsKLADR                
+            //    .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}000_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
+            //    .OrderBy(x => x.NAME)
+            //    .Select(x => x.CODE)
+            //    .Skip(req.PageNum * req.PageSize)
+            //    .Take(req.PageSize)
+            //    .ToArrayAsync();
+            //var v3 = v1;
+#endif
         }
         else if (codeMd.Level == KladrTypesObjectsEnum.City) // города в районах
         {
             query = context
-                .PopPointsInCityQuery(codeMd).Select(x => x.CODE)
-                .Union(context.StreetsInCityQuery(codeMd).Select(x => x.CODE));
+                .ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE)
+                .Union(context.StreetsKLADR.Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_________"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE));
+
+            dbRows = await context
+                .ObjectsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE)
+                .Union(context.StreetsKLADR.Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_________"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE))
+                .Skip(req.PageNum * req.PageSize)
+                .Take(req.PageSize)
+                .ToArrayAsync();
         }
         else if (codeMd.Level == KladrTypesObjectsEnum.PopPoint) // нас пункты
         {
             query = context
-                .StreetsInPopPointQuery(codeMd).Select(x => x.CODE);
+                .StreetsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}______"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE);
+
+            dbRows = await context
+                .StreetsKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}______"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE)
+                .Skip(req.PageNum * req.PageSize)
+                .Take(req.PageSize)
+                .ToArrayAsync();
         }
         else if (codeMd.Level == KladrTypesObjectsEnum.Street) // улицы
         {
             query = context
-                .HousesInStritQuery(codeMd).Select(x => x.CODE);
+                .HousesKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}{codeMd.StreetCode}____"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE);
+
+            dbRows = await context
+                .HousesKLADR
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}{codeMd.StreetCode}____"))
+                .OrderBy(x => x.NAME)
+                .Select(x => x.CODE)
+                .Skip(req.PageNum * req.PageSize)
+                .Take(req.PageSize)
+                .ToArrayAsync();
         }
         else
+        {
             query = Array.Empty<string>().AsQueryable();
+            dbRows = [];
+        }
 
         response.TotalRowsCount = await query.CountAsync();
-
-        dbRows = await query
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToArrayAsync();
 
         List<TResponseModel<KladrResponseModel>> fullData = [];
         await Task.WhenAll(dbRows.Select(x => Task.Run(async () =>
@@ -352,17 +465,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         })));
 
         fullData.RemoveAll(x => x.Response is null);
-        response.Response.AddRange(fullData.Select(x => x.Response!));
-
-        /*
-         response.Response.AddRange(dataDb.Select(x => new KladrResponseModel()
-            {
-                ChainType = KladrChainTypesEnum.RootRegions,
-                TypeObject = KladrTypesObjectsEnum.RootRegion,
-                Payload = JObject.FromObject(x),
-                Socrbase = [.. socrbases.Where(y => y.SOCRNAME == x.SOCR)]
-            }));
-         */
+        response.Response.AddRange(fullData.OrderBy(x => x.Response?.Chain).Select(x => x.Response!));
 
         return response;
     }

@@ -2,7 +2,7 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-<div data-type-descr="@GlobalTools.ParseKladrTypeObject(Item.Value!.CODE)"
+<div data-type-descr="@CodeKladrModel.Build(Item.Value!.CODE)"
      data-code="@Item.Value?.CODE" @key="DomID"
      style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
     <MudStack Row="true">
