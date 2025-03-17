@@ -1,10 +1,10 @@
 ﻿@using MudBlazor
 
 <MudExpansionPanels>
-    <MudExpansionPanel ExpandedChanged="OnExpandedChanged">
+    <MudExpansionPanel ExpandedChanged="OnExpandedChanged" Disabled="@(MetaData?.SignOfRelevance != SignOfRelevanciesEnum.Actual)">
         <TitleContent>
             <div class="hstack gap-3">
-                @switch (MetaData.Level)
+                @switch (MetaData?.Level)
                 {
                     case KladrTypesObjectsEnum.RootRegion:
                         <MudIcon Icon="@Icons.Material.Filled.CenterFocusStrong" Size="Size.Small" />
@@ -33,11 +33,21 @@
                     <strong>@ObjectKLADR.NAME</strong>
                     <sub class="font-monospace">@ObjectKLADR.SOCR</sub>
                 }
-                <sup>@ObjectKLADR.CODE</sup>
+                <sup>
+                    <u title="Код региона: два разряда">@ObjectKLADR.CODE.Substring(0, 2)</u>
+                    <u title="Код района: три разряда">@ObjectKLADR.CODE.Substring(2, 3)</u>
+                    <u title="Код города: три разряда">@ObjectKLADR.CODE.Substring(5, 3)</u>
+                    <u title="Код населённого пункта: три разряда">@ObjectKLADR.CODE.Substring(8, 3)</u>
+                    @ObjectKLADR.CODE.Substring(11)
+                </sup>
+                @if (MetaData?.SignOfRelevance is not null && MetaData.SignOfRelevance != SignOfRelevanciesEnum.Actual)
+                {
+                    <mark>@MetaData.SignOfRelevance.Value.DescriptionInfo()</mark>
+                }
             </div>
         </TitleContent>
         <ChildContent>
-            @if (Expanded)
+            @if (Expanded && MetaData?.SignOfRelevance == SignOfRelevanciesEnum.Actual)
             {
                 <KladrQueryNavComponent CodeLikeFilter="@ObjectKLADR.CODE" />
             }

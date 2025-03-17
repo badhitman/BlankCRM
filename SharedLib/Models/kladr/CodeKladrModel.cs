@@ -58,20 +58,21 @@ public partial class CodeKladrModel
         string codeStreet = code.Length < 17 ? "" : code.Substring(11, 4);
         string codeHome = code.Length < 19 ? "" : code.Substring(15, 4);
 
-        string? signOfRelevanceCode = code.Length < 19
+        string? signOfRelevanceCode = code.Length > 17
             ? null
-            : code.TakeLast(2).ToString();
+            : code.Substring(code.Length - 2);
+
         SignOfRelevanciesEnum? signOfRel = null;
         if (!string.IsNullOrWhiteSpace(signOfRelevanceCode))
         {
             int parseRel = int.Parse(signOfRelevanceCode);
-            if(parseRel == 0)
+            if (parseRel == 0)
                 signOfRel = SignOfRelevanciesEnum.Actual;
 
-            else if(parseRel >= 1 && parseRel <=50)
+            else if (parseRel >= 1 && parseRel <= 50)
                 signOfRel = SignOfRelevanciesEnum.Renamed;
 
-            else if(parseRel == 51)
+            else if (parseRel == 51)
                 signOfRel = SignOfRelevanciesEnum.WasReassigned;
 
             else if (parseRel >= 52 && parseRel <= 98)
@@ -93,8 +94,8 @@ public partial class CodeKladrModel
                 HomeCode = codeHome,
                 PopPointCode = codePopPoint,
                 StreetCode = codeStreet,
-                 SignOfRelevance = signOfRel,
-                  SignOfRelevanceCode = signOfRelevanceCode,
+                SignOfRelevance = signOfRel,
+                SignOfRelevanceCode = signOfRelevanceCode,
             };
 
         if (AreaPatternRegex().IsMatch(code)) // районы

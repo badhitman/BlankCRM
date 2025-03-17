@@ -317,6 +317,19 @@ public class UsersAuthenticateService(
             return res;
         }
 
+        ResponseBaseModel flushRes = await identityRepo.ClaimsUserFlush(currentAppUser.Id);
+
+        //if (flushRes.Success())
+        //    await signInManager.RefreshSignInAsync(currentAppUser);
+
+        FlushUserRolesModel? user_flush = userManageConfig.Value.UpdatesUsersRoles?.FirstOrDefault(x => x.EmailUser.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
+        if (user_flush is not null)
+        {
+            ResponseBaseModel add_res = await identityRepo.TryAddRolesToUser(new() { RolesNames = user_flush.SetRoles, UserId = currentAppUser.Id });
+            //if (add_res.Success())
+            //    await signInManager.RefreshSignInAsync(currentAppUser);
+        }
+
         SignInResult sr = await signInManager.PasswordSignInAsync(userEmail, password, isPersistent, lockoutOnFailure: true);
 
         if (!sr.Succeeded)
@@ -336,20 +349,7 @@ public class UsersAuthenticateService(
 
             return res;
         }
-
-        ResponseBaseModel flushRes = await identityRepo.ClaimsUserFlush(currentAppUser.Id);
-
-        if (flushRes.Success())
-            await signInManager.RefreshSignInAsync(currentAppUser);
-
-        FlushUserRolesModel? user_flush = userManageConfig.Value.UpdatesUsersRoles?.FirstOrDefault(x => x.EmailUser.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
-        if (user_flush is not null)
-        {
-            ResponseBaseModel add_res = await identityRepo.TryAddRolesToUser(new() { RolesNames = user_flush.SetRoles, UserId = currentAppUser.Id });
-            if (add_res.Success())
-                await signInManager.RefreshSignInAsync(currentAppUser);
-        }
-
+        
         return new()
         {
             IsLockedOut = sr.IsLockedOut,

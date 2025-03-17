@@ -4,13 +4,6 @@
 @inherits BlazorBusyComponentBaseModel
 
 <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table" Loading="IsBusyProgress">
-    <ToolBarContent>
-        @if (string.IsNullOrWhiteSpace(CodeLikeFilter))
-        {
-            <MudText Typo="Typo.h6">Классификатор адресов</MudText>
-            <MudSpacer />
-        }
-    </ToolBarContent>
     <HeaderContent>
         <MudTh></MudTh>
     </HeaderContent>

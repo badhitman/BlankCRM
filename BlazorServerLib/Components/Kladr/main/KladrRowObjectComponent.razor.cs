@@ -17,7 +17,7 @@ public partial class KladrRowObjectComponent
 
     bool Expanded = false;
 
-    CodeKladrModel MetaData = default!;
+    CodeKladrModel? MetaData;
 
     /// <inheritdoc/>
     protected override Task OnInitializedAsync()
