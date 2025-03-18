@@ -10,24 +10,33 @@ using SharedLib;
 namespace BlazorWebLib.Components.Kladr.main;
 
 /// <summary>
-/// KladrQueryNavComponent
+/// QueryNavKladrComponent
 /// </summary>
-public partial class KladrQueryNavComponent : BlazorBusyComponentBaseModel
+public partial class QueryNavKladrComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IKladrNavigationService kladrRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter]
     public string? CodeLikeFilter { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required QueryNavKladrComponent? Parent { get; set; }
+
+    /// <inheritdoc/>
+    public List<KladrResponseModel> PartData = [];
 
     private MudTable<KladrResponseModel>? table;
 
+
     /// <inheritdoc/>
-    protected override Task OnInitializedAsync()
+    public async Task Reload()
     {
-        return base.OnInitializedAsync();
+        if (table is not null)
+            await table.ReloadServerData();
     }
 
     /// <summary>
@@ -45,6 +54,7 @@ public partial class KladrQueryNavComponent : BlazorBusyComponentBaseModel
         await SetBusy(token: token);
         TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsSelect(req);
         await SetBusy(false, token: token);
-        return new TableData<KladrResponseModel>() { TotalItems = res.TotalRowsCount, Items = res.Response ?? [] };
+        PartData = res.Response ?? [];
+        return new TableData<KladrResponseModel>() { TotalItems = res.TotalRowsCount, Items = PartData };
     }
 }

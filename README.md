@@ -127,12 +127,6 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 Для ручного запуска [собственные микро сервисы настраиваются в виде служб](https://github.com/badhitman/BlankCRM/tree/main/devops/etc/systemd/system), а вспомогательные службы RabbitMQ, Redis, MongoDB и PostgreSQL запускаются пакетом в [docker-compose.yml](./devops/docker-compose.yml). Пример того как может быть настроено в VS:
 ![пример состава и порядка запуска проектов](./img/csproj-set-demo.png)
 
-#### [TelegramBotService](https://github.com/badhitman/BlankCRM/tree/main/TelegramBotService) 
-- Сохраняет все входящие сообщения и позволяет в последствии работать с чатами другим сервисам.
-- В оригинальном исполнении `Worker Service`[^5].
-- Ответы на входящие Telegram сообщения обрабатывает реализация интерфейса `ITelegramDialogService`[^7]. Пользователям можно индивидуально устанавливать имя автоответчика[^2]. Это касается как простых текстовых `Message`, так и `CallbackQuery`.
-- Для обеспечения работы HelpDesk предусмотрен [командный режим работы бота](https://github.com/badhitman/BlankCRM/tree/main/HelpdeskService#%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC-telegrambot). В этом режиме простые текстовые сообщения в бота не обрабатываются автоответчиком (равно как и отправка файлов, документов и т.п.). Сообщения сохраняются, но ответ не формируется если это не команда или **CallbackQuery**. Команды в TelegramBot начинаются с косой черты (/). Таким образом в командном режиме бот будет пытаться выполнить/обработать входящее сообщение только если текст сообщения является командой: начинается с косой черты (/) либо в случае если это **CallbackQuery**, а в остальных случаях клиент будет в свободной форме вести чат с ботом, а операторы HelpDesk должны будут ему отвечать от имени бота через WEB интерфейс или воспользовавшись режимом ['экспресс-ответа'](https://github.com/badhitman/BlankCRM/tree/main/HelpdeskService#%D1%8D%D0%BA%D1%81%D0%BF%D1%80%D0%B5%D1%81%D1%81-%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B).
-
 #### [BlankBlazorApp](https://github.com/badhitman/BlankCRM/tree/main/BlankBlazorApp/BlankBlazorApp)
 - Blazor вэб сервер.
 - Рендеринг: `InteractiveServerRenderMode(prerender: false)`
@@ -143,7 +137,12 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 #### [IdentityService](https://github.com/badhitman/BlankCRM/tree/main/IdentityService)
 - Управление пользователями: регистрация, авторизация и т.д.
 - Управление ролями (правами) пользователей
-- Режим 2FA для всех пользователей сразу.
+
+#### [TelegramBotService](https://github.com/badhitman/BlankCRM/tree/main/TelegramBotService) 
+- Сохраняет все входящие сообщения и позволяет в последствии работать с чатами другим сервисам.
+- В оригинальном исполнении `Worker Service`[^5].
+- Ответы на входящие Telegram сообщения обрабатывает реализация интерфейса `ITelegramDialogService`[^7]. Пользователям можно индивидуально устанавливать имя автоответчика[^2]. Это касается как простых текстовых `Message`, так и `CallbackQuery`.
+- Для обеспечения работы HelpDesk предусмотрен [командный режим работы бота](https://github.com/badhitman/BlankCRM/tree/main/HelpdeskService#%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC-telegrambot). В этом режиме простые текстовые сообщения в бота не обрабатываются автоответчиком (равно как и отправка файлов, документов и т.п.). Сообщения сохраняются, но ответ не формируется если это не команда или **CallbackQuery**. Команды в TelegramBot начинаются с косой черты (/). Таким образом в командном режиме бот будет пытаться выполнить/обработать входящее сообщение только если текст сообщения является командой: начинается с косой черты (/) либо в случае если это **CallbackQuery**, а в остальных случаях клиент будет в свободной форме вести чат с ботом, а операторы HelpDesk должны будут ему отвечать от имени бота через WEB интерфейс или воспользовавшись режимом ['экспресс-ответа'](https://github.com/badhitman/BlankCRM/tree/main/HelpdeskService#%D1%8D%D0%BA%D1%81%D0%BF%D1%80%D0%B5%D1%81%D1%81-%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B).
 
 #### [HelpdeskService](https://github.com/badhitman/BlankCRM/tree/main/HelpdeskService) 
 - Система документооборота со своим собственным контекстом: `HelpdeskContext`.
@@ -166,7 +165,7 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 #### [ConstructorService](https://github.com/badhitman/BlankCRM/tree/main/ConstructorService)
 - Решение для создания форм и документов. В режиме WEB редактора можно создать документ любой сложности (поля, формы, табы, таблицы) и использовать эти схемы для создания сессий (уникальные ссылки) которые можно передавать пользователям. По таким ссылкам/сессиям пользователь увидит созданный документ что бы заполнить его данными.
 
-#### [Классификатор адресов](https://github.com/badhitman/BlankCRM/tree/main/KladrService)
+#### [KladrService](https://github.com/badhitman/BlankCRM/tree/main/KladrService)
 - КЛАДР 4.0 от ГНИВЦ. Официальная база данных адресов загружается в систему
 - Заполнение/обновление справочника при помощи штатной win/android утилиты
 

@@ -7,17 +7,22 @@ using SharedLib;
 
 namespace BlazorWebLib.Components.Kladr.main;
 
-/// <inheritdoc/>
-public partial class KladrRowObjectComponent
+/// <summary>
+/// StreetNodeKladrComponent.razor
+/// </summary>
+public partial class StreetNodeKladrComponent
 {
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required ObjectKLADRModelDB ObjectKLADR { get; set; }
+    public required StreetKLADRModelDB ObjectKLADR { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required QueryNavKladrComponent Parent { get; set; }
 
 
     bool Expanded = false;
-
-    CodeKladrModel? MetaData;
+    CodeKladrModel MetaData = default!;
 
     /// <inheritdoc/>
     protected override Task OnInitializedAsync()
@@ -26,8 +31,5 @@ public partial class KladrRowObjectComponent
         return base.OnInitializedAsync();
     }
 
-    void OnExpandedChanged(bool newVal)
-    {
-        Expanded = newVal;
-    }
+    void OnExpandedChanged(bool newVal) => Expanded = newVal;
 }

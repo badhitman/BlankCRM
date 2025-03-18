@@ -12,6 +12,31 @@ namespace SharedLib;
 public class KladrResponseModel
 {
     /// <summary>
+    /// Code
+    /// </summary>
+    public required string Code { get; set; }
+
+    /// <summary>
+    /// Socr
+    /// </summary>
+    public required string Socr { get; set; }
+
+    /// <summary>
+    /// Name
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// Chain
+    /// </summary>
+    public required KladrChainTypesEnum Chain {  get; set; }
+
+    /// <summary>
+    /// Payload
+    /// </summary>
+    public required JObject Payload { get; set; }
+
+    /// <summary>
     /// Socrbase
     /// </summary>
     public required SocrbaseKLADRModelDB[] Socrbases { get; set; }
@@ -20,14 +45,4 @@ public class KladrResponseModel
     /// Вышестоящие/предки
     /// </summary>
     public List<RootKLADRModelDB>? Parents { get; set; }
-
-    /// <summary>
-    /// Payload
-    /// </summary>
-    public required JObject Payload { get; set; }
-
-    /// <summary>
-    /// Chain
-    /// </summary>
-    public required KladrChainTypesEnum Chain {  get; set; }
 }

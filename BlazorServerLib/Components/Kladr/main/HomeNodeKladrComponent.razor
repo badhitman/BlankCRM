@@ -1,0 +1,17 @@
+@using MudBlazor
+<div class="hstack gap-3">
+    <MudIcon Icon="@Icons.Material.Filled.AccountTree" Style="@($"color:{Colors.LightGreen.Lighten1};")" Title="Дом" />
+    @ObjectKLADR.NAME
+    <sub class="ms-1">@ObjectKLADR.SOCR</sub>
+    <MudSpacer />
+    <LinksKladrComponent PostIndex="@ObjectKLADR.INDEX" Owner="Parent" />
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public required HouseKLADRModelDB ObjectKLADR { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required QueryNavKladrComponent Parent { get; set; }
+}

@@ -60,7 +60,7 @@ public class UsersAuthenticateService(
 
                 bool _isLockedOut = default!, isEmailConfirmed = default!;
                 await Task.WhenAll([
-                    Task.Run(async () => { _isLockedOut = await userManager.IsLockedOutAsync(user); }), 
+                    Task.Run(async () => { _isLockedOut = await userManager.IsLockedOutAsync(user); }),
                     Task.Run(async () => { isEmailConfirmed = await userManager.IsEmailConfirmedAsync(user); })
                 ]);
 
@@ -317,18 +317,10 @@ public class UsersAuthenticateService(
             return res;
         }
 
-        ResponseBaseModel flushRes = await identityRepo.ClaimsUserFlush(currentAppUser.Id);
-
-        //if (flushRes.Success())
-        //    await signInManager.RefreshSignInAsync(currentAppUser);
-
+        await identityRepo.ClaimsUserFlush(currentAppUser.Id);
         FlushUserRolesModel? user_flush = userManageConfig.Value.UpdatesUsersRoles?.FirstOrDefault(x => x.EmailUser.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
         if (user_flush is not null)
-        {
-            ResponseBaseModel add_res = await identityRepo.TryAddRolesToUser(new() { RolesNames = user_flush.SetRoles, UserId = currentAppUser.Id });
-            //if (add_res.Success())
-            //    await signInManager.RefreshSignInAsync(currentAppUser);
-        }
+            await identityRepo.TryAddRolesToUser(new() { RolesNames = user_flush.SetRoles, UserId = currentAppUser.Id });
 
         SignInResult sr = await signInManager.PasswordSignInAsync(userEmail, password, isPersistent, lockoutOnFailure: true);
 
@@ -349,7 +341,7 @@ public class UsersAuthenticateService(
 
             return res;
         }
-        
+
         return new()
         {
             IsLockedOut = sr.IsLockedOut,

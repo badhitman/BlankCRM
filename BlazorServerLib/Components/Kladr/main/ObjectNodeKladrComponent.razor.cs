@@ -8,15 +8,21 @@ using SharedLib;
 namespace BlazorWebLib.Components.Kladr.main;
 
 /// <summary>
-/// KladrRowStreetComponent
+/// ObjectNodeKladrComponent.razor
 /// </summary>
-public partial class KladrRowStreetComponent
+public partial class ObjectNodeKladrComponent
 {
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required StreetKLADRModelDB ObjectKLADR { get; set; }
+    public required ObjectKLADRModelDB ObjectKLADR { get; set; }
 
-    CodeKladrModel MetaData = default!;
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required QueryNavKladrComponent Parent { get; set; }
+
+
+    bool Expanded = false;
+    CodeKladrModel? MetaData;
 
     /// <inheritdoc/>
     protected override Task OnInitializedAsync()
@@ -24,4 +30,6 @@ public partial class KladrRowStreetComponent
         MetaData = CodeKladrModel.Build(ObjectKLADR.CODE);
         return base.OnInitializedAsync();
     }
+
+    void OnExpandedChanged(bool newVal) => Expanded = newVal;
 }

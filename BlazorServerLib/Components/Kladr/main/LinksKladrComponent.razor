@@ -1,0 +1,27 @@
+﻿@using MudBlazor
+
+<div style="justify-self: end;">    
+    <MudIconButton Class="ms-2" Icon="@Icons.Material.Filled.Map" OnClick="GoToMap"></MudIconButton>
+    @if (!string.IsNullOrWhiteSpace(PostIndex))
+    {
+        <a href="https://www.pochta.ru/offices/@PostIndex" title="Почтовый индекс" target="_blank">@PostIndex</a>
+    }
+
+    @*  @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(Item.Value.UNO)) == true)
+                {
+                    <span class="badge text-bg-info me-1">@($"{nameof(Item.Value.UNO)}: {Item.Value.UNO}")</span>
+                }
+                @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(Item.Value.CODE)) == true)
+                {
+                    <span class="badge text-bg-warning me-1">@($"{nameof(Item.Value.CODE)}: {Item.Value.CODE}")</span>
+                }
+                @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(Item.Value.OCATD)) == true)
+                {
+                    <span class="badge text-bg-primary me-1">@($"{nameof(Item.Value.OCATD)}: {Item.Value.OCATD}")</span>
+                }
+                @if (KladrMainTreeView.SelectedFieldsView?.Contains(nameof(Item.Value.GNINMB)) == true)
+                {
+                    <span class="badge text-bg-success me-1">@($"{nameof(Item.Value.GNINMB)}: {Item.Value.GNINMB}")</span>
+                } *@
+
+</div>
