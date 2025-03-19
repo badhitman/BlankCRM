@@ -33,10 +33,11 @@ public partial class QueryNavKladrComponent : BlazorBusyComponentBaseModel
 
 
     /// <inheritdoc/>
-    public async Task Reload()
+    public void Reload()
     {
-        if (table is not null)
-            await table.ReloadServerData();
+        StateHasChangedCall();
+        //if (table is not null)
+        //    await table.ReloadServerData();
     }
 
     /// <summary>

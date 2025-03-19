@@ -161,6 +161,9 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 Parents = dataList.Count == 1 ? null : [.. dataList.Take(dataList.Count - 1)],
                 Socrbases = socrBasesDb,
                 Chain = codeParse.Chain,
+                GNINMB = mainElement.GNINMB,
+                OCATD = mainElement.OCATD,
+                UNO = mainElement.UNO,
             }
         };
     }
@@ -333,6 +336,9 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 Name = x.NAME,
                 Code = x.CODE,
                 Socr = x.SOCR,
+                GNINMB = x.GNINMB,
+                OCATD = x.OCATD,
+                UNO = x.UNO,
             }));
             return response;
         }

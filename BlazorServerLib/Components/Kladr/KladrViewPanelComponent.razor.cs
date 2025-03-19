@@ -11,7 +11,16 @@ namespace BlazorWebLib.Components.Kladr;
 /// </summary>
 public partial class KladrViewPanelComponent
 {
-    IReadOnlyCollection<string>? SelectedFieldsView { get; set; }
+    IReadOnlyCollection<string>? _selectedFieldsView;
+    IReadOnlyCollection<string>? SelectedFieldsView
+    {
+        get => _selectedFieldsView;
+        set
+        {
+            _selectedFieldsView = value;
+            kladrRef?.Reload();
+        }
+    }
 
     QueryNavKladrComponent? kladrRef;
 }

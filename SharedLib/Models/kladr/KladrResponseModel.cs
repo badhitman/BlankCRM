@@ -26,6 +26,23 @@ public class KladrResponseModel
     /// </summary>
     public required string Name { get; set; }
 
+
+    /// <summary>
+    /// UNO
+    /// </summary>
+    public required string UNO { get; set; }
+
+    /// <summary>
+    /// OCATD
+    /// </summary>
+    public required string OCATD { get; set; }
+
+    /// <summary>
+    /// GNINMB
+    /// </summary>
+    public required string GNINMB { get; set; }
+
+
     /// <summary>
     /// Chain
     /// </summary>

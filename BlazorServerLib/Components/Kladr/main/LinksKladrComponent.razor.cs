@@ -31,6 +31,10 @@ public partial class LinksKladrComponent
     [CascadingParameter, EditorRequired]
     public required KladrResponseModel Payload { get; set; }
 
+    /// <inheritdoc/>
+    [CascadingParameter, EditorRequired]
+    public required IReadOnlyCollection<string>? SelectedFieldsView { get; set; }
+
 
     async Task GoToMap()
     {
