@@ -1,7 +1,13 @@
 ﻿@using MudBlazor
 
+@inherits KladrNavBaseNodeComponent
+
 <div style="justify-self: end;">
-    <MudIconButton Class="ms-2" Icon="@Icons.Material.Filled.Map" OnClick="GoToMap"></MudIconButton>
+    @if (!HideMapLink)
+    {
+        <MudIconButton Class="ms-2" Icon="@Icons.Material.Filled.Map" OnClick="GoToMap"></MudIconButton>
+    }
+
     @if (!string.IsNullOrWhiteSpace(PostIndex))
     {
         <a href="https://www.pochta.ru/offices/@PostIndex" title="Почтовый индекс" target="_blank">@PostIndex</a>

@@ -4,18 +4,22 @@
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using SharedLib;
+using System.Linq;
 
 namespace BlazorWebLib.Components.Kladr.main;
 
 /// <summary>
 /// LinksKladrComponent
 /// </summary>
-public partial class LinksKladrComponent
+public partial class LinksKladrComponent : KladrNavBaseNodeComponent
 {
     [Inject]
     IJSRuntime JSRepo { get; set; } = default!;
 
+
+    /// <inheritdoc/>
+    [Parameter]
+    public bool HideMapLink { get; set; }
 
     /// <summary>
     /// Почтовый индекс
@@ -29,26 +33,8 @@ public partial class LinksKladrComponent
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required KladrResponseModel Payload { get; set; }
-
-    /// <inheritdoc/>
-    [CascadingParameter, EditorRequired]
     public required IReadOnlyCollection<string>? SelectedFieldsView { get; set; }
 
-
     async Task GoToMap()
-    {
-        string resUri = $"{Payload.Socr} {Payload.Name}";
-
-        QueryNavKladrComponent? parent = Owner.Parent;
-        string? codeLikeFilter = Owner.CodeLikeFilter;
-        while (parent is not null && !string.IsNullOrWhiteSpace(codeLikeFilter))
-        {
-            KladrResponseModel _el = parent.PartData.First(z => z.Code == codeLikeFilter);
-            resUri = $"{_el.Socr} {_el.Name}, {resUri}";
-            codeLikeFilter = parent.CodeLikeFilter;
-            parent = parent.Parent;
-        }
-        await JSRepo.InvokeVoidAsync("open", $"https://yandex.ru/maps?text={resUri}&source=serp_navig", "_blank");
-    }
+        => await JSRepo.InvokeVoidAsync("open", $"https://yandex.ru/maps?text={string.Join(", ", GetFullName(Owner))}&source=serp_navig", "_blank");
 }
