@@ -11,6 +11,52 @@ namespace SharedLib;
 /// <inheritdoc/>
 public static class Extensions
 {
+    /// <summary>
+    /// Получить маршрут OU
+    /// </summary>
+    /// <param name="inc">Носитель сборки маршрута</param>
+    /// <param name="dn_parsed_raw">Строка пути для парсинга</param>
+    /// <param name="ldap_route_segment_type">Тип сегмента маршрута/пути DN</param>
+    public static void OrganizationalUnitsSections(ref List<OuRouteSegmentModel> inc, string dn_parsed_raw, LdapRouteSegmentsTypesEnum ldap_route_segment_type = LdapRouteSegmentsTypesEnum.Ou)
+    {
+        string ldap_route_segment_type_str = ldap_route_segment_type.ToString().ToLower();
+        dn_parsed_raw = dn_parsed_raw.Trim();
+        int i = dn_parsed_raw.ToLower().IndexOf($"{ldap_route_segment_type_str}=");
+        if (i < 0)
+            return;
+        //
+        int io = dn_parsed_raw.IndexOf(",");
+        string curr_ou = io < 0
+        ? dn_parsed_raw.Trim()[3..]
+        : dn_parsed_raw.Substring(i + 3, io - 3).Trim();
+
+        inc.Add(new OuRouteSegmentModel()
+        {
+            Name = curr_ou,
+            LdapRouteSegmentType = ldap_route_segment_type
+        });
+
+        if (dn_parsed_raw.Length <= curr_ou.Length + 4)
+            return;
+
+        dn_parsed_raw = dn_parsed_raw[(curr_ou.Length + 4)..];
+        if (!dn_parsed_raw.StartsWith($"{ldap_route_segment_type_str}=", StringComparison.OrdinalIgnoreCase))
+        {
+            switch (ldap_route_segment_type)
+            {
+                case LdapRouteSegmentsTypesEnum.Ou:
+                    OrganizationalUnitsSections(ref inc, dn_parsed_raw, LdapRouteSegmentsTypesEnum.Dc);
+                    break;
+                case LdapRouteSegmentsTypesEnum.Dc:
+                    return;
+            }
+        }
+        else
+        {
+            OrganizationalUnitsSections(ref inc, dn_parsed_raw, ldap_route_segment_type);
+        }
+    }
+
     /// <inheritdoc/>
     public static List<RootKLADRModelDB> KladrBuild(this Dictionary<KladrChainTypesEnum, Newtonsoft.Json.Linq.JObject[]> src)
     {

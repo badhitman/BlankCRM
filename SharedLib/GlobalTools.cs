@@ -12,6 +12,7 @@ using HtmlAgilityPack;
 using Newtonsoft.Json;
 using System.Text;
 using System.Web;
+using System.Security.Cryptography;
 
 namespace SharedLib;
 
@@ -20,6 +21,108 @@ namespace SharedLib;
 /// </summary>
 public static partial class GlobalTools
 {
+    /// <summary>
+    /// Расчитать хеш строки
+    /// </summary>
+    /// <param name="inputString">Строка для расчёта hash</param>
+    /// <returns>hash строки</returns>
+    public static string GetHashString(string inputString)
+    {
+        if (string.IsNullOrWhiteSpace(inputString))
+            return "<is null or white space>";
+
+        StringBuilder sb = new();
+        foreach (byte b in SHA256.HashData(Encoding.UTF8.GetBytes(inputString)))
+            sb.Append(b.ToString("X2"));
+
+        return sb.ToString();
+    }
+
+
+    static readonly Regex cn_rx = new(@"^cn=([^,]*.*?)(?=,[^,])", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    /// <summary>
+    /// Извлечь 'comon name'
+    /// </summary>
+    /// <param name="dn">distinguishedName</param>
+    /// <returns>Значение атрибута CN</returns>
+    public static string GetCnAttrFromLdap(string dn)
+    {
+        if (string.IsNullOrWhiteSpace(dn))
+            return string.Empty;
+
+        Match rx = cn_rx.Match(dn);
+
+        if (!rx.Success)
+            return string.Empty;
+
+        return rx.Groups[1].Value;
+    }
+
+    /// <summary>
+    /// Экранировать спецсимволы в значениях, вставляемых в фильтры-запросы
+    /// </summary>
+    /// <param name="value">Исходная строка значения, которе будет вставлено в правую часть проверки равенства фильтра</param>
+    public static string LdapEscapeValue(string value)
+    {
+        value = value
+            .Replace("\\", "\\5c")
+            .Replace("(", "\\28")
+            .Replace(")", "\\29")
+            .Replace("&", "\\26")
+            .Replace("|", "\\7c")
+            .Replace("=", "\\3d")
+            .Replace(">", "\\3e")
+            .Replace("<", "\\3c")
+            .Replace("~", "\\7e")
+            .Replace("*", "\\2a")
+            .Replace("/", "\\2f");
+        return value;
+    }
+
+    /// <summary>
+    /// Получить маршрут OU
+    /// </summary>
+    /// <param name="inc">Носитель сборки маршрута</param>
+    /// <param name="dn_parsed_raw">Строка пути для парсинга</param>
+    /// <param name="ldap_route_segment_type">Тип сегмента маршрута/пути DN</param>
+    public static void OrganizationalUnitsSections(ref List<OuRouteSegmentModel> inc, string dn_parsed_raw, LdapRouteSegmentsTypesEnum ldap_route_segment_type = LdapRouteSegmentsTypesEnum.Ou)
+    {
+        string ldap_route_segment_type_str = ldap_route_segment_type.ToString().ToLower();
+        dn_parsed_raw = dn_parsed_raw.Trim();
+        int i = dn_parsed_raw.IndexOf($"{ldap_route_segment_type_str}=", StringComparison.CurrentCultureIgnoreCase);
+        if (i < 0)
+            return;
+        //
+        int io = dn_parsed_raw.IndexOf(',');
+        string curr_ou = io < 0
+        ? dn_parsed_raw.Trim()[3..]
+        : dn_parsed_raw.Substring(i + 3, io - 3).Trim();
+
+        inc.Add(new OuRouteSegmentModel()
+        {
+            Name = curr_ou,
+            LdapRouteSegmentType = ldap_route_segment_type
+        });
+
+        if (dn_parsed_raw.Length <= curr_ou.Length + 4)
+            return;
+
+        dn_parsed_raw = dn_parsed_raw[(curr_ou.Length + 4)..];
+        if (!dn_parsed_raw.StartsWith($"{ldap_route_segment_type_str}=", StringComparison.OrdinalIgnoreCase))
+        {
+            switch (ldap_route_segment_type)
+            {
+                case LdapRouteSegmentsTypesEnum.Ou:
+                    OrganizationalUnitsSections(ref inc, dn_parsed_raw, LdapRouteSegmentsTypesEnum.Dc);
+                    break;
+                case LdapRouteSegmentsTypesEnum.Dc:
+                    return;
+            }
+        }
+        else
+            OrganizationalUnitsSections(ref inc, dn_parsed_raw, ldap_route_segment_type);
+    }
+
     /// <summary>
     /// IsPhoneNumber
     /// </summary>

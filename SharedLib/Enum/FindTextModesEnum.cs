@@ -33,5 +33,17 @@ public enum FindTextModesEnum
     /// Не содержит подстроку в строке
     /// </summary>
     [Description("Не содержит подстроку в строке")]
-    NotContains
+    NotContains,
+
+    /// <summary>
+    /// Начинается как
+    /// </summary>
+    [Description("Начинается как")]
+    BeginsWith,
+
+    /// <summary>
+    /// Заканчивается как
+    /// </summary>
+    [Description("Заканчивается как")]
+    EndsWith,
 }

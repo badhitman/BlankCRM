@@ -13,6 +13,11 @@ namespace SharedLib;
 public static partial class GlobalStaticConstants
 {
     /// <summary>
+    /// yyyy-MM-dd HH:mm
+    /// </summary>
+    public const string _DT_FORMAT = "yyyy-MM-dd HH:mm";
+
+    /// <summary>
     /// TinyMCEditorConf
     /// </summary>
     public static Dictionary<string, object> TinyMCEditorConf(string images_upload_url) => new()

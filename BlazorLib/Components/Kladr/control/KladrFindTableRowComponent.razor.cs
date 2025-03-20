@@ -3,11 +3,13 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using SharedLib;
 
 namespace BlazorLib.Components.Kladr.control;
 
+/// <summary>
+/// KladrFindTableRowComponent
+/// </summary>
 public partial class KladrFindTableRowComponent
 {
     /// <inheritdoc/>
