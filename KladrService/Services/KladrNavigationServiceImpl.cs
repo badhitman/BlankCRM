@@ -482,7 +482,61 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         })));
 
         response.Response.AddRange(fullData.OrderBy(x => x.Chain).ThenBy(x => x.Name));
+        return response;
+    }
 
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFind(KladrFindRequestModel req)
+    {
+        TPaginationResponseModel<KladrResponseModel> response = new(req) { Response = [] };
+
+        if (string.IsNullOrWhiteSpace(req.FindText))
+            return response;
+
+        using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+        IQueryable<string> q = context
+            .ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.NAME, req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))))
+
+            .Select(x => x.CODE)
+            .Union(context
+            .StreetsKLADR
+            .Where(x => EF.Functions.Like(x.NAME, req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))))
+
+            .Select(x => x.CODE))
+            ;
+
+        response.TotalRowsCount = await q.CountAsync();
+        string[] dbRows;
+        dbRows = await context
+            .ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.NAME, req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))))
+            .OrderBy(x => x.NAME)
+            .ThenBy(x => x.CODE)
+            .Select(x => x.CODE)
+            .Union(context
+            .StreetsKLADR
+            .Where(x => EF.Functions.Like(x.NAME, req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))))
+            .OrderBy(x => x.NAME)
+            .ThenBy(x => x.CODE)
+            .Select(x => x.CODE))
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize)
+            .ToArrayAsync()
+            ;
+
+        List<KladrResponseModel> fullData = [];
+        await Task.WhenAll(dbRows.Select(x => Task.Run(async () =>
+        {
+            TResponseModel<KladrResponseModel> objDb = await ObjectGet(new() { Code = x });
+            if (objDb.Response is not null)
+                lock (fullData)
+                {
+                    fullData.Add(objDb.Response);
+                }
+        })));
+
+        response.Response.AddRange(fullData.OrderBy(x => x.Chain).ThenBy(x => x.Name));
         return response;
     }
 }

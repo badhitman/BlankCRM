@@ -5,16 +5,16 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Kladr.main;
+namespace BlazorLib.Components.Kladr.main;
 
 /// <summary>
-/// ObjectNodeKladrComponent.razor
+/// StreetNodeKladrComponent.razor
 /// </summary>
-public partial class ObjectNodeKladrComponent
+public partial class StreetNodeKladrComponent
 {
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required ObjectKLADRModelDB ObjectKLADR { get; set; }
+    public required StreetKLADRModelDB ObjectKLADR { get; set; }
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
@@ -22,7 +22,7 @@ public partial class ObjectNodeKladrComponent
 
 
     bool Expanded = false;
-    CodeKladrModel? MetaData;
+    CodeKladrModel MetaData = default!;
 
     /// <inheritdoc/>
     protected override Task OnInitializedAsync()

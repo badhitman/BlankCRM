@@ -7,7 +7,7 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Kladr.main;
+namespace BlazorLib.Components.Kladr.main;
 
 /// <summary>
 /// QueryNavKladrComponent

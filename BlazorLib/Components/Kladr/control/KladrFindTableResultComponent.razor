@@ -1,0 +1,37 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentBaseModel
+
+@if(string.IsNullOrWhiteSpace(FindText))
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Пустая стркоа поиска.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Укажите строку для <cite title="Для поиска требуется текст запроса">поиска</cite>
+        </figcaption>
+    </figure>
+}
+else
+{
+    <MudTable ServerData="ServerReload" Loading="IsBusyProgress" Dense="true" Hover="true">
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="nr_field" T="KladrResponseModel">Nr</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.Name @context.Socr</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+}
+
+

@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Kladr.main;
+namespace BlazorLib.Components.Kladr.main;
 
 /// <summary>
 /// HomeNodeKladrComponent
@@ -20,9 +20,10 @@ public partial class HomeNodeKladrComponent : KladrNavBaseNodeComponent
     [Parameter, EditorRequired]
     public required QueryNavKladrComponent Parent { get; set; }
 
+
     string? FullNameData;
 
- CodeKladrModel MetaData = default!;
+    CodeKladrModel MetaData = default!;
     string[]? _names;
     string[] Names
     {

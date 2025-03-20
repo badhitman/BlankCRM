@@ -6,7 +6,7 @@ using BlazorLib;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Kladr.main;
+namespace BlazorLib.Components.Kladr.main;
 
 /// <summary>
 /// KladrNavBaseNodeComponent

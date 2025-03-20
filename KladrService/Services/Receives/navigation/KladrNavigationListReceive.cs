@@ -9,7 +9,7 @@ using SharedLib;
 namespace Transmission.Receives.kladr;
 
 /// <inheritdoc/>
-public class KladrNavigationReceive(IKladrNavigationService kladrRepo)
+public class KladrNavigationListReceive(IKladrNavigationService kladrRepo)
     : IResponseReceive<KladrsRequestBaseModel?, Dictionary<KladrChainTypesEnum, JObject[]>?>
 {
     /// <inheritdoc/>

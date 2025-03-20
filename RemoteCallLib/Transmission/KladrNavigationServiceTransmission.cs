@@ -17,6 +17,10 @@ public class KladrNavigationServiceTransmission(IRabbitClient rabbitClient) : IK
         => await rabbitClient.MqRemoteCall<TResponseModel<KladrResponseModel>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationGetObjectReceive, req) ?? new();
 
     /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFind(KladrFindRequestModel req)
+        => await rabbitClient.MqRemoteCall<TPaginationResponseModel<KladrResponseModel>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationFindReceive, req) ?? new();
+
+    /// <inheritdoc/>
     public async Task<Dictionary<KladrChainTypesEnum, JObject[]>> ObjectsListForParent(KladrsRequestBaseModel req)
         => await rabbitClient.MqRemoteCall<Dictionary<KladrChainTypesEnum, JObject[]>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationListReceive, req) ?? [];
 

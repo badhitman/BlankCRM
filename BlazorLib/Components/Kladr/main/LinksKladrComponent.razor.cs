@@ -4,9 +4,8 @@
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System.Linq;
 
-namespace BlazorWebLib.Components.Kladr.main;
+namespace BlazorLib.Components.Kladr.main;
 
 /// <summary>
 /// LinksKladrComponent
@@ -34,6 +33,7 @@ public partial class LinksKladrComponent : KladrNavBaseNodeComponent
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
     public required IReadOnlyCollection<string>? SelectedFieldsView { get; set; }
+
 
     async Task GoToMap()
         => await JSRepo.InvokeVoidAsync("open", $"https://yandex.ru/maps?text={string.Join(", ", GetFullName(Owner))}&source=serp_navig", "_blank");

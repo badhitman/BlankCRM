@@ -19,12 +19,13 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection KladrRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<KladrNavigationReceive,     KladrsRequestBaseModel, Dictionary<KladrChainTypesEnum, JObject[]>>()
+            .RegisterMqListener<KladrNavigationListReceive,     KladrsRequestBaseModel, Dictionary<KladrChainTypesEnum, JObject[]>>()
             .RegisterMqListener<UploadPartTempKladrReceive, UploadPartTableDataModel, ResponseBaseModel>()
             .RegisterMqListener<GetMetadataKladrReceive,    GetMetadataKladrRequestModel, MetadataKladrModel>()
             .RegisterMqListener<ClearTempKladrReceive,      object, ResponseBaseModel>()
             .RegisterMqListener<FlushTempKladrReceive,      object, ResponseBaseModel>()
             .RegisterMqListener<KladrSelectReceive,         KladrSelectRequestModel, TPaginationResponseModel<KladrResponseModel>>()
+            .RegisterMqListener<KladrFindReceive, KladrFindRequestModel, TPaginationResponseModel<KladrResponseModel>>()
             ;
     }
 }

@@ -2,9 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorWebLib.Components.Kladr.main;
+using BlazorLib.Components.Kladr.main;
 
-namespace BlazorWebLib.Components.Kladr;
+namespace BlazorLib.Components.Kladr;
 
 /// <summary>
 /// KladrViewPanelComponent

@@ -22,7 +22,12 @@ public interface IKladrNavigationService
     public Task<TResponseModel<KladrResponseModel>> ObjectGet(KladrsRequestBaseModel req);
 
     /// <summary>
-    /// ObjectsSelect
+    /// Select objects
     /// </summary>
     public Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelect(KladrSelectRequestModel req);
+
+    /// <summary>
+    /// Find objects
+    /// </summary>
+    public Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFind(KladrFindRequestModel req);
 }
