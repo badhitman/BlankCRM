@@ -4,10 +4,10 @@
 
 <MudDialog>
     <TitleContent>
-        Поиск: <span class="font-monospace">@($"%{FindText}%")</span>
+        Поиск: <span class="font-monospace">@FindText</span>
     </TitleContent>
     <DialogContent>
-        <KladrFindTableResultComponent FindText="@($"%{FindText}%")" />
+        <KladrFindTableResultComponent FindText="@(FindText)" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>

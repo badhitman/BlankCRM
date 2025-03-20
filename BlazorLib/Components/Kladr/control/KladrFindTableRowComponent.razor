@@ -1,0 +1,13 @@
+﻿@* @KladrRow.Name @KladrRow.Socr *@
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        @foreach (string _el in _items)
+        {
+            <li class="breadcrumb-item">
+                <MudHighlighter Text="@_el" HighlightedText="@HighlightedText" />
+            </li>
+        }
+        @* <li class="breadcrumb-item active" aria-current="page">Library</li> *@
+    </ol>
+</nav>

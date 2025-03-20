@@ -2,7 +2,7 @@
 
 @inherits BlazorBusyComponentBaseModel
 
-@if(string.IsNullOrWhiteSpace(FindText))
+@if (string.IsNullOrWhiteSpace(FindText))
 {
     <figure class="text-center">
         <blockquote class="blockquote">
@@ -16,22 +16,22 @@
 else
 {
     <MudTable ServerData="ServerReload" Loading="IsBusyProgress" Dense="true" Hover="true">
-    <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="nr_field" T="KladrResponseModel">Nr</MudTableSortLabel></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Nr">@context.Name @context.Socr</MudTd>
-    </RowTemplate>
-    <NoRecordsContent>
-        <MudText>No matching records found</MudText>
-    </NoRecordsContent>
-    <LoadingContent>
-        <MudText>Loading...</MudText>
-    </LoadingContent>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
-</MudTable>
+        <HeaderContent>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>
+                <KladrFindTableRowComponent KladrRow="context" HighlightedText="@FindText" />
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>Ни чего не найдено</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Обработка запроса...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
 }
-
-

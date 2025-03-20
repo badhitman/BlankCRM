@@ -32,7 +32,7 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
-            FindText = FindText,
+            FindText = $"%{FindText}%",
         };
 
         await SetBusy(token: token);

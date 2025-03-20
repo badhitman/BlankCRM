@@ -25,7 +25,7 @@ public partial class KladrFindInputComponent : BlazorBusyComponentBaseModel
             { x => x.FindText, FindText }
         };
 
-        DialogOptions options = new() { CloseOnEscapeKey = true };
+        DialogOptions options = new() { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         return DialogService.ShowAsync<KladrFindDialogComponent>("Поиск адреса", parameters, options);
     }
 }
