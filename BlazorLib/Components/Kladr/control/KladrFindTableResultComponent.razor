@@ -15,15 +15,20 @@
 }
 else
 {
-    <MudTable ServerData="ServerReload" Loading="IsBusyProgress" Dense="true" Hover="true">
-        <ToolBarContent>
-            <MudSelect T="string" Label="US States" MultiSelection="true" @bind-Value="_value" @bind-SelectedValues="_options">
-                @foreach (var state in _states)
-                {
-                    <MudSelectItem T="string" Value="@state">@state</MudSelectItem>
-                }
-            </MudSelect>
-        </ToolBarContent>
+    <MudSelect Label="Регион(ы) поиска"
+               Clearable
+               OnClose="() => InvokeAsync(tableRef!.ReloadServerData)"
+               OnClearButtonClick="() => InvokeAsync(tableRef!.ReloadServerData)"
+               MultiSelection @bind-SelectedValues="_regionsSelected"
+               Disabled="IsBusyProgress"
+               MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))"
+               T="string">
+        @foreach (var state in regions)
+        {
+            <MudSelectItem T="string" Value="@state.Code">@state</MudSelectItem>
+        }
+    </MudSelect>
+    <MudTable ServerData="ServerReload" Loading="IsBusyProgress" Dense Hover @ref="tableRef">
         <HeaderContent>
             <MudTh></MudTh>
         </HeaderContent>

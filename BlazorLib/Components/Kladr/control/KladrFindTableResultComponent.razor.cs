@@ -4,7 +4,9 @@
 
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Newtonsoft.Json.Linq;
 using SharedLib;
+using System.Globalization;
 
 namespace BlazorLib.Components.Kladr.control;
 
@@ -24,27 +26,20 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
 
     List<KladrResponseModel>? PartData;
 
+    
 
-    private string _value = "Nothing selected";
-    private IEnumerable<string> _options = new HashSet<string> { "Alaska" };
-    private readonly string[] _states =
-    [
-        "Alabama", "Alaska", "American Samoa", "Arizona",
-        "Arkansas", "California", "Colorado", "Connecticut",
-        "Delaware", "District of Columbia", "Federated States of Micronesia",
-        "Florida", "Georgia", "Guam", "Hawaii", "Idaho",
-        "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
-        "Louisiana", "Maine", "Marshall Islands", "Maryland",
-        "Massachusetts", "Michigan", "Minnesota", "Mississippi",
-        "Missouri", "Montana", "Nebraska", "Nevada",
-        "New Hampshire", "New Jersey", "New Mexico", "New York",
-        "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio",
-        "Oklahoma", "Oregon", "Palau", "Pennsylvania", "Puerto Rico",
-        "Rhode Island", "South Carolina", "South Dakota", "Tennessee",
-        "Texas", "Utah", "Vermont", "Virgin Island", "Virginia",
-        "Washington", "West Virginia", "Wisconsin", "Wyoming"
-    ];
+    IEnumerable<string> _regionsSelected = [];
+    
+    MudTable<KladrResponseModel>? tableRef;
+    List<RootKLADREquatableModel> regions = [];
 
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        Dictionary<KladrChainTypesEnum, JObject[]> regionsRest = await kladrRepo.ObjectsListForParent(new());
+        foreach (RootKLADRModel? region in regionsRest.SelectMany(x => x.Value).Select(x => x.ToObject<RootKLADRModel>()!))
+            regions.Add(new(region.CODE, region.NAME, region.SOCR));
+    }
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
@@ -56,6 +51,7 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
             PageNum = state.Page,
             PageSize = state.PageSize,
             FindText = $"%{FindText}%",
+            CodeLikeFilter = _regionsSelected?.Select(x => $"{x[..2]}%").ToArray(),
         };
 
         await SetBusy(token: token);
@@ -67,5 +63,10 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
             TotalItems = res.TotalRowsCount,
             Items = PartData
         };
+    }
+
+    private string GetMultiSelectionText(List<string> selectedValues)
+    {
+        return $"Выбран{(selectedValues.Count > 1 ? "о" : "")}: {string.Join(", ", selectedValues.Select(x => regions.First(y => y.Code == x).ToString()))}";
     }
 }

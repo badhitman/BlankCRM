@@ -16,6 +16,7 @@ public partial class KladrFindInputComponent : BlazorBusyComponentBaseModel
     [Inject]
     IDialogService DialogService { get; set; } = default!;
 
+
     string? FindText { get; set; }
 
     Task<IDialogReference> OpenDialogAsync()
