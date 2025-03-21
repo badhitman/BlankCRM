@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorLib.Components.Kladr.control;
+namespace BlazorLib.Components.Kladr.control.find;
 
 /// <summary>
 /// KladrFindTableRowComponent

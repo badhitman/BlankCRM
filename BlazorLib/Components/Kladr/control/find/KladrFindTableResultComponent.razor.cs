@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.Kladr.control;
+namespace BlazorLib.Components.Kladr.control.find;
 
 /// <summary>
 /// KladrFindTableResultComponent

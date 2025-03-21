@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using MudBlazor;
 
-namespace BlazorLib.Components.Kladr.control;
+namespace BlazorLib.Components.Kladr.control.find;
 
 /// <summary>
 /// KladrFindInputComponent

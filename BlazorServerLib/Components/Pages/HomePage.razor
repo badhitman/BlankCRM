@@ -3,6 +3,7 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @using BlazorLib
+@using BlazorWebLib.Components.Commerce.Organizations
 @using BlazorWebLib.Components.Helpdesk.issue
 @using Microsoft.AspNetCore.Components.Web
 @using MudBlazor
@@ -17,6 +18,10 @@
 else
 {
     @ms
+}
+@if (IsDebug)
+{
+    <OfficeOrganizationComponent AddressForOrganization="5" />
 }
 
 @code {
@@ -42,4 +47,10 @@ else
 
         _textValue = res.Response;
     }
+
+#if DEBUG
+    bool IsDebug => true;
+#else
+    bool IsDebug => false;
+#endif
 }
