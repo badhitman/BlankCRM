@@ -44,7 +44,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// FindCodes
     /// </summary>
-    public async Task<KladrEntry[]> FindCodes(string findText, int offset, int limit = 10, string[]? codeLikeFilters = null)
+    public async Task<KladrEntry[]> FindByName(string findText, int offset, int limit = 10, string[]? codeLikeFilters = null)
     {
         string query = $@"SELECT u.""CODE""
                         FROM (

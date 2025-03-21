@@ -509,7 +509,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         response.TotalRowsCount = await q.CountAsync();
         string[] dbRows;
 
-        dbRows = [.. (await context.FindCodes(req.FindText, req.PageNum * req.PageSize, req.PageSize, req.CodeLikeFilter)).Select(x => x.CODE)];
+        dbRows = [.. (await context.FindByName(req.FindText, req.PageNum * req.PageSize, req.PageSize, req.CodeLikeFilter)).Select(x => x.CODE)];
         //.ObjectsKLADR
         //.Where(x => EF.Functions.Like(x.NAME, req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))))
         //.OrderBy(x => x.NAME)
