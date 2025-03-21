@@ -4,15 +4,15 @@
 - СЭД (ServiceDesk/HelpDesk) подсистема оказания консультаций, обратной связи или сопровождение заказов. Управление документами: изменение статусов заявок, журналирование/протоколирование событий и другая универсальная функциональность.
 - Подсистема электронной коммерции: на базе СЭД функционирует простой учёт заказов в т.ч. остатки на складах и предоставление услуг с настраиваемым графиком/расписанием.
 - WEB-Конструктор схем данных (формы, документы).
-- Интерфейс rest API (swagger) для внешних информационных систем (план обмена для [commerce](https://github.com/badhitman/BlankCRM/blob/main/CommerceService/INTEGRATION.md)).
-- ui пакеты: [MudBlazor 7](https://github.com/MudBlazor/MudBlazor/) и два WYSIWYG: [CKEditor](https://ckeditor.com/) + [TinyMCE](https://www.tiny.cloud). Важно: **CKEditor** не поддерживает вставку картинок, а **TinyMCE** имеет такую поддержу (в т.ч. локальное хранение файлов в MongoDB)
-- Win/Android [клиент доступа к Rest/Api](https://github.com/badhitman/BlankCRM?tab=readme-ov-file#tools-maui-app)
+- Интерфейс rest API (swagger) для внешних информационных систем (пример: план обмена для [commerce](https://github.com/badhitman/BlankCRM/blob/main/CommerceService/INTEGRATION.md)).
+- ui пакеты: [MudBlazor 7](https://github.com/MudBlazor/MudBlazor/) и два WYSIWYG: [CKEditor](https://ckeditor.com/) + [TinyMCE](https://www.tiny.cloud). Важно: **CKEditor** не поддерживает вставку картинок, а **TinyMCE** имеет такую поддержу.
+- Кроссплатформенный .NET MAUI (Win, Android и т.д.) [клиент доступа к Rest/Api](https://github.com/badhitman/BlankCRM?tab=readme-ov-file#tools-maui-app)
 - Связь между службами через RabbitMQ[^1] в режиме `запрос-ответ`: при отправке сообщения в очередь, отправитель дожидается ответ (в границах таймаута) и возвращает результат вызывающему. При использовании вызова такой команды удалённого сервиса проходит так, как если бы это был обычный `await` запрос к базе данных или rest/api. Вместе с тем есть возможность отправить команду в режиме "отправил и забыл".
 - .NET Aspire: [набор инструментов для оркестрации](https://github.com/badhitman/BlankCRM/tree/main/BlankCRM.AppHost): мониторинг сервисов (телеметрия, трассировка). ![aspire main](./img/aspire-main.png)
-- LDAP (ActiveDirectory) коннектор. alfa версия
+- LDAP (ActiveDirectory) коннектор. предварительная версия
 
 
-- Зависимости решения между проектами (в формате [Mermaid](https://mermaid.js.org)):
+Зависимости решения между проектами (в формате [Mermaid](https://mermaid.js.org)):
 
 ```mermaid
 ---
@@ -126,15 +126,15 @@ note for DbPostgreLib "Если используется другая СУБД, 
 dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manifest --output-path ../aspire-manifest.json
 ```
 
-Для ручного запуска [собственные микро сервисы настраиваются в виде служб](https://github.com/badhitman/BlankCRM/tree/main/devops/etc/systemd/system), а вспомогательные службы RabbitMQ, Redis, MongoDB и PostgreSQL запускаются пакетом в [docker-compose.yml](./devops/docker-compose.yml). Пример того как может быть настроено в VS:
+Для ручного запуска [собственные микро сервисы настраиваются в виде служб](https://github.com/badhitman/BlankCRM/tree/main/devops/etc/systemd/system), а вспомогательные службы [**RabbitMQ**, **Redis**, **MongoDB** и **PostgreSQL**] запускаются пакетом в [docker-compose.yml](./devops/docker-compose.yml). Пример того как может быть настроено в VS:
 ![пример состава и порядка запуска проектов](./img/csproj-set-demo.png)
 
 #### [BlankBlazorApp](https://github.com/badhitman/BlankCRM/tree/main/BlankBlazorApp/BlankBlazorApp)
-- Blazor вэб сервер.
+- Blazor вэб сервер
 - Рендеринг: `InteractiveServerRenderMode(prerender: false)`
-- Авторизация типовая `Microsoft.AspNetCore.Identity` ([documents](https://learn.microsoft.com/ru-ru/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio)).
-- В Frontend добавлен базовый функционал для работы с Пользователями, Ролями, Claims и Telegram[^4]. 
-- Служба равно как и другие службы использует RabbitMQ для обслуживания входящих команд, на которые она зарегистрировала свои обработчики[^1]. Кроме того, Web служба обрабатывает запросы для [Identity](https://learn.microsoft.com/ru-ru/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio). У Identity свой автономный контекст БД.
+- Авторизация типовая `Microsoft.AspNetCore.Identity` ([documents](https://learn.microsoft.com/ru-ru/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio))
+- В Frontend добавлен базовый функционал для работы с Пользователями, Ролями, Claims и Telegram[^4]
+- Служба равно как и другие службы использует RabbitMQ для обслуживания входящих команд, на которые она зарегистрировала свои обработчики[^1]
 
 #### [IdentityService](https://github.com/badhitman/BlankCRM/tree/main/IdentityService)
 - Управление пользователями: регистрация, авторизация и т.д.
@@ -170,6 +170,9 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 #### [KladrService](https://github.com/badhitman/BlankCRM/tree/main/KladrService)
 - КЛАДР 4.0 от ГНИВЦ. Официальная база данных адресов загружается в систему
 - Заполнение/обновление справочника при помощи штатной win/android утилиты
+
+#### [LdapService](https://github.com/badhitman/BlankCRM/tree/main/LdapService)
+- Интеграция AD через LDAP
 
 > все службы должны быть настроены, запущены вместе и соединены общим RabbitMQ и Redis. В противном случае в MQ очередях будут копиться запросы без ответов и функционал местами будет недоступен если ответственная служба не будет обрабатывать запросы.
 
