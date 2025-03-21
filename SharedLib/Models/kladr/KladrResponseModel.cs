@@ -11,6 +11,12 @@ namespace SharedLib;
 /// </summary>
 public class KladrResponseModel
 {
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{Name} {Socr}";
+    }
+
     /// <summary>
     /// Code
     /// </summary>

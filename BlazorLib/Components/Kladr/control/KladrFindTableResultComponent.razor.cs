@@ -3,10 +3,9 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using Newtonsoft.Json.Linq;
+using MudBlazor;
 using SharedLib;
-using System.Globalization;
 
 namespace BlazorLib.Components.Kladr.control;
 
@@ -25,11 +24,7 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
 
 
     List<KladrResponseModel>? PartData;
-
-    
-
     IEnumerable<string> _regionsSelected = [];
-    
     MudTable<KladrResponseModel>? tableRef;
     List<RootKLADREquatableModel> regions = [];
 
@@ -61,7 +56,7 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
         return new TableData<KladrResponseModel>()
         {
             TotalItems = res.TotalRowsCount,
-            Items = PartData
+            Items = PartData.OrderBy(x => x.Name).ThenBy(x => x.Code)
         };
     }
 

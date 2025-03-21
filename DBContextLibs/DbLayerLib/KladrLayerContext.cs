@@ -35,7 +35,35 @@ public abstract partial class KladrLayerContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("public");
+        modelBuilder.Entity<KladrEntry>().HasNoKey();
     }
+
+    /// <inheritdoc/>
+    public record KladrEntry(string CODE);
+
+    /// <summary>
+    /// FindCodes
+    /// </summary>
+    public async Task<KladrEntry[]> FindCodes(string findText, int offset, int limit = 10, string[]? codeLikeFilters = null)
+    {
+        string query = $@"SELECT u.""CODE""
+                        FROM (
+                            (SELECT o.""CODE""
+                            FROM public.""ObjectsKLADR"" AS o
+                            WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"o.\"CODE\" LIKE '{x}'"))}) AND")} o.""NAME"" LIKE '{findText}' ESCAPE ''
+	                        ORDER BY o.""NAME"", o.""CODE"")
+                            UNION
+                            (SELECT s.""CODE""
+                            FROM public.""StreetsKLADR"" AS s
+                            WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"s.\"CODE\" LIKE '{x}'"))}) AND")} s.""NAME"" LIKE '{findText}' ESCAPE ''
+	                        ORDER BY s.""NAME"", s.""CODE"")
+                        ) AS u
+                        LIMIT {limit} OFFSET {offset}";
+
+        return await Set<KladrEntry>()
+                        .FromSqlRaw(query).ToArrayAsync();
+    }
+
 
     /// <summary>
     /// Очистка временных таблиц
