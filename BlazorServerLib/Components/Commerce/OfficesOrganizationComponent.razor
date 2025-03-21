@@ -9,7 +9,7 @@
             <MudCard>
                 <MudCardHeader>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.h6">Новый адрес</MudText>
+                        <MudText Typo="Typo.h6">Добавить новый</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
                         <MudIconButton Disabled="IsBusyProgress" OnClick="ToggleMode" Icon="@Icons.Material.Filled.Close" Color="Color.Default" />
@@ -75,11 +75,11 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (AddressOrganizationModelDB ad in Organization.Addresses)
+            @foreach (OfficeOrganizationModelDB ad in Organization.Addresses)
             {
                 <tr @key="@($"{ad.Id}")">
                     <th scope="row"><b>@GetCity(ad)</b></th>
-                    <th><a href="/organizations/edit/addresses/@ad.Id">@ad.Name</a></th>
+                    <th><a href="/organizations/edit/office/@ad.Id">@ad.Name</a></th>
                     <td>@ad.Address</td>
                     <td>@ad.Contacts</td>
                 </tr>

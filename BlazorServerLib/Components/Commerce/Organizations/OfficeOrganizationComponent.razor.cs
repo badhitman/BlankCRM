@@ -2,18 +2,17 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using BlazorWebLib.Components.Helpdesk;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
-using MudBlazor;
 using SharedLib;
-using BlazorWebLib.Components.Helpdesk;
 
-namespace BlazorWebLib.Components.Commerce.Pages;
+namespace BlazorWebLib.Components.Commerce.Organizations;
 
 /// <summary>
-/// AddressForOrganizationPage
+/// OfficeOrganizationComponent
 /// </summary>
-public partial class AddressForOrganizationPage : BlazorBusyComponentBaseModel
+public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
@@ -25,18 +24,18 @@ public partial class AddressForOrganizationPage : BlazorBusyComponentBaseModel
     /// <summary>
     /// AddressForOrganization
     /// </summary>
-    [Parameter]
-    public int AddressForOrganization { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public required int AddressForOrganization { get; set; }
 
 
-    AddressOrganizationModelDB AddressCurrent { get; set; } = default!;
-    AddressOrganizationModelDB AddressEdit { get; set; } = default!;
+    OfficeOrganizationModelDB OfficeCurrent { get; set; } = default!;
+    OfficeOrganizationModelDB OfficeEdit { get; set; } = default!;
 
     bool CanSave =>
-        (AddressEdit.Address != AddressCurrent.Address ||
-        AddressEdit.Contacts != AddressCurrent.Contacts ||
-        AddressEdit.Name != AddressCurrent.Name ||
-        AddressEdit.ParentId != AddressCurrent.ParentId) &&
+        (OfficeEdit.Address != OfficeCurrent.Address ||
+        OfficeEdit.Contacts != OfficeCurrent.Contacts ||
+        OfficeEdit.Name != OfficeCurrent.Name ||
+        OfficeEdit.ParentId != OfficeCurrent.ParentId) &&
         SelectedRubric is not null;
 
     UniversalBaseModel? SelectedRubric;
@@ -46,14 +45,14 @@ public partial class AddressForOrganizationPage : BlazorBusyComponentBaseModel
     {
         await SetBusy();
 
-        TResponseModel<AddressOrganizationModelDB[]> res_address = await CommerceRepo
+        TResponseModel<OfficeOrganizationModelDB[]> res_address = await CommerceRepo
             .AddressesOrganizationsRead([AddressForOrganization]);
 
         SnackbarRepo.ShowMessagesResponse(res_address.Messages);
-        AddressCurrent = res_address.Response!.Single();
-        AddressEdit = GlobalTools.CreateDeepCopy(AddressCurrent) ?? throw new Exception();
+        OfficeCurrent = res_address.Response!.Single();
+        OfficeEdit = GlobalTools.CreateDeepCopy(OfficeCurrent) ?? throw new Exception();
 
-        TResponseModel<List<RubricIssueHelpdeskModelDB>> res_rubric = await HelpdeskRepo.RubricRead(AddressCurrent.ParentId);
+        TResponseModel<List<RubricIssueHelpdeskModelDB>> res_rubric = await HelpdeskRepo.RubricRead(OfficeCurrent.ParentId);
         await SetBusy(false);
         SnackbarRepo.ShowMessagesResponse(res_rubric.Messages);
         if (res_rubric.Success() && res_rubric.Response is not null && res_rubric.Response.Count != 0)
@@ -76,10 +75,10 @@ public partial class AddressForOrganizationPage : BlazorBusyComponentBaseModel
 
     void ResetEdit()
     {
-        AddressEdit = GlobalTools.CreateDeepCopy(AddressCurrent) ?? throw new Exception();
-        if (rubricSelector_ref.SelectedRubricId != AddressEdit.ParentId)
+        OfficeEdit = GlobalTools.CreateDeepCopy(OfficeCurrent) ?? throw new Exception();
+        if (rubricSelector_ref.SelectedRubricId != OfficeEdit.ParentId)
         {
-            rubricSelector_ref.SelectedRubricId = AddressEdit.ParentId;
+            rubricSelector_ref.SelectedRubricId = OfficeEdit.ParentId;
             rubricSelector_ref.StateHasChangedCall();
         }
     }
@@ -91,12 +90,12 @@ public partial class AddressForOrganizationPage : BlazorBusyComponentBaseModel
 
         await SetBusy();
 
-        TResponseModel<int> res = await CommerceRepo.AddressOrganizationUpdate(new AddressOrganizationBaseModel()
+        TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdate(new AddressOrganizationBaseModel()
         {
-            Address = AddressEdit.Address!,
-            Name = AddressEdit.Name!,
+            Address = OfficeEdit.Address!,
+            Name = OfficeEdit.Name!,
             ParentId = SelectedRubric!.Id,
-            Contacts = AddressEdit.Contacts,
+            Contacts = OfficeEdit.Contacts,
             Id = AddressForOrganization,
         });
         IsBusyProgress = false;
@@ -104,13 +103,13 @@ public partial class AddressForOrganizationPage : BlazorBusyComponentBaseModel
         if (!res.Success())
             return;
 
-        AddressCurrent = GlobalTools.CreateDeepCopy(AddressEdit) ?? throw new Exception();
+        OfficeCurrent = GlobalTools.CreateDeepCopy(OfficeEdit) ?? throw new Exception();
     }
 
     void RubricSelectAction(UniversalBaseModel? selectedRubric)
     {
         SelectedRubric = selectedRubric;
-        AddressEdit.ParentId = selectedRubric?.Id ?? 0;
+        OfficeEdit.ParentId = selectedRubric?.Id ?? 0;
         StateHasChanged();
     }
 }

@@ -46,6 +46,9 @@ public abstract partial class KladrLayerContext : DbContext
     /// </summary>
     public async Task<KladrEntry[]> FindByName(string findText, int offset, int limit = 10, string[]? codeLikeFilters = null)
     {
+        if (string.IsNullOrWhiteSpace(findText) || findText.Contains('\''))
+            return [];
+
         string query = $@"SELECT u.""CODE""
                         FROM (
                             (SELECT o.""CODE""

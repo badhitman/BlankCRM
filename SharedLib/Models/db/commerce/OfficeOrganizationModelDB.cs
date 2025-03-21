@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// Адрес организации
+/// Офис организации
 /// </summary>
-public class AddressOrganizationModelDB : AddressOrganizationBaseModel
+public class OfficeOrganizationModelDB : AddressOrganizationBaseModel
 {
     /// <summary>
     /// Организация

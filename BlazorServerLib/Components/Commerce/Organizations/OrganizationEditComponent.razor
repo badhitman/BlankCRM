@@ -157,8 +157,8 @@ else
                 </div>
             </div>
         </MudTabPanel>
-        <MudTabPanel Disabled="@(OrganizationId <= 0)" Text="Адреса">
-            <AddressesForOrganizationComponent Organization="currentOrg" />
+        <MudTabPanel Disabled="@(OrganizationId <= 0)" Text="Филиалы">
+            <OfficesOrganizationComponent Organization="currentOrg" />
         </MudTabPanel>
         <MudTabPanel Disabled="@(OrganizationId <= 0)" Text="Заказы">
             <OrdersJournalComponent OrganizationFilter="currentOrg.Id" />

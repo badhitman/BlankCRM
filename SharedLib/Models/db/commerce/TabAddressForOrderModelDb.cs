@@ -32,7 +32,7 @@ public class TabAddressForOrderModelDb
     /// <summary>
     /// AddressOrganization
     /// </summary>
-    public AddressOrganizationModelDB? AddressOrganization { get; set; }
+    public OfficeOrganizationModelDB? AddressOrganization { get; set; }
 
     /// <summary>
     /// AddressOrganization

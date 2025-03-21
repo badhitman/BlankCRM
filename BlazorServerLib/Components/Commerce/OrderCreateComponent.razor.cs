@@ -30,7 +30,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
     readonly DialogOptions _dialogOptions = new() { FullWidth = true };
 
     OrderDocumentModelDB? CurrentCart;
-    readonly Func<AddressOrganizationModelDB, string> converter = p => p.Name;
+    readonly Func<OfficeOrganizationModelDB, string> converter = p => p.Name;
 
     List<OrganizationModelDB> Organizations { get; set; } = [];
     OrganizationModelDB? prevCurrOrg;
@@ -60,9 +60,9 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
     /// <summary>
     /// Предварительный набор адресов, который пользователь должен утвердить/подтвердить.
     /// </summary>
-    IEnumerable<AddressOrganizationModelDB>? _prevSelectedAddresses;
-    List<AddressOrganizationModelDB>? _selectedAddresses = [];
-    IEnumerable<AddressOrganizationModelDB>? SelectedAddresses
+    IEnumerable<OfficeOrganizationModelDB>? _prevSelectedAddresses;
+    List<OfficeOrganizationModelDB>? _selectedAddresses = [];
+    IEnumerable<OfficeOrganizationModelDB>? SelectedAddresses
     {
         get => _selectedAddresses ?? [];
         set
@@ -73,7 +73,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             CurrentCart.AddressesTabs ??= [];
 
             // адреса/вкладки, которые следует добавить
-            AddressOrganizationModelDB[] addresses = value is null ? [] : [.. value.Where(x => !CurrentCart.AddressesTabs.Any(y => y.AddressOrganizationId == x.Id))];
+            OfficeOrganizationModelDB[] addresses = value is null ? [] : [.. value.Where(x => !CurrentCart.AddressesTabs.Any(y => y.AddressOrganizationId == x.Id))];
             if (addresses.Length != 0)
             {
                 CurrentCart.AddressesTabs.AddRange(addresses.Select(x => new TabAddressForOrderModelDb()
@@ -96,7 +96,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
                 _selectedAddresses = [.. CurrentCart.AddressesTabs.Select(Convert)];
                 InvokeAsync(async () => await StorageRepo.SaveParameter(CurrentCart, GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), false));
             }
-            static AddressOrganizationModelDB Convert(TabAddressForOrderModelDb x) => new()
+            static OfficeOrganizationModelDB Convert(TabAddressForOrderModelDb x) => new()
             {
                 Id = x.AddressOrganization!.Id,
                 Name = x.AddressOrganization.Name,
@@ -113,7 +113,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
                 .Where(x => value?.Any(y => y.Id == x.AddressOrganizationId) != true).ToArray();
 
             // адреса/вкладки, которые можно свободно удалить (без строк)
-            AddressOrganizationModelDB[] _prev = _qr
+            OfficeOrganizationModelDB[] _prev = _qr
                  .Where(x => x.Rows is null || x.Rows.Count == 0)
                  .Select(Convert)
                  .ToArray();

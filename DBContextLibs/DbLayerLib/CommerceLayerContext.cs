@@ -75,9 +75,9 @@ public partial class CommerceLayerContext : DbContext
     public DbSet<OrganizationModelDB> Organizations { get; set; } = default!;
 
     /// <summary>
-    /// Адреса организации (филиалы/офисы)
+    /// Филиалы (Офисы)
     /// </summary>
-    public DbSet<AddressOrganizationModelDB> AddressesOrganizations { get; set; } = default!;
+    public DbSet<OfficeOrganizationModelDB> OfficesOrganizations { get; set; } = default!;
 
     /// <summary>
     /// Сотрудники компаний

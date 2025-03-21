@@ -67,5 +67,5 @@ public partial interface ICommerceService
     /// <summary>
     /// AddressesOrganizationsRead
     /// </summary>
-    public Task<TResponseModel<AddressOrganizationModelDB[]>> AddressesOrganizationsRead(int[] organizationsIds);
+    public Task<TResponseModel<OfficeOrganizationModelDB[]>> AddressesOrganizationsRead(int[] organizationsIds);
 }

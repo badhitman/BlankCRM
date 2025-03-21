@@ -46,7 +46,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// Роли: <see cref="ExpressApiRolesEnum.OrganizationsReadCommerce"/>, <see cref="ExpressApiRolesEnum.OrganizationsWriteCommerce"/>
     /// </remarks>
     [HttpPut($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.ADDRESSES_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.READ_ACTION_NAME}")]
-    public async Task<TResponseModel<AddressOrganizationModelDB[]>> AddressesOrganizationsRead(int[] ids)
+    public async Task<TResponseModel<OfficeOrganizationModelDB[]>> AddressesOrganizationsRead(int[] ids)
         => await commRepo.AddressesOrganizationsRead(ids);
 
 
@@ -94,5 +94,5 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
 [Authorize(Roles = nameof(ExpressApiRolesEnum.OrganizationsWriteCommerce))]
 #endif
     public async Task<TResponseModel<int>> AddressOrganizationUpdate(AddressOrganizationBaseModel req)
-        => await commRepo.AddressOrganizationUpdate(req);
+        => await commRepo.OfficeOrganizationUpdate(req);
 }

@@ -88,13 +88,13 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<AddressOrganizationModelDB[]>> AddressesOrganizationsRead(int[] organizationsIds)
+    public async Task<TResponseModel<OfficeOrganizationModelDB[]>> AddressesOrganizationsRead(int[] organizationsIds)
     {
-        TResponseModel<AddressOrganizationModelDB[]> res = new();
+        TResponseModel<OfficeOrganizationModelDB[]> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
         res.Response = await context
-            .AddressesOrganizations
+            .OfficesOrganizations
             .Where(x => organizationsIds.Any(y => y == x.Id))
             .ToArrayAsync();
 
@@ -125,7 +125,7 @@ public partial class CommerceImplementService : ICommerceService
         if (!res.Success())
             return res;
 
-        await context.AddressesOrganizations.Where(x => x.Id == address_id).ExecuteDeleteAsync();
+        await context.OfficesOrganizations.Where(x => x.Id == address_id).ExecuteDeleteAsync();
         res.AddSuccess("Команда успешно выполнена");
 
         return res;
@@ -139,7 +139,7 @@ public partial class CommerceImplementService : ICommerceService
 
         if (req.Id < 1)
         {
-            AddressOrganizationModelDB add = new()
+            OfficeOrganizationModelDB add = new()
             {
                 Address = req.Address,
                 Name = req.Name,
@@ -154,7 +154,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        res.Response = await context.AddressesOrganizations
+        res.Response = await context.OfficesOrganizations
                         .Where(x => x.Id == req.Id)
                         .ExecuteUpdateAsync(set => set
                         //.SetProperty(p => p.OrganizationId, req.OrganizationId)

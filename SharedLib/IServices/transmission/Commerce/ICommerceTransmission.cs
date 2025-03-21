@@ -57,7 +57,7 @@ public partial interface ICommerceTransmission
     /// <summary>
     /// Прочитать данные адресов организаций по их идентификаторам
     /// </summary>
-    public Task<TResponseModel<AddressOrganizationModelDB[]>> AddressesOrganizationsRead(int[] ids);
+    public Task<TResponseModel<OfficeOrganizationModelDB[]>> AddressesOrganizationsRead(int[] ids);
 
     /// <summary>
     /// Удалить платёжный документ
@@ -123,14 +123,14 @@ public partial interface ICommerceTransmission
     public Task<TResponseModel<bool>> OrganizationSetLegal(OrganizationLegalModel org);
 
     /// <summary>
-    /// Удалить адрес организации
+    /// Удалить офис/филиал организации
     /// </summary>
-    public Task<ResponseBaseModel> AddressOrganizationDelete(int req);
+    public Task<ResponseBaseModel> OfficeOrganizationDelete(int req);
 
     /// <summary>
-    /// Обновить/Создать адрес организации
+    /// Обновить/Создать офис/филиал организации
     /// </summary>
-    public Task<TResponseModel<int>> AddressOrganizationUpdate(AddressOrganizationBaseModel req);
+    public Task<TResponseModel<int>> OfficeOrganizationUpdate(AddressOrganizationBaseModel req);
 
     /// <summary>
     /// Обновить/Создать товар

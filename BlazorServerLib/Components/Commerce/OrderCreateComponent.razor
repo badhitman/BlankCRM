@@ -37,12 +37,12 @@ else
             </MudSelect>
         </div>
         <div class="col-md-6">
-            <MudSelect T="AddressOrganizationModelDB" Label="Филиалы" MultiSelection="true" Disabled="@(CurrentOrganization is null || CurrentOrganization.Id == 0)" @bind-SelectedValues="SelectedAddresses" ToStringFunc="@converter">
+            <MudSelect T="OfficeOrganizationModelDB" Label="Филиалы" MultiSelection="true" Disabled="@(CurrentOrganization is null || CurrentOrganization.Id == 0)" @bind-SelectedValues="SelectedAddresses" ToStringFunc="@converter">
                 @if (CurrentOrganization?.Addresses is not null)
                 {
-                    foreach (AddressOrganizationModelDB add in CurrentOrganization.Addresses)
+                    foreach (OfficeOrganizationModelDB add in CurrentOrganization.Addresses)
                     {
-                        <MudSelectItem T="AddressOrganizationModelDB" Value="@add">@add.Name</MudSelectItem>
+                        <MudSelectItem T="OfficeOrganizationModelDB" Value="@add">@add.Name</MudSelectItem>
                     }
                 }
             </MudSelect>
@@ -66,7 +66,7 @@ else
         <div class="card mt-3">
             <div class="card-body">
                 <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
-                    @foreach (AddressOrganizationModelDB add in SelectedAddresses)
+                    @foreach (OfficeOrganizationModelDB add in SelectedAddresses)
                     {
                         TabAddressForOrderModelDb current_tab = CurrentCart.AddressesTabs!.First(x => x.AddressOrganizationId == add.Id);
                         current_tab.OrderDocument = CurrentCart;

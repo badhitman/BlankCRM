@@ -10,9 +10,9 @@ using MudBlazor;
 namespace BlazorWebLib.Components.Commerce;
 
 /// <summary>
-/// AddressesForOrganizationComponent
+/// OfficesOrganizationComponent
 /// </summary>
-public partial class AddressesForOrganizationComponent : BlazorBusyComponentBaseModel
+public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
@@ -52,7 +52,7 @@ public partial class AddressesForOrganizationComponent : BlazorBusyComponentBase
 
         await SetBusy();
 
-        TResponseModel<int> res = await CommerceRepo.AddressOrganizationUpdate(new AddressOrganizationBaseModel()
+        TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdate(new AddressOrganizationBaseModel()
         {
             Address = addingAddress!,
             Name = addingName!,
@@ -116,7 +116,7 @@ public partial class AddressesForOrganizationComponent : BlazorBusyComponentBase
         }
     }
 
-    string? GetCity(AddressOrganizationModelDB ad)
+    string? GetCity(OfficeOrganizationModelDB ad)
     {
         if (!RubriciesCached.TryGetValue(ad.ParentId, out List<RubricIssueHelpdeskModelDB>? value))
             return null;

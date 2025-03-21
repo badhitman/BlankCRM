@@ -1,7 +1,4 @@
-﻿@page "/organizations/edit/addresses/{AddressForOrganization:int}"
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
-
-@using BlazorWebLib.Components.Helpdesk
+﻿@using BlazorWebLib.Components.Helpdesk
 @using MudBlazor
 
 @inherits BlazorBusyComponentBaseModel
@@ -17,26 +14,26 @@
             <MudCard>
                 <MudCardHeader>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.h6">Адрес организации:</MudText>
+                        <MudText Typo="Typo.h6">Филиал:</MudText>
                     </CardHeaderContent>
                 </MudCardHeader>
                 <MudCardContent>
                     <MudStack>
                         <CascadingValue Value="RubricSelectAction">
-                            <RubricSelectorComponent @ref="rubricSelector_ref" ContextName="@GlobalStaticConstants.Routes.ADDRESS_CONTROLLER_NAME" Title="Регин, город" ModeSelectingRubrics="ModesSelectRubricsEnum.Strict" ShowDisabledRubrics="false" StartRubric="AddressEdit.ParentId" />
+                            <RubricSelectorComponent @ref="rubricSelector_ref" ContextName="@GlobalStaticConstants.Routes.ADDRESS_CONTROLLER_NAME" Title="Регин, город" ModeSelectingRubrics="ModesSelectRubricsEnum.Strict" ShowDisabledRubrics="false" StartRubric="OfficeEdit.ParentId" />
                         </CascadingValue>
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="nameFormControlInput1" class="form-label">Название</label>
-                                <input @bind-value:event="oninput" @bind-value="AddressEdit.Name" type="text" class="form-control" id="nameFormControlInput1" placeholder="Наименование">
+                                <input @bind-value:event="oninput" @bind-value="OfficeEdit.Name" type="text" class="form-control" id="nameFormControlInput1" placeholder="Наименование">
                             </div>
                             <div class="col-md-4">
                                 <label for="addrFormControlInput1" class="form-label">Адрес</label>
-                                <input @bind-value:event="oninput" @bind-value="AddressEdit.Address" type="text" class="form-control" id="addrFormControlInput1" placeholder="Улица, дом...">
+                                <input @bind-value:event="oninput" @bind-value="OfficeEdit.Address" type="text" class="form-control" id="addrFormControlInput1" placeholder="Улица, дом...">
                             </div>
                             <div class="col-md-4">
                                 <label for="telFormControlInput" class="form-label">Контакты</label>
-                                <input @bind-value:event="oninput" @bind-value="AddressEdit.Contacts" type="tel" class="form-control" id="telFormControlInput" placeholder="Номер телефона, email...">
+                                <input @bind-value:event="oninput" @bind-value="OfficeEdit.Contacts" type="tel" class="form-control" id="telFormControlInput" placeholder="Номер телефона, email...">
                             </div>
                         </div>
                     </MudStack>
@@ -52,4 +49,3 @@
         <OrdersJournalComponent AddressForOrganization="AddressForOrganization" />
     </MudTabPanel>
 </MudTabs>
-
