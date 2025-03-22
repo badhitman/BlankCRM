@@ -204,9 +204,9 @@ public interface ILdapService
     public Task<LdapUserAndGroupResultModel> CheckUserGroupPair(LdapUserAndGroupModel inc, IEnumerable<string>? base_filters_users = null, IEnumerable<string>? base_filters_groups = null);
 
     /// <summary>
-    /// Отключить/Включить пользователя (+ переместить в соответствующую OU) GU.LOCAL.
+    /// Отключить/Включить пользователя (+ переместить в соответствующую OU)
     /// </summary>
-    /// <param name="sAMAccountName">Логин AD gu.local</param>
+    /// <param name="sAMAccountName">Логин AD</param>
     /// <param name="setUserIsDisabled">Статус который следует установить пользователю (вкл/выкл). true - пользователь отключён, а false - пользователь не отключён</param>
     /// <param name="newOuDistinguishedName">Новая OU для перемещения (если не указано, то перемещения не будет)</param>
     /// <param name="base_filters_users">базовые фильтры для поиска пользователя</param>
