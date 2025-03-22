@@ -163,10 +163,13 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             .ToArray();
 
         if (offersIds is null || offersIds.Length == 0 || CurrentUserSession is null)
+        { 
+            await SetBusy(false); 
             return;
+        }
 
-        //await SetBusy();
         TResponseModel<OfferModelDB[]> offersRes = await CommerceRepo.OffersRead(new() { Payload = offersIds, SenderActionUserId = CurrentUserSession.UserId });
+        await SetBusy(false);
         if (!offersRes.Success() || offersRes.Response is null || offersRes.Response.Length == 0)
         {
             SnackbarRepo.ShowMessagesResponse(offersRes.Messages);
@@ -181,7 +184,6 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
                 });
         });
 
-        await SetBusy(false);
     }
 
     void CalculateDiscounts()

@@ -45,7 +45,6 @@ public class OrganizationModelDB : OrganizationLegalModel
     /// </summary>
     public List<BankDetailsModelDB>? BanksDetails { get; set; }
 
-
     /// <summary>
     /// Находится ли объект в режиме запроса изменений реквизитов
     /// </summary>

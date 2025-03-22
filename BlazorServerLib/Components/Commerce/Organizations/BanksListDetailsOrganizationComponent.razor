@@ -3,11 +3,21 @@
 @inherits BlazorBusyComponentBaseModel
 
 <MudExpansionPanels>
-    <MudExpansionPanel MaxHeight="1000" ExpandedChanged="OnExpandedChanged">
+    <MudExpansionPanel MaxHeight="1000" ExpandedChanged="OnExpandedChanged" Disabled="@(CurrentOrganization.Id < 1)">
         <TitleContent>
             <div class="d-flex">
                 <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
-                <MudText>Основной р/с:</MudText>
+                <MudText>
+                    Основной р/с:
+                    @if (CurrentOrganization.Id < 1)
+                    {
+                        <span>недоступен. объект организации не записан</span>
+                    }
+                    else if (CurrentOrganization.BanksDetails?.Count == 0)
+                    {
+                        <span>отсутствует</span>
+                    }
+                </MudText>
             </div>
         </TitleContent>
         <ChildContent>
@@ -32,7 +42,7 @@
                         Добавьте организации <cite title="расчётный счёт">банковский счёт</cite>
                     </figcaption>
                 </figure>
-                <BankDetailsEditComponent />
+                <BankDetailsEditComponent BankDetails="BankDetailsModelDB.BuildEmpty(CurrentOrganization.Id)" />
             }
             else if (IsExpanded)
             {

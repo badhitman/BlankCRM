@@ -16,7 +16,7 @@ public class BankDetailsModelDB : EntryDescriptionSwitchableModel
     /// <summary>
     /// Organization
     /// </summary>
-    public OrganizationModelDB? Organization {  get; set; }
+    public OrganizationModelDB? Organization { get; set; }
 
     /// <summary>
     /// Organization
@@ -46,4 +46,17 @@ public class BankDetailsModelDB : EntryDescriptionSwitchableModel
     /// </summary>
     [Required]
     public required string BankBIC { get; set; }
+
+    /// <inheritdoc/>
+    public static BankDetailsModelDB BuildEmpty(int organizationId)
+        => new()
+        {
+            BankBIC = string.Empty,
+            BankName = string.Empty,
+            CorrespondentAccount = string.Empty,
+            CurrentAccount = string.Empty,
+            Name = string.Empty,
+            Description = string.Empty,
+            OrganizationId = organizationId,
+        };
 }

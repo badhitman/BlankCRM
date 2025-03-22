@@ -54,7 +54,6 @@ public class OrganizationLegalModel : EntryDescriptionSwitchableModel
     /// </summary>
     public int BankMainAccount { get; set; }
 
-
     /// <inheritdoc/>
     public override string ToString()
     {

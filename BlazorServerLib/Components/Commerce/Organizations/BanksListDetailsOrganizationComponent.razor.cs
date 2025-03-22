@@ -8,6 +8,9 @@ using SharedLib;
 
 namespace BlazorWebLib.Components.Commerce.Organizations;
 
+/// <summary>
+/// BanksListDetailsOrganizationComponent
+/// </summary>
 public partial class BanksListDetailsOrganizationComponent : BlazorBusyComponentBaseModel
 {
     /// <inheritdoc/>

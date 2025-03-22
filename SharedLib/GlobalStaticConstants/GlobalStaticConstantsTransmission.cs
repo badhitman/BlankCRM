@@ -586,6 +586,12 @@ public static partial class GlobalStaticConstants
         public readonly static string OrganizationsUsersSelectCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATIONS_CONTROLLER_NAME}-{Routes.USERS_CONTROLLER_NAME}", Routes.SELECT_ACTION_NAME);
 
         /// <inheritdoc/>
+        public readonly static string BankDetailsUpdateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATIONS_CONTROLLER_NAME}-{Routes.BANK_CONTROLLER_NAME}-{Routes.DETAILS_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string BankDetailsDeleteCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATIONS_CONTROLLER_NAME}-{Routes.BANK_CONTROLLER_NAME}-{Routes.DETAILS_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string OrganizationsFindCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ORGANIZATIONS_CONTROLLER_NAME, Routes.FIND_ACTION_NAME);
 
         /// <inheritdoc/>
@@ -595,7 +601,7 @@ public static partial class GlobalStaticConstants
         public readonly static string OrganizationsUsersReadCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATIONS_CONTROLLER_NAME}-{Routes.USERS_CONTROLLER_NAME}", Routes.READ_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string AddressesOrganizationsReadCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ADDRESSES_CONTROLLER_NAME, Routes.ORGANIZATIONS_CONTROLLER_NAME, Routes.READ_ACTION_NAME);
+        public readonly static string OfficesOrganizationsReadCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.OFFICES_CONTROLLER_NAME, Routes.ORGANIZATIONS_CONTROLLER_NAME, Routes.READ_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string OrganizationUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ORGANIZATION_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);

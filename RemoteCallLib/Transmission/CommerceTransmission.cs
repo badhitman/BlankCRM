@@ -93,7 +93,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
 
     /// <inheritdoc/>
     public async Task<TResponseModel<OfficeOrganizationModelDB[]>> OfficesOrganizationsRead(int[] ids)
-        => await rabbitClient.MqRemoteCall<TResponseModel<OfficeOrganizationModelDB[]>>(GlobalStaticConstants.TransmissionQueues.AddressesOrganizationsReadCommerceReceive, ids) ?? new();
+        => await rabbitClient.MqRemoteCall<TResponseModel<OfficeOrganizationModelDB[]>>(GlobalStaticConstants.TransmissionQueues.OfficesOrganizationsReadCommerceReceive, ids) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesRead(TAuthRequestModel<int[]> ids)
@@ -186,4 +186,12 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> AttendanceRecordsDelete(TAuthRequestModel<int> req)
         => await rabbitClient.MqRemoteCall<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.AttendanceRecordDeleteCommerceReceive, req) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> BankDetailsUpdate(TAuthRequestModel<BankDetailsModelDB> req)
+        => await rabbitClient.MqRemoteCall<TResponseModel<int>>(GlobalStaticConstants.TransmissionQueues.BankDetailsUpdateCommerceReceive, req) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> BankDetailsDelete(TAuthRequestModel<int> req)
+        => await rabbitClient.MqRemoteCall<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.BankDetailsDeleteCommerceReceive, req) ?? new();
 }

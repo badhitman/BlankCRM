@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// E-Commerce Remote Transmission Service
 /// </summary>
-public partial interface ICommerceTransmission
+public partial interface ICommerceTransmission : ICommerceServiceBase
 {
     /// <summary>
     /// Price Full - file get
@@ -53,11 +53,6 @@ public partial interface ICommerceTransmission
     /// NomenclaturesRead
     /// </summary>
     public Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesRead(TAuthRequestModel<int[]> ids);
-
-    /// <summary>
-    /// Прочитать данные адресов организаций по их идентификаторам
-    /// </summary>
-    public Task<TResponseModel<OfficeOrganizationModelDB[]>> OfficesOrganizationsRead(int[] ids);
 
     /// <summary>
     /// Удалить платёжный документ
@@ -115,55 +110,7 @@ public partial interface ICommerceTransmission
     public Task<TResponseModel<int>> OfferUpdate(TAuthRequestModel<OfferModelDB> offer);
 
     /// <summary>
-    /// Установить реквизиты организации (+ сброс запроса редактирования)
-    /// </summary>
-    /// <remarks>
-    /// Если организация находиться в статусе запроса изменения реквизитов - этот признак обнуляется.
-    /// </remarks>
-    public Task<TResponseModel<bool>> OrganizationSetLegal(OrganizationLegalModel org);
-
-    /// <summary>
-    /// Удалить офис/филиал организации
-    /// </summary>
-    public Task<ResponseBaseModel> OfficeOrganizationDelete(int req);
-
-    /// <summary>
-    /// Обновить/Создать офис/филиал организации
-    /// </summary>
-    public Task<TResponseModel<int>> OfficeOrganizationUpdate(AddressOrganizationBaseModel req);
-
-    /// <summary>
     /// Обновить/Создать товар
     /// </summary>
     public Task<TResponseModel<int>> NomenclatureUpdateReceive(NomenclatureModelDB req);
-
-    /// <summary>
-    /// Подбор организаций с параметрами запроса
-    /// </summary>
-    public Task<TPaginationResponseModel<OrganizationModelDB>> OrganizationsSelect(TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req);
-
-    /// <summary>
-    /// Обновление параметров организации. Юридические параметры не меняются, а формируется запрос на изменение, которое должна подтвердить сторонняя система
-    /// </summary>
-    public Task<TResponseModel<int>> OrganizationUpdate(TAuthRequestModel<OrganizationModelDB> org);
-
-    /// <summary>
-    /// Прочитать данные организаций по их идентификаторам
-    /// </summary>
-    public Task<TResponseModel<OrganizationModelDB[]>> OrganizationsRead(int[] organizations_ids);
-
-    /// <summary>
-    /// UsersOrganizationsSelect
-    /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<UserOrganizationModelDB>>> UsersOrganizationsSelect(TPaginationRequestAuthModel<UsersOrganizationsStatusesRequestModel> req);
-
-    /// <summary>
-    /// UserOrganizationUpdate
-    /// </summary>
-    public Task<TResponseModel<int>> UserOrganizationUpdate(TAuthRequestModel<UserOrganizationModelDB> org);
-
-    /// <summary>
-    /// UsersOrganizationsRead
-    /// </summary>
-    public Task<TResponseModel<UserOrganizationModelDB[]>> UsersOrganizationsRead(int[] organizations_ids);
 }

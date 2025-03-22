@@ -1,10 +1,19 @@
 ﻿@using MudBlazor
 
+@inherits BlazorBusyComponentBaseModel
+
 <div class="card">
     <div class="card-body">
-        @if (BankDetails is null)
+        @if (BankDetails.OrganizationId < 1)
         {
-            <MudProgressCircular Color="Color.Success" Indeterminate="true" />
+            <figure class="text-center">
+                <blockquote class="blockquote">
+                    <p>Объект не записан.</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    Запишите организацию <cite title="CurrentOrganization.BansDetails is null">для добавления реквизитов</cite>
+                </figcaption>
+            </figure>
         }
         else
         {
@@ -31,8 +40,3 @@
         }
     </div>
 </div>
-
-@code {
-    BankDetailsModelDB? BankDetails;
-
-}

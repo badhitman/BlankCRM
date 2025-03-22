@@ -88,7 +88,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<OfficeOrganizationModelDB[]>> AddressesOrganizationsRead(int[] organizationsIds)
+    public async Task<TResponseModel<OfficeOrganizationModelDB[]>> OfficesOrganizationsRead(int[] organizationsIds)
     {
         TResponseModel<OfficeOrganizationModelDB[]> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
@@ -218,6 +218,7 @@ public partial class CommerceImplementService : ICommerceService
             .Where(x => req.Any(y => y == x.Id))
             .Include(x => x.Offices)
             .Include(x => x.Users)
+            .Include(x => x.BanksDetails)
             .ToArrayAsync();
 
         return res;
@@ -281,7 +282,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
-        OrganizationModelDB? duple;
+        OrganizationModelDB? duple = default;
         UserInfoModel actor = default!;
         await Task.WhenAll([
             Task.Run(async () =>
@@ -292,12 +293,9 @@ public partial class CommerceImplementService : ICommerceService
             Task.Run(async () => { duple = await context.Organizations.FirstOrDefaultAsync(x => x.INN == req.Payload.INN || x.OGRN == req.Payload.OGRN ); })
             ]);
 
-        duple = await context
-                .Organizations
-                .FirstOrDefaultAsync(x => x.INN == req.Payload.INN || x.OGRN == req.Payload.OGRN);
-
         if (req.Payload.Id < 1)
         {
+            req.Payload.Id = 0;
             if (duple is not null)
             {
                 UserOrganizationModelDB? sq = await context
@@ -325,10 +323,11 @@ public partial class CommerceImplementService : ICommerceService
                                 Subject = "Новый сотрудник" }, false); })
                         ]);
 
-                    res.AddSuccess($"Вы добавлены к управлению компанией, но требуется подтверждение администратором");
+                    res.AddSuccess($"Вы добавлены как сотрудник компании, но требуется подтверждение администратором");
                 }
                 else
                     res.AddWarning($"Компания уже существует. Требуется подтверждение администратором");
+
                 return res;
             }
 
@@ -346,6 +345,7 @@ public partial class CommerceImplementService : ICommerceService
                 LastAtUpdatedUTC = DateTime.UtcNow,
                 UserPersonIdentityId = req.SenderActionUserId,
                 OrganizationId = req.Payload.Id,
+                UserStatus = UsersOrganizationsStatusesEnum.None,
             });
             await context.SaveChangesAsync();
             res.AddSuccess($"Компания создана");
@@ -363,61 +363,46 @@ public partial class CommerceImplementService : ICommerceService
 
             if (org_db.Name != req.Payload.Name)
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewName, req.Payload.Name));
-            else if (org_db.Name != org_db.NewName)
+            else if (!string.IsNullOrWhiteSpace(org_db.NewName))
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewName, ""));
 
             if (org_db.LegalAddress != req.Payload.LegalAddress)
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewLegalAddress, req.Payload.LegalAddress));
-            else if (org_db.LegalAddress != org_db.NewLegalAddress)
+            else if (!string.IsNullOrWhiteSpace(org_db.NewLegalAddress))
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewLegalAddress, ""));
 
             if (org_db.INN != req.Payload.INN)
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewINN, req.Payload.INN));
-            else if (org_db.INN != org_db.INN)
+            else if (!string.IsNullOrWhiteSpace(org_db.NewINN))
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewINN, ""));
 
             if (org_db.OGRN != req.Payload.OGRN)
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewOGRN, req.Payload.OGRN));
-            else if (org_db.OGRN != org_db.OGRN)
+            else if (!string.IsNullOrWhiteSpace(org_db.NewOGRN))
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewOGRN, ""));
 
             if (org_db.KPP != req.Payload.KPP)
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewKPP, req.Payload.KPP));
-            else if (org_db.KPP != org_db.KPP)
+            else if (!string.IsNullOrWhiteSpace(org_db.NewKPP))
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewKPP, ""));
 
-            await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.LastAtUpdatedUTC, lud));
-
             if (org_db.Email != req.Payload.Email)
-            {
-                await context
-                    .Organizations
-                    .Where(x => x.Id == org_db.Id)
-                    .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.LastAtUpdatedUTC, lud)
-                    .SetProperty(p => p.Email, req.Payload.Email));
                 res.AddSuccess("Email изменён");
-            }
             if (org_db.Phone != req.Payload.Phone)
-            {
-                await context
-                    .Organizations
-                    .Where(x => x.Id == org_db.Id)
-                    .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.LastAtUpdatedUTC, lud)
-                    .SetProperty(p => p.Phone, req.Payload.Phone));
                 res.AddSuccess("Phone изменён");
-            }
             if (org_db.IsDisabled != req.Payload.IsDisabled)
-            {
-                await context
-                    .Organizations
-                    .Where(x => x.Id == org_db.Id)
-                    .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled));
-
                 res.AddSuccess(req.Payload.IsDisabled ? "Организация успешно отключена" : "Организация успешно включена");
-            }
+
+            if (org_db.Email != req.Payload.Email || org_db.Phone != req.Payload.Phone || org_db.IsDisabled != req.Payload.IsDisabled)
+                await context
+                   .Organizations
+                   .Where(x => x.Id == org_db.Id)
+                   .ExecuteUpdateAsync(set => set
+                   .SetProperty(p => p.LastAtUpdatedUTC, lud)
+                   .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled)
+                   .SetProperty(p => p.Phone, req.Payload.Phone)
+                   .SetProperty(p => p.Email, req.Payload.Email));
+
         }
 
         return res;
@@ -522,5 +507,77 @@ public partial class CommerceImplementService : ICommerceService
                 Response = req.Payload.IncludeExternalData ? await extQ.ToListAsync() : await pq.ToListAsync()
             }
         };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> BankDetailsUpdate(TAuthRequestModel<BankDetailsModelDB> req)
+    {
+        TResponseModel<int> res = new() { Response = 0 };
+        (bool IsValid, List<System.ComponentModel.DataAnnotations.ValidationResult> ValidationResults) = GlobalTools.ValidateObject(req.Payload);
+        if (!IsValid)
+        {
+            res.Messages.InjectException(ValidationResults);
+            return res;
+        }
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        BankDetailsModelDB? duple;
+        UserInfoModel? actor = default;
+        await Task.WhenAll([
+            Task.Run(async () =>
+            {
+                TResponseModel<UserInfoModel[]> userFind = await identityRepo.GetUsersIdentity([req.SenderActionUserId]);
+                actor = userFind.Response?.Single();
+                }),
+            Task.Run(async () => { duple = await context.BanksDetails.Include(x => x.Organization).FirstOrDefaultAsync(x => x.Id != req.Payload.Id && x.BankBIC == req.Payload.BankBIC && x.CurrentAccount == req.Payload.CurrentAccount ); })
+            ]);
+
+        if (actor is null)
+        {
+            res.AddError("Отказано в доступе");
+            return res;
+        }
+
+        if (req.Payload.Id < 1)
+        {
+            req.Payload.Id = 0;
+            await context.AddAsync(req.Payload);
+            await context.SaveChangesAsync();
+            res.Response = req.Payload.Id;
+        }
+        else
+        {
+            res.Response = await context.BanksDetails
+                .Where(x => x.Id == req.Payload.Id)
+                .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Name, req.Payload.Name)
+                .SetProperty(p => p.CurrentAccount, req.Payload.CurrentAccount)
+                .SetProperty(p => p.CorrespondentAccount, req.Payload.CorrespondentAccount)
+                .SetProperty(p => p.BankName, req.Payload.BankName)
+                .SetProperty(p => p.BankBIC, req.Payload.BankBIC)
+                .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled));
+        }
+
+        return res;
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> BankDetailsDelete(TAuthRequestModel<int> req)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        BankDetailsModelDB? bankDb = default;
+        UserInfoModel? actor = default;
+        await Task.WhenAll([
+            Task.Run(async () =>
+            {
+                TResponseModel<UserInfoModel[]> userFind = await identityRepo.GetUsersIdentity([req.SenderActionUserId]);
+                actor = userFind.Response?.Single();
+                }),
+            Task.Run(async () => { bankDb = await context.BanksDetails.Include(x => x.Organization).FirstAsync(x => x.Id == req.Payload ); })
+            ]);
+
+        if (actor is null || bankDb is null)
+            return ResponseBaseModel.CreateError("Отказано в доступе");
+
+        return ResponseBaseModel.CreateInfo($"Удалено: {await context.BanksDetails.Where(x => x.Id == req.Payload).ExecuteDeleteAsync()}");
     }
 }

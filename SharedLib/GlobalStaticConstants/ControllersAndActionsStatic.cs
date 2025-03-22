@@ -30,14 +30,19 @@ public static partial class GlobalStaticConstants
         public const string USERS_CONTROLLER_NAME = "users";
 
         /// <summary>
+        /// Банк
+        /// </summary>
+        public const string BANK_CONTROLLER_NAME = "bank";
+
+        /// <summary>
+        /// Реквизиты
+        /// </summary>
+        public const string DETAILS_CONTROLLER_NAME = "details";
+
+        /// <summary>
         /// Confirmation
         /// </summary>
         public const string CONFIRMATION_CONTROLLER_NAME = "confirmation";
-
-        /// <summary>
-        /// Details
-        /// </summary>
-        public const string DETAILS_CONTROLLER_NAME = "details";
 
         /// <summary>
         /// Lock
@@ -63,6 +68,11 @@ public static partial class GlobalStaticConstants
         /// Office
         /// </summary>
         public const string OFFICE_CONTROLLER_NAME = "office";
+
+        /// <summary>
+        /// Offices
+        /// </summary>
+        public const string OFFICES_CONTROLLER_NAME = "offices";
 
         /// <summary>
         /// Articles
