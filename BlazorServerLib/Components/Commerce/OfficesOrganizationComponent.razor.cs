@@ -45,7 +45,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         _expanded = !_expanded;
     }
 
-    async Task AddAddress()
+    async Task AddOffice()
     {
         if (!CanCreate)
             return;
@@ -65,8 +65,8 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         if (!res.Success())
             return;
 
-        Organization.Addresses ??= [];
-        Organization.Addresses.Add(new()
+        Organization.Offices ??= [];
+        Organization.Offices.Add(new()
         {
             Address = addingAddress!,
             Name = addingName!,
@@ -88,9 +88,9 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
     string? _last_request;
     async Task UpdateCacheRubrics()
     {
-        Organization.Addresses ??= [];
+        Organization.Offices ??= [];
         int[] added_rubrics = [..Organization
-            .Addresses
+            .Offices
             .Where(x => !RubriciesCached.ContainsKey(x.ParentId))
             .Select(x => x.ParentId).Distinct()];
 

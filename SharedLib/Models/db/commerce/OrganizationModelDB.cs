@@ -88,7 +88,7 @@ public class OrganizationModelDB : OrganizationLegalModel
     /// <summary>
     /// Addresses
     /// </summary>
-    public List<OfficeOrganizationModelDB>? Addresses { get; set; }
+    public List<OfficeOrganizationModelDB>? Offices { get; set; }
 
     /// <inheritdoc/>
     public override bool Equals(object? obj)

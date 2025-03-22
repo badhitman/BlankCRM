@@ -9,18 +9,18 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// AddressOrganizationUpdateReceive
+/// OfficeOrganizationUpdateReceive
 /// </summary>
-public class AddressOrganizationUpdateReceive(ICommerceService commerceRepo, ILogger<AddressOrganizationUpdateReceive> loggerRepo) : IResponseReceive<AddressOrganizationBaseModel?, TResponseModel<int>?>
+public class OfficeOrganizationUpdateReceive(ICommerceService commerceRepo, ILogger<OfficeOrganizationUpdateReceive> loggerRepo) : IResponseReceive<AddressOrganizationBaseModel?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.AddressOrganizationUpdateCommerceReceive;
+    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OfficeOrganizationUpdateCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleAction(AddressOrganizationBaseModel? req)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.AddressOrganizationUpdate(req);
+        return await commerceRepo.OfficeOrganizationUpdate(req);
     }
 }

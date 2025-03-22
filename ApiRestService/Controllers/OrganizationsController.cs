@@ -46,8 +46,8 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// Роли: <see cref="ExpressApiRolesEnum.OrganizationsReadCommerce"/>, <see cref="ExpressApiRolesEnum.OrganizationsWriteCommerce"/>
     /// </remarks>
     [HttpPut($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.ADDRESSES_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.READ_ACTION_NAME}")]
-    public async Task<TResponseModel<OfficeOrganizationModelDB[]>> AddressesOrganizationsRead(int[] ids)
-        => await commRepo.AddressesOrganizationsRead(ids);
+    public async Task<TResponseModel<OfficeOrganizationModelDB[]>> OfficesOrganizationsRead(int[] ids)
+        => await commRepo.OfficesOrganizationsRead(ids);
 
 
     /// <summary>
@@ -87,12 +87,12 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// <remarks>
     /// Роль: <see cref="ExpressApiRolesEnum.OrganizationsWriteCommerce"/>
     /// </remarks>
-    [HttpPost($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.ADDRESS_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.UPDATE_ACTION_NAME}"), LoggerLog]
+    [HttpPost($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.OFFICE_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.UPDATE_ACTION_NAME}"), LoggerLog]
 #if DEBUG
     [AllowAnonymous]
 #else
 [Authorize(Roles = nameof(ExpressApiRolesEnum.OrganizationsWriteCommerce))]
 #endif
-    public async Task<TResponseModel<int>> AddressOrganizationUpdate(AddressOrganizationBaseModel req)
+    public async Task<TResponseModel<int>> OfficeOrganizationUpdate(AddressOrganizationBaseModel req)
         => await commRepo.OfficeOrganizationUpdate(req);
 }

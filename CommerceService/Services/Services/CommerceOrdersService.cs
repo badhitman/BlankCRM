@@ -43,7 +43,7 @@ public partial class CommerceImplementService(
             res.AddError("Сумма платежа должна быть больше нуля");
             return res;
         }
-        if (req.Payload.OrderDocumentId < 1)
+        if (req.Payload.OrderId < 1)
         {
             res.AddError("Не указан документ-заказ");
             return res;
@@ -56,7 +56,7 @@ public partial class CommerceImplementService(
         if (!string.IsNullOrWhiteSpace(req.Payload.ExternalDocumentId))
         {
             payment_db = await context
-               .PaymentsDocuments
+               .Payments
                .FirstOrDefaultAsync(x => x.ExternalDocumentId == req.Payload.ExternalDocumentId);
 
             req.Payload.Id = req.Payload.Id > 0 ? req.Payload.Id : payment_db?.Id ?? 0;
@@ -68,7 +68,7 @@ public partial class CommerceImplementService(
             {
                 Name = req.Payload.Name,
                 Amount = req.Payload.Amount,
-                OrderDocumentId = req.Payload.OrderDocumentId,
+                OrderId = req.Payload.OrderId,
                 ExternalDocumentId = req.Payload.ExternalDocumentId,
             };
 
@@ -81,19 +81,19 @@ public partial class CommerceImplementService(
             return res;
         }
 
-        res.Response = await context.PaymentsDocuments
+        res.Response = await context.Payments
             .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set
             .SetProperty(p => p.Name, req.Payload.Name)
             .SetProperty(p => p.Amount, req.Payload.Amount));
 
-        await context.OrdersDocuments
-               .Where(x => x.Id == req.Payload.OrderDocumentId)
+        await context.Orders
+               .Where(x => x.Id == req.Payload.OrderId)
                .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastAtUpdatedUTC, dtu));
 
 
         if (!string.IsNullOrWhiteSpace(req.Payload.ExternalDocumentId) && payment_db?.ExternalDocumentId != req.Payload.ExternalDocumentId)
-            res.Response = await context.PaymentsDocuments
+            res.Response = await context.Payments
             .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set.SetProperty(p => p.ExternalDocumentId, req.Payload.ExternalDocumentId));
 
@@ -106,11 +106,11 @@ public partial class CommerceImplementService(
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
         DateTime dtu = DateTime.UtcNow;
-        await context.OrdersDocuments
-                .Where(x => context.PaymentsDocuments.Any(y => y.Id == req.Payload && y.OrderDocumentId == x.Id))
+        await context.Orders
+                .Where(x => context.Payments.Any(y => y.Id == req.Payload && y.OrderId == x.Id))
                 .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastAtUpdatedUTC, dtu));
 
-        return ResponseBaseModel.CreateInfo($"Изменений бд: {await context.PaymentsDocuments.Where(x => x.Id == req.Payload).ExecuteDeleteAsync()}");
+        return ResponseBaseModel.CreateInfo($"Изменений бд: {await context.Payments.Where(x => x.Id == req.Payload).ExecuteDeleteAsync()}");
     }
     #endregion
 
@@ -309,8 +309,8 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
         int lc = await context
-            .OrdersDocuments
-            .Where(x => context.RowsOfOrdersDocuments.Any(y => y.OrderDocumentId == x.Id && y.OfferId == req.Payload))
+            .Orders
+            .Where(x => context.RowsOrders.Any(y => y.OrderId == x.Id && y.OfferId == req.Payload))
             .CountAsync();
 
         string msg;
@@ -456,15 +456,15 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
         IQueryable<OrderDocumentModelDB> q = context
-            .OrdersDocuments
+            .Orders
             .Where(x => req.IssueIds.Any(y => y == x.HelpdeskId))
             .AsQueryable();
 
         Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<OrderDocumentModelDB, NomenclatureModelDB?> inc_query = q
             .Include(x => x.Organization)
-            .Include(x => x.AddressesTabs!)
-            .ThenInclude(x => x.AddressOrganization)
-            .Include(x => x.AddressesTabs!)
+            .Include(x => x.OfficesTabs!)
+            .ThenInclude(x => x.Office)
+            .Include(x => x.OfficesTabs!)
             .ThenInclude(x => x.Rows!)
             .ThenInclude(x => x.Offer!)
             .ThenInclude(x => x.Nomenclature);
@@ -485,13 +485,13 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
         IQueryable<OrderDocumentModelDB> q = context
-            .OrdersDocuments
+            .Orders
             .Where(x => req.Payload.Any(y => x.Id == y));
 
         res.Response = await q
-            .Include(x => x.AddressesTabs!)
-            .ThenInclude(x => x.AddressOrganization)
-            .Include(x => x.AddressesTabs!)
+            .Include(x => x.OfficesTabs!)
+            .ThenInclude(x => x.Office)
+            .Include(x => x.OfficesTabs!)
             .ThenInclude(x => x.Rows!)
             .ThenInclude(x => x.Offer!)
             .ThenInclude(x => x.Nomenclature)
@@ -509,7 +509,7 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
         IQueryable<OrderDocumentModelDB> q = context
-            .OrdersDocuments
+            .Orders
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.Payload.SenderActionUserId) && !req.Payload.SenderActionUserId.Equals(GlobalStaticConstants.Roles.System))
@@ -519,13 +519,13 @@ public partial class CommerceImplementService(
             q = q.Where(x => x.OrganizationId == req.Payload.Payload.OrganizationFilter);
 
         if (req.Payload.Payload.AddressForOrganizationFilter.HasValue && req.Payload.Payload.AddressForOrganizationFilter.Value != 0)
-            q = q.Where(x => context.TabsAddressesForOrders.Any(y => y.OrderDocumentId == x.Id && y.AddressOrganizationId == req.Payload.Payload.AddressForOrganizationFilter));
+            q = q.Where(x => context.OfficesOrders.Any(y => y.OrderId == x.Id && y.OfficeId == req.Payload.Payload.AddressForOrganizationFilter));
 
         if (req.Payload.Payload.OfferFilter is not null && req.Payload.Payload.OfferFilter.Length != 0)
-            q = q.Where(x => context.RowsOfOrdersDocuments.Any(y => y.OrderDocumentId == x.Id && req.Payload.Payload.OfferFilter.Any(i => i == y.OfferId)));
+            q = q.Where(x => context.RowsOrders.Any(y => y.OrderId == x.Id && req.Payload.Payload.OfferFilter.Any(i => i == y.OfferId)));
 
         if (req.Payload.Payload.NomenclatureFilter is not null && req.Payload.Payload.NomenclatureFilter.Length != 0)
-            q = q.Where(x => context.RowsOfOrdersDocuments.Any(y => y.OrderDocumentId == x.Id && req.Payload.Payload.NomenclatureFilter.Any(i => i == y.NomenclatureId)));
+            q = q.Where(x => context.RowsOrders.Any(y => y.OrderId == x.Id && req.Payload.Payload.NomenclatureFilter.Any(i => i == y.NomenclatureId)));
 
         if (req.Payload.Payload.AfterDateUpdate is not null)
             q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.Payload.AfterDateUpdate || (x.LastAtUpdatedUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.Payload.AfterDateUpdate));
@@ -543,9 +543,9 @@ public partial class CommerceImplementService(
 
         Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<OrderDocumentModelDB, NomenclatureModelDB?> inc_query = pq
             .Include(x => x.Organization)
-            .Include(x => x.AddressesTabs!)
-            .ThenInclude(x => x.AddressOrganization)
-            .Include(x => x.AddressesTabs!)
+            .Include(x => x.OfficesTabs!)
+            .ThenInclude(x => x.Office)
+            .Include(x => x.OfficesTabs!)
             .ThenInclude(x => x.Rows!)
             .ThenInclude(x => x.Offer!)
             .ThenInclude(x => x.Nomenclature);
@@ -572,9 +572,9 @@ public partial class CommerceImplementService(
         }
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
-        IQueryable<OrderRowsQueryRecord> queryDocumentDb = from r in context.RowsOfOrdersDocuments
-                                                           join d in context.OrdersDocuments on r.OrderDocumentId equals d.Id
-                                                           join t in context.TabsAddressesForOrders.Where(x => x.Id == req.AddressForOrderTabId) on r.AddressForOrderTabId equals t.Id
+        IQueryable<OrderRowsQueryRecord> queryDocumentDb = from r in context.RowsOrders
+                                                           join d in context.Orders on r.OrderId equals d.Id
+                                                           join t in context.OfficesOrders.Where(x => x.Id == req.OfficeOrderTabId) on r.OfficeOrderTabId equals t.Id
                                                            join o in context.Offers on r.OfferId equals o.Id
                                                            join g in context.Nomenclatures on r.NomenclatureId equals g.Id
                                                            select new OrderRowsQueryRecord(d, t, r, o, g);
@@ -589,8 +589,8 @@ public partial class CommerceImplementService(
             })
             .FirstAsync();
 
-        bool conflict = await context.RowsOfOrdersDocuments
-            .AnyAsync(x => x.Id != req.Id && x.AddressForOrderTabId == req.AddressForOrderTabId && x.OfferId == req.OfferId);
+        bool conflict = await context.RowsOrders
+            .AnyAsync(x => x.Id != req.Id && x.OfficeOrderTabId == req.OfficeOrderTabId && x.OfferId == req.OfferId);
 
         if (commDataDb.WarehouseId == 0)
             res.AddError($"В документе не указан склад: обновление невозможно");
@@ -602,7 +602,7 @@ public partial class CommerceImplementService(
             return res;
 
         RowOfOrderDocumentModelDB? rowDb = req.Id > 0
-           ? await context.RowsOfOrdersDocuments.FirstAsync(x => x.Id == req.Id)
+           ? await context.RowsOrders.FirstAsync(x => x.Id == req.Id)
            : null;
 
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
@@ -675,8 +675,8 @@ public partial class CommerceImplementService(
         }
 
         DateTime dtu = DateTime.UtcNow;
-        await context.OrdersDocuments
-                .Where(x => x.Id == req.OrderDocumentId)
+        await context.Orders
+                .Where(x => x.Id == req.OrderId)
                 .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.LastAtUpdatedUTC, dtu));
@@ -736,7 +736,7 @@ public partial class CommerceImplementService(
                 }
             }
 
-            res.Response = await context.RowsOfOrdersDocuments
+            res.Response = await context.RowsOrders
               .Where(x => x.Id == req.Id)
               .ExecuteUpdateAsync(set => set
               .SetProperty(p => p.Quantity, req.Quantity)
@@ -770,10 +770,10 @@ public partial class CommerceImplementService(
         }
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
-        IQueryable<RowOfOrderDocumentModelDB> mainQuery = context.RowsOfOrdersDocuments.Where(x => req.Any(y => y == x.Id));
+        IQueryable<RowOfOrderDocumentModelDB> mainQuery = context.RowsOrders.Where(x => req.Any(y => y == x.Id));
         IQueryable<RowOrderDocumentRecord> q = from r in mainQuery
-                                               join d in context.OrdersDocuments on r.OrderDocumentId equals d.Id
-                                               join t in context.TabsAddressesForOrders on r.AddressForOrderTabId equals t.Id
+                                               join d in context.Orders on r.OrderId equals d.Id
+                                               join t in context.OfficesOrders on r.OfficeOrderTabId equals t.Id
                                                select new RowOrderDocumentRecord(
                                                    d.Id,
                                                    d.StatusDocument,
@@ -825,7 +825,7 @@ public partial class CommerceImplementService(
            .ToListAsync();
 
         int[] documents_ids = [.. _allOffersOfDocuments.Select(x => x.DocumentId).Distinct()];
-        await context.OrdersDocuments.Where(x => documents_ids.Any(y => y == x.Id)).ExecuteUpdateAsync(set => set.SetProperty(p => p.Version, Guid.NewGuid()).SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow));
+        await context.Orders.Where(x => documents_ids.Any(y => y == x.Id)).ExecuteUpdateAsync(set => set.SetProperty(p => p.Version, Guid.NewGuid()).SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow));
 
         foreach (var rowEl in _allOffersOfDocuments.Where(x => x.DocumentStatus != StatusesDocumentsEnum.Canceled))
         {
@@ -853,7 +853,7 @@ public partial class CommerceImplementService(
             context.RemoveRange(offersLocked);
 
         await context.SaveChangesAsync();
-        res.Response = await context.RowsOfOrdersDocuments.Where(x => req.Any(y => y == x.Id)).ExecuteDeleteAsync() != 0;
+        res.Response = await context.RowsOrders.Where(x => req.Any(y => y == x.Id)).ExecuteDeleteAsync() != 0;
 
         await transaction.CommitAsync();
         res.AddSuccess("Команда удаления выполнена");
@@ -884,7 +884,7 @@ public partial class CommerceImplementService(
         DateTime dtu = DateTime.UtcNow;
         req.LastAtUpdatedUTC = dtu;
 
-        OfferModelDB?[] allOffersReq = req.AddressesTabs!
+        OfferModelDB?[] allOffersReq = req.OfficesTabs!
             .SelectMany(x => x.Rows!)
             .Select(x => x.Offer)
             .DistinctBy(x => x!.Id)
@@ -896,28 +896,28 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
         if (req.Id < 1)
         {
-            if (req.AddressesTabs is null || req.AddressesTabs.Count == 0)
+            if (req.OfficesTabs is null || req.OfficesTabs.Count == 0)
             {
                 res.AddError($"В заказе отсутствуют адреса доставки");
                 return res;
             }
 
-            req.AddressesTabs.ForEach(x =>
+            req.OfficesTabs.ForEach(x =>
             {
                 if (x.Rows is null || x.Rows.Count == 0)
-                    res.AddError($"Для адреса доставки '{x.AddressOrganization?.Name}' не указана номенклатура");
+                    res.AddError($"Для адреса доставки '{x.Office?.Name}' не указана номенклатура");
                 else if (x.Rows.Any(x => x.Quantity < 1))
-                    res.AddError($"В адресе доставки '{x.AddressOrganization?.Name}' есть номенклатура без количества");
+                    res.AddError($"В адресе доставки '{x.Office?.Name}' есть номенклатура без количества");
                 else if (x.Rows.Count != x.Rows.GroupBy(x => x.OfferId).Count())
-                    res.AddError($"В адресе доставки '{x.AddressOrganization?.Name}' ошибка в таблице товаров: оффер встречается более одного раза");
+                    res.AddError($"В адресе доставки '{x.Office?.Name}' ошибка в таблице товаров: оффер встречается более одного раза");
 
                 if (x.WarehouseId < 1)
-                    res.AddError($"В адресе доставки '{x.AddressOrganization?.Name}' не корректный склад #{x.WarehouseId}");
+                    res.AddError($"В адресе доставки '{x.Office?.Name}' не корректный склад #{x.WarehouseId}");
             });
             if (!res.Success())
                 return res;
 
-            int[] rubricsIds = [.. req.AddressesTabs.Select(x => x.WarehouseId).Distinct()];
+            int[] rubricsIds = [.. req.OfficesTabs.Select(x => x.WarehouseId).Distinct()];
             TResponseModel<List<RubricIssueHelpdeskModelDB>> getRubrics = await HelpdeskRepo.RubricsGet(rubricsIds);
             if (!getRubrics.Success())
             {
@@ -937,7 +937,7 @@ public partial class CommerceImplementService(
             req.Version = Guid.NewGuid();
             req.StatusDocument = StatusesDocumentsEnum.Created;
 
-            var _offersOfDocument = req.AddressesTabs
+            var _offersOfDocument = req.OfficesTabs
                            .SelectMany(x => x.Rows!.Select(y => new { x.WarehouseId, Row = y }))
                            .ToArray();
 
@@ -991,7 +991,7 @@ public partial class CommerceImplementService(
             await Task.WhenAll(tasks);
             tasks.Clear();
 
-            req.AddressesTabs.ForEach(tabAddr =>
+            req.OfficesTabs.ForEach(tabAddr =>
             {
                 tabAddr.Rows!.ForEach(rowDoc =>
                 {
@@ -1018,7 +1018,7 @@ public partial class CommerceImplementService(
                 await context.SaveChangesAsync();
                 res.Response = req.Id;
 
-                foreach (TabAddressForOrderModelDb tabAddr in req.AddressesTabs)
+                foreach (TabOfficeForOrderModelDb tabAddr in req.OfficesTabs)
                 {
                     foreach (RowOfOrderDocumentModelDB rowDoc in tabAddr.Rows!)
                     {
@@ -1108,7 +1108,7 @@ public partial class CommerceImplementService(
             }
         }
 
-        OrderDocumentModelDB order_document = await context.OrdersDocuments.FirstAsync(x => x.Id == req.Id);
+        OrderDocumentModelDB order_document = await context.Orders.FirstAsync(x => x.Id == req.Id);
         if (order_document.Version != req.Version)
         {
             msg = "Документ был кем-то изменён пока был открытым";
@@ -1123,7 +1123,7 @@ public partial class CommerceImplementService(
             return res;
         }
 
-        res.Response = await context.OrdersDocuments
+        res.Response = await context.Orders
             .Where(x => x.Id == req.Id)
             .ExecuteUpdateAsync(set => set
             .SetProperty(p => p.Name, req.Name)
@@ -1141,9 +1141,9 @@ public partial class CommerceImplementService(
         string msg;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
         OrderDocumentModelDB[] ordersDb = await context
-            .OrdersDocuments
+            .Orders
             .Where(x => x.HelpdeskId == req.Payload.DocumentId && x.StatusDocument != req.Payload.Step)
-            .Include(x => x.AddressesTabs!)
+            .Include(x => x.OfficesTabs!)
             .ThenInclude(x => x.Rows)
             .ToArrayAsync();
 
@@ -1157,14 +1157,14 @@ public partial class CommerceImplementService(
             return res;
         }
 
-        List<WarehouseRowDocumentRecord> _allOffersOfDocuments = ordersDb.SelectMany(x => x.AddressesTabs!)
+        List<WarehouseRowDocumentRecord> _allOffersOfDocuments = ordersDb.SelectMany(x => x.OfficesTabs!)
                            .SelectMany(x => x.Rows!.Select(y => new WarehouseRowDocumentRecord(x.WarehouseId, y)))
                            .ToList();
 
         if (_allOffersOfDocuments.Count == 0)
         {
             res.Response = await context
-                    .OrdersDocuments
+                    .Orders
                     .Where(x => x.HelpdeskId == req.Payload.DocumentId)
                     .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow)) != 0;
 
@@ -1250,7 +1250,7 @@ public partial class CommerceImplementService(
 
         await context.SaveChangesAsync();
         res.Response = await context
-                            .OrdersDocuments
+                            .Orders
                             .Where(x => x.HelpdeskId == req.Payload.DocumentId)
                             .ExecuteUpdateAsync(set => set
                             .SetProperty(p => p.StatusDocument, req.Payload.Step)
@@ -1336,10 +1336,10 @@ public partial class CommerceImplementService(
             div wrapDiv = new();
             wrapDiv.AddDomNode(new p(docName));
 
-            orderDb.AddressesTabs!.ForEach(aNode =>
+            orderDb.OfficesTabs!.ForEach(aNode =>
             {
                 div addressDiv = new();
-                addressDiv.AddDomNode(new p($"Адрес: `{aNode.AddressOrganization?.Name}`"));
+                addressDiv.AddDomNode(new p($"Адрес: `{aNode.Office?.Name}`"));
 
                 table my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
                 my_table.THead.AddColumn("Наименование").AddColumn("Цена").AddColumn("Кол-во").AddColumn("Сумма");
@@ -1443,10 +1443,10 @@ public partial class CommerceImplementService(
 
         Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? workbookPart.Workbook.AppendChild(new Sheets());
 
-        foreach (var table in orderDb.AddressesTabs!)
+        foreach (var table in orderDb.OfficesTabs!)
         {
             WorksheetPart wSheetPart = wBookPart.AddNewPart<WorksheetPart>();
-            Sheet sheet = new() { Id = workbookPart.GetIdOfPart(wSheetPart), SheetId = sheetId, Name = table.AddressOrganization?.Name };
+            Sheet sheet = new() { Id = workbookPart.GetIdOfPart(wSheetPart), SheetId = sheetId, Name = table.Office?.Name };
             sheets.Append(sheet);
 
             SheetData sheetData = new();
@@ -1469,7 +1469,7 @@ public partial class CommerceImplementService(
                 wSheetPart.Worksheet.InsertAt(lstColumns, 0);
 
             Row topRow = new() { RowIndex = 2 };
-            InsertExcelCell(topRow, 1, $"Адрес доставки: {table.AddressOrganization?.Address}", CellValues.String, 0);
+            InsertExcelCell(topRow, 1, $"Адрес доставки: {table.Office?.Address}", CellValues.String, 0);
             sheetData!.Append(topRow);
 
             Row headerRow = new() { RowIndex = 4 };

@@ -198,7 +198,7 @@ public partial class CommerceImplementService : ICommerceService
         }
         req = [.. req.Distinct()];
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
-        IQueryable<RowOfWarehouseDocumentModelDB> mainQuery = context.RowsOfWarehouseDocuments.Where(x => req.Any(y => y == x.Id));
+        IQueryable<RowOfWarehouseDocumentModelDB> mainQuery = context.RowsWarehouses.Where(x => req.Any(y => y == x.Id));
         var q = from r in mainQuery
                 join d in context.WarehouseDocuments on r.WarehouseDocumentId equals d.Id
                 select new
@@ -274,7 +274,7 @@ public partial class CommerceImplementService : ICommerceService
         if (offersLocked.Length != 0)
             context.RemoveRange(offersLocked);
 
-        res.Response = await context.RowsOfWarehouseDocuments.Where(x => req.Any(y => y == x.Id)).ExecuteDeleteAsync() != 0;
+        res.Response = await context.RowsWarehouses.Where(x => req.Any(y => y == x.Id)).ExecuteDeleteAsync() != 0;
         await context.SaveChangesAsync();
         await transaction.CommitAsync();
 
@@ -309,7 +309,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        if (await context.RowsOfWarehouseDocuments.AnyAsync(x => x.Id != req.Id && x.OfferId == req.OfferId && x.WarehouseDocumentId == req.WarehouseDocumentId))
+        if (await context.RowsWarehouses.AnyAsync(x => x.Id != req.Id && x.OfferId == req.OfferId && x.WarehouseDocumentId == req.WarehouseDocumentId))
         {
             msg = "В документе уже существует этот офер. Установите ему требуемое количество";
             loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
@@ -321,7 +321,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
 
         RowOfWarehouseDocumentModelDB? rowDb = req.Id > 0
-            ? await context.RowsOfWarehouseDocuments.FirstAsync(x => x.Id == req.Id)
+            ? await context.RowsWarehouses.FirstAsync(x => x.Id == req.Id)
             : null;
 
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
@@ -425,7 +425,7 @@ public partial class CommerceImplementService : ICommerceService
                 }
             }
 
-            res.Response = await context.RowsOfWarehouseDocuments
+            res.Response = await context.RowsWarehouses
                        .Where(x => x.Id == req.Id)
                        .ExecuteUpdateAsync(set => set
                        .SetProperty(p => p.Quantity, req.Quantity).SetProperty(p => p.Version, Guid.NewGuid()));
@@ -477,10 +477,10 @@ public partial class CommerceImplementService : ICommerceService
             q = q.Where(x => x.NormalizedUpperName.Contains(req.Payload.SearchQuery.ToUpper()));
 
         if (req.Payload.OfferFilter is not null && req.Payload.OfferFilter.Length != 0)
-            q = q.Where(x => context.RowsOfWarehouseDocuments.Any(y => y.WarehouseDocumentId == x.Id && req.Payload.OfferFilter.Any(i => i == y.OfferId)));
+            q = q.Where(x => context.RowsWarehouses.Any(y => y.WarehouseDocumentId == x.Id && req.Payload.OfferFilter.Any(i => i == y.OfferId)));
 
         if (req.Payload.NomenclatureFilter is not null && req.Payload.NomenclatureFilter.Length != 0)
-            q = q.Where(x => context.RowsOfWarehouseDocuments.Any(y => y.WarehouseDocumentId == x.Id && req.Payload.NomenclatureFilter.Any(i => i == y.NomenclatureId)));
+            q = q.Where(x => context.RowsWarehouses.Any(y => y.WarehouseDocumentId == x.Id && req.Payload.NomenclatureFilter.Any(i => i == y.NomenclatureId)));
 
         if (req.Payload.AfterDateUpdate is not null)
             q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.AfterDateUpdate || (x.LastAtUpdatedUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.AfterDateUpdate));

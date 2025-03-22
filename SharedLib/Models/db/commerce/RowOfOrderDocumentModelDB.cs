@@ -10,28 +10,28 @@ namespace SharedLib;
 /// <summary>
 /// Строка заказа (документа)
 /// </summary>
-[Index(nameof(AddressForOrderTabId), nameof(OfferId), IsUnique = true)]
-[Index(nameof(AddressForOrderTabId))]
+[Index(nameof(OfficeOrderTabId), nameof(OfferId), IsUnique = true)]
+[Index(nameof(OfficeOrderTabId))]
 public class RowOfOrderDocumentModelDB : RowOfMiddleDocumentModel
 {
     /// <summary>
-    /// Адрес доставки (из документа заказа)
+    /// офис доставки (из документа заказа)
     /// </summary>
-    public TabAddressForOrderModelDb? AddressForOrderTab { get; set; }
+    public TabOfficeForOrderModelDb? OfficeOrderTab { get; set; }
     /// <summary>
     /// AddressForOrderTab
     /// </summary>
-    public int AddressForOrderTabId { get; set; }
+    public int OfficeOrderTabId { get; set; }
 
     /// <summary>
     /// Заказ (документ)
     /// </summary>
-    public OrderDocumentModelDB? OrderDocument { get; set; }
+    public OrderDocumentModelDB? Order { get; set; }
 
     /// <summary>
     /// Заказ (документ)
     /// </summary>
-    public int? OrderDocumentId { get; set; }
+    public int? OrderId { get; set; }
 
     /// <summary>
     /// Сумма

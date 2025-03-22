@@ -57,7 +57,7 @@ public partial interface ICommerceTransmission
     /// <summary>
     /// Прочитать данные адресов организаций по их идентификаторам
     /// </summary>
-    public Task<TResponseModel<OfficeOrganizationModelDB[]>> AddressesOrganizationsRead(int[] ids);
+    public Task<TResponseModel<OfficeOrganizationModelDB[]>> OfficesOrganizationsRead(int[] ids);
 
     /// <summary>
     /// Удалить платёжный документ

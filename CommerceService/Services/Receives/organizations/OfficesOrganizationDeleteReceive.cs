@@ -9,17 +9,17 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// AddressOrganizationDeleteReceive
+/// OfficesOrganizationDeleteReceive
 /// </summary>
-public class AddressOrganizationDeleteReceive(ICommerceService commerceRepo, ILogger<AddressOrganizationDeleteReceive> loggerRepo) : IResponseReceive<int, ResponseBaseModel?>
+public class OfficesOrganizationDeleteReceive(ICommerceService commerceRepo, ILogger<OfficesOrganizationDeleteReceive> loggerRepo) : IResponseReceive<int, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.AddressOrganizationDeleteCommerceReceive;
+    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OfficeOrganizationDeleteCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleAction(int req)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.AddressOrganizationDelete(req);
+        return await commerceRepo.OfficeOrganizationDelete(req);
     }
 }

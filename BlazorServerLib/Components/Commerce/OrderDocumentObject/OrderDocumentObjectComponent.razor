@@ -2,17 +2,17 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-@if (IsBusyProgress || Document.AddressesTabs is null)
+@if (IsBusyProgress || Document.OfficesTabs is null)
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
 }
 else
 {
-    foreach (TabAddressForOrderModelDb at in Document.AddressesTabs)
+    foreach (TabOfficeForOrderModelDb at in Document.OfficesTabs)
     {
         <div class="card mt-3">
             <div class="card-header">
-                @(at.AddressOrganization!.Name)
+                @(at.Office!.Name)
             </div>
             <div class="card-body">
                 <h5 class="card-title">Склад: @(currentWarehouses.FirstOrDefault(x => x.Id == at.WarehouseId)?.Name)</h5>

@@ -44,7 +44,7 @@
                     </MudStack>
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton Disabled="(IsBusyProgress || !CanCreate)" OnClick="AddAddress" Variant="Variant.Text" Color="Color.Success">Создать</MudButton>
+                    <MudButton Disabled="(IsBusyProgress || !CanCreate)" OnClick="AddOffice" Variant="Variant.Text" Color="Color.Success">Создать</MudButton>
                     <MudButton Disabled="IsBusyProgress" OnClick="ToggleMode" Variant="Variant.Text" Color="Color.Primary">Отмена</MudButton>
                 </MudCardActions>
             </MudCard>
@@ -52,7 +52,7 @@
     </MudStack>
 </MudPaper>
 
-@if (Organization.Addresses is null || Organization.Addresses.Count == 0)
+@if (Organization.Offices is null || Organization.Offices.Count == 0)
 {
     <figure class="text-center">
         <blockquote class="blockquote">
@@ -75,7 +75,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (OfficeOrganizationModelDB ad in Organization.Addresses)
+            @foreach (OfficeOrganizationModelDB ad in Organization.Offices)
             {
                 <tr @key="@($"{ad.Id}")">
                     <th scope="row"><b>@GetCity(ad)</b></th>

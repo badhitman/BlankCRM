@@ -11,7 +11,7 @@ namespace SharedLib;
 /// Адрес организации в заказе
 /// </summary>
 [Index(nameof(WarehouseId))]
-public class TabAddressForOrderModelDb
+public class TabOfficeForOrderModelDb
 {
     /// <summary>
     /// Идентификатор/Key
@@ -22,22 +22,22 @@ public class TabAddressForOrderModelDb
     /// <summary>
     /// OrderDocument
     /// </summary>
-    public OrderDocumentModelDB? OrderDocument { get; set; }
+    public OrderDocumentModelDB? Order { get; set; }
 
     /// <summary>
     /// OrderDocument
     /// </summary>
-    public int OrderDocumentId { get; set; }
+    public int OrderId { get; set; }
 
     /// <summary>
-    /// AddressOrganization
+    /// OfficeOrganization
     /// </summary>
-    public OfficeOrganizationModelDB? AddressOrganization { get; set; }
+    public OfficeOrganizationModelDB? Office { get; set; }
 
     /// <summary>
-    /// AddressOrganization
+    /// OfficeOrganization
     /// </summary>
-    public int AddressOrganizationId { get; set; }
+    public int OfficeId { get; set; }
 
     /// <summary>
     /// Склад

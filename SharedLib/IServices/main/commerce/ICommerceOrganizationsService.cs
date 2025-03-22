@@ -57,12 +57,12 @@ public partial interface ICommerceService
     /// <summary>
     /// AddressOrganizationUpdate
     /// </summary>
-    public Task<TResponseModel<int>> AddressOrganizationUpdate(AddressOrganizationBaseModel req);
+    public Task<TResponseModel<int>> OfficeOrganizationUpdate(AddressOrganizationBaseModel req);
 
     /// <summary>
     /// AddressOrganizationDelete
     /// </summary>
-    public Task<ResponseBaseModel> AddressOrganizationDelete(int address_id);
+    public Task<ResponseBaseModel> OfficeOrganizationDelete(int address_id);
 
     /// <summary>
     /// AddressesOrganizationsRead

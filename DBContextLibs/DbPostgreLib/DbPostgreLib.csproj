@@ -17,6 +17,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Migrations\Commerce\" />
 	  <Folder Include="Migrations\Kladr\" />
 	</ItemGroup>
 

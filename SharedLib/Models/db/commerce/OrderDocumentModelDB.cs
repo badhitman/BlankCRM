@@ -12,7 +12,7 @@ public class OrderDocumentModelDB : OrderDocumentBaseModelDB
     /// <summary>
     /// Адреса доставки
     /// </summary>
-    public List<TabAddressForOrderModelDb>? AddressesTabs { get; set; }
+    public List<TabOfficeForOrderModelDb>? OfficesTabs { get; set; }
 
     /// <summary>
     /// Подготовить объект заказа для записи в БД
@@ -20,14 +20,14 @@ public class OrderDocumentModelDB : OrderDocumentBaseModelDB
     public void PrepareForSave()
     {
         Organization = null;
-        AddressesTabs?.ForEach(x =>
+        OfficesTabs?.ForEach(x =>
         {
-            x.AddressOrganization = null;
+            x.Office = null;
             x.Rows?.ForEach(y =>
             {
                 y.Id = 0;
                 y.Amount = y.Quantity * y.Offer!.Price;
-                y.OrderDocument = this;
+                y.Order = this;
                 y.Nomenclature = null;
                 y.Offer = null;
                 y.Version = Guid.NewGuid();
@@ -40,10 +40,10 @@ public class OrderDocumentModelDB : OrderDocumentBaseModelDB
     /// </summary>
     public decimal TotalSumForRows()
     {
-        if (AddressesTabs is null || AddressesTabs.Count == 0 || AddressesTabs.Any(x => x.Rows is null) || AddressesTabs.Any(x => x.Rows is null || x.Rows.Any(z => z.Offer is null)))
+        if (OfficesTabs is null || OfficesTabs.Count == 0 || OfficesTabs.Any(x => x.Rows is null) || OfficesTabs.Any(x => x.Rows is null || x.Rows.Any(z => z.Offer is null)))
             return 0;
 
-        return AddressesTabs.Sum(x => x.Rows!.Sum(y => y.Quantity * y.Offer!.Price));
+        return OfficesTabs.Sum(x => x.Rows!.Sum(y => y.Quantity * y.Offer!.Price));
     }
 
     /// <inheritdoc/>

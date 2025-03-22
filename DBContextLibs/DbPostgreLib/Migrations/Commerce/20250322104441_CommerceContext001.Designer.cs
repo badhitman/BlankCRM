@@ -12,20 +12,191 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20241125150939_CommerceContext022_2")]
-    partial class CommerceContext022_2
+    [Migration("20250322104441_CommerceContext001")]
+    partial class CommerceContext001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("SharedLib.AddressOrganizationModelDB", b =>
+            modelBuilder.Entity("SharedLib.LockTransactionModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("LockerId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LockerName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RubricId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LockerId", "LockerName", "RubricId")
+                        .IsUnique();
+
+                    b.ToTable("LockTransactions");
+                });
+
+            modelBuilder.Entity("SharedLib.NomenclatureModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BaseUnit")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ContextName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastAtUpdatedUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NormalizedNameUpper")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("SortIndex")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContextName");
+
+                    b.HasIndex("IsDisabled");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("NormalizedNameUpper");
+
+                    b.HasIndex("SortIndex", "ParentId", "ContextName")
+                        .IsUnique();
+
+                    b.ToTable("Nomenclatures");
+                });
+
+            modelBuilder.Entity("SharedLib.OfferAvailabilityModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("NomenclatureId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OfferId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NomenclatureId");
+
+                    b.HasIndex("OfferId");
+
+                    b.HasIndex("Quantity");
+
+                    b.HasIndex("WarehouseId", "OfferId")
+                        .IsUnique();
+
+                    b.ToTable("OffersAvailability");
+                });
+
+            modelBuilder.Entity("SharedLib.OfferModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastAtUpdatedUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Multiplicity")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("NomenclatureId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OfferUnit")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("QuantitiesTemplate")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ShortName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDisabled");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("NomenclatureId");
+
+                    b.ToTable("Offers");
+                });
+
+            modelBuilder.Entity("SharedLib.OfficeOrganizationModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,155 +228,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("AddressesOrganizations");
-                });
-
-            modelBuilder.Entity("SharedLib.GoodsModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BaseUnit")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAtUTC")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("LastAtUpdatedUTC")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IsDisabled");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("Goods");
-                });
-
-            modelBuilder.Entity("SharedLib.LockOffersAvailabilityModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("LockerId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("LockerName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("RubricId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LockerId", "LockerName", "RubricId")
-                        .IsUnique();
-
-                    b.ToTable("LockerOffersAvailability");
-                });
-
-            modelBuilder.Entity("SharedLib.OfferAvailabilityModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("GoodsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("OfferId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("WarehouseId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GoodsId");
-
-                    b.HasIndex("OfferId");
-
-                    b.HasIndex("Quantity");
-
-                    b.HasIndex("WarehouseId");
-
-                    b.ToTable("OffersAvailability");
-                });
-
-            modelBuilder.Entity("SharedLib.OfferGoodModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAtUTC")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<int>("GoodsId")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("LastAtUpdatedUTC")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("Multiplicity")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("OfferUnit")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("QuantitiesTemplate")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ShortName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GoodsId");
-
-                    b.HasIndex("IsDisabled");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("OffersGoods");
+                    b.ToTable("Offices");
                 });
 
             modelBuilder.Entity("SharedLib.OrderDocumentModelDB", b =>
@@ -258,7 +281,31 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("OrdersDocuments");
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("SharedLib.OrganizationContractorModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("OfferId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfferId");
+
+                    b.HasIndex("OrganizationId", "OfferId")
+                        .IsUnique();
+
+                    b.ToTable("Contractors");
                 });
 
             modelBuilder.Entity("SharedLib.OrganizationModelDB", b =>
@@ -388,16 +435,16 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("OrderDocumentId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name");
 
-                    b.HasIndex("OrderDocumentId");
+                    b.HasIndex("OrderId");
 
-                    b.ToTable("PaymentsDocuments");
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("SharedLib.PriceRuleForOfferModelDB", b =>
@@ -430,8 +477,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<decimal>("PriceRule")
                         .HasColumnType("numeric");
 
-                    b.Property<long>("QuantityRule")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("QuantityRule")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -445,7 +492,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("PricesRules");
                 });
 
-            modelBuilder.Entity("SharedLib.RowOfOrderDocumentModelDB", b =>
+            modelBuilder.Entity("SharedLib.RecordsAttendanceModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -453,22 +500,54 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressForOrderTabId")
+                    b.Property<string>("AuthorIdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContextName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly>("DateExecute")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<TimeOnly>("EndPart")
+                        .HasColumnType("time without time zone");
+
+                    b.Property<string>("ExternalDocumentId")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("HelpdeskId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                    b.Property<string>("Information")
+                        .HasColumnType("text");
 
-                    b.Property<int>("GoodsId")
+                    b.Property<DateTime>("LastAtUpdatedUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("NomenclatureId")
                         .HasColumnType("integer");
 
                     b.Property<int>("OfferId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("OrderDocumentId")
+                    b.Property<int>("OrganizationId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Quantity")
+                    b.Property<TimeOnly>("StartPart")
+                        .HasColumnType("time without time zone");
+
+                    b.Property<int>("StatusDocument")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("Version")
@@ -477,20 +556,63 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressForOrderTabId");
+                    b.HasIndex("Name");
 
-                    b.HasIndex("GoodsId");
+                    b.HasIndex("NomenclatureId");
 
                     b.HasIndex("OfferId");
 
-                    b.HasIndex("OrderDocumentId");
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("AttendancesReg");
+                });
+
+            modelBuilder.Entity("SharedLib.RowOfOrderDocumentModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("NomenclatureId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OfferId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OfficeOrderTabId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NomenclatureId");
+
+                    b.HasIndex("OfferId");
+
+                    b.HasIndex("OfficeOrderTabId");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("Quantity");
 
-                    b.HasIndex("AddressForOrderTabId", "OfferId")
+                    b.HasIndex("OfficeOrderTabId", "OfferId")
                         .IsUnique();
 
-                    b.ToTable("RowsOfOrdersDocuments");
+                    b.ToTable("RowsOrders");
                 });
 
             modelBuilder.Entity("SharedLib.RowOfWarehouseDocumentModelDB", b =>
@@ -501,14 +623,14 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("GoodsId")
+                    b.Property<int>("NomenclatureId")
                         .HasColumnType("integer");
 
                     b.Property<int>("OfferId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("numeric");
 
                     b.Property<Guid>("Version")
                         .IsConcurrencyToken()
@@ -519,7 +641,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GoodsId");
+                    b.HasIndex("NomenclatureId");
 
                     b.HasIndex("OfferId");
 
@@ -530,10 +652,10 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("WarehouseDocumentId", "OfferId")
                         .IsUnique();
 
-                    b.ToTable("RowsOfWarehouseDocuments");
+                    b.ToTable("RowsWarehouses");
                 });
 
-            modelBuilder.Entity("SharedLib.TabAddressForOrderModelDb", b =>
+            modelBuilder.Entity("SharedLib.TabOfficeForOrderModelDb", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -541,10 +663,10 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressOrganizationId")
+                    b.Property<int>("OfficeId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("OrderDocumentId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
                     b.Property<int>("WarehouseId")
@@ -552,13 +674,13 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressOrganizationId");
+                    b.HasIndex("OfficeId");
 
-                    b.HasIndex("OrderDocumentId");
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("WarehouseId");
 
-                    b.ToTable("TabsAddressesForOrders");
+                    b.ToTable("OfficesOrders");
                 });
 
             modelBuilder.Entity("SharedLib.UserOrganizationModelDB", b =>
@@ -579,14 +701,19 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("UserStatus")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserPersonIdentityId");
 
+                    b.HasIndex("UserStatus");
+
                     b.HasIndex("OrganizationId", "UserPersonIdentityId")
                         .IsUnique();
 
-                    b.ToTable("OrganizationsUsers");
+                    b.ToTable("Units");
                 });
 
             modelBuilder.Entity("SharedLib.WarehouseDocumentModelDB", b =>
@@ -645,45 +772,155 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("WarehouseDocuments");
                 });
 
-            modelBuilder.Entity("SharedLib.AddressOrganizationModelDB", b =>
+            modelBuilder.Entity("SharedLib.WorkScheduleBaseModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContextName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(34)
+                        .HasColumnType("character varying(34)");
+
+                    b.Property<long>("EndPart")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastAtUpdatedUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("NomenclatureId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("NormalizedNameUpper")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("OfferId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("QueueCapacity")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SortIndex")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("StartPart")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContextName");
+
+                    b.HasIndex("IsDisabled");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("NomenclatureId");
+
+                    b.HasIndex("NormalizedNameUpper");
+
+                    b.HasIndex("OfferId");
+
+                    b.HasIndex("StartPart", "EndPart");
+
+                    b.HasIndex("SortIndex", "ParentId", "ContextName")
+                        .IsUnique();
+
+                    b.ToTable("WorkScheduleBaseModelDB");
+
+                    b.HasDiscriminator().HasValue("WorkScheduleBaseModelDB");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("SharedLib.CalendarScheduleModelDB", b =>
+                {
+                    b.HasBaseType("SharedLib.WorkScheduleBaseModelDB");
+
+                    b.Property<string>("DateScheduleCalendar")
+                        .IsRequired()
+                        .HasColumnType("character varying(10)");
+
+                    b.HasIndex("DateScheduleCalendar");
+
+                    b.HasDiscriminator().HasValue("CalendarScheduleModelDB");
+                });
+
+            modelBuilder.Entity("SharedLib.WeeklyScheduleModelDB", b =>
+                {
+                    b.HasBaseType("SharedLib.WorkScheduleBaseModelDB");
+
+                    b.Property<int>("Weekday")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("Weekday");
+
+                    b.HasDiscriminator().HasValue("WeeklyScheduleModelDB");
+                });
+
+            modelBuilder.Entity("SharedLib.OfferAvailabilityModelDB", b =>
+                {
+                    b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
+                        .WithMany()
+                        .HasForeignKey("NomenclatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedLib.OfferModelDB", "Offer")
+                        .WithMany("Registers")
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Nomenclature");
+
+                    b.Navigation("Offer");
+                });
+
+            modelBuilder.Entity("SharedLib.OfferModelDB", b =>
+                {
+                    b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
+                        .WithMany("Offers")
+                        .HasForeignKey("NomenclatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Nomenclature");
+                });
+
+            modelBuilder.Entity("SharedLib.OfficeOrganizationModelDB", b =>
                 {
                     b.HasOne("SharedLib.OrganizationModelDB", "Organization")
-                        .WithMany("Addresses")
+                        .WithMany("Offices")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Organization");
-                });
-
-            modelBuilder.Entity("SharedLib.OfferAvailabilityModelDB", b =>
-                {
-                    b.HasOne("SharedLib.GoodsModelDB", "Goods")
-                        .WithMany()
-                        .HasForeignKey("GoodsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SharedLib.OfferGoodModelDB", "Offer")
-                        .WithMany()
-                        .HasForeignKey("OfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Goods");
-
-                    b.Navigation("Offer");
-                });
-
-            modelBuilder.Entity("SharedLib.OfferGoodModelDB", b =>
-                {
-                    b.HasOne("SharedLib.GoodsModelDB", "Goods")
-                        .WithMany("Offers")
-                        .HasForeignKey("GoodsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Goods");
                 });
 
             modelBuilder.Entity("SharedLib.OrderDocumentModelDB", b =>
@@ -697,20 +934,37 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("SharedLib.PaymentDocumentModelDb", b =>
+            modelBuilder.Entity("SharedLib.OrganizationContractorModel", b =>
                 {
-                    b.HasOne("SharedLib.OrderDocumentModelDB", "OrderDocument")
-                        .WithMany()
-                        .HasForeignKey("OrderDocumentId")
+                    b.HasOne("SharedLib.OfferModelDB", "Offer")
+                        .WithMany("Contractors")
+                        .HasForeignKey("OfferId");
+
+                    b.HasOne("SharedLib.OrganizationModelDB", "Organization")
+                        .WithMany("Contractors")
+                        .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OrderDocument");
+                    b.Navigation("Offer");
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("SharedLib.PaymentDocumentModelDb", b =>
+                {
+                    b.HasOne("SharedLib.OrderDocumentModelDB", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("SharedLib.PriceRuleForOfferModelDB", b =>
                 {
-                    b.HasOne("SharedLib.OfferGoodModelDB", "Offer")
+                    b.HasOne("SharedLib.OfferModelDB", "Offer")
                         .WithMany("PricesRules")
                         .HasForeignKey("OfferId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -719,48 +973,75 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Offer");
                 });
 
-            modelBuilder.Entity("SharedLib.RowOfOrderDocumentModelDB", b =>
+            modelBuilder.Entity("SharedLib.RecordsAttendanceModelDB", b =>
                 {
-                    b.HasOne("SharedLib.TabAddressForOrderModelDb", "AddressForOrderTab")
-                        .WithMany("Rows")
-                        .HasForeignKey("AddressForOrderTabId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SharedLib.GoodsModelDB", "Goods")
+                    b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
                         .WithMany()
-                        .HasForeignKey("GoodsId")
+                        .HasForeignKey("NomenclatureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharedLib.OfferGoodModelDB", "Offer")
+                    b.HasOne("SharedLib.OfferModelDB", "Offer")
                         .WithMany()
                         .HasForeignKey("OfferId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharedLib.OrderDocumentModelDB", "OrderDocument")
+                    b.HasOne("SharedLib.OrganizationModelDB", "Organization")
                         .WithMany()
-                        .HasForeignKey("OrderDocumentId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("AddressForOrderTab");
-
-                    b.Navigation("Goods");
+                    b.Navigation("Nomenclature");
 
                     b.Navigation("Offer");
 
-                    b.Navigation("OrderDocument");
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("SharedLib.RowOfOrderDocumentModelDB", b =>
+                {
+                    b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
+                        .WithMany()
+                        .HasForeignKey("NomenclatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedLib.OfferModelDB", "Offer")
+                        .WithMany()
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedLib.TabOfficeForOrderModelDb", "OfficeOrderTab")
+                        .WithMany("Rows")
+                        .HasForeignKey("OfficeOrderTabId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedLib.OrderDocumentModelDB", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId");
+
+                    b.Navigation("Nomenclature");
+
+                    b.Navigation("Offer");
+
+                    b.Navigation("OfficeOrderTab");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("SharedLib.RowOfWarehouseDocumentModelDB", b =>
                 {
-                    b.HasOne("SharedLib.GoodsModelDB", "Goods")
+                    b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
                         .WithMany()
-                        .HasForeignKey("GoodsId")
+                        .HasForeignKey("NomenclatureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharedLib.OfferGoodModelDB", "Offer")
+                    b.HasOne("SharedLib.OfferModelDB", "Offer")
                         .WithMany()
                         .HasForeignKey("OfferId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -772,30 +1053,30 @@ namespace DbPostgreLib.Migrations.Commerce
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Goods");
+                    b.Navigation("Nomenclature");
 
                     b.Navigation("Offer");
 
                     b.Navigation("WarehouseDocument");
                 });
 
-            modelBuilder.Entity("SharedLib.TabAddressForOrderModelDb", b =>
+            modelBuilder.Entity("SharedLib.TabOfficeForOrderModelDb", b =>
                 {
-                    b.HasOne("SharedLib.AddressOrganizationModelDB", "AddressOrganization")
+                    b.HasOne("SharedLib.OfficeOrganizationModelDB", "Office")
                         .WithMany()
-                        .HasForeignKey("AddressOrganizationId")
+                        .HasForeignKey("OfficeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharedLib.OrderDocumentModelDB", "OrderDocument")
-                        .WithMany("AddressesTabs")
-                        .HasForeignKey("OrderDocumentId")
+                    b.HasOne("SharedLib.OrderDocumentModelDB", "Order")
+                        .WithMany("OfficesTabs")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AddressOrganization");
+                    b.Navigation("Office");
 
-                    b.Navigation("OrderDocument");
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("SharedLib.UserOrganizationModelDB", b =>
@@ -809,29 +1090,50 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("SharedLib.GoodsModelDB", b =>
+            modelBuilder.Entity("SharedLib.WorkScheduleBaseModelDB", b =>
+                {
+                    b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
+                        .WithMany()
+                        .HasForeignKey("NomenclatureId");
+
+                    b.HasOne("SharedLib.OfferModelDB", "Offer")
+                        .WithMany()
+                        .HasForeignKey("OfferId");
+
+                    b.Navigation("Nomenclature");
+
+                    b.Navigation("Offer");
+                });
+
+            modelBuilder.Entity("SharedLib.NomenclatureModelDB", b =>
                 {
                     b.Navigation("Offers");
                 });
 
-            modelBuilder.Entity("SharedLib.OfferGoodModelDB", b =>
+            modelBuilder.Entity("SharedLib.OfferModelDB", b =>
                 {
+                    b.Navigation("Contractors");
+
                     b.Navigation("PricesRules");
+
+                    b.Navigation("Registers");
                 });
 
             modelBuilder.Entity("SharedLib.OrderDocumentModelDB", b =>
                 {
-                    b.Navigation("AddressesTabs");
+                    b.Navigation("OfficesTabs");
                 });
 
             modelBuilder.Entity("SharedLib.OrganizationModelDB", b =>
                 {
-                    b.Navigation("Addresses");
+                    b.Navigation("Contractors");
+
+                    b.Navigation("Offices");
 
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("SharedLib.TabAddressForOrderModelDb", b =>
+            modelBuilder.Entity("SharedLib.TabOfficeForOrderModelDb", b =>
                 {
                     b.Navigation("Rows");
                 });

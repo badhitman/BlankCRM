@@ -37,11 +37,11 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> OfficeOrganizationDelete(int req)
-        => await rabbitClient.MqRemoteCall<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.AddressOrganizationDeleteCommerceReceive, req) ?? new();
+        => await rabbitClient.MqRemoteCall<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.OfficeOrganizationDeleteCommerceReceive, req) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> OfficeOrganizationUpdate(AddressOrganizationBaseModel req)
-        => await rabbitClient.MqRemoteCall<TResponseModel<int>>(GlobalStaticConstants.TransmissionQueues.AddressOrganizationUpdateCommerceReceive, req) ?? new();
+        => await rabbitClient.MqRemoteCall<TResponseModel<int>>(GlobalStaticConstants.TransmissionQueues.OfficeOrganizationUpdateCommerceReceive, req) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> NomenclatureUpdateReceive(NomenclatureModelDB req)
@@ -92,7 +92,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCall<TResponseModel<bool>>(GlobalStaticConstants.TransmissionQueues.RowsDeleteFromOrderCommerceReceive, req) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<OfficeOrganizationModelDB[]>> AddressesOrganizationsRead(int[] ids)
+    public async Task<TResponseModel<OfficeOrganizationModelDB[]>> OfficesOrganizationsRead(int[] ids)
         => await rabbitClient.MqRemoteCall<TResponseModel<OfficeOrganizationModelDB[]>>(GlobalStaticConstants.TransmissionQueues.AddressesOrganizationsReadCommerceReceive, ids) ?? new();
 
     /// <inheritdoc/>

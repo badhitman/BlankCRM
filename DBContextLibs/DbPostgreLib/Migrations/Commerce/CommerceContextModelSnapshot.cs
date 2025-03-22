@@ -45,7 +45,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("LockerId", "LockerName", "RubricId")
                         .IsUnique();
 
-                    b.ToTable("LockersTransactions");
+                    b.ToTable("LockTransactions");
                 });
 
             modelBuilder.Entity("SharedLib.NomenclatureModelDB", b =>
@@ -225,7 +225,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("OfficesOrganizations");
+                    b.ToTable("Offices");
                 });
 
             modelBuilder.Entity("SharedLib.OrderDocumentModelDB", b =>
@@ -278,7 +278,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("OrdersDocuments");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("SharedLib.OrganizationContractorModel", b =>
@@ -302,7 +302,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("OrganizationId", "OfferId")
                         .IsUnique();
 
-                    b.ToTable("ContractorsOrganizations");
+                    b.ToTable("Contractors");
                 });
 
             modelBuilder.Entity("SharedLib.OrganizationModelDB", b =>
@@ -432,16 +432,16 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("OrderDocumentId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name");
 
-                    b.HasIndex("OrderDocumentId");
+                    b.HasIndex("OrderId");
 
-                    b.ToTable("PaymentsDocuments");
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("SharedLib.PriceRuleForOfferModelDB", b =>
@@ -561,7 +561,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("RecordsAttendances");
+                    b.ToTable("AttendancesReg");
                 });
 
             modelBuilder.Entity("SharedLib.RowOfOrderDocumentModelDB", b =>
@@ -572,9 +572,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressForOrderTabId")
-                        .HasColumnType("integer");
-
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
@@ -584,7 +581,10 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<int>("OfferId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("OrderDocumentId")
+                    b.Property<int>("OfficeOrderTabId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("OrderId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Quantity")
@@ -596,20 +596,20 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressForOrderTabId");
-
                     b.HasIndex("NomenclatureId");
 
                     b.HasIndex("OfferId");
 
-                    b.HasIndex("OrderDocumentId");
+                    b.HasIndex("OfficeOrderTabId");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("Quantity");
 
-                    b.HasIndex("AddressForOrderTabId", "OfferId")
+                    b.HasIndex("OfficeOrderTabId", "OfferId")
                         .IsUnique();
 
-                    b.ToTable("RowsOfOrdersDocuments");
+                    b.ToTable("RowsOrders");
                 });
 
             modelBuilder.Entity("SharedLib.RowOfWarehouseDocumentModelDB", b =>
@@ -649,10 +649,10 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("WarehouseDocumentId", "OfferId")
                         .IsUnique();
 
-                    b.ToTable("RowsOfWarehouseDocuments");
+                    b.ToTable("RowsWarehouses");
                 });
 
-            modelBuilder.Entity("SharedLib.TabAddressForOrderModelDb", b =>
+            modelBuilder.Entity("SharedLib.TabOfficeForOrderModelDb", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -660,10 +660,10 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressOrganizationId")
+                    b.Property<int>("OfficeId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("OrderDocumentId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
                     b.Property<int>("WarehouseId")
@@ -671,13 +671,13 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressOrganizationId");
+                    b.HasIndex("OfficeId");
 
-                    b.HasIndex("OrderDocumentId");
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("WarehouseId");
 
-                    b.ToTable("TabsAddressesForOrders");
+                    b.ToTable("OfficesOrders");
                 });
 
             modelBuilder.Entity("SharedLib.UserOrganizationModelDB", b =>
@@ -710,7 +710,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("OrganizationId", "UserPersonIdentityId")
                         .IsUnique();
 
-                    b.ToTable("OrganizationsUsers");
+                    b.ToTable("Units");
                 });
 
             modelBuilder.Entity("SharedLib.WarehouseDocumentModelDB", b =>
@@ -912,7 +912,7 @@ namespace DbPostgreLib.Migrations.Commerce
             modelBuilder.Entity("SharedLib.OfficeOrganizationModelDB", b =>
                 {
                     b.HasOne("SharedLib.OrganizationModelDB", "Organization")
-                        .WithMany("Addresses")
+                        .WithMany("Offices")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -950,13 +950,13 @@ namespace DbPostgreLib.Migrations.Commerce
 
             modelBuilder.Entity("SharedLib.PaymentDocumentModelDb", b =>
                 {
-                    b.HasOne("SharedLib.OrderDocumentModelDB", "OrderDocument")
+                    b.HasOne("SharedLib.OrderDocumentModelDB", "Order")
                         .WithMany()
-                        .HasForeignKey("OrderDocumentId")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OrderDocument");
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("SharedLib.PriceRuleForOfferModelDB", b =>
@@ -999,12 +999,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
             modelBuilder.Entity("SharedLib.RowOfOrderDocumentModelDB", b =>
                 {
-                    b.HasOne("SharedLib.TabAddressForOrderModelDb", "AddressForOrderTab")
-                        .WithMany("Rows")
-                        .HasForeignKey("AddressForOrderTabId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
                         .WithMany()
                         .HasForeignKey("NomenclatureId")
@@ -1017,17 +1011,23 @@ namespace DbPostgreLib.Migrations.Commerce
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharedLib.OrderDocumentModelDB", "OrderDocument")
-                        .WithMany()
-                        .HasForeignKey("OrderDocumentId");
+                    b.HasOne("SharedLib.TabOfficeForOrderModelDb", "OfficeOrderTab")
+                        .WithMany("Rows")
+                        .HasForeignKey("OfficeOrderTabId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("AddressForOrderTab");
+                    b.HasOne("SharedLib.OrderDocumentModelDB", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId");
 
                     b.Navigation("Nomenclature");
 
                     b.Navigation("Offer");
 
-                    b.Navigation("OrderDocument");
+                    b.Navigation("OfficeOrderTab");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("SharedLib.RowOfWarehouseDocumentModelDB", b =>
@@ -1057,23 +1057,23 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("WarehouseDocument");
                 });
 
-            modelBuilder.Entity("SharedLib.TabAddressForOrderModelDb", b =>
+            modelBuilder.Entity("SharedLib.TabOfficeForOrderModelDb", b =>
                 {
-                    b.HasOne("SharedLib.OfficeOrganizationModelDB", "AddressOrganization")
+                    b.HasOne("SharedLib.OfficeOrganizationModelDB", "Office")
                         .WithMany()
-                        .HasForeignKey("AddressOrganizationId")
+                        .HasForeignKey("OfficeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharedLib.OrderDocumentModelDB", "OrderDocument")
-                        .WithMany("AddressesTabs")
-                        .HasForeignKey("OrderDocumentId")
+                    b.HasOne("SharedLib.OrderDocumentModelDB", "Order")
+                        .WithMany("OfficesTabs")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AddressOrganization");
+                    b.Navigation("Office");
 
-                    b.Navigation("OrderDocument");
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("SharedLib.UserOrganizationModelDB", b =>
@@ -1118,19 +1118,19 @@ namespace DbPostgreLib.Migrations.Commerce
 
             modelBuilder.Entity("SharedLib.OrderDocumentModelDB", b =>
                 {
-                    b.Navigation("AddressesTabs");
+                    b.Navigation("OfficesTabs");
                 });
 
             modelBuilder.Entity("SharedLib.OrganizationModelDB", b =>
                 {
-                    b.Navigation("Addresses");
-
                     b.Navigation("Contractors");
+
+                    b.Navigation("Offices");
 
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("SharedLib.TabAddressForOrderModelDb", b =>
+            modelBuilder.Entity("SharedLib.TabOfficeForOrderModelDb", b =>
                 {
                     b.Navigation("Rows");
                 });

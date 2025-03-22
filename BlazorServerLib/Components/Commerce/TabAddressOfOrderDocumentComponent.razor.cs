@@ -25,7 +25,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
     /// CurrentTab
     /// </summary>
     [Parameter, EditorRequired]
-    public required TabAddressForOrderModelDb CurrentTab { get; set; }
+    public required TabOfficeForOrderModelDb CurrentTab { get; set; }
 
     /// <summary>
     /// Если true - тогда можно добавлять офферы, которых нет в остатках.
@@ -121,14 +121,14 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
         if (exist_row < 0)
             CurrentTab.Rows.Add(new RowOfOrderDocumentModelDB()
             {
-                AddressForOrderTab = CurrentTab,
-                AddressForOrderTabId = CurrentTab.Id,
+                OfficeOrderTab = CurrentTab,
+                OfficeOrderTabId = CurrentTab.Id,
                 Nomenclature = off.Nomenclature,
                 NomenclatureId = off.NomenclatureId,
                 Offer = off,
                 OfferId = off.Id,
-                OrderDocument = CurrentTab.OrderDocument,
-                OrderDocumentId = CurrentTab.OrderDocumentId,
+                Order = CurrentTab.Order,
+                OrderId = CurrentTab.OrderId,
                 Quantity = off.Quantity,
             });
         else

@@ -27,5 +27,5 @@ public class PaymentDocumentBaseModel : EntryModel
     /// <summary>
     /// Документ-заказ
     /// </summary>
-    public int OrderDocumentId { get; set; }
+    public int OrderId { get; set; }
 }

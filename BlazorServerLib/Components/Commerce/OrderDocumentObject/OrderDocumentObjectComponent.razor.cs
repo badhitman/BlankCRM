@@ -79,16 +79,16 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         doc.Information = null;
 
         doc.Organization = null;
-        doc.AddressesTabs!.ForEach(x =>
+        doc.OfficesTabs!.ForEach(x =>
         {
             x.Id = 0;
             //x.AddressOrganization = null;
-            x.OrderDocumentId = 0;
+            x.OrderId = 0;
             x.Rows?.ForEach(y =>
             {
                 y.Id = 0;
                 //y.OrderDocument = doc;
-                y.OrderDocumentId = 0;
+                y.OrderId = 0;
                 //y.Goods = null;
                 //y.Offer = null;
             });
@@ -134,7 +134,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
     protected override async Task OnInitializedAsync()
     {
         await ReadCurrentUser();
-        int[] orderWarehouses = [.. Document.AddressesTabs!.Select(x => x.WarehouseId).Distinct()];
+        int[] orderWarehouses = [.. Document.OfficesTabs!.Select(x => x.WarehouseId).Distinct()];
         await SetBusy();
 
         TResponseModel<List<RubricIssueHelpdeskModelDB>> getWarehouses = await HelpdeskRepo.RubricsGet(orderWarehouses);

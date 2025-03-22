@@ -77,12 +77,12 @@ public partial class CommerceLayerContext : DbContext
     /// <summary>
     /// Филиалы (Офисы)
     /// </summary>
-    public DbSet<OfficeOrganizationModelDB> OfficesOrganizations { get; set; } = default!;
+    public DbSet<OfficeOrganizationModelDB> Offices { get; set; } = default!;
 
     /// <summary>
     /// Сотрудники компаний
     /// </summary>
-    public DbSet<UserOrganizationModelDB> OrganizationsUsers { get; set; } = default!;
+    public DbSet<UserOrganizationModelDB> Units { get; set; } = default!;
 
     /// <summary>
     /// Подрядчики
@@ -90,7 +90,7 @@ public partial class CommerceLayerContext : DbContext
     /// <remarks>
     /// Связь организации с офером
     /// </remarks>
-    public DbSet<OrganizationContractorModel> ContractorsOrganizations { get; set; } = default!;
+    public DbSet<OrganizationContractorModel> Contractors { get; set; } = default!;
 
 
     /// <summary>
@@ -116,7 +116,7 @@ public partial class CommerceLayerContext : DbContext
     /// <summary>
     /// Rows of warehouse documents
     /// </summary>
-    public DbSet<RowOfWarehouseDocumentModelDB> RowsOfWarehouseDocuments { get; set; } = default!;
+    public DbSet<RowOfWarehouseDocumentModelDB> RowsWarehouses { get; set; } = default!;
 
 
 
@@ -128,35 +128,35 @@ public partial class CommerceLayerContext : DbContext
     /// <summary>
     /// Locker offers availability
     /// </summary>
-    public DbSet<LockTransactionModelDB> LockersTransactions { get; set; } = default!;
+    public DbSet<LockTransactionModelDB> LockTransactions { get; set; } = default!;
 
 
 
     /// <summary>
     /// Заказы на услуги (бронь/запись)
     /// </summary>
-    public DbSet<RecordsAttendanceModelDB> RecordsAttendances { get; set; } = default!;
+    public DbSet<RecordsAttendanceModelDB> AttendancesReg { get; set; } = default!;
 
 
     /// <summary>
     /// Заказы товаров со складов
     /// </summary>
-    public DbSet<OrderDocumentModelDB> OrdersDocuments { get; set; } = default!;
+    public DbSet<OrderDocumentModelDB> Orders { get; set; } = default!;
 
     /// <summary>
-    /// Адреса организаций в заказе
+    /// Офисы/филиалы организаций в заказе
     /// </summary>
-    public DbSet<TabAddressForOrderModelDb> TabsAddressesForOrders { get; set; } = default!;
+    public DbSet<TabOfficeForOrderModelDb> OfficesOrders { get; set; } = default!;
 
     /// <summary>
     /// Строки заказов
     /// </summary>
-    public DbSet<RowOfOrderDocumentModelDB> RowsOfOrdersDocuments { get; set; } = default!;
+    public DbSet<RowOfOrderDocumentModelDB> RowsOrders { get; set; } = default!;
 
 
 
     /// <summary>
     /// Payments documents
     /// </summary>
-    public DbSet<PaymentDocumentModelDb> PaymentsDocuments { get; set; } = default!;
+    public DbSet<PaymentDocumentModelDb> Payments { get; set; } = default!;
 }

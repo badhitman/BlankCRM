@@ -25,7 +25,7 @@ public partial class CommerceImplementService : ICommerceService
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
         IQueryable<RecordsAttendanceModelDB> q = context
-            .RecordsAttendances
+            .AttendancesReg
             .Where(x => x.ContextName == req.Payload.ContextName)
             .AsQueryable();
 
@@ -300,7 +300,7 @@ public partial class CommerceImplementService : ICommerceService
         ResponseBaseModel res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
         await Task.WhenAll([
-            Task.Run(async () => { orderAttendanceDB = await context.RecordsAttendances.FirstOrDefaultAsync(x => x.Id == req.Payload); }),
+            Task.Run(async () => { orderAttendanceDB = await context.AttendancesReg.FirstOrDefaultAsync(x => x.Id == req.Payload); }),
             Task.Run(async () => {
                 TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentity([req.SenderActionUserId]);
                 if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length != 1)
@@ -368,7 +368,7 @@ public partial class CommerceImplementService : ICommerceService
         string msg;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
         List<RecordsAttendanceModelDB> ordersDb = await context
-            .RecordsAttendances
+            .AttendancesReg
             .Where(x => x.HelpdeskId == req.Payload.DocumentId && x.StatusDocument != req.Payload.Step)
             .ToListAsync();
 
@@ -471,7 +471,7 @@ public partial class CommerceImplementService : ICommerceService
         context.RemoveRange(offersLocked);
         await context.SaveChangesAsync();
         res.Response = await context
-                            .RecordsAttendances
+                            .AttendancesReg
                             .Where(x => x.HelpdeskId == req.Payload.DocumentId)
                             .ExecuteUpdateAsync(set => set
                             .SetProperty(p => p.StatusDocument, req.Payload.Step)
@@ -496,7 +496,7 @@ public partial class CommerceImplementService : ICommerceService
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
         IQueryable<RecordsAttendanceModelDB> q = context
-            .RecordsAttendances
+            .AttendancesReg
             .Where(x => req.IssueIds.Any(y => y == x.HelpdeskId))
             .AsQueryable();
 
@@ -595,7 +595,7 @@ public partial class CommerceImplementService : ICommerceService
                 using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
                 IQueryable<RecordsAttendanceModelDB> q = context
-                    .RecordsAttendances
+                    .AttendancesReg
                     .Where(x => x.ContextName == req.ContextName && x.DateExecute >= req.StartDate && x.DateExecute <= req.EndDate)
                     .Where(x => req.OffersFilter.Any(y => y == x.OfferId));
 
@@ -611,7 +611,7 @@ public partial class CommerceImplementService : ICommerceService
                 using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
                 IQueryable<OrganizationContractorModel> q = context
-                    .ContractorsOrganizations
+                    .Contractors
                     .Where(x => x.OfferId == null || req.OffersFilter.Any(y => y == x.OfferId));
 
                 if(organizationsFilter is not null && organizationsFilter.Length != 0)

@@ -16,6 +16,10 @@ public class AddressOrganizationBaseModel : EntryModel
     /// </summary>
     public override required string Name { get; set; }
 
+    #region address    
+    /*[Required]
+    public required string KladrCode { get; set; }*/
+
     /// <summary>
     /// Регион/Город
     /// </summary>
@@ -26,6 +30,7 @@ public class AddressOrganizationBaseModel : EntryModel
     /// </summary>
     [Required]
     public required string Address { get; set; }
+    #endregion
 
     /// <summary>
     /// Контакты

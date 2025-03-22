@@ -19,8 +19,8 @@ public partial class CommerceImplementService : ICommerceService
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
         IQueryable<OrganizationContractorModel> q = req.OfferFilter is null
-            ? context.ContractorsOrganizations.Where(x => x.OfferId == null)
-            : context.ContractorsOrganizations.Where(x => x.OfferId == null || x.OfferId == req.OfferFilter);
+            ? context.Contractors.Where(x => x.OfferId == null)
+            : context.Contractors.Where(x => x.OfferId == null || x.OfferId == req.OfferFilter);
 
         if (req.OrganizationsFilter is not null && req.OrganizationsFilter.Length != 0)
             q = q.Where(x => req.OrganizationsFilter.Contains(x.OrganizationId));
@@ -38,7 +38,7 @@ public partial class CommerceImplementService : ICommerceService
 
         if (req.Payload.SetValue)
         {
-            if (await context.ContractorsOrganizations.AnyAsync(x => x.OrganizationId == req.Payload.OrganizationId && x.OfferId == req.Payload.OfferId))
+            if (await context.Contractors.AnyAsync(x => x.OrganizationId == req.Payload.OrganizationId && x.OfferId == req.Payload.OfferId))
             {
                 return new()
                 {
@@ -46,7 +46,7 @@ public partial class CommerceImplementService : ICommerceService
                     Response = false,
                 };
             }
-            await context.ContractorsOrganizations.AddAsync(new() { OfferId = req.Payload.OfferId, OrganizationId = req.Payload.OrganizationId });
+            await context.Contractors.AddAsync(new() { OfferId = req.Payload.OfferId, OrganizationId = req.Payload.OrganizationId });
 
             try
             {
@@ -71,7 +71,7 @@ public partial class CommerceImplementService : ICommerceService
         }
         else
         {
-            if (!await context.ContractorsOrganizations.AnyAsync(x => x.OrganizationId == req.Payload.OrganizationId && x.OfferId == req.Payload.OfferId))
+            if (!await context.Contractors.AnyAsync(x => x.OrganizationId == req.Payload.OrganizationId && x.OfferId == req.Payload.OfferId))
             {
                 return new()
                 {
@@ -82,7 +82,7 @@ public partial class CommerceImplementService : ICommerceService
             return new()
             {
                 Messages = [new() { Text = "Контракт удалён", TypeMessage = ResultTypesEnum.Success }],
-                Response = await context.ContractorsOrganizations.Where(x => x.OrganizationId == req.Payload.OrganizationId && x.OfferId == req.Payload.OfferId).ExecuteDeleteAsync() > 0,
+                Response = await context.Contractors.Where(x => x.OrganizationId == req.Payload.OrganizationId && x.OfferId == req.Payload.OfferId).ExecuteDeleteAsync() > 0,
             };
         }
     }
@@ -94,7 +94,7 @@ public partial class CommerceImplementService : ICommerceService
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
         res.Response = await context
-            .OfficesOrganizations
+            .Offices
             .Where(x => organizationsIds.Any(y => y == x.Id))
             .ToArrayAsync();
 
@@ -102,15 +102,15 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> AddressOrganizationDelete(int address_id)
+    public async Task<ResponseBaseModel> OfficeOrganizationDelete(int address_id)
     {
         ResponseBaseModel res = new();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
         int count = await context
-            .OrdersDocuments
-            .CountAsync(x => context.TabsAddressesForOrders.Any(y => y.OrderDocumentId == x.Id && y.AddressOrganizationId == address_id));
+            .Orders
+            .CountAsync(x => context.OfficesOrders.Any(y => y.OrderId == x.Id && y.OfficeId == address_id));
 
         if (count != 0)
             res.AddError($"Адрес используется в заказах: {count} шт.");
@@ -125,14 +125,14 @@ public partial class CommerceImplementService : ICommerceService
         if (!res.Success())
             return res;
 
-        await context.OfficesOrganizations.Where(x => x.Id == address_id).ExecuteDeleteAsync();
+        await context.Offices.Where(x => x.Id == address_id).ExecuteDeleteAsync();
         res.AddSuccess("Команда успешно выполнена");
 
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> AddressOrganizationUpdate(AddressOrganizationBaseModel req)
+    public async Task<TResponseModel<int>> OfficeOrganizationUpdate(AddressOrganizationBaseModel req)
     {
         TResponseModel<int> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
@@ -154,7 +154,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        res.Response = await context.OfficesOrganizations
+        res.Response = await context.Offices
                         .Where(x => x.Id == req.Id)
                         .ExecuteUpdateAsync(set => set
                         //.SetProperty(p => p.OrganizationId, req.OrganizationId)
@@ -228,7 +228,7 @@ public partial class CommerceImplementService : ICommerceService
         res.Response = await context
             .Organizations
             .Where(x => req.Any(y => y == x.Id))
-            .Include(x => x.Addresses)
+            .Include(x => x.Offices)
             .Include(x => x.Users)
             .ToArrayAsync();
 
@@ -249,13 +249,13 @@ public partial class CommerceImplementService : ICommerceService
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
         IQueryable<OrganizationModelDB> q = context.Organizations.AsQueryable();
         if (!actor.IsAdmin)
-            q = q.Where(x => context.OrganizationsUsers.Any(y => y.OrganizationId == x.Id && y.UserStatus > UsersOrganizationsStatusesEnum.None && y.UserPersonIdentityId == req.SenderActionUserId));
+            q = q.Where(x => context.Units.Any(y => y.OrganizationId == x.Id && y.UserStatus > UsersOrganizationsStatusesEnum.None && y.UserPersonIdentityId == req.SenderActionUserId));
 
         if (req.Payload.AfterDateUpdate is not null)
             q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.AfterDateUpdate);
 
         if (!string.IsNullOrWhiteSpace(req.Payload.ForUserIdentityId))
-            q = q.Where(x => context.OrganizationsUsers.Any(y => y.OrganizationId == x.Id && y.UserPersonIdentityId == req.Payload.ForUserIdentityId));
+            q = q.Where(x => context.Units.Any(y => y.OrganizationId == x.Id && y.UserPersonIdentityId == req.Payload.ForUserIdentityId));
 
         q = req.SortingDirection == DirectionsEnum.Up
             ? q.OrderBy(x => x.Name)
@@ -266,7 +266,7 @@ public partial class CommerceImplementService : ICommerceService
             .Take(req.PageSize);
 
         var extQ = pq
-            .Include(x => x.Addresses)
+            .Include(x => x.Offices)
             .Include(x => x.Users)
             .Include(x => x.Contractors!)
             .ThenInclude(x => x.Offer);
@@ -313,7 +313,7 @@ public partial class CommerceImplementService : ICommerceService
             if (duple is not null)
             {
                 UserOrganizationModelDB? sq = await context
-                    .OrganizationsUsers
+                    .Units
                     .FirstOrDefaultAsync(x => x.UserPersonIdentityId == req.SenderActionUserId && x.OrganizationId == duple.Id);
 
                 if (!string.IsNullOrWhiteSpace(req.SenderActionUserId) && req.SenderActionUserId != GlobalStaticConstants.Roles.System && sq is not null)
@@ -468,7 +468,7 @@ public partial class CommerceImplementService : ICommerceService
 
         if (req.Payload.Id < 1)
         {
-            UserOrganizationModelDB? dl = await context.OrganizationsUsers
+            UserOrganizationModelDB? dl = await context.Units
                 .FirstOrDefaultAsync(x => x.OrganizationId == req.Payload.OrganizationId && x.UserPersonIdentityId == req.Payload.UserPersonIdentityId);
 
             if (dl is not null)
@@ -484,7 +484,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        res.Response = await context.OrganizationsUsers
+        res.Response = await context.Units
                         .Where(x => x.Id == req.Payload.Id)
                         .ExecuteUpdateAsync(set => set
                         .SetProperty(p => p.UserStatus, req.Payload.UserStatus)
@@ -500,7 +500,7 @@ public partial class CommerceImplementService : ICommerceService
         TResponseModel<UserOrganizationModelDB[]> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
         res.Response = await context
-            .OrganizationsUsers
+            .Units
             .Where(x => req.Any(y => y == x.Id))
             .Include(x => x.Organization!)
             .ThenInclude(x => x.Users)
@@ -518,8 +518,8 @@ public partial class CommerceImplementService : ICommerceService
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
         IQueryable<UserOrganizationModelDB> q = req.Payload.UsersOrganizationsStatusesFilter is not null && req.Payload.UsersOrganizationsStatusesFilter.Length > 0
-            ? context.OrganizationsUsers.Where(x => req.Payload.UsersOrganizationsStatusesFilter.Any(y => y == x.UserStatus))
-            : context.OrganizationsUsers.AsQueryable();
+            ? context.Units.Where(x => req.Payload.UsersOrganizationsStatusesFilter.Any(y => y == x.UserStatus))
+            : context.Units.AsQueryable();
 
         if (req.Payload.AfterDateUpdate is not null)
             q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.AfterDateUpdate);

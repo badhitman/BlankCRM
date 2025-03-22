@@ -46,7 +46,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         await SetBusy();
 
         TResponseModel<OfficeOrganizationModelDB[]> res_address = await CommerceRepo
-            .AddressesOrganizationsRead([AddressForOrganization]);
+            .OfficesOrganizationsRead([AddressForOrganization]);
 
         SnackbarRepo.ShowMessagesResponse(res_address.Messages);
         OfficeCurrent = res_address.Response!.Single();
@@ -83,7 +83,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         }
     }
 
-    async Task SaveAddress()
+    async Task SaveOffice()
     {
         if (!CanSave)
             return;

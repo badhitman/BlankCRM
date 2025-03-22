@@ -70,19 +70,19 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             if (_prevSelectedAddresses is not null || CurrentCart is null)
                 return;
 
-            CurrentCart.AddressesTabs ??= [];
+            CurrentCart.OfficesTabs ??= [];
 
             // адреса/вкладки, которые следует добавить
-            OfficeOrganizationModelDB[] addresses = value is null ? [] : [.. value.Where(x => !CurrentCart.AddressesTabs.Any(y => y.AddressOrganizationId == x.Id))];
+            OfficeOrganizationModelDB[] addresses = value is null ? [] : [.. value.Where(x => !CurrentCart.OfficesTabs.Any(y => y.OfficeId == x.Id))];
             if (addresses.Length != 0)
             {
-                CurrentCart.AddressesTabs.AddRange(addresses.Select(x => new TabAddressForOrderModelDb()
+                CurrentCart.OfficesTabs.AddRange(addresses.Select(x => new TabOfficeForOrderModelDb()
                 {
-                    AddressOrganizationId = x.Id,
+                    OfficeId = x.Id,
                     Rows = [],
-                    OrderDocument = CurrentCart,
-                    OrderDocumentId = CurrentCart.Id,
-                    AddressOrganization = new()
+                    Order = CurrentCart,
+                    OrderId = CurrentCart.Id,
+                    Office = new()
                     {
                         Id = x.Id,
                         Address = x.Address,
@@ -93,24 +93,24 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
                         Organization = CurrentOrganization,
                     }
                 }));
-                _selectedAddresses = [.. CurrentCart.AddressesTabs.Select(Convert)];
+                _selectedAddresses = [.. CurrentCart.OfficesTabs.Select(Convert)];
                 InvokeAsync(async () => await StorageRepo.SaveParameter(CurrentCart, GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), false));
             }
-            static OfficeOrganizationModelDB Convert(TabAddressForOrderModelDb x) => new()
+            static OfficeOrganizationModelDB Convert(TabOfficeForOrderModelDb x) => new()
             {
-                Id = x.AddressOrganization!.Id,
-                Name = x.AddressOrganization.Name,
-                Address = x.AddressOrganization.Address,
-                Contacts = x.AddressOrganization.Contacts,
-                ParentId = x.AddressOrganization.ParentId,
-                Organization = x.AddressOrganization.Organization,
-                OrganizationId = x.AddressOrganization.OrganizationId,
+                Id = x.Office!.Id,
+                Name = x.Office.Name,
+                Address = x.Office.Address,
+                Contacts = x.Office.Contacts,
+                ParentId = x.Office.ParentId,
+                Organization = x.Office.Organization,
+                OrganizationId = x.Office.OrganizationId,
             };
 
             // адреса/вкладки, которые пользователь хочет удалить
-            TabAddressForOrderModelDb[] _qr = CurrentCart
-                .AddressesTabs
-                .Where(x => value?.Any(y => y.Id == x.AddressOrganizationId) != true).ToArray();
+            TabOfficeForOrderModelDb[] _qr = CurrentCart
+                .OfficesTabs
+                .Where(x => value?.Any(y => y.Id == x.OfficeId) != true).ToArray();
 
             // адреса/вкладки, которые можно свободно удалить (без строк)
             OfficeOrganizationModelDB[] _prev = _qr
@@ -119,8 +119,8 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
                  .ToArray();
             if (_prev.Length != 0)
             {
-                CurrentCart.AddressesTabs!.RemoveAll(x => _prev.Any(y => y.Id == x.AddressOrganizationId));
-                _selectedAddresses = [.. CurrentCart.AddressesTabs.Select(Convert)];
+                CurrentCart.OfficesTabs!.RemoveAll(x => _prev.Any(y => y.Id == x.OfficeId));
+                _selectedAddresses = [.. CurrentCart.OfficesTabs.Select(Convert)];
                 InvokeAsync(async () => { await StorageRepo.SaveParameter(CurrentCart, GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true); });
             }
 
@@ -156,7 +156,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
     async Task ActualityData()
     {
         int[]? offersIds = CurrentCart?
-            .AddressesTabs?
+            .OfficesTabs?
             .SkipWhile(x => x.Rows is null)
             .SelectMany(x => x.Rows!.Select(y => y.OfferId))
             .Distinct()
@@ -173,7 +173,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             return;
         }
 
-        CurrentCart!.AddressesTabs!.ForEach(adRow =>
+        CurrentCart!.OfficesTabs!.ForEach(adRow =>
         {
             adRow.Rows?.ForEach(orderRow =>
                 {
@@ -225,11 +225,11 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             if (CurrentCart is null)
                 throw new ArgumentNullException(nameof(CurrentCart), GetType().FullName);
 
-            if (CurrentCart.AddressesTabs is null || CurrentCart.AddressesTabs.Count == 0)
+            if (CurrentCart.OfficesTabs is null || CurrentCart.OfficesTabs.Count == 0)
                 return 0;
 
             IQueryable<RowOfOrderDocumentModelDB> rows = CurrentCart
-                .AddressesTabs
+                .OfficesTabs
                 .Where(x => x.Rows is not null)
                 .SelectMany(x => x.Rows!)
                 .AsQueryable();
@@ -246,11 +246,11 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
         if (CurrentCart is null)
             throw new ArgumentNullException(nameof(CurrentCart), GetType().FullName);
 
-        CurrentCart.AddressesTabs ??= [];
+        CurrentCart.OfficesTabs ??= [];
         if (_prevSelectedAddresses is null || !_prevSelectedAddresses.Any())
-            CurrentCart.AddressesTabs.Clear();
+            CurrentCart.OfficesTabs.Clear();
         else
-            CurrentCart.AddressesTabs.RemoveAll(x => !_prevSelectedAddresses.Any(y => y.Id == x.AddressOrganizationId));
+            CurrentCart.OfficesTabs.RemoveAll(x => !_prevSelectedAddresses.Any(y => y.Id == x.OfficeId));
 
         _selectedAddresses = _prevSelectedAddresses?.ToList();
         _prevSelectedAddresses = null;
@@ -275,16 +275,16 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
         CurrentCart.Organization = prevCurrOrg;
         CurrentCart.OrganizationId = prevCurrOrg?.Id ?? 0;
         prevCurrOrg = null;
-        CurrentCart.AddressesTabs?.RemoveAll(x => !CurrentOrganization!.Addresses!.Any(y => y.Id == x.AddressOrganizationId));
+        CurrentCart.OfficesTabs?.RemoveAll(x => !CurrentOrganization!.Offices!.Any(y => y.Id == x.OfficeId));
         ResetAddresses();
         _visibleChangeOrganization = false;
     }
 
     async Task ClearOrder()
     {
-        if (CurrentCart?.AddressesTabs is null)
+        if (CurrentCart?.OfficesTabs is null)
             return;
-        CurrentCart.AddressesTabs.ForEach(x => x.Rows?.Clear());
+        CurrentCart.OfficesTabs.ForEach(x => x.Rows?.Clear());
         await StorageRepo.SaveParameter(CurrentCart, GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
         NavRepo.Refresh(true);
     }
@@ -295,7 +295,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             throw new ArgumentNullException(nameof(CurrentCart), GetType().FullName);
 
         await SetBusy();
-        CurrentCart.AddressesTabs?.RemoveAll(x => !CurrentOrganization!.Addresses!.Any(y => y.Id == x.AddressOrganizationId));
+        CurrentCart.OfficesTabs?.RemoveAll(x => !CurrentOrganization!.Offices!.Any(y => y.Id == x.OfficeId));
         await StorageRepo.SaveParameter(CurrentCart, GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
         await SetBusy(false);
     }
@@ -317,7 +317,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
         if (CurrentCart is null)
             throw new ArgumentNullException(nameof(CurrentCart), GetType().FullName);
 
-        if (CurrentCart.AddressesTabs?.Any(x => x.Rows is null || x.Rows.Count == 0) == true)
+        if (CurrentCart.OfficesTabs?.Any(x => x.Rows is null || x.Rows.Count == 0) == true)
         {
             SnackbarRepo.Error("Присутствуют адреса без номенклатуры заказа. Исключите пустую вкладку или заполните её данными");
             return;
@@ -357,14 +357,14 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
 
         CurrentCart ??= OrderDocumentModelDB.NewEmpty(CurrentUserSession!.UserId);
 
-        if (CurrentCart.AddressesTabs is null)
+        if (CurrentCart.OfficesTabs is null)
         {
             AllRows = [];
             GroupingRows = [];
             return;
         }
 
-        AllRows = CurrentCart.AddressesTabs?.Where(x => x.Rows is not null).SelectMany(x => x.Rows!).ToArray() ?? [];
+        AllRows = CurrentCart.OfficesTabs?.Where(x => x.Rows is not null).SelectMany(x => x.Rows!).ToArray() ?? [];
         GroupingRows = AllRows.GroupBy(x => x.OfferId).ToList();
         List<int> offers_load = [.. GroupingRows.Where(dc => !RulesCache.ContainsKey(dc.Key)).Select(x => x.Key).Distinct()];
 
@@ -446,13 +446,13 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             await StorageRepo.SaveParameter(CurrentCart, GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
         }
 
-        CurrentCart.AddressesTabs ??= [];
-        CurrentCart.AddressesTabs.RemoveAll(x => !CurrentOrganization!.Addresses!.Any(y => y.Id == x.AddressOrganizationId));
-        if (CurrentCart.AddressesTabs.Count != 0)
+        CurrentCart.OfficesTabs ??= [];
+        CurrentCart.OfficesTabs.RemoveAll(x => !CurrentOrganization!.Offices!.Any(y => y.Id == x.OfficeId));
+        if (CurrentCart.OfficesTabs.Count != 0)
         {
             _selectedAddresses = [.. CurrentCart
-                .AddressesTabs
-                .Select(x => CurrentOrganization!.Addresses!.First(y => y.Id == x.AddressOrganizationId))];
+                .OfficesTabs
+                .Select(x => CurrentOrganization!.Offices!.First(y => y.Id == x.OfficeId))];
         }
     }
 }
