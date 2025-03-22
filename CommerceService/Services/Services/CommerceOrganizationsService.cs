@@ -179,12 +179,6 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        org_db.BankBIC = org.BankBIC;
-        org_db.NewBankBIC = null;
-
-        org_db.BankName = org.BankName;
-        org_db.NewBankName = null;
-
         org_db.INN = org.INN;
         org_db.NewINN = null;
 
@@ -193,12 +187,6 @@ public partial class CommerceImplementService : ICommerceService
 
         org_db.OGRN = org.OGRN;
         org_db.NewOGRN = null;
-
-        org_db.CorrespondentAccount = org.CorrespondentAccount;
-        org_db.NewCorrespondentAccount = null;
-
-        org_db.CurrentAccount = org.CurrentAccount;
-        org_db.NewCurrentAccount = null;
 
         org_db.KPP = org.KPP;
         org_db.NewKPP = null;
@@ -301,12 +289,12 @@ public partial class CommerceImplementService : ICommerceService
                 TResponseModel<UserInfoModel[]> userFind = await identityRepo.GetUsersIdentity([req.SenderActionUserId]);
                 actor = userFind.Response!.First();
                 }),
-            Task.Run(async () => { duple = await context.Organizations.FirstOrDefaultAsync(x => x.INN == req.Payload.INN || x.OGRN == req.Payload.OGRN || (x.BankBIC == req.Payload.BankBIC && x.CurrentAccount == req.Payload.CurrentAccount && x.CorrespondentAccount == req.Payload.CorrespondentAccount)); })
+            Task.Run(async () => { duple = await context.Organizations.FirstOrDefaultAsync(x => x.INN == req.Payload.INN || x.OGRN == req.Payload.OGRN ); })
             ]);
 
         duple = await context
                 .Organizations
-                .FirstOrDefaultAsync(x => x.INN == req.Payload.INN || x.OGRN == req.Payload.OGRN || (x.BankBIC == req.Payload.BankBIC && x.CurrentAccount == req.Payload.CurrentAccount && x.CorrespondentAccount == req.Payload.CorrespondentAccount));
+                .FirstOrDefaultAsync(x => x.INN == req.Payload.INN || x.OGRN == req.Payload.OGRN);
 
         if (req.Payload.Id < 1)
         {
@@ -346,10 +334,6 @@ public partial class CommerceImplementService : ICommerceService
 
             req.Payload.NewINN = req.Payload.INN;
             req.Payload.NewOGRN = req.Payload.OGRN;
-            req.Payload.NewBankBIC = req.Payload.BankBIC;
-            req.Payload.NewCorrespondentAccount = req.Payload.CorrespondentAccount;
-            req.Payload.NewCurrentAccount = req.Payload.CurrentAccount;
-            req.Payload.NewBankName = req.Payload.BankName;
             req.Payload.NewName = req.Payload.Name;
             req.Payload.NewLegalAddress = req.Payload.LegalAddress;
             req.Payload.NewKPP = req.Payload.KPP;
@@ -387,21 +371,6 @@ public partial class CommerceImplementService : ICommerceService
             else if (org_db.LegalAddress != org_db.NewLegalAddress)
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewLegalAddress, ""));
 
-            if (org_db.CurrentAccount != req.Payload.CurrentAccount)
-                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewCurrentAccount, req.Payload.CurrentAccount));
-            else if (org_db.CurrentAccount != org_db.NewCurrentAccount)
-                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewCurrentAccount, ""));
-
-            if (org_db.BankBIC != req.Payload.BankBIC)
-                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewBankBIC, req.Payload.BankBIC));
-            else if (org_db.BankBIC != org_db.NewBankBIC)
-                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewBankBIC, ""));
-
-            if (org_db.BankName != req.Payload.BankName)
-                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewBankName, req.Payload.BankName));
-            else if (org_db.BankName != org_db.BankName)
-                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewBankName, ""));
-
             if (org_db.INN != req.Payload.INN)
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewINN, req.Payload.INN));
             else if (org_db.INN != org_db.INN)
@@ -411,11 +380,6 @@ public partial class CommerceImplementService : ICommerceService
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewOGRN, req.Payload.OGRN));
             else if (org_db.OGRN != org_db.OGRN)
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewOGRN, ""));
-
-            if (org_db.CorrespondentAccount != req.Payload.CorrespondentAccount)
-                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewCorrespondentAccount, req.Payload.CorrespondentAccount));
-            else if (org_db.CorrespondentAccount != org_db.CorrespondentAccount)
-                await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewCorrespondentAccount, ""));
 
             if (org_db.KPP != req.Payload.KPP)
                 await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.NewKPP, req.Payload.KPP));

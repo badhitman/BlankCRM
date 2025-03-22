@@ -1,0 +1,38 @@
+﻿@using MudBlazor
+
+<div class="card">
+    <div class="card-body">
+        @if (BankDetails is null)
+        {
+            <MudProgressCircular Color="Color.Success" Indeterminate="true" />
+        }
+        else
+        {
+            <div class="mb-2">
+                <label for="inputCurrentAccount" class="form-label">Расчетный счет</label>
+                <input @bind-value="BankDetails.CurrentAccount" @bind-value:event="oninput" type="text" id="inputCurrentAccount" class="form-control" aria-describedby="currentAccountHelpBlock">
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label for="inputBankName" class="form-label">Банк</label>
+                    <input @bind-value="BankDetails.BankName" @bind-value:event="oninput" type="text" id="inputBankName" class="form-control" aria-describedby="bankNameHelpBlock">
+                </div>
+                <div class="col-md-4">
+                    <label for="inputBankBIC" class="form-label">БИК</label>
+                    <input @bind-value="BankDetails.BankBIC" @bind-value:event="oninput" type="text" id="inputBankBIC" class="form-control" aria-describedby="bankBICHelpBlock">
+
+                </div>
+                <div class="col-md-4">
+                    <label for="inputCorrespondentAccount" class="form-label">Корр. счет</label>
+                    <input @bind-value="BankDetails.CorrespondentAccount" @bind-value:event="oninput" type="text" id="inputCorrespondentAccount" class="form-control" aria-describedby="correspondentAccountHelpBlock">
+                </div>
+                @* <MudSwitch @bind-Value="BankDetails.IsDisabled" Label="Отключение" Color="Color.Success" /> *@
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    BankDetailsModelDB? BankDetails;
+
+}

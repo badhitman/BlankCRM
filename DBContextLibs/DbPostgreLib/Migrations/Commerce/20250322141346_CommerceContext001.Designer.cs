@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20250322104441_CommerceContext001")]
+    [Migration("20250322141346_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -24,6 +24,57 @@ namespace DbPostgreLib.Migrations.Commerce
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("SharedLib.BankDetailsModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BankBIC")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("BankName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CorrespondentAccount")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CurrentAccount")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDisabled");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("BankBIC", "CorrespondentAccount", "CurrentAccount")
+                        .IsUnique();
+
+                    b.ToTable("BanksDetails");
+                });
 
             modelBuilder.Entity("SharedLib.LockTransactionModelDB", b =>
                 {
@@ -316,24 +367,11 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BankBIC")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("BankName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CorrespondentAccount")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("BankMainAccount")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CurrentAccount")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -361,18 +399,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("NewBankBIC")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NewBankName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NewCorrespondentAccount")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NewCurrentAccount")
                         .HasColumnType("text");
 
                     b.Property<string>("NewINN")
@@ -408,9 +434,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("Name");
 
                     b.HasIndex("OGRN")
-                        .IsUnique();
-
-                    b.HasIndex("BankBIC", "CorrespondentAccount", "CurrentAccount")
                         .IsUnique();
 
                     b.ToTable("Organizations");
@@ -882,6 +905,17 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasDiscriminator().HasValue("WeeklyScheduleModelDB");
                 });
 
+            modelBuilder.Entity("SharedLib.BankDetailsModelDB", b =>
+                {
+                    b.HasOne("SharedLib.OrganizationModelDB", "Organization")
+                        .WithMany("BanksDetails")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("SharedLib.OfferAvailabilityModelDB", b =>
                 {
                     b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
@@ -1126,6 +1160,8 @@ namespace DbPostgreLib.Migrations.Commerce
 
             modelBuilder.Entity("SharedLib.OrganizationModelDB", b =>
                 {
+                    b.Navigation("BanksDetails");
+
                     b.Navigation("Contractors");
 
                     b.Navigation("Offices");

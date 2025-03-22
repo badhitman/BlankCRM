@@ -63,10 +63,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     NewINN = table.Column<string>(type: "text", nullable: true),
                     NewKPP = table.Column<string>(type: "text", nullable: true),
                     NewOGRN = table.Column<string>(type: "text", nullable: true),
-                    NewCurrentAccount = table.Column<string>(type: "text", nullable: true),
-                    NewCorrespondentAccount = table.Column<string>(type: "text", nullable: true),
-                    NewBankName = table.Column<string>(type: "text", nullable: true),
-                    NewBankBIC = table.Column<string>(type: "text", nullable: true),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
@@ -76,10 +72,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     INN = table.Column<string>(type: "text", nullable: false),
                     KPP = table.Column<string>(type: "text", nullable: true),
                     OGRN = table.Column<string>(type: "text", nullable: false),
-                    CurrentAccount = table.Column<string>(type: "text", nullable: false),
-                    CorrespondentAccount = table.Column<string>(type: "text", nullable: false),
-                    BankName = table.Column<string>(type: "text", nullable: false),
-                    BankBIC = table.Column<string>(type: "text", nullable: false)
+                    BankMainAccount = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -133,6 +126,32 @@ namespace DbPostgreLib.Migrations.Commerce
                         name: "FK_Offers_Nomenclatures_NomenclatureId",
                         column: x => x.NomenclatureId,
                         principalTable: "Nomenclatures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BanksDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OrganizationId = table.Column<int>(type: "integer", nullable: false),
+                    CurrentAccount = table.Column<string>(type: "text", nullable: false),
+                    CorrespondentAccount = table.Column<string>(type: "text", nullable: false),
+                    BankName = table.Column<string>(type: "text", nullable: false),
+                    BankBIC = table.Column<string>(type: "text", nullable: false),
+                    IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BanksDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BanksDetails_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -524,6 +543,27 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BanksDetails_BankBIC_CorrespondentAccount_CurrentAccount",
+                table: "BanksDetails",
+                columns: new[] { "BankBIC", "CorrespondentAccount", "CurrentAccount" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BanksDetails_IsDisabled",
+                table: "BanksDetails",
+                column: "IsDisabled");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BanksDetails_Name",
+                table: "BanksDetails",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BanksDetails_OrganizationId",
+                table: "BanksDetails",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Contractors_OfferId",
                 table: "Contractors",
                 column: "OfferId");
@@ -636,12 +676,6 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_Orders_OrganizationId",
                 table: "Orders",
                 column: "OrganizationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Organizations_BankBIC_CorrespondentAccount_CurrentAccount",
-                table: "Organizations",
-                columns: new[] { "BankBIC", "CorrespondentAccount", "CurrentAccount" },
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Organizations_INN",
@@ -846,6 +880,9 @@ namespace DbPostgreLib.Migrations.Commerce
         {
             migrationBuilder.DropTable(
                 name: "AttendancesReg");
+
+            migrationBuilder.DropTable(
+                name: "BanksDetails");
 
             migrationBuilder.DropTable(
                 name: "Contractors");

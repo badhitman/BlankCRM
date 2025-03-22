@@ -10,9 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// OrganizationLegalModel
 /// </summary>
-[Index(nameof(INN), IsUnique = true)]
-[Index(nameof(OGRN), IsUnique = true)]
-[Index(nameof(BankBIC), nameof(CorrespondentAccount), nameof(CurrentAccount), IsUnique = true)]
+[Index(nameof(INN), IsUnique = true), Index(nameof(OGRN), IsUnique = true)]
 public class OrganizationLegalModel : EntryDescriptionSwitchableModel
 {
     /// <summary>
@@ -52,28 +50,10 @@ public class OrganizationLegalModel : EntryDescriptionSwitchableModel
     public required string OGRN { get; set; }
 
     /// <summary>
-    /// Расчетный счет
+    /// Банковские реквизиты (основные)
     /// </summary>
-    [Required]
-    public required string CurrentAccount { get; set; }
+    public int BankMainAccount { get; set; }
 
-    /// <summary>
-    /// Корр. счет
-    /// </summary>
-    [Required]
-    public required string CorrespondentAccount { get; set; }
-
-    /// <summary>
-    /// Банк
-    /// </summary>
-    [Required]
-    public required string BankName { get; set; }
-
-    /// <summary>
-    /// БИК Банка
-    /// </summary>
-    [Required]
-    public required string BankBIC { get; set; }
 
     /// <inheritdoc/>
     public override string ToString()

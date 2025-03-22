@@ -8,7 +8,7 @@ namespace SharedLib;
 /// Организация
 /// </summary>
 public class OrganizationModelDB : OrganizationLegalModel
-{    
+{
     /// <summary>
     /// Дата последнего обновления
     /// </summary>
@@ -39,22 +39,12 @@ public class OrganizationModelDB : OrganizationLegalModel
     /// НОВЫЙ ОГРН (запрос изменений)
     /// </summary>
     public string? NewOGRN { get; set; }
+
     /// <summary>
-    /// НОВЫЙ Расчетный счет (запрос изменений)
+    /// Банковские реквизиты
     /// </summary>
-    public string? NewCurrentAccount { get; set; }
-    /// <summary>
-    /// НОВЫЙ Корр. счет (запрос изменений)
-    /// </summary>
-    public string? NewCorrespondentAccount { get; set; }
-    /// <summary>
-    /// НОВЫЙ Банк (запрос изменений)
-    /// </summary>
-    public string? NewBankName { get; set; }
-    /// <summary>
-    /// НОВЫЙ БИК Банка (запрос изменений)
-    /// </summary>
-    public string? NewBankBIC { get; set; }
+    public List<BankDetailsModelDB>? BanksDetails { get; set; }
+
 
     /// <summary>
     /// Находится ли объект в режиме запроса изменений реквизитов
@@ -65,11 +55,7 @@ public class OrganizationModelDB : OrganizationLegalModel
         {
             return
                 !string.IsNullOrWhiteSpace(NewName) ||
-                !string.IsNullOrWhiteSpace(NewBankBIC) ||
-                !string.IsNullOrWhiteSpace(NewBankName) ||
                 !string.IsNullOrWhiteSpace(NewLegalAddress) ||
-                !string.IsNullOrWhiteSpace(NewCorrespondentAccount) ||
-                !string.IsNullOrWhiteSpace(NewCurrentAccount) ||
                 !string.IsNullOrWhiteSpace(NewINN) ||
                 !string.IsNullOrWhiteSpace(NewKPP);
         }
@@ -79,7 +65,7 @@ public class OrganizationModelDB : OrganizationLegalModel
     /// Users
     /// </summary>
     public List<UserOrganizationModelDB>? Users { get; set; }
-    
+
     /// <summary>
     /// Подрядчики (организации)
     /// </summary>
@@ -100,10 +86,6 @@ public class OrganizationModelDB : OrganizationLegalModel
             return
                 org_db.IsDisabled == IsDisabled &&
                 org_db.OGRN == OGRN &&
-                org_db.CurrentAccount == CurrentAccount &&
-                org_db.CorrespondentAccount == CorrespondentAccount &&
-                org_db.BankName == BankName &&
-                org_db.BankBIC == BankBIC &&
                 org_db.Email == Email &&
                 org_db.INN == INN &&
                 org_db.Name == Name &&
@@ -117,5 +99,5 @@ public class OrganizationModelDB : OrganizationLegalModel
 
     /// <inheritdoc/>
     public override int GetHashCode()
-        => $"{Id}{KPP}{Name}{INN}{Email}{BankBIC}{BankName}{CorrespondentAccount}{CurrentAccount}{OGRN}{IsDisabled}{LegalAddress}{Phone}".GetHashCode();
+        => $"{Id}{KPP}{Name}{INN}{Email}{OGRN}{IsDisabled}{LegalAddress}{Phone}".GetHashCode();
 }

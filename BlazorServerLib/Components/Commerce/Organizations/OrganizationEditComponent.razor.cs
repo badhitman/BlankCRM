@@ -36,10 +36,6 @@ public partial class OrganizationEditComponent : BlazorBusyComponentBaseAuthMode
         {
             currentOrg = new()
             {
-                BankBIC = string.Empty,
-                BankName = string.Empty,
-                CorrespondentAccount = string.Empty,
-                CurrentAccount = string.Empty,
                 Email = string.Empty,
                 INN = string.Empty,
                 KPP = string.Empty,

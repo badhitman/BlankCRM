@@ -75,6 +75,11 @@ public partial class CommerceLayerContext : DbContext
     public DbSet<OrganizationModelDB> Organizations { get; set; } = default!;
 
     /// <summary>
+    /// Банковские реквизиты организаций
+    /// </summary>
+    public DbSet<BankDetailsModelDB> BanksDetails { get; set; } = default!;
+
+    /// <summary>
     /// Филиалы (Офисы)
     /// </summary>
     public DbSet<OfficeOrganizationModelDB> Offices { get; set; } = default!;

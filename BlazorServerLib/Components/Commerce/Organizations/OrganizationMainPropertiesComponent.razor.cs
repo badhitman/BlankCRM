@@ -27,6 +27,12 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
     OrganizationModelDB? editOrg;
 
+    /// <inheritdoc/>
+    protected override void OnInitialized()
+    {
+        editOrg = GlobalTools.CreateDeepCopy(CurrentOrganization);
+    }
+
     async Task ReadOrganization()
     {
         if (CurrentOrganization is null)
@@ -64,26 +70,14 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
         OrganizationModelDB req = GlobalTools.CreateDeepCopy(editOrg)!;
 
-        if (!string.IsNullOrWhiteSpace(editOrg.NewBankBIC))
-            req.BankBIC = editOrg.NewBankBIC;
-
-        if (!string.IsNullOrWhiteSpace(editOrg.NewBankName))
-            req.BankName = editOrg.NewBankName;
-
         if (!string.IsNullOrWhiteSpace(editOrg.NewINN))
             req.INN = editOrg.NewINN;
 
         if (!string.IsNullOrWhiteSpace(editOrg.NewOGRN))
             req.OGRN = editOrg.NewOGRN;
 
-        if (!string.IsNullOrWhiteSpace(editOrg.NewCorrespondentAccount))
-            req.CorrespondentAccount = editOrg.NewCorrespondentAccount;
-
         if (!string.IsNullOrWhiteSpace(editOrg.NewLegalAddress))
             req.LegalAddress = editOrg.NewLegalAddress;
-
-        if (!string.IsNullOrWhiteSpace(editOrg.NewCurrentAccount))
-            req.CurrentAccount = editOrg.NewCurrentAccount;
 
         if (!string.IsNullOrWhiteSpace(editOrg.NewKPP))
             req.KPP = editOrg.NewKPP;
