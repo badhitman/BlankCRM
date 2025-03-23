@@ -1,6 +1,6 @@
 ﻿@using MudBlazor
 
-@inherits BlazorBusyComponentBaseModel
+@inherits BlazorBusyComponentBaseAuthModel
 
 <MudExpansionPanels @ref="PanelsRef">
     <MudExpansionPanel MaxHeight="500" ExpandedChanged="OnExpandedChanged" Disabled="@(CurrentOrganization.Id < 1 || ReadOnly)">
@@ -26,6 +26,10 @@
                         <span>@CurrentOrganization.BanksDetails.First(x => x.Id == CurrentOrganization.BankMainAccount)</span>
                     }
                 </MudText>
+                @if (IsBusyProgress)
+                {
+                    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+                }
             </div>
         </TitleContent>
         <ChildContent>
@@ -62,6 +66,7 @@
                             <th scope="col">Банк</th>
                             <th scope="col">БИК</th>
                             <th scope="col">Корр.счёт</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -76,12 +81,8 @@
                                     }
                                     else
                                     {
-                                        <sup title="сделать счёт основным для расчётов" style="cursor:pointer;" class="mx-1 link-secondary">сделать основным</sup>
+                                        <sup title="сделать счёт основным для расчётов" style="cursor:pointer;" @onclick="() => SetBankDetailsAsMain(bank)" class="mx-1 link-secondary">сделать основным</sup>
                                     }
-                                    <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
-                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" />
-                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" />
-                                    </MudButtonGroup>
                                 </td>
                                 <th>
                                     @bank.Name
@@ -91,6 +92,12 @@
                                 </th>
                                 <th>
                                     @bank.CorrespondentAccount
+                                </th>
+                                <th>
+                                    <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+                                        <MudIconButton OnClick="() => DeleteBankDetails(bank)" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" />
+                                        <MudIconButton OnClick="() => OpenBankDetails(bank)" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" />
+                                    </MudButtonGroup>
                                 </th>
                             </tr>
                         }

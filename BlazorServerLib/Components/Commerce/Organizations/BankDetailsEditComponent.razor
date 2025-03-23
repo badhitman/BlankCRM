@@ -43,7 +43,7 @@
                     <label for="inputCorrespondentAccount" class="form-label">Корр. счет</label>
                     <input @bind-value="bankDetailsEdit.CorrespondentAccount" @bind-value:event="oninput" type="text" id="inputCorrespondentAccount" class="form-control" aria-describedby="correspondentAccountHelpBlock">
                 </div>
-                 <MudSwitch @bind-Value="bankDetailsEdit.IsDisabled" Label="Отключение" Color="Color.Success" />
+                <MudSwitch @bind-Value="bankDetailsEdit.IsDisabled" Label="Отключение" Color="Color.Success" />
             </div>
         }
     </DialogContent>
@@ -52,4 +52,3 @@
         <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
     </DialogActions>
 </MudDialog>
-

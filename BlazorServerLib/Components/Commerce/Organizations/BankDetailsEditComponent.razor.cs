@@ -18,7 +18,6 @@ public partial class BankDetailsEditComponent : BlazorBusyComponentBaseAuthModel
     ICommerceTransmission CommerceRepo { get; set; } = default!;
 
 
-
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
     public required IMudDialogInstance MudDialog { get; set; }
@@ -44,17 +43,27 @@ public partial class BankDetailsEditComponent : BlazorBusyComponentBaseAuthModel
             throw new ArgumentNullException(nameof(BankDetails.Organization));
 
         await SetBusy();
-        TResponseModel<int> res = await CommerceRepo.BankDetailsUpdate(new TAuthRequestModel<BankDetailsModelDB>() { Payload = bankDetailsEdit, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> res = await CommerceRepo.BankDetailsUpdate(new TAuthRequestModel<BankDetailsModelDB>()
+        {
+            Payload = bankDetailsEdit,
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
 
         if (res.Success())
         {
-            bankDetailsEdit.Id = res.Response;
             BankDetails.Organization.BanksDetails ??= [];
-            BankDetails.Organization.BanksDetails.Add(bankDetailsEdit);
-            if (BankDetails.Organization.BankMainAccount == 0 && BankDetails.Organization.BanksDetails?.Count == 1)
-                BankDetails.Organization.BankMainAccount = res.Response;
+            if (bankDetailsEdit.Id < 1)
+            {
+                bankDetailsEdit.Id = res.Response;
+                BankDetails.Organization.BanksDetails.Add(bankDetailsEdit);
+                if (BankDetails.Organization.BankMainAccount == 0 && BankDetails.Organization.BanksDetails?.Count == 1)
+                    BankDetails.Organization.BankMainAccount = res.Response;
+            }
+            else
+                BankDetails.Organization.BanksDetails.First(x => x.Id == bankDetailsEdit.Id).Update(bankDetailsEdit);
         }
 
         StateHasChangedHandler();

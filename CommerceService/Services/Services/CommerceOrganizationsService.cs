@@ -576,17 +576,28 @@ public partial class CommerceImplementService : ICommerceService
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
         BankDetailsModelDB? bankDb = default;
         UserInfoModel? actor = default;
+
         await Task.WhenAll([
             Task.Run(async () =>
             {
                 TResponseModel<UserInfoModel[]> userFind = await identityRepo.GetUsersIdentity([req.SenderActionUserId]);
                 actor = userFind.Response?.Single();
                 }),
-            Task.Run(async () => { bankDb = await context.BanksDetails.Include(x => x.Organization).FirstAsync(x => x.Id == req.Payload ); })
-            ]);
+            Task.Run(async () =>
+            {
+                bankDb = await context.BanksDetails
+                .Include(x => x.Organization)
+                .FirstAsync(x => x.Id == req.Payload );
+
+            })
+        ]);
 
         if (actor is null || bankDb is null)
             return ResponseBaseModel.CreateError("Отказано в доступе");
+
+        await context.Organizations
+            .Where(x => x.BankMainAccount == req.Payload)
+            .ExecuteUpdateAsync(set => set.SetProperty(p => p.BankMainAccount, 0));
 
         return ResponseBaseModel.CreateInfo($"Удалено: {await context.BanksDetails.Where(x => x.Id == req.Payload).ExecuteDeleteAsync()}");
     }
