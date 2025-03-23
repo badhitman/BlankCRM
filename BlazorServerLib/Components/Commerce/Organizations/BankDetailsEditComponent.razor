@@ -1,9 +1,12 @@
 ﻿@using MudBlazor
 
-@inherits BlazorBusyComponentBaseModel
+@inherits BlazorBusyComponentBaseAuthModel
 
-<div class="card">
-    <div class="card-body">
+<MudDialog>
+    <TitleContent>
+        @MudDialog.Title
+    </TitleContent>
+    <DialogContent>
         @if (BankDetails.OrganizationId < 1)
         {
             <figure class="text-center">
@@ -17,29 +20,36 @@
         }
         else if (bankDetailsEdit is null)
         {
-
+            <p class="lead">
+                bankDetailsEdit is null
+            </p>
         }
         else
         {
             <div class="mb-2">
                 <label for="inputCurrentAccount" class="form-label">Расчетный счет</label>
-                <input @bind-value="BankDetails.CurrentAccount" @bind-value:event="oninput" type="text" id="inputCurrentAccount" class="form-control" aria-describedby="currentAccountHelpBlock">
+                <input @bind-value="bankDetailsEdit.CurrentAccount" @bind-value:event="oninput" type="text" id="inputCurrentAccount" class="form-control" aria-describedby="currentAccountHelpBlock">
             </div>
             <div class="row mb-2">
                 <div class="col-md-4">
                     <label for="inputBankName" class="form-label">Банк</label>
-                    <input @bind-value="BankDetails.Name" @bind-value:event="oninput" type="text" id="inputBankName" class="form-control" aria-describedby="bankNameHelpBlock">
+                    <input @bind-value="bankDetailsEdit.Name" @bind-value:event="oninput" type="text" id="inputBankName" class="form-control" aria-describedby="bankNameHelpBlock">
                 </div>
                 <div class="col-md-4">
                     <label for="inputBankBIC" class="form-label">БИК</label>
-                    <input @bind-value="BankDetails.BankBIC" @bind-value:event="oninput" type="text" id="inputBankBIC" class="form-control" aria-describedby="bankBICHelpBlock">
+                    <input @bind-value="bankDetailsEdit.BankBIC" @bind-value:event="oninput" type="text" id="inputBankBIC" class="form-control" aria-describedby="bankBICHelpBlock">
                 </div>
                 <div class="col-md-4">
                     <label for="inputCorrespondentAccount" class="form-label">Корр. счет</label>
-                    <input @bind-value="BankDetails.CorrespondentAccount" @bind-value:event="oninput" type="text" id="inputCorrespondentAccount" class="form-control" aria-describedby="correspondentAccountHelpBlock">
+                    <input @bind-value="bankDetailsEdit.CorrespondentAccount" @bind-value:event="oninput" type="text" id="inputCorrespondentAccount" class="form-control" aria-describedby="correspondentAccountHelpBlock">
                 </div>
-                @* <MudSwitch @bind-Value="BankDetails.IsDisabled" Label="Отключение" Color="Color.Success" /> *@
+                 <MudSwitch @bind-Value="bankDetailsEdit.IsDisabled" Label="Отключение" Color="Color.Success" />
             </div>
         }
-    </div>
-</div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+

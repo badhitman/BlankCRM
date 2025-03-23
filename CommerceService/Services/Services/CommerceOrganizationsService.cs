@@ -396,15 +396,13 @@ public partial class CommerceImplementService : ICommerceService
                 res.AddSuccess(req.Payload.IsDisabled ? "Организация успешно отключена" : "Организация успешно включена");
 
             if (org_db.Email != req.Payload.Email || org_db.Phone != req.Payload.Phone || org_db.IsDisabled != req.Payload.IsDisabled)
-                await context
-                   .Organizations
-                   .Where(x => x.Id == org_db.Id)
+                await q
                    .ExecuteUpdateAsync(set => set
                    .SetProperty(p => p.LastAtUpdatedUTC, lud)
-                   .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled)
                    .SetProperty(p => p.Phone, req.Payload.Phone)
-                   .SetProperty(p => p.Email, req.Payload.Email));
-
+                   .SetProperty(p => p.Email, req.Payload.Email)
+                   .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled)
+                   .SetProperty(p => p.BankMainAccount, req.Payload.BankMainAccount));
         }
 
         return res;
@@ -514,6 +512,7 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> BankDetailsUpdate(TAuthRequestModel<BankDetailsModelDB> req)
     {
+        req.Payload.Organization = null;
         TResponseModel<int> res = new() { Response = 0 };
         (bool IsValid, List<System.ComponentModel.DataAnnotations.ValidationResult> ValidationResults) = GlobalTools.ValidateObject(req.Payload);
         if (!IsValid)
@@ -544,7 +543,14 @@ public partial class CommerceImplementService : ICommerceService
             req.Payload.Id = 0;
             await context.AddAsync(req.Payload);
             await context.SaveChangesAsync();
+
             res.Response = req.Payload.Id;
+            res.AddSuccess("Банковский счёт добавлен/создан");
+
+            if (!await context.BanksDetails.AnyAsync(x => x.OrganizationId == req.Payload.OrganizationId && x.Id != req.Payload.Id))
+                await context.Organizations
+                    .Where(x => x.Id == req.Payload.OrganizationId)
+                    .ExecuteUpdateAsync(set => set.SetProperty(p => p.BankMainAccount, req.Payload.Id));
         }
         else
         {
@@ -557,6 +563,8 @@ public partial class CommerceImplementService : ICommerceService
                 .SetProperty(p => p.Description, req.Payload.Description)
                 .SetProperty(p => p.BankBIC, req.Payload.BankBIC)
                 .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled));
+
+            res.AddSuccess($"Банковский счёт {(res.Response > 0 ? "обновлён" : "[без изменений]")}");
         }
 
         return res;

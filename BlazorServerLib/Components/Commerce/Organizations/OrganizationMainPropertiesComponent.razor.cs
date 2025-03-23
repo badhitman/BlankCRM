@@ -26,11 +26,22 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
 
     OrganizationModelDB? editOrg;
+    BanksListDetailsOrganizationComponent? banksListDetailsRef;
 
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
         editOrg = GlobalTools.CreateDeepCopy(CurrentOrganization);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender && banksListDetailsRef?.PanelsRef is not null && banksListDetailsRef.IsExpanded && !CurrentOrganization.Equals(editOrg))
+        {
+            await banksListDetailsRef.PanelsRef.CollapseAllAsync();
+            banksListDetailsRef.StateHasChangedCall();
+        }
     }
 
     async Task ReadOrganization()

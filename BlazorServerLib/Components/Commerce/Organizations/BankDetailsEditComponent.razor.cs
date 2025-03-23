@@ -5,27 +5,68 @@
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using MudBlazor;
 
 namespace BlazorWebLib.Components.Commerce.Organizations;
 
 /// <summary>
 /// BankDetailsEditComponent
 /// </summary>
-public partial class BankDetailsEditComponent : BlazorBusyComponentBaseModel
+public partial class BankDetailsEditComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     ICommerceTransmission CommerceRepo { get; set; } = default!;
 
 
+
+    /// <inheritdoc/>
+    [CascadingParameter, EditorRequired]
+    public required IMudDialogInstance MudDialog { get; set; }
+
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required BankDetailsModelDB BankDetails { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action StateHasChangedHandler { get; set; }
+
+
     BankDetailsModelDB? bankDetailsEdit;
 
-    /// <inheritdoc/>
-    protected override void OnInitialized()
+    async Task Submit()
     {
+        if (bankDetailsEdit is null)
+            throw new ArgumentNullException(nameof(bankDetailsEdit));
+        if (CurrentUserSession is null)
+            throw new ArgumentNullException(nameof(CurrentUserSession));
+        if (BankDetails.Organization is null)
+            throw new ArgumentNullException(nameof(BankDetails.Organization));
+
+        await SetBusy();
+        TResponseModel<int> res = await CommerceRepo.BankDetailsUpdate(new TAuthRequestModel<BankDetailsModelDB>() { Payload = bankDetailsEdit, SenderActionUserId = CurrentUserSession.UserId });
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusy(false);
+
+        if (res.Success())
+        {
+            bankDetailsEdit.Id = res.Response;
+            BankDetails.Organization.BanksDetails ??= [];
+            BankDetails.Organization.BanksDetails.Add(bankDetailsEdit);
+            if (BankDetails.Organization.BankMainAccount == 0 && BankDetails.Organization.BanksDetails?.Count == 1)
+                BankDetails.Organization.BankMainAccount = res.Response;
+        }
+
+        StateHasChangedHandler();
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
         bankDetailsEdit = GlobalTools.CreateDeepCopy(BankDetails);
     }
 }

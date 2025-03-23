@@ -42,16 +42,19 @@ public class BankDetailsModelDB : EntryDescriptionSwitchableModel
     public required string CorrespondentAccount { get; set; }
 
     /// <inheritdoc/>
+    public override string ToString() 
+        => $"{CurrentAccount} в {Name} (БИК:{BankBIC})";
+
+    /// <inheritdoc/>
     public static BankDetailsModelDB BuildEmpty(OrganizationModelDB org)
         => new()
         {
-            BankBIC = string.Empty,
-            Name = string.Empty,
-            CorrespondentAccount = string.Empty,
-            CurrentAccount = string.Empty,
             OrganizationId = org.Id,
             Organization = org,
-            Description = string.Empty,
-            IsDisabled = false,
+
+            CorrespondentAccount = string.Empty,
+            CurrentAccount = string.Empty,
+            BankBIC = string.Empty,
+            Name = string.Empty,
         };
 }

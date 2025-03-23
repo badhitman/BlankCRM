@@ -73,7 +73,9 @@
             }
         </div>
         <div class="mb-2">
-            <BanksListDetailsOrganizationComponent CurrentOrganization="CurrentOrganization" />
+            <BanksListDetailsOrganizationComponent ReadOnly="!CurrentOrganization.Equals(editOrg)"
+                                                   CurrentOrganization="CurrentOrganization"
+                                                   @ref="banksListDetailsRef" />
         </div>
         @if (CurrentUserSession!.IsAdmin)
         {

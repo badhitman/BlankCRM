@@ -2,20 +2,28 @@
 
 @inherits BlazorBusyComponentBaseModel
 
-<MudExpansionPanels>
-    <MudExpansionPanel MaxHeight="1000" ExpandedChanged="OnExpandedChanged" Disabled="@(CurrentOrganization.Id < 1)">
+<MudExpansionPanels @ref="PanelsRef">
+    <MudExpansionPanel MaxHeight="500" ExpandedChanged="OnExpandedChanged" Disabled="@(CurrentOrganization.Id < 1 || ReadOnly)">
         <TitleContent>
             <div class="d-flex">
                 <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
                 <MudText>
-                    Основной р/с:
+                    р/с:
                     @if (CurrentOrganization.Id < 1)
                     {
                         <span>недоступен. объект организации не записан</span>
                     }
-                    else if (CurrentOrganization.BanksDetails?.Count == 0)
+                    else if (CurrentOrganization.BanksDetails is null || CurrentOrganization.BanksDetails.Count == 0)
                     {
                         <span>отсутствует</span>
+                    }
+                    else if (CurrentOrganization.BankMainAccount == 0)
+                    {
+                        <span>не установлен</span>
+                    }
+                    else
+                    {
+                        <span>@CurrentOrganization.BanksDetails.First(x => x.Id == CurrentOrganization.BankMainAccount)</span>
                     }
                 </MudText>
             </div>
@@ -39,10 +47,11 @@
                         <p>Нет ни одного счёта.</p>
                     </blockquote>
                     <figcaption class="blockquote-footer">
-                        Добавьте организации <cite title="расчётный счёт">банковский счёт</cite>
+                        <cite title="расчётный счёт">Добавить банковский счёт</cite>
+                        <button @onclick="CreateNewBankDetails" type="button" class="btn btn-link">Добавить банковский счёт</button>
                     </figcaption>
                 </figure>
-                <BankDetailsEditComponent BankDetails="BankDetailsModelDB.BuildEmpty(CurrentOrganization)" />
+                @* <BankDetailsEditComponent BankDetails="BankDetailsModelDB.BuildEmpty(CurrentOrganization)" /> *@
             }
             else if (IsExpanded)
             {
@@ -51,18 +60,45 @@
                         <tr>
                             <th scope="col">Счёт</th>
                             <th scope="col">Банк</th>
+                            <th scope="col">БИК</th>
+                            <th scope="col">Корр.счёт</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (BankDetailsModelDB bank in CurrentOrganization.BanksDetails)
                         {
                             <tr>
-                                <td>@bank.CurrentAccount</td>
-                                <th scope="row">@bank.Name</th>
+                                <td scope="row">
+                                    @bank.CurrentAccount
+                                    @if (bank.Id == CurrentOrganization.BankMainAccount)
+                                    {
+                                        <span class="mx-1 badge text-bg-primary">основной</span>
+                                    }
+                                    else
+                                    {
+                                        <sup title="сделать счёт основным для расчётов" style="cursor:pointer;" class="mx-1 link-secondary">сделать основным</sup>
+                                    }
+                                    <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" />
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" />
+                                    </MudButtonGroup>
+                                </td>
+                                <th>
+                                    @bank.Name
+                                </th>
+                                <th>
+                                    @bank.BankBIC
+                                </th>
+                                <th>
+                                    @bank.CorrespondentAccount
+                                </th>
                             </tr>
                         }
                     </tbody>
                 </table>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button title="Добавить расчётный счёт" @onclick="CreateNewBankDetails" class="btn btn-primary" type="button">Новый</button>
+                </div>
             }
         </ChildContent>
     </MudExpansionPanel>
