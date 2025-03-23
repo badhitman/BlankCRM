@@ -141,12 +141,13 @@ public partial class CommerceImplementService : ICommerceService
         {
             OfficeOrganizationModelDB add = new()
             {
-                AddressManual = req.AddressManual,
+                AddressUserComment = req.AddressUserComment,
                 Name = req.Name,
                 ParentId = req.ParentId,
                 Contacts = req.Contacts,
                 OrganizationId = req.OrganizationId,
                 KladrCode = req.KladrCode,
+                KladrTitle = req.KladrTitle,
             };
             await context.AddAsync(add);
             await context.SaveChangesAsync();
@@ -159,7 +160,7 @@ public partial class CommerceImplementService : ICommerceService
                         .Where(x => x.Id == req.Id)
                         .ExecuteUpdateAsync(set => set
                         //.SetProperty(p => p.OrganizationId, req.OrganizationId)
-                        .SetProperty(p => p.AddressManual, req.AddressManual)
+                        .SetProperty(p => p.AddressUserComment, req.AddressUserComment)
                         .SetProperty(p => p.Name, req.Name)
                         .SetProperty(p => p.ParentId, req.ParentId)
                         .SetProperty(p => p.Contacts, req.Contacts));

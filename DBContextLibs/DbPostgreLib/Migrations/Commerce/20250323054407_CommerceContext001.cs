@@ -163,8 +163,9 @@ namespace DbPostgreLib.Migrations.Commerce
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     ParentId = table.Column<int>(type: "integer", nullable: false),
-                    AddressManual = table.Column<string>(type: "text", nullable: false),
                     KladrCode = table.Column<string>(type: "text", nullable: false),
+                    KladrTitle = table.Column<string>(type: "text", nullable: false),
+                    AddressUserComment = table.Column<string>(type: "text", nullable: false),
                     Contacts = table.Column<string>(type: "text", nullable: false),
                     OrganizationId = table.Column<int>(type: "integer", nullable: false)
                 },

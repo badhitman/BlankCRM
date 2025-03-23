@@ -32,7 +32,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
     OfficeOrganizationModelDB OfficeEdit { get; set; } = default!;
 
     bool CanSave =>
-        (OfficeEdit.AddressManual != OfficeCurrent.AddressManual ||
+        (OfficeEdit.AddressUserComment != OfficeCurrent.AddressUserComment ||
         OfficeEdit.Contacts != OfficeCurrent.Contacts ||
         OfficeEdit.Name != OfficeCurrent.Name ||
         OfficeEdit.ParentId != OfficeCurrent.ParentId) &&
@@ -93,7 +93,8 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdate(new AddressOrganizationBaseModel()
         {
             KladrCode = OfficeEdit.KladrCode,
-            AddressManual = OfficeEdit.AddressManual!,
+            KladrTitle = OfficeEdit.KladrTitle,
+            AddressUserComment = OfficeEdit.AddressUserComment!,
             Name = OfficeEdit.Name!,
             ParentId = SelectedRubric!.Id,
             Contacts = OfficeEdit.Contacts,

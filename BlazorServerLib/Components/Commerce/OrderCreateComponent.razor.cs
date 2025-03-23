@@ -85,13 +85,14 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
                     Office = new()
                     {
                         Id = x.Id,
-                        AddressManual = x.AddressManual,
+                        AddressUserComment = x.AddressUserComment,
                         Name = x.Name,
                         ParentId = x.ParentId,
                         Contacts = x.Contacts,
                         OrganizationId = CurrentOrganization!.Id,
                         Organization = CurrentOrganization,
                         KladrCode = x.KladrCode,
+                        KladrTitle = x.KladrTitle,
                     }
                 }));
                 _selectedAddresses = [.. CurrentCart.OfficesTabs.Select(Convert)];
@@ -101,12 +102,13 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             {
                 Id = x.Office!.Id,
                 Name = x.Office.Name,
-                AddressManual = x.Office.AddressManual,
+                AddressUserComment = x.Office.AddressUserComment,
                 Contacts = x.Office.Contacts,
                 ParentId = x.Office.ParentId,
                 Organization = x.Office.Organization,
                 OrganizationId = x.Office.OrganizationId,
                 KladrCode = x.Office.KladrCode,
+                KladrTitle = x.Office.KladrTitle,
             };
 
             // адреса/вкладки, которые пользователь хочет удалить

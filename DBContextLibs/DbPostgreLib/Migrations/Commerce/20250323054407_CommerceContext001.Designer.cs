@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20250323051758_CommerceContext001")]
+    [Migration("20250323054407_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -251,7 +251,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AddressManual")
+                    b.Property<string>("AddressUserComment")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -260,6 +260,10 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("text");
 
                     b.Property<string>("KladrCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("KladrTitle")
                         .IsRequired()
                         .HasColumnType("text");
 

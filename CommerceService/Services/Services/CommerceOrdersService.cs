@@ -1469,7 +1469,7 @@ public partial class CommerceImplementService(
                 wSheetPart.Worksheet.InsertAt(lstColumns, 0);
 
             Row topRow = new() { RowIndex = 2 };
-            InsertExcelCell(topRow, 1, $"Адрес доставки: {table.Office?.AddressManual}", CellValues.String, 0);
+            InsertExcelCell(topRow, 1, $"Адрес доставки: {table.Office?.AddressUserComment}", CellValues.String, 0);
             sheetData!.Append(topRow);
 
             Row headerRow = new() { RowIndex = 4 };

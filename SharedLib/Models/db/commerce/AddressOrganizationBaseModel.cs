@@ -22,15 +22,19 @@ public class AddressOrganizationBaseModel : EntryModel
     /// </summary>
     public required int ParentId { get; set; }
 
-    /// <summary>
-    /// Адрес
-    /// </summary>
-    [Required]
-    public required string AddressManual { get; set; }
-
     /// <inheritdoc/>
     [Required]
     public required string KladrCode { get; set; }
+
+    /// <inheritdoc/>
+    [Required]
+    public required string KladrTitle { get; set; }
+
+    /// <summary>
+    /// Адрес 
+    /// </summary>
+    [Required]
+    public required string AddressUserComment { get; set; }
     #endregion
 
     /// <summary>
@@ -47,13 +51,13 @@ public class AddressOrganizationBaseModel : EntryModel
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{Name} {AddressManual} {(string.IsNullOrEmpty(Contacts) ? "" : $" (контакты:{Contacts})")}".Trim().Replace("  ", " ");
+        return $"{Name} {AddressUserComment} {(string.IsNullOrEmpty(Contacts) ? "" : $" (контакты:{Contacts})")}".Trim().Replace("  ", " ");
     }
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return $"{Id}{Name}{OrganizationId}{AddressManual}{ParentId}{Contacts}".GetHashCode();
+        return $"{Id}{Name}{OrganizationId}{AddressUserComment}{ParentId}{Contacts}".GetHashCode();
     }
 
     /// <inheritdoc/>
@@ -66,7 +70,8 @@ public class AddressOrganizationBaseModel : EntryModel
                 add.Id == Id &&
                 add.Contacts == Contacts &&
                 add.OrganizationId == OrganizationId &&
-                add.AddressManual == AddressManual &&
+                add.AddressUserComment == AddressUserComment &&
+                add.KladrCode == KladrCode &&
                 add.Name == Name &&
                 add.ParentId == ParentId;
 
@@ -79,7 +84,8 @@ public class AddressOrganizationBaseModel : EntryModel
         off1.Name == off2.Name &&
         off1.ParentId == off2.ParentId &&
         off1.Contacts == off2.Contacts &&
-        off1.AddressManual == off2.AddressManual;
+        off1.KladrCode == off2.KladrCode &&
+        off1.AddressUserComment == off2.AddressUserComment;
 
     /// <inheritdoc/>
     public static bool operator !=(AddressOrganizationBaseModel off1, AddressOrganizationBaseModel off2)
@@ -89,6 +95,7 @@ public class AddressOrganizationBaseModel : EntryModel
                 off1.Name != off2.Name ||
                 off1.ParentId != off2.ParentId ||
                 off1.Contacts != off2.Contacts ||
-                off1.AddressManual != off2.AddressManual;
+                off1.KladrCode != off2.KladrCode ||
+                off1.AddressUserComment != off2.AddressUserComment;
     }
 }
