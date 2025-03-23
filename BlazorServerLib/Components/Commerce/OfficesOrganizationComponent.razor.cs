@@ -31,7 +31,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
     UniversalBaseModel? SelectedRubric;
 
     Dictionary<int, List<RubricIssueHelpdeskModelDB>> RubriciesCached = [];
-    string? addingAddress, addingContacts, addingName;
+    string? addingAddress, addingContacts, addingName, addingDescr;
 
     string kladrCode { get; set; } = "";
     string kladrTitle { get; set; } = "";
@@ -46,6 +46,13 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
     private void OnExpandCollapseClick()
     {
         _expanded = !_expanded;
+    }
+
+    void HandleOnChange(ChangeEventArgs args)
+    {
+        addingDescr = args.Value?.ToString();
+
+        //await ChildDataChanged.InvokeAsync(data);
     }
 
     async Task AddOffice()

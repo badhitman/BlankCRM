@@ -1,16 +1,7 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
 <div class="input-group mb-3">
-    <button @onclick="() => SelectRegions = !SelectRegions" class="btn btn-outline-secondary dropdown-toggle @(SelectRegions ? "show" : "")" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>
-    @if (SelectRegions)
-    {
-        <ul class="dropdown-menu show" style="@(SelectRegions?" position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 40px);":"")">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Separated link</a></li>
-        </ul>
-    }
-    <input type="text" class="form-control" aria-label="Text input with dropdown button">
+    <span class="input-group-text">Адрес:</span>
+    <input readonly type="text" placeholder="Выбор из классификатора" class="form-control">
+    <button type="button" class="btn btn-outline-secondary">Изменить</button>
 </div>

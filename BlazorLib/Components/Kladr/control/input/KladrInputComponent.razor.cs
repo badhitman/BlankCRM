@@ -10,6 +10,5 @@ namespace BlazorLib.Components.Kladr.control.input;
 public partial class KladrInputComponent : BlazorBusyComponentBaseModel
 {
 
-    bool SelectRegions;
 
 }

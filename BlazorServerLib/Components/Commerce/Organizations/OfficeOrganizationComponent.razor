@@ -21,22 +21,22 @@
                 <MudCardContent>
                     <MudStack>
                         <CascadingValue Value="RubricSelectAction">
-                            <RubricSelectorComponent @ref="rubricSelector_ref" ContextName="@GlobalStaticConstants.Routes.ADDRESS_CONTROLLER_NAME" Title="Регин, город" ModeSelectingRubrics="ModesSelectRubricsEnum.Strict" ShowDisabledRubrics="false" StartRubric="OfficeEdit.ParentId" />
+                            <RubricSelectorComponent @ref="rubricSelector_ref" ContextName="@GlobalStaticConstants.Routes.ADDRESS_CONTROLLER_NAME" Title="Регион, Город" ModeSelectingRubrics="ModesSelectRubricsEnum.Strict" ShowDisabledRubrics="false" StartRubric="OfficeEdit.ParentId" />
                         </CascadingValue>
-                        <KladrInputComponent />
                         <div class="row mb-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="nameFormControlInput1" class="form-label">Название</label>
                                 <input @bind-value:event="oninput" @bind-value="OfficeEdit.Name" type="text" class="form-control" id="nameFormControlInput1" placeholder="Наименование">
                             </div>
-                            <div class="col-md-4">
-                                <label for="addrFormControlInput1" class="form-label">Адрес</label>
-                                <input @bind-value:event="oninput" @bind-value="OfficeEdit.AddressUserComment" type="text" class="form-control" id="addrFormControlInput1" placeholder="Улица, дом...">
-                            </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="telFormControlInput" class="form-label">Контакты</label>
                                 <input @bind-value:event="oninput" @bind-value="OfficeEdit.Contacts" type="tel" class="form-control" id="telFormControlInput" placeholder="Номер телефона, email...">
                             </div>
+                        </div>
+                        <KladrInputComponent />
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" @oninput="HandleOnChange">@OfficeEdit.AddressUserComment</textarea>
                         </div>
                     </MudStack>
                 </MudCardContent>

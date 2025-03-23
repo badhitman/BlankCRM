@@ -6,6 +6,7 @@ using BlazorWebLib.Components.Helpdesk;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BlazorWebLib.Components.Commerce.Organizations;
 
@@ -39,6 +40,13 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         SelectedRubric is not null;
 
     UniversalBaseModel? SelectedRubric;
+
+    void HandleOnChange(ChangeEventArgs args)
+    {
+        OfficeEdit.AddressUserComment = args.Value?.ToString() ?? "";
+
+        //await ChildDataChanged.InvokeAsync(data);
+    }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
