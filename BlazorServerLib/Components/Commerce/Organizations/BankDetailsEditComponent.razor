@@ -15,6 +15,10 @@
                 </figcaption>
             </figure>
         }
+        else if (bankDetailsEdit is null)
+        {
+            
+        }
         else
         {
             <div class="mb-2">
@@ -24,7 +28,7 @@
             <div class="row mb-2">
                 <div class="col-md-4">
                     <label for="inputBankName" class="form-label">Банк</label>
-                    <input @bind-value="BankDetails.BankName" @bind-value:event="oninput" type="text" id="inputBankName" class="form-control" aria-describedby="bankNameHelpBlock">
+                    <input @bind-value="BankDetails.Name" @bind-value:event="oninput" type="text" id="inputBankName" class="form-control" aria-describedby="bankNameHelpBlock">
                 </div>
                 <div class="col-md-4">
                     <label for="inputBankBIC" class="form-label">БИК</label>

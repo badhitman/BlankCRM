@@ -4,7 +4,7 @@ Update-Database -Context MainDbAppContext -Project DbPostgreLib -StartupProject 
 ```
 
 ```
-Add-Migration StorageContext017 -Context StorageContext -Project DbPostgreLib -StartupProject StorageService
+Add-Migration StorageContext002 -Context StorageContext -Project DbPostgreLib -StartupProject StorageService
 Update-Database -Context StorageContext -Project DbPostgreLib -StartupProject StorageService
 ```
 
@@ -19,7 +19,7 @@ Update-Database -Context NLogsContext -Project DbPostgreLib -StartupProject Stor
 ```
 
 ```
-Add-Migration HelpdeskPostgreContext014 -Context HelpdeskContext -Project DbPostgreLib -StartupProject HelpdeskService
+Add-Migration HelpdeskPostgreContext002 -Context HelpdeskContext -Project DbPostgreLib -StartupProject HelpdeskService
 Update-Database -Context HelpdeskContext -Project DbPostgreLib -StartupProject HelpdeskService
 ```
 

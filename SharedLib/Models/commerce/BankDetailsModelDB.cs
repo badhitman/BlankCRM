@@ -24,6 +24,12 @@ public class BankDetailsModelDB : EntryDescriptionSwitchableModel
     public int OrganizationId { get; set; }
 
     /// <summary>
+    /// БИК Банка
+    /// </summary>
+    [Required]
+    public required string BankBIC { get; set; }
+
+    /// <summary>
     /// Расчетный счет
     /// </summary>
     [Required]
@@ -35,28 +41,17 @@ public class BankDetailsModelDB : EntryDescriptionSwitchableModel
     [Required]
     public required string CorrespondentAccount { get; set; }
 
-    /// <summary>
-    /// Банк
-    /// </summary>
-    [Required]
-    public required string BankName { get; set; }
-
-    /// <summary>
-    /// БИК Банка
-    /// </summary>
-    [Required]
-    public required string BankBIC { get; set; }
-
     /// <inheritdoc/>
-    public static BankDetailsModelDB BuildEmpty(int organizationId)
+    public static BankDetailsModelDB BuildEmpty(OrganizationModelDB org)
         => new()
         {
             BankBIC = string.Empty,
-            BankName = string.Empty,
+            Name = string.Empty,
             CorrespondentAccount = string.Empty,
             CurrentAccount = string.Empty,
-            Name = string.Empty,
+            OrganizationId = org.Id,
+            Organization = org,
             Description = string.Empty,
-            OrganizationId = organizationId,
+            IsDisabled = false,
         };
 }

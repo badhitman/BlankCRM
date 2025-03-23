@@ -81,7 +81,7 @@
         }
         <div class="d-grid gap-2">
             <button title="Сохранить изменения" @onclick="SaveOrganization" disabled="@(CurrentOrganization.Equals(editOrg) || !GlobalTools.ValidateObject(editOrg).IsValid)" class="btn btn-@(CurrentOrganization.Equals(editOrg) || !GlobalTools.ValidateObject(editOrg).IsValid ? "outline-secondary" : "success")" type="button">Сохранить</button>
-            @if (!CurrentOrganization.Equals(editOrg))
+            @if (!CurrentOrganization.Equals(editOrg) && editOrg.Id > 0)
             {
                 <button title="Отменить редактирование формы" @onclick="() => editOrg = GlobalTools.CreateDeepCopy(CurrentOrganization)" class="btn btn-primary" type="button">Отмена</button>
             }

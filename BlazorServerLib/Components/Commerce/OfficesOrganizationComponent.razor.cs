@@ -32,6 +32,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 
     Dictionary<int, List<RubricIssueHelpdeskModelDB>> RubriciesCached = [];
     string? addingAddress, addingContacts, addingName;
+    string kladrCode { get; set; } = "";
 
     bool CanCreate =>
         !string.IsNullOrWhiteSpace(addingAddress) &&
@@ -54,11 +55,12 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 
         TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdate(new AddressOrganizationBaseModel()
         {
-            Address = addingAddress!,
+            AddressManual = addingAddress!,
             Name = addingName!,
             ParentId = SelectedRubric!.Id,
             OrganizationId = Organization.Id,
             Contacts = addingContacts,
+            KladrCode = kladrCode,
         });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
@@ -68,7 +70,8 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         Organization.Offices ??= [];
         Organization.Offices.Add(new()
         {
-            Address = addingAddress!,
+            KladrCode = kladrCode,
+            AddressManual = addingAddress!,
             Name = addingName!,
             ParentId = SelectedRubric!.Id,
             OrganizationId = Organization.Id,

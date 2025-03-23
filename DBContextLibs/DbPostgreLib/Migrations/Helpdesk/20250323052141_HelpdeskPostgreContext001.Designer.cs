@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Helpdesk
 {
     [DbContext(typeof(HelpdeskContext))]
-    [Migration("20241012214015_HelpdeskPostgreContext004")]
-    partial class HelpdeskPostgreContext004
+    [Migration("20250323052141_HelpdeskPostgreContext001")]
+    partial class HelpdeskPostgreContext001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -86,7 +86,7 @@ namespace DbPostgreLib.Migrations.Helpdesk
                     b.ToTable("AnswersToForwards");
                 });
 
-            modelBuilder.Entity("SharedLib.ArticleTagModelDB", b =>
+            modelBuilder.Entity("SharedLib.ArticleModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -94,20 +94,46 @@ namespace DbPostgreLib.Migrations.Helpdesk
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AuthorIdentityId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("OwnerArticleId")
+                    b.Property<string>("NormalizedNameUpper")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProjectId")
                         .HasColumnType("integer");
+
+                    b.Property<long>("SortIndex")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorIdentityId");
+
+                    b.HasIndex("CreatedAtUTC");
+
+                    b.HasIndex("LastUpdatedAtUTC");
+
                     b.HasIndex("Name");
 
-                    b.HasIndex("OwnerArticleId");
-
-                    b.ToTable("ArticlesTags");
+                    b.ToTable("Articles");
                 });
 
             modelBuilder.Entity("SharedLib.ForwardMessageTelegramBotModelDB", b =>
@@ -161,7 +187,7 @@ namespace DbPostgreLib.Migrations.Helpdesk
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
@@ -189,20 +215,28 @@ namespace DbPostgreLib.Migrations.Helpdesk
                     b.Property<int?>("RubricIssueId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("StepIssue")
+                    b.Property<int>("StatusDocument")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedAt");
+                    b.HasIndex("AuthorIdentityUserId");
+
+                    b.HasIndex("CreatedAtUTC");
 
                     b.HasIndex("LastUpdateAt");
 
                     b.HasIndex("Name");
 
+                    b.HasIndex("NormalizedDescriptionUpper");
+
+                    b.HasIndex("NormalizedNameUpper");
+
                     b.HasIndex("RubricIssueId");
 
-                    b.HasIndex("AuthorIdentityUserId", "ExecutorIdentityUserId", "LastUpdateAt", "RubricIssueId", "StepIssue");
+                    b.HasIndex("StatusDocument");
+
+                    b.HasIndex("AuthorIdentityUserId", "ExecutorIdentityUserId", "LastUpdateAt", "RubricIssueId", "StatusDocument");
 
                     b.ToTable("Issues");
                 });
@@ -357,53 +391,6 @@ namespace DbPostgreLib.Migrations.Helpdesk
                     b.ToTable("RubricsArticlesJoins");
                 });
 
-            modelBuilder.Entity("SharedLib.RubricArticleModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ContextName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("NormalizedNameUpper")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("ParentRubricId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("integer");
-
-                    b.Property<long>("SortIndex")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IsDisabled");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("ParentRubricId");
-
-                    b.HasIndex("SortIndex", "ParentRubricId")
-                        .IsUnique();
-
-                    b.ToTable("RubricsForArticles");
-                });
-
             modelBuilder.Entity("SharedLib.RubricIssueHelpdeskModelDB", b =>
                 {
                     b.Property<int>("Id")
@@ -415,11 +402,17 @@ namespace DbPostgreLib.Migrations.Helpdesk
                     b.Property<string>("ContextName")
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastAtUpdatedUTC")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -428,7 +421,7 @@ namespace DbPostgreLib.Migrations.Helpdesk
                     b.Property<string>("NormalizedNameUpper")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ParentRubricId")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ProjectId")
@@ -439,54 +432,20 @@ namespace DbPostgreLib.Migrations.Helpdesk
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ContextName");
+
                     b.HasIndex("IsDisabled");
 
                     b.HasIndex("Name");
 
-                    b.HasIndex("ParentRubricId");
+                    b.HasIndex("NormalizedNameUpper");
 
-                    b.HasIndex("SortIndex", "ParentRubricId")
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("SortIndex", "ParentId", "ContextName")
                         .IsUnique();
 
-                    b.ToTable("RubricsForIssues");
-                });
-
-            modelBuilder.Entity("SharedLib.StorageArticleModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AuthorIdentityId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAtUTC")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedAtUTC")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorIdentityId");
-
-                    b.HasIndex("CreatedAtUTC");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("UpdatedAtUTC");
-
-                    b.ToTable("Articles");
+                    b.ToTable("Rubrics");
                 });
 
             modelBuilder.Entity("SharedLib.SubscriberIssueHelpdeskModelDB", b =>
@@ -557,17 +516,6 @@ namespace DbPostgreLib.Migrations.Helpdesk
                     b.Navigation("ForwardMessage");
                 });
 
-            modelBuilder.Entity("SharedLib.ArticleTagModelDB", b =>
-                {
-                    b.HasOne("SharedLib.StorageArticleModelDB", "OwnerArticle")
-                        .WithMany("Tags")
-                        .HasForeignKey("OwnerArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OwnerArticle");
-                });
-
             modelBuilder.Entity("SharedLib.IssueHelpdeskModelDB", b =>
                 {
                     b.HasOne("SharedLib.RubricIssueHelpdeskModelDB", "RubricIssue")
@@ -612,13 +560,13 @@ namespace DbPostgreLib.Migrations.Helpdesk
 
             modelBuilder.Entity("SharedLib.RubricArticleJoinModelDB", b =>
                 {
-                    b.HasOne("SharedLib.StorageArticleModelDB", "Article")
+                    b.HasOne("SharedLib.ArticleModelDB", "Article")
                         .WithMany("RubricsJoins")
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharedLib.RubricArticleModelDB", "Rubric")
+                    b.HasOne("SharedLib.RubricIssueHelpdeskModelDB", "Rubric")
                         .WithMany("ArticlesJoins")
                         .HasForeignKey("RubricId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -629,22 +577,13 @@ namespace DbPostgreLib.Migrations.Helpdesk
                     b.Navigation("Rubric");
                 });
 
-            modelBuilder.Entity("SharedLib.RubricArticleModelDB", b =>
-                {
-                    b.HasOne("SharedLib.RubricArticleModelDB", "ParentRubric")
-                        .WithMany("NestedRubrics")
-                        .HasForeignKey("ParentRubricId");
-
-                    b.Navigation("ParentRubric");
-                });
-
             modelBuilder.Entity("SharedLib.RubricIssueHelpdeskModelDB", b =>
                 {
-                    b.HasOne("SharedLib.RubricIssueHelpdeskModelDB", "ParentRubric")
+                    b.HasOne("SharedLib.RubricIssueHelpdeskModelDB", "Parent")
                         .WithMany("NestedRubrics")
-                        .HasForeignKey("ParentRubricId");
+                        .HasForeignKey("ParentId");
 
-                    b.Navigation("ParentRubric");
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("SharedLib.SubscriberIssueHelpdeskModelDB", b =>
@@ -677,6 +616,11 @@ namespace DbPostgreLib.Migrations.Helpdesk
                     b.Navigation("Message");
                 });
 
+            modelBuilder.Entity("SharedLib.ArticleModelDB", b =>
+                {
+                    b.Navigation("RubricsJoins");
+                });
+
             modelBuilder.Entity("SharedLib.ForwardMessageTelegramBotModelDB", b =>
                 {
                     b.Navigation("Answers");
@@ -698,25 +642,13 @@ namespace DbPostgreLib.Migrations.Helpdesk
                     b.Navigation("Votes");
                 });
 
-            modelBuilder.Entity("SharedLib.RubricArticleModelDB", b =>
+            modelBuilder.Entity("SharedLib.RubricIssueHelpdeskModelDB", b =>
                 {
                     b.Navigation("ArticlesJoins");
 
-                    b.Navigation("NestedRubrics");
-                });
-
-            modelBuilder.Entity("SharedLib.RubricIssueHelpdeskModelDB", b =>
-                {
                     b.Navigation("Issues");
 
                     b.Navigation("NestedRubrics");
-                });
-
-            modelBuilder.Entity("SharedLib.StorageArticleModelDB", b =>
-                {
-                    b.Navigation("RubricsJoins");
-
-                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

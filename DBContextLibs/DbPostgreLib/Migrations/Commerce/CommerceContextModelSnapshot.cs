@@ -34,10 +34,6 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("BankName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("CorrespondentAccount")
                         .IsRequired()
                         .HasColumnType("text");
@@ -252,11 +248,15 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
+                    b.Property<string>("AddressManual")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Contacts")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("KladrCode")
                         .IsRequired()
                         .HasColumnType("text");
 

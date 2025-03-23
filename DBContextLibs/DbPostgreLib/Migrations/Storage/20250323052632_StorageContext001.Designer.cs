@@ -12,20 +12,20 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Storage
 {
     [DbContext(typeof(StorageContext))]
-    [Migration("20241012125341_StorageContext002")]
-    partial class StorageContext002
+    [Migration("20250323052632_StorageContext001")]
+    partial class StorageContext001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("SharedLib.FileTagModelDB", b =>
+            modelBuilder.Entity("SharedLib.AccessFileRuleModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,20 +33,21 @@ namespace DbPostgreLib.Migrations.Storage
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<int>("AccessRuleType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Option")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("OwnerFileId")
+                    b.Property<int>("StoreFileId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("StoreFileId");
 
-                    b.HasIndex("OwnerFileId");
-
-                    b.ToTable("FilesTags");
+                    b.ToTable("RulesFilesAccess");
                 });
 
             modelBuilder.Entity("SharedLib.StorageCloudParameterModelDB", b =>
@@ -64,14 +65,14 @@ namespace DbPostgreLib.Migrations.Storage
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int?>("OwnerPrimaryKey")
                         .HasColumnType("integer");
 
                     b.Property<string>("PrefixPropertyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PropertyName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SerializedDataJson")
@@ -88,7 +89,7 @@ namespace DbPostgreLib.Migrations.Storage
 
                     b.HasIndex("TypeName");
 
-                    b.HasIndex("ApplicationName", "Name");
+                    b.HasIndex("ApplicationName", "PropertyName");
 
                     b.HasIndex("PrefixPropertyName", "OwnerPrimaryKey");
 
@@ -111,6 +112,9 @@ namespace DbPostgreLib.Migrations.Storage
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ContentType")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -121,8 +125,7 @@ namespace DbPostgreLib.Migrations.Storage
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("NormalizedFileNameUpper")
                         .HasColumnType("text");
 
                     b.Property<int?>("OwnerPrimaryKey")
@@ -133,6 +136,10 @@ namespace DbPostgreLib.Migrations.Storage
                         .HasColumnType("text");
 
                     b.Property<string>("PrefixPropertyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PropertyName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ReferrerMain")
@@ -146,31 +153,82 @@ namespace DbPostgreLib.Migrations.Storage
 
                     b.HasIndex("FileName");
 
+                    b.HasIndex("NormalizedFileNameUpper");
+
                     b.HasIndex("PointId");
 
                     b.HasIndex("ReferrerMain");
 
-                    b.HasIndex("ApplicationName", "Name");
+                    b.HasIndex("ApplicationName", "PropertyName");
 
                     b.HasIndex("PrefixPropertyName", "OwnerPrimaryKey");
 
                     b.ToTable("CloudFiles");
                 });
 
-            modelBuilder.Entity("SharedLib.FileTagModelDB", b =>
+            modelBuilder.Entity("SharedLib.TagModelDB", b =>
                 {
-                    b.HasOne("SharedLib.StorageFileModelDB", "OwnerFile")
-                        .WithMany("Tags")
-                        .HasForeignKey("OwnerFileId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedTagNameUpper")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("OwnerPrimaryKey")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PrefixPropertyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PropertyName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TagName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("NormalizedTagNameUpper");
+
+                    b.HasIndex("ApplicationName", "PropertyName");
+
+                    b.HasIndex("PrefixPropertyName", "OwnerPrimaryKey");
+
+                    b.HasIndex(new[] { "NormalizedTagNameUpper", "OwnerPrimaryKey", "ApplicationName" }, "IX_TagNameOwnerKeyUnique")
+                        .IsUnique();
+
+                    b.ToTable("CloudTags");
+                });
+
+            modelBuilder.Entity("SharedLib.AccessFileRuleModelDB", b =>
+                {
+                    b.HasOne("SharedLib.StorageFileModelDB", "StoreFile")
+                        .WithMany("AccessRules")
+                        .HasForeignKey("StoreFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OwnerFile");
+                    b.Navigation("StoreFile");
                 });
 
             modelBuilder.Entity("SharedLib.StorageFileModelDB", b =>
                 {
-                    b.Navigation("Tags");
+                    b.Navigation("AccessRules");
                 });
 #pragma warning restore 612, 618
         }

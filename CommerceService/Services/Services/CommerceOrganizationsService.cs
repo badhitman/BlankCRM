@@ -141,11 +141,12 @@ public partial class CommerceImplementService : ICommerceService
         {
             OfficeOrganizationModelDB add = new()
             {
-                Address = req.Address,
+                AddressManual = req.AddressManual,
                 Name = req.Name,
                 ParentId = req.ParentId,
                 Contacts = req.Contacts,
                 OrganizationId = req.OrganizationId,
+                KladrCode = req.KladrCode,
             };
             await context.AddAsync(add);
             await context.SaveChangesAsync();
@@ -158,7 +159,7 @@ public partial class CommerceImplementService : ICommerceService
                         .Where(x => x.Id == req.Id)
                         .ExecuteUpdateAsync(set => set
                         //.SetProperty(p => p.OrganizationId, req.OrganizationId)
-                        .SetProperty(p => p.Address, req.Address)
+                        .SetProperty(p => p.AddressManual, req.AddressManual)
                         .SetProperty(p => p.Name, req.Name)
                         .SetProperty(p => p.ParentId, req.ParentId)
                         .SetProperty(p => p.Contacts, req.Contacts));
@@ -549,10 +550,10 @@ public partial class CommerceImplementService : ICommerceService
             res.Response = await context.BanksDetails
                 .Where(x => x.Id == req.Payload.Id)
                 .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Payload.Name)
                 .SetProperty(p => p.CurrentAccount, req.Payload.CurrentAccount)
                 .SetProperty(p => p.CorrespondentAccount, req.Payload.CorrespondentAccount)
-                .SetProperty(p => p.BankName, req.Payload.BankName)
+                .SetProperty(p => p.Name, req.Payload.Name)
+                .SetProperty(p => p.Description, req.Payload.Description)
                 .SetProperty(p => p.BankBIC, req.Payload.BankBIC)
                 .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled));
         }

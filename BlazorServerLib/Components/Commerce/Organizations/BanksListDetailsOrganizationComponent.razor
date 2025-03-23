@@ -42,24 +42,25 @@
                         Добавьте организации <cite title="расчётный счёт">банковский счёт</cite>
                     </figcaption>
                 </figure>
-                <BankDetailsEditComponent BankDetails="BankDetailsModelDB.BuildEmpty(CurrentOrganization.Id)" />
+                <BankDetailsEditComponent BankDetails="BankDetailsModelDB.BuildEmpty(CurrentOrganization)" />
             }
             else if (IsExpanded)
             {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
+                            <th scope="col">Счёт</th>
+                            <th scope="col">Банк</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                        </tr>
+                        @foreach (BankDetailsModelDB bank in CurrentOrganization.BanksDetails)
+                        {
+                            <tr>
+                                <td>@bank.CurrentAccount</td>
+                                <th scope="row">@bank.Name</th>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             }

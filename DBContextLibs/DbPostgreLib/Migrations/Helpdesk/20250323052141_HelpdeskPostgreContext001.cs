@@ -28,6 +28,27 @@ namespace DbPostgreLib.Migrations.Helpdesk
                 });
 
             migrationBuilder.CreateTable(
+                name: "Articles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    SortIndex = table.Column<long>(type: "bigint", nullable: false),
+                    NormalizedNameUpper = table.Column<string>(type: "text", nullable: true),
+                    IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    AuthorIdentityId = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Articles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ForwardedMessages",
                 columns: table => new
                 {
@@ -59,27 +80,29 @@ namespace DbPostgreLib.Migrations.Helpdesk
                 });
 
             migrationBuilder.CreateTable(
-                name: "RubricsForIssues",
+                name: "Rubrics",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
+                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
                     SortIndex = table.Column<long>(type: "bigint", nullable: false),
-                    ParentRubricId = table.Column<int>(type: "integer", nullable: true),
+                    ParentId = table.Column<int>(type: "integer", nullable: true),
                     ContextName = table.Column<string>(type: "text", nullable: true),
                     NormalizedNameUpper = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RubricsForIssues", x => x.Id);
+                    table.PrimaryKey("PK_Rubrics", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RubricsForIssues_RubricsForIssues_ParentRubricId",
-                        column: x => x.ParentRubricId,
-                        principalTable: "RubricsForIssues",
+                        name: "FK_Rubrics_Rubrics_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Rubrics",
                         principalColumn: "Id");
                 });
 
@@ -115,22 +138,48 @@ namespace DbPostgreLib.Migrations.Helpdesk
                     RubricIssueId = table.Column<int>(type: "integer", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    StepIssue = table.Column<int>(type: "integer", nullable: false),
+                    StatusDocument = table.Column<int>(type: "integer", nullable: false),
                     AuthorIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     NormalizedDescriptionUpper = table.Column<string>(type: "text", nullable: true),
                     ExecutorIdentityUserId = table.Column<string>(type: "text", nullable: true),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastUpdateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Issues", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Issues_RubricsForIssues_RubricIssueId",
+                        name: "FK_Issues_Rubrics_RubricIssueId",
                         column: x => x.RubricIssueId,
-                        principalTable: "RubricsForIssues",
+                        principalTable: "Rubrics",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RubricsArticlesJoins",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RubricId = table.Column<int>(type: "integer", nullable: false),
+                    ArticleId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RubricsArticlesJoins", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RubricsArticlesJoins_Articles_ArticleId",
+                        column: x => x.ArticleId,
+                        principalTable: "Articles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RubricsArticlesJoins_Rubrics_RubricId",
+                        column: x => x.RubricId,
+                        principalTable: "Rubrics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -281,6 +330,26 @@ namespace DbPostgreLib.Migrations.Helpdesk
                 column: "ResultMessageTelegramId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Articles_AuthorIdentityId",
+                table: "Articles",
+                column: "AuthorIdentityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Articles_CreatedAtUTC",
+                table: "Articles",
+                column: "CreatedAtUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Articles_LastUpdatedAtUTC",
+                table: "Articles",
+                column: "LastUpdatedAtUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Articles_Name",
+                table: "Articles",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ForwardedMessages_CreatedAtUtc",
                 table: "ForwardedMessages",
                 column: "CreatedAtUtc");
@@ -312,9 +381,24 @@ namespace DbPostgreLib.Migrations.Helpdesk
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Issues_AuthorIdentityUserId",
+                table: "Issues",
+                column: "AuthorIdentityUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Issues_AuthorIdentityUserId_ExecutorIdentityUserId_LastUpda~",
                 table: "Issues",
-                columns: new[] { "AuthorIdentityUserId", "ExecutorIdentityUserId", "LastUpdateAt" });
+                columns: new[] { "AuthorIdentityUserId", "ExecutorIdentityUserId", "LastUpdateAt", "RubricIssueId", "StatusDocument" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Issues_CreatedAtUTC",
+                table: "Issues",
+                column: "CreatedAtUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Issues_LastUpdateAt",
+                table: "Issues",
+                column: "LastUpdateAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Issues_Name",
@@ -322,9 +406,24 @@ namespace DbPostgreLib.Migrations.Helpdesk
                 column: "Name");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Issues_NormalizedDescriptionUpper",
+                table: "Issues",
+                column: "NormalizedDescriptionUpper");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Issues_NormalizedNameUpper",
+                table: "Issues",
+                column: "NormalizedNameUpper");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Issues_RubricIssueId",
                 table: "Issues",
                 column: "RubricIssueId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Issues_StatusDocument",
+                table: "Issues",
+                column: "StatusDocument");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IssuesMessages_AuthorUserId",
@@ -373,25 +472,45 @@ namespace DbPostgreLib.Migrations.Helpdesk
                 column: "Tag");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RubricsForIssues_IsDisabled",
-                table: "RubricsForIssues",
+                name: "IX_Rubrics_ContextName",
+                table: "Rubrics",
+                column: "ContextName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rubrics_IsDisabled",
+                table: "Rubrics",
                 column: "IsDisabled");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RubricsForIssues_Name",
-                table: "RubricsForIssues",
+                name: "IX_Rubrics_Name",
+                table: "Rubrics",
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RubricsForIssues_ParentRubricId",
-                table: "RubricsForIssues",
-                column: "ParentRubricId");
+                name: "IX_Rubrics_NormalizedNameUpper",
+                table: "Rubrics",
+                column: "NormalizedNameUpper");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RubricsForIssues_SortIndex_ParentRubricId",
-                table: "RubricsForIssues",
-                columns: new[] { "SortIndex", "ParentRubricId" },
+                name: "IX_Rubrics_ParentId",
+                table: "Rubrics",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rubrics_SortIndex_ParentId_ContextName",
+                table: "Rubrics",
+                columns: new[] { "SortIndex", "ParentId", "ContextName" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RubricsArticlesJoins_ArticleId",
+                table: "RubricsArticlesJoins",
+                column: "ArticleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RubricsArticlesJoins_RubricId",
+                table: "RubricsArticlesJoins",
+                column: "RubricId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubscribersOfIssues_IssueId",
@@ -439,6 +558,9 @@ namespace DbPostgreLib.Migrations.Helpdesk
                 name: "PulseEvents");
 
             migrationBuilder.DropTable(
+                name: "RubricsArticlesJoins");
+
+            migrationBuilder.DropTable(
                 name: "SubscribersOfIssues");
 
             migrationBuilder.DropTable(
@@ -448,13 +570,16 @@ namespace DbPostgreLib.Migrations.Helpdesk
                 name: "ForwardedMessages");
 
             migrationBuilder.DropTable(
+                name: "Articles");
+
+            migrationBuilder.DropTable(
                 name: "IssuesMessages");
 
             migrationBuilder.DropTable(
                 name: "Issues");
 
             migrationBuilder.DropTable(
-                name: "RubricsForIssues");
+                name: "Rubrics");
         }
     }
 }
