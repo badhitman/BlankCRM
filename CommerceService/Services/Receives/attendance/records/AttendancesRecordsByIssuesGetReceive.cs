@@ -16,7 +16,7 @@ public class AttendancesRecordsByIssuesGetReceive(ICommerceService commRepo) : I
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrdersAttendancesByIssuesGetReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<RecordsAttendanceModelDB[]>?> ResponseHandleAction(OrdersByIssuesSelectRequestModel? payload, CancellationToken token = default)
+    public async Task<TResponseModel<RecordsAttendanceModelDB[]>?> ResponseHandleActionAsync(OrdersByIssuesSelectRequestModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await commRepo.RecordsAttendancesByIssuesGet(payload, token);

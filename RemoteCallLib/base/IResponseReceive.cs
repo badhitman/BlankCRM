@@ -14,7 +14,7 @@ public interface IResponseReceive<TRequest, TResponse>
     /// <summary>
     /// Обработчик ответа на запрос
     /// </summary>
-    public Task<TResponse?> ResponseHandleAction(TRequest? payload, CancellationToken token = default);
+    public Task<TResponse?> ResponseHandleActionAsync(TRequest? payload, CancellationToken token = default);
 
     /// <summary>
     /// Имя очереди

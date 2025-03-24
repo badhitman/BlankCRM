@@ -22,7 +22,7 @@ public class CalendarScheduleUpdateReceive(ICommerceService commerceRepo, ILogge
     /// <summary>
     /// Обновление WorkScheduleCalendar
     /// </summary>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<CalendarScheduleModelDB>? payload, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<CalendarScheduleModelDB>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload, GlobalStaticConstants.JsonSerializerSettings)}");

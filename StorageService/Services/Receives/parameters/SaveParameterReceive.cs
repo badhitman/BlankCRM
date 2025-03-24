@@ -18,7 +18,7 @@ public class SaveParameterReceive(ISerializeStorage serializeStorageRepo, ILogge
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SaveCloudParameterReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int?>?> ResponseHandleAction(StorageCloudParameterPayloadModel? req, CancellationToken token = default)
+    public async Task<TResponseModel<int?>?> ResponseHandleActionAsync(StorageCloudParameterPayloadModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         req.Normalize();

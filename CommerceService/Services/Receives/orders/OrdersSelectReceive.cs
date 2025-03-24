@@ -16,7 +16,7 @@ public class OrdersSelectReceive(ICommerceService commRepo) : IResponseReceive<T
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrdersSelectCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OrderDocumentModelDB>?> ResponseHandleAction(TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<OrderDocumentModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commRepo.OrdersSelect(req, token);

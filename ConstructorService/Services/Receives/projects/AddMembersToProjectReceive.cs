@@ -16,7 +16,7 @@ public class AddMembersToProjectReceive(IConstructorService conService) : IRespo
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.AddMembersToProjectReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(UsersProjectModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UsersProjectModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await conService.AddMemberToProject(req, token);

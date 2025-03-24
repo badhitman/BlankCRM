@@ -16,7 +16,7 @@ public class KladrNavigationListReceive(IKladrNavigationService kladrRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.KladrNavigationListReceive;
 
     /// <inheritdoc/>
-    public async Task<Dictionary<KladrChainTypesEnum, JObject[]>?> ResponseHandleAction(KladrsRequestBaseModel? req, CancellationToken token = default)
+    public async Task<Dictionary<KladrChainTypesEnum, JObject[]>?> ResponseHandleActionAsync(KladrsRequestBaseModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await kladrRepo.ObjectsListForParent(req, token);

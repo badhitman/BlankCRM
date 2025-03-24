@@ -16,7 +16,7 @@ public class NomenclaturesSelectReceive(ICommerceService commerceRepo) : IRespon
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.NomenclaturesSelectCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NomenclatureModelDB>?> ResponseHandleAction(TPaginationRequestModel<NomenclaturesSelectRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<NomenclatureModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<NomenclaturesSelectRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commerceRepo.NomenclaturesSelect(req, token);

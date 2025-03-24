@@ -20,7 +20,7 @@ public class CateNewRoleReceive(IIdentityTools idRepo, ILogger<CateNewRoleReceiv
     /// <summary>
     /// Создать новую роль
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(string? roleName, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(string? roleName, CancellationToken token = default)
     {
         if(string.IsNullOrWhiteSpace(roleName))
             throw new ArgumentNullException(nameof(roleName));

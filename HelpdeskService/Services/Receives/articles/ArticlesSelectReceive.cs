@@ -17,7 +17,7 @@ public class ArticlesSelectReceive(IArticlesService artRepo, ILogger<ArticlesSel
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ArticlesSelectHelpdeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ArticleModelDB>?> ResponseHandleAction(TPaginationRequestModel<SelectArticlesRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<ArticleModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<SelectArticlesRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

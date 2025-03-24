@@ -18,7 +18,7 @@ public class TagsSelectReceive(ILogger<TagsSelectReceive> loggerRepo, ISerialize
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.TagsSelectReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TagModelDB>?> ResponseHandleAction(TPaginationRequestModel<SelectMetadataRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<TagModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<SelectMetadataRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

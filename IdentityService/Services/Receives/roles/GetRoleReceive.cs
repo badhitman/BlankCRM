@@ -19,7 +19,7 @@ public class GetRoleReceive(IIdentityTools idRepo)
     /// <summary>
     /// Get Role (by id)
     /// </summary>
-    public async Task<TResponseModel<RoleInfoModel>?> ResponseHandleAction(string? roleName, CancellationToken token = default)
+    public async Task<TResponseModel<RoleInfoModel>?> ResponseHandleActionAsync(string? roleName, CancellationToken token = default)
     {
         if(string.IsNullOrWhiteSpace(roleName))
             throw new ArgumentNullException(nameof(roleName));

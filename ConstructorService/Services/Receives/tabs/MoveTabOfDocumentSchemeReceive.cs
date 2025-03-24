@@ -16,7 +16,7 @@ public class MoveTabOfDocumentSchemeReceive(IConstructorService conService) : IR
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.MoveTabOfDocumentSchemeReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleAction(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)
+    public async Task<TResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.MoveTabOfDocumentScheme(payload, token);

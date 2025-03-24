@@ -19,7 +19,7 @@ public class CreateNewUserReceive(IIdentityTools idRepo, ILogger<CreateNewUserRe
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.RegistrationNewUserReceive;
 
     /// <inheritdoc/>
-    public async Task<RegistrationNewUserResponseModel?> ResponseHandleAction(string? req, CancellationToken token = default)
+    public async Task<RegistrationNewUserResponseModel?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(req) || !MailAddress.TryCreate(req, out _))
             throw new ArgumentNullException(nameof(req));

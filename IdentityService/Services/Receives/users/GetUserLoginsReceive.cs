@@ -20,7 +20,7 @@ public class GetUserLoginsReceive(IIdentityTools idRepo, ILogger<AddPasswordForU
     /// <summary>
     /// Извлекает связанные логины для указанного <param ref="userId"/>
     /// </summary>
-    public async Task<TResponseModel<IEnumerable<UserLoginInfoModel>>?> ResponseHandleAction(string? req, CancellationToken token = default)
+    public async Task<TResponseModel<IEnumerable<UserLoginInfoModel>>?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

@@ -19,7 +19,7 @@ public class GetAuthenticatorKeyReceive(IIdentityTools idRepo)
     /// <summary>
     /// Ключ аутентификации пользователя.
     /// </summary>
-    public async Task<TResponseModel<string?>?> ResponseHandleAction(string? req, CancellationToken token = default)
+    public async Task<TResponseModel<string?>?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);        
         return await idRepo.GetAuthenticatorKey(req, token);

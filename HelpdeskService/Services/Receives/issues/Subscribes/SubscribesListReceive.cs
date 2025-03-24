@@ -19,7 +19,7 @@ public class SubscribesListReceive(IHelpdeskService hdRepo)
     /// <summary>
     /// Подписчики на события в обращении/инциденте
     /// </summary>
-    public async Task<TResponseModel<List<SubscriberIssueHelpdeskModelDB>>?> ResponseHandleAction(TAuthRequestModel<int>? req, CancellationToken token = default)
+    public async Task<TResponseModel<List<SubscriberIssueHelpdeskModelDB>>?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await hdRepo.SubscribesList(req, token);

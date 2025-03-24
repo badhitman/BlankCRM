@@ -16,7 +16,7 @@ public class AttendancesRecordsStatusChangeByHelpdeskIdReceive(ICommerceService 
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrdersAttendancesStatusesChangeByHelpdeskDocumentIdReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>?> ResponseHandleAction(TAuthRequestModel<StatusChangeRequestModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestModel<StatusChangeRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commRepo.RecordsAttendancesStatusesChangeByHelpdeskId(req, token);

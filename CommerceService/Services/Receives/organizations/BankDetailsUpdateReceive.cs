@@ -17,7 +17,7 @@ public class BankDetailsUpdateReceive(ICommerceService commerceRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.BankDetailsUpdateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<BankDetailsModelDB>? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<BankDetailsModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commerceRepo.BankDetailsUpdate(req, token);

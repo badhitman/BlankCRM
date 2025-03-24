@@ -20,7 +20,7 @@ public class GenerateOTPFor2StepVerificationReceive(IIdentityTools idRepo, ILogg
     /// <summary>
     /// Генерация (и отправка на Email++) 2fa токена
     /// </summary>
-    public async Task<TResponseModel<string>?> ResponseHandleAction(string? userId, CancellationToken token = default)
+    public async Task<TResponseModel<string>?> ResponseHandleActionAsync(string? userId, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(userId);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(userId, GlobalStaticConstants.JsonSerializerSettings));

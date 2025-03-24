@@ -18,7 +18,7 @@ public class FindUserByEmailReceive(IIdentityTools idRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.FindUserByEmailReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel>?> ResponseHandleAction(string? req, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel>?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(req) || !MailAddress.TryCreate(req, out _))
             throw new ArgumentNullException(nameof(req));

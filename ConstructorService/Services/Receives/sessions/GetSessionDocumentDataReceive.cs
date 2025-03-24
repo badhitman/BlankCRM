@@ -16,7 +16,7 @@ public class GetSessionDocumentDataReceive(IConstructorService conService) : IRe
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetSessionDocumentDataReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleAction(string? payload, CancellationToken token = default)
+    public async Task<TResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleActionAsync(string? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.GetSessionDocumentData(payload, token);

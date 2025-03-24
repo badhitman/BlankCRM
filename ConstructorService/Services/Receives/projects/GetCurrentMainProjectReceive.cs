@@ -16,7 +16,7 @@ public class GetCurrentMainProjectReceive(IConstructorService conService) : IRes
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetCurrentMainProjectReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MainProjectViewModel>?> ResponseHandleAction(string? req, CancellationToken token = default)
+    public async Task<TResponseModel<MainProjectViewModel>?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(req))
             throw new ArgumentNullException(nameof(req));

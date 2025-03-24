@@ -20,7 +20,7 @@ public class CountRecoveryCodesReceive(IIdentityTools idRepo, ILogger<CountRecov
     /// <summary>
     /// Возвращает количество кодов восстановления, действительных для пользователя
     /// </summary>
-    public async Task<TResponseModel<int?>?> ResponseHandleAction(string? req, CancellationToken token = default)
+    public async Task<TResponseModel<int?>?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

@@ -21,7 +21,7 @@ public class SendWappiMessageReceive(
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SendWappiMessageReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SendMessageResponseModel>?> ResponseHandleAction(EntryAltExtModel? req, CancellationToken token = default)
+    public async Task<TResponseModel<SendMessageResponseModel>?> ResponseHandleActionAsync(EntryAltExtModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

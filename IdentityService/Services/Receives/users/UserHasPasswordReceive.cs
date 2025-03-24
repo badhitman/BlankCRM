@@ -19,7 +19,7 @@ public class UserHasPasswordReceive(IIdentityTools idRepo)
     /// <summary>
     /// Получает флаг, указывающий, есть ли у пользователя пароль
     /// </summary>
-    public async Task<TResponseModel<bool?>?> ResponseHandleAction(string? userId, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(string? userId, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(userId);
         return await idRepo.UserHasPassword(userId, token);

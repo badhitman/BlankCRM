@@ -17,7 +17,7 @@ public class UpdateTelegramMainUserMessageReceive(IIdentityTools identityRepo, I
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.UpdateTelegramMainUserMessageReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(MainUserMessageModel? setMainMessage, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(MainUserMessageModel? setMainMessage, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(setMainMessage);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(setMainMessage, GlobalStaticConstants.JsonSerializerSettings)}");

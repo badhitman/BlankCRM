@@ -17,7 +17,7 @@ public class DeleteValuesFieldsByGroupSessionDocumentDataByRowNumReceive(IConstr
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.DeleteValuesFieldsByGroupSessionDocumentDataByRowNumReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(ValueFieldSessionDocumentDataBaseModel? payload, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ValueFieldSessionDocumentDataBaseModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.DeleteValuesFieldsByGroupSessionDocumentDataByRowNum(payload, token);

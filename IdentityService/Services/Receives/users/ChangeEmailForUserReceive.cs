@@ -21,7 +21,7 @@ public class ChangeEmailForUserReceive(IIdentityTools idRepo, ILogger<ChangeEmai
     /// Обновляет адрес Email, если токен действительный для пользователя.    
     /// Пользователь, адрес электронной почты которого необходимо обновить.Новый адрес электронной почты.Измененный токен электронной почты, который необходимо подтвердить.
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityEmailTokenModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(IdentityEmailTokenModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

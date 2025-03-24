@@ -20,7 +20,7 @@ public class TryAddRolesToUserReceive(IIdentityTools idRepo, ILogger<TryAddRoles
     /// <summary>
     /// Попытка добавить роли пользователю. Если роли такой нет, то она будет создана.
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(UserRolesModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UserRolesModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

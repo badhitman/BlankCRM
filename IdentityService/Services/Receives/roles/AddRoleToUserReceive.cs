@@ -20,7 +20,7 @@ public class AddRoleToUserReceive(IIdentityTools idRepo, ILogger<AddRoleToUserRe
     /// <summary>
     /// Добавить роль пользователю (включить пользователя в роль)
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(RoleEmailModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(RoleEmailModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

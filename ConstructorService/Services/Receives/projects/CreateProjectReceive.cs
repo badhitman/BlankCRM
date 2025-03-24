@@ -16,7 +16,7 @@ public class CreateProjectReceive(IConstructorService conService) : IResponseRec
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProjectCreateReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(CreateProjectRequestModel? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(CreateProjectRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await conService.CreateProject(req, token);

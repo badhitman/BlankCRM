@@ -17,7 +17,7 @@ public class FindParametersReceive(ISerializeStorage serializeStorageRepo, ILogg
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.FindCloudParameterReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FoundParameterModel[]?>?> ResponseHandleAction(RequestStorageBaseModel? request, CancellationToken token = default)
+    public async Task<TResponseModel<FoundParameterModel[]?>?> ResponseHandleActionAsync(RequestStorageBaseModel? request, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(request);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(request)}");

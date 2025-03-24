@@ -16,7 +16,7 @@ public class GetTabDocumentSchemeJoinFormReceive(IConstructorService conService)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetTabDocumentSchemeJoinFormReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FormToTabJoinConstructorModelDB>?> ResponseHandleAction(int payload, CancellationToken token = default)
+    public async Task<TResponseModel<FormToTabJoinConstructorModelDB>?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
     {
         return await conService.GetTabDocumentSchemeJoinForm(payload, token);
     }

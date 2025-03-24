@@ -23,7 +23,7 @@ public class SendPasswordResetLinkReceive(IIdentityTools idRepo, ILogger<AddPass
     /// Этот API поддерживает инфраструктуру ASP.NET Core Identity и не предназначен для использования в качестве абстракции электронной почты общего назначения.
     /// Он должен быть реализован в приложении, чтобы инфраструктура идентификации могла отправлять электронные письма для сброса пароля.
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(SendPasswordResetLinkRequestModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SendPasswordResetLinkRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

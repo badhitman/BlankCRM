@@ -18,7 +18,7 @@ public class MetadataLogsReceive(ISerializeStorage storeRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.MetadataLogsReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<LogsMetadataResponseModel>?> ResponseHandleAction(PeriodDatesTimesModel? payload, CancellationToken token = default)
+    public async Task<TResponseModel<LogsMetadataResponseModel>?> ResponseHandleActionAsync(PeriodDatesTimesModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await storeRepo.MetadataLogs(payload, token);

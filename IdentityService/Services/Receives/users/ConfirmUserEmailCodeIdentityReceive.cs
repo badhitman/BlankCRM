@@ -20,7 +20,7 @@ public class ConfirmUserEmailCodeIdentityReceive(IIdentityTools IdentityRepo, IL
     /// <summary>
     /// Проверяет, соответствует ли токен подтверждения электронной почты указанному пользователю.
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(UserCodeModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UserCodeModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

@@ -18,7 +18,7 @@ public class TelegramJoinAccountConfirmReceive(IIdentityTools identityRepo, ILog
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.TelegramJoinAccountConfirmReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(TelegramJoinAccountConfirmModel? confirm, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramJoinAccountConfirmModel? confirm, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(confirm);
 

@@ -16,7 +16,7 @@ public class ConsoleIssuesSelectReceive(IHelpdeskService hdRepo) : IResponseRece
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ConsoleIssuesSelectHelpdeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<IssueHelpdeskModel>?> ResponseHandleAction(TPaginationRequestModel<ConsoleIssuesRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<IssueHelpdeskModel>?> ResponseHandleActionAsync(TPaginationRequestModel<ConsoleIssuesRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await hdRepo.ConsoleIssuesSelect(req, token);

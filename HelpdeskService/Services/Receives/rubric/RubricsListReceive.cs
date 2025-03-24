@@ -19,7 +19,7 @@ public class RubricsListReceive(IHelpdeskService hdRepo)
     /// <summary>
     /// Получить рубрики, вложенные в рубрику <paramref name="req"/>.OwnerId (если не указано, то root перечень)
     /// </summary>
-    public async Task<List<UniversalBaseModel>?> ResponseHandleAction(RubricsListRequestModel? req, CancellationToken token = default)
+    public async Task<List<UniversalBaseModel>?> ResponseHandleActionAsync(RubricsListRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await hdRepo.RubricsList(req, token);

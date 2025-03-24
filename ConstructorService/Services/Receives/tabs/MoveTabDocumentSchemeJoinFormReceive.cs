@@ -16,7 +16,7 @@ public class MoveTabDocumentSchemeJoinFormReceive(IConstructorService conService
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.MoveTabDocumentSchemeJoinFormReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>?> ResponseHandleAction(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)
+    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.MoveTabDocumentSchemeJoinForm(payload, token);

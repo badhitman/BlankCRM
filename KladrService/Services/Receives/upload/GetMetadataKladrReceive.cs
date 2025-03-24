@@ -16,7 +16,7 @@ public class GetMetadataKladrReceive(ILogger<GetMetadataKladrReceive> loggerRepo
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetMetadataKladrReceive;
 
     /// <inheritdoc/>
-    public async Task<MetadataKladrModel?> ResponseHandleAction(GetMetadataKladrRequestModel? req, CancellationToken token = default)
+    public async Task<MetadataKladrModel?> ResponseHandleActionAsync(GetMetadataKladrRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

@@ -21,7 +21,7 @@ public class GetUserIdentityByTelegramReceive(IIdentityTools IdentityRepo, IMemo
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]>?> ResponseHandleAction(long[]? tg_ids = null, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]>?> ResponseHandleActionAsync(long[]? tg_ids = null, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(tg_ids);
         tg_ids = [.. tg_ids.Where(x => x != 0)];

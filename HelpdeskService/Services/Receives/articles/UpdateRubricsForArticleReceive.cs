@@ -17,7 +17,7 @@ public class UpdateRubricsForArticleReceive(IArticlesService artRepo, ILogger<Ar
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.RubricsForArticleSetReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(ArticleRubricsSetModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ArticleRubricsSetModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

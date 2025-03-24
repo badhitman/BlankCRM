@@ -16,7 +16,7 @@ public class SetValueFieldSessionDocumentDataReceive(IConstructorService conServ
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetValueFieldSessionDocumentDataReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleAction(SetValueFieldDocumentDataModel? payload, CancellationToken token = default)
+    public async Task<TResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleActionAsync(SetValueFieldDocumentDataModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.SetValueFieldSessionDocumentData(payload, token);

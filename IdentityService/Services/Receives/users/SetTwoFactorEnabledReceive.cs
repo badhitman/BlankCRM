@@ -20,7 +20,7 @@ public class SetTwoFactorEnabledReceive(IIdentityTools idRepo, ILogger<SetTwoFac
     /// <summary>
     /// Вкл/Выкл двухфакторную аутентификацию для указанного userId
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(SetTwoFactorEnabledRequestModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SetTwoFactorEnabledRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

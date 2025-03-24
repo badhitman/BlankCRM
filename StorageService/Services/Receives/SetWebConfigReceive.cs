@@ -17,7 +17,7 @@ public class SetWebConfigReceive(WebConfigModel webConfig, ILogger<SetWebConfigR
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetWebConfigStorageReceive;
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel?> ResponseHandleAction(WebConfigModel? payload, CancellationToken token = default)
+    public Task<ResponseBaseModel?> ResponseHandleActionAsync(WebConfigModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload)}");

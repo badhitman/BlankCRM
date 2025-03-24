@@ -26,7 +26,7 @@ public class FilesAreaGetMetadataReceive(ILogger<FilesSelectReceive> loggerRepo,
     /// <remarks>
     /// Общий размер и количество группируется по AppName
     /// </remarks>
-    public async Task<TResponseModel<FilesAreaMetadataModel[]>?> ResponseHandleAction(FilesAreaMetadataRequestModel? req, CancellationToken token = default)
+    public async Task<TResponseModel<FilesAreaMetadataModel[]>?> ResponseHandleActionAsync(FilesAreaMetadataRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

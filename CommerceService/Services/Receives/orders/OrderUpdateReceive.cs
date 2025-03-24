@@ -17,7 +17,7 @@ public class OrderUpdateReceive(ICommerceService commRepo, ILogger<OrderUpdateRe
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrderUpdateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(OrderDocumentModelDB? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(OrderDocumentModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

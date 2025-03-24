@@ -20,7 +20,7 @@ public class DeleteRoleReceive(IIdentityTools idRepo, ILogger<DeleteRoleReceive>
     /// <summary>
     /// Добавить роль пользователю (включить пользователя в роль)
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(string? roleName, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(string? roleName, CancellationToken token = default)
     {
         if(string.IsNullOrWhiteSpace(roleName))
             throw new ArgumentNullException(nameof(roleName));

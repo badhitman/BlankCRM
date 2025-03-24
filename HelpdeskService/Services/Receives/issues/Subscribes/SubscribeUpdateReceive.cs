@@ -16,7 +16,7 @@ public class SubscribeUpdateReceive(IHelpdeskService hdRepo) : IResponseReceive<
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SubscribeIssueUpdateHelpdeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>?> ResponseHandleAction(TAuthRequestModel<SubscribeUpdateRequestModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestModel<SubscribeUpdateRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await hdRepo.SubscribeUpdate(req, token);

@@ -20,7 +20,7 @@ public class TelegramJoinAccountDeleteActionReceive(IIdentityTools identityRepo,
     /// <summary>
     /// Удалить текущую процедуру привязки Telegram аккаунта к учётной записи сайта
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(string? payload, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(string? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload, GlobalStaticConstants.JsonSerializerSettings)}");

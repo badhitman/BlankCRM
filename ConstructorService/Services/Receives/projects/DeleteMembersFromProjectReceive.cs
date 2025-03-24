@@ -16,7 +16,7 @@ public class DeleteMembersFromProjectReceive(IConstructorService conService) : I
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.DeleteMembersFromProjectReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(UsersProjectModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UsersProjectModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await conService.DeleteMembersFromProject(req, token);

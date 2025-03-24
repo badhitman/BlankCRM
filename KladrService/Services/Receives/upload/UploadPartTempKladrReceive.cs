@@ -16,7 +16,7 @@ public class UploadPartTempKladrReceive(ILogger<UploadPartTempKladrReceive> Logg
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(UploadPartTableDataModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UploadPartTableDataModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

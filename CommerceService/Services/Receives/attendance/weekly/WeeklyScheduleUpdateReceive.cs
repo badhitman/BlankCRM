@@ -21,7 +21,7 @@ public class WeeklyScheduleUpdateReceive(ICommerceService commerceRepo, ILogger<
     /// <summary>
     /// Обновление WorkSchedule
     /// </summary>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(WeeklyScheduleModelDB? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(WeeklyScheduleModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");

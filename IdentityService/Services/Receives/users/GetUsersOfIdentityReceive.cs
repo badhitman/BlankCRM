@@ -21,7 +21,7 @@ public class GetUsersOfIdentityReceive(IIdentityTools identityRepo, IMemoryCache
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]>?> ResponseHandleAction(string[]? users_ids = null, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]>?> ResponseHandleActionAsync(string[]? users_ids = null, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(users_ids);
         users_ids = [.. users_ids.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct()];

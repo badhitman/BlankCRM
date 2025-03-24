@@ -16,7 +16,7 @@ public class WarehousesSelectReceive(ICommerceService commRepo) : IResponseRecei
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.WarehousesSelectCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>?> ResponseHandleAction(TPaginationRequestModel<WarehouseDocumentsSelectRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<WarehouseDocumentsSelectRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commRepo.WarehouseDocumentsSelect(req, token);

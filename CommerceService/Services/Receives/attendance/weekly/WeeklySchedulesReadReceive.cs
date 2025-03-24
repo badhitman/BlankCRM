@@ -16,7 +16,7 @@ public class WeeklySchedulesReadReceive(ICommerceService commerceRepo) : IRespon
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.WeeklySchedulesReadCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<List<WeeklyScheduleModelDB>?> ResponseHandleAction(int[]? req, CancellationToken token = default)
+    public async Task<List<WeeklyScheduleModelDB>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commerceRepo.WeeklySchedulesRead(req, token);

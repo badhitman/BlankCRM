@@ -20,7 +20,7 @@ public class CheckTelegramUserReceive(IIdentityTools identityRepo, ILogger<Check
     /// <summary>
     /// Проверка пользователя (сообщение из службы TelegramBot серверной части сайта)
     /// </summary>
-    public async Task<TResponseModel<CheckTelegramUserAuthModel>?> ResponseHandleAction(CheckTelegramUserHandleModel? req, CancellationToken token = default)
+    public async Task<TResponseModel<CheckTelegramUserAuthModel>?> ResponseHandleActionAsync(CheckTelegramUserHandleModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");

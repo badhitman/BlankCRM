@@ -16,7 +16,7 @@ public class ProjectsReadReceive(IConstructorService conService) : IResponseRece
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProjectsReadReceive;
 
     /// <inheritdoc/>
-    public async Task<List<ProjectModelDb>?> ResponseHandleAction(int[]? req, CancellationToken token = default)
+    public async Task<List<ProjectModelDb>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await conService.ReadProjects(req, token);

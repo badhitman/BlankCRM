@@ -16,7 +16,7 @@ public class ExecuterUpdateReceive(IHelpdeskService hdRepo) : IResponseReceive<T
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ExecuterIssueUpdateHelpdeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>?> ResponseHandleAction(TAuthRequestModel<UserIssueModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestModel<UserIssueModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await hdRepo.ExecuterUpdate(req, token);

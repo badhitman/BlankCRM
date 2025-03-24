@@ -16,7 +16,7 @@ public class DeleteSessionDocumentReceive(IConstructorService conService) : IRes
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.DeleteSessionDocumentReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(int payload, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
     {
         return await conService.DeleteSessionDocument(payload, token);
     }

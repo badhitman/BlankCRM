@@ -17,7 +17,7 @@ public class GetBotUsernameReceive(ITelegramBotService tgRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetBotUsernameReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>?> ResponseHandleAction(object? payload = null, CancellationToken token = default)
+    public async Task<TResponseModel<string>?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)
     {
         return await tgRepo.GetBotUsername(token);
     }

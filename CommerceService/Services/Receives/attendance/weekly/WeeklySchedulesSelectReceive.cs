@@ -16,7 +16,7 @@ public class WeeklySchedulesSelectReceive(ICommerceService commerceRepo) : IResp
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.WeeklySchedulesSelectCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WeeklyScheduleModelDB>?> ResponseHandleAction(TPaginationRequestModel<WorkSchedulesSelectRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<WeeklyScheduleModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<WorkSchedulesSelectRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commerceRepo.WeeklySchedulesSelect(req, token);

@@ -17,7 +17,7 @@ public class GetWebConfigReceive(IOptions<TelegramBotConfigModel> webConfig) : I
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetWebConfigReceive;
 
     /// <inheritdoc/>
-    public Task<TelegramBotConfigModel?> ResponseHandleAction(object? payload = null, CancellationToken token = default)
+    public Task<TelegramBotConfigModel?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)
     {
 #pragma warning disable CS8619 // Допустимость значения NULL для ссылочных типов в значении не соответствует целевому типу.
         return Task.FromResult(webConfig.Value);

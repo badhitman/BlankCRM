@@ -96,7 +96,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 ? default
                 : JsonConvert.DeserializeObject<TRequest?>(content);
 
-                answer.Response = await receiveService.ResponseHandleAction(sr);
+                answer.Response = await receiveService.ResponseHandleActionAsync(sr);
             }
             catch (Exception ex)
             {

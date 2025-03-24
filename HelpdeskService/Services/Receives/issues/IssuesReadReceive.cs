@@ -16,7 +16,7 @@ public class IssuesReadReceive(IHelpdeskService hdRepo) : IResponseReceive<TAuth
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.IssuesGetHelpdeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<IssueHelpdeskModelDB[]>?> ResponseHandleAction(TAuthRequestModel<IssuesReadRequestModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<IssueHelpdeskModelDB[]>?> ResponseHandleActionAsync(TAuthRequestModel<IssuesReadRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await hdRepo.IssuesRead(req, token);

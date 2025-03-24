@@ -17,7 +17,7 @@ public class ReadParametersReceive(ISerializeStorage serializeStorageRepo, ILogg
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ReadCloudParametersReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<StorageCloudParameterPayloadModel>>?> ResponseHandleAction(StorageMetadataModel[]? request, CancellationToken token = default)
+    public async Task<TResponseModel<List<StorageCloudParameterPayloadModel>>?> ResponseHandleActionAsync(StorageMetadataModel[]? request, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(request);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(request)}");

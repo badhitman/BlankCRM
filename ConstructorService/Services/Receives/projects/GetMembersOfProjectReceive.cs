@@ -16,7 +16,7 @@ public class GetMembersOfProjectReceive(IConstructorService conService) : IRespo
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetMembersOfProjectReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<EntryAltModel[]>?> ResponseHandleAction(int req, CancellationToken token = default)
+    public async Task<TResponseModel<EntryAltModel[]>?> ResponseHandleActionAsync(int req, CancellationToken token = default)
     {
         return await conService.GetMembersOfProject(req, token);
     }

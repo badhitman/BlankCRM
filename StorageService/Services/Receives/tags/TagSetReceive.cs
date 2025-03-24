@@ -20,7 +20,7 @@ public class TagSetReceive(ILogger<TagSetReceive> loggerRepo, ISerializeStorage 
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.TagSetReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(TagSetModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TagSetModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

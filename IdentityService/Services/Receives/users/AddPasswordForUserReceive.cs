@@ -22,7 +22,7 @@ public class AddPasswordForUserReceive(IIdentityTools idRepo, ILogger<AddPasswor
     /// Добавляет password к указанному userId, только если у пользователя еще нет пароля.
     /// Если userId не указан, то команда выполняется для текущего пользователя (запрос/сессия)
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityPasswordModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(IdentityPasswordModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

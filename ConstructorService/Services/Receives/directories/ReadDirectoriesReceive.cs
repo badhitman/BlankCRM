@@ -16,7 +16,7 @@ public class ReadDirectoriesReceive(IConstructorService conService) : IResponseR
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ReadDirectoriesReceive;
 
     /// <inheritdoc/>
-    public async Task<List<EntryNestedModel>?> ResponseHandleAction(int[]? payload, CancellationToken token = default)
+    public async Task<List<EntryNestedModel>?> ResponseHandleActionAsync(int[]? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.ReadDirectories(payload, token);

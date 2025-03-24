@@ -17,7 +17,7 @@ public class RubricCreateOrUpdateReceive(IHelpdeskService hdRepo, ILogger<Rubric
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.RubricForIssuesUpdateHelpdeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(RubricIssueHelpdeskModelDB? rubric, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(RubricIssueHelpdeskModelDB? rubric, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(rubric);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(rubric)}");
