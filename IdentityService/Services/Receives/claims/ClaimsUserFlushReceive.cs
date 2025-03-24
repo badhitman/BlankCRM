@@ -24,6 +24,6 @@ public class ClaimsUserFlushReceive(IIdentityTools idRepo)
         if (string.IsNullOrWhiteSpace(userId))
             throw new ArgumentNullException(nameof(userId));
 
-        return await idRepo.ClaimsUserFlush(userId, token);
+        return await idRepo.ClaimsUserFlushAsync(userId, token);
     }
 }

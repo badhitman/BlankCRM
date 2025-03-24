@@ -21,6 +21,6 @@ public class ReadParametersReceive(ISerializeStorage serializeStorageRepo, ILogg
     {
         ArgumentNullException.ThrowIfNull(request);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(request)}");
-        return await serializeStorageRepo.ReadParameters(request, token);
+        return await serializeStorageRepo.ReadParametersAsync(request, token);
     }
 }

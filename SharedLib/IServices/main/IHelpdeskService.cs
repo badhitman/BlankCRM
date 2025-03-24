@@ -25,93 +25,93 @@ public interface IHelpdeskService
     /// <summary>
     /// Сообщение в обращение
     /// </summary>
-    public Task<TResponseModel<int?>> MessageUpdateOrCreate(TAuthRequestModel<IssueMessageHelpdeskBaseModel> req, CancellationToken token = default);
+    public Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestModel<IssueMessageHelpdeskBaseModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Message vote
     /// </summary>
-    public Task<TResponseModel<bool?>> MessageVote(TAuthRequestModel<VoteIssueRequestModel> req, CancellationToken token = default);
+    public Task<TResponseModel<bool?>> MessageVoteAsync(TAuthRequestModel<VoteIssueRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// MessagesList
     /// </summary>
-    public Task<TResponseModel<IssueMessageHelpdeskModelDB[]>> MessagesList(TAuthRequestModel<int> req, CancellationToken token = default);
+    public Task<TResponseModel<IssueMessageHelpdeskModelDB[]>> MessagesListAsync(TAuthRequestModel<int> req, CancellationToken token = default);
     #endregion
 
     #region issues
     /// <summary>
     /// SubscribesList
     /// </summary>
-    public Task<TResponseModel<List<SubscriberIssueHelpdeskModelDB>>> SubscribesList(TAuthRequestModel<int> req, CancellationToken token = default);
+    public Task<TResponseModel<List<SubscriberIssueHelpdeskModelDB>>> SubscribesListAsync(TAuthRequestModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// IssuesSelect
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>>> IssuesSelect(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// ConsoleIssuesSelect
     /// </summary>
-    public Task<TPaginationResponseModel<IssueHelpdeskModel>> ConsoleIssuesSelect(TPaginationRequestModel<ConsoleIssuesRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<IssueHelpdeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestModel<ConsoleIssuesRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Subscribe update - of context user
     /// </summary>
-    public Task<TResponseModel<bool>> ExecuterUpdate(TAuthRequestModel<UserIssueModel> req, CancellationToken token = default);
+    public Task<TResponseModel<bool>> ExecuterUpdateAsync(TAuthRequestModel<UserIssueModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Create (or update) Issue: Рубрика, тема и описание
     /// </summary>
-    public Task<TResponseModel<int>> IssueCreateOrUpdate(TAuthRequestModel<UniversalUpdateRequestModel> req, CancellationToken token = default);
+    public Task<TResponseModel<int>> IssueCreateOrUpdateAsync(TAuthRequestModel<UniversalUpdateRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Subscribe update - of context user
     /// </summary>
-    public Task<TResponseModel<bool?>> SubscribeUpdate(TAuthRequestModel<SubscribeUpdateRequestModel> req, CancellationToken token = default);
+    public Task<TResponseModel<bool?>> SubscribeUpdateAsync(TAuthRequestModel<SubscribeUpdateRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Status change
     /// </summary>
-    public Task<TResponseModel<bool>> IssueStatusChange(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default);
+    public Task<TResponseModel<bool>> IssueStatusChangeAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Read issue - of context user
     /// </summary>
-    public Task<TResponseModel<IssueHelpdeskModelDB[]>> IssuesRead(TAuthRequestModel<IssuesReadRequestModel> req, CancellationToken token = default);
+    public Task<TResponseModel<IssueHelpdeskModelDB[]>> IssuesReadAsync(TAuthRequestModel<IssuesReadRequestModel> req, CancellationToken token = default);
     #endregion
 
     #region rubric
     /// <summary>
     /// Получить рубрики, вложенные в рубрику (если не указано, то root перечень)
     /// </summary>
-    public Task<List<UniversalBaseModel>> RubricsList(RubricsListRequestModel req, CancellationToken token = default);
+    public Task<List<UniversalBaseModel>> RubricsListAsync(RubricsListRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// RubricMove
     /// </summary>
-    public Task<ResponseBaseModel> RubricMove(TAuthRequestModel<RowMoveModel> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestModel<RowMoveModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Rubric create (or update)
     /// </summary>
-    public Task<TResponseModel<int>> RubricCreateOrUpdate(RubricIssueHelpdeskModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricIssueHelpdeskModelDB req, CancellationToken token = default);
 
     /// <summary>
     /// Rubric read
     /// </summary>
-    public Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricRead(int rubricId, CancellationToken token = default);
+    public Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricReadAsync(int rubricId, CancellationToken token = default);
 
     /// <summary>
     /// Rubrics get
     /// </summary>
-    public Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricsGet(int[] rubricsIds, CancellationToken token = default);
+    public Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default);
     #endregion
 
     #region pulse
     /// <summary>
     /// PulseJournalSelect
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseJournalSelect(TAuthRequestModel<TPaginationRequestModel<UserIssueModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseJournalSelectAsync(TAuthRequestModel<TPaginationRequestModel<UserIssueModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// Регистрация события из обращения (логи).
@@ -119,7 +119,7 @@ public interface IHelpdeskService
     /// <remarks>
     /// Плюс рассылка уведомлений участникам события.
     /// </remarks>
-    public Task<TResponseModel<bool>> PulsePush(PulseRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<bool>> PulsePushAsync(PulseRequestModel req, CancellationToken token = default);
 
     #endregion
 
@@ -129,12 +129,12 @@ public interface IHelpdeskService
     /// <remarks>
     /// Если это ответ в контексте заявки, тогда оно регистрируется и переправляется
     /// </remarks>
-    public Task<ResponseBaseModel> TelegramMessageIncoming(TelegramIncomingMessageModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> TelegramMessageIncomingAsync(TelegramIncomingMessageModel req, CancellationToken token = default);
 
     /// <summary>
     /// SetWebConfig
     /// </summary>
-    public Task<ResponseBaseModel> SetWebConfig(HelpdeskConfigModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> SetWebConfigAsync(HelpdeskConfigModel req, CancellationToken token = default);
 
     /// <summary>
     /// Очистить кеш сегмента консоли

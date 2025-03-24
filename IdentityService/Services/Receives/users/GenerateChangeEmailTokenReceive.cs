@@ -24,6 +24,6 @@ public class GenerateChangeEmailTokenReceive(IIdentityTools idRepo, ILogger<Gene
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.GenerateChangeEmailToken(req, token);
+        return await idRepo.GenerateChangeEmailTokenAsync(req, token);
     }
 }

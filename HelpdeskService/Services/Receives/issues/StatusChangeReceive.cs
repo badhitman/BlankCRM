@@ -19,6 +19,6 @@ public class StatusChangeReceive(IHelpdeskService hdRepo) : IResponseReceive<TAu
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestModel<StatusChangeRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.IssueStatusChange(req, token);
+        return await hdRepo.IssueStatusChangeAsync(req, token);
     }
 }

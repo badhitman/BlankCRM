@@ -24,6 +24,6 @@ public class ClaimUpdateOrCreateReceive(IIdentityTools idRepo, ILogger<ClaimUpda
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ClaimUpdateOrCreate(req, token);
+        return await idRepo.ClaimUpdateOrCreateAsync(req, token);
     }
 }

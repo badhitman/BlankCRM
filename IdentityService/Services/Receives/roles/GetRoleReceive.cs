@@ -24,6 +24,6 @@ public class GetRoleReceive(IIdentityTools idRepo)
         if(string.IsNullOrWhiteSpace(roleName))
             throw new ArgumentNullException(nameof(roleName));
         
-        return await idRepo.GetRole(roleName, token);
+        return await idRepo.GetRoleAsync(roleName, token);
     }
 }

@@ -19,6 +19,6 @@ public class ExecuterUpdateReceive(IHelpdeskService hdRepo) : IResponseReceive<T
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestModel<UserIssueModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.ExecuterUpdate(req, token);
+        return await hdRepo.ExecuterUpdateAsync(req, token);
     }
 }

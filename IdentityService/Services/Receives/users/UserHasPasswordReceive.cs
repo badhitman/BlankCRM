@@ -22,6 +22,6 @@ public class UserHasPasswordReceive(IIdentityTools idRepo)
     public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(string? userId, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(userId);
-        return await idRepo.UserHasPassword(userId, token);
+        return await idRepo.UserHasPasswordAsync(userId, token);
     }
 }

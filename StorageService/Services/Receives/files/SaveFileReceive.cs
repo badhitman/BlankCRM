@@ -22,6 +22,6 @@ public class SaveFileReceive(ILogger<SaveFileReceive> LoggerRepo, ISerializeStor
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await serializeStorageRepo.SaveFile(req, token);
+        return await serializeStorageRepo.SaveFileAsync(req, token);
     }
 }

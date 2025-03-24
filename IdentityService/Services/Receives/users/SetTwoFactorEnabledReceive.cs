@@ -24,6 +24,6 @@ public class SetTwoFactorEnabledReceive(IIdentityTools idRepo, ILogger<SetTwoFac
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.SetTwoFactorEnabled(req, token);
+        return await idRepo.SetTwoFactorEnabledAsync(req, token);
     }
 }

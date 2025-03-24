@@ -21,6 +21,6 @@ public class RubricCreateOrUpdateReceive(IHelpdeskService hdRepo, ILogger<Rubric
     {
         ArgumentNullException.ThrowIfNull(rubric);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(rubric)}");
-        return await hdRepo.RubricCreateOrUpdate(rubric, token);
+        return await hdRepo.RubricCreateOrUpdateAsync(rubric, token);
     }
 }

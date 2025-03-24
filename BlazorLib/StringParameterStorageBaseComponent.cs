@@ -63,7 +63,7 @@ public class StringParameterStorageBaseComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await SetBusy();
-        TResponseModel<string?> res = await StoreRepo.ReadParameter<string?>(KeyStorage);
+        TResponseModel<string?> res = await StoreRepo.ReadParameterAsync<string?>(KeyStorage);
         IsBusyProgress = false;
         if (!res.Success())
             SnackbarRepo.ShowMessagesResponse(res.Messages);

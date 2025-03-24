@@ -39,7 +39,7 @@ public class GetUsersOfIdentityReceive(IIdentityTools identityRepo, IMemoryCache
             res.Response = users_cache;
             return res;
         }
-        res = await identityRepo.GetUsersOfIdentity(users_ids);
+        res = await identityRepo.GetUsersOfIdentity(users_ids, token);
 
         if (res.Response is null || res.Response.Length == 0)
         {

@@ -22,6 +22,6 @@ public class SetWebConfigReceive(IHelpdeskService hdRepo, ILogger<SetWebConfigRe
     {
         ArgumentNullException.ThrowIfNull(payload);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload)}");
-        return await hdRepo.SetWebConfig(payload, token);
+        return await hdRepo.SetWebConfigAsync(payload, token);
     }
 }

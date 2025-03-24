@@ -19,6 +19,6 @@ public class MoveTabDocumentSchemeJoinFormReceive(IConstructorService conService
     public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.MoveTabDocumentSchemeJoinForm(payload, token);
+        return await conService.MoveTabDocumentSchemeJoinFormAsync(payload, token);
     }
 }

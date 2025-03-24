@@ -25,6 +25,6 @@ public class ChangeEmailForUserReceive(IIdentityTools idRepo, ILogger<ChangeEmai
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ChangeEmail(req, token);
+        return await idRepo.ChangeEmailAsync(req, token);
     }
 }

@@ -53,7 +53,7 @@ public partial class QueryNavKladrComponent : BlazorBusyComponentBaseModel
         };
 
         await SetBusy(token: token);
-        TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsSelect(req);
+        TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsSelectAsync(req);
         await SetBusy(false, token: token);
         PartData = res.Response ?? [];
         return new TableData<KladrResponseModel>() { TotalItems = res.TotalRowsCount, Items = PartData };

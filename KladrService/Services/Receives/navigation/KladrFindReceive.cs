@@ -18,6 +18,6 @@ public class KladrFindReceive(IKladrNavigationService kladrRepo)
     public async Task<TPaginationResponseModel<KladrResponseModel>?> ResponseHandleActionAsync(KladrFindRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await kladrRepo.ObjectsFind(req, token);
+        return await kladrRepo.ObjectsFindAsync(req, token);
     }
 }

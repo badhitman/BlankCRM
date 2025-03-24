@@ -22,6 +22,6 @@ public class GetTwoFactorEnabledReceive(IIdentityTools idRepo)
     public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(string? userId, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(userId);        
-        return await idRepo.GetTwoFactorEnabled(userId, token);
+        return await idRepo.GetTwoFactorEnabledAsync(userId, token);
     }
 }

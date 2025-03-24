@@ -30,6 +30,6 @@ public class FilesAreaGetMetadataReceive(ILogger<FilesSelectReceive> loggerRepo,
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await serializeStorageRepo.FilesAreaGetMetadata(req, token);
+        return await serializeStorageRepo.FilesAreaGetMetadataAsync(req, token);
     }
 }

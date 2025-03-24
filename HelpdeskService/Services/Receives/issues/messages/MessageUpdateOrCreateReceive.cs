@@ -21,6 +21,6 @@ public class MessageUpdateOrCreateReceive(IHelpdeskService hdRepo) : IResponseRe
     public async Task<TResponseModel<int?>?> ResponseHandleActionAsync(TAuthRequestModel<IssueMessageHelpdeskBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.MessageUpdateOrCreate(req, token);
+        return await hdRepo.MessageUpdateOrCreateAsync(req, token);
     }
 }

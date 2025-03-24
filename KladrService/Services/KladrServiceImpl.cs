@@ -17,7 +17,7 @@ IHttpClientFactory HttpClientFactory,
 ILogger<KladrServiceImpl> loggerRepo) : IKladrService
 {
     /// <inheritdoc/>
-    public async Task<MetadataKladrModel> GetMetadataKladr(GetMetadataKladrRequestModel req, CancellationToken token = default)
+    public async Task<MetadataKladrModel> GetMetadataKladrAsync(GetMetadataKladrRequestModel req, CancellationToken token = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.RabbitMqManagement.ToString());
 
@@ -57,16 +57,16 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ClearTempKladr(CancellationToken token = default)
+    public async Task<ResponseBaseModel> ClearTempKladrAsync(CancellationToken token = default)
     {
-        loggerRepo.LogInformation($"call > {nameof(ClearTempKladr)}");
+        loggerRepo.LogInformation($"call > {nameof(ClearTempKladrAsync)}");
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync(token);
         await context.EmptyTemplateTables();
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UploadPartTempKladrAsync(UploadPartTableDataModel req, CancellationToken token = default)
     {
         string tableName = req.TableName[..req.TableName.IndexOf('.')];
         bool valid = Enum.TryParse(tableName, true, out KladrFilesEnum currentKladrElement);
@@ -153,9 +153,9 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FlushTempKladr(CancellationToken token = default)
+    public async Task<ResponseBaseModel> FlushTempKladrAsync(CancellationToken token = default)
     {
-        loggerRepo.LogInformation($"call > {nameof(FlushTempKladr)}");
+        loggerRepo.LogInformation($"call > {nameof(FlushTempKladrAsync)}");
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync(token);
 
         try

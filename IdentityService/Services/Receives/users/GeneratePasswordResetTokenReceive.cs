@@ -24,6 +24,6 @@ public class GeneratePasswordResetTokenReceive(IIdentityTools idRepo)
     public async Task<TResponseModel<string?>?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await idRepo.GeneratePasswordResetToken(req, token);
+        return await idRepo.GeneratePasswordResetTokenAsync(req, token);
     }
 }

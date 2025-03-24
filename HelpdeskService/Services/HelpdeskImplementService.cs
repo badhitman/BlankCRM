@@ -34,7 +34,7 @@ public class HelpdeskImplementService(
 
     #region messages
     /// <inheritdoc/>
-    public async Task<TResponseModel<IssueMessageHelpdeskModelDB[]>> MessagesList(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<IssueMessageHelpdeskModelDB[]>> MessagesListAsync(TAuthRequestModel<int> req, CancellationToken token = default)
     {
         TResponseModel<IssueMessageHelpdeskModelDB[]> res = new();
 
@@ -44,7 +44,7 @@ public class HelpdeskImplementService(
 
         UserInfoModel actor = rest.Response[0];
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesRead(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload], IncludeSubscribersOnly = true },
@@ -74,7 +74,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int?>> MessageUpdateOrCreate(TAuthRequestModel<IssueMessageHelpdeskBaseModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestModel<IssueMessageHelpdeskBaseModel> req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<int?> res = new();
@@ -86,7 +86,7 @@ public class HelpdeskImplementService(
         }
         req.Payload.MessageText = req.Payload.MessageText.Trim();
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesRead(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = req.SenderActionUserId,
             Payload = new() { IssuesIds = [req.Payload.IssueId], IncludeSubscribersOnly = true },
@@ -113,7 +113,7 @@ public class HelpdeskImplementService(
         IssueHelpdeskModelDB issue_data = issues_data.Response.Single();
         if (req.SenderActionUserId != GlobalStaticConstants.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
         {
-            await SubscribeUpdate(new()
+            await SubscribeUpdateAsync(new()
             {
                 SenderActionUserId = GlobalStaticConstants.Roles.System,
                 Payload = new()
@@ -169,7 +169,7 @@ public class HelpdeskImplementService(
                 };
 
                 tasks = [
-                    PulsePush(p_req, token),
+                    PulsePushAsync(p_req, token),
                     Task.Run(async () => { my_marker = await context.IssueReadMarkers.FirstOrDefaultAsync(x => x.IssueId == req.Payload.IssueId && x.UserIdentityId == actor.UserId); }, token)];
 
                 await Task.WhenAll(tasks);
@@ -231,25 +231,25 @@ public class HelpdeskImplementService(
                 tasks.Add(Task.Run(async () => { wc = await webTransmissionRepo.GetWebConfig(); }, token));
                 tasks.Add(Task.Run(async () =>
                 {
-                    CommerceNewMessageOrderBodyNotificationWhatsapp = await StorageRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderBodyNotificationWhatsapp);
+                    CommerceNewMessageOrderBodyNotificationWhatsapp = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderBodyNotificationWhatsapp);
                     if (CommerceNewMessageOrderBodyNotificationWhatsapp.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotificationWhatsapp.Response))
                         wpMessage = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotificationWhatsapp.Response, wc.ClearBaseUri, _about_document, true);
                 }, token));
                 tasks.Add(Task.Run(async () =>
                 {
-                    CommerceNewMessageOrderBodyNotificationTelegram = await StorageRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderBodyNotificationTelegram);
+                    CommerceNewMessageOrderBodyNotificationTelegram = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderBodyNotificationTelegram);
                     if (CommerceNewMessageOrderBodyNotificationTelegram.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotificationTelegram.Response))
                         tg_message = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
                 }, token));
                 tasks.Add(Task.Run(async () =>
                 {
-                    CommerceNewMessageOrderBodyNotification = await StorageRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderBodyNotification);
+                    CommerceNewMessageOrderBodyNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderBodyNotification);
                     if (CommerceNewMessageOrderBodyNotification.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotification.Response))
                         msg = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotification.Response, wc.ClearBaseUri, _about_document);
                 }, token));
                 tasks.Add(Task.Run(async () =>
                 {
-                    CommerceNewMessageOrderSubjectNotification = await StorageRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderSubjectNotification);
+                    CommerceNewMessageOrderSubjectNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderSubjectNotification);
                     if (CommerceNewMessageOrderSubjectNotification.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderSubjectNotification.Response))
                         subject_email = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderSubjectNotification.Response, wc.ClearBaseUri, _about_document);
                 }, token));
@@ -356,7 +356,7 @@ public class HelpdeskImplementService(
                         .SetProperty(p => p.MessageText, req.Payload.MessageText)
                         .SetProperty(p => p.LastUpdateAt, dtn));
                 }, token));
-                tasks.Add(PulsePush(p_req, token));
+                tasks.Add(PulsePushAsync(p_req, token));
                 await Task.WhenAll(tasks);
                 msg = "Сообщение успешно обновлено";
                 res.AddSuccess(msg);
@@ -367,7 +367,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>> MessageVote(TAuthRequestModel<VoteIssueRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>> MessageVoteAsync(TAuthRequestModel<VoteIssueRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<bool?> res = new();
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
@@ -383,7 +383,7 @@ public class HelpdeskImplementService(
         using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         IssueMessageHelpdeskModelDB msg_db = await context.IssuesMessages.FirstAsync(x => x.Id == req.Payload.MessageId, cancellationToken: token);
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesRead(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [msg_db.IssueId], IncludeSubscribersOnly = true },
@@ -400,7 +400,7 @@ public class HelpdeskImplementService(
         var issue_data = issues_data.Response.Single();
         if (req.SenderActionUserId != GlobalStaticConstants.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
         {
-            await SubscribeUpdate(new()
+            await SubscribeUpdateAsync(new()
             {
                 SenderActionUserId = GlobalStaticConstants.Roles.System,
                 Payload = new()
@@ -443,7 +443,7 @@ public class HelpdeskImplementService(
                     }
                 };
 
-                await PulsePush(p_req, token);
+                await PulsePushAsync(p_req, token);
             }
             else
                 res.AddInfo("Вы уже проголосовали");
@@ -475,7 +475,7 @@ public class HelpdeskImplementService(
                     }
                 };
 
-                await PulsePush(p_req, token);
+                await PulsePushAsync(p_req, token);
             }
         }
 
@@ -485,7 +485,7 @@ public class HelpdeskImplementService(
 
     #region rubric
     /// <inheritdoc/>
-    public async Task<List<UniversalBaseModel>> RubricsList(RubricsListRequestModel req, CancellationToken token = default)
+    public async Task<List<UniversalBaseModel>> RubricsListAsync(RubricsListRequestModel req, CancellationToken token = default)
     {
         using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         IQueryable<UniversalBaseModel> q = context
@@ -512,7 +512,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RubricMove(TAuthRequestModel<RowMoveModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestModel<RowMoveModel> req, CancellationToken token = default)
     {
         ResponseBaseModel res = new();
 
@@ -614,7 +614,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> RubricCreateOrUpdate(RubricIssueHelpdeskModelDB rubric, CancellationToken token = default)
+    public async Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricIssueHelpdeskModelDB rubric, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         Regex rx = new(@"\s+", RegexOptions.Compiled);
@@ -665,7 +665,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricRead(int rubricId, CancellationToken token = default)
+    public async Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricReadAsync(int rubricId, CancellationToken token = default)
     {
         TResponseModel<List<RubricIssueHelpdeskModelDB>> res = new();
 
@@ -710,7 +710,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricsGet(int[] rubricsIds, CancellationToken token = default)
+    public async Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default)
     {
         TResponseModel<List<RubricIssueHelpdeskModelDB>> res = new();
         rubricsIds = [.. rubricsIds.Where(x => x > 0)];
@@ -727,7 +727,7 @@ public class HelpdeskImplementService(
 
     #region issues
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<SubscriberIssueHelpdeskModelDB>>> SubscribesList(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<SubscriberIssueHelpdeskModelDB>>> SubscribesListAsync(TAuthRequestModel<int> req, CancellationToken token = default)
     {
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentity([req.SenderActionUserId], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length != 1)
@@ -735,7 +735,7 @@ public class HelpdeskImplementService(
 
         UserInfoModel actor = rest.Response[0];
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesRead(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload], IncludeSubscribersOnly = true },
@@ -748,7 +748,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>>> IssuesSelect(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
     {
         if (req.Payload.PageSize < 5)
             req.Payload.PageSize = 5;
@@ -832,7 +832,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<IssueHelpdeskModel>> ConsoleIssuesSelect(TPaginationRequestModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<IssueHelpdeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -904,12 +904,12 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> ExecuterUpdate(TAuthRequestModel<UserIssueModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> ExecuterUpdateAsync(TAuthRequestModel<UserIssueModel> req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<bool> res = new();
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesRead(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = req.SenderActionUserId,
             Payload = new IssuesReadRequestModel()
@@ -936,7 +936,7 @@ public class HelpdeskImplementService(
 
         if (req.SenderActionUserId != GlobalStaticConstants.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
         {
-            await SubscribeUpdate(new()
+            await SubscribeUpdateAsync(new()
             {
                 SenderActionUserId = GlobalStaticConstants.Roles.System,
                 Payload = new()
@@ -950,7 +950,7 @@ public class HelpdeskImplementService(
         }
         if (issue_data.Subscribers?.Any(x => x.UserId == req.Payload.UserId) != true)
         {
-            await SubscribeUpdate(new()
+            await SubscribeUpdateAsync(new()
             {
                 SenderActionUserId = GlobalStaticConstants.Roles.System,
                 Payload = new()
@@ -1000,7 +1000,7 @@ public class HelpdeskImplementService(
                     }
                 };
 
-                await PulsePush(p_req, token);
+                await PulsePushAsync(p_req, token);
             }
         }
         else
@@ -1030,7 +1030,7 @@ public class HelpdeskImplementService(
                         }
                     };
 
-                    await PulsePush(p_req, token);
+                    await PulsePushAsync(p_req, token);
                 }
                 else
                 {
@@ -1051,7 +1051,7 @@ public class HelpdeskImplementService(
                         }
                     };
 
-                    await PulsePush(p_req, token);
+                    await PulsePushAsync(p_req, token);
                 }
 
                 await context
@@ -1067,7 +1067,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> IssueCreateOrUpdate(TAuthRequestModel<UniversalUpdateRequestModel> issue_upd, CancellationToken token = default)
+    public async Task<TResponseModel<int>> IssueCreateOrUpdateAsync(TAuthRequestModel<UniversalUpdateRequestModel> issue_upd, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(issue_upd)}");
         TResponseModel<int> res = new() { Response = 0 };
@@ -1076,7 +1076,7 @@ public class HelpdeskImplementService(
 
         List<Task> tasks = [
             Task.Run(async () => { users_rest = await IdentityRepo.GetUsersIdentity([issue_upd.SenderActionUserId]); }, token),
-            Task.Run(async () => { res_ModeSelectingRubrics = await StorageRepo.ReadParameter<ModesSelectRubricsEnum?>(GlobalStaticConstants.CloudStorageMetadata.ModeSelectingRubrics); }, token) ];
+            Task.Run(async () => { res_ModeSelectingRubrics = await StorageRepo.ReadParameterAsync<ModesSelectRubricsEnum?>(GlobalStaticConstants.CloudStorageMetadata.ModeSelectingRubrics); }, token) ];
 
         await Task.WhenAll(tasks);
         tasks.Clear();
@@ -1174,9 +1174,9 @@ public class HelpdeskImplementService(
             };
             TResponseModel<long?> helpdesk_user_redirect_telegram_for_issue_rest = default!;
             await Task.WhenAll([
-                PulsePush(p_req, token),
-                Task.Run(async () => { helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameter<long?>(GlobalStaticConstants.CloudStorageMetadata.HelpdeskNotificationTelegramForCreateIssue); }, token),
-                MessageUpdateOrCreate(new() { SenderActionUserId = GlobalStaticConstants.Roles.System, Payload = new() { MessageText = $"Пользователь `{actor.UserName}` создал новый запрос: {issue_upd.Payload.Name}", IssueId = issue.Id } }, token)]);
+                PulsePushAsync(p_req, token),
+                Task.Run(async () => { helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticConstants.CloudStorageMetadata.HelpdeskNotificationTelegramForCreateIssue); }, token),
+                MessageUpdateOrCreateAsync(new() { SenderActionUserId = GlobalStaticConstants.Roles.System, Payload = new() { MessageText = $"Пользователь `{actor.UserName}` создал новый запрос: {issue_upd.Payload.Name}", IssueId = issue.Id } }, token)]);
 
             if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
             {
@@ -1252,10 +1252,10 @@ public class HelpdeskImplementService(
                         SenderActionUserId = issue_upd.SenderActionUserId,
                     }
                 };
-                tasks = [PulsePush(p_req, token)];
+                tasks = [PulsePushAsync(p_req, token)];
                 if (issue_upd.SenderActionUserId != GlobalStaticConstants.Roles.System && issue.Subscribers?.Any(x => x.UserId == issue_upd.SenderActionUserId) != true)
                 {
-                    tasks.Add(SubscribeUpdate(new()
+                    tasks.Add(SubscribeUpdateAsync(new()
                     {
                         SenderActionUserId = GlobalStaticConstants.Roles.System,
                         Payload = new()
@@ -1277,7 +1277,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<IssueHelpdeskModelDB[]>> IssuesRead(TAuthRequestModel<IssuesReadRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<IssueHelpdeskModelDB[]>> IssuesReadAsync(TAuthRequestModel<IssuesReadRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<IssueHelpdeskModelDB[]> res = new();
         string mem_key = $"{GlobalStaticConstants.TransmissionQueues.IssuesGetHelpdeskReceive}-{string.Join(";", req.Payload.IssuesIds)}/{req.Payload.IncludeSubscribersOnly}({req.SenderActionUserId})";
@@ -1332,7 +1332,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> IssueStatusChange(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> IssueStatusChangeAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<bool> res = new()
@@ -1346,7 +1346,7 @@ public class HelpdeskImplementService(
 
         UserInfoModel actor = req.SenderActionUserId == GlobalStaticConstants.Roles.System ? UserInfoModel.BuildSystem() : rest.Response![0];
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesRead(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload.DocumentId], IncludeSubscribersOnly = true },
@@ -1404,15 +1404,15 @@ public class HelpdeskImplementService(
 
         TelegramBotConfigModel wc = default!;
         List<Task> tasks = [
-            Task.Run(async () => { CommerceStatusChangeOrderSubjectNotification = await StorageRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderSubjectNotification(prevStatus)); }, token),
-            Task.Run(async () => { CommerceStatusChangeOrderBodyNotification = await StorageRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderBodyNotification(prevStatus)); }, token),
-            Task.Run(async () => { CommerceStatusChangeOrderBodyNotificationTelegram = await StorageRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationTelegram(prevStatus)); }, token),
-            Task.Run(async () => { CommerceStatusChangeOrderBodyNotificationWhatsapp = await StorageRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationWhatsapp(prevStatus)); }, token),
+            Task.Run(async () => { CommerceStatusChangeOrderSubjectNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderSubjectNotification(prevStatus)); }, token),
+            Task.Run(async () => { CommerceStatusChangeOrderBodyNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderBodyNotification(prevStatus)); }, token),
+            Task.Run(async () => { CommerceStatusChangeOrderBodyNotificationTelegram = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationTelegram(prevStatus)); }, token),
+            Task.Run(async () => { CommerceStatusChangeOrderBodyNotificationWhatsapp = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationWhatsapp(prevStatus)); }, token),
             Task.Run(async () => { wc = await webTransmissionRepo.GetWebConfig(); }, token)];
 
         if (req.SenderActionUserId != GlobalStaticConstants.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
         {
-            tasks.Add(SubscribeUpdate(new()
+            tasks.Add(SubscribeUpdateAsync(new()
             {
                 SenderActionUserId = GlobalStaticConstants.Roles.System,
                 Payload = new()
@@ -1474,7 +1474,7 @@ public class HelpdeskImplementService(
             IsMuteTelegram = true,
             IsMuteWhatsapp = true,
         };
-        tasks.Add(PulsePush(p_req, token));
+        tasks.Add(PulsePushAsync(p_req, token));
 
         OrdersByIssuesSelectRequestModel req_docs = new()
         {
@@ -1563,7 +1563,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>> SubscribeUpdate(TAuthRequestModel<SubscribeUpdateRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>> SubscribeUpdateAsync(TAuthRequestModel<SubscribeUpdateRequestModel> req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<bool?> res = new() { Response = false };
@@ -1579,7 +1579,7 @@ public class HelpdeskImplementService(
             actor = rest.Response.First(x => x.UserId == req.SenderActionUserId),
             requested_user = rest.Response.First(x => x.UserId == req.Payload.UserId);
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesRead(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new IssuesReadRequestModel()
@@ -1634,7 +1634,7 @@ public class HelpdeskImplementService(
                         }
                     };
 
-                    await PulsePush(p_req, token);
+                    await PulsePushAsync(p_req, token);
                 }
             }
             else
@@ -1668,7 +1668,7 @@ public class HelpdeskImplementService(
                             }
                         };
 
-                        await PulsePush(p_req, token);
+                        await PulsePushAsync(p_req, token);
                     }
                 }
             }
@@ -1702,7 +1702,7 @@ public class HelpdeskImplementService(
                         }
                     };
 
-                    await PulsePush(p_req, token);
+                    await PulsePushAsync(p_req, token);
                 }
             }
         }
@@ -1714,7 +1714,7 @@ public class HelpdeskImplementService(
 
     #region pulse
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> PulsePush(PulseRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> PulsePushAsync(PulseRequestModel req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<bool> res = new()
@@ -1722,7 +1722,7 @@ public class HelpdeskImplementService(
             Response = false,
         };
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesRead(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = GlobalStaticConstants.Roles.System,
             Payload = new() { IssuesIds = [req.Payload.Payload.IssueId], IncludeSubscribersOnly = true },
@@ -1798,7 +1798,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseJournalSelect(TAuthRequestModel<TPaginationRequestModel<UserIssueModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseJournalSelectAsync(TAuthRequestModel<TPaginationRequestModel<UserIssueModel>> req, CancellationToken token = default)
     {
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentity([req.Payload.Payload.UserId], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length == 0)
@@ -1811,7 +1811,7 @@ public class HelpdeskImplementService(
 
         loggerRepo.LogDebug($"Запрос журнала активности пользователем: {JsonConvert.SerializeObject(actor)}");
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesRead(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload.Payload.IssueId], IncludeSubscribersOnly = true },
@@ -1859,7 +1859,7 @@ public class HelpdeskImplementService(
     #endregion
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TelegramMessageIncoming(TelegramIncomingMessageModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TelegramMessageIncomingAsync(TelegramIncomingMessageModel req, CancellationToken token = default)
     {
         using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
@@ -1916,7 +1916,7 @@ public class HelpdeskImplementService(
         if (req.Chat?.Type != ChatsTypesTelegramEnum.Private)
             return ResponseBaseModel.CreateWarning("Чат не является частным (обработке в HelpDesk не подлежит)!");
 
-        TResponseModel<long?> helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameter<long?>(GlobalStaticConstants.CloudStorageMetadata.HelpdeskNotificationsTelegramForUser(req.From!.UserTelegramId), token);
+        TResponseModel<long?> helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticConstants.CloudStorageMetadata.HelpdeskNotificationsTelegramForUser(req.From!.UserTelegramId), token);
         if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
         {
             TResponseModel<MessageComplexIdsModel> forward_res = await telegramRemoteRepo.ForwardMessage(new()
@@ -1944,7 +1944,7 @@ public class HelpdeskImplementService(
                 ResponseBaseModel.Create(forward_res.Messages);
         }
 
-        helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameter<long?>(GlobalStaticConstants.CloudStorageMetadata.HelpdeskNotificationTelegramGlobalForIncomingMessage, token);
+        helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticConstants.CloudStorageMetadata.HelpdeskNotificationTelegramGlobalForIncomingMessage, token);
         if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
         {
             TResponseModel<MessageComplexIdsModel> forward_res = await telegramRemoteRepo.ForwardMessage(new()
@@ -2015,7 +2015,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> SetWebConfig(HelpdeskConfigModel req, CancellationToken token = default)
+    public Task<ResponseBaseModel> SetWebConfigAsync(HelpdeskConfigModel req, CancellationToken token = default)
     {
         if (!Uri.TryCreate(req.BaseUri, UriKind.Absolute, out _))
             return Task.FromResult(ResponseBaseModel.CreateError("BaseUri is null"));

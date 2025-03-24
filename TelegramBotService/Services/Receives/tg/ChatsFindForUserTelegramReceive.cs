@@ -20,6 +20,6 @@ public class ChatsFindForUserTelegramReceive(ITelegramBotService tgRepo)
     public async Task<List<ChatTelegramModelDB>?> ResponseHandleActionAsync(long[]? chats_ids, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(chats_ids);
-        return await tgRepo.ChatsFindForUserTelegram(chats_ids, token);
+        return await tgRepo.ChatsFindForUserTelegramAsync(chats_ids, token);
     }
 }

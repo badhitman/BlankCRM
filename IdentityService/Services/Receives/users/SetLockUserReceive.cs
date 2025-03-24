@@ -24,6 +24,6 @@ public class SetLockUserReceive(IIdentityTools idRepo, ILogger<SetLockUserReceiv
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.SetLockUser(req, token);
+        return await idRepo.SetLockUserAsync(req, token);
     }
 }

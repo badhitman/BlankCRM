@@ -22,6 +22,6 @@ public class SetRoleForUserReceive(IIdentityTools identityRepo, ILogger<SetRoleF
     {
         ArgumentNullException.ThrowIfNull(req);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await identityRepo.SetRoleForUser(req, token);
+        return await identityRepo.SetRoleForUserAsync(req, token);
     }
 }

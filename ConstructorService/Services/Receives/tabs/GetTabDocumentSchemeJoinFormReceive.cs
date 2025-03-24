@@ -18,6 +18,6 @@ public class GetTabDocumentSchemeJoinFormReceive(IConstructorService conService)
     /// <inheritdoc/>
     public async Task<TResponseModel<FormToTabJoinConstructorModelDB>?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
     {
-        return await conService.GetTabDocumentSchemeJoinForm(payload, token);
+        return await conService.GetTabDocumentSchemeJoinFormAsync(payload, token);
     }
 }

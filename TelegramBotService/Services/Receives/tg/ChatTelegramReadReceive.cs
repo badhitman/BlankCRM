@@ -19,6 +19,6 @@ public class ChatTelegramReadReceive(ITelegramBotService tgRepo)
     /// <inheritdoc/>
     public async Task<ChatTelegramModelDB?> ResponseHandleActionAsync(int chat_id, CancellationToken token = default)
     {
-        return await tgRepo.ChatTelegramRead(chat_id, token);
+        return await tgRepo.ChatTelegramReadAsync(chat_id, token);
     }
 }

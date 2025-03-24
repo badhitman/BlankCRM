@@ -435,7 +435,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             return;
         Organizations = res.Response;
         TResponseModel<OrderDocumentModelDB?> current_cart = await StorageRepo
-            .ReadParameter<OrderDocumentModelDB>(GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId));
+            .ReadParameterAsync<OrderDocumentModelDB>(GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId));
 
         CurrentCart = current_cart.Response ?? new()
         {

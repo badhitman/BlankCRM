@@ -22,6 +22,6 @@ public class MessagesListReceive(IHelpdeskService hdRepo)
     public async Task<TResponseModel<IssueMessageHelpdeskModelDB[]>?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.MessagesList(req, token);
+        return await hdRepo.MessagesListAsync(req, token);
     }
 }

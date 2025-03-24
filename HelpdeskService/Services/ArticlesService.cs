@@ -15,7 +15,7 @@ namespace HelpdeskService;
 public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactory) : IArticlesService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> ArticleCreateOrUpdate(ArticleModelDB article, CancellationToken token = default)
+    public async Task<TResponseModel<int>> ArticleCreateOrUpdateAsync(ArticleModelDB article, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         Regex rx = new(@"\s+", RegexOptions.Compiled);
@@ -56,7 +56,7 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ArticleModelDB[]>> ArticlesRead(int[] req, CancellationToken token = default)
+    public async Task<TResponseModel<ArticleModelDB[]>> ArticlesReadAsync(int[] req, CancellationToken token = default)
     {
         using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 #if DEBUG
@@ -77,7 +77,7 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ArticleModelDB>> ArticlesSelect(TPaginationRequestModel<SelectArticlesRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<ArticleModelDB>> ArticlesSelectAsync(TPaginationRequestModel<SelectArticlesRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
@@ -122,7 +122,7 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> UpdateRubricsForArticle(ArticleRubricsSetModel req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> UpdateRubricsForArticleAsync(ArticleRubricsSetModel req, CancellationToken token = default)
     {
         using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         if (req.RubricsIds.Length == 0)

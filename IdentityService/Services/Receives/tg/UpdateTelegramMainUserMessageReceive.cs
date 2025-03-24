@@ -21,6 +21,6 @@ public class UpdateTelegramMainUserMessageReceive(IIdentityTools identityRepo, I
     {
         ArgumentNullException.ThrowIfNull(setMainMessage);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(setMainMessage, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await identityRepo.UpdateTelegramMainUserMessage(setMainMessage, token);
+        return await identityRepo.UpdateTelegramMainUserMessageAsync(setMainMessage, token);
     }
 }

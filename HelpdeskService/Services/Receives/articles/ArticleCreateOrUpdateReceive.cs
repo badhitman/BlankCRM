@@ -23,6 +23,6 @@ public class ArticleCreateOrUpdateReceive(IArticlesService artRepo, ILogger<Arti
     {
         ArgumentNullException.ThrowIfNull(article);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(article)}");
-        return await artRepo.ArticleCreateOrUpdate(article, token);
+        return await artRepo.ArticleCreateOrUpdateAsync(article, token);
     }
 }

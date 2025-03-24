@@ -39,7 +39,7 @@ public class GetUserIdentityByTelegramReceive(IIdentityTools IdentityRepo, IMemo
             return response;
         }
 
-        response = await IdentityRepo.GetUsersIdentityByTelegram([.. tg_ids], token);
+        response = await IdentityRepo.GetUsersIdentityByTelegramAsync([.. tg_ids], token);
 
         if (response.Response is null || response.Response.Length == 0)
         {

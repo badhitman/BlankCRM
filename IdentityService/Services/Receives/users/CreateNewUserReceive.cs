@@ -25,6 +25,6 @@ public class CreateNewUserReceive(IIdentityTools idRepo, ILogger<CreateNewUserRe
             throw new ArgumentNullException(nameof(req));
 
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.CreateNewUserEmail(req, token);
+        return await idRepo.CreateNewUserEmailAsync(req, token);
     }
 }

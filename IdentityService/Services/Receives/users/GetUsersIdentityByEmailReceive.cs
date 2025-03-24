@@ -39,7 +39,7 @@ public class GetUsersIdentityByEmailReceive(IIdentityTools IdentityRepo, IMemory
             res.Response = users_cache;
             return res;
         }
-        res = await IdentityRepo.GetUsersIdentityByEmail(users_emails);
+        res = await IdentityRepo.GetUsersIdentityByEmail(users_emails, token);
 
         if (res.Response is null || res.Response.Length == 0)
         {

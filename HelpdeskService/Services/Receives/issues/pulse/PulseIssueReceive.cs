@@ -22,6 +22,6 @@ public class PulseIssueReceive(IHelpdeskService hdRepo) : IResponseReceive<Pulse
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(PulseRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.PulsePush(req, token);
+        return await hdRepo.PulsePushAsync(req, token);
     }
 }

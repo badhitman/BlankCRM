@@ -19,6 +19,6 @@ public class GetSessionDocumentReceive(IConstructorService conService) : IRespon
     public async Task<TResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleActionAsync(SessionGetModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.GetSessionDocument(payload, token);
+        return await conService.GetSessionDocumentAsync(payload, token);
     }
 }

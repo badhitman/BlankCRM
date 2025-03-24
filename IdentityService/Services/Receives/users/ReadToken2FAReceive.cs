@@ -22,6 +22,6 @@ public class ReadToken2FAReceive(IIdentityTools idRepo)
     public async Task<TResponseModel<string>?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await idRepo.ReadToken2FA(req, token);
+        return await idRepo.ReadToken2FAAsync(req, token);
     }
 }

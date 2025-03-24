@@ -22,6 +22,6 @@ public class ForwardMessageTelegramReceive(ILogger<ForwardMessageTelegramReceive
     {
         ArgumentNullException.ThrowIfNull(message);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(message)}");
-        return await tgRepo.ForwardMessageTelegram(message, token);
+        return await tgRepo.ForwardMessageTelegramAsync(message, token);
     }
 }

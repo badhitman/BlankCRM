@@ -20,6 +20,6 @@ public class TelegramMessageIncomingReceive(IHelpdeskService hdRepo)
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramIncomingMessageModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.TelegramMessageIncoming(req, token);
+        return await hdRepo.TelegramMessageIncomingAsync(req, token);
     }
 }

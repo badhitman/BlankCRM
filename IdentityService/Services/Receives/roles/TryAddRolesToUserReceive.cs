@@ -24,6 +24,6 @@ public class TryAddRolesToUserReceive(IIdentityTools idRepo, ILogger<TryAddRoles
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.TryAddRolesToUser(req, token);
+        return await idRepo.TryAddRolesToUserAsync(req, token);
     }
 }

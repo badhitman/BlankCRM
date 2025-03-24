@@ -24,6 +24,6 @@ public class DeleteUserDataReceive(IIdentityTools idRepo, ILogger<AddPasswordFor
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.DeleteUserData(req, token);
+        return await idRepo.DeleteUserDataAsync(req, token);
     }
 }

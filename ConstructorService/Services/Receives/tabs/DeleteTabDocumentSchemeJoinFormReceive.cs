@@ -19,6 +19,6 @@ public class DeleteTabDocumentSchemeJoinFormReceive(IConstructorService conServi
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.DeleteTabDocumentSchemeJoinForm(payload, token);
+        return await conService.DeleteTabDocumentSchemeJoinFormAsync(payload, token);
     }
 }

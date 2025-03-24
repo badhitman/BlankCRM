@@ -26,6 +26,6 @@ public class TelegramJoinAccountStateReceive(IIdentityTools idRepo, ILogger<Tele
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.TelegramJoinAccountState(req, token);
+        return await idRepo.TelegramJoinAccountStateAsync(req, token);
     }
 }

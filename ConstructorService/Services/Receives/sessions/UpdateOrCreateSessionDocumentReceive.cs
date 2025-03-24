@@ -19,6 +19,6 @@ public class UpdateOrCreateSessionDocumentReceive(IConstructorService conService
     public async Task<TResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleActionAsync(SessionOfDocumentDataModelDB? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.UpdateOrCreateSessionDocument(payload, token);
+        return await conService.UpdateOrCreateSessionDocumentAsync(payload, token);
     }
 }

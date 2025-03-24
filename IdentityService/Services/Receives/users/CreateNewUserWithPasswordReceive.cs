@@ -22,6 +22,6 @@ public class CreateNewUserWithPasswordReceive(IIdentityTools idRepo, ILogger<Cre
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.CreateNewUserWithPassword(req, token);
+        return await idRepo.CreateNewUserWithPasswordAsync(req, token);
     }
 }

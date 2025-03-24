@@ -87,7 +87,7 @@ public partial class NoteSimpleComponent : BlazorBusyComponentBaseModel
     {
         domId = $"{OwnerPrimaryKey}/{nameof(NoteSimpleComponent)}{ApplicationName}{PropertyName}{PrefixPropertyName}";
         await SetBusy();
-        TResponseModel<string?> rest = await StorageRepo.ReadParameter<string>(KeyStorage);
+        TResponseModel<string?> rest = await StorageRepo.ReadParameterAsync<string>(KeyStorage);
         IsBusyProgress = false;
         initValue = rest.Response;
         editValue = initValue;

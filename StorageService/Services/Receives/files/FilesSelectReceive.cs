@@ -22,6 +22,6 @@ public class FilesSelectReceive(ILogger<FilesSelectReceive> loggerRepo, ISeriali
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await serializeStorageRepo.FilesSelect(req, token);
+        return await serializeStorageRepo.FilesSelectAsync(req, token);
     }
 }

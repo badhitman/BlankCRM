@@ -24,6 +24,6 @@ public class GenerateOTPFor2StepVerificationReceive(IIdentityTools idRepo, ILogg
     {
         ArgumentNullException.ThrowIfNull(userId);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(userId, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.GenerateToken2FA(userId, token);
+        return await idRepo.GenerateToken2FAAsync(userId, token);
     }
 }

@@ -20,6 +20,6 @@ public class GoToPageForRowReceive(ISerializeStorage storeRepo)
     public async Task<TPaginationResponseModel<NLogRecordModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<int>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await storeRepo.GoToPageForRow(payload, token);
+        return await storeRepo.GoToPageForRowAsync(payload, token);
     }
 }

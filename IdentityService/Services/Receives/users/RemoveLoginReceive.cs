@@ -26,6 +26,6 @@ public class RemoveLoginReceive(IIdentityTools idRepo, ILogger<RemoveLoginReceiv
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.RemoveLoginForUser(req, token);
+        return await idRepo.RemoveLoginForUserAsync(req, token);
     }
 }

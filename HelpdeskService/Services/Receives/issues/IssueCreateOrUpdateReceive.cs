@@ -19,6 +19,6 @@ public class IssueCreateOrUpdateReceive(IHelpdeskService hdRepo) : IResponseRece
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<UniversalUpdateRequestModel>? issue_upd, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(issue_upd);
-        return await hdRepo.IssueCreateOrUpdate(issue_upd, token);
+        return await hdRepo.IssueCreateOrUpdateAsync(issue_upd, token);
     }
 }

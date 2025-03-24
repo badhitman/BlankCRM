@@ -26,6 +26,6 @@ public class DeleteRoleReceive(IIdentityTools idRepo, ILogger<DeleteRoleReceive>
             throw new ArgumentNullException(nameof(roleName));
         
         loggerRepo.LogWarning(JsonConvert.SerializeObject(roleName, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.DeleteRole(roleName, token);
+        return await idRepo.DeleteRoleAsync(roleName, token);
     }
 }

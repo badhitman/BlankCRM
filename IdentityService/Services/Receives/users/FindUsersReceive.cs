@@ -22,6 +22,6 @@ public class FindUsersReceive(IIdentityTools idRepo)
     public async Task<TPaginationResponseModel<UserInfoModel>?> ResponseHandleActionAsync(FindWithOwnedRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await idRepo.FindUsers(req, token);
+        return await idRepo.FindUsersAsync(req, token);
     }
 }

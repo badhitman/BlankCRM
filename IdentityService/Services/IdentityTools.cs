@@ -32,7 +32,7 @@ public class IdentityTools(
     IDbContextFactory<IdentityAppDbContext> identityDbFactory) : IIdentityTools
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>> CheckToken2FA(CheckToken2FARequestModel req, CancellationToken tokenCan = default)
+    public async Task<TResponseModel<string>> CheckToken2FAAsync(CheckToken2FARequestModel req, CancellationToken tokenCan = default)
     {
         MemCachePrefixModel pref = new(GlobalStaticConstants.Routes.TWOFACTOR_CONTROLLER_NAME, GlobalStaticConstants.Routes.ALIAS_CONTROLLER_NAME);
         string? userId = await memCache.GetStringValueAsync(pref, req.UserAlias, tokenCan);
@@ -53,13 +53,13 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>> ReadToken2FA(string userId, CancellationToken token = default)
+    public async Task<TResponseModel<string>> ReadToken2FAAsync(string userId, CancellationToken token = default)
     {
         return new() { Response = await memCache.GetStringValueAsync(new MemCachePrefixModel(GlobalStaticConstants.Routes.TWOFACTOR_CONTROLLER_NAME, GlobalStaticConstants.Routes.TOKEN_CONTROLLER_NAME), userId, token) };
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>> GenerateToken2FA(string userId, CancellationToken tokenCan = default)
+    public async Task<TResponseModel<string>> GenerateToken2FAAsync(string userId, CancellationToken tokenCan = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -86,7 +86,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<IEnumerable<UserLoginInfoModel>>> GetUserLogins(string userId, CancellationToken token = default)
+    public async Task<TResponseModel<IEnumerable<UserLoginInfoModel>>> GetUserLoginsAsync(string userId, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -103,7 +103,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> CheckUserPassword(IdentityPasswordModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> CheckUserPasswordAsync(IdentityPasswordModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -124,7 +124,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteUserData(DeleteUserDataRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteUserDataAsync(DeleteUserDataRequestModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -146,7 +146,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>> UserHasPassword(string userId, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>> UserHasPasswordAsync(string userId, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -162,7 +162,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>> GetTwoFactorEnabled(string userId, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>> GetTwoFactorEnabledAsync(string userId, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -175,7 +175,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetTwoFactorEnabled(SetTwoFactorEnabledRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> SetTwoFactorEnabledAsync(SetTwoFactorEnabledRequestModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -196,7 +196,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ResetAuthenticatorKey(string userId, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ResetAuthenticatorKeyAsync(string userId, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -217,7 +217,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RemoveLoginForUser(RemoveLoginRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RemoveLoginForUserAsync(RemoveLoginRequestModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -234,7 +234,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> VerifyTwoFactorToken(VerifyTwoFactorTokenRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> VerifyTwoFactorTokenAsync(VerifyTwoFactorTokenRequestModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -252,7 +252,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int?>> CountRecoveryCodes(string userId, CancellationToken token = default)
+    public async Task<TResponseModel<int?>> CountRecoveryCodesAsync(string userId, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -265,7 +265,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> GenerateChangeEmailToken(GenerateChangeEmailTokenRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> GenerateChangeEmailTokenAsync(GenerateChangeEmailTokenRequestModel req, CancellationToken token = default)
     {
 
         if (!MailAddress.TryCreate(req.NewEmail, out _))
@@ -288,7 +288,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<IEnumerable<string>?>> GenerateNewTwoFactorRecoveryCodes(GenerateNewTwoFactorRecoveryCodesRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<IEnumerable<string>?>> GenerateNewTwoFactorRecoveryCodesAsync(GenerateNewTwoFactorRecoveryCodesRequestModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -301,7 +301,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string?>> GetAuthenticatorKey(string userId, CancellationToken token = default)
+    public async Task<TResponseModel<string?>> GetAuthenticatorKeyAsync(string userId, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -324,7 +324,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string?>> GeneratePasswordResetToken(string userId, CancellationToken token = default)
+    public async Task<TResponseModel<string?>> GeneratePasswordResetTokenAsync(string userId, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -340,7 +340,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SendPasswordResetLink(SendPasswordResetLinkRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> SendPasswordResetLinkAsync(SendPasswordResetLinkRequestModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         IEmailSender<ApplicationUser> emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender<ApplicationUser>>();
@@ -361,7 +361,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ChangePassword(IdentityChangePasswordModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ChangePasswordAsync(IdentityChangePasswordModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -383,7 +383,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> AddPassword(IdentityPasswordModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> AddPasswordAsync(IdentityPasswordModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -408,7 +408,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentity(TPaginationRequestModel<SimpleBaseRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestModel<SimpleBaseRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -614,7 +614,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ChangeEmail(IdentityEmailTokenModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ChangeEmailAsync(IdentityEmailTokenModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -637,7 +637,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateUserDetails(IdentityDetailsModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateUserDetailsAsync(IdentityDetailsModel req, CancellationToken token = default)
     {
         req.FirstName ??= "";
         req.LastName ??= "";
@@ -666,13 +666,13 @@ public class IdentityTools(
         user_db.LastName = req.LastName;
         user_db.NormalizedLastNameUpper = req.LastName.ToUpper();
 
-        await ClaimsUserFlush(user_db.Id, token);
+        await ClaimsUserFlushAsync(user_db.Id, token);
 
         return ResponseBaseModel.CreateSuccess("First/Last names (and phone) update");
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ClaimDelete(ClaimAreaIdModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ClaimDeleteAsync(ClaimAreaIdModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
 
@@ -704,7 +704,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ClaimUpdateOrCreate(ClaimUpdateModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ClaimUpdateOrCreateAsync(ClaimUpdateModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
 
@@ -763,7 +763,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<List<ClaimBaseModel>> GetClaims(ClaimAreaOwnerModel req, CancellationToken token = default)
+    public async Task<List<ClaimBaseModel>> GetClaimsAsync(ClaimAreaOwnerModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
 
@@ -778,7 +778,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetLockUser(IdentityBooleanModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> SetLockUserAsync(IdentityBooleanModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -791,7 +791,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<UserInfoModel>> FindUsers(FindWithOwnedRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<UserInfoModel>> FindUsersAsync(FindWithOwnedRequestModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         IQueryable<ApplicationUser> q = identityContext.Users
@@ -846,7 +846,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ResetPassword(IdentityPasswordTokenModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ResetPasswordAsync(IdentityPasswordTokenModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -873,7 +873,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel>> FindByEmail(string email, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel>> FindByEmailAsync(string email, CancellationToken token = default)
     {
         TResponseModel<UserInfoModel> res = new();
         using IServiceScope scope = serviceScopeFactory.CreateScope();
@@ -906,7 +906,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> GenerateEmailConfirmation(SimpleUserIdentityModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> GenerateEmailConfirmationAsync(SimpleUserIdentityModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         IEmailSender<ApplicationUser> emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender<ApplicationUser>>();
@@ -924,7 +924,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ConfirmEmail(UserCodeModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ConfirmEmailAsync(UserCodeModel req, CancellationToken token = default)
     {
         if (req.UserId is null || req.Code is null)
             return ResponseBaseModel.CreateError("UserId is null || Code is null. error {715DE145-87B0-48B0-9341-0A21962045BF}");
@@ -944,7 +944,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> ClaimsUserFlush(string user_id, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> ClaimsUserFlushAsync(string user_id, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync();
         ApplicationUser app_user = await identityContext.Users.FirstAsync(x => x.Id == user_id, cancellationToken: token);
@@ -1106,7 +1106,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<RegistrationNewUserResponseModel> CreateNewUserEmail(string email, CancellationToken token = default)
+    public async Task<RegistrationNewUserResponseModel> CreateNewUserEmailAsync(string email, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using IUserStore<ApplicationUser> userStore = scope.ServiceProvider.GetRequiredService<IUserStore<ApplicationUser>>();
@@ -1131,7 +1131,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<RegistrationNewUserResponseModel> CreateNewUserWithPassword(RegisterNewUserPasswordModel req, CancellationToken token = default)
+    public async Task<RegistrationNewUserResponseModel> CreateNewUserWithPasswordAsync(RegisterNewUserPasswordModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using IUserStore<ApplicationUser> userStore = scope.ServiceProvider.GetRequiredService<IUserStore<ApplicationUser>>();
@@ -1177,7 +1177,7 @@ public class IdentityTools(
 
     #region telegram
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByTelegram(List<long> tg_ids, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByTelegramAsync(List<long> tg_ids, CancellationToken token = default)
     {
         tg_ids = [.. tg_ids.Where(x => x != 0)];
         TResponseModel<UserInfoModel[]> response = new() { Response = [] };
@@ -1217,7 +1217,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TelegramJoinAccountDeleteAction(string userId, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TelegramJoinAccountDeleteActionAsync(string userId, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -1244,7 +1244,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TelegramAccountRemoveIdentityJoin(TelegramAccountRemoveJoinRequestIdentityModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TelegramAccountRemoveIdentityJoinAsync(TelegramAccountRemoveJoinRequestIdentityModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         ApplicationUser user = identityContext.Users.First(x => x.Id == req.UserId);
@@ -1268,7 +1268,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TelegramJoinAccountModelDb>> TelegramJoinAccountCreate(string userId, CancellationToken token = default)
+    public async Task<TResponseModel<TelegramJoinAccountModelDb>> TelegramJoinAccountCreateAsync(string userId, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -1304,7 +1304,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TelegramJoinAccountConfirmTokenFromTelegram(TelegramJoinAccountConfirmModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TelegramJoinAccountConfirmTokenFromTelegramAsync(TelegramJoinAccountConfirmModel req, CancellationToken token = default)
     {
         DateTime lifeTime = DateTime.UtcNow.AddMinutes(-req.TelegramJoinAccountTokenLifetimeMinutes);
 
@@ -1326,7 +1326,7 @@ public class IdentityTools(
         identityContext.Update(appUserDb);
         await identityContext.SaveChangesAsync(token);
 
-        await ClaimsUserFlush(appUserDb.Id, token);
+        await ClaimsUserFlushAsync(appUserDb.Id, token);
         string msg;
 
         List<ApplicationUser> other_joins = await identityContext.Users
@@ -1365,7 +1365,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegram(FindRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(FindRequestModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         IQueryable<TelegramUserModelDb> query = identityContext.TelegramUsers
@@ -1418,7 +1418,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TelegramAccountRemoveTelegramJoin(TelegramAccountRemoveJoinRequestTelegramModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TelegramAccountRemoveTelegramJoinAsync(TelegramAccountRemoveJoinRequestTelegramModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         ApplicationUser? userIdentityDb = await identityContext.Users.FirstOrDefaultAsync(x => x.ChatTelegramId == req.TelegramId, cancellationToken: token);
@@ -1431,7 +1431,7 @@ public class IdentityTools(
 
         if (MailAddress.TryCreate(userIdentityDb.Email, out _))
         {
-            TResponseModel<TelegramUserBaseModel> tg_user_dump = await GetTelegramUserCachedInfo(req.TelegramId, token);
+            TResponseModel<TelegramUserBaseModel> tg_user_dump = await GetTelegramUserCachedInfoAsync(req.TelegramId, token);
             await mailRepo.SendEmailAsync(userIdentityDb.Email, "Удаление привязки Telegram к учётной записи", $"Telegram аккаунт {tg_user_dump.Response} отключён от вашей учётной записи на сайте.", token: token);
         }
 
@@ -1455,7 +1455,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TelegramUserBaseModel>> GetTelegramUserCachedInfo(long telegramId, CancellationToken token = default)
+    public async Task<TResponseModel<TelegramUserBaseModel>> GetTelegramUserCachedInfoAsync(long telegramId, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         TResponseModel<TelegramUserBaseModel> res = new() { Response = TelegramUserBaseModel.Build(await identityContext.TelegramUsers.FirstOrDefaultAsync(x => x.TelegramId == telegramId)) };
@@ -1466,7 +1466,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateTelegramMainUserMessage(MainUserMessageModel setMainUserMessage, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateTelegramMainUserMessageAsync(MainUserMessageModel setMainUserMessage, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         TelegramUserModelDb? user_db = await identityContext.TelegramUsers.FirstOrDefaultAsync(x => x.TelegramId == setMainUserMessage.UserId, cancellationToken: token);
@@ -1483,7 +1483,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TelegramJoinAccountModelDb>> TelegramJoinAccountState(TelegramJoinAccountStateRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<TelegramJoinAccountModelDb>> TelegramJoinAccountStateAsync(TelegramJoinAccountStateRequestModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -1524,7 +1524,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<CheckTelegramUserAuthModel>> CheckTelegramUser(CheckTelegramUserHandleModel user, CancellationToken token = default)
+    public async Task<TResponseModel<CheckTelegramUserAuthModel>> CheckTelegramUserAsync(CheckTelegramUserHandleModel user, CancellationToken token = default)
     {
         TResponseModel<CheckTelegramUserAuthModel> res = new();
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
@@ -1613,7 +1613,7 @@ public class IdentityTools(
                     .ExecuteUpdateAsync(set => set.SetProperty(p => p.UserIdentityId, appUserDb.Id), cancellationToken: token);
             }
 
-            await ClaimsUserFlush(appUserDb.Id, token);
+            await ClaimsUserFlushAsync(appUserDb.Id, token);
 
         }
         else
@@ -1625,7 +1625,7 @@ public class IdentityTools(
 
     #region roles
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TryAddRolesToUser(UserRolesModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TryAddRolesToUserAsync(UserRolesModel req, CancellationToken token = default)
     {
         req.RolesNames = [.. req.RolesNames
             .Where(x => !string.IsNullOrWhiteSpace(x))
@@ -1683,7 +1683,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string[]>> SetRoleForUser(SetRoleForUserRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<string[]>> SetRoleForUserAsync(SetRoleForUserRequestModel req, CancellationToken token = default)
     {
         TResponseModel<string[]> res = new();
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
@@ -1737,7 +1737,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<RoleInfoModel>> GetRole(string role_id, CancellationToken token = default)
+    public async Task<TResponseModel<RoleInfoModel>> GetRoleAsync(string role_id, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using RoleManager<ApplicationRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
@@ -1758,7 +1758,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<RoleInfoModel>> FindRoles(FindWithOwnedRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<RoleInfoModel>> FindRolesAsync(FindWithOwnedRequestModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         IQueryable<ApplicationRole> q = identityContext.Roles
@@ -1795,7 +1795,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> CreateNewRole(string role_name, CancellationToken token = default)
+    public async Task<ResponseBaseModel> CreateNewRoleAsync(string role_name, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using RoleManager<ApplicationRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
@@ -1819,7 +1819,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteRole(string role_name, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteRoleAsync(string role_name, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using RoleManager<ApplicationRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
@@ -1848,7 +1848,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteRoleFromUser(RoleEmailModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteRoleFromUserAsync(RoleEmailModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using RoleManager<ApplicationRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
@@ -1876,7 +1876,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> AddRoleToUser(RoleEmailModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> AddRoleToUserAsync(RoleEmailModel req, CancellationToken token = default)
     {
         using IServiceScope scope = serviceScopeFactory.CreateAsyncScope();
         using RoleManager<ApplicationRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();

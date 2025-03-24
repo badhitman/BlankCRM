@@ -24,6 +24,6 @@ public class ResetAuthenticatorKeyReceive(IIdentityTools idRepo, ILogger<ResetAu
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ResetAuthenticatorKey(req, token);
+        return await idRepo.ResetAuthenticatorKeyAsync(req, token);
     }
 }

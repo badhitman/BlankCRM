@@ -22,6 +22,6 @@ public class CheckToken2FAReceive(IIdentityTools idRepo)
     public async Task<TResponseModel<string>?> ResponseHandleActionAsync(CheckToken2FARequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await idRepo.CheckToken2FA(req, token);
+        return await idRepo.CheckToken2FAAsync(req, token);
     }
 }

@@ -63,7 +63,7 @@ public partial class BoolSimpleStorageComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await SetBusy();
-        TResponseModel<bool?> showCreatingIssue = await StorageTransmissionRepo.ReadParameter<bool?>(StorageMetadata);
+        TResponseModel<bool?> showCreatingIssue = await StorageTransmissionRepo.ReadParameterAsync<bool?>(StorageMetadata);
         _storeValue = showCreatingIssue.Success() && showCreatingIssue.Response == true;
         await SetBusy(false);
     }

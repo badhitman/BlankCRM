@@ -19,6 +19,6 @@ public class SetDoneSessionDocumentDataReceive(IConstructorService conService) :
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(string? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.SetDoneSessionDocumentData(payload, token);
+        return await conService.SetDoneSessionDocumentDataAsync(payload, token);
     }
 }

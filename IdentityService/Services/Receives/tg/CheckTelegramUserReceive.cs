@@ -24,6 +24,6 @@ public class CheckTelegramUserReceive(IIdentityTools identityRepo, ILogger<Check
     {
         ArgumentNullException.ThrowIfNull(req);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await identityRepo.CheckTelegramUser(req, token);
+        return await identityRepo.CheckTelegramUserAsync(req, token);
     }
 }

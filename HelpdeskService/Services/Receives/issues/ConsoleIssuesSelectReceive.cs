@@ -19,6 +19,6 @@ public class ConsoleIssuesSelectReceive(IHelpdeskService hdRepo) : IResponseRece
     public async Task<TPaginationResponseModel<IssueHelpdeskModel>?> ResponseHandleActionAsync(TPaginationRequestModel<ConsoleIssuesRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.ConsoleIssuesSelect(req, token);
+        return await hdRepo.ConsoleIssuesSelectAsync(req, token);
     }
 }

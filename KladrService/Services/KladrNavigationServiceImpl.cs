@@ -169,7 +169,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     }
 
     /// <inheritdoc/>
-    public async Task<Dictionary<KladrChainTypesEnum, JObject[]>> ObjectsListForParent(KladrsRequestBaseModel req, CancellationToken token = default)
+    public async Task<Dictionary<KladrChainTypesEnum, JObject[]>> ObjectsListForParentAsync(KladrsRequestBaseModel req, CancellationToken token = default)
     {
         List<Task> tasks = [];
         Dictionary<KladrChainTypesEnum, JObject[]> res = [];
@@ -300,7 +300,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelect(KladrSelectRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelectAsync(KladrSelectRequestModel req, CancellationToken token = default)
     {
         TPaginationResponseModel<KladrResponseModel> response = new(req) { Response = [] };
 
@@ -486,7 +486,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFind(KladrFindRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFindAsync(KladrFindRequestModel req, CancellationToken token = default)
     {
         TPaginationResponseModel<KladrResponseModel> response = new(req) { Response = [] };
 

@@ -22,6 +22,6 @@ public class TagsSelectReceive(ILogger<TagsSelectReceive> loggerRepo, ISerialize
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await serializeStorageRepo.TagsSelect(req, token);
+        return await serializeStorageRepo.TagsSelectAsync(req, token);
     }
 }

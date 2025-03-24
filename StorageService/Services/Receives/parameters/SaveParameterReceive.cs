@@ -35,6 +35,6 @@ public class SaveParameterReceive(ISerializeStorage serializeStorageRepo, ILogge
             CreatedAt = DateTime.UtcNow,
         };
 
-        return await serializeStorageRepo.FlushParameter(store_db, req.TrimHistory, token);
+        return await serializeStorageRepo.FlushParameterAsync(store_db, req.TrimHistory, token);
     }
 }

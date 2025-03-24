@@ -84,7 +84,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
             PageSize = state.PageSize,
         };
         await SetBusy(token: token);
-        TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsFind(req, token);
+        TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsFindAsync(req, token);
         await SetBusy(false, token: token);
         // Return the data
         return new TableData<KladrResponseModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
@@ -94,7 +94,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await SetBusy();
-        Dictionary<KladrChainTypesEnum, JObject[]> regionsRest = await kladrRepo.ObjectsListForParent(new());
+        Dictionary<KladrChainTypesEnum, JObject[]> regionsRest = await kladrRepo.ObjectsListForParentAsync(new());
         await SetBusy(false);
         foreach (RootKLADRModel? region in regionsRest.SelectMany(x => x.Value).Select(x => x.ToObject<RootKLADRModel>()!))
             regions.Add(new(region.CODE, region.NAME, region.SOCR));

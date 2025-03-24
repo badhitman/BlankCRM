@@ -141,7 +141,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         SnackbarRepo.ShowMessagesResponse(getWarehouses.Messages);
         currentWarehouses = getWarehouses.Response ?? [];
 
-        TResponseModel<bool?> res = await StorageRepo.ReadParameter<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingAttachmentsOrderArea);
+        TResponseModel<bool?> res = await StorageRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingAttachmentsOrderArea);
         if (!res.Success())
             SnackbarRepo.ShowMessagesResponse(res.Messages);
 

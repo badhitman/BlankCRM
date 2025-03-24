@@ -20,6 +20,6 @@ public class ClearTempKladrReceive(ILogger<ClearTempKladrReceive> LoggerRepo, IK
     {
         // ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await kladrRepo.ClearTempKladr(token);
+        return await kladrRepo.ClearTempKladrAsync(token);
     }
 }

@@ -19,6 +19,6 @@ public class IssuesReadReceive(IHelpdeskService hdRepo) : IResponseReceive<TAuth
     public async Task<TResponseModel<IssueHelpdeskModelDB[]>?> ResponseHandleActionAsync(TAuthRequestModel<IssuesReadRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.IssuesRead(req, token);
+        return await hdRepo.IssuesReadAsync(req, token);
     }
 }

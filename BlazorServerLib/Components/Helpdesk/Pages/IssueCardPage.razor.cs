@@ -63,9 +63,9 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
     {
         await SetBusy();
         await Task.WhenAll([
-                Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameter<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingTelegramArea); ShowingTelegramArea = res.Response == true; }),
-                Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameter<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingAttachmentsIssuesArea); ShowingAttachmentsIssueArea = res.Response == true; }),
-                Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameter<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingWappiArea); ShowingWappiArea = res.Response == true; }),
+                Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingTelegramArea); ShowingTelegramArea = res.Response == true; }),
+                Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingAttachmentsIssuesArea); ShowingAttachmentsIssueArea = res.Response == true; }),
+                Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingWappiArea); ShowingWappiArea = res.Response == true; }),
                 ReadCurrentUser(),
                 FindOrders(),
                 FindOrdersAttendances(),

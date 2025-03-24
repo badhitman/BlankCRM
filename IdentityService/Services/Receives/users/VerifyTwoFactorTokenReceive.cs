@@ -24,6 +24,6 @@ public class VerifyTwoFactorTokenReceive(IIdentityTools idRepo, ILogger<VerifyTw
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.VerifyTwoFactorToken(req, token);
+        return await idRepo.VerifyTwoFactorTokenAsync(req, token);
     }
 }

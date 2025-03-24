@@ -21,6 +21,6 @@ public class ArticlesSelectReceive(IArticlesService artRepo, ILogger<ArticlesSel
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await artRepo.ArticlesSelect(req, token);
+        return await artRepo.ArticlesSelectAsync(req, token);
     }
 }

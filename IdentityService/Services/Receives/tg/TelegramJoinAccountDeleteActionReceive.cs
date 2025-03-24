@@ -24,6 +24,6 @@ public class TelegramJoinAccountDeleteActionReceive(IIdentityTools identityRepo,
     {
         ArgumentNullException.ThrowIfNull(payload);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await identityRepo.TelegramJoinAccountDeleteAction(payload, token);
+        return await identityRepo.TelegramJoinAccountDeleteActionAsync(payload, token);
     }
 }

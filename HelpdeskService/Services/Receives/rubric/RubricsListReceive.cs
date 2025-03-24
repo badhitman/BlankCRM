@@ -22,6 +22,6 @@ public class RubricsListReceive(IHelpdeskService hdRepo)
     public async Task<List<UniversalBaseModel>?> ResponseHandleActionAsync(RubricsListRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.RubricsList(req, token);
+        return await hdRepo.RubricsListAsync(req, token);
     }
 }

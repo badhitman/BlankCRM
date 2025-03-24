@@ -74,7 +74,7 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
     protected override async Task OnInitializedAsync()
     {
         await SetBusy();
-        TResponseModel<int?> res_RubricIssueForCreateOrder = await StoreRepo.ReadParameter<int?>(KeyStorage);
+        TResponseModel<int?> res_RubricIssueForCreateOrder = await StoreRepo.ReadParameterAsync<int?>(KeyStorage);
         _rubricSelected = res_RubricIssueForCreateOrder.Response;
         if (ref_rubric is not null && _rubricSelected.HasValue)
         {

@@ -20,6 +20,6 @@ public class SelectUsersOfIdentityReceive(IIdentityTools identityRepo)
     public async Task<TPaginationResponseModel<UserInfoModel>?> ResponseHandleActionAsync(TPaginationRequestModel<SimpleBaseRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await identityRepo.SelectUsersOfIdentity(req, token);
+        return await identityRepo.SelectUsersOfIdentityAsync(req, token);
     }
 }

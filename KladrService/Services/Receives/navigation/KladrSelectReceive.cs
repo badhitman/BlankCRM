@@ -18,6 +18,6 @@ public class KladrSelectReceive(IKladrNavigationService kladrRepo)
     public async Task<TPaginationResponseModel<KladrResponseModel>?> ResponseHandleActionAsync(KladrSelectRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await kladrRepo.ObjectsSelect(req, token);
+        return await kladrRepo.ObjectsSelectAsync(req, token);
     }
 }

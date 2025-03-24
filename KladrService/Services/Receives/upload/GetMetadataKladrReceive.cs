@@ -20,6 +20,6 @@ public class GetMetadataKladrReceive(ILogger<GetMetadataKladrReceive> loggerRepo
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await kladrRepo.GetMetadataKladr(req, token);
+        return await kladrRepo.GetMetadataKladrAsync(req, token);
     }
 }

@@ -20,6 +20,6 @@ public class UploadPartTempKladrReceive(ILogger<UploadPartTempKladrReceive> Logg
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await kladrRepo.UploadPartTempKladr(req, token);
+        return await kladrRepo.UploadPartTempKladrAsync(req, token);
     }
 }

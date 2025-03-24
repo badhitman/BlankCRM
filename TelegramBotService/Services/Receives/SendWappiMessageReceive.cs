@@ -32,13 +32,13 @@ public class SendWappiMessageReceive(
 
         List<Task> tasks = [Task.Run(async () =>
         {
-            wappiToken = await StorageTransmissionRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.WappiTokenApi);
+            wappiToken = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.WappiTokenApi);
         }, token), Task.Run(async () =>
         {
-            wappiProfileId = await StorageTransmissionRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.WappiProfileId);
+            wappiProfileId = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.WappiProfileId);
         }, token), Task.Run(async () =>
         {
-            wappiEnable = await StorageTransmissionRepo.ReadParameter<bool?>(GlobalStaticConstants.CloudStorageMetadata.ParameterEnabledWappi);
+            wappiEnable = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ParameterEnabledWappi);
         }, token)];
         await Task.WhenAll(tasks);
 

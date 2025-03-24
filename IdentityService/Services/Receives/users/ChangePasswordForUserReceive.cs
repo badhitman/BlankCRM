@@ -24,6 +24,6 @@ public class ChangePasswordForUserReceive(IIdentityTools idRepo, ILogger<ChangeP
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ChangePassword(req, token);
+        return await idRepo.ChangePasswordAsync(req, token);
     }
 }

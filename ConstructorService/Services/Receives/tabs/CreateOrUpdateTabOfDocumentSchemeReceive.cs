@@ -19,6 +19,6 @@ public class CreateOrUpdateTabOfDocumentSchemeReceive(IConstructorService conSer
     public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<EntryDescriptionOwnedModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.CreateOrUpdateTabOfDocumentScheme(payload, token);
+        return await conService.CreateOrUpdateTabOfDocumentSchemeAsync(payload, token);
     }
 }

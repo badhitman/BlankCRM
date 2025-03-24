@@ -19,6 +19,6 @@ public class MessageVoteReceive(IHelpdeskService hdRepo) : IResponseReceive<TAut
     public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestModel<VoteIssueRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.MessageVote(req, token);
+        return await hdRepo.MessageVoteAsync(req, token);
     }
 }

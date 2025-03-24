@@ -20,6 +20,6 @@ public class LogsSelectReceive(ISerializeStorage storeRepo)
     public async Task<TPaginationResponseModel<NLogRecordModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<LogsSelectRequestModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await storeRepo.LogsSelect(payload, token);
+        return await storeRepo.LogsSelectAsync(payload, token);
     }
 }

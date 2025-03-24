@@ -30,6 +30,6 @@ public class GenerateEmailConfirmationIdentityReceive(IIdentityTools IdentityRep
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SimpleUserIdentityModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await IdentityRepo.GenerateEmailConfirmation(req, token);
+        return await IdentityRepo.GenerateEmailConfirmationAsync(req, token);
     }
 }

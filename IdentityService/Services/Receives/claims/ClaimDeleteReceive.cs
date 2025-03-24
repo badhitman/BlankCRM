@@ -24,6 +24,6 @@ public class ClaimDeleteReceive(IIdentityTools idRepo, ILogger<ClaimDeleteReceiv
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ClaimDelete(req, token);
+        return await idRepo.ClaimDeleteAsync(req, token);
     }
 }

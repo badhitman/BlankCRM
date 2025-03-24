@@ -22,6 +22,6 @@ public class RubricMoveReceive(IHelpdeskService hdRepo, ILogger<RubricMoveReceiv
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await hdRepo.RubricMove(req, token);
+        return await hdRepo.RubricMoveAsync(req, token);
     }
 }

@@ -18,6 +18,6 @@ public class GetTabOfDocumentSchemeReceive(IConstructorService conService) : IRe
     /// <inheritdoc/>
     public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
     {
-        return await conService.GetTabOfDocumentScheme(payload, token);
+        return await conService.GetTabOfDocumentSchemeAsync(payload, token);
     }
 }

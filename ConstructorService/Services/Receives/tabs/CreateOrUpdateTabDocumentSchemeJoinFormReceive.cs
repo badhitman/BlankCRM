@@ -19,6 +19,6 @@ public class CreateOrUpdateTabDocumentSchemeJoinFormReceive(IConstructorService 
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<FormToTabJoinConstructorModelDB>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.CreateOrUpdateTabDocumentSchemeJoinForm(payload, token);
+        return await conService.CreateOrUpdateTabDocumentSchemeJoinFormAsync(payload, token);
     }
 }

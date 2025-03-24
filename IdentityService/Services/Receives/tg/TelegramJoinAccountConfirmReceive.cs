@@ -33,6 +33,6 @@ public class TelegramJoinAccountConfirmReceive(IIdentityTools identityRepo, ILog
             return res;
         }
 
-        return await identityRepo.TelegramJoinAccountConfirmTokenFromTelegram(confirm, token);
+        return await identityRepo.TelegramJoinAccountConfirmTokenFromTelegramAsync(confirm, token);
     }
 }

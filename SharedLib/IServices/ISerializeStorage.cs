@@ -16,49 +16,49 @@ public interface ISerializeStorage
     /// <summary>
     /// Определить номер страницы для строки
     /// </summary>
-    public Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestModel<int> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// Чтение логов
     /// </summary>
-    public Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelect(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// MetadataLogs
     /// </summary>
-    public Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogs(PeriodDatesTimesModel req, CancellationToken token = default);
+    public Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogsAsync(PeriodDatesTimesModel req, CancellationToken token = default);
     #endregion
 
     #region tags
     /// <summary>
     /// FilesAreaGetMetadata
     /// </summary>
-    public Task<TResponseModel<FilesAreaMetadataModel[]>> FilesAreaGetMetadata(FilesAreaMetadataRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<FilesAreaMetadataModel[]>> FilesAreaGetMetadataAsync(FilesAreaMetadataRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// FilesSelect
     /// </summary>
-    public Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelect(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// ReadFile
     /// </summary>
-    public Task<TResponseModel<FileContentModel>> ReadFile(TAuthRequestModel<RequestFileReadModel> req, CancellationToken token = default);
+    public Task<TResponseModel<FileContentModel>> ReadFileAsync(TAuthRequestModel<RequestFileReadModel> req, CancellationToken token = default);
 
     /// <summary>
     /// SaveFile
     /// </summary>
-    public Task<TResponseModel<StorageFileModelDB>> SaveFile(TAuthRequestModel<StorageImageMetadataModel> req, CancellationToken token = default);
+    public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageImageMetadataModel> req, CancellationToken token = default);
 
     /// <summary>
     /// TagSet
     /// </summary>
-    public Task<ResponseBaseModel> TagSet(TagSetModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> TagSetAsync(TagSetModel req, CancellationToken token = default);
 
     /// <summary>
     /// TagsSelect
     /// </summary>
-    public Task<TPaginationResponseModel<TagModelDB>> TagsSelect(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<TagModelDB>> TagsSelectAsync(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default);
     #endregion
 
     #region storage parameters
@@ -87,7 +87,7 @@ public interface ISerializeStorage
     /// <summary>
     /// FlushParameter
     /// </summary>
-    public Task<TResponseModel<int?>> FlushParameter(StorageCloudParameterModelDB storage, bool trimHistory = false, CancellationToken token = default);
+    public Task<TResponseModel<int?>> FlushParameterAsync(StorageCloudParameterModelDB storage, bool trimHistory = false, CancellationToken token = default);
 
     /// <summary>
     /// Прочитать значение параметра. null - если значения нет
@@ -96,7 +96,7 @@ public interface ISerializeStorage
     /// Возвращается самое актуальное значение (последнее установленное). Хранится история значений - если значение будет часто меняться будет ротация стека накопленных значений с усечением от 150 до 100.
     /// Проверка переполнения происходит при каждой команде сохранения.
     /// </remarks>
-    public Task<TResponseModel<StorageCloudParameterPayloadModel>> ReadParameter(StorageMetadataModel req, CancellationToken token = default);
+    public Task<TResponseModel<StorageCloudParameterPayloadModel>> ReadParameterAsync(StorageMetadataModel req, CancellationToken token = default);
 
     /// <summary>
     /// Прочитать значения параметров. Данные запрашиваемых параметров, которые отсутствуют в БД - не попадут в возвращаемый ответ.
@@ -105,11 +105,11 @@ public interface ISerializeStorage
     /// Возвращается самое актуальные значения (последнее установленное). Хранится история значений - если значение будет часто меняться будет ротация стека накопленных значений с усечением от 150 до 100.
     /// Проверка переполнения происходит при каждой команде сохранения.
     /// </remarks>
-    public Task<TResponseModel<List<StorageCloudParameterPayloadModel>>> ReadParameters(StorageMetadataModel[] req, CancellationToken token = default);
+    public Task<TResponseModel<List<StorageCloudParameterPayloadModel>>> ReadParametersAsync(StorageMetadataModel[] req, CancellationToken token = default);
 
     /// <summary>
     /// Поиск значений параметров
     /// </summary>
-    public Task<TResponseModel<FoundParameterModel[]?>> Find(RequestStorageBaseModel req, CancellationToken token = default);
+    public Task<TResponseModel<FoundParameterModel[]?>> FindAsync(RequestStorageBaseModel req, CancellationToken token = default);
     #endregion
 }

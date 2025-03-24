@@ -14,7 +14,7 @@ public interface IKladrNavigationService
     /// <summary>
     /// Получить элементы по их вышестоящему/предку
     /// </summary>
-    public Task<Dictionary<KladrChainTypesEnum, JObject[]>> ObjectsListForParent(KladrsRequestBaseModel req, CancellationToken token = default);
+    public Task<Dictionary<KladrChainTypesEnum, JObject[]>> ObjectsListForParentAsync(KladrsRequestBaseModel req, CancellationToken token = default);
 
     /// <summary>
     /// Получить объект и его предков
@@ -24,10 +24,10 @@ public interface IKladrNavigationService
     /// <summary>
     /// Select objects
     /// </summary>
-    public Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelect(KladrSelectRequestModel req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelectAsync(KladrSelectRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// Find objects
     /// </summary>
-    public Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFind(KladrFindRequestModel req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFindAsync(KladrFindRequestModel req, CancellationToken token = default);
 }

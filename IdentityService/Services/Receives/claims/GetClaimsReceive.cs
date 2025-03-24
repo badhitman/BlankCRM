@@ -22,6 +22,6 @@ public class GetClaimsReceive(IIdentityTools idRepo)
     public async Task<List<ClaimBaseModel>?> ResponseHandleActionAsync(ClaimAreaOwnerModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);        
-        return await idRepo.GetClaims(req, token);
+        return await idRepo.GetClaimsAsync(req, token);
     }
 }

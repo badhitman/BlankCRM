@@ -24,6 +24,6 @@ public class TagSetReceive(ILogger<TagSetReceive> loggerRepo, ISerializeStorage 
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await serializeStorageRepo.TagSet(req, token);
+        return await serializeStorageRepo.TagSetAsync(req, token);
     }
 }

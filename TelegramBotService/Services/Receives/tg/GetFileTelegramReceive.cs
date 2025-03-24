@@ -20,6 +20,6 @@ public class GetFileTelegramReceive(ITelegramBotService tgRepo)
     public async Task<TResponseModel<byte[]>?> ResponseHandleActionAsync(string? fileId, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(fileId);
-        return await tgRepo.GetFileTelegram(fileId, token);
+        return await tgRepo.GetFileTelegramAsync(fileId, token);
     }
 }

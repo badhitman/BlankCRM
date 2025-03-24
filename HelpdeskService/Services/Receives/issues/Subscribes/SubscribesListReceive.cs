@@ -22,6 +22,6 @@ public class SubscribesListReceive(IHelpdeskService hdRepo)
     public async Task<TResponseModel<List<SubscriberIssueHelpdeskModelDB>>?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.SubscribesList(req, token);
+        return await hdRepo.SubscribesListAsync(req, token);
     }
 }

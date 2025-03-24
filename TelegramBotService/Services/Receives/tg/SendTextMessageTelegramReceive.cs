@@ -22,6 +22,6 @@ public class SendTextMessageTelegramReceive(ITelegramBotService tgRepo, ILogger<
     {
         ArgumentNullException.ThrowIfNull(message);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(message)}");
-        return await tgRepo.SendTextMessageTelegram(message, token);
+        return await tgRepo.SendTextMessageTelegramAsync(message, token);
     }
 }

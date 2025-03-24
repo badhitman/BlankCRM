@@ -24,6 +24,6 @@ public class GetUserLoginsReceive(IIdentityTools idRepo, ILogger<AddPasswordForU
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.GetUserLogins(req, token);
+        return await idRepo.GetUserLoginsAsync(req, token);
     }
 }

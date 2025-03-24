@@ -20,6 +20,6 @@ public class FlushTempKladrReceive(ILogger<FlushTempKladrReceive> LoggerRepo, IK
     {
         // ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await kladrRepo.FlushTempKladr(token);
+        return await kladrRepo.FlushTempKladrAsync(token);
     }
 }

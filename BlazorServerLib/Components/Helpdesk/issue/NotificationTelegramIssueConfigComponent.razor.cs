@@ -56,7 +56,7 @@ public partial class NotificationTelegramIssueConfigComponent : BlazorBusyCompon
     protected override async Task OnInitializedAsync()
     {
         await SetBusy();
-        TResponseModel<long?> rest = await StorageRepo.ReadParameter<long?>(KeyStorage);
+        TResponseModel<long?> rest = await StorageRepo.ReadParameterAsync<long?>(KeyStorage);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         initValue = rest.Response ?? 0;

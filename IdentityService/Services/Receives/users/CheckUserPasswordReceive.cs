@@ -28,6 +28,6 @@ public class CheckUserPasswordReceive(IIdentityTools idRepo)
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(IdentityPasswordModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await idRepo.CheckUserPassword(req, token);
+        return await idRepo.CheckUserPasswordAsync(req, token);
     }
 }

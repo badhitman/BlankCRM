@@ -29,7 +29,7 @@ public partial class FormsConstructorService(
     #region public    
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SessionOfDocumentDataModelDB>> GetSessionDocumentData(string guid_session, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<SessionOfDocumentDataModelDB>> GetSessionDocumentDataAsync(string guid_session, CancellationToken cancellationToken = default)
     {
         if (!Guid.TryParse(guid_session, out Guid guid_parsed) || guid_parsed == Guid.Empty)
             return new() { Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = "Токен сессии имеет не корректный формат" }] };
@@ -73,7 +73,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetDoneSessionDocumentData(string token_session, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> SetDoneSessionDocumentDataAsync(string token_session, CancellationToken cancellationToken = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         SessionOfDocumentDataModelDB? sq = await context_forms.Sessions.FirstOrDefaultAsync(x => x.SessionToken == token_session, cancellationToken: cancellationToken);
@@ -116,7 +116,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<SessionOfDocumentDataModelDB>> SetValueFieldSessionDocumentData(SetValueFieldDocumentDataModel req, CancellationToken cancellationToken = default)
     {
-        TResponseModel<SessionOfDocumentDataModelDB> session = await GetSessionDocument(new() { SessionId = req.SessionId }, cancellationToken);
+        TResponseModel<SessionOfDocumentDataModelDB> session = await GetSessionDocumentAsync(new() { SessionId = req.SessionId }, cancellationToken);
         if (!session.Success())
             return session;
 
@@ -161,7 +161,7 @@ public partial class FormsConstructorService(
         if (existing_value is null)
         {
             if (req.FieldValue is null)
-                return await GetSessionDocument(new() { SessionId = req.SessionId }, cancellationToken);
+                return await GetSessionDocumentAsync(new() { SessionId = req.SessionId }, cancellationToken);
 
             existing_value = ValueDataForSessionOfDocumentModelDB.Build(req, form_join, session_Document);
 
@@ -181,13 +181,13 @@ public partial class FormsConstructorService(
 
         await context_forms.SaveChangesAsync(cancellationToken);
 
-        return await GetSessionDocument(new() { SessionId = req.SessionId }, cancellationToken);
+        return await GetSessionDocumentAsync(new() { SessionId = req.SessionId }, cancellationToken);
     }
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> AddRowToTable(FieldSessionDocumentDataBaseModel req, CancellationToken cancellationToken = default)
     {
-        TResponseModel<SessionOfDocumentDataModelDB> get_s = await GetSessionDocument(new() { SessionId = req.SessionId }, cancellationToken);
+        TResponseModel<SessionOfDocumentDataModelDB> get_s = await GetSessionDocumentAsync(new() { SessionId = req.SessionId }, cancellationToken);
         if (!get_s.Success())
             return new TResponseModel<int>() { Messages = get_s.Messages, Response = 0 };
         TResponseModel<int> res = new() { Response = 0 };
@@ -230,7 +230,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteValuesFieldsByGroupSessionDocumentDataByRowNum(ValueFieldSessionDocumentDataBaseModel req, CancellationToken cancellationToken = default)
     {
-        TResponseModel<SessionOfDocumentDataModelDB> get_s = await GetSessionDocument(new() { SessionId = req.SessionId }, cancellationToken);
+        TResponseModel<SessionOfDocumentDataModelDB> get_s = await GetSessionDocumentAsync(new() { SessionId = req.SessionId }, cancellationToken);
         if (!get_s.Success())
             return get_s;
 
@@ -262,7 +262,7 @@ public partial class FormsConstructorService(
             await context_forms.SaveChangesAsync(cancellationToken);
             res.AddSuccess($"Строка №{req.GroupByRowNum} удалена ({values_for_delete.Length} значений ячеек)");
 
-            get_s = await GetSessionDocument(new() { SessionId = req.SessionId }, cancellationToken);
+            get_s = await GetSessionDocumentAsync(new() { SessionId = req.SessionId }, cancellationToken);
             uint i = 0;
             List<ValueDataForSessionOfDocumentModelDB> values_re_sort = [];
             session.DataSessionValues
@@ -2374,7 +2374,7 @@ public partial class FormsConstructorService(
     // табы/вкладки схожи по смыслу табов/вкладок в Excel. Т.е. обычная группировка разных рабочих пространств со своим именем 
     #region табы документов    
     /// <inheritdoc/>
-    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> GetTabOfDocumentScheme(int tab_of_document_scheme_id, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> GetTabOfDocumentSchemeAsync(int tab_of_document_scheme_id, CancellationToken cancellationToken = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> res = new()
@@ -2400,7 +2400,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DocumentSchemeConstructorModelDB>> MoveTabOfDocumentScheme(TAuthRequestModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<DocumentSchemeConstructorModelDB>> MoveTabOfDocumentSchemeAsync(TAuthRequestModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<DocumentSchemeConstructorModelDB> res = new();
 
@@ -2487,7 +2487,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> CreateOrUpdateTabOfDocumentScheme(TAuthRequestModel<EntryDescriptionOwnedModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> CreateOrUpdateTabOfDocumentSchemeAsync(TAuthRequestModel<EntryDescriptionOwnedModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> res = new();
 
@@ -2589,7 +2589,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteTabOfDocumentScheme(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteTabOfDocumentSchemeAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TabOfDocumentSchemeConstructorModelDB? tab_of_document_scheme_db = await context_forms
@@ -2623,7 +2623,7 @@ public partial class FormsConstructorService(
     #endregion
     #region структура/схема табов/вкладок схем документов: формы, порядок и настройки поведения    
     /// <inheritdoc/>
-    public async Task<TResponseModel<FormToTabJoinConstructorModelDB>> GetTabDocumentSchemeJoinForm(int tab_document_scheme_join_form_id, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<FormToTabJoinConstructorModelDB>> GetTabDocumentSchemeJoinFormAsync(int tab_document_scheme_join_form_id, CancellationToken cancellationToken = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TResponseModel<FormToTabJoinConstructorModelDB> res = new()
@@ -2645,7 +2645,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> MoveTabDocumentSchemeJoinForm(TAuthRequestModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> MoveTabDocumentSchemeJoinFormAsync(TAuthRequestModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> res = new();
 
@@ -2736,7 +2736,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> CreateOrUpdateTabDocumentSchemeJoinForm(TAuthRequestModel<FormToTabJoinConstructorModelDB> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> CreateOrUpdateTabDocumentSchemeJoinFormAsync(TAuthRequestModel<FormToTabJoinConstructorModelDB> req, CancellationToken cancellationToken = default)
     {
         req.Payload.Name = req.Payload.Name is null
             ? null
@@ -2844,7 +2844,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteTabDocumentSchemeJoinForm(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteTabDocumentSchemeJoinFormAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FormToTabJoinConstructorModelDB? questionnaire_page_db = await context_forms
@@ -2883,7 +2883,7 @@ public partial class FormsConstructorService(
     // Пользователи видят ваш документ, но сам документ данные не хранит. Хранение данных происходит в сессиях, которые вы сами выпускаете для любого вашего документа
     #region сессии документов (данные заполнения документов).
     /// <inheritdoc/>
-    public async Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>> SaveSessionForm(SaveConstructorSessionRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>> SaveSessionFormAsync(SaveConstructorSessionRequestModel req, CancellationToken token = default)
     {
         req.SessionValues = [.. req.SessionValues.SkipWhile(x => x.Id < 1 && string.IsNullOrWhiteSpace(x.Value))];
 
@@ -2956,7 +2956,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetStatusSessionDocument(SessionStatusModel req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> SetStatusSessionDocumentAsync(SessionStatusModel req, CancellationToken cancellationToken = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         SessionOfDocumentDataModelDB? sq = await context_forms.Sessions.FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: cancellationToken);
@@ -2988,7 +2988,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SessionOfDocumentDataModelDB>> GetSessionDocument(SessionGetModel req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<SessionOfDocumentDataModelDB>> GetSessionDocumentAsync(SessionGetModel req, CancellationToken cancellationToken = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         IQueryable<SessionOfDocumentDataModelDB> q = context_forms
@@ -3030,7 +3030,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SessionOfDocumentDataModelDB>> UpdateOrCreateSessionDocument(SessionOfDocumentDataModelDB session_json, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<SessionOfDocumentDataModelDB>> UpdateOrCreateSessionDocumentAsync(SessionOfDocumentDataModelDB session_json, CancellationToken cancellationToken = default)
     {
         TResponseModel<SessionOfDocumentDataModelDB> res = new();
 
@@ -3148,14 +3148,14 @@ public partial class FormsConstructorService(
             logger.LogInformation(msg);
             await context_forms.SaveChangesAsync(cancellationToken);
         }
-        TResponseModel<SessionOfDocumentDataModelDB> sr = await GetSessionDocument(new() { SessionId = session_json.Id }, cancellationToken);
+        TResponseModel<SessionOfDocumentDataModelDB> sr = await GetSessionDocumentAsync(new() { SessionId = session_json.Id }, cancellationToken);
         if (res.Messages.Count != 0)
             sr.AddRangeMessages(res.Messages);
         return sr;
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<SessionOfDocumentDataModelDB>> RequestSessionsDocuments(RequestSessionsDocumentsRequestPaginationModel req, CancellationToken cancellationToken = default)
+    public async Task<TPaginationResponseModel<SessionOfDocumentDataModelDB>> RequestSessionsDocumentsAsync(RequestSessionsDocumentsRequestPaginationModel req, CancellationToken cancellationToken = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;

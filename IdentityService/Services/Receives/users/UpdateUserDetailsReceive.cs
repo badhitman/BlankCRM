@@ -24,6 +24,6 @@ public class UpdateUserDetailsReceive(IIdentityTools idRepo, ILogger<UpdateUserD
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.UpdateUserDetails(req, token);
+        return await idRepo.UpdateUserDetailsAsync(req, token);
     }
 }

@@ -22,6 +22,6 @@ public class GetUsersIdentityByTelegramReceive(IIdentityTools identityRepo)
     public async Task<TResponseModel<UserInfoModel[]>?> ResponseHandleActionAsync(List<long>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await identityRepo.GetUsersIdentityByTelegram(payload, token);
+        return await identityRepo.GetUsersIdentityByTelegramAsync(payload, token);
     }
 }

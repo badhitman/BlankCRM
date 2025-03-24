@@ -22,6 +22,6 @@ public class PulseJournalSelectReceive(IHelpdeskService hdRepo)
     public async Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>?> ResponseHandleActionAsync(TAuthRequestModel<TPaginationRequestModel<UserIssueModel>>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.PulseJournalSelect(req, token);
+        return await hdRepo.PulseJournalSelectAsync(req, token);
     }
 }

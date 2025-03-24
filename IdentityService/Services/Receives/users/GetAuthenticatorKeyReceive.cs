@@ -22,6 +22,6 @@ public class GetAuthenticatorKeyReceive(IIdentityTools idRepo)
     public async Task<TResponseModel<string?>?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);        
-        return await idRepo.GetAuthenticatorKey(req, token);
+        return await idRepo.GetAuthenticatorKeyAsync(req, token);
     }
 }

@@ -41,7 +41,7 @@ public class StorageServiceImpl(
 
     #region logs
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestModel<int> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestModel<int> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -72,13 +72,13 @@ public class StorageServiceImpl(
         res.Response = [.. await oq.Skip(res.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync(cancellationToken: token)];
 
         if (!res.Response.Any(x => x.Id == req.Payload))
-            return await GoToPageForRow(req, token);
+            return await GoToPageForRowAsync(req, token);
 
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogs(PeriodDatesTimesModel req, CancellationToken token = default)
+    public async Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogsAsync(PeriodDatesTimesModel req, CancellationToken token = default)
     {
         Dictionary<string, int> LevelsAvailable = [];
         Dictionary<string, int> ApplicationsAvailable = [];
@@ -146,7 +146,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelect(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -197,7 +197,7 @@ public class StorageServiceImpl(
 
     #region tags
     /// <inheritdoc/>
-    public async Task<TResponseModel<FilesAreaMetadataModel[]>> FilesAreaGetMetadata(FilesAreaMetadataRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<FilesAreaMetadataModel[]>> FilesAreaGetMetadataAsync(FilesAreaMetadataRequestModel req, CancellationToken token = default)
     {
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         IQueryable<StorageFileModelDB> q = context
@@ -231,7 +231,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelect(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default)
     {
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
 
@@ -275,7 +275,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FileContentModel>> ReadFile(TAuthRequestModel<RequestFileReadModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<FileContentModel>> ReadFileAsync(TAuthRequestModel<RequestFileReadModel> req, CancellationToken token = default)
     {
         TResponseModel<FileContentModel> res = new();
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
@@ -373,7 +373,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageFileModelDB>> SaveFile(TAuthRequestModel<StorageImageMetadataModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageImageMetadataModel> req, CancellationToken token = default)
     {
         TResponseModel<StorageFileModelDB> res = new();
         GridFSBucket gridFS = new(mongoFs);
@@ -503,7 +503,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TagSet(TagSetModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TagSetAsync(TagSetModel req, CancellationToken token = default)
     {
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         ResponseBaseModel res = new();
@@ -548,7 +548,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TagModelDB>> TagsSelect(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<TagModelDB>> TagsSelectAsync(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
@@ -653,7 +653,7 @@ public class StorageServiceImpl(
             OwnerPrimaryKey = set.OwnerPrimaryKey,
             PrefixPropertyName = set.PrefixPropertyName,
         };
-        ResponseBaseModel res = await FlushParameter(_set, trimHistory, token);
+        ResponseBaseModel res = await FlushParameterAsync(_set, trimHistory, token);
         if (res.Success())
         {
             string mem_key = $"{set.PropertyName}/{set.OwnerPrimaryKey}/{set.PrefixPropertyName}/{set.ApplicationName}".Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
@@ -662,7 +662,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int?>> FlushParameter(StorageCloudParameterModelDB _set, bool trimHistory = false, CancellationToken token = default)
+    public async Task<TResponseModel<int?>> FlushParameterAsync(StorageCloudParameterModelDB _set, bool trimHistory = false, CancellationToken token = default)
     {
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         TResponseModel<int?> res = new();
@@ -734,7 +734,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageCloudParameterPayloadModel>> ReadParameter(StorageMetadataModel req, CancellationToken token = default)
+    public async Task<TResponseModel<StorageCloudParameterPayloadModel>> ReadParameterAsync(StorageMetadataModel req, CancellationToken token = default)
     {
         req.Normalize();
         string mem_key = $"{req.PropertyName}/{req.OwnerPrimaryKey}/{req.PrefixPropertyName}/{req.ApplicationName}".Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
@@ -781,14 +781,14 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<StorageCloudParameterPayloadModel>>> ReadParameters(StorageMetadataModel[] req, CancellationToken token = default)
+    public async Task<TResponseModel<List<StorageCloudParameterPayloadModel>>> ReadParametersAsync(StorageMetadataModel[] req, CancellationToken token = default)
     {
         BlockingCollection<StorageCloudParameterPayloadModel> res = [];
         BlockingCollection<ResultMessage> _messages = [];
         await Task.WhenAll(req.Select(x => Task.Run(async () =>
         {
             x.Normalize();
-            TResponseModel<StorageCloudParameterPayloadModel> _subResult = await ReadParameter(x);
+            TResponseModel<StorageCloudParameterPayloadModel> _subResult = await ReadParameterAsync(x);
             if (_subResult.Success() && _subResult.Response is not null)
                 res.Add(_subResult.Response);
             if (_subResult.Messages.Count != 0)
@@ -803,7 +803,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FoundParameterModel[]?>> Find(RequestStorageBaseModel req, CancellationToken token = default)
+    public async Task<TResponseModel<FoundParameterModel[]?>> FindAsync(RequestStorageBaseModel req, CancellationToken token = default)
     {
         req.Normalize();
         TResponseModel<FoundParameterModel[]?> res = new();

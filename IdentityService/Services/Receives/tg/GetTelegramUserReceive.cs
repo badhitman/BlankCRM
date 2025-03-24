@@ -30,6 +30,6 @@ public class GetTelegramUserReceive(IIdentityTools identityRepo, ILogger<GetTele
             return res;
         }
 
-        return await identityRepo.GetTelegramUserCachedInfo(payload, token);
+        return await identityRepo.GetTelegramUserCachedInfoAsync(payload, token);
     }
 }

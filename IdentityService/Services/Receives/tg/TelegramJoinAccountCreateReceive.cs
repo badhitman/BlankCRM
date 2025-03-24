@@ -24,6 +24,6 @@ public class TelegramJoinAccountCreateReceive(IIdentityTools identityRepo, ILogg
     {
         ArgumentNullException.ThrowIfNull(payload);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await identityRepo.TelegramJoinAccountCreate(payload, token);
+        return await identityRepo.TelegramJoinAccountCreateAsync(payload, token);
     }
 }

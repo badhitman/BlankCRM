@@ -40,8 +40,8 @@ else
         await ReadCurrentUser();
 
         TResponseModel<string?> res = string.IsNullOrWhiteSpace(CurrentUserSession?.Email)
-        ? await StoreRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.HomePagePublic)
-        : await StoreRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.HomePagePrivate);
+        ? await StoreRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.HomePagePublic)
+        : await StoreRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.HomePagePrivate);
 
         await SetBusy(false);
         if (!res.Success())

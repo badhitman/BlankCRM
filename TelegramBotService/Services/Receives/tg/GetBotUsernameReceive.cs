@@ -19,6 +19,6 @@ public class GetBotUsernameReceive(ITelegramBotService tgRepo)
     /// <inheritdoc/>
     public async Task<TResponseModel<string>?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)
     {
-        return await tgRepo.GetBotUsername(token);
+        return await tgRepo.GetBotUsernameAsync(token);
     }
 }

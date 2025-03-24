@@ -19,6 +19,6 @@ public class DeleteTabOfDocumentSchemeReceive(IConstructorService conService) : 
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.DeleteTabOfDocumentScheme(payload, token);
+        return await conService.DeleteTabOfDocumentSchemeAsync(payload, token);
     }
 }

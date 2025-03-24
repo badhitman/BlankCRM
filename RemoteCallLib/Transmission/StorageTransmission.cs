@@ -68,7 +68,7 @@ public class StorageTransmission(IRabbitClient rabbitClient) : IStorageTransmiss
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<T?>> ReadParameter<T>(StorageMetadataModel req, CancellationToken token = default)
+    public async Task<TResponseModel<T?>> ReadParameterAsync<T>(StorageMetadataModel req, CancellationToken token = default)
     {
         TResponseModel<StorageCloudParameterPayloadModel>? response_payload = await rabbitClient.MqRemoteCallAsync<TResponseModel<StorageCloudParameterPayloadModel>>(GlobalStaticConstants.TransmissionQueues.ReadCloudParameterReceive, req, token: token);
         TResponseModel<T?> res = new() { Messages = response_payload?.Messages ?? [] };

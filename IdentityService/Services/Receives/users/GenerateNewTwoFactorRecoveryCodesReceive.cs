@@ -26,6 +26,6 @@ public class GenerateNewTwoFactorRecoveryCodesReceive(IIdentityTools idRepo, ILo
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.GenerateNewTwoFactorRecoveryCodes(req, token);
+        return await idRepo.GenerateNewTwoFactorRecoveryCodesAsync(req, token);
     }
 }

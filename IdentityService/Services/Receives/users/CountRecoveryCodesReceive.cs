@@ -24,6 +24,6 @@ public class CountRecoveryCodesReceive(IIdentityTools idRepo, ILogger<CountRecov
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.CountRecoveryCodes(req, token);
+        return await idRepo.CountRecoveryCodesAsync(req, token);
     }
 }

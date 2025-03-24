@@ -19,6 +19,6 @@ public class SetStatusSessionDocumentReceive(IConstructorService conService) : I
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SessionStatusModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.SetStatusSessionDocument(payload, token);
+        return await conService.SetStatusSessionDocumentAsync(payload, token);
     }
 }

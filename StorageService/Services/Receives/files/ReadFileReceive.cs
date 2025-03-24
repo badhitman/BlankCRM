@@ -22,6 +22,6 @@ public class ReadFileReceive(    ILogger<ReadFileReceive> LoggerRepo, ISerialize
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await serializeStorageRepo.ReadFile(req, token);
+        return await serializeStorageRepo.ReadFileAsync(req, token);
     }
 }

@@ -24,6 +24,6 @@ public class TelegramAccountRemoveIdentityJoinReceive(IIdentityTools identityRep
     {
         ArgumentNullException.ThrowIfNull(payload);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await identityRepo.TelegramAccountRemoveIdentityJoin(payload, token);
+        return await identityRepo.TelegramAccountRemoveIdentityJoinAsync(payload, token);
     }
 }

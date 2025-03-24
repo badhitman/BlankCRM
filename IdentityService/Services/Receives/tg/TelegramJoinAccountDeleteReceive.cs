@@ -30,6 +30,6 @@ public class TelegramJoinAccountDeleteReceive(IIdentityTools identityRepo, ILogg
             return ResponseBaseModel.CreateError(msg);
         }
 
-        return await identityRepo.TelegramAccountRemoveTelegramJoin(payload, token);
+        return await identityRepo.TelegramAccountRemoveTelegramJoinAsync(payload, token);
     }
 }
