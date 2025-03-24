@@ -16,7 +16,7 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> WarehouseDocumentUpdate(WarehouseDocumentModelDB req)
+    public async Task<TResponseModel<int>> WarehouseDocumentUpdate(WarehouseDocumentModelDB req, CancellationToken token = default)
     {
         TResponseModel<int> res = new() { Response = 0 };
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
@@ -30,7 +30,7 @@ public partial class CommerceImplementService : ICommerceService
         req.Name = req.Name.Trim();
         req.NormalizedUpperName = req.Name.ToUpper();
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         string msg;
         DateTime dtu = DateTime.UtcNow;
         if (req.Id < 1)
@@ -40,8 +40,8 @@ public partial class CommerceImplementService : ICommerceService
             req.Version = Guid.NewGuid();
             req.CreatedAtUTC = dtu;
             req.LastAtUpdatedUTC = dtu;
-            await context.AddAsync(req);
-            await context.SaveChangesAsync();
+            await context.AddAsync(req, token);
+            await context.SaveChangesAsync(token);
             res.Response = req.Id;
             res.AddSuccess("Документ создан");
             return res;
@@ -50,7 +50,7 @@ public partial class CommerceImplementService : ICommerceService
         WarehouseDocumentModelDB warehouseDocumentDb = await context
             .WarehouseDocuments
             .Include(x => x.Rows)
-            .FirstAsync(x => x.Id == req.Id);
+            .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
 
         if (warehouseDocumentDb.Version != req.Version)
         {
@@ -64,17 +64,17 @@ public partial class CommerceImplementService : ICommerceService
             ? []
             : warehouseDocumentDb.Rows.Select(x => new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = x.OfferId, RubricId = req.WarehouseId }).ToArray();
 
-        using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
+        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
         if (offersLocked.Length != 0)
         {
             try
             {
                 await context.AddRangeAsync(offersLocked);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(token);
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                await transaction.RollbackAsync(token);
                 msg = $"Не удалось выполнить команду блокировки БД {nameof(WarehouseDocumentUpdate)}: ";
                 loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError($"{msg}{ex.Message}");
@@ -85,7 +85,7 @@ public partial class CommerceImplementService : ICommerceService
         int[] _offersIds = [.. warehouseDocumentDb.Rows.Select(x => x.OfferId).Distinct()];
         List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
             .Where(x => _offersIds.Any(y => y == x.OfferId))
-            .ToListAsync();
+            .ToListAsync(cancellationToken: token);
 
         if (warehouseDocumentDb.IsDisabled != req.IsDisabled)
         {
@@ -118,7 +118,7 @@ public partial class CommerceImplementService : ICommerceService
                 });
                 if (!res.Success())
                 {
-                    await transaction.RollbackAsync();
+                    await transaction.RollbackAsync(token);
                     msg = $"Не удалось выполнить обновить складской документ: ";
                     loggerRepo.LogError($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                     res.AddError(msg);
@@ -162,7 +162,7 @@ public partial class CommerceImplementService : ICommerceService
                     }
                 });
                 if (offAvAdding.Count != 0)
-                    await context.AddRangeAsync(offAvAdding);
+                    await context.AddRangeAsync(offAvAdding, token);
             }
         }
 
@@ -175,19 +175,19 @@ public partial class CommerceImplementService : ICommerceService
                 .SetProperty(p => p.IsDisabled, req.IsDisabled)
                 .SetProperty(p => p.WarehouseId, req.WarehouseId)
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.LastAtUpdatedUTC, dtu));
+                .SetProperty(p => p.LastAtUpdatedUTC, dtu), cancellationToken: token);
 
         if (offersLocked.Length != 0)
             context.RemoveRange(offersLocked);
 
         res.AddSuccess("Складской документ обновлён");
-        await context.SaveChangesAsync();
-        await transaction.CommitAsync();
+        await context.SaveChangesAsync(token);
+        await transaction.CommitAsync(token);
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> RowsForWarehouseDocumentDelete(int[] req)
+    public async Task<TResponseModel<bool>> RowsForWarehouseDocumentDelete(int[] req, CancellationToken token = default)
     {
         string msg;
         TResponseModel<bool> res = new() { Response = req.Any(x => x > 0) };
@@ -197,7 +197,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
         req = [.. req.Distinct()];
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<RowOfWarehouseDocumentModelDB> mainQuery = context.RowsWarehouses.Where(x => req.Any(y => y == x.Id));
         var q = from r in mainQuery
                 join d in context.WarehouseDocuments on r.WarehouseDocumentId equals d.Id
@@ -219,24 +219,23 @@ public partial class CommerceImplementService : ICommerceService
             res.AddWarning($"Данные не найдены. Метод удаления [{nameof(RowsForWarehouseDocumentDelete)}] не может выполнить команду.");
             return res;
         }
-        LockTransactionModelDB[] offersLocked = _allOffersOfDocuments
+        LockTransactionModelDB[] offersLocked = [.. _allOffersOfDocuments
             .Select(x => new LockTransactionModelDB()
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.OfferId,
                 RubricId = x.WarehouseId
-            })
-            .ToArray();
+            })];
 
-        using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
+        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
         try
         {
             await context.AddRangeAsync(offersLocked);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
         }
         catch (Exception ex)
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(token);
             msg = $"Не удалось выполнить команду блокировки БД {nameof(WarehouseDocumentUpdate)}: ";
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError($"{msg}{ex.Message}");
@@ -246,7 +245,7 @@ public partial class CommerceImplementService : ICommerceService
         int[] _offersIds = [.. _allOffersOfDocuments.Select(x => x.OfferId)];
         List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
            .Where(x => _offersIds.Any(y => y == x.OfferId))
-           .ToListAsync();
+           .ToListAsync(cancellationToken: token);
 
         foreach (int doc_id in _allOffersOfDocuments.Select(x => x.DocumentId).Distinct())
             await context.WarehouseDocuments.Where(x => x.Id == doc_id).ExecuteUpdateAsync(set => set
@@ -268,22 +267,22 @@ public partial class CommerceImplementService : ICommerceService
                     NomenclatureId = rowEl.NomenclatureId,
                     OfferId = rowEl.OfferId,
                     Quantity = -rowEl.Quantity,
-                });
+                }, token);
         }
 
         if (offersLocked.Length != 0)
             context.RemoveRange(offersLocked);
 
-        res.Response = await context.RowsWarehouses.Where(x => req.Any(y => y == x.Id)).ExecuteDeleteAsync() != 0;
-        await context.SaveChangesAsync();
-        await transaction.CommitAsync();
+        res.Response = await context.RowsWarehouses.Where(x => req.Any(y => y == x.Id)).ExecuteDeleteAsync(cancellationToken: token) != 0;
+        await context.SaveChangesAsync(token);
+        await transaction.CommitAsync(token);
 
         res.AddSuccess("Команда удаления выполнена");
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> RowForWarehouseDocumentUpdate(RowOfWarehouseDocumentModelDB req)
+    public async Task<TResponseModel<int>> RowForWarehouseDocumentUpdate(RowOfWarehouseDocumentModelDB req, CancellationToken token = default)
     {
         string msg;
         TResponseModel<int> res = new() { Response = 0 };
@@ -293,12 +292,12 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<WarehouseDocumentModelDB> queryDocumentDb = context.WarehouseDocuments.Where(x => x.Id == req.WarehouseDocumentId);
 
         WarehouseDocumentRecord whDoc = await queryDocumentDb
             .Select(x => new WarehouseDocumentRecord(x.WarehouseId, x.IsDisabled))
-            .FirstAsync();
+            .FirstAsync(cancellationToken: token);
 
         // List<Task> tasks = [];
         if (whDoc.WarehouseId == 0)
@@ -309,7 +308,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        if (await context.RowsWarehouses.AnyAsync(x => x.Id != req.Id && x.OfferId == req.OfferId && x.WarehouseDocumentId == req.WarehouseDocumentId))
+        if (await context.RowsWarehouses.AnyAsync(x => x.Id != req.Id && x.OfferId == req.OfferId && x.WarehouseDocumentId == req.WarehouseDocumentId, cancellationToken: token))
         {
             msg = "В документе уже существует этот офер. Установите ему требуемое количество";
             loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
@@ -321,10 +320,10 @@ public partial class CommerceImplementService : ICommerceService
             return res;
 
         RowOfWarehouseDocumentModelDB? rowDb = req.Id > 0
-            ? await context.RowsWarehouses.FirstAsync(x => x.Id == req.Id)
+            ? await context.RowsWarehouses.FirstAsync(x => x.Id == req.Id, cancellationToken: token)
             : null;
 
-        using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
+        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
         List<LockTransactionModelDB> lockers = [new()
         {
             LockerName = nameof(OfferAvailabilityModelDB),
@@ -344,12 +343,12 @@ public partial class CommerceImplementService : ICommerceService
 
         try
         {
-            await context.AddRangeAsync(lockers);
-            await context.SaveChangesAsync();
+            await context.AddRangeAsync(lockers, token);
+            await context.SaveChangesAsync(token);
         }
         catch (Exception ex)
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(token);
             msg = $"Не удалось выполнить команду: ";
             res.AddError($"{msg}{ex.Message}");
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
@@ -358,7 +357,7 @@ public partial class CommerceImplementService : ICommerceService
 
         OfferAvailabilityModelDB? regOfferAv = await context
             .OffersAvailability
-            .FirstOrDefaultAsync(x => x.OfferId == req.OfferId && x.WarehouseId == whDoc.WarehouseId);
+            .FirstOrDefaultAsync(x => x.OfferId == req.OfferId && x.WarehouseId == whDoc.WarehouseId, cancellationToken: token);
 
         if (regOfferAv is null && !whDoc.IsDisabled)
         {
@@ -384,7 +383,7 @@ public partial class CommerceImplementService : ICommerceService
 
         await queryDocumentDb.ExecuteUpdateAsync(set => set
              .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow)
-             .SetProperty(p => p.Version, Guid.NewGuid()));
+             .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
         if (req.Id < 1)
         {
@@ -392,8 +391,8 @@ public partial class CommerceImplementService : ICommerceService
                 regOfferAv.Quantity += req.Quantity;
 
             req.Version = Guid.NewGuid();
-            await context.AddAsync(req);
-            await context.SaveChangesAsync();
+            await context.AddAsync(req, token);
+            await context.SaveChangesAsync(token);
 
             res.AddSuccess("Товар добавлен к документу");
             res.Response = req.Id;
@@ -402,7 +401,7 @@ public partial class CommerceImplementService : ICommerceService
         {
             if (rowDb!.Version != req.Version)
             {
-                await transaction.RollbackAsync();
+                await transaction.RollbackAsync(token);
                 msg = "Строка документа была уже кем-то изменена";
                 loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError($"{msg}. Обновите документ (F5), что бы получить актуальные данные");
@@ -428,11 +427,11 @@ public partial class CommerceImplementService : ICommerceService
             res.Response = await context.RowsWarehouses
                        .Where(x => x.Id == req.Id)
                        .ExecuteUpdateAsync(set => set
-                       .SetProperty(p => p.Quantity, req.Quantity).SetProperty(p => p.Version, Guid.NewGuid()));
+                       .SetProperty(p => p.Quantity, req.Quantity).SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
         }
         context.RemoveRange(lockers);
-        await context.SaveChangesAsync();
-        await transaction.CommitAsync();
+        await context.SaveChangesAsync(token);
+        await transaction.CommitAsync(token);
 
         res.AddSuccess($"Обновление `строки складского документа` выполнено");
         return res;
@@ -440,10 +439,10 @@ public partial class CommerceImplementService : ICommerceService
 
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<WarehouseDocumentModelDB[]>> WarehouseDocumentsRead(int[] req)
+    public async Task<TResponseModel<WarehouseDocumentModelDB[]>> WarehouseDocumentsRead(int[] req, CancellationToken token = default)
     {
         TResponseModel<WarehouseDocumentModelDB[]> res = new();
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<WarehouseDocumentModelDB> q = context
             .WarehouseDocuments
@@ -453,18 +452,18 @@ public partial class CommerceImplementService : ICommerceService
             .Include(x => x.Rows!)
             .ThenInclude(x => x.Offer!)
             .ThenInclude(x => x.Nomenclature)
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: token);
 
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelect(TPaginationRequestModel<WarehouseDocumentsSelectRequestModel> req)
+    public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelect(TPaginationRequestModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<WarehouseDocumentModelDB> q = context
             .WarehouseDocuments
@@ -508,18 +507,18 @@ public partial class CommerceImplementService : ICommerceService
             PageSize = req.PageSize,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
-            TotalRowsCount = await q.CountAsync(),
-            Response = req.Payload.IncludeExternalData ? [.. await inc_query.ToArrayAsync()] : [.. await pq.ToArrayAsync()]
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = req.Payload.IncludeExternalData ? [.. await inc_query.ToArrayAsync(cancellationToken: token)] : [.. await pq.ToArrayAsync(cancellationToken: token)]
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>> RegistersSelect(TPaginationRequestModel<RegistersSelectRequestBaseModel> req)
+    public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>> RegistersSelect(TPaginationRequestModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<OfferAvailabilityModelDB> q = context
             .OffersAvailability
@@ -543,8 +542,8 @@ public partial class CommerceImplementService : ICommerceService
                       select new { Register = offerAv, Offer = oj, Good = gj };
 
         var dbRes = req.SortingDirection == DirectionsEnum.Up
-           ? await exQuery.OrderBy(x => x.Offer.Name).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync()
-           : await exQuery.OrderByDescending(x => x.Offer.Name).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync();
+           ? await exQuery.OrderBy(x => x.Offer.Name).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync(cancellationToken: token)
+           : await exQuery.OrderByDescending(x => x.Offer.Name).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync(cancellationToken: token);
 
         return new()
         {
@@ -552,7 +551,7 @@ public partial class CommerceImplementService : ICommerceService
             PageSize = req.PageSize,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
-            TotalRowsCount = await q.CountAsync(),
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = [.. dbRes.Select(x => x.Register)],
         };
     }

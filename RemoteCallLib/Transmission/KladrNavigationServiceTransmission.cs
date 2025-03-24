@@ -14,17 +14,17 @@ public class KladrNavigationServiceTransmission(IRabbitClient rabbitClient) : IK
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<KladrResponseModel>> ObjectGet(KladrsRequestBaseModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCall<TResponseModel<KladrResponseModel>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationGetObjectReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<KladrResponseModel>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationGetObjectReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFind(KladrFindRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCall<TPaginationResponseModel<KladrResponseModel>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationFindReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<KladrResponseModel>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationFindReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<Dictionary<KladrChainTypesEnum, JObject[]>> ObjectsListForParent(KladrsRequestBaseModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCall<Dictionary<KladrChainTypesEnum, JObject[]>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationListReceive, req, token: token) ?? [];
+        => await rabbitClient.MqRemoteCallAsync<Dictionary<KladrChainTypesEnum, JObject[]>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationListReceive, req, token: token) ?? [];
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelect(KladrSelectRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCall<TPaginationResponseModel<KladrResponseModel>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationSelectReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<KladrResponseModel>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationSelectReceive, req, token: token) ?? new();
 }

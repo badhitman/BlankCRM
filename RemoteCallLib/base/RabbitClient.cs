@@ -56,7 +56,7 @@ public class RabbitClient : IRabbitClient
     }
 
     /// <inheritdoc/>
-    public Task<T?> MqRemoteCall<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default)
+    public Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default)
     {
         // Custom ActivitySource for the application
         ActivitySource greeterActivitySource = new($"OTel.{AppName}");

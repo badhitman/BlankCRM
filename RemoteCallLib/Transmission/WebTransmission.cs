@@ -13,5 +13,5 @@ public class WebTransmission(IRabbitClient rabbitClient) : IWebTransmission
 {
     /// <inheritdoc/>
     public async Task<TelegramBotConfigModel> GetWebConfig(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCall<TelegramBotConfigModel>(GlobalStaticConstants.TransmissionQueues.GetWebConfigReceive, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TelegramBotConfigModel>(GlobalStaticConstants.TransmissionQueues.GetWebConfigReceive, token: token) ?? new();
 }
