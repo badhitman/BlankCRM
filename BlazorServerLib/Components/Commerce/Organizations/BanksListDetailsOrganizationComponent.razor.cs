@@ -63,10 +63,11 @@ public partial class BanksListDetailsOrganizationComponent : BlazorBusyComponent
         {
             ResponseBaseModel res = await CommerceRepo.BankDetailsDelete(new TAuthRequestModel<int>() { Payload = sender.Id, SenderActionUserId = CurrentUserSession.UserId });
             SnackbarRepo.ShowMessagesResponse(res.Messages);
+
+            CurrentOrganization.BanksDetails?.RemoveAll(x => x.Id == sender.Id);
+            if (CurrentOrganization.BankMainAccount == sender.Id)
+                CurrentOrganization.BankMainAccount = 0;
         }
-        CurrentOrganization.BanksDetails?.RemoveAll(x => x.Id == sender.Id);
-        if (CurrentOrganization.BankMainAccount == sender.Id)
-            CurrentOrganization.BankMainAccount = 0;
 
         await SetBusy(false);
     }

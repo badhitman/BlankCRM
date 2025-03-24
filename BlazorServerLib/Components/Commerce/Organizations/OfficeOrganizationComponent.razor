@@ -20,9 +20,9 @@
                 </MudCardHeader>
                 <MudCardContent>
                     <MudStack>
-                        <CascadingValue Value="RubricSelectAction">
+                        @* <CascadingValue Value="RubricSelectAction">
                             <RubricSelectorComponent @ref="rubricSelector_ref" ContextName="@GlobalStaticConstants.Routes.ADDRESS_CONTROLLER_NAME" Title="Регион, Город" ModeSelectingRubrics="ModesSelectRubricsEnum.Strict" ShowDisabledRubrics="false" StartRubric="OfficeEdit.ParentId" />
-                        </CascadingValue>
+                        </CascadingValue> *@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="nameFormControlInput1" class="form-label">Название</label>
@@ -33,9 +33,9 @@
                                 <input @bind-value:event="oninput" @bind-value="OfficeEdit.Contacts" type="tel" class="form-control" id="telFormControlInput" placeholder="Номер телефона, email...">
                             </div>
                         </div>
-                        <KladrInputComponent />
+                        <KladrInputComponent ChangeSelectHandle="ChangeSelectAction" KladrObject="EntryAltModel.Build(OfficeEdit.KladrCode, OfficeEdit.KladrTitle)" />
                         <div class="mb-3">
-                            <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+                            <label for="exampleFormControlTextarea1" class="form-label">Примечание</label>
                             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" @oninput="HandleOnChange">@OfficeEdit.AddressUserComment</textarea>
                         </div>
                     </MudStack>

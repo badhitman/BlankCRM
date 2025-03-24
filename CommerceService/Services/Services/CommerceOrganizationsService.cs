@@ -159,9 +159,10 @@ public partial class CommerceImplementService : ICommerceService
         res.Response = await context.Offices
                         .Where(x => x.Id == req.Id)
                         .ExecuteUpdateAsync(set => set
-                        //.SetProperty(p => p.OrganizationId, req.OrganizationId)
                         .SetProperty(p => p.AddressUserComment, req.AddressUserComment)
                         .SetProperty(p => p.Name, req.Name)
+                        .SetProperty(p => p.KladrCode, req.KladrCode)
+                        .SetProperty(p => p.KladrTitle, req.KladrTitle)
                         .SetProperty(p => p.ParentId, req.ParentId)
                         .SetProperty(p => p.Contacts, req.Contacts));
 

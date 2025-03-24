@@ -18,6 +18,9 @@ public class EntryAltModel
     public required string? Name { get; set; }
 
     /// <inheritdoc/>
+    public static EntryAltModel Build(string id, string name) => new() { Id = id, Name = name };
+
+    /// <inheritdoc/>
     public void Update(EntryAltModel other)
     {
         Id = other.Id;

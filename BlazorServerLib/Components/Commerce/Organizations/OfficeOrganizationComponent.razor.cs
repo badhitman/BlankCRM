@@ -36,10 +36,19 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         (OfficeEdit.AddressUserComment != OfficeCurrent.AddressUserComment ||
         OfficeEdit.Contacts != OfficeCurrent.Contacts ||
         OfficeEdit.Name != OfficeCurrent.Name ||
+        OfficeEdit.KladrCode != OfficeCurrent.KladrCode ||
+        OfficeEdit.KladrTitle != OfficeCurrent.KladrTitle ||
         OfficeEdit.ParentId != OfficeCurrent.ParentId) &&
         SelectedRubric is not null;
 
     UniversalBaseModel? SelectedRubric;
+
+    void ChangeSelectAction(KladrResponseModel sender)
+    {
+        OfficeEdit.KladrCode = sender.Code;
+        OfficeEdit.KladrTitle = sender.Name;
+        StateHasChangedCall();         
+    }
 
     void HandleOnChange(ChangeEventArgs args)
     {

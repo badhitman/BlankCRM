@@ -48,6 +48,13 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         _expanded = !_expanded;
     }
 
+    void ChangeSelectAction(KladrResponseModel sender)
+    {
+        kladrCode = sender.Code;
+        kladrTitle = sender.Name;
+        StateHasChangedCall();
+    }
+
     void HandleOnChange(ChangeEventArgs args)
     {
         addingDescr = args.Value?.ToString();
@@ -151,6 +158,4 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         addingContacts = null;
         addingName = null;
     }
-
-
 }
