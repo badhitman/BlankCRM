@@ -17,7 +17,7 @@ namespace ServerLib;
 public class MailProviderService(IOptions<SmtpConfigModel> _config, ILogger<MailProviderService> loggerRepo) : IMailProviderService
 {
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SendEmailAsync(string email, string subject, string message, string mimekit_format = "html")
+    public async Task<ResponseBaseModel> SendEmailAsync(string email, string subject, string message, string mimekit_format = "html", CancellationToken token = default)
     {
         if (email != "*")
         {
@@ -51,16 +51,16 @@ public class MailProviderService(IOptions<SmtpConfigModel> _config, ILogger<Mail
             Text = message
         };
 
-        return await SendMessageAsync(emailMessage);
+        return await SendMessageAsync(emailMessage, token);
     }
 
-    async Task<ResponseBaseModel> SendMessageAsync(MimeMessage emailMessage)
+    async Task<ResponseBaseModel> SendMessageAsync(MimeMessage emailMessage, CancellationToken token = default)
     {
         using SmtpClient? client = new();
         try
         {
-            await client.ConnectAsync(_config.Value.Host, _config.Value.Port, _config.Value.UseSsl);
-            await client.AuthenticateAsync(_config.Value.Login, _config.Value.Password);
+            await client.ConnectAsync(_config.Value.Host, _config.Value.Port, _config.Value.UseSsl, token);
+            await client.AuthenticateAsync(_config.Value.Login, _config.Value.Password, token);
         }
         catch (Exception ex)
         {
@@ -83,9 +83,9 @@ public class MailProviderService(IOptions<SmtpConfigModel> _config, ILogger<Mail
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SendTechnicalEmailNotificationAsync(string message, string mimekit_format = "html")
+    public async Task<ResponseBaseModel> SendTechnicalEmailNotificationAsync(string message, string mimekit_format = "html", CancellationToken token = default)
     {
-        TextFormat format = (TextFormat)Enum.Parse(typeof(TextFormat), mimekit_format, true);
+        TextFormat format = Enum.Parse<TextFormat>(mimekit_format, true);
         MimeMessage? emailMessage = new();
 
         emailMessage.From.Add(new MailboxAddress(_config.Value.PublicName, _config.Value.Email));
@@ -97,6 +97,6 @@ public class MailProviderService(IOptions<SmtpConfigModel> _config, ILogger<Mail
             Text = message
         };
 
-        return await SendMessageAsync(emailMessage);
+        return await SendMessageAsync(emailMessage, token);
     }
 }

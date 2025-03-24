@@ -19,9 +19,9 @@ public class CheckToken2FAReceive(IIdentityTools idRepo)
     /// <summary>
     /// Проверка 2FA токена
     /// </summary>
-    public async Task<TResponseModel<string>?> ResponseHandleAction(CheckToken2FARequestModel? req)
+    public async Task<TResponseModel<string>?> ResponseHandleAction(CheckToken2FARequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await idRepo.CheckToken2FA(req);
+        return await idRepo.CheckToken2FA(req, token);
     }
 }

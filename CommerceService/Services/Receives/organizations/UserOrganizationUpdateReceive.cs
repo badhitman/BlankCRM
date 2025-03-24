@@ -17,10 +17,10 @@ public class UserOrganizationUpdateReceive(ICommerceService commerceRepo, ILogge
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrganizationUserUpdateOrCreateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<UserOrganizationModelDB>? req)
+    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<UserOrganizationModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await commerceRepo.UserOrganizationUpdate(req);
+        return await commerceRepo.UserOrganizationUpdate(req, token);
     }
 }

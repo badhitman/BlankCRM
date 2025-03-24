@@ -13,7 +13,7 @@ namespace SharedLib;
 public class ToolsSystemService : IServerToolsService
 {
     /// <inheritdoc/>
-    public Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectoryData(ToolsFilesRequestModel req)
+    public Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectoryData(ToolsFilesRequestModel req, CancellationToken token = default)
     {
         TResponseModel<List<ToolsFilesResponseModel>> res = new();
 
@@ -23,7 +23,7 @@ public class ToolsSystemService : IServerToolsService
         else
         {
             string[] all_files = GlobalTools.GetFiles(_di.FullName).ToArray();
-            res.Response = all_files.Select(x =>
+            res.Response = [.. all_files.Select(x =>
             {
                 FileInfo fileInfo = new(x);
 
@@ -42,13 +42,13 @@ public class ToolsSystemService : IServerToolsService
                     Size = fileInfo.Length,
                     Hash = Hash,
                 };
-            }).ToList();
+            })];
         }
         return Task.FromResult(res);
     }
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DirectoryExist(string remoteDirectory)
+    public Task<ResponseBaseModel> DirectoryExist(string remoteDirectory, CancellationToken token = default)
     {
         DirectoryInfo _di = new(remoteDirectory);
         if (!_di.Exists)
@@ -58,7 +58,7 @@ public class ToolsSystemService : IServerToolsService
     }
 
     /// <inheritdoc/>
-    public Task<TResponseModel<bool>> DeleteFile(DeleteRemoteFileRequestModel req)
+    public Task<TResponseModel<bool>> DeleteFile(DeleteRemoteFileRequestModel req, CancellationToken token = default)
     {
         TResponseModel<bool> response = new();
         DirectoryInfo di = new(req.RemoteDirectory);
@@ -85,7 +85,7 @@ public class ToolsSystemService : IServerToolsService
     }
 
     /// <inheritdoc/>
-    public Task<TResponseModel<string>> UpdateFile(string fileName, string remoteDirectory, byte[] bytes)
+    public Task<TResponseModel<string>> UpdateFile(string fileName, string remoteDirectory, byte[] bytes, CancellationToken token = default)
     {
         TResponseModel<string> response = new();
 
@@ -131,7 +131,7 @@ public class ToolsSystemService : IServerToolsService
     }
 
     /// <inheritdoc/>
-    public Task<TResponseModel<string>> ExeCommand(ExeCommandModelDB req)
+    public Task<TResponseModel<string>> ExeCommand(ExeCommandModelDB req, CancellationToken token = default)
     {
         TResponseModel<string> res = new();
 

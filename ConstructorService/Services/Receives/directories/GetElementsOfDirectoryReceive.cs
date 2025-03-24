@@ -16,8 +16,8 @@ public class GetElementsOfDirectoryReceive(IConstructorService conService) : IRe
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetElementsOfDirectoryReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<EntryModel>>?> ResponseHandleAction(int payload)
+    public async Task<TResponseModel<List<EntryModel>>?> ResponseHandleAction(int payload, CancellationToken token = default)
     {
-        return await conService.GetElementsOfDirectory(payload);
+        return await conService.GetElementsOfDirectory(payload, token);
     }
 }

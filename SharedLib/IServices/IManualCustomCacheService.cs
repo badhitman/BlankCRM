@@ -142,23 +142,16 @@ public interface IManualCustomCacheService
     /// <summary>
     /// Удалить (асинхронно) данные из Cache
     /// </summary>
-    /// <param name="key">Ключ/указатель на данные в Cache</param>
-    /// <returns>Результат операции</returns>
-    public Task<bool> RemoveAsync(string key);
+    public Task<bool> RemoveAsync(string key, CancellationToken token = default);
 
     /// <summary>
     /// Удалить (асинхронно) данные из Cache
     /// </summary>
-    /// <param name="key">Ключ/указатель на данные в Cache</param>
-    /// <returns>Результат операции</returns>
-    public Task<bool> RemoveAsync(MemCacheComplexKeyModel key);
+    public Task<bool> RemoveAsync(MemCacheComplexKeyModel key, CancellationToken token = default);
 
     /// <summary>
     /// Удалить (асинхронно) данные из Cache
     /// </summary>
-    /// <param name="pref">Префикс ключа доступа к данным Cache</param>
-    /// <param name="id">Имя/идентификатор (конечный) доступа к данным Cache</param>
-    /// <returns>Результат операции</returns>
-    public Task<bool> RemoveAsync(MemCachePrefixModel pref, string id);
+    public Task<bool> RemoveAsync(MemCachePrefixModel pref, string id, CancellationToken token = default);
     #endregion
 }

@@ -17,9 +17,9 @@ public class SelectUsersOfIdentityReceive(IIdentityTools identityRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SelectUsersOfIdentityReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<UserInfoModel>?> ResponseHandleAction(TPaginationRequestModel<SimpleBaseRequestModel>? req)
+    public async Task<TPaginationResponseModel<UserInfoModel>?> ResponseHandleAction(TPaginationRequestModel<SimpleBaseRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await identityRepo.SelectUsersOfIdentity(req);
+        return await identityRepo.SelectUsersOfIdentity(req, token);
     }
 }

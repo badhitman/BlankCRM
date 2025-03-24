@@ -18,10 +18,10 @@ public class SendTextMessageTelegramReceive(ITelegramBotService tgRepo, ILogger<
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SendTextMessageTelegramReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MessageComplexIdsModel>?> ResponseHandleAction(SendTextMessageTelegramBotModel? message)
+    public async Task<TResponseModel<MessageComplexIdsModel>?> ResponseHandleAction(SendTextMessageTelegramBotModel? message, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(message);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(message)}");
-        return await tgRepo.SendTextMessageTelegram(message);
+        return await tgRepo.SendTextMessageTelegram(message, token);
     }
 }

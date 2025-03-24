@@ -16,9 +16,9 @@ public class UpdateOrCreateSessionDocumentReceive(IConstructorService conService
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.UpdateOrCreateSessionDocumentReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleAction(SessionOfDocumentDataModelDB? payload)
+    public async Task<TResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleAction(SessionOfDocumentDataModelDB? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.UpdateOrCreateSessionDocument(payload);
+        return await conService.UpdateOrCreateSessionDocument(payload, token);
     }
 }

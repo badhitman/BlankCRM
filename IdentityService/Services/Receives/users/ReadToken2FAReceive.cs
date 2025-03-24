@@ -19,9 +19,9 @@ public class ReadToken2FAReceive(IIdentityTools idRepo)
     /// <summary>
     /// Чтение 2fa токена (из кеша)
     /// </summary>
-    public async Task<TResponseModel<string>?> ResponseHandleAction(string? req)
+    public async Task<TResponseModel<string>?> ResponseHandleAction(string? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await idRepo.ReadToken2FA(req);
+        return await idRepo.ReadToken2FA(req, token);
     }
 }

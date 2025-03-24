@@ -17,10 +17,10 @@ public class FindParametersReceive(ISerializeStorage serializeStorageRepo, ILogg
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.FindCloudParameterReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FoundParameterModel[]?>?> ResponseHandleAction(RequestStorageBaseModel? request)
+    public async Task<TResponseModel<FoundParameterModel[]?>?> ResponseHandleAction(RequestStorageBaseModel? request, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(request);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(request)}");
-        return await serializeStorageRepo.Find(request);
+        return await serializeStorageRepo.Find(request, token);
     }
 }

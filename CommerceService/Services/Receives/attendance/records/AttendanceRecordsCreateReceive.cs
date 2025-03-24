@@ -21,10 +21,10 @@ public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, ILogg
     /// <summary>
     /// Обновление WorkScheduleCalendar
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<CreateAttendanceRequestModel>? payload)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<CreateAttendanceRequestModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.RecordsAttendanceCreate(payload);
+        return await commerceRepo.RecordsAttendanceCreate(payload, token);
     }
 }

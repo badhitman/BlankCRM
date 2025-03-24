@@ -12,10 +12,10 @@ public partial interface ICommerceService : ICommerceServiceBase
     /// <summary>
     /// OrganizationOfferContractUpdate
     /// </summary>
-    public Task<TResponseModel<bool>> OrganizationOfferContractUpdate(TAuthRequestModel<OrganizationOfferToggleModel> req);
+    public Task<TResponseModel<bool>> OrganizationOfferContractUpdate(TAuthRequestModel<OrganizationOfferToggleModel> req, CancellationToken token = default);
 
     /// <summary>
     /// ContractorsOrganizationsFind
     /// </summary>
-    public Task<OrganizationContractorModel[]> ContractorsOrganizationsFind(ContractorsOrganizationsRequestModel req);
+    public Task<OrganizationContractorModel[]> ContractorsOrganizationsFind(ContractorsOrganizationsRequestModel req, CancellationToken token = default);
 }

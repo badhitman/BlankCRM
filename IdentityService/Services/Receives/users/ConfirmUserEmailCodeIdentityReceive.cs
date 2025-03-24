@@ -20,11 +20,10 @@ public class ConfirmUserEmailCodeIdentityReceive(IIdentityTools IdentityRepo, IL
     /// <summary>
     /// Проверяет, соответствует ли токен подтверждения электронной почты указанному пользователю.
     /// </summary>
-    /// <param name="req">Пользователь, для которого необходимо проверить токен подтверждения электронной почты.</param>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(UserCodeModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(UserCodeModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await IdentityRepo.ConfirmEmail(req);
+        return await IdentityRepo.ConfirmEmail(req, token);
     }
 }

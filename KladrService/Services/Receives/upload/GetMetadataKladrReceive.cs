@@ -16,10 +16,10 @@ public class GetMetadataKladrReceive(ILogger<GetMetadataKladrReceive> loggerRepo
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetMetadataKladrReceive;
 
     /// <inheritdoc/>
-    public async Task<MetadataKladrModel?> ResponseHandleAction(GetMetadataKladrRequestModel? req)
+    public async Task<MetadataKladrModel?> ResponseHandleAction(GetMetadataKladrRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await kladrRepo.GetMetadataKladr(req);
+        return await kladrRepo.GetMetadataKladr(req, token);
     }
 }

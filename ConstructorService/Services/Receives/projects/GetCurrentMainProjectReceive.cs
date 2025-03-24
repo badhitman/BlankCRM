@@ -16,11 +16,11 @@ public class GetCurrentMainProjectReceive(IConstructorService conService) : IRes
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetCurrentMainProjectReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MainProjectViewModel>?> ResponseHandleAction(string? req)
+    public async Task<TResponseModel<MainProjectViewModel>?> ResponseHandleAction(string? req, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(req))
             throw new ArgumentNullException(nameof(req));
 
-        return await conService.GetCurrentMainProject(req);
+        return await conService.GetCurrentMainProject(req, token);
     }
 }

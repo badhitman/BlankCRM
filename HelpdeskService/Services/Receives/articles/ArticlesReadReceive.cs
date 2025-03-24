@@ -17,10 +17,10 @@ public class ArticlesReadReceive(IArticlesService artRepo, ILogger<ArticlesReadR
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ArticlesReadReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ArticleModelDB[]>?> ResponseHandleAction(int[]? req)
+    public async Task<TResponseModel<ArticleModelDB[]>?> ResponseHandleAction(int[]? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await artRepo.ArticlesRead(req);
+        return await artRepo.ArticlesRead(req, token);
     }
 }

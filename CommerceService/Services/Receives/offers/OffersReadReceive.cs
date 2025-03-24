@@ -17,9 +17,9 @@ public class OffersReadReceive(ICommerceService commerceRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OfferReadCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<OfferModelDB[]>?> ResponseHandleAction(TAuthRequestModel<int[]>? req)
+    public async Task<TResponseModel<OfferModelDB[]>?> ResponseHandleAction(TAuthRequestModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.OffersRead(req);
+        return await commerceRepo.OffersRead(req, token);
     }
 }

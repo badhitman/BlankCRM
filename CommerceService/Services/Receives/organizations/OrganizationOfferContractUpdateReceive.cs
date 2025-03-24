@@ -17,10 +17,10 @@ public class OrganizationOfferContractUpdateReceive(ICommerceService commerceRep
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrganizationOfferContractUpdateOrCreateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>?> ResponseHandleAction(TAuthRequestModel<OrganizationOfferToggleModel>? req)
+    public async Task<TResponseModel<bool>?> ResponseHandleAction(TAuthRequestModel<OrganizationOfferToggleModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await commerceRepo.OrganizationOfferContractUpdate(req);
+        return await commerceRepo.OrganizationOfferContractUpdate(req, token);
     }
 }

@@ -18,11 +18,11 @@ public interface IClientHTTPRestService : IServerToolsService, IKladrService
     /// <summary>
     /// Создать сессию порционной (частями) загрузки файлов
     /// </summary>
-    public Task<TResponseModel<PartUploadSessionModel>> FilePartUploadSessionStart(PartUploadSessionStartRequestModel req);
+    public Task<TResponseModel<PartUploadSessionModel>> FilePartUploadSessionStart(PartUploadSessionStartRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// Загрузка порции файла
     /// </summary>
-    public Task<ResponseBaseModel> FilePartUpload(SessionFileRequestModel req);
+    public Task<ResponseBaseModel> FilePartUpload(SessionFileRequestModel req, CancellationToken token = default);
     #endregion
 }

@@ -34,7 +34,7 @@ public partial class FormsConstructorService(
         if (!Guid.TryParse(guid_session, out Guid guid_parsed) || guid_parsed == Guid.Empty)
             return new() { Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = "Токен сессии имеет не корректный формат" }] };
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
         IQueryable<SessionOfDocumentDataModelDB> q = context_forms
             .Sessions
@@ -75,7 +75,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SetDoneSessionDocumentData(string token_session, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         SessionOfDocumentDataModelDB? sq = await context_forms.Sessions.FirstOrDefaultAsync(x => x.SessionToken == token_session, cancellationToken: cancellationToken);
         if (sq is null)
             return ResponseBaseModel.CreateError($"Сессия [{token_session}] не найдена в БД. ошибка 638FB569-BB5E-43C2-9263-2DCB76F7D88E");
@@ -156,7 +156,7 @@ public partial class FormsConstructorService(
             res.AddError($"Поле '{req.NameField}' не найдено в форме #{form_join.Form.Id} '{form_join.Form.Name}'. ошибка 98371573-83A3-41A3-97C2-F8F775BFFD2D");
             return res;
         }
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         ValueDataForSessionOfDocumentModelDB? existing_value = session_Document.DataSessionValues.FirstOrDefault(x => x.RowNum == req.GroupByRowNum && x.Name.Equals(req.NameField, StringComparison.OrdinalIgnoreCase) && x.JoinFormToTabId == form_join.Id);
         if (existing_value is null)
         {
@@ -210,14 +210,14 @@ public partial class FormsConstructorService(
         }
         IQueryable<ValueDataForSessionOfDocumentModelDB> q = session.DataSessionValues.Where(x => x.JoinFormToTabId == form_join.Id && x.RowNum > 0).AsQueryable();
         res.Response = (int)(q.Any() ? (q.Max(x => x.RowNum) + 1) : 1);
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
-        ValueDataForSessionOfDocumentModelDB[] rows_add = form_join.Form.AllFields.Where(ScalarOnly).Select(x => new ValueDataForSessionOfDocumentModelDB()
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
+        ValueDataForSessionOfDocumentModelDB[] rows_add = [.. form_join.Form.AllFields.Where(ScalarOnly).Select(x => new ValueDataForSessionOfDocumentModelDB()
         {
             RowNum = (uint)res.Response,
             Name = x.Name,
             OwnerId = session.Id,
             JoinFormToTabId = form_join.Id
-        }).ToArray();
+        })];
         await context_forms.AddRangeAsync(rows_add, cancellationToken);
         session.LastDocumentUpdateActivity = DateTime.UtcNow;
 
@@ -257,7 +257,7 @@ public partial class FormsConstructorService(
         if (values_for_delete.Length > 0)
         {
             session.LastDocumentUpdateActivity = DateTime.UtcNow;
-            using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+            using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
             context_forms.RemoveRange(values_for_delete);
             await context_forms.SaveChangesAsync(cancellationToken);
             res.AddSuccess($"Строка №{req.GroupByRowNum} удалена ({values_for_delete.Length} значений ячеек)");
@@ -312,9 +312,9 @@ public partial class FormsConstructorService(
     // Если проект отключить (есть у него такой статус: IsDisabled), то работы с проектом блокируются для всех участников, кроме владельца
     #region проекты
     /// <inheritdoc/>
-    public async Task<TResponseModel<ProjectViewModel[]>> GetProjectsForUser(GetProjectsForUserRequestModel req)
+    public async Task<TResponseModel<ProjectViewModel[]>> GetProjectsForUser(GetProjectsForUserRequestModel req, CancellationToken token = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         IQueryable<ProjectModelDb> q = context_forms
             .Projects
             .Where(x => x.OwnerUserId == req.UserId || context_forms.MembersOfProjects.Any(y => y.ProjectId == x.Id && y.UserId == req.UserId))
@@ -324,27 +324,24 @@ public partial class FormsConstructorService(
         if (!string.IsNullOrWhiteSpace(req.NameFilter))
             q = q.Where(x => EF.Functions.Like(x.Name.ToUpper(), $"%{req.NameFilter.ToUpper()}%"));
 
-        ProjectModelDb[] raw_data = await q.ToArrayAsync();
+        ProjectModelDb[] raw_data = await q.ToArrayAsync(cancellationToken: token);
 
-        string[] usersIds = raw_data
+        string[] usersIds = [.. raw_data
             .Where(x => x.Members is not null)
             .SelectMany(x => x.Members!)
             .Select(x => x.UserId)
             .Union(raw_data.Select(x => x.OwnerUserId))
-            .Distinct()
-            .ToArray();
+            .Distinct()];
 
         EntryAltModel[]? usersIdentity = null;
 
         if (usersIds.Length != 0)
         {
-            TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(usersIds);
+            TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(usersIds, token);
             if (!restUsers.Success())
                 throw new Exception(restUsers.Message());
 
-            usersIdentity = restUsers.Response!
-                .Select(x => new EntryAltModel { Id = x.UserId, Name = x.UserName })
-                .ToArray();
+            usersIdentity = [.. restUsers.Response!.Select(x => new EntryAltModel { Id = x.UserId, Name = x.UserName })];
         }
 
         List<EntryAltModel>? ReadMembersData(List<MemberOfProjectConstructorModelDB>? members)
@@ -352,9 +349,7 @@ public partial class FormsConstructorService(
             if (members is null || usersIdentity is null)
                 return null;
 
-            return usersIdentity
-                .Where(identityUser => members.Any(memberOfProject => memberOfProject.UserId == identityUser.Id))
-                .ToList();
+            return [.. usersIdentity.Where(identityUser => members.Any(memberOfProject => memberOfProject.UserId == identityUser.Id))];
         }
 
         Func<ProjectModelDb, ProjectViewModel> cast_expression = (project) => new ProjectViewModel()
@@ -368,13 +363,13 @@ public partial class FormsConstructorService(
             Members = ReadMembersData(project.Members),
         };
 
-        return new() { Response = raw_data.Select(cast_expression).ToArray() };
+        return new() { Response = [.. raw_data.Select(cast_expression)] };
     }
 
     /// <inheritdoc/>
-    public async Task<List<ProjectModelDb>> ReadProjects(int[] projects_ids)
+    public async Task<List<ProjectModelDb>> ReadProjects(int[] projects_ids, CancellationToken token = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         return await context_forms
             .Projects
             .Where(x => projects_ids.Any(y => y == x.Id))
@@ -399,7 +394,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateProject(CreateProjectRequestModel req)
+    public async Task<TResponseModel<int>> CreateProject(CreateProjectRequestModel req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         req.Project.Name = MyRegexSpices().Replace(req.Project.Name.Trim(), " ");
@@ -410,7 +405,7 @@ public partial class FormsConstructorService(
             res.Messages.InjectException(ValidationResults);
             return res;
         }
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity([req.UserId]);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity([req.UserId], token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -421,10 +416,10 @@ public partial class FormsConstructorService(
             res.AddError($"Пользователь #{req.UserId} не найден в БД");
             return res;
         }
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         ProjectModelDb? projectDb = await context_forms
             .Projects
-            .FirstOrDefaultAsync(x => x.OwnerUserId == userDb.UserId && (x.Name == req.Project.Name));
+            .FirstOrDefaultAsync(x => x.OwnerUserId == userDb.UserId && (x.Name == req.Project.Name), cancellationToken: token);
 
         if (projectDb is not null)
         {
@@ -441,8 +436,8 @@ public partial class FormsConstructorService(
             IsDisabled = req.Project.IsDisabled,
         };
 
-        await context_forms.AddAsync(projectDb);
-        await context_forms.SaveChangesAsync();
+        await context_forms.AddAsync(projectDb, token);
+        await context_forms.SaveChangesAsync(token);
 
         res.Response = projectDb.Id;
         res.AddSuccess("Проект создан");
@@ -451,44 +446,44 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetMarkerDeleteProject(SetMarkerProjectRequestModel req)
+    public async Task<ResponseBaseModel> SetMarkerDeleteProject(SetMarkerProjectRequestModel req, CancellationToken token = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
 
         ProjectModelDb? project = await context_forms
             .Projects
-            .FirstOrDefaultAsync(x => x.Id == req.ProjectId);
+            .FirstOrDefaultAsync(x => x.Id == req.ProjectId, cancellationToken: token);
 
         if (project is null)
             return ResponseBaseModel.CreateError($"Проект #{req.ProjectId} не найден в БД");
 
         project.IsDisabled = req.Marker;
         context_forms.Update(project);
-        await context_forms.SaveChangesAsync();
+        await context_forms.SaveChangesAsync(token);
 
         return ResponseBaseModel.CreateSuccess($"Проект '{project.Name}' {(req.Marker ? "выключен" : "включён")}");
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateProject(ProjectViewModel project)
+    public async Task<ResponseBaseModel> UpdateProject(ProjectViewModel project, CancellationToken token = default)
     {
         (bool IsValid, List<ValidationResult> ValidationResults) = GlobalTools.ValidateObject(project);
         if (!IsValid)
             return ResponseBaseModel.CreateError(ValidationResults);
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         project.Name = MyRegexSpices().Replace(project.Name.Trim(), " ");
         string upName = project.Name.ToUpper();
         ProjectModelDb? projectDb = await context_forms
             .Projects
-            .FirstOrDefaultAsync(x => x.Id != project.Id && x.NormalizedUpperName == upName);
+            .FirstOrDefaultAsync(x => x.Id != project.Id && x.NormalizedUpperName == upName, cancellationToken: token);
 
         if (projectDb is not null)
             return ResponseBaseModel.CreateError($"Проект должен иметь уникальное имя. Похожий проект есть в БД: #{projectDb.Id} '{projectDb.Name}'");
 
         projectDb = await context_forms
             .Projects
-            .FirstOrDefaultAsync(x => x.Id == project.Id);
+            .FirstOrDefaultAsync(x => x.Id == project.Id, cancellationToken: token);
 
         if (projectDb is null)
             return ResponseBaseModel.CreateError($"Проект #{project.Id} не найден в БД");
@@ -502,72 +497,69 @@ public partial class FormsConstructorService(
             .SetProperty(p => p.IsDisabled, project.IsDisabled)
             .SetProperty(p => p.Description, project.Description)
             .SetProperty(p => p.NormalizedUpperName, upName)
-            .SetProperty(p => p.Name, project.Name));
+            .SetProperty(p => p.Name, project.Name), cancellationToken: token);
 
-        await context_forms.SaveChangesAsync();
+        await context_forms.SaveChangesAsync(token);
 
         return ResponseBaseModel.CreateSuccess("Проект обновлён");
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<EntryAltModel[]>> GetMembersOfProject(int project_id)
+    public async Task<TResponseModel<EntryAltModel[]>> GetMembersOfProject(int project_id, CancellationToken token = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
 
         string[] members_users_ids = await context_forms
             .MembersOfProjects
             .Where(x => x.ProjectId == project_id)
             .Select(x => x.UserId)
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: token);
 
         if (members_users_ids.Length == 0)
             return new();
 
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(members_users_ids);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(members_users_ids, token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
         return new()
         {
-            Response = restUsers.Response!
-            .Select(x => new EntryAltModel() { Id = x.UserId, Name = x.UserName })
-            .ToArray()
+            Response = [.. restUsers.Response!.Select(x => new EntryAltModel() { Id = x.UserId, Name = x.UserName })]
         };
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> AddMemberToProject(UsersProjectModel req)
+    public async Task<ResponseBaseModel> AddMemberToProject(UsersProjectModel req, CancellationToken token = default)
     {
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(req.UsersIds);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(req.UsersIds, token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
         if (restUsers.Response is null || restUsers.Response.Length != req.UsersIds.Length)
             return ResponseBaseModel.CreateError($"Пользователи #[{string.Join(";", req.UsersIds)}] не найдены в БД");
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         MemberOfProjectConstructorModelDB[] membersDb = await context_forms
             .MembersOfProjects
             .Where(x => x.ProjectId == req.ProjectId && req.UsersIds.Any(y => y == x.UserId))
-            .ToArrayAsync()
+            .ToArrayAsync(cancellationToken: token)
             ;
 
-        UserInfoModel[] usersForAdd = req.UsersIds
+        UserInfoModel[] usersForAdd = [.. req.UsersIds
             .Where(x => !req.UsersIds.Any(y => y == x))
-            .Select(x => restUsers.Response.First(y => y.UserId.Equals(x)))
-            .ToArray();
+            .Select(x => restUsers.Response.First(y => y.UserId.Equals(x)))];
 
         if (usersForAdd.Length == 0)
             return ResponseBaseModel.CreateInfo("Пользователи уже является участниками проекта");
 
         ProjectModelDb? projectDb = await context_forms
             .Projects
-            .FirstOrDefaultAsync(x => x.Id == req.ProjectId);
+            .FirstOrDefaultAsync(x => x.Id == req.ProjectId, cancellationToken: token);
 
         if (projectDb is null)
             return ResponseBaseModel.CreateError($"Проект #{req.ProjectId} не найден в БД");
 
-        restUsers = await identityRepo.GetUsersIdentity([projectDb.OwnerUserId]);
+        restUsers = await identityRepo.GetUsersIdentity([projectDb.OwnerUserId], token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -584,27 +576,27 @@ public partial class FormsConstructorService(
         MemberOfProjectConstructorModelDB[] usersDb = [.. usersForAdd.Select(x => new MemberOfProjectConstructorModelDB() { UserId = x.UserId, ProjectId = req.ProjectId })];
 
         await context_forms.AddRangeAsync(usersDb);
-        await context_forms.SaveChangesAsync();
+        await context_forms.SaveChangesAsync(token);
 
         return ResponseBaseModel.CreateSuccess($"Пользователи/участники х{string.Join("; ", usersForAdd.Select(x => x.Email))}ъ добавлены к проекту '{projectDb.Name}'");
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteMembersFromProject(UsersProjectModel req)
+    public async Task<ResponseBaseModel> DeleteMembersFromProject(UsersProjectModel req, CancellationToken token = default)
     {
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(req.UsersIds);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(req.UsersIds, token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
         if (restUsers.Response is null || restUsers.Response.Length != req.UsersIds.Length)
             return ResponseBaseModel.CreateError($"Пользователи #{string.Join(";", req.UsersIds)} не найдены в БД");
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         MemberOfProjectConstructorModelDB[] membersDb = await context_forms
             .MembersOfProjects
             .Include(x => x.Project)
             .Where(x => x.ProjectId == req.ProjectId && req.UsersIds.Any(y => y == x.UserId))
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: token);
 
         var usersForDelete = membersDb
             .Where(x => !req.UsersIds.Any(y => y == x.UserId))
@@ -616,20 +608,20 @@ public partial class FormsConstructorService(
 
         await context_forms.MembersOfProjects
              .Where(x => usersForDelete.Any(y => y.Id == x.Id))
-             .ExecuteDeleteAsync();
+             .ExecuteDeleteAsync(cancellationToken: token);
 
         await context_forms.ProjectsUse
             .Where(x => usersForDelete.Any(y => y.UserId == x.UserId) && x.ProjectId == req.ProjectId)
-            .ExecuteDeleteAsync();
+            .ExecuteDeleteAsync(cancellationToken: token);
 
-        await context_forms.SaveChangesAsync();
+        await context_forms.SaveChangesAsync(token);
         return ResponseBaseModel.CreateSuccess($"Пользователь успешно исключён из проекта");
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetProjectAsMain(UserProjectModel req)
+    public async Task<ResponseBaseModel> SetProjectAsMain(UserProjectModel req, CancellationToken token = default)
     {
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity([req.UserId]);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity([req.UserId], token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -638,8 +630,8 @@ public partial class FormsConstructorService(
         if (userDb is null)
             return ResponseBaseModel.CreateError($"Пользователь #{req.UserId} не найден в БД");
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
-        ProjectModelDb? projectDb = await context_forms.Projects.FirstOrDefaultAsync(x => x.Id == req.ProjectId);
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync();
+        ProjectModelDb? projectDb = await context_forms.Projects.FirstOrDefaultAsync(x => x.Id == req.ProjectId, cancellationToken: token);
         if (projectDb is null)
             return ResponseBaseModel.CreateError($"Проект #{req.ProjectId} не найден в БД");
 
@@ -647,7 +639,7 @@ public partial class FormsConstructorService(
         if (mainProjectDb is null)
         {
             mainProjectDb = new ProjectUseConstructorModelDb() { UserId = req.UserId, ProjectId = req.ProjectId, Project = projectDb };
-            await context_forms.AddAsync(mainProjectDb);
+            await context_forms.AddAsync(mainProjectDb, token);
         }
         else
         {
@@ -655,14 +647,14 @@ public partial class FormsConstructorService(
             mainProjectDb.ProjectId = req.ProjectId;
             context_forms.Update(mainProjectDb);
         }
-        await context_forms.SaveChangesAsync();
+        await context_forms.SaveChangesAsync(token);
         return ResponseBaseModel.CreateSuccess($"Проект '{projectDb.Name}' успешно установлен в роли основного/используемого");
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProject(string user_id)
+    public async Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProject(string user_id, CancellationToken token = default)
     {
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity([user_id]);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity([user_id], token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -679,16 +671,16 @@ public partial class FormsConstructorService(
         bool _seed_call = false;
 #endif
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         ProjectModelDb? project = null;
         ProjectUseConstructorModelDb? project_use = null;
-        if (!await context_forms.Projects.AnyAsync(x => x.OwnerUserId == user_id) && !await context_forms.MembersOfProjects.AnyAsync(x => x.UserId == user_id))
+        if (!await context_forms.Projects.AnyAsync(x => x.OwnerUserId == user_id, cancellationToken: token) && !await context_forms.MembersOfProjects.AnyAsync(x => x.UserId == user_id, cancellationToken: token))
         {
             project = new() { Name = "По умолчанию", OwnerUserId = user_id, NormalizedUpperName = "ПО УМОЛЧАНИЮ" };
-            await context_forms.AddAsync(project);
+            await context_forms.AddAsync(project, token);
             try
             {
-                await context_forms.SaveChangesAsync();
+                await context_forms.SaveChangesAsync(token);
             }
             catch (Exception ex)
             {
@@ -699,8 +691,8 @@ public partial class FormsConstructorService(
             _seed_call = true;
 #endif
             project_use = new() { UserId = project.OwnerUserId, ProjectId = project.Id };
-            await context_forms.AddAsync(project_use);
-            await context_forms.SaveChangesAsync();
+            await context_forms.AddAsync(project_use, token);
+            await context_forms.SaveChangesAsync(token);
         }
 
         res.Response = project is not null
@@ -708,7 +700,7 @@ public partial class FormsConstructorService(
             : await context_forms.ProjectsUse.Where(x => x.UserId == user_id)
             .Include(x => x.Project)
             .Select(x => new MainProjectViewModel() { Id = x.Project!.Id, Name = x.Project.Name, Description = x.Project.Description, IsDisabled = x.Project.IsDisabled, OwnerUserId = x.Project.OwnerUserId })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: token);
 
         if (res.Response is null)
         {
@@ -724,11 +716,11 @@ public partial class FormsConstructorService(
                 .Projects
                 .Where(x => x.OwnerUserId == user_id)
                 .Union(members_query)
-                .FirstAsync();
+                .FirstAsync(cancellationToken: token);
 
             project_use = new() { UserId = user_id, ProjectId = project.Id };
-            await context_forms.AddAsync(project_use);
-            await context_forms.SaveChangesAsync();
+            await context_forms.AddAsync(project_use, token);
+            await context_forms.SaveChangesAsync(token);
 
             res.Response = MainProjectViewModel.Build(project);
         }
@@ -854,7 +846,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> CanEditProject(UserProjectModel req)
+    public async Task<ResponseBaseModel> CanEditProject(UserProjectModel req, CancellationToken token = default)
     {
         if (req.ProjectId < 1)
             return ResponseBaseModel.CreateError("Не указан проект");
@@ -862,14 +854,14 @@ public partial class FormsConstructorService(
         // user_id ??= httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new Exception();
 
 
-        TResponseModel<UserInfoModel[]> call_user = await identityRepo.GetUsersIdentity([req.UserId]);
+        TResponseModel<UserInfoModel[]> call_user = await identityRepo.GetUsersIdentity([req.UserId], token);
         UserInfoModel? author_user = call_user.Response?.Single();
 
         if (!call_user.Success())
             return ResponseBaseModel.Create(call_user.Messages);
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
-        ProjectModelDb? project = await context_forms.Projects.FirstOrDefaultAsync(x => x.Id == req.ProjectId);
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
+        ProjectModelDb? project = await context_forms.Projects.FirstOrDefaultAsync(x => x.Id == req.ProjectId, cancellationToken: token);
         if (project is null)
             return ResponseBaseModel.CreateError($"Проект #{req.ProjectId} не найден в БД");
 
@@ -888,7 +880,7 @@ public partial class FormsConstructorService(
     {
         if (!ids.Any())
             return [];
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DirectoryConstructorModelDB[] res = await context_forms
             .Directories
             .Include(x => x.Elements)
@@ -901,7 +893,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryModel[]>> GetDirectories(ProjectFindModel req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
         IQueryable<EntryModel> query = context_forms
             .Directories
@@ -918,7 +910,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryDescriptionModel>> GetDirectory(int enumeration_id, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         return new()
         {
             Response = await context_forms
@@ -943,7 +935,7 @@ public partial class FormsConstructorService(
 
         string msg;
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DirectoryConstructorModelDB? directory_db = await context_forms
             .Directories
             .FirstOrDefaultAsync(x => x.Id != req.Payload.Id && x.ProjectId == req.Payload.ProjectId && x.Name == req.Payload.Name, cancellationToken: cancellationToken);
@@ -984,7 +976,7 @@ public partial class FormsConstructorService(
                 return res;
             }
 
-            ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = directory_db.ProjectId, UserId = req.SenderActionUserId });
+            ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = directory_db.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
             if (!check_project.Success())
             {
                 res.AddRangeMessages(check_project.Messages);
@@ -1019,7 +1011,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteDirectory(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DirectoryConstructorModelDB? directory_db = await context_forms
             .Directories
             .FirstOrDefaultAsync(x => x.Id == req.Payload, cancellationToken: cancellationToken);
@@ -1027,7 +1019,7 @@ public partial class FormsConstructorService(
         if (directory_db is null)
             return ResponseBaseModel.CreateError($"Список/справочник #{req.Payload} не найден в БД");
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = directory_db.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = directory_db.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
             return check_project;
 
@@ -1046,7 +1038,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryDescriptionModel>> GetElementOfDirectory(int element_id, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         return new()
         {
             Response = await context_forms
@@ -1061,7 +1053,7 @@ public partial class FormsConstructorService(
     public async Task<TResponseModel<List<EntryModel>>> GetElementsOfDirectory(int directory_id, CancellationToken cancellationToken = default)
     {
         TResponseModel<List<EntryModel>> res = new();
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DirectoryConstructorModelDB? dir = await context_forms.Directories
             .Include(x => x.Elements)
             .FirstOrDefaultAsync(x => x.Id == directory_id, cancellationToken: cancellationToken);
@@ -1093,7 +1085,7 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DirectoryConstructorModelDB? directory_db = await context_forms.Directories
             .Include(x => x.Elements)
             .FirstOrDefaultAsync(x => x.Id == req.Payload.OwnerId, cancellationToken: cancellationToken);
@@ -1104,7 +1096,7 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = directory_db.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = directory_db.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
         {
             res.AddRangeMessages(check_project.Messages);
@@ -1163,7 +1155,7 @@ public partial class FormsConstructorService(
 
         ResponseBaseModel res = new();
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         ElementOfDirectoryConstructorModelDB? element_db = await context_forms
             .ElementsOfDirectories
             .Include(x => x.Parent)
@@ -1175,7 +1167,7 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = element_db.Parent.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = element_db.Parent.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
             return check_project;
 
@@ -1214,7 +1206,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteElementFromDirectory(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         ElementOfDirectoryConstructorModelDB? element_db = await context_forms
             .ElementsOfDirectories
             .Include(x => x.Parent)
@@ -1223,7 +1215,7 @@ public partial class FormsConstructorService(
         if (element_db?.Parent is null)
             return ResponseBaseModel.CreateError($"Элемент справочника #{req.Payload} не найден в БД");
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = element_db.Parent.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = element_db.Parent.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
             return check_project;
 
@@ -1241,7 +1233,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpMoveElementOfDirectory(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         ElementOfDirectoryConstructorModelDB? element_db = await context_forms
             .ElementsOfDirectories
             .Include(x => x.Parent)
@@ -1264,7 +1256,7 @@ public partial class FormsConstructorService(
         element_db.Parent!.Elements![i].SortIndex--;
         element_db.Parent!.Elements![i - 1].SortIndex++;
 
-        context_forms.UpdateRange(new ElementOfDirectoryConstructorModelDB[] { element_db.Parent!.Elements![i], element_db.Parent!.Elements![i - 1] });
+        context_forms.UpdateRange([element_db.Parent!.Elements![i], element_db.Parent!.Elements![i - 1]]);
         await context_forms.SaveChangesAsync(cancellationToken);
 
         await context_forms
@@ -1278,7 +1270,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownMoveElementOfDirectory(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         ElementOfDirectoryConstructorModelDB? element_db = await context_forms
             .ElementsOfDirectories
             .Include(x => x.Parent)
@@ -1288,7 +1280,7 @@ public partial class FormsConstructorService(
         if (element_db?.Parent?.Elements is null)
             return ResponseBaseModel.CreateError($"Элемент справочника #{req.Payload} не найден в БД");
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = element_db.Parent.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = element_db.Parent.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
             return check_project;
 
@@ -1301,7 +1293,7 @@ public partial class FormsConstructorService(
         element_db.Parent!.Elements![i].SortIndex++;
         element_db.Parent!.Elements![i + 1].SortIndex--;
 
-        context_forms.UpdateRange(new ElementOfDirectoryConstructorModelDB[] { element_db.Parent!.Elements![i], element_db.Parent!.Elements![i + 1] });
+        context_forms.UpdateRange([element_db.Parent!.Elements![i], element_db.Parent!.Elements![i + 1]]);
         await context_forms.SaveChangesAsync(cancellationToken);
 
         await context_forms
@@ -1315,7 +1307,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> CheckAndNormalizeSortIndexForElementsOfDirectory(int directory_id, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         List<ElementOfDirectoryConstructorModelDB> elements = await context_forms
             .ElementsOfDirectories
             .Where(x => x.ParentId == directory_id)
@@ -1352,7 +1344,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<FormConstructorModelDB>> SelectForms(SelectFormsModel req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
         IQueryable<FormConstructorModelDB> q;
 
@@ -1386,7 +1378,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<FormConstructorModelDB>> GetForm(int form_id, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TResponseModel<FormConstructorModelDB> res = new()
         {
             Response = await context_forms
@@ -1456,7 +1448,7 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
         FormConstructorModelDB? form_db = await context_forms
             .Forms
@@ -1474,7 +1466,7 @@ public partial class FormsConstructorService(
         ResponseBaseModel check_project;
         if (req.Payload.Id < 1)
         {
-            check_project = await CanEditProject(new() { ProjectId = req.Payload.ProjectId, UserId = req.SenderActionUserId });
+            check_project = await CanEditProject(new() { ProjectId = req.Payload.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
             if (!check_project.Success())
             {
                 res.AddRangeMessages(check_project.Messages);
@@ -1539,7 +1531,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> FormDelete(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
         FormConstructorModelDB? form_db = await context_forms
             .Forms
@@ -1548,7 +1540,7 @@ public partial class FormsConstructorService(
         if (form_db is null)
             return ResponseBaseModel.CreateError($"Форма #{req.Payload} не найдена в БД");
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = form_db.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = form_db.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
             return check_project;
 
@@ -1566,7 +1558,7 @@ public partial class FormsConstructorService(
     {
         TResponseModel<FormConstructorModelDB> res = new();
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FieldFormConstructorModelDB? field_db = await context_forms
             .Fields
             .Include(x => x.Owner)
@@ -1581,7 +1573,7 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = field_db.Owner.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = field_db.Owner.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
         {
             res.AddRangeMessages(check_project.Messages);
@@ -1642,7 +1634,7 @@ public partial class FormsConstructorService(
     {
         TResponseModel<FormConstructorModelDB> res = new();
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FieldFormAkaDirectoryConstructorModelDB? field_db = await context_forms
             .LinksDirectoriesToForms
             .Include(x => x.Owner)
@@ -1657,7 +1649,7 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = field_db.Owner.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = field_db.Owner.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
         {
             res.AddRangeMessages(check_project.Messages);
@@ -1724,7 +1716,7 @@ public partial class FormsConstructorService(
             return ResponseBaseModel.CreateError(ValidationResults);
 
         ResponseBaseModel res = new();
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FormConstructorModelDB? form_db = await context_forms
             .Forms
             .Include(x => x.Fields)
@@ -1743,7 +1735,7 @@ public partial class FormsConstructorService(
         if (req.Payload.Id > 0 && !form_db.Fields.Any(x => x.Id == req.Payload.Id))
             return ResponseBaseModel.CreateError($"Поле (#{req.Payload.Id} простого типа) для формы #{form_db.Id} не найдено в БД, либо поле принадлежит другой форме или относится к иному виду поля");
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = form_db.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = form_db.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
             return check_project;
 
@@ -1895,7 +1887,7 @@ public partial class FormsConstructorService(
             return ResponseBaseModel.CreateError(ValidationResults);
 
         ResponseBaseModel res = new();
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
         DirectoryConstructorModelDB? directory_db = await context_forms
             .Directories
@@ -1922,7 +1914,7 @@ public partial class FormsConstructorService(
         if (req.Payload.Id > 0 && !form_db.FieldsDirectoriesLinks.Any(x => x.Id == req.Payload.Id))
             return ResponseBaseModel.CreateError($"Поле (списочного типа #{req.Payload.Id}) для формы #{form_db.Id} не найдено в БД, либо принадлежит другой форме или относится к иному виду поля");
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = form_db.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = form_db.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
             return check_project;
 
@@ -2067,7 +2059,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> FormFieldDelete(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FieldFormConstructorModelDB? field_db = await context_forms
             .Fields
             .Include(x => x.Owner)
@@ -2102,7 +2094,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> FormFieldDirectoryDelete(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FieldFormAkaDirectoryConstructorModelDB? field_db = await context_forms
             .LinksDirectoriesToForms
             .Include(x => x.Owner)
@@ -2111,7 +2103,7 @@ public partial class FormsConstructorService(
         if (field_db?.Owner is null)
             return ResponseBaseModel.CreateError($"Поле #{req.Payload} (тип: справочник) формы не найден в БД");
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = field_db.Owner.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = field_db.Owner.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
             return check_project;
 
@@ -2137,7 +2129,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<FormConstructorModelDB>> CheckAndNormalizeSortIndexFrmFields(int form_id, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         IIncludableQueryable<FormConstructorModelDB, DirectoryConstructorModelDB?> _q = context_forms
             .Forms
             .Where(x => x.Id == form_id)
@@ -2201,7 +2193,7 @@ public partial class FormsConstructorService(
         if (req.RequestPayload.PageSize < 1)
             req.RequestPayload.PageSize = 10;
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
         IQueryable<DocumentSchemeConstructorModelDB> query = context_forms
             .DocumentSchemes
@@ -2246,7 +2238,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<DocumentSchemeConstructorModelDB>> GetDocumentScheme(int document_scheme_id, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TResponseModel<DocumentSchemeConstructorModelDB> res = new()
         {
             Response = await context_forms
@@ -2275,7 +2267,7 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DocumentSchemeConstructorModelDB? questionnaire_db = await context_forms
             .DocumentSchemes
             .FirstOrDefaultAsync(x => x.Id != req.Payload.Id && x.ProjectId == req.Payload.ProjectId && x.Name.ToUpper() == req.Payload.Name.ToUpper(), cancellationToken: cancellationToken);
@@ -2291,7 +2283,7 @@ public partial class FormsConstructorService(
         ResponseBaseModel check_project;
         if (req.Payload.Id < 1)
         {
-            check_project = await CanEditProject(new() { ProjectId = req.Payload.ProjectId, UserId = req.SenderActionUserId });
+            check_project = await CanEditProject(new() { ProjectId = req.Payload.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
             if (!check_project.Success())
             {
                 res.AddRangeMessages(check_project.Messages);
@@ -2319,7 +2311,7 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        check_project = await CanEditProject(new() { ProjectId = questionnaire_db.ProjectId, UserId = req.SenderActionUserId });
+        check_project = await CanEditProject(new() { ProjectId = questionnaire_db.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
         {
             res.AddRangeMessages(check_project.Messages);
@@ -2354,7 +2346,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteDocumentScheme(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DocumentSchemeConstructorModelDB? document_scheme_db = await context_forms
             .DocumentSchemes
             .Include(x => x.Tabs!)
@@ -2384,7 +2376,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> GetTabOfDocumentScheme(int tab_of_document_scheme_id, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> res = new()
         {
             Response = await context_forms
@@ -2412,7 +2404,7 @@ public partial class FormsConstructorService(
     {
         TResponseModel<DocumentSchemeConstructorModelDB> res = new();
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TabOfDocumentSchemeConstructorModelDB? tab_of_document_scheme_db = await context_forms
             .TabsOfDocumentsSchemes
             .Include(x => x.Owner)
@@ -2425,7 +2417,7 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = tab_of_document_scheme_db.Owner.ProjectId, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = tab_of_document_scheme_db.Owner.ProjectId, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
         {
             res.AddRangeMessages(check_project.Messages);
@@ -2508,7 +2500,7 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DocumentSchemeConstructorModelDB? document_scheme_db = await context_forms
             .DocumentSchemes
             .Include(x => x.Tabs)
@@ -2529,7 +2521,7 @@ public partial class FormsConstructorService(
              where ds.Id == document_scheme_db.Id
              select project.Id).FirstAsync(cancellationToken: cancellationToken);
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = current_project_id, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = current_project_id, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
         {
             res.AddRangeMessages(check_project.Messages);
@@ -2599,7 +2591,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteTabOfDocumentScheme(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TabOfDocumentSchemeConstructorModelDB? tab_of_document_scheme_db = await context_forms
             .TabsOfDocumentsSchemes
             .Include(x => x.JoinsForms)
@@ -2614,7 +2606,7 @@ public partial class FormsConstructorService(
              where ds.Id == tab_of_document_scheme_db.OwnerId
              select project.Id).FirstAsync(cancellationToken: cancellationToken);
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = current_project_id, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = current_project_id, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
             return check_project;
 
@@ -2633,7 +2625,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<FormToTabJoinConstructorModelDB>> GetTabDocumentSchemeJoinForm(int tab_document_scheme_join_form_id, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TResponseModel<FormToTabJoinConstructorModelDB> res = new()
         {
             Response = await context_forms
@@ -2647,7 +2639,7 @@ public partial class FormsConstructorService(
         if (res.Response is null)
             res.AddError($"Связь #{tab_document_scheme_join_form_id} (форма<->опрос/анкета) не найдена в БД");
         else if (res.Response.Tab?.JoinsForms is not null)
-            res.Response.Tab.JoinsForms = res.Response.Tab.JoinsForms.OrderBy(x => x.SortIndex).ToList();
+            res.Response.Tab.JoinsForms = [.. res.Response.Tab.JoinsForms.OrderBy(x => x.SortIndex)];
 
         return res;
     }
@@ -2657,7 +2649,7 @@ public partial class FormsConstructorService(
     {
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> res = new();
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FormToTabJoinConstructorModelDB? questionnaire_page_join_db = await context_forms
             .TabsJoinsForms
             .Include(x => x.Tab)
@@ -2677,7 +2669,7 @@ public partial class FormsConstructorService(
                                         select project.Id)
                                                           .FirstAsync(cancellationToken: cancellationToken);
 
-        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = current_project_id, UserId = req.SenderActionUserId });
+        ResponseBaseModel check_project = await CanEditProject(new() { ProjectId = current_project_id, UserId = req.SenderActionUserId }, cancellationToken);
         if (!check_project.Success())
         {
             res.AddRangeMessages(check_project.Messages);
@@ -2757,7 +2749,7 @@ public partial class FormsConstructorService(
             return ResponseBaseModel.CreateError(ValidationResults);
 
         ResponseBaseModel res = new();
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TabOfDocumentSchemeConstructorModelDB? tab_of_document_db = await context_forms
             .TabsOfDocumentsSchemes
             .Include(x => x.JoinsForms)
@@ -2854,7 +2846,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteTabDocumentSchemeJoinForm(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FormToTabJoinConstructorModelDB? questionnaire_page_db = await context_forms
             .TabsJoinsForms
             .FirstOrDefaultAsync(x => x.Id == req.Payload, cancellationToken: cancellationToken);
@@ -2891,16 +2883,16 @@ public partial class FormsConstructorService(
     // Пользователи видят ваш документ, но сам документ данные не хранит. Хранение данных происходит в сессиях, которые вы сами выпускаете для любого вашего документа
     #region сессии документов (данные заполнения документов).
     /// <inheritdoc/>
-    public async Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>> SaveSessionForm(SaveConstructorSessionRequestModel req)
+    public async Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>> SaveSessionForm(SaveConstructorSessionRequestModel req, CancellationToken token = default)
     {
         req.SessionValues = [.. req.SessionValues.SkipWhile(x => x.Id < 1 && string.IsNullOrWhiteSpace(x.Value))];
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         SessionOfDocumentDataModelDB? sq = await context_forms
             .Sessions
             .Include(x => x.DataSessionValues!)
             .ThenInclude(x => x.JoinFormToTab)
-            .FirstOrDefaultAsync(x => x.Id == req.SessionId);
+            .FirstOrDefaultAsync(x => x.Id == req.SessionId, cancellationToken: token);
 
         TResponseModel<ValueDataForSessionOfDocumentModelDB[]> res = new();
 
@@ -2910,46 +2902,43 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        ValueDataForSessionOfDocumentModelDB[] _session_data = sq
+        ValueDataForSessionOfDocumentModelDB[] _session_data = [.. sq
             .DataSessionValues!
-            .Where(x => x.JoinFormToTabId == req.JoinFormToTab)
-            .ToArray();
+            .Where(x => x.JoinFormToTabId == req.JoinFormToTab)];
 
-        int[] _ids_del = req.SessionValues
+        int[] _ids_del = [.. req.SessionValues
             .Where(x => x.Id > 0 && string.IsNullOrWhiteSpace(x.Value))
-            .Select(x => x.Id)
-            .ToArray();
+            .Select(x => x.Id)];
 
         if (_ids_del.Length != 0)
         {
             context_forms.RemoveRange(context_forms.Sessions.Where(x => _ids_del.Contains(x.Id)));
-            await context_forms.SaveChangesAsync();
+            _ = await context_forms.SaveChangesAsync(token);
         }
 
-        ValueDataForSessionOfDocumentModelDB[] values_upd = _session_data
+        ValueDataForSessionOfDocumentModelDB[] values_upd = [.. _session_data
             .Where(x => req.SessionValues.Any(y => y.Id == x.Id && x.Value != y.Value))
             .Where(x => !string.IsNullOrWhiteSpace(x.Value))
-            .Select(x => { x.Value = req.SessionValues.First(y => y.Id == x.Id).Value; return x; })
-            .ToArray();
+            .Select(x => { x.Value = req.SessionValues.First(y => y.Id == x.Id).Value; return x; })];
 
         if (values_upd.Length != 0)
         {
             context_forms.UpdateRange(values_upd);
-            await context_forms.SaveChangesAsync();
+            await context_forms.SaveChangesAsync(token);
         }
 
-        values_upd = req.SessionValues.Where(x => x.Id == 0).ToArray();
+        values_upd = [.. req.SessionValues.Where(x => x.Id == 0)];
         if (values_upd.Length != 0)
         {
             await context_forms.AddRangeAsync(values_upd);
-            await context_forms.SaveChangesAsync();
+            await context_forms.SaveChangesAsync(token);
         }
 
         res.AddSuccess("Форма документа сохранена");
         res.Response = await context_forms
             .ValuesSessions
             .Where(x => x.OwnerId == req.SessionId && x.JoinFormToTabId == req.JoinFormToTab)
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: token);
 
         if (res.Response.Any(x => string.IsNullOrWhiteSpace(x.Value)))
         {
@@ -2959,7 +2948,7 @@ public partial class FormsConstructorService(
                 .Select(x => x.Id)];
 
             context_forms.RemoveRange(context_forms.ValuesSessions.Where(x => _ids_del.Contains(x.Id)));
-            await context_forms.SaveChangesAsync();
+            await context_forms.SaveChangesAsync(token);
             res.Response = [.. res.Response.SkipWhile(x => string.IsNullOrWhiteSpace(x.Value))];
         }
 
@@ -2969,7 +2958,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SetStatusSessionDocument(SessionStatusModel req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         SessionOfDocumentDataModelDB? sq = await context_forms.Sessions.FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: cancellationToken);
         if (sq is null)
             return ResponseBaseModel.CreateError($"Сессия [{req.Id}] не найдена в БД. ошибка A85733AF-56F4-45D2-A16C-729352D1645B");
@@ -3001,7 +2990,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<SessionOfDocumentDataModelDB>> GetSessionDocument(SessionGetModel req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         IQueryable<SessionOfDocumentDataModelDB> q = context_forms
             .Sessions
             .Where(x => x.Id == req.SessionId)
@@ -3080,7 +3069,7 @@ public partial class FormsConstructorService(
             return res;
         }
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
         Expression<Func<SessionOfDocumentDataModelDB, bool>> expr = x
             => x.Id != session_json.Id &&
@@ -3171,7 +3160,7 @@ public partial class FormsConstructorService(
         if (req.PageSize < 10)
             req.PageSize = 10;
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
         IQueryable<SessionOfDocumentDataModelDB> query = context_forms
             .Sessions
@@ -3232,7 +3221,7 @@ public partial class FormsConstructorService(
             res.AddError("Не указано имя поля/колонки");
             return res;
         }
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         var q = from _vs in context_forms.ValuesSessions.Where(_vs => _vs.Name == req.FieldName)
                 join _s in context_forms.Sessions on _vs.OwnerId equals _s.Id
                 join _pjf in context_forms.TabsJoinsForms.Where(x => x.FormId == req.FormId) on _vs.JoinFormToTabId equals _pjf.Id
@@ -3241,7 +3230,7 @@ public partial class FormsConstructorService(
 
         var data_rows = await q.ToArrayAsync(cancellationToken: cancellationToken);
 
-        res.Response = data_rows
+        res.Response = [.. data_rows
             .GroupBy(x => x.Session.Id)
             .Select(x =>
             {
@@ -3273,7 +3262,7 @@ public partial class FormsConstructorService(
                     Name = element_g.Session.Name,
                     Tag = _d
                 };
-            }).ToArray();
+            })];
         res.AddInfo($"Получено ссылок {res.Response.Length}");
         return res;
     }
@@ -3281,12 +3270,12 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ClearValuesForFieldName(FormFieldOfSessionModel req, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         IQueryable<ValueDataForSessionOfDocumentModelDB> q = from _vs in context_forms.ValuesSessions.Where(_vs => _vs.Name == req.FieldName)
                                                              join _s in context_forms.Sessions.Where(x => !req.SessionId.HasValue || x.Id == req.SessionId.Value) on _vs.OwnerId equals _s.Id
                                                              join _pjf in context_forms.TabsJoinsForms.Where(x => x.FormId == req.FormId) on _vs.JoinFormToTabId equals _pjf.Id
                                                              select _vs;
-        int _i = await q.CountAsync();
+        int _i = await q.CountAsync(cancellationToken: cancellationToken);
         if (_i == 0)
             return ResponseBaseModel.CreateSuccess("Значений нет (удалить нечего)");
 
@@ -3299,7 +3288,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteSessionDocument(int session_id, CancellationToken cancellationToken = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         SessionOfDocumentDataModelDB? session_db = await context_forms
             .Sessions
             .Include(x => x.DataSessionValues)

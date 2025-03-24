@@ -16,9 +16,9 @@ public class IssueCreateOrUpdateReceive(IHelpdeskService hdRepo) : IResponseRece
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.IssueUpdateHelpdeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<UniversalUpdateRequestModel>? issue_upd)
+    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<UniversalUpdateRequestModel>? issue_upd, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(issue_upd);
-        return await hdRepo.IssueCreateOrUpdate(issue_upd);
+        return await hdRepo.IssueCreateOrUpdate(issue_upd, token);
     }
 }

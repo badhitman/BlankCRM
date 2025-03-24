@@ -16,9 +16,9 @@ public class SelectFormsReceive(IConstructorService conService) : IResponseRecei
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SelectFormsReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<FormConstructorModelDB>?> ResponseHandleAction(SelectFormsModel? payload)
+    public async Task<TPaginationResponseModel<FormConstructorModelDB>?> ResponseHandleAction(SelectFormsModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.SelectForms(payload);
+        return await conService.SelectForms(payload, token);
     }
 }

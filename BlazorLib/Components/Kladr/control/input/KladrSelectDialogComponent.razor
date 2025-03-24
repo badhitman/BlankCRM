@@ -1,20 +1,68 @@
-﻿<MudDialog>
+﻿@inherits BlazorBusyComponentBaseModel
+
+<MudDialog>
     <TitleContent>
         @MudDialog.Title
     </TitleContent>
     <DialogContent>
-        Dialog Content
+        <MudAutocomplete @bind-Value="SelectedRegionName"
+                         Dense
+                         HelperTextOnFocus
+                         SearchFunc="SearchRegion"
+                         Label="Регион"
+                         Placeholder="Регион"
+                         HelperText="Регион" />
+        @if (CurrentRegion is not null)
+        {
+            <div class="input-group mb-3">
+                <input @bind="FindName" type="text" class="form-control">
+                <button class="btn btn-outline-secondary" type="button">Найти</button>
+            </div>
+            @if (string.IsNullOrWhiteSpace(FindName))
+            {
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>Введите строку поиска.</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        С учётом <cite title="регистр символа будет учтён для точного совпадения">регистра</cite>
+                    </figcaption>
+                </figure>
+            }
+            else
+            {
+                <MudTable ServerData="ServerReload" Dense="true" Hover="true">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Periodic Elements</MudText>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Nr">@context.Name @context.Socr</MudTd>
+                    </RowTemplate>
+                    <NoRecordsContent>
+                        <figure class="text-center">
+                            <blockquote class="blockquote">
+                                <p>Введите строку поиска.</p>
+                            </blockquote>
+                            <figcaption class="blockquote-footer">
+                                С учётом <cite title="регистр символа будет учтён для точного совпадения">регистра</cite>
+                            </figcaption>
+                        </figure>
+                    </NoRecordsContent>
+                    <LoadingContent>
+                        <MudText>Loading...</MudText>
+                    </LoadingContent>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+            }
+        }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
         <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
     </DialogActions>
 </MudDialog>
-@code {
-    [CascadingParameter, EditorRequired]
-    public required IMudDialogInstance MudDialog { get; set; }
-
-    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
-
-    private void Cancel() => MudDialog.Cancel();
-}

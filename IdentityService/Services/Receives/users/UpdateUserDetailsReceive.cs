@@ -20,10 +20,10 @@ public class UpdateUserDetailsReceive(IIdentityTools idRepo, ILogger<UpdateUserD
     /// <summary>
     /// Обновить пользователю поля: FirstName и LastName
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityDetailsModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityDetailsModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.UpdateUserDetails(req);
+        return await idRepo.UpdateUserDetails(req, token);
     }
 }

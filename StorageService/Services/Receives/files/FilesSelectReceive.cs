@@ -18,10 +18,10 @@ public class FilesSelectReceive(ILogger<FilesSelectReceive> loggerRepo, ISeriali
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.FilesSelectReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<StorageFileModelDB>?> ResponseHandleAction(TPaginationRequestModel<SelectMetadataRequestModel>? req)
+    public async Task<TPaginationResponseModel<StorageFileModelDB>?> ResponseHandleAction(TPaginationRequestModel<SelectMetadataRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await serializeStorageRepo.FilesSelect(req);
+        return await serializeStorageRepo.FilesSelect(req, token);
     }
 }

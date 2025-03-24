@@ -22,10 +22,10 @@ public class TelegramJoinAccountStateReceive(IIdentityTools idRepo, ILogger<Tele
     /// Получить состояние процедуры привязки аккаунта Telegram к учётной записи сайта (если есть).
     /// Если userId не указан, то команда выполняется для текущего пользователя (запрос/сессия)
     /// </summary>
-    public async Task<TResponseModel<TelegramJoinAccountModelDb>?> ResponseHandleAction(TelegramJoinAccountStateRequestModel? req)
+    public async Task<TResponseModel<TelegramJoinAccountModelDb>?> ResponseHandleAction(TelegramJoinAccountStateRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.TelegramJoinAccountState(req);
+        return await idRepo.TelegramJoinAccountState(req, token);
     }
 }

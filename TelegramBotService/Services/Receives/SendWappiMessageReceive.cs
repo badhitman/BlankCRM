@@ -21,7 +21,7 @@ public class SendWappiMessageReceive(
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SendWappiMessageReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SendMessageResponseModel>?> ResponseHandleAction(EntryAltExtModel? req)
+    public async Task<TResponseModel<SendMessageResponseModel>?> ResponseHandleAction(EntryAltExtModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
@@ -33,13 +33,13 @@ public class SendWappiMessageReceive(
         List<Task> tasks = [Task.Run(async () =>
         {
             wappiToken = await StorageTransmissionRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.WappiTokenApi);
-        }), Task.Run(async () =>
+        }, token), Task.Run(async () =>
         {
             wappiProfileId = await StorageTransmissionRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.WappiProfileId);
-        }), Task.Run(async () =>
+        }, token), Task.Run(async () =>
         {
             wappiEnable = await StorageTransmissionRepo.ReadParameter<bool?>(GlobalStaticConstants.CloudStorageMetadata.ParameterEnabledWappi);
-        })];
+        }, token)];
         await Task.WhenAll(tasks);
 
         if (wappiEnable.Response != true)
@@ -63,17 +63,17 @@ public class SendWappiMessageReceive(
         if (!client.DefaultRequestHeaders.Any(x => x.Key == "Authorization"))
             client.DefaultRequestHeaders.Add("Authorization", wappiToken.Response);
 
-        using HttpResponseMessage response = await client.PostAsJsonAsync($"/api/sync/message/send?profile_id={wappiProfileId.Response}", new SendMessageRequestModel() { Body = req.Text, Recipient = req.Number });
+        using HttpResponseMessage response = await client.PostAsJsonAsync($"/api/sync/message/send?profile_id={wappiProfileId.Response}", new SendMessageRequestModel() { Body = req.Text, Recipient = req.Number }, cancellationToken: token);
 
         if (!response.IsSuccessStatusCode)
         {
-            string _msg = $"http err (wappi): {response.StatusCode} ({response.Content.ReadAsStringAsync()})\n\n{JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}";
+            string _msg = $"http err (wappi): {response.StatusCode} ({response.Content.ReadAsStringAsync(token)})\n\n{JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}";
             _logger.LogError(_msg);
             res.AddError(_msg);
         }
         else
         {
-            string rj = await response.Content.ReadAsStringAsync();
+            string rj = await response.Content.ReadAsStringAsync(token);
             res.Response = JsonConvert.DeserializeObject<SendMessageResponseModel>(rj);
             res.AddSuccess($"Сообщение успешно отправлено: {res.Response?.Status}");
         }

@@ -17,10 +17,10 @@ public class StatusOrderChangeByHelpdeskDocumentIdReceive(ICommerceService commR
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.StatusChangeOrderByHelpDeskDocumentIdReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>?> ResponseHandleAction(TAuthRequestModel<StatusChangeRequestModel>? req)
+    public async Task<TResponseModel<bool>?> ResponseHandleAction(TAuthRequestModel<StatusChangeRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await commRepo.StatusesOrdersChangeByHelpdeskDocumentId(req);
+        return await commRepo.StatusesOrdersChangeByHelpdeskDocumentId(req, token);
     }
 }

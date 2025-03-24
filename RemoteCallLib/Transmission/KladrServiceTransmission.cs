@@ -12,18 +12,18 @@ namespace RemoteCallLib;
 public class KladrServiceTransmission(IRabbitClient rabbitClient) : IKladrService
 {
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ClearTempKladr()
-        => await rabbitClient.MqRemoteCall<TResponseModel<int>>(GlobalStaticConstants.TransmissionQueues.ClearTempKladrReceive) ?? new();
+    public async Task<ResponseBaseModel> ClearTempKladr(CancellationToken token = default)
+        => await rabbitClient.MqRemoteCall<TResponseModel<int>>(GlobalStaticConstants.TransmissionQueues.ClearTempKladrReceive, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FlushTempKladr()
-        => await rabbitClient.MqRemoteCall<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.FlushTempKladrRecive) ?? new();
+    public async Task<ResponseBaseModel> FlushTempKladr(CancellationToken token = default)
+        => await rabbitClient.MqRemoteCall<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.FlushTempKladrRecive, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<MetadataKladrModel> GetMetadataKladr(GetMetadataKladrRequestModel req)
-        => await rabbitClient.MqRemoteCall<MetadataKladrModel>(GlobalStaticConstants.TransmissionQueues.GetMetadataKladrReceive, req) ?? new();
+    public async Task<MetadataKladrModel> GetMetadataKladr(GetMetadataKladrRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCall<MetadataKladrModel>(GlobalStaticConstants.TransmissionQueues.GetMetadataKladrReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req)
-        => await rabbitClient.MqRemoteCall<MetadataKladrModel>(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive, req, waitResponse: false) ?? new();
+    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCall<MetadataKladrModel>(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive, req, waitResponse: false, token: token) ?? new();
 }

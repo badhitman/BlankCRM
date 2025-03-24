@@ -46,52 +46,52 @@ public interface IConstructorService
     /// <summary>
     /// Получить проекты
     /// </summary>
-    public Task<TResponseModel<ProjectViewModel[]>> GetProjectsForUser(GetProjectsForUserRequestModel req);
+    public Task<TResponseModel<ProjectViewModel[]>> GetProjectsForUser(GetProjectsForUserRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Прочитать данные проектов
     /// </summary>
-    public Task<List<ProjectModelDb>> ReadProjects(int[] projects_ids);
+    public Task<List<ProjectModelDb>> ReadProjects(int[] projects_ids, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Создать проект
     /// </summary>
-    public Task<TResponseModel<int>> CreateProject(CreateProjectRequestModel req);
+    public Task<TResponseModel<int>> CreateProject(CreateProjectRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Установить проекту признак <paramref name="req"/> <c>Marker</c> .
     /// </summary>
-    public Task<ResponseBaseModel> SetMarkerDeleteProject(SetMarkerProjectRequestModel req);
+    public Task<ResponseBaseModel> SetMarkerDeleteProject(SetMarkerProjectRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Обновить проект
     /// </summary>
-    public Task<ResponseBaseModel> UpdateProject(ProjectViewModel project);
+    public Task<ResponseBaseModel> UpdateProject(ProjectViewModel project, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Добавить участника к проекту
     /// </summary>
-    public Task<ResponseBaseModel> AddMemberToProject(UsersProjectModel req);
+    public Task<ResponseBaseModel> AddMemberToProject(UsersProjectModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Исключить участника из проекта
     /// </summary>
-    public Task<ResponseBaseModel> DeleteMembersFromProject(UsersProjectModel req);
+    public Task<ResponseBaseModel> DeleteMembersFromProject(UsersProjectModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить участников проекта (за исключением владельца, который хранится в самом проекте)
     /// </summary>
-    public Task<TResponseModel<EntryAltModel[]>> GetMembersOfProject(int project_id);
+    public Task<TResponseModel<EntryAltModel[]>> GetMembersOfProject(int project_id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Установить проект как основной/используемый для пользователя.
     /// </summary>
-    public Task<ResponseBaseModel> SetProjectAsMain(UserProjectModel req);
+    public Task<ResponseBaseModel> SetProjectAsMain(UserProjectModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить текущий основной/используемый проект
     /// </summary>
-    public Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProject(string user_id);
+    public Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProject(string user_id, CancellationToken cancellationToken = default);
     #endregion
 
     /// <summary>
@@ -101,7 +101,7 @@ public interface IConstructorService
     /// Пользователи с ролью ADMIN имеют полный доступ ко всем проектам.
     /// Владельцы имеют полный доступ к своим проектам, а простые участники проектов зависят от статуса проекта (выкл/вкл)
     /// </remarks>
-    public Task<ResponseBaseModel> CanEditProject(UserProjectModel req);
+    public Task<ResponseBaseModel> CanEditProject(UserProjectModel req, CancellationToken token);
 
     /////////////// Перечисления.
     // Простейший тип данных поля формы, который можно в в последствии использовать в конструкторе форм при добавлении/редактировании полей
@@ -315,7 +315,7 @@ public interface IConstructorService
     /// <summary>
     /// Сохранить данные формы документа из сессии
     /// </summary>
-    public Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>> SaveSessionForm(SaveConstructorSessionRequestModel req);
+    public Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>> SaveSessionForm(SaveConstructorSessionRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Установить статус сессии (от менеджера)

@@ -18,10 +18,10 @@ public class ForwardMessageTelegramReceive(ILogger<ForwardMessageTelegramReceive
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ForwardTextMessageTelegramReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MessageComplexIdsModel>?> ResponseHandleAction(ForwardMessageTelegramBotModel? message)
+    public async Task<TResponseModel<MessageComplexIdsModel>?> ResponseHandleAction(ForwardMessageTelegramBotModel? message, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(message);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(message)}");
-        return await tgRepo.ForwardMessageTelegram(message);
+        return await tgRepo.ForwardMessageTelegram(message, token);
     }
 }

@@ -16,9 +16,9 @@ public class SetProjectAsMainReceive(IConstructorService conService) : IResponse
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetProjectAsMainReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(UserProjectModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(UserProjectModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.SetProjectAsMain(req);
+        return await conService.SetProjectAsMain(req, token);
     }
 }

@@ -15,9 +15,9 @@ namespace HelpdeskService;
 public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactory) : IArticlesService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> ArticleCreateOrUpdate(ArticleModelDB article)
+    public async Task<TResponseModel<int>> ArticleCreateOrUpdate(ArticleModelDB article, CancellationToken token = default)
     {
-        TResponseModel<int> res = new TResponseModel<int>();
+        TResponseModel<int> res = new();
         Regex rx = new(@"\s+", RegexOptions.Compiled);
         article.Name = rx.Replace(article.Name.Trim(), " ");
         if (string.IsNullOrWhiteSpace(article.Name))
@@ -27,7 +27,7 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
         }
 
         article.NormalizedNameUpper = article.Name.ToUpper();
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync();
+        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         DateTime dtu = DateTime.UtcNow;
         if (article.Id < 1)
@@ -35,8 +35,8 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
             article.Id = 0;
             article.CreatedAtUTC = dtu;
 
-            await context.AddAsync(article);
-            await context.SaveChangesAsync();
+            await context.AddAsync(article, token);
+            await context.SaveChangesAsync(token);
             res.Response = article.Id;
             res.AddSuccess("Статья успешно создана");
             return res;
@@ -47,7 +47,7 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
             .SetProperty(p => p.LastUpdatedAtUTC, dtu)
             .SetProperty(p => p.Name, article.Name)
             .SetProperty(p => p.Description, article.Description)
-            .SetProperty(p => p.NormalizedNameUpper, article.NormalizedNameUpper));
+            .SetProperty(p => p.NormalizedNameUpper, article.NormalizedNameUpper), cancellationToken: token);
 
         if (res.Response < 1)
             res.AddInfo("Запрос не вызвал измений в БД");
@@ -56,15 +56,15 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ArticleModelDB[]>> ArticlesRead(int[] req)
+    public async Task<TResponseModel<ArticleModelDB[]>> ArticlesRead(int[] req, CancellationToken token = default)
     {
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync();
+        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 #if DEBUG
         var _res = await context.Articles
             .Where(x => req.Any(y => y == x.Id))
             .Include(x => x.RubricsJoins!)
             .ThenInclude(x => x.Rubric)
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: token);
 #endif
         return new()
         {
@@ -72,17 +72,17 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
             .Where(x => req.Any(y => y == x.Id))
             .Include(x => x.RubricsJoins!)
             .ThenInclude(x => x.Rubric)
-            .ToArrayAsync()
+            .ToArrayAsync(cancellationToken: token)
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ArticleModelDB>> ArticlesSelect(TPaginationRequestModel<SelectArticlesRequestModel> req)
+    public async Task<TPaginationResponseModel<ArticleModelDB>> ArticlesSelect(TPaginationRequestModel<SelectArticlesRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync();
+        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         IQueryable<ArticleModelDB> q = context
             .Articles
@@ -117,32 +117,32 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(),
-            Response = [.. req.Payload.IncludeExternal ? await inc.ToListAsync() : await oq.ToListAsync()]
+            Response = [.. req.Payload.IncludeExternal ? await inc.ToListAsync(cancellationToken: token) : await oq.ToListAsync(cancellationToken: token)]
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> UpdateRubricsForArticle(ArticleRubricsSetModel req)
+    public async Task<TResponseModel<bool>> UpdateRubricsForArticle(ArticleRubricsSetModel req, CancellationToken token = default)
     {
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync();
+        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         if (req.RubricsIds.Length == 0)
-            return new TResponseModel<bool>() { Response = await context.RubricsArticlesJoins.Where(x => x.ArticleId == req.ArticleId).ExecuteDeleteAsync() != 0 };
+            return new TResponseModel<bool>() { Response = await context.RubricsArticlesJoins.Where(x => x.ArticleId == req.ArticleId).ExecuteDeleteAsync(cancellationToken: token) != 0 };
 
         RubricArticleJoinModelDB[] rubrics_db = await context
             .RubricsArticlesJoins
             .Where(x => x.ArticleId == req.ArticleId)
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: token);
 
         bool res = false;
-        int[] _ids = rubrics_db.Where(x => !req.RubricsIds.Contains(x.RubricId)).Select(x => x.Id).ToArray();
+        int[] _ids = [.. rubrics_db.Where(x => !req.RubricsIds.Contains(x.RubricId)).Select(x => x.Id)];
         if (_ids.Length != 0)
-            res = await context.RubricsArticlesJoins.Where(x => _ids.Any(y => y == x.Id)).ExecuteDeleteAsync() != 0;
+            res = await context.RubricsArticlesJoins.Where(x => _ids.Any(y => y == x.Id)).ExecuteDeleteAsync(cancellationToken: token) != 0;
 
-        _ids = req.RubricsIds.Where(x => !rubrics_db.Any(y => y.RubricId == x)).ToArray();
+        _ids = [.. req.RubricsIds.Where(x => !rubrics_db.Any(y => y.RubricId == x))];
         if (_ids.Length != 0)
         {
-            await context.AddRangeAsync(_ids.Select(x => new RubricArticleJoinModelDB() { ArticleId = req.ArticleId, RubricId = x }));
-            res = res || await context.SaveChangesAsync() != 0;
+            await context.AddRangeAsync(_ids.Select(x => new RubricArticleJoinModelDB() { ArticleId = req.ArticleId, RubricId = x }), token);
+            res = res || await context.SaveChangesAsync(token) != 0;
         }
 
         return new()

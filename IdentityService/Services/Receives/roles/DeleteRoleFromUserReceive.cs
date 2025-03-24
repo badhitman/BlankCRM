@@ -20,10 +20,10 @@ public class DeleteRoleFromUserReceive(IIdentityTools idRepo, ILogger<DeleteRole
     /// <summary>
     /// Исключить пользователя из роли (лишить пользователя роли)
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(RoleEmailModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(RoleEmailModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.DeleteRoleFromUser(req);
+        return await idRepo.DeleteRoleFromUser(req, token);
     }
 }

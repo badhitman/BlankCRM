@@ -21,9 +21,9 @@ public class FindUsersTelegramReceive(IIdentityTools identityRepo)
     /// Telegram пользователи (сохранённые).
     /// Все пользователи, которые когда либо писали что либо в бота - сохраняются/кэшируются в БД.
     /// </summary>
-    public async Task<TPaginationResponseModel<TelegramUserViewModel>?> ResponseHandleAction(FindRequestModel? payload)
+    public async Task<TPaginationResponseModel<TelegramUserViewModel>?> ResponseHandleAction(FindRequestModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await identityRepo.FindUsersTelegram(payload);
+        return await identityRepo.FindUsersTelegram(payload, token);
     }
 }

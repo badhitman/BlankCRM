@@ -17,10 +17,10 @@ public class ReadParameterReceive(ISerializeStorage serializeStorageRepo, ILogge
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ReadCloudParameterReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageCloudParameterPayloadModel>?> ResponseHandleAction(StorageMetadataModel? request)
+    public async Task<TResponseModel<StorageCloudParameterPayloadModel>?> ResponseHandleAction(StorageMetadataModel? request, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(request);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(request)}");
-        return await serializeStorageRepo.ReadParameter(request);
+        return await serializeStorageRepo.ReadParameter(request, token);
     }
 }

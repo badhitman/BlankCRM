@@ -18,10 +18,10 @@ public class RubricMoveReceive(IHelpdeskService hdRepo, ILogger<RubricMoveReceiv
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.RubricForIssuesMoveHelpdeskReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<RowMoveModel>? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<RowMoveModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await hdRepo.RubricMove(req);
+        return await hdRepo.RubricMove(req, token);
     }
 }

@@ -19,9 +19,9 @@ public class FindUsersReceive(IIdentityTools idRepo)
     /// <summary>
     /// Пользователи
     /// </summary>
-    public async Task<TPaginationResponseModel<UserInfoModel>?> ResponseHandleAction(FindWithOwnedRequestModel? req)
+    public async Task<TPaginationResponseModel<UserInfoModel>?> ResponseHandleAction(FindWithOwnedRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await idRepo.FindUsers(req);
+        return await idRepo.FindUsers(req, token);
     }
 }

@@ -18,7 +18,7 @@ public class GetBotTokenReceive(IOptions<BotConfiguration> tgConfig, ILogger<Get
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetBotTokenTelegramReceive;
 
     /// <inheritdoc/>
-    public Task<TResponseModel<string>?> ResponseHandleAction(object? payload)
+    public Task<TResponseModel<string>?> ResponseHandleAction(object? payload, CancellationToken token = default)
     {
         _logger.LogInformation($"call `{GetType().Name}`");
 #pragma warning disable CS8619 // Допустимость значения NULL для ссылочных типов в значении не соответствует целевому типу.

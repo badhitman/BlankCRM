@@ -14,7 +14,7 @@ public class DefaultTelegramDialogHandle(IIdentityTransmission identityRepo, ILo
     : ITelegramDialogService
 {
     /// <inheritdoc/>
-    public async Task<TelegramDialogResponseModel> TelegramDialogHandle(TelegramDialogRequestModel tgDialog)
+    public async Task<TelegramDialogResponseModel> TelegramDialogHandle(TelegramDialogRequestModel tgDialog, CancellationToken token = default)
     {
         TelegramDialogResponseModel resp = new()
         {

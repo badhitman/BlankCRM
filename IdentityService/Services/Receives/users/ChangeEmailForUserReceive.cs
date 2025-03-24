@@ -18,13 +18,13 @@ public class ChangeEmailForUserReceive(IIdentityTools idRepo, ILogger<ChangeEmai
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ChangeEmailForUserReceive;
 
     /// <summary>
-    /// Обновляет адрес Email, если токен действительный для пользователя.
+    /// Обновляет адрес Email, если токен действительный для пользователя.    
+    /// Пользователь, адрес электронной почты которого необходимо обновить.Новый адрес электронной почты.Измененный токен электронной почты, который необходимо подтвердить.
     /// </summary>
-    /// <param name="req">Пользователь, адрес электронной почты которого необходимо обновить.Новый адрес электронной почты.Измененный токен электронной почты, который необходимо подтвердить.</param>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityEmailTokenModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityEmailTokenModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ChangeEmail(req);
+        return await idRepo.ChangeEmail(req, token);
     }
 }

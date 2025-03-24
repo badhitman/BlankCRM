@@ -17,10 +17,10 @@ public class OrganizationSetLegalReceive(ICommerceService commerceRepo, ILogger<
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrganizationSetLegalCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>?> ResponseHandleAction(OrganizationLegalModel? org)
+    public async Task<TResponseModel<bool>?> ResponseHandleAction(OrganizationLegalModel? org, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(org);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(org)}");
-        return await commerceRepo.OrganizationSetLegal(org);
+        return await commerceRepo.OrganizationSetLegal(org, token);
     }
 }

@@ -20,10 +20,10 @@ public class ResetAuthenticatorKeyReceive(IIdentityTools idRepo, ILogger<ResetAu
     /// <summary>
     /// Сбрасывает ключ аутентификации для пользователя.
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(string? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(string? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ResetAuthenticatorKey(req);
+        return await idRepo.ResetAuthenticatorKey(req, token);
     }
 }

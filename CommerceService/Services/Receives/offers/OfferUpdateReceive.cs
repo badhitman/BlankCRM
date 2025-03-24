@@ -18,10 +18,10 @@ public class OfferUpdateReceive(ICommerceService commerceRepo, ILogger<OfferUpda
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OfferUpdateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<OfferModelDB>? req)
+    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<OfferModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.OfferUpdate(req);
+        return await commerceRepo.OfferUpdate(req, token);
     }
 }

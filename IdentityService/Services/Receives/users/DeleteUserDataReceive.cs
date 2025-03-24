@@ -20,10 +20,10 @@ public class DeleteUserDataReceive(IIdentityTools idRepo, ILogger<AddPasswordFor
     /// <summary>
     /// Удалить Identity данные пользователя
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(DeleteUserDataRequestModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(DeleteUserDataRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.DeleteUserData(req);
+        return await idRepo.DeleteUserData(req, token);
     }
 }

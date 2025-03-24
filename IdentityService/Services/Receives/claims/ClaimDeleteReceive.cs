@@ -20,10 +20,10 @@ public class ClaimDeleteReceive(IIdentityTools idRepo, ILogger<ClaimDeleteReceiv
     /// <summary>
     /// Claim: Remove
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(ClaimAreaIdModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(ClaimAreaIdModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ClaimDelete(req);
+        return await idRepo.ClaimDelete(req, token);
     }
 }

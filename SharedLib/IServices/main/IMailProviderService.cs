@@ -16,12 +16,14 @@ public interface IMailProviderService
     /// <param name="subject">Тема письма</param>
     /// <param name="message">Сообщение</param>
     /// <param name="mimekit_format">Формат сообщения (MimeKit: Plain, Plain, Flowed, Html, Enriched, CompressedRichText, RichText)</param>
-    public Task<ResponseBaseModel> SendEmailAsync(string email, string subject, string message, string mimekit_format = "html");
+    /// <param name="token"></param>
+    public Task<ResponseBaseModel> SendEmailAsync(string email, string subject, string message, string mimekit_format = "html", CancellationToken token = default);
 
     /// <summary>
     /// Разослать техническое уведомления получателям из [SmtpConfigModel.EmailNotificationRecipients]
     /// </summary>
     /// <param name="message">Сообщение</param>
     /// <param name="mimekit_format">Формат сообщения (MimeKit: Plain, Plain, Flowed, Html, Enriched, CompressedRichText, RichText)</param>
-    public Task<ResponseBaseModel> SendTechnicalEmailNotificationAsync(string message, string mimekit_format = "html");
+    /// <param name="token"></param>
+    public Task<ResponseBaseModel> SendTechnicalEmailNotificationAsync(string message, string mimekit_format = "html", CancellationToken token = default);
 }

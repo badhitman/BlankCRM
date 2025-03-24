@@ -28,10 +28,13 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
     MudTable<KladrResponseModel>? tableRef;
     List<RootKLADREquatableModel> regions = [];
 
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await SetBusy();
         Dictionary<KladrChainTypesEnum, JObject[]> regionsRest = await kladrRepo.ObjectsListForParent(new());
+        await SetBusy(false);
         foreach (RootKLADRModel? region in regionsRest.SelectMany(x => x.Value).Select(x => x.ToObject<RootKLADRModel>()!))
             regions.Add(new(region.CODE, region.NAME, region.SOCR));
     }
@@ -50,7 +53,7 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
         };
 
         await SetBusy(token: token);
-        TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsFind(req);
+        TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsFind(req, token);
         await SetBusy(false, token: token);
         PartData = res.Response ?? [];
         return new TableData<KladrResponseModel>()

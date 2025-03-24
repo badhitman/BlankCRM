@@ -19,10 +19,10 @@ public class ArticleCreateOrUpdateReceive(IArticlesService artRepo, ILogger<Arti
     /// <summary>
     /// Создать/обновить статью
     /// </summary>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(ArticleModelDB? article)
+    public async Task<TResponseModel<int>?> ResponseHandleAction(ArticleModelDB? article, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(article);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(article)}");
-        return await artRepo.ArticleCreateOrUpdate(article);
+        return await artRepo.ArticleCreateOrUpdate(article, token);
     }
 }

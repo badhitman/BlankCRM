@@ -16,9 +16,9 @@ public class SaveSessionFormReceive(IConstructorService conService) : IResponseR
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SaveSessionFormReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>?> ResponseHandleAction(SaveConstructorSessionRequestModel? payload)
+    public async Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>?> ResponseHandleAction(SaveConstructorSessionRequestModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.SaveSessionForm(payload);
+        return await conService.SaveSessionForm(payload, token);
     }
 }

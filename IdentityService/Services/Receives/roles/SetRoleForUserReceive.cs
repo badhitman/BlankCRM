@@ -18,10 +18,10 @@ public class SetRoleForUserReceive(IIdentityTools identityRepo, ILogger<SetRoleF
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetRoleForUserOfIdentityReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string[]>?> ResponseHandleAction(SetRoleForUserRequestModel? req)
+    public async Task<TResponseModel<string[]>?> ResponseHandleAction(SetRoleForUserRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await identityRepo.SetRoleForUser(req);
+        return await identityRepo.SetRoleForUser(req, token);
     }
 }

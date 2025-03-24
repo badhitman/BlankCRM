@@ -19,9 +19,9 @@ public class MessagesListReceive(IHelpdeskService hdRepo)
     /// <summary>
     /// Получить сообщения для инцидента
     /// </summary>
-    public async Task<TResponseModel<IssueMessageHelpdeskModelDB[]>?> ResponseHandleAction(TAuthRequestModel<int>? req)
+    public async Task<TResponseModel<IssueMessageHelpdeskModelDB[]>?> ResponseHandleAction(TAuthRequestModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.MessagesList(req);
+        return await hdRepo.MessagesList(req, token);
     }
 }

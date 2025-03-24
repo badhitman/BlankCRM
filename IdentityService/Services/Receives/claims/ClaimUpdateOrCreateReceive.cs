@@ -20,10 +20,10 @@ public class ClaimUpdateOrCreateReceive(IIdentityTools idRepo, ILogger<ClaimUpda
     /// <summary>
     /// Claim: Update or create
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(ClaimUpdateModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(ClaimUpdateModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ClaimUpdateOrCreate(req);
+        return await idRepo.ClaimUpdateOrCreate(req, token);
     }
 }

@@ -13,40 +13,40 @@ namespace SharedLib;
 public interface IToolsAppManager
 {
     /// <inheritdoc/>
-    public Task<ApiRestConfigModelDB[]> GetAllConfigurations();
+    public Task<ApiRestConfigModelDB[]> GetAllConfigurations(CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ApiRestConfigModelDB> ReadConfiguration(int confId);
+    public Task<ApiRestConfigModelDB> ReadConfiguration(int confId, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> UpdateOrCreateConfig(ApiRestConfigModelDB req);
+    public Task<TResponseModel<int>> UpdateOrCreateConfig(ApiRestConfigModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeleteConfig(int confId);
-
-
-    /// <inheritdoc/>
-    public Task<SyncDirectoryModelDB[]> GetSyncDirectoriesForConfig(int confId);
-
-    /// <inheritdoc/>
-    public Task<SyncDirectoryModelDB> ReadSyncDirectory(int syncDirId);
-
-    /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdateOrCreateSyncDirectory(SyncDirectoryModelDB req);
-
-    /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeleteSyncDirectory(int syncDirectoryId);
+    public Task<ResponseBaseModel> DeleteConfig(int confId, CancellationToken token = default);
 
 
     /// <inheritdoc/>
-    public Task<ExeCommandModelDB[]> GetExeCommandsForConfig(int confId);
+    public Task<SyncDirectoryModelDB[]> GetSyncDirectoriesForConfig(int confId, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ExeCommandModelDB> ReadExeCommand(int comId);
+    public Task<SyncDirectoryModelDB> ReadSyncDirectory(int syncDirId, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdateOrCreateExeCommand(ExeCommandModelDB req);
+    public Task<ResponseBaseModel> UpdateOrCreateSyncDirectory(SyncDirectoryModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeleteExeCommand(int exeCommandId);
+    public Task<ResponseBaseModel> DeleteSyncDirectory(int syncDirectoryId, CancellationToken token = default);
+
+
+    /// <inheritdoc/>
+    public Task<ExeCommandModelDB[]> GetExeCommandsForConfig(int confId, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<ExeCommandModelDB> ReadExeCommand(int comId, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> UpdateOrCreateExeCommand(ExeCommandModelDB req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> DeleteExeCommand(int exeCommandId, CancellationToken token = default);
 }

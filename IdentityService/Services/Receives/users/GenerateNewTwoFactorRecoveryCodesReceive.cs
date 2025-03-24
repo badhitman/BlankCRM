@@ -22,10 +22,10 @@ public class GenerateNewTwoFactorRecoveryCodesReceive(IIdentityTools idRepo, ILo
     /// Генерирует коды восстановления для пользователя, что делает недействительными все предыдущие коды восстановления для пользователя.
     /// </summary>
     /// <returns>Новые коды восстановления для пользователя. Примечание. Возвращенное число может быть меньше, поскольку дубликаты будут удалены.</returns>
-    public async Task<TResponseModel<IEnumerable<string>?>?> ResponseHandleAction(GenerateNewTwoFactorRecoveryCodesRequestModel? req)
+    public async Task<TResponseModel<IEnumerable<string>?>?> ResponseHandleAction(GenerateNewTwoFactorRecoveryCodesRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.GenerateNewTwoFactorRecoveryCodes(req);
+        return await idRepo.GenerateNewTwoFactorRecoveryCodes(req, token);
     }
 }

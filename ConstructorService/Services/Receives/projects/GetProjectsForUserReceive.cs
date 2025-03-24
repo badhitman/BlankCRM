@@ -16,9 +16,9 @@ public class GetProjectsForUserReceive(IConstructorService conService) : IRespon
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProjectsForUserReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ProjectViewModel[]>?> ResponseHandleAction(GetProjectsForUserRequestModel? req)
+    public async Task<TResponseModel<ProjectViewModel[]>?> ResponseHandleAction(GetProjectsForUserRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.GetProjectsForUser(req);
+        return await conService.GetProjectsForUser(req, token);
     }
 }

@@ -14,7 +14,7 @@ public partial interface IJournalUniversalService
             SystemName = systemNamesManufacture.GetSystemName(dir.Id, dir.GetType().Name) ?? GlobalTools.TranslitToSystemName(dir.Name),
             Name = dir.Name,
             Description = dir.Description,
-            EnumItems = dir.Elements.Count < 1 ? [] : dir.Elements.Select(e =>
+            EnumItems = dir.Elements.Count < 1 ? [] : [.. dir.Elements.Select(e =>
             {
                 return new SortableFitModel()
                 {
@@ -23,7 +23,7 @@ public partial interface IJournalUniversalService
                     SortIndex = e.SortIndex,
                     Description = e.Description,
                 };
-            }).ToArray()
+            })]
         };
     }
 
@@ -115,15 +115,15 @@ public partial interface IJournalUniversalService
     /// <remarks>
     /// имя документа и идентификатор проекта, которому принадлежит этот документ (а так же - имя проекта в Tag)
     /// </remarks>
-    public Task<EntryAltTagModel[]> GetMyDocumentsSchemas();
+    public Task<EntryAltTagModel[]> GetMyDocumentsSchemas(CancellationToken token = default);
 
     /// <summary>
     /// Найти схемы документов по имени (или номеру)
     /// </summary>
-    public Task<TResponseModel<DocumentSchemeConstructorModelDB[]?>> FindDocumentSchemes(string document_name_or_id, int? projectId);
+    public Task<TResponseModel<DocumentSchemeConstructorModelDB[]?>> FindDocumentSchemes(string document_name_or_id, int? projectId, CancellationToken token = default);
 
     /// <summary>
     /// Прочитать данные сессии ограниченые одной вкладкой/табом
     /// </summary>
-    public Task<ValueDataForSessionOfDocumentModelDB[]> ReadSessionTabValues(int tabId, int sessionId);
+    public Task<ValueDataForSessionOfDocumentModelDB[]> ReadSessionTabValues(int tabId, int sessionId, CancellationToken token = default);
 }

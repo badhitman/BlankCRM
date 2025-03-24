@@ -16,9 +16,9 @@ public class OrganizationsSelectReceive(ICommerceService commerceRepo) : IRespon
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrganizationsSelectCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OrganizationModelDB>?> ResponseHandleAction(TPaginationRequestAuthModel<OrganizationsSelectRequestModel>? req)
+    public async Task<TPaginationResponseModel<OrganizationModelDB>?> ResponseHandleAction(TPaginationRequestAuthModel<OrganizationsSelectRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.OrganizationsSelect(req);
+        return await commerceRepo.OrganizationsSelect(req, token);
     }
 }

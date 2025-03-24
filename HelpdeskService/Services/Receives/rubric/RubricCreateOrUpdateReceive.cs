@@ -17,10 +17,10 @@ public class RubricCreateOrUpdateReceive(IHelpdeskService hdRepo, ILogger<Rubric
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.RubricForIssuesUpdateHelpdeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(RubricIssueHelpdeskModelDB? rubric)
+    public async Task<TResponseModel<int>?> ResponseHandleAction(RubricIssueHelpdeskModelDB? rubric, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(rubric);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(rubric)}");
-        return await hdRepo.RubricCreateOrUpdate(rubric);
+        return await hdRepo.RubricCreateOrUpdate(rubric, token);
     }
 }

@@ -22,7 +22,7 @@ public class GetUsersIdentityByEmailReceive(IIdentityTools IdentityRepo, IMemory
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]>?> ResponseHandleAction(string[]? users_emails = null)
+    public async Task<TResponseModel<UserInfoModel[]>?> ResponseHandleAction(string[]? users_emails = null, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(users_emails);
         users_emails = [.. users_emails.Where(x => MailAddress.TryCreate(x, out _)).Select(x => x.ToUpper())];

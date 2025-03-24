@@ -16,10 +16,10 @@ public class ClearTempKladrReceive(ILogger<ClearTempKladrReceive> LoggerRepo, IK
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ClearTempKladrReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(object? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(object? req, CancellationToken token = default)
     {
         // ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await kladrRepo.ClearTempKladr();
+        return await kladrRepo.ClearTempKladr(token);
     }
 }

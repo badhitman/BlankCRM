@@ -16,9 +16,9 @@ public class CreateElementForDirectoryReceive(IConstructorService conService) : 
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.CreateElementForDirectoryReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<OwnedNameModel>? payload)
+    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<OwnedNameModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.CreateElementForDirectory(payload);
+        return await conService.CreateElementForDirectory(payload, token);
     }
 }

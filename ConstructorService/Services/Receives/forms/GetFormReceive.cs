@@ -16,8 +16,8 @@ public class GetFormReceive(IConstructorService conService) : IResponseReceive<i
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetFormReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleAction(int payload)
+    public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleAction(int payload, CancellationToken token = default)
     {
-        return await conService.GetForm(payload);
+        return await conService.GetForm(payload, token);
     }
 }

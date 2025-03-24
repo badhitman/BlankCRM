@@ -16,9 +16,9 @@ public class FieldFormMoveReceive(IConstructorService conService) : IResponseRec
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.FieldFormMoveReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleAction(TAuthRequestModel<MoveObjectModel>? payload)
+    public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleAction(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.FieldFormMove(payload);
+        return await conService.FieldFormMove(payload, token);
     }
 }

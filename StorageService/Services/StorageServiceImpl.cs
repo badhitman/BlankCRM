@@ -41,43 +41,44 @@ public class StorageServiceImpl(
 
     #region logs
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestModel<int> req)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestModel<int> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
 
-        using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
+        using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync(token);
         IQueryable<NLogRecordModelDB> q = ctx.Logs.AsQueryable();
 
         TPaginationResponseModel<NLogRecordModelDB> res = new()
         {
-            TotalRowsCount = await q.CountAsync(),
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
             PageSize = req.PageSize,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
         };
 
-        if (!await q.AnyAsync(x => x.Id == req.Payload))
+        if (!await q.AnyAsync(x => x.Id == req.Payload, cancellationToken: token))
             return res;
 
         IOrderedQueryable<NLogRecordModelDB> oq = req.SortingDirection == DirectionsEnum.Up
           ? q.OrderBy(x => x.RecordTime)
           : q.OrderByDescending(x => x.RecordTime);
 
-        res.PageNum = 0;
-        while (!await oq.Skip(res.PageNum * req.PageSize).Take(req.PageSize).AnyAsync(x => x.Id == req.Payload))
+        res.PageNum = (await oq.CountAsync(cancellationToken: token)) / req.PageSize;
+
+        if (!await oq.Skip(res.PageNum * req.PageSize).Take(req.PageSize).AnyAsync(x => x.Id == req.Payload, cancellationToken: token))
             res.PageNum++;
 
-        res.Response = [.. await oq.Skip(res.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync()];
+        res.Response = [.. await oq.Skip(res.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync(cancellationToken: token)];
 
         if (!res.Response.Any(x => x.Id == req.Payload))
-            return await GoToPageForRow(req);
+            return await GoToPageForRow(req, token);
 
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogs(PeriodDatesTimesModel req)
+    public async Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogs(PeriodDatesTimesModel req, CancellationToken token = default)
     {
         Dictionary<string, int> LevelsAvailable = [];
         Dictionary<string, int> ApplicationsAvailable = [];
@@ -107,27 +108,27 @@ public class StorageServiceImpl(
                 Task.Run(async () => {
                     using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
                     minDate = await ctx.Logs.MinAsync(x => x.RecordTime);
-                }),
+                }, token),
                 Task.Run(async () => {
                     using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
                     maxDate = await ctx.Logs.MaxAsync(x => x.RecordTime);
-                }),
+                }, token),
                 Task.Run(async () => {
                     using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
                     (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.RecordLevel).Select(x => new KeyValuePair<string, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => LevelsAvailable.Add(x.Key, x.Value));
-                }),
+                }, token),
                 Task.Run(async () => {
                     using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
                     (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.ApplicationName).Select(x => new KeyValuePair<string, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => ApplicationsAvailable.Add(x.Key, x.Value));
-                }),
+                }, token),
                 Task.Run(async () => {
                     using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
                     (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.ContextPrefix).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => ContextsPrefixesAvailable.Add(x.Key ?? "", x.Value));
-                }),
+                }, token),
                 Task.Run(async () => {
                     using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
                     (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.Logger).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => LoggersAvailable.Add(x.Key ?? "", x.Value));
-                }),
+                }, token),
             ]);
 
         return new()
@@ -145,12 +146,12 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelect(TPaginationRequestModel<LogsSelectRequestModel> req)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelect(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
 
-        using NLogsContext context = await logsDbFactory.CreateDbContextAsync();
+        using NLogsContext context = await logsDbFactory.CreateDbContextAsync(token);
         IQueryable<NLogRecordModelDB> q = context.Logs.AsQueryable();
 
         if (req.Payload.StartAt.HasValue)
@@ -180,7 +181,7 @@ public class StorageServiceImpl(
           ? q.OrderBy(x => x.RecordTime)
           : q.OrderByDescending(x => x.RecordTime);
 
-        int trc = await q.CountAsync();
+        int trc = await q.CountAsync(cancellationToken: token);
 
         return new()
         {
@@ -196,9 +197,9 @@ public class StorageServiceImpl(
 
     #region tags
     /// <inheritdoc/>
-    public async Task<TResponseModel<FilesAreaMetadataModel[]>> FilesAreaGetMetadata(FilesAreaMetadataRequestModel req)
+    public async Task<TResponseModel<FilesAreaMetadataModel[]>> FilesAreaGetMetadata(FilesAreaMetadataRequestModel req, CancellationToken token = default)
     {
-        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync();
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         IQueryable<StorageFileModelDB> q = context
             .CloudFiles
             .AsQueryable();
@@ -230,9 +231,9 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelect(TPaginationRequestModel<SelectMetadataRequestModel> req)
+    public async Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelect(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default)
     {
-        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync();
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
 
         if (req.PageSize < 5)
             req.PageSize = 5;
@@ -260,7 +261,7 @@ public class StorageServiceImpl(
           ? q.OrderBy(x => x.CreatedAt).Skip(req.PageNum * req.PageSize).Take(req.PageSize)
           : q.OrderByDescending(x => x.CreatedAt).Skip(req.PageNum * req.PageSize).Take(req.PageSize);
 
-        int trc = await q.CountAsync();
+        int trc = await q.CountAsync(cancellationToken: token);
         TPaginationResponseModel<StorageFileModelDB> res = new()
         {
             PageNum = req.PageNum,
@@ -268,20 +269,20 @@ public class StorageServiceImpl(
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = trc,
-            Response = await oq.ToListAsync(),
+            Response = await oq.ToListAsync(cancellationToken: token),
         };
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FileContentModel>> ReadFile(TAuthRequestModel<RequestFileReadModel> req)
+    public async Task<TResponseModel<FileContentModel>> ReadFile(TAuthRequestModel<RequestFileReadModel> req, CancellationToken token = default)
     {
         TResponseModel<FileContentModel> res = new();
-        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync();
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         StorageFileModelDB? file_db = await context
             .CloudFiles
             .Include(x => x.AccessRules)
-            .FirstOrDefaultAsync(x => x.Id == req.Payload.FileId);
+            .FirstOrDefaultAsync(x => x.Id == req.Payload.FileId, cancellationToken: token);
 
         if (file_db is null)
         {
@@ -303,7 +304,7 @@ public class StorageServiceImpl(
         UserInfoModel? currentUser = null;
         if (!allowed && !string.IsNullOrWhiteSpace(req.SenderActionUserId))
         {
-            TResponseModel<UserInfoModel[]> findUserRes = await identityRepo.GetUsersIdentity([req.SenderActionUserId]);
+            TResponseModel<UserInfoModel[]> findUserRes = await identityRepo.GetUsersIdentity([req.SenderActionUserId], token);
             currentUser = findUserRes.Response?.Single();
             if (currentUser is null)
             {
@@ -336,7 +337,7 @@ public class StorageServiceImpl(
                             IncludeSubscribersOnly = false,
                         }
                     };
-                    TResponseModel<IssueHelpdeskModelDB[]> findIssues = await HelpdeskRepo.IssuesRead(reqIssues);
+                    TResponseModel<IssueHelpdeskModelDB[]> findIssues = await HelpdeskRepo.IssuesRead(reqIssues, token);
                     allowed = findIssues.Success() &&
                         findIssues.Response?.Any(x => x.AuthorIdentityUserId == req.SenderActionUserId || x.ExecutorIdentityUserId == req.SenderActionUserId || x.Subscribers?.Any(y => y.UserId == req.SenderActionUserId) == true) == true;
                 }
@@ -351,7 +352,7 @@ public class StorageServiceImpl(
 
         using MemoryStream stream = new();
         GridFSBucket gridFS = new(mongoFs);
-        await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream);
+        await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);
 
         res.Response = new()
         {
@@ -372,7 +373,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageFileModelDB>> SaveFile(TAuthRequestModel<StorageImageMetadataModel> req)
+    public async Task<TResponseModel<StorageFileModelDB>> SaveFile(TAuthRequestModel<StorageImageMetadataModel> req, CancellationToken token = default)
     {
         TResponseModel<StorageFileModelDB> res = new();
         GridFSBucket gridFS = new(mongoFs);
@@ -382,8 +383,8 @@ public class StorageServiceImpl(
             _file_name = $"без имени: {DateTime.UtcNow}";
 
         using MemoryStream stream = new(req.Payload.Payload);
-        ObjectId _uf = await gridFS.UploadFromStreamAsync(_file_name, stream);
-        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync();
+        ObjectId _uf = await gridFS.UploadFromStreamAsync(_file_name, stream, cancellationToken: token);
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         res.Response = new StorageFileModelDB()
         {
             ApplicationName = req.Payload.ApplicationName,
@@ -400,8 +401,8 @@ public class StorageServiceImpl(
             FileLength = req.Payload.Payload.Length,
         };
 
-        await context.AddAsync(res.Response);
-        await context.SaveChangesAsync();
+        await context.AddAsync(res.Response, token);
+        await context.SaveChangesAsync(token);
 
         if (GlobalTools.IsImageFile(_file_name))
         {
@@ -417,7 +418,7 @@ public class StorageServiceImpl(
                 TagName = _h,
                 OwnerPrimaryKey = res.Response.Id,
                 PrefixPropertyName = GlobalStaticConstants.Routes.DEFAULT_CONTROLLER_NAME,
-            });
+            }, token);
             await context.AddAsync(new TagModelDB()
             {
                 ApplicationName = GlobalStaticConstants.Routes.FILE_CONTROLLER_NAME,
@@ -427,7 +428,7 @@ public class StorageServiceImpl(
                 TagName = _w,
                 OwnerPrimaryKey = res.Response.Id,
                 PrefixPropertyName = GlobalStaticConstants.Routes.DEFAULT_CONTROLLER_NAME,
-            });
+            }, token);
             await context.AddAsync(new TagModelDB()
             {
                 ApplicationName = GlobalStaticConstants.Routes.FILE_CONTROLLER_NAME,
@@ -437,7 +438,7 @@ public class StorageServiceImpl(
                 TagName = nameof(GlobalTools.IsImageFile),
                 OwnerPrimaryKey = res.Response.Id,
                 PrefixPropertyName = GlobalStaticConstants.Routes.DEFAULT_CONTROLLER_NAME,
-            });
+            }, token);
         }
 
         if (req.Payload.OwnerPrimaryKey.HasValue && req.Payload.OwnerPrimaryKey.Value > 0)
@@ -472,7 +473,7 @@ public class StorageServiceImpl(
                                 }
                             };
 
-                            await HelpdeskRepo.PulsePush(reqPulse, false);
+                            await HelpdeskRepo.PulsePush(reqPulse, false, token);
                         }
                     }
                     break;
@@ -493,7 +494,7 @@ public class StorageServiceImpl(
                             SenderActionUserId = GlobalStaticConstants.Roles.System,
                         }
                     };
-                    await HelpdeskRepo.PulsePush(reqPulse, false);
+                    await HelpdeskRepo.PulsePush(reqPulse, false, token);
                     break;
             }
         }
@@ -502,9 +503,9 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TagSet(TagSetModel req)
+    public async Task<ResponseBaseModel> TagSet(TagSetModel req, CancellationToken token = default)
     {
-        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync();
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         ResponseBaseModel res = new();
 
         IQueryable<TagModelDB> q = context
@@ -518,7 +519,7 @@ public class StorageServiceImpl(
 
         if (req.Set)
         {
-            if (await q.AnyAsync())
+            if (await q.AnyAsync(cancellationToken: token))
                 res.AddInfo("Тег уже установлен");
             else
             {
@@ -531,8 +532,8 @@ public class StorageServiceImpl(
                     NormalizedTagNameUpper = req.Name.ToUpper(),
                     PrefixPropertyName = req.PrefixPropertyName,
                     OwnerPrimaryKey = req.Id,
-                });
-                await context.SaveChangesAsync();
+                }, token);
+                await context.SaveChangesAsync(token);
             }
         }
         else
@@ -547,11 +548,11 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TagModelDB>> TagsSelect(TPaginationRequestModel<SelectMetadataRequestModel> req)
+    public async Task<TPaginationResponseModel<TagModelDB>> TagsSelect(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
-        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync();
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
 
         IQueryable<TagModelDB> q = context
             .CloudTags
@@ -576,7 +577,7 @@ public class StorageServiceImpl(
           ? q.OrderBy(x => x.TagName).Skip(req.PageNum * req.PageSize).Take(req.PageSize)
           : q.OrderByDescending(x => x.TagName).Skip(req.PageNum * req.PageSize).Take(req.PageSize);
 
-        int trc = await q.CountAsync();
+        int trc = await q.CountAsync(cancellationToken: token);
         return new()
         {
             PageNum = req.PageNum,
@@ -584,42 +585,42 @@ public class StorageServiceImpl(
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = trc,
-            Response = await oq.ToListAsync(),
+            Response = await oq.ToListAsync(cancellationToken: token),
         };
     }
     #endregion
 
     #region storage parameters
     /// <inheritdoc/>
-    public async Task<T?[]> Find<T>(RequestStorageBaseModel req)
+    public async Task<T?[]> Find<T>(RequestStorageBaseModel req, CancellationToken token = default)
     {
         req.Normalize();
-        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync();
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         string _tn = typeof(T).FullName ?? throw new Exception();
         StorageCloudParameterModelDB[] _dbd = await context
             .CloudProperties
             .Where(x => x.TypeName == _tn && x.ApplicationName == req.ApplicationName && x.PropertyName == req.PropertyName)
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: token);
 
-        return _dbd.Select(x => JsonConvert.DeserializeObject<T>(x.SerializedDataJson)).ToArray();
+        return [.. _dbd.Select(x => JsonConvert.DeserializeObject<T>(x.SerializedDataJson))];
     }
 
     /// <inheritdoc/>
-    public async Task<T?> Read<T>(StorageMetadataModel req)
+    public async Task<T?> Read<T>(StorageMetadataModel req, CancellationToken token = default)
     {
         req.Normalize();
         string mem_key = $"{req.PropertyName}/{req.OwnerPrimaryKey}/{req.PrefixPropertyName}/{req.ApplicationName}".Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
         if (cache.TryGetValue(mem_key, out T? sd))
             return sd;
 
-        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync();
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         string _tn = typeof(T).FullName ?? throw new Exception();
 
         StorageCloudParameterModelDB? pdb = await context
             .CloudProperties
             .Where(x => x.TypeName == _tn && x.OwnerPrimaryKey == req.OwnerPrimaryKey && x.PrefixPropertyName == req.PrefixPropertyName && x.ApplicationName == req.ApplicationName)
             .OrderByDescending(x => x.CreatedAt)
-            .FirstOrDefaultAsync(x => x.PropertyName == req.PropertyName);
+            .FirstOrDefaultAsync(x => x.PropertyName == req.PropertyName, cancellationToken: token);
 
         if (pdb is null)
             return default;
@@ -638,7 +639,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task Save<T>(T obj, StorageMetadataModel set, bool trimHistory = false)
+    public async Task Save<T>(T obj, StorageMetadataModel set, bool trimHistory = false, CancellationToken token = default)
     {
         if (obj is null)
             throw new ArgumentNullException(nameof(obj));
@@ -652,7 +653,7 @@ public class StorageServiceImpl(
             OwnerPrimaryKey = set.OwnerPrimaryKey,
             PrefixPropertyName = set.PrefixPropertyName,
         };
-        ResponseBaseModel res = await FlushParameter(_set, trimHistory);
+        ResponseBaseModel res = await FlushParameter(_set, trimHistory, token);
         if (res.Success())
         {
             string mem_key = $"{set.PropertyName}/{set.OwnerPrimaryKey}/{set.PrefixPropertyName}/{set.ApplicationName}".Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
@@ -661,12 +662,12 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int?>> FlushParameter(StorageCloudParameterModelDB _set, bool trimHistory = false)
+    public async Task<TResponseModel<int?>> FlushParameter(StorageCloudParameterModelDB _set, bool trimHistory = false, CancellationToken token = default)
     {
-        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync();
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         TResponseModel<int?> res = new();
         _set.Id = 0;
-        await context.AddAsync(_set);
+        await context.AddAsync(_set, token);
         bool success;
         _set.Normalize();
         Random rnd = new();
@@ -675,7 +676,7 @@ public class StorageServiceImpl(
             success = false;
             try
             {
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(token);
                 string mem_key = $"{_set.PropertyName}/{_set.OwnerPrimaryKey}/{_set.PrefixPropertyName}/{_set.ApplicationName}".Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
                 cache.Remove(mem_key);
                 success = true;
@@ -686,7 +687,7 @@ public class StorageServiceImpl(
             {
                 res.AddInfo($"Попытка записи [{i}]: {ex.Message}");
                 _set.CreatedAt = DateTime.UtcNow;
-                await Task.Delay(TimeSpan.FromMilliseconds(rnd.Next(100, 300)));
+                await Task.Delay(TimeSpan.FromMilliseconds(rnd.Next(100, 300)), token);
             }
 
             if (success)
@@ -702,9 +703,9 @@ public class StorageServiceImpl(
         {
             await qf
                 .Where(x => x.Id != _set.Id)
-                .ExecuteDeleteAsync();
+                .ExecuteDeleteAsync(cancellationToken: token);
         }
-        else if (await qf.CountAsync() > 50)
+        else if (await qf.CountAsync(cancellationToken: token) > 50)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -714,14 +715,14 @@ public class StorageServiceImpl(
                     await qf
                         .OrderBy(x => x.CreatedAt)
                         .Take(50)
-                        .ExecuteDeleteAsync();
+                        .ExecuteDeleteAsync(cancellationToken: token);
                     res.AddSuccess($"Ротация успешно выполнена на попытке [{i}]");
                     success = true;
                 }
                 catch (Exception ex)
                 {
                     res.AddInfo($"Попытка записи [{i}]: {ex.Message}");
-                    await Task.Delay(TimeSpan.FromMilliseconds(rnd.Next(100, 300)));
+                    await Task.Delay(TimeSpan.FromMilliseconds(rnd.Next(100, 300)), token);
                 }
 
                 if (success)
@@ -733,7 +734,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageCloudParameterPayloadModel>> ReadParameter(StorageMetadataModel req)
+    public async Task<TResponseModel<StorageCloudParameterPayloadModel>> ReadParameter(StorageMetadataModel req, CancellationToken token = default)
     {
         req.Normalize();
         string mem_key = $"{req.PropertyName}/{req.OwnerPrimaryKey}/{req.PrefixPropertyName}/{req.ApplicationName}".Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
@@ -744,7 +745,7 @@ public class StorageServiceImpl(
             return res;
         }
         string msg;
-        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync();
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         StorageCloudParameterModelDB? parameter_db = await context
             .CloudProperties
             .OrderByDescending(x => x.CreatedAt)
@@ -752,7 +753,7 @@ public class StorageServiceImpl(
             x.OwnerPrimaryKey == req.OwnerPrimaryKey &&
             x.PropertyName == req.PropertyName &&
             x.ApplicationName == req.ApplicationName &&
-            x.PrefixPropertyName == req.PrefixPropertyName);
+            x.PrefixPropertyName == req.PrefixPropertyName, cancellationToken: token);
 
         if (parameter_db is not null)
         {
@@ -780,7 +781,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<StorageCloudParameterPayloadModel>>> ReadParameters(StorageMetadataModel[] req)
+    public async Task<TResponseModel<List<StorageCloudParameterPayloadModel>>> ReadParameters(StorageMetadataModel[] req, CancellationToken token = default)
     {
         BlockingCollection<StorageCloudParameterPayloadModel> res = [];
         BlockingCollection<ResultMessage> _messages = [];
@@ -802,25 +803,24 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FoundParameterModel[]?>> Find(RequestStorageBaseModel req)
+    public async Task<TResponseModel<FoundParameterModel[]?>> Find(RequestStorageBaseModel req, CancellationToken token = default)
     {
         req.Normalize();
         TResponseModel<FoundParameterModel[]?> res = new();
-        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync();
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         StorageCloudParameterModelDB[] prop_db = await context
             .CloudProperties
             .Where(x => req.PropertyName == x.PropertyName && req.ApplicationName == x.ApplicationName)
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: token);
 
-        res.Response = prop_db
+        res.Response = [.. prop_db
             .Select(x => new FoundParameterModel()
             {
                 SerializedDataJson = JsonConvert.SerializeObject(x),
                 CreatedAt = DateTime.UtcNow,
                 OwnerPrimaryKey = x.OwnerPrimaryKey,
                 PrefixPropertyName = x.PrefixPropertyName,
-            })
-            .ToArray();
+            })];
 
         return res;
     }

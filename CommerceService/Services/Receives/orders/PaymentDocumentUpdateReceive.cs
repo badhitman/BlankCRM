@@ -18,10 +18,10 @@ public class PaymentDocumentUpdateReceive(ICommerceService commerceRepo, ILogger
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.PaymentDocumentUpdateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<PaymentDocumentBaseModel>? req)
+    public async Task<TResponseModel<int>?> ResponseHandleAction(TAuthRequestModel<PaymentDocumentBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.PaymentDocumentUpdate(req);
+        return await commerceRepo.PaymentDocumentUpdate(req, token);
     }
 }

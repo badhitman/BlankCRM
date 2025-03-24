@@ -17,9 +17,9 @@ public class GoToPageForRowReceive(ISerializeStorage storeRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GoToPageForRowReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>?> ResponseHandleAction(TPaginationRequestModel<int>? payload)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>?> ResponseHandleAction(TPaginationRequestModel<int>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await storeRepo.GoToPageForRow(payload);
+        return await storeRepo.GoToPageForRow(payload, token);
     }
 }

@@ -19,13 +19,11 @@ public class ClaimsUserFlushReceive(IIdentityTools idRepo)
     /// <summary>
     /// Установить пользователю Claim`s[TelegramId, FirstName, LastName, PhoneNum]
     /// </summary>
-    /// <param name="userId">User id (of Identity)</param>
-    /// <exception cref="ArgumentNullException"></exception>
-    public async Task<TResponseModel<bool>?> ResponseHandleAction(string? userId)
+    public async Task<TResponseModel<bool>?> ResponseHandleAction(string? userId, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(userId))
             throw new ArgumentNullException(nameof(userId));
 
-        return await idRepo.ClaimsUserFlush(userId);
+        return await idRepo.ClaimsUserFlush(userId, token);
     }
 }

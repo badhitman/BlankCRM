@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Amazon.Runtime.Internal;
 using Microsoft.Extensions.Caching.Distributed;
 using SharedLib;
 
@@ -37,7 +36,7 @@ public class ManualCustomCacheService(IDistributedCache set_cache)
         => await GetObjectAsync<T>(new MemCacheComplexKeyModel(id, pref), token);
 
     /// <inheritdoc/>
-    public async Task<T?> GetObjectAsync<T>(string mem_key,  CancellationToken token = default)
+    public async Task<T?> GetObjectAsync<T>(string mem_key, CancellationToken token = default)
     {
         byte[]? br = await _cache.GetAsync(mem_key, token);
         if (br is null)
@@ -126,19 +125,19 @@ public class ManualCustomCacheService(IDistributedCache set_cache)
 
     #region remove
     /// <inheritdoc/>
-    public async Task<bool> RemoveAsync(MemCacheComplexKeyModel key)
-        => await RemoveAsync(key.ToString());
+    public async Task<bool> RemoveAsync(MemCacheComplexKeyModel key, CancellationToken token = default)
+        => await RemoveAsync(key.ToString(), token);
 
     /// <inheritdoc/>
-    public async Task<bool> RemoveAsync(MemCachePrefixModel pref, string id)
-        => await RemoveAsync(new MemCacheComplexKeyModel(id, pref));
+    public async Task<bool> RemoveAsync(MemCachePrefixModel pref, string id, CancellationToken token = default)
+        => await RemoveAsync(new MemCacheComplexKeyModel(id, pref), token);
 
     /// <inheritdoc/>
-    public async Task<bool> RemoveAsync(string key)
+    public async Task<bool> RemoveAsync(string key, CancellationToken token = default)
     {
         try
         {
-            await _cache.RemoveAsync(key);
+            await _cache.RemoveAsync(key, token);
         }
         catch
         {

@@ -16,9 +16,9 @@ public class OffersRegistersSelectReceive(ICommerceService commRepo) : IResponse
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OffersRegistersSelectCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>?> ResponseHandleAction(TPaginationRequestModel<RegistersSelectRequestBaseModel>? req)
+    public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>?> ResponseHandleAction(TPaginationRequestModel<RegistersSelectRequestBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.RegistersSelect(req);
+        return await commRepo.RegistersSelect(req, token);
     }
 }

@@ -22,10 +22,10 @@ public class RemoveLoginReceive(IIdentityTools idRepo, ILogger<RemoveLoginReceiv
     /// Пытается удалить предоставленную внешнюю информацию для входа из указанного userId
     /// и возвращает флаг, указывающий, удалось ли удаление или нет
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(RemoveLoginRequestModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(RemoveLoginRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.RemoveLoginForUser(req);
+        return await idRepo.RemoveLoginForUser(req, token);
     }
 }

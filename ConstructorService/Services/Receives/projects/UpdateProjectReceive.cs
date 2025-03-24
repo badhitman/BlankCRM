@@ -16,9 +16,9 @@ public class UpdateProjectReceive(IConstructorService conService) : IResponseRec
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.UpdateProjectReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(ProjectViewModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(ProjectViewModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.UpdateProject(req);
+        return await conService.UpdateProject(req, token);
     }
 }

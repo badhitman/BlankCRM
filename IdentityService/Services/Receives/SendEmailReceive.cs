@@ -18,10 +18,10 @@ public class SendEmailReceive(IMailProviderService mailRepo, ILogger<SendEmailRe
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SendEmailReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(SendEmailRequestModel? email_send)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(SendEmailRequestModel? email_send, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(email_send);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(email_send, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await mailRepo.SendEmailAsync(email_send.Email, email_send.Subject, email_send.TextMessage, email_send.MimeType);
+        return await mailRepo.SendEmailAsync(email_send.Email, email_send.Subject, email_send.TextMessage, email_send.MimeType, token);
     }
 }

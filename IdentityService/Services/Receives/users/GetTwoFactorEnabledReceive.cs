@@ -19,9 +19,9 @@ public class GetTwoFactorEnabledReceive(IIdentityTools idRepo)
     /// <summary>
     /// Включена ли для указанного <paramref name="userId"/> двухфакторная аутентификация
     /// </summary>
-    public async Task<TResponseModel<bool?>?> ResponseHandleAction(string? userId)
+    public async Task<TResponseModel<bool?>?> ResponseHandleAction(string? userId, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(userId);        
-        return await idRepo.GetTwoFactorEnabled(userId);
+        return await idRepo.GetTwoFactorEnabled(userId, token);
     }
 }

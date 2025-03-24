@@ -17,9 +17,9 @@ public class LogsSelectReceive(ISerializeStorage storeRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.LogsSelectStorageReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>?> ResponseHandleAction(TPaginationRequestModel<LogsSelectRequestModel>? payload)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>?> ResponseHandleAction(TPaginationRequestModel<LogsSelectRequestModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await storeRepo.LogsSelect(payload);
+        return await storeRepo.LogsSelect(payload, token);
     }
 }

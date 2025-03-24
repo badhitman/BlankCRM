@@ -18,9 +18,9 @@ public class RubricsGetReceive(IHelpdeskService hdRepo) : IResponseReceive<int[]
     /// <summary>
     /// Получить рубрики
     /// </summary>
-    public async Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>?> ResponseHandleAction(int[]? rubricsIds)
+    public async Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>?> ResponseHandleAction(int[]? rubricsIds, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(rubricsIds);
-        return await hdRepo.RubricsGet(rubricsIds);
+        return await hdRepo.RubricsGet(rubricsIds, token);
     }
 }

@@ -21,10 +21,10 @@ public class NomenclatureUpdateReceive(ICommerceService commerceRepo, ILogger<No
     /// <summary>
     /// Обновление номенклатуры
     /// </summary>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(NomenclatureModelDB? req)
+    public async Task<TResponseModel<int>?> ResponseHandleAction(NomenclatureModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.NomenclatureUpdate(req);
+        return await commerceRepo.NomenclatureUpdate(req, token);
     }
 }

@@ -17,7 +17,7 @@ public class SetWebConfigReceive(TelegramBotConfigModel webConfig, ILogger<SetWe
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetWebConfigTelegramReceive;
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel?> ResponseHandleAction(TelegramBotConfigModel? payload)
+    public Task<ResponseBaseModel?> ResponseHandleAction(TelegramBotConfigModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload)}");

@@ -27,9 +27,9 @@ public class GenerateEmailConfirmationIdentityReceive(IIdentityTools IdentityRep
     /// Этот API поддерживает инфраструктуру ASP.NET Core Identity и не предназначен для использования в качестве абстракции электронной почты общего назначения.
     /// Он должен быть реализован в приложении, чтобы  Identityинфраструктура могла отправлять электронные письма с подтверждением.
     /// </remarks>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(SimpleUserIdentityModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(SimpleUserIdentityModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await IdentityRepo.GenerateEmailConfirmation(req);
+        return await IdentityRepo.GenerateEmailConfirmation(req, token);
     }
 }

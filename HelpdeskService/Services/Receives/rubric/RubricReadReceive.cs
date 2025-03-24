@@ -18,8 +18,8 @@ public class RubricReadReceive(IHelpdeskService hdRepo) : IResponseReceive<int, 
     /// <summary>
     /// Прочитать рубрику (со всеми вышестоящими владельцами)
     /// </summary>
-    public async Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>?> ResponseHandleAction(int rubricId)
+    public async Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>?> ResponseHandleAction(int rubricId, CancellationToken token = default)
     {
-        return await hdRepo.RubricRead(rubricId);
+        return await hdRepo.RubricRead(rubricId, token);
     }
 }

@@ -19,9 +19,9 @@ public class GetUsersIdentityByTelegramReceive(IIdentityTools identityRepo)
     /// <summary>
     /// Find user identity by telegram - receive
     /// </summary>
-    public async Task<TResponseModel<UserInfoModel[]>?> ResponseHandleAction(List<long>? payload)
+    public async Task<TResponseModel<UserInfoModel[]>?> ResponseHandleAction(List<long>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await identityRepo.GetUsersIdentityByTelegram(payload);
+        return await identityRepo.GetUsersIdentityByTelegram(payload, token);
     }
 }

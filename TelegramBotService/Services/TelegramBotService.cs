@@ -24,12 +24,12 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     StoreTelegramService storeTgRepo) : ITelegramBotService
 {
     /// <inheritdoc/>
-    public async Task<List<ChatTelegramModelDB>> ChatsFindForUserTelegram(long[] chats_ids)
+    public async Task<List<ChatTelegramModelDB>> ChatsFindForUserTelegram(long[] chats_ids, CancellationToken token)
     {
         TResponseModel<ChatTelegramModelDB[]?> res = new();
-        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync();
+        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
 
-        int[] users_ids = await context.Users.Where(x => chats_ids.Contains(x.UserTelegramId)).Select(x => x.Id).ToArrayAsync();
+        int[] users_ids = await context.Users.Where(x => chats_ids.Contains(x.UserTelegramId)).Select(x => x.Id).ToArrayAsync(cancellationToken: token);
 
         IQueryable<ChatTelegramModelDB> q = users_ids.Length == 0
             ? context.Chats.Where(x => chats_ids.Contains(x.ChatTelegramId))
@@ -38,25 +38,25 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
         return await q
             .Include(x => x.UsersJoins!)
             .ThenInclude(x => x.User)
-            .ToListAsync();
+            .ToListAsync(cancellationToken: token);
     }
 
     /// <inheritdoc/>
-    public async Task<List<ChatTelegramModelDB>> ChatsReadTelegram(long[] chats_ids)
+    public async Task<List<ChatTelegramModelDB>> ChatsReadTelegram(long[] chats_ids, CancellationToken token)
     {
         TResponseModel<ChatTelegramModelDB[]> res = new();
-        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync();
-        return await context.Chats.Where(x => chats_ids.Contains(x.ChatTelegramId)).ToListAsync()
+        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
+        return await context.Chats.Where(x => chats_ids.Contains(x.ChatTelegramId)).ToListAsync(cancellationToken: token)
         ;
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectTelegram(TPaginationRequestModel<string?> req)
+    public async Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectTelegram(TPaginationRequestModel<string?> req, CancellationToken token)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
 
-        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync();
+        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
 
         IQueryable<ChatTelegramModelDB> q = context
             .Chats
@@ -86,30 +86,30 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             PageSize = req.PageSize,
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
-            TotalRowsCount = await q.CountAsync(),
-            Response = await TakePart(q, req.SortingDirection).ToListAsync(),
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await TakePart(q, req.SortingDirection).ToListAsync(cancellationToken: token),
         };
     }
 
     /// <inheritdoc/>
-    public async Task<ChatTelegramModelDB> ChatTelegramRead(int chatId)
+    public async Task<ChatTelegramModelDB> ChatTelegramRead(int chatId, CancellationToken token)
     {
         TResponseModel<ChatTelegramModelDB> res = new();
-        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync();
+        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
         return await context
             .Chats
             .Include(x => x.UsersJoins!)
             .ThenInclude(x => x.User)
-            .FirstAsync(x => x.Id == chatId);
+            .FirstAsync(x => x.Id == chatId, cancellationToken: token);
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegram(TPaginationRequestModel<long[]> req)
+    public async Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegram(TPaginationRequestModel<long[]> req, CancellationToken token)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
 
-        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync();
+        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
 
         IQueryable<ErrorSendingMessageTelegramBotModelDB> q = context
             .ErrorsSendingTextMessageTelegramBot
@@ -131,19 +131,19 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             PageSize = req.PageSize,
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
-            TotalRowsCount = await q.CountAsync(),
-            Response = await TakePart(q, req.SortingDirection).ToListAsync(),
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await TakePart(q, req.SortingDirection).ToListAsync(cancellationToken: token),
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MessageComplexIdsModel>> ForwardMessageTelegram(ForwardMessageTelegramBotModel message)
+    public async Task<TResponseModel<MessageComplexIdsModel>> ForwardMessageTelegram(ForwardMessageTelegramBotModel message, CancellationToken token)
     {
         TResponseModel<MessageComplexIdsModel> res = new();
         Message sender_msg;
         try
         {
-            sender_msg = await _botClient.ForwardMessage(chatId: message.DestinationChatId, fromChatId: message.SourceChatId, messageId: message.SourceMessageId);
+            sender_msg = await _botClient.ForwardMessage(chatId: message.DestinationChatId, fromChatId: message.SourceChatId, messageId: message.SourceMessageId, cancellationToken: token);
 
             MessageTelegramModelDB msg_db = await storeTgRepo.StoreMessage(sender_msg);
             res.Response = new()
@@ -160,7 +160,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             else if (ex is RequestException _re)
                 errorCode = (int?)_re.HttpStatusCode;
 
-            using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync();
+            using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
             await context.AddAsync(new ErrorSendingMessageTelegramBotModelDB()
             {
                 ChatId = message.DestinationChatId,
@@ -170,7 +170,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 ExceptionTypeName = ex.GetType().FullName,
                 ErrorCode = errorCode,
             });
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
 
             res.AddError("Ошибка отправки Telegram сообщения. error E06E939D-6E93-45CE-A5F5-19A417A27DC1");
 
@@ -182,14 +182,14 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>> GetBotUsername()
+    public async Task<TResponseModel<string>> GetBotUsername(CancellationToken token)
     {
         TResponseModel<string> res = new();
         Telegram.Bot.Types.User me;
         string msg;
         try
         {
-            me = await _botClient.GetMe();
+            me = await _botClient.GetMe(cancellationToken: token);
         }
         catch (Exception ex)
         {
@@ -203,12 +203,12 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<byte[]>> GetFileTelegram(string fileId)
+    public async Task<TResponseModel<byte[]>> GetFileTelegram(string fileId, CancellationToken token)
     {
         TResponseModel<byte[]> res = new();
         try
         {
-            TGFile fileTg = await _botClient.GetFile(fileId);
+            TGFile fileTg = await _botClient.GetFile(fileId, cancellationToken: token);
             MemoryStream ms = new();
 
             if (string.IsNullOrWhiteSpace(fileTg.FilePath))
@@ -217,7 +217,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 return res;
             }
 
-            await _botClient.DownloadFile(fileTg.FilePath, ms);
+            await _botClient.DownloadFile(fileTg.FilePath, ms, token);
             res.Response = ms.ToArray();
         }
         catch (Exception ex)
@@ -228,12 +228,12 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesSelectTelegram(TPaginationRequestModel<SearchMessagesChatModel> req)
+    public async Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesSelectTelegram(TPaginationRequestModel<SearchMessagesChatModel> req, CancellationToken token)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
 
-        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync();
+        using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
         IQueryable<MessageTelegramModelDB> q = context.Messages.AsQueryable();
 
         if (req.Payload.ChatId != 0)
@@ -271,7 +271,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                  join joinChat in context.Chats on msg.ChatId equals joinChat.Id into getChat
                  from chat in getChat.DefaultIfEmpty()
 
-                 select new { msg, document, audio, voice, video, sender, forward, chat }).ToListAsync();
+                 select new { msg, document, audio, voice, video, sender, forward, chat }).ToListAsync(cancellationToken: token);
 
             dbData.ForEach(r =>
             {
@@ -300,13 +300,13 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             PageSize = req.PageSize,
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
-            TotalRowsCount = await q.CountAsync(),
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await Include(TakePart(q, req.SortingDirection))
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MessageComplexIdsModel>> SendTextMessageTelegram(SendTextMessageTelegramBotModel message)
+    public async Task<TResponseModel<MessageComplexIdsModel>> SendTextMessageTelegram(SendTextMessageTelegramBotModel message, CancellationToken token)
     {
         TResponseModel<MessageComplexIdsModel> res = new();
         string msg;
@@ -316,7 +316,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             return res;
         }
 
-        TResponseModel<TelegramUserBaseModel> tgUser = await IdentityRepo.GetTelegramUser(message.UserTelegramId);
+        TResponseModel<TelegramUserBaseModel> tgUser = await IdentityRepo.GetTelegramUser(message.UserTelegramId, token);
         if (tgUser.Response is null || !tgUser.Success())
         {
             if (tgUser.Success())
@@ -335,8 +335,6 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             _logger.LogWarning(msg);
             res.AddWarning(msg);
         }
-
-
 
         ReplyMarkup? replyKB = message.ReplyKeyboard is null
             ? null
@@ -358,22 +356,11 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
 
                     if (GlobalTools.IsImageFile(file.Name))
                     {
-                        sender_msg = await _botClient.SendPhoto(
-                            chatId: message.UserTelegramId,
-                            photo: InputFile.FromStream(new MemoryStream(file.Data), file.Name),
-                            caption: msg_text,
-                            replyMarkup: replyKB,
-                            parseMode: parse_mode,
-                            replyParameters: message.ReplyToMessageId!.Value);
+                        sender_msg = await _botClient.SendPhoto(chatId: message.UserTelegramId, photo: InputFile.FromStream(new MemoryStream(file.Data), file.Name), caption: msg_text, replyMarkup: replyKB, parseMode: parse_mode, replyParameters: message.ReplyToMessageId!.Value, cancellationToken: token);
                     }
                     else
                     {
-                        sender_msg = await _botClient.SendDocument(
-                                    chatId: message.UserTelegramId,
-                                    document: InputFile.FromStream(new MemoryStream(file.Data), file.Name),
-                        caption: msg_text,
-                                    parseMode: parse_mode,
-                                    replyParameters: message.ReplyToMessageId);
+                        sender_msg = await _botClient.SendDocument(chatId: message.UserTelegramId, document: InputFile.FromStream(new MemoryStream(file.Data), file.Name), caption: msg_text, parseMode: parse_mode, replyParameters: message.ReplyToMessageId, cancellationToken: token);
                     }
 
                     msg_db = await storeTgRepo.StoreMessage(sender_msg);
@@ -385,10 +372,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 }
                 else
                 {
-                    Message[] senders_msgs = await _botClient.SendMediaGroup(
-                        chatId: message.UserTelegramId,
-                        media: message.Files.Select(ToolsStatic.ConvertFile).ToArray(),
-                        replyParameters: message.ReplyToMessageId);
+                    Message[] senders_msgs = await _botClient.SendMediaGroup(chatId: message.UserTelegramId, media: message.Files.Select(ToolsStatic.ConvertFile).ToArray(), replyParameters: message.ReplyToMessageId, cancellationToken: token);
 
                     foreach (Message mm in senders_msgs)
                     {
@@ -403,11 +387,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             }
             else
             {
-                sender_msg = await _botClient.SendMessage(
-                    chatId: message.UserTelegramId,
-                text: msg_text,
-                    parseMode: parse_mode,
-                    replyParameters: message.ReplyToMessageId);
+                sender_msg = await _botClient.SendMessage(chatId: message.UserTelegramId, text: msg_text, parseMode: parse_mode, replyParameters: message.ReplyToMessageId, cancellationToken: token);
 
                 msg_db = await storeTgRepo.StoreMessage(sender_msg);
                 res.Response = new MessageComplexIdsModel()
@@ -419,7 +399,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
         }
         catch (Exception ex)
         {
-            using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync();
+            using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
             int? errorCode = null;
             if (ex is ApiRequestException _are)
                 errorCode = _are.ErrorCode;
@@ -442,8 +422,8 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 Message = $"{ex.Message}\n\n{JsonConvert.SerializeObject(message)}",
                 ExceptionTypeName = ex.GetType().FullName,
                 ErrorCode = errorCode
-            });
-            await context.SaveChangesAsync();
+            }, token);
+            await context.SaveChangesAsync(token);
 
             msg = "Ошибка отправки Telegram сообщения. error FA51C4EC-6AC7-4F7D-9B64-A6D6436DFDDA";
             res.AddError(msg);
@@ -456,10 +436,10 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
         {
             try
             {
-                await _botClient.DeleteMessage(chatId: message.UserTelegramId, message.MainTelegramMessageId.Value);
+                await _botClient.DeleteMessage(chatId: message.UserTelegramId, message.MainTelegramMessageId.Value, cancellationToken: token);
             }
             finally { }
-            await IdentityRepo.UpdateTelegramMainUserMessage(new() { MessageId = 0, UserId = message.UserTelegramId });
+            await IdentityRepo.UpdateTelegramMainUserMessage(new() { MessageId = 0, UserId = message.UserTelegramId }, token);
         }
 
         return res;

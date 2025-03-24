@@ -16,9 +16,9 @@ public class DeleteTabOfDocumentSchemeReceive(IConstructorService conService) : 
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.DeleteTabOfDocumentSchemeReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<int>? payload)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<int>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.DeleteTabOfDocumentScheme(payload);
+        return await conService.DeleteTabOfDocumentScheme(payload, token);
     }
 }

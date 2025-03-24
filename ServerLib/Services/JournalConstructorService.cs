@@ -20,11 +20,11 @@ public partial class JournalConstructorService(
     IHttpContextAccessor httpContextAccessor) : IJournalUniversalService
 {
     /// <inheritdoc/>
-    public async Task<DocumentFitModel> GetDocumentMetadata(string document_name_or_id, int? projectId = null)
+    public async Task<DocumentFitModel> GetDocumentMetadata(string document_name_or_id, int? projectId = null, CancellationToken token = default)
     {
         TResponseModel<DocumentFitModel> res = new();
 
-        TResponseModel<DocumentSchemeConstructorModelDB[]?> find_doc = await FindDocumentSchemes(document_name_or_id, projectId);
+        TResponseModel<DocumentSchemeConstructorModelDB[]?> find_doc = await FindDocumentSchemes(document_name_or_id, projectId, token);
         if (!find_doc.Success())
             throw new Exception();
 
@@ -34,22 +34,22 @@ public partial class JournalConstructorService(
         if (find_doc.Response.Length > 1)
             throw new Exception();
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
 
 
         ManufactureSystemNameModelDB[] system_names = await (from sys_name in context_forms.SystemNamesManufactures
                                                              join man in context_forms.Manufactures.Where(x => x.ProjectId == find_doc.Response.Single().ProjectId) on sys_name.ManufactureId equals man.Id
-                                                             select sys_name).ToArrayAsync();
+                                                             select sys_name).ToArrayAsync(cancellationToken: token);
 
         return IJournalUniversalService.DocumentConvert(find_doc.Response[0], [.. system_names.Select(x => new SystemNameEntryModel() { TypeDataId = x.TypeDataId, TypeDataName = x.TypeDataName, Qualification = x.Qualification, SystemName = x.SystemName })]);
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<EntryAltModel[]?>> GetColumnsForJournal(string journal_name_or_id, int? projectId)
+    public async Task<TResponseModel<EntryAltModel[]?>> GetColumnsForJournal(string journal_name_or_id, int? projectId, CancellationToken token = default)
     {
         TResponseModel<EntryAltModel[]?> res = new();
 
-        TResponseModel<DocumentSchemeConstructorModelDB[]?> find_doc = await FindDocumentSchemes(journal_name_or_id, projectId);
+        TResponseModel<DocumentSchemeConstructorModelDB[]?> find_doc = await FindDocumentSchemes(journal_name_or_id, projectId, token);
         if (!find_doc.Success())
         {
             res.Messages = find_doc.Messages;
@@ -80,44 +80,38 @@ public partial class JournalConstructorService(
             return [];
 
         if (_doc.Tabs.Count > 1)
-            return _doc.Tabs
-                .Select(x => new EntryAltModel() { Id = x.Id.ToString(), Name = x.Name })
-                .ToArray();
+            return [.. _doc.Tabs.Select(x => new EntryAltModel() { Id = x.Id.ToString(), Name = x.Name })];
 
         TabOfDocumentSchemeConstructorModelDB _tab = _doc.Tabs.Single();
         if (_tab.JoinsForms is null || _tab.JoinsForms.Count == 0)
             return [new EntryAltModel() { Id = _tab.Id.ToString(), Name = _tab.Name }];
 
         if (_tab.JoinsForms.Count > 1)
-            return _tab.JoinsForms
-                .Select(x => new EntryAltModel() { Id = x.Id.ToString(), Name = x.Name })
-                .ToArray();
+            return [.. _tab.JoinsForms.Select(x => new EntryAltModel() { Id = x.Id.ToString(), Name = x.Name })];
 
         FormConstructorModelDB _form = _tab.JoinsForms.Single().Form ?? throw new Exception();
 
         if (_form.AllFields.Length == 0)
             return [new EntryAltModel() { Id = _form.Id.ToString(), Name = _form.Name }];
 
-        return _form.AllFields
-            .Select(x => new EntryAltModel() { Id = x.Id.ToString(), Name = x.Name })
-            .ToArray();
+        return [.. _form.AllFields.Select(x => new EntryAltModel() { Id = x.Id.ToString(), Name = x.Name })];
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KeyValuePair<int, Dictionary<string, object>>>> SelectJournalPart(SelectJournalPartRequestModel req, int? projectId)
+    public async Task<TPaginationResponseModel<KeyValuePair<int, Dictionary<string, object>>>> SelectJournalPart(SelectJournalPartRequestModel req, int? projectId, CancellationToken token = default)
     {
-        TResponseModel<DocumentSchemeConstructorModelDB[]?> find_doc = await FindDocumentSchemes(req.DocumentNameOrId, projectId);
+        TResponseModel<DocumentSchemeConstructorModelDB[]?> find_doc = await FindDocumentSchemes(req.DocumentNameOrId, projectId, token);
         if (!find_doc.Success() || find_doc.Response is null || find_doc.Response.Length == 0 || find_doc.Response.Length > 1)
             return new() { Response = [] };
 
         DocumentSchemeConstructorModelDB doc_db = find_doc.Response.Single();
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
 
         IQueryable<SessionOfDocumentDataModelDB> q = context_forms
             .Sessions
             .Where(x => x.OwnerId == doc_db.Id);
 
-        int totalRowsCount = await q.CountAsync();
+        int totalRowsCount = await q.CountAsync(cancellationToken: token);
 
         q = q
             .OrderBy(x => x.Id)
@@ -173,10 +167,9 @@ public partial class JournalConstructorService(
                             return new KeyValuePair<int, Dictionary<string, object>>(_session.Id, _fields_raw);
                         }
 
-                        ValueDataForSessionOfDocumentModelDB[] data = _session
+                        ValueDataForSessionOfDocumentModelDB[] data = [.. _session
                             .DataSessionValues
-                            .Where(x => x.JoinFormToTabId == _join.Id)
-                            .ToArray();
+                            .Where(x => x.JoinFormToTabId == _join.Id)];
 
                         foreach (FieldFormBaseLowConstructorModel f in _fields)
                             _fields_raw.Add(f.Name, data.FirstOrDefault()?.Value ?? "");
@@ -203,9 +196,7 @@ public partial class JournalConstructorService(
             }
         }
 
-        List<KeyValuePair<int, Dictionary<string, object>>> _response = sessions_db
-            .Select(SessionConvert)
-            .ToList();
+        List<KeyValuePair<int, Dictionary<string, object>>> _response = [.. sessions_db.Select(SessionConvert)];
 
         if (!string.IsNullOrWhiteSpace(req.SearchString))
             _response = _response
@@ -221,24 +212,22 @@ public partial class JournalConstructorService(
                 : [.. _response.OrderByDescending(x => x.Value[req.SortBy])];
         }
 
-        _response = _response
+        _response = [.. _response
             .OrderBy(x => x.Key)
             .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToList();
+            .Take(req.PageSize)];
 
         return new()
         {
-            Response = _response
+            Response = [.. _response
             .OrderBy(x => x.Key)
             .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToList()
+            .Take(req.PageSize)]
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DocumentSchemeConstructorModelDB[]?>> FindDocumentSchemes(string document_name_or_id, int? projectId)
+    public async Task<TResponseModel<DocumentSchemeConstructorModelDB[]?>> FindDocumentSchemes(string document_name_or_id, int? projectId, CancellationToken token = default)
     {
         TResponseModel<DocumentSchemeConstructorModelDB[]?> res = new();
 
@@ -250,10 +239,10 @@ public partial class JournalConstructorService(
             return res;
         }
 
-        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentity([user_id]);
+        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentity([user_id], token);
         UserInfoModel current_user = users_find.Response![0];
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
 
         IQueryable<DocumentSchemeConstructorModelDB> pre_q = from scheme in context_forms.DocumentSchemes
                                                              join pt in context_forms.Projects on scheme.ProjectId equals pt.Id
@@ -279,43 +268,43 @@ public partial class JournalConstructorService(
         }
 
         res.Response = int.TryParse(document_name_or_id, out int doc_id)
-            ? await IncQuery(pre_q.Where(f => f.Id == doc_id)).ToArrayAsync()
-            : await IncQuery(pre_q.Where(f => f.Name == document_name_or_id)).ToArrayAsync();
+            ? await IncQuery(pre_q.Where(f => f.Id == doc_id)).ToArrayAsync(cancellationToken: token)
+            : await IncQuery(pre_q.Where(f => f.Name == document_name_or_id)).ToArrayAsync(cancellationToken: token);
 
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<EntryAltTagModel[]> GetMyDocumentsSchemas()
+    public async Task<EntryAltTagModel[]> GetMyDocumentsSchemas(CancellationToken token = default)
     {
         string? user_id = httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (user_id is null)
             return [];
 
-        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentity([user_id]);
+        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentity([user_id], token);
         UserInfoModel current_user = users_find.Response![0];
 
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync();
 
         IQueryable<EntryAltTagModel> pre_q = from scheme in context_forms.DocumentSchemes
                                              join pt in context_forms.Projects on scheme.ProjectId equals pt.Id
                                              where pt.OwnerUserId == current_user.UserId || context_forms.MembersOfProjects.Any(x => x.ProjectId == pt.Id && x.UserId == current_user.UserId)
                                              select new EntryAltTagModel() { Id = scheme.Id.ToString(), Name = scheme.Name, Tag = pt.Name };
 
-        return await pre_q.OrderBy(x => x.Name).ToArrayAsync();
+        return await pre_q.OrderBy(x => x.Name).ToArrayAsync(cancellationToken: token);
     }
 
     /// <inheritdoc/>
-    public async Task<ValueDataForSessionOfDocumentModelDB[]> ReadSessionTabValues(int tabId, int sessionId)
+    public async Task<ValueDataForSessionOfDocumentModelDB[]> ReadSessionTabValues(int tabId, int sessionId, CancellationToken token = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
 
         IQueryable<ValueDataForSessionOfDocumentModelDB> q = from val in context_forms.ValuesSessions.Where(x => x.OwnerId == sessionId)
                                                              join tj in context_forms.TabsJoinsForms.Where(x => x.TabId == tabId) on val.JoinFormToTabId equals tj.Id
                                                              select val;
 
-        return await q.Include(x => x.JoinFormToTab).ToArrayAsync();
+        return await q.Include(x => x.JoinFormToTab).ToArrayAsync(cancellationToken: token);
     }
 }

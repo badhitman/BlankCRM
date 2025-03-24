@@ -18,10 +18,10 @@ public class SaveFileReceive(ILogger<SaveFileReceive> LoggerRepo, ISerializeStor
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SaveFileReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageFileModelDB>?> ResponseHandleAction(TAuthRequestModel<StorageImageMetadataModel>? req)
+    public async Task<TResponseModel<StorageFileModelDB>?> ResponseHandleAction(TAuthRequestModel<StorageImageMetadataModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await serializeStorageRepo.SaveFile(req);
+        return await serializeStorageRepo.SaveFile(req, token);
     }
 }

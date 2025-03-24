@@ -17,10 +17,10 @@ public class RowForWarehouseDocumentUpdateReceive(ICommerceService commRepo, ILo
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.RowForWarehouseDocumentUpdateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleAction(RowOfWarehouseDocumentModelDB? req)
+    public async Task<TResponseModel<int>?> ResponseHandleAction(RowOfWarehouseDocumentModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commRepo.RowForWarehouseDocumentUpdate(req);
+        return await commRepo.RowForWarehouseDocumentUpdate(req, token);
     }
 }

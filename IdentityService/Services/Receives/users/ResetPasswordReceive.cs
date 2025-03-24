@@ -25,10 +25,10 @@ public class ResetPasswordReceive(IIdentityTools idRepo, ILogger<ResetPasswordRe
     /// Сбрасывает пароль на указанный
     /// после проверки заданного сброса пароля.
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityPasswordTokenModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityPasswordTokenModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ResetPassword(req);
+        return await idRepo.ResetPassword(req, token);
     }
 }

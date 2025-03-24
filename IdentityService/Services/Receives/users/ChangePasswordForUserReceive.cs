@@ -20,10 +20,10 @@ public class ChangePasswordForUserReceive(IIdentityTools idRepo, ILogger<ChangeP
     /// <summary>
     /// Изменяет пароль пользователя после подтверждения правильности указанного currentPassword
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityChangePasswordModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityChangePasswordModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ChangePassword(req);
+        return await idRepo.ChangePassword(req, token);
     }
 }

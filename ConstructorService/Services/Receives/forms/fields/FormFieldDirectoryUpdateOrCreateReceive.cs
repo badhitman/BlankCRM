@@ -16,9 +16,9 @@ public class FormFieldDirectoryUpdateOrCreateReceive(IConstructorService conServ
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.FormFieldDirectoryUpdateOrCreateReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<FieldFormAkaDirectoryConstructorModelDB>? payload)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<FieldFormAkaDirectoryConstructorModelDB>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.FormFieldDirectoryUpdateOrCreate(payload);
+        return await conService.FormFieldDirectoryUpdateOrCreate(payload, token);
     }
 }

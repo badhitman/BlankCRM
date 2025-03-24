@@ -16,10 +16,10 @@ public class FlushTempKladrReceive(ILogger<FlushTempKladrReceive> LoggerRepo, IK
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.FlushTempKladrRecive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(object? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(object? req, CancellationToken token = default)
     {
         // ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await kladrRepo.FlushTempKladr();
+        return await kladrRepo.FlushTempKladr(token);
     }
 }

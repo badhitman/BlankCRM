@@ -16,8 +16,8 @@ public class PriceFullFileGetReceive(ICommerceService commRepo) : IResponseRecei
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.PriceFullFileGetCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<FileAttachModel?> ResponseHandleAction(object? req)
+    public async Task<FileAttachModel?> ResponseHandleAction(object? req, CancellationToken token = default)
     {
-        return await commRepo.GetFullPriceFile();
+        return await commRepo.GetFullPriceFile(token);
     }
 }

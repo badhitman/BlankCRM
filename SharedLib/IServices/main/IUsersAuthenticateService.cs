@@ -16,55 +16,59 @@ public interface IUsersAuthenticateService
     /// <param name="isPersistent">Флаг, указывающий, должен ли файл cookie для входа сохраняться после закрытия браузера.</param>
     /// <param name="rememberClient">Флаг, указывающий, следует ли запомнить текущий браузер, подавляя все дальнейшие запросы двухфакторной аутентификации.</param>
     /// <param name="userAlias">User alias</param>
-    public Task<IdentityResultResponseModel> TwoFactorAuthenticatorSignIn(string code, bool isPersistent, bool rememberClient, string? userAlias = null);
+    /// <param name="token"></param>
+    public Task<IdentityResultResponseModel> TwoFactorAuthenticatorSignIn(string code, bool isPersistent, bool rememberClient, string? userAlias = null, CancellationToken token = default);
 
     /// <summary>
     /// Войти в учётную запись пользователя
     /// </summary>
-    public Task<ResponseBaseModel> SignIn(string userId, bool isPersistent);
+    public Task<ResponseBaseModel> SignIn(string userId, bool isPersistent, CancellationToken token = default);
 
     /// <summary>
     /// Войти в учётную запись пользователя
     /// </summary>
-    public Task<SignInResultResponseModel> PasswordSignIn(string userEmail, string password, bool isPersistent);
+    public Task<SignInResultResponseModel> PasswordSignIn(string userEmail, string password, bool isPersistent, CancellationToken token = default);
 
     /// <summary>
     /// Регистрация нового пользователя
     /// </summary>
     /// <param name="req">Email + Пароль + Адрес сайта/домена (для формирования ссылки подтверждения)</param>
-    public Task<RegistrationNewUserResponseModel> RegisterNewUser(RegisterNewUserPasswordModel req);
+    /// <param name="token"></param>
+    public Task<RegistrationNewUserResponseModel> RegisterNewUser(RegisterNewUserPasswordModel req, CancellationToken token = default);
 
     /// <summary>
     /// [External] Регистрация нового пользователя
     /// </summary>
     /// <param name="userEmail">Email</param>
     /// <param name="baseAddress">Адрес сайта/домена (для формирования ссылки подтверждения)</param>
-    public Task<RegistrationNewUserResponseModel> ExternalRegisterNewUser(string userEmail, string baseAddress);
+    /// <param name="token"></param>
+    public Task<RegistrationNewUserResponseModel> ExternalRegisterNewUser(string userEmail, string baseAddress, CancellationToken token = default);
 
     /// <summary>
     /// Получает информацию о внешнем входе для текущего входа в виде асинхронной операции.
     /// Gets the external login information for the current login, as an asynchronous operation.
     /// </summary>
-    public Task<UserLoginInfoResponseModel> GetExternalLoginInfo(string? expectedXsrf = null);
+    public Task<UserLoginInfoResponseModel> GetExternalLoginInfo(string? expectedXsrf = null, CancellationToken token = default);
 
     /// <summary>
     /// Вход пользователя через ранее зарегистрированный сторонний логин в виде асинхронной операции.
     /// </summary>
-    public Task<ExternalLoginSignInResponseModel> ExternalLoginSignIn(string loginProvider, string providerKey, string? identityName, bool isPersistent = false, bool bypassTwoFactor = true);
+    public Task<ExternalLoginSignInResponseModel> ExternalLoginSignIn(string loginProvider, string providerKey, string? identityName, bool isPersistent = false, bool bypassTwoFactor = true, CancellationToken token = default);
 
     /// <summary>
     /// Получает информацию о пользователе для текущего входа в систему с двухфакторной аутентификацией.
     /// </summary>
-    public Task<TResponseModel<UserInfoModel?>> GetTwoFactorAuthenticationUser();
+    public Task<TResponseModel<UserInfoModel?>> GetTwoFactorAuthenticationUser(CancellationToken token = default);
 
     /// <summary>
     /// Вход пользователя без двухфакторной аутентификации с использованием двухфакторного кода восстановления.
     /// </summary>
     /// <param name="recoveryCode">Двухфакторный код восстановления.</param>
-    public Task<IdentityResultResponseModel> TwoFactorRecoveryCodeSignIn(string recoveryCode);
+    /// <param name="token"></param>
+    public Task<IdentityResultResponseModel> TwoFactorRecoveryCodeSignIn(string recoveryCode, CancellationToken token = default);
 
     /// <summary>
     /// Выводит текущего пользователя из приложения.
     /// </summary>
-    public Task SignOut();
+    public Task SignOut(CancellationToken token = default);
 }

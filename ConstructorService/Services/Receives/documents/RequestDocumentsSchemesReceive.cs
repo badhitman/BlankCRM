@@ -16,9 +16,9 @@ public class RequestDocumentsSchemesReceive(IConstructorService conService) : IR
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.RequestDocumentsSchemesReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleAction(RequestDocumentsSchemesModel? payload)
+    public async Task<TPaginationResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleAction(RequestDocumentsSchemesModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.RequestDocumentsSchemes(payload);
+        return await conService.RequestDocumentsSchemes(payload, token);
     }
 }

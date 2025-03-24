@@ -18,10 +18,10 @@ public class ReadFileReceive(    ILogger<ReadFileReceive> LoggerRepo, ISerialize
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ReadFileReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FileContentModel>?> ResponseHandleAction(TAuthRequestModel<RequestFileReadModel>? req)
+    public async Task<TResponseModel<FileContentModel>?> ResponseHandleAction(TAuthRequestModel<RequestFileReadModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await serializeStorageRepo.ReadFile(req);
+        return await serializeStorageRepo.ReadFile(req, token);
     }
 }

@@ -20,10 +20,10 @@ public class VerifyTwoFactorTokenReceive(IIdentityTools idRepo, ILogger<VerifyTw
     /// <summary>
     /// Проверяет указанную двухфакторную аутентификацию VerificationCode на соответствие UserId
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(VerifyTwoFactorTokenRequestModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(VerifyTwoFactorTokenRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.VerifyTwoFactorToken(req);
+        return await idRepo.VerifyTwoFactorToken(req, token);
     }
 }

@@ -13,152 +13,152 @@ public interface IConstructorTransmission
     /// <summary>
     /// AddRowToTable
     /// </summary>
-    public Task<TResponseModel<int>> AddRowToTable(FieldSessionDocumentDataBaseModel req);
+    public Task<TResponseModel<int>> AddRowToTable(FieldSessionDocumentDataBaseModel req, CancellationToken token = default);
 
     /// <summary>
     /// DeleteValuesFieldsByGroupSessionDocumentDataByRowNum
     /// </summary>
-    public Task<ResponseBaseModel> DeleteValuesFieldsByGroupSessionDocumentDataByRowNum(ValueFieldSessionDocumentDataBaseModel req);
+    public Task<ResponseBaseModel> DeleteValuesFieldsByGroupSessionDocumentDataByRowNum(ValueFieldSessionDocumentDataBaseModel req, CancellationToken token = default);
 
     /// <summary>
     /// SetDoneSessionDocumentData
     /// </summary>
-    public Task<ResponseBaseModel> SetDoneSessionDocumentData(string req);
+    public Task<ResponseBaseModel> SetDoneSessionDocumentData(string req, CancellationToken token = default);
 
     /// <summary>
     /// SetValueFieldSessionDocumentData
     /// </summary>
-    public Task<TResponseModel<SessionOfDocumentDataModelDB>> SetValueFieldSessionDocumentData(SetValueFieldDocumentDataModel req);
+    public Task<TResponseModel<SessionOfDocumentDataModelDB>> SetValueFieldSessionDocumentData(SetValueFieldDocumentDataModel req, CancellationToken token = default);
 
     /// <summary>
     /// GetSessionDocumentData
     /// </summary>
-    public Task<TResponseModel<SessionOfDocumentDataModelDB>> GetSessionDocumentData(string req);
+    public Task<TResponseModel<SessionOfDocumentDataModelDB>> GetSessionDocumentData(string req, CancellationToken token = default);
     #endregion
 
     #region derictories
     /// <summary>
     /// GetDirectory
     /// </summary>
-    public Task<TResponseModel<EntryDescriptionModel>> GetDirectory(int req);
+    public Task<TResponseModel<EntryDescriptionModel>> GetDirectory(int req, CancellationToken token = default);
 
     /// <summary>
     /// GetDirectories
     /// </summary>
-    public Task<TResponseModel<EntryModel[]>> GetDirectories(ProjectFindModel req);
+    public Task<TResponseModel<EntryModel[]>> GetDirectories(ProjectFindModel req, CancellationToken token = default);
 
     /// <summary>
     /// ReadDirectories
     /// </summary>
-    public Task<List<EntryNestedModel>> ReadDirectories(int[] req);
+    public Task<List<EntryNestedModel>> ReadDirectories(int[] req, CancellationToken token = default);
 
     /// <summary>
     /// UpdateOrCreateDirectory
     /// </summary>
-    public Task<TResponseModel<int>> UpdateOrCreateDirectory(TAuthRequestModel<EntryConstructedModel> req);
+    public Task<TResponseModel<int>> UpdateOrCreateDirectory(TAuthRequestModel<EntryConstructedModel> req, CancellationToken token = default);
 
     /// <summary>
     /// DeleteDirectory
     /// </summary>
-    public Task<ResponseBaseModel> DeleteDirectory(TAuthRequestModel<int> req);
+    public Task<ResponseBaseModel> DeleteDirectory(TAuthRequestModel<int> req, CancellationToken token = default);
     #endregion
     #region elements of directories
     /// <summary>
     /// GetElementsOfDirectory
     /// </summary>
-    public Task<TResponseModel<List<EntryModel>>> GetElementsOfDirectory(int req);
+    public Task<TResponseModel<List<EntryModel>>> GetElementsOfDirectory(int req, CancellationToken token = default);
 
     /// <summary>
     /// CreateElementForDirectory
     /// </summary>
-    public Task<TResponseModel<int>> CreateElementForDirectory(TAuthRequestModel<OwnedNameModel> req);
+    public Task<TResponseModel<int>> CreateElementForDirectory(TAuthRequestModel<OwnedNameModel> req, CancellationToken token = default);
 
     /// <summary>
     /// UpdateElementOfDirectory
     /// </summary>
-    public Task<ResponseBaseModel> UpdateElementOfDirectory(TAuthRequestModel<EntryDescriptionModel> req);
+    public Task<ResponseBaseModel> UpdateElementOfDirectory(TAuthRequestModel<EntryDescriptionModel> req, CancellationToken token = default);
 
     /// <summary>
     /// GetElementOfDirectory
     /// </summary>
-    public Task<TResponseModel<EntryDescriptionModel>> GetElementOfDirectory(int req);
+    public Task<TResponseModel<EntryDescriptionModel>> GetElementOfDirectory(int req, CancellationToken token = default);
 
     /// <summary>
     /// DeleteElementFromDirectory
     /// </summary>
-    public Task<ResponseBaseModel> DeleteElementFromDirectory(TAuthRequestModel<int> req);
+    public Task<ResponseBaseModel> DeleteElementFromDirectory(TAuthRequestModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// UpMoveElementOfDirectory
     /// </summary>
-    public Task<ResponseBaseModel> UpMoveElementOfDirectory(TAuthRequestModel<int> req);
+    public Task<ResponseBaseModel> UpMoveElementOfDirectory(TAuthRequestModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// DownMoveElementOfDirectory
     /// </summary>
-    public Task<ResponseBaseModel> DownMoveElementOfDirectory(TAuthRequestModel<int> req);
+    public Task<ResponseBaseModel> DownMoveElementOfDirectory(TAuthRequestModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// CheckAndNormalizeSortIndexForElementsOfDirectory
     /// </summary>
-    public Task<ResponseBaseModel> CheckAndNormalizeSortIndexForElementsOfDirectory(int req);
+    public Task<ResponseBaseModel> CheckAndNormalizeSortIndexForElementsOfDirectory(int req, CancellationToken token = default);
     #endregion
 
     #region project
     /// <summary>
     /// CanEditProject
     /// </summary>
-    public Task<ResponseBaseModel> CanEditProject(UserProjectModel req);
+    public Task<ResponseBaseModel> CanEditProject(UserProjectModel req, CancellationToken token = default);
 
     /// <summary>
     /// DeleteMembersFromProject
     /// </summary>
-    public Task<ResponseBaseModel> DeleteMembersFromProject(UsersProjectModel req);
+    public Task<ResponseBaseModel> DeleteMembersFromProject(UsersProjectModel req, CancellationToken token = default);
 
     /// <summary>
     /// ProjectsRead
     /// </summary>
-    public Task<List<ProjectModelDb>> ProjectsRead(int[] ids);
+    public Task<List<ProjectModelDb>> ProjectsRead(int[] ids, CancellationToken token = default);
 
     /// <summary>
     /// GetProjectsForUser
     /// </summary>
-    public Task<TResponseModel<ProjectViewModel[]>> GetProjectsForUser(GetProjectsForUserRequestModel req);
+    public Task<TResponseModel<ProjectViewModel[]>> GetProjectsForUser(GetProjectsForUserRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// SetMarkerDeleteProject
     /// </summary>
-    public Task<ResponseBaseModel> SetMarkerDeleteProject(SetMarkerProjectRequestModel req);
+    public Task<ResponseBaseModel> SetMarkerDeleteProject(SetMarkerProjectRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// UpdateProject
     /// </summary>
-    public Task<ResponseBaseModel> UpdateProject(ProjectViewModel req);
+    public Task<ResponseBaseModel> UpdateProject(ProjectViewModel req, CancellationToken token = default);
 
     /// <summary>
     /// AddMembersToProject
     /// </summary>
-    public Task<ResponseBaseModel> AddMembersToProject(UsersProjectModel req);
+    public Task<ResponseBaseModel> AddMembersToProject(UsersProjectModel req, CancellationToken token = default);
 
     /// <summary>
     /// SetProjectAsMain
     /// </summary>
-    public Task<ResponseBaseModel> SetProjectAsMain(UserProjectModel req);
+    public Task<ResponseBaseModel> SetProjectAsMain(UserProjectModel req, CancellationToken token = default);
 
     /// <summary>
     /// GetCurrentMainProject
     /// </summary>
-    public Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProject(string req);
+    public Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProject(string req, CancellationToken token = default);
 
     /// <summary>
     /// CreateProject
     /// </summary>
-    public Task<TResponseModel<int>> CreateProject(CreateProjectRequestModel req);
+    public Task<TResponseModel<int>> CreateProject(CreateProjectRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// GetMembersOfProject
     /// </summary>
-    public Task<TResponseModel<EntryAltModel[]>> GetMembersOfProject(int req);
+    public Task<TResponseModel<EntryAltModel[]>> GetMembersOfProject(int req, CancellationToken token = default);
     #endregion
 
     /////////////// Формы для редактирования/добавления бизнес-сущностей внутри итогового документа.
@@ -296,7 +296,7 @@ public interface IConstructorTransmission
     /// <summary>
     /// Сохранить данные формы документа из сессии
     /// </summary>
-    public Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>> SaveSessionForm(SaveConstructorSessionRequestModel req);
+    public Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>> SaveSessionForm(SaveConstructorSessionRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// Установить статус сессии (от менеджера)

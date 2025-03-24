@@ -20,9 +20,9 @@ public class RecordsAttendancesSelectReceive(ICommerceService commerceRepo)
     /// <summary>
     /// Подбор записей (актуальных)
     /// </summary>
-    public async Task<TPaginationResponseModel<RecordsAttendanceModelDB>?> ResponseHandleAction(TPaginationRequestAuthModel<RecordsAttendancesRequestModel>? payload)
+    public async Task<TPaginationResponseModel<RecordsAttendanceModelDB>?> ResponseHandleAction(TPaginationRequestAuthModel<RecordsAttendancesRequestModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await commerceRepo.RecordsAttendancesSelect(payload);
+        return await commerceRepo.RecordsAttendancesSelect(payload, token);
     }
 }

@@ -20,10 +20,10 @@ public class SetLockUserReceive(IIdentityTools idRepo, ILogger<SetLockUserReceiv
     /// <summary>
     /// Установить блокировку пользователю
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityBooleanModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(IdentityBooleanModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.SetLockUser(req);
+        return await idRepo.SetLockUser(req, token);
     }
 }

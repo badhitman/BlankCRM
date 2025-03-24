@@ -17,7 +17,7 @@ IHttpClientFactory HttpClientFactory,
 ILogger<KladrServiceImpl> loggerRepo) : IKladrService
 {
     /// <inheritdoc/>
-    public async Task<MetadataKladrModel> GetMetadataKladr(GetMetadataKladrRequestModel req)
+    public async Task<MetadataKladrModel> GetMetadataKladr(GetMetadataKladrRequestModel req, CancellationToken token = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.RabbitMqManagement.ToString());
 
@@ -30,7 +30,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
         resMq = await client.GetStringAsync<List<RabbitMqManagementResponseModel>>($"api/queues");
          q = resMq.Response?
             .Where(x => x.name?.Equals(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive) == true);
-        }), Task.Run(async () =>
+        }, token), Task.Run(async () =>
         {
 
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
@@ -50,23 +50,23 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
             SocrbasesCount = await context.SocrbasesKLADR.CountAsync(),
             StreetsCount = await context.StreetsKLADR.CountAsync(),
             DomaCount = await context.HousesKLADR.CountAsync()};
-        })]);
+        }, token)]);
 
         res.RabbitMqManagement = q?.FirstOrDefault(x => x.name?.Equals(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive) == true);
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ClearTempKladr()
+    public async Task<ResponseBaseModel> ClearTempKladr(CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call > {nameof(ClearTempKladr)}");
-        using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+        using KladrContext context = await kladrDbFactory.CreateDbContextAsync(token);
         await context.EmptyTemplateTables();
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req)
+    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req, CancellationToken token = default)
     {
         string tableName = req.TableName[..req.TableName.IndexOf('.')];
         bool valid = Enum.TryParse(tableName, true, out KladrFilesEnum currentKladrElement);
@@ -77,7 +77,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
         if (req.RowsData.Count == 0)
             return ResponseBaseModel.CreateWarning("Строк данных нет");
 
-        using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+        using KladrContext context = await kladrDbFactory.CreateDbContextAsync(token);
 
         switch (currentKladrElement)
         {
@@ -90,8 +90,8 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
                 if (altnamesPart.Response is null || altnamesPart.Response.Count == 0)
                     return ResponseBaseModel.CreateError("altnamesPart.Response is null || altnamesPart.Response.Length == 0");
 
-                await context.TempAltnamesKLADR.AddRangeAsync(altnamesPart.Response.Select(AltnameKLADRModelDB.Build));
-                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.ALTNAMES}` - {await context.SaveChangesAsync()}");
+                await context.TempAltnamesKLADR.AddRangeAsync(altnamesPart.Response.Select(AltnameKLADRModelDB.Build), token);
+                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.ALTNAMES}` - {await context.SaveChangesAsync(token)}");
             case KladrFilesEnum.DOMA:
                 TResponseModel<List<HouseKLADRModel>> housesPart = HouseKLADRModel.Build(req.Columns, req.RowsData);
 
@@ -102,7 +102,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
                     return ResponseBaseModel.CreateError("housesPart.Response is null || housesPart.Response.Length == 0");
 
                 await context.TempHousesKLADR.AddRangeAsync(housesPart.Response.Select(HouseKLADRModelDB.Build));
-                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.DOMA}` - {await context.SaveChangesAsync()}");
+                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.DOMA}` - {await context.SaveChangesAsync(token)}");
             case KladrFilesEnum.NAMEMAP:
                 TResponseModel<List<NameMapKLADRModel>> namesPart = NameMapKLADRModel.Build(req.Columns, req.RowsData);
 
@@ -113,7 +113,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
                     return ResponseBaseModel.CreateError("namesPart.Response is null || namesPart.Response.Length == 0");
 
                 await context.TempNamesMapsKLADR.AddRangeAsync(namesPart.Response.Select(NameMapKLADRModelDB.Build));
-                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.NAMEMAP}` - {await context.SaveChangesAsync()}");
+                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.NAMEMAP}` - {await context.SaveChangesAsync(token)}");
             case KladrFilesEnum.SOCRBASE:
                 TResponseModel<List<SocrbaseKLADRModel>> socrbasesPart = SocrbaseKLADRModel.Build(req.Columns, req.RowsData);
 
@@ -123,8 +123,8 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
                 if (socrbasesPart.Response is null || socrbasesPart.Response.Count == 0)
                     return ResponseBaseModel.CreateError("socrbasesPart.Response is null || socrbasesPart.Response.Length == 0");
 
-                await context.TempSocrbasesKLADR.AddRangeAsync(socrbasesPart.Response.Select(SocrbaseKLADRModelDB.Build));
-                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.SOCRBASE}` - {await context.SaveChangesAsync()}");
+                await context.TempSocrbasesKLADR.AddRangeAsync(socrbasesPart.Response.Select(SocrbaseKLADRModelDB.Build), token);
+                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.SOCRBASE}` - {await context.SaveChangesAsync(token)}");
             case KladrFilesEnum.KLADR:
                 TResponseModel<List<ObjectKLADRModel>> objectsPart = ObjectKLADRModel.Build(req.Columns, req.RowsData);
 
@@ -134,8 +134,8 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
                 if (objectsPart.Response is null || objectsPart.Response.Count == 0)
                     return ResponseBaseModel.CreateError("objectsPart.Response is null || objectsPart.Response.Length == 0");
 
-                await context.TempObjectsKLADR.AddRangeAsync(objectsPart.Response.Select(ObjectKLADRModelDB.Build));
-                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.KLADR}` - {await context.SaveChangesAsync()}");
+                await context.TempObjectsKLADR.AddRangeAsync(objectsPart.Response.Select(ObjectKLADRModelDB.Build), token);
+                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.KLADR}` - {await context.SaveChangesAsync(token)}");
             case KladrFilesEnum.STREET:
                 TResponseModel<List<RootKLADRModel>> streetsPart = RootKLADRModel.Build(req.Columns, req.RowsData);
 
@@ -145,18 +145,18 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
                 if (streetsPart.Response is null || streetsPart.Response.Count == 0)
                     return ResponseBaseModel.CreateError("streetsPart.Response is null || streetsPart.Response.Length == 0");
 
-                await context.TempStreetsKLADR.AddRangeAsync(streetsPart.Response.Select(StreetKLADRModelDB.Build));
-                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.STREET}` - {await context.SaveChangesAsync()}");
+                await context.TempStreetsKLADR.AddRangeAsync(streetsPart.Response.Select(StreetKLADRModelDB.Build), token);
+                return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.STREET}` - {await context.SaveChangesAsync(token)}");
         }
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FlushTempKladr()
+    public async Task<ResponseBaseModel> FlushTempKladr(CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call > {nameof(FlushTempKladr)}");
-        using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
+        using KladrContext context = await kladrDbFactory.CreateDbContextAsync(token);
 
         try
         {

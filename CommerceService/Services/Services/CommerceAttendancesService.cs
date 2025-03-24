@@ -17,12 +17,12 @@ public partial class CommerceImplementService : ICommerceService
 {
     #region records
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<RecordsAttendanceModelDB>> RecordsAttendancesSelect(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req)
+    public async Task<TPaginationResponseModel<RecordsAttendanceModelDB>> RecordsAttendancesSelect(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<RecordsAttendanceModelDB> q = context
             .AttendancesReg
@@ -59,13 +59,13 @@ public partial class CommerceImplementService : ICommerceService
             PageSize = req.PageSize,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
-            TotalRowsCount = await q.CountAsync(),
-            Response = req.Payload.IncludeExternalData ? [.. await inc_query.ToArrayAsync()] : [.. await pq.ToArrayAsync()]
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = req.Payload.IncludeExternalData ? [.. await inc_query.ToArrayAsync(cancellationToken: token)] : [.. await pq.ToArrayAsync()]
         };
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RecordsAttendanceCreate(TAuthRequestModel<CreateAttendanceRequestModel> workSchedules)
+    public async Task<ResponseBaseModel> RecordsAttendanceCreate(TAuthRequestModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default)
     {
         List<WorkScheduleModel> records = workSchedules.Payload.Records;
         ResponseBaseModel res = new();
@@ -84,7 +84,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentity([workSchedules.SenderActionUserId]);
+        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentity([workSchedules.SenderActionUserId], token);
         if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length == 0)
         {
             res.AddRangeMessages(actorRes.Messages);
@@ -93,7 +93,7 @@ public partial class CommerceImplementService : ICommerceService
 
         UserInfoModel actor = actorRes.Response[0];
 
-        List<RecordsAttendanceModelDB> recordsForAdd = records.Select(x => new RecordsAttendanceModelDB()
+        List<RecordsAttendanceModelDB> recordsForAdd = [.. records.Select(x => new RecordsAttendanceModelDB()
         {
             AuthorIdentityUserId = workSchedules.SenderActionUserId,
             ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME,
@@ -108,27 +108,26 @@ public partial class CommerceImplementService : ICommerceService
             Version = Guid.NewGuid(),
             StatusDocument = StatusesDocumentsEnum.Created,
             Name = "Новая запись"
-        })
-        .ToList();
+        })];
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
-        LockTransactionModelDB[] offersLocked = recordsForAdd
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        LockTransactionModelDB[] offersLocked = [.. recordsForAdd
             .Select(x => new LockTransactionModelDB()
             {
                 LockerName = $"{nameof(RecordsAttendanceModelDB)} /{x.DateExecute}: {x.StartPart}-{x.EndPart}",
                 LockerId = x.OfferId,
                 RubricId = x.OrganizationId
-            }).ToArray();
-        using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
+            })];
+        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
 
         try
         {
             await context.AddRangeAsync(offersLocked);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
         }
         catch (Exception ex)
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(token);
             msg = $"Не удалось выполнить команду блокировки БД {nameof(RecordsAttendanceCreate)}: ";
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(workSchedules, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError(msg);
@@ -148,15 +147,15 @@ public partial class CommerceImplementService : ICommerceService
         TResponseModel<string?>? CommerceNewOrderSubjectNotification = null, CommerceNewOrderBodyNotification = null, CommerceNewOrderBodyNotificationTelegram = null;
 
         List<Task> tasks = [
-                Task.Run(async () => { CommerceNewOrderSubjectNotification = await StorageTransmissionRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewOrderSubjectNotification); }),
-                Task.Run(async () => { CommerceNewOrderBodyNotification = await StorageTransmissionRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewOrderBodyNotification); }),
-                Task.Run(async () => { CommerceNewOrderBodyNotificationTelegram = await StorageTransmissionRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewOrderBodyNotificationTelegram); }),
-                Task.Run(async () => { res_RubricIssueForCreateOrder = await StorageTransmissionRepo.ReadParameter<int?>(GlobalStaticConstants.CloudStorageMetadata.RubricIssueForCreateAttendanceOrder); }),
+                Task.Run(async () => { CommerceNewOrderSubjectNotification = await StorageTransmissionRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewOrderSubjectNotification); }, token),
+                Task.Run(async () => { CommerceNewOrderBodyNotification = await StorageTransmissionRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewOrderBodyNotification); }, token),
+                Task.Run(async () => { CommerceNewOrderBodyNotificationTelegram = await StorageTransmissionRepo.ReadParameter<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewOrderBodyNotificationTelegram); }, token),
+                Task.Run(async () => { res_RubricIssueForCreateOrder = await StorageTransmissionRepo.ReadParameter<int?>(GlobalStaticConstants.CloudStorageMetadata.RubricIssueForCreateAttendanceOrder); }, token),
                 Task.Run(async () =>
                 {
-                    WorksFindResponseModel get_balance = await WorkSchedulesFind(req, recordsForAdd.Select(x => x.OrganizationId).Distinct().ToArray());
+                    WorksFindResponseModel get_balance = await WorkSchedulesFind(req, [.. recordsForAdd.Select(x => x.OrganizationId).Distinct()]);
                     WorksSchedulesViews = get_balance.WorksSchedulesViews;
-                })
+                }, token)
             ];
 
         if (string.IsNullOrWhiteSpace(_webConf.ClearBaseUri))
@@ -168,7 +167,7 @@ public partial class CommerceImplementService : ICommerceService
                     TelegramBotConfigModel wc = await webTransmissionRepo.GetWebConfig();
                     _webConf.BaseUri = wc.ClearBaseUri;
                 }
-            }));
+            }, token));
         }
 
         await Task.WhenAll(tasks);
@@ -177,9 +176,7 @@ public partial class CommerceImplementService : ICommerceService
 
         foreach (IGrouping<int, WorkScheduleModel> rec in records.GroupBy(x => x.Organization.Id))
         {
-            List<WorkScheduleModel> b_crop_list = WorksSchedulesViews
-                .Where(x => x.Organization.Id == rec.Key)
-                .ToList();
+            List<WorkScheduleModel> b_crop_list = [.. WorksSchedulesViews.Where(x => x.Organization.Id == rec.Key)];
 
             foreach (WorkScheduleModel subNode in rec)
             {
@@ -195,7 +192,7 @@ public partial class CommerceImplementService : ICommerceService
 
         if (!res.Success())
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(token);
             msg = $"Не удалось сформировать резерв: ";
             loggerRepo.LogError($"{msg}{JsonConvert.SerializeObject(workSchedules, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError(msg);
@@ -213,18 +210,18 @@ public partial class CommerceImplementService : ICommerceService
             },
         };
 
-        TResponseModel<int> issue = await HelpdeskRepo.IssueCreateOrUpdate(issue_new);
+        TResponseModel<int> issue = await HelpdeskRepo.IssueCreateOrUpdate(issue_new, token);
         if (!issue.Success())
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(token);
             res.Messages.AddRange(issue.Messages);
             return res;
         }
 
         recordsForAdd.ForEach(x => x.HelpdeskId = issue.Response);
 
-        await context.AddRangeAsync(recordsForAdd);
-        await context.SaveChangesAsync();
+        await context.AddRangeAsync(recordsForAdd, token);
+        await context.SaveChangesAsync(token);
 
         PulseRequestModel reqPulse = new()
         {
@@ -240,7 +237,7 @@ public partial class CommerceImplementService : ICommerceService
                 SenderActionUserId = workSchedules.SenderActionUserId,
             }
         };
-        await HelpdeskRepo.PulsePush(reqPulse, false);
+        await HelpdeskRepo.PulsePush(reqPulse, false, token);
 
         string subject_email = "Создана новая бронь";
         DateTime _dt = DateTime.UtcNow.GetCustomTime();
@@ -266,10 +263,10 @@ public partial class CommerceImplementService : ICommerceService
             msg_for_tg = CommerceNewOrderBodyNotificationTelegram.Response;
         msg_for_tg = IHelpdeskService.ReplaceTags(msg_for_tg, _dt, issue.Response, StatusesDocumentsEnum.Created, msg_for_tg, _webConf.ClearBaseUri, _about_order);
 
-        tasks = [identityRepo.SendEmail(new() { Email = actor.Email!, Subject = subject_email, TextMessage = msg }, false)];
+        tasks = [identityRepo.SendEmail(new() { Email = actor.Email!, Subject = subject_email, TextMessage = msg }, false, token)];
 
         if (actor.TelegramId.HasValue)
-            tasks.Add(tgRepo.SendTextMessageTelegram(new() { Message = msg_for_tg, UserTelegramId = actor.TelegramId!.Value }, false));
+            tasks.Add(tgRepo.SendTextMessageTelegram(new() { Message = msg_for_tg, UserTelegramId = actor.TelegramId!.Value }, false, token));
 
         if (!string.IsNullOrWhiteSpace(actor.PhoneNumber) && GlobalTools.IsPhoneNumber(actor.PhoneNumber!))
         {
@@ -280,27 +277,27 @@ public partial class CommerceImplementService : ICommerceService
                     waMsg = CommerceNewOrderBodyNotificationWhatsapp.Response;
 
                 await tgRepo.SendWappiMessage(new() { Number = actor.PhoneNumber!, Text = IHelpdeskService.ReplaceTags(waMsg, _dt, issue.Response, StatusesDocumentsEnum.Created, waMsg, _webConf.ClearBaseUri, _about_order, true) }, false);
-            }));
+            }, token));
         }
 
         loggerRepo.LogInformation(msg_for_tg);
         context.RemoveRange(offersLocked);
 
-        await context.SaveChangesAsync();
-        await transaction.CommitAsync();
+        await context.SaveChangesAsync(token);
+        await transaction.CommitAsync(token);
         res.AddSuccess("Ok");
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RecordAttendanceDelete(TAuthRequestModel<int> req)
+    public async Task<ResponseBaseModel> RecordAttendanceDelete(TAuthRequestModel<int> req, CancellationToken token = default)
     {
         UserInfoModel actor = default!;
         RecordsAttendanceModelDB? orderAttendanceDB = null;
         ResponseBaseModel res = new();
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         await Task.WhenAll([
-            Task.Run(async () => { orderAttendanceDB = await context.AttendancesReg.FirstOrDefaultAsync(x => x.Id == req.Payload); }),
+            Task.Run(async () => { orderAttendanceDB = await context.AttendancesReg.FirstOrDefaultAsync(x => x.Id == req.Payload); }, token),
             Task.Run(async () => {
                 TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentity([req.SenderActionUserId]);
                 if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length != 1)
@@ -310,7 +307,7 @@ public partial class CommerceImplementService : ICommerceService
                 }
                 else
                     actor = actorRes.Response[0];
-             })]);
+             }, token)]);
 
         if (!res.Success())
             return res;
@@ -322,7 +319,7 @@ public partial class CommerceImplementService : ICommerceService
             if (orderAttendanceDB.AuthorIdentityUserId == req.SenderActionUserId || actor.IsAdmin || actor.Roles?.Contains(GlobalStaticConstants.Roles.System) == true)
             {
                 context.Remove(orderAttendanceDB);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(token);
                 res.AddSuccess("Запись успешно удалена");
 
                 if (orderAttendanceDB.HelpdeskId.HasValue)
@@ -342,7 +339,7 @@ public partial class CommerceImplementService : ICommerceService
                         }
                     };
 
-                    await HelpdeskRepo.PulsePush(reqPulse, false);
+                    await HelpdeskRepo.PulsePush(reqPulse, false, token);
                 }
             }
             else
@@ -355,10 +352,10 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> RecordsAttendancesStatusesChangeByHelpdeskId(TAuthRequestModel<StatusChangeRequestModel> req)
+    public async Task<TResponseModel<bool>> RecordsAttendancesStatusesChangeByHelpdeskId(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<bool> res = new();
-        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentity([req.SenderActionUserId]);
+        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentity([req.SenderActionUserId], token);
         if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length == 0)
         {
             res.AddRangeMessages(actorRes.Messages);
@@ -366,11 +363,11 @@ public partial class CommerceImplementService : ICommerceService
         }
         UserInfoModel actor = actorRes.Response[0];
         string msg;
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         List<RecordsAttendanceModelDB> ordersDb = await context
             .AttendancesReg
             .Where(x => x.HelpdeskId == req.Payload.DocumentId && x.StatusDocument != req.Payload.Step)
-            .ToListAsync();
+            .ToListAsync(cancellationToken: token);
 
         if (ordersDb.Count == 0)
         {
@@ -380,23 +377,23 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        LockTransactionModelDB[] offersLocked = ordersDb
+        LockTransactionModelDB[] offersLocked = [.. ordersDb
            .Select(x => new LockTransactionModelDB()
            {
                LockerName = $"{nameof(RecordsAttendanceModelDB)} /{x.DateExecute}: {x.StartPart}-{x.EndPart}",
                LockerId = x.OfferId,
                RubricId = x.OrganizationId
-           }).ToArray();
+           })];
 
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
         try
         {
             await context.AddRangeAsync(offersLocked);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
         }
         catch (Exception ex)
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(token);
             msg = $"Не удалось выполнить команду блокировки БД {nameof(RecordsAttendancesStatusesChangeByHelpdeskId)}: ";
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError($"{msg}{ex.Message}");
@@ -435,13 +432,11 @@ public partial class CommerceImplementService : ICommerceService
                 StartDate = ordersDb.Min(x => x.DateExecute),
                 EndDate = ordersDb.Max(x => x.DateExecute),
             };
-            WorksFindResponseModel get_balance = await WorkSchedulesFind(get_balance_req, ordersDb.Select(x => x.OrganizationId).Distinct().ToArray());
+            WorksFindResponseModel get_balance = await WorkSchedulesFind(get_balance_req, ordersDb.Select(x => x.OrganizationId).Distinct().ToArray(), token);
 
             foreach (IGrouping<int, WorkScheduleModel> rec in ordersDb.GroupBy(x => x.OrganizationId))
             {
-                List<WorkScheduleModel> b_crop_list = get_balance.WorksSchedulesViews
-                    .Where(x => x.Organization.Id == rec.Key)
-                    .ToList();
+                List<WorkScheduleModel> b_crop_list = [.. get_balance.WorksSchedulesViews.Where(x => x.Organization.Id == rec.Key)];
 
                 foreach (WorkScheduleModel subNode in rec)
                 {
@@ -457,7 +452,7 @@ public partial class CommerceImplementService : ICommerceService
 
             if (!res.Success())
             {
-                await transaction.RollbackAsync();
+                await transaction.RollbackAsync(token);
                 msg = $"Не удалось сформировать резерв:";
                 loggerRepo.LogError($"{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}\n{JsonConvert.SerializeObject(res, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError(msg);
@@ -467,25 +462,25 @@ public partial class CommerceImplementService : ICommerceService
             reqPulse.Payload.Payload.Description += $"Восстановление записей/брони: {string.Join(";", ordersDb.Select(x => x.ToString()))};";
             reqPulse.Payload.Payload.Tag = GlobalStaticConstants.Routes.SET_ACTION_NAME;
         }
-        await HelpdeskRepo.PulsePush(reqPulse, false);
+        await HelpdeskRepo.PulsePush(reqPulse, false, token);
         context.RemoveRange(offersLocked);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(token);
         res.Response = await context
                             .AttendancesReg
                             .Where(x => x.HelpdeskId == req.Payload.DocumentId)
                             .ExecuteUpdateAsync(set => set
                             .SetProperty(p => p.StatusDocument, req.Payload.Step)
                             .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow)
-                            .SetProperty(p => p.Version, Guid.NewGuid())) != 0;
+                            .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token) != 0;
 
-        await transaction.CommitAsync();
+        await transaction.CommitAsync(token);
         res.AddSuccess("Запрос смены статуса заказа услуг выполнен успешно");
 
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<RecordsAttendanceModelDB[]>> RecordsAttendancesByIssuesGet(OrdersByIssuesSelectRequestModel req)
+    public async Task<TResponseModel<RecordsAttendanceModelDB[]>> RecordsAttendancesByIssuesGet(OrdersByIssuesSelectRequestModel req, CancellationToken token = default)
     {
         if (req.IssueIds.Length == 0)
             return new()
@@ -494,7 +489,7 @@ public partial class CommerceImplementService : ICommerceService
                 Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = "Запрос не может быть пустым" }]
             };
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<RecordsAttendanceModelDB> q = context
             .AttendancesReg
             .Where(x => req.IssueIds.Any(y => y == x.HelpdeskId))
@@ -508,19 +503,19 @@ public partial class CommerceImplementService : ICommerceService
         return new()
         {
             Response = req.IncludeExternalData
-            ? [.. await inc_query.ToArrayAsync()]
-            : [.. await q.ToArrayAsync()],
+            ? [.. await inc_query.ToArrayAsync(cancellationToken: token)]
+            : [.. await q.ToArrayAsync(cancellationToken: token)],
         };
     }
     #endregion
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelect(TPaginationRequestModel<WorkSchedulesSelectRequestModel> req)
+    public async Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelect(TPaginationRequestModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<WeeklyScheduleModelDB> q = context
             .WeeklySchedules.Where(x => x.ContextName == req.Payload.ContextName);
@@ -556,12 +551,12 @@ public partial class CommerceImplementService : ICommerceService
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(),
-            Response = req.Payload.IncludeExternalData ? [.. await inc_query.ToArrayAsync()] : [.. await pq.ToArrayAsync()]
+            Response = req.Payload.IncludeExternalData ? [.. await inc_query.ToArrayAsync(cancellationToken: token)] : [.. await pq.ToArrayAsync(cancellationToken: token)]
         };
     }
 
     /// <inheritdoc/>
-    public async Task<WorksFindResponseModel> WorkSchedulesFind(WorkFindRequestModel req, int[]? organizationsFilter = null)
+    public async Task<WorksFindResponseModel> WorkSchedulesFind(WorkFindRequestModel req, int[]? organizationsFilter = null, CancellationToken token = default)
     {
         List<DayOfWeek> weeks = [];
         List<DateOnly> dates = [];
@@ -584,13 +579,13 @@ public partial class CommerceImplementService : ICommerceService
                 WeeklySchedules = await context.WeeklySchedules
                     .Where(x => !x.IsDisabled && x.ContextName == req.ContextName && (x.OfferId == null || req.OffersFilter.Any(y => y == x.OfferId)) && weeks.Contains(x.Weekday))
                     .ToListAsync();
-             }),
+             }, token),
             Task.Run(async ()=> {
                 using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
                 CalendarsSchedules = await context.CalendarsSchedules
                     .Where(x => !x.IsDisabled && x.ContextName == req.ContextName && dates.Contains(x.DateScheduleCalendar))
                     .ToListAsync();
-            }),
+            }, token),
              Task.Run(async ()=> {
                 using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
@@ -606,7 +601,7 @@ public partial class CommerceImplementService : ICommerceService
                     .Include(x => x.Offer!)
                     .ThenInclude(x => x.Nomenclature)
                     .ToListAsync();
-            }),
+            }, token),
             Task.Run(async ()=> {
                 using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
 
@@ -621,14 +616,14 @@ public partial class CommerceImplementService : ICommerceService
                     .Include(x => x.Offer)
                     .Include(x => x.Organization!)
                     .ToListAsync();
-            })
+            }, token)
         ]);
 
         return new WorksFindResponseModel(req.StartDate, req.EndDate, WeeklySchedules, CalendarsSchedules, OrganizationsContracts, OrdersAttendances);
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> WeeklyScheduleUpdate(WeeklyScheduleModelDB req)
+    public async Task<TResponseModel<int>> WeeklyScheduleUpdate(WeeklyScheduleModelDB req, CancellationToken token = default)
     {
         TResponseModel<int> res = new() { Response = 0 };
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
@@ -643,14 +638,14 @@ public partial class CommerceImplementService : ICommerceService
         req.NormalizedNameUpper = req.Name.ToUpper();
         req.LastAtUpdatedUTC = DateTime.UtcNow;
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         if (req.Id < 1)
         {
             req.IsDisabled = true;
             req.Id = 0;
             req.CreatedAtUTC = req.LastAtUpdatedUTC;
             context.Add(req);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
             res.Response = req.Id;
         }
         else
@@ -665,16 +660,16 @@ public partial class CommerceImplementService : ICommerceService
                 .SetProperty(p => p.StartPart, req.StartPart)
                 .SetProperty(p => p.EndPart, req.EndPart)
                 .SetProperty(p => p.QueueCapacity, req.QueueCapacity)
-                .SetProperty(p => p.Name, req.Name));
+                .SetProperty(p => p.Name, req.Name), cancellationToken: token);
         }
 
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<List<WeeklyScheduleModelDB>> WeeklySchedulesRead(int[] req)
+    public async Task<List<WeeklyScheduleModelDB>> WeeklySchedulesRead(int[] req, CancellationToken token = default)
     {
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<WeeklyScheduleModelDB> q = context
             .WeeklySchedules
@@ -683,11 +678,11 @@ public partial class CommerceImplementService : ICommerceService
         return await q
             .Include(x => x.Offer!)
             .Include(x => x.Nomenclature)
-            .ToListAsync();
+            .ToListAsync(cancellationToken: token);
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CalendarScheduleUpdate(TAuthRequestModel<CalendarScheduleModelDB> req)
+    public async Task<TResponseModel<int>> CalendarScheduleUpdate(TAuthRequestModel<CalendarScheduleModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new() { Response = 0 };
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
@@ -701,7 +696,7 @@ public partial class CommerceImplementService : ICommerceService
         req.Payload.Description = req.Payload.Description?.Trim();
         req.Payload.NormalizedNameUpper = req.Payload.Name.ToUpper();
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         if (req.Payload.Id < 1)
         {
             req.Payload.IsDisabled = true;
@@ -709,7 +704,7 @@ public partial class CommerceImplementService : ICommerceService
             req.Payload.CreatedAtUTC = DateTime.UtcNow;
             req.Payload.LastAtUpdatedUTC = DateTime.UtcNow;
             context.Add(req.Payload);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
             res.Response = req.Payload.Id;
         }
         else
@@ -725,19 +720,19 @@ public partial class CommerceImplementService : ICommerceService
                 .SetProperty(p => p.StartPart, req.Payload.StartPart)
                 .SetProperty(p => p.DateScheduleCalendar, req.Payload.DateScheduleCalendar)
                 .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow)
-                .SetProperty(p => p.NormalizedNameUpper, req.Payload.NormalizedNameUpper));
+                .SetProperty(p => p.NormalizedNameUpper, req.Payload.NormalizedNameUpper), cancellationToken: token);
         }
 
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarSchedulesSelect(TAuthRequestModel<TPaginationRequestModel<WorkScheduleCalendarsSelectRequestModel>> req)
+    public async Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarSchedulesSelect(TAuthRequestModel<TPaginationRequestModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default)
     {
         if (req.Payload.PageSize < 10)
             req.Payload.PageSize = 10;
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         DateOnly _dtp = DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -767,8 +762,8 @@ public partial class CommerceImplementService : ICommerceService
             .Include(x => x.Nomenclature);
 
         CalendarScheduleModelDB[] res = req.Payload.Payload.IncludeExternalData
-            ? await inc_query.ToArrayAsync()
-            : await pq.ToArrayAsync();
+            ? await inc_query.ToArrayAsync(cancellationToken: token)
+            : await pq.ToArrayAsync(cancellationToken: token);
 
         return new()
         {
@@ -778,18 +773,18 @@ public partial class CommerceImplementService : ICommerceService
                 PageSize = req.Payload.PageSize,
                 SortingDirection = req.Payload.SortingDirection,
                 SortBy = req.Payload.SortBy,
-                TotalRowsCount = await q.CountAsync(),
+                TotalRowsCount = await q.CountAsync(cancellationToken: token),
                 Response = [.. res]
             }
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarSchedulesRead(TAuthRequestModel<int[]> req)
+    public async Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarSchedulesRead(TAuthRequestModel<int[]> req, CancellationToken token = default)
     {
         TResponseModel<CalendarScheduleModelDB[]> res = new();
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<CalendarScheduleModelDB> q = context
             .CalendarsSchedules
@@ -800,7 +795,7 @@ public partial class CommerceImplementService : ICommerceService
             Response = await q
             .Include(x => x.Offer!)
             .Include(x => x.Nomenclature)
-            .ToListAsync()
+            .ToListAsync(cancellationToken: token)
         };
     }
 }

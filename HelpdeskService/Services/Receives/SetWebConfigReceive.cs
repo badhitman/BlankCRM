@@ -18,10 +18,10 @@ public class SetWebConfigReceive(IHelpdeskService hdRepo, ILogger<SetWebConfigRe
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetWebConfigHelpdeskReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(HelpdeskConfigModel? payload)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(HelpdeskConfigModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload)}");
-        return await hdRepo.SetWebConfig(payload);
+        return await hdRepo.SetWebConfig(payload, token);
     }
 }

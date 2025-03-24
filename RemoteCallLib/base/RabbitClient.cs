@@ -56,7 +56,7 @@ public class RabbitClient : IRabbitClient
     }
 
     /// <inheritdoc/>
-    public Task<T?> MqRemoteCall<T>(string queue, object? request = null, bool waitResponse = true)
+    public Task<T?> MqRemoteCall<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default)
     {
         // Custom ActivitySource for the application
         ActivitySource greeterActivitySource = new($"OTel.{AppName}");
@@ -180,7 +180,7 @@ public class RabbitClient : IRabbitClient
             {
                 await Task.Delay(RabbitConfigRepo.RemoteCallTimeoutMs);
                 cts.Cancel();
-            });
+            }, tokenOuter);
             try
             {
                 mres.Wait(token);

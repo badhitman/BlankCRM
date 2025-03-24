@@ -21,9 +21,9 @@ public class GeneratePasswordResetTokenReceive(IIdentityTools idRepo)
     /// Создает токен сброса пароля для указанного "userId", используя настроенного поставщика токенов сброса пароля.
     /// Если "userId" не указан, то команда выполняется для текущего пользователя (запрос/сессия)
     /// </summary>
-    public async Task<TResponseModel<string?>?> ResponseHandleAction(string? req)
+    public async Task<TResponseModel<string?>?> ResponseHandleAction(string? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await idRepo.GeneratePasswordResetToken(req);
+        return await idRepo.GeneratePasswordResetToken(req, token);
     }
 }

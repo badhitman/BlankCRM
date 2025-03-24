@@ -16,9 +16,9 @@ public class UsersOrganizationsSelectReceive(ICommerceService commerceRepo) : IR
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrganizationsUsersSelectCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<UserOrganizationModelDB>>?> ResponseHandleAction(TPaginationRequestAuthModel<UsersOrganizationsStatusesRequestModel>? req)
+    public async Task<TResponseModel<TPaginationResponseModel<UserOrganizationModelDB>>?> ResponseHandleAction(TPaginationRequestAuthModel<UsersOrganizationsStatusesRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.UsersOrganizationsSelect(req);
+        return await commerceRepo.UsersOrganizationsSelect(req, token);
     }
 }

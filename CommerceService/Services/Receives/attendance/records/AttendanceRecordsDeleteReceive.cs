@@ -21,10 +21,10 @@ public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, ILogg
     /// <summary>
     /// Обновление WorkScheduleCalendar
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<int>? payload)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<int>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.RecordAttendanceDelete(payload);
+        return await commerceRepo.RecordAttendanceDelete(payload, token);
     }
 }

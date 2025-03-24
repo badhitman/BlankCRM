@@ -16,9 +16,9 @@ public class SetMarkerDeleteProjectReceive(IConstructorService conService) : IRe
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetMarkerDeleteProjectReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(SetMarkerProjectRequestModel? req)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(SetMarkerProjectRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.SetMarkerDeleteProject(req);
+        return await conService.SetMarkerDeleteProject(req, token);
     }
 }

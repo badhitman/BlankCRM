@@ -20,14 +20,14 @@ public class ManufactureService(
     IHttpContextAccessor httpContextAccessor) : IManufactureService
 {
     /// <inheritdoc/>
-    public async Task CreateSnapshot(StructureProjectModel dump, int projectId, string name)
+    public async Task CreateSnapshot(StructureProjectModel dump, int projectId, string name, CancellationToken token = default)
     {
         string user_id = httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new Exception();
 
-        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentity([user_id]);
+        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentity([user_id], token);
         UserInfoModel current_user = users_find.Response![0];
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         using IDbContextTransaction transaction = context_forms.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
 
         ProjectSnapshotModelDB _project_snapshot = new()
@@ -39,7 +39,7 @@ public class ManufactureService(
             Documents = []
         };
 
-        _project_snapshot.Directories = dump.Enumerations.Select(_enum_fit =>
+        _project_snapshot.Directories = [.. dump.Enumerations.Select(_enum_fit =>
         {
             DirectoryEnumSnapshotModelDB _d = new()
             {
@@ -51,7 +51,7 @@ public class ManufactureService(
                 Owner = _project_snapshot,
             };
 
-            _d.Elements = _enum_fit.EnumItems.Select(_enum_element_of_directory =>
+            _d.Elements = [.. _enum_fit.EnumItems.Select(_enum_element_of_directory =>
             {
                 DirectoryEnumElementSnapshotModelDB _df = new()
                 {
@@ -64,15 +64,15 @@ public class ManufactureService(
                 };
 
                 return _df;
-            }).ToList();
+            })];
 
             return _d;
-        }).ToList();
+        })];
 
-        await context_forms.AddAsync(_project_snapshot);
-        await context_forms.SaveChangesAsync();
+        await context_forms.AddAsync(_project_snapshot, token);
+        await context_forms.SaveChangesAsync(token);
 
-        _project_snapshot.Documents = dump.Documents.Select(_doc_fit =>
+        _project_snapshot.Documents = [.. dump.Documents.Select(_doc_fit =>
         {
             DocumentSnapshotModelDB _doc = new()
             {
@@ -83,7 +83,7 @@ public class ManufactureService(
                 Description = _doc_fit.Description,
                 Owner = _project_snapshot,
             };
-            _doc.Tabs = _doc_fit.Tabs.Select(_tab_fit =>
+            _doc.Tabs = [.. _doc_fit.Tabs.Select(_tab_fit =>
             {
                 TabSnapshotModelDB _tab = new()
                 {
@@ -95,7 +95,7 @@ public class ManufactureService(
                     Forms = [],
                     SortIndex = _tab_fit.SortIndex,
                 };
-                _tab.Forms = _tab_fit.Forms.Select(_form_fit =>
+                _tab.Forms = [.. _tab_fit.Forms.Select(_form_fit =>
                 {
                     FormSnapshotModelDB _form = new()
                     {
@@ -143,33 +143,33 @@ public class ManufactureService(
                         }));
                     }
                     return _form;
-                }).ToList();
+                })];
                 return _tab;
-            }).ToList();
+            })];
             return _doc;
-        }).ToList();
+        })];
 
-        await context_forms.AddRangeAsync(_project_snapshot.Documents);
-        await context_forms.SaveChangesAsync();
-        await transaction.CommitAsync();
+        await context_forms.AddRangeAsync(_project_snapshot.Documents, token);
+        await context_forms.SaveChangesAsync(token);
+        await transaction.CommitAsync(token);
     }
 
     /// <inheritdoc/>
-    public async Task<List<SystemNameEntryModel>> GetSystemNames(int manufactureId)
+    public async Task<List<SystemNameEntryModel>> GetSystemNames(int manufactureId, CancellationToken token = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         return await context_forms
             .SystemNamesManufactures
             .Where(x => x.ManufactureId == manufactureId)
             .Select(x => new SystemNameEntryModel() { Qualification = x.Qualification, TypeDataName = x.TypeDataName, SystemName = x.SystemName, TypeDataId = x.TypeDataId })
-            .ToListAsync();
+            .ToListAsync(cancellationToken: token);
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ManageManufactureModelDB>> ReadManufactureConfig(int projectId, string userId)
+    public async Task<TResponseModel<ManageManufactureModelDB>> ReadManufactureConfig(int projectId, string userId, CancellationToken token = default)
     {
         TResponseModel<ManageManufactureModelDB> res = new();
-        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentity([userId]);
+        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentity([userId], token);
         if (!findUsers.Success() || findUsers.Response is null)
         {
             res.AddRangeMessages(findUsers.Messages);
@@ -177,11 +177,11 @@ public class ManufactureService(
         }
 
         UserInfoModel user = findUsers.Response.Single();
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
 
         res.Response = await context_forms
             .Manufactures
-            .FirstOrDefaultAsync(x => x.ProjectId == projectId && x.UserId == user.UserId);
+            .FirstOrDefaultAsync(x => x.ProjectId == projectId && x.UserId == user.UserId, cancellationToken: token);
 
         if (res.Response is null)
         {
@@ -192,20 +192,20 @@ public class ManufactureService(
                         .FirstAsync();
 
             res.Response = new ManageManufactureModelDB() { UserId = user.UserId, Namespace = GlobalTools.TranslitToSystemName(project_db.Name), ProjectId = project_db.Id };
-            await context_forms.AddAsync(res.Response);
-            await context_forms.SaveChangesAsync();
+            await context_forms.AddAsync(res.Response, token);
+            await context_forms.SaveChangesAsync(token);
         }
 
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetOrDeleteSystemName(UpdateSystemNameModel request)
+    public async Task<ResponseBaseModel> SetOrDeleteSystemName(UpdateSystemNameModel request, CancellationToken token = default)
     {
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         ManufactureSystemNameModelDB? snMan = await context_forms
             .SystemNamesManufactures
-            .FirstOrDefaultAsync(x => x.Qualification == request.Qualification && x.TypeDataName == request.TypeDataName && x.ManufactureId == request.ManufactureId && x.TypeDataId == request.TypeDataId);
+            .FirstOrDefaultAsync(x => x.Qualification == request.Qualification && x.TypeDataName == request.TypeDataName && x.ManufactureId == request.ManufactureId && x.TypeDataId == request.TypeDataId, cancellationToken: token);
 
         if (string.IsNullOrWhiteSpace(request.SystemName))
         {
@@ -214,7 +214,7 @@ public class ManufactureService(
             else
             {
                 context_forms.Remove(snMan);
-                await context_forms.SaveChangesAsync();
+                await context_forms.SaveChangesAsync(token);
                 return ResponseBaseModel.CreateInfo("Значение удалено.");
             }
         }
@@ -224,11 +224,11 @@ public class ManufactureService(
         {
             if (snMan == null)
             {
-                if (await context_forms.SystemNamesManufactures.AnyAsync(x => x.SystemName == request.SystemName && x.TypeDataName == request.TypeDataName && x.ManufactureId == request.ManufactureId && x.TypeDataId == request.TypeDataId))
+                if (await context_forms.SystemNamesManufactures.AnyAsync(x => x.SystemName == request.SystemName && x.TypeDataName == request.TypeDataName && x.ManufactureId == request.ManufactureId && x.TypeDataId == request.TypeDataId, cancellationToken: token))
                     return ResponseBaseModel.CreateError("Имя не уникально. Задайте другое имя");
 
-                await context_forms.AddAsync(ManufactureSystemNameModelDB.Build(request));
-                await context_forms.SaveChangesAsync();
+                await context_forms.AddAsync(ManufactureSystemNameModelDB.Build(request), token);
+                await context_forms.SaveChangesAsync(token);
                 return ResponseBaseModel.CreateInfo("Значение создано.");
             }
             else
@@ -236,42 +236,41 @@ public class ManufactureService(
                 if (snMan.SystemName == request.SystemName)
                     return ResponseBaseModel.CreateInfo("Обновления системного имени не требуется.");
 
-                if (await context_forms.SystemNamesManufactures.AnyAsync(x => x.Id != snMan.Id && x.SystemName == request.SystemName && x.TypeDataName == request.TypeDataName && x.ManufactureId == request.ManufactureId && x.TypeDataId == request.TypeDataId))
+                if (await context_forms.SystemNamesManufactures.AnyAsync(x => x.Id != snMan.Id && x.SystemName == request.SystemName && x.TypeDataName == request.TypeDataName && x.ManufactureId == request.ManufactureId && x.TypeDataId == request.TypeDataId, cancellationToken: token))
                     return ResponseBaseModel.CreateError("Имя не уникально. Задайте другое имя");
 
                 snMan.SystemName = request.SystemName;
                 context_forms.Update(snMan);
-                await context_forms.SaveChangesAsync();
+                await context_forms.SaveChangesAsync(token);
                 return ResponseBaseModel.CreateInfo("Значение обновлено.");
             }
         }
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateManufactureConfig(ManageManufactureModelDB manufacture)
+    public async Task<ResponseBaseModel> UpdateManufactureConfig(ManageManufactureModelDB manufacture, CancellationToken token = default)
     {
         (bool IsValid, List<ValidationResult> ValidationResults) = GlobalTools.ValidateObject(manufacture);
         if (!IsValid)
             return ResponseBaseModel.CreateError(ValidationResults);
 
         string?[] folder_names = [manufacture.AccessDataDirectoryPath, manufacture.EnumDirectoryPath, manufacture.DocumentsMastersDbDirectoryPath];
-        folder_names = folder_names
+        folder_names = [.. folder_names
             .GroupBy(x => x)
             .Where(x => x.Count() > 1)
-            .Select(x => x.Key)
-            .ToArray();
+            .Select(x => x.Key)];
 
         if (folder_names.Length != 0)
             return ResponseBaseModel.CreateError($"Имена папок должны быть уникальные. Есть дубликаты: {string.Join(";", folder_names)}");
 
-        using ConstructorContext context_forms = mainDbFactory.CreateDbContext();
-        ManageManufactureModelDB manufacture_db = await context_forms.Manufactures.FirstAsync(x => x.Id == manufacture.Id);
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
+        ManageManufactureModelDB manufacture_db = await context_forms.Manufactures.FirstAsync(x => x.Id == manufacture.Id, cancellationToken: token);
         if (manufacture_db.Equals(manufacture))
             return ResponseBaseModel.CreateInfo("Обновление не требуется. Объекты равны");
 
         manufacture_db.Reload(manufacture);
         context_forms.Update(manufacture_db);
-        await context_forms.SaveChangesAsync();
+        await context_forms.SaveChangesAsync(token);
 
         return ResponseBaseModel.CreateSuccess("Обновление успешно выполнено");
     }

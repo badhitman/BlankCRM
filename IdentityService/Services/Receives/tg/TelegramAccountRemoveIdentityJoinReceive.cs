@@ -20,10 +20,10 @@ public class TelegramAccountRemoveIdentityJoinReceive(IIdentityTools identityRep
     /// <summary>
     /// Удалить связь Telegram аккаунта с учётной записью сайта
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(TelegramAccountRemoveJoinRequestIdentityModel? payload)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(TelegramAccountRemoveJoinRequestIdentityModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await identityRepo.TelegramAccountRemoveIdentityJoin(payload);
+        return await identityRepo.TelegramAccountRemoveIdentityJoin(payload, token);
     }
 }

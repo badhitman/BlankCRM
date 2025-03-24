@@ -17,9 +17,9 @@ public class PricesRulesGetForOffersReceive(ICommerceService commerceRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.PricesRulesGetForOfferCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<PriceRuleForOfferModelDB>>?> ResponseHandleAction(TAuthRequestModel<int[]>? req)
+    public async Task<TResponseModel<List<PriceRuleForOfferModelDB>>?> ResponseHandleAction(TAuthRequestModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.PricesRulesGetForOffers(req);
+        return await commerceRepo.PricesRulesGetForOffers(req, token);
     }
 }

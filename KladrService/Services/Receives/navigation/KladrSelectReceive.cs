@@ -15,9 +15,9 @@ public class KladrSelectReceive(IKladrNavigationService kladrRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.KladrNavigationSelectReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KladrResponseModel>?> ResponseHandleAction(KladrSelectRequestModel? req)
+    public async Task<TPaginationResponseModel<KladrResponseModel>?> ResponseHandleAction(KladrSelectRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await kladrRepo.ObjectsSelect(req);
+        return await kladrRepo.ObjectsSelect(req, token);
     }
 }

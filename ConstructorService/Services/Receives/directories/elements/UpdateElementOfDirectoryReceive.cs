@@ -16,9 +16,9 @@ public class UpdateElementOfDirectoryReceive(IConstructorService conService) : I
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.UpdateElementOfDirectoryReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<EntryDescriptionModel>? payload)
+    public async Task<ResponseBaseModel?> ResponseHandleAction(TAuthRequestModel<EntryDescriptionModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.UpdateElementOfDirectory(payload);
+        return await conService.UpdateElementOfDirectory(payload, token);
     }
 }

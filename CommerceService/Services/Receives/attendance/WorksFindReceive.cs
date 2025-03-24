@@ -16,9 +16,9 @@ public class WorksFindReceive(ICommerceService commerceRepo) : IResponseReceive<
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.WorksSchedulesFindCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<WorksFindResponseModel?> ResponseHandleAction(WorkFindRequestModel? req)
+    public async Task<WorksFindResponseModel?> ResponseHandleAction(WorkFindRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.WorkSchedulesFind(req);
+        return await commerceRepo.WorkSchedulesFind(req, token);
     }
 }

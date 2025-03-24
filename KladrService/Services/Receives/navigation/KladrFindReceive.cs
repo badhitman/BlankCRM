@@ -15,9 +15,9 @@ public class KladrFindReceive(IKladrNavigationService kladrRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.KladrNavigationFindReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KladrResponseModel>?> ResponseHandleAction(KladrFindRequestModel? req)
+    public async Task<TPaginationResponseModel<KladrResponseModel>?> ResponseHandleAction(KladrFindRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await kladrRepo.ObjectsFind(req);
+        return await kladrRepo.ObjectsFind(req, token);
     }
 }
