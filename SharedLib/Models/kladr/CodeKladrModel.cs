@@ -52,9 +52,9 @@ public partial class CodeKladrModel
     {
          KladrTypesObjectsEnum.RootRegion => $"{RegionCode}%00",
          KladrTypesObjectsEnum.Area => $"{RegionCode}{AreaCode}%00",
-         KladrTypesObjectsEnum.City => $"{RegionCode}___{CityCode}%00",
-         KladrTypesObjectsEnum.PopPoint => $"{RegionCode}______{PopPointCode}%00",
-         KladrTypesObjectsEnum.Street => $"{RegionCode}_________{StreetCode}%",
+         KladrTypesObjectsEnum.City => $"{RegionCode}{AreaCode}{CityCode}%00",
+         KladrTypesObjectsEnum.PopPoint => $"{RegionCode}{AreaCode}{CityCode}{PopPointCode}%00",
+         KladrTypesObjectsEnum.Street => $"{RegionCode}{AreaCode}{CityCode}{PopPointCode}{StreetCode}%",
          _ => default
     };
 
@@ -243,7 +243,7 @@ public partial class CodeKladrModel
         return new()
         {
             CodeOrigin = code,
-            Level = KladrTypesObjectsEnum.Home,
+            Level = KladrTypesObjectsEnum.House,
             Chain = KladrChainTypesEnum.HousesInStreet,
             RegionCode = codeRegion,
             AreaCode = codeArea,

@@ -45,5 +45,5 @@ public enum KladrTypesObjectsEnum
     /// Дом
     /// </summary>
     [Description("Дом")]
-    Home = 60,
+    House = 60,
 }

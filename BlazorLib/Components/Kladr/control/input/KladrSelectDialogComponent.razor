@@ -27,10 +27,10 @@
         @if (CurrentRegion is not null)
         {
             <div class="input-group mb-3">
-                <input @bind="FindName" type="text" class="form-control">
+                <input @bind="FindName" type="text" class="form-control" placeholder="Поиск по названию">
                 <button class="btn btn-outline-secondary" type="button">Найти</button>
             </div>
-            @if (string.IsNullOrWhiteSpace(FindName))
+            @if (string.IsNullOrWhiteSpace(FindName) && SelectionProgressSteps.Count == 0)
             {
                 <figure class="text-center">
                     <blockquote class="blockquote">
@@ -51,7 +51,7 @@
                         <MudTh></MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd><KladrFindTableRowComponent KladrRow="context" HighlightedText="@FindName" SelectionHandler="SelectRowAction" /></MudTd>
+                        <MudTd><KladrFindTableRowComponent KladrRow="context" HighlightedText="@FindName" SelectionHandler="SelectRowAction" SkipBreadcrumbs="@(SelectionProgressSteps.Count + 1)" /></MudTd>
                     </RowTemplate>
                     <NoRecordsContent>
                         <figure class="text-center">

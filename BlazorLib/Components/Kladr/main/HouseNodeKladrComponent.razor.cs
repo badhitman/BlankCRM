@@ -8,9 +8,9 @@ using SharedLib;
 namespace BlazorLib.Components.Kladr.main;
 
 /// <summary>
-/// HomeNodeKladrComponent
+/// HouseNodeKladrComponent
 /// </summary>
-public partial class HomeNodeKladrComponent : KladrNavBaseNodeComponent
+public partial class HouseNodeKladrComponent : KladrNavBaseNodeComponent
 {
     /// <inheritdoc/>
     [Parameter, EditorRequired]

@@ -133,7 +133,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 HouseKLADRModelDB? _db = await context.HousesKLADR.FirstOrDefaultAsync(x => x.CODE == codeParse.CodeOrigin);
                 if (_db is not null)
                 {
-                    dataResponse.TryAdd(KladrTypesObjectsEnum.Home, _db);
+                    dataResponse.TryAdd(KladrTypesObjectsEnum.House, _db);
                     lock (socrBases)
                     {
                         socrBases.Add((6, _db.SOCR));

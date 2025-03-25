@@ -22,6 +22,10 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
     [CascadingParameter, EditorRequired]
     public required IMudDialogInstance MudDialog { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action<KladrResponseModel> ChangeSelectHandle { get; set; }
+
 
     RootKLADREquatableModel? CurrentRegion;
     List<RootKLADREquatableModel> regions = [];
@@ -79,7 +83,10 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         FindName = "";
         CodeKladrModel mdCode = CodeKladrModel.Build(selected.Code);
         if (_finChains.Contains(selected.Chain) || string.IsNullOrWhiteSpace(mdCode.ChildsCodesTemplate))
+        {
+            ChangeSelectHandle(selected);
             MudDialog.Close(DialogResult.Ok(true));
+        }
         else
         {
             InvokeAsync(async () =>
@@ -88,7 +95,12 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
                 ResponseBaseModel res = await kladrRepo.ChildsContainsAsync(mdCode.ChildsCodesTemplate);
                 await SetBusyAsync(false);
                 if (!res.Success())
+                {
+                    ChangeSelectHandle(selected);
                     MudDialog.Close(DialogResult.Ok(true));
+                }
+                else
+                    await RebuildTable();
             });
         }
     }
@@ -98,7 +110,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
     /// </summary>
     private async Task<TableData<KladrResponseModel>> ServerReload(TableState state, CancellationToken token)
     {
-        if (CurrentRegion is null || string.IsNullOrWhiteSpace(FindName))
+        if (CurrentRegion is null || (string.IsNullOrWhiteSpace(FindName) && SelectionProgressSteps.Count == 0))
             return new TableData<KladrResponseModel>() { TotalItems = 0, Items = [] };
 
         string[] _codeLikeFilter;

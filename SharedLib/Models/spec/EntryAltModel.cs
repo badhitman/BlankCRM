@@ -28,6 +28,13 @@ public class EntryAltModel
     }
 
     /// <inheritdoc/>
+    public void Update(string id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+
+    /// <inheritdoc/>
     public static bool operator ==(EntryAltModel e1, EntryAltModel e2)
         => e1.Id == e2.Id && e1.Name == e2.Name;
 

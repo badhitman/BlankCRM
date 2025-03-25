@@ -26,11 +26,23 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public EntryAltModel? KladrObject { get; set; }
 
-
-    private Task<IDialogReference> OpenDialogAsync()
+    void ChangeSelectAction(KladrResponseModel sender)
     {
-        DialogOptions options = new() { CloseOnEscapeKey = true };
+        ChangeSelectHandle(sender);
+        KladrObject?.Update(sender.Code, sender.ToString());
+        StateHasChangedCall();
+    }
 
-        return DialogService.ShowAsync<KladrSelectDialogComponent>("Выбор адреса:", options);
+    async Task<IDialogReference> OpenDialogAsync()
+    {
+        DialogParameters<KladrSelectDialogComponent> parameters = new()
+        {
+            { x => x.ChangeSelectHandle, ChangeSelectAction }
+        };
+
+        DialogOptions options = new() { CloseOnEscapeKey = true };
+        IDialogReference res = await DialogService.ShowAsync<KladrSelectDialogComponent>("Выбор адреса:", parameters, options);
+
+        return res;
     }
 }

@@ -1,6 +1,6 @@
 ﻿<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb" style="margin-bottom:0;">
-        @foreach (string _el in _items)
+        @foreach (string _el in _items.Skip(SkipBreadcrumbs))
         {
             <li class="breadcrumb-item">
                 <MudHighlighter Text="@_el" HighlightedText="@HighlightedText" />

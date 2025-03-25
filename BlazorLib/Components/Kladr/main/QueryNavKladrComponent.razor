@@ -24,9 +24,9 @@
                         StreetKLADRModelDB street = context.Payload.ToObject<StreetKLADRModelDB>() ?? throw new Exception("context.Payload.ToObject<StreetKLADRModelDB>() - IS NULL");
                         <StreetNodeKladrComponent @key="@($"{CodeLikeFilter}_{street.CODE}")" ObjectKLADR="street" Parent="this" />
                         break;
-                    case KladrTypesObjectsEnum.Home:
+                    case KladrTypesObjectsEnum.House:
                         HouseKLADRModelDB home = context.Payload.ToObject<HouseKLADRModelDB>() ?? throw new Exception("context.Payload.ToObject<HouseKLADRModelDB>() - IS NULL");
-                        <HomeNodeKladrComponent @key="@($"{CodeLikeFilter}_{home.CODE}")" ObjectKLADR="home" Parent="this" />
+                        <HouseNodeKladrComponent @key="@($"{CodeLikeFilter}_{home.CODE}")" ObjectKLADR="home" Parent="this" />
                         break;
                 }
             </CascadingValue>

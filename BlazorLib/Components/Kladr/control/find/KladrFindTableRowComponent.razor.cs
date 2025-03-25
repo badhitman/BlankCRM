@@ -22,10 +22,14 @@ public partial class KladrFindTableRowComponent
 
     /// <inheritdoc/>
     [Parameter]
+    public int SkipBreadcrumbs { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter]
     public Action<KladrResponseModel>? SelectionHandler { get; set; }
 
 
-    List<string> _items = [];
+    private readonly List<string> _items = [];
 
 
     /// <inheritdoc/>
