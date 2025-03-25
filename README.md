@@ -1,4 +1,4 @@
-## Blank CRM: NET.9, Blazor, Telegram Bot, Aspire. + СЭД (aka HelpDesk/ServiceDesk)
+## Blank CRM: NET.9, Blazor, Telegram Bot. + LDAP/AD
 
 - **Blazor NET.9**[^4] + **TelegramBot**[^5]: поддержка [автоматической авторизации](#автоматическая-авторизация-в-telegram-webapp) в Telegram WebApp.
 - СЭД (ServiceDesk/HelpDesk) подсистема оказания консультаций, обратной связи или сопровождение заказов. Управление документами: изменение статусов заявок, журналирование/протоколирование событий и другая универсальная функциональность.
