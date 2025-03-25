@@ -47,6 +47,16 @@ public partial class CodeKladrModel
     /// <inheritdoc/>
     public required SignOfRelevanciesEnum? SignOfRelevance { get; set; }
 
+    /// <inheritdoc/>
+    public string? ChildsCodesTemplate => Level switch 
+    {
+         KladrTypesObjectsEnum.RootRegion => $"{RegionCode}%00",
+         KladrTypesObjectsEnum.Area => $"{RegionCode}{AreaCode}%00",
+         KladrTypesObjectsEnum.City => $"{RegionCode}___{CityCode}%00",
+         KladrTypesObjectsEnum.PopPoint => $"{RegionCode}______{PopPointCode}%00",
+         KladrTypesObjectsEnum.Street => $"{RegionCode}_________{StreetCode}%",
+         _ => default
+    };
 
     /// <inheritdoc/>
     public static CodeKladrModel Build(string code)
@@ -60,7 +70,7 @@ public partial class CodeKladrModel
 
         string? signOfRelevanceCode = code.Length > 17
             ? null
-            : code.Substring(code.Length - 2);
+            : code[^2..];
 
         SignOfRelevanciesEnum? signOfRel = null;
         if (!string.IsNullOrWhiteSpace(signOfRelevanceCode))

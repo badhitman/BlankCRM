@@ -89,33 +89,25 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         if (CurrentRegion is null || string.IsNullOrWhiteSpace(FindName))
             return new TableData<KladrResponseModel>() { TotalItems = 0, Items = [] };
 
-        string[] _codeLikeFilter = [$"{CurrentRegion.Code[..2]}%00"];
-        RootKLADRModelDB? sObj = SelectedObject;
-        if (sObj is not null)
+        string[] _codeLikeFilter;
+        RootKLADRModelDB? so = SelectedObject;
+        if (so is not null)
         {
-            CodeKladrModel mdCode = CodeKladrModel.Build(sObj.CODE);
-            switch (mdCode.Level)
+            CodeKladrModel mdCode = CodeKladrModel.Build(so.CODE);
+            if (string.IsNullOrWhiteSpace(mdCode.ChildsCodesTemplate))
             {
-                case KladrTypesObjectsEnum.RootRegion:
-
-                    break;
-                case KladrTypesObjectsEnum.Area:
-
-                    break;
-                case KladrTypesObjectsEnum.City:
-
-                    break;
-                case KladrTypesObjectsEnum.PopPoint:
-
-                    break;
-                case KladrTypesObjectsEnum.Street:
-
-                    break;
-                case KladrTypesObjectsEnum.Home:
-
-                    break;
+                MudDialog.Close(DialogResult.Ok(true));
+                return new TableData<KladrResponseModel>()
+                {
+                    TotalItems = 0,
+                    Items = []
+                };
             }
+            else
+                _codeLikeFilter = [mdCode.ChildsCodesTemplate];
         }
+        else
+            _codeLikeFilter = [$"{CurrentRegion.Code[..2]}%00"];
 
         KladrFindRequestModel req = new()
         {

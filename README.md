@@ -96,6 +96,9 @@ note for DbPostgreLib "Если используется другая СУБД, 
     class KladrService{
         @Микросервис - КЛАДР 4.0
     }
+    class LdapService{
+        @Микросервис - LDAP over Novell driver
+    }
     class ConstructorService{
         @Микросервис - ВебКонструктор/ВебФормы
     }
