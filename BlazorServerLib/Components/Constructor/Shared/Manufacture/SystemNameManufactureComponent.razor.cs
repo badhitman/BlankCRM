@@ -66,7 +66,7 @@ public partial class SystemNameManufactureComponent : BlazorBusyComponentBaseMod
         if (Item.Value?.Tag is null)
             throw new Exception();
 
-        SetBusy();
+        SetBusyAsync();
         //ResponseBaseModel res = await ManufactureRepo
         //    .SetOrDeleteSystemName(new UpdateSystemNameModel()
         //    {

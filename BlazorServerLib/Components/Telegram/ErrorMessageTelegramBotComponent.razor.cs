@@ -32,7 +32,7 @@ public partial class ErrorMessageTelegramBotComponent : BlazorBusyComponentBaseM
     /// </summary>
     private async Task<TableData<ErrorSendingMessageTelegramBotModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB> err_res = await TelegramRepo.ErrorsForChatsSelectTelegramAsync(new TPaginationRequestModel<long[]?>()
         {
             Payload = ChatId is null || ChatId.Value == 0 ? null : [ChatId.Value],

@@ -49,7 +49,7 @@ public partial class NomenclatureCreatingFormComponent : BlazorBusyComponentBase
             IsDisabled = true,
         };
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.NomenclatureUpdateAsync(new_obj);
         IsBusyProgress = false;

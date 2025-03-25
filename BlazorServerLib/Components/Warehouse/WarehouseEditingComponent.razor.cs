@@ -63,9 +63,9 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
     async Task SaveDocument()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> res = await CommRepo.WarehouseUpdateAsync(editDocument);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (editDocument.Id < 1 && res.Response > 0)
             NavRepo.NavigateTo($"/nomenclature/warehouse/editing/{res.Response}");
@@ -86,7 +86,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{GlobalStaticConstants.Routes.WAREHOUSE_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.BODY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={GlobalStaticConstants.Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={Id}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
-        await SetBusy();
+        await SetBusyAsync();
         _shouldRender = false;
         await base.OnInitializedAsync();
         if (Id < 1)
@@ -105,13 +105,13 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
                 }
             }
             _shouldRender = true;
-            await SetBusy(false);
+            await SetBusyAsync(false);
             return;
         }
 
         await ReadDocument();
         _shouldRender = true;
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     async Task ReadDocument()
@@ -119,7 +119,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         if (Id < 1)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<WarehouseDocumentModelDB[]> res = await CommRepo.WarehousesReadAsync([Id]);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success() && res.Response is not null)
@@ -128,7 +128,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         editDocument = GlobalTools.CreateDeepCopy(CurrentDocument)!;
 
         TResponseModel<List<RubricIssueHelpdeskModelDB>> resShadow = await HelpdeskRepo.RubricReadAsync(editDocument.WarehouseId);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(resShadow.Messages);
         RubricMetadataShadow = resShadow.Response;
         if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
@@ -159,10 +159,10 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
                 Quantity = off.Quantity,
             };
 
-            await SetBusy();
+            await SetBusyAsync();
             res = await CommRepo.RowForWarehouseUpdateAsync(_newRow);
             SnackbarRepo.ShowMessagesResponse(res.Messages);
-            await SetBusy(false);
+            await SetBusyAsync(false);
             if (!res.Success())
                 return;
 
@@ -173,10 +173,10 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         else
         {
             CurrentDocument.Rows[exist_row].Quantity = +off.Quantity;
-            await SetBusy();
+            await SetBusyAsync();
             res = await CommRepo.RowForWarehouseUpdateAsync(CurrentDocument.Rows[exist_row]);
             SnackbarRepo.ShowMessagesResponse(res.Messages);
-            await SetBusy(false);
+            await SetBusyAsync(false);
         }
 
         await ReadDocument();
@@ -215,10 +215,10 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             return;
         }
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<bool> res = await CommRepo.RowsForWarehouseDeleteAsync([currentRow.Id]);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         if (!res.Success())
             return;
 

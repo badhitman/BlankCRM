@@ -26,7 +26,7 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
     /// </summary>
     private async Task<TableData<PulseViewModel>> ServerReload(TableState state, CancellationToken token)
     {
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TResponseModel<TPaginationResponseModel<PulseViewModel>> tp = await HelpdeskRepo.PulseSelectJournalAsync(new()
         {
             Payload = new TPaginationRequestModel<UserIssueModel>()
@@ -56,7 +56,7 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
 
         if (users_ids.Length != 0)
         {
-            await SetBusy(token: token);
+            await SetBusyAsync(token: token);
             TResponseModel<UserInfoModel[]> users_add = await IdentityRepo.GetUsersIdentityAsync(users_ids);
             IsBusyProgress = false;
             SnackbarRepo.ShowMessagesResponse(users_add.Messages);

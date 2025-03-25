@@ -51,7 +51,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
     /// </summary>
     protected async Task OpenForm(FormConstructorModelDB form)
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(form.Id);
         IsBusyProgress = false;
 
@@ -87,7 +87,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
         if (ParentFormsPage.MainProject is null)
             throw new Exception("Проект не выбран.");
 
-        await SetBusy();
+        await SetBusyAsync();
 
         rest_data = await ConstructorRepo.SelectFormsAsync(new() { Request = SimplePaginationRequestModel.Build(searchString, _table_state?.PageSize ?? 10, _table_state?.Page ?? 0), ProjectId = ParentFormsPage.MainProject.Id });
         IsBusyProgress = false;

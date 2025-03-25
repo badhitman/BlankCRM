@@ -79,7 +79,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
             FilterUserId = CurrentUserSession!.UserId,
             ProjectId = ParentFormsPage.MainProject.Id
         };
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         await Task.Delay(1, token);
         TPaginationResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.RequestSessionsDocumentsAsync(req);
 
@@ -100,7 +100,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async Task EditSession(SessionOfDocumentDataModelDB session)
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = session.Id, IncludeExtra = false });
         IsBusyProgress = false;
 
@@ -125,7 +125,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async Task DeleteSession(int session_id)
     {
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel rest = await ConstructorRepo.DeleteSessionDocumentAsync(session_id);
         IsBusyProgress = false;
 
@@ -172,7 +172,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
             AuthorUser = CurrentUserSession!.UserId,
             ProjectId = ParentFormsPage.MainProject.Id
         };
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.UpdateOrCreateSessionDocumentAsync(req);
         IsBusyProgress = false;
 
@@ -203,7 +203,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         if (ParentFormsPage.MainProject is null)
             throw new Exception("Не выбран основной/используемый проект");
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TPaginationResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = new() { PageNum = 0, PageSize = 1000 }, ProjectId = ParentFormsPage.MainProject.Id });
 
@@ -222,7 +222,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     protected override async Task OnInitializedAsync()
     {
         await ReadCurrentUser();
-        await SetBusy();
+        await SetBusyAsync();
         await RestUpdate();
         IsBusyProgress = false;
     }

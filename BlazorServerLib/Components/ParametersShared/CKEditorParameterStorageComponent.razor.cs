@@ -62,7 +62,7 @@ public partial class CKEditorParameterStorageComponent : BlazorBusyComponentBase
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<string?> res = await StoreRepo.ReadParameterAsync<string?>(KeyStorage);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);

@@ -36,7 +36,7 @@ public partial class ConstructorPage : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         await ReadCurrentUser();
         await ReadCurrentMainProject();
     }
@@ -47,7 +47,7 @@ public partial class ConstructorPage : BlazorBusyComponentBaseAuthModel
     public async Task ReadCurrentMainProject()
     {
         CanEditProject = false;
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<MainProjectViewModel> currentMainProject = await ConstructorRepo.GetCurrentMainProjectAsync(CurrentUserSession!.UserId);
 

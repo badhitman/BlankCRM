@@ -88,7 +88,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
 
     async Task Test()
     {
-        await SetBusy();
+        await SetBusyAsync();
 
         LocalDirectoryInfo = string.IsNullOrWhiteSpace(SyncDirectory.LocalDirectory)
             ? null
@@ -111,7 +111,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
             SnackbarRepo.Error("Не указана директория на удалённом сервере");
 
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
 
@@ -125,7 +125,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
 
         IndeterminateProgress = true;
         //await ParentPage.HoldPageUpdate(true);
-        await SetBusy();
+        await SetBusyAsync();
 
         forDelete = null;
         forUpdateOrAdd = null;
@@ -135,11 +135,11 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
         if (localScan?.Response is null || remoteScan?.Response is null)
         {
             SnackbarRepo.Error("localScan is null || remoteScan is null");
-            await SetBusy(false);
+            await SetBusyAsync(false);
             return;
         }
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
 
         forDelete = [.. remoteScan.Response.Where(x => !localScan.Response.Any(y => x.SafeScopeName == y.SafeScopeName))];
 
@@ -177,14 +177,14 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
         IndeterminateProgress = true;
         ValueProgress = 0;
         //await ParentPage.HoldPageUpdate(true);
-        await SetBusy();
+        await SetBusyAsync();
 
         MemoryStream ms;
 
         if (forDelete.Length != 0)
         {
             InfoAbout = "Удаление файлов...";
-            await SetBusy();
+            await SetBusyAsync();
             foreach (ToolsFilesResponseModel tFile in forDelete)
                 await RestClientRepo.DeleteFileAsync(new DeleteRemoteFileRequestModel()
                 {
@@ -192,7 +192,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
                     SafeScopeName = tFile.SafeScopeName,
                 });
             InfoAbout = $"Удалено файлов: {forDelete.Length} шт.";
-            await SetBusy();
+            await SetBusyAsync();
         }
 
         using MD5 md5 = MD5.Create();
@@ -279,7 +279,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
 
         if (totalTransferData != 0)
             SnackbarRepo.Add($"Отправлено: {GlobalTools.SizeDataAsString(totalTransferData)}", MudBlazor.Severity.Info, c => c.DuplicatesBehavior = MudBlazor.SnackbarDuplicatesBehavior.Allow);
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     async Task ReadLocalData()

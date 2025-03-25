@@ -81,10 +81,10 @@ public abstract class OffersTableBaseComponent : BlazorRegistersComponent
                 ContextName = ContextName
             }
         };
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
-        await SetBusy(false);
+        await SetBusyAsync(false);
         if (res.Response?.Response is not null && res.Response.Response.Count != 0)
         {
             allOffers!.AddRange(res.Response.Response);

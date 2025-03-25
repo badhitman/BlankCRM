@@ -31,7 +31,7 @@ public abstract class BlazorBusyComponentUsersCachedModel : BlazorBusyComponentB
         if (!usersIds.Any())
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<UserInfoModel[]> users = await IdentityRepo.GetUsersIdentityAsync(usersIds);
         SnackbarRepo.ShowMessagesResponse(users.Messages);
         if (users.Success() && users.Response is not null && users.Response.Length != 0)
@@ -40,6 +40,6 @@ public abstract class BlazorBusyComponentUsersCachedModel : BlazorBusyComponentB
                 UsersCache.AddRange(users.Response.Where(x => !UsersCache.Any(y => y.UserId == x.UserId)));
             }
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 }

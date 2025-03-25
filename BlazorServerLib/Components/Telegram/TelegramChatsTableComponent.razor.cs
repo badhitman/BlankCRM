@@ -37,7 +37,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
 
     async Task<TableData<ChatTelegramModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TPaginationRequestModel<string?> req = new()
         {
             Payload = searchString,
@@ -69,7 +69,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
         if (users_ids_for_load.Length == 0)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<UserInfoModel[]> users_res = await IdentityRepo.GetUserIdentityByTelegramAsync(users_ids_for_load);
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(users_res.Messages);
@@ -79,7 +79,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
         UsersCache.AddRange(users_res.Response);
 
         string[] users_ids_identity = [.. users_res.Response.Select(x => x.UserId)];
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>> issues_users_res = await HelpdeskRepo
                      .IssuesSelectAsync(new()
                      {

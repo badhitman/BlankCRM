@@ -229,7 +229,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     /// <inheritdoc/>
     protected async Task ClearValuesForFieldName(int? session_id)
     {
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel rest = await ConstructorRepo.ClearValuesForFieldNameAsync(new() { FormId = Form.Id, FieldName = Field.Name, SessionId = session_id });
         IsBusyProgress = false;
 
@@ -264,7 +264,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     protected async Task SaveEditField()
     {
         ResponseBaseModel rest;
-        await SetBusy();
+        await SetBusyAsync();
         Action act;
         if (_field_master is FieldFormConstructorModelDB sf)
         {
@@ -354,7 +354,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
 
     async Task ReloadForm()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(Field.OwnerId);
         IsBusyProgress = false;
 
@@ -442,7 +442,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     /// </summary>
     protected async Task DeleteClick()
     {
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel rest;
         if (_field_master is FieldFormConstructorModelDB sf)
             rest = await ConstructorRepo.FormFieldDeleteAsync(new() { Payload = sf.Id, SenderActionUserId = CurrentUserSession!.UserId });
@@ -515,7 +515,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     /// </summary>
     protected async Task MoveFieldUp()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<FormConstructorModelDB> rest;
         if (_field_master is FieldFormConstructorModelDB sf)
             rest = await ConstructorRepo.FieldFormMoveAsync(new() { Payload = new() { Id = sf.Id, Direct = DirectionsEnum.Up }, SenderActionUserId = CurrentUserSession!.UserId });
@@ -552,7 +552,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     /// </summary>
     protected async Task MoveFieldDown()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<FormConstructorModelDB> rest;
         if (_field_master is FieldFormConstructorModelDB sf)
             rest = await ConstructorRepo.FieldFormMoveAsync(new() { Payload = new() { Id = sf.Id, Direct = DirectionsEnum.Down }, SenderActionUserId = CurrentUserSession!.UserId });

@@ -94,7 +94,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
             Payload = []
         };
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<StorageFileModelDB> res;
         MemoryStream ms;
@@ -115,7 +115,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
 
         loadedFiles.Clear();
         _inputFileId = Guid.NewGuid().ToString();
-        await SetBusy(false);
+        await SetBusyAsync(false);
 
         if (TableRef is not null)
             await TableRef.ReloadServerData();
@@ -185,6 +185,6 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
     protected override async Task OnInitializedAsync()
     {
         await ReadCurrentUser();
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 }

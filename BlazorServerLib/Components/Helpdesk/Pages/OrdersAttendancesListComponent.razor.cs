@@ -46,7 +46,7 @@ public partial class OrdersAttendancesListComponent(ICommerceTransmission Commer
             return;
         }
 
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel resDel = await CommerceRepo.AttendanceRecordsDeleteAsync(new() { Payload = rec.Id, SenderActionUserId = CurrentUserSession.UserId });
         SnackbarRepo.ShowMessagesResponse(resDel.Messages);
 
@@ -59,6 +59,6 @@ public partial class OrdersAttendancesListComponent(ICommerceTransmission Commer
             UpdateRecords(OrdersAttendances);
         }
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 }

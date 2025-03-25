@@ -63,7 +63,7 @@ public partial class NomenclatureEditComponent : BlazorBusyComponentBaseAuthMode
         if (editNomenclature is null)
             throw new ArgumentNullException(nameof(editNomenclature));
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.NomenclatureUpdateAsync(editNomenclature);
         IsBusyProgress = false;
@@ -82,7 +82,7 @@ public partial class NomenclatureEditComponent : BlazorBusyComponentBaseAuthMode
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
         await base.OnInitializedAsync();
-        await SetBusy();
+        await SetBusyAsync();
         if (CurrentUserSession is null)
             throw new Exception();
 

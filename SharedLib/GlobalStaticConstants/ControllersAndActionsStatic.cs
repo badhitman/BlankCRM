@@ -440,6 +440,11 @@ public static partial class GlobalStaticConstants
         public const string NAVIGATION_CONTROLLER_NAME = "navigation";
 
         /// <summary>
+        /// Childs
+        /// </summary>
+        public const string CHILDS_CONTROLLER_NAME = "childs";
+
+        /// <summary>
         /// Job
         /// </summary>
         public const string JOB_CONTROLLER_NAME = "job";
@@ -1105,6 +1110,11 @@ public static partial class GlobalStaticConstants
         /// Выборка
         /// </summary>
         public const string SELECT_ACTION_NAME = "select";
+
+        /// <summary>
+        /// Contains
+        /// </summary>
+        public const string CONTAINS_ACTION_NAME = "contains";
 
         /// <summary>
         /// Go to

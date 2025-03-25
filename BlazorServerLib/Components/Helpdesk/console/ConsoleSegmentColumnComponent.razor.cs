@@ -64,7 +64,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
 
     async Task LoadData()
     {
-        await SetBusy();
+        await SetBusyAsync();
 
         TPaginationResponseModel<IssueHelpdeskModel> res = await HelpdeskRepo.ConsoleIssuesSelectAsync(new TPaginationRequestModel<ConsoleIssuesRequestModel>
         {
@@ -101,7 +101,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
         if (issues_ids.Length == 0 && issues_attendance_ids.Length == 0)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
 
         await Task.WhenAll([
             Task.Run(async () => {

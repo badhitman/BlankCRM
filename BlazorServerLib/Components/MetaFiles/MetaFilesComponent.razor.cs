@@ -56,10 +56,10 @@ public partial class MetaFilesComponent : BlazorBusyComponentBaseAuthModel
     protected override async Task OnInitializedAsync()
     {
         _reqKey = SelectedAreas is null || SelectedAreas.Length == 0 ? null : JsonConvert.SerializeObject(SelectedAreas);
-        await SetBusy();
+        await SetBusyAsync();
         await ReadCurrentUser();
         TResponseModel<FilesAreaMetadataModel[]> res = await FilesRepo.FilesAreaGetMetadataAsync(new());
-        await SetBusy(false);
+        await SetBusyAsync(false);
         FilesAreaMetadata = res.Response ?? throw new Exception();
         _included = FilesAreaMetadata.Select(x => SelectedAreas?.Any(y => y == x.ApplicationName) == true).ToList();
     }

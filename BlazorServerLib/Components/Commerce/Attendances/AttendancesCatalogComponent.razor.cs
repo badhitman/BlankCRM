@@ -42,7 +42,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TPaginationResponseModel<NomenclatureModelDB> res = await CommerceRepo.NomenclaturesSelectAsync(req);
 
         IsBusyProgress = false;

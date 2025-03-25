@@ -86,10 +86,10 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
             _selectedRubricId = 0;
         }
 
-        await SetBusy();
+        await SetBusyAsync();
         CurrentRubrics = await HelpdeskRepo.RubricsListAsync(new() { Request = ownerRubricId, ContextName = ContextName });
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -101,7 +101,7 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
             RubricMetadataShadow = set_rubricMetadataShadow;
         else
         {
-            await SetBusy();
+            await SetBusyAsync();
 
             TResponseModel<List<RubricIssueHelpdeskModelDB>> dump_rubric = await HelpdeskRepo.RubricReadAsync(rubric_id);
             RubricMetadataShadow = dump_rubric.Response;

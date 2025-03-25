@@ -23,7 +23,7 @@ public partial class TelegramConfigComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<bool?> res_IsCommandModeTelegramBot = await SerializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ParameterIsCommandModeTelegramBot);
         IsBusyProgress = false;
 

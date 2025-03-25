@@ -41,7 +41,7 @@ public abstract class BlazorBusyComponentRubricsCachedModel : BlazorBusyComponen
         if (!rubricsIds.Any())
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<List<RubricIssueHelpdeskModelDB>> rubrics = await HelpdeskRepo.RubricsGetAsync(rubricsIds);
         SnackbarRepo.ShowMessagesResponse(rubrics.Messages);
         if (rubrics.Success() && rubrics.Response is not null && rubrics.Response.Count != 0)
@@ -50,6 +50,6 @@ public abstract class BlazorBusyComponentRubricsCachedModel : BlazorBusyComponen
                 RubricsCache.AddRange(rubrics.Response.Where(x => !RubricsCache.Any(y => y.Id == x.Id)));
             }
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 }

@@ -61,7 +61,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         await Task.WhenAll([
                 Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingTelegramArea); ShowingTelegramArea = res.Response == true; }),
                 Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingAttachmentsIssuesArea); ShowingAttachmentsIssueArea = res.Response == true; }),
@@ -72,7 +72,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
             ]);
         await ReadIssue();
         await FlushUsersDump();
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     async Task FindOrders()
@@ -115,7 +115,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
             SenderActionUserId = CurrentUserSession!.UserId
         };
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<IssueHelpdeskModelDB[]> issue_res = await HelpdeskRepo.IssuesReadAsync(req);
         SnackbarRepo.ShowMessagesResponse(issue_res.Messages);
         IssueSource = issue_res.Response?.FirstOrDefault();

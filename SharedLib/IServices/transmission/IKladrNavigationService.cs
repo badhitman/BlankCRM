@@ -30,4 +30,9 @@ public interface IKladrNavigationService
     /// Find objects
     /// </summary>
     public Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFindAsync(KladrFindRequestModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// Наличие предков, соответствующих шаблону кода
+    /// </summary>
+    public Task<ResponseBaseModel> ChildsContainsAsync(string codeLike, CancellationToken token = default);
 }

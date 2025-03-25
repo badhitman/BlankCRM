@@ -44,7 +44,7 @@ public partial class MembersOfProjectComponent : BlazorBusyComponentBaseModel
         if (!MailAddress.TryCreate(emailForAddMember, out _))
             throw new Exception($"Email не корректный '{emailForAddMember}'");
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<UserInfoModel>? user_info = await IdentityRepo.FindUserByEmailAsync(emailForAddMember);
 
         if (user_info.Response is null)
@@ -68,7 +68,7 @@ public partial class MembersOfProjectComponent : BlazorBusyComponentBaseModel
         if (chip.Value is null)
             throw new Exception();
 
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel res = await ConstructorRepo.DeleteMembersFromProjectAsync(new() { ProjectId = ProjectView.Id, UsersIds = [chip.Value.Id] });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);

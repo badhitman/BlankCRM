@@ -33,9 +33,9 @@ public partial class SyncDirectoriesRulesComponent : BlazorBusyComponentBaseMode
     async void CloseCommandAction()
     {
         SelectedSyncDir = null;
-        await SetBusy();
+        await SetBusyAsync();
         await ReloadDirectories();
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     async Task OpenSyncRule(int ruleId = 0)
@@ -53,9 +53,9 @@ public partial class SyncDirectoriesRulesComponent : BlazorBusyComponentBaseMode
 
     async Task ReloadDirectories()
     {
-        await SetBusy();
+        await SetBusyAsync();
         SyncDirectories = await AppManagerRepo.GetSyncDirectoriesForConfigAsync(ApiConnect.Id);
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

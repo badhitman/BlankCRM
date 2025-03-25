@@ -53,7 +53,7 @@ public partial class BanksListDetailsOrganizationComponent : BlazorBusyComponent
         if (CurrentUserSession is null)
             throw new ArgumentNullException(nameof(CurrentUserSession));
 
-        await SetBusy();
+        await SetBusyAsync();
         bool? result = await DialogService.ShowMessageBox(
             "Внимание",
             "Подтверждаете удаление?",
@@ -69,7 +69,7 @@ public partial class BanksListDetailsOrganizationComponent : BlazorBusyComponent
                 CurrentOrganization.BankMainAccount = 0;
         }
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     async Task SetBankDetailsAsMain(BankDetailsModelDB sender)
@@ -78,9 +78,9 @@ public partial class BanksListDetailsOrganizationComponent : BlazorBusyComponent
             throw new ArgumentNullException(nameof(CurrentUserSession));
 
         CurrentOrganization.BankMainAccount = sender.Id;
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(new() { Payload = CurrentOrganization, SenderActionUserId = CurrentUserSession.UserId });
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
     }
 

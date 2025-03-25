@@ -74,10 +74,10 @@ public partial class AttendancesManageComponent : BlazorBusyComponentBaseAuthMod
                 ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME
             }
         };
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
-        await SetBusy(false);
+        await SetBusyAsync(false);
         if (res.Response?.Response is not null && res.Response.Response.Count != 0)
         {
             AllOffers!.AddRange(res.Response.Response);

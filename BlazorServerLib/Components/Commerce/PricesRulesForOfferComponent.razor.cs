@@ -56,7 +56,7 @@ public partial class PricesRulesForOfferComponent : BlazorBusyComponentBaseAuthM
         if (CurrentUserSession is null)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> res = await CommerceRepo.PriceRuleUpdateAsync(new() { Payload = rule, SenderActionUserId = CurrentUserSession.UserId });
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         LoggerRepo.LogWarning("Правило изменено");
@@ -72,7 +72,7 @@ public partial class PricesRulesForOfferComponent : BlazorBusyComponentBaseAuthM
         QuantityAddingRule = 2;
         PriceAddingRule = 0;
         //
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<List<PriceRuleForOfferModelDB>> res = await CommerceRepo.PricesRulesGetForOffersAsync(new() { Payload = [Offer.Id], SenderActionUserId = CurrentUserSession.UserId });
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is not null && res.Success())

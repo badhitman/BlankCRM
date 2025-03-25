@@ -60,7 +60,7 @@ else
     async Task SendMessage()
     {
         errorMessage = null;
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<TelegramUserBaseModel> tg_user_info = await IdentityRepo.GetTelegramUserAsync(TelegramId);
 
         if (!tg_user_info.Success())

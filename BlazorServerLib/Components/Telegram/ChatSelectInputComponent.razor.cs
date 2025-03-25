@@ -27,7 +27,7 @@ public partial class ChatSelectInputComponent : LazySelectorComponent<ChatTelegr
     /// <inheritdoc/>
     public override async Task LoadPartData()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TPaginationResponseModel<ChatTelegramModelDB> rest = await TelegramRepo
             .ChatsSelectAsync(new()
             {
@@ -46,7 +46,7 @@ public partial class ChatSelectInputComponent : LazySelectorComponent<ChatTelegr
 
             PageNum++;
         }
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     long _sc;
@@ -74,19 +74,19 @@ public partial class ChatSelectInputComponent : LazySelectorComponent<ChatTelegr
 
     async Task ReadChat()
     {
-        await SetBusy();
+        await SetBusyAsync();
 
         List<ChatTelegramModelDB> rest = await TelegramRepo.ChatsReadTelegramAsync([SelectedChat]);
         
         if (rest.Count == 0)
         {
-            await SetBusy(false);
+            await SetBusyAsync(false);
             SnackbarRepo.Error($"Не найден запрашиваемый чат #{SelectedChat}");
             return;
         }
         SelectedObject = rest.Single();
         _selectedValueText = SelectedObject.ToString();
         SelectHandleAction(SelectedObject);
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 }

@@ -64,22 +64,22 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
 
     async void SaveRubric()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> res = await StoreRepo.SaveParameterAsync(_rubricSelected, KeyStorage, true);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
     }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int?> res_RubricIssueForCreateOrder = await StoreRepo.ReadParameterAsync<int?>(KeyStorage);
         _rubricSelected = res_RubricIssueForCreateOrder.Response;
         if (ref_rubric is not null && _rubricSelected.HasValue)
         {
             TResponseModel<List<RubricIssueHelpdeskModelDB>> res = await HelpdeskRepo.RubricReadAsync(_rubricSelected.Value);
-            await SetBusy(false);
+            await SetBusyAsync(false);
             SnackbarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;
             if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
@@ -92,6 +92,6 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
             }
         }
         else
-            await SetBusy(false);
+            await SetBusyAsync(false);
     }
 }

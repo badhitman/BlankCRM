@@ -42,11 +42,11 @@ public partial class ProjectsListComponent : BlazorBusyComponentBaseAuthModel
     /// </summary>
     public async Task ReloadListProjects()
     {
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<ProjectViewModel[]> res_pr = await ConstructorRepo.GetProjectsForUserAsync(new() { UserId = CurrentUserSession!.UserId });
         ProjectsOfUser = res_pr.Response ?? throw new Exception();
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     /// <summary>

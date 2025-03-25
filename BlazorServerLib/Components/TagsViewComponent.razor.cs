@@ -62,9 +62,9 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
     {
         if (!string.IsNullOrWhiteSpace(chip.Value?.TagName) && OwnerPrimaryKey.HasValue)
         {
-            await SetBusy();
+            await SetBusyAsync();
 
-            await SetBusy();
+            await SetBusyAsync();
             TResponseModel<bool> res = await TagsRepo.TagSetAsync(new()
             {
                 PrefixPropertyName = PrefixPropertyName,
@@ -75,7 +75,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
                 Set = false
             });
             await ReloadTags();
-            await SetBusy(false);
+            await SetBusyAsync(false);
             if (!res.Success())
                 SnackbarRepo.ShowMessagesResponse(res.Messages);
         }
@@ -111,7 +111,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
 
     async Task ReloadTags()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TPaginationRequestModel<SelectMetadataRequestModel> req = new()
         {
             Payload = new()
@@ -129,7 +129,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
 
         TPaginationResponseModel<TagModelDB> res = await TagsRepo.TagsSelectAsync(req);
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
         if (res.Response is not null)
             TagsSets = res.Response;
     }
@@ -137,7 +137,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         await ReadCurrentUser();
         await ReloadTags();
     }

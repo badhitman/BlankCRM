@@ -42,7 +42,7 @@ public partial class BankDetailsEditComponent : BlazorBusyComponentBaseAuthModel
         if (BankDetails.Organization is null)
             throw new ArgumentNullException(nameof(BankDetails.Organization));
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> res = await CommerceRepo.BankDetailsUpdateAsync(new TAuthRequestModel<BankDetailsModelDB>()
         {
             Payload = bankDetailsEdit,
@@ -50,7 +50,7 @@ public partial class BankDetailsEditComponent : BlazorBusyComponentBaseAuthModel
         });
 
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusy(false);
+        await SetBusyAsync(false);
 
         if (res.Success())
         {

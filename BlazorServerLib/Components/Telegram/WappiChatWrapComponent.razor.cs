@@ -39,7 +39,7 @@ public partial class WappiChatWrapComponent : BlazorBusyComponentBaseModel
         if (string.IsNullOrWhiteSpace(_textSendMessage))
             throw new ArgumentNullException(nameof(_textSendMessage));
 
-        await SetBusy();
+        await SetBusyAsync();
         EntryAltExtModel req = new() { Text = _textSendMessage, Number = Chat };
 
         TResponseModel<SendMessageResponseModel> rest = await TelegramRepo.SendWappiMessageAsync(req);

@@ -63,7 +63,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
     /// <inheritdoc/>
     protected async Task DeleteJoinForm()
     {
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel rest = await ConstructorRepo.DeleteTabDocumentSchemeJoinFormAsync(new() { Payload = PageJoinForm.Id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
@@ -119,7 +119,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
     /// <inheritdoc/>
     protected async Task DocumentPageJoinFormMove(DirectionsEnum direct)
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.MoveTabDocumentSchemeJoinFormAsync(new() { Payload = new() { Id = PageJoinForm.Id, Direct = direct }, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
@@ -148,7 +148,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
             SortIndex = PageJoinForm.SortIndex
         };
 
-        await SetBusy();
+        await SetBusyAsync();
 
         ResponseBaseModel rest = await ConstructorRepo.CreateOrUpdateTabDocumentSchemeJoinFormAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
@@ -189,7 +189,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
         if (PageJoinForm.Form is null)
         {
             LoggerRepo.LogWarning("Дозагрузка [Form] для [PageJoinForm]...");
-            await SetBusy();
+            await SetBusyAsync();
             TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(PageJoinForm.FormId);
             IsBusyProgress = false;
 

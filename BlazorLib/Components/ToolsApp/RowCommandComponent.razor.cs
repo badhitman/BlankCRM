@@ -45,10 +45,10 @@ public partial class RowCommandComponent : BlazorBusyComponentBaseModel
 
     async Task RunCommand()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<string> res = await ToolsExtRepo.ExeCommandAsync(CurrentCommand);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         DialogParameters<ResultExeCommandComponent> parameters = new()
         {
             { x => x.ShellOutput, res.Response },
@@ -72,21 +72,21 @@ public partial class RowCommandComponent : BlazorBusyComponentBaseModel
 
     async Task SaveRow()
     {
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateExeCommandAsync(CurrentCommand);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         OriginCommand = GlobalTools.CreateDeepCopy(CurrentCommand)!;
-        await SetBusy(false);
+        await SetBusyAsync(false);
         ReloadCommandsHandle();
 
     }
 
     async Task DeleteCommand()
     {
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel res = await AppManagerRepo.DeleteExeCommandAsync(CurrentCommand.Id);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         ReloadCommandsHandle();
     }
 

@@ -105,7 +105,7 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
 
     async Task SaveForm()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.UpdateOrCreateSessionDocumentAsync(session_origin);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(rest.Messages);

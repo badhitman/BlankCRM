@@ -74,7 +74,7 @@ public partial class RolesManageKitComponent : BlazorBusyComponentBaseModel
             User.Roles.AddRange(res.Response);
         };
 
-        await SetBusy();
+        await SetBusyAsync();
         if (value_bool && !User.Roles.Contains(roleName))
             await Act();
         else if (!value_bool && User.Roles.Contains(roleName))

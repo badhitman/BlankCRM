@@ -47,7 +47,7 @@ public partial class WorkCalendarAddDateComponent : BlazorBusyComponentBaseAuthM
         if (_date is null || EndPart is null || StartPart is null || CurrentUserSession is null)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> res = await CommerceRepo.CalendarScheduleUpdateAsync(new()
         {
             Payload = new CalendarScheduleModelDB()
@@ -62,7 +62,7 @@ public partial class WorkCalendarAddDateComponent : BlazorBusyComponentBaseAuthM
             },
             SenderActionUserId = CurrentUserSession.UserId
         });
-        await SetBusy(false);
+        await SetBusyAsync(false);
         if (WorkCalendarAddDateHandle is not null)
             WorkCalendarAddDateHandle();
     }

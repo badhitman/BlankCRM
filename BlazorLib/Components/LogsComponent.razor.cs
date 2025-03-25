@@ -117,7 +117,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
     bool navInit = false;
     async Task OnChipClick(NLogRecordModelDB chip)
     {
-        await SetBusy();
+        await SetBusyAsync();
         selectedRecord = chip.Id;
 
         _dateRangeBind = new(null, null);
@@ -161,9 +161,9 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         if (table is null)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         await table.ReloadServerData();
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     private void PageChanged(int i)
@@ -207,7 +207,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
             PageSize = state.PageSize,
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         if (selectedRecord != 0)
         {
             if (navInit)
@@ -221,7 +221,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
                     SortingDirection = req.SortingDirection,
                 });
                 navInit = false;
-                await SetBusy(false, token);
+                await SetBusyAsync(false, token);
             }
 
             if (DirectPage is not null)
@@ -248,7 +248,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
 
         _metaData = md.Response;
 
-        await SetBusy(false, token);
+        await SetBusyAsync(false, token);
         return new TableData<NLogRecordModelDB>() { TotalItems = selector.TotalRowsCount, Items = selector.Response };
     }
 }

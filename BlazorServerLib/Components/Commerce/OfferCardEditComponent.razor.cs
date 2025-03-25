@@ -44,7 +44,7 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
         if(CurrentUserSession is null)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OfferUpdateAsync(new() { Payload = editOffer, SenderActionUserId = CurrentUserSession.UserId });
         IsBusyProgress = false;
@@ -62,7 +62,7 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
         images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{GlobalStaticConstants.Routes.OFFER_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.BODY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={GlobalStaticConstants.Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={OfferId}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
-        await SetBusy();
+        await SetBusyAsync();
         await ReadCurrentUser();
         TResponseModel<OfferModelDB[]> res = await CommerceRepo.OffersReadAsync(new() { Payload = [OfferId], SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;

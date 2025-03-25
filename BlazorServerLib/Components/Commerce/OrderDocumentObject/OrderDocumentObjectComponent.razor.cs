@@ -54,10 +54,10 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
             Payload = Document.Id,
             SenderActionUserId = CurrentUserSession.UserId
         };
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<FileAttachModel> res = await CommRepo.OrderReportGetAsync(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         if (res.Success() && res.Response is not null && res.Response.Data.Length != 0)
         {
             using MemoryStream ms = new(res.Response.Data);
@@ -95,7 +95,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         });
 
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<int> res = await StorageRepo.SaveParameterAsync(doc, GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
 
@@ -120,14 +120,14 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
                 Step = StatusesDocumentsEnum.Canceled,
             }
         };
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<bool> res = await HelpdeskRepo.StatusChangeAsync(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response && res.Success())
             NavRepo.ReloadPage();
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -135,7 +135,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
     {
         await ReadCurrentUser();
         int[] orderWarehouses = [.. Document.OfficesTabs!.Select(x => x.WarehouseId).Distinct()];
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<List<RubricIssueHelpdeskModelDB>> getWarehouses = await HelpdeskRepo.RubricsGetAsync(orderWarehouses);
         SnackbarRepo.ShowMessagesResponse(getWarehouses.Messages);
@@ -146,6 +146,6 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
             SnackbarRepo.ShowMessagesResponse(res.Messages);
 
         ShowingAttachmentsOrderArea = res.Response == true;
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 }

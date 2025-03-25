@@ -52,7 +52,7 @@
 
     async Task UpdateState()
     {
-        await SetBusy();
+        await SetBusyAsync();
         await _tab.TableRef.ReloadServerData();
         IsBusyProgress = false;
         _tab.StateHasChangedCall();

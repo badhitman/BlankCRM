@@ -64,7 +64,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     {
         ArgumentNullException.ThrowIfNull(ElementObjectEdit);
 
-        await SetBusy();
+        await SetBusyAsync();
         
         ResponseBaseModel rest = await ConstructorRepo.UpdateElementOfDirectoryAsync(new() { Payload = ElementObjectEdit, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
@@ -98,7 +98,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
             return;
         }
         
-        await SetBusy();
+        await SetBusyAsync();
         
         TResponseModel<EntryDescriptionModel> res = await ConstructorRepo.GetElementOfDirectoryAsync(ElementObject.Id);
         ElementObjectOrign = res.Response ?? throw new Exception();
@@ -146,7 +146,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     async Task MoveUp()
     {
         IsEdit = false;
-        await SetBusy();
+        await SetBusyAsync();
         
         ResponseBaseModel rest = await ConstructorRepo.UpMoveElementOfDirectoryAsync(new() { Payload = ElementObject.Id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
@@ -162,7 +162,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     async Task MoveDown()
     {
         IsEdit = false;
-        await SetBusy();
+        await SetBusyAsync();
         
         ResponseBaseModel rest = await ConstructorRepo.DownMoveElementOfDirectoryAsync(new() { Payload = ElementObject.Id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
@@ -178,7 +178,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     /// <inheritdoc/>
     protected async Task DeleteElementOfDirectory()
     {
-        await SetBusy();
+        await SetBusyAsync();
         
         ResponseBaseModel rest = await ConstructorRepo.DeleteElementFromDirectoryAsync(new() { Payload = ElementObject.Id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;

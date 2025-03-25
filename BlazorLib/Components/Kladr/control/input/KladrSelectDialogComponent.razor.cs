@@ -68,7 +68,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         StateHasChanged();
         await Task.Delay(1);
     }
-    static KladrChainTypesEnum[] _finChains = [KladrChainTypesEnum.StreetsInCity, KladrChainTypesEnum.StreetsInRegion, KladrChainTypesEnum.StreetsInPopPoint];
+    private static readonly KladrChainTypesEnum[] _finChains = [KladrChainTypesEnum.StreetsInCity, KladrChainTypesEnum.StreetsInRegion, KladrChainTypesEnum.StreetsInPopPoint];
     void SelectRowAction(KladrResponseModel selected)
     {
         List<RootKLADRModelDB>? parents = selected.Parents?.Skip(1 + SelectionProgressSteps.Count).ToList();
@@ -76,9 +76,21 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
             SelectionProgressSteps.AddRange(parents);
 
         SelectionProgressSteps.Add(selected.Payload.ToObject<RootKLADRModelDB>()!);
-        StateHasChanged();
-        if (_finChains.Contains(selected.Chain))
+        FindName = "";
+        CodeKladrModel mdCode = CodeKladrModel.Build(selected.Code);
+        if (_finChains.Contains(selected.Chain) || string.IsNullOrWhiteSpace(mdCode.ChildsCodesTemplate))
             MudDialog.Close(DialogResult.Ok(true));
+        else
+        {
+            InvokeAsync(async () =>
+            {
+                await SetBusyAsync();
+                ResponseBaseModel res = await kladrRepo.ChildsContainsAsync(mdCode.ChildsCodesTemplate);
+                await SetBusyAsync(false);
+                if (!res.Success())
+                    MudDialog.Close(DialogResult.Ok(true));
+            });
+        }
     }
 
     /// <summary>
@@ -116,10 +128,10 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
             PageNum = state.Page,
             PageSize = state.PageSize,
         };
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsFindAsync(req, token);
         partData = res.Response;
-        await SetBusy(false, token: token);
+        await SetBusyAsync(false, token: token);
         // Return the data
         return new TableData<KladrResponseModel>() { TotalItems = res.TotalRowsCount, Items = partData };
     }
@@ -127,9 +139,9 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         Dictionary<KladrChainTypesEnum, JObject[]> regionsRest = await kladrRepo.ObjectsListForParentAsync(new());
-        await SetBusy(false);
+        await SetBusyAsync(false);
         foreach (RootKLADRModel? region in regionsRest.SelectMany(x => x.Value).Select(x => x.ToObject<RootKLADRModel>()!))
             regions.Add(new(region.CODE, region.NAME, region.SOCR));
 

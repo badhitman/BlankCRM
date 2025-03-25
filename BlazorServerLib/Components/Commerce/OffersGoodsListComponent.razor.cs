@@ -40,7 +40,7 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await SetBusy();
+        await SetBusyAsync();
 
         List<Task> tasks = [
             Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.HideWorthOffers); if (!res.Success()) SnackbarRepo.ShowMessagesResponse(res.Messages); else _hideWorth = res.Response == true; }),
@@ -48,7 +48,7 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
 
         await Task.WhenAll(tasks);
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     void CancelChangeConfig()
@@ -80,7 +80,7 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
 
         if (res.Response?.Response is not null)

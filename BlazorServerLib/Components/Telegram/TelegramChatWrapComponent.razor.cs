@@ -46,7 +46,7 @@ public partial class TelegramChatWrapComponent : BlazorBusyComponentBaseModel
         if (string.IsNullOrWhiteSpace(_textSendMessage))
             throw new ArgumentNullException(nameof(_textSendMessage));
 
-        await SetBusy();
+        await SetBusyAsync();
         SendTextMessageTelegramBotModel req = new() { Message = _textSendMessage, UserTelegramId = Chat.ChatTelegramId, From = "Техподдержка" };
 
         MemoryStream ms;

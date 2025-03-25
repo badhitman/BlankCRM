@@ -21,9 +21,9 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
         if (table is null)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         await table.ReloadServerData();
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
     /// </summary>
     private async Task<TableData<OfferAvailabilityModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TPaginationRequestModel<RegistersSelectRequestBaseModel> req = new()
         {
             Payload = new()
@@ -48,11 +48,11 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
         if (rest.Response is not null)
         {
             await CacheRubricsUpdate(rest.Response.Select(x => x.WarehouseId));
-            await SetBusy(false, token: token);
+            await SetBusyAsync(false, token: token);
             return new TableData<OfferAvailabilityModelDB>() { TotalItems = rest.TotalRowsCount, Items = rest.Response };
         }
 
-        await SetBusy(false, token: token);
+        await SetBusyAsync(false, token: token);
         return new TableData<OfferAvailabilityModelDB>() { TotalItems = 0, Items = [] };
     }
 }

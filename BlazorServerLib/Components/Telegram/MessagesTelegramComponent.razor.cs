@@ -53,7 +53,7 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     /// </summary>
     private async Task<TableData<MessageTelegramModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TPaginationResponseModel<MessageTelegramModelDB> rest_message = await TelegramRepo
             .MessagesTelegramSelectAsync(new TPaginationRequestModel<SearchMessagesChatModel>()
             {

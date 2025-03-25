@@ -61,7 +61,7 @@ public partial class WorkScheduleWeekdayAddingComponent : BlazorBusyComponentBas
             IsDisabled = true,
         };
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> res = await CommerceRepo.WeeklyScheduleUpdateAsync(ws);
         ws.Id = res.Response;
         if (res.Success() && ws.Id != 0 && AddingWorkScheduleHandle is not null)
@@ -69,7 +69,7 @@ public partial class WorkScheduleWeekdayAddingComponent : BlazorBusyComponentBas
             IsExpandAdding = !IsExpandAdding;
             AddingWorkScheduleHandle(ws);
         }
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
     }
 }

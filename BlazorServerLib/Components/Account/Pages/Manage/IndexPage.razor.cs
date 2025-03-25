@@ -52,12 +52,12 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
         }
 
         Messages = [];
-        await SetBusy();
+        await SetBusyAsync();
 
         ResponseBaseModel rest = await IdentityRepo.UpdateUserDetailsAsync(new() { UserId = CurrentUserSession.UserId, FirstName = firstName, LastName = lastName, PhoneNum = phoneNum });
         //AuthenticationState ar = await AuthRepo.GetAuthenticationStateAsync();
         // ar.User.Claims.ToList().ForEach(x => { x. });
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Success())
         {

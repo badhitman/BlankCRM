@@ -66,7 +66,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
         SnackbarRepo.ShowMessagesResponse(res.Messages);
 

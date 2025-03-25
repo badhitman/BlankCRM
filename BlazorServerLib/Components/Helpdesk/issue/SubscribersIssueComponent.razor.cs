@@ -27,7 +27,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
         if (!MailAddress.TryCreate(addingSubscriber, out _))
             throw new Exception();
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<UserInfoModel>? user_by_email = await IdentityRepo.FindUserByEmailAsync(addingSubscriber);
         IsBusyProgress = false;
@@ -40,7 +40,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
         if (!UsersIdentityDump.Any(x => x.UserId == user_by_email.Response.UserId))
             UsersIdentityDump.Add(user_by_email.Response);
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<bool> add_subscriber_res = await HelpdeskRepo.SubscribeUpdateAsync(new()
         {
@@ -58,7 +58,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
             return;
 
         addingSubscriber = null;
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<List<SubscriberIssueHelpdeskModelDB>> res = await HelpdeskRepo.SubscribesListAsync(new() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession!.UserId });
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         Issue.Subscribers = res.Response;
@@ -85,7 +85,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
             SenderActionUserId = CurrentUserSession!.UserId
         };
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<bool> rest = await HelpdeskRepo.SubscribeUpdateAsync(req);
 
@@ -115,7 +115,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
             SenderActionUserId = CurrentUserSession!.UserId
         };
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<bool> rest = await HelpdeskRepo.SubscribeUpdateAsync(req);
 

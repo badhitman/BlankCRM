@@ -62,7 +62,7 @@ public partial class ClaimRowComponent : BlazorBusyComponentBaseModel
 
     async Task SaveClaim()
     {
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel res = await IdentityRepo.ClaimUpdateOrCreateAsync(new() { ClaimArea = ClaimArea, ClaimUpdate = ClaimModel.Build(Claim.Id, claimType, claimValue, OwnerId) });
         IsBusyProgress = false;
         if (!res.Success())
@@ -81,7 +81,7 @@ public partial class ClaimRowComponent : BlazorBusyComponentBaseModel
             return;
         }
 
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel res = await IdentityRepo.ClaimDeleteAsync(new() { ClaimArea = ClaimArea, Id = Claim.Id });
         IsBusyProgress = false;
         initRemoveClaim = false;

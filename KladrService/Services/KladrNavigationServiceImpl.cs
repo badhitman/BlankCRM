@@ -488,24 +488,21 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     {
         TPaginationResponseModel<KladrResponseModel> response = new(req) { Response = [] };
 
-        if (string.IsNullOrWhiteSpace(req.FindText))
+        if (string.IsNullOrWhiteSpace(req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0))
             return response;
 
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync(token);
-        IQueryable<string> q = context
-            .ObjectsKLADR
+        response.TotalRowsCount = await context.ObjectsKLADR
             .Where(x => EF.Functions.Like(x.NAME, req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))))
-
             .Select(x => x.CODE)
-            .Union(context
-            .StreetsKLADR
-            .Where(x => EF.Functions.Like(x.NAME, req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))))
-
-            .Select(x => x.CODE))
-            ;
-
-        response.TotalRowsCount = await q.CountAsync(cancellationToken: token);
+            .Union(context.StreetsKLADR
+            .Where(x => (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))) &&  EF.Functions.Like(x.NAME, req.FindText))
+            .Select(x => x.CODE)).CountAsync(cancellationToken: token);
+        
         string[] dbRows;
+
+        if (string.IsNullOrWhiteSpace(req.FindText))
+            return response;
 
         dbRows = [.. (await context.FindByName(req.FindText, req.PageNum * req.PageSize, req.PageSize, req.CodeLikeFilter, token)).Select(x => x.CODE)];
         //.ObjectsKLADR
@@ -538,6 +535,13 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         response.Response.AddRange(fullData.OrderBy(x => x.Chain).ThenBy(x => x.Name));
         return response;
     }
-}
 
-internal record KladrElementSelectRecord(KladrChainTypesEnum Chain, string CODE);
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ChildsContainsAsync(string codeLike, CancellationToken token = default)
+    {
+        using KladrContext context = await kladrDbFactory.CreateDbContextAsync(token);
+        return await context.ObjectsKLADR.AnyAsync(x=>EF.Functions.Like(x.CODE, codeLike), cancellationToken: token)
+            ? ResponseBaseModel.CreateInfo("Вложенные объекты существуют")
+            : ResponseBaseModel.CreateError("Вложенных объектов нет");
+    }
+}

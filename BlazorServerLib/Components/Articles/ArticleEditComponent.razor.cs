@@ -42,7 +42,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
         if (editArticle is null)
             throw new Exception();
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<int> res = await ArticlesRepo.ArticleCreateOrUpdateAsync(editArticle);
         IsBusyProgress = false;
@@ -58,10 +58,10 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
 
     async Task LoadArticleData()
     {
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<ArticleModelDB[]> res = await ArticlesRepo.ArticlesReadAsync([ArticleId]);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is null)
             throw new Exception();
@@ -74,7 +74,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
         if (editArticle?.RubricsJoins is not null && !req.Any(x => !editArticle!.RubricsJoins.Any(y => y.RubricId == x?.Id)) && !editArticle.RubricsJoins.Any(x => !req.Any(y => y?.Id == x.RubricId)))
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel res = await ArticlesRepo.UpdateRubricsForArticleAsync(new() { ArticleId = ArticleId, RubricsIds = req.Select(x => x!.Id).ToArray() });
         await LoadArticleData();
         // await SetBusy(false);
@@ -84,7 +84,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         await ReadCurrentUser();
         images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{GlobalStaticConstants.Routes.ARTICLE_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.BODY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={GlobalStaticConstants.Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={ArticleId}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
@@ -102,6 +102,6 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
             };
 
         editArticle = GlobalTools.CreateDeepCopy(orignArticle) ?? throw new Exception();
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 }

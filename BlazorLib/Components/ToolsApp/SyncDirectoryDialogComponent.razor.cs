@@ -72,10 +72,10 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
             initDelete = true;
             return;
         }
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel res = await AppManagerRepo.DeleteSyncDirectoryAsync(SyncDir.Id);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         MudDialog.Close(DialogResult.Ok(true));
     }
 
@@ -89,10 +89,10 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
             ParentId = ApiConnect.Id,
             Id = SyncDir?.Id ?? 0
         };
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateSyncDirectoryAsync(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusy(false);
+        await SetBusyAsync(false);
 
         MudDialog.Close(DialogResult.Ok(true));
     }
@@ -107,7 +107,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
             return;
         }
 
-        await SetBusy();
+        await SetBusyAsync();
         SyncDirectoryModelDB? backupDir = null;
         if (testForm)
         {
@@ -140,7 +140,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
         if (backupDir is not null)
             SyncDir?.Update(backupDir);
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     void ResetValues()
@@ -156,9 +156,9 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
         await base.OnInitializedAsync();
         if (SyncRuleId != 0)
         {
-            await SetBusy();
+            await SetBusyAsync();
             SyncDir = await AppManagerRepo.ReadSyncDirectoryAsync(SyncRuleId);
-            await SetBusy(false);
+            await SetBusyAsync(false);
         }
         else
             SyncDir = SyncDirectoryModelDB.BuildEmpty(ApiConnect.Id);

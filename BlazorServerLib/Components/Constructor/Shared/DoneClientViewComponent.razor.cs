@@ -45,7 +45,7 @@ public partial class DoneClientViewComponent : BlazorBusyComponentBaseModel
             return;
         }
 
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel rest = await ConstructorRepo.SetDoneSessionDocumentDataAsync(SessionDocument.SessionToken);
         IsBusyProgress = false;
 

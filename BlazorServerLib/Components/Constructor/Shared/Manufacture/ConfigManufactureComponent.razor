@@ -118,7 +118,7 @@
 
     Task UpdateManufacture()
     {
-        SetBusy();
+        SetBusyAsync();
         //ResponseBaseModel res = await ManufactureRepo.UpdateManufactureConfig(manufactureEdit);
         IsBusyProgress = false;
         //SnackbarRepo.ShowMessagesResponse(res.Messages);

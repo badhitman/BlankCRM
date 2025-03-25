@@ -67,7 +67,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         if (!CanCreate)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdateAsync(new AddressOrganizationBaseModel()
         {
@@ -122,7 +122,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
                 return;
             _last_request = _curr_request;
 
-            await SetBusy();
+            await SetBusyAsync();
 
             foreach (int i in added_rubrics)
             {
@@ -133,7 +133,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
                 if (res.Messages.Any(x => x.TypeMessage > ResultTypesEnum.Info))
                     SnackbarRepo.ShowMessagesResponse(res.Messages);
             }
-            await SetBusy(false);
+            await SetBusyAsync(false);
         }
     }
 

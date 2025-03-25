@@ -45,7 +45,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await SetBusy();
+        await SetBusyAsync();
 
         List<Task> tasks = [
             Task.Run(async () => { TResponseModel<List<RubricIssueHelpdeskModelDB>> res = await HelpdeskRepo.RubricReadAsync(0); SnackbarRepo.ShowMessagesResponse(res.Messages); RubricMetadataShadow = res.Response; }),
@@ -54,7 +54,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
 
         await Task.WhenAll(tasks);
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
 
         if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
         {
@@ -73,9 +73,9 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
         if (CurrentTab.Rows is null || CurrentTab.Rows.Count == 0)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         await CacheRegistersUpdate(offers: CurrentTab.Rows.Select(x => x.OfferId).ToArray(), goods: [], CurrentTab.WarehouseId, true);
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     decimal GetMaxValue(RowOfOrderDocumentModelDB ctx)

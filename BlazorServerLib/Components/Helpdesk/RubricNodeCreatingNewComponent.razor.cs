@@ -51,7 +51,7 @@ public partial class RubricNodeCreatingNewComponent : BlazorBusyComponentBaseMod
         if (string.IsNullOrWhiteSpace(rubricName))
             throw new Exception();
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> rest = await HelpdeskRepo.RubricCreateOrUpdateAsync(new() { Name = rubricName, ParentId = ItemModel.ParentId > 0 ? ItemModel.ParentId : null, ContextName = ContextName });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(rest.Messages);

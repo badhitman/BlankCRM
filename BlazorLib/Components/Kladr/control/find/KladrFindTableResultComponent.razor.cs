@@ -32,9 +32,9 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         Dictionary<KladrChainTypesEnum, JObject[]> regionsRest = await kladrRepo.ObjectsListForParentAsync(new());
-        await SetBusy(false);
+        await SetBusyAsync(false);
         foreach (RootKLADRModel? region in regionsRest.SelectMany(x => x.Value).Select(x => x.ToObject<RootKLADRModel>()!))
             regions.Add(new(region.CODE, region.NAME, region.SOCR));
     }
@@ -52,9 +52,9 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
             CodeLikeFilter = _regionsSelected?.Select(x => $"{x[..2]}%").ToArray(),
         };
 
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsFindAsync(req, token);
-        await SetBusy(false, token: token);
+        await SetBusyAsync(false, token: token);
         PartData = res.Response ?? [];
         return new TableData<KladrResponseModel>()
         {

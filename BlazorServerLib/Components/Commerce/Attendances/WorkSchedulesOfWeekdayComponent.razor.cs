@@ -49,7 +49,7 @@ public partial class WorkSchedulesOfWeekdayComponent : BlazorBusyComponentBaseMo
             WorkSchedules.Clear();
         OfferCurrent = selectedOffer;
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TPaginationRequestModel<WorkSchedulesSelectRequestModel> req = new()
         {
@@ -71,7 +71,7 @@ public partial class WorkSchedulesOfWeekdayComponent : BlazorBusyComponentBaseMo
             TotalElementsCount = res.TotalRowsCount;
             WorkSchedules.AddRange(res.Response);
         }
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

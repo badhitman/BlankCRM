@@ -32,7 +32,7 @@ public partial class NotificationsAreaTelegramIssueConfigComponent : IssueWrapBa
         if (telegram_users_ids.Length == 0)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         chatsTelegram = [.. await TelegramRepo.ChatsFindForUserAsync(telegram_users_ids)];
         IsBusyProgress = false;
         chatsTelegram.Insert(0, new() { Title = "Off", Type = ChatsTypesTelegramEnum.Private });

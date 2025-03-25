@@ -56,7 +56,7 @@ public partial class OrganizationEditComponent : BlazorBusyComponentBaseAuthMode
         if (OrganizationId is null)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<OrganizationModelDB[]> res = await CommerceRepo.OrganizationsReadAsync([OrganizationId.Value]);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);

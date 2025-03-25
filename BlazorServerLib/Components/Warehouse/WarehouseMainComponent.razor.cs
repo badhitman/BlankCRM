@@ -23,7 +23,7 @@ public partial class WarehouseMainComponent : BlazorBusyComponentRubricsCachedMo
     /// </summary>
     private async Task<TableData<WarehouseDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TPaginationRequestModel<WarehouseDocumentsSelectRequestModel> req = new()
         {
             Payload = new()
@@ -37,7 +37,7 @@ public partial class WarehouseMainComponent : BlazorBusyComponentRubricsCachedMo
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
         TPaginationResponseModel<WarehouseDocumentModelDB> rest = await CommerceRepo.WarehousesSelectAsync(req);
-        await SetBusy(false, token: token);
+        await SetBusyAsync(false, token: token);
 
         if (rest.Response is not null)
         {
@@ -45,7 +45,7 @@ public partial class WarehouseMainComponent : BlazorBusyComponentRubricsCachedMo
             return new TableData<WarehouseDocumentModelDB>() { TotalItems = rest.TotalRowsCount, Items = rest.Response };
         }
 
-        await SetBusy(false, token: token);
+        await SetBusyAsync(false, token: token);
         return new TableData<WarehouseDocumentModelDB>() { TotalItems = 0, Items = [] };
     }
 

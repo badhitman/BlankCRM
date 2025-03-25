@@ -50,7 +50,7 @@ public partial class OfferCreatingFormComponent : BlazorBusyComponentBaseAuthMod
             OfferUnit = UnitOffer,
             Price = priceOffer,
         };
-        await SetBusy();
+        await SetBusyAsync();
         
         TResponseModel<int> res = await CommerceRepo.OfferUpdateAsync(new() { Payload = off, SenderActionUserId = CurrentUserSession.UserId });
         IsBusyProgress = false;

@@ -60,7 +60,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<OfficeOrganizationModelDB[]> res_address = await CommerceRepo
             .OfficesOrganizationsReadAsync([AddressForOrganization]);
@@ -70,7 +70,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         OfficeEdit = GlobalTools.CreateDeepCopy(OfficeCurrent) ?? throw new Exception();
 
         TResponseModel<List<RubricIssueHelpdeskModelDB>> res_rubric = await HelpdeskRepo.RubricReadAsync(OfficeCurrent.ParentId);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res_rubric.Messages);
         if (res_rubric.Success() && res_rubric.Response is not null && res_rubric.Response.Count != 0)
         {
@@ -105,7 +105,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         if (!CanSave)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdateAsync(new AddressOrganizationBaseModel()
         {

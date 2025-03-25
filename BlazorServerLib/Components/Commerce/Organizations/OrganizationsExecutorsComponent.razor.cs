@@ -66,7 +66,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
     {
         if (!MailAddress.TryCreate(AddingUserEmail, out _) || Organization is null || CurrentUserSession is null)
             return;
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersIdentityByEmailsAsync([AddingUserEmail]);
 
@@ -91,7 +91,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
         AddingUserEmail = "";
 
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         await tableRef.ReloadServerData();
     }
 
@@ -130,9 +130,9 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
             return;
 
         UserOrganizationModelDB sender = (UserOrganizationModelDB)element;
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> res = await CommerceRepo.UserOrganizationUpdateAsync(new TAuthRequestModel<UserOrganizationModelDB>() { Payload = sender, SenderActionUserId = CurrentUserSession.UserId });
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await tableRef.ReloadServerData();
     }
@@ -178,9 +178,9 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
         if (Organization is not null && Organization.Id > 0)
             req.Payload.OrganizationsFilter = [Organization.Id];
 
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TResponseModel<TPaginationResponseModel<UserOrganizationModelDB>> res = await CommerceRepo.UsersOrganizationsSelectAsync(req);
-        await SetBusy(false, token);
+        await SetBusyAsync(false, token);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success() || res.Response?.Response is null)
             return new TableData<UserOrganizationModelDB>() { TotalItems = 0, Items = [] };

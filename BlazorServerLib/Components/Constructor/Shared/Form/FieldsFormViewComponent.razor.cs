@@ -48,7 +48,7 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
         {
             _ = InvokeAsync(async () =>
             {
-                await SetBusy();
+                await SetBusyAsync();
                 StateHasChanged();
                 rest = await ConstructorRepo.GetFormAsync(Form.Id);
                 IsBusyProgress = false;
@@ -96,7 +96,7 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
             return;
         }
         ResponseBaseModel rest;
-        await SetBusy();
+        await SetBusyAsync();
 
         if (_field_master is FieldFormAkaDirectoryConstructorModelDB directory_field)
         {

@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DocumentFormat.OpenXml.Drawing;
 using Newtonsoft.Json.Linq;
 using SharedLib;
 
@@ -12,6 +13,10 @@ namespace RemoteCallLib;
 /// </summary>
 public class KladrNavigationServiceTransmission(IRabbitClient rabbitClient) : IKladrNavigationService
 {
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ChildsContainsAsync(string codeLike, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.KladrNavigationChildsContainsReceive, codeLike, token: token) ?? new();
+
     /// <inheritdoc/>
     public async Task<TResponseModel<KladrResponseModel>> ObjectGetAsync(KladrsRequestBaseModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<KladrResponseModel>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationGetObjectReceive, req, token: token) ?? new();

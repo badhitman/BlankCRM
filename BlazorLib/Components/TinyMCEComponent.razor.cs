@@ -73,7 +73,7 @@ public partial class TinyMCEComponent : BlazorBusyComponentBaseModel
         images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{KeyStorage.ApplicationName.Replace("\\", "_").Replace("/", "_")}/{KeyStorage.PropertyName.Replace("\\", "_").Replace("/", "_")}?{nameof(KeyStorage.PrefixPropertyName)}={KeyStorage.PrefixPropertyName}&{nameof(KeyStorage.OwnerPrimaryKey)}={KeyStorage.OwnerPrimaryKey}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<string?> res = await StoreRepo.ReadParameterAsync<string?>(KeyStorage);
 
         if (!res.Success())

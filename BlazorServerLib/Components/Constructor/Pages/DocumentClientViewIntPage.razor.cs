@@ -25,7 +25,7 @@ public partial class DocumentClientViewIntPage : BlazorBusyComponentBaseAuthMode
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         await ReadCurrentUser();
         
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = DocumentId, IncludeExtra = true });

@@ -35,21 +35,21 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
                 SenderActionUserId = CurrentUserSession!.UserId
             }
         };
-        await SetBusy();
+        await SetBusyAsync();
         await HelpdeskRepo.PulsePushAsync(req_pulse, false);
         TResponseModel<int> add_msg_system = await HelpdeskRepo.MessageCreateOrUpdateAsync(new()
         {
             SenderActionUserId = GlobalStaticConstants.Roles.System,
             Payload = new() { MessageText = $"<b>Пользователь {CurrentUserSession!.UserName} отправил сообщение Telegram пользователю user-tg#{msg.UserTelegramId}</b>: {msg.Message}", IssueId = Issue.Id }
         });
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(add_msg_system.Messages);
     }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         await base.OnInitializedAsync();
         long[] chats_ids = [.. UsersIdentityDump.Where(x => x.TelegramId.HasValue).Select(x => x.TelegramId!.Value)];
 

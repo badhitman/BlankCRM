@@ -47,7 +47,7 @@ public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
     /// <summary>
     /// SetBusy
     /// </summary>
-    public async Task SetBusy(bool is_busy = true, CancellationToken token = default)
+    public async Task SetBusyAsync(bool is_busy = true, CancellationToken token = default)
     {
         //#if DEBUG
         //        Logger.LogDebug($"{nameof(SetBusy)}:{is_busy}");

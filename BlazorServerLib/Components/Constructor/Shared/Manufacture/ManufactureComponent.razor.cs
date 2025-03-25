@@ -94,7 +94,7 @@ public partial class ManufactureComponent : BlazorBusyComponentBaseAuthModel
     /// </summary>
     public async Task ReloadProjectData()
     {
-        await SetBusy();
+        await SetBusyAsync();
 
         List<ProjectModelDb> rest_project = await ConstructorRepo.ProjectsReadAsync([ParentFormsPage.MainProject!.Id]);
         CurrentProject = rest_project.Single();

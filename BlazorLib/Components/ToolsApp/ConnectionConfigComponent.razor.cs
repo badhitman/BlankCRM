@@ -114,7 +114,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
     /// <param name="testForm">Если требуется проверить настройки из формы</param>
     public async Task TestConnect(bool testForm = false)
     {
-        await SetBusy();
+        await SetBusyAsync();
         ApiRestConfigModelDB? backupConf = null;
         if (testForm)
         {
@@ -130,7 +130,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
         if (backupConf is not null)
             ApiConnect.Update(backupConf);
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(GetMe.Messages);
 
         if (!testForm && ExpFormRef is not null && GetMe.Success())
@@ -149,10 +149,10 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
             TokenAccess = TokenAccess,
             HeaderName = HeaderName,
         };
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> res = await AppManagerRepo.UpdateOrCreateConfigAsync(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         if (res.Success())
             SetActiveHandler(req.Id > 0 ? req.Id : res.Response);
     }

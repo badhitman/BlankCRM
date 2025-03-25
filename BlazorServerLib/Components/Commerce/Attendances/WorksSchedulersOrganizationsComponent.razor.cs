@@ -42,7 +42,7 @@ public partial class WorksSchedulersOrganizationsComponent : BlazorBusyComponent
                 OfferId = Offer?.Id,
             }
         };
-        await SetBusy();
+        await SetBusyAsync();
 
         if (Offer is null || Offer.Id < 1)
             req.Payload.SetValue = org.Contractors?.Any(x => x.OrganizationId == org.Id && (x.OfferId == null || x.OfferId < 1)) != true;
@@ -51,7 +51,7 @@ public partial class WorksSchedulersOrganizationsComponent : BlazorBusyComponent
 
         TResponseModel<bool> res = await CommerceRepo.OrganizationOfferContractUpdateAsync(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         if (table is not null)
             await table.ReloadServerData();
     }
@@ -141,9 +141,9 @@ public partial class WorksSchedulersOrganizationsComponent : BlazorBusyComponent
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
-        await SetBusy(token: token);
+        await SetBusyAsync(token: token);
         TPaginationResponseModel<OrganizationModelDB> res = await CommerceRepo.OrganizationsSelectAsync(req);
-        await SetBusy(false, token: token);
+        await SetBusyAsync(false, token: token);
 
         if (res.Response is null)
             return new TableData<OrganizationModelDB>() { TotalItems = 0, Items = [] };

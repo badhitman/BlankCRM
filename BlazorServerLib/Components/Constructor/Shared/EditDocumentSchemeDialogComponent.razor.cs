@@ -51,7 +51,7 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
     {
         if (DocumentScheme.Id > 0)
         {
-            await SetBusy();
+            await SetBusyAsync();
             TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetDocumentSchemeAsync(DocumentScheme.Id);
             IsBusyProgress = false;
 
@@ -77,7 +77,7 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
         if (ParentFormsPage.MainProject is null)
             throw new Exception("Не выбран основной/используемый проект");
 
-        await SetBusy();
+        await SetBusyAsync();
         
         TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.UpdateOrCreateDocumentSchemeAsync(new() { Payload = new EntryConstructedModel() { Id = DocumentScheme.Id, Name = DocumentNameOrigin, Description = DocumentDescriptionOrigin, ProjectId = ParentFormsPage.MainProject.Id }, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;

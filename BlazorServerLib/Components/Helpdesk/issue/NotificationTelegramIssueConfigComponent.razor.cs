@@ -45,7 +45,7 @@ public partial class NotificationTelegramIssueConfigComponent : BlazorBusyCompon
 
     async Task SaveConfig()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> rest = await StorageRepo.SaveParameterAsync(SelectedChatSet.ChatTelegramId, KeyStorage, false);
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         IsBusyProgress = false;
@@ -55,7 +55,7 @@ public partial class NotificationTelegramIssueConfigComponent : BlazorBusyCompon
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<long?> rest = await StorageRepo.ReadParameterAsync<long?>(KeyStorage);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(rest.Messages);

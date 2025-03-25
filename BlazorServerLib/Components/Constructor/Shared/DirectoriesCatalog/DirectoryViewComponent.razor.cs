@@ -46,7 +46,7 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
             return;
         }
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<int> rest = await ConstructorRepo.CreateElementForDirectoryAsync(new() { Payload = createNewElementForDict, SenderActionUserId = CurrentUserSession!.UserId });
         createNewElementForDict = OwnedNameModel.BuildEmpty(createNewElementForDict.OwnerId);
@@ -55,7 +55,7 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
 
         if (directoryNav_ref is not null)
-            await directoryNav_ref.SetBusy();
+            await directoryNav_ref.SetBusyAsync();
 
         if (rest.Success())
             await elementsListOfDirectoryView_ref.ReloadElements(directoryNav_ref?.SelectedDirectoryId, true);
@@ -66,7 +66,7 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
         }
 
         if (directoryNav_ref is not null)
-            await directoryNav_ref.SetBusy(false);
+            await directoryNav_ref.SetBusyAsync(false);
     }
 
     async void SelectedDirectoryChangeAction(int selectedDirectoryId)

@@ -49,7 +49,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         if (CurrentOrganization is null)
             return;
 
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<OrganizationModelDB[]> res = await CommerceRepo.OrganizationsReadAsync([CurrentOrganization.Id]);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
@@ -66,7 +66,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         editOrg = GlobalTools.CreateDeepCopy(CurrentOrganization);
 
         TAuthRequestModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession!.UserId };
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
         IsBusyProgress = false;
@@ -96,7 +96,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         if (!string.IsNullOrWhiteSpace(editOrg.NewName))
             req.Name = editOrg.NewName;
 
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<bool> res = await CommerceRepo.OrganizationSetLegalAsync(req);
         IsBusyProgress = false;
@@ -110,7 +110,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
             throw new ArgumentNullException(nameof(editOrg));
 
         TAuthRequestModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession!.UserId };
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
         IsBusyProgress = false;

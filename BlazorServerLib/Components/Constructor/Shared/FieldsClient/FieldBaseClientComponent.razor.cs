@@ -90,7 +90,7 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
             _stringFieldValue = value;
             InvokeAsync(async () =>
             {
-                await SetBusy();
+                await SetBusyAsync();
                 StateHasChanged();
                 await SetValue(_stringFieldValue, Field.Name);
                 StateHasChanged();
@@ -109,7 +109,7 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
             _boolFieldValue = value;
             InvokeAsync(async () =>
             {
-                await SetBusy();
+                await SetBusyAsync();
                 StateHasChanged();
                 await SetValue(_boolFieldValue.ToString(), Field.Name);
                 IsBusyProgress = false;
@@ -128,7 +128,7 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
             _dateTimeFieldValue = value;
             InvokeAsync(async () =>
             {
-                await SetBusy();
+                await SetBusyAsync();
                 StateHasChanged();
                 await SetValue(_dateTimeFieldValue.ToString(), Field.Name);
                 IsBusyProgress = false;
@@ -147,7 +147,7 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
             _doubleFieldValue = value;
             InvokeAsync(async () =>
             {
-                await SetBusy();
+                await SetBusyAsync();
                 StateHasChanged();
                 await SetValue(_doubleFieldValue.ToString(), Field.Name);
                 IsBusyProgress = false;
@@ -167,7 +167,7 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
             _intFieldValue = value;
             InvokeAsync(async () =>
             {
-                await SetBusy();
+                await SetBusyAsync();
                 StateHasChanged();
                 await SetValue(_intFieldValue.ToString(), Field.Name);
                 IsBusyProgress = false;

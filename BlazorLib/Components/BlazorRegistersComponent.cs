@@ -56,9 +56,9 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
             PageSize = int.MaxValue,
             SortingDirection = DirectionsEnum.Up,
         };
-        await SetBusy();
+        await SetBusyAsync();
         TPaginationResponseModel<OfferAvailabilityModelDB> offersRegisters = await CommerceRepo.OffersRegistersSelectAsync(reqData);
-        await SetBusy(false);
+        await SetBusyAsync(false);
 
         if (offersRegisters.Response is not null && offersRegisters.Response.Count != 0)
         {

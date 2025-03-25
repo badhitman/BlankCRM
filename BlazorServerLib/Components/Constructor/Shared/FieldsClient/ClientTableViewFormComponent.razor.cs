@@ -98,7 +98,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         StateHasChanged();
         _ = InvokeAsync(async () =>
         {
-            await SetBusy();
+            await SetBusyAsync();
             StateHasChanged();
             ValueFieldSessionDocumentDataBaseModel req = new() { GroupByRowNum = row_num, JoinFormId = PageJoinForm.Id, SessionId = SessionDocument.Id };
             ResponseBaseModel rest = await ConstructorRepo.DeleteValuesFieldsByGroupSessionDocumentDataByRowNumAsync(req);
@@ -128,7 +128,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
             JoinFormId = PageJoinForm.Id,
             SessionId = SessionDocument.Id
         };
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<int> rest = await ConstructorRepo.AddRowToTableAsync(row_obj);
         IsBusyProgress = false;
@@ -168,7 +168,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
             SnackbarRepo.Add("SessionDocument is null. error BCBB2599-4CC1-433A-A5BC-21114935105F", Severity.Error, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
             return;
         }
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<SessionOfDocumentDataModelDB> rest = string.IsNullOrWhiteSpace(SessionDocument.SessionToken)
         ? await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = SessionDocument.Id, IncludeExtra = false })
         : await ConstructorRepo.GetSessionDocumentDataAsync(SessionDocument.SessionToken);

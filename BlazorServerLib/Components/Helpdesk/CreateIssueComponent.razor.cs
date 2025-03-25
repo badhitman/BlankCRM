@@ -80,7 +80,7 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<bool?> res_ShowCreatingIssue = await SerializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowCreatingIssue);
         _showCreateIssue = res_ShowCreatingIssue.Success() && res_ShowCreatingIssue.Response == true;
         TResponseModel<bool?> res = await SerializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ParameterShowDisabledRubrics);

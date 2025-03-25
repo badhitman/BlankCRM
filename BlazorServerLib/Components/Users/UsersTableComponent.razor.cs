@@ -187,7 +187,7 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<bool?> res_ShowClaimsUsers = await SerializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowClaimsUser);
         showClaimsUsers = res_ShowClaimsUsers.Response == true;
 
@@ -215,7 +215,7 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
                 string msg = "UsersInfo is null. error {B57C9FB4-FC33-44A1-90C7-E52C00A041EE}";
                 throw new Exception(msg);
             }
-            await SetBusy(false);
+            await SetBusyAsync(false);
             if (numResults != res.TotalRowsCount)
             {
                 numResults = res.TotalRowsCount;

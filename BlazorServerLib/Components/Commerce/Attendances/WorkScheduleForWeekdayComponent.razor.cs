@@ -39,7 +39,7 @@ public partial class WorkScheduleForWeekdayComponent : BlazorBusyComponentBaseMo
 
     async Task SaveSchedule()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> res = await CommerceRepo.WeeklyScheduleUpdateAsync(WorkScheduleEdit);
         if (res.Success())
         {
@@ -47,7 +47,7 @@ public partial class WorkScheduleForWeekdayComponent : BlazorBusyComponentBaseMo
             WorkSchedule = GlobalTools.CreateDeepCopy(WorkScheduleEdit)!;
         }
 
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
     }
 

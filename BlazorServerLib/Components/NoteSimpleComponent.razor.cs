@@ -75,7 +75,7 @@ public partial class NoteSimpleComponent : BlazorBusyComponentBaseModel
 
     async Task SaveText()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<int> rest = await StorageRepo.SaveParameterAsync(editValue, KeyStorage, false);
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         IsBusyProgress = false;
@@ -86,7 +86,7 @@ public partial class NoteSimpleComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         domId = $"{OwnerPrimaryKey}/{nameof(NoteSimpleComponent)}{ApplicationName}{PropertyName}{PrefixPropertyName}";
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<string?> rest = await StorageRepo.ReadParameterAsync<string>(KeyStorage);
         IsBusyProgress = false;
         initValue = rest.Response;

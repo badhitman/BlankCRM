@@ -65,7 +65,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
 
     async Task ReadState(bool notify_email)
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<TelegramJoinAccountModelDb> rest = await IdentityRepo.TelegramJoinAccountStateAsync(new() { UserId = User.UserId, EmailNotify = notify_email, TelegramJoinAccountTokenLifetimeMinutes = WebConfig.Value.TelegramJoinAccountTokenLifetimeMinutes });
         IsBusyProgress = false;
         if (!rest.Success())
@@ -78,7 +78,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
 
     async Task CreateToken()
     {
-        await SetBusy();
+        await SetBusyAsync();
         TResponseModel<TelegramJoinAccountModelDb> rest = await IdentityRepo.TelegramJoinAccountCreateAsync(User.UserId);
         Messages = rest.Messages;
         TelegramJoinAccount = rest.Response;
@@ -87,7 +87,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
 
     async Task DeleteToken()
     {
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel rest = await IdentityRepo.TelegramJoinAccountDeleteActionAsync(User.UserId);
         Messages = rest.Messages;
         TResponseModel<TelegramJoinAccountModelDb> rest_state = await IdentityRepo.TelegramJoinAccountStateAsync(new() { UserId = User.UserId, EmailNotify = false, TelegramJoinAccountTokenLifetimeMinutes = WebConfig.Value.TelegramJoinAccountTokenLifetimeMinutes });//, 
@@ -100,7 +100,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
 
     async Task Rest()
     {
-        await SetBusy();
+        await SetBusyAsync();
         if (string.IsNullOrWhiteSpace(UserId))
         {
             AuthenticationState state = await AuthRepo.GetAuthenticationStateAsync();
@@ -119,7 +119,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
     {
         await Rest();
         await ReadState(false);
-        await SetBusy();
+        await SetBusyAsync();
 
         TResponseModel<string> bot_username_res = await TelegramRemoteRepo.GetBotUsernameAsync();
         IsBusyProgress = false;
@@ -127,7 +127,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
         Messages.AddRange(bot_username_res.Messages);
         if (User.TelegramId.HasValue)
         {
-            await SetBusy();
+            await SetBusyAsync();
 
             TResponseModel<TelegramUserBaseModel> rest = await IdentityRepo.GetTelegramUserAsync(User.TelegramId.Value);
             IsBusyProgress = false;
