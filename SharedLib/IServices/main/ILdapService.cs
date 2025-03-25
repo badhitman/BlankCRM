@@ -24,8 +24,8 @@ public interface ILdapService
     /// Получить группы пользователя
     /// </summary>
     /// <param name="base_filters">Перечень базовых фильтров для поиска</param>
-    /// <param name="token"></param>
     /// <param name="user_dn">Имя пользователя (полный адрес/путь)</param>
+    /// <param name="token"></param>
     public Task<IEnumerable<string>> GetGroupsDNForUserAsync(string user_dn, IEnumerable<string>? base_filters = null, CancellationToken token = default);
 
     /// <summary>
@@ -34,7 +34,7 @@ public interface ILdapService
     public Task<ResponseBaseModel> CreateUserAsync(LdapUserInformationModel user, CancellationToken token = default);
 
     /// <summary>
-    /// Перевыпуск пароля пользователю и отправка уведомления (с новым паролем) ему
+    /// Перевыпуск пароля пользователю
     /// </summary>
     /// <param name="sAMAccountName">Логин пользователя</param>
     /// <param name="token"></param>
@@ -71,7 +71,7 @@ public interface ILdapService
     /// <param name="emails">Искомые E-mail адреса</param>
     /// <param name="base_filters">фильтры поиска LDAP</param>
     /// <param name="token"></param>
-    /// <returns>Найденые пользователи</returns>
+    /// <returns>Найденные пользователи</returns>
     public Task<IEnumerable<LdapMemberViewModel>> FindMembersOfEmailsAsync(IEnumerable<string> emails, IEnumerable<string>? base_filters = null, CancellationToken token = default);
 
     /// <summary>
@@ -79,7 +79,7 @@ public interface ILdapService
     /// </summary>
     /// <param name="base_filters">фильтры поиска LDAP</param>
     /// <param name="token"></param>
-    /// <returns>Найденые пользователи</returns>
+    /// <returns>Найденные пользователи</returns>
     public Task<IEnumerable<LdapMemberViewModel>> GetAllEmailsAsync(IEnumerable<string>? base_filters = null, CancellationToken token = default);
 
     /// <summary>
@@ -115,7 +115,7 @@ public interface ILdapService
     /// <param name="mode">Режим поиска</param>
     /// <param name="base_filters">базовое ограничение/фильтр пути/dn</param>
     /// <param name="token"></param>
-    /// <returns>Резульатт запроса</returns>
+    /// <returns>Результат запроса</returns>
     public Task<IEnumerable<string>> FindGroupsDNByQueryCNAsync(IEnumerable<string> queries_cn, FindTextModesEnum mode, IEnumerable<string>? base_filters = null, CancellationToken token = default);
 
     /// <summary>

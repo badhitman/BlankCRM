@@ -20,6 +20,12 @@ else
     @ms
 }
 
+@if (IsDebug)
+{
+    @* <OfficeOrganizationComponent AddressForOrganization="1" /> *@
+    <OrganizationEditComponent OrganizationId="1" />
+}
+
 @code {
     [Inject]
     IStorageTransmission StoreRepo { get; set; } = default!;

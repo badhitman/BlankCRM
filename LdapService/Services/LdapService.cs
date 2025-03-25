@@ -103,7 +103,7 @@ public class LdapService : ILdapService, IDisposable
             ldap_conn = new LdapConnection();
             end_point_connect = (!string.IsNullOrWhiteSpace(_ad_opt.Ip) ? _ad_opt.Ip : _ad_opt.Host);
             _logger.LogDebug($"try ldap connect (no ssl): {end_point_connect}");
-            await ldap_conn.ConnectAsync(end_point_connect, LdapConnection.DefaultPort);
+            await ldap_conn.ConnectAsync(end_point_connect, LdapConnection.DefaultPort, token);
         }
 
         if (!ldap_conn.Connected)
@@ -114,7 +114,7 @@ public class LdapService : ILdapService, IDisposable
 
         string user_dn = !string.IsNullOrWhiteSpace(Login) ? Login : (User + "@" + _ad_opt.Host);
         _logger.LogDebug($"try binding ldap: {JsonConvert.SerializeObject(new { User, Login, end_point_connect, user_dn, ph = GlobalTools.GetHashString(Password) })}");
-        await ldap_conn.BindAsync(user_dn, Password);
+        await ldap_conn.BindAsync(user_dn, Password, token);
 
         LdapSearchConstraints cons = ldap_conn.SearchConstraints;
         cons.MaxResults = _config_ldap_service.LimitResponseRows;
@@ -158,7 +158,7 @@ public class LdapService : ILdapService, IDisposable
         //    }
         //}
 
-        string[] find_ou = (await FindOrgUnitsAsync(new LdapSimpleRequestModel() { Query = user.OU, BaseFilters = [BasePath] })).ToArray();
+        string[] find_ou = [.. (await FindOrgUnitsAsync(new LdapSimpleRequestModel() { Query = user.OU, BaseFilters = [BasePath] }, token))];
         IQueryable<string> q = find_ou.Where(x => x.Equals(user.OU, StringComparison.OrdinalIgnoreCase)).AsQueryable();
         if (q.Count() != 1)
         {
@@ -536,7 +536,6 @@ public class LdapService : ILdapService, IDisposable
             try
             {
                 SearchOptions so = new(sb, LdapConnection.ScopeSub, searchFilter, [.. attributes_names]);
-
                 List<LdapMemberViewRecModel> raw = await ldap_conn.SearchUsingSimplePagingAsync<LdapMemberViewRecModel>(e => e, so, 100, cancellationToken: token);
                 res.AddRange([.. raw.Select(x => (LdapMemberViewModel)x)]);
             }
@@ -1176,7 +1175,7 @@ public class LdapService : ILdapService, IDisposable
                 try
                 {
                     SearchOptions so = new(bf, LdapConnection.ScopeSub, searchFilter, [DistinguishedNameAttribute, SAMAccountNameAttribute]);
-                    List<LdapPersonBaseViewRecModel> raw = await ldap_conn.SearchUsingSimplePagingAsync<LdapPersonBaseViewRecModel>(e => e, so, 100);
+                    List<LdapPersonBaseViewRecModel> raw = await ldap_conn.SearchUsingSimplePagingAsync<LdapPersonBaseViewRecModel>(e => e, so, 100, cancellationToken: token);
                     res_groups.AddRange([.. raw.Select(x => (LdapPersonBaseViewModel)x)]);
                 }
                 catch (LdapReferralException) { }// так надо

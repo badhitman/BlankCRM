@@ -68,7 +68,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         StateHasChanged();
         await Task.Delay(1);
     }
-
+    static KladrChainTypesEnum[] _finChains = [KladrChainTypesEnum.StreetsInCity, KladrChainTypesEnum.StreetsInRegion, KladrChainTypesEnum.StreetsInPopPoint];
     void SelectRowAction(KladrResponseModel selected)
     {
         List<RootKLADRModelDB>? parents = selected.Parents?.Skip(1 + SelectionProgressSteps.Count).ToList();
@@ -77,7 +77,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
 
         SelectionProgressSteps.Add(selected.Payload.ToObject<RootKLADRModelDB>()!);
         StateHasChanged();
-        if (selected.Chain == KladrChainTypesEnum.StreetsInPopPoint)
+        if (_finChains.Contains(selected.Chain))
             MudDialog.Close(DialogResult.Ok(true));
     }
 
@@ -89,17 +89,37 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         if (CurrentRegion is null || string.IsNullOrWhiteSpace(FindName))
             return new TableData<KladrResponseModel>() { TotalItems = 0, Items = [] };
 
-        string _codeLikeFilter = $"{CurrentRegion.Code[..2]}%00";
+        string[] _codeLikeFilter = [$"{CurrentRegion.Code[..2]}%00"];
         RootKLADRModelDB? sObj = SelectedObject;
-        
-        if(sObj is not null)
+        if (sObj is not null)
         {
-          var  MetaData = CodeKladrModel.Build(sObj.CODE);
+            CodeKladrModel mdCode = CodeKladrModel.Build(sObj.CODE);
+            switch (mdCode.Level)
+            {
+                case KladrTypesObjectsEnum.RootRegion:
+
+                    break;
+                case KladrTypesObjectsEnum.Area:
+
+                    break;
+                case KladrTypesObjectsEnum.City:
+
+                    break;
+                case KladrTypesObjectsEnum.PopPoint:
+
+                    break;
+                case KladrTypesObjectsEnum.Street:
+
+                    break;
+                case KladrTypesObjectsEnum.Home:
+
+                    break;
+            }
         }
 
         KladrFindRequestModel req = new()
         {
-            CodeLikeFilter = [_codeLikeFilter],
+            CodeLikeFilter = _codeLikeFilter,
             FindText = $"%{FindName}%",
             PageNum = state.Page,
             PageSize = state.PageSize,

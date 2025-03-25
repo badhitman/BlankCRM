@@ -18,9 +18,4 @@ public class LdapUserInformationModel : UserInformationModel
     /// Telegram id (опционально)
     /// </summary>
     public string? TelegramId { get; set; }
-
-    /// <summary>
-    /// Использовать шаблон письма
-    /// </summary>
-    public int? UseEmailTemplateId { get; set; }
 }
