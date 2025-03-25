@@ -20,6 +20,10 @@ public partial class KladrFindTableRowComponent
     [Parameter, EditorRequired]
     public required string HighlightedText { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public Action<KladrResponseModel>? SelectionHandler { get; set; }
+
 
     List<string> _items = [];
 

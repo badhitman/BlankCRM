@@ -45,6 +45,11 @@
                 </div>
                 <MudSwitch @bind-Value="bankDetailsEdit.IsDisabled" Label="Отключение" Color="Color.Success" />
             </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Адрес банка</label>
+                <input @bind-value="bankDetailsEdit.BankAddress" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">Город.</div>
+            </div>
         }
     </DialogContent>
     <DialogActions>

@@ -11,12 +11,6 @@ namespace SharedLib;
 /// </summary>
 public class KladrResponseModel
 {
-    /// <inheritdoc/>
-    public override string ToString()
-    {
-        return $"{Name} {Socr}";
-    }
-
     /// <summary>
     /// Code
     /// </summary>
@@ -49,10 +43,17 @@ public class KladrResponseModel
     public required string GNINMB { get; set; }
 
 
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{Name} {Socr}";
+    }
+
     /// <summary>
     /// Chain
     /// </summary>
-    public required KladrChainTypesEnum Chain {  get; set; }
+    public KladrChainTypesEnum Chain => CodeKladrModel.Build(Code).Chain;
+
 
     /// <summary>
     /// Payload

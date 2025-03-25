@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json.Linq;
 using MudBlazor;
 using SharedLib;
-using static MudBlazor.CategoryTypes;
-using System.Net.Http;
 
 namespace BlazorLib.Components.Kladr.control.input;
 
@@ -27,9 +25,12 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
 
     RootKLADREquatableModel? CurrentRegion;
     List<RootKLADREquatableModel> regions = [];
-    MudDataGrid<RootKLADREquatableModel>? dataGridRef;
-    List<KladrResponseModel>? PartData;
+    List<RootKLADRModelDB> SelectionProgressSteps = [];
 
+    /// <summary>
+    /// Выбранный объект
+    /// </summary>
+    public RootKLADRModelDB? SelectedObject => SelectionProgressSteps.LastOrDefault();
 
     string? _selectedRegionName;
     string? SelectedRegionName
@@ -49,23 +50,35 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         set
         {
             _findName = value;
-            if (dataGridRef is not null)
-                InvokeAsync(dataGridRef.ReloadServerData);
+            InvokeAsync(RebuildTable);
         }
     }
 
+    List<KladrResponseModel>? partData;
 
-
-
-    private string[] _states = [];
-
-    private async Task<IEnumerable<string?>> SearchRegion(string? value, CancellationToken token)
+    string[] _states = [];
+    bool hideTable;
+    async Task RebuildTable()
     {
-        // if text is null or empty, show complete list
-        if (string.IsNullOrEmpty(value))
-            return _states;
+        hideTable = true;
+        StateHasChanged();
+        await Task.Delay(1);
+        partData = null;
+        hideTable = false;
+        StateHasChanged();
+        await Task.Delay(1);
+    }
 
-        return _states.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    void SelectRowAction(KladrResponseModel selected)
+    {
+        List<RootKLADRModelDB>? parents = selected.Parents?.Skip(1 + SelectionProgressSteps.Count).ToList();
+        if (parents is not null && parents.Count != 0)
+            SelectionProgressSteps.AddRange(parents);
+
+        SelectionProgressSteps.Add(selected.Payload.ToObject<RootKLADRModelDB>()!);
+        StateHasChanged();
+        if (selected.Chain == KladrChainTypesEnum.StreetsInPopPoint)
+            MudDialog.Close(DialogResult.Ok(true));
     }
 
     /// <summary>
@@ -76,18 +89,27 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         if (CurrentRegion is null || string.IsNullOrWhiteSpace(FindName))
             return new TableData<KladrResponseModel>() { TotalItems = 0, Items = [] };
 
+        string _codeLikeFilter = $"{CurrentRegion.Code[..2]}%00";
+        RootKLADRModelDB? sObj = SelectedObject;
+        
+        if(sObj is not null)
+        {
+          var  MetaData = CodeKladrModel.Build(sObj.CODE);
+        }
+
         KladrFindRequestModel req = new()
         {
-            CodeLikeFilter = [$"{CurrentRegion.Code[..2]}%00"],
-            FindText = FindName,
+            CodeLikeFilter = [_codeLikeFilter],
+            FindText = $"%{FindName}%",
             PageNum = state.Page,
             PageSize = state.PageSize,
         };
         await SetBusy(token: token);
         TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsFindAsync(req, token);
+        partData = res.Response;
         await SetBusy(false, token: token);
         // Return the data
-        return new TableData<KladrResponseModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        return new TableData<KladrResponseModel>() { TotalItems = res.TotalRowsCount, Items = partData };
     }
 
     /// <inheritdoc/>
@@ -102,7 +124,14 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         _states = [.. regions.Where(x => x.Code.EndsWith("00")).Select(x => x.ToString()).Order()];
     }
 
-    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    private Task<IEnumerable<string?>> SearchRegion(string? value, CancellationToken token)
+    {
+        // if text is null or empty, show complete list
+        if (string.IsNullOrEmpty(value))
+            return Task.FromResult(_states.AsEnumerable())!;
+
+        return Task.FromResult(_states.Where(x => x.Contains(value, StringComparison.OrdinalIgnoreCase)))!;
+    }
 
     private void Cancel() => MudDialog.Cancel();
 }

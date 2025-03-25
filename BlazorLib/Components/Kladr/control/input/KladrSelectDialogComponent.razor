@@ -1,4 +1,5 @@
-﻿@inherits BlazorBusyComponentBaseModel
+﻿@using BlazorLib.Components.Kladr.control.find
+@inherits BlazorBusyComponentBaseModel
 
 <MudDialog>
     <TitleContent>
@@ -12,6 +13,17 @@
                          Label="Регион"
                          Placeholder="Регион"
                          HelperText="Регион" />
+
+        @if (SelectionProgressSteps.Count != 0)
+        {
+            <ul class="list-group list-group-flush">
+                @foreach (RootKLADRModelDB kladrRow in SelectionProgressSteps)
+                {
+                    <li class="list-group-item">@kladrRow.ToString()</li>
+                }
+            </ul>
+        }
+
         @if (CurrentRegion is not null)
         {
             <div class="input-group mb-3">
@@ -29,30 +41,30 @@
                     </figcaption>
                 </figure>
             }
-            else
+            else if (!hideTable)
             {
-                <MudTable ServerData="ServerReload" Dense="true" Hover="true">
+                <MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress">
                     <ToolBarContent>
-                        <MudText Typo="Typo.h6">Periodic Elements</MudText>
+                        <span class="font-monospace">@(IsBusyProgress ? "Запрос обрабатывается" : (partData is null || partData.Count == 0 ? "ни чего не найдено" : "Выберете из перечня, пожалуйста"))</span>
                     </ToolBarContent>
                     <HeaderContent>
                         <MudTh></MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd DataLabel="Nr">@context.Name @context.Socr</MudTd>
+                        <MudTd><KladrFindTableRowComponent KladrRow="context" HighlightedText="@FindName" SelectionHandler="SelectRowAction" /></MudTd>
                     </RowTemplate>
                     <NoRecordsContent>
                         <figure class="text-center">
                             <blockquote class="blockquote">
-                                <p>Введите строку поиска.</p>
+                                <p>Измените строку поиска.</p>
                             </blockquote>
                             <figcaption class="blockquote-footer">
-                                С учётом <cite title="регистр символа будет учтён для точного совпадения">регистра</cite>
+                                По вашему запросу <cite title="регистр символа будет учтён для точного совпадения">ни чего не найдено</cite>
                             </figcaption>
                         </figure>
                     </NoRecordsContent>
                     <LoadingContent>
-                        <MudText>Loading...</MudText>
+                        <MudText>Поиск...</MudText>
                     </LoadingContent>
                     <PagerContent>
                         <MudTablePager />
@@ -62,7 +74,6 @@
         }
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+        <MudButton OnClick="Cancel">Отмена</MudButton>
     </DialogActions>
 </MudDialog>

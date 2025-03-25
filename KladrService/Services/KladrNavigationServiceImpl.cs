@@ -160,7 +160,6 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 Payload = JObject.FromObject(mainElement),
                 Parents = dataList.Count == 1 ? null : [.. dataList.Take(dataList.Count - 1)],
                 Socrbases = socrBasesDb,
-                Chain = codeParse.Chain,
                 GNINMB = mainElement.GNINMB,
                 OCATD = mainElement.OCATD,
                 UNO = mainElement.UNO,
@@ -332,7 +331,6 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             {
                 Payload = JObject.FromObject(x),
                 Socrbases = [.. socrbases.Where(y => y.SOCRNAME == x.SOCR)],
-                Chain = CodeKladrModel.Build(x.CODE).Chain,
                 Name = x.NAME,
                 Code = x.CODE,
                 Socr = x.SOCR,

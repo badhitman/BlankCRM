@@ -31,6 +31,6 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
     {
         DialogOptions options = new() { CloseOnEscapeKey = true };
 
-        return DialogService.ShowAsync<KladrSelectDialogComponent>("Simple Dialog", options);
+        return DialogService.ShowAsync<KladrSelectDialogComponent>("Выбор адреса:", options);
     }
 }

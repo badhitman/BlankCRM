@@ -31,6 +31,12 @@ public class RootKLADRModelDB : BaseKladrModel
     public required string OCATD { get; set; }
 
     /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{NAME} {SOCR}";
+    }
+
+    /// <inheritdoc/>
     public void Update(RootKLADRModelDB sender)
     {
         NAME = sender.NAME;

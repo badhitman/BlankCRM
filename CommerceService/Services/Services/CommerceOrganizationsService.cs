@@ -564,6 +564,7 @@ public partial class CommerceImplementService : ICommerceService
                 .SetProperty(p => p.Name, req.Payload.Name)
                 .SetProperty(p => p.Description, req.Payload.Description)
                 .SetProperty(p => p.BankBIC, req.Payload.BankBIC)
+                .SetProperty(p => p.BankAddress, req.Payload.BankAddress)
                 .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled), cancellationToken: token);
 
             res.AddSuccess($"Банковский счёт {(res.Response > 0 ? "обновлён" : "[без изменений]")}");
