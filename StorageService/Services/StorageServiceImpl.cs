@@ -304,7 +304,7 @@ public class StorageServiceImpl(
         UserInfoModel? currentUser = null;
         if (!allowed && !string.IsNullOrWhiteSpace(req.SenderActionUserId))
         {
-            TResponseModel<UserInfoModel[]> findUserRes = await identityRepo.GetUsersIdentity([req.SenderActionUserId], token);
+            TResponseModel<UserInfoModel[]> findUserRes = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
             currentUser = findUserRes.Response?.Single();
             if (currentUser is null)
             {
@@ -337,7 +337,7 @@ public class StorageServiceImpl(
                             IncludeSubscribersOnly = false,
                         }
                     };
-                    TResponseModel<IssueHelpdeskModelDB[]> findIssues = await HelpdeskRepo.IssuesRead(reqIssues, token);
+                    TResponseModel<IssueHelpdeskModelDB[]> findIssues = await HelpdeskRepo.IssuesReadAsync(reqIssues, token);
                     allowed = findIssues.Success() &&
                         findIssues.Response?.Any(x => x.AuthorIdentityUserId == req.SenderActionUserId || x.ExecutorIdentityUserId == req.SenderActionUserId || x.Subscribers?.Any(y => y.UserId == req.SenderActionUserId) == true) == true;
                 }
@@ -448,7 +448,7 @@ public class StorageServiceImpl(
             switch (req.Payload.ApplicationName)
             {
                 case GlobalStaticConstants.Routes.ORDER_CONTROLLER_NAME:
-                    TResponseModel<OrderDocumentModelDB[]> get_order = await commRepo.OrdersRead(new() { Payload = [req.Payload.OwnerPrimaryKey.Value], SenderActionUserId = req.SenderActionUserId });
+                    TResponseModel<OrderDocumentModelDB[]> get_order = await commRepo.OrdersReadAsync(new() { Payload = [req.Payload.OwnerPrimaryKey.Value], SenderActionUserId = req.SenderActionUserId });
                     if (!get_order.Success() || get_order.Response is null)
                         res.AddRangeMessages(get_order.Messages);
                     else
@@ -473,7 +473,7 @@ public class StorageServiceImpl(
                                 }
                             };
 
-                            await HelpdeskRepo.PulsePush(reqPulse, false, token);
+                            await HelpdeskRepo.PulsePushAsync(reqPulse, false, token);
                         }
                     }
                     break;
@@ -494,7 +494,7 @@ public class StorageServiceImpl(
                             SenderActionUserId = GlobalStaticConstants.Roles.System,
                         }
                     };
-                    await HelpdeskRepo.PulsePush(reqPulse, false, token);
+                    await HelpdeskRepo.PulsePushAsync(reqPulse, false, token);
                     break;
             }
         }
@@ -592,7 +592,7 @@ public class StorageServiceImpl(
 
     #region storage parameters
     /// <inheritdoc/>
-    public async Task<T?[]> Find<T>(RequestStorageBaseModel req, CancellationToken token = default)
+    public async Task<T?[]> FindAsync<T>(RequestStorageBaseModel req, CancellationToken token = default)
     {
         req.Normalize();
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
@@ -606,7 +606,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<T?> Read<T>(StorageMetadataModel req, CancellationToken token = default)
+    public async Task<T?> ReadAsync<T>(StorageMetadataModel req, CancellationToken token = default)
     {
         req.Normalize();
         string mem_key = $"{req.PropertyName}/{req.OwnerPrimaryKey}/{req.PrefixPropertyName}/{req.ApplicationName}".Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
@@ -639,7 +639,7 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task Save<T>(T obj, StorageMetadataModel set, bool trimHistory = false, CancellationToken token = default)
+    public async Task SaveAsync<T>(T obj, StorageMetadataModel set, bool trimHistory = false, CancellationToken token = default)
     {
         if (obj is null)
             throw new ArgumentNullException(nameof(obj));

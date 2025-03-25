@@ -98,7 +98,7 @@ public partial class FormsConstructorService(
             }
         }
 
-        TResponseModel<UserInfoModel[]> userRest = await identityRepo.GetUsersIdentity([sq.AuthorUser]);
+        TResponseModel<UserInfoModel[]> userRest = await identityRepo.GetUsersIdentityAsync([sq.AuthorUser]);
         UserInfoModel? author_user = userRest.Response?.Single();
         if (author_user is null)
         {
@@ -337,7 +337,7 @@ public partial class FormsConstructorService(
 
         if (usersIds.Length != 0)
         {
-            TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(usersIds, token);
+            TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentityAsync(usersIds, token);
             if (!restUsers.Success())
                 throw new Exception(restUsers.Message());
 
@@ -405,7 +405,7 @@ public partial class FormsConstructorService(
             res.Messages.InjectException(ValidationResults);
             return res;
         }
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity([req.UserId], token);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentityAsync([req.UserId], token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -518,7 +518,7 @@ public partial class FormsConstructorService(
         if (members_users_ids.Length == 0)
             return new();
 
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(members_users_ids, token);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentityAsync(members_users_ids, token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -531,7 +531,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> AddMemberToProjectAsync(UsersProjectModel req, CancellationToken token = default)
     {
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(req.UsersIds, token);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentityAsync(req.UsersIds, token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -559,7 +559,7 @@ public partial class FormsConstructorService(
         if (projectDb is null)
             return ResponseBaseModel.CreateError($"Проект #{req.ProjectId} не найден в БД");
 
-        restUsers = await identityRepo.GetUsersIdentity([projectDb.OwnerUserId], token);
+        restUsers = await identityRepo.GetUsersIdentityAsync([projectDb.OwnerUserId], token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -584,7 +584,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteMembersFromProjectAsync(UsersProjectModel req, CancellationToken token = default)
     {
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(req.UsersIds, token);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentityAsync(req.UsersIds, token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -621,7 +621,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SetProjectAsMainAsync(UserProjectModel req, CancellationToken token = default)
     {
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity([req.UserId], token);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentityAsync([req.UserId], token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -654,7 +654,7 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProjectAsync(string user_id, CancellationToken token = default)
     {
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity([user_id], token);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentityAsync([user_id], token);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -854,7 +854,7 @@ public partial class FormsConstructorService(
         // user_id ??= httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new Exception();
 
 
-        TResponseModel<UserInfoModel[]> call_user = await identityRepo.GetUsersIdentity([req.UserId], token);
+        TResponseModel<UserInfoModel[]> call_user = await identityRepo.GetUsersIdentityAsync([req.UserId], token);
         UserInfoModel? author_user = call_user.Response?.Single();
 
         if (!call_user.Success())
@@ -1073,7 +1073,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateElementForDirectory(TAuthRequestModel<OwnedNameModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<int>> CreateElementForDirectoryAsync(TAuthRequestModel<OwnedNameModel> req, CancellationToken cancellationToken = default)
     {
         req.Payload.Name = MyRegexSpices().Replace(req.Payload.Name, " ").Trim();
         TResponseModel<int> res = new() { Response = 0 };
@@ -2052,7 +2052,7 @@ public partial class FormsConstructorService(
              .Where(u => u.Id == form_db.ProjectId)
              .ExecuteUpdateAsync(b => b.SetProperty(u => u.SchemeLastUpdated, DateTime.UtcNow), cancellationToken: cancellationToken);
 
-        await CheckAndNormalizeSortIndexFrmFields(form_field_db.OwnerId, cancellationToken);
+        await CheckAndNormalizeSortIndexFrmFieldsAsync(form_field_db.OwnerId, cancellationToken);
         return res;
     }
 
@@ -2087,7 +2087,7 @@ public partial class FormsConstructorService(
              .Where(u => u.Id == field_db.Owner.ProjectId)
              .ExecuteUpdateAsync(b => b.SetProperty(u => u.SchemeLastUpdated, DateTime.UtcNow), cancellationToken: cancellationToken);
 
-        await CheckAndNormalizeSortIndexFrmFields(field_db.OwnerId, cancellationToken);
+        await CheckAndNormalizeSortIndexFrmFieldsAsync(field_db.OwnerId, cancellationToken);
         return ResponseBaseModel.CreateSuccess($"Поле '{field_db.Name}' {{простого типа}} удалено из формы");
     }
 
@@ -2127,7 +2127,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FormConstructorModelDB>> CheckAndNormalizeSortIndexFrmFields(int form_id, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<FormConstructorModelDB>> CheckAndNormalizeSortIndexFrmFieldsAsync(int form_id, CancellationToken cancellationToken = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         IIncludableQueryable<FormConstructorModelDB, DirectoryConstructorModelDB?> _q = context_forms
@@ -3057,7 +3057,7 @@ public partial class FormsConstructorService(
         session_json.Name = MyRegexSpices().Replace(session_json.Name.Trim(), " ");
         session_json.NormalizedUpperName = session_json.Name.ToUpper();
 
-        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity([session_json.AuthorUser]);
+        TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentityAsync([session_json.AuthorUser]);
         if (!restUsers.Success())
             throw new Exception(restUsers.Message());
 
@@ -3196,7 +3196,7 @@ public partial class FormsConstructorService(
             string[] users_ids = response.Select(x => x.AuthorUser).Distinct().ToArray();
 
 
-            TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentity(users_ids);
+            TResponseModel<UserInfoModel[]> restUsers = await identityRepo.GetUsersIdentityAsync(users_ids);
             if (!restUsers.Success())
                 throw new Exception(restUsers.Message());
 

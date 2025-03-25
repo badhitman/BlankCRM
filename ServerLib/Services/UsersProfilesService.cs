@@ -23,67 +23,67 @@ public class UsersProfilesService(
     ILogger<UsersProfilesService> LoggerRepo) : IUsersProfilesService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<IEnumerable<UserLoginInfoModel>>> GetUserLogins(string? userId = null, CancellationToken token = default)
+    public async Task<TResponseModel<IEnumerable<UserLoginInfoModel>>> GetUserLoginsAsync(string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        return await IdentityRepo.GetUserLogins(user.ApplicationUser.Id, token);
+        return await IdentityRepo.GetUserLoginsAsync(user.ApplicationUser.Id, token);
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> CheckUserPassword(string password, string? userId = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> CheckUserPasswordAsync(string password, string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        return await IdentityRepo.CheckUserPassword(new() { Password = password, UserId = user.ApplicationUser.Id }, token);
+        return await IdentityRepo.CheckUserPasswordAsync(new() { Password = password, UserId = user.ApplicationUser.Id }, token);
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteUserData(string password, string? userId = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteUserDataAsync(string password, string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        return await IdentityRepo.DeleteUserData(new() { Password = password, UserId = user.ApplicationUser.Id }, token);
+        return await IdentityRepo.DeleteUserDataAsync(new() { Password = password, UserId = user.ApplicationUser.Id }, token);
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>> UserHasPassword(string? userId = null, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>> UserHasPasswordAsync(string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new TResponseModel<bool?>() { Messages = user.Messages };
 
-        return await IdentityRepo.UserHasPassword(user.ApplicationUser.Id, token);
+        return await IdentityRepo.UserHasPasswordAsync(user.ApplicationUser.Id, token);
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>> GetTwoFactorEnabled(string? userId = null, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>> GetTwoFactorEnabledAsync(string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        return await IdentityRepo.GetTwoFactorEnabled(user.ApplicationUser.Id, token);
+        return await IdentityRepo.GetTwoFactorEnabledAsync(user.ApplicationUser.Id, token);
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetTwoFactorEnabled(bool enabled_set, string? userId = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> SetTwoFactorEnabledAsync(bool enabled_set, string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        return await IdentityRepo.SetTwoFactorEnabled(new() { UserId = user.ApplicationUser.Id, EnabledSet = enabled_set }, token);
+        return await IdentityRepo.SetTwoFactorEnabledAsync(new() { UserId = user.ApplicationUser.Id, EnabledSet = enabled_set }, token);
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> IsEmailConfirmed(string? userId = null, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> IsEmailConfirmedAsync(string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
@@ -96,13 +96,13 @@ public class UsersProfilesService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ResetAuthenticatorKey(string? userId = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ResetAuthenticatorKeyAsync(string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        ResponseBaseModel res = await IdentityRepo.ResetAuthenticatorKey(user.ApplicationUser.Id, token);
+        ResponseBaseModel res = await IdentityRepo.ResetAuthenticatorKeyAsync(user.ApplicationUser.Id, token);
         if (!res.Success())
             return res;
 
@@ -113,7 +113,7 @@ public class UsersProfilesService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> AddLogin(string? userId = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> AddLoginAsync(string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
@@ -131,13 +131,13 @@ public class UsersProfilesService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RemoveLogin(string loginProvider, string providerKey, string? userId = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RemoveLoginAsync(string loginProvider, string providerKey, string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        ResponseBaseModel res = await IdentityRepo.RemoveLogin(new() { LoginProvider = loginProvider, ProviderKey = providerKey, UserId = user.ApplicationUser.Id }, token);
+        ResponseBaseModel res = await IdentityRepo.RemoveLoginAsync(new() { LoginProvider = loginProvider, ProviderKey = providerKey, UserId = user.ApplicationUser.Id }, token);
         if (!res.Success())
             return res;
 
@@ -146,27 +146,27 @@ public class UsersProfilesService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> VerifyTwoFactorToken(string verificationCode, string? userId = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> VerifyTwoFactorTokenAsync(string verificationCode, string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        return await IdentityRepo.VerifyTwoFactorToken(new() { UserId = user.ApplicationUser.Id, VerificationCode = verificationCode }, token);
+        return await IdentityRepo.VerifyTwoFactorTokenAsync(new() { UserId = user.ApplicationUser.Id, VerificationCode = verificationCode }, token);
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int?>> CountRecoveryCodes(string? userId = null, CancellationToken token = default)
+    public async Task<TResponseModel<int?>> CountRecoveryCodesAsync(string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        return await IdentityRepo.CountRecoveryCodes(user.ApplicationUser.Id, token);
+        return await IdentityRepo.CountRecoveryCodesAsync(user.ApplicationUser.Id, token);
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> GenerateChangeEmailToken(string newEmail, string baseAddress, string? userId = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> GenerateChangeEmailTokenAsync(string newEmail, string baseAddress, string? userId = null, CancellationToken token = default)
     {
         if (!MailAddress.TryCreate(newEmail, out _))
             return ResponseBaseModel.CreateError($"Адрес e-mail `{newEmail}` имеет не корректный формат");
@@ -175,31 +175,31 @@ public class UsersProfilesService(
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        return await IdentityRepo.GenerateChangeEmailToken(new() { BaseAddress = baseAddress, NewEmail = newEmail, UserId = user.ApplicationUser.Id }, token);
+        return await IdentityRepo.GenerateChangeEmailTokenAsync(new() { BaseAddress = baseAddress, NewEmail = newEmail, UserId = user.ApplicationUser.Id }, token);
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<IEnumerable<string>?>> GenerateNewTwoFactorRecoveryCodes(string? userId = null, CancellationToken token = default)
+    public async Task<TResponseModel<IEnumerable<string>?>> GenerateNewTwoFactorRecoveryCodesAsync(string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        return await IdentityRepo.GenerateNewTwoFactorRecoveryCodes(new() { UserId = user.ApplicationUser.Id, Number = 10 }, token);
+        return await IdentityRepo.GenerateNewTwoFactorRecoveryCodesAsync(new() { UserId = user.ApplicationUser.Id, Number = 10 }, token);
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string?>> GetAuthenticatorKey(string? userId = null, CancellationToken token = default)
+    public async Task<TResponseModel<string?>> GetAuthenticatorKeyAsync(string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        return await IdentityRepo.GetAuthenticatorKey(user.ApplicationUser.Id, token);
+        return await IdentityRepo.GetAuthenticatorKeyAsync(user.ApplicationUser.Id, token);
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string?>> GeneratePasswordResetToken(string? userId = null, CancellationToken token = default)
+    public async Task<TResponseModel<string?>> GeneratePasswordResetTokenAsync(string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
@@ -209,23 +209,23 @@ public class UsersProfilesService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TryAddRolesToUser(IEnumerable<string> addRoles, string? userId = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TryAddRolesToUserAsync(IEnumerable<string> addRoles, string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        return await IdentityRepo.TryAddRolesToUser(new() { RolesNames = [.. addRoles], UserId = user.ApplicationUser.Id }, token);
+        return await IdentityRepo.TryAddRolesToUserAsync(new() { RolesNames = [.. addRoles], UserId = user.ApplicationUser.Id }, token);
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ChangePassword(string currentPassword, string newPassword, string? userId = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ChangePasswordAsync(string currentPassword, string newPassword, string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        ResponseBaseModel res = await IdentityRepo.ChangePassword(new() { CurrentPassword = currentPassword, NewPassword = newPassword, UserId = user.ApplicationUser.Id }, token);
+        ResponseBaseModel res = await IdentityRepo.ChangePasswordAsync(new() { CurrentPassword = currentPassword, NewPassword = newPassword, UserId = user.ApplicationUser.Id }, token);
         if (!res.Success())
             return res;
 
@@ -234,13 +234,13 @@ public class UsersProfilesService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> AddPassword(string password, string? userId = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> AddPasswordAsync(string password, string? userId = null, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(userId, token);
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        ResponseBaseModel addPassRes = await IdentityRepo.AddPassword(new() { Password = password, UserId = user.ApplicationUser.Id }, token);
+        ResponseBaseModel addPassRes = await IdentityRepo.AddPasswordAsync(new() { Password = password, UserId = user.ApplicationUser.Id }, token);
         if (!addPassRes.Success())
             return addPassRes;
 
@@ -249,7 +249,7 @@ public class UsersProfilesService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ChangeEmail(IdentityEmailTokenModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ChangeEmailAsync(IdentityEmailTokenModel req, CancellationToken token = default)
     {
         ApplicationUserResponseModel user = await GetUser(req.UserId, token); ;
         if (!user.Success() || user.ApplicationUser is null)

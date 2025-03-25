@@ -43,7 +43,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
         await SetBusy(token: token);
-        TPaginationResponseModel<NomenclatureModelDB> res = await CommerceRepo.NomenclaturesSelect(req);
+        TPaginationResponseModel<NomenclatureModelDB> res = await CommerceRepo.NomenclaturesSelectAsync(req);
 
         IsBusyProgress = false;
 
@@ -65,7 +65,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
 
-        TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelect(recReq);
+        TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq);
         List<RecordsAttendanceModelDB> currentRecords = recordsSelect.Response ?? [];
 
         return new TableData<NomenclatureModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };

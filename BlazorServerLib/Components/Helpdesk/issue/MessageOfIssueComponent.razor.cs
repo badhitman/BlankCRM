@@ -89,7 +89,7 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
 
         await SetBusy();
         TResponseModel<int> rest = await HelpdeskRepo
-            .MessageCreateOrUpdate(new()
+            .MessageCreateOrUpdateAsync(new()
             {
                 SenderActionUserId = CurrentUserSession!.UserId,
                 Payload = new()

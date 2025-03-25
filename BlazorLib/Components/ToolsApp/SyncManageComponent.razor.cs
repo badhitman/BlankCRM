@@ -103,7 +103,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
 
         RemoteDirectoryInfo = string.IsNullOrWhiteSpace(SyncDirectory.RemoteDirectory)
                 ? null
-                : await RestClientRepo.DirectoryExist(SyncDirectory.RemoteDirectory);
+                : await RestClientRepo.DirectoryExistAsync(SyncDirectory.RemoteDirectory);
 
         if (RemoteDirectoryInfo is not null)
             SnackbarRepo.ShowMessagesResponse(RemoteDirectoryInfo.Messages);
@@ -186,7 +186,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
             InfoAbout = "Удаление файлов...";
             await SetBusy();
             foreach (ToolsFilesResponseModel tFile in forDelete)
-                await RestClientRepo.DeleteFile(new DeleteRemoteFileRequestModel()
+                await RestClientRepo.DeleteFileAsync(new DeleteRemoteFileRequestModel()
                 {
                     RemoteDirectory = SyncDirectory.RemoteDirectory,
                     SafeScopeName = tFile.SafeScopeName,
@@ -219,7 +219,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
                     zip.Dispose();
                     ms = new MemoryStream(File.ReadAllBytes(archive));
 
-                    TResponseModel<PartUploadSessionModel> sessionPartUpload = await RestClientRepo.FilePartUploadSessionStart(new PartUploadSessionStartRequestModel()
+                    TResponseModel<PartUploadSessionModel> sessionPartUpload = await RestClientRepo.FilePartUploadSessionStartAsync(new PartUploadSessionStartRequestModel()
                     {
                         RemoteDirectory = SyncDirectory.RemoteDirectory,
                         FileSize = ms.Length,
@@ -238,7 +238,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
 
                     if (sessionPartUpload.Response.FilePartsMetadata.Count == 1)
                     {
-                        TResponseModel<string> resUpd = await RestClientRepo.UpdateFile(tFile.SafeScopeName, SyncDirectory.RemoteDirectory, ms.ToArray());
+                        TResponseModel<string> resUpd = await RestClientRepo.UpdateFileAsync(tFile.SafeScopeName, SyncDirectory.RemoteDirectory, ms.ToArray());
 
                         if (resUpd.Messages.Any(x => x.TypeMessage == ResultTypesEnum.Error || x.TypeMessage >= ResultTypesEnum.Info))
                             SnackbarRepo.ShowMessagesResponse(resUpd.Messages);
@@ -256,7 +256,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
                             ms.Position = fileMd.PartFilePositionStart;
                             byte[] _buff = new byte[fileMd.PartFileSize];
                             ms.Read(_buff, 0, _buff.Length);
-                            ResponseBaseModel _subRest = await RestClientRepo.FilePartUpload(new SessionFileRequestModel(sessionPartUpload.Response.SessionId, fileMd.PartFileId, _buff, Path.GetFileName(tFile.FullName), fileMd.PartFileIndex));
+                            ResponseBaseModel _subRest = await RestClientRepo.FilePartUploadAsync(new SessionFileRequestModel(sessionPartUpload.Response.SessionId, fileMd.PartFileId, _buff, Path.GetFileName(tFile.FullName), fileMd.PartFileIndex));
                             if (!_subRest.Success())
                                 SnackbarRepo.ShowMessagesResponse(_subRest.Messages);
 
@@ -294,7 +294,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
         localScanBusy = true;
         await Task.Delay(1);
         StateHasChanged();
-        localScan = await ServicedRepo.GetDirectoryData(new ToolsFilesRequestModel
+        localScan = await ServicedRepo.GetDirectoryDataAsync(new ToolsFilesRequestModel
         {
             RemoteDirectory = SyncDirectory.LocalDirectory,
             CalculationHash = true,
@@ -314,7 +314,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
         remoteScanBusy = true;
         await Task.Delay(1);
         StateHasChanged();
-        remoteScan = await RestClientRepo.GetDirectoryData(new ToolsFilesRequestModel
+        remoteScan = await RestClientRepo.GetDirectoryDataAsync(new ToolsFilesRequestModel
         {
             RemoteDirectory = SyncDirectory.RemoteDirectory,
             CalculationHash = true,

@@ -46,7 +46,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
-        TPaginationResponseModel<ChatTelegramModelDB> rest = await TgRepo.ChatsSelect(req);
+        TPaginationResponseModel<ChatTelegramModelDB> rest = await TgRepo.ChatsSelectAsync(req);
         IsBusyProgress = false;
 
         if (rest.Response is null)
@@ -70,7 +70,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
             return;
 
         await SetBusy();
-        TResponseModel<UserInfoModel[]> users_res = await IdentityRepo.GetUserIdentityByTelegram(users_ids_for_load);
+        TResponseModel<UserInfoModel[]> users_res = await IdentityRepo.GetUserIdentityByTelegramAsync(users_ids_for_load);
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(users_res.Messages);
         if (!users_res.Success() || users_res.Response is null || users_res.Response.Length == 0)
@@ -81,7 +81,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
         string[] users_ids_identity = [.. users_res.Response.Select(x => x.UserId)];
         await SetBusy();
         TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>> issues_users_res = await HelpdeskRepo
-                     .IssuesSelect(new()
+                     .IssuesSelectAsync(new()
                      {
                          Payload = new()
                          {

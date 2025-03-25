@@ -129,12 +129,12 @@ public interface IIdentityTools
     /// <summary>
     /// Получить пользователей из Identity по их идентификаторам
     /// </summary>
-    public Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentity(string[] req, CancellationToken token = default);
+    public Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentityAsync(string[] req, CancellationToken token = default);
 
     /// <summary>
     /// Получить пользователей из Identity по их Email
     /// </summary>
-    public Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByEmail(string[] req, CancellationToken token = default);
+    public Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByEmailAsync(string[] req, CancellationToken token = default);
 
     /// <summary>
     /// Обновляет адрес Email, если токен действительный для пользователя.

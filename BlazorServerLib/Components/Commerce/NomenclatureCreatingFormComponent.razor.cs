@@ -51,7 +51,7 @@ public partial class NomenclatureCreatingFormComponent : BlazorBusyComponentBase
 
         await SetBusy();
 
-        TResponseModel<int> res = await CommerceRepo.NomenclatureUpdateReceive(new_obj);
+        TResponseModel<int> res = await CommerceRepo.NomenclatureUpdateAsync(new_obj);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success() && res.Response > 0)

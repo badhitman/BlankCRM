@@ -178,7 +178,7 @@ public class Program
         {
             TelegramBotConfigModel wc_main = ss.ServiceProvider.GetRequiredService<TelegramBotConfigModel>();
             IWebTransmission webRemoteCall = ss.ServiceProvider.GetRequiredService<IWebTransmission>();
-            TelegramBotConfigModel wc_remote = await webRemoteCall.GetWebConfig();
+            TelegramBotConfigModel wc_remote = await webRemoteCall.GetWebConfigAsync();
             wc_main.Update(wc_remote);
         }
 

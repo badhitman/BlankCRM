@@ -81,7 +81,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         };
         await SetBusy(token: token);
         await Task.Delay(1, token);
-        TPaginationResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.RequestSessionsDocuments(req);
+        TPaginationResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.RequestSessionsDocumentsAsync(req);
 
         IsBusyProgress = false;
 
@@ -101,7 +101,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     protected async Task EditSession(SessionOfDocumentDataModelDB session)
     {
         await SetBusy();
-        TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.GetSessionDocument(new() { SessionId = session.Id, IncludeExtra = false });
+        TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = session.Id, IncludeExtra = false });
         IsBusyProgress = false;
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
@@ -126,7 +126,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     protected async Task DeleteSession(int session_id)
     {
         await SetBusy();
-        ResponseBaseModel rest = await ConstructorRepo.DeleteSessionDocument(session_id);
+        ResponseBaseModel rest = await ConstructorRepo.DeleteSessionDocumentAsync(session_id);
         IsBusyProgress = false;
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
@@ -173,7 +173,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
             ProjectId = ParentFormsPage.MainProject.Id
         };
         await SetBusy();
-        TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.UpdateOrCreateSessionDocument(req);
+        TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.UpdateOrCreateSessionDocumentAsync(req);
         IsBusyProgress = false;
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
@@ -205,7 +205,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy();
 
-        TPaginationResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.RequestDocumentsSchemes(new() { RequestPayload = new() { PageNum = 0, PageSize = 1000 }, ProjectId = ParentFormsPage.MainProject.Id });
+        TPaginationResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = new() { PageNum = 0, PageSize = 1000 }, ProjectId = ParentFormsPage.MainProject.Id });
 
         IsBusyProgress = false;
 

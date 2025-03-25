@@ -35,7 +35,7 @@ public partial class ConfirmEmailPage : ComponentBase
             RedirectManager.RedirectTo("");
         }
 
-        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentity([UserId]);
+        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentityAsync([UserId]);
         Messages = findUsers.Messages;
         if (findUsers.Response is null)
         {
@@ -44,7 +44,7 @@ public partial class ConfirmEmailPage : ComponentBase
         else
         {
             UserInfoModel user = findUsers.Response.Single();
-            ResponseBaseModel result = await IdentityRepo.ConfirmUserEmailCode(new() { Code = Code, UserId = user.UserId });
+            ResponseBaseModel result = await IdentityRepo.ConfirmUserEmailCodeAsync(new() { Code = Code, UserId = user.UserId });
             Messages.AddRange(result.Messages);
             if (!result.Success())
             {

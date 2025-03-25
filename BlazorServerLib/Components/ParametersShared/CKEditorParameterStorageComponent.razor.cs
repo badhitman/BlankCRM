@@ -54,7 +54,7 @@ public partial class CKEditorParameterStorageComponent : BlazorBusyComponentBase
     {
         //await SetBusy();
         //
-        await StoreRepo.SaveParameter(_textValue, KeyStorage, true);
+        await StoreRepo.SaveParameterAsync(_textValue, KeyStorage, true);
         //IsBusyProgress = false;
         //StateHasChanged();
     }

@@ -20,11 +20,11 @@ public class ManufactureService(
     IHttpContextAccessor httpContextAccessor) : IManufactureService
 {
     /// <inheritdoc/>
-    public async Task CreateSnapshot(StructureProjectModel dump, int projectId, string name, CancellationToken token = default)
+    public async Task CreateSnapshotAsync(StructureProjectModel dump, int projectId, string name, CancellationToken token = default)
     {
         string user_id = httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new Exception();
 
-        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentity([user_id], token);
+        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentityAsync([user_id], token);
         UserInfoModel current_user = users_find.Response![0];
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
@@ -155,7 +155,7 @@ public class ManufactureService(
     }
 
     /// <inheritdoc/>
-    public async Task<List<SystemNameEntryModel>> GetSystemNames(int manufactureId, CancellationToken token = default)
+    public async Task<List<SystemNameEntryModel>> GetSystemNamesAsync(int manufactureId, CancellationToken token = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         return await context_forms
@@ -166,10 +166,10 @@ public class ManufactureService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ManageManufactureModelDB>> ReadManufactureConfig(int projectId, string userId, CancellationToken token = default)
+    public async Task<TResponseModel<ManageManufactureModelDB>> ReadManufactureConfigAsync(int projectId, string userId, CancellationToken token = default)
     {
         TResponseModel<ManageManufactureModelDB> res = new();
-        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentity([userId], token);
+        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentityAsync([userId], token);
         if (!findUsers.Success() || findUsers.Response is null)
         {
             res.AddRangeMessages(findUsers.Messages);
@@ -200,7 +200,7 @@ public class ManufactureService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetOrDeleteSystemName(UpdateSystemNameModel request, CancellationToken token = default)
+    public async Task<ResponseBaseModel> SetOrDeleteSystemNameAsync(UpdateSystemNameModel request, CancellationToken token = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
         ManufactureSystemNameModelDB? snMan = await context_forms
@@ -248,7 +248,7 @@ public class ManufactureService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateManufactureConfig(ManageManufactureModelDB manufacture, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateManufactureConfigAsync(ManageManufactureModelDB manufacture, CancellationToken token = default)
     {
         (bool IsValid, List<ValidationResult> ValidationResults) = GlobalTools.ValidateObject(manufacture);
         if (!IsValid)

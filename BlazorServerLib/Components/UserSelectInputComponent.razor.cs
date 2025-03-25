@@ -28,7 +28,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
     {
         await SetBusy();
         TPaginationResponseModel<UserInfoModel> rest = await IdentityRepo
-            .SelectUsersOfIdentity(new()
+            .SelectUsersOfIdentityAsync(new()
             {
                 Payload = new() { SearchQuery = _selectedValueText },
                 PageNum = PageNum,
@@ -64,7 +64,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
         }
 
         await SetBusy();
-        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentity([SelectedUser]);
+        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([SelectedUser]);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Response is null || rest.Response.Length == 0)

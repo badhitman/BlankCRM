@@ -124,7 +124,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> CreateUser(LdapUserInformationModel user, CancellationToken token = default)
+    public async Task<ResponseBaseModel> CreateUserAsync(LdapUserInformationModel user, CancellationToken token = default)
     {
         string msg = "Не удачная попытка создать пользователя в AD: ";
         if (!MailAddress.TryCreate(user.Email, out _) || string.IsNullOrWhiteSpace(user.FirstName) || string.IsNullOrWhiteSpace(user.Login))
@@ -158,7 +158,7 @@ public class LdapService : ILdapService, IDisposable
         //    }
         //}
 
-        string[] find_ou = (await FindOrgUnits(new LdapSimpleRequestModel() { Query = user.OU, BaseFilters = [BasePath] })).ToArray();
+        string[] find_ou = (await FindOrgUnitsAsync(new LdapSimpleRequestModel() { Query = user.OU, BaseFilters = [BasePath] })).ToArray();
         IQueryable<string> q = find_ou.Where(x => x.Equals(user.OU, StringComparison.OrdinalIgnoreCase)).AsQueryable();
         if (q.Count() != 1)
         {
@@ -170,7 +170,7 @@ public class LdapService : ILdapService, IDisposable
         string name = $"{user.LastName} {user.FirstName} {user.PatronymicName}".Replace("  ", " "),
             dn = $"CN={name},{user.OU}";
 
-        LdapMemberViewModel? find_user = (await FindMembersViewDataByQuery([user.Login], [$"{findMembersPrefix}{BasePath}"], token)).FirstOrDefault(x => x.SAMAccountName.Equals(user.Login, StringComparison.OrdinalIgnoreCase));
+        LdapMemberViewModel? find_user = (await FindMembersViewDataByQueryAsync([user.Login], [$"{findMembersPrefix}{BasePath}"], token)).FirstOrDefault(x => x.SAMAccountName.Equals(user.Login, StringComparison.OrdinalIgnoreCase));
         if (find_user is not null)
         {
             msg = $"{msg} TelegramId уже используется - {JsonConvert.SerializeObject(find_user)}";
@@ -187,7 +187,7 @@ public class LdapService : ILdapService, IDisposable
 
             }
 
-            List<LdapMemberViewModel> chk_tg_user = await GetMembersViewDataByTelegramIds([user.TelegramId], token: token);
+            List<LdapMemberViewModel> chk_tg_user = await GetMembersViewDataByTelegramIdsAsync([user.TelegramId], token: token);
             if (chk_tg_user.Count != 0)
             {
                 msg = $"{msg}ошибка в имени 'OU' ({user.OU}). Результат поиска - {JsonConvert.SerializeObject(chk_tg_user)}";
@@ -232,9 +232,9 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RenewPassword(string sAMAccountName, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RenewPasswordAsync(string sAMAccountName, CancellationToken token = default)
     {
-        LdapMemberViewModel? find_user = (await FindMembersViewDataByQuery(new[] { sAMAccountName }, [$"{findMembersPrefix}{BasePath}"], token)).FirstOrDefault(x => x.SAMAccountName.Equals(sAMAccountName, StringComparison.OrdinalIgnoreCase));
+        LdapMemberViewModel? find_user = (await FindMembersViewDataByQueryAsync(new[] { sAMAccountName }, [$"{findMembersPrefix}{BasePath}"], token)).FirstOrDefault(x => x.SAMAccountName.Equals(sAMAccountName, StringComparison.OrdinalIgnoreCase));
         if (find_user is null)
             return ResponseBaseModel.CreateError($"Пользователь '{sAMAccountName}' не найден");
 
@@ -254,7 +254,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<string>> FindOrgUnits(LdapSimpleRequestModel req, CancellationToken token = default)
+    public async Task<IEnumerable<string>> FindOrgUnitsAsync(LdapSimpleRequestModel req, CancellationToken token = default)
     {
         if (req.BaseFilters?.Any(x => !string.IsNullOrWhiteSpace(x)) != true)
             return [];
@@ -298,7 +298,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapMemberViewModel>> FindMembersViewDataByQuery(IEnumerable<string> queries, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapMemberViewModel>> FindMembersViewDataByQueryAsync(IEnumerable<string> queries, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         string query;
         if (queries.Count() > 1)
@@ -319,7 +319,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapMemberViewModel>> GetMembersViewDataByEmails(IEnumerable<string> emails, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapMemberViewModel>> GetMembersViewDataByEmailsAsync(IEnumerable<string> emails, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         if (!emails.Any())
             return [];
@@ -345,7 +345,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<List<LdapMemberViewModel>> GetMembersViewDataByTelegramIds(IEnumerable<string> ids, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<List<LdapMemberViewModel>> GetMembersViewDataByTelegramIdsAsync(IEnumerable<string> ids, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         if (!ids.Any())
             return [];
@@ -371,7 +371,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapMemberViewModel>> GetMembersViewDataBySamAccountNames(IEnumerable<string> samaccounts_names, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapMemberViewModel>> GetMembersViewDataBySamAccountNamesAsync(IEnumerable<string> samaccounts_names, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         if (!samaccounts_names.Any())
             return [];
@@ -397,11 +397,11 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetTelegramIdForUser(string user_dn, string telegram_id, CancellationToken token = default)
+    public async Task<ResponseBaseModel> SetTelegramIdForUserAsync(string user_dn, string telegram_id, CancellationToken token = default)
     {
         ResponseBaseModel res = new();
         string msg;
-        LdapMemberViewModel? find_user_by_telegram_id = (await GetMembersViewDataByTelegramIds([telegram_id], token: token)).FirstOrDefault();
+        LdapMemberViewModel? find_user_by_telegram_id = (await GetMembersViewDataByTelegramIdsAsync([telegram_id], token: token)).FirstOrDefault();
         if (find_user_by_telegram_id is not null)
         {
             if (find_user_by_telegram_id.DistinguishedName.Equals(user_dn, StringComparison.OrdinalIgnoreCase))
@@ -433,7 +433,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapMemberViewModel>> GetMembersViewOfGroup(string group_dn, CancellationToken token = default)
+    public async Task<IEnumerable<LdapMemberViewModel>> GetMembersViewOfGroupAsync(string group_dn, CancellationToken token = default)
     {
         string searchFilter = string.Format($"(&(objectClass=user)(objectClass=person)({MemberOfNameAttribute}={{0}}))", group_dn);
         return [.. (await ReadMemberViewData([$"{findMembersPrefix}{BasePath}"], searchFilter, token: token)).DistinctBy(x => x.DistinguishedName)];
@@ -551,7 +551,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetDisableStateUser(string sAMAccountName, bool setUserIsDisabled, string? newOuDistinguishedName, IEnumerable<string>? base_filters_users = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel> SetDisableStateUserAsync(string sAMAccountName, bool setUserIsDisabled, string? newOuDistinguishedName, IEnumerable<string>? base_filters_users = null, CancellationToken token = default)
     {
         ResponseBaseModel res = new();
         string searchFilter = string.Format("(&(objectClass=user)(objectClass=person)({1}={0}))", sAMAccountName, SAMAccountNameAttribute);
@@ -651,7 +651,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapMemberViewModel>> FindMembersOfEmails(IEnumerable<string> emails, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapMemberViewModel>> FindMembersOfEmailsAsync(IEnumerable<string> emails, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         List<LdapMemberViewModel> res = [];
         if (emails?.Any() != true)
@@ -676,7 +676,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapMinimalModel>> FindGroupsDNByCN(IEnumerable<string> queries_cn, IEnumerable<string> base_filters, bool is_scope_sub = true, CancellationToken token = default)
+    public async Task<IEnumerable<LdapMinimalModel>> FindGroupsDNByCNAsync(IEnumerable<string> queries_cn, IEnumerable<string> base_filters, bool is_scope_sub = true, CancellationToken token = default)
     {
         if (!queries_cn.Any())
             return [];
@@ -741,7 +741,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<string>> GetGroupsDNForUser(string user_dn, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<string>> GetGroupsDNForUserAsync(string user_dn, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         string searchFilter = string.Format("(&(objectClass=group)(member={0}))", user_dn);
 
@@ -770,7 +770,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<string>> FindGroupsDNByCodeTemplate(string code_template, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<string>> FindGroupsDNByCodeTemplateAsync(string code_template, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         string searchFilter = string.Format($"(&(objectClass=group)(|({CnNameAttribute}={{0}}_*)({CnNameAttribute}={{0}}-*)({CnNameAttribute}={{0}})))", code_template);
 
@@ -798,7 +798,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<string>> FindGroupsDNByQueryCN(IEnumerable<string> queries_cn, FindTextModesEnum mode, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<string>> FindGroupsDNByQueryCNAsync(IEnumerable<string> queries_cn, FindTextModesEnum mode, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         if (base_filters?.Any(x => !string.IsNullOrWhiteSpace(x)) != true)
             return [];
@@ -846,7 +846,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapGroupViewModel>> GetGroupsBySAMAccountNames(IEnumerable<string> groups_sam_account_names, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapGroupViewModel>> GetGroupsBySAMAccountNamesAsync(IEnumerable<string> groups_sam_account_names, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         if (!groups_sam_account_names.Any())
             return [];
@@ -872,7 +872,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapGroupViewModel>> GetGroupsByDistinguishedNames(IEnumerable<string> groups_dns, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapGroupViewModel>> GetGroupsByDistinguishedNamesAsync(IEnumerable<string> groups_dns, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         if (!groups_dns.Any())
             return [];
@@ -898,7 +898,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapGroupViewModel>> GetGroupsByParentDistinguishedNames(IEnumerable<string> groups_dns, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapGroupViewModel>> GetGroupsByParentDistinguishedNamesAsync(IEnumerable<string> groups_dns, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         if (!groups_dns.Any())
             return [];
@@ -995,7 +995,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapMemberViewModel>> GetMembersBySAMAccountNames(IEnumerable<string> users_sam_account_names, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapMemberViewModel>> GetMembersBySAMAccountNamesAsync(IEnumerable<string> users_sam_account_names, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         if (!users_sam_account_names.Any())
             return [];
@@ -1017,7 +1017,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapMemberViewModel>> GetUsersByDistinguishedNames(IEnumerable<string> users_dns, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapMemberViewModel>> GetUsersByDistinguishedNamesAsync(IEnumerable<string> users_dns, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         if (!users_dns.Any())
             return [];
@@ -1075,14 +1075,14 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapMemberViewModel>> FindMembersOfGroupsByQueryGroupName(IEnumerable<string> queries_for_groups_names, FindTextModesEnum mode, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapMemberViewModel>> FindMembersOfGroupsByQueryGroupNameAsync(IEnumerable<string> queries_for_groups_names, FindTextModesEnum mode, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         queries_for_groups_names = queries_for_groups_names.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => GlobalTools.LdapEscapeValue(x)).ToArray();
         if (!queries_for_groups_names.Any())
             return [];
 
         base_filters ??= [BasePath];
-        IEnumerable<string> groups_dn = [.. await FindGroupsDNByQueryCN(queries_for_groups_names, mode, base_filters, token)];
+        IEnumerable<string> groups_dn = [.. await FindGroupsDNByQueryCNAsync(queries_for_groups_names, mode, base_filters, token)];
 
         if (!groups_dn.Any())
             return [];
@@ -1099,7 +1099,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapPersonBaseViewModel>> GetMetadataGroupsForUser(string user_name, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapPersonBaseViewModel>> GetMetadataGroupsForUserAsync(string user_name, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         string query, searchFilter;
         query = $"({SAMAccountNameAttribute}={user_name})";
@@ -1213,7 +1213,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapMemberViewModel>> GetMembersOfGroups(IEnumerable<string> groups_dn_memberOf, CancellationToken token = default)
+    public async Task<IEnumerable<LdapMemberViewModel>> GetMembersOfGroupsAsync(IEnumerable<string> groups_dn_memberOf, CancellationToken token = default)
     {
         List<LdapMemberViewModel> res = [];
         groups_dn_memberOf = [.. groups_dn_memberOf.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => GlobalTools.LdapEscapeValue(x))];
@@ -1242,7 +1242,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapMemberViewModel>> GetAllEmails(IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapMemberViewModel>> GetAllEmailsAsync(IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         base_filters ??= _config_ldap_service.LdapBasedFiltersForFindUsers;
         string searchFilter = string.Format("(&(objectClass=user)(objectCategory=person)(mail=*)(pwdLastSet=*)(!(userAccountControl:{1}:={0})))", UacDontHumanFlags, LDAP_MATCHING_RULE_BIT_OR);
@@ -1251,7 +1251,7 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<LdapGroupViewModel>> FindGroups(string query, IEnumerable<string>? base_filters = null, CancellationToken token = default)
+    public async Task<IEnumerable<LdapGroupViewModel>> FindGroupsAsync(string query, IEnumerable<string>? base_filters = null, CancellationToken token = default)
     {
         string searchFilter = string.Format("(&(objectClass=top)(objectClass=group)(|({1}=*{0}*)({2}=*{0}*)({3}=*{0}*)))", query, CnNameAttribute, SAMAccountNameAttribute, NameAttribute);
 
@@ -1263,9 +1263,9 @@ public class LdapService : ILdapService, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task<LdapMembersViewsResponseModel> InjectMemberToGroup(string user_dn, string group_dn, IEnumerable<string>? base_filters_users = null, IEnumerable<string>? base_filters_groups = null, CancellationToken token = default)
+    public async Task<LdapMembersViewsResponseModel> InjectMemberToGroupAsync(string user_dn, string group_dn, IEnumerable<string>? base_filters_users = null, IEnumerable<string>? base_filters_groups = null, CancellationToken token = default)
     {
-        LdapUserAndGroupResultModel check = await CheckUserGroupPair(new() { UserDN = user_dn, GroupDN = group_dn }, base_filters_users, base_filters_groups, token);
+        LdapUserAndGroupResultModel check = await CheckUserGroupPairAsync(new() { UserDN = user_dn, GroupDN = group_dn }, base_filters_users, base_filters_groups, token);
         LdapMembersViewsResponseModel res = new();
         string msg;
         if (check.GroupData is null || check.UserData is null)
@@ -1281,7 +1281,7 @@ public class LdapService : ILdapService, IDisposable
             msg = $"Пользователь `{check.UserData.SAMAccountName}` [{user_dn}] уже в группе `{check.GroupData.SAMAccountName}` [{group_dn}]. Добавление не требуется!";
             _logger.LogInformation(msg);
             res.AddInfo(msg);
-            res.Members = (await GetMembersViewOfGroup(group_dn, token)).OrderBy(x => x.DistinguishedName);
+            res.Members = (await GetMembersViewOfGroupAsync(group_dn, token)).OrderBy(x => x.DistinguishedName);
             return res;
         }
 
@@ -1306,14 +1306,14 @@ public class LdapService : ILdapService, IDisposable
             res.AddError($"{msg}: {ex.Message}");
         }
 
-        res.Members = (await GetMembersViewOfGroup(group_dn, token)).OrderBy(x => x.DistinguishedName);
+        res.Members = (await GetMembersViewOfGroupAsync(group_dn, token)).OrderBy(x => x.DistinguishedName);
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<LdapMembersViewsResponseModel> KickMemberFromGroup(string user_dn, string group_dn, IEnumerable<string>? base_filters_users = null, IEnumerable<string>? base_filters_groups = null, CancellationToken token = default)
+    public async Task<LdapMembersViewsResponseModel> KickMemberFromGroupAsync(string user_dn, string group_dn, IEnumerable<string>? base_filters_users = null, IEnumerable<string>? base_filters_groups = null, CancellationToken token = default)
     {
-        LdapUserAndGroupResultModel check = await CheckUserGroupPair(new() { UserDN = user_dn, GroupDN = group_dn }, base_filters_users, base_filters_groups, token);
+        LdapUserAndGroupResultModel check = await CheckUserGroupPairAsync(new() { UserDN = user_dn, GroupDN = group_dn }, base_filters_users, base_filters_groups, token);
         LdapMembersViewsResponseModel res = new();
         string msg;
         if (check.GroupData is null || check.UserData is null)
@@ -1329,7 +1329,7 @@ public class LdapService : ILdapService, IDisposable
             msg = $"Пользователя `{check.UserData.SAMAccountName}` [{user_dn}] нет в группе `{check.GroupData.SAMAccountName}` [{group_dn}]. Удаление не требуется!";
             _logger.LogInformation(msg);
             res.AddInfo(msg);
-            res.Members = (await GetMembersViewOfGroup(group_dn, token)).OrderBy(x => x.DistinguishedName);
+            res.Members = (await GetMembersViewOfGroupAsync(group_dn, token)).OrderBy(x => x.DistinguishedName);
             return res;
         }
 
@@ -1354,19 +1354,19 @@ public class LdapService : ILdapService, IDisposable
             res.AddError($"{msg}: {ex.Message}");
         }
 
-        res.Members = await GetMembersViewOfGroup(group_dn, token);
+        res.Members = await GetMembersViewOfGroupAsync(group_dn, token);
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<LdapUserAndGroupResultModel> CheckUserGroupPair(LdapUserAndGroupModel inc, IEnumerable<string>? base_filters_users = null, IEnumerable<string>? base_filters_groups = null, CancellationToken token = default)
+    public async Task<LdapUserAndGroupResultModel> CheckUserGroupPairAsync(LdapUserAndGroupModel inc, IEnumerable<string>? base_filters_users = null, IEnumerable<string>? base_filters_groups = null, CancellationToken token = default)
     {
         LdapUserAndGroupResultModel res = new();
         if (!string.IsNullOrWhiteSpace(inc.UserDN))
-            res.UserData = (await GetUsersByDistinguishedNames([inc.UserDN], token: token)).FirstOrDefault();
+            res.UserData = (await GetUsersByDistinguishedNamesAsync([inc.UserDN], token: token)).FirstOrDefault();
 
         if (!string.IsNullOrWhiteSpace(inc.GroupDN))
-            res.GroupData = (await GetGroupsByDistinguishedNames([inc.GroupDN], token: token)).FirstOrDefault();
+            res.GroupData = (await GetGroupsByDistinguishedNamesAsync([inc.GroupDN], token: token)).FirstOrDefault();
 
         return res;
     }

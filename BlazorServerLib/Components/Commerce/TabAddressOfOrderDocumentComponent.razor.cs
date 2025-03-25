@@ -48,7 +48,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
         await SetBusy();
 
         List<Task> tasks = [
-            Task.Run(async () => { TResponseModel<List<RubricIssueHelpdeskModelDB>> res = await HelpdeskRepo.RubricRead(0); SnackbarRepo.ShowMessagesResponse(res.Messages); RubricMetadataShadow = res.Response; }),
+            Task.Run(async () => { TResponseModel<List<RubricIssueHelpdeskModelDB>> res = await HelpdeskRepo.RubricReadAsync(0); SnackbarRepo.ShowMessagesResponse(res.Messages); RubricMetadataShadow = res.Response; }),
             CacheRegistersUpdate(offers: CurrentTab.Rows!.Select(x => x.OfferId).ToArray(),goods: [],CurrentTab.WarehouseId, true),
             Task.Run(async () => { TResponseModel<bool?> showingPriceSelectorOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingPriceSelectorOrder); _showingPriceSelectorOrder = showingPriceSelectorOrder.Response == true; if (!showingPriceSelectorOrder.Success()) SnackbarRepo.ShowMessagesResponse(showingPriceSelectorOrder.Messages); }) ];
 

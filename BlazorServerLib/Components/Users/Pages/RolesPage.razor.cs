@@ -39,7 +39,7 @@ public partial class RolesPage
     {
         if (!string.IsNullOrWhiteSpace(OwnerUserId))
         {
-            TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentity([OwnerUserId]);
+            TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentityAsync([OwnerUserId]);
             Messages = findUsers.Messages;
             if (!findUsers.Success() || findUsers.Response is null)
                 return;
@@ -82,8 +82,8 @@ public partial class RolesPage
         }
 
         ResponseBaseModel rest = !string.IsNullOrEmpty(UserInfo?.Email)
-        ? await IdentityRepo.DeleteRoleFromUser(new() { RoleName = roleName, Email = UserInfo.Email })
-        : await IdentityRepo.DeleteRole(roleName.Trim());
+        ? await IdentityRepo.DeleteRoleFromUserAsync(new() { RoleName = roleName, Email = UserInfo.Email })
+        : await IdentityRepo.DeleteRoleAsync(roleName.Trim());
 
         Messages = rest.Messages;
         if (!rest.Success())
@@ -102,8 +102,8 @@ public partial class RolesPage
             return;
         }
         ResponseBaseModel rest = !string.IsNullOrEmpty(UserInfo?.Email)
-        ? await IdentityRepo.AddRoleToUser(new() { Email = UserInfo.Email, RoleName = added_role_name })
-        : await IdentityRepo.CreateNewRole(added_role_name.Trim());
+        ? await IdentityRepo.AddRoleToUserAsync(new() { Email = UserInfo.Email, RoleName = added_role_name })
+        : await IdentityRepo.CreateNewRoleAsync(added_role_name.Trim());
 
         Messages = rest.Messages;
         if (!rest.Success())

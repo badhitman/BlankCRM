@@ -44,7 +44,7 @@ public partial class ProjectsListComponent : BlazorBusyComponentBaseAuthModel
     {
         await SetBusy();
 
-        TResponseModel<ProjectViewModel[]> res_pr = await ConstructorRepo.GetProjectsForUser(new() { UserId = CurrentUserSession!.UserId });
+        TResponseModel<ProjectViewModel[]> res_pr = await ConstructorRepo.GetProjectsForUserAsync(new() { UserId = CurrentUserSession!.UserId });
         ProjectsOfUser = res_pr.Response ?? throw new Exception();
         await SetBusy(false);
     }

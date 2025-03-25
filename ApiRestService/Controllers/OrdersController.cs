@@ -27,7 +27,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
     [LoggerNolog]
 #endif
     public async Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelect(TPaginationRequestModel<OrdersSelectRequestModel> req)
-        => await commRepo.OrdersSelect(new TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>>() { Payload = new TAuthRequestModel<OrdersSelectRequestModel>() { Payload = req.Payload, SenderActionUserId = GlobalStaticConstants.Roles.System } });
+        => await commRepo.OrdersSelectAsync(new TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>>() { Payload = new TAuthRequestModel<OrdersSelectRequestModel>() { Payload = req.Payload, SenderActionUserId = GlobalStaticConstants.Roles.System } });
 
     /// <summary>
     /// Прикрепить файл к заказу (счёт, акт и т.п.). Имя файла должно быть уникальным в контексте заказа. Если файл с таким именем существует, тогда он будет перезаписан новым
@@ -46,7 +46,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
             return response;
         }
 
-        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersRead(new() { Payload = [OrderId], SenderActionUserId = GlobalStaticConstants.Roles.System });
+        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersReadAsync(new() { Payload = [OrderId], SenderActionUserId = GlobalStaticConstants.Roles.System });
 
         if (!call.Success())
         {
@@ -78,7 +78,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
             Payload = stream.ToArray(),
         };
 
-        return await storageRepo.SaveFile(new() { Payload = reqSave, SenderActionUserId = GlobalStaticConstants.Roles.System });
+        return await storageRepo.SaveFileAsync(new() { Payload = reqSave, SenderActionUserId = GlobalStaticConstants.Roles.System });
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
     [HttpPost($"/api/{GlobalStaticConstants.Routes.ORDER_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.ROW_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.UPDATE_ACTION_NAME}")]
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     public async Task<TResponseModel<int>> RowForOrderUpdate(RowOfOrderDocumentModelDB row)
-        => await commRepo.RowForOrderUpdate(row);
+        => await commRepo.RowForOrderUpdateAsync(row);
 
     /// <summary>
     /// Удалить строки из заказа
@@ -102,7 +102,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     [HttpDelete($"/api/{GlobalStaticConstants.Routes.ORDERS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.ROW_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.DELETE_ACTION_NAME}")]
     public async Task<TResponseModel<bool>> RowForOrderDelete([FromBody] int[] rows_ids)
-        => await commRepo.RowsForOrderDelete(rows_ids);
+        => await commRepo.RowsForOrderDeleteAsync(rows_ids);
 
     /// <summary>
     /// Установить статус заказа
@@ -113,7 +113,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     public async Task<TResponseModel<bool>> OrderStageSet([FromRoute] int OrderId, [FromRoute] StatusesDocumentsEnum Step)
     {
-        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersRead(new() { Payload = [OrderId], SenderActionUserId = GlobalStaticConstants.Roles.System });
+        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersReadAsync(new() { Payload = [OrderId], SenderActionUserId = GlobalStaticConstants.Roles.System });
         TResponseModel<bool> response = new() { Response = false };
         if (!call.Success())
         {
@@ -142,7 +142,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
                 IssuesIds = [order_doc.HelpdeskId.Value]
             }
         };
-        TResponseModel<IssueHelpdeskModelDB[]> find_helpdesk = await hdRepo.IssuesRead(req_hd);
+        TResponseModel<IssueHelpdeskModelDB[]> find_helpdesk = await hdRepo.IssuesReadAsync(req_hd);
         if (!find_helpdesk.Success() || find_helpdesk.Response is null || find_helpdesk.Response.Length != 1)
         {
             response.AddRangeMessages(find_helpdesk.Messages);
@@ -163,7 +163,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
                 Step = Step,
             }
         };
-        TResponseModel<bool> update_final = await hdRepo.StatusChange(status_change_req);
+        TResponseModel<bool> update_final = await hdRepo.StatusChangeAsync(status_change_req);
         response.AddRangeMessages(update_final.Messages);
         return response;
     }

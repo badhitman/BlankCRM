@@ -30,7 +30,7 @@ public partial class DocumentClientViewPage : BlazorBusyComponentBaseModel
     {
         await SetBusy();
         
-        TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.GetSessionDocumentData(DocumentGuid.ToString());
+        TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.GetSessionDocumentDataAsync(DocumentGuid.ToString());
         IsBusyProgress = false;
 
         if (rest.Response is null)

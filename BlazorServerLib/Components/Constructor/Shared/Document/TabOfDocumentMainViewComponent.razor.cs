@@ -64,7 +64,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
     protected async Task DeleteJoinForm()
     {
         await SetBusy();
-        ResponseBaseModel rest = await ConstructorRepo.DeleteTabDocumentSchemeJoinForm(new() { Payload = PageJoinForm.Id, SenderActionUserId = CurrentUserSession!.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.DeleteTabDocumentSchemeJoinFormAsync(new() { Payload = PageJoinForm.Id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
@@ -120,7 +120,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
     protected async Task DocumentPageJoinFormMove(DirectionsEnum direct)
     {
         await SetBusy();
-        TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.MoveTabDocumentSchemeJoinForm(new() { Payload = new() { Id = PageJoinForm.Id, Direct = direct }, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.MoveTabDocumentSchemeJoinFormAsync(new() { Payload = new() { Id = PageJoinForm.Id, Direct = direct }, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
@@ -150,7 +150,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
 
         await SetBusy();
 
-        ResponseBaseModel rest = await ConstructorRepo.CreateOrUpdateTabDocumentSchemeJoinForm(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.CreateOrUpdateTabDocumentSchemeJoinFormAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
@@ -190,7 +190,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
         {
             LoggerRepo.LogWarning("Дозагрузка [Form] для [PageJoinForm]...");
             await SetBusy();
-            TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetForm(PageJoinForm.FormId);
+            TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(PageJoinForm.FormId);
             IsBusyProgress = false;
 
             SnackbarRepo.ShowMessagesResponse(rest.Messages);

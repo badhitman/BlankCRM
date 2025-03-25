@@ -13,7 +13,7 @@ namespace RemoteCallLib;
 public class KladrNavigationServiceTransmission(IRabbitClient rabbitClient) : IKladrNavigationService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<KladrResponseModel>> ObjectGet(KladrsRequestBaseModel req, CancellationToken token = default)
+    public async Task<TResponseModel<KladrResponseModel>> ObjectGetAsync(KladrsRequestBaseModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<KladrResponseModel>>(GlobalStaticConstants.TransmissionQueues.KladrNavigationGetObjectReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

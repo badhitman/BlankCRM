@@ -49,7 +49,7 @@ public partial class ConstructorPage : BlazorBusyComponentBaseAuthModel
         CanEditProject = false;
         await SetBusy();
 
-        TResponseModel<MainProjectViewModel> currentMainProject = await ConstructorRepo.GetCurrentMainProject(CurrentUserSession!.UserId);
+        TResponseModel<MainProjectViewModel> currentMainProject = await ConstructorRepo.GetCurrentMainProjectAsync(CurrentUserSession!.UserId);
 
         if (!currentMainProject.Success())
             SnackbarRepo.ShowMessagesResponse(currentMainProject.Messages);

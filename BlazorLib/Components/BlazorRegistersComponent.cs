@@ -57,7 +57,7 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
             SortingDirection = DirectionsEnum.Up,
         };
         await SetBusy();
-        TPaginationResponseModel<OfferAvailabilityModelDB> offersRegisters = await CommerceRepo.OffersRegistersSelect(reqData);
+        TPaginationResponseModel<OfferAvailabilityModelDB> offersRegisters = await CommerceRepo.OffersRegistersSelectAsync(reqData);
         await SetBusy(false);
 
         if (offersRegisters.Response is not null && offersRegisters.Response.Count != 0)

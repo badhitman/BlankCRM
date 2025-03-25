@@ -45,7 +45,7 @@ public partial class ClaimsManageComponent
     {
         try
         {
-            claims = await IdentityRepo.GetClaims(new() { ClaimArea = ClaimArea, OwnerId = OwnerId });//
+            claims = await IdentityRepo.GetClaimsAsync(new() { ClaimArea = ClaimArea, OwnerId = OwnerId });//
         }
         catch (Exception ex)
         {
@@ -71,7 +71,7 @@ public partial class ClaimsManageComponent
             return;
         }
 
-        ResponseBaseModel res = await IdentityRepo.ClaimUpdateOrCreate(new() { ClaimArea = ClaimArea, ClaimUpdate = new() { ClaimType = claimType?.Trim(), ClaimValue = claimValue?.Trim(), OwnerId = OwnerId } });
+        ResponseBaseModel res = await IdentityRepo.ClaimUpdateOrCreateAsync(new() { ClaimArea = ClaimArea, ClaimUpdate = new() { ClaimType = claimType?.Trim(), ClaimValue = claimValue?.Trim(), OwnerId = OwnerId } });
 
         if (!res.Success())
         {
@@ -82,6 +82,6 @@ public partial class ClaimsManageComponent
         claimType = null;
         claimValue = null;
 
-        claims = await IdentityRepo.GetClaims(new() { ClaimArea = ClaimArea, OwnerId = OwnerId });
+        claims = await IdentityRepo.GetClaimsAsync(new() { ClaimArea = ClaimArea, OwnerId = OwnerId });
     }
 }

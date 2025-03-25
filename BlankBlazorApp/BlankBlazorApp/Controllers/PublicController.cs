@@ -37,7 +37,7 @@ public class PublicController(ITelegramTransmission tgRepo, IIdentityTransmissio
         string dataCheckString = string.Join('\n', dataDict.Where(x => x.Key != "hash")
             .Select(x => $"{x.Key}={x.Value}"));
 
-        TResponseModel<string> getTgToken = await tgRepo.GetTelegramBotToken();
+        TResponseModel<string> getTgToken = await tgRepo.GetTelegramBotTokenAsync();
         if (!getTgToken.Success() || string.IsNullOrWhiteSpace(getTgToken.Response))
             return NotFound(ResponseBaseModel.CreateError("Не удалось прочитать токен TG бота"));
 
@@ -56,13 +56,13 @@ public class PublicController(ITelegramTransmission tgRepo, IIdentityTransmissio
         {
             string telegramUserJsonData = dataDict["user"];
             TelegramUserData userData = JsonConvert.DeserializeObject<TelegramUserData>(telegramUserJsonData)!;
-            TResponseModel<CheckTelegramUserAuthModel> uc = await identityRepo.CheckTelegramUser(CheckTelegramUserHandleModel.Build(userData.Id, userData.FirstName, userData.LastName, userData.UserName, userData.IsBot));
+            TResponseModel<CheckTelegramUserAuthModel> uc = await identityRepo.CheckTelegramUserAsync(CheckTelegramUserHandleModel.Build(userData.Id, userData.FirstName, userData.LastName, userData.UserName, userData.IsBot));
             if (!uc.Success())
                 return NotFound(uc.Messages);
             if (uc.Response is null)
                 return NotFound(ResponseBaseModel.CreateError("Пользователь не найден"));
 
-            await uaRepo.SignIn(uc.Response.UserIdentityId, false);
+            await uaRepo.SignInAsync(uc.Response.UserIdentityId, false);
             return Ok(uc);
         }
 

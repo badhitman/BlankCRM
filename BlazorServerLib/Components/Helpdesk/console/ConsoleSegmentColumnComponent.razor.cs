@@ -66,7 +66,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
     {
         await SetBusy();
 
-        TPaginationResponseModel<IssueHelpdeskModel> res = await HelpdeskRepo.ConsoleIssuesSelect(new TPaginationRequestModel<ConsoleIssuesRequestModel>
+        TPaginationResponseModel<IssueHelpdeskModel> res = await HelpdeskRepo.ConsoleIssuesSelectAsync(new TPaginationRequestModel<ConsoleIssuesRequestModel>
         {
             PageNum = pageNum,
             PageSize = 5,
@@ -111,7 +111,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
                     IncludeExternalData = true
                 };
 
-                TResponseModel<OrderDocumentModelDB[]> rest = await commRepo.OrdersByIssues(req);
+                TResponseModel<OrderDocumentModelDB[]> rest = await commRepo.OrdersByIssuesAsync(req);
                 if (rest.Success() && rest.Response is not null && rest.Response.Length != 0)
                 {
                     lock(OrdersCache)
@@ -132,7 +132,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
                     IssueIds = issues_attendance_ids,
                     IncludeExternalData = true
                 };
-                TResponseModel<RecordsAttendanceModelDB[]> restAttendance = await commRepo.OrdersAttendancesByIssues(req);
+                TResponseModel<RecordsAttendanceModelDB[]> restAttendance = await commRepo.OrdersAttendancesByIssuesAsync(req);
                 if (restAttendance.Success() && restAttendance.Response is not null && restAttendance.Response.Length != 0)
                 {
                     lock(OrdersAttendancesCache)

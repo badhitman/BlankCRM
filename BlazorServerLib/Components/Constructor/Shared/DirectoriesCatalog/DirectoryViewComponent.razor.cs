@@ -48,7 +48,7 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy();
 
-        TResponseModel<int> rest = await ConstructorRepo.CreateElementForDirectory(new() { Payload = createNewElementForDict, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<int> rest = await ConstructorRepo.CreateElementForDirectoryAsync(new() { Payload = createNewElementForDict, SenderActionUserId = CurrentUserSession!.UserId });
         createNewElementForDict = OwnedNameModel.BuildEmpty(createNewElementForDict.OwnerId);
         IsBusyProgress = false;
         StateHasChanged();

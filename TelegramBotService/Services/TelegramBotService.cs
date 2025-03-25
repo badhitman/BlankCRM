@@ -316,7 +316,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             return res;
         }
 
-        TResponseModel<TelegramUserBaseModel> tgUser = await IdentityRepo.GetTelegramUser(message.UserTelegramId, token);
+        TResponseModel<TelegramUserBaseModel> tgUser = await IdentityRepo.GetTelegramUserAsync(message.UserTelegramId, token);
         if (tgUser.Response is null || !tgUser.Success())
         {
             if (tgUser.Success())
@@ -439,7 +439,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 await _botClient.DeleteMessage(chatId: message.UserTelegramId, message.MainTelegramMessageId.Value, cancellationToken: token);
             }
             finally { }
-            await IdentityRepo.UpdateTelegramMainUserMessage(new() { MessageId = 0, UserId = message.UserTelegramId }, token);
+            await IdentityRepo.UpdateTelegramMainUserMessageAsync(new() { MessageId = 0, UserId = message.UserTelegramId }, token);
         }
 
         return res;

@@ -73,7 +73,7 @@ public partial class JournalUniversalComponent : BlazorBusyComponentBaseModel
 
         await SetBusy();
         TPaginationResponseModel<KeyValuePair<int, Dictionary<string, object>>> res = await JournalRepo
-            .SelectJournalPart(new SelectJournalPartRequestModel()
+            .SelectJournalPartAsync(new SelectJournalPartRequestModel()
             {
                 SearchString = searchString,
                 DocumentNameOrId = DocumentNameOrIdType,
@@ -122,7 +122,7 @@ public partial class JournalUniversalComponent : BlazorBusyComponentBaseModel
         else
         {
             await SetBusy();
-            TResponseModel<EntryAltModel[]?> res = await JournalRepo.GetColumnsForJournal(SelectedJournal, ProjectId);
+            TResponseModel<EntryAltModel[]?> res = await JournalRepo.GetColumnsForJournalAsync(SelectedJournal, ProjectId);
             SnackbarRepo.ShowMessagesResponse(res.Messages);
             ColumnsNames = res.Response;
             IsBusyProgress = false;

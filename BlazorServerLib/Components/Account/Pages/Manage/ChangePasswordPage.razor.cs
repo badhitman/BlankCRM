@@ -28,7 +28,7 @@ public partial class ChangePasswordPage
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        TResponseModel<bool?> rest = await UsersProfilesRepo.UserHasPassword();
+        TResponseModel<bool?> rest = await UsersProfilesRepo.UserHasPasswordAsync();
         //user = rest.UserInfo;
         Messages = rest.Messages;
         if (rest.Response != true)
@@ -40,7 +40,7 @@ public partial class ChangePasswordPage
     private async Task OnValidSubmitAsync()
     {
         Messages = null;
-        ResponseBaseModel changePasswordResult = await UsersProfilesRepo.ChangePassword(Input.OldPassword, Input.NewPassword);
+        ResponseBaseModel changePasswordResult = await UsersProfilesRepo.ChangePasswordAsync(Input.OldPassword, Input.NewPassword);
         Messages = changePasswordResult.Messages;
         if (!changePasswordResult.Success())
             return;

@@ -55,7 +55,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
             SenderActionUserId = CurrentUserSession.UserId
         };
         await SetBusy();
-        TResponseModel<FileAttachModel> res = await CommRepo.OrderReportGet(req);
+        TResponseModel<FileAttachModel> res = await CommRepo.OrderReportGetAsync(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
         if (res.Success() && res.Response is not null && res.Response.Data.Length != 0)
@@ -97,7 +97,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
 
         await SetBusy();
 
-        TResponseModel<int> res = await StorageRepo.SaveParameter(doc, GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
+        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(doc, GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
 
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         SnackbarRepo.Add("Содержимое документа отправлено в корзину для формирования нового заказа", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
@@ -122,7 +122,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         };
         await SetBusy();
 
-        TResponseModel<bool> res = await HelpdeskRepo.StatusChange(req);
+        TResponseModel<bool> res = await HelpdeskRepo.StatusChangeAsync(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response && res.Success())
             NavRepo.ReloadPage();
@@ -137,7 +137,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         int[] orderWarehouses = [.. Document.OfficesTabs!.Select(x => x.WarehouseId).Distinct()];
         await SetBusy();
 
-        TResponseModel<List<RubricIssueHelpdeskModelDB>> getWarehouses = await HelpdeskRepo.RubricsGet(orderWarehouses);
+        TResponseModel<List<RubricIssueHelpdeskModelDB>> getWarehouses = await HelpdeskRepo.RubricsGetAsync(orderWarehouses);
         SnackbarRepo.ShowMessagesResponse(getWarehouses.Messages);
         currentWarehouses = getWarehouses.Response ?? [];
 

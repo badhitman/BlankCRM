@@ -37,9 +37,9 @@ public partial class ChatsWappiIssueComponent : IssueWrapBaseModel
         };
         await SetBusy();
         TResponseModel<int> add_msg_system = default!;
-        List<Task> tasks = [HelpdeskRepo.PulsePush(req_pulse, false),
+        List<Task> tasks = [HelpdeskRepo.PulsePushAsync(req_pulse, false),
         Task.Run(async () => { 
-            add_msg_system = await HelpdeskRepo.MessageCreateOrUpdate(new() { SenderActionUserId = GlobalStaticConstants.Roles.System, Payload = new() { MessageText = $"<b>Пользователь {CurrentUserSession!.UserName} отправил сообщение WhatsApp пользователю {msg.Number}</b>: {msg.Text}", IssueId = Issue.Id }});
+            add_msg_system = await HelpdeskRepo.MessageCreateOrUpdateAsync(new() { SenderActionUserId = GlobalStaticConstants.Roles.System, Payload = new() { MessageText = $"<b>Пользователь {CurrentUserSession!.UserName} отправил сообщение WhatsApp пользователю {msg.Number}</b>: {msg.Text}", IssueId = Issue.Id }});
         })];
         await Task.WhenAll(tasks);
         await SetBusy(false);

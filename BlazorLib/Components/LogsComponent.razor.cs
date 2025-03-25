@@ -212,7 +212,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         {
             if (navInit)
             {
-                DirectPage = await LogsRepo.GoToPageForRow(new()
+                DirectPage = await LogsRepo.GoToPageForRowAsync(new()
                 {
                     Payload = selectedRecord,
                     PageNum = state.Page,
@@ -242,8 +242,8 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         TResponseModel<LogsMetadataResponseModel> md = default!;
         
         await Task.WhenAll([
-                Task.Run(async () => selector = await LogsRepo.LogsSelect(req)),
-                Task.Run(async () => md = await LogsRepo.MetadataLogs(new() { StartAt = DateRangeBind.Start, FinalOff = DateRangeBind.End })),
+                Task.Run(async () => selector = await LogsRepo.LogsSelectAsync(req)),
+                Task.Run(async () => md = await LogsRepo.MetadataLogsAsync(new() { StartAt = DateRangeBind.Start, FinalOff = DateRangeBind.End })),
                 ]);
 
         _metaData = md.Response;

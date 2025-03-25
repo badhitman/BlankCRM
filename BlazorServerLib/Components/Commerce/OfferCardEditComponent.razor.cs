@@ -46,7 +46,7 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy();
 
-        TResponseModel<int> res = await CommerceRepo.OfferUpdate(new() { Payload = editOffer, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> res = await CommerceRepo.OfferUpdateAsync(new() { Payload = editOffer, SenderActionUserId = CurrentUserSession.UserId });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success() && res.Response > 0)
@@ -64,7 +64,7 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy();
         await ReadCurrentUser();
-        TResponseModel<OfferModelDB[]> res = await CommerceRepo.OffersRead(new() { Payload = [OfferId], SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<OfferModelDB[]> res = await CommerceRepo.OffersReadAsync(new() { Payload = [OfferId], SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         CurrentOffer = res.Response!.Single();

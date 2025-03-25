@@ -67,7 +67,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
         await SetBusy(token: token);
-        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelect(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
         SnackbarRepo.ShowMessagesResponse(res.Messages);
 
         if (res.Response?.Response is not null)
@@ -87,7 +87,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
                 SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
             };
 
-            TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelect(recReq);
+            TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq);
             currentRecords = recordsSelect.Response ?? [];
 
             //await CacheRegistersUpdate(offers: res.Response.Response.Select(x => x.Id).ToArray(), goods: []);

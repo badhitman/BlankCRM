@@ -61,7 +61,7 @@ public partial class OrganizationsTableComponent : BlazorBusyComponentBaseAuthMo
         else if (!string.IsNullOrWhiteSpace(UserId))
         {
             await SetBusy();
-            TResponseModel<UserInfoModel[]> user_res = await IdentityRepo.GetUsersIdentity([UserId]);
+            TResponseModel<UserInfoModel[]> user_res = await IdentityRepo.GetUsersIdentityAsync([UserId]);
             SnackbarRepo.ShowMessagesResponse(user_res.Messages);
             CurrentViewUser = user_res.Response?.FirstOrDefault();
             await SetBusy(false);

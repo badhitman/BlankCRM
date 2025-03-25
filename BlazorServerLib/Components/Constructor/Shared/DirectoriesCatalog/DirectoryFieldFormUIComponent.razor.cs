@@ -70,7 +70,7 @@ public partial class DirectoryFieldFormUIComponent : BlazorBusyComponentBaseMode
     {
         await SetBusy();
         
-        TResponseModel<EntryModel[]> rest = await ConstructorRepo.GetDirectories(new() { ProjectId = Form.ProjectId });
+        TResponseModel<EntryModel[]> rest = await ConstructorRepo.GetDirectoriesAsync(new() { ProjectId = Form.ProjectId });
         IsBusyProgress = false;
         StateHasChangedHandler(FieldObject, GetType());
 

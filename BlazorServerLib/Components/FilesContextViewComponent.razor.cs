@@ -109,7 +109,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
             req.FileName = fileBrowser.Name;
 
             await ms.DisposeAsync();
-            res = await FilesRepo.SaveFile(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
+            res = await FilesRepo.SaveFileAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
             SnackbarRepo.ShowMessagesResponse(res.Messages);
         }
 
@@ -136,7 +136,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
         if (_selectedFile is null || CurrentUserSession is null)
             return;
 
-        TResponseModel<FileContentModel> downloadSource = await FilesRepo.ReadFile(new TAuthRequestModel<RequestFileReadModel>() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { FileId = _selectedFile.Id } });
+        TResponseModel<FileContentModel> downloadSource = await FilesRepo.ReadFileAsync(new TAuthRequestModel<RequestFileReadModel>() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { FileId = _selectedFile.Id } });
 
         if (downloadSource.Success() && downloadSource.Response?.Payload is not null)
         {
@@ -167,7 +167,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
         };
 
         TPaginationResponseModel<StorageFileModelDB> rest = await FilesRepo
-            .FilesSelect(req);
+            .FilesSelectAsync(req);
 
         List<StorageFileModelDB>? data = rest.Response;
         IsBusyProgress = false;

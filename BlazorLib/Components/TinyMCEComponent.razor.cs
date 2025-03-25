@@ -63,7 +63,7 @@ public partial class TinyMCEComponent : BlazorBusyComponentBaseModel
     async Task StoreData()
     {
         //await SetBusy();
-        await StoreRepo.SaveParameter(_textValue, KeyStorage, true);
+        await StoreRepo.SaveParameterAsync(_textValue, KeyStorage, true);
         //await SetBusy(false);
     }
 

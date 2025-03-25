@@ -65,7 +65,7 @@ public partial class NomenclatureEditComponent : BlazorBusyComponentBaseAuthMode
 
         await SetBusy();
 
-        TResponseModel<int> res = await CommerceRepo.NomenclatureUpdateReceive(editNomenclature);
+        TResponseModel<int> res = await CommerceRepo.NomenclatureUpdateAsync(editNomenclature);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success())
@@ -86,7 +86,7 @@ public partial class NomenclatureEditComponent : BlazorBusyComponentBaseAuthMode
         if (CurrentUserSession is null)
             throw new Exception();
 
-        TResponseModel<List<NomenclatureModelDB>> res = await CommerceRepo.NomenclaturesRead(new() { Payload = [NomenclatureId], SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<List<NomenclatureModelDB>> res = await CommerceRepo.NomenclaturesReadAsync(new() { Payload = [NomenclatureId], SenderActionUserId = CurrentUserSession.UserId });
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         IsBusyProgress = false;
 

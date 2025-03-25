@@ -54,7 +54,7 @@ public class StringParameterStorageBaseComponent : BlazorBusyComponentBaseModel
     {
         await SetBusy();
 
-        await StoreRepo.SaveParameter(_textValue, KeyStorage, false);
+        await StoreRepo.SaveParameterAsync(_textValue, KeyStorage, false);
         IsBusyProgress = false;
         StateHasChanged();
     }

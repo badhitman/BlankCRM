@@ -32,11 +32,11 @@ public partial class ForgotPasswordPage
 
     private async Task OnValidSubmitAsync()
     {
-        TResponseModel<UserInfoModel>? user = await IdentityRepo.FindUserByEmail(Input.Email);
+        TResponseModel<UserInfoModel>? user = await IdentityRepo.FindUserByEmailAsync(Input.Email);
         if (user.Response is null)
             RedirectManager.RedirectTo("Account/ForgotPasswordConfirmation");
 
-        TResponseModel<bool> email_is_confirmed_rest = await UsersProfilesRepo.IsEmailConfirmed(user.Response.UserId);
+        TResponseModel<bool> email_is_confirmed_rest = await UsersProfilesRepo.IsEmailConfirmedAsync(user.Response.UserId);
         if (user is null || !email_is_confirmed_rest.Success() || email_is_confirmed_rest.Response != true)
         {
             // Don't reveal that the user does not exist or is not confirmed
@@ -46,7 +46,7 @@ public partial class ForgotPasswordPage
 
         // For more information on how to enable account confirmation and password reset please
         // visit https://go.microsoft.com/fwlink/?LinkID=532713
-        TResponseModel<string?> code_rest = await UsersProfilesRepo.GeneratePasswordResetToken(user.Response.UserId);
+        TResponseModel<string?> code_rest = await UsersProfilesRepo.GeneratePasswordResetTokenAsync(user.Response.UserId);
         Messages.AddRange(code_rest.Messages);
         if (string.IsNullOrEmpty(code_rest.Response))
             throw new Exception("PasswordResetToken is null. error {92318C2E-0997-4737-B746-73698FB38B39}");

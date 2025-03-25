@@ -37,7 +37,7 @@ public partial class RegisterConfirmationPage
             RedirectManager.RedirectTo("");
         }
 
-        TResponseModel<UserInfoModel> user = await IdentityRepo.FindUserByEmail(Email);
+        TResponseModel<UserInfoModel> user = await IdentityRepo.FindUserByEmailAsync(Email);
         if (user.Response is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;

@@ -28,7 +28,7 @@ public partial class EmailPage : BlazorBusyComponentBaseAuthModel
         if (CurrentUserSession is null)
             throw new Exception($"Пользователь сессии не определён");
 
-        TResponseModel<bool> rest = await UsersProfilesRepo.IsEmailConfirmed();
+        TResponseModel<bool> rest = await UsersProfilesRepo.IsEmailConfirmedAsync();
         Messages = rest.Messages;
 
         email = CurrentUserSession.Email;
@@ -44,7 +44,7 @@ public partial class EmailPage : BlazorBusyComponentBaseAuthModel
             return;
         }
 
-        ResponseBaseModel rest = await UsersProfilesRepo.GenerateChangeEmailToken(Input.NewEmail, NavigationManager.ToAbsoluteUri("Account/ConfirmEmailChange").AbsoluteUri);
+        ResponseBaseModel rest = await UsersProfilesRepo.GenerateChangeEmailTokenAsync(Input.NewEmail, NavigationManager.ToAbsoluteUri("Account/ConfirmEmailChange").AbsoluteUri);
         Messages = rest.Messages;
     }
 
@@ -55,7 +55,7 @@ public partial class EmailPage : BlazorBusyComponentBaseAuthModel
             Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = $"email [{email}] имеет не корректный формат" }];
             return;
         }
-        ResponseBaseModel rest = await IdentityRepo.GenerateEmailConfirmation(new() { Email = email, BaseAddress = NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri });
+        ResponseBaseModel rest = await IdentityRepo.GenerateEmailConfirmationAsync(new() { Email = email, BaseAddress = NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri });
         Messages = rest.Messages;
     }
 }

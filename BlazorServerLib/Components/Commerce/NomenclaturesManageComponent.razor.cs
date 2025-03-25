@@ -43,7 +43,7 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
     async Task DownloadFullPrice()
     {
         await SetBusy();
-        FileAttachModel res = await CommerceRepo.PriceFullFileGet();
+        FileAttachModel res = await CommerceRepo.PriceFullFileGetAsync();
 
         await SetBusy(false);
         if (res.Data.Length != 0)
@@ -68,7 +68,7 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
         await SetBusy(token: token);
-        TPaginationResponseModel<NomenclatureModelDB> res = await CommerceRepo.NomenclaturesSelect(req);
+        TPaginationResponseModel<NomenclatureModelDB> res = await CommerceRepo.NomenclaturesSelectAsync(req);
 
         if (res.Response is not null)
         {

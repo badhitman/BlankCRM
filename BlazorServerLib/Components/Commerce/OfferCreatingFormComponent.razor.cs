@@ -52,7 +52,7 @@ public partial class OfferCreatingFormComponent : BlazorBusyComponentBaseAuthMod
         };
         await SetBusy();
         
-        TResponseModel<int> res = await CommerceRepo.OfferUpdate(new() { Payload = off, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> res = await CommerceRepo.OfferUpdateAsync(new() { Payload = off, SenderActionUserId = CurrentUserSession.UserId });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success() && res.Response > 0)

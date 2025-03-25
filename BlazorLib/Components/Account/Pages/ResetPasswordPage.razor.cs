@@ -45,14 +45,14 @@ public partial class ResetPasswordPage
 
     private async Task OnValidSubmitAsync()
     {
-        TResponseModel<UserInfoModel> user = await IdentityRepo.FindUserByEmail(Input.Email);
+        TResponseModel<UserInfoModel> user = await IdentityRepo.FindUserByEmailAsync(Input.Email);
         if (user.Response is null)
         {
             // Don't reveal that the user does not exist
             RedirectManager.RedirectTo("Account/ResetPasswordConfirmation");
         }
 
-        ResponseBaseModel result = await IdentityRepo.ResetPassword(new() { Password = Input.Password, Token = Input.Code, UserId = user.Response.UserId });
+        ResponseBaseModel result = await IdentityRepo.ResetPasswordAsync(new() { Password = Input.Password, Token = Input.Code, UserId = user.Response.UserId });
         Messages = result.Messages;
         if (result.Success())
         {

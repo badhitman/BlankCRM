@@ -42,7 +42,7 @@ public partial class DocumentEditConstructorComponent : DocumentEditBaseComponen
 
         if (schemes?.Length == 1 && DocumentKey > 0)
         {
-            TResponseModel<SessionOfDocumentDataModelDB> session_data = await ConstructorRepo.GetSessionDocument(new() { SessionId = DocumentKey.Value });
+            TResponseModel<SessionOfDocumentDataModelDB> session_data = await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = DocumentKey.Value });
             SnackbarRepo.ShowMessagesResponse(session_data.Messages);
             session = session_data.Response;
         }

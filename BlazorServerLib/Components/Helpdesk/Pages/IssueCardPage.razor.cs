@@ -83,7 +83,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
             IssueIds = [Id],
         };
 
-        TResponseModel<OrderDocumentModelDB[]> res = await CommRepo.OrdersByIssues(req);
+        TResponseModel<OrderDocumentModelDB[]> res = await CommRepo.OrdersByIssuesAsync(req);
 
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         OrdersJournal = res.Response is null
@@ -99,7 +99,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
             IssueIds = [Id],
         };
 
-        TResponseModel<RecordsAttendanceModelDB[]> res = await CommRepo.OrdersAttendancesByIssues(req);
+        TResponseModel<RecordsAttendanceModelDB[]> res = await CommRepo.OrdersAttendancesByIssuesAsync(req);
 
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         OrdersAttendancesJournal = res.Response is null
@@ -116,7 +116,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
         };
 
         await SetBusy();
-        TResponseModel<IssueHelpdeskModelDB[]> issue_res = await HelpdeskRepo.IssuesRead(req);
+        TResponseModel<IssueHelpdeskModelDB[]> issue_res = await HelpdeskRepo.IssuesReadAsync(req);
         SnackbarRepo.ShowMessagesResponse(issue_res.Messages);
         IssueSource = issue_res.Response?.FirstOrDefault();
         IsBusyProgress = false;
@@ -141,7 +141,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
         if (users_ids.Count != 0)
             users_ids = users_ids.Distinct().ToList();
 
-        TResponseModel<UserInfoModel[]> users_data_identity = await IdentityRepo.GetUsersIdentity([.. users_ids]);
+        TResponseModel<UserInfoModel[]> users_data_identity = await IdentityRepo.GetUsersIdentityAsync([.. users_ids]);
         SnackbarRepo.ShowMessagesResponse(users_data_identity.Messages);
         if (users_data_identity.Response is not null && users_data_identity.Response.Length != 0)
             UsersIdentityDump.AddRange(users_data_identity.Response);

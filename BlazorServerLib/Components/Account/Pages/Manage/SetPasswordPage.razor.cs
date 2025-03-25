@@ -30,7 +30,7 @@ public partial class SetPasswordPage : BlazorBusyComponentBaseAuthModel
     {
         await base.OnInitializedAsync();
 
-        TResponseModel<bool?> hasPassword = await UsersProfilesRepo.UserHasPassword();
+        TResponseModel<bool?> hasPassword = await UsersProfilesRepo.UserHasPasswordAsync();
         Messages = hasPassword.Messages;
         if (hasPassword.Response == true || CurrentUserSession is null)
         {
@@ -41,7 +41,7 @@ public partial class SetPasswordPage : BlazorBusyComponentBaseAuthModel
     private async Task OnValidSubmitAsync()
     {
         Messages = null;
-        ResponseBaseModel rest = await UsersProfilesRepo.AddPassword(Input.NewPassword!);
+        ResponseBaseModel rest = await UsersProfilesRepo.AddPasswordAsync(Input.NewPassword!);
         Messages = rest.Messages;
         if (!rest.Success())
             return;

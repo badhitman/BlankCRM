@@ -33,7 +33,7 @@ public partial class TelegramUsersPage
     {
         foodRecallProvider = async req =>
         {
-            TPaginationResponseModel<TelegramUserViewModel> res = await IdentityRepo.FindUsersTelegram(new FindRequestModel()
+            TPaginationResponseModel<TelegramUserViewModel> res = await IdentityRepo.FindUsersTelegramAsync(new FindRequestModel()
             {
                 FindQuery = Input.FindQuery,
                 PageNum = pagination.CurrentPageIndex,

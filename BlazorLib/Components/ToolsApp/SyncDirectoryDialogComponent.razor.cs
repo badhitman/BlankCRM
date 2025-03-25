@@ -73,7 +73,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
             return;
         }
         await SetBusy();
-        ResponseBaseModel res = await AppManagerRepo.DeleteSyncDirectory(SyncDir.Id);
+        ResponseBaseModel res = await AppManagerRepo.DeleteSyncDirectoryAsync(SyncDir.Id);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
         MudDialog.Close(DialogResult.Ok(true));
@@ -90,7 +90,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
             Id = SyncDir?.Id ?? 0
         };
         await SetBusy();
-        ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateSyncDirectory(req);
+        ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateSyncDirectoryAsync(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
 
@@ -130,7 +130,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
 
         RemoteDirectoryInfo = string.IsNullOrWhiteSpace(SyncDir?.RemoteDirectory)
                 ? null
-                : await RestClientRepo.DirectoryExist(SyncDir.RemoteDirectory);
+                : await RestClientRepo.DirectoryExistAsync(SyncDir.RemoteDirectory);
 
         if (RemoteDirectoryInfo is not null)
             SnackbarRepo.ShowMessagesResponse(RemoteDirectoryInfo.Messages);
@@ -157,7 +157,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
         if (SyncRuleId != 0)
         {
             await SetBusy();
-            SyncDir = await AppManagerRepo.ReadSyncDirectory(SyncRuleId);
+            SyncDir = await AppManagerRepo.ReadSyncDirectoryAsync(SyncRuleId);
             await SetBusy(false);
         }
         else

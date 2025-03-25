@@ -14,7 +14,7 @@ public class DefaultTelegramDialogHandle(IIdentityTransmission identityRepo, ILo
     : ITelegramDialogService
 {
     /// <inheritdoc/>
-    public async Task<TelegramDialogResponseModel> TelegramDialogHandle(TelegramDialogRequestModel tgDialog, CancellationToken token = default)
+    public async Task<TelegramDialogResponseModel> TelegramDialogHandleAsync(TelegramDialogRequestModel tgDialog, CancellationToken token = default)
     {
         TelegramDialogResponseModel resp = new()
         {
@@ -28,7 +28,7 @@ public class DefaultTelegramDialogHandle(IIdentityTransmission identityRepo, ILo
                 resp.ReplyKeyboard = [[new ButtonActionModel() { Data = "/logout.2", Title = "Подтвердить выход" }]];
                 break;
             case "/logout.2":
-                ResponseBaseModel rest = await identityRepo.TelegramJoinAccountDelete(new() { TelegramId = tgDialog.TelegramUser.TelegramId, ClearBaseUri = webConf.ClearBaseUri ?? "https://" });
+                ResponseBaseModel rest = await identityRepo.TelegramJoinAccountDeleteAsync(new() { TelegramId = tgDialog.TelegramUser.TelegramId, ClearBaseUri = webConf.ClearBaseUri ?? "https://" });
                 if (!rest.Success())
                 {
                     _logger.LogError(rest.Message());

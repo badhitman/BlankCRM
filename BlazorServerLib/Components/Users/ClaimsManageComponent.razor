@@ -32,7 +32,7 @@ else
         <tbody>
             @foreach (ClaimBaseModel claim in claims)
             {
-                <ClaimRowComponent Claim="claim" ClaimArea="ClaimArea" OwnerId="@OwnerId" ReloadHandler="async () => {claims = await IdentityRepo.GetClaims(new(){ ClaimArea = ClaimArea, OwnerId = OwnerId}); StateHasChanged(); }" />
+                <ClaimRowComponent Claim="claim" ClaimArea="ClaimArea" OwnerId="@OwnerId" ReloadHandler="async () => {claims = await IdentityRepo.GetClaimsAsync(new(){ ClaimArea = ClaimArea, OwnerId = OwnerId}); StateHasChanged(); }" />
             }
         </tbody>
     </table>

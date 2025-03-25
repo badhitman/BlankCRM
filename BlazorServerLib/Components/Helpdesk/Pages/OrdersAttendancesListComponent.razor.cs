@@ -47,10 +47,10 @@ public partial class OrdersAttendancesListComponent(ICommerceTransmission Commer
         }
 
         await SetBusy();
-        ResponseBaseModel resDel = await CommerceRepo.AttendanceRecordsDelete(new() { Payload = rec.Id, SenderActionUserId = CurrentUserSession.UserId });
+        ResponseBaseModel resDel = await CommerceRepo.AttendanceRecordsDeleteAsync(new() { Payload = rec.Id, SenderActionUserId = CurrentUserSession.UserId });
         SnackbarRepo.ShowMessagesResponse(resDel.Messages);
 
-        TResponseModel<RecordsAttendanceModelDB[]> resReload = await CommerceRepo.OrdersAttendancesByIssues(new() { IssueIds = [HelpdeskIssueId] });
+        TResponseModel<RecordsAttendanceModelDB[]> resReload = await CommerceRepo.OrdersAttendancesByIssuesAsync(new() { IssueIds = [HelpdeskIssueId] });
         SnackbarRepo.ShowMessagesResponse(resReload.Messages);
 
         if (resReload.Success() && resReload.Response is not null)

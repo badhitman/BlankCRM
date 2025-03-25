@@ -41,7 +41,7 @@ public partial class ElementsOfDirectoryListViewComponent : BlazorBusyComponentB
 
         await SetBusy();
         
-        TResponseModel<List<EntryModel>> rest = await ConstructorRepo.GetElementsOfDirectory(SelectedDirectoryId);
+        TResponseModel<List<EntryModel>> rest = await ConstructorRepo.GetElementsOfDirectoryAsync(SelectedDirectoryId);
         IsBusyProgress = false;
 
         if (!rest.Success())

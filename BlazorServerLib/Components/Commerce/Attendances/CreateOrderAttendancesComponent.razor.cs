@@ -87,7 +87,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
         };
 
         await SetBusy();
-        ResponseBaseModel res = await CommerceRepo.CreateAttendanceRecords(req);
+        ResponseBaseModel res = await CommerceRepo.CreateAttendanceRecordsAsync(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
 
         if (res.Success())
@@ -109,7 +109,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
             ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME,
         };
         await SetBusy();
-        WorksFindResponseModel res = await CommerceRepo.WorksSchedulesFind(req);
+        WorksFindResponseModel res = await CommerceRepo.WorksSchedulesFindAsync(req);
         Elements = [.. res.WorksSchedulesViews
             .OrderBy(x => x.Date)
             .ThenBy(x => x.StartPart)
@@ -175,7 +175,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
             }
         };
         await SetBusy();
-        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelect(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
         await SetBusy(false);
         if (res.Response?.Response is not null && res.Response.Response.Count != 0)
         {

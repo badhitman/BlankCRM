@@ -125,7 +125,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
             ApiConnect.TokenAccess = TokenAccess;
         }
         token = cancelTokenSource.Token;
-        GetMe = await RestClientRepo.GetMe(token.Value);
+        GetMe = await RestClientRepo.GetMeAsync(token.Value);
 
         if (backupConf is not null)
             ApiConnect.Update(backupConf);
@@ -150,7 +150,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
             HeaderName = HeaderName,
         };
         await SetBusy();
-        TResponseModel<int> res = await AppManagerRepo.UpdateOrCreateConfig(req);
+        TResponseModel<int> res = await AppManagerRepo.UpdateOrCreateConfigAsync(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
         if (res.Success())

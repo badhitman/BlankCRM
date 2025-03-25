@@ -34,7 +34,7 @@ public class ToolsController(
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.PAGE_ACTION_NAME}/{Routes.GOTO_ACTION_NAME}-for-{Routes.RECORD_CONTROLLER_NAME}"), LoggerNolog]
     public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestModel<int> req)
     {
-        return await storeRepo.GoToPageForRow(req);
+        return await storeRepo.GoToPageForRowAsync(req);
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class ToolsController(
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.SELECT_ACTION_NAME}"), LoggerNolog]
     public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelect(TPaginationRequestModel<LogsSelectRequestModel> req)
     {
-        return await storeRepo.LogsSelect(req);
+        return await storeRepo.LogsSelectAsync(req);
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class ToolsController(
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.METADATA_CONTROLLER_NAME}"), LoggerNolog]
     public async Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogs(PeriodDatesTimesModel req)
     {
-        return await storeRepo.MetadataLogs(req);
+        return await storeRepo.MetadataLogsAsync(req);
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public class ToolsController(
                 Task.Run(async () => { await memCache.RemoveAsync(new MemCacheComplexKeyModel(fileToken, PartUploadCacheFilesDumpsPrefix)); }),
                 Task.Run(async () => { await memCache.RemoveAsync(new MemCacheComplexKeyModel(sessionToken, PartUploadCacheSessionsPrefix)); })]);
 
-            return await toolsRepo.UpdateFile(_file_name, sessionUploadPart.RemoteDirectory, ms.ToArray());
+            return await toolsRepo.UpdateFileAsync(_file_name, sessionUploadPart.RemoteDirectory, ms.ToArray());
         }
         else
         {
@@ -158,7 +158,7 @@ public class ToolsController(
                     .Union([Task.Run(async () => { await memCache.RemoveAsync(new MemCacheComplexKeyModel(sessionToken, PartUploadCacheSessionsPrefix)); })])
                     .Union(partsFiles.Select(x => Task.Run(async () => { await memCache.RemoveAsync(new MemCacheComplexKeyModel(x.PartFileId, PartUploadCacheFilesDumpsPrefix)); }))));
 
-                return await toolsRepo.UpdateFile(_file_name, sessionUploadPart.RemoteDirectory, ms.ToArray());
+                return await toolsRepo.UpdateFileAsync(_file_name, sessionUploadPart.RemoteDirectory, ms.ToArray());
             }
         }
 
@@ -234,7 +234,7 @@ public class ToolsController(
         using MemoryStream ms = new();
         uploadedFile.OpenReadStream().CopyTo(ms);
 
-        return await toolsRepo.UpdateFile(_file_name, remoteDirectory, ms.ToArray());
+        return await toolsRepo.UpdateFileAsync(_file_name, remoteDirectory, ms.ToArray());
     }
 
     /// <summary>
@@ -268,7 +268,7 @@ public class ToolsController(
     /// </remarks>
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.DIRECTORY_CONTROLLER_NAME}/{Routes.GET_ACTION_NAME}-{Routes.DATA_ACTION_NAME}"), LoggerNolog]
     public Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectoryData(ToolsFilesRequestModel req)
-        => toolsRepo.GetDirectoryData(req);
+        => toolsRepo.GetDirectoryDataAsync(req);
 
     /// <summary>
     /// Существование директории
@@ -278,7 +278,7 @@ public class ToolsController(
     /// </remarks>
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.DIRECTORY_CONTROLLER_NAME}/{Routes.CHECK_ACTION_NAME}"), LoggerNolog]
     public Task<ResponseBaseModel> DirectoryExist([FromBody] string directoryPath)
-        => toolsRepo.DirectoryExist(directoryPath);
+        => toolsRepo.DirectoryExistAsync(directoryPath);
 
     /// <summary>
     /// Удалить файл
@@ -289,6 +289,6 @@ public class ToolsController(
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.FILE_CONTROLLER_NAME}-{Routes.DELETE_ACTION_NAME}")]
     public async Task<TResponseModel<bool>> FileDelete(DeleteRemoteFileRequestModel req)
     {
-        return await toolsRepo.DeleteFile(req);
+        return await toolsRepo.DeleteFileAsync(req);
     }
 }

@@ -29,7 +29,7 @@ public partial class ChatSelectInputComponent : LazySelectorComponent<ChatTelegr
     {
         await SetBusy();
         TPaginationResponseModel<ChatTelegramModelDB> rest = await TelegramRepo
-            .ChatsSelect(new()
+            .ChatsSelectAsync(new()
             {
                 Payload = _selectedValueText,
                 PageNum = PageNum,
@@ -76,7 +76,7 @@ public partial class ChatSelectInputComponent : LazySelectorComponent<ChatTelegr
     {
         await SetBusy();
 
-        List<ChatTelegramModelDB> rest = await TelegramRepo.ChatsReadTelegram([SelectedChat]);
+        List<ChatTelegramModelDB> rest = await TelegramRepo.ChatsReadTelegramAsync([SelectedChat]);
         
         if (rest.Count == 0)
         {

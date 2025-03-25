@@ -64,7 +64,7 @@ public partial class RubricNodeEditComponent : BlazorBusyComponentBaseAuthModel
             return;
 
         await SetBusy();
-        ResponseBaseModel res = await HelpdeskRepo.RubricMove(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { Direction = dir, ObjectId = rubric.Value!.Id, ContextName = ContextName } });
+        ResponseBaseModel res = await HelpdeskRepo.RubricMoveAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { Direction = dir, ObjectId = rubric.Value!.Id, ContextName = ContextName } });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         ReloadNodeHandle(ItemModel.ParentId ?? 0);
@@ -82,7 +82,7 @@ public partial class RubricNodeEditComponent : BlazorBusyComponentBaseAuthModel
         ItemModel.Name = itemSystemName;
 
         await SetBusy();
-        TResponseModel<int> res = await HelpdeskRepo.RubricCreateOrUpdate(new RubricIssueHelpdeskModelDB()
+        TResponseModel<int> res = await HelpdeskRepo.RubricCreateOrUpdateAsync(new RubricIssueHelpdeskModelDB()
         {
             Name = ItemModel.Name,
             Description = ItemModel.Description,

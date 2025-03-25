@@ -49,7 +49,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
     {
         await SetBusy();
 
-        ResponseBaseModel rest = await ConstructorRepo.DeleteDocumentScheme(new() { Payload = questionnaire_id, SenderActionUserId = CurrentUserSession!.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.DeleteDocumentSchemeAsync(new() { Payload = questionnaire_id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
@@ -74,7 +74,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
         SimplePaginationRequestModel req = new();
         await SetBusy(token: token);
 
-        data = await ConstructorRepo.RequestDocumentsSchemes(new() { RequestPayload = req, ProjectId = ParentFormsPage.MainProject.Id }, token);
+        data = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = req, ProjectId = ParentFormsPage.MainProject.Id }, token);
         IsBusyProgress = false;
 
         if (data.Response is null)

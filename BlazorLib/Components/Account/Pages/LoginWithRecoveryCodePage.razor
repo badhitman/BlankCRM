@@ -37,7 +37,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        TResponseModel<UserInfoModel?> user = await UsersAuthRepo.GetTwoFactorAuthenticationUser();
+        TResponseModel<UserInfoModel?> user = await UsersAuthRepo.GetTwoFactorAuthenticationUserAsync();
         Messages = user.Messages;
         if (user.Response is null)
             throw new InvalidOperationException("Невозможно загрузить пользователя двухфакторной аутентификации.");
@@ -47,7 +47,7 @@
     {
         Messages = null;
         string recoveryCode = Input.RecoveryCode.Replace(" ", string.Empty);
-        IdentityResultResponseModel result = await UsersAuthRepo.TwoFactorRecoveryCodeSignIn(recoveryCode);
+        IdentityResultResponseModel result = await UsersAuthRepo.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
         Messages = result.Messages;
 
         if (result.Success())

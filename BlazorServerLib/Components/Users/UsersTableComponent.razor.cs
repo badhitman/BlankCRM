@@ -119,7 +119,7 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
 
     async Task SetUserLock(string userId, bool locked_set)
     {
-        ResponseBaseModel rest = await IdentityRepo.SetLockUser(new() { Set = locked_set, UserId = userId });
+        ResponseBaseModel rest = await IdentityRepo.SetLockUserAsync(new() { Set = locked_set, UserId = userId });
         Messages = rest.Messages;
         if (myGrid is not null)
             await myGrid.RefreshDataAsync();
@@ -139,7 +139,7 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
             return;
         }
 
-        ResponseBaseModel rest = await IdentityRepo.DeleteRoleFromUser(new() { Email = user_email, RoleName = RoleInfo.Name });
+        ResponseBaseModel rest = await IdentityRepo.DeleteRoleFromUserAsync(new() { Email = user_email, RoleName = RoleInfo.Name });
 
         Messages = rest.Messages;
         if (!rest.Success())
@@ -163,7 +163,7 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
             return;
         }
 
-        ResponseBaseModel rest = await IdentityRepo.AddRoleToUser(new() { Email = added_user_email, RoleName = RoleInfo.Name });
+        ResponseBaseModel rest = await IdentityRepo.AddRoleToUserAsync(new() { Email = added_user_email, RoleName = RoleInfo.Name });
         Messages = rest.Messages;
         if (!rest.Success())
             return;
@@ -193,7 +193,7 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
 
         if (!string.IsNullOrWhiteSpace(OwnerRoleId))
         {
-            TResponseModel<RoleInfoModel> rest = await IdentityRepo.GetRole(OwnerRoleId);
+            TResponseModel<RoleInfoModel> rest = await IdentityRepo.GetRoleAsync(OwnerRoleId);
             Messages = rest.Messages;
             if (!rest.Success())
                 return;

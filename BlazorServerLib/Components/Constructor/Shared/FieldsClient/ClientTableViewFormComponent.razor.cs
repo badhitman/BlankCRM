@@ -101,7 +101,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
             await SetBusy();
             StateHasChanged();
             ValueFieldSessionDocumentDataBaseModel req = new() { GroupByRowNum = row_num, JoinFormId = PageJoinForm.Id, SessionId = SessionDocument.Id };
-            ResponseBaseModel rest = await ConstructorRepo.DeleteValuesFieldsByGroupSessionDocumentDataByRowNum(req);
+            ResponseBaseModel rest = await ConstructorRepo.DeleteValuesFieldsByGroupSessionDocumentDataByRowNumAsync(req);
             IsBusyProgress = false;
 
             SnackbarRepo.ShowMessagesResponse(rest.Messages);
@@ -130,7 +130,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         };
         await SetBusy();
 
-        TResponseModel<int> rest = await ConstructorRepo.AddRowToTable(row_obj);
+        TResponseModel<int> rest = await ConstructorRepo.AddRowToTableAsync(row_obj);
         IsBusyProgress = false;
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
@@ -157,7 +157,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
             SessionId = SessionDocument.Id,
             IsSelf = true
         };
-        _ = await ConstructorRepo.DeleteValuesFieldsByGroupSessionDocumentDataByRowNum(req);
+        _ = await ConstructorRepo.DeleteValuesFieldsByGroupSessionDocumentDataByRowNumAsync(req);
         await ReloadSession();
     }
 
@@ -170,8 +170,8 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         }
         await SetBusy();
         TResponseModel<SessionOfDocumentDataModelDB> rest = string.IsNullOrWhiteSpace(SessionDocument.SessionToken)
-        ? await ConstructorRepo.GetSessionDocument(new() { SessionId = SessionDocument.Id, IncludeExtra = false })
-        : await ConstructorRepo.GetSessionDocumentData(SessionDocument.SessionToken);
+        ? await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = SessionDocument.Id, IncludeExtra = false })
+        : await ConstructorRepo.GetSessionDocumentDataAsync(SessionDocument.SessionToken);
         IsBusyProgress = false;
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);

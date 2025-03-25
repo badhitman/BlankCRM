@@ -66,7 +66,7 @@ public interface ISerializeStorage
     /// Сохранить параметр
     /// </summary>
     /// <typeparam name="T">Тип сохраняемых данных (сериализируемый)</typeparam>
-    public Task Save<T>(T obj, StorageMetadataModel set, bool trimHistory = false, CancellationToken token = default);
+    public Task SaveAsync<T>(T obj, StorageMetadataModel set, bool trimHistory = false, CancellationToken token = default);
 
     /// <summary>
     /// Прочитать значение параметра. null - если значения нет
@@ -76,13 +76,13 @@ public interface ISerializeStorage
     /// Возвращается самое актуальное значение (последнее установленное). Хранится история значений - если значение будет часто меняться будет ротация стека накопленных значений с усечением от 150 до 100.
     /// Проверка переполнения происходит при каждой команде сохранения.
     /// </remarks>
-    public Task<T?> Read<T>(StorageMetadataModel req, CancellationToken token = default);
+    public Task<T?> ReadAsync<T>(StorageMetadataModel req, CancellationToken token = default);
 
     /// <summary>
     /// Поиск значений параметров
     /// </summary>
     /// <typeparam name="T">Тип данных (для десериализации из JSON)</typeparam>
-    public Task<T?[]> Find<T>(RequestStorageBaseModel req, CancellationToken token = default);
+    public Task<T?[]> FindAsync<T>(RequestStorageBaseModel req, CancellationToken token = default);
 
     /// <summary>
     /// FlushParameter

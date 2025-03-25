@@ -71,7 +71,7 @@ public partial class BoolSimpleStorageComponent : BlazorBusyComponentBaseModel
     async void SaveParameter()
     {
         await SetBusy();
-        TResponseModel<int> res = await StorageTransmissionRepo.SaveParameter<bool?>(StoreValue, StorageMetadata, true);
+        TResponseModel<int> res = await StorageTransmissionRepo.SaveParameterAsync<bool?>(StoreValue, StorageMetadata, true);
         await SetBusy(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
     }

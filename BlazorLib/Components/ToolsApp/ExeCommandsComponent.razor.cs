@@ -32,7 +32,7 @@ public partial class ExeCommandsComponent : BlazorBusyComponentBaseModel
     async void ReloadCommands()
     {
         await SetBusy();
-        ExeCommands = await AppManagerRepo.GetExeCommandsForConfig(ApiConnect.Id);
+        ExeCommands = await AppManagerRepo.GetExeCommandsForConfigAsync(ApiConnect.Id);
         await SetBusy(false);
     }
 
@@ -48,7 +48,7 @@ public partial class ExeCommandsComponent : BlazorBusyComponentBaseModel
     {
         //await ParentPage.HoldPageUpdate(true);
         await SetBusy();
-        ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateExeCommand(newCommand);
+        ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateExeCommandAsync(newCommand);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         
         if(res.Success())

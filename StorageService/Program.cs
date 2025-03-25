@@ -165,7 +165,7 @@ public class Program
         {
             WebConfigModel wc_main = ss.ServiceProvider.GetRequiredService<WebConfigModel>();
             IWebTransmission webRemoteCall = ss.ServiceProvider.GetRequiredService<IWebTransmission>();
-            TelegramBotConfigModel wc_remote = await webRemoteCall.GetWebConfig();
+            TelegramBotConfigModel wc_remote = await webRemoteCall.GetWebConfigAsync();
             if (Uri.TryCreate(wc_remote.BaseUri, UriKind.Absolute, out _))
                 wc_main.Update(wc_remote.BaseUri);
         }

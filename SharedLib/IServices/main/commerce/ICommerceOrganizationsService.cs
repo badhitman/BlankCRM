@@ -17,5 +17,5 @@ public partial interface ICommerceService : ICommerceServiceBase
     /// <summary>
     /// ContractorsOrganizationsFind
     /// </summary>
-    public Task<OrganizationContractorModel[]> ContractorsOrganizationsFind(ContractorsOrganizationsRequestModel req, CancellationToken token = default);
+    public Task<OrganizationContractorModel[]> ContractorsOrganizationsFindAsync(ContractorsOrganizationsRequestModel req, CancellationToken token = default);
 }

@@ -54,7 +54,7 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
         Messages = [];
         await SetBusy();
 
-        ResponseBaseModel rest = await IdentityRepo.UpdateUserDetails(new() { UserId = CurrentUserSession.UserId, FirstName = firstName, LastName = lastName, PhoneNum = phoneNum });
+        ResponseBaseModel rest = await IdentityRepo.UpdateUserDetailsAsync(new() { UserId = CurrentUserSession.UserId, FirstName = firstName, LastName = lastName, PhoneNum = phoneNum });
         //AuthenticationState ar = await AuthRepo.GetAuthenticationStateAsync();
         // ar.User.Claims.ToList().ForEach(x => { x. });
         await SetBusy(false);

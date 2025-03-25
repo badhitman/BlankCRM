@@ -97,7 +97,7 @@ public partial class HelpdeskJournalComponent : BlazorBusyComponentBaseAuthModel
         };
 
         TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>> rest = await HelpdeskRepo
-             .IssuesSelect(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
+             .IssuesSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
 
         IsBusyProgress = false;
         if (rest.Response?.Response is null)
@@ -118,7 +118,7 @@ public partial class HelpdeskJournalComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy();
 
-        TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersIdentity(_ids);
+        TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersIdentityAsync(_ids);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is null)

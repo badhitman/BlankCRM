@@ -32,7 +32,7 @@ public partial class ConsoleHelpdeskComponent : BlazorBusyComponentBaseAuthModel
         stepNum = 0;
 
         await SetBusy();
-        TResponseModel<int> res = await StorageRepo.SaveParameter(FilterUserId, GlobalStaticConstants.CloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId), false);
+        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(FilterUserId, GlobalStaticConstants.CloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId), false);
         await SetBusy(false);
         if (!res.Success())
             SnackbarRepo.ShowMessagesResponse(res.Messages);
@@ -52,7 +52,7 @@ public partial class ConsoleHelpdeskComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy();
 
-        TResponseModel<int> res = await StorageRepo.SaveParameter(IsLarge, SizeColumnsKeyStorage, true);
+        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(IsLarge, SizeColumnsKeyStorage, true);
         IsBusyProgress = false;
         if (!res.Success())
             SnackbarRepo.ShowMessagesResponse(res.Messages);

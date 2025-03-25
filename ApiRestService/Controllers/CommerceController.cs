@@ -26,7 +26,7 @@ public class CommerceController(ICommerceTransmission commRepo) : ControllerBase
     [LoggerNolog]
 #endif
     public async Task<TPaginationResponseModel<NomenclatureModelDB>> OrdersSelect(TPaginationRequestModel<NomenclaturesSelectRequestModel> req)
-        => await commRepo.NomenclaturesSelect(req);
+        => await commRepo.NomenclaturesSelectAsync(req);
 
     /// <summary>
     /// Чтение номенклатуры (по идентификаторам)
@@ -39,5 +39,5 @@ public class CommerceController(ICommerceTransmission commRepo) : ControllerBase
     [LoggerNolog]
 #endif
     public async Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesRead(int[] req)
-        => await commRepo.NomenclaturesRead(new() { Payload = req, SenderActionUserId = GlobalStaticConstants.Roles.System });
+        => await commRepo.NomenclaturesReadAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstants.Roles.System });
 }

@@ -157,7 +157,7 @@ public partial class RubricsManageComponent : BlazorBusyComponentBaseModel
     async Task<List<UniversalBaseModel>> RequestRubrics(int? parent_id = null)
     {
         await SetBusy();
-        List<UniversalBaseModel> rest = await HelpdeskRepo.RubricsList(new() { Request = parent_id ?? 0, ContextName = ContextName });
+        List<UniversalBaseModel> rest = await HelpdeskRepo.RubricsListAsync(new() { Request = parent_id ?? 0, ContextName = ContextName });
 
         rest = [.. rest.OrderBy(x => x.SortIndex)];
 

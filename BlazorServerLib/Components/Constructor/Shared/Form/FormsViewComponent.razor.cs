@@ -52,7 +52,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
     protected async Task OpenForm(FormConstructorModelDB form)
     {
         await SetBusy();
-        TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetForm(form.Id);
+        TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(form.Id);
         IsBusyProgress = false;
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
@@ -89,7 +89,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
 
         await SetBusy();
 
-        rest_data = await ConstructorRepo.SelectForms(new() { Request = SimplePaginationRequestModel.Build(searchString, _table_state?.PageSize ?? 10, _table_state?.Page ?? 0), ProjectId = ParentFormsPage.MainProject.Id });
+        rest_data = await ConstructorRepo.SelectFormsAsync(new() { Request = SimplePaginationRequestModel.Build(searchString, _table_state?.PageSize ?? 10, _table_state?.Page ?? 0), ProjectId = ParentFormsPage.MainProject.Id });
         IsBusyProgress = false;
     }
 

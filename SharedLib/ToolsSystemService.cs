@@ -13,7 +13,7 @@ namespace SharedLib;
 public class ToolsSystemService : IServerToolsService
 {
     /// <inheritdoc/>
-    public Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectoryData(ToolsFilesRequestModel req, CancellationToken token = default)
+    public Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectoryDataAsync(ToolsFilesRequestModel req, CancellationToken token = default)
     {
         TResponseModel<List<ToolsFilesResponseModel>> res = new();
 
@@ -48,7 +48,7 @@ public class ToolsSystemService : IServerToolsService
     }
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DirectoryExist(string remoteDirectory, CancellationToken token = default)
+    public Task<ResponseBaseModel> DirectoryExistAsync(string remoteDirectory, CancellationToken token = default)
     {
         DirectoryInfo _di = new(remoteDirectory);
         if (!_di.Exists)
@@ -58,7 +58,7 @@ public class ToolsSystemService : IServerToolsService
     }
 
     /// <inheritdoc/>
-    public Task<TResponseModel<bool>> DeleteFile(DeleteRemoteFileRequestModel req, CancellationToken token = default)
+    public Task<TResponseModel<bool>> DeleteFileAsync(DeleteRemoteFileRequestModel req, CancellationToken token = default)
     {
         TResponseModel<bool> response = new();
         DirectoryInfo di = new(req.RemoteDirectory);
@@ -85,7 +85,7 @@ public class ToolsSystemService : IServerToolsService
     }
 
     /// <inheritdoc/>
-    public Task<TResponseModel<string>> UpdateFile(string fileName, string remoteDirectory, byte[] bytes, CancellationToken token = default)
+    public Task<TResponseModel<string>> UpdateFileAsync(string fileName, string remoteDirectory, byte[] bytes, CancellationToken token = default)
     {
         TResponseModel<string> response = new();
 
@@ -131,7 +131,7 @@ public class ToolsSystemService : IServerToolsService
     }
 
     /// <inheritdoc/>
-    public Task<TResponseModel<string>> ExeCommand(ExeCommandModelDB req, CancellationToken token = default)
+    public Task<TResponseModel<string>> ExeCommandAsync(ExeCommandModelDB req, CancellationToken token = default)
     {
         TResponseModel<string> res = new();
 

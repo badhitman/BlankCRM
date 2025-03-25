@@ -36,8 +36,8 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
             }
         };
         await SetBusy();
-        await HelpdeskRepo.PulsePush(req_pulse, false);
-        TResponseModel<int> add_msg_system = await HelpdeskRepo.MessageCreateOrUpdate(new()
+        await HelpdeskRepo.PulsePushAsync(req_pulse, false);
+        TResponseModel<int> add_msg_system = await HelpdeskRepo.MessageCreateOrUpdateAsync(new()
         {
             SenderActionUserId = GlobalStaticConstants.Roles.System,
             Payload = new() { MessageText = $"<b>Пользователь {CurrentUserSession!.UserName} отправил сообщение Telegram пользователю user-tg#{msg.UserTelegramId}</b>: {msg.Message}", IssueId = Issue.Id }
@@ -53,7 +53,7 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
         await base.OnInitializedAsync();
         long[] chats_ids = [.. UsersIdentityDump.Where(x => x.TelegramId.HasValue).Select(x => x.TelegramId!.Value)];
 
-        chats = await TelegramRepo.ChatsReadTelegram(chats_ids);
+        chats = await TelegramRepo.ChatsReadTelegramAsync(chats_ids);
         IsBusyProgress = false;
     }
 }

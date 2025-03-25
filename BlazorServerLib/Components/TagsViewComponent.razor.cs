@@ -36,7 +36,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         if (string.IsNullOrWhiteSpace(_value) || !OwnerPrimaryKey.HasValue)
             return;
 
-        TResponseModel<bool> res = await TagsRepo.TagSet(new()
+        TResponseModel<bool> res = await TagsRepo.TagSetAsync(new()
         {
             PrefixPropertyName = PrefixPropertyName,
             ApplicationName = ApplicationsNames.Single(),
@@ -65,7 +65,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
             await SetBusy();
 
             await SetBusy();
-            TResponseModel<bool> res = await TagsRepo.TagSet(new()
+            TResponseModel<bool> res = await TagsRepo.TagSetAsync(new()
             {
                 PrefixPropertyName = PrefixPropertyName,
                 ApplicationName = ApplicationsNames.Single(),
@@ -99,7 +99,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
             SortingDirection = DirectionsEnum.Down,
         };
 
-        TPaginationResponseModel<TagModelDB> res = await TagsRepo.TagsSelect(req);
+        TPaginationResponseModel<TagModelDB> res = await TagsRepo.TagsSelectAsync(req);
 
         List<string> res_data = res.Response?.Where(x => TagsSets?.Any(y => y.TagName.Equals(x.TagName, StringComparison.OrdinalIgnoreCase)) != true).Select(x => x.TagName).ToList() ?? [];
 
@@ -127,7 +127,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
             SortingDirection = DirectionsEnum.Down,
         };
 
-        TPaginationResponseModel<TagModelDB> res = await TagsRepo.TagsSelect(req);
+        TPaginationResponseModel<TagModelDB> res = await TagsRepo.TagsSelectAsync(req);
 
         await SetBusy(false);
         if (res.Response is not null)

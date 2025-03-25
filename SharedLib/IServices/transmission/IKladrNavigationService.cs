@@ -19,7 +19,7 @@ public interface IKladrNavigationService
     /// <summary>
     /// Получить объект и его предков
     /// </summary>
-    public Task<TResponseModel<KladrResponseModel>> ObjectGet(KladrsRequestBaseModel req, CancellationToken token = default);
+    public Task<TResponseModel<KladrResponseModel>> ObjectGetAsync(KladrsRequestBaseModel req, CancellationToken token = default);
 
     /// <summary>
     /// Select objects

@@ -12,14 +12,14 @@ namespace ServerLib;
 public class LogsService(IStorageTransmission storeRepo) : ILogsService
 {
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestModel<int> req, CancellationToken token = default)
-        => await storeRepo.GoToPageForRow(req, token);
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestModel<int> req, CancellationToken token = default)
+        => await storeRepo.GoToPageForRowAsync(req, token);
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelect(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken token = default)
-        => await storeRepo.LogsSelect(req, token);
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken token = default)
+        => await storeRepo.LogsSelectAsync(req, token);
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogs(PeriodDatesTimesModel req, CancellationToken token = default)
-        => await storeRepo.MetadataLogs(req, token);
+    public async Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogsAsync(PeriodDatesTimesModel req, CancellationToken token = default)
+        => await storeRepo.MetadataLogsAsync(req, token);
 }

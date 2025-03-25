@@ -244,7 +244,7 @@ public partial class FormOfTabConstructorComponent : FormBaseModel
 
         await SetBusy();
         
-        TResponseModel<ValueDataForSessionOfDocumentModelDB[]> res = await ConstructorRepo.SaveSessionForm(new() { JoinFormToTab = Join.Id, SessionId = DocumentKey.Value, SessionValues = SessionValues });
+        TResponseModel<ValueDataForSessionOfDocumentModelDB[]> res = await ConstructorRepo.SaveSessionFormAsync(new() { JoinFormToTab = Join.Id, SessionId = DocumentKey.Value, SessionValues = SessionValues });
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         IsBusyProgress = false;
 

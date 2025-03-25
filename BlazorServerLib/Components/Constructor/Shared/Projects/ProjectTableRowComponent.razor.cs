@@ -66,7 +66,7 @@ public partial class ProjectTableRowComponent : BlazorBusyComponentBaseAuthModel
     protected async Task DeleteProject()
     {
         await SetBusy();
-        ResponseBaseModel res = await ConstructorRepo.SetMarkerDeleteProject(new() { ProjectId = ProjectRow.Id, Marker = !ProjectRow.IsDisabled });
+        ResponseBaseModel res = await ConstructorRepo.SetMarkerDeleteProjectAsync(new() { ProjectId = ProjectRow.Id, Marker = !ProjectRow.IsDisabled });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await ParentProjectsList.ReloadListProjects();
@@ -78,7 +78,7 @@ public partial class ProjectTableRowComponent : BlazorBusyComponentBaseAuthModel
     {
         await SetBusy();
 
-        ResponseBaseModel res = await ConstructorRepo.SetProjectAsMain(new() { ProjectId = ProjectRow.Id, UserId = CurrentUserSession!.UserId });
+        ResponseBaseModel res = await ConstructorRepo.SetProjectAsMainAsync(new() { ProjectId = ProjectRow.Id, UserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success())

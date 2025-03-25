@@ -12,5 +12,5 @@ public interface ITelegramDialogService
     /// <summary>
     /// Обработка входящих сообщений из Telegram
     /// </summary>
-    public Task<TelegramDialogResponseModel> TelegramDialogHandle(TelegramDialogRequestModel tgDialog, CancellationToken token = default);
+    public Task<TelegramDialogResponseModel> TelegramDialogHandleAsync(TelegramDialogRequestModel tgDialog, CancellationToken token = default);
 }

@@ -47,7 +47,7 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
         };
 
         TPaginationResponseModel<ArticleModelDB> rest = await HelpdeskRepo
-            .ArticlesSelect(req);
+            .ArticlesSelectAsync(req);
 
         await SetBusy(false, token: token);
 
@@ -66,7 +66,7 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy();
 
-        TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersIdentity(_ids);
+        TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersIdentityAsync(_ids);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is null)

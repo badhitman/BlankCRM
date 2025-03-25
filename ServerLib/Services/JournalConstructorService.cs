@@ -20,7 +20,7 @@ public partial class JournalConstructorService(
     IHttpContextAccessor httpContextAccessor) : IJournalUniversalService
 {
     /// <inheritdoc/>
-    public async Task<DocumentFitModel> GetDocumentMetadata(string document_name_or_id, int? projectId = null, CancellationToken token = default)
+    public async Task<DocumentFitModel> GetDocumentMetadataAsync(string document_name_or_id, int? projectId = null, CancellationToken token = default)
     {
         TResponseModel<DocumentFitModel> res = new();
 
@@ -45,7 +45,7 @@ public partial class JournalConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<EntryAltModel[]?>> GetColumnsForJournal(string journal_name_or_id, int? projectId, CancellationToken token = default)
+    public async Task<TResponseModel<EntryAltModel[]?>> GetColumnsForJournalAsync(string journal_name_or_id, int? projectId, CancellationToken token = default)
     {
         TResponseModel<EntryAltModel[]?> res = new();
 
@@ -98,7 +98,7 @@ public partial class JournalConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KeyValuePair<int, Dictionary<string, object>>>> SelectJournalPart(SelectJournalPartRequestModel req, int? projectId, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<KeyValuePair<int, Dictionary<string, object>>>> SelectJournalPartAsync(SelectJournalPartRequestModel req, int? projectId, CancellationToken token = default)
     {
         TResponseModel<DocumentSchemeConstructorModelDB[]?> find_doc = await FindDocumentSchemes(req.DocumentNameOrId, projectId, token);
         if (!find_doc.Success() || find_doc.Response is null || find_doc.Response.Length == 0 || find_doc.Response.Length > 1)
@@ -239,7 +239,7 @@ public partial class JournalConstructorService(
             return res;
         }
 
-        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentity([user_id], token);
+        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentityAsync([user_id], token);
         UserInfoModel current_user = users_find.Response![0];
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
@@ -282,7 +282,7 @@ public partial class JournalConstructorService(
         if (user_id is null)
             return [];
 
-        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentity([user_id], token);
+        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentityAsync([user_id], token);
         UserInfoModel current_user = users_find.Response![0];
 
 

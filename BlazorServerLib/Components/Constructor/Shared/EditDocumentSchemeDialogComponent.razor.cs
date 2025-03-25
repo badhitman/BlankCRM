@@ -52,7 +52,7 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
         if (DocumentScheme.Id > 0)
         {
             await SetBusy();
-            TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetDocumentScheme(DocumentScheme.Id);
+            TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetDocumentSchemeAsync(DocumentScheme.Id);
             IsBusyProgress = false;
 
             SnackbarRepo.ShowMessagesResponse(rest.Messages);
@@ -79,7 +79,7 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
 
         await SetBusy();
         
-        TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.UpdateOrCreateDocumentScheme(new() { Payload = new EntryConstructedModel() { Id = DocumentScheme.Id, Name = DocumentNameOrigin, Description = DocumentDescriptionOrigin, ProjectId = ParentFormsPage.MainProject.Id }, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.UpdateOrCreateDocumentSchemeAsync(new() { Payload = new EntryConstructedModel() { Id = DocumentScheme.Id, Name = DocumentNameOrigin, Description = DocumentDescriptionOrigin, ProjectId = ParentFormsPage.MainProject.Id }, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);

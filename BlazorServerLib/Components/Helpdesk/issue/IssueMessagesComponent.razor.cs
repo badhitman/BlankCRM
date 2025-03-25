@@ -62,7 +62,7 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
     public async Task ReloadMessages()
     {
         await SetBusy();
-        TResponseModel<IssueMessageHelpdeskModelDB[]> messages_rest = await HelpdeskRepo.MessagesList(new()
+        TResponseModel<IssueMessageHelpdeskModelDB[]> messages_rest = await HelpdeskRepo.MessagesListAsync(new()
         {
             Payload = Issue.Id,
             SenderActionUserId = CurrentUserSession!.UserId,
@@ -83,7 +83,7 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
 
         if (users_for_adding.Length != 0)
         {
-            TResponseModel<UserInfoModel[]> users_data_identity = await IdentityRepo.GetUsersIdentity([.. users_for_adding.Distinct()]);
+            TResponseModel<UserInfoModel[]> users_data_identity = await IdentityRepo.GetUsersIdentityAsync([.. users_for_adding.Distinct()]);
             SnackbarRepo.ShowMessagesResponse(users_data_identity.Messages);
             if (users_data_identity.Response is not null && users_data_identity.Response.Length != 0)
                 UsersIdentityDump.AddRange(users_data_identity.Response);

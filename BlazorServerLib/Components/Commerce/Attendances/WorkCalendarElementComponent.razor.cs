@@ -56,7 +56,7 @@ public partial class WorkCalendarElementComponent : BlazorBusyComponentBaseAuthM
             return;
 
         await SetBusy();
-        TResponseModel<int> res = await CommerceRepo.CalendarScheduleUpdate(new() { Payload = editWorkScheduleCalendar, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> res = await CommerceRepo.CalendarScheduleUpdateAsync(new() { Payload = editWorkScheduleCalendar, SenderActionUserId = CurrentUserSession.UserId });
         WorkScheduleCalendar = GlobalTools.CreateDeepCopy(editWorkScheduleCalendar)!;
         await SetBusy(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);

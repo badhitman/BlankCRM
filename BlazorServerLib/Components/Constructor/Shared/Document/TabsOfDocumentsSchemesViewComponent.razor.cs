@@ -59,7 +59,7 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
 
         await SetBusy();
 
-        TPaginationResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.SelectForms(new() { ProjectId = ParentFormsPage.MainProject.Id, Request = AltSimplePaginationRequestModel.Build(null, int.MaxValue, 0, true) });
+        TPaginationResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.SelectFormsAsync(new() { ProjectId = ParentFormsPage.MainProject.Id, Request = AltSimplePaginationRequestModel.Build(null, int.MaxValue, 0, true) });
 
         IsBusyProgress = false;
 
@@ -76,7 +76,7 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
         {
             await SetBusy();
             StateHasChanged();
-            TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetDocumentScheme(DocumentScheme.Id);
+            TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetDocumentSchemeAsync(DocumentScheme.Id);
             IsBusyProgress = false;
             SnackbarRepo.ShowMessagesResponse(rest.Messages);
             if (rest.Response is null)

@@ -71,7 +71,7 @@ public partial class LoginPage(IUsersAuthenticateService UserAuthManage, Navigat
     /// </summary>
     public async Task OnValidSubmit()
     {
-        result = await UserAuthManage.PasswordSignIn(Input.Email, Input.Password, Input.RememberMe);
+        result = await UserAuthManage.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe);
         Messages.AddRange(result.Messages);
         if (result.RequiresTwoFactor == true)
             return;
@@ -88,7 +88,7 @@ public partial class LoginPage(IUsersAuthenticateService UserAuthManage, Navigat
             return;
 
         string authenticatorCode = TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
-        IdentityResultResponseModel result = await AuthRepo.TwoFactorAuthenticatorSignIn(authenticatorCode, true, Input.RememberMe, UserAlias);
+        IdentityResultResponseModel result = await AuthRepo.TwoFactorAuthenticatorSignInAsync(authenticatorCode, true, Input.RememberMe, UserAlias);
 
         if (result.Succeeded == true)
         {

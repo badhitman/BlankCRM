@@ -60,7 +60,7 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
             return;
         }
 
-        TResponseModel<int> res = await HelpdeskRepo.IssueCreateOrUpdate(new()
+        TResponseModel<int> res = await HelpdeskRepo.IssueCreateOrUpdateAsync(new()
         {
             SenderActionUserId = UserIdentityId,
             Payload = new()

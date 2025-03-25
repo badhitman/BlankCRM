@@ -27,7 +27,7 @@ public class UsersAuthenticateService(
     UserManageConfigModel UserConfMan => userManageConfig.Value;
 
     /// <inheritdoc/>
-    public async Task<IdentityResultResponseModel> TwoFactorAuthenticatorSignIn(string code, bool isPersistent, bool rememberClient, string? userAlias = null, CancellationToken token = default)
+    public async Task<IdentityResultResponseModel> TwoFactorAuthenticatorSignInAsync(string code, bool isPersistent, bool rememberClient, string? userAlias = null, CancellationToken token = default)
     {
         string authenticatorCode = code.Replace(" ", string.Empty).Replace("-", string.Empty);
 
@@ -45,7 +45,7 @@ public class UsersAuthenticateService(
         }
         else if (!string.IsNullOrWhiteSpace(userAlias))
         {
-            TResponseModel<string> checkToken = await identityRepo.CheckToken2FA(new() { Token = authenticatorCode, UserAlias = userAlias }, token);
+            TResponseModel<string> checkToken = await identityRepo.CheckToken2FAAsync(new() { Token = authenticatorCode, UserAlias = userAlias }, token);
             if (checkToken.Success() && !string.IsNullOrWhiteSpace(checkToken.Response))
             {
                 ApplicationUser? user = await userManager.FindByIdAsync(checkToken.Response);
@@ -80,7 +80,7 @@ public class UsersAuthenticateService(
                         Messages = [new() { Text = "Email пользователя не подтверждён", TypeMessage = ResultTypesEnum.Error }]
                     };
 
-                await SignIn(checkToken.Response, isPersistent, token);
+                await SignInAsync(checkToken.Response, isPersistent, token);
                 return new()
                 {
                     Succeeded = true,
@@ -96,7 +96,7 @@ public class UsersAuthenticateService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel?>> GetTwoFactorAuthenticationUser(CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel?>> GetTwoFactorAuthenticationUserAsync(CancellationToken token = default)
     {
         ApplicationUser? au = await signInManager.GetTwoFactorAuthenticationUserAsync();
         if (au is null)
@@ -120,7 +120,7 @@ public class UsersAuthenticateService(
     }
 
     /// <inheritdoc/>
-    public async Task<IdentityResultResponseModel> TwoFactorRecoveryCodeSignIn(string recoveryCode, CancellationToken token = default)
+    public async Task<IdentityResultResponseModel> TwoFactorRecoveryCodeSignInAsync(string recoveryCode, CancellationToken token = default)
     {
         string msg;
         ApplicationUser? user = await signInManager.GetTwoFactorAuthenticationUserAsync();
@@ -160,7 +160,7 @@ public class UsersAuthenticateService(
     }
 
     /// <inheritdoc/>
-    public async Task<UserLoginInfoResponseModel> GetExternalLoginInfo(string? expectedXsrf = null, CancellationToken token = default)
+    public async Task<UserLoginInfoResponseModel> GetExternalLoginInfoAsync(string? expectedXsrf = null, CancellationToken token = default)
     {
         ExternalLoginInfo? info = await signInManager.GetExternalLoginInfoAsync(expectedXsrf);
 
@@ -173,7 +173,7 @@ public class UsersAuthenticateService(
     }
 
     /// <inheritdoc/>
-    public async Task<ExternalLoginSignInResponseModel> ExternalLoginSignIn(string loginProvider, string providerKey, string? identityName, bool isPersistent = false, bool bypassTwoFactor = true, CancellationToken token = default)
+    public async Task<ExternalLoginSignInResponseModel> ExternalLoginSignInAsync(string loginProvider, string providerKey, string? identityName, bool isPersistent = false, bool bypassTwoFactor = true, CancellationToken token = default)
     {
         // Sign in the user with this external login provider if the user already has a login.
         SignInResult result = await signInManager.ExternalLoginSignInAsync(
@@ -217,12 +217,12 @@ public class UsersAuthenticateService(
     }
 
     /// <inheritdoc/>
-    public async Task<RegistrationNewUserResponseModel> RegisterNewUser(RegisterNewUserPasswordModel req, CancellationToken token = default)
+    public async Task<RegistrationNewUserResponseModel> RegisterNewUserAsync(RegisterNewUserPasswordModel req, CancellationToken token = default)
     {
         if (!UserConfMan.UserRegistrationIsAllowed(req.Email))
             return new() { Messages = [new() { Text = $"Ошибка регистрации {UserConfMan.DenyAuthorization?.Message}", TypeMessage = ResultTypesEnum.Error }] };
 
-        RegistrationNewUserResponseModel regUserRes = await identityRepo.CreateNewUserWithPassword(req, token);
+        RegistrationNewUserResponseModel regUserRes = await identityRepo.CreateNewUserWithPasswordAsync(req, token);
         if (!regUserRes.Success() || string.IsNullOrWhiteSpace(regUserRes.Response) || regUserRes.RequireConfirmedEmail == true)
             return regUserRes;
 
@@ -238,13 +238,13 @@ public class UsersAuthenticateService(
     }
 
     /// <inheritdoc/>
-    public async Task<RegistrationNewUserResponseModel> ExternalRegisterNewUser(string userEmail, string baseAddress, CancellationToken token = default)
+    public async Task<RegistrationNewUserResponseModel> ExternalRegisterNewUserAsync(string userEmail, string baseAddress, CancellationToken token = default)
     {
         ExternalLoginInfo? externalLoginInfo = await signInManager.GetExternalLoginInfoAsync();
         if (externalLoginInfo == null)
             return (RegistrationNewUserResponseModel)ResponseBaseModel.CreateError("externalLoginInfo == null. error {D991FA4A-9566-4DD4-B23A-DEB497931FF5}");
 
-        RegistrationNewUserResponseModel regUserRes = await identityRepo.CreateNewUser(userEmail, token);
+        RegistrationNewUserResponseModel regUserRes = await identityRepo.CreateNewUserAsync(userEmail, token);
         if (!regUserRes.Success() || string.IsNullOrWhiteSpace(regUserRes.Response))
             return regUserRes;
 
@@ -260,7 +260,7 @@ public class UsersAuthenticateService(
         {
             loggerRepo.LogInformation("Пользователь создал учетную запись с помощью провайдера {Name}.", externalLoginInfo.LoginProvider);
 
-            ResponseBaseModel genConfirm = await identityRepo.GenerateEmailConfirmation(new() { BaseAddress = baseAddress, Email = userEmail }, token);
+            ResponseBaseModel genConfirm = await identityRepo.GenerateEmailConfirmationAsync(new() { BaseAddress = baseAddress, Email = userEmail }, token);
             if (!genConfirm.Success() || regUserRes.RequireConfirmedAccount == true)
             {
                 regUserRes.AddRangeMessages(genConfirm.Messages);
@@ -282,7 +282,7 @@ public class UsersAuthenticateService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SignIn(string userId, bool isPersistent, CancellationToken token = default)
+    public async Task<ResponseBaseModel> SignInAsync(string userId, bool isPersistent, CancellationToken token = default)
     {
         ApplicationUser? user = await userManager.FindByIdAsync(userId);
         if (user is null)
@@ -293,7 +293,7 @@ public class UsersAuthenticateService(
     }
 
     /// <inheritdoc/>
-    public async Task<SignInResultResponseModel> PasswordSignIn(string userEmail, string password, bool isPersistent, CancellationToken token = default)
+    public async Task<SignInResultResponseModel> PasswordSignInAsync(string userEmail, string password, bool isPersistent, CancellationToken token = default)
     {
         if (!UserConfMan.UserAuthorizationIsAllowed(userEmail))
             return new() { Messages = [new() { Text = $"Ошибка авторизации {UserConfMan.DenyAuthorization?.Message}", TypeMessage = ResultTypesEnum.Error }] };
@@ -306,21 +306,21 @@ public class UsersAuthenticateService(
         TResponseModel<bool?> globalEnable2FA = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.GlobalEnable2FA, token);
         if (globalEnable2FA.Response == true)
         {
-            ResponseBaseModel chkUserPass = await identityRepo.CheckUserPassword(new() { Password = password, UserId = currentAppUser.Id }, token);
+            ResponseBaseModel chkUserPass = await identityRepo.CheckUserPasswordAsync(new() { Password = password, UserId = currentAppUser.Id }, token);
 
             if (!chkUserPass.Success())
                 return new() { Messages = chkUserPass.Messages };
 
-            TResponseModel<string> otp = await identityRepo.GenerateToken2FA(currentAppUser.Id, token);
+            TResponseModel<string> otp = await identityRepo.GenerateToken2FAAsync(currentAppUser.Id, token);
             res.RequiresTwoFactor = true;
             res.UserId = otp.Response;
             return res;
         }
 
-        await identityRepo.ClaimsUserFlush(currentAppUser.Id, token);
+        await identityRepo.ClaimsUserFlushAsync(currentAppUser.Id, token);
         FlushUserRolesModel? user_flush = userManageConfig.Value.UpdatesUsersRoles?.FirstOrDefault(x => x.EmailUser.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
         if (user_flush is not null)
-            await identityRepo.TryAddRolesToUser(new() { RolesNames = user_flush.SetRoles, UserId = currentAppUser.Id }, token);
+            await identityRepo.TryAddRolesToUserAsync(new() { RolesNames = user_flush.SetRoles, UserId = currentAppUser.Id }, token);
 
         SignInResult sr = await signInManager.PasswordSignInAsync(userEmail, password, isPersistent, lockoutOnFailure: true);
 
@@ -329,7 +329,7 @@ public class UsersAuthenticateService(
             if (sr.RequiresTwoFactor)
             {
                 res.AddError("Error: RequiresTwoFactor");
-                TResponseModel<string> otp = await identityRepo.GenerateToken2FA(currentAppUser.Id, token);
+                TResponseModel<string> otp = await identityRepo.GenerateToken2FAAsync(currentAppUser.Id, token);
                 return new() { RequiresTwoFactor = true, Messages = res.Messages, UserId = otp.Response };
             }
 
@@ -353,7 +353,7 @@ public class UsersAuthenticateService(
     }
 
     /// <inheritdoc/>
-    public async Task SignOut(CancellationToken token = default)
+    public async Task SignOutAsync(CancellationToken token = default)
     {
         if (httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true)
             await signInManager.SignOutAsync();

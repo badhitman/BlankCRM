@@ -55,7 +55,7 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     {
         await SetBusy(token: token);
         TPaginationResponseModel<MessageTelegramModelDB> rest_message = await TelegramRepo
-            .MessagesTelegramSelect(new TPaginationRequestModel<SearchMessagesChatModel>()
+            .MessagesTelegramSelectAsync(new TPaginationRequestModel<SearchMessagesChatModel>()
             {
                 Payload = new() { ChatId = ChatId, SearchQuery = SearchStringQuery },
                 PageNum = state.Page,

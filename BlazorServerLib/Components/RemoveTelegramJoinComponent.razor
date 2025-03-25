@@ -54,8 +54,8 @@ else
         await SetBusy();
 
         ResponseBaseModel rest = TelegramUserId.HasValue
-        ? await IdentityRepo.TelegramJoinAccountDelete(new() { TelegramId = TelegramUserId.Value, ClearBaseUri = webConfig.Value.ClearBaseUri ?? "https://" })
-        : await IdentityRepo.TelegramAccountRemoveIdentityJoin(new() { UserId = IdentityUserId!, ClearBaseUri = webConfig.Value.ClearBaseUri ?? "https://" });
+        ? await IdentityRepo.TelegramJoinAccountDeleteAsync(new() { TelegramId = TelegramUserId.Value, ClearBaseUri = webConfig.Value.ClearBaseUri ?? "https://" })
+        : await IdentityRepo.TelegramAccountRemoveIdentityJoinAsync(new() { UserId = IdentityUserId!, ClearBaseUri = webConfig.Value.ClearBaseUri ?? "https://" });
         IsBusyProgress = false;
         DeleteInit = false;
         if (!rest.Success())

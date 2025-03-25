@@ -84,7 +84,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentity([workSchedules.SenderActionUserId], token);
+        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentityAsync([workSchedules.SenderActionUserId], token);
         if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length == 0)
         {
             res.AddRangeMessages(actorRes.Messages);
@@ -164,7 +164,7 @@ public partial class CommerceImplementService : ICommerceService
             {
                 if (string.IsNullOrWhiteSpace(_webConf.ClearBaseUri))
                 {
-                    TelegramBotConfigModel wc = await webTransmissionRepo.GetWebConfig();
+                    TelegramBotConfigModel wc = await webTransmissionRepo.GetWebConfigAsync();
                     _webConf.BaseUri = wc.ClearBaseUri;
                 }
             }, token));
@@ -210,7 +210,7 @@ public partial class CommerceImplementService : ICommerceService
             },
         };
 
-        TResponseModel<int> issue = await HelpdeskRepo.IssueCreateOrUpdate(issue_new, token);
+        TResponseModel<int> issue = await HelpdeskRepo.IssueCreateOrUpdateAsync(issue_new, token);
         if (!issue.Success())
         {
             await transaction.RollbackAsync(token);
@@ -237,7 +237,7 @@ public partial class CommerceImplementService : ICommerceService
                 SenderActionUserId = workSchedules.SenderActionUserId,
             }
         };
-        await HelpdeskRepo.PulsePush(reqPulse, false, token);
+        await HelpdeskRepo.PulsePushAsync(reqPulse, false, token);
 
         string subject_email = "Создана новая бронь";
         DateTime _dt = DateTime.UtcNow.GetCustomTime();
@@ -263,10 +263,10 @@ public partial class CommerceImplementService : ICommerceService
             msg_for_tg = CommerceNewOrderBodyNotificationTelegram.Response;
         msg_for_tg = IHelpdeskService.ReplaceTags(msg_for_tg, _dt, issue.Response, StatusesDocumentsEnum.Created, msg_for_tg, _webConf.ClearBaseUri, _about_order);
 
-        tasks = [identityRepo.SendEmail(new() { Email = actor.Email!, Subject = subject_email, TextMessage = msg }, false, token)];
+        tasks = [identityRepo.SendEmailAsync(new() { Email = actor.Email!, Subject = subject_email, TextMessage = msg }, false, token)];
 
         if (actor.TelegramId.HasValue)
-            tasks.Add(tgRepo.SendTextMessageTelegram(new() { Message = msg_for_tg, UserTelegramId = actor.TelegramId!.Value }, false, token));
+            tasks.Add(tgRepo.SendTextMessageTelegramAsync(new() { Message = msg_for_tg, UserTelegramId = actor.TelegramId!.Value }, false, token));
 
         if (!string.IsNullOrWhiteSpace(actor.PhoneNumber) && GlobalTools.IsPhoneNumber(actor.PhoneNumber!))
         {
@@ -276,7 +276,7 @@ public partial class CommerceImplementService : ICommerceService
                 if (CommerceNewOrderBodyNotificationWhatsapp.Success() && !string.IsNullOrWhiteSpace(CommerceNewOrderBodyNotificationWhatsapp.Response))
                     waMsg = CommerceNewOrderBodyNotificationWhatsapp.Response;
 
-                await tgRepo.SendWappiMessage(new() { Number = actor.PhoneNumber!, Text = IHelpdeskService.ReplaceTags(waMsg, _dt, issue.Response, StatusesDocumentsEnum.Created, waMsg, _webConf.ClearBaseUri, _about_order, true) }, false);
+                await tgRepo.SendWappiMessageAsync(new() { Number = actor.PhoneNumber!, Text = IHelpdeskService.ReplaceTags(waMsg, _dt, issue.Response, StatusesDocumentsEnum.Created, waMsg, _webConf.ClearBaseUri, _about_order, true) }, false);
             }, token));
         }
 
@@ -299,7 +299,7 @@ public partial class CommerceImplementService : ICommerceService
         await Task.WhenAll([
             Task.Run(async () => { orderAttendanceDB = await context.AttendancesReg.FirstOrDefaultAsync(x => x.Id == req.Payload); }, token),
             Task.Run(async () => {
-                TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentity([req.SenderActionUserId]);
+                TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId]);
                 if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length != 1)
                 {
                     res.AddRangeMessages(actorRes.Messages);
@@ -339,7 +339,7 @@ public partial class CommerceImplementService : ICommerceService
                         }
                     };
 
-                    await HelpdeskRepo.PulsePush(reqPulse, false, token);
+                    await HelpdeskRepo.PulsePushAsync(reqPulse, false, token);
                 }
             }
             else
@@ -355,7 +355,7 @@ public partial class CommerceImplementService : ICommerceService
     public async Task<TResponseModel<bool>> RecordsAttendancesStatusesChangeByHelpdeskIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<bool> res = new();
-        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentity([req.SenderActionUserId], token);
+        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
         if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length == 0)
         {
             res.AddRangeMessages(actorRes.Messages);
@@ -462,7 +462,7 @@ public partial class CommerceImplementService : ICommerceService
             reqPulse.Payload.Payload.Description += $"Восстановление записей/брони: {string.Join(";", ordersDb.Select(x => x.ToString()))};";
             reqPulse.Payload.Payload.Tag = GlobalStaticConstants.Routes.SET_ACTION_NAME;
         }
-        await HelpdeskRepo.PulsePush(reqPulse, false, token);
+        await HelpdeskRepo.PulsePushAsync(reqPulse, false, token);
         context.RemoveRange(offersLocked);
         await context.SaveChangesAsync(token);
         res.Response = await context

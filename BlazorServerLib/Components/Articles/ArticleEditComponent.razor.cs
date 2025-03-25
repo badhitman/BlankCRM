@@ -44,7 +44,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy();
 
-        TResponseModel<int> res = await ArticlesRepo.ArticleCreateOrUpdate(editArticle);
+        TResponseModel<int> res = await ArticlesRepo.ArticleCreateOrUpdateAsync(editArticle);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (editArticle.Id < 1 && res.Response > 0)
@@ -60,7 +60,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
     {
         await SetBusy();
 
-        TResponseModel<ArticleModelDB[]> res = await ArticlesRepo.ArticlesRead([ArticleId]);
+        TResponseModel<ArticleModelDB[]> res = await ArticlesRepo.ArticlesReadAsync([ArticleId]);
         await SetBusy(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is null)
@@ -75,7 +75,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
             return;
 
         await SetBusy();
-        ResponseBaseModel res = await ArticlesRepo.UpdateRubricsForArticle(new() { ArticleId = ArticleId, RubricsIds = req.Select(x => x!.Id).ToArray() });
+        ResponseBaseModel res = await ArticlesRepo.UpdateRubricsForArticleAsync(new() { ArticleId = ArticleId, RubricsIds = req.Select(x => x!.Id).ToArray() });
         await LoadArticleData();
         // await SetBusy(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);

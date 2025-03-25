@@ -12,5 +12,5 @@ public interface IWebTransmission
     /// <summary>
     /// Получить `web config` сайта
     /// </summary>
-    public Task<TelegramBotConfigModel> GetWebConfig(CancellationToken token = default);
+    public Task<TelegramBotConfigModel> GetWebConfigAsync(CancellationToken token = default);
 }

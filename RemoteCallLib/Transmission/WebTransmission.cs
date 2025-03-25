@@ -12,6 +12,6 @@ namespace RemoteCallLib;
 public class WebTransmission(IRabbitClient rabbitClient) : IWebTransmission
 {
     /// <inheritdoc/>
-    public async Task<TelegramBotConfigModel> GetWebConfig(CancellationToken token = default)
+    public async Task<TelegramBotConfigModel> GetWebConfigAsync(CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TelegramBotConfigModel>(GlobalStaticConstants.TransmissionQueues.GetWebConfigReceive, token: token) ?? new();
 }

@@ -72,7 +72,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
 
         await SetBusy();
 
-        TResponseModel<int> res = await HelpdeskRepo.IssueCreateOrUpdate(new()
+        TResponseModel<int> res = await HelpdeskRepo.IssueCreateOrUpdateAsync(new()
         {
             SenderActionUserId = CurrentUserSession!.UserId,
             Payload = new()
@@ -103,7 +103,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
         {
             await SetBusy();
 
-            TResponseModel<List<RubricIssueHelpdeskModelDB>> res = await HelpdeskRepo.RubricRead(Issue.RubricIssueId.Value);
+            TResponseModel<List<RubricIssueHelpdeskModelDB>> res = await HelpdeskRepo.RubricReadAsync(Issue.RubricIssueId.Value);
             IsBusyProgress = false;
             SnackbarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;

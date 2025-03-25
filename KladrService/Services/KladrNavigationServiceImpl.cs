@@ -14,7 +14,7 @@ namespace KladrService;
 public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbFactory) : IKladrNavigationService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<KladrResponseModel>> ObjectGet(KladrsRequestBaseModel req, CancellationToken token = default)
+    public async Task<TResponseModel<KladrResponseModel>> ObjectGetAsync(KladrsRequestBaseModel req, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(req.Code))
             throw new NotImplementedException();
@@ -473,7 +473,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         List<KladrResponseModel> fullData = [];
         await Task.WhenAll(dbRows.Select(x => Task.Run(async () =>
         {
-            TResponseModel<KladrResponseModel> objDb = await ObjectGet(new() { Code = x });
+            TResponseModel<KladrResponseModel> objDb = await ObjectGetAsync(new() { Code = x });
             if (objDb.Response is not null)
                 lock (fullData)
                 {
@@ -529,7 +529,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         List<KladrResponseModel> fullData = [];
         await Task.WhenAll(dbRows.Select(x => Task.Run(async () =>
         {
-            TResponseModel<KladrResponseModel> objDb = await ObjectGet(new() { Code = x });
+            TResponseModel<KladrResponseModel> objDb = await ObjectGetAsync(new() { Code = x });
             if (objDb.Response is not null)
                 lock (fullData)
                 {

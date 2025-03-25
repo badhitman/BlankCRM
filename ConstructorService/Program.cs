@@ -150,7 +150,7 @@ using (IServiceScope ss = host.Services.CreateScope())
 {
     IOptions<ConstructorConfigModel> wc_main = ss.ServiceProvider.GetRequiredService<IOptions<ConstructorConfigModel>>();
     IWebTransmission webRemoteCall = ss.ServiceProvider.GetRequiredService<IWebTransmission>();
-    wc_main.Value.WebConfig = await webRemoteCall.GetWebConfig();
+    wc_main.Value.WebConfig = await webRemoteCall.GetWebConfigAsync();
 }
 
 host.Run();

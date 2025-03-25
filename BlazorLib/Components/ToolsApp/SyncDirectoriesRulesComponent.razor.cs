@@ -54,7 +54,7 @@ public partial class SyncDirectoriesRulesComponent : BlazorBusyComponentBaseMode
     async Task ReloadDirectories()
     {
         await SetBusy();
-        SyncDirectories = await AppManagerRepo.GetSyncDirectoriesForConfig(ApiConnect.Id);
+        SyncDirectories = await AppManagerRepo.GetSyncDirectoriesForConfigAsync(ApiConnect.Id);
         await SetBusy(false);
     }
 

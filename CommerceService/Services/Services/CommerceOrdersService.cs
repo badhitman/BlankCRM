@@ -871,7 +871,7 @@ public partial class CommerceImplementService(
 
         req.Name = req.Name.Trim();
 
-        TResponseModel<UserInfoModel[]> actor = await identityRepo.GetUsersIdentity([req.AuthorIdentityUserId], token);
+        TResponseModel<UserInfoModel[]> actor = await identityRepo.GetUsersIdentityAsync([req.AuthorIdentityUserId], token);
         if (!actor.Success() || actor.Response is null || actor.Response.Length == 0)
         {
             res.AddRangeMessages(actor.Messages);
@@ -915,7 +915,7 @@ public partial class CommerceImplementService(
                 return res;
 
             int[] rubricsIds = [.. req.OfficesTabs.Select(x => x.WarehouseId).Distinct()];
-            TResponseModel<List<RubricIssueHelpdeskModelDB>> getRubrics = await HelpdeskRepo.RubricsGet(rubricsIds, token);
+            TResponseModel<List<RubricIssueHelpdeskModelDB>> getRubrics = await HelpdeskRepo.RubricsGetAsync(rubricsIds, token);
             if (!getRubrics.Success())
             {
                 res.AddRangeMessages(getRubrics.Messages);
@@ -979,7 +979,7 @@ public partial class CommerceImplementService(
                 {
                     if (string.IsNullOrWhiteSpace(_webConf.ClearBaseUri))
                     {
-                        TelegramBotConfigModel wc = await webTransmissionRepo.GetWebConfig();
+                        TelegramBotConfigModel wc = await webTransmissionRepo.GetWebConfigAsync();
                         _webConf.BaseUri = wc.ClearBaseUri;
                     }
                 }, token));
@@ -1037,7 +1037,7 @@ public partial class CommerceImplementService(
                     },
                 };
 
-                TResponseModel<int> issue = await HelpdeskRepo.IssueCreateOrUpdate(issue_new, token);
+                TResponseModel<int> issue = await HelpdeskRepo.IssueCreateOrUpdateAsync(issue_new, token);
                 if (!issue.Success())
                 {
                     await transaction.RollbackAsync(token);
@@ -1072,10 +1072,10 @@ public partial class CommerceImplementService(
                     msg_for_tg = CommerceNewOrderBodyNotificationTelegram.Response;
                 msg_for_tg = IHelpdeskService.ReplaceTags(msg_for_tg, _dt, issue.Response, StatusesDocumentsEnum.Created, msg_for_tg, _webConf.ClearBaseUri, _about_order);
 
-                tasks = [identityRepo.SendEmail(new() { Email = actor.Response[0].Email!, Subject = subject_email, TextMessage = msg }, false, token)];
+                tasks = [identityRepo.SendEmailAsync(new() { Email = actor.Response[0].Email!, Subject = subject_email, TextMessage = msg }, false, token)];
 
                 if (actor.Response[0].TelegramId.HasValue)
-                    tasks.Add(tgRepo.SendTextMessageTelegram(new() { Message = msg_for_tg, UserTelegramId = actor.Response[0].TelegramId!.Value }, false));
+                    tasks.Add(tgRepo.SendTextMessageTelegramAsync(new() { Message = msg_for_tg, UserTelegramId = actor.Response[0].TelegramId!.Value }, false));
 
                 if (!string.IsNullOrWhiteSpace(actor.Response[0].PhoneNumber) && GlobalTools.IsPhoneNumber(actor.Response[0].PhoneNumber!))
                 {
@@ -1085,7 +1085,7 @@ public partial class CommerceImplementService(
                         if (CommerceNewOrderBodyNotificationWhatsapp.Success() && !string.IsNullOrWhiteSpace(CommerceNewOrderBodyNotificationWhatsapp.Response))
                             waMsg = CommerceNewOrderBodyNotificationWhatsapp.Response;
 
-                        await tgRepo.SendWappiMessage(new() { Number = actor.Response[0].PhoneNumber!, Text = IHelpdeskService.ReplaceTags(waMsg, _dt, issue.Response, StatusesDocumentsEnum.Created, waMsg, _webConf.ClearBaseUri, _about_order, true) }, false);
+                        await tgRepo.SendWappiMessageAsync(new() { Number = actor.Response[0].PhoneNumber!, Text = IHelpdeskService.ReplaceTags(waMsg, _dt, issue.Response, StatusesDocumentsEnum.Created, waMsg, _webConf.ClearBaseUri, _about_order, true) }, false);
                     }, token));
                 }
 
@@ -1267,7 +1267,7 @@ public partial class CommerceImplementService(
         TResponseModel<UserInfoModel[]> rest = default!;
         TResponseModel<OrderDocumentModelDB[]> orderData = default!;
         List<Task> _taskList = [
-            Task.Run(async () => { rest = await identityRepo.GetUsersIdentity([req.SenderActionUserId]); }, token),
+            Task.Run(async () => { rest = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId]); }, token),
             Task.Run(async () => { orderData = await OrdersReadAsync(new(){ Payload = [req.Payload], SenderActionUserId = req.SenderActionUserId }); }, token)];
 
         await Task.WhenAll(_taskList);
@@ -1287,7 +1287,7 @@ public partial class CommerceImplementService(
         bool allowed = actor.IsAdmin || orderDb.AuthorIdentityUserId == actor.UserId || actor.UserId == GlobalStaticConstants.Roles.System;
         if (!allowed && orderDb.HelpdeskId.HasValue && orderDb.HelpdeskId.Value > 0)
         {
-            TResponseModel<IssueHelpdeskModelDB[]> issueData = await HelpdeskRepo.IssuesRead(new TAuthRequestModel<IssuesReadRequestModel>()
+            TResponseModel<IssueHelpdeskModelDB[]> issueData = await HelpdeskRepo.IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
             {
                 SenderActionUserId = req.SenderActionUserId,
                 Payload = new()
@@ -1390,7 +1390,7 @@ public partial class CommerceImplementService(
         }
 
         int[] rubricsIds = offersAll.SelectMany(x => x.Registers!).Select(x => x.WarehouseId).Distinct().ToArray();
-        TResponseModel<List<RubricIssueHelpdeskModelDB>> rubricsDb = await HelpdeskRepo.RubricsGet(rubricsIds);
+        TResponseModel<List<RubricIssueHelpdeskModelDB>> rubricsDb = await HelpdeskRepo.RubricsGetAsync(rubricsIds);
         List<IGrouping<NomenclatureModelDB?, OfferModelDB>> gof = offersAll.GroupBy(x => x.Nomenclature).Where(x => x.Any(y => y.Registers!.Any(z => z.Quantity > 0))).ToList();
         try
         {

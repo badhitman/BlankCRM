@@ -59,7 +59,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
                 {
                     await SetBusy();
 
-                    TResponseModel<EntryDescriptionModel> rest = await ConstructorRepo.GetDirectory(value);
+                    TResponseModel<EntryDescriptionModel> rest = await ConstructorRepo.GetDirectoryAsync(value);
                     IsBusyProgress = false;
 
                     if (rest.Response is null)
@@ -113,7 +113,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     {
         await SetBusy();
 
-        ResponseBaseModel rest = await ConstructorRepo.DeleteDirectory(new() { Payload = SelectedDirectoryId, SenderActionUserId = CurrentUserSession!.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.DeleteDirectoryAsync(new() { Payload = SelectedDirectoryId, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
 
@@ -135,7 +135,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy();
 
-        TResponseModel<int> rest = await ConstructorRepo.UpdateOrCreateDirectory(new() { Payload = new() { Name = directoryObject.Name, ProjectId = ParentFormsPage.MainProject.Id, Description = Description }, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<int> rest = await ConstructorRepo.UpdateOrCreateDirectoryAsync(new() { Payload = new() { Name = directoryObject.Name, ProjectId = ParentFormsPage.MainProject.Id, Description = Description }, SenderActionUserId = CurrentUserSession!.UserId });
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Success())
         {
@@ -155,7 +155,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
         ResetNavForm();
         await SetBusy();
 
-        TResponseModel<EntryDescriptionModel> res = await ConstructorRepo.GetDirectory(_selected_dir_id);
+        TResponseModel<EntryDescriptionModel> res = await ConstructorRepo.GetDirectoryAsync(_selected_dir_id);
         IsBusyProgress = false;
 
         if (res.Response is null)
@@ -173,7 +173,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy();
 
-        TResponseModel<int> rest = await ConstructorRepo.UpdateOrCreateDirectory(new()
+        TResponseModel<int> rest = await ConstructorRepo.UpdateOrCreateDirectoryAsync(new()
         {
             Payload = EntryConstructedModel.Build(directoryObject, ParentFormsPage.MainProject.Id, Description),
             SenderActionUserId = CurrentUserSession!.UserId
@@ -212,7 +212,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy();
 
-        TResponseModel<EntryModel[]> rest = await ConstructorRepo.GetDirectories(new() { ProjectId = ParentFormsPage.MainProject.Id });
+        TResponseModel<EntryModel[]> rest = await ConstructorRepo.GetDirectoriesAsync(new() { ProjectId = ParentFormsPage.MainProject.Id });
 
         allDirectories = rest.Response ?? throw new Exception();
 

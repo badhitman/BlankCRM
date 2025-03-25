@@ -59,7 +59,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
         if (!q.Any())
             return;
 
-        TResponseModel<IssueHelpdeskModelDB[]> res = await HelpdeskRepo.IssuesRead(new()
+        TResponseModel<IssueHelpdeskModelDB[]> res = await HelpdeskRepo.IssuesReadAsync(new()
         {
             SenderActionUserId = CurrentUserSession!.UserId,
             Payload = new()
@@ -96,7 +96,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusy(token: token);
 
-        TPaginationResponseModel<OrderDocumentModelDB> res = await CommerceRepo.OrdersSelect(req);
+        TPaginationResponseModel<OrderDocumentModelDB> res = await CommerceRepo.OrdersSelectAsync(req);
         IsBusyProgress = false;
 
         if (res.Response is null)

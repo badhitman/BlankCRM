@@ -43,7 +43,7 @@ public partial class EnableAuthenticatorPage : BlazorBusyComponentBaseAuthModel
     {
         // Strip spaces and hyphens
         string verificationCode = Input.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
-        var is_2fa_token_valid_rest = await UsersProfilesRepo.VerifyTwoFactorToken(verificationCode);
+        var is_2fa_token_valid_rest = await UsersProfilesRepo.VerifyTwoFactorTokenAsync(verificationCode);
         Messages = is_2fa_token_valid_rest.Messages;
         if (!is_2fa_token_valid_rest.Success())
         {
@@ -51,21 +51,21 @@ public partial class EnableAuthenticatorPage : BlazorBusyComponentBaseAuthModel
             return;
         }
 
-        ResponseBaseModel stf_res = await UsersProfilesRepo.SetTwoFactorEnabled(true);
+        ResponseBaseModel stf_res = await UsersProfilesRepo.SetTwoFactorEnabledAsync(true);
         Messages.AddRange(stf_res.Messages);
         if (!stf_res.Success())
             return;
 
         Messages.Add(new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = "Ваше приложение-аутентификатор проверено." });
 
-        TResponseModel<int?> cnt_rc = await UsersProfilesRepo.CountRecoveryCodes();
+        TResponseModel<int?> cnt_rc = await UsersProfilesRepo.CountRecoveryCodesAsync();
         Messages.AddRange(cnt_rc.Messages);
         if (!cnt_rc.Success() || cnt_rc.Response is null)
             return;
 
         if (cnt_rc.Response.Value == 0)
         {
-            TResponseModel<IEnumerable<string>?> rc_res = await UsersProfilesRepo.GenerateNewTwoFactorRecoveryCodes();
+            TResponseModel<IEnumerable<string>?> rc_res = await UsersProfilesRepo.GenerateNewTwoFactorRecoveryCodesAsync();
             Messages.AddRange(rc_res.Messages);
             recoveryCodes = rc_res.Response;
         }
@@ -87,7 +87,7 @@ public partial class EnableAuthenticatorPage : BlazorBusyComponentBaseAuthModel
         }
 
         // Load the authenticator key & QR code URI to display on the form
-        TResponseModel<string?> unformatted_key_rest = await UsersProfilesRepo.GetAuthenticatorKey();
+        TResponseModel<string?> unformatted_key_rest = await UsersProfilesRepo.GetAuthenticatorKeyAsync();
         if (string.IsNullOrEmpty(unformatted_key_rest.Response))
         {
             msg = "string.IsNullOrEmpty(unformatted_key_rest.ResponseString). error {F0A2EF98-5C04-46D2-8A93-711BC9827EF9}";

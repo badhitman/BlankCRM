@@ -102,7 +102,7 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
         };
         await SetBusy();
         
-        TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.SetValueFieldSessionDocumentData(req);
+        TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.SetValueFieldSessionDocumentDataAsync(req);
         IsBusyProgress = false;
 
         if (!rest.Success())

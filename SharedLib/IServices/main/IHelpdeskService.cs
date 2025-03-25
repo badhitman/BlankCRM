@@ -139,5 +139,5 @@ public interface IHelpdeskService
     /// <summary>
     /// Очистить кеш сегмента консоли
     /// </summary>
-    public Task ConsoleSegmentCacheEmpty(StatusesDocumentsEnum? Status = null, CancellationToken token = default);
+    public Task ConsoleSegmentCacheEmptyAsync(StatusesDocumentsEnum? Status = null, CancellationToken token = default);
 }

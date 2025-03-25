@@ -48,7 +48,7 @@ public partial class WorkCalendarAddDateComponent : BlazorBusyComponentBaseAuthM
             return;
 
         await SetBusy();
-        TResponseModel<int> res = await CommerceRepo.CalendarScheduleUpdate(new()
+        TResponseModel<int> res = await CommerceRepo.CalendarScheduleUpdateAsync(new()
         {
             Payload = new CalendarScheduleModelDB()
             {

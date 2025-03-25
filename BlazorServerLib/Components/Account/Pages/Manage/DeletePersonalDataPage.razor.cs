@@ -26,26 +26,26 @@ public partial class DeletePersonalDataPage : BlazorBusyComponentBaseAuthModel
     {
         await base.OnInitializedAsync();
         Input ??= new();
-        var rest = await UsersProfilesRepo.UserHasPassword();
+        var rest = await UsersProfilesRepo.UserHasPasswordAsync();
         Messages = rest.Messages;
         requirePassword = rest.Response == true;
     }
 
     private async Task OnValidSubmitAsync()
     {
-        var rest = await UsersProfilesRepo.CheckUserPassword(Input.Password);
+        var rest = await UsersProfilesRepo.CheckUserPasswordAsync(Input.Password);
         Messages = rest.Messages;
         if (requirePassword && !rest.Success())
             return;
 
-        ResponseBaseModel result = await UsersProfilesRepo.DeleteUserData(Input.Password);
+        ResponseBaseModel result = await UsersProfilesRepo.DeleteUserDataAsync(Input.Password);
         Messages.AddRange(result.Messages);
         if (!result.Success())
         {
             throw new InvalidOperationException("Произошла непредвиденная ошибка при удалении пользователя.");
         }
 
-        await UserAuthRepo.SignOut();
+        await UserAuthRepo.SignOutAsync();
         RedirectManager.RedirectToCurrentPage();
     }
 }
