@@ -19,6 +19,6 @@ public class ProjectsReadReceive(IConstructorService conService) : IResponseRece
     public async Task<List<ProjectModelDb>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.ReadProjects(req, token);
+        return await conService.ReadProjectsAsync(req, token);
     }
 }

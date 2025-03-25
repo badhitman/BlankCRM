@@ -19,6 +19,6 @@ public class FieldFormMoveReceive(IConstructorService conService) : IResponseRec
     public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.FieldFormMove(payload, token);
+        return await conService.FieldFormMoveAsync(payload, token);
     }
 }

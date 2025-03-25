@@ -18,6 +18,6 @@ public class PriceFullFileGetReceive(ICommerceService commRepo) : IResponseRecei
     /// <inheritdoc/>
     public async Task<FileAttachModel?> ResponseHandleActionAsync(object? req, CancellationToken token = default)
     {
-        return await commRepo.GetFullPriceFile(token);
+        return await commRepo.GetFullPriceFileAsync(token);
     }
 }

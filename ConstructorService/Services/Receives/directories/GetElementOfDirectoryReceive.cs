@@ -18,6 +18,6 @@ public class GetElementOfDirectoryReceive(IConstructorService conService) : IRes
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryDescriptionModel>?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
     {
-        return await conService.GetElementOfDirectory(payload, token);
+        return await conService.GetElementOfDirectoryAsync(payload, token);
     }
 }

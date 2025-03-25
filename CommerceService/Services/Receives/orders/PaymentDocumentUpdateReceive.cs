@@ -22,6 +22,6 @@ public class PaymentDocumentUpdateReceive(ICommerceService commerceRepo, ILogger
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.PaymentDocumentUpdate(req, token);
+        return await commerceRepo.PaymentDocumentUpdateAsync(req, token);
     }
 }

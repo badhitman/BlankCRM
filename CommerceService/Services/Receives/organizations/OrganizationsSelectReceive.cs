@@ -19,6 +19,6 @@ public class OrganizationsSelectReceive(ICommerceService commerceRepo) : IRespon
     public async Task<TPaginationResponseModel<OrganizationModelDB>?> ResponseHandleActionAsync(TPaginationRequestAuthModel<OrganizationsSelectRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.OrganizationsSelect(req, token);
+        return await commerceRepo.OrganizationsSelectAsync(req, token);
     }
 }

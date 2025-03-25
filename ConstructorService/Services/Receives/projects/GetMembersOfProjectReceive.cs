@@ -18,6 +18,6 @@ public class GetMembersOfProjectReceive(IConstructorService conService) : IRespo
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryAltModel[]>?> ResponseHandleActionAsync(int req, CancellationToken token = default)
     {
-        return await conService.GetMembersOfProject(req, token);
+        return await conService.GetMembersOfProjectAsync(req, token);
     }
 }

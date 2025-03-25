@@ -19,6 +19,6 @@ public class WarehousesSelectReceive(ICommerceService commRepo) : IResponseRecei
     public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<WarehouseDocumentsSelectRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.WarehouseDocumentsSelect(req, token);
+        return await commRepo.WarehouseDocumentsSelectAsync(req, token);
     }
 }

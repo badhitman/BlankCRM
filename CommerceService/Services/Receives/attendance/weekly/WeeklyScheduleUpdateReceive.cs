@@ -25,6 +25,6 @@ public class WeeklyScheduleUpdateReceive(ICommerceService commerceRepo, ILogger<
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.WeeklyScheduleUpdate(req, token);
+        return await commerceRepo.WeeklyScheduleUpdateAsync(req, token);
     }
 }

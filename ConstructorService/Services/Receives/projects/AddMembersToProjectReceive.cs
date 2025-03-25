@@ -19,6 +19,6 @@ public class AddMembersToProjectReceive(IConstructorService conService) : IRespo
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UsersProjectModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.AddMemberToProject(req, token);
+        return await conService.AddMemberToProjectAsync(req, token);
     }
 }

@@ -19,6 +19,6 @@ public class FindSessionsDocumentsByFormFieldNameReceive(IConstructorService con
     public async Task<TResponseModel<EntryDictModel[]>?> ResponseHandleActionAsync(FormFieldModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.FindSessionsDocumentsByFormFieldName(payload, token);
+        return await conService.FindSessionsDocumentsByFormFieldNameAsync(payload, token);
     }
 }

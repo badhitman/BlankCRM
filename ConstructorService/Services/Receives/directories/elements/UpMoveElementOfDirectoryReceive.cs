@@ -19,6 +19,6 @@ public class UpMoveElementOfDirectoryReceive(IConstructorService conService) : I
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.UpMoveElementOfDirectory(payload, token);
+        return await conService.UpMoveElementOfDirectoryAsync(payload, token);
     }
 }

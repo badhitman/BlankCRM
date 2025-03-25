@@ -20,6 +20,6 @@ public class OfficesOrganizationDeleteReceive(ICommerceService commerceRepo, ILo
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.OfficeOrganizationDelete(req, token);
+        return await commerceRepo.OfficeOrganizationDeleteAsync(req, token);
     }
 }

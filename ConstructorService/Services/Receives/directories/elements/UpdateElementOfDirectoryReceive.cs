@@ -19,6 +19,6 @@ public class UpdateElementOfDirectoryReceive(IConstructorService conService) : I
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<EntryDescriptionModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.UpdateElementOfDirectory(payload, token);
+        return await conService.UpdateElementOfDirectoryAsync(payload, token);
     }
 }

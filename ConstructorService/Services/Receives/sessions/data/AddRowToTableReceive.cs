@@ -20,6 +20,6 @@ public class AddRowToTableReceive(IConstructorService conService) : IResponseRec
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(FieldSessionDocumentDataBaseModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.AddRowToTable(payload, token);
+        return await conService.AddRowToTableAsync(payload, token);
     }
 }

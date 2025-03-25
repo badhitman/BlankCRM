@@ -21,6 +21,6 @@ public class OrganizationSetLegalReceive(ICommerceService commerceRepo, ILogger<
     {
         ArgumentNullException.ThrowIfNull(org);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(org)}");
-        return await commerceRepo.OrganizationSetLegal(org, token);
+        return await commerceRepo.OrganizationSetLegalAsync(org, token);
     }
 }

@@ -21,6 +21,6 @@ public class StatusOrderChangeByHelpdeskDocumentIdReceive(ICommerceService commR
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await commRepo.StatusesOrdersChangeByHelpdeskDocumentId(req, token);
+        return await commRepo.StatusesOrdersChangeByHelpdeskDocumentIdAsync(req, token);
     }
 }

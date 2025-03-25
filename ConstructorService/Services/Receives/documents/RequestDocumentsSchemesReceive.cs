@@ -19,6 +19,6 @@ public class RequestDocumentsSchemesReceive(IConstructorService conService) : IR
     public async Task<TPaginationResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(RequestDocumentsSchemesModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.RequestDocumentsSchemes(payload, token);
+        return await conService.RequestDocumentsSchemesAsync(payload, token);
     }
 }

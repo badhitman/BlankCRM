@@ -18,6 +18,6 @@ public class CheckAndNormalizeSortIndexForElementsOfDirectoryReceive(IConstructo
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
     {
-        return await conService.CheckAndNormalizeSortIndexForElementsOfDirectory(payload, token);
+        return await conService.CheckAndNormalizeSortIndexForElementsOfDirectoryAsync(payload, token);
     }
 }

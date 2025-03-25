@@ -17,7 +17,7 @@ public partial class CommerceImplementService : ICommerceService
 {
     #region records
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<RecordsAttendanceModelDB>> RecordsAttendancesSelect(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<RecordsAttendanceModelDB>> RecordsAttendancesSelectAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -65,7 +65,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RecordsAttendanceCreate(TAuthRequestModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RecordsAttendanceCreateAsync(TAuthRequestModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default)
     {
         List<WorkScheduleModel> records = workSchedules.Payload.Records;
         ResponseBaseModel res = new();
@@ -128,7 +128,7 @@ public partial class CommerceImplementService : ICommerceService
         catch (Exception ex)
         {
             await transaction.RollbackAsync(token);
-            msg = $"Не удалось выполнить команду блокировки БД {nameof(RecordsAttendanceCreate)}: ";
+            msg = $"Не удалось выполнить команду блокировки БД {nameof(RecordsAttendanceCreateAsync)}: ";
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(workSchedules, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError(msg);
             return res;
@@ -153,7 +153,7 @@ public partial class CommerceImplementService : ICommerceService
                 Task.Run(async () => { res_RubricIssueForCreateOrder = await StorageTransmissionRepo.ReadParameterAsync<int?>(GlobalStaticConstants.CloudStorageMetadata.RubricIssueForCreateAttendanceOrder); }, token),
                 Task.Run(async () =>
                 {
-                    WorksFindResponseModel get_balance = await WorkSchedulesFind(req, [.. recordsForAdd.Select(x => x.OrganizationId).Distinct()]);
+                    WorksFindResponseModel get_balance = await WorkSchedulesFindAsync(req, [.. recordsForAdd.Select(x => x.OrganizationId).Distinct()]);
                     WorksSchedulesViews = get_balance.WorksSchedulesViews;
                 }, token)
             ];
@@ -290,7 +290,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RecordAttendanceDelete(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RecordAttendanceDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default)
     {
         UserInfoModel actor = default!;
         RecordsAttendanceModelDB? orderAttendanceDB = null;
@@ -352,7 +352,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> RecordsAttendancesStatusesChangeByHelpdeskId(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> RecordsAttendancesStatusesChangeByHelpdeskIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<bool> res = new();
         TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentity([req.SenderActionUserId], token);
@@ -394,7 +394,7 @@ public partial class CommerceImplementService : ICommerceService
         catch (Exception ex)
         {
             await transaction.RollbackAsync(token);
-            msg = $"Не удалось выполнить команду блокировки БД {nameof(RecordsAttendancesStatusesChangeByHelpdeskId)}: ";
+            msg = $"Не удалось выполнить команду блокировки БД {nameof(RecordsAttendancesStatusesChangeByHelpdeskIdAsync)}: ";
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError($"{msg}{ex.Message}");
             return res;
@@ -432,7 +432,7 @@ public partial class CommerceImplementService : ICommerceService
                 StartDate = ordersDb.Min(x => x.DateExecute),
                 EndDate = ordersDb.Max(x => x.DateExecute),
             };
-            WorksFindResponseModel get_balance = await WorkSchedulesFind(get_balance_req, ordersDb.Select(x => x.OrganizationId).Distinct().ToArray(), token);
+            WorksFindResponseModel get_balance = await WorkSchedulesFindAsync(get_balance_req, ordersDb.Select(x => x.OrganizationId).Distinct().ToArray(), token);
 
             foreach (IGrouping<int, WorkScheduleModel> rec in ordersDb.GroupBy(x => x.OrganizationId))
             {
@@ -480,7 +480,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<RecordsAttendanceModelDB[]>> RecordsAttendancesByIssuesGet(OrdersByIssuesSelectRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<RecordsAttendanceModelDB[]>> RecordsAttendancesByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default)
     {
         if (req.IssueIds.Length == 0)
             return new()
@@ -510,7 +510,7 @@ public partial class CommerceImplementService : ICommerceService
     #endregion
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelect(TPaginationRequestModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -556,7 +556,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<WorksFindResponseModel> WorkSchedulesFind(WorkFindRequestModel req, int[]? organizationsFilter = null, CancellationToken token = default)
+    public async Task<WorksFindResponseModel> WorkSchedulesFindAsync(WorkFindRequestModel req, int[]? organizationsFilter = null, CancellationToken token = default)
     {
         List<DayOfWeek> weeks = [];
         List<DateOnly> dates = [];
@@ -623,7 +623,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> WeeklyScheduleUpdate(WeeklyScheduleModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> WeeklyScheduleUpdateAsync(WeeklyScheduleModelDB req, CancellationToken token = default)
     {
         TResponseModel<int> res = new() { Response = 0 };
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
@@ -667,7 +667,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<List<WeeklyScheduleModelDB>> WeeklySchedulesRead(int[] req, CancellationToken token = default)
+    public async Task<List<WeeklyScheduleModelDB>> WeeklySchedulesReadAsync(int[] req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -682,7 +682,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CalendarScheduleUpdate(TAuthRequestModel<CalendarScheduleModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CalendarScheduleUpdateAsync(TAuthRequestModel<CalendarScheduleModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new() { Response = 0 };
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
@@ -727,7 +727,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarSchedulesSelect(TAuthRequestModel<TPaginationRequestModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarSchedulesSelectAsync(TAuthRequestModel<TPaginationRequestModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default)
     {
         if (req.Payload.PageSize < 10)
             req.Payload.PageSize = 10;
@@ -780,7 +780,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarSchedulesRead(TAuthRequestModel<int[]> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarSchedulesReadAsync(TAuthRequestModel<int[]> req, CancellationToken token = default)
     {
         TResponseModel<CalendarScheduleModelDB[]> res = new();
 

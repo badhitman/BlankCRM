@@ -19,6 +19,6 @@ public class DeleteMembersFromProjectReceive(IConstructorService conService) : I
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UsersProjectModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.DeleteMembersFromProject(req, token);
+        return await conService.DeleteMembersFromProjectAsync(req, token);
     }
 }

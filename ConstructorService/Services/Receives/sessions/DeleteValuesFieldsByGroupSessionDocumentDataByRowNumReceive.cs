@@ -20,6 +20,6 @@ public class DeleteValuesFieldsByGroupSessionDocumentDataByRowNumReceive(IConstr
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ValueFieldSessionDocumentDataBaseModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.DeleteValuesFieldsByGroupSessionDocumentDataByRowNum(payload, token);
+        return await conService.DeleteValuesFieldsByGroupSessionDocumentDataByRowNumAsync(payload, token);
     }
 }

@@ -21,6 +21,6 @@ public class RowsForOrderDeleteReceive(ICommerceService commRepo, ILogger<RowsFo
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commRepo.RowsForOrderDelete(req, token);
+        return await commRepo.RowsForOrderDeleteAsync(req, token);
     }
 }

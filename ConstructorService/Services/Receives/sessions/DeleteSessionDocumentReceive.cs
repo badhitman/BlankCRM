@@ -18,6 +18,6 @@ public class DeleteSessionDocumentReceive(IConstructorService conService) : IRes
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
     {
-        return await conService.DeleteSessionDocument(payload, token);
+        return await conService.DeleteSessionDocumentAsync(payload, token);
     }
 }

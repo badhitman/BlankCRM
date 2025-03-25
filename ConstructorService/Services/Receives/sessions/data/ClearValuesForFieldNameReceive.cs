@@ -19,6 +19,6 @@ public class ClearValuesForFieldNameReceive(IConstructorService conService) : IR
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(FormFieldOfSessionModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.ClearValuesForFieldName(payload, token);
+        return await conService.ClearValuesForFieldNameAsync(payload, token);
     }
 }

@@ -21,6 +21,6 @@ public class WarehouseDocumentUpdateReceive(ICommerceService commRepo, ILogger<W
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await commRepo.WarehouseDocumentUpdate(req, token);
+        return await commRepo.WarehouseDocumentUpdateAsync(req, token);
     }
 }

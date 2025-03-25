@@ -19,6 +19,6 @@ public class UpdateProjectReceive(IConstructorService conService) : IResponseRec
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ProjectViewModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.UpdateProject(req, token);
+        return await conService.UpdateProjectAsync(req, token);
     }
 }

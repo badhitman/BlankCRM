@@ -19,6 +19,6 @@ public class GetDirectoriesReceive(IConstructorService conService) : IResponseRe
     public async Task<TResponseModel<EntryModel[]>?> ResponseHandleActionAsync(ProjectFindModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.GetDirectories(payload, token);
+        return await conService.GetDirectoriesAsync(payload, token);
     }
 }

@@ -429,7 +429,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             SortingDirection = DirectionsEnum.Up,
         };
 
-        TPaginationResponseModel<OrganizationModelDB> res = await CommerceRepo.OrganizationsSelect(req);
+        TPaginationResponseModel<OrganizationModelDB> res = await CommerceRepo.OrganizationsSelectAsync(req);
 
         if (res.Response is null || res.Response.Count == 0)
             return;

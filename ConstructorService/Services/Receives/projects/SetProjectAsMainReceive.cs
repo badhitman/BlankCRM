@@ -19,6 +19,6 @@ public class SetProjectAsMainReceive(IConstructorService conService) : IResponse
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UserProjectModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.SetProjectAsMain(req, token);
+        return await conService.SetProjectAsMainAsync(req, token);
     }
 }

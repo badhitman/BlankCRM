@@ -20,6 +20,6 @@ public class NomenclaturesReadReceive(ICommerceService commerceRepo)
     public async Task<TResponseModel<List<NomenclatureModelDB>>?> ResponseHandleActionAsync(TAuthRequestModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.NomenclaturesRead(req, token);
+        return await commerceRepo.NomenclaturesReadAsync(req, token);
     }
 }

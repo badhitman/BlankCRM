@@ -19,6 +19,6 @@ public class OrderReportGetReceive(ICommerceService commRepo) : IResponseReceive
     public async Task<TResponseModel<FileAttachModel>?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.GetOrderReportFile(req, token);
+        return await commRepo.GetOrderReportFileAsync(req, token);
     }
 }

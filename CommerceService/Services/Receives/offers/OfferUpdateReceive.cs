@@ -22,6 +22,6 @@ public class OfferUpdateReceive(ICommerceService commerceRepo, ILogger<OfferUpda
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.OfferUpdate(req, token);
+        return await commerceRepo.OfferUpdateAsync(req, token);
     }
 }

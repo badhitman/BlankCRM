@@ -23,6 +23,6 @@ public class RecordsAttendancesSelectReceive(ICommerceService commerceRepo)
     public async Task<TPaginationResponseModel<RecordsAttendanceModelDB>?> ResponseHandleActionAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await commerceRepo.RecordsAttendancesSelect(payload, token);
+        return await commerceRepo.RecordsAttendancesSelectAsync(payload, token);
     }
 }

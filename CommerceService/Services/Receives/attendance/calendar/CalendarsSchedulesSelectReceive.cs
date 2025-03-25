@@ -20,6 +20,6 @@ public class CalendarsSchedulesSelectReceive(ICommerceService commerceRepo)
     public async Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>?> ResponseHandleActionAsync(TAuthRequestModel<TPaginationRequestModel<WorkScheduleCalendarsSelectRequestModel>>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await commerceRepo.CalendarSchedulesSelect(payload, token);
+        return await commerceRepo.CalendarSchedulesSelectAsync(payload, token);
     }
 }

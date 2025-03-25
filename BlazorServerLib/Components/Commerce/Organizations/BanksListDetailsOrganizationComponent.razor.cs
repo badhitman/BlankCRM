@@ -61,7 +61,7 @@ public partial class BanksListDetailsOrganizationComponent : BlazorBusyComponent
 
         if (result == true)
         {
-            ResponseBaseModel res = await CommerceRepo.BankDetailsDelete(new TAuthRequestModel<int>() { Payload = sender.Id, SenderActionUserId = CurrentUserSession.UserId });
+            ResponseBaseModel res = await CommerceRepo.BankDetailsDeleteAsync(new TAuthRequestModel<int>() { Payload = sender.Id, SenderActionUserId = CurrentUserSession.UserId });
             SnackbarRepo.ShowMessagesResponse(res.Messages);
 
             CurrentOrganization.BanksDetails?.RemoveAll(x => x.Id == sender.Id);
@@ -79,7 +79,7 @@ public partial class BanksListDetailsOrganizationComponent : BlazorBusyComponent
 
         CurrentOrganization.BankMainAccount = sender.Id;
         await SetBusy();
-        TResponseModel<int> res = await CommerceRepo.OrganizationUpdate(new() { Payload = CurrentOrganization, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(new() { Payload = CurrentOrganization, SenderActionUserId = CurrentUserSession.UserId });
         await SetBusy(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
     }

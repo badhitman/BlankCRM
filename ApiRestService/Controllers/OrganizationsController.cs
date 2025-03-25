@@ -27,7 +27,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// </remarks>
     [HttpPut($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.READ_ACTION_NAME}")]
     public async Task<TResponseModel<OrganizationModelDB[]>> ReadOrganizations(int[] organizations_ids)
-        => await commRepo.OrganizationsRead(organizations_ids);
+        => await commRepo.OrganizationsReadAsync(organizations_ids);
 
     /// <summary>
     /// Подбор организаций с параметрами запроса
@@ -37,7 +37,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// </remarks>
     [HttpPut($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.SELECT_ACTION_NAME}")]
     public async Task<TPaginationResponseModel<OrganizationModelDB>> OrganizationsSelect(TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req)
-        => await commRepo.OrganizationsSelect(req);
+        => await commRepo.OrganizationsSelectAsync(req);
 
     /// <summary>
     /// Прочитать данные адресов организаций по их идентификаторам
@@ -47,7 +47,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// </remarks>
     [HttpPut($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.ADDRESSES_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.READ_ACTION_NAME}")]
     public async Task<TResponseModel<OfficeOrganizationModelDB[]>> OfficesOrganizationsRead(int[] ids)
-        => await commRepo.OfficesOrganizationsRead(ids);
+        => await commRepo.OfficesOrganizationsReadAsync(ids);
 
 
     /// <summary>
@@ -64,7 +64,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
 [Authorize(Roles = nameof(ExpressApiRolesEnum.OrganizationsWriteCommerce))]
 #endif
     public async Task<TResponseModel<bool>> OrganizationSetLegal(OrganizationLegalModel org)
-        => await commRepo.OrganizationSetLegal(org);
+        => await commRepo.OrganizationSetLegalAsync(org);
 
     /// <summary>
     /// Обновление параметров организации. Юридические параметры не меняются, а формируется запрос на изменение, которое должна подтвердить сторонняя система
@@ -79,7 +79,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
 [Authorize(Roles = nameof(ExpressApiRolesEnum.OrganizationsWriteCommerce))]
 #endif
     public async Task<TResponseModel<int>> OrganizationUpdate(OrganizationModelDB org)
-        => await commRepo.OrganizationUpdate(new() { Payload = org, SenderActionUserId = GlobalStaticConstants.Roles.System });
+        => await commRepo.OrganizationUpdateAsync(new() { Payload = org, SenderActionUserId = GlobalStaticConstants.Roles.System });
 
     /// <summary>
     /// Обновить/Создать адрес организации
@@ -94,5 +94,5 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
 [Authorize(Roles = nameof(ExpressApiRolesEnum.OrganizationsWriteCommerce))]
 #endif
     public async Task<TResponseModel<int>> OfficeOrganizationUpdate(AddressOrganizationBaseModel req)
-        => await commRepo.OfficeOrganizationUpdate(req);
+        => await commRepo.OfficeOrganizationUpdateAsync(req);
 }

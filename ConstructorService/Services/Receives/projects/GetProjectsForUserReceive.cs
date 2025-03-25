@@ -19,6 +19,6 @@ public class GetProjectsForUserReceive(IConstructorService conService) : IRespon
     public async Task<TResponseModel<ProjectViewModel[]>?> ResponseHandleActionAsync(GetProjectsForUserRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.GetProjectsForUser(req, token);
+        return await conService.GetProjectsForUserAsync(req, token);
     }
 }

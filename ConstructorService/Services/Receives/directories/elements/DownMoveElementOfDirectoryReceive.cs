@@ -19,6 +19,6 @@ public class DownMoveElementOfDirectoryReceive(IConstructorService conService) :
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.DownMoveElementOfDirectory(payload, token);
+        return await conService.DownMoveElementOfDirectoryAsync(payload, token);
     }
 }

@@ -19,6 +19,6 @@ public class CreateProjectReceive(IConstructorService conService) : IResponseRec
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(CreateProjectRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.CreateProject(req, token);
+        return await conService.CreateProjectAsync(req, token);
     }
 }

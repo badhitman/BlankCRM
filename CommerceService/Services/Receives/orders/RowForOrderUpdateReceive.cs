@@ -21,6 +21,6 @@ public class RowForOrderUpdateReceive(ICommerceService commRepo, ILogger<RowForO
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commRepo.RowForOrderUpdate(req, token);
+        return await commRepo.RowForOrderUpdateAsync(req, token);
     }
 }

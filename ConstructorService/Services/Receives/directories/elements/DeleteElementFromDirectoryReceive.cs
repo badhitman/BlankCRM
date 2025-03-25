@@ -19,6 +19,6 @@ public class DeleteElementFromDirectoryReceive(IConstructorService conService) :
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.DeleteElementFromDirectory(payload, token);
+        return await conService.DeleteElementFromDirectoryAsync(payload, token);
     }
 }

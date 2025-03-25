@@ -19,6 +19,6 @@ public class FieldDirectoryFormMoveReceive(IConstructorService conService) : IRe
     public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.FieldDirectoryFormMove(payload, token);
+        return await conService.FieldDirectoryFormMoveAsync(payload, token);
     }
 }

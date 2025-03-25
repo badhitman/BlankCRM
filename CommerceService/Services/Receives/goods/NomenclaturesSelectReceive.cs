@@ -19,6 +19,6 @@ public class NomenclaturesSelectReceive(ICommerceService commerceRepo) : IRespon
     public async Task<TPaginationResponseModel<NomenclatureModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<NomenclaturesSelectRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.NomenclaturesSelect(req, token);
+        return await commerceRepo.NomenclaturesSelectAsync(req, token);
     }
 }

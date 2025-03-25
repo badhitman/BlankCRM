@@ -19,6 +19,6 @@ public class OrdersByIssuesGetReceive(ICommerceService commRepo) : IResponseRece
     public async Task<TResponseModel<OrderDocumentModelDB[]>?> ResponseHandleActionAsync(OrdersByIssuesSelectRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.OrdersByIssuesGet(req, token);
+        return await commRepo.OrdersByIssuesGetAsync(req, token);
     }
 }

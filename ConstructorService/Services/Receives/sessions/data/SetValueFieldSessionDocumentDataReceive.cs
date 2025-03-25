@@ -19,6 +19,6 @@ public class SetValueFieldSessionDocumentDataReceive(IConstructorService conServ
     public async Task<TResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleActionAsync(SetValueFieldDocumentDataModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.SetValueFieldSessionDocumentData(payload, token);
+        return await conService.SetValueFieldSessionDocumentDataAsync(payload, token);
     }
 }

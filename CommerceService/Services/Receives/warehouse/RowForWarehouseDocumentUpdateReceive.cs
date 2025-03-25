@@ -21,6 +21,6 @@ public class RowForWarehouseDocumentUpdateReceive(ICommerceService commRepo, ILo
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commRepo.RowForWarehouseDocumentUpdate(req, token);
+        return await commRepo.RowForWarehouseDocumentUpdateAsync(req, token);
     }
 }

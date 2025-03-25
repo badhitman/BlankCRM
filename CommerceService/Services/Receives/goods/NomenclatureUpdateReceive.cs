@@ -25,6 +25,6 @@ public class NomenclatureUpdateReceive(ICommerceService commerceRepo, ILogger<No
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.NomenclatureUpdate(req, token);
+        return await commerceRepo.NomenclatureUpdateAsync(req, token);
     }
 }

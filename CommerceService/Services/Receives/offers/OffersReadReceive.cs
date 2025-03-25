@@ -20,6 +20,6 @@ public class OffersReadReceive(ICommerceService commerceRepo)
     public async Task<TResponseModel<OfferModelDB[]>?> ResponseHandleActionAsync(TAuthRequestModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.OffersRead(req, token);
+        return await commerceRepo.OffersReadAsync(req, token);
     }
 }

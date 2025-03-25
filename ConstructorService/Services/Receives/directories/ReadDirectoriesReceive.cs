@@ -19,6 +19,6 @@ public class ReadDirectoriesReceive(IConstructorService conService) : IResponseR
     public async Task<List<EntryNestedModel>?> ResponseHandleActionAsync(int[]? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.ReadDirectories(payload, token);
+        return await conService.ReadDirectoriesAsync(payload, token);
     }
 }

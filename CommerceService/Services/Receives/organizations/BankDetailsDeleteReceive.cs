@@ -20,6 +20,6 @@ public class BankDetailsDeleteReceive(ICommerceService commerceRepo)
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.BankDetailsDelete(req, token);
+        return await commerceRepo.BankDetailsDeleteAsync(req, token);
     }
 }

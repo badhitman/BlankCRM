@@ -19,6 +19,6 @@ public class SelectFormsReceive(IConstructorService conService) : IResponseRecei
     public async Task<TPaginationResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(SelectFormsModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.SelectForms(payload, token);
+        return await conService.SelectFormsAsync(payload, token);
     }
 }

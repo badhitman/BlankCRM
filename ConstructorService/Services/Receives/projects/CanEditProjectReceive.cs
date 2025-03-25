@@ -19,6 +19,6 @@ public class CanEditProjectReceive(IConstructorService conService) : IResponseRe
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UserProjectModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.CanEditProject(req, token);
+        return await conService.CanEditProjectAsync(req, token);
     }
 }

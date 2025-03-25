@@ -19,6 +19,6 @@ public class WarehousesDocumentsReadReceive(ICommerceService commRepo) : IRespon
     public async Task<TResponseModel<WarehouseDocumentModelDB[]>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.WarehouseDocumentsRead(req, token);
+        return await commRepo.WarehouseDocumentsReadAsync(req, token);
     }
 }

@@ -19,6 +19,6 @@ public class SetMarkerDeleteProjectReceive(IConstructorService conService) : IRe
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SetMarkerProjectRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await conService.SetMarkerDeleteProject(req, token);
+        return await conService.SetMarkerDeleteProjectAsync(req, token);
     }
 }

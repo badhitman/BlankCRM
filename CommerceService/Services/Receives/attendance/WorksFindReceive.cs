@@ -19,6 +19,6 @@ public class WorksFindReceive(ICommerceService commerceRepo) : IResponseReceive<
     public async Task<WorksFindResponseModel?> ResponseHandleActionAsync(WorkFindRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.WorkSchedulesFind(req, token: token);
+        return await commerceRepo.WorkSchedulesFindAsync(req, token: token);
     }
 }

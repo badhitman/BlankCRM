@@ -21,6 +21,6 @@ public class OrderUpdateReceive(ICommerceService commRepo, ILogger<OrderUpdateRe
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await commRepo.OrderUpdate(req, token);
+        return await commRepo.OrderUpdateAsync(req, token);
     }
 }

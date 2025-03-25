@@ -43,7 +43,7 @@ public partial class BankDetailsEditComponent : BlazorBusyComponentBaseAuthModel
             throw new ArgumentNullException(nameof(BankDetails.Organization));
 
         await SetBusy();
-        TResponseModel<int> res = await CommerceRepo.BankDetailsUpdate(new TAuthRequestModel<BankDetailsModelDB>()
+        TResponseModel<int> res = await CommerceRepo.BankDetailsUpdateAsync(new TAuthRequestModel<BankDetailsModelDB>()
         {
             Payload = bankDetailsEdit,
             SenderActionUserId = CurrentUserSession.UserId

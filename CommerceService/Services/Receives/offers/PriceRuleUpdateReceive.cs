@@ -22,6 +22,6 @@ public class PriceRuleUpdateReceive(ICommerceService commerceRepo, ILogger<Price
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.PriceRuleUpdate(req, token);
+        return await commerceRepo.PriceRuleUpdateAsync(req, token);
     }
 }

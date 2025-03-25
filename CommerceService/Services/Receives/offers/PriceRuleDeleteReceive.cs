@@ -22,6 +22,6 @@ public class PriceRuleDeleteReceive(ICommerceService commerceRepo, ILogger<Price
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req.Payload, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.PriceRuleDelete(req, token);
+        return await commerceRepo.PriceRuleDeleteAsync(req, token);
     }
 }

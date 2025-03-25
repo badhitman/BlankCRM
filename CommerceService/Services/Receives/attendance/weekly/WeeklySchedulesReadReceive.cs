@@ -19,6 +19,6 @@ public class WeeklySchedulesReadReceive(ICommerceService commerceRepo) : IRespon
     public async Task<List<WeeklyScheduleModelDB>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.WeeklySchedulesRead(req, token);
+        return await commerceRepo.WeeklySchedulesReadAsync(req, token);
     }
 }

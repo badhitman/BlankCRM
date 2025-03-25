@@ -89,7 +89,7 @@ public partial class OrganizationsTableComponent : BlazorBusyComponentBaseAuthMo
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
         await SetBusy(token: token);
-        TPaginationResponseModel<OrganizationModelDB> res = await CommerceRepo.OrganizationsSelect(req);
+        TPaginationResponseModel<OrganizationModelDB> res = await CommerceRepo.OrganizationsSelectAsync(req);
         await SetBusy(false, token: token);
 
         if (res.Response is null)

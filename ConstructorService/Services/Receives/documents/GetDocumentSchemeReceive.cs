@@ -18,6 +18,6 @@ public class GetDocumentSchemeReceive(IConstructorService conService) : IRespons
     /// <inheritdoc/>
     public async Task<TResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
     {
-        return await conService.GetDocumentScheme(payload, token);
+        return await conService.GetDocumentSchemeAsync(payload, token);
     }
 }

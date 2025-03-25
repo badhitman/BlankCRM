@@ -21,6 +21,6 @@ public class GetCurrentMainProjectReceive(IConstructorService conService) : IRes
         if (string.IsNullOrWhiteSpace(req))
             throw new ArgumentNullException(nameof(req));
 
-        return await conService.GetCurrentMainProject(req, token);
+        return await conService.GetCurrentMainProjectAsync(req, token);
     }
 }

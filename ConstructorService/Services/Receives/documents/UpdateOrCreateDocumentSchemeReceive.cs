@@ -19,6 +19,6 @@ public class UpdateOrCreateDocumentSchemeReceive(IConstructorService conService)
     public async Task<TResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<EntryConstructedModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.UpdateOrCreateDocumentScheme(payload, token);
+        return await conService.UpdateOrCreateDocumentSchemeAsync(payload, token);
     }
 }

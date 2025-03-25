@@ -21,6 +21,6 @@ public class OrganizationUpdateReceive(ICommerceService commerceRepo, ILogger<Or
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await commerceRepo.OrganizationUpdate(req, token);
+        return await commerceRepo.OrganizationUpdateAsync(req, token);
     }
 }

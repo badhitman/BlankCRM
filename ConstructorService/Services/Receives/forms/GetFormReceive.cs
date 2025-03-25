@@ -18,6 +18,6 @@ public class GetFormReceive(IConstructorService conService) : IResponseReceive<i
     /// <inheritdoc/>
     public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
     {
-        return await conService.GetForm(payload, token);
+        return await conService.GetFormAsync(payload, token);
     }
 }

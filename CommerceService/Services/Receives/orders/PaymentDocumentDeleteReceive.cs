@@ -22,6 +22,6 @@ public class PaymentDocumentDeleteReceive(ICommerceService commerceRepo, ILogger
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.PaymentDocumentDelete(req, token);
+        return await commerceRepo.PaymentDocumentDeleteAsync(req, token);
     }
 }

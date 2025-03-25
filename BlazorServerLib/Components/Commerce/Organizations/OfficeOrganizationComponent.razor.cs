@@ -63,7 +63,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         await SetBusy();
 
         TResponseModel<OfficeOrganizationModelDB[]> res_address = await CommerceRepo
-            .OfficesOrganizationsRead([AddressForOrganization]);
+            .OfficesOrganizationsReadAsync([AddressForOrganization]);
 
         SnackbarRepo.ShowMessagesResponse(res_address.Messages);
         OfficeCurrent = res_address.Response!.Single();
@@ -107,7 +107,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
 
         await SetBusy();
 
-        TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdate(new AddressOrganizationBaseModel()
+        TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdateAsync(new AddressOrganizationBaseModel()
         {
             KladrCode = OfficeEdit.KladrCode,
             KladrTitle = OfficeEdit.KladrTitle,

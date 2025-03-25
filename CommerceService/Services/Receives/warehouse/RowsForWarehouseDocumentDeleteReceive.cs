@@ -21,7 +21,7 @@ public class RowsForWarehouseDocumentDeleteReceive(ICommerceService commRepo, IL
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commRepo.RowsForWarehouseDocumentDelete(req, token);
+        return await commRepo.RowsForWarehouseDocumentDeleteAsync(req, token);
 
     }
 }

@@ -50,7 +50,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
             return;
 
         await SetBusy();
-        TResponseModel<OrganizationModelDB[]> res = await CommerceRepo.OrganizationsRead([CurrentOrganization.Id]);
+        TResponseModel<OrganizationModelDB[]> res = await CommerceRepo.OrganizationsReadAsync([CurrentOrganization.Id]);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         CurrentOrganization = res.Response!.Single();
@@ -68,7 +68,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         TAuthRequestModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession!.UserId };
         await SetBusy();
 
-        TResponseModel<int> res = await CommerceRepo.OrganizationUpdate(req);
+        TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await ReadOrganization();
@@ -98,7 +98,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
         await SetBusy();
 
-        TResponseModel<bool> res = await CommerceRepo.OrganizationSetLegal(req);
+        TResponseModel<bool> res = await CommerceRepo.OrganizationSetLegalAsync(req);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         NavigationRepo.ReloadPage();
@@ -112,7 +112,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         TAuthRequestModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession!.UserId };
         await SetBusy();
 
-        TResponseModel<int> res = await CommerceRepo.OrganizationUpdate(req);
+        TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
 

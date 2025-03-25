@@ -26,6 +26,6 @@ public class OfferDeleteReceive(ICommerceService commerceRepo, ILogger<OfferDele
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await commerceRepo.OfferDelete(req, token);
+        return await commerceRepo.OfferDeleteAsync(req, token);
     }
 }

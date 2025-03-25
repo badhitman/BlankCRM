@@ -19,6 +19,6 @@ public class FormFieldDeleteReceive(IConstructorService conService) : IResponseR
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.FormFieldDelete(payload, token);
+        return await conService.FormFieldDeleteAsync(payload, token);
     }
 }

@@ -19,6 +19,6 @@ public class UpdateOrCreateDirectoryReceive(IConstructorService conService) : IR
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<EntryConstructedModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await conService.UpdateOrCreateDirectory(payload, token);
+        return await conService.UpdateOrCreateDirectoryAsync(payload, token);
     }
 }

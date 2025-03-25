@@ -19,6 +19,6 @@ public class UsersOrganizationsReadReceive(ICommerceService commerceRepo) : IRes
     public async Task<TResponseModel<UserOrganizationModelDB[]>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.UsersOrganizationsRead(req, token);
+        return await commerceRepo.UsersOrganizationsReadAsync(req, token);
     }
 }

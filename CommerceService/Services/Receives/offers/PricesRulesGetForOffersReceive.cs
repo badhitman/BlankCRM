@@ -20,6 +20,6 @@ public class PricesRulesGetForOffersReceive(ICommerceService commerceRepo)
     public async Task<TResponseModel<List<PriceRuleForOfferModelDB>>?> ResponseHandleActionAsync(TAuthRequestModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.PricesRulesGetForOffers(req, token);
+        return await commerceRepo.PricesRulesGetForOffersAsync(req, token);
     }
 }

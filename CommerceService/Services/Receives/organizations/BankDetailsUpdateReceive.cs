@@ -20,6 +20,6 @@ public class BankDetailsUpdateReceive(ICommerceService commerceRepo)
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<BankDetailsModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commerceRepo.BankDetailsUpdate(req, token);
+        return await commerceRepo.BankDetailsUpdateAsync(req, token);
     }
 }

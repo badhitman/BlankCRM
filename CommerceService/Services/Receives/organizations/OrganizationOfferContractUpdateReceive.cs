@@ -21,6 +21,6 @@ public class OrganizationOfferContractUpdateReceive(ICommerceService commerceRep
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await commerceRepo.OrganizationOfferContractUpdate(req, token);
+        return await commerceRepo.OrganizationOfferContractUpdateAsync(req, token);
     }
 }
