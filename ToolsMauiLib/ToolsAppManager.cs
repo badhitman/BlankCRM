@@ -17,14 +17,14 @@ namespace ToolsMauiLib;
 public class ToolsAppManager(IDbContextFactory<ToolsAppContext> toolsDbFactory) : IToolsAppManager
 {
     /// <inheritdoc/>
-    public async Task<ApiRestConfigModelDB[]> GetAllConfigurations()
+    public async Task<ApiRestConfigModelDB[]> GetAllConfigurationsAsync(CancellationToken token = default)
     {
         using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
         return await context.Configurations.ToArrayAsync();
     }
 
     /// <inheritdoc/>
-    public async Task<ApiRestConfigModelDB> ReadConfiguration(int confId)
+    public async Task<ApiRestConfigModelDB> ReadConfigurationAsync(int confId, CancellationToken token = default)
     {
         using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
 
@@ -36,7 +36,7 @@ public class ToolsAppManager(IDbContextFactory<ToolsAppContext> toolsDbFactory) 
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> UpdateOrCreateConfig(ApiRestConfigModelDB req)
+    public async Task<TResponseModel<int>> UpdateOrCreateConfigAsync(ApiRestConfigModelDB req, CancellationToken token = default)
     {
         req.Name = req.Name.Trim();
 
@@ -82,7 +82,7 @@ public class ToolsAppManager(IDbContextFactory<ToolsAppContext> toolsDbFactory) 
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteConfig(int confId)
+    public async Task<ResponseBaseModel> DeleteConfigAsync(int confId, CancellationToken token = default)
     {
         using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
 
@@ -96,14 +96,14 @@ public class ToolsAppManager(IDbContextFactory<ToolsAppContext> toolsDbFactory) 
     }
 
     /// <inheritdoc/>
-    public async Task<ExeCommandModelDB[]> GetExeCommandsForConfig(int confId)
+    public async Task<ExeCommandModelDB[]> GetExeCommandsForConfigAsync(int confId, CancellationToken token = default)
     {
         using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
         return await context.ExeCommands.Where(x => x.ParentId == confId).ToArrayAsync();
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteExeCommand(int exeCommandId)
+    public async Task<ResponseBaseModel> DeleteExeCommandAsync(int exeCommandId, CancellationToken token = default)
     {
         using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
 
@@ -117,7 +117,7 @@ public class ToolsAppManager(IDbContextFactory<ToolsAppContext> toolsDbFactory) 
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateOrCreateExeCommand(ExeCommandModelDB req)
+    public async Task<ResponseBaseModel> UpdateOrCreateExeCommandAsync(ExeCommandModelDB req, CancellationToken token = default)
     {
         using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
 
@@ -146,14 +146,14 @@ public class ToolsAppManager(IDbContextFactory<ToolsAppContext> toolsDbFactory) 
 
 
     /// <inheritdoc/>
-    public async Task<SyncDirectoryModelDB[]> GetSyncDirectoriesForConfig(int confId)
+    public async Task<SyncDirectoryModelDB[]> GetSyncDirectoriesForConfigAsync(int confId, CancellationToken token = default)
     {
         using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
         return await context.SyncDirectories.Where(x => x.ParentId == confId).ToArrayAsync();
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteSyncDirectory(int syncDirectoryId)
+    public async Task<ResponseBaseModel> DeleteSyncDirectoryAsync(int syncDirectoryId, CancellationToken token = default)
     {
         using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
 
@@ -167,7 +167,7 @@ public class ToolsAppManager(IDbContextFactory<ToolsAppContext> toolsDbFactory) 
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateOrCreateSyncDirectory(SyncDirectoryModelDB req)
+    public async Task<ResponseBaseModel> UpdateOrCreateSyncDirectoryAsync(SyncDirectoryModelDB req, CancellationToken token = default)
     {
         using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
 
@@ -195,7 +195,7 @@ public class ToolsAppManager(IDbContextFactory<ToolsAppContext> toolsDbFactory) 
     }
 
     /// <inheritdoc/>
-    public async Task<SyncDirectoryModelDB> ReadSyncDirectory(int syncDirId)
+    public async Task<SyncDirectoryModelDB> ReadSyncDirectoryAsync(int syncDirId, CancellationToken token = default)
     {
         using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
         return await context
@@ -204,7 +204,7 @@ public class ToolsAppManager(IDbContextFactory<ToolsAppContext> toolsDbFactory) 
     }
 
     /// <inheritdoc/>
-    public async Task<ExeCommandModelDB> ReadExeCommand(int comId)
+    public async Task<ExeCommandModelDB> ReadExeCommandAsync(int comId, CancellationToken token = default)
     {
         using ToolsAppContext context = await toolsDbFactory.CreateDbContextAsync();
         return await context

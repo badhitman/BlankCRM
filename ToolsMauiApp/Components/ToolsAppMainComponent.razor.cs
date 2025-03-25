@@ -43,7 +43,7 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
             return;
         }
         await SetBusy();
-        ResponseBaseModel res = await AppManagerRepo.DeleteConfig(ApiConnect.Id);
+        ResponseBaseModel res = await AppManagerRepo.DeleteConfigAsync(ApiConnect.Id);
         deleteInit = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusy(false);
@@ -65,7 +65,7 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
     public async Task SetActiveHandler(int selectedConfId)
     {
         await SetBusy();
-        AllTokens = await AppManagerRepo.GetAllConfigurations();
+        AllTokens = await AppManagerRepo.GetAllConfigurationsAsync();
 
         if (selectedConfId == 0)
             ApiConnect.Empty();
@@ -82,7 +82,7 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
     async Task InitSelector()
     {
         await SetBusy();
-        AllTokens = await AppManagerRepo.GetAllConfigurations();
+        AllTokens = await AppManagerRepo.GetAllConfigurationsAsync();
         await SetActiveHandler(AllTokens.OrderBy(x => x.Name).FirstOrDefault()?.Id ?? 0);
         await SetBusy(false);
     }

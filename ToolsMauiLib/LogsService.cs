@@ -25,44 +25,44 @@ public class LogsService(ApiRestConfigModelDB _conf, IHttpClientFactory HttpClie
     };
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestModel<int> req)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestModel<int> req, CancellationToken cancellationToken = default)
     {
         using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
         string json = System.Text.Json.JsonSerializer.Serialize(req, _serializerOptions);
         StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        using HttpResponseMessage response = await _client.PostAsync(new Uri($"/{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.PAGE_ACTION_NAME}/{Routes.GOTO_ACTION_NAME}-for-{Routes.RECORD_CONTROLLER_NAME}"), content);
+        using HttpResponseMessage response = await _client.PostAsync(new Uri($"/{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.PAGE_ACTION_NAME}/{Routes.GOTO_ACTION_NAME}-for-{Routes.RECORD_CONTROLLER_NAME}"), content, cancellationToken);
 
-        string rj = await response.Content.ReadAsStringAsync();
+        string rj = await response.Content.ReadAsStringAsync(cancellationToken);
 
         return JsonConvert.DeserializeObject<TPaginationResponseModel<NLogRecordModelDB>>(rj)!;
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelect(TPaginationRequestModel<LogsSelectRequestModel> req)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken cancellationToken = default)
     {
         using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
         string json = System.Text.Json.JsonSerializer.Serialize(req, _serializerOptions);
         StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        using HttpResponseMessage response = await _client.PostAsync(new Uri($"{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.SELECT_ACTION_NAME}"), content);
-        string rj = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await _client.PostAsync(new Uri($"{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.SELECT_ACTION_NAME}"), content, cancellationToken);
+        string rj = await response.Content.ReadAsStringAsync(cancellationToken);
 
         return JsonConvert.DeserializeObject<TPaginationResponseModel<NLogRecordModelDB>>(rj)!;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogs(PeriodDatesTimesModel req)
+    public async Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogsAsync(PeriodDatesTimesModel req, CancellationToken cancellationToken = default)
     {
         using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
         string json = System.Text.Json.JsonSerializer.Serialize(req, _serializerOptions);
         StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        using HttpResponseMessage response = await _client.PostAsync(new Uri($"{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.METADATA_CONTROLLER_NAME}"), content);
-        string rj = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await _client.PostAsync(new Uri($"{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.METADATA_CONTROLLER_NAME}"), content, cancellationToken);
+        string rj = await response.Content.ReadAsStringAsync(cancellationToken);
 
         try
         {

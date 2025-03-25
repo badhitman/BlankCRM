@@ -19,7 +19,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpCl
 #pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<ExpressProfileResponseModel>> GetMe(CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<ExpressProfileResponseModel>> GetMeAsync(CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
@@ -37,7 +37,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpCl
 
     #region files (ext)
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FilePartUpload(SessionFileRequestModel req)
+    public async Task<ResponseBaseModel> FilePartUploadAsync(SessionFileRequestModel req, CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
@@ -51,50 +51,50 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpCl
         routeUri += $"?{Routes.SESSION_CONTROLLER_NAME}_{Routes.TOKEN_CONTROLLER_NAME}={Convert.ToBase64String(Encoding.UTF8.GetBytes(req.SessionId))}";
         routeUri += $"&{Routes.FILE_CONTROLLER_NAME}_{Routes.TOKEN_CONTROLLER_NAME}={Convert.ToBase64String(Encoding.UTF8.GetBytes(req.FileId))}";
 
-        HttpResponseMessage response = await client.PostAsync(routeUri, form);
+        HttpResponseMessage response = await client.PostAsync(routeUri, form, cancellationToken);
 
         response.EnsureSuccessStatusCode();
-        string rj = await response.Content.ReadAsStringAsync();
+        string rj = await response.Content.ReadAsStringAsync(cancellationToken);
 
         return JsonConvert.DeserializeObject<ResponseBaseModel>(rj)!;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<PartUploadSessionModel>> FilePartUploadSessionStart(PartUploadSessionStartRequestModel req)
+    public async Task<TResponseModel<PartUploadSessionModel>> FilePartUploadSessionStartAsync(PartUploadSessionStartRequestModel req, CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
-        using HttpResponseMessage response = await client.PostAsJsonAsync($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.SESSION_CONTROLLER_NAME}-{Routes.PART_CONTROLLER_NAME}-{Routes.UPLOAD_ACTION_NAME}-{Routes.START_ACTION_NAME}", req);
-        string rj = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await client.PostAsJsonAsync($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.SESSION_CONTROLLER_NAME}-{Routes.PART_CONTROLLER_NAME}-{Routes.UPLOAD_ACTION_NAME}-{Routes.START_ACTION_NAME}", req, cancellationToken: cancellationToken);
+        string rj = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<TResponseModel<PartUploadSessionModel>>(rj)!;
     }
     #endregion
 
     #region files (base)
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> DeleteFile(DeleteRemoteFileRequestModel req)
+    public async Task<TResponseModel<bool>> DeleteFileAsync(DeleteRemoteFileRequestModel req, CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
-        using HttpResponseMessage response = await client.PostAsJsonAsync($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.FILE_CONTROLLER_NAME}-{Routes.DELETE_ACTION_NAME}", req);
-        string rj = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await client.PostAsJsonAsync($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.FILE_CONTROLLER_NAME}-{Routes.DELETE_ACTION_NAME}", req, cancellationToken: cancellationToken);
+        string rj = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<TResponseModel<bool>>(rj)!;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>> ExeCommand(ExeCommandModelDB req)
+    public async Task<TResponseModel<string>> ExeCommandAsync(ExeCommandModelDB req, CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
-        using HttpResponseMessage response = await client.PostAsJsonAsync($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.CMD_CONTROLLER_NAME}/{Routes.EXE_ACTION_NAME}", req);
-        string rj = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await client.PostAsJsonAsync($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.CMD_CONTROLLER_NAME}/{Routes.EXE_ACTION_NAME}", req, cancellationToken: cancellationToken);
+        string rj = await response.Content.ReadAsStringAsync(cancellationToken);
 
         return JsonConvert.DeserializeObject<TResponseModel<string>>(rj)!;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectoryData(ToolsFilesRequestModel req)
+    public async Task<TResponseModel<List<ToolsFilesResponseModel>>> GetDirectoryDataAsync(ToolsFilesRequestModel req, CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
-        using HttpResponseMessage response = await client.PostAsJsonAsync($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.DIRECTORY_CONTROLLER_NAME}/{Routes.GET_ACTION_NAME}-{Routes.DATA_ACTION_NAME}", req);
-        string rj = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await client.PostAsJsonAsync($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.DIRECTORY_CONTROLLER_NAME}/{Routes.GET_ACTION_NAME}-{Routes.DATA_ACTION_NAME}", req, cancellationToken: cancellationToken);
+        string rj = await response.Content.ReadAsStringAsync(cancellationToken);
         TResponseModel<List<ToolsFilesResponseModel>> res = JsonConvert.DeserializeObject<TResponseModel<List<ToolsFilesResponseModel>>>(rj)!;
 
         if (res.Response is null)
@@ -114,17 +114,17 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpCl
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DirectoryExist(string remoteDirectory)
+    public async Task<ResponseBaseModel> DirectoryExistAsync(string remoteDirectory, CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
         string q = $"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.DIRECTORY_CONTROLLER_NAME}/{Routes.CHECK_ACTION_NAME}";
-        using HttpResponseMessage response = await client.PostAsJsonAsync(q, remoteDirectory);
-        string rj = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await client.PostAsJsonAsync(q, remoteDirectory, cancellationToken: cancellationToken);
+        string rj = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<ResponseBaseModel>(rj)!;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>> UpdateFile(string fileScopeName, string remoteDirectory, byte[] bytes)
+    public async Task<TResponseModel<string>> UpdateFileAsync(string fileScopeName, string remoteDirectory, byte[] bytes, CancellationToken cancellationToken = default)
     {
         TResponseModel<string> res = new();
         if (string.IsNullOrWhiteSpace(remoteDirectory))
@@ -142,67 +142,67 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpCl
         string routeUri = $"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.FILE_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}";
         routeUri += $"?{Routes.REMOTE_CONTROLLER_NAME}_{Routes.DIRECTORY_CONTROLLER_NAME}={Convert.ToBase64String(Encoding.UTF8.GetBytes(remoteDirectory))}";
 
-        HttpResponseMessage response = await client.PostAsync(routeUri, form);
+        HttpResponseMessage response = await client.PostAsync(routeUri, form, cancellationToken);
 
         response.EnsureSuccessStatusCode();
 
-        string sd = await response.Content.ReadAsStringAsync();
+        string sd = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<TResponseModel<string>>(sd)!;
     }
     #endregion
 
     #region КЛАДР 4.0
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ClearTempKladr()
+    public async Task<ResponseBaseModel> ClearTempKladrAsync(CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
         string routeUri = $"{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}-{Routes.CLEAR_ACTION_NAME}";
 
-        HttpResponseMessage response = await client.DeleteAsync(routeUri);
+        HttpResponseMessage response = await client.DeleteAsync(routeUri, cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        string sd = await response.Content.ReadAsStringAsync();
+        string sd = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<ResponseBaseModel>(sd)!;
     }
 
     /// <inheritdoc/>
-    public async Task<MetadataKladrModel> GetMetadataKladr(GetMetadataKladrRequestModel req)
+    public async Task<MetadataKladrModel> GetMetadataKladrAsync(GetMetadataKladrRequestModel req, CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
         string routeUri = $"/{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.METADATA_CONTROLLER_NAME}/{Routes.CALCULATE_ACTION_NAME}";
 
-        HttpResponseMessage response = await client.PostAsJsonAsync(routeUri, req);
+        HttpResponseMessage response = await client.PostAsJsonAsync(routeUri, req, cancellationToken: cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        string sd = await response.Content.ReadAsStringAsync();
+        string sd = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<MetadataKladrModel>(sd)!;
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UploadPartTempKladr(UploadPartTableDataModel req)
+    public async Task<ResponseBaseModel> UploadPartTempKladrAsync(UploadPartTableDataModel req, CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
         string routeUri = $"/{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}/{Routes.UPLOAD_ACTION_NAME}-{Routes.PART_CONTROLLER_NAME}";
 
-        HttpResponseMessage response = await client.PostAsJsonAsync(routeUri, req);
+        HttpResponseMessage response = await client.PostAsJsonAsync(routeUri, req, cancellationToken: cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        string sd = await response.Content.ReadAsStringAsync();
+        string sd = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<ResponseBaseModel>(sd)!;
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FlushTempKladr()
+    public async Task<ResponseBaseModel> FlushTempKladrAsync(CancellationToken cancellationToken = default)
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
         string routeUri = $"{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}-{Routes.FLUSH_ACTION_NAME}";
 
-        HttpResponseMessage response = await client.PutAsync(routeUri, null);
+        HttpResponseMessage response = await client.PutAsync(routeUri, null, cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        string sd = await response.Content.ReadAsStringAsync();
+        string sd = await response.Content.ReadAsStringAsync(cancellationToken);
         return JsonConvert.DeserializeObject<ResponseBaseModel>(sd)!;
     }
     #endregion

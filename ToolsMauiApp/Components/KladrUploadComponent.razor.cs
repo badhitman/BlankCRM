@@ -103,7 +103,7 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
         aboutSubStatus = "данные записываются в удалённую базу данных";
 
         await SetBusy();
-        await RemoteClient.ClearTempKladr();
+        await RemoteClient.ClearTempKladrAsync();
         await Task.WhenAll(ViewsChilds.Select(x => Task.Run(async () => await x.ParentComponent.UploadData())));
 
         aboutStatus = "Данные отправлены на сервер";

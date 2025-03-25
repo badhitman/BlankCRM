@@ -316,7 +316,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
             if (data_list_Count > 1000)
             {
                 data_list_Count = 0;
-                _ = await RemoteClient.UploadPartTempKladr(new()
+                _ = await RemoteClient.UploadPartTempKladrAsync(new()
                 {
                     Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
                     RowsData = DataList,
@@ -330,7 +330,7 @@ public partial class ParseDBF(IClientHTTPRestService RemoteClient)
         }
         if (DataList.Count != 0)
         {
-            _ = await RemoteClient.UploadPartTempKladr(new()
+            _ = await RemoteClient.UploadPartTempKladrAsync(new()
             {
                 Columns = [.. Columns.Cast<FieldDescriptor>().Select(x => new FieldDescriptorBase() { FieldLen = x.fieldLen, FieldName = x.fieldName, FieldType = x.fieldType })],
                 RowsData = DataList,
