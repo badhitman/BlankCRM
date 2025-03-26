@@ -43,11 +43,11 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
 
     UniversalBaseModel? SelectedRubric;
 
-    void ChangeSelectAction(KladrResponseModel sender)
+    void ChangeSelectAction(KladrResponseModel? sender)
     {
-        OfficeEdit.KladrCode = sender.Code;
-        OfficeEdit.KladrTitle = sender.Name;
-        StateHasChangedCall();         
+        OfficeEdit.KladrCode = sender?.Code ?? "";
+        OfficeEdit.KladrTitle = sender?.Name ?? "";
+        StateHasChangedCall();
     }
 
     void HandleOnChange(ChangeEventArgs args)

@@ -43,12 +43,6 @@ public class KladrResponseModel
     public required string GNINMB { get; set; }
 
 
-    /// <inheritdoc/>
-    public override string ToString()
-    {
-        return $"{Name} {Socr}";
-    }
-
     /// <summary>
     /// Chain
     /// </summary>
@@ -69,4 +63,26 @@ public class KladrResponseModel
     /// Вышестоящие/предки
     /// </summary>
     public List<RootKLADRModelDB>? Parents { get; set; }
+
+
+    /// <summary>
+    /// Full name
+    /// </summary>
+    /// <returns></returns>
+    public string GetFullName()
+    {
+        static string toString(string name, string socr) => socr[..1].Equals(socr[..1].ToUpper()) 
+            ? $"{socr} {name}" 
+            : $"{name} {socr}";
+
+        return Parents is null || Parents.Count == 0 
+            ? toString(Name, Socr) 
+            : $"{string.Join(", ", Parents.Select(x => toString(x.NAME, x.SOCR)))}, {toString(Name, Socr)}";
+    }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{Name} {Socr}";
+    }
 }

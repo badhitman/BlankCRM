@@ -48,10 +48,10 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         _expanded = !_expanded;
     }
 
-    void ChangeSelectAction(KladrResponseModel sender)
+    void ChangeSelectAction(KladrResponseModel? sender)
     {
-        kladrCode = sender.Code;
-        kladrTitle = sender.Name;
+        kladrCode = sender?.Code ?? "";
+        kladrTitle = sender?.Name ?? "";
         StateHasChangedCall();
     }
 

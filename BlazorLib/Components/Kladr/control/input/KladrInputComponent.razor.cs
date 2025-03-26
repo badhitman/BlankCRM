@@ -20,7 +20,7 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public required Action<KladrResponseModel> ChangeSelectHandle { get; set; }
+    public required Action<KladrResponseModel?> ChangeSelectHandle { get; set; }
 
     /// <inheritdoc/>
     [Parameter]
@@ -29,8 +29,17 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
     void ChangeSelectAction(KladrResponseModel sender)
     {
         ChangeSelectHandle(sender);
-        KladrObject?.Update(sender.Code, sender.ToString());
-        StateHasChangedCall();
+        if (KladrObject is null)
+            KladrObject = new() { Id = sender.Code, Name = sender.GetFullName() };
+        else
+            KladrObject?.Update(sender.Code, sender.GetFullName());
+        StateHasChangedCall();        
+    }
+
+    void ClearInput()
+    {
+        KladrObject = null;
+        ChangeSelectHandle(null);
     }
 
     async Task<IDialogReference> OpenDialogAsync()
