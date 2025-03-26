@@ -72,8 +72,8 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         StateHasChanged();
         await Task.Delay(1);
     }
-    private static readonly KladrChainTypesEnum[] _finChains = [KladrChainTypesEnum.StreetsInCity, KladrChainTypesEnum.StreetsInRegion, KladrChainTypesEnum.StreetsInPopPoint];
-    void SelectRowAction(KladrResponseModel selected)
+    
+    async void SelectRowAction(KladrResponseModel selected)
     {
         List<RootKLADRModelDB>? parents = selected.Parents?.Skip(1 + SelectionProgressSteps.Count).ToList();
         if (parents is not null && parents.Count != 0)
@@ -82,26 +82,23 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         SelectionProgressSteps.Add(selected.Payload.ToObject<RootKLADRModelDB>()!);
         FindName = "";
         CodeKladrModel mdCode = CodeKladrModel.Build(selected.Code);
-        if (_finChains.Contains(selected.Chain) || string.IsNullOrWhiteSpace(mdCode.ChildsCodesTemplate))
+        if (mdCode.Level== KladrTypesObjectsEnum.House || string.IsNullOrWhiteSpace(mdCode.ChildsCodesTemplate))
         {
             ChangeSelectHandle(selected);
             MudDialog.Close(DialogResult.Ok(true));
         }
         else
         {
-            InvokeAsync(async () =>
+            await SetBusyAsync();
+            ResponseBaseModel res = await kladrRepo.ChildsContainsAsync(mdCode.ChildsCodesTemplate);
+            await SetBusyAsync(false);
+            if (!res.Success())
             {
-                await SetBusyAsync();
-                ResponseBaseModel res = await kladrRepo.ChildsContainsAsync(mdCode.ChildsCodesTemplate);
-                await SetBusyAsync(false);
-                if (!res.Success())
-                {
-                    ChangeSelectHandle(selected);
-                    MudDialog.Close(DialogResult.Ok(true));
-                }
-                else
-                    await RebuildTable();
-            });
+                ChangeSelectHandle(selected);
+                MudDialog.Close(DialogResult.Ok(true));
+            }
+            else
+                await RebuildTable();
         }
     }
 

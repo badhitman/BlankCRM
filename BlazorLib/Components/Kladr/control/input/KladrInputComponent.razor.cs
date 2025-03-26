@@ -26,6 +26,7 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public EntryAltModel? KladrObject { get; set; }
 
+
     void ChangeSelectAction(KladrResponseModel sender)
     {
         ChangeSelectHandle(sender);
@@ -49,7 +50,7 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
             { x => x.ChangeSelectHandle, ChangeSelectAction }
         };
 
-        DialogOptions options = new() { CloseOnEscapeKey = true };
+        DialogOptions options = new() { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Large };
         IDialogReference res = await DialogService.ShowAsync<KladrSelectDialogComponent>("Выбор адреса:", parameters, options);
 
         return res;

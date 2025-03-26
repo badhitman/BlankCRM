@@ -7,6 +7,7 @@
     </TitleContent>
     <DialogContent>
         <MudAutocomplete @bind-Value="SelectedRegionName"
+                         Disabled="IsBusyProgress"
                          Dense
                          HelperTextOnFocus
                          SearchFunc="SearchRegion"
@@ -27,8 +28,8 @@
         @if (CurrentRegion is not null)
         {
             <div class="input-group mb-3">
-                <input @bind="FindName" type="text" class="form-control" placeholder="Поиск по названию">
-                <button class="btn btn-outline-secondary" type="button">Найти</button>
+                <input @bind="FindName" type="text" class="form-control" placeholder="Поиск по названию" disabled="@IsBusyProgress">
+                <button class="btn btn-outline-secondary" type="button" disabled="@IsBusyProgress">Найти</button>
             </div>
             @if (string.IsNullOrWhiteSpace(FindName) && SelectionProgressSteps.Count == 0)
             {

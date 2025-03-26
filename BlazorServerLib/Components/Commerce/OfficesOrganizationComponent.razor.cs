@@ -38,7 +38,8 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 
     bool CanCreate =>
         !string.IsNullOrWhiteSpace(addingAddress) &&
-        !string.IsNullOrWhiteSpace(addingContacts) &&
+        !string.IsNullOrWhiteSpace(kladrCode) &&
+        !string.IsNullOrWhiteSpace(kladrTitle) &&
         !string.IsNullOrWhiteSpace(addingName) &&
         SelectedRubric is not null;
 
@@ -51,7 +52,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
     void ChangeSelectAction(KladrResponseModel? sender)
     {
         kladrCode = sender?.Code ?? "";
-        kladrTitle = sender?.Name ?? "";
+        kladrTitle = sender?.GetFullName() ?? "";
         StateHasChangedCall();
     }
 
