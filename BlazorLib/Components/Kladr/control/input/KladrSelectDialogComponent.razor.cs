@@ -44,6 +44,8 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         {
             _selectedRegionName = value;
             CurrentRegion = regions.First(x => x.ToString().Equals(_selectedRegionName));
+            SelectionProgressSteps.Clear();
+            FindName = "";
         }
     }
 
@@ -72,7 +74,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         StateHasChanged();
         await Task.Delay(1);
     }
-    
+
     async void SelectRowAction(KladrResponseModel selected)
     {
         List<RootKLADRModelDB>? parents = selected.Parents?.Skip(1 + SelectionProgressSteps.Count).ToList();
@@ -82,7 +84,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         SelectionProgressSteps.Add(selected.Payload.ToObject<RootKLADRModelDB>()!);
         FindName = "";
         CodeKladrModel mdCode = CodeKladrModel.Build(selected.Code);
-        if (mdCode.Level== KladrTypesObjectsEnum.House || string.IsNullOrWhiteSpace(mdCode.ChildsCodesTemplate))
+        if (mdCode.Level == KladrTypesObjectsEnum.Street || string.IsNullOrWhiteSpace(mdCode.ChildsCodesTemplate))
         {
             ChangeSelectHandle(selected);
             MudDialog.Close(DialogResult.Ok(true));
@@ -111,6 +113,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
             return new TableData<KladrResponseModel>() { TotalItems = 0, Items = [] };
 
         string[] _codeLikeFilter;
+        bool includeHouses = false;
         RootKLADRModelDB? so = SelectedObject;
         if (so is not null)
         {
@@ -125,7 +128,10 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
                 };
             }
             else
+            {
                 _codeLikeFilter = [mdCode.ChildsCodesTemplate];
+                includeHouses = mdCode.Level >= KladrTypesObjectsEnum.Street;
+            }
         }
         else
             _codeLikeFilter = [$"{CurrentRegion.Code[..2]}%00"];
@@ -136,6 +142,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
             FindText = $"%{FindName}%",
             PageNum = state.Page,
             PageSize = state.PageSize,
+            IncludeHouses = includeHouses,
         };
         await SetBusyAsync(token: token);
         TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsFindAsync(req, token);

@@ -140,6 +140,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     BankBIC = table.Column<string>(type: "text", nullable: false),
                     CurrentAccount = table.Column<string>(type: "text", nullable: false),
                     CorrespondentAccount = table.Column<string>(type: "text", nullable: false),
+                    BankAddress = table.Column<string>(type: "text", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
@@ -279,6 +280,44 @@ namespace DbPostgreLib.Migrations.Commerce
                 });
 
             migrationBuilder.CreateTable(
+                name: "CalendarsSchedules",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DateScheduleCalendar = table.Column<string>(type: "character varying(10)", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
+                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    SortIndex = table.Column<long>(type: "bigint", nullable: false),
+                    ParentId = table.Column<int>(type: "integer", nullable: true),
+                    ContextName = table.Column<string>(type: "text", nullable: true),
+                    NormalizedNameUpper = table.Column<string>(type: "text", nullable: true),
+                    NomenclatureId = table.Column<int>(type: "integer", nullable: true),
+                    OfferId = table.Column<int>(type: "integer", nullable: true),
+                    StartPart = table.Column<long>(type: "bigint", nullable: false),
+                    EndPart = table.Column<long>(type: "bigint", nullable: false),
+                    QueueCapacity = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CalendarsSchedules", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CalendarsSchedules_Nomenclatures_NomenclatureId",
+                        column: x => x.NomenclatureId,
+                        principalTable: "Nomenclatures",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CalendarsSchedules_Offers_OfferId",
+                        column: x => x.OfferId,
+                        principalTable: "Offers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Contractors",
                 columns: table => new
                 {
@@ -393,21 +432,14 @@ namespace DbPostgreLib.Migrations.Commerce
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkScheduleBaseModelDB",
+                name: "WeeklySchedules",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    NomenclatureId = table.Column<int>(type: "integer", nullable: true),
-                    OfferId = table.Column<int>(type: "integer", nullable: true),
-                    StartPart = table.Column<long>(type: "bigint", nullable: false),
-                    EndPart = table.Column<long>(type: "bigint", nullable: false),
-                    QueueCapacity = table.Column<long>(type: "bigint", nullable: false),
-                    Discriminator = table.Column<string>(type: "character varying(34)", maxLength: 34, nullable: false),
-                    DateScheduleCalendar = table.Column<string>(type: "character varying(10)", nullable: true),
-                    Weekday = table.Column<int>(type: "integer", nullable: true),
-                    IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
+                    Weekday = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
+                    IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
@@ -415,18 +447,23 @@ namespace DbPostgreLib.Migrations.Commerce
                     SortIndex = table.Column<long>(type: "bigint", nullable: false),
                     ParentId = table.Column<int>(type: "integer", nullable: true),
                     ContextName = table.Column<string>(type: "text", nullable: true),
-                    NormalizedNameUpper = table.Column<string>(type: "text", nullable: true)
+                    NormalizedNameUpper = table.Column<string>(type: "text", nullable: true),
+                    NomenclatureId = table.Column<int>(type: "integer", nullable: true),
+                    OfferId = table.Column<int>(type: "integer", nullable: true),
+                    StartPart = table.Column<long>(type: "bigint", nullable: false),
+                    EndPart = table.Column<long>(type: "bigint", nullable: false),
+                    QueueCapacity = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkScheduleBaseModelDB", x => x.Id);
+                    table.PrimaryKey("PK_WeeklySchedules", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WorkScheduleBaseModelDB_Nomenclatures_NomenclatureId",
+                        name: "FK_WeeklySchedules_Nomenclatures_NomenclatureId",
                         column: x => x.NomenclatureId,
                         principalTable: "Nomenclatures",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_WorkScheduleBaseModelDB_Offers_OfferId",
+                        name: "FK_WeeklySchedules_Offers_OfferId",
                         column: x => x.OfferId,
                         principalTable: "Offers",
                         principalColumn: "Id");
@@ -563,6 +600,52 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_BanksDetails_OrganizationId",
                 table: "BanksDetails",
                 column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalendarsSchedules_ContextName",
+                table: "CalendarsSchedules",
+                column: "ContextName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalendarsSchedules_DateScheduleCalendar",
+                table: "CalendarsSchedules",
+                column: "DateScheduleCalendar");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalendarsSchedules_IsDisabled",
+                table: "CalendarsSchedules",
+                column: "IsDisabled");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalendarsSchedules_Name",
+                table: "CalendarsSchedules",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalendarsSchedules_NomenclatureId",
+                table: "CalendarsSchedules",
+                column: "NomenclatureId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalendarsSchedules_NormalizedNameUpper",
+                table: "CalendarsSchedules",
+                column: "NormalizedNameUpper");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalendarsSchedules_OfferId",
+                table: "CalendarsSchedules",
+                column: "OfferId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalendarsSchedules_SortIndex_ParentId_ContextName",
+                table: "CalendarsSchedules",
+                columns: new[] { "SortIndex", "ParentId", "ContextName" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalendarsSchedules_StartPart_EndPart",
+                table: "CalendarsSchedules",
+                columns: new[] { "StartPart", "EndPart" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contractors_OfferId",
@@ -825,54 +908,49 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkScheduleBaseModelDB_ContextName",
-                table: "WorkScheduleBaseModelDB",
+                name: "IX_WeeklySchedules_ContextName",
+                table: "WeeklySchedules",
                 column: "ContextName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkScheduleBaseModelDB_DateScheduleCalendar",
-                table: "WorkScheduleBaseModelDB",
-                column: "DateScheduleCalendar");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkScheduleBaseModelDB_IsDisabled",
-                table: "WorkScheduleBaseModelDB",
+                name: "IX_WeeklySchedules_IsDisabled",
+                table: "WeeklySchedules",
                 column: "IsDisabled");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkScheduleBaseModelDB_Name",
-                table: "WorkScheduleBaseModelDB",
+                name: "IX_WeeklySchedules_Name",
+                table: "WeeklySchedules",
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkScheduleBaseModelDB_NomenclatureId",
-                table: "WorkScheduleBaseModelDB",
+                name: "IX_WeeklySchedules_NomenclatureId",
+                table: "WeeklySchedules",
                 column: "NomenclatureId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkScheduleBaseModelDB_NormalizedNameUpper",
-                table: "WorkScheduleBaseModelDB",
+                name: "IX_WeeklySchedules_NormalizedNameUpper",
+                table: "WeeklySchedules",
                 column: "NormalizedNameUpper");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkScheduleBaseModelDB_OfferId",
-                table: "WorkScheduleBaseModelDB",
+                name: "IX_WeeklySchedules_OfferId",
+                table: "WeeklySchedules",
                 column: "OfferId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkScheduleBaseModelDB_SortIndex_ParentId_ContextName",
-                table: "WorkScheduleBaseModelDB",
+                name: "IX_WeeklySchedules_SortIndex_ParentId_ContextName",
+                table: "WeeklySchedules",
                 columns: new[] { "SortIndex", "ParentId", "ContextName" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkScheduleBaseModelDB_StartPart_EndPart",
-                table: "WorkScheduleBaseModelDB",
+                name: "IX_WeeklySchedules_StartPart_EndPart",
+                table: "WeeklySchedules",
                 columns: new[] { "StartPart", "EndPart" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkScheduleBaseModelDB_Weekday",
-                table: "WorkScheduleBaseModelDB",
+                name: "IX_WeeklySchedules_Weekday",
+                table: "WeeklySchedules",
                 column: "Weekday");
         }
 
@@ -884,6 +962,9 @@ namespace DbPostgreLib.Migrations.Commerce
 
             migrationBuilder.DropTable(
                 name: "BanksDetails");
+
+            migrationBuilder.DropTable(
+                name: "CalendarsSchedules");
 
             migrationBuilder.DropTable(
                 name: "Contractors");
@@ -910,7 +991,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "Units");
 
             migrationBuilder.DropTable(
-                name: "WorkScheduleBaseModelDB");
+                name: "WeeklySchedules");
 
             migrationBuilder.DropTable(
                 name: "OfficesOrders");

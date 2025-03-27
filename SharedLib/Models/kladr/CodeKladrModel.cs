@@ -53,8 +53,8 @@ public partial class CodeKladrModel
          KladrTypesObjectsEnum.RootRegion => $"{RegionCode}%00",
          KladrTypesObjectsEnum.Area => $"{RegionCode}{AreaCode}%00",
          KladrTypesObjectsEnum.City => $"{RegionCode}{AreaCode}{CityCode}%00",
-         KladrTypesObjectsEnum.PopPoint => $"{RegionCode}{AreaCode}{CityCode}{PopPointCode}%00",
-         KladrTypesObjectsEnum.Street => $"{RegionCode}{AreaCode}{CityCode}{PopPointCode}{StreetCode}%",
+         KladrTypesObjectsEnum.PopPoint => $"{RegionCode}{AreaCode}{CityCode}{PopPointCode}____00",
+         KladrTypesObjectsEnum.Street => $"{RegionCode}{AreaCode}{CityCode}{PopPointCode}{StreetCode}____",
          _ => default
     };
 

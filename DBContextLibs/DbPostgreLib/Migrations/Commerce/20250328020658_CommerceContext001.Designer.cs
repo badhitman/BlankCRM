@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20250323054407_CommerceContext001")]
+    [Migration("20250328020658_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -32,6 +32,10 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BankAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("BankBIC")
                         .IsRequired()
@@ -70,6 +74,88 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsUnique();
 
                     b.ToTable("BanksDetails");
+                });
+
+            modelBuilder.Entity("SharedLib.CalendarScheduleModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContextName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DateScheduleCalendar")
+                        .IsRequired()
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<long>("EndPart")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastAtUpdatedUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("NomenclatureId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("NormalizedNameUpper")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("OfferId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("QueueCapacity")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SortIndex")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("StartPart")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContextName");
+
+                    b.HasIndex("DateScheduleCalendar");
+
+                    b.HasIndex("IsDisabled");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("NomenclatureId");
+
+                    b.HasIndex("NormalizedNameUpper");
+
+                    b.HasIndex("OfferId");
+
+                    b.HasIndex("StartPart", "EndPart");
+
+                    b.HasIndex("SortIndex", "ParentId", "ContextName")
+                        .IsUnique();
+
+                    b.ToTable("CalendarsSchedules");
                 });
 
             modelBuilder.Entity("SharedLib.LockTransactionModelDB", b =>
@@ -799,7 +885,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("WarehouseDocuments");
                 });
 
-            modelBuilder.Entity("SharedLib.WorkScheduleBaseModelDB", b =>
+            modelBuilder.Entity("SharedLib.WeeklyScheduleModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -815,11 +901,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(34)
-                        .HasColumnType("character varying(34)");
 
                     b.Property<long>("EndPart")
                         .HasColumnType("bigint");
@@ -858,6 +939,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<long>("StartPart")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("Weekday")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ContextName");
@@ -872,41 +956,14 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("OfferId");
 
+                    b.HasIndex("Weekday");
+
                     b.HasIndex("StartPart", "EndPart");
 
                     b.HasIndex("SortIndex", "ParentId", "ContextName")
                         .IsUnique();
 
-                    b.ToTable("WorkScheduleBaseModelDB");
-
-                    b.HasDiscriminator().HasValue("WorkScheduleBaseModelDB");
-
-                    b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("SharedLib.CalendarScheduleModelDB", b =>
-                {
-                    b.HasBaseType("SharedLib.WorkScheduleBaseModelDB");
-
-                    b.Property<string>("DateScheduleCalendar")
-                        .IsRequired()
-                        .HasColumnType("character varying(10)");
-
-                    b.HasIndex("DateScheduleCalendar");
-
-                    b.HasDiscriminator().HasValue("CalendarScheduleModelDB");
-                });
-
-            modelBuilder.Entity("SharedLib.WeeklyScheduleModelDB", b =>
-                {
-                    b.HasBaseType("SharedLib.WorkScheduleBaseModelDB");
-
-                    b.Property<int>("Weekday")
-                        .HasColumnType("integer");
-
-                    b.HasIndex("Weekday");
-
-                    b.HasDiscriminator().HasValue("WeeklyScheduleModelDB");
+                    b.ToTable("WeeklySchedules");
                 });
 
             modelBuilder.Entity("SharedLib.BankDetailsModelDB", b =>
@@ -918,6 +975,21 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired();
 
                     b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("SharedLib.CalendarScheduleModelDB", b =>
+                {
+                    b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
+                        .WithMany()
+                        .HasForeignKey("NomenclatureId");
+
+                    b.HasOne("SharedLib.OfferModelDB", "Offer")
+                        .WithMany()
+                        .HasForeignKey("OfferId");
+
+                    b.Navigation("Nomenclature");
+
+                    b.Navigation("Offer");
                 });
 
             modelBuilder.Entity("SharedLib.OfferAvailabilityModelDB", b =>
@@ -1128,7 +1200,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("SharedLib.WorkScheduleBaseModelDB", b =>
+            modelBuilder.Entity("SharedLib.WeeklyScheduleModelDB", b =>
                 {
                     b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
                         .WithMany()

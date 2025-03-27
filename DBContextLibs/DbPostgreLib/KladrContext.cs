@@ -15,7 +15,7 @@ public partial class KladrContext(DbContextOptions<KladrContext> options) : Klad
 {
     /// <inheritdoc/>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "EF1002:Risk of vulnerability to SQL injection.", Justification = "<CustomAttr>")]
-    public override async Task EmptyTemplateTables(bool forTemplate = true)
+    public override async Task EmptyTemplateTablesAsync(bool forTemplate = true)
     {
         if (forTemplate)
         {

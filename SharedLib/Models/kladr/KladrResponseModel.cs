@@ -46,7 +46,7 @@ public class KladrResponseModel
     /// <summary>
     /// Chain
     /// </summary>
-    public KladrChainTypesEnum Chain => CodeKladrModel.Build(Code).Chain;
+    public CodeKladrModel Metadata => CodeKladrModel.Build(Code);
 
 
     /// <summary>
@@ -71,13 +71,13 @@ public class KladrResponseModel
     /// <returns></returns>
     public string GetFullName()
     {
-        static string toString(string name, string socr) => socr[..1].Equals(socr[..1].ToUpper()) 
-            ? $"{socr} {name}" 
+        static string toString(string name, string socr, CodeKladrModel md) => socr[..1].Equals(socr[..1].ToUpper()) || md.Level >= KladrTypesObjectsEnum.City
+            ? $"{socr} {name}"
             : $"{name} {socr}";
 
-        return Parents is null || Parents.Count == 0 
-            ? toString(Name, Socr) 
-            : $"{string.Join(", ", Parents.Select(x => toString(x.NAME, x.SOCR)))}, {toString(Name, Socr)}";
+        return Parents is null || Parents.Count == 0
+            ? toString(Name, Socr, Metadata)
+            : $"{string.Join(", ", Parents.Select(x => toString(x.NAME, x.SOCR, Metadata)))}, {toString(Name, Socr, Metadata)}";
     }
 
     /// <inheritdoc/>

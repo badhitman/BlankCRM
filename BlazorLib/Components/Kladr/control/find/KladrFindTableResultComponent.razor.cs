@@ -50,6 +50,7 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
             PageSize = state.PageSize,
             FindText = $"%{FindText}%",
             CodeLikeFilter = _regionsSelected?.Select(x => $"{x[..2]}%").ToArray(),
+            IncludeHouses = false,
         };
 
         await SetBusyAsync(token: token);

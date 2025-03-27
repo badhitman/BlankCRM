@@ -53,7 +53,7 @@ public partial class OrganizationEditComponent : BlazorBusyComponentBaseAuthMode
 
     async Task ReadOrganization()
     {
-        if (OrganizationId is null)
+        if (OrganizationId is null || OrganizationId < 1)
             return;
 
         await SetBusyAsync();

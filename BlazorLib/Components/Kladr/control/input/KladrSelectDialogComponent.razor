@@ -3,18 +3,22 @@
 
 <MudDialog>
     <TitleContent>
-        @MudDialog.Title
+        <MudStack>@MudDialog.Title</MudStack>
     </TitleContent>
     <DialogContent>
         <MudAutocomplete @bind-Value="SelectedRegionName"
-                         Disabled="IsBusyProgress"
-                         Dense
-                         HelperTextOnFocus
                          SearchFunc="SearchRegion"
-                         Label="Регион"
+                         Disabled="IsBusyProgress"
                          Placeholder="Регион"
-                         HelperText="Регион" />
+                         HelperText="Регион"
+                         HelperTextOnFocus
+                         Label="Регион"
+                         Dense />
 
+        @if (IsBusyProgress && CurrentRegion is null)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="mb-2" />
+        }
         @if (SelectionProgressSteps.Count != 0)
         {
             <ul class="list-group list-group-flush mb-2">
@@ -28,6 +32,13 @@
         @if (CurrentRegion is not null)
         {
             <div class="input-group mb-3">
+                @if (IsBusyProgress)
+                {
+                    <button class="btn btn-outline-info" type="button" disabled title="Обработка запроса выполняется">
+                        <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                        <span class="visually-hidden" role="status">Loading...</span>
+                    </button>
+                }
                 <input @bind="FindName" type="text" class="form-control" placeholder="Поиск по названию" disabled="@IsBusyProgress">
                 <button class="btn btn-outline-secondary" type="button" disabled="@IsBusyProgress">Найти</button>
             </div>

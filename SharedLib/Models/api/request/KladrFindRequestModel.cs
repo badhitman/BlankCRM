@@ -18,4 +18,12 @@ public class KladrFindRequestModel : PaginationRequestModel
     /// Искомая строка
     /// </summary>
     public string? FindText { get; set; }
+
+    /// <summary>
+    /// Искать в домах или нет?
+    /// </summary>
+    /// <remarks>
+    /// Поиск в домах имеет смысл только для кодов объектов, но не наименования
+    /// </remarks>
+    public required bool IncludeHouses { get; set; }
 }

@@ -38,8 +38,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         OfficeEdit.Name != OfficeCurrent.Name ||
         OfficeEdit.KladrCode != OfficeCurrent.KladrCode ||
         OfficeEdit.KladrTitle != OfficeCurrent.KladrTitle ||
-        OfficeEdit.ParentId != OfficeCurrent.ParentId) &&
-        SelectedRubric is not null;
+        OfficeEdit.ParentId != OfficeCurrent.ParentId);
 
     UniversalBaseModel? SelectedRubric;
 

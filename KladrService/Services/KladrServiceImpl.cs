@@ -61,7 +61,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
     {
         loggerRepo.LogInformation($"call > {nameof(ClearTempKladrAsync)}");
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync(token);
-        await context.EmptyTemplateTables();
+        await context.EmptyTemplateTablesAsync();
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 

@@ -13,7 +13,7 @@ namespace DbcLib;
 public partial class KladrContext(DbContextOptions<KladrContext> options) : KladrLayerContext(options)
 {
     /// <inheritdoc/>
-    public override async Task EmptyTemplateTables(bool forTemplate = true)
+    public override async Task EmptyTemplateTablesAsync(bool forTemplate = true)
     {
         if (forTemplate)
         {

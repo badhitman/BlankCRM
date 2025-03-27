@@ -479,7 +479,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 }
         })));
 
-        response.Response.AddRange(fullData.OrderBy(x => x.Chain).ThenBy(x => x.Name));
+        response.Response.AddRange(fullData.OrderBy(x => x.Metadata.Chain).ThenBy(x => x.Name));
         return response;
     }
 
@@ -492,34 +492,14 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             return response;
 
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync(token);
-        response.TotalRowsCount = await context.ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.NAME, req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))))
-            .Select(x => x.CODE)
-            .Union(context.StreetsKLADR
-            .Where(x => (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))) &&  EF.Functions.Like(x.NAME, req.FindText))
-            .Select(x => x.CODE)).CountAsync(cancellationToken: token);
-        
+        response.TotalRowsCount = await context.CountByNameAsync(req.FindText, req.IncludeHouses, req.CodeLikeFilter, token: token);
+
         string[] dbRows;
 
         if (string.IsNullOrWhiteSpace(req.FindText))
             return response;
 
-        dbRows = [.. (await context.FindByName(req.FindText, req.PageNum * req.PageSize, req.PageSize, req.CodeLikeFilter, token)).Select(x => x.CODE)];
-        //.ObjectsKLADR
-        //.Where(x => EF.Functions.Like(x.NAME, req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))))
-        //.OrderBy(x => x.NAME)
-        //.ThenBy(x => x.CODE)
-        //.Select(x => x.CODE)
-        //.Union(context
-        //.StreetsKLADR
-        //.Where(x => EF.Functions.Like(x.NAME, req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0 || req.CodeLikeFilter.Any(y => EF.Functions.Like(x.CODE, y))))
-        //.OrderBy(x => x.NAME)
-        //.ThenBy(x => x.CODE)
-        //.Select(x => x.CODE))
-        //.Skip(req.PageNum * req.PageSize)
-        //.Take(req.PageSize)
-        //.ToArrayAsync();
-
+        dbRows = [.. (await context.FindByNameAsync(req.FindText, req.IncludeHouses, req.PageNum * req.PageSize, req.PageSize, req.CodeLikeFilter, token)).Select(x => x.CODE)];
 
         List<KladrResponseModel> fullData = [];
         await Task.WhenAll(dbRows.Select(x => Task.Run(async () =>
@@ -532,7 +512,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 }
         })));
 
-        response.Response.AddRange(fullData.OrderBy(x => x.Chain).ThenBy(x => x.Name));
+        response.Response.AddRange(fullData.OrderBy(x => x.Metadata.Chain).ThenBy(x => x.Name));
         return response;
     }
 
@@ -540,7 +520,10 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     public async Task<ResponseBaseModel> ChildsContainsAsync(string codeLike, CancellationToken token = default)
     {
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync(token);
-        return await context.ObjectsKLADR.AnyAsync(x=>EF.Functions.Like(x.CODE, codeLike), cancellationToken: token)
+        return await context.ObjectsKLADR.Select(x => x.CODE)
+            .Union(context.StreetsKLADR.Select(x => x.CODE))
+            .Union(context.HousesKLADR.Select(x => x.CODE))
+            .AnyAsync(x => EF.Functions.Like(x, codeLike), cancellationToken: token)
             ? ResponseBaseModel.CreateInfo("Вложенные объекты существуют")
             : ResponseBaseModel.CreateError("Вложенных объектов нет");
     }

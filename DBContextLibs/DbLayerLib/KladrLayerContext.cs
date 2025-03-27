@@ -5,6 +5,7 @@
 using Microsoft.EntityFrameworkCore;
 using DbLayerLib;
 using SharedLib;
+using System.Collections.Generic;
 
 namespace DbcLib;
 
@@ -41,28 +42,48 @@ public abstract partial class KladrLayerContext : DbContext
     /// <inheritdoc/>
     public record KladrEntry(string CODE);
 
+    /// <inheritdoc/>
+    static string GetFindQuery(string findText, bool housesInclude, string[]? codeLikeFilters = null)
+    {
+        return $@"(SELECT o.""CODE""
+                    FROM public.""ObjectsKLADR"" AS o
+                    WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"o.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR o.""NAME"" LIKE '{findText}' ESCAPE '')
+                    ORDER BY o.""NAME"", o.""CODE"")
+                    UNION
+                    (SELECT s.""CODE""
+                    FROM public.""StreetsKLADR"" AS s
+                    WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"s.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR s.""NAME"" LIKE '{findText}' ESCAPE '')
+                    ORDER BY s.""NAME"", s.""CODE"")
+                    {(!housesInclude ? "" : $@"
+                    UNION
+                    (SELECT h.""CODE""
+                    FROM public.""HousesKLADR"" AS h
+                    {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $@"WHERE {string.Join(" OR ", codeLikeFilters.Select(x => $"h.\"CODE\" LIKE '{x}'"))}")}                    
+                    ORDER BY h.""NAME"", h.""CODE"")")}
+        ";
+    }
+
     /// <summary>
-    /// FindCodes
+    /// Поиск объектов КЛАДР
     /// </summary>
-    public async Task<KladrEntry[]> FindByName(string findText, int offset, int limit = 10, string[]? codeLikeFilters = null, CancellationToken token = default)
+    public async Task<int> CountByNameAsync(string? findText, bool housesInclude, string[]? codeLikeFilters = null, CancellationToken token = default)
+    {
+        if (string.IsNullOrWhiteSpace(findText) || findText.Contains('\''))
+            return 0;
+
+        string query = $@"SELECT COUNT(*) as ""Value"" FROM ({GetFindQuery(findText, housesInclude, codeLikeFilters)})";
+        return await Database.SqlQueryRaw<int>(query).FirstOrDefaultAsync(cancellationToken: token);
+    }
+
+    /// <summary>
+    /// Поиск объектов КЛАДР
+    /// </summary>
+    public async Task<KladrEntry[]> FindByNameAsync(string findText, bool housesInclude, int offset, int limit = 10, string[]? codeLikeFilters = null, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(findText) || findText.Contains('\''))
             return [];
 
-        string query = $@"SELECT u.""CODE""
-                        FROM (
-                            (SELECT o.""CODE""
-                            FROM public.""ObjectsKLADR"" AS o
-                            WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"o.\"CODE\" LIKE '{x}'"))}) AND")} o.""NAME"" LIKE '{findText}' ESCAPE ''
-	                        ORDER BY o.""NAME"", o.""CODE"")
-                            UNION
-                            (SELECT s.""CODE""
-                            FROM public.""StreetsKLADR"" AS s
-                            WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"s.\"CODE\" LIKE '{x}'"))}) AND")} s.""NAME"" LIKE '{findText}' ESCAPE ''
-	                        ORDER BY s.""NAME"", s.""CODE"")
-                        ) AS u
-                        LIMIT {limit} OFFSET {offset}";
-
+        string query = $@"SELECT r.""CODE"" FROM ({GetFindQuery(findText, housesInclude, codeLikeFilters)}) AS r LIMIT {limit} OFFSET {offset}";
         return await Set<KladrEntry>()
                         .FromSqlRaw(query).ToArrayAsync(cancellationToken: token);
     }
@@ -71,7 +92,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// Очистка временных таблиц
     /// </summary>
-    public abstract Task EmptyTemplateTables(bool forTemplate = true);
+    public abstract Task EmptyTemplateTablesAsync(bool forTemplate = true);
 
     #region Регион
     /// <summary>

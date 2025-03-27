@@ -47,12 +47,22 @@ public partial class CommerceLayerContext : DbContext
            .HasConversion(converter2);
 
         modelBuilder
-            .Entity<WorkScheduleBaseModelDB>()
+            .Entity<WeeklyScheduleModelDB>()
             .Property(e => e.StartPart)
             .HasConversion(converter);
 
         modelBuilder
-           .Entity<WorkScheduleBaseModelDB>()
+           .Entity<WeeklyScheduleModelDB>()
+           .Property(e => e.EndPart)
+           .HasConversion(converter);
+
+        modelBuilder
+            .Entity<CalendarScheduleModelDB>()
+            .Property(e => e.StartPart)
+            .HasConversion(converter);
+
+        modelBuilder
+           .Entity<CalendarScheduleModelDB>()
            .Property(e => e.EndPart)
            .HasConversion(converter);
     }

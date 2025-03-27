@@ -40,8 +40,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         !string.IsNullOrWhiteSpace(addingAddress) &&
         !string.IsNullOrWhiteSpace(kladrCode) &&
         !string.IsNullOrWhiteSpace(kladrTitle) &&
-        !string.IsNullOrWhiteSpace(addingName) &&
-        SelectedRubric is not null;
+        !string.IsNullOrWhiteSpace(addingName);
 
     bool _expanded;
     private void OnExpandCollapseClick()
