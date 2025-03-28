@@ -42,11 +42,11 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
             deleteInit = true;
             return;
         }
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel res = await AppManagerRepo.DeleteConfigAsync(ApiConnect.Id);
         deleteInit = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusy(false);
+        await SetBusyAsync(false);
         await InitSelector();
     }
 
@@ -64,7 +64,7 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
     /// </summary>
     public async Task SetActiveHandler(int selectedConfId)
     {
-        await SetBusy();
+        await SetBusyAsync();
         AllTokens = await AppManagerRepo.GetAllConfigurationsAsync();
 
         if (selectedConfId == 0)
@@ -76,15 +76,15 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
         }
 
         configRef?.ResetForm();
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     async Task InitSelector()
     {
-        await SetBusy();
+        await SetBusyAsync();
         AllTokens = await AppManagerRepo.GetAllConfigurationsAsync();
         await SetActiveHandler(AllTokens.OrderBy(x => x.Name).FirstOrDefault()?.Id ?? 0);
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

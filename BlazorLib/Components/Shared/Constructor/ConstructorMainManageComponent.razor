@@ -1,0 +1,129 @@
+﻿@using BlazorLib.Components.Shared.Constructor.DirectoriesCatalog
+@using BlazorLib.Components.Shared.Constructor.Document
+@using BlazorLib.Components.Shared.Constructor.Form
+@using BlazorLib.Components.Shared.Constructor.Manufacture
+@using BlazorLib.Components.Shared.Constructor.Projects
+@inherits BlazorBusyComponentBaseAuthModel
+
+<h3>
+    Конструктор
+    <MudTooltip>
+        <ChildContent>
+            <sup class="@(MainProject is null ? "text-secondary" : "text-primary-emphasis")">
+                @if (MainProject is null)
+                {
+                    <text>[проект не выбран]</text>
+                }
+                else
+                {
+                    <text>"@MainProject.Name"</text>
+                }
+            </sup>
+        </ChildContent>
+        <TooltipContent>
+            @if (MainProject is null)
+            {
+                <p>не выбран <b>текущий/основной</b> проект контекста конструктора</p>
+            }
+            else
+            {
+                <p>
+                    конструктор работает в контексте основного/текущего проекта
+                    @if (!string.IsNullOrWhiteSpace(MainProject.Description))
+                    {
+                        @((MarkupString)MainProject.Description)
+                    }
+                </p>
+            }
+        </TooltipContent>
+    </MudTooltip>
+</h3>
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+}
+
+<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="true" ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-4">
+    <CascadingValue Value="this">
+        <MudTabPanel Disabled="IsBusyProgress" Text="Проекты">
+            <ProjectsListComponent />
+        </MudTabPanel>
+        <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Списки">
+            <DirectoryViewComponent />
+        </MudTabPanel>
+        <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Формы">
+            <FormsViewComponent />
+        </MudTabPanel>
+        <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Документы">
+            <DocumentsSchemesTableComponent />
+        </MudTabPanel>
+        <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text="Ссылки" ToolTip="Доступ к заполнению данными документов (в т.ч. анонимные пользователи)">
+            <SessionsViewComponent />
+        </MudTabPanel>
+        <AuthorizeView Roles="@($"{GlobalStaticConstants.Roles.Admin},manufacture")">
+            <Authorized>
+                <MudTabPanel Disabled="@(MainProject is null || IsBusyProgress)" Text=".NET" BadgeData='"C#"' BadgeColor="Color.Primary" ToolTip="Генерация кодовой базы C# .NET">
+                    <ManufactureComponent @ref="manufacture_ref" />
+                </MudTabPanel>
+            </Authorized>
+        </AuthorizeView>
+    </CascadingValue>
+</MudTabs>
+
+@if (!IsBusyProgress && MainProject is null)
+{
+    <div class="alert alert-success mt-2" role="alert">
+        <h4 class="alert-heading">Не выбран проект</h4>
+        <hr>
+        <p class="mb-0">Что бы работать с конструктором - необходимо назначить проект контекста работы</p>
+    </div>
+}
+
+@code {
+    [Inject]
+    IConstructorTransmission ConstructorRepo { get; set; } = default!;
+
+
+    ManufactureComponent? manufacture_ref = default!;
+
+
+    /// <inheritdoc/>
+    public List<SystemNameEntryModel>? SystemNamesManufacture;
+
+    /// <inheritdoc/>
+    public MainProjectViewModel? MainProject { get; private set; }
+
+    /// <summary>
+    /// Проверка разрешения редактировать проект
+    /// </summary>
+    public bool CanEditProject { get; private set; }
+
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        await ReadCurrentUser();
+        await ReadCurrentMainProject();
+    }
+
+    /// <summary>
+    /// Прочитать данные о текущем/основном проекте
+    /// </summary>
+    public async Task ReadCurrentMainProject()
+    {
+        CanEditProject = false;
+        await SetBusyAsync();
+
+        TResponseModel<MainProjectViewModel> currentMainProject = await ConstructorRepo.GetCurrentMainProjectAsync(CurrentUserSession!.UserId);
+
+        if (!currentMainProject.Success())
+            SnackbarRepo.ShowMessagesResponse(currentMainProject.Messages);
+
+        MainProject = currentMainProject.Response;
+        CanEditProject = MainProject is not null && (!MainProject.IsDisabled || MainProject.OwnerUserId.Equals(CurrentUserSession!.UserId) || CurrentUserSession!.IsAdmin);
+        IsBusyProgress = false;
+
+    }
+}

@@ -3,8 +3,8 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using BlazorLib.Components;
 using BlazorLib;
-using MudBlazor;
 using SharedLib;
 
 namespace BlazorWebLib.Components.ParametersShared;

@@ -29,4 +29,8 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.3" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Components\Constructor\Shared\" />
+	</ItemGroup>
+
 </Project>

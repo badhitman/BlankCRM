@@ -1,4 +1,6 @@
-﻿@page "/questionnaire/session/protected/{DocumentId:int}"
+﻿@using BlazorLib.Components.Shared.Constructor
+
+@page "/questionnaire/session/protected/{DocumentId:int}"
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inherits BlazorBusyComponentBaseAuthModel

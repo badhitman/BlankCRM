@@ -1,4 +1,6 @@
-﻿@page "/questionnaire/session/{DocumentGuid:guid}"
+﻿@using BlazorLib.Components.Shared.Constructor
+
+@page "/questionnaire/session/{DocumentGuid:guid}"
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inherits BlazorBusyComponentBaseModel

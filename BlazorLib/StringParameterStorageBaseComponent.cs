@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using SharedLib;
 
 namespace BlazorLib;

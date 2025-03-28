@@ -64,10 +64,10 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
         Parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
 
         if (!IsBusyProgress)
-            await SetBusy();
+            await SetBusyAsync();
 
         DemoTable = await Parser.GetRandomRowsAsDataTable(5);
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -81,7 +81,7 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
         OwnerComponent.ChildBusyVote(1);
         OwnerComponent.InitHandleAction((this, FileViewElement.Name));
 
-        await SetBusy();
+        await SetBusyAsync();
         ms = new();
         await FileViewElement.OpenReadStream(long.MaxValue).CopyToAsync(ms);
         NumRecordsTotal = await Parser.Open(ms, FileViewElement.Name);
@@ -95,13 +95,13 @@ public partial class KladrFileViewComponent : BlazorBusyComponentBaseModel
         startedProgress = DateTime.Now;
         OwnerComponent.ChildBusyVote(1);
         numRecordProgress = 1;
-        await SetBusy();
+        await SetBusyAsync();
         Parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
         Parser.PartUploadNotify += ParserPartUploadNotify;
         await Parser.UploadData(true);
         Parser.PartUploadNotify -= ParserPartUploadNotify;
         endedProgress = DateTime.Now;
-        await SetBusy(false);
+        await SetBusyAsync(false);
         OwnerComponent.ChildBusyVote(-1);
     }
 

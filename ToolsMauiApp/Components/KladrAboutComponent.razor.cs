@@ -21,28 +21,28 @@ public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
 
     async Task TransitData()
     {
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel res = await RemoteClient.FlushTempKladrAsync();
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await ReloadData();
     }
 
     async Task ClearTempTables()
     {
-        await SetBusy();
+        await SetBusyAsync();
         ResponseBaseModel res = await RemoteClient.ClearTempKladrAsync();
-        await SetBusy(false);
+        await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await ReloadData();
     }
 
     async Task ReloadData()
     {
-        await SetBusy();
+        await SetBusyAsync();
         await Task.WhenAll([Task.Run(async () => tmp = await RemoteClient.GetMetadataKladrAsync(new() { ForTemporary = true })),
             Task.Run(async () => prod = await RemoteClient.GetMetadataKladrAsync(new() { ForTemporary = false }))]);
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

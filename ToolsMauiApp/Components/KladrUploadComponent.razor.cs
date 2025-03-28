@@ -42,9 +42,9 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
         {
             _value = value;
 
-            InvokeAsync(async () => await SetBusy());
+            InvokeAsync(async () => await SetBusyAsync());
             InvokeAsync(async () => await Task.WhenAll(ViewsChilds.Select(x => Task.Run(async () => await x.ParentComponent.SeedDemo(_value)))));
-            InvokeAsync(async () => await SetBusy(false));
+            InvokeAsync(async () => await SetBusyAsync(false));
         }
     }
 
@@ -102,7 +102,7 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
         aboutStatus = "Отправка данных на сервер";
         aboutSubStatus = "данные записываются в удалённую базу данных";
 
-        await SetBusy();
+        await SetBusyAsync();
         await RemoteClient.ClearTempKladrAsync();
         await Task.WhenAll(ViewsChilds.Select(x => Task.Run(async () => await x.ParentComponent.UploadData())));
 
@@ -111,6 +111,6 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
 
         loadedFiles.Clear();
         _inputFileId = Guid.NewGuid().ToString();
-        await SetBusy(false);
+        await SetBusyAsync(false);
     }
 }
