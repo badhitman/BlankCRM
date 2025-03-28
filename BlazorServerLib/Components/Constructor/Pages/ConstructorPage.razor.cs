@@ -15,9 +15,6 @@ public partial class ConstructorPage : BlazorBusyComponentBaseAuthModel
     [Inject]
     IConstructorTransmission ConstructorRepo { get; set; } = default!;
 
-    //[Inject]
-    //IManufactureService ManufactureRepo { get; set; } = default!;
-
 
     ManufactureComponent? manufacture_ref = default!;
 
@@ -32,6 +29,7 @@ public partial class ConstructorPage : BlazorBusyComponentBaseAuthModel
     /// Проверка разрешения редактировать проект
     /// </summary>
     public bool CanEditProject { get; private set; }
+
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -57,17 +55,6 @@ public partial class ConstructorPage : BlazorBusyComponentBaseAuthModel
         MainProject = currentMainProject.Response;
         CanEditProject = MainProject is not null && (!MainProject.IsDisabled || MainProject.OwnerUserId.Equals(CurrentUserSession!.UserId) || CurrentUserSession!.IsAdmin);
         IsBusyProgress = false;
-        //await GetSystemNames();
 
     }
-
-    //public async Task GetSystemNames()
-    //{
-    //    await SetBusy();
-    // 
-    //    if (MainProject is not null)
-    //        SystemNamesManufacture = await ManufactureRepo.GetSystemNames(MainProject!.Id);
-    //    IsBusyProgress = false;
-    //    manufacture_ref?.StateHasChangedCall();
-    //}
 }
