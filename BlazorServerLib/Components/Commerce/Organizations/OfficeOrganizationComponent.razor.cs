@@ -112,7 +112,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
             KladrTitle = OfficeEdit.KladrTitle,
             AddressUserComment = OfficeEdit.AddressUserComment!,
             Name = OfficeEdit.Name!,
-            ParentId = SelectedRubric!.Id,
+            ParentId = SelectedRubric?.Id ?? 0,
             Contacts = OfficeEdit.Contacts,
             Id = AddressForOrganization,
         });
