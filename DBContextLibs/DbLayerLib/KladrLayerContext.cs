@@ -5,7 +5,6 @@
 using Microsoft.EntityFrameworkCore;
 using DbLayerLib;
 using SharedLib;
-using System.Collections.Generic;
 
 namespace DbcLib;
 
@@ -46,18 +45,18 @@ public abstract partial class KladrLayerContext : DbContext
     static string GetFindQuery(string findText, bool housesInclude, string[]? codeLikeFilters = null)
     {
         return $@"(SELECT o.""CODE""
-                    FROM public.""ObjectsKLADR"" AS o
+                    FROM public.""{nameof(ObjectsKLADR)}"" AS o
                     WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"o.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR o.""NAME"" LIKE '{findText}')
                     ORDER BY o.""NAME"", o.""CODE"")
                     UNION
                     (SELECT s.""CODE""
-                    FROM public.""StreetsKLADR"" AS s
+                    FROM public.""{nameof(StreetsKLADR)}"" AS s
                     WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"s.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR s.""NAME"" LIKE '{findText}')
                     ORDER BY s.""NAME"", s.""CODE"")
                     {(!housesInclude ? "" : $@"
                     UNION
                     (SELECT h.""CODE""
-                    FROM public.""HousesKLADR"" AS h
+                    FROM public.""{nameof(HousesKLADR)}"" AS h
                     {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $@"WHERE {string.Join(" OR ", codeLikeFilters.Select(x => $"h.\"CODE\" LIKE '{x}'"))}")}                    
                     ORDER BY h.""NAME"", h.""CODE"")")}
         ";
