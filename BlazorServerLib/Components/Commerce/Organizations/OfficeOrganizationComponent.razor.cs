@@ -45,7 +45,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
     void ChangeSelectAction(KladrResponseModel? sender)
     {
         OfficeEdit.KladrCode = sender?.Code ?? "";
-        OfficeEdit.KladrTitle = sender?.Name ?? "";
+        OfficeEdit.KladrTitle = sender?.GetFullName() ?? "";
         StateHasChangedCall();
     }
 

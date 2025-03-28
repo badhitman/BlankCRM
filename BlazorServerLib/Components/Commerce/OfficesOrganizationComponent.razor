@@ -40,7 +40,7 @@
                             </div>
                             <KladrInputComponent ChangeSelectHandle="ChangeSelectAction" />
                             <div class="mb-3">
-                                <label for="detailsAddressControlTextarea" class="form-label">Адрес (комментарий)</label>
+                                <label for="detailsAddressControlTextarea" class="form-label">дом/кв (примечание)</label>
                                 <textarea class="form-control" id="detailsAddressControlTextarea" rows="3" @oninput="HandleOnChange">@addingDescr</textarea>
                             </div>
                         }
@@ -83,7 +83,7 @@ else
                 <tr @key="@($"{ad.Id}")">
                     <th scope="row"><b>@GetCity(ad)</b></th>
                     <th><a href="/organizations/edit/office/@ad.Id">@ad.Name</a></th>
-                    <td>@ad.AddressUserComment</td>
+                    <td>@ad.KladrTitle @ad.AddressUserComment</td>
                     <td>@ad.Contacts</td>
                 </tr>
             }

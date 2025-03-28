@@ -18,7 +18,7 @@ public class AddressOrganizationBaseModel : EntryModel
 
     #region address 
     /// <summary>
-    /// Регион/Город
+    /// Рубрика
     /// </summary>
     public required int ParentId { get; set; }
 

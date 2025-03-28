@@ -29,12 +29,12 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
 
     void ChangeSelectAction(KladrResponseModel sender)
     {
-        ChangeSelectHandle(sender);
         if (KladrObject is null)
             KladrObject = new() { Id = sender.Code, Name = sender.GetFullName() };
         else
             KladrObject?.Update(sender.Code, sender.GetFullName());
         StateHasChangedCall();        
+        ChangeSelectHandle(sender);
     }
 
     void ClearInput()

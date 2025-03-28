@@ -37,7 +37,6 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
     string kladrTitle { get; set; } = "";
 
     bool CanCreate =>
-        !string.IsNullOrWhiteSpace(addingAddress) &&
         !string.IsNullOrWhiteSpace(kladrCode) &&
         !string.IsNullOrWhiteSpace(kladrTitle) &&
         !string.IsNullOrWhiteSpace(addingName);
@@ -73,7 +72,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         {
             AddressUserComment = addingAddress ?? "",
             Name = addingName!,
-            ParentId = SelectedRubric!.Id,
+            ParentId = SelectedRubric?.Id ?? 0,
             OrganizationId = Organization.Id,
             Contacts = addingContacts,
             KladrCode = kladrCode,
@@ -91,7 +90,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
             KladrTitle = kladrTitle,
             AddressUserComment = addingAddress!,
             Name = addingName!,
-            ParentId = SelectedRubric!.Id,
+            ParentId = SelectedRubric?.Id ?? 0,
             OrganizationId = Organization.Id,
             Contacts = addingContacts,
             Id = res.Response,

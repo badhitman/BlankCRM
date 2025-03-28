@@ -77,7 +77,7 @@ public class KladrResponseModel
 
         return Parents is null || Parents.Count == 0
             ? toString(Name, Socr, Metadata)
-            : $"{string.Join(", ", Parents.Select(x => toString(x.NAME, x.SOCR, Metadata)))}, {toString(Name, Socr, Metadata)}";
+            : $"{string.Join(", ", Parents.Select(x => toString(x.NAME, x.SOCR, CodeKladrModel.Build(x.CODE))))}, {toString(Name, Socr, Metadata)}";
     }
 
     /// <inheritdoc/>

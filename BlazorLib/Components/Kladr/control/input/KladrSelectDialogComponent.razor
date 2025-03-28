@@ -40,7 +40,7 @@
                     </button>
                 }
                 <input @bind="FindName" type="text" class="form-control" placeholder="Поиск по названию" disabled="@IsBusyProgress">
-                <button class="btn btn-outline-secondary" type="button" disabled="@IsBusyProgress">Найти</button>
+                <button @onclick="async () => { if(!IsBusyProgress){ await RebuildTable(); }}" class="btn btn-outline-secondary" type="button" disabled="@IsBusyProgress">Найти</button>
             </div>
             @if (string.IsNullOrWhiteSpace(FindName) && SelectionProgressSteps.Count == 0)
             {
@@ -68,10 +68,10 @@
                     <NoRecordsContent>
                         <figure class="text-center">
                             <blockquote class="blockquote">
-                                <p>Измените строку поиска.</p>
+                                <p>Проверьте строку поиска.</p>
                             </blockquote>
                             <figcaption class="blockquote-footer">
-                                По вашему запросу <cite title="регистр символа будет учтён для точного совпадения">ни чего не найдено</cite>
+                                Поиск учитывает <cite title="регистр символа будет учтён для точного совпадения">регистр букв</cite>.
                             </figcaption>
                         </figure>
                     </NoRecordsContent>
