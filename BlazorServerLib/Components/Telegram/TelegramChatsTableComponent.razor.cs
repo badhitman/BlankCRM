@@ -46,7 +46,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
-        TPaginationResponseModel<ChatTelegramModelDB> rest = await TgRepo.ChatsSelectAsync(req);
+        TPaginationResponseModel<ChatTelegramModelDB> rest = await TgRepo.ChatsSelectAsync(req, token);
         IsBusyProgress = false;
 
         if (rest.Response is null)

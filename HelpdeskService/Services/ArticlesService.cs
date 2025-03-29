@@ -116,7 +116,7 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
             PageSize = req.PageSize,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
-            TotalRowsCount = await q.CountAsync(),
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = [.. req.Payload.IncludeExternal ? await inc.ToListAsync(cancellationToken: token) : await oq.ToListAsync(cancellationToken: token)]
         };
     }

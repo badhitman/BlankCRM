@@ -97,7 +97,7 @@ public partial class HelpdeskJournalComponent : BlazorBusyComponentBaseAuthModel
         };
 
         TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>> rest = await HelpdeskRepo
-             .IssuesSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
+             .IssuesSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId }, token);
 
         IsBusyProgress = false;
         if (rest.Response?.Response is null)

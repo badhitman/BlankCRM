@@ -71,7 +71,7 @@ public partial class JournalUniversalComponent : BlazorBusyComponentBaseModel
         if (DocumentNameOrIdType is null)
             throw new Exception();
 
-        await SetBusyAsync();
+        await SetBusyAsync(token: token);
         TPaginationResponseModel<KeyValuePair<int, Dictionary<string, object>>> res = await JournalRepo
             .SelectJournalPartAsync(new SelectJournalPartRequestModel()
             {
@@ -81,7 +81,7 @@ public partial class JournalUniversalComponent : BlazorBusyComponentBaseModel
                 PageNum = state.Page,
                 PageSize = state.PageSize,
                 SortingDirection = state.SortDirection == SortDirection.Descending ? DirectionsEnum.Down : DirectionsEnum.Up
-            }, ProjectId);
+            }, ProjectId, token);
         IsBusyProgress = false;
 
         totalItems = res.TotalRowsCount;

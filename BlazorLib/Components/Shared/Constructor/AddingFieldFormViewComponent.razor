@@ -1,5 +1,4 @@
-﻿@using BlazorLib.Components.Shared.Constructor.DirectoriesCatalog
-@using BlazorLib.Components.Shared.Constructor.Form
+﻿
 <div class="col-auto">
     <select title="Тип добавляемого поля" @bind="SelectedTypeFieldForAdding" class="form-select" name="adding-new-field-to-form" id="adding-new-field-to-form">
         <option value="0" disabled="@(SelectedTypeFieldForAdding > 0)">Выбор типа поля...</option>
@@ -10,6 +9,7 @@
         <option class="text-success" value="@int.MaxValue">Список/Справочник</option>
     </select>
 </div>
+
 @if (SelectedTypeFieldForAdding < 1)
 {
     <div class="col-auto">

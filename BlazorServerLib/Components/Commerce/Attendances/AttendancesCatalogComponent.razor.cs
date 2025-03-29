@@ -43,11 +43,11 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<NomenclatureModelDB> res = await CommerceRepo.NomenclaturesSelectAsync(req);
+        TPaginationResponseModel<NomenclatureModelDB> resNomenclatures = await CommerceRepo.NomenclaturesSelectAsync(req, token);
 
         IsBusyProgress = false;
 
-        if (res.Response is null)
+        if (resNomenclatures.Response is null)
             return new TableData<NomenclatureModelDB>() { TotalItems = 0, Items = [] };
 
 
@@ -55,7 +55,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
         {
             Payload = new RecordsAttendancesRequestModel()
             {
-                NomenclatureFilter = [.. res.Response.Select(x => x.Id)],
+                NomenclatureFilter = [.. resNomenclatures.Response.Select(x => x.Id)],
                 ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME,
                 IncludeExternalData = true,
             },
@@ -65,10 +65,10 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
 
-        TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq);
+        TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq, token);
         List<RecordsAttendanceModelDB> currentRecords = recordsSelect.Response ?? [];
 
-        return new TableData<NomenclatureModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        return new TableData<NomenclatureModelDB>() { TotalItems = resNomenclatures.TotalRowsCount, Items = resNomenclatures.Response };
     }
 
     private void OnExpandCollapseClick()

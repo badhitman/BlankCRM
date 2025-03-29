@@ -96,7 +96,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusyAsync(token: token);
 
-        TPaginationResponseModel<OrderDocumentModelDB> res = await CommerceRepo.OrdersSelectAsync(req);
+        TPaginationResponseModel<OrderDocumentModelDB> res = await CommerceRepo.OrdersSelectAsync(req, token);
         IsBusyProgress = false;
 
         if (res.Response is null)

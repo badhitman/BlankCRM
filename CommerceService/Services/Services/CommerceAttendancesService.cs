@@ -60,7 +60,7 @@ public partial class CommerceImplementService : ICommerceService
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = req.Payload.IncludeExternalData ? [.. await inc_query.ToArrayAsync(cancellationToken: token)] : [.. await pq.ToArrayAsync()]
+            Response = req.Payload.IncludeExternalData ? [.. await inc_query.ToArrayAsync(cancellationToken: token)] : [.. await pq.ToArrayAsync(cancellationToken: token)]
         };
     }
 
@@ -118,7 +118,7 @@ public partial class CommerceImplementService : ICommerceService
                 LockerId = x.OfferId,
                 RubricId = x.OrganizationId
             })];
-        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
+        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
 
         try
         {
@@ -550,7 +550,7 @@ public partial class CommerceImplementService : ICommerceService
             PageSize = req.PageSize,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
-            TotalRowsCount = await q.CountAsync(),
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = req.Payload.IncludeExternalData ? [.. await inc_query.ToArrayAsync(cancellationToken: token)] : [.. await pq.ToArrayAsync(cancellationToken: token)]
         };
     }

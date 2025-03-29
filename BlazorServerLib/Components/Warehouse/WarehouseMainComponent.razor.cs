@@ -36,7 +36,7 @@ public partial class WarehouseMainComponent : BlazorBusyComponentRubricsCachedMo
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
-        TPaginationResponseModel<WarehouseDocumentModelDB> rest = await CommerceRepo.WarehousesSelectAsync(req);
+        TPaginationResponseModel<WarehouseDocumentModelDB> rest = await CommerceRepo.WarehousesSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
 
         if (rest.Response is not null)

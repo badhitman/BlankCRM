@@ -109,7 +109,7 @@ public partial class CommerceImplementService(
                 .Where(x => context.Payments.Any(y => y.Id == req.Payload && y.OrderId == x.Id))
                 .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastAtUpdatedUTC, dtu), cancellationToken: token);
 
-        return ResponseBaseModel.CreateInfo($"Изменений бд: {await context.Payments.Where(x => x.Id == req.Payload).ExecuteDeleteAsync()}");
+        return ResponseBaseModel.CreateInfo($"Изменений бд: {await context.Payments.Where(x => x.Id == req.Payload).ExecuteDeleteAsync(cancellationToken: token)}");
     }
     #endregion
 
@@ -586,7 +586,7 @@ public partial class CommerceImplementService(
                 OfferName = x.Offer.Name,
                 GoodsName = x.Goods.Name,
             })
-            .FirstAsync();
+            .FirstAsync(cancellationToken: token);
 
         bool conflict = await context.RowsOrders
             .AnyAsync(x => x.Id != req.Id && x.OfficeOrderTabId == req.OfficeOrderTabId && x.OfferId == req.OfferId, cancellationToken: token);
@@ -669,7 +669,7 @@ public partial class CommerceImplementService(
                     NomenclatureId = rowDb.NomenclatureId,
                     WarehouseId = commDataDb.WarehouseId,
                 };
-                await context.AddAsync(regOfferAvStorno);
+                await context.AddAsync(regOfferAvStorno, token);
             }
         }
 
@@ -782,7 +782,7 @@ public partial class CommerceImplementService(
                                                    t.WarehouseId
                                                );
         RowOrderDocumentRecord[] _allOffersOfDocuments = await q
-           .ToArrayAsync();
+           .ToArrayAsync(cancellationToken: token);
 
         if (_allOffersOfDocuments.Length == 0)
         {
@@ -1075,7 +1075,7 @@ public partial class CommerceImplementService(
                 tasks = [identityRepo.SendEmailAsync(new() { Email = actor.Response[0].Email!, Subject = subject_email, TextMessage = msg }, false, token)];
 
                 if (actor.Response[0].TelegramId.HasValue)
-                    tasks.Add(tgRepo.SendTextMessageTelegramAsync(new() { Message = msg_for_tg, UserTelegramId = actor.Response[0].TelegramId!.Value }, false));
+                    tasks.Add(tgRepo.SendTextMessageTelegramAsync(new() { Message = msg_for_tg, UserTelegramId = actor.Response[0].TelegramId!.Value }, false, token));
 
                 if (!string.IsNullOrWhiteSpace(actor.Response[0].PhoneNumber) && GlobalTools.IsPhoneNumber(actor.Response[0].PhoneNumber!))
                 {
@@ -1196,7 +1196,7 @@ public partial class CommerceImplementService(
         List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
            .Where(x => _offersIds.Any(y => y == x.OfferId))
            .Include(x => x.Offer)
-           .ToListAsync();
+           .ToListAsync(cancellationToken: token);
 
         _allOffersOfDocuments.ForEach(async offerEl =>
         {
@@ -1232,7 +1232,7 @@ public partial class CommerceImplementService(
 
         if (!res.Success())
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(token);
             msg = $"Отказ изменения статуса: не достаточно остатков!";
             loggerRepo.LogError($"{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}\n{JsonConvert.SerializeObject(res, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError(msg);
@@ -1243,16 +1243,16 @@ public partial class CommerceImplementService(
         if (offersLocked.Length != 0)
             context.RemoveRange(offersLocked);
 
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(token);
         res.Response = await context
                             .Orders
                             .Where(x => x.HelpdeskId == req.Payload.DocumentId)
                             .ExecuteUpdateAsync(set => set
                             .SetProperty(p => p.StatusDocument, req.Payload.Step)
                             .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow)
-                            .SetProperty(p => p.Version, Guid.NewGuid())) != 0;
+                            .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token) != 0;
 
-        await transaction.CommitAsync();
+        await transaction.CommitAsync(token);
         res.AddSuccess("Запрос смены статуса заказа выполнен успешно");
         return res;
     }
@@ -1295,7 +1295,7 @@ public partial class CommerceImplementService(
                     IssuesIds = [orderDb.HelpdeskId.Value],
                     IncludeSubscribersOnly = true,
                 }
-            });
+            }, token);
             if (!issueData.Success() || issueData.Response is null || issueData.Response.Length != 1)
             {
                 res.AddRangeMessages(issueData.Messages);
@@ -1390,7 +1390,7 @@ public partial class CommerceImplementService(
         }
 
         int[] rubricsIds = offersAll.SelectMany(x => x.Registers!).Select(x => x.WarehouseId).Distinct().ToArray();
-        TResponseModel<List<RubricIssueHelpdeskModelDB>> rubricsDb = await HelpdeskRepo.RubricsGetAsync(rubricsIds);
+        TResponseModel<List<RubricIssueHelpdeskModelDB>> rubricsDb = await HelpdeskRepo.RubricsGetAsync(rubricsIds, token);
         List<IGrouping<NomenclatureModelDB?, OfferModelDB>> gof = offersAll.GroupBy(x => x.Nomenclature).Where(x => x.Any(y => y.Registers!.Any(z => z.Quantity > 0))).ToList();
         try
         {

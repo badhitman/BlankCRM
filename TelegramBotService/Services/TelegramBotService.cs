@@ -169,7 +169,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 Message = ex.Message,
                 ExceptionTypeName = ex.GetType().FullName,
                 ErrorCode = errorCode,
-            });
+            }, token);
             await context.SaveChangesAsync(token);
 
             res.AddError("Ошибка отправки Telegram сообщения. error E06E939D-6E93-45CE-A5F5-19A417A27DC1");

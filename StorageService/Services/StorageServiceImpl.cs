@@ -190,7 +190,7 @@ public class StorageServiceImpl(
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = trc,
-            Response = [.. await oq.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync()]
+            Response = [.. await oq.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToArrayAsync(cancellationToken: token)]
         };
     }
     #endregion
@@ -215,7 +215,7 @@ public class StorageServiceImpl(
                 CountFiles = x.Count(),
                 SummSize = x.Sum(y => y.FileLength)
             })
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: token);
 
         return new()
         {
@@ -448,7 +448,7 @@ public class StorageServiceImpl(
             switch (req.Payload.ApplicationName)
             {
                 case GlobalStaticConstants.Routes.ORDER_CONTROLLER_NAME:
-                    TResponseModel<OrderDocumentModelDB[]> get_order = await commRepo.OrdersReadAsync(new() { Payload = [req.Payload.OwnerPrimaryKey.Value], SenderActionUserId = req.SenderActionUserId });
+                    TResponseModel<OrderDocumentModelDB[]> get_order = await commRepo.OrdersReadAsync(new() { Payload = [req.Payload.OwnerPrimaryKey.Value], SenderActionUserId = req.SenderActionUserId }, token);
                     if (!get_order.Success() || get_order.Response is null)
                         res.AddRangeMessages(get_order.Messages);
                     else

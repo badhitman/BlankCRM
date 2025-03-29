@@ -87,11 +87,11 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         {
             Payload = new()
             {
-                ApplicationsNames = [],//ApplicationsNames,
-                IdentityUsersIds = [], // [CurrentUserSession!.UserId],
-                PropertyName = "",//PropertyName,
-                OwnerPrimaryKey = 0,//OwnerPrimaryKey,
-                PrefixPropertyName = "",//PrefixPropertyName
+                ApplicationsNames = [],
+                IdentityUsersIds = [],
+                PropertyName = "",
+                OwnerPrimaryKey = 0,
+                PrefixPropertyName = "",
                 SearchQuery = value,
             },
             PageNum = 0,
@@ -99,7 +99,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
             SortingDirection = DirectionsEnum.Down,
         };
 
-        TPaginationResponseModel<TagModelDB> res = await TagsRepo.TagsSelectAsync(req);
+        TPaginationResponseModel<TagModelDB> res = await TagsRepo.TagsSelectAsync(req, token);
 
         List<string> res_data = res.Response?.Where(x => TagsSets?.Any(y => y.TagName.Equals(x.TagName, StringComparison.OrdinalIgnoreCase)) != true).Select(x => x.TagName).ToList() ?? [];
 

@@ -40,7 +40,7 @@ public partial class ErrorMessageTelegramBotComponent : BlazorBusyComponentBaseM
             PageSize = state.PageSize,
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
-        });
+        }, token);
         IsBusyProgress = false;
         
         if (err_res.Response is null)

@@ -43,7 +43,7 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
-        TPaginationResponseModel<OfferAvailabilityModelDB> rest = await CommerceRepo.OffersRegistersSelectAsync(req);
+        TPaginationResponseModel<OfferAvailabilityModelDB> rest = await CommerceRepo.OffersRegistersSelectAsync(req, token);
 
         if (rest.Response is not null)
         {

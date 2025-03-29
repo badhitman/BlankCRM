@@ -90,7 +90,7 @@ public class HelpdeskImplementService(
         {
             SenderActionUserId = req.SenderActionUserId,
             Payload = new() { IssuesIds = [req.Payload.IssueId], IncludeSubscribersOnly = true },
-        });
+        }, token);
 
         if (!issues_data.Success() || issues_data.Response is null || issues_data.Response.Length == 0)
             return new() { Messages = issues_data.Messages };
@@ -123,10 +123,10 @@ public class HelpdeskImplementService(
                     UserId = actor.UserId,
                     IsSilent = false,
                 }
-            });
+            }, token);
         }
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync();
+        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         IssueMessageHelpdeskModelDB msg_db;
         IssueReadMarkerHelpdeskModelDB? my_marker = null;
         DateTime dtn = DateTime.UtcNow;
@@ -190,7 +190,7 @@ public class HelpdeskImplementService(
                 {
                     await context.IssueReadMarkers.Where(x => x.Id == my_marker.Id)
                         .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.LastReadAt, dtn));
+                        .SetProperty(p => p.LastReadAt, dtn), cancellationToken: token);
                 }
 
                 tasks.Add(context
@@ -354,7 +354,7 @@ public class HelpdeskImplementService(
                         .Where(x => x.Id == msg_db.Id)
                         .ExecuteUpdateAsync(set => set
                         .SetProperty(p => p.MessageText, req.Payload.MessageText)
-                        .SetProperty(p => p.LastUpdateAt, dtn));
+                        .SetProperty(p => p.LastUpdateAt, dtn), cancellationToken: token);
                 }, token));
                 tasks.Add(PulsePushAsync(p_req, token));
                 await Task.WhenAll(tasks);
@@ -893,7 +893,7 @@ public class HelpdeskImplementService(
             PageSize = req.PageSize,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
-            TotalRowsCount = await q.CountAsync(),
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = [.. data.Select(x => IssueHelpdeskModel.Build(x))]
         };
 
@@ -927,7 +927,7 @@ public class HelpdeskImplementService(
         string[] users_ids = [req.SenderActionUserId, req.Payload.UserId, issue_data.ExecutorIdentityUserId ?? ""];
         users_ids = [.. users_ids.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct()];
 
-        TResponseModel<UserInfoModel[]> users_rest = await IdentityRepo.GetUsersIdentityAsync(users_ids);
+        TResponseModel<UserInfoModel[]> users_rest = await IdentityRepo.GetUsersIdentityAsync(users_ids, token);
         if (!users_rest.Success() || users_rest.Response is null || users_rest.Response.Length != users_ids.Length)
             return new() { Messages = users_rest.Messages };
 
@@ -1097,7 +1097,7 @@ public class HelpdeskImplementService(
         IssueHelpdeskModelDB issue;
         DateTime dtn = DateTime.UtcNow;
         string msg;
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync();
+        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         PulseRequestModel p_req;
 
         ModesSelectRubricsEnum _current_mode_rubric = res_ModeSelectingRubrics.Response ?? ModesSelectRubricsEnum.AllowWithoutRubric;
@@ -1311,7 +1311,7 @@ public class HelpdeskImplementService(
         if (req.SenderActionUserId == GlobalStaticConstants.Roles.System || issues_db.All(x => x.ExecutorIdentityUserId == req.SenderActionUserId) || issues_db.All(x => x.AuthorIdentityUserId == req.SenderActionUserId) || issues_db.All(x => x.Subscribers!.Any(x => x.UserId == req.SenderActionUserId)))
             return new() { Response = issues_db };
 
-        TResponseModel<UserInfoModel[]> rest_user_date = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId]);
+        TResponseModel<UserInfoModel[]> rest_user_date = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
         if (!rest_user_date.Success() || rest_user_date.Response is null || rest_user_date.Response.Length != 1)
         {
             loggerRepo.LogError($"Пользователь не найден: {req.SenderActionUserId}");
@@ -1350,7 +1350,7 @@ public class HelpdeskImplementService(
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload.DocumentId], IncludeSubscribersOnly = true },
-        });
+        }, token);
 
         if (!issues_data.Success() || issues_data.Response is null || issues_data.Response.Length == 0)
             return new() { Messages = issues_data.Messages };
@@ -1425,7 +1425,7 @@ public class HelpdeskImplementService(
             }, token));
         }
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync();
+        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         tasks.Add(context.Issues.Where(x => x.Id == issue_data.Id)
             .ExecuteUpdateAsync(set => set

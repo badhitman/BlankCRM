@@ -11,6 +11,14 @@
 		<UserSecretsId>d3e3ff85-6538-49dd-9b17-37187beac77e</UserSecretsId>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Aspire.Hosting.AppHost" Version="9.1.0" />
 		<PackageReference Include="Aspire.Hosting.MongoDB" Version="9.1.0" />

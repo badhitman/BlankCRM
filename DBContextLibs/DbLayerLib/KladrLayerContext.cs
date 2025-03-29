@@ -97,119 +97,160 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 1.1 города в регионе
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> CitiesInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
-        => await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))
-            .OrderBy(x => x.NAME)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToArrayAsync(cancellationToken: token);
+    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> CitiesInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    {
+        IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"));
+
+        return new(req)
+        {
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.OrderBy(x => x.NAME).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
+    }
 
     /// <summary>
     /// 1.2 нас. пункты в регионе
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> PopPointsInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
-        => await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
-            .OrderBy(x => x.NAME)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToArrayAsync(cancellationToken: token);
+    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> PopPointsInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    {
+        IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"));
+
+        return new(req)
+        {
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.OrderBy(x => x.NAME).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
+    }
 
     /// <summary>
     /// 1.3 районы в регионе
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> AreasInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
-        => await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000________"))
-            .OrderBy(x => x.NAME)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToArrayAsync(cancellationToken: token);
+    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> AreasInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    {
+        IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000________"));
+
+        return new(req)
+        {
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.OrderBy(x => x.NAME).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
+    }
 
     /// <summary>
     /// 1.4 street`s в регионе
     /// </summary>
-    public async Task<StreetKLADRModelDB[]> StreetsInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
-        => await StreetsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000000______"))
-            .OrderBy(x => x.NAME)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToArrayAsync(cancellationToken: token);
+    public async Task<TPaginationResponseModel<StreetKLADRModelDB>> StreetsInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    {
+        IQueryable<StreetKLADRModelDB> q = StreetsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000000______"));
+
+        return new(req)
+        {
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.OrderBy(x => x.NAME).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
+    }
     #endregion
 
     #region Район
     /// <summary>
     /// 2.1 города в районах
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> CitiesInArea(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
-        => await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))
-            .OrderBy(x => x.NAME)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToArrayAsync(cancellationToken: token);
+    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> CitiesInArea(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    {
+        IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"));
+
+        return new(req)
+        {
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.OrderBy(x => x.NAME).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token),
+        };
+    }
 
     /// <summary>
     /// 2.2 нас. пункты в районах
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> PopPointsInArea(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
-        => await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}000_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
-            .OrderBy(x => x.NAME)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToArrayAsync(cancellationToken: token);
+    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> PopPointsInArea(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    {
+        IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}000_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"));
+
+        return new(req)
+        {
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.OrderBy(x => x.NAME).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
+    }
     #endregion
 
     #region Город
     /// <summary>
     /// 3.1 нас. пункты в городах
     /// </summary>
-    public async Task<ObjectKLADRModelDB[]> PopPointsInCity(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
-        => await ObjectsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
-            .OrderBy(x => x.NAME)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToArrayAsync(cancellationToken: token);
+    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> PopPointsInCity(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    {
+        IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"));
+
+        return new(req)
+        {
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.OrderBy(x => x.NAME).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
+    }
 
     /// <summary>
     /// 3.2 улицы в городах
     /// </summary>
-    public async Task<StreetKLADRModelDB[]> StreetsInCity(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
-        => await StreetsKLADR.Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_________"))
-            .OrderBy(x => x.NAME)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToArrayAsync(cancellationToken: token);
+    public async Task<TPaginationResponseModel<StreetKLADRModelDB>> StreetsInCity(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    {
+        IQueryable<StreetKLADRModelDB> q = StreetsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_________"));
+
+        return new(req)
+        {
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.OrderBy(x => x.NAME).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
+    }
     #endregion
 
     #region Нас.пункт
     /// <summary>
     /// 4.1 улицы в городах StreetKLADRModelDB
     /// </summary>
-    public async Task<StreetKLADRModelDB[]> StreetsInPopPoint(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
-        => await StreetsKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}______"))
-            .OrderBy(x => x.NAME)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToArrayAsync(cancellationToken: token);
+    public async Task<TPaginationResponseModel<StreetKLADRModelDB>> StreetsInPopPoint(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    {
+        IQueryable<StreetKLADRModelDB> q = StreetsKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}______"));
+
+        return new(req)
+        {
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.OrderBy(x => x.NAME).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
+    }
     #endregion
 
     #region Улица
     /// <summary>
     /// 5.1 дома на улицах
     /// </summary>
-    public async Task<HouseKLADRModelDB[]> HousesInStrit(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
-        => await HousesKLADR
-            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}{codeMd.StreetCode}____"))
-            .OrderBy(x => x.NAME)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize)
-            .ToArrayAsync(cancellationToken: token);
+    public async Task<TPaginationResponseModel<HouseKLADRModelDB>> HousesInStrit(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    {
+        IQueryable<HouseKLADRModelDB> q = HousesKLADR
+            .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}{codeMd.StreetCode}____"));
+
+        return new(req)
+        {
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.OrderBy(x => x.NAME).Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
+    }
     #endregion
 
 

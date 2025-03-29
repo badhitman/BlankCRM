@@ -245,7 +245,7 @@ public class LdapService : ILdapService, IDisposable
             new(LdapModification.Replace, new LdapAttribute(UserAccountControlAttribute, "512")),
             new(LdapModification.Replace, new LdapAttribute(PwdLastSetNameAttribute, "0"))
             ];
-        await ldap_conn!.ModifyAsync(find_user.DistinguishedName, modification);
+        await ldap_conn!.ModifyAsync(find_user.DistinguishedName, modification, token);
 
         string msg = "Новый пароль для вашей учётной записи";
         //await _email.SendEmailAsync(find_user.Email, msg, Properties.Resources.create_user_mail.Replace("Вам была заведена учетная запись", "Вам был сброшен пароль учетной записи").Replace("[accountname]", find_user.SAMAccountName).Replace("[password]", $"<strong>{password[1..^1]}</strong>"));

@@ -179,7 +179,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
             req.Payload.OrganizationsFilter = [Organization.Id];
 
         await SetBusyAsync(token: token);
-        TResponseModel<TPaginationResponseModel<UserOrganizationModelDB>> res = await CommerceRepo.UsersOrganizationsSelectAsync(req);
+        TResponseModel<TPaginationResponseModel<UserOrganizationModelDB>> res = await CommerceRepo.UsersOrganizationsSelectAsync(req, token);
         await SetBusyAsync(false, token);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success() || res.Response?.Response is null)

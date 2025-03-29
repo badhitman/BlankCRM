@@ -47,7 +47,7 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
         };
 
         TPaginationResponseModel<ArticleModelDB> rest = await HelpdeskRepo
-            .ArticlesSelectAsync(req);
+            .ArticlesSelectAsync(req, token);
 
         await SetBusyAsync(false, token: token);
 

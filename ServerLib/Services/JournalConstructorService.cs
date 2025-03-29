@@ -120,7 +120,7 @@ public partial class JournalConstructorService(
 
         SessionOfDocumentDataModelDB[] sessions_db = await q
             .Include(x => x.DataSessionValues)
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: token);
 
         KeyValuePair<int, Dictionary<string, object>> SessionConvert(SessionOfDocumentDataModelDB _session)
         {
@@ -286,7 +286,7 @@ public partial class JournalConstructorService(
         UserInfoModel current_user = users_find.Response![0];
 
 
-        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync();
+        using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
 
         IQueryable<EntryAltTagModel> pre_q = from scheme in context_forms.DocumentSchemes
                                              join pt in context_forms.Projects on scheme.ProjectId equals pt.Id

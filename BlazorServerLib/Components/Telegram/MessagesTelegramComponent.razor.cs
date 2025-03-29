@@ -62,7 +62,7 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
                 PageSize = state.PageSize,
                 SortingDirection = state.SortDirection == SortDirection.Descending ? DirectionsEnum.Down : DirectionsEnum.Up,
                 SortBy = state.SortLabel,
-            });
+            }, token);
 
         IsBusyProgress = false;
 

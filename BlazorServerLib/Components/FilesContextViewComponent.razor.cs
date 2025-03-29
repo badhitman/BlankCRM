@@ -167,7 +167,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
         };
 
         TPaginationResponseModel<StorageFileModelDB> rest = await FilesRepo
-            .FilesSelectAsync(req);
+            .FilesSelectAsync(req, token);
 
         List<StorageFileModelDB>? data = rest.Response;
         IsBusyProgress = false;

@@ -189,7 +189,7 @@ public class ManufactureService(
                         .Projects
                         .Where(x => x.Id == projectId)
                         .Select(x => new { x.Id, x.Name })
-                        .FirstAsync();
+                        .FirstAsync(cancellationToken: token);
 
             res.Response = new ManageManufactureModelDB() { UserId = user.UserId, Namespace = GlobalTools.TranslitToSystemName(project_db.Name), ProjectId = project_db.Id };
             await context_forms.AddAsync(res.Response, token);

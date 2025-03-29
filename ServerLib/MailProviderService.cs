@@ -78,7 +78,7 @@ public class MailProviderService(IOptions<SmtpConfigModel> _config, ILogger<Mail
             return ResponseBaseModel.CreateError(ex);
         }
 
-        await client.DisconnectAsync(true);
+        await client.DisconnectAsync(true, token);
         return ResponseBaseModel.CreateSuccess(res);
     }
 

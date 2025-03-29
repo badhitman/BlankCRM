@@ -219,7 +219,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
                     PageSize = state.PageSize,
                     SortBy = req.SortBy,
                     SortingDirection = req.SortingDirection,
-                });
+                }, token);
                 navInit = false;
                 await SetBusyAsync(false, token);
             }
@@ -242,7 +242,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         TResponseModel<LogsMetadataResponseModel> md = default!;
         
         await Task.WhenAll([
-                Task.Run(async () => selector = await LogsRepo.LogsSelectAsync(req)),
+                Task.Run(async () => selector = await LogsRepo.LogsSelectAsync(req, token)),
                 Task.Run(async () => md = await LogsRepo.MetadataLogsAsync(new() { StartAt = DateRangeBind.Start, FinalOff = DateRangeBind.End })),
                 ]);
 

@@ -41,7 +41,7 @@ public class IdentityTools(
 
         await memCache.RemoveAsync(pref, req.UserAlias, tokenCan);
 
-        string? token = await memCache.GetStringValueAsync(new MemCachePrefixModel(GlobalStaticConstants.Routes.TWOFACTOR_CONTROLLER_NAME, GlobalStaticConstants.Routes.TOKEN_CONTROLLER_NAME), userId);
+        string? token = await memCache.GetStringValueAsync(new MemCachePrefixModel(GlobalStaticConstants.Routes.TWOFACTOR_CONTROLLER_NAME, GlobalStaticConstants.Routes.TOKEN_CONTROLLER_NAME), userId, tokenCan);
         if (string.IsNullOrWhiteSpace(token))
             return new() { Messages = [new() { Text = "Токен 2FA отсутствует!", TypeMessage = ResultTypesEnum.Error }] };
 
@@ -479,7 +479,7 @@ public class IdentityTools(
            .UserRoles
            .Where(x => find_users_ids.Contains(x.UserId))
            .Select(x => new { x.RoleId, x.UserId })
-           .ToArrayAsync();
+           .ToArrayAsync(cancellationToken: token);
 
         EntryAltModel[] roles_names = users_roles.Length == 0
             ? []
@@ -571,7 +571,7 @@ public class IdentityTools(
              .UserClaims
              .Where(x => find_users_ids.Contains(x.UserId) && x.ClaimType != null && x.ClaimType != "")
              .Select(x => new EntryAltTagModel() { Id = x.UserId, Name = x.ClaimType, Tag = x.ClaimValue })
-             .ToArrayAsync();
+             .ToArrayAsync(cancellationToken: token);
 
         string[]? roles_for_user(string user_id)
         {
@@ -679,7 +679,7 @@ public class IdentityTools(
         switch (req.ClaimArea)
         {
             case ClaimAreasEnum.ForRole:
-                IdentityRoleClaim<string>? claim_role_db = await identityContext.RoleClaims.FirstOrDefaultAsync(x => x.Id == req.Id);
+                IdentityRoleClaim<string>? claim_role_db = await identityContext.RoleClaims.FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
 
                 if (claim_role_db is null)
                     return ResponseBaseModel.CreateWarning($"Claim #{req.Id} не найден в БД");
@@ -946,7 +946,7 @@ public class IdentityTools(
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>> ClaimsUserFlushAsync(string user_id, CancellationToken token = default)
     {
-        using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync();
+        using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         ApplicationUser app_user = await identityContext.Users.FirstAsync(x => x.Id == user_id, cancellationToken: token);
 
         app_user.FirstName ??= "";
@@ -976,7 +976,7 @@ public class IdentityTools(
                     ClaimValue = app_user.ChatTelegramId.ToString(),
                     UserId = app_user.Id,
                 }, token);
-                res.Response = await identityContext.SaveChangesAsync() != 0 || res.Response;
+                res.Response = await identityContext.SaveChangesAsync(token) != 0 || res.Response;
             }
         }
         else
@@ -993,7 +993,7 @@ public class IdentityTools(
             if (claims_db.Length != 0)
             {
                 claims_ids = claims_db.Select(x => x.Id).ToArray();
-                res.Response = await identityContext.UserClaims.Where(x => claims_ids.Contains(x.Id)).ExecuteDeleteAsync() != 0 || res.Response;
+                res.Response = await identityContext.UserClaims.Where(x => claims_ids.Contains(x.Id)).ExecuteDeleteAsync(cancellationToken: token) != 0 || res.Response;
             }
         }
         else
@@ -1260,7 +1260,7 @@ public class IdentityTools(
             Message = $"Ваш Telegram аккаунт отключён от учётной записи {user.Email} с сайта {req.ClearBaseUri}",
             UserTelegramId = (await identityContext.TelegramUsers.FirstAsync(x => x.TelegramId == tg_user_dump, cancellationToken: token)).TelegramId,
             From = "уведомление",
-        });
+        }, token: token);
         if (!tgCall.Success())
             loggerRepo.LogError(tgCall.Message());
 
@@ -1357,7 +1357,7 @@ public class IdentityTools(
             Message = $"Ваш Telegram аккаунт привязан к учётной записи '{appUserDb.Email}' сайта {req.ClearBaseUri}",
             UserTelegramId = req.TelegramId,
             From = "уведомление",
-        });
+        }, token: token);
         if (!tgCall.Success())
             loggerRepo.LogError(tgCall.Message());
 
@@ -1383,7 +1383,7 @@ public class IdentityTools(
         int total = query.Count();
         query = query.OrderBy(x => x.Id).Skip(req.PageNum * req.PageSize).Take(req.PageSize);
 
-        TelegramUserModelDb[] users_tg = await query.ToArrayAsync();
+        TelegramUserModelDb[] users_tg = await query.ToArrayAsync(cancellationToken: token);
         if (users_tg.Length == 0)
             return new() { Response = [] };
 
@@ -1447,7 +1447,7 @@ public class IdentityTools(
             Message = $"Ваш Telegram аккаунт отключён от учётной записи {userIdentityDb.Email} с сайта {req.ClearBaseUri}",
             UserTelegramId = tg_user_info.TelegramId,
             From = "уведомление",
-        });
+        }, token: token);
         if (!tgCall.Success())
             loggerRepo.LogError(tgCall.Message());
 
@@ -1458,7 +1458,7 @@ public class IdentityTools(
     public async Task<TResponseModel<TelegramUserBaseModel>> GetTelegramUserCachedInfoAsync(long telegramId, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
-        TResponseModel<TelegramUserBaseModel> res = new() { Response = TelegramUserBaseModel.Build(await identityContext.TelegramUsers.FirstOrDefaultAsync(x => x.TelegramId == telegramId)) };
+        TResponseModel<TelegramUserBaseModel> res = new() { Response = TelegramUserBaseModel.Build(await identityContext.TelegramUsers.FirstOrDefaultAsync(x => x.TelegramId == telegramId, cancellationToken: token)) };
         if (res.Response is null)
             res.AddInfo($"Пользователь Telegram #{telegramId} не найден в кешэ БД");
 
@@ -1505,7 +1505,7 @@ public class IdentityTools(
             if (MailAddress.TryCreate(user.Email, out _))
             {
                 string msg;
-                TResponseModel<string> bot_username_res = await tgRemoteRepo.GetBotUsernameAsync();
+                TResponseModel<string> bot_username_res = await tgRemoteRepo.GetBotUsernameAsync(token);
                 string? bot_username = bot_username_res.Response;
 
                 msg = $"Существует ссылка привязки Telegram аккаунта к учётной записи сайта действительная до {act.CreatedAt.AddMinutes(req.TelegramJoinAccountTokenLifetimeMinutes)} ({DateTime.UtcNow - lifeTime}).<br/>";
@@ -1643,7 +1643,7 @@ public class IdentityTools(
 
         string[] roles_for_add_normalized = req.RolesNames.Select(r => userManager.NormalizeName(r)).ToArray();
 
-        using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync();
+        using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
 
         // роли, которые есть в БД
         string?[] roles_that_are_in_db = await identityContext.Roles

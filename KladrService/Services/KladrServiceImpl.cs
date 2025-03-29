@@ -27,7 +27,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
 
         await Task.WhenAll([Task.Run(async () =>
         {
-        resMq = await client.GetStringAsync<List<RabbitMqManagementResponseModel>>($"api/queues");
+        resMq = await client.GetStringAsync<List<RabbitMqManagementResponseModel>>($"api/queues", cancellationToken : token);
          q = resMq.Response?
             .Where(x => x.name?.Equals(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive) == true);
         }, token), Task.Run(async () =>
@@ -101,7 +101,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
                 if (housesPart.Response is null || housesPart.Response.Count == 0)
                     return ResponseBaseModel.CreateError("housesPart.Response is null || housesPart.Response.Length == 0");
 
-                await context.TempHousesKLADR.AddRangeAsync(housesPart.Response.Select(HouseKLADRModelDB.Build));
+                await context.TempHousesKLADR.AddRangeAsync(housesPart.Response.Select(HouseKLADRModelDB.Build), cancellationToken: token);
                 return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.DOMA}` - {await context.SaveChangesAsync(token)}");
             case KladrFilesEnum.NAMEMAP:
                 TResponseModel<List<NameMapKLADRModel>> namesPart = NameMapKLADRModel.Build(req.Columns, req.RowsData);
@@ -112,7 +112,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
                 if (namesPart.Response is null || namesPart.Response.Count == 0)
                     return ResponseBaseModel.CreateError("namesPart.Response is null || namesPart.Response.Length == 0");
 
-                await context.TempNamesMapsKLADR.AddRangeAsync(namesPart.Response.Select(NameMapKLADRModelDB.Build));
+                await context.TempNamesMapsKLADR.AddRangeAsync(namesPart.Response.Select(NameMapKLADRModelDB.Build), cancellationToken: token);
                 return ResponseBaseModel.CreateSuccess($"Добавлено `{KladrFilesEnum.NAMEMAP}` - {await context.SaveChangesAsync(token)}");
             case KladrFilesEnum.SOCRBASE:
                 TResponseModel<List<SocrbaseKLADRModel>> socrbasesPart = SocrbaseKLADRModel.Build(req.Columns, req.RowsData);

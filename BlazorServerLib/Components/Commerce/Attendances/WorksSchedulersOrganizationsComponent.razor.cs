@@ -142,7 +142,7 @@ public partial class WorksSchedulersOrganizationsComponent : BlazorBusyComponent
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<OrganizationModelDB> res = await CommerceRepo.OrganizationsSelectAsync(req);
+        TPaginationResponseModel<OrganizationModelDB> res = await CommerceRepo.OrganizationsSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
 
         if (res.Response is null)

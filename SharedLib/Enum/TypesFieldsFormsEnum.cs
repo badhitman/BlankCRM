@@ -60,6 +60,12 @@ public enum TypesFieldsFormsEnum
     DateTime = 80,
 
     /// <summary>
+    /// Адрес (КЛАДР 4.0)
+    /// </summary>
+    [Description("Адрес")]
+    AddressKladrRussia = 100,
+
+    /// <summary>
     /// Калькуляция  (double; программное;)
     /// </summary>
     [Description("Калькуляция")]

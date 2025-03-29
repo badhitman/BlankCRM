@@ -212,7 +212,7 @@ public partial class CommerceImplementService : ICommerceService
                 };
 
         var _allOffersOfDocuments = await q
-           .ToArrayAsync();
+           .ToArrayAsync(cancellationToken: token);
 
         if (_allOffersOfDocuments.Length == 0)
         {
@@ -250,7 +250,7 @@ public partial class CommerceImplementService : ICommerceService
         foreach (int doc_id in _allOffersOfDocuments.Select(x => x.DocumentId).Distinct())
             await context.WarehouseDocuments.Where(x => x.Id == doc_id).ExecuteUpdateAsync(set => set
             .SetProperty(p => p.Version, Guid.NewGuid())
-            .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow));
+            .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow), cancellationToken: token);
 
         foreach (var rowEl in _allOffersOfDocuments.Where(x => !x.IsDisabled))
         {
@@ -368,7 +368,7 @@ public partial class CommerceImplementService : ICommerceService
                 WarehouseId = whDoc.WarehouseId,
             };
 
-            await context.AddAsync(regOfferAv);
+            await context.AddAsync(regOfferAv, token);
         }
         OfferAvailabilityModelDB? regOfferAvStorno = null;
         if (rowDb is not null && rowDb.OfferId != req.OfferId)

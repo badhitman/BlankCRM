@@ -419,7 +419,7 @@ public partial class CommerceImplementService : ICommerceService
         if (req.Payload.Id < 1)
         {
             UserOrganizationModelDB? dl = await context.Units
-                .FirstOrDefaultAsync(x => x.OrganizationId == req.Payload.OrganizationId && x.UserPersonIdentityId == req.Payload.UserPersonIdentityId);
+                .FirstOrDefaultAsync(x => x.OrganizationId == req.Payload.OrganizationId && x.UserPersonIdentityId == req.Payload.UserPersonIdentityId, cancellationToken: token);
 
             if (dl is not null)
             {
