@@ -33,9 +33,9 @@
                                 <input @bind-value:event="oninput" @bind-value="OfficeEdit.Contacts" type="tel" class="form-control" id="telFormControlInput" placeholder="Номер телефона, email...">
                             </div>
                         </div>
-                        <KladrInputComponent ChangeSelectHandle="ChangeSelectAction" KladrObject="EntryAltModel.Build(OfficeEdit.KladrCode, OfficeEdit.KladrTitle)" />
+                        <KladrInputComponent @bind-KladrObject="SelectedKladrObject" />
                         <div class="mb-3">
-                            <label for="exampleFormControlTextarea1" class="form-label">дом/кв (примечание)</label>
+                            <label for="exampleFormControlTextarea1" class="form-label">уточнение адреса (если требуется)</label>
                             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" @oninput="HandleOnChange">@OfficeEdit.AddressUserComment</textarea>
                         </div>
                     </MudStack>

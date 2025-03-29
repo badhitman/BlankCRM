@@ -25,7 +25,7 @@
                         }
                         else
                         {
-                             @* <CascadingValue Value="RubricSelectAction">
+                            @* <CascadingValue Value="RubricSelectAction">
                                 <RubricSelectorComponent ContextName="@GlobalStaticConstants.Routes.ADDRESS_CONTROLLER_NAME" Title="Тип офиса" ModeSelectingRubrics="ModesSelectRubricsEnum.AllowWithoutRubric" ShowDisabledRubrics="false" />
                             </CascadingValue>  *@
                             <div class="row mb-3">
@@ -38,9 +38,9 @@
                                     <input @bind-value:event="oninput" @bind-value="addingContacts" type="tel" class="form-control" id="telFormControlInput" placeholder="Номер телефона, email...">
                                 </div>
                             </div>
-                            <KladrInputComponent ChangeSelectHandle="ChangeSelectAction" />
+                            <KladrInputComponent @bind-KladrObject="SelectedKladrObject" />
                             <div class="mb-3">
-                                <label for="detailsAddressControlTextarea" class="form-label">дом/кв (примечание)</label>
+                                <label for="detailsAddressControlTextarea" class="form-label">уточнение адреса (если требуется)</label>
                                 <textarea class="form-control" id="detailsAddressControlTextarea" rows="3" @oninput="HandleOnChange">@addingDescr</textarea>
                             </div>
                         }

@@ -31,14 +31,12 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
     UniversalBaseModel? SelectedRubric;
 
     Dictionary<int, List<RubricIssueHelpdeskModelDB>> RubriciesCached = [];
-    string? addingAddress, addingContacts, addingName, addingDescr;
+    string? addingAddress, addingContacts, addingName, addingDescr, addingKladrCode, addingKladrTitle;
 
-    string kladrCode { get; set; } = "";
-    string kladrTitle { get; set; } = "";
 
     bool CanCreate =>
-        !string.IsNullOrWhiteSpace(kladrCode) &&
-        !string.IsNullOrWhiteSpace(kladrTitle) &&
+        !string.IsNullOrWhiteSpace(addingKladrCode) &&
+        !string.IsNullOrWhiteSpace(addingKladrTitle) &&
         !string.IsNullOrWhiteSpace(addingName);
 
     bool _expanded;
@@ -47,11 +45,14 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         _expanded = !_expanded;
     }
 
-    void ChangeSelectAction(KladrResponseModel? sender)
+    EntryAltModel? SelectedKladrObject
     {
-        kladrCode = sender?.Code ?? "";
-        kladrTitle = sender?.GetFullName() ?? "";
-        StateHasChangedCall();
+        get => EntryAltModel.Build(addingKladrCode ?? "", addingKladrTitle ?? "");
+        set
+        {
+            addingKladrCode = value?.Id ?? "";
+            addingKladrTitle = value?.Name ?? "";
+        }
     }
 
     void HandleOnChange(ChangeEventArgs args)
@@ -75,8 +76,8 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
             ParentId = SelectedRubric?.Id ?? 0,
             OrganizationId = Organization.Id,
             Contacts = addingContacts,
-            KladrCode = kladrCode,
-            KladrTitle = kladrTitle,
+            KladrCode = addingKladrCode!,
+            KladrTitle = addingKladrTitle!,
         });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
@@ -86,8 +87,8 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         Organization.Offices ??= [];
         Organization.Offices.Add(new()
         {
-            KladrCode = kladrCode,
-            KladrTitle = kladrTitle,
+            KladrCode = addingKladrCode!,
+            KladrTitle = addingKladrTitle!,
             AddressUserComment = addingAddress!,
             Name = addingName!,
             ParentId = SelectedRubric?.Id ?? 0,

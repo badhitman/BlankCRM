@@ -83,14 +83,16 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
                 },
                 SenderActionUserId = CurrentUserSession!.UserId,
                 PageNum = 0,
-                PageSize = int.MaxValue,
+                PageSize = 100,
                 SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
             };
 
             TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq, token);
-            currentRecords = recordsSelect.Response ?? [];
 
-            //await CacheRegistersUpdate(offers: res.Response.Response.Select(x => x.Id).ToArray(), goods: []);
+            if (recordsSelect.TotalRowsCount > recReq.PageSize)
+                SnackbarRepo.Error($"Записей больше: {recordsSelect.TotalRowsCount}");
+
+            currentRecords = recordsSelect.Response ?? [];
             IsBusyProgress = false;
             return new TableData<OfferModelDB>() { TotalItems = res.Response.TotalRowsCount, Items = res.Response.Response };
         }

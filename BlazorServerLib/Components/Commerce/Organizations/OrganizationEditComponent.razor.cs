@@ -21,15 +21,14 @@ public partial class OrganizationEditComponent : BlazorBusyComponentBaseAuthMode
     /// <summary>
     /// OrganizationId
     /// </summary>
-    [Parameter]
-    public int? OrganizationId { get; set; }
+    [Parameter, EditorRequired]
+    public int OrganizationId { get; set; }
 
     OrganizationModelDB? currentOrg;
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        OrganizationId ??= 0;
         await ReadCurrentUser();
 
         if (OrganizationId == 0)
@@ -53,11 +52,11 @@ public partial class OrganizationEditComponent : BlazorBusyComponentBaseAuthMode
 
     async Task ReadOrganization()
     {
-        if (OrganizationId is null || OrganizationId < 1)
+        if (OrganizationId < 1)
             return;
 
         await SetBusyAsync();
-        TResponseModel<OrganizationModelDB[]> res = await CommerceRepo.OrganizationsReadAsync([OrganizationId.Value]);
+        TResponseModel<OrganizationModelDB[]> res = await CommerceRepo.OrganizationsReadAsync([OrganizationId]);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         currentOrg = res.Response!.Single();

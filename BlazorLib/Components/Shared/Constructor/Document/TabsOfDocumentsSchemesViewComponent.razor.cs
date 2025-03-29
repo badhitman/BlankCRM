@@ -57,11 +57,17 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
         if (ParentFormsPage.MainProject is null)
             throw new Exception("Не выбран основной/используемый проект");
 
+        SelectFormsModel reqForms = new()
+        {
+            ProjectId = ParentFormsPage.MainProject.Id,
+            Request = AltSimplePaginationRequestModel.Build(null, 100, 0, true)
+        };
         await SetBusyAsync();
-
-        TPaginationResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.SelectFormsAsync(new() { ProjectId = ParentFormsPage.MainProject.Id, Request = AltSimplePaginationRequestModel.Build(null, int.MaxValue, 0, true) });
-
+        TPaginationResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.SelectFormsAsync(reqForms);
         IsBusyProgress = false;
+
+        if (rest.TotalRowsCount > rest.PageSize)
+            SnackbarRepo.Error($"Записей больше: {rest.TotalRowsCount}");
 
         if (rest.Response is null)
             throw new Exception($"Ошибка 973D18EE-ED49-442D-B12B-CDC5A32C8A51 rest.Content.Elements is null");

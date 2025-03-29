@@ -95,11 +95,14 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
                 SearchQuery = value,
             },
             PageNum = 0,
-            PageSize = int.MaxValue,
+            PageSize = 100,
             SortingDirection = DirectionsEnum.Down,
         };
 
         TPaginationResponseModel<TagModelDB> res = await TagsRepo.TagsSelectAsync(req, token);
+
+        if (res.TotalRowsCount > req.PageSize)
+            SnackbarRepo.Error($"Записей больше: {res.TotalRowsCount}");
 
         List<string> res_data = res.Response?.Where(x => TagsSets?.Any(y => y.TagName.Equals(x.TagName, StringComparison.OrdinalIgnoreCase)) != true).Select(x => x.TagName).ToList() ?? [];
 
@@ -123,11 +126,14 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
                 PrefixPropertyName = PrefixPropertyName,
             },
             PageNum = 0,
-            PageSize = int.MaxValue,
+            PageSize = 100,
             SortingDirection = DirectionsEnum.Down,
         };
 
         TPaginationResponseModel<TagModelDB> res = await TagsRepo.TagsSelectAsync(req);
+
+        if (res.TotalRowsCount > req.PageSize)
+            SnackbarRepo.Error($"Записей больше: {res.TotalRowsCount}");
 
         await SetBusyAsync(false);
         if (res.Response is not null)

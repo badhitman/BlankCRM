@@ -424,7 +424,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             },
             SenderActionUserId = CurrentUserSession.UserId,
             PageNum = 0,
-            PageSize = int.MaxValue,
+            PageSize = 100,
             SortBy = nameof(OrderDocumentModelDB.Name),
             SortingDirection = DirectionsEnum.Up,
         };
@@ -433,6 +433,10 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
 
         if (res.Response is null || res.Response.Count == 0)
             return;
+
+        if (res.TotalRowsCount > req.PageSize)
+            SnackbarRepo.Error($"Записей больше: {res.TotalRowsCount}");
+
         Organizations = res.Response;
         TResponseModel<OrderDocumentModelDB?> current_cart = await StorageRepo
             .ReadParameterAsync<OrderDocumentModelDB>(GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId));

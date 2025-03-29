@@ -3,9 +3,7 @@
 ////////////////////////////////////////////////
 
 using BlazorLib.Components.Shared.Constructor.FieldsClient;
-using BlazorLib.Components.Shared.Constructor;
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -30,6 +28,8 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
     [CascadingParameter, EditorRequired]
     public required ConstructorMainManageComponent ParentFormsPage { get; set; }
 
+
+    FieldFormBaseLowConstructorModel? _field_master;
 
     /// <inheritdoc/>
     protected bool CanSave => !string.IsNullOrWhiteSpace(field_creating_field_ref?.FieldName);
@@ -84,8 +84,6 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
             });
         }
     }
-
-    FieldFormBaseLowConstructorModel? _field_master;
 
     /// <inheritdoc/>
     protected async Task CreateField()
@@ -169,14 +167,7 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
                     directory_field.DirectoryId = dl.DirectoryId;
             }
             else
-            {
                 _field_master.Update(directory_field);
-
-                //_field_master.Required = directory_field.Required;
-                //_field_master.Name = directory_field.Name;
-                //((FieldFormAkaDirectoryConstructorModelDB)_field_master).IsMultiSelect = directory_field.IsMultiSelect;
-            }
-            //_field_master = directory_field;
         }
         else if (_sender is FieldFormConstructorModelDB standard_field)
         {
@@ -185,9 +176,6 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
             {
                 _field_master.Required = standard_field.Required;
                 _field_master.Name = standard_field.Name;
-
-                //if (_field_master is FieldFormConstructorModelDB sfl)
-                //    standard_field.MetadataValueType = sfl.MetadataValueType;
 
                 if (!change_type && _field_master is FieldFormConstructorModelDB sfl)
                     standard_field.MetadataValueType = sfl.MetadataValueType;
@@ -199,7 +187,6 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
                 _field_master.Required = standard_field.Required;
                 _field_master.Name = standard_field.Name;
             }
-            //_field_master = standard_field;
         }
         else
         {
@@ -214,8 +201,6 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await ReadCurrentUser();
-
         await base.OnInitializedAsync();
     }
 }

@@ -10,6 +10,6 @@
             <span role="status">Loading...</span>
         </button>
     }
-    <button @onclick="OpenDialogAsync" type="button" class="btn btn-outline-secondary">Выбрать</button>
-    <button @onclick="ClearInput" type="button" class="btn btn-outline-secondary bi bi-x-lg" disabled="@(string.IsNullOrWhiteSpace(KladrObject?.Id))"></button>
+    <button @onclick="OpenDialogAsync" type="button" class="btn btn-outline-secondary" disabled="@ReadOnly">Выбрать</button>
+    <button @onclick="ClearInput" type="button" class="btn btn-outline-secondary bi bi-x-lg" disabled="@(ReadOnly || string.IsNullOrWhiteSpace(KladrObject?.Id))"></button>
 </div>

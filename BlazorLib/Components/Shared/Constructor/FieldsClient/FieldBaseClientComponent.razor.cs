@@ -91,10 +91,8 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
             InvokeAsync(async () =>
             {
                 await SetBusyAsync();
-                StateHasChanged();
                 await SetValue(_stringFieldValue, Field.Name);
-                StateHasChanged();
-                IsBusyProgress = false;
+                await SetBusyAsync(false);
             });
         }
     }
@@ -110,10 +108,8 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
             InvokeAsync(async () =>
             {
                 await SetBusyAsync();
-                StateHasChanged();
                 await SetValue(_boolFieldValue.ToString(), Field.Name);
-                IsBusyProgress = false;
-                StateHasChanged();
+                await SetBusyAsync(false);
             });
         }
     }
@@ -129,10 +125,8 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
             InvokeAsync(async () =>
             {
                 await SetBusyAsync();
-                StateHasChanged();
                 await SetValue(_dateTimeFieldValue.ToString(), Field.Name);
-                IsBusyProgress = false;
-                StateHasChanged();
+                await SetBusyAsync(false);
             });
         }
     }
@@ -148,12 +142,9 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
             InvokeAsync(async () =>
             {
                 await SetBusyAsync();
-                StateHasChanged();
                 await SetValue(_doubleFieldValue.ToString(), Field.Name);
-                IsBusyProgress = false;
-                StateHasChanged();
-            }
-            );
+                await SetBusyAsync(false);
+            });
         }
     }
 
@@ -168,11 +159,20 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
             InvokeAsync(async () =>
             {
                 await SetBusyAsync();
-                StateHasChanged();
                 await SetValue(_intFieldValue.ToString(), Field.Name);
-                IsBusyProgress = false;
-                StateHasChanged();
+                await SetBusyAsync(false);
             });
+        }
+    }
+
+    EntryAltModel? _kladrObjectValue;
+    EntryAltModel? KladrObject
+    {
+        get => _kladrObjectValue;
+        set
+        {
+            _kladrObjectValue = value;
+            StringFieldValue = _kladrObjectValue?.Name;
         }
     }
 
@@ -190,7 +190,7 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
 
         switch (Field.TypeField)
         {
-            case TypesFieldsFormsEnum.Text or TypesFieldsFormsEnum.Password or TypesFieldsFormsEnum.Time or TypesFieldsFormsEnum.Generator:
+            case TypesFieldsFormsEnum.Text or TypesFieldsFormsEnum.Password or TypesFieldsFormsEnum.Time or TypesFieldsFormsEnum.Generator or TypesFieldsFormsEnum.AddressKladrRussia:
                 CommandEntryModel? _current_agent = Entries.FirstOrDefault(x => $"{x.Name} #{x.Id}".Equals(Parameter));
                 if (_current_agent is not null)
                 {

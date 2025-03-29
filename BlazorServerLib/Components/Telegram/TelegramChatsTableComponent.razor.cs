@@ -79,29 +79,33 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
         UsersCache.AddRange(users_res.Response);
 
         string[] users_ids_identity = [.. users_res.Response.Select(x => x.UserId)];
+        TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req = new()
+        {
+            Payload = new()
+            {
+                Payload = new()
+                {
+                    IdentityUsersIds = [.. users_ids_identity],
+                    JournalMode = HelpdeskJournalModesEnum.All,
+                    IncludeSubscribers = true,
+                },
+                PageNum = 0,
+                PageSize = 100,
+                SortBy = nameof(IssueHelpdeskModel.LastUpdateAt),
+                SortingDirection = DirectionsEnum.Down,
+            },
+            SenderActionUserId = CurrentUserSession.UserId
+        };
         await SetBusyAsync();
         TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>> issues_users_res = await HelpdeskRepo
-                     .IssuesSelectAsync(new()
-                     {
-                         Payload = new()
-                         {
-                             Payload = new()
-                             {
-                                 IdentityUsersIds = [.. users_ids_identity],
-                                 JournalMode = HelpdeskJournalModesEnum.All,
-                                 IncludeSubscribers = true,
-                             },
-                             PageNum = 0,
-                             PageSize = int.MaxValue,
-                             SortBy = nameof(IssueHelpdeskModel.LastUpdateAt),
-                             SortingDirection = DirectionsEnum.Down,
-                         },
-                         SenderActionUserId = CurrentUserSession.UserId
-                     });
+                     .IssuesSelectAsync(req);
         IsBusyProgress = false;
 
         if (issues_users_res.Response?.Response is null || issues_users_res.Response.Response.Count == 0)
             return;
+
+        if (issues_users_res.Response.TotalRowsCount > req.Payload.PageSize)
+            SnackBarRepo.Error($"Записей больше: {issues_users_res.Response.TotalRowsCount}");
 
         foreach (UserInfoModel us in users_res.Response)
         {

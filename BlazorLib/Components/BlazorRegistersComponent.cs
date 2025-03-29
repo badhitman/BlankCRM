@@ -53,12 +53,16 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
                 MinQuantity = 1,
             },
             PageNum = 0,
-            PageSize = int.MaxValue,
+            PageSize = 100,
             SortingDirection = DirectionsEnum.Up,
         };
         await SetBusyAsync();
+
         TPaginationResponseModel<OfferAvailabilityModelDB> offersRegisters = await CommerceRepo.OffersRegistersSelectAsync(reqData);
         await SetBusyAsync(false);
+
+        if (offersRegisters.TotalRowsCount > offersRegisters.PageSize)
+            SnackbarRepo.Error($"Записей больше: {offersRegisters.TotalRowsCount}");
 
         if (offersRegisters.Response is not null && offersRegisters.Response.Count != 0)
         {

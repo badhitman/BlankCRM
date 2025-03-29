@@ -42,12 +42,16 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
 
     UniversalBaseModel? SelectedRubric;
 
-    void ChangeSelectAction(KladrResponseModel? sender)
+    EntryAltModel? SelectedKladrObject
     {
-        OfficeEdit.KladrCode = sender?.Code ?? "";
-        OfficeEdit.KladrTitle = sender?.GetFullName() ?? "";
-        StateHasChangedCall();
+        get => EntryAltModel.Build(OfficeEdit.KladrCode, OfficeEdit.KladrTitle);
+        set
+        {
+            OfficeEdit.KladrCode = value?.Id ?? "";
+            OfficeEdit.KladrTitle = value?.Name ?? "";
+        }
     }
+
 
     void HandleOnChange(ChangeEventArgs args)
     {

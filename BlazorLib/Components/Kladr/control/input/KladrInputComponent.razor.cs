@@ -19,28 +19,35 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
 
 
     /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public required Action<KladrResponseModel?> ChangeSelectHandle { get; set; }
-
-    /// <inheritdoc/>
     [Parameter]
     public EntryAltModel? KladrObject { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public EventCallback<EntryAltModel?> KladrObjectChanged { get; set; }
 
-    void ChangeSelectAction(KladrResponseModel sender)
+    async Task UpdateKladrObject(EntryAltModel? sender) => await KladrObjectChanged.InvokeAsync(sender);
+
+
+    /// <inheritdoc/>
+    [Parameter]
+    public bool ReadOnly { get; set; }
+
+
+    async void ChangeSelectAction(KladrResponseModel sender)
     {
         if (KladrObject is null)
             KladrObject = new() { Id = sender.Code, Name = sender.GetFullName() };
         else
             KladrObject?.Update(sender.Code, sender.GetFullName());
-        StateHasChangedCall();        
-        ChangeSelectHandle(sender);
+        StateHasChangedCall();
+        await UpdateKladrObject(EntryAltModel.Build(sender.Code, sender.GetFullName()));
     }
 
-    void ClearInput()
+    async void ClearInput()
     {
         KladrObject = null;
-        ChangeSelectHandle(null);
+        await UpdateKladrObject(null);
     }
 
     async Task<IDialogReference> OpenDialogAsync()
@@ -52,7 +59,6 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
 
         DialogOptions options = new() { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Large };
         IDialogReference res = await DialogService.ShowAsync<KladrSelectDialogComponent>("Выбор адреса:", parameters, options);
-
         return res;
     }
 }
