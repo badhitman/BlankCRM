@@ -36,6 +36,8 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
     /// </summary>
     public RootKLADRModelDB? SelectedObject => SelectionProgressSteps.LastOrDefault();
 
+    CodeKladrModel? CurrentMD => SelectedObject is null ? null : CodeKladrModel.Build(SelectedObject.CODE);
+
     string? _selectedRegionName;
     string? SelectedRegionName
     {

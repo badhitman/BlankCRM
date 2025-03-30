@@ -48,7 +48,6 @@ public partial class HouseNodeKladrComponent : KladrNavBaseNodeComponent
     {
         List<KladrBaseElementModel> md = GetNamesScheme(Parent);
         md.RemoveAt(md.Count - 1);
-        FullNameData = string.Join(", ", md);
-
+        FullNameData = string.Join(", ", md.Select(x => x.ToString()));
     }
 }

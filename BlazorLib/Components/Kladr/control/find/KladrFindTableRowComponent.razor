@@ -3,7 +3,18 @@
         @foreach (KladrBaseElementModel _el in _items.Skip(SkipBreadcrumbs))
         {
             <li class="breadcrumb-item">
-                <MudHighlighter Text="@_el.ToString()" HighlightedText="@HighlightedText" />
+                @if (CodeKladrModel.Build(_el.Code).Level < KladrTypesObjectsEnum.House)
+                {
+                    <MudHighlighter Text="@_el.ToString()" HighlightedText="@HighlightedText" />
+                }
+                else
+                {
+                    <strong class="mx-1">@_el.Socr:</strong>
+                    foreach (string house in _el.Name.Split(','))
+                    {
+                        <u @onclick="()=> SelectHouseHandle(house,_el)" style="cursor:pointer;" class="mx-1 link-success">@house</u>
+                    }
+                }
             </li>
         }
         @if (SelectionHandler is not null)

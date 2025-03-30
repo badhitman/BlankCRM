@@ -29,25 +29,25 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
     public required int AddressForOrganization { get; set; }
 
 
-    OfficeOrganizationModelDB OfficeCurrent { get; set; } = default!;
-    OfficeOrganizationModelDB OfficeEdit { get; set; } = default!;
+    OfficeOrganizationModelDB? OfficeCurrent { get; set; }
+    OfficeOrganizationModelDB? OfficeEdit { get; set; }
 
     bool CanSave =>
-        (OfficeEdit.AddressUserComment != OfficeCurrent.AddressUserComment ||
-        OfficeEdit.Contacts != OfficeCurrent.Contacts ||
-        OfficeEdit.Name != OfficeCurrent.Name ||
-        OfficeEdit.KladrCode != OfficeCurrent.KladrCode ||
-        OfficeEdit.KladrTitle != OfficeCurrent.KladrTitle ||
-        OfficeEdit.ParentId != OfficeCurrent.ParentId);
+        (OfficeEdit?.AddressUserComment != OfficeCurrent?.AddressUserComment ||
+        OfficeEdit?.Contacts != OfficeCurrent?.Contacts ||
+        OfficeEdit?.Name != OfficeCurrent?.Name ||
+        OfficeEdit?.KladrCode != OfficeCurrent?.KladrCode ||
+        OfficeEdit?.KladrTitle != OfficeCurrent?.KladrTitle ||
+        OfficeEdit?.ParentId != OfficeCurrent?.ParentId);
 
     UniversalBaseModel? SelectedRubric;
 
     EntryAltModel? SelectedKladrObject
     {
-        get => EntryAltModel.Build(OfficeEdit.KladrCode, OfficeEdit.KladrTitle);
+        get => EntryAltModel.Build(OfficeEdit!.KladrCode, OfficeEdit.KladrTitle);
         set
         {
-            OfficeEdit.KladrCode = value?.Id ?? "";
+            OfficeEdit!.KladrCode = value?.Id ?? "";
             OfficeEdit.KladrTitle = value?.Name ?? "";
         }
     }
@@ -55,7 +55,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
 
     void HandleOnChange(ChangeEventArgs args)
     {
-        OfficeEdit.AddressUserComment = args.Value?.ToString() ?? "";
+        OfficeEdit!.AddressUserComment = args.Value?.ToString() ?? "";
 
         //await ChildDataChanged.InvokeAsync(data);
     }
@@ -112,7 +112,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
 
         TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdateAsync(new AddressOrganizationBaseModel()
         {
-            KladrCode = OfficeEdit.KladrCode,
+            KladrCode = OfficeEdit!.KladrCode,
             KladrTitle = OfficeEdit.KladrTitle,
             AddressUserComment = OfficeEdit.AddressUserComment!,
             Name = OfficeEdit.Name!,
@@ -131,7 +131,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
     void RubricSelectAction(UniversalBaseModel? selectedRubric)
     {
         SelectedRubric = selectedRubric;
-        OfficeEdit.ParentId = selectedRubric?.Id ?? 0;
+        OfficeEdit!.ParentId = selectedRubric?.Id ?? 0;
         StateHasChanged();
     }
 }

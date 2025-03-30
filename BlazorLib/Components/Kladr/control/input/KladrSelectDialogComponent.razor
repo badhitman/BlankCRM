@@ -31,17 +31,21 @@
 
         @if (CurrentRegion is not null)
         {
-            <div class="input-group mb-3">
-                @if (IsBusyProgress)
-                {
-                    <button class="btn btn-outline-info" type="button" disabled title="Обработка запроса выполняется">
-                        <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
-                        <span class="visually-hidden" role="status">Loading...</span>
-                    </button>
-                }
-                <input @bind="FindName" type="text" class="form-control" placeholder="Поиск по названию" disabled="@IsBusyProgress">
-                <button @onclick="async () => { if(!IsBusyProgress){ await RebuildTable(); }}" class="btn btn-outline-secondary" type="button" disabled="@IsBusyProgress">Найти</button>
-            </div>
+            if (CurrentMD is null || CurrentMD.Level < KladrTypesObjectsEnum.Street)
+            {
+                <div class="input-group mb-3">
+                    @if (IsBusyProgress)
+                    {
+                        <button class="btn btn-outline-info" type="button" disabled title="Обработка запроса выполняется">
+                            <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                            <span class="visually-hidden" role="status">Loading...</span>
+                        </button>
+                    }
+                    <input @bind="FindName" type="text" class="form-control" placeholder="Поиск адреса" disabled="@IsBusyProgress">
+                    <button @onclick="async () => { if(!IsBusyProgress){ await RebuildTable(); }}" class="btn btn-outline-secondary" type="button" disabled="@IsBusyProgress">Найти</button>
+                </div>
+            }
+
             @if (string.IsNullOrWhiteSpace(FindName) && SelectionProgressSteps.Count == 0)
             {
                 <figure class="text-center">

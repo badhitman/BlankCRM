@@ -96,6 +96,7 @@ public partial class CommerceImplementService : ICommerceService
         res.Response = await context
             .Offices
             .Where(x => organizationsIds.Any(y => y == x.Id))
+            .Include(x => x.Organization)
             .ToArrayAsync(cancellationToken: token);
 
         return res;

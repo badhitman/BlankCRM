@@ -4,7 +4,6 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
-using static MudBlazor.CategoryTypes;
 
 namespace BlazorLib.Components.Kladr.control.find;
 
@@ -40,6 +39,14 @@ public partial class KladrFindTableRowComponent
             _md ??= CodeKladrModel.Build(KladrRow.Code);
             return _md;
         }
+    }
+
+    void SelectHouseHandle(string houzeNum, KladrBaseElementModel _el)
+    {
+        if (SelectionHandler is null)
+            throw new ArgumentNullException(nameof(SelectionHandler));
+
+        SelectionHandler(KladrRow.Build(houzeNum));
     }
 
     /// <inheritdoc/>

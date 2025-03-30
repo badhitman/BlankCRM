@@ -43,6 +43,15 @@ public class KladrResponseModel : KladrBaseElementModel
     public List<RootKLADRModelDB>? Parents { get; set; }
 
 
+    /// <inheritdoc/>
+    public KladrResponseModel Build(string houseNum)
+    {
+        KladrResponseModel res = GlobalTools.CreateDeepCopy(this)!;
+        res.Name = houseNum;
+        return res;
+    }
+
+
     /// <summary>
     /// Full name
     /// </summary>
