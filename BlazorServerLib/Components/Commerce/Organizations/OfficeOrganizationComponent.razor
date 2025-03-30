@@ -7,10 +7,10 @@
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Офис `@OfficeCurrent?.Organization?.Name`<sup class="ms-1"><a class="card-subtitle mb-2 text-body-secondary" href="/organizations/edit/@OfficeCurrent?.OrganizationId">назад: в компанию</a></sup></h5>
-        
+
         <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
             <MudTabPanel Text="Параметры">
-                @if (IsBusyProgress)
+                @if (IsBusyProgress || OfficeEdit is null)
                 {
                     <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
                 }
