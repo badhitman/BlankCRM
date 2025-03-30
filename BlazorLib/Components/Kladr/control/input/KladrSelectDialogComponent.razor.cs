@@ -28,8 +28,8 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
 
 
     RootKLADREquatableModel? CurrentRegion;
-    List<RootKLADREquatableModel> regions = [];
-    List<RootKLADRModelDB> SelectionProgressSteps = [];
+    readonly List<RootKLADREquatableModel> regions = [];
+    readonly List<RootKLADRModelDB> SelectionProgressSteps = [];
 
     /// <summary>
     /// Выбранный объект
@@ -84,7 +84,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         SelectionProgressSteps.Add(selected.Payload.ToObject<RootKLADRModelDB>()!);
         FindName = "";
         CodeKladrModel mdCode = CodeKladrModel.Build(selected.Code);
-        if (mdCode.Level == KladrTypesObjectsEnum.Street || string.IsNullOrWhiteSpace(mdCode.ChildsCodesTemplate))
+        if (mdCode.Level == KladrTypesObjectsEnum.House || string.IsNullOrWhiteSpace(mdCode.ChildsCodesTemplate))
         {
             ChangeSelectHandle(selected);
             MudDialog.Close(DialogResult.Ok(true));

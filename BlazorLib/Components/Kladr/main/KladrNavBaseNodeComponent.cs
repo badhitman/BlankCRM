@@ -16,22 +16,22 @@ public class KladrNavBaseNodeComponent : BlazorBusyComponentBaseModel
     [CascadingParameter, EditorRequired]
     public required KladrResponseModel Payload { get; set; }
 
-    List<string>? _fullName;
+    List<KladrBaseElementModel>? _fullName;
     /// <inheritdoc/>
-    public List<string> GetFullName(QueryNavKladrComponent Owner)
+    public List<KladrBaseElementModel> GetNamesScheme(QueryNavKladrComponent Owner)
     {
         if (_fullName != null)
             return _fullName;
 
         _fullName = [];
 
-        _fullName.Add($"{Payload.Socr} {Payload.Name}");
+        _fullName.Add(KladrBaseElementModel.Build(Payload));
         QueryNavKladrComponent? parent = Owner.Parent;
         string? codeLikeFilter = Owner.CodeLikeFilter;
         while (parent is not null && !string.IsNullOrWhiteSpace(codeLikeFilter))
         {
             KladrResponseModel _el = parent.PartData.First(z => z.Code == codeLikeFilter);
-            _fullName.Insert(0, $"{_el.Socr} {_el.Name}");
+            _fullName.Insert(0, KladrBaseElementModel.Build(_el));
             codeLikeFilter = parent.CodeLikeFilter;
             parent = parent.Parent;
         }

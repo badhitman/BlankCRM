@@ -36,5 +36,5 @@ public partial class LinksKladrComponent : KladrNavBaseNodeComponent
 
 
     async Task GoToMap()
-        => await JSRepo.InvokeVoidAsync("open", $"https://yandex.ru/maps?text={string.Join(", ", GetFullName(Owner))}&source=serp_navig", "_blank");
+        => await JSRepo.InvokeVoidAsync("open", $"https://yandex.ru/maps?text={string.Join(", ", GetNamesScheme(Owner).Select(x=>x.ToString()))}&source=serp_navig", "_blank");
 }

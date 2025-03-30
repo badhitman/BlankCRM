@@ -23,7 +23,16 @@ public partial class HouseNodeKladrComponent : KladrNavBaseNodeComponent
 
     string? FullNameData;
 
-    CodeKladrModel MetaData = default!;
+    CodeKladrModel? _md;
+    CodeKladrModel MetaData
+    {
+        get
+        {
+            _md ??= CodeKladrModel.Build(ObjectKLADR.CODE);
+            return _md;
+        }
+    }
+
     string[]? _names;
     string[] Names
     {
@@ -37,8 +46,7 @@ public partial class HouseNodeKladrComponent : KladrNavBaseNodeComponent
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
-        MetaData = CodeKladrModel.Build(ObjectKLADR.CODE);
-        List<string> md = GetFullName(Parent);
+        List<KladrBaseElementModel> md = GetNamesScheme(Parent);
         md.RemoveAt(md.Count - 1);
         FullNameData = string.Join(", ", md);
 

@@ -9,24 +9,8 @@ namespace SharedLib;
 /// <summary>
 /// объект и все его предки
 /// </summary>
-public class KladrResponseModel
+public class KladrResponseModel : KladrBaseElementModel
 {
-    /// <summary>
-    /// Code
-    /// </summary>
-    public required string Code { get; set; }
-
-    /// <summary>
-    /// Socr
-    /// </summary>
-    public required string Socr { get; set; }
-
-    /// <summary>
-    /// Name
-    /// </summary>
-    public required string Name { get; set; }
-
-
     /// <summary>
     /// UNO
     /// </summary>
@@ -41,12 +25,6 @@ public class KladrResponseModel
     /// GNINMB
     /// </summary>
     public required string GNINMB { get; set; }
-
-
-    /// <summary>
-    /// Chain
-    /// </summary>
-    public CodeKladrModel Metadata => CodeKladrModel.Build(Code);
 
 
     /// <summary>
@@ -78,11 +56,5 @@ public class KladrResponseModel
         return Parents is null || Parents.Count == 0
             ? toString(Name, Socr, Metadata)
             : $"{string.Join(", ", Parents.Select(x => toString(x.NAME, x.SOCR, CodeKladrModel.Build(x.CODE))))}, {toString(Name, Socr, Metadata)}";
-    }
-
-    /// <inheritdoc/>
-    public override string ToString()
-    {
-        return $"{Name} {Socr}";
     }
 }

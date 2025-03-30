@@ -1,16 +1,25 @@
 ﻿<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb" style="margin-bottom:0;">
-        @foreach (string _el in _items.Skip(SkipBreadcrumbs))
+        @foreach (KladrBaseElementModel _el in _items.Skip(SkipBreadcrumbs))
         {
             <li class="breadcrumb-item">
-                <MudHighlighter Text="@_el" HighlightedText="@HighlightedText" />
+                <MudHighlighter Text="@_el.ToString()" HighlightedText="@HighlightedText" />
             </li>
         }
         @if (SelectionHandler is not null)
         {
-            <li @onclick="() => SelectionHandler(KladrRow)" class="breadcrumb-item active link-info link-underline-info text-decoration-underline" aria-current="page" style="cursor:pointer;">
-                выбрать
-            </li>
+            if (CurrentMd.Level < KladrTypesObjectsEnum.House)
+            {
+                <li @onclick="() => SelectionHandler(KladrRow)" class="breadcrumb-item active link-info link-info text-decoration-underline" aria-current="page" style="cursor:pointer;">
+                    выбрать
+                </li>
+            }
+            else
+            {
+                <li class="breadcrumb-item active" aria-current="page">
+                    выберете из перечня
+                </li>
+            }
         }
     </ol>
 </nav>

@@ -4,6 +4,7 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
+using static MudBlazor.CategoryTypes;
 
 namespace BlazorLib.Components.Kladr.control.find;
 
@@ -29,16 +30,25 @@ public partial class KladrFindTableRowComponent
     public Action<KladrResponseModel>? SelectionHandler { get; set; }
 
 
-    private readonly List<string> _items = [];
+    private readonly List<KladrBaseElementModel> _items = [];
 
+    CodeKladrModel? _md;
+    CodeKladrModel CurrentMd
+    {
+        get
+        {
+            _md ??= CodeKladrModel.Build(KladrRow.Code);
+            return _md;
+        }
+    }
 
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
         if (KladrRow.Parents is not null)
             foreach (RootKLADRModelDB item in KladrRow.Parents)
-                _items.Add($"{item.NAME} {item.SOCR}");
+                _items.Add(KladrBaseElementModel.Build(item));//$"{item.NAME} {item.SOCR}"
 
-        _items.Add($"{KladrRow.Name} {KladrRow.Socr}");
+        _items.Add(KladrBaseElementModel.Build(KladrRow));//$"{KladrRow.Name} {KladrRow.Socr}"
     }
 }
