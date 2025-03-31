@@ -40,26 +40,24 @@ public abstract partial class KladrLayerContext : DbContext
 
     /// <inheritdoc/>
     public record KladrEntry(string CODE);
-
+    // ORDER BY o.""NAME"", o.""CODE""
     /// <inheritdoc/>
     static string GetFindQuery(string findText, bool housesInclude, string[]? codeLikeFilters = null)
     {
-        return $@"(SELECT o.""CODE""
+        return $@"SELECT x.""CODE"" FROM ((SELECT o.""CODE"", o.""NAME"", 1 as ""LEVEL""
                     FROM public.""{nameof(ObjectsKLADR)}"" AS o
-                    WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"o.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR o.""NAME"" LIKE '{findText}')
-                    ORDER BY o.""NAME"", o.""CODE"")
+                    WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"o.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR o.""NAME"" LIKE '{findText}'))
                     UNION
-                    (SELECT s.""CODE""
+                    (SELECT s.""CODE"", s.""NAME"", 2 as ""LEVEL""
                     FROM public.""{nameof(StreetsKLADR)}"" AS s
-                    WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"s.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR s.""NAME"" LIKE '{findText}')
-                    ORDER BY s.""NAME"", s.""CODE"")
+                    WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"s.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR s.""NAME"" LIKE '{findText}'))
                     {(!housesInclude ? "" : $@"
                     UNION
-                    (SELECT h.""CODE""
+                    (SELECT h.""CODE"", h.""NAME"", 3 as ""LEVEL""
                     FROM public.""{nameof(HousesKLADR)}"" AS h
-                    {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $@"WHERE {string.Join(" OR ", codeLikeFilters.Select(x => $"h.\"CODE\" LIKE '{x}'"))}")}                    
-                    ORDER BY h.""NAME"", h.""CODE"")")}
-        ";
+                    {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $@"WHERE {string.Join(" OR ", codeLikeFilters.Select(x => $"h.\"CODE\" LIKE '{x}'"))}")})")}) as x
+                    ORDER BY x.""NAME"", x.""LEVEL""
+                ";
     }
 
     /// <summary>

@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -26,19 +25,12 @@ public partial class QueryNavKladrComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public required QueryNavKladrComponent? Parent { get; set; }
 
+
     /// <inheritdoc/>
     public List<KladrResponseModel> PartData = [];
 
     private MudTable<KladrResponseModel>? table;
 
-
-    /// <inheritdoc/>
-    public void Reload()
-    {
-        StateHasChangedCall();
-        //if (table is not null)
-        //    await table.ReloadServerData();
-    }
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server

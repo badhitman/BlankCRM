@@ -12,13 +12,16 @@ namespace BlazorLib.Components.Kladr;
 public partial class KladrViewPanelComponent
 {
     IReadOnlyCollection<string>? _selectedFieldsView;
+    /// <summary>
+    /// Отображаемы поля/колонки
+    /// </summary>
     IReadOnlyCollection<string>? SelectedFieldsView
     {
         get => _selectedFieldsView;
         set
         {
             _selectedFieldsView = value;
-            kladrRef?.Reload();
+            kladrRef?.StateHasChangedCall();
         }
     }
 

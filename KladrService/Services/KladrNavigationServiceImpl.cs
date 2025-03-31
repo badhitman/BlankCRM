@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using Newtonsoft.Json.Linq;
 using SharedLib;
 using DbcLib;
+using System.Linq;
 
 namespace KladrService;
 
@@ -324,125 +325,97 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
         Dictionary<KladrChainTypesEnum, string[]> dataResponse = [];
         CodeKladrModel codeMd = CodeKladrModel.Build(req.CodeLikeFilter);
         string[] dbRows;
-
         if (codeMd.Level == KladrTypesObjectsEnum.RootRegion) // регионы
         {
-            response.TotalRowsCount = await context
-                .ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE)
-                .Union(context.ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE))
-                .Union(context.ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000________"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE))
-                .Union(context.StreetsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000000______"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE))
-                .CountAsync(cancellationToken: token);
+            var _q = context.ObjectsKLADR
+                  .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000%"))
+                  .Select(x => new { L = 1, x.CODE, x.NAME })
+                  .Union(context.ObjectsKLADR
+                  .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000___000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000%"))
+                  .Select(x => new { L = 2, x.CODE, x.NAME }))
+                  .Union(context.ObjectsKLADR
+                  .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000%"))
+                  .Select(x => new { L = 3, x.CODE, x.NAME }))
+                  .Union(context.StreetsKLADR
+                  .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000000%"))
+                  .Select(x => new { L = 4, x.CODE, x.NAME }));
 
-            dbRows = await context
-                .ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE)
-                .Union(context.ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE))
-                .Union(context.ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000________"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE))
-                .Union(context.StreetsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000000______"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE))
+            response.TotalRowsCount = await _q.CountAsync(cancellationToken: token);
+            dbRows = await _q
+                .OrderBy(x => x.L)
+                .ThenBy(x => x.NAME)
                 .Skip(req.PageNum * req.PageSize)
                 .Take(req.PageSize)
+                .Select(x => x.CODE)
                 .ToArrayAsync(cancellationToken: token);
         }
         else if (codeMd.Level == KladrTypesObjectsEnum.Area) //районы
         {
-            response.TotalRowsCount = await context
-                .ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))
-                .Select(x => x.CODE)
-                .Union(context.ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}000_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
-                .Select(x => x.CODE))
-                .CountAsync(cancellationToken: token);
+            var _q = context
+                 .ObjectsKLADR
+                 .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}___000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000%"))
+                 .Select(x => new { L = 1, x.CODE, x.NAME })
+                 .Union(context.ObjectsKLADR
+                 .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000%"))
+                 .Select(x => new { L = 2, x.CODE, x.NAME }));
 
-            dbRows = await context
-                .ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE)
-                .Union(context.ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}000_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE))
+            response.TotalRowsCount = await _q.CountAsync(cancellationToken: token);
+            dbRows = await _q
+                .OrderBy(x => x.L)
+                .ThenBy(x => x.NAME)
                 .Skip(req.PageNum * req.PageSize)
                 .Take(req.PageSize)
+                .Select(x => x.CODE)
                 .ToArrayAsync(cancellationToken: token);
         }
         else if (codeMd.Level == KladrTypesObjectsEnum.City) // города в районах
         {
-            response.TotalRowsCount = await context
+            var _q = context
                 .ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
-                .Select(x => x.CODE)
-                .Union(context.StreetsKLADR.Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_________"))
-                .Select(x => x.CODE))
-                .CountAsync(cancellationToken: token);
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000%"))
+                .Select(x => new { L = 1, x.CODE, x.NAME })
+                .Union(context.StreetsKLADR.Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}000%"))
+                .Select(x => new { L = 2, x.CODE, x.NAME }));
 
-            dbRows = await context
-                .ObjectsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE)
-                .Union(context.StreetsKLADR.Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_________"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE))
+            response.TotalRowsCount = await _q.CountAsync(cancellationToken: token);
+            dbRows = await _q
+                .OrderBy(x => x.L)
+                .ThenBy(x => x.NAME)
                 .Skip(req.PageNum * req.PageSize)
                 .Take(req.PageSize)
+                .Select(x => x.CODE)
                 .ToArrayAsync(cancellationToken: token);
         }
         else if (codeMd.Level == KladrTypesObjectsEnum.PopPoint) // нас пункты
         {
-            response.TotalRowsCount = await context
+            var _q = context
                 .StreetsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}______"))
-                .CountAsync(cancellationToken: token);
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}%"))
+                .Select(x => new { L = 1, x.CODE, x.NAME });
 
-            dbRows = await context
-                .StreetsKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}______"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE)
+            response.TotalRowsCount = await _q.CountAsync(cancellationToken: token);
+            dbRows = await _q
+                .OrderBy(x => x.L)
+                .ThenBy(x => x.NAME)
                 .Skip(req.PageNum * req.PageSize)
                 .Take(req.PageSize)
+                .Select(x => x.CODE)
                 .ToArrayAsync(cancellationToken: token);
         }
         else if (codeMd.Level == KladrTypesObjectsEnum.Street) // улицы
         {
-            response.TotalRowsCount = await context
+            var _q = context
                 .HousesKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}{codeMd.StreetCode}____"))
-                .CountAsync(cancellationToken: token);
+                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}{codeMd.StreetCode}%"))
+                .Select(x => new { L = 1, x.CODE, x.NAME });
 
-            dbRows = await context
-                .HousesKLADR
-                .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}{codeMd.StreetCode}____"))
-                .OrderBy(x => x.NAME)
-                .Select(x => x.CODE)
+            response.TotalRowsCount = await _q.CountAsync(cancellationToken: token);
+            dbRows = await _q
+                .OrderBy(x => x.L)
+                .ThenBy(x => x.NAME)
                 .Skip(req.PageNum * req.PageSize)
                 .Take(req.PageSize)
+                .Select(x => x.CODE)
                 .ToArrayAsync(cancellationToken: token);
         }
         else
