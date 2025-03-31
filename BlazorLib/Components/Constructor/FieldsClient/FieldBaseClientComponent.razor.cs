@@ -164,15 +164,13 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
             });
         }
     }
-
-    EntryAltModel? _kladrObjectValue;
+    //StringFieldValue
     EntryAltModel? KladrObject
     {
-        get => _kladrObjectValue;
+        get => EntryAltModel.Build("0", StringFieldValue ?? "");
         set
         {
-            _kladrObjectValue = value;
-            StringFieldValue = _kladrObjectValue?.Name;
+            StringFieldValue = value?.Name;
         }
     }
 

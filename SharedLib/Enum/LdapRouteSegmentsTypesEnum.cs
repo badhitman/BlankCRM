@@ -1,4 +1,8 @@
-﻿namespace SharedLib;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+namespace SharedLib;
 
 /// <summary>
 /// Сегменты маршрутизации пути LDAP

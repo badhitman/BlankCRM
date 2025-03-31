@@ -26,7 +26,7 @@ public abstract class FieldFormBaseConstructorModel : FieldFormBaseLowConstructo
     /// <summary>
     /// Получить/распарсить метаданные
     /// </summary>
-    public Dictionary<MetadataExtensionsFormFieldsEnum, object?> MetadataValueTypeGet()
+    public Dictionary<MetadataExtensionsFormFieldsEnum, object?> MetadataParse()
     {
         if (string.IsNullOrWhiteSpace(MetadataValueType))
             return [];
@@ -47,7 +47,7 @@ public abstract class FieldFormBaseConstructorModel : FieldFormBaseLowConstructo
     /// </summary>
     public void UnsetValueOfMetadata(MetadataExtensionsFormFieldsEnum prop_index)
     {
-        Dictionary<MetadataExtensionsFormFieldsEnum, object?> dd = MetadataValueTypeGet();
+        Dictionary<MetadataExtensionsFormFieldsEnum, object?> dd = MetadataParse();
         lock (locker)
         {
             dd.Remove(prop_index);
@@ -60,14 +60,11 @@ public abstract class FieldFormBaseConstructorModel : FieldFormBaseLowConstructo
     /// </summary>
     public void SetValueOfMetadata(MetadataExtensionsFormFieldsEnum prop_index, object? prop_value)
     {
-        Dictionary<MetadataExtensionsFormFieldsEnum, object?> dd = MetadataValueTypeGet();
+        Dictionary<MetadataExtensionsFormFieldsEnum, object?> dd = MetadataParse();
         lock (locker)
         {
-            if (dd.ContainsKey(prop_index))
+            if (!dd.TryAdd(prop_index, prop_value))
                 dd[prop_index] = prop_value;
-            else
-                dd.Add(prop_index, prop_value);
-
             MetadataValueType = JsonConvert.SerializeObject(dd);
         }
     }
@@ -77,7 +74,7 @@ public abstract class FieldFormBaseConstructorModel : FieldFormBaseLowConstructo
     /// </summary>
     public object? GetMetadataValue(MetadataExtensionsFormFieldsEnum prop_index, object? default_value = null)
     {
-        Dictionary<MetadataExtensionsFormFieldsEnum, object?> dd = MetadataValueTypeGet();
+        Dictionary<MetadataExtensionsFormFieldsEnum, object?> dd = MetadataParse();
         if (dd.TryGetValue(prop_index, out object? prop_value))
             return prop_value;
 
@@ -89,7 +86,7 @@ public abstract class FieldFormBaseConstructorModel : FieldFormBaseLowConstructo
     /// </summary>
     public bool EqualMetadata(Dictionary<MetadataExtensionsFormFieldsEnum, object> other_dd)
     {
-        Dictionary<MetadataExtensionsFormFieldsEnum, object?> dd = MetadataValueTypeGet();
+        Dictionary<MetadataExtensionsFormFieldsEnum, object?> dd = MetadataParse();
 
         if (other_dd.Any(x => !dd.ContainsKey(x.Key)) || dd.Any(x => !other_dd.ContainsKey(x.Key)))
             return false;

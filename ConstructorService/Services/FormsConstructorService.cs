@@ -1408,7 +1408,7 @@ public partial class FormsConstructorService(
                     }
                     else
                     {
-                        mdvs = f.MetadataValueTypeGet();
+                        mdvs = f.MetadataParse();
                         foreach (KeyValuePair<MetadataExtensionsFormFieldsEnum, object?> md in mdvs)
                         {
                             if (string.IsNullOrWhiteSpace(md.Value?.ToString()))

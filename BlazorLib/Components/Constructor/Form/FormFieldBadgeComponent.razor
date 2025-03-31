@@ -9,7 +9,7 @@
     else if (Field is FieldFormConstructorModelDB _f)
     {
         string _t = $"{_f.TypeField.DescriptionInfo()}";
-        Dictionary<MetadataExtensionsFormFieldsEnum, object?> _dict = _f.MetadataValueTypeGet();
+        Dictionary<MetadataExtensionsFormFieldsEnum, object?> _dict = _f.MetadataParse();
         if (_dict.ContainsKey(MetadataExtensionsFormFieldsEnum.Descriptor))
             _t += $" &#10149; <b>{_dict[MetadataExtensionsFormFieldsEnum.Descriptor]}</b>";
 

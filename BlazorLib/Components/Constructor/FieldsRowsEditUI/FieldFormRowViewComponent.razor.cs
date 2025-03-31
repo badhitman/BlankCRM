@@ -2,12 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
-using BlazorLib;
 
 namespace BlazorLib.Components.Constructor.FieldsRowsEditUI;
 
@@ -75,18 +73,12 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             {
                 if (_field_master is FieldFormConstructorModelDB sf)
                 {
-                    switch (sf.TypeField)
+                    _type_name = sf.TypeField switch
                     {
-                        case TypesFieldsFormsEnum.Generator:
-                            _type_name = $"<span class='badge bg-info text-dark text-wrap'>{sf.TypeField.DescriptionInfo()}</span>";
-                            break;
-                        case TypesFieldsFormsEnum.ProgramCalculationDouble:
-                            _type_name = $"<span class='badge bg-primary text-wrap'>{sf.TypeField.DescriptionInfo()}</span>";
-                            break;
-                        default:
-                            _type_name = sf.TypeField.DescriptionInfo();
-                            break;
-                    }
+                        TypesFieldsFormsEnum.Generator => $"<span class='badge bg-info text-dark text-wrap'>{sf.TypeField.DescriptionInfo()}</span>",
+                        TypesFieldsFormsEnum.ProgramCalculationDouble => $"<span class='badge bg-primary text-wrap'>{sf.TypeField.DescriptionInfo()}</span>",
+                        _ => sf.TypeField.DescriptionInfo(),
+                    };
                 }
                 else if (_field_master is FieldFormAkaDirectoryConstructorModelDB df)
                     _type_name = $"<span class='badge bg-success text-wrap position-relative'>Справочник/Список{(df.IsMultiSelect ? "<span title='мульти-выбор' class='position-absolute top-0 start-100 translate-middle p-1 ms-1 bg-danger border border-light rounded-circle'>ml<span class='visually-hidden'>multi select</span></span>" : "")}</span>";
@@ -125,9 +117,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
 
                     if (!string.IsNullOrEmpty(_parameter) && _parameter.TryParseJson(out string[]? out_res) && out_res is not null && out_res.Length != 0)
                     {
-                        string[] lost_fields = out_res
-                            .Where(x => !Form.AllFields.Any(y => y.Name.Equals(x)))
-                            .ToArray();
+                        string[] lost_fields = [.. out_res.Where(x => !Form.AllFields.Any(y => y.Name.Equals(x)))];
 
                         if (lost_fields.Length != 0)
                         {
