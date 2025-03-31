@@ -18,9 +18,9 @@ public enum MetadataExtensionsFormFieldsEnum
     IsMultiline = 30,
 
     /// <summary>
-    /// Параметер
+    /// Параметр
     /// </summary>
-    [Description("Параметер")]
+    [Description("Параметр")]
     Parameter = 40,
 
     /// <summary>

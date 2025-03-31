@@ -18,7 +18,7 @@ public partial class TextFieldFormRowEditUIComponent : FieldFormEditFormBaseComp
     {
         get
         {
-            return Field.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Parameter, "")?.ToString();
+            return Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Parameter, "")?.ToString();
         }
         private set
         {
@@ -45,7 +45,7 @@ public partial class TextFieldFormRowEditUIComponent : FieldFormEditFormBaseComp
     {
         get
         {
-            if (Enum.TryParse(Field.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Descriptor, PropsTypesMDFieldsEnum.None.ToString())?.ToString(), out PropsTypesMDFieldsEnum _mode))
+            if (Enum.TryParse(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor, PropsTypesMDFieldsEnum.None.ToString())?.ToString(), out PropsTypesMDFieldsEnum _mode))
                 return _mode;
 
             return PropsTypesMDFieldsEnum.None;
@@ -83,7 +83,7 @@ public partial class TextFieldFormRowEditUIComponent : FieldFormEditFormBaseComp
     {
         get
         {
-            return (bool?)Field.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.IsMultiline, false) == true;
+            return (bool?)Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.IsMultiline, false) == true;
         }
         private set
         {

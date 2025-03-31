@@ -1784,7 +1784,7 @@ public partial class FormsConstructorService(
                 return res;
             }
 
-            if (req.Payload.TypeField == TypesFieldsFormsEnum.ProgramCalculationDouble && req.Payload.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Descriptor, null) is null)
+            if (req.Payload.TypeField == TypesFieldsFormsEnum.ProgramCalculationDouble && req.Payload.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor, null) is null)
             {
                 msg = $"Для калькуляции требуются параметры с именами полей. Пример: ['ИмяПоля1', 'ИмяПоля2', 'ИмяПоля3']";
                 res.AddError(msg);

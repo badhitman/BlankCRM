@@ -33,7 +33,7 @@
         @(DescriptorField == PropsTypesMDFieldsEnum.TextMask ? "Маска для вводимого значения" : "Параметры")
         @if (DescriptorField == PropsTypesMDFieldsEnum.Template)
         {
-            <TextFieldAgentSelectorComponent @ref="_tfAgentSelectorComponent_ref" SelectAgentHandle="SelectAgentAction" SelectedAgent="@(Field.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Parameter, "")?.ToString())" />
+            <TextFieldAgentSelectorComponent @ref="_tfAgentSelectorComponent_ref" SelectAgentHandle="SelectAgentAction" SelectedAgent="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Parameter, "")?.ToString())" />
         }
     </label>
     <input disabled="@(IsMultiline || DescriptorField == PropsTypesMDFieldsEnum.None)" readonly="@(!ParentFormsPage.CanEditProject)" @bind-value="ParameterField" @bind-value:event="oninput" type="text" class="form-control" id="exampleInputParameter1_@(DomID)" name="exampleInputParameter1_@(DomID)" aria-describedby="@($"exampleInputParameter1_{DomID}Help")">

@@ -14,7 +14,7 @@ public enum PropsTypesMDFieldsEnum
     /// <summary>
     /// None
     /// </summary>
-    [Description("Нет")]
+    [Description("None")]
     None,
 
     /// <summary>

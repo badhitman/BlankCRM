@@ -80,16 +80,16 @@ public partial class DocumentsManufactureComponent : BlazorBusyComponentBaseMode
             {
                 _res.Information = $"<span class='badge text-bg-light text-wrap'>{ff.TypeField.DescriptionInfo()}</span>";
 
-                if (skip_fields.Contains(ff.TypeField) || Enum.TryParse(ff.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Descriptor, PropsTypesMDFieldsEnum.None.ToString())?.ToString(), out PropsTypesMDFieldsEnum _mode) && _mode == PropsTypesMDFieldsEnum.Template)
+                if (skip_fields.Contains(ff.TypeField) || Enum.TryParse(ff.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor, PropsTypesMDFieldsEnum.None.ToString())?.ToString(), out PropsTypesMDFieldsEnum _mode) && _mode == PropsTypesMDFieldsEnum.Template)
                 {
                     _res.IsDisabled = true;
                     _res.Tooltip = "Поле формы не будет выгружено: данный тип поля не поддерживается для выгрузки";
                 }
                 else
                 {
-                    string? descriptor = ff.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Descriptor)?.ToString();
+                    string? descriptor = ff.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor)?.ToString();
                     DeclarationAbstraction? _d = DeclarationAbstraction.GetHandlerService(descriptor ?? "");
-                    string? parameter = ff.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Parameter)?.ToString();
+                    string? parameter = ff.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Parameter)?.ToString();
                     _res.Information = $"{_res.Information} <b>{_d?.Name ?? descriptor}</b> <u>{parameter}</u>";
 
                     if (!_res.IsDisabled && _d is not null && !_d.AllowCallWithoutParameters && string.IsNullOrEmpty(parameter))

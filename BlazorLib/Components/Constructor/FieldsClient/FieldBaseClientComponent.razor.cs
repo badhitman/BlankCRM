@@ -25,13 +25,13 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
         get
         {
             CommandEntryModel? md = CalculationsAsEntries?.FirstOrDefault(EqualCommand);
-            return $"{md?.Name ?? "ошибка 99A9A8C3-4748-45BD-B4C9-A34BA6C13ECF"}: {Field.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Descriptor)}";
+            return $"{md?.Name ?? "ошибка 99A9A8C3-4748-45BD-B4C9-A34BA6C13ECF"}: {Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor)}";
         }
     }
 
     bool EqualCommand(CommandEntryModel comm)
     {
-        object? ext = Field.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Descriptor);
+        object? ext = Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor);
         return comm.Id == ext?.ToString();
     }
 
@@ -69,12 +69,12 @@ public partial class FieldBaseClientComponent : FieldComponentBaseModel
     /// <summary>
     /// Вид параметра
     /// </summary>
-    string? Descriptor => Field.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Descriptor)?.ToString();
+    string? Descriptor => Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor)?.ToString();
 
     /// <summary>
     /// Параметр
     /// </summary>
-    string? Parameter => Field.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Parameter)?.ToString();
+    string? Parameter => Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Parameter)?.ToString();
 
     IQueryable<FieldFormConstructorModelDB>? QueryFieldsOfNumericTypes => PageJoinForm?.Form?.QueryFieldsOfNumericTypes(Field.Name);
     IEnumerable<string> FieldsNames => QueryFieldsOfNumericTypes?.Select(x => x.Name) ?? Enumerable.Empty<string>();

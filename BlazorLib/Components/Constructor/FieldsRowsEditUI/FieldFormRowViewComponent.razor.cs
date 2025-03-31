@@ -114,8 +114,8 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             {
                 if (_field_master is FieldFormConstructorModelDB sf)
                 {
-                    string? _descriptor = sf.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Descriptor)?.ToString();
-                    string? _parameter = sf.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Parameter)?.ToString();
+                    string? _descriptor = sf.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor)?.ToString();
+                    string? _parameter = sf.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Parameter)?.ToString();
 
                     if (!string.IsNullOrEmpty(_descriptor))
                     {
@@ -268,10 +268,10 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         Action act;
         if (_field_master is FieldFormConstructorModelDB sf)
         {
-            string? field_valid = sf.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Descriptor)?.ToString();
+            string? field_valid = sf.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor)?.ToString();
             if (field_valid is not null && Enum.TryParse(field_valid, out PropsTypesMDFieldsEnum myDescriptor))
             {
-                string? parameter = sf.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Parameter)?.ToString();
+                string? parameter = sf.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Parameter)?.ToString();
 
                 switch (myDescriptor)
                 {

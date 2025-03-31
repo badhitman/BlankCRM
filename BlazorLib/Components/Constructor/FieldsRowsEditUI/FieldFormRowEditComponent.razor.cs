@@ -35,7 +35,7 @@ public partial class FieldFormRowEditComponent : FieldFormEditFormBaseComponent
     /// <inheritdoc/>
     protected string? FieldsNames
     {
-        get => (string?)Field.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Parameter, "");
+        get => (string?)Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Parameter, "");
         set
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -55,7 +55,7 @@ public partial class FieldFormRowEditComponent : FieldFormEditFormBaseComponent
     /// <inheritdoc/>
     public string? SelectedProgramCalculationField
     {
-        get => (string?)Field.GetValueObjectOfMetadata(MetadataExtensionsFormFieldsEnum.Descriptor, "");
+        get => (string?)Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor, "");
         private set
         {
             if (string.IsNullOrWhiteSpace(value))
