@@ -1,6 +1,6 @@
 ## Commerce
 
-[план обмена](https://github.com/badhitman/BlankCRM/blob/main/CommerceService/INTEGRATION.md)
+[план обмена](https://github.com/badhitman/BlankCRM/blob/main/micro-services/CommerceService/INTEGRATION.md)
 
 ![Заказ товаров](img/create-order.png)
 

@@ -3,7 +3,7 @@
 - СЭД (ServiceDesk/HelpDesk) подсистема оказания консультаций, обратной связи или сопровождение заказов. Управление документами: изменение статусов заявок, журналирование/протоколирование событий и другая универсальная функциональность.
 - Подсистема электронной коммерции: на базе СЭД функционирует простой учёт заказов в т.ч. остатки на складах и предоставление услуг с настраиваемым графиком/расписанием.
 - WEB-Конструктор схем данных (формы, документы).
-- Интерфейс rest API (swagger) для внешних информационных систем (пример: план обмена для [commerce](https://github.com/badhitman/BlankCRM/blob/main/CommerceService/INTEGRATION.md)).
+- Интерфейс rest API (swagger) для внешних информационных систем (пример: план обмена для [commerce](https://github.com/badhitman/BlankCRM/blob/main/micro-services/CommerceService/INTEGRATION.md)).
 - ui пакеты: [MudBlazor 7](https://github.com/MudBlazor/MudBlazor/) и два WYSIWYG: [CKEditor](https://ckeditor.com/) + [TinyMCE](https://www.tiny.cloud). Важно: **CKEditor** не поддерживает вставку картинок, а **TinyMCE** имеет такую поддержу.
 - Кроссплатформенный .NET MAUI (Win, Android и т.д.) [клиент доступа к Rest/Api](https://github.com/badhitman/BlankCRM?tab=readme-ov-file#tools-maui-app)
 - Связь между службами через RabbitMQ[^1] в режиме `запрос-ответ`: при отправке сообщения в очередь, отправитель дожидается ответ (в границах таймаута) и возвращает результат вызывающему. При использовании вызова такой команды удалённого сервиса проходит так, как если бы это был обычный `await` запрос к базе данных или rest/api. Вместе с тем есть возможность отправить команду в режиме "отправил и забыл".
@@ -316,8 +316,8 @@ else
 
 [^7]: Свой обработчик ответа на входящее сообщение Telegram реализуется через [интерфейс](https://github.com/badhitman/BlankCRM/blob/main/SharedLib/IServices/ITelegramDialogService.cs) и [регистрации его в **Program.cs**](https://github.com/badhitman/BlankCRM/blob/main/TelegramBotService/Program.cs#L84) службы **TelegramBot**.
 
-[^8]: Служба Telegram бота для каждого входящего сообщения [проверяет статус пользователя через вызов удалённой команды](https://github.com/badhitman/BlankCRM/blob/main/TelegramBotService/Services/UpdateHandler.cs#L53), которую в данном случае обрабатывает Web сервер Blzaor.
+[^8]: Служба Telegram бота для каждого входящего сообщения [проверяет статус пользователя через вызов удалённой команды](https://github.com/badhitman/BlankCRM/blob/main/micro-services/TelegramBotService/Services/UpdateHandler.cs#L53), которую в данном случае обрабатывает Web сервер Blzaor.
 
-[^9]: [Бот ищет по имени нужного обработчика. Если не находит, то использует базовый](https://github.com/badhitman/BlankCRM/blob/main/TelegramBotService/Services/UpdateHandler.cs#L131).
+[^9]: [Бот ищет по имени нужного обработчика. Если не находит, то использует базовый](https://github.com/badhitman/BlankCRM/blob/main/micro-services/TelegramBotService/Services/UpdateHandler.cs#L131).
 
 [^10]: МетаФайлы поддерживают контроль доступа. По умолчанию файлы доступны публично по ссылке, но можно установить ограничения на чтение. Правила доступа позволяют разрешать доступ персонально пользователям или по ассоциации с документом. В случае доступа по ассоциации с документом проверяется упоминание пользователя в документе (должен быть среди подписчиков или являться автором|исполнителем). Кроме того можно создать токен доступа (guid) для файла, по которому можно получить доступ вне всяких ограничений передав его get/query параметром в строке URL.
