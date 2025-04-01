@@ -45,7 +45,7 @@ public static class MauiProgram
         builder.Services.AddScoped<IToolsAppManager, ToolsAppManager>();
         builder.Services.AddTransient<ParseDBF>();
 
-        builder.Services.AddScoped<IClientHTTPRestService, ToolsSystemHTTPRestService>();
+        builder.Services.AddScoped<IClientRestToolsService, ToolsSystemHTTPRestService>();
         builder.Services.AddScoped<IServerToolsService, ToolsSystemService>();
 
         builder.Services.AddHttpClient(HttpClientsNamesEnum.Kladr.ToString(), cc =>

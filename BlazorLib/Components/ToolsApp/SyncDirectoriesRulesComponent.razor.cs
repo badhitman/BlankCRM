@@ -17,7 +17,7 @@ public partial class SyncDirectoriesRulesComponent : BlazorBusyComponentBaseMode
     ApiRestConfigModelDB ApiConnect { get; set; } = default!;
 
     [Inject]
-    IClientHTTPRestService RestClientRepo { get; set; } = default!;
+    IClientRestToolsService RestClientRepo { get; set; } = default!;
 
     [Inject]
     IToolsAppManager AppManagerRepo { get; set; } = default!;

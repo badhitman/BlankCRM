@@ -14,7 +14,7 @@ namespace ToolsMauiApp.Components;
 public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IClientHTTPRestService RemoteClient { get; set; } = default!;
+    IClientRestToolsService RemoteClient { get; set; } = default!;
 
 
     MetadataKladrModel? tmp, prod;

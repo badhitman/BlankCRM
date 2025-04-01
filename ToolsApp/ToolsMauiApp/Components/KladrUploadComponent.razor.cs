@@ -15,7 +15,7 @@ namespace ToolsMauiApp.Components;
 public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IClientHTTPRestService RemoteClient { get; set; } = default!;
+    IClientRestToolsService RemoteClient { get; set; } = default!;
 
 
     private string _inputFileId = Guid.NewGuid().ToString();

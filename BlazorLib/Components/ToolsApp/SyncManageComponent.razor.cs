@@ -21,7 +21,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
     IToolsAppManager AppManagerRepo { get; set; } = default!;
 
     [Inject]
-    IClientHTTPRestService RestClientRepo { get; set; } = default!;
+    IClientRestToolsService RestClientRepo { get; set; } = default!;
 
     [Inject]
     IServerToolsService ServicedRepo { get; set; } = default!;

@@ -10,7 +10,7 @@ using SharedLib;
 
 namespace ToolsMauiLib;
 
-public partial class ParseDBF(IClientHTTPRestService RemoteClient)
+public partial class ParseDBF(IClientRestToolsService RemoteClient)
 {
     public delegate void PartUploadHandler(int recordNum);
     public event PartUploadHandler? PartUploadNotify;

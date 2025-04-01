@@ -104,6 +104,14 @@ public class Program
         //    .AddScoped<IApiDaichiBusinessService, ApiDaichiBusinessServiceImpl>()
         //    ;
 
+        builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString(), cc =>
+        {
+            cc.BaseAddress = new Uri($"https://api.daichi.ru/b2b/");
+            //string authenticationString = $"{_mqConf.UserName}:{_mqConf.Password}";
+            //string base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(authenticationString));
+            //cc.DefaultRequestHeaders.Add("Authorization", $"Basic {base64EncodedAuthenticationString}");
+        });
+
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");
         OpenTelemetryBuilder otel = builder.Services.AddOpenTelemetry();

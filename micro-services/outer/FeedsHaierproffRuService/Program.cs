@@ -104,6 +104,11 @@ public class Program
         //    .AddScoped<IFeedsHaierproffRuService, FeedsHaierproffRuServiceImpl>()
         //    ;
 
+        builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.FeedsHaierproffRu.ToString(), cc =>
+        {
+            cc.BaseAddress = new Uri($"https://haierproff.ru/feeds/cond/");            
+        });
+
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");
         OpenTelemetryBuilder otel = builder.Services.AddOpenTelemetry();

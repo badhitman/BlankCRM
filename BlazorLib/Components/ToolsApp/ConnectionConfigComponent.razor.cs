@@ -20,7 +20,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
     IToolsAppManager AppManagerRepo { get; set; } = default!;
 
     [Inject]
-    IClientHTTPRestService RestClientRepo { get; set; } = default!;
+    IClientRestToolsService RestClientRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>

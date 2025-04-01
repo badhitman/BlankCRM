@@ -17,7 +17,7 @@ namespace BlazorLib.Components.ToolsApp;
 public partial class RowCommandComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IClientHTTPRestService ToolsExtRepo { get; set; } = default!;
+    IClientRestToolsService ToolsExtRepo { get; set; } = default!;
 
     [Inject]
     ApiRestConfigModelDB ApiConnect { get; set; } = default!;

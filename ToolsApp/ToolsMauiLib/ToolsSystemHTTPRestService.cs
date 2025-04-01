@@ -5,7 +5,6 @@
 using static SharedLib.GlobalStaticConstants;
 using System.Net.Http.Json;
 using Newtonsoft.Json;
-using ToolsMauiApp;
 using System.Text;
 using SharedLib;
 
@@ -14,9 +13,7 @@ namespace ToolsMauiLib;
 /// <summary>
 /// ToolsSystemHTTPRestService
 /// </summary>
-#pragma warning disable CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
-public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpClientFactory HttpClientFactory) : IClientHTTPRestService
-#pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
+public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpClientFactory HttpClientFactory) : IClientRestToolsService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<ExpressProfileResponseModel>> GetMeAsync(CancellationToken cancellationToken = default)

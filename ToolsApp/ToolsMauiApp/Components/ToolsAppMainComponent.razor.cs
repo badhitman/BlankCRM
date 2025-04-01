@@ -15,7 +15,7 @@ namespace ToolsMauiApp.Components;
 public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IClientHTTPRestService RestClientRepo { get; set; } = default!;
+    IClientRestToolsService RestClientRepo { get; set; } = default!;
 
     [Inject]
     IToolsAppManager AppManagerRepo { get; set; } = default!;

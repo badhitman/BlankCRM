@@ -5,6 +5,38 @@
 namespace SharedLib;
 
 /// <summary>
+/// IOuterApiBaseService
+/// </summary>
+public interface IOuterApiBaseService
+{
+
+}
+
+/// <summary>
+/// Breez.ru api
+/// </summary>
+public interface IBreezRuApiService: IOuterApiBaseService
+{
+
+}
+
+/// <summary>
+/// Daichi business api
+/// </summary>
+public interface IDaichiBusinessApiService: IOuterApiBaseService
+{
+
+}
+
+/// <summary>
+/// b2b rusklimat api
+/// </summary>
+public interface IRusklimatComApiService: IOuterApiBaseService
+{
+
+}
+
+/// <summary>
 /// КЛАДР 4.0
 /// </summary>
 public interface IKladrService
