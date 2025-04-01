@@ -68,7 +68,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebLib", "BlazorServe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RemoteCallLib", "RemoteCallLib\RemoteCallLib.csproj", "{AD9A4093-D7DA-4223-977B-EDDCB47C2903}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpdeskService", "HelpdeskService\HelpdeskService.csproj", "{22770E54-F249-469A-BCD1-2A5C61120FCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpdeskService", "micro-services\HelpdeskService\HelpdeskService.csproj", "{22770E54-F249-469A-BCD1-2A5C61120FCD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodegeneratorLib", "CodegeneratorLib\CodegeneratorLib.csproj", "{A7535378-8361-4D80-8D1C-4BB9D06165DA}"
 EndProject
@@ -76,17 +76,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HtmlGenerator", "..\HtmlGen
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "secrets", "secrets", "{AC947053-95FC-46B4-A464-FB02A72D4441}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommerceService", "CommerceService\CommerceService.csproj", "{C8B00CC0-BAA6-48E4-9FC3-F89BD4B079C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommerceService", "micro-services\CommerceService\CommerceService.csproj", "{C8B00CC0-BAA6-48E4-9FC3-F89BD4B079C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiRestService", "ApiRestService\ApiRestService.csproj", "{23129EDA-1CBD-4592-9EE6-0A4EC3344DAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiRestService", "micro-services\ApiRestService\ApiRestService.csproj", "{23129EDA-1CBD-4592-9EE6-0A4EC3344DAC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{90E71949-5CC1-4E9F-A5F2-DC59078B3849}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StorageService", "StorageService\StorageService.csproj", "{05B73FB3-FCCC-4C41-9F80-FEED9D73CF43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StorageService", "micro-services\StorageService\StorageService.csproj", "{05B73FB3-FCCC-4C41-9F80-FEED9D73CF43}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConstructorService", "ConstructorService\ConstructorService.csproj", "{96B0DA02-8148-4F5D-B98C-D12F9B595166}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConstructorService", "micro-services\ConstructorService\ConstructorService.csproj", "{96B0DA02-8148-4F5D-B98C-D12F9B595166}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolsMauiApp", "ToolsMauiApp\ToolsMauiApp.csproj", "{77DAC5F2-6E00-4C39-87A1-8CB450118360}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolsMauiApp", "ToolsApp\ToolsMauiApp\ToolsMauiApp.csproj", "{77DAC5F2-6E00-4C39-87A1-8CB450118360}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stage", "stage", "{CEF1BB59-528D-4BE0-AF5D-08FBB8C347A8}"
 	ProjectSection(SolutionItems) = preProject
@@ -133,13 +133,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mmd", "mmd", "{F23783DE-35E
 		index.svg = index.svg
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "IdentityService\IdentityService.csproj", "{A44C1002-FB5D-4626-B3B3-7E3D50A97E38}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "micro-services\IdentityService\IdentityService.csproj", "{A44C1002-FB5D-4626-B3B3-7E3D50A97E38}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlankCRM.AppHost", "BlankCRM.AppHost\BlankCRM.AppHost.csproj", "{D1A9DC55-90EF-4B01-AE96-189C19ADE9B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlankCRM.ServiceDefaults", "BlankCRM.ServiceDefaults\BlankCRM.ServiceDefaults.csproj", "{D2DBA6AF-E491-4715-B154-907BCCA05066}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBotService", "TelegramBotService\TelegramBotService.csproj", "{26000A47-6D72-4CC1-9003-A6B09E829878}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBotService", "micro-services\TelegramBotService\TelegramBotService.csproj", "{26000A47-6D72-4CC1-9003-A6B09E829878}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppHost", "AppHost", "{E17C8007-9007-414F-83F3-AFD89B127DC7}"
 	ProjectSection(SolutionItems) = preProject
@@ -165,13 +165,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "custom", "custom", "{8EA09A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ToolsMaui", "ToolsMaui", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsMauiAppMigration", "ToolsMauiAppMigration\ToolsMauiAppMigration.csproj", "{2558A893-67F2-4F87-9A77-42D69AF324E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsMauiAppMigration", "ToolsApp\ToolsMauiAppMigration\ToolsMauiAppMigration.csproj", "{2558A893-67F2-4F87-9A77-42D69AF324E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsMauiLib", "ToolsMauiLib\ToolsMauiLib.csproj", "{2BBC18B7-2637-422B-8A9D-55567B7560C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsMauiLib", "ToolsApp\ToolsMauiLib\ToolsMauiLib.csproj", "{2BBC18B7-2637-422B-8A9D-55567B7560C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KladrService", "KladrService\KladrService.csproj", "{14FEB18B-26B1-27EC-C0CF-791D57AE54CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KladrService", "micro-services\KladrService\KladrService.csproj", "{14FEB18B-26B1-27EC-C0CF-791D57AE54CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LdapService", "LdapService\LdapService.csproj", "{AA5E2529-197B-643D-00FB-3E0F14F5D73C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LdapService", "micro-services\LdapService\LdapService.csproj", "{AA5E2529-197B-643D-00FB-3E0F14F5D73C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

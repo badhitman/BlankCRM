@@ -28,17 +28,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\ApiRestService\ApiRestService.csproj" />
-		<ProjectReference Include="..\BlankBlazorApp\BlankBlazorApp\BlankBlazorApp.csproj" />
-		<ProjectReference Include="..\CommerceService\CommerceService.csproj" />
-		<ProjectReference Include="..\ConstructorService\ConstructorService.csproj" />
-		<ProjectReference Include="..\HelpdeskService\HelpdeskService.csproj" />
-		<ProjectReference Include="..\IdentityService\IdentityService.csproj" />
-		<ProjectReference Include="..\KladrService\KladrService.csproj" />
-		<ProjectReference Include="..\LdapService\LdapService.csproj" />
 		<ProjectReference Include="..\SharedLib\SharedLib.csproj" IsAspireProjectResource="false" />
-		<ProjectReference Include="..\StorageService\StorageService.csproj" />
-		<ProjectReference Include="..\TelegramBotService\TelegramBotService.csproj" />
+		<ProjectReference Include="..\BlankBlazorApp\BlankBlazorApp\BlankBlazorApp.csproj" />
+		<ProjectReference Include="..\micro-services\ApiRestService\ApiRestService.csproj" />
+		<ProjectReference Include="..\micro-services\CommerceService\CommerceService.csproj" />
+		<ProjectReference Include="..\micro-services\ConstructorService\ConstructorService.csproj" />
+		<ProjectReference Include="..\micro-services\HelpdeskService\HelpdeskService.csproj" />
+		<ProjectReference Include="..\micro-services\IdentityService\IdentityService.csproj" />
+		<ProjectReference Include="..\micro-services\KladrService\KladrService.csproj" />
+		<ProjectReference Include="..\micro-services\LdapService\LdapService.csproj" />
+		<ProjectReference Include="..\micro-services\StorageService\StorageService.csproj" />
+		<ProjectReference Include="..\micro-services\TelegramBotService\TelegramBotService.csproj" />
 	</ItemGroup>
 
 
