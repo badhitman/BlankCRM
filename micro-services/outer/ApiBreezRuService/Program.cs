@@ -90,7 +90,7 @@ public class Program
         RabbitMQConfigModel _mqConf = builder.Configuration.GetSection("RabbitMQConfig").Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
 
         string connectionStorage = builder.Configuration.GetConnectionString($"ApiBreezRuConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'ApiBreezRuConnection{_modePrefix}' not found.");
-        builder.Services.AddDbContextFactory<ApiBreezRuLayerContext>(opt =>
+        builder.Services.AddDbContextFactory<ApiBreezRuContext>(opt =>
             opt.UseNpgsql(connectionStorage));
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";

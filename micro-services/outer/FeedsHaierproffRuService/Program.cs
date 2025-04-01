@@ -90,7 +90,7 @@ public class Program
         RabbitMQConfigModel _mqConf = builder.Configuration.GetSection("RabbitMQConfig").Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
 
         string connectionStorage = builder.Configuration.GetConnectionString($"FeedsHaierproffRuConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'FeedsHaierproffRuConnection{_modePrefix}' not found.");
-        builder.Services.AddDbContextFactory<FeedsHaierproffRuLayerContext>(opt =>
+        builder.Services.AddDbContextFactory<FeedsHaierproffRuContext>(opt =>
             opt.UseNpgsql(connectionStorage));
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
