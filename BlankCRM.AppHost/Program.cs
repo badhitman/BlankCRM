@@ -1,7 +1,5 @@
-using Aspire.Hosting;
 using Microsoft.Extensions.Configuration;
 using SharedLib;
-using StackExchange.Redis;
 
 namespace DesignerApp.AppHost;
 
@@ -59,35 +57,30 @@ public class Program
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
 
-        List<KeyValuePair<string, string?>> smtpConfig = builder.Configuration
+        List<KeyValuePair<string, string?>> smtpConfig = [.. builder.Configuration
             .GetChildren()
             .Where(x => x.Path.Equals(SmtpConfigModel.Configuration, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(x => x.AsEnumerable())
-            .ToList();
+            .SelectMany(x => x.AsEnumerable())];
 
-        List<KeyValuePair<string, string?>> rabbitConfig = builder.Configuration
+        List<KeyValuePair<string, string?>> rabbitConfig = [.. builder.Configuration
             .GetChildren()
             .Where(x => x.Path.Equals(RabbitMQConfigModel.Configuration, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(x => x.AsEnumerable())
-            .ToList();
+            .SelectMany(x => x.AsEnumerable())];
 
-        List<KeyValuePair<string, string?>> mongoConfig = builder.Configuration
+        List<KeyValuePair<string, string?>> mongoConfig = [.. builder.Configuration
             .GetChildren()
             .Where(x => x.Path.Equals(MongoConfigModel.Configuration, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(x => x.AsEnumerable())
-            .ToList();
+            .SelectMany(x => x.AsEnumerable())];
 
-        List<KeyValuePair<string, string?>> botTelegramConfig = builder.Configuration
+        List<KeyValuePair<string, string?>> botTelegramConfig = [.. builder.Configuration
             .GetChildren()
             .Where(x => x.Path.Equals(BotConfiguration.Configuration, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(x => x.AsEnumerable())
-            .ToList();
+            .SelectMany(x => x.AsEnumerable())];
 
-        List<KeyValuePair<string, string?>> apiAccessConfig = builder.Configuration
+        List<KeyValuePair<string, string?>> apiAccessConfig = [.. builder.Configuration
             .GetChildren()
             .Where(x => x.Path.Equals(RestApiConfigBaseModel.Configuration, StringComparison.OrdinalIgnoreCase))
-            .SelectMany(x => x.AsEnumerable())
-            .ToList();
+            .SelectMany(x => x.AsEnumerable())];
 
         /* apiAccess
         //IResourceBuilder<RabbitMQServerResource> rabbit = builder.AddRabbitMQ("rabbit")
@@ -141,6 +134,32 @@ public class Program
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithReference(builder.AddConnectionString($"CloudParametersConnection{_modePrefix}"))
             ;
+
+#if OUTER_DATA
+        IResourceBuilder<ProjectResource> apiBreezRuService = builder.AddProject<Projects.ApiBreezRuService>("apibreezrueservice")
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithReference(builder.AddConnectionString($"ApiBreezRuConnection{_modePrefix}"))
+            ;
+
+        IResourceBuilder<ProjectResource> apiDaichiBusinessService = builder.AddProject<Projects.ApiDaichiBusinessService>("apidaichibusinesseservice")
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithReference(builder.AddConnectionString($"ApiDaichiBusinessConnection{_modePrefix}"))
+            ;
+
+        IResourceBuilder<ProjectResource> apiRusklimatComService = builder.AddProject<Projects.ApiRusklimatComService>("apirusklimatcomeservice")
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithReference(builder.AddConnectionString($"ApiRusklimatComConnection{_modePrefix}"))
+            ;
+
+        IResourceBuilder<ProjectResource> feedsHaierproffRuService = builder.AddProject<Projects.FeedsHaierproffRuService>("feedshaierproffrueservice")
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithReference(builder.AddConnectionString($"FeedsHaierproffRuConnection{_modePrefix}"))
+            ;
+#endif
 
         IResourceBuilder<ProjectResource> kladrService = builder.AddProject<Projects.KladrService>("kladreservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
@@ -211,6 +230,19 @@ public class Program
             .WaitFor(constructorService)
             .WithReference(kladrService)
             .WaitFor(kladrService)
+# if OUTER_DATA
+            .WithReference(apiBreezRuService)
+            .WaitFor(apiBreezRuService)
+
+            .WithReference(apiDaichiBusinessService)
+            .WaitFor(apiDaichiBusinessService)
+
+            .WithReference(apiRusklimatComService)
+            .WaitFor(apiRusklimatComService)
+
+            .WithReference(feedsHaierproffRuService)
+            .WaitFor(feedsHaierproffRuService)
+#endif
         ;
 
         builder.Build().Run();
