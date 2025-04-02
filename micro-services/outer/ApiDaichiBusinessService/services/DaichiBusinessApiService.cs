@@ -3,18 +3,22 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
-namespace ApiBreezRuService;
+namespace ApiDaichiBusinessService;
 
-public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<BreezRuApiService> logger, IDbContextFactory<ApiBreezRuContext> dbFactory) : IBreezRuApiService
+public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
+    IOptions<TokenVersionModel> _conf,
+    ILogger<DaichiBusinessApiService> logger,
+    IDbContextFactory<ApiDaichiBusinessContext> dbFactory) : IDaichiBusinessApiService
 {
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
     {
-        HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
-        HttpResponseMessage response = await httpClient.GetAsync("/leftovers/", token);
+        HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString());
+        HttpResponseMessage response = await httpClient.GetAsync($"/products/get/?access-token={_conf.Value.Token}", token);
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -31,7 +35,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return ResponseBaseModel.CreateError(msg);
         }
 
-        List<BreezRuGoodsModel>? parseData = JsonConvert.DeserializeObject<List<BreezRuGoodsModel>>(responseBody);
+        ProductsDaichiBusinessResultModel? parseData = JsonConvert.DeserializeObject<ProductsDaichiBusinessResultModel>(responseBody);
 
         if (parseData is null)
         {
@@ -40,10 +44,11 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return ResponseBaseModel.CreateError(msg);
         }
 
-        ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
-        await ctx.AddRangeAsync(parseData.Select(BreezRuElementModelDB.Build), token);
-        await ctx.SaveChangesAsync(token);
+        ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
 
-        return ResponseBaseModel.CreateSuccess($"Задание выполнено: {nameof(DownloadAndSaveAsync)}. Записано элементов: {parseData.Count}");
+        //await ctx.AddRangeAsync(parseData.Select(BreezRuElementModelDB.Build), token);
+        //await ctx.SaveChangesAsync(token);
+
+        return ResponseBaseModel.CreateSuccess($"Задание выполнено: {nameof(DownloadAndSaveAsync)}.");
     }
 }

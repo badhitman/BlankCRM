@@ -86,11 +86,13 @@ public class Program
 
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+            .Configure<TokenVersionModel>(builder.Configuration.GetSection("DaichiApiConfig"))
             ;
 
         builder.Services.AddMemoryCache();
         builder.Services.AddOptions();
 
+        TokenVersionModel daichiCredentials = builder.Configuration.GetSection("DaichiApiConfig").Get<TokenVersionModel>() ?? throw new Exception("DaichiApi not config");
         RabbitMQConfigModel _mqConf = builder.Configuration.GetSection("RabbitMQConfig").Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
 
         string connectionStorage = builder.Configuration.GetConnectionString($"ApiDaichiBusinessConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'ApiDaichiBusinessConnection{_modePrefix}' not found.");
@@ -108,13 +110,7 @@ public class Program
         //    .AddScoped<IApiDaichiBusinessService, ApiDaichiBusinessServiceImpl>()
         //    ;
 
-        builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString(), cc =>
-        {
-            cc.BaseAddress = new Uri($"https://api.daichi.ru/b2b/");
-            //string authenticationString = $"{_mqConf.UserName}:{_mqConf.Password}";
-            //string base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(authenticationString));
-            //cc.DefaultRequestHeaders.Add("Authorization", $"Basic {base64EncodedAuthenticationString}");
-        });
+        builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString(), cc => { cc.BaseAddress = new Uri($"https://api.daichi.ru/b2b/{daichiCredentials.Version}"); });
 
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");

@@ -92,7 +92,6 @@ public class Program
         builder.Services.AddOptions();
 
         IdentityPasswordVersionModel breezCredentials = builder.Configuration.GetSection("BreezApiConfig").Get<IdentityPasswordVersionModel>() ?? throw new Exception("BreezApi not config");
-
         RabbitMQConfigModel _mqConf = builder.Configuration.GetSection("RabbitMQConfig").Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
 
         string connectionStorage = builder.Configuration.GetConnectionString($"ApiBreezRuConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'ApiBreezRuConnection{_modePrefix}' not found.");

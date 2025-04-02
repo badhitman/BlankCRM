@@ -5,9 +5,10 @@
 namespace SharedLib;
 
 /// <summary>
-/// Daichi business api
+/// StoreInfoDaichiModel
 /// </summary>
-public interface IDaichiBusinessApiService : IOuterApiBaseService
+public class StoreInfoDaichiModel : DaichiEntryModel
 {
-    
+    /// <inheritdoc/>
+    public string? IS_DEFAULT { get; set; }
 }

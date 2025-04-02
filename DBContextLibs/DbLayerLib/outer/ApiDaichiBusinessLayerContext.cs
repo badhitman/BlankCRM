@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using SharedLib;
 
 namespace DbcLib;
 
@@ -34,4 +35,7 @@ public abstract partial class ApiDaichiBusinessLayerContext : DbContext
     {
         modelBuilder.HasDefaultSchema("public");
     }
+
+    /// <inheritdoc/>
+    public DbSet<DaichiBusinessStoreModelDB> Stores { get; set; }
 }
