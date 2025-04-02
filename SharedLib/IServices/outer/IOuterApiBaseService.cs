@@ -5,17 +5,12 @@
 namespace SharedLib;
 
 /// <summary>
-/// IdentityPasswordModel
+/// IOuterApiBaseService
 /// </summary>
-public class IdentityPasswordModel
+public interface IOuterApiBaseService
 {
     /// <summary>
-    /// UserId
+    /// 
     /// </summary>
-    public required string UserId { get; set; }
-
-    /// <summary>
-    /// Пароль
-    /// </summary>
-    public required string Password { get; set; }
+    public Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default);
 }

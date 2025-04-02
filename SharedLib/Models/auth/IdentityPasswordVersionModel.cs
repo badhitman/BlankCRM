@@ -5,17 +5,12 @@
 namespace SharedLib;
 
 /// <summary>
-/// IdentityPasswordModel
+/// IdentityPasswordVersionModel
 /// </summary>
-public class IdentityPasswordModel
+public class IdentityPasswordVersionModel : IdentityPasswordModel
 {
     /// <summary>
-    /// UserId
+    /// Version
     /// </summary>
-    public required string UserId { get; set; }
-
-    /// <summary>
-    /// Пароль
-    /// </summary>
-    public required string Password { get; set; }
+    public required string Version { get; set; }
 }

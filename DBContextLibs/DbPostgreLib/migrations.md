@@ -37,3 +37,9 @@ Update-Database -Context CommerceContext -Project DbPostgreLib -StartupProject C
 Add-Migration ConstructorContext004 -Context ConstructorContext -Project DbPostgreLib -StartupProject ConstructorService
 Update-Database -Context ConstructorContext -Project DbPostgreLib -StartupProject ConstructorService
 ```
+
+
+```
+Add-Migration ApiBreezRuContext002 -Context ApiBreezRuContext -Project DbPostgreLib -StartupProject ApiBreezRuService
+Update-Database -Context ApiBreezRuContext -Project DbPostgreLib -StartupProject ApiBreezRuService
+```

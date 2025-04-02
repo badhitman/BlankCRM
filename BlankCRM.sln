@@ -147,6 +147,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppHost", "AppHost", "{E17C
 		..\secrets-BlankCRM.AppHost\connections-strings.Development.json = ..\secrets-BlankCRM.AppHost\connections-strings.Development.json
 		..\secrets-BlankCRM.AppHost\email-conf.Development.json = ..\secrets-BlankCRM.AppHost\email-conf.Development.json
 		..\secrets-BlankCRM.AppHost\mongo-conf.json = ..\secrets-BlankCRM.AppHost\mongo-conf.json
+		..\secrets-BlankCRM.AppHost\outers-credentials.json = ..\secrets-BlankCRM.AppHost\outers-credentials.json
 		..\secrets-BlankCRM.AppHost\rabbitmq-conf.Development.json = ..\secrets-BlankCRM.AppHost\rabbitmq-conf.Development.json
 		..\secrets-BlankCRM.AppHost\telegram-bot.Development.json = ..\secrets-BlankCRM.AppHost\telegram-bot.Development.json
 	EndProjectSection
@@ -176,6 +177,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "outer", "outer", "{962EC2C6-CEDD-4EDD-8881-CEAE233F0BA9}"
 	ProjectSection(SolutionItems) = preProject
 		micro-services\outer\README.md = micro-services\outer\README.md
+		micro-services\outer\outers-credentials-example.json = micro-services\outer\outers-credentials-example.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiBreezRuService", "micro-services\outer\ApiBreezRuService\ApiBreezRuService.csproj", "{BC956CCD-6B18-5540-2476-C9B7233E7A6F}"

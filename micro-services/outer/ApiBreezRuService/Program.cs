@@ -1,3 +1,7 @@
+////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
@@ -87,6 +91,8 @@ public class Program
         builder.Services.AddMemoryCache();
         builder.Services.AddOptions();
 
+        IdentityPasswordVersionModel breezCredentials = builder.Configuration.GetSection("BreezApiConfig").Get<IdentityPasswordVersionModel>() ?? throw new Exception("BreezApi not config");
+
         RabbitMQConfigModel _mqConf = builder.Configuration.GetSection("RabbitMQConfig").Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
 
         string connectionStorage = builder.Configuration.GetConnectionString($"ApiBreezRuConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'ApiBreezRuConnection{_modePrefix}' not found.");
@@ -107,9 +113,9 @@ public class Program
         builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString(), cc =>
         {
             cc.BaseAddress = new Uri($"https://api.breez.ru/v1/");
-            //string authenticationString = $"{_mqConf.UserName}:{_mqConf.Password}";
-            //string base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(authenticationString));
-            //cc.DefaultRequestHeaders.Add("Authorization", $"Basic {base64EncodedAuthenticationString}");
+            string authenticationString = $"{breezCredentials.UserId}:{breezCredentials.Password}";
+            string base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(authenticationString));
+            cc.DefaultRequestHeaders.Add("Authorization", $"Basic {base64EncodedAuthenticationString}");
         });
 
         // Custom metrics for the application

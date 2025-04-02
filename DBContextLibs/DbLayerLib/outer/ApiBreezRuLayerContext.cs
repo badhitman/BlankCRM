@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using SharedLib;
 
 namespace DbcLib;
 
@@ -34,4 +35,9 @@ public abstract partial class ApiBreezRuLayerContext : DbContext
     {
         modelBuilder.HasDefaultSchema("public");
     }
+
+    /// <summary>
+    /// Goods
+    /// </summary>
+    public DbSet<BreezRuElementModelDB> Goods { get; set; }
 }
