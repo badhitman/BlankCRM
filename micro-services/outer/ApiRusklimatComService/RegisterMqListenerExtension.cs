@@ -2,10 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json.Linq;
-using SharedLib;
-
-
 namespace ApiRusklimatComService;
 
 /// <summary>

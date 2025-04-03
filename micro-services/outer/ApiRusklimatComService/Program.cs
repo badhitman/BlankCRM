@@ -16,8 +16,14 @@ using NLog;
 
 namespace ApiRusklimatComService;
 
+/// <summary>
+/// Program
+/// </summary>
 public class Program
 {
+    /// <summary>
+    /// Main
+    /// </summary>
     public static void Main(string[] args)
     {
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
@@ -84,8 +90,11 @@ public class Program
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddCommandLine(args);
 
+        AuthAlterModel rusklimatCredentials = builder.Configuration.GetSection("RusklimarApiConfig").Get<AuthAlterModel>() ?? throw new Exception("RusklimarApi not config");
+
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+            .Configure<AuthAlterModel>(builder.Configuration.GetSection("RusklimarApiConfig"))
             ;
 
         builder.Services.AddMemoryCache();
@@ -104,14 +113,20 @@ public class Program
 
         builder.Services.ApiRusklimatComRegisterMqListeners();
         #endregion
+        
         //builder.Services
         //    .AddScoped<IApiRusklimatComService, ApiRusklimatComServiceImpl>()
         //    ;
+        
+        builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.AuthRusklimatComJWT.ToString(), cc =>
+        {
+            cc.BaseAddress = new Uri($"https://b2b.rusklimat.com/api/");
+            cc.DefaultRequestHeaders.Add("User-Agent", "catalog-ip");
+        });
 
         builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.ApiRusklimatCom.ToString(), cc =>
         {
-            cc.BaseAddress = new Uri($"https://internet-partner.rusklimat.com");
-            cc.DefaultRequestHeaders.Add("User-Agent", "catalog-ip");
+            cc.BaseAddress = new Uri($"https://internet-partner.rusklimat.com/api/");
         });
 
         // Custom metrics for the application

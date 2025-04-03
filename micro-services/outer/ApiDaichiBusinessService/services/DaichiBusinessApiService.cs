@@ -10,14 +10,18 @@ using Newtonsoft.Json;
 
 namespace ApiDaichiBusinessService;
 
+/// <summary>
+/// DaichiBusinessApiService
+/// </summary>
 public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     IOptions<TokenVersionModel> _conf,
     ILogger<DaichiBusinessApiService> logger,
     IDbContextFactory<ApiDaichiBusinessContext> dbFactory) : IDaichiBusinessApiService
 {
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
     {
-        HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString());
+        using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"/products/get/?access-token={_conf.Value.Token}", token);
         string msg;
         if (!response.IsSuccessStatusCode)
@@ -44,7 +48,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
             return ResponseBaseModel.CreateError(msg);
         }
 
-        ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
+        using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
 
         //await ctx.AddRangeAsync(parseData.Select(BreezRuElementModelDB.Build), token);
         //await ctx.SaveChangesAsync(token);

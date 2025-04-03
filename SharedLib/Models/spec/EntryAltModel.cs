@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.ComponentModel.DataAnnotations;
+
 namespace SharedLib;
 
 /// <summary>
@@ -12,6 +14,7 @@ namespace SharedLib;
 public class EntryAltModel
 {
     /// <inheritdoc/>
+    [Key]
     public required string Id { get; set; }
 
     /// <inheritdoc/>

@@ -9,11 +9,15 @@ using DbcLib;
 
 namespace ApiBreezRuService;
 
+/// <summary>
+/// BreezRuApiService
+/// </summary>
 public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<BreezRuApiService> logger, IDbContextFactory<ApiBreezRuContext> dbFactory) : IBreezRuApiService
 {
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
     {
-        HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
+        using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync("/leftovers/", token);
         string msg;
         if (!response.IsSuccessStatusCode)
@@ -40,7 +44,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return ResponseBaseModel.CreateError(msg);
         }
 
-        ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
+        using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
         await ctx.AddRangeAsync(parseData.Select(BreezRuElementModelDB.Build), token);
         await ctx.SaveChangesAsync(token);
 

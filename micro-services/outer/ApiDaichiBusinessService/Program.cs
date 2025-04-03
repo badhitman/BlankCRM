@@ -16,8 +16,14 @@ using NLog;
 
 namespace ApiDaichiBusinessService;
 
+/// <summary>
+/// Program
+/// </summary>
 public class Program
 {
+    /// <summary>
+    /// Main
+    /// </summary>
     public static void Main(string[] args)
     {
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);

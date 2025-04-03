@@ -24,10 +24,16 @@ public enum HttpClientsNamesOuterEnum
     ApiDaichiBusiness = 20,
 
     /// <summary>
-    /// Русклимат b2b API
+    /// Русклимат internet-partner API
     /// </summary>
-    [Description("https://b2b.rusklimat.com/api/v1/")]
+    [Description("https://internet-partner.rusklimat.com/api/")]
     ApiRusklimatCom = 30,
+
+    /// <summary>
+    /// Авторизация б2б портала
+    /// </summary>
+    [Description("https://b2b.rusklimat.com/api/")]
+    AuthRusklimatComJWT = 31,
 
     /// <summary>
     /// RSS Фид каталога кондиционеров Haierproff
