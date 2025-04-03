@@ -37,5 +37,26 @@ public abstract partial class ApiDaichiBusinessLayerContext : DbContext
     }
 
     /// <inheritdoc/>
-    public DbSet<DaichiBusinessStoreModelDB> Stores { get; set; }
+    public DbSet<StoreDaichiModelDB> Stores { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<AvailabilityGoodsDaichiModelDB> AvailabilityGoods { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<PriceGoodsDaichiModelDB> PricesGoods { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<PriceDaichiModelDB> Prices { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<GoodsDaichiModelDB> Goods { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<AttributeValueDaichiModelDB> AttributesValues { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<AttributeDaichiModelDB> Attributes { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<GroupAttributeDaichiModelDB> GroupsAttributes { get; set; }
 }

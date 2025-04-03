@@ -43,3 +43,7 @@ Update-Database -Context ConstructorContext -Project DbPostgreLib -StartupProjec
 Add-Migration ApiBreezRuContext002 -Context ApiBreezRuContext -Project DbPostgreLib -StartupProject ApiBreezRuService
 Update-Database -Context ApiBreezRuContext -Project DbPostgreLib -StartupProject ApiBreezRuService
 ```
+```
+Add-Migration ApiDaichiBusinessContext002 -Context ApiDaichiBusinessContext -Project DbPostgreLib -StartupProject ApiDaichiBusinessService
+Update-Database -Context ApiDaichiBusinessContext -Project DbPostgreLib -StartupProject ApiDaichiBusinessService
+```

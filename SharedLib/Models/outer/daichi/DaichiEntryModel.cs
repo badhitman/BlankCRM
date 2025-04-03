@@ -2,11 +2,12 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharedLib;
 
 /// <inheritdoc/>
+[Index(nameof(XML_ID), IsUnique = true), Index(nameof(NAME))]
 public class DaichiEntryModel
 {
     /// <inheritdoc/>

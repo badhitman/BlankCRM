@@ -6,13 +6,8 @@
 namespace SharedLib;
 
 /// <inheritdoc/>
-public class GoodsDaichiModel : DaichiEntryModel
+public class GoodsDaichiModel : GoodsDaichiBaseModel
 {
-    /// <inheritdoc/>
-    [Newtonsoft.Json.JsonIgnore]
-    [System.Text.Json.Serialization.JsonIgnore]
-    public int KeyIndex { get; set; }
-
     /// <summary>
     /// Параметры товара
     /// </summary>
@@ -25,4 +20,12 @@ public class GoodsDaichiModel : DaichiEntryModel
     /// Информация о наличии товара на складе
     /// </summary>
     public StoreDaichiModel? STORE { get; set; }
+}
+/// <inheritdoc/>
+public class GoodsDaichiBaseModel : DaichiEntryModel
+{
+    /// <inheritdoc/>
+    [Newtonsoft.Json.JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
+    public int KeyIndex { get; set; }
 }
