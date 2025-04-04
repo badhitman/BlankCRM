@@ -9,50 +9,14 @@ namespace SharedLib;
 /// <summary>
 /// ProductRusklimatModel
 /// </summary>
-public class ProductRusklimatModel : EntryAltModel
+public class ProductRusklimatModel : ProductRusklimatBaseModel
 {
-    /// <inheritdoc/>
-    public string? NSCode { get; set; }
-
-    /// <inheritdoc/>
-    public string? CategoryId { get; set; }
-
-    /// <inheritdoc/>
-    public string? VendorCode { get; set; }
-
-    /// <inheritdoc/>
-    public string? Brand { get; set; }
-
-    /// <inheritdoc/>
-    public JObject? Properties { get; set; }
-
     /// <inheritdoc/>
     public List<string>? Pictures { get; set; }
 
     /// <inheritdoc/>
-    public string? Description { get; set; }
-
-    /// <inheritdoc/>
     public List<string>? Certificates { get; set; }
 
-    /// <summary>
-    /// индивидуальная цена партнёра, в случае, когда цена не установлена, будет отдан 0
-    /// </summary>
-    public double Price { get; set; }
-
-    /// <summary>
-    /// цена РИЦ
-    /// </summary>
-    public double? InternetPrice { get; set; }
-
-    /// <inheritdoc/>
-    public int ClientPrice { get; set; }
-
-    /// <summary>
-    /// признак эксклюзивности
-    /// </summary>
-    public bool Exclusive { get; set; }
-    
     /// <inheritdoc/>
     public List<string>? Video { get; set; }
 
@@ -74,7 +38,7 @@ public class ProductRusklimatModel : EntryAltModel
     /// массив ссылок на pdf файлы с промо материалами, может содержать 0 элементов
     /// </summary>
     public List<string>? PromoMaterials { get; set; }
-    
+
     /// <summary>
     /// массив ссылок на pdf файлы с инструкциями, может содержать 0 элементов
     /// </summary>
@@ -85,8 +49,20 @@ public class ProductRusklimatModel : EntryAltModel
     /// </summary>
     public List<string>? Barcode { get; set; }
 
+
     /// <summary>
     /// остаток товара на складе
     /// </summary>
     public RemainsRusklimatModel? Remains { get; set; }
+
+
+    /// <summary>
+    /// Массив свойств товара.
+    /// </summary>
+    /// <remarks>
+    /// элементы в формате:
+    /// для версии метода v1 - "уникальный идентификатор свойства": "значение свойства"
+    /// для версии метода v2 - "уникальный идентификатор свойства": {"value": "значение свойства", "unit": "идентификатор единицы измерения(информацию по единицам измерения можно получить в другом методе - /api/v1/InternetPartner/units, см. Получение единиц измерения)"}
+    /// </remarks>
+    public Dictionary<string, JObject>? Properties { get; set; }
 }

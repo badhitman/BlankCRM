@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using SharedLib;
 
 namespace DbcLib;
 
@@ -34,4 +35,9 @@ public abstract partial class ApiRusklimatComLayerContext : DbContext
     {
         modelBuilder.HasDefaultSchema("public");
     }
+
+    /// <summary>
+    /// Единицы измерения
+    /// </summary>
+    public DbSet<UnitRusklimatModelDB> Units {  get; set; }
 }

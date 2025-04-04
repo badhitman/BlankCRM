@@ -5,13 +5,10 @@
 namespace SharedLib;
 
 /// <summary>
-/// Единицы измерения
+/// Свойства товаров
 /// </summary>
-public class UnitsRusklimatResponseModel : ResponseBaseModel
+public class PropertyRusklimatModelDB : EntryAltModel
 {
     /// <inheritdoc/>
-    public int TotalCount { get; set; }
-
-    /// <inheritdoc/>
-    public UnitRusklimatModelDB[]? Data { get; set; }
+    public required int Sort { get; set; }
 }

@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Категории товаров
 /// </summary>
-public class CategoryRusklimatModel : EntryAltModel
+public class CategoryRusklimatModelDB : EntryAltModel
 {
     /// <inheritdoc/>
     public required string Parent { get; set; }

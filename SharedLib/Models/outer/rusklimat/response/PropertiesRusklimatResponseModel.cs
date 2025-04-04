@@ -13,5 +13,5 @@ public class PropertiesRusklimatResponseModel : ResponseBaseModel
     public int TotalCount { get; set; }
 
     /// <inheritdoc/>
-    public PropertyRusklimatModel[]? Data { get; set; }
+    public PropertyRusklimatModelDB[]? Data { get; set; }
 }

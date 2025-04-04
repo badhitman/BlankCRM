@@ -5,10 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// Свойства товаров
+/// ProductRusklimatModelDB
 /// </summary>
-public class PropertyRusklimatModel : EntryAltModel
+public class ProductRusklimatModelDB : ProductRusklimatBaseModel
 {
-    /// <inheritdoc/>
-    public required int Sort { get; set; }
+
 }
