@@ -27,15 +27,15 @@ public class ProductRusklimatBaseModel : EntryAltModel
     /// <summary>
     /// индивидуальная цена партнёра, в случае, когда цена не установлена, будет отдан 0
     /// </summary>
-    public double Price { get; set; }
+    public decimal Price { get; set; }
+
+    /// <inheritdoc/>
+    public decimal ClientPrice { get; set; }
 
     /// <summary>
     /// цена РИЦ
     /// </summary>
-    public double? InternetPrice { get; set; }
-
-    /// <inheritdoc/>
-    public int ClientPrice { get; set; }
+    public decimal? InternetPrice { get; set; }
 
     /// <summary>
     /// признак эксклюзивности

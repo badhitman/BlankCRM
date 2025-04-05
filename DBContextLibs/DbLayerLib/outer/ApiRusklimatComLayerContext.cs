@@ -37,6 +37,39 @@ public abstract partial class ApiRusklimatComLayerContext : DbContext
     }
 
     /// <summary>
+    /// Товары
+    /// </summary>
+    public DbSet<ProductRusklimatModelDB> Products { get; set; }
+
+    /// <summary>
+    /// Информация для товаров
+    /// </summary>
+    /// <remarks>
+    /// массивы строк (ссылки или идентификаторы)
+    /// </remarks>
+    public DbSet<ProductInformationRusklimatModelDB> ProductsInformation {  get; set; }
+
+    /// <summary>
+    /// Свойства товаров
+    /// </summary>
+    public DbSet<PropertyRusklimatModelDB> PropertiesCatalog { get; set; }
+
+    /// <summary>
+    /// Связи свойств с товарами
+    /// </summary>
+    public DbSet<ProductPropertyRusklimatModelDB> ProductsProperties { get; set; }
+
+    /// <summary>
+    /// Остатки на складах
+    /// </summary>
+    public DbSet<WarehouseRemainsRusklimatModelDB> WarehousesRemains { get; set; }
+
+    /// <summary>
+    /// Остатки
+    /// </summary>
+    public DbSet<RemainsRusklimatModelDB> Remains { get; set; }
+
+    /// <summary>
     /// Единицы измерения
     /// </summary>
     public DbSet<UnitRusklimatModelDB> Units {  get; set; }

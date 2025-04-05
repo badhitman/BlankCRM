@@ -25,6 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Migrations\ApiRusklimatCom\" />
 	  <Folder Include="Migrations\Commerce\" />
 	  <Folder Include="Migrations\Kladr\" />
 	</ItemGroup>

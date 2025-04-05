@@ -17,5 +17,5 @@ public class RemainsRusklimatModel
     /// <summary>
     /// детализация остатков по складам в формате "название склада": "остаток на складе"
     /// </summary>
-    public Dictionary<string,string>? Warehouses { get; set; }
+    public Dictionary<string, string>? Warehouses { get; set; }
 }

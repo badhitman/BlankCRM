@@ -47,3 +47,7 @@ Update-Database -Context ApiBreezRuContext -Project DbPostgreLib -StartupProject
 Add-Migration ApiDaichiBusinessContext002 -Context ApiDaichiBusinessContext -Project DbPostgreLib -StartupProject ApiDaichiBusinessService
 Update-Database -Context ApiDaichiBusinessContext -Project DbPostgreLib -StartupProject ApiDaichiBusinessService
 ```
+```
+Add-Migration ApiRusklimatComContext002 -Context ApiRusklimatComContext -Project DbPostgreLib -StartupProject ApiRusklimatComService
+Update-Database -Context ApiRusklimatComContext -Project DbPostgreLib -StartupProject ApiRusklimatComService
+```

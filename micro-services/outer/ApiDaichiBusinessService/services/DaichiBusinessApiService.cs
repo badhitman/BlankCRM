@@ -3,10 +3,10 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
-using SharedLib;
-using DbcLib;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using SharedLib;
+using DbcLib;
 
 namespace ApiDaichiBusinessService;
 
@@ -54,5 +54,26 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         //await ctx.SaveChangesAsync(token);
 
         return ResponseBaseModel.CreateSuccess($"Задание выполнено: {nameof(DownloadAndSaveAsync)}.");
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<ProductsDaichiBusinessResultModel>> ProductsGetAsync(CancellationToken token = default)
+    {
+        using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<ProductsParamsDaichiBusinessResponseModel>> ProductsParamsGetAsync(ProductParamsRequestDaichiModel req, CancellationToken token = default)
+    {
+        using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<StoresDaichiBusinessResponseModel>> StoresGetAsync(CancellationToken token = default)
+    {
+        using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
+        throw new NotImplementedException();
     }
 }

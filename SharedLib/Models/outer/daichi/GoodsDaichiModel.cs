@@ -11,7 +11,7 @@ public class GoodsDaichiModel : GoodsDaichiBaseModel
     /// <summary>
     /// Параметры товара
     /// </summary>
-    public ParamsDaichiModel? PARAMS { get; set; }
+    public ParamsGoodsDaichiModel? PARAMS { get; set; }
 
     /// <inheritdoc/>
     public PricesdDaichiModel? PRICES { get; set; }

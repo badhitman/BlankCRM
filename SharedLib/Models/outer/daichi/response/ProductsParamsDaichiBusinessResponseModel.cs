@@ -5,12 +5,12 @@
 namespace SharedLib;
 
 /// <summary>
-/// StoresDaichiBusinessResponseModel
+/// ProductsParamsDaichiBusinessResponseModel
 /// </summary>
-public class StoresDaichiBusinessResponseModel
+public class ProductsParamsDaichiBusinessResponseModel
 {
     /// <inheritdoc/>
-    public List<StoreInfoDaichiModel>? Result { get; set; }
+    public ProductsParamsDaichiBusinessResultModel? Result { get; set; }
 
     /// <inheritdoc/>
     public double Time { get; set; }

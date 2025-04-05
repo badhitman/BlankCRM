@@ -155,7 +155,7 @@ public class RusklimatComApiService(
     }
 
     /// <inheritdoc/>
-    public async Task<ProductsRusklimatResponseModel> GetProductsAsync(CancellationToken token = default)
+    public async Task<ProductsRusklimatResponseModel> GetProductsAsync(PaginationRequestModel req, CancellationToken token = default)
     {
         ApiRusklimatComContext ctx = await dbFactory.CreateDbContextAsync(token);
         throw new NotImplementedException();

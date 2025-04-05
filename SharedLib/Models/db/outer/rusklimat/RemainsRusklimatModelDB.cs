@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// Связь свойства с товаром
+/// остатки
 /// </summary>
-public class ProductPropertyRusklimatModelDB
+public class RemainsRusklimatModelDB
 {
     /// <summary>
     /// Идентификатор/Key
@@ -27,11 +27,12 @@ public class ProductPropertyRusklimatModelDB
     public int ProductId { get; set; }
 
     /// <summary>
-    /// Property
+    /// Остатки на складах
     /// </summary>
-    public PropertyRusklimatModelDB? Property { get; set; }
+    public List<WarehouseRemainsRusklimatModelDB>? WarehousesRemains { get; set; }
+
     /// <summary>
-    /// Property
+    /// сумма остатков по всем складам
     /// </summary>
-    public int PropertyId { get; set; }
+    public required string Total { get; set; }
 }
