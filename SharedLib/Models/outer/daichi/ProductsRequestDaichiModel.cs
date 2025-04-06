@@ -8,9 +8,9 @@ using System.Text.Json.Serialization;
 namespace SharedLib;
 
 /// <summary>
-/// ProductParamsRequestDaichiModel
+/// ProductsRequestDaichiModel
 /// </summary>
-public class ProductParamsRequestDaichiModel: RequestDaichiBaseModel
+public class ProductsRequestDaichiModel : RequestDaichiBaseModel
 {
     /// <summary>
     /// Количество товаров на странице. Максимально значение 100.
@@ -19,18 +19,6 @@ public class ProductParamsRequestDaichiModel: RequestDaichiBaseModel
     /// Требуется указать, если не были указаны параметры filter[NAME] или filter[XML_ID].
     /// Без указания данного параметра метод вернёт список всех товаров из каталога, но без характеристик.
     /// </remarks>
-    [JsonProperty("page-size"),JsonPropertyName("page-size")]
-    public int PageSize { get; set; }
-
-    /// <summary>
-    /// Номер страницы.
-    /// </summary>
-    [JsonProperty("page"), JsonPropertyName("page")]
-    public int Page {  get; set; }
-
-    /// <summary>
-    /// Флаг для показа незаполненных характеристик товара (по-умолчанию false). 
-    /// </summary>
-    [JsonProperty("show-empty-params"), JsonPropertyName("show-empty-params")]
-    public bool ShowEmptyParams { get; set; }
+    [JsonProperty("store-id"), JsonPropertyName("store-id")]
+    public int StoreId { get; set; }
 }

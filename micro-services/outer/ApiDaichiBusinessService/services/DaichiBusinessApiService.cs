@@ -57,7 +57,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ProductsDaichiBusinessResultModel>> ProductsGetAsync(CancellationToken token = default)
+    public async Task<TResponseModel<ProductsDaichiBusinessResultModel>> ProductsGetAsync(ProductsRequestDaichiModel req, CancellationToken token = default)
     {
         using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
         throw new NotImplementedException();
