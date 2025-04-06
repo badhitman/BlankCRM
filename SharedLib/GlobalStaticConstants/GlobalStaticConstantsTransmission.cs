@@ -830,10 +830,31 @@ public static partial class GlobalStaticConstants
         #region Outer
         /// <inheritdoc/>
         public readonly static string LeftoversGetBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.LEFTOVERS_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
+
         /// <inheritdoc/>
-        public readonly static string DownloadAndSaveBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.LEFTOVERS_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
+        public readonly static string DownloadAndSaveBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
 
 
+        /// <inheritdoc/>
+        public readonly static string DownloadAndSaveDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
+        /// <inheritdoc/>
+        public readonly static string ProductsGetDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", Routes.PRODUCTS_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+        /// <inheritdoc/>
+        public readonly static string ProductsParamsGetDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.PRODUCTS_CONTROLLER_NAME}-{Routes.PARAMETERS_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
+        /// <inheritdoc/>
+        public readonly static string StoresGetDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.STORES_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
+
+
+        /// <inheritdoc/>
+        public readonly static string DownloadAndSaveRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
+        /// <inheritdoc/>
+        public readonly static string GetUnitsRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.UNITS_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
+        /// <inheritdoc/>
+        public readonly static string GetCategoriesRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.CATEGORIES_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
+        /// <inheritdoc/>
+        public readonly static string GetPropertiesRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.PROPERTIES_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
+        /// <inheritdoc/>
+        public readonly static string GetProductsRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.PRODUCTS_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
         #endregion
 
         #region kladr

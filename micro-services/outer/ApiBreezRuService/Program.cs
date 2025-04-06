@@ -104,7 +104,7 @@ public class Program
         string connectionStorage = builder.Configuration.GetConnectionString($"ApiBreezRuConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'ApiBreezRuConnection{_modePrefix}' not found.");
         builder.Services.AddDbContextFactory<ApiBreezRuContext>(opt =>
             opt.UseNpgsql(connectionStorage));
-
+        
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
         builder.Services

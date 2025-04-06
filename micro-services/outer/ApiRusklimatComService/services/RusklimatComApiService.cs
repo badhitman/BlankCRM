@@ -148,7 +148,7 @@ public class RusklimatComApiService(
     }
 
     /// <inheritdoc/>
-    public async Task<PropertiesRusklimatResponseModel> GetProperties(CancellationToken token = default)
+    public async Task<PropertiesRusklimatResponseModel> GetPropertiesAsync(CancellationToken token = default)
     {
         ApiRusklimatComContext ctx = await dbFactory.CreateDbContextAsync(token);
         throw new NotImplementedException();

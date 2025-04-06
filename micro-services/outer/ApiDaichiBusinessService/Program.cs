@@ -104,7 +104,7 @@ public class Program
         string connectionStorage = builder.Configuration.GetConnectionString($"ApiDaichiBusinessConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'ApiDaichiBusinessConnection{_modePrefix}' not found.");
         builder.Services.AddDbContextFactory<ApiDaichiBusinessContext>(opt =>
             opt.UseNpgsql(connectionStorage));
-
+        
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
         builder.Services
@@ -112,9 +112,9 @@ public class Program
 
         builder.Services.ApiDaichiBusinessRegisterMqListeners();
         #endregion
-        //builder.Services
-        //    .AddScoped<IApiDaichiBusinessService, ApiDaichiBusinessServiceImpl>()
-        //    ;
+        builder.Services
+            .AddScoped<IDaichiBusinessApiService, DaichiBusinessApiService>()
+            ;
 
         builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString(), cc => { cc.BaseAddress = new Uri($"https://api.daichi.ru/b2b/{daichiCredentials.Version}"); });
 

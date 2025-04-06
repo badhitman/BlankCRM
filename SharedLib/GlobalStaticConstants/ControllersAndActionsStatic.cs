@@ -429,16 +429,30 @@ public static partial class GlobalStaticConstants
         /// </summary>
         public const string KLADR_CONTROLLER_NAME = "kladr";
 
-        // // BREEZ_CONTROLLER_NAME // LEFTOVERS_CONTROLLER_NAME
         /// <summary>
         /// BREEZ API
         /// </summary>
-        public const string BREEZ_CONTROLLER_NAME = "breez";
+        public const string BREEZ_CONTROLLER_NAME = "BREEZ";
+
+        /// <summary>
+        /// DAICHI API
+        /// </summary>
+        public const string DAICHI_CONTROLLER_NAME = "DAICHI";
+
+        /// <summary>
+        /// RUSKLIMAT API
+        /// </summary>
+        public const string RUSKLIMAT_CONTROLLER_NAME = "RUSKLIMAT";
 
         /// <summary>
         /// Остатки
         /// </summary>
         public const string LEFTOVERS_CONTROLLER_NAME = "leftovers";
+
+        /// <summary>
+        /// Синхронизация
+        /// </summary>
+        public const string SYNCHRONIZATION_CONTROLLER_NAME = "synchronization";
 
         /// <summary>
         /// Temporary
@@ -464,6 +478,11 @@ public static partial class GlobalStaticConstants
         /// Property
         /// </summary>
         public const string PROPERTY_CONTROLLER_NAME = "property";
+
+        /// <summary>
+        /// Properties
+        /// </summary>
+        public const string PROPERTIES_CONTROLLER_NAME = "properties";
 
         /// <summary>
         /// Form
@@ -774,6 +793,31 @@ public static partial class GlobalStaticConstants
         /// Mongo
         /// </summary>
         public const string MONGO_CONTROLLER_NAME = "mongo";
+
+        /// <summary>
+        /// Продукты
+        /// </summary>
+        public const string PRODUCTS_CONTROLLER_NAME = "products";
+
+        /// <summary>
+        /// Единицы измерения
+        /// </summary>
+        public const string UNITS_CONTROLLER_NAME = "units";
+
+        /// <summary>
+        /// Категории
+        /// </summary>
+        public const string CATEGORIES_CONTROLLER_NAME = "categories";
+
+        /// <summary>
+        /// Склады
+        /// </summary>
+        public const string STORES_CONTROLLER_NAME = "stores";
+
+        /// <summary>
+        /// Параметры
+        /// </summary>
+        public const string PARAMETERS_CONTROLLER_NAME = "parameters";
 
         /// <summary>
         /// Chat
@@ -1311,11 +1355,6 @@ public static partial class GlobalStaticConstants
         /// Участники
         /// </summary>
         public const string MEMEBERS_ACTION_NAME = "members";
-
-        /// <summary>
-        /// Продукты
-        /// </summary>
-        public const string PRODUCTS_ACTION_NAME = "products";
 
         /// <summary>
         /// ВСЕ

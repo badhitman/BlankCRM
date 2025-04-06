@@ -2,9 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json.Linq;
+using Transmission.Receives.Outers.Daichi;
 using SharedLib;
-
 
 namespace ApiDaichiBusinessService;
 
@@ -19,8 +18,10 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection ApiDaichiBusinessRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            //.RegisterMqListener<, , >()
-            //.RegisterMqListener<, , >()
+            .RegisterMqListener<StoresGetReceive, object?, TResponseModel<StoresDaichiBusinessResponseModel>>()
+            .RegisterMqListener<ProductsParamsGetReceive, ProductParamsRequestDaichiModel, TResponseModel<ProductsParamsDaichiBusinessResponseModel>>()
+            .RegisterMqListener<ProductsGetReceive, ProductsRequestDaichiModel, TResponseModel<ProductsDaichiBusinessResultModel>>()
+            .RegisterMqListener<DownloadAndSaveReceive, object, ResponseBaseModel>()
             ;
     }
 }

@@ -219,7 +219,12 @@ builder.Services
     .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
     .AddScoped<IConstructorTransmission, ConstructorTransmission>()
     .AddScoped<IIdentityTransmission, IdentityTransmission>()
-    .AddScoped<IWebTransmission, WebTransmission>();
+    .AddScoped<IWebTransmission, WebTransmission>()
+
+    .AddScoped<IBreezRuApiService, BreezRuTransmission>()
+    .AddScoped<IDaichiBusinessApiService, DaichiBusinessTransmission>()
+    .AddScoped<IRusklimatComApiService, RusklimatComTransmission>()
+    ;
 //
 builder.Services.WebAppRegisterMqListeners();
 #endregion

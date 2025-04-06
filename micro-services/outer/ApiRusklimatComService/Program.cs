@@ -113,11 +113,11 @@ public class Program
 
         builder.Services.ApiRusklimatComRegisterMqListeners();
         #endregion
-        
-        //builder.Services
-        //    .AddScoped<IApiRusklimatComService, ApiRusklimatComServiceImpl>()
-        //    ;
-        
+
+        builder.Services
+            .AddScoped<IRusklimatComApiService, RusklimatComApiService>()
+            ;
+
         builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.AuthRusklimatComJWT.ToString(), cc =>
         {
             cc.BaseAddress = new Uri($"https://b2b.rusklimat.com/api/");

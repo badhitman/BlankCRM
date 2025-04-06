@@ -5,7 +5,7 @@
 using RemoteCallLib;
 using SharedLib;
 
-namespace Transmission.Receives.outer;
+namespace Transmission.Receives.Outers.Breez;
 
 /// <summary>
 /// LeftoversGetAsyncReceive

@@ -2,6 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Transmission.Receives.Outers.Rusklimat;
+using SharedLib;
+
 namespace ApiRusklimatComService;
 
 /// <summary>
@@ -15,8 +18,11 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection ApiRusklimatComRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            //.RegisterMqListener<, , >()
-            //.RegisterMqListener<, , >()
+            .RegisterMqListener<DownloadAndSaveReceive, object, ResponseBaseModel>()
+            .RegisterMqListener<GetCategoriesReceive, object, CategoriesRusklimatResponseModel>()
+            .RegisterMqListener<GetProductsReceive, PaginationRequestModel, ProductsRusklimatResponseModel>()
+            .RegisterMqListener<GetPropertiesReceive, object, PropertiesRusklimatResponseModel>()
+            .RegisterMqListener<GetUnitsReceive, object, UnitsRusklimatResponseModel>()
             ;
     }
 }
