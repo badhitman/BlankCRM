@@ -18,6 +18,9 @@ public partial class DaichiManageComponent : BlazorBusyComponentBaseModel
 
     async Task Download()
     {
-        var res = await daichiRepo.DownloadAndSaveAsync();
+        await SetBusyAsync();
+        ResponseBaseModel res = await daichiRepo.DownloadAndSaveAsync();
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
     }
 }

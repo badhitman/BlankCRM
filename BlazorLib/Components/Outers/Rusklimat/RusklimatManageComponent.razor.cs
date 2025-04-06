@@ -18,6 +18,9 @@ public partial class RusklimatManageComponent : BlazorBusyComponentBaseModel
 
     async Task Download()
     {
-        var res = await rusklimatRepo.DownloadAndSaveAsync();
+        await SetBusyAsync();
+        ResponseBaseModel res = await rusklimatRepo.DownloadAndSaveAsync();
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
     }
 }

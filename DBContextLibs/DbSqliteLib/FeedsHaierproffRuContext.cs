@@ -9,7 +9,7 @@ namespace DbcLib;
 /// <summary>
 /// Промежуточный/общий слой контекста базы данных
 /// </summary>
-public partial class FeedsHaierproffRuContext(DbContextOptions<FeedsHaierproffRuContext> options) : FeedsHaierproffRuLayerContext(options)
+public partial class FeedsHaierProffRuContext(DbContextOptions<FeedsHaierProffRuContext> options) : FeedsHaierProffRuLayerContext(options)
 {
 
 }

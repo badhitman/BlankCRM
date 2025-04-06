@@ -187,7 +187,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiDaichiBusinessService", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiRusklimatComService", "micro-services\outer\ApiRusklimatComService\ApiRusklimatComService.csproj", "{F131AF0B-D70D-EE8E-D35F-C9F3D7713808}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeedsHaierproffRuService", "micro-services\outer\FeedsHaierproffRuService\FeedsHaierproffRuService.csproj", "{478C4F4F-F285-D8CA-B98C-DC16A889A298}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeedsHaierProffRuService", "micro-services\outer\FeedsHaierproffRuService\FeedsHaierProffRuService.csproj", "{478C4F4F-F285-D8CA-B98C-DC16A889A298}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

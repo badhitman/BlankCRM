@@ -855,6 +855,12 @@ public static partial class GlobalStaticConstants
         public readonly static string GetPropertiesRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.PROPERTIES_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
         /// <inheritdoc/>
         public readonly static string GetProductsRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.PRODUCTS_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
+
+
+        /// <inheritdoc/>
+        public readonly static string DownloadAndSaveHaierProffReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.HAIERPROFF_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
+        /// <inheritdoc/>
+        public readonly static string ProductsFeedGetHaierProffReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.HAIERPROFF_CONTROLLER_NAME}-{Routes.RSS_CONTROLLER_NAME}", $"{Routes.PRODUCTS_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
         #endregion
 
         #region kladr

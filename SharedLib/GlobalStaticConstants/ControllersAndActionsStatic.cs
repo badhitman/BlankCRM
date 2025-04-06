@@ -430,19 +430,24 @@ public static partial class GlobalStaticConstants
         public const string KLADR_CONTROLLER_NAME = "kladr";
 
         /// <summary>
-        /// BREEZ API
+        /// BREEZ
         /// </summary>
         public const string BREEZ_CONTROLLER_NAME = "BREEZ";
 
         /// <summary>
-        /// DAICHI API
+        /// DAICHI
         /// </summary>
         public const string DAICHI_CONTROLLER_NAME = "DAICHI";
 
         /// <summary>
-        /// RUSKLIMAT API
+        /// RUSKLIMAT
         /// </summary>
         public const string RUSKLIMAT_CONTROLLER_NAME = "RUSKLIMAT";
+
+        /// <summary>
+        /// HaierProff
+        /// </summary>
+        public const string HAIERPROFF_CONTROLLER_NAME = "HAIERPROFF";
 
         /// <summary>
         /// Остатки
@@ -453,6 +458,11 @@ public static partial class GlobalStaticConstants
         /// Синхронизация
         /// </summary>
         public const string SYNCHRONIZATION_CONTROLLER_NAME = "synchronization";
+
+        /// <summary>
+        /// rss
+        /// </summary>
+        public const string RSS_CONTROLLER_NAME = "rss";
 
         /// <summary>
         /// Temporary

@@ -18,6 +18,9 @@ public partial class BreezManageComponent : BlazorBusyComponentBaseModel
 
     async Task Download()
     {
-        var res = await breezRepo.DownloadAndSaveAsync();
+        await SetBusyAsync();
+        ResponseBaseModel res = await breezRepo.DownloadAndSaveAsync();
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
     }
 }

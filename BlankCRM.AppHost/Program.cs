@@ -154,10 +154,10 @@ public class Program
             .WithReference(builder.AddConnectionString($"ApiRusklimatComConnection{_modePrefix}"))
             ;
 
-        IResourceBuilder<ProjectResource> feedsHaierproffRuService = builder.AddProject<Projects.FeedsHaierproffRuService>("feedshaierproffrueservice")
+        IResourceBuilder<ProjectResource> feedsHaierProffRuService = builder.AddProject<Projects.FeedsHaierProffRuService>("feedshaierproffrueservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
-            .WithReference(builder.AddConnectionString($"FeedsHaierproffRuConnection{_modePrefix}"))
+            .WithReference(builder.AddConnectionString($"FeedsHaierProffRuConnection{_modePrefix}"))
             ;
 #endif
 
@@ -240,8 +240,8 @@ public class Program
             .WithReference(apiRusklimatComService)
             .WaitFor(apiRusklimatComService)
 
-            .WithReference(feedsHaierproffRuService)
-            .WaitFor(feedsHaierproffRuService)
+            .WithReference(feedsHaierProffRuService)
+            .WaitFor(feedsHaierProffRuService)
 #endif
         ;
 

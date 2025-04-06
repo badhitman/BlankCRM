@@ -14,7 +14,7 @@ using SharedLib;
 using DbcLib;
 using NLog;
 
-namespace FeedsHaierproffRuService;
+namespace FeedsHaierProffRuService;
 
 /// <summary>
 /// Program
@@ -99,8 +99,8 @@ public class Program
 
         RabbitMQConfigModel _mqConf = builder.Configuration.GetSection("RabbitMQConfig").Get<RabbitMQConfigModel>() ?? throw new Exception("RabbitMQ not config");
 
-        string connectionStorage = builder.Configuration.GetConnectionString($"FeedsHaierproffRuConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'FeedsHaierproffRuConnection{_modePrefix}' not found.");
-        builder.Services.AddDbContextFactory<FeedsHaierproffRuContext>(opt =>
+        string connectionStorage = builder.Configuration.GetConnectionString($"FeedsHaierProffRuConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'FeedsHaierProffRuConnection{_modePrefix}' not found.");
+        builder.Services.AddDbContextFactory<FeedsHaierProffRuContext>(opt =>
             opt.UseNpgsql(connectionStorage));
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
@@ -108,15 +108,15 @@ public class Program
         builder.Services
             .AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 
-        builder.Services.FeedsHaierproffRuRegisterMqListeners();
+        builder.Services.FeedsHaierProffRuRegisterMqListeners();
         #endregion
-        //builder.Services
-        //    .AddScoped<IFeedsHaierproffRuService, FeedsHaierproffRuServiceImpl>()
-        //    ;
+        builder.Services
+            .AddScoped<IFeedsHaierProffRuService, HaierProffRuFeedsService>()
+            ;
 
-        builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.FeedsHaierproffRu.ToString(), cc =>
+        builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.FeedsHaierProffRu.ToString(), cc =>
         {
-            cc.BaseAddress = new Uri($"https://haierproff.ru/feeds/cond/");            
+            cc.BaseAddress = new Uri($"https://haierproff.ru/feeds");            
         });
 
         // Custom metrics for the application

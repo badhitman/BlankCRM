@@ -3,14 +3,15 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using SharedLib;
 
 namespace DbcLib;
 
 /// <inheritdoc/>
-public abstract partial class FeedsHaierproffRuLayerContext : DbContext
+public abstract partial class FeedsHaierProffRuLayerContext : DbContext
 {
     /// <inheritdoc/>
-    public FeedsHaierproffRuLayerContext(DbContextOptions options)
+    public FeedsHaierProffRuLayerContext(DbContextOptions options)
         : base(options)
     {
         //#if DEBUG
@@ -34,4 +35,24 @@ public abstract partial class FeedsHaierproffRuLayerContext : DbContext
     {
         modelBuilder.HasDefaultSchema("public");
     }
+
+    /// <summary>
+    /// ProductsFeedsRss
+    /// </summary>
+    public DbSet<FeedItemHaierModelDB> ProductsFeedsRss { get; set; }
+
+    /// <summary>
+    /// FilesFeedsRss
+    /// </summary>
+    public DbSet<FileFeedItemHaierModelDB> FilesFeedsRss { get; set; }
+
+    /// <summary>
+    /// SectionOptionFeedItemHaierModelDB
+    /// </summary>
+    public DbSet<SectionOptionFeedItemHaierModelDB> SectionsOptionsFeedsRss { get; set; }
+
+    /// <summary>
+    /// OptionsFeedsRss
+    /// </summary>
+    public DbSet<OptionFeedItemHaierModelDB> OptionsFeedsRss { get; set; }
 }

@@ -224,6 +224,7 @@ builder.Services
     .AddScoped<IBreezRuApiService, BreezRuTransmission>()
     .AddScoped<IDaichiBusinessApiService, DaichiBusinessTransmission>()
     .AddScoped<IRusklimatComApiService, RusklimatComTransmission>()
+    .AddScoped<IFeedsHaierProffRuService, HaierProffRuTransmission>()
     ;
 //
 builder.Services.WebAppRegisterMqListeners();

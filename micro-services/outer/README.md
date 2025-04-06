@@ -1,11 +1,10 @@
-﻿## Внешние источники данных
+﻿## Внешние источники данных (api/rest etc...)
 
-(api/rest etc...)
-https://api.breez.ru/api
-https://api.daichi.ru/b2b/<версия>/<метод>?<параметры>
-https://internet-partner.rusklimat.com/api/ (+ https://b2b.rusklimat.com/api/v1/)
 
-https://haierproff.ru/feeds/cond/?type=partners
+ - https://breez.ru - api
+ - https://daichi.ru - b2b
+ - https://rusklimat.com - api
+ - https://haierproff.ru - partners feeds
 
 #### Настройки
 пример в [файле](outers-credentials-example.json)
@@ -14,5 +13,14 @@ https://haierproff.ru/feeds/cond/?type=partners
     "UserId": "0001112233",
     "Password": "123123",
     "Version": "v1"
-}
+},
+"BreezApiConfig": {
+    "UserId": "",
+    "Password": "",
+    "Version": "v1"
+  },
+  "DaichiApiConfig": {
+    "Token": "",
+    "Version": "v1"
+  },
 ```

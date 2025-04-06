@@ -51,3 +51,7 @@ Update-Database -Context ApiDaichiBusinessContext -Project DbPostgreLib -Startup
 Add-Migration ApiRusklimatComContext002 -Context ApiRusklimatComContext -Project DbPostgreLib -StartupProject ApiRusklimatComService
 Update-Database -Context ApiRusklimatComContext -Project DbPostgreLib -StartupProject ApiRusklimatComService
 ```
+```
+Add-Migration FeedsHaierProffRuContext002 -Context FeedsHaierProffRuContext -Project DbPostgreLib -StartupProject FeedsHaierProffRuService
+Update-Database -Context FeedsHaierProffRuContext -Project DbPostgreLib -StartupProject FeedsHaierProffRuService
+```

@@ -39,5 +39,5 @@ public enum HttpClientsNamesOuterEnum
     /// RSS Фид каталога кондиционеров Haierproff
     /// </summary>
     [Description("https://haierproff.ru/feeds/cond/?type=partners")]
-    FeedsHaierproffRu = 40,
+    FeedsHaierProffRu = 40,
 }
