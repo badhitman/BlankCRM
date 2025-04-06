@@ -827,6 +827,14 @@ public static partial class GlobalStaticConstants
         public readonly static string FindCloudParameterReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CLOUD_CONTROLLER_NAME, Routes.PROPERTY_CONTROLLER_NAME, Routes.FIND_ACTION_NAME);
         #endregion
 
+        #region Outer
+        /// <inheritdoc/>
+        public readonly static string LeftoversGetBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.LEFTOVERS_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
+        /// <inheritdoc/>
+        public readonly static string DownloadAndSaveBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.LEFTOVERS_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
+
+
+        #endregion
 
         #region kladr
         /// <inheritdoc/>

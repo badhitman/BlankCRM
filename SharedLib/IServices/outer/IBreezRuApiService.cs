@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.Threading;
+
 namespace SharedLib;
 
 /// <summary>
@@ -12,5 +14,5 @@ public interface IBreezRuApiService : IOuterApiBaseService
     /// <summary>
     /// остатки на доступных складах
     /// </summary>
-    public Task<TResponseModel<List<BreezRuGoodsModel>>> LeftoversGetAsync(CancellationToken token = default);
+    public Task<TResponseModel<List<BreezRuGoodsModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default);
 }

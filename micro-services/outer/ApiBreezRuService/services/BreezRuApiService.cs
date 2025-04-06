@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
-using System.Collections.Generic;
 
 namespace ApiBreezRuService;
 
@@ -19,7 +18,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
     {
         string msg;
-        TResponseModel<List<BreezRuGoodsModel>> jsonData = await LeftoversGetAsync(token);
+        TResponseModel<List<BreezRuGoodsModel>> jsonData = await LeftoversGetAsync(token: token);
         if (jsonData.Response is null)
         {
             msg = $"Error `{nameof(DownloadAndSaveAsync)}`: parseData.Response is null";
@@ -34,7 +33,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<BreezRuGoodsModel>>> LeftoversGetAsync(CancellationToken token = default)
+    public async Task<TResponseModel<List<BreezRuGoodsModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default)
     {
         TResponseModel<List<BreezRuGoodsModel>> result = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());

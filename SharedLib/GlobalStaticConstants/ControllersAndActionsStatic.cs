@@ -429,6 +429,17 @@ public static partial class GlobalStaticConstants
         /// </summary>
         public const string KLADR_CONTROLLER_NAME = "kladr";
 
+        // // BREEZ_CONTROLLER_NAME // LEFTOVERS_CONTROLLER_NAME
+        /// <summary>
+        /// BREEZ API
+        /// </summary>
+        public const string BREEZ_CONTROLLER_NAME = "breez";
+
+        /// <summary>
+        /// Остатки
+        /// </summary>
+        public const string LEFTOVERS_CONTROLLER_NAME = "leftovers";
+
         /// <summary>
         /// Temporary
         /// </summary>
@@ -1215,6 +1226,11 @@ public static partial class GlobalStaticConstants
         /// данные
         /// </summary>
         public const string DATA_ACTION_NAME = "data";
+
+        /// <summary>
+        /// Загрузка
+        /// </summary>
+        public const string DOWNLOAD_ACTION_NAME = "download";
 
         /// <summary>
         /// Справочники

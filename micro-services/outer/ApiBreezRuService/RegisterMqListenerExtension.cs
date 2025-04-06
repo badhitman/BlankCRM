@@ -2,9 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json.Linq;
 using SharedLib;
-
+using Transmission.Receives.outer;
 
 namespace ApiBreezRuService;
 
@@ -19,8 +18,8 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection ApiBreezRuRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            //.RegisterMqListener<, , >()
-            //.RegisterMqListener<, , >()
+            .RegisterMqListener<DownloadAndSaveReceive, object, ResponseBaseModel>()
+            .RegisterMqListener<LeftoversGetReceive, string, TResponseModel<List<BreezRuGoodsModel>>>()
             ;
     }
 }

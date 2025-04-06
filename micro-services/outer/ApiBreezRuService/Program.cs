@@ -112,9 +112,9 @@ public class Program
 
         builder.Services.ApiBreezRuRegisterMqListeners();
         #endregion
-        //builder.Services
-        //    .AddScoped<IApiBreezRuService, ApiBreezRuServiceImpl>()
-        //    ;
+        builder.Services
+            .AddScoped<IBreezRuApiService, BreezRuApiService>()
+            ;
 
         builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString(), cc =>
         {
