@@ -48,6 +48,22 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
                 });
 
             migrationBuilder.CreateTable(
+                name: "ParametersCatalog",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    XML_ID = table.Column<string>(type: "text", nullable: false),
+                    NAME = table.Column<string>(type: "text", nullable: false),
+                    ID = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParametersCatalog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Prices",
                 schema: "public",
                 columns: table => new
@@ -253,6 +269,19 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
                 column: "Name");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ParametersCatalog_NAME",
+                schema: "public",
+                table: "ParametersCatalog",
+                column: "NAME");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParametersCatalog_XML_ID",
+                schema: "public",
+                table: "ParametersCatalog",
+                column: "XML_ID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Prices_NAME",
                 schema: "public",
                 table: "Prices",
@@ -306,6 +335,10 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
 
             migrationBuilder.DropTable(
                 name: "AvailabilityGoods",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "ParametersCatalog",
                 schema: "public");
 
             migrationBuilder.DropTable(

@@ -26,8 +26,14 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return ResponseBaseModel.CreateError(msg);
         }
         using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
+        await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await ctx.Database.BeginTransactionAsync(token);
+
+        await ctx.Goods.ExecuteDeleteAsync(cancellationToken: token);
+
         await ctx.AddRangeAsync(jsonData.Response.Select(BreezRuElementModelDB.Build), token);
         await ctx.SaveChangesAsync(token);
+
+        await transaction.CommitAsync(token);
 
         return ResponseBaseModel.CreateSuccess($"Задание выполнено: {nameof(DownloadAndSaveAsync)}. Записано элементов: {jsonData.Response.Count}");
     }
@@ -37,7 +43,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
     {
         TResponseModel<List<BreezRuGoodsModel>> result = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
-        HttpResponseMessage response = await httpClient.GetAsync("/leftovers/", token);
+        HttpResponseMessage response = await httpClient.GetAsync("leftovers/", token);
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -56,16 +62,16 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return result;
         }
 
-        List<BreezRuGoodsModel>? parseData = JsonConvert.DeserializeObject<List<BreezRuGoodsModel>>(responseBody);
+        result.Response = JsonConvert.DeserializeObject<List<BreezRuGoodsModel>>(responseBody);
 
-        if (parseData is null)
+        if (result.Response is null)
         {
             msg = $"Error `{nameof(DownloadAndSaveAsync)}`: parseData is null";
             logger.LogError(msg);
             result.AddError(msg);
             return result;
         }
-        result.AddSuccess($"Загружено {parseData.Count}");
+        result.AddSuccess($"Прочитано товаров: {result.Response.Count}");
         return result;
     }
 }

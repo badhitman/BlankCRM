@@ -59,4 +59,7 @@ public abstract partial class ApiDaichiBusinessLayerContext : DbContext
 
     /// <inheritdoc/>
     public DbSet<GroupAttributeDaichiModelDB> GroupsAttributes { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<ParameterEntryDaichiModelDB> ParametersCatalog { get; set; }
 }

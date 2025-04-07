@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.ApiDaichiBusiness
 {
     [DbContext(typeof(ApiDaichiBusinessContext))]
-    [Migration("20250403083205_ApiDaichiBusinessContext001")]
+    [Migration("20250407091619_ApiDaichiBusinessContext001")]
     partial class ApiDaichiBusinessContext001
     {
         /// <inheritdoc />
@@ -175,6 +175,36 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
                     b.HasIndex("Name");
 
                     b.ToTable("GroupsAttributes", "public");
+                });
+
+            modelBuilder.Entity("SharedLib.ParameterEntryDaichiModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ID")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NAME")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("XML_ID")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NAME");
+
+                    b.HasIndex("XML_ID")
+                        .IsUnique();
+
+                    b.ToTable("ParametersCatalog", "public");
                 });
 
             modelBuilder.Entity("SharedLib.PriceDaichiModelDB", b =>

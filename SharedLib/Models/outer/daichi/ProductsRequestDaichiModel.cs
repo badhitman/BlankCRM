@@ -20,5 +20,5 @@ public class ProductsRequestDaichiModel : RequestDaichiBaseModel
     /// Без указания данного параметра метод вернёт список всех товаров из каталога, но без характеристик.
     /// </remarks>
     [JsonProperty("store-id"), JsonPropertyName("store-id")]
-    public int StoreId { get; set; }
+    public string StoreId { get; set; } = "default";
 }
