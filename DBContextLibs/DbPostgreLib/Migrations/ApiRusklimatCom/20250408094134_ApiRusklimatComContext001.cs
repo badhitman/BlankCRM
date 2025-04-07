@@ -15,25 +15,17 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 name: "public");
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Categories",
                 schema: "public",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    NSCode = table.Column<string>(type: "text", nullable: true),
-                    CategoryId = table.Column<string>(type: "text", nullable: true),
-                    VendorCode = table.Column<string>(type: "text", nullable: true),
-                    Brand = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Price = table.Column<decimal>(type: "numeric", nullable: false),
-                    ClientPrice = table.Column<decimal>(type: "numeric", nullable: false),
-                    InternetPrice = table.Column<decimal>(type: "numeric", nullable: true),
-                    Exclusive = table.Column<bool>(type: "boolean", nullable: false)
+                    Parent = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -51,6 +43,21 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 });
 
             migrationBuilder.CreateTable(
+                name: "Remains",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProductId = table.Column<int>(type: "integer", nullable: false),
+                    Total = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Remains", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Units",
                 schema: "public",
                 columns: table => new
@@ -64,6 +71,59 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Units", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    RemainsId = table.Column<int>(type: "integer", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    NSCode = table.Column<string>(type: "text", nullable: true),
+                    CategoryId = table.Column<string>(type: "text", nullable: true),
+                    VendorCode = table.Column<string>(type: "text", nullable: true),
+                    Brand = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    ClientPrice = table.Column<decimal>(type: "numeric", nullable: false),
+                    InternetPrice = table.Column<decimal>(type: "numeric", nullable: true),
+                    Exclusive = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_Remains_RemainsId",
+                        column: x => x.RemainsId,
+                        principalSchema: "public",
+                        principalTable: "Remains",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WarehousesRemains",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ParentId = table.Column<int>(type: "integer", nullable: false),
+                    RemainValue = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WarehousesRemains", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WarehousesRemains_Remains_ParentId",
+                        column: x => x.ParentId,
+                        principalSchema: "public",
+                        principalTable: "Remains",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -90,28 +150,6 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 });
 
             migrationBuilder.CreateTable(
-                name: "Remains",
-                schema: "public",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductId1 = table.Column<string>(type: "text", nullable: true),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
-                    Total = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Remains", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Remains_Products_ProductId1",
-                        column: x => x.ProductId1,
-                        principalSchema: "public",
-                        principalTable: "Products",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProductsProperties",
                 schema: "public",
                 columns: table => new
@@ -120,8 +158,9 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ProductId1 = table.Column<string>(type: "text", nullable: true),
                     ProductId = table.Column<int>(type: "integer", nullable: false),
-                    PropertyId1 = table.Column<string>(type: "text", nullable: true),
-                    PropertyId = table.Column<int>(type: "integer", nullable: false)
+                    PropertyKey = table.Column<string>(type: "text", nullable: true),
+                    Value = table.Column<string>(type: "text", nullable: false),
+                    Unit = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -132,36 +171,20 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                         principalSchema: "public",
                         principalTable: "Products",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ProductsProperties_PropertiesCatalog_PropertyId1",
-                        column: x => x.PropertyId1,
-                        principalSchema: "public",
-                        principalTable: "PropertiesCatalog",
-                        principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
-                name: "WarehousesRemains",
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_Parent",
                 schema: "public",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ParentId = table.Column<int>(type: "integer", nullable: false),
-                    RemainValue = table.Column<string>(type: "text", nullable: true),
-                    Name = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WarehousesRemains", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WarehousesRemains_Remains_ParentId",
-                        column: x => x.ParentId,
-                        principalSchema: "public",
-                        principalTable: "Remains",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                table: "Categories",
+                column: "Parent");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_RemainsId",
+                schema: "public",
+                table: "Products",
+                column: "RemainsId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductsInformation_Name",
@@ -182,18 +205,6 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 column: "ProductId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductsProperties_PropertyId1",
-                schema: "public",
-                table: "ProductsProperties",
-                column: "PropertyId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Remains_ProductId1",
-                schema: "public",
-                table: "Remains",
-                column: "ProductId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_WarehousesRemains_Name",
                 schema: "public",
                 table: "WarehousesRemains",
@@ -210,11 +221,19 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Categories",
+                schema: "public");
+
+            migrationBuilder.DropTable(
                 name: "ProductsInformation",
                 schema: "public");
 
             migrationBuilder.DropTable(
                 name: "ProductsProperties",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "PropertiesCatalog",
                 schema: "public");
 
             migrationBuilder.DropTable(
@@ -226,15 +245,11 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 schema: "public");
 
             migrationBuilder.DropTable(
-                name: "PropertiesCatalog",
+                name: "Products",
                 schema: "public");
 
             migrationBuilder.DropTable(
                 name: "Remains",
-                schema: "public");
-
-            migrationBuilder.DropTable(
-                name: "Products",
                 schema: "public");
         }
     }

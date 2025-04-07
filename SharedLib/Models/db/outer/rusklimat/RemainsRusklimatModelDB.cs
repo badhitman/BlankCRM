@@ -34,5 +34,5 @@ public class RemainsRusklimatModelDB
     /// <summary>
     /// сумма остатков по всем складам
     /// </summary>
-    public required string Total { get; set; }
+    public string? Total { get; set; }
 }

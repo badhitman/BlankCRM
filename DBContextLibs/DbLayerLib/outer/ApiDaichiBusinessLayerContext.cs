@@ -36,30 +36,31 @@ public abstract partial class ApiDaichiBusinessLayerContext : DbContext
         modelBuilder.HasDefaultSchema("public");
     }
 
+
     /// <inheritdoc/>
     public DbSet<StoreDaichiModelDB> Stores { get; set; }
 
     /// <inheritdoc/>
-    public DbSet<AvailabilityGoodsDaichiModelDB> AvailabilityGoods { get; set; }
+    public DbSet<ProductDaichiModelDB> Products { get; set; }
 
     /// <inheritdoc/>
-    public DbSet<PriceGoodsDaichiModelDB> PricesGoods { get; set; }
+    public DbSet<ParamsProductDaichiModelDB> ParamsProducts { get; set; }
 
     /// <inheritdoc/>
-    public DbSet<PriceDaichiModelDB> Prices { get; set; }
+    public DbSet<AvailabilityProductsDaichiModelDB> AvailabilityGoods { get; set; }
 
     /// <inheritdoc/>
-    public DbSet<GoodsDaichiModelDB> Goods { get; set; }
+    public DbSet<PriceProductDaichiModelDB> PricesProducts { get; set; }
 
     /// <inheritdoc/>
-    public DbSet<AttributeValueDaichiModelDB> AttributesValues { get; set; }
-
-    /// <inheritdoc/>
-    public DbSet<AttributeDaichiModelDB> Attributes { get; set; }
-
-    /// <inheritdoc/>
-    public DbSet<GroupAttributeDaichiModelDB> GroupsAttributes { get; set; }
+    public DbSet<AttributeParameterDaichiModelDB> Attributes { get; set; }
 
     /// <inheritdoc/>
     public DbSet<ParameterEntryDaichiModelDB> ParametersCatalog { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<SectionParameterDaichiModelDB> SectionsParameters { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<PhotoParameterDaichiModelDB> PhotosParameters { get; set; }
 }

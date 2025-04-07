@@ -6,18 +6,18 @@
 namespace SharedLib;
 
 /// <inheritdoc/>
-public class GoodsDaichiModel : GoodsDaichiBaseModel
+public class ProductDaichiModel : ProductDaichiBaseModel
 {
     /// <summary>
     /// Параметры товара
     /// </summary>
-    public ParamsGoodsDaichiModel? PARAMS { get; set; }
+    public required ParamsProductDaichiModel PARAMS { get; set; }
 
     /// <inheritdoc/>
-    public PricesdDaichiModel? PRICES { get; set; }
+    public required PricesdDaichiModel PRICES { get; set; }
 
     /// <summary>
     /// Информация о наличии товара на складе
     /// </summary>
-    public StoreDaichiModel? STORE { get; set; }
+    public required StoreDaichiModel STORE { get; set; }
 }

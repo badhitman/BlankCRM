@@ -3,6 +3,9 @@
 ////////////////////////////////////////////////
 
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace SharedLib;
 
@@ -18,37 +21,50 @@ public class ProductsDaichiBusinessResultModel
     public double Time { get; set; }
 
     /// <inheritdoc/>
-    Dictionary<string, JToken?>? GetJTokens
-    {
-        get
-        {
-            if (Result is null)
-                return null;
+    public ConcurrentDictionary<string, Exception>? Exceptions { get; set; }
 
-            Dictionary<string, JToken?> dict_data = [];
-            foreach (KeyValuePair<string, JToken?> kvp in Result)
-            {
-                JValue? jv = kvp.Value as JValue;
-                if (!dict_data.ContainsKey(kvp.Key))
-                    dict_data.Add(kvp.Key, jv);
-            }
-
-            return dict_data;
-        }
-    }
-
+    List<ProductDaichiModel>? _getProducts;
     /// <inheritdoc/>
-    public List<GoodsDaichiModel>? GetProducts
+    public List<ProductDaichiModel>? GetProducts
     {
         get
         {
-            Dictionary<string, JToken?>? tokens = GetJTokens;
+            if (_getProducts is not null)
+                return _getProducts;
+
+            Exceptions = null;
+            JProperty[]? tokens = [.. Result?.Properties().Where(x => !x.Name.Equals("_count", StringComparison.OrdinalIgnoreCase))!];
 
             if (tokens is null)
                 return null;
 
-            List<GoodsDaichiModel> res = [];
+            try
+            {
+                _getProducts = [.. tokens.Select(GetProduct).Where(x => x is not null)];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+
+            return _getProducts;
+        }
+    }
+
+    ProductDaichiModel? GetProduct(JProperty entry)
+    {
+        try
+        {
+            ProductDaichiModel res = entry.First().ToObject<ProductDaichiModel>()!;
+            res.KeyIndex = int.Parse(entry.Name);
             return res;
+        }
+        catch (Exception ex)
+        {
+            Exceptions ??= [];
+            Exceptions.TryAdd(entry.Name, ex);
+            return null;
         }
     }
 }

@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <inheritdoc/>
-public class ParamsGoodsDaichiModel
+public class ParamsProductDaichiModel
 {
     /// <inheritdoc/>
     public string? BRAND { get; set; }

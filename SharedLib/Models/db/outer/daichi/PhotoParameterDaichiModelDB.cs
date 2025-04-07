@@ -4,11 +4,11 @@
 
 namespace SharedLib;
 
-/// <summary>
-/// DaichiGroupAttributeModelDB
-/// </summary>
-public class GroupAttributeDaichiModelDB : EntryModel
+/// <inheritdoc/>
+public class PhotoParameterDaichiModelDB : EntryModel
 {
     /// <inheritdoc/>
-    public List<AttributeDaichiModelDB>? AttributesValues { get; set; }
+    public ParameterEntryDaichiModelDB? Parent { get; set; }
+    /// <inheritdoc/>
+    public int ParentId { get; set; }
 }

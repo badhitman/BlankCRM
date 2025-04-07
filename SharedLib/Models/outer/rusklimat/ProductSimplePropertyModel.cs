@@ -2,16 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
-
 namespace SharedLib;
 
 /// <summary>
-/// Категории товаров
+/// ProductSimplePropertyModel
 /// </summary>
-[Index(nameof(Parent))]
-public class CategoryRusklimatModelDB : EntryAltModel
+public class ProductSimplePropertyModel
 {
     /// <inheritdoc/>
-    public string? Parent { get; set; }
+    public required string Value { get; set; }
+    /// <inheritdoc/>
+    public  string? Unit { get; set; }
 }

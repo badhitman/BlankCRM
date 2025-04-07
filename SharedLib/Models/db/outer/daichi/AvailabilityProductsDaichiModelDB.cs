@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Наличие товара на складе
 /// </summary>
-public class AvailabilityGoodsDaichiModelDB
+public class AvailabilityProductsDaichiModelDB
 {
     /// <summary>
     /// Идентификатор/Key
@@ -19,9 +19,9 @@ public class AvailabilityGoodsDaichiModelDB
 
 
     /// <inheritdoc/>
-    public GoodsDaichiModelDB? Goods { get; set; }
+    public ProductDaichiModelDB? Product { get; set; }
     /// <inheritdoc/>
-    public int GoodsId { get; set; }
+    public int ProductId { get; set; }
 
 
     /// <inheritdoc/>
@@ -39,21 +39,23 @@ public class AvailabilityGoodsDaichiModelDB
     public int DELIVERY_AMOUNT { get; set; }
 
     /// <summary>
-    /// Количество, больше которого не показывется точное значение. При превышении ограничения на портале точное значение заменяется выражением ‘>’
+    /// Количество, больше которого не показывается точное значение. При превышении ограничения на портале точное значение заменяется выражением ‘>’
     /// </summary>
-    public int STORE_LIMIT { get; set; }
+    public int? STORE_LIMIT { get; set; }
+    /// <summary>
+    /// Количество, больше которого не показывается точное значение. При превышении ограничения на портале точное значение заменяется выражением ‘>’
+    /// </summary>
+    public int? DELIVERY_LIMIT { get; set; }
+
 
     /// <summary>
     /// false (лимит не превышен. STORE_AMOUNT показывает точное значение)
     /// true (лимит превышен. STORE_AMOUNT ограничено значением LIMIT)
     /// </summary>
-    public bool STORE_HIDE_MORE_LIMIT { get; set; }
+    public bool? STORE_HIDE_MORE_LIMIT { get; set; }
     /// <summary>
     /// false (лимит не превышен. DELIVERY_AMOUNT показывает точное значение)
     /// true (лимит превышен. DELIVERY_AMOUNT ограничено значением LIMIT)
     /// </summary>
-    public bool DELIVERY_HIDE_MORE_LIMIT { get; set; }
-
-    /// <inheritdoc/>
-    public required DateTime CreatedAt { get; set; }
+    public bool? DELIVERY_HIDE_MORE_LIMIT { get; set; }
 }

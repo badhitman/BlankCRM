@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// PriceDaichiModel
+/// ParamsProductDaichiModelDB
 /// </summary>
-public class PriceDaichiModelDB : DaichiEntryModel
+public class ParamsProductDaichiModelDB: ParamsProductDaichiModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -18,5 +18,7 @@ public class PriceDaichiModelDB : DaichiEntryModel
     public int Id { get; set; }
 
     /// <inheritdoc/>
-    public string? CURRENCY { get; set; }
+    public ProductDaichiModelDB? Product {  get; set; }
+    /// <inheritdoc/>
+    public int ProductId { get; set; }
 }

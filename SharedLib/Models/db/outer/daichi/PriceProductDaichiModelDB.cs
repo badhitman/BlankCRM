@@ -8,10 +8,10 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// PriceGoodsDaichiModelDB
+/// PriceProductDaichiModelDB
 /// </summary>
-[Index(nameof(PRICE)), Index(nameof(CreatedAt))]
-public class PriceGoodsDaichiModelDB
+[Index(nameof(PRICE))]
+public class PriceProductDaichiModelDB : DaichiEntryModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -19,15 +19,17 @@ public class PriceGoodsDaichiModelDB
     [Key]
     public int Id { get; set; }
 
-    /// <inheritdoc/>
-    public GoodsDaichiModelDB? Goods { get; set; }
 
     /// <inheritdoc/>
-    public int GoodsId { get; set; }
+    public ProductDaichiModelDB? Product { get; set; }
+
+    /// <inheritdoc/>
+    public int ProductId { get; set; }
+
 
     /// <inheritdoc/>
     public string? PRICE { get; set; }
 
     /// <inheritdoc/>
-    public required DateTime CreatedAt { get; set; }
+    public string? CURRENCY { get; set; }
 }

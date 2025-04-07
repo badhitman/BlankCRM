@@ -2,14 +2,13 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-
 namespace SharedLib;
 
 /// <inheritdoc/>
-public class GoodsDaichiBaseModel : DaichiEntryModel
+public class SectionParameterDaichiModelDB : EntryModel
 {
     /// <inheritdoc/>
-    [Newtonsoft.Json.JsonIgnore]
-    [System.Text.Json.Serialization.JsonIgnore]
-    public int KeyIndex { get; set; }
+    public ParameterEntryDaichiModelDB? Parent { get; set; }
+    /// <inheritdoc/>
+    public int ParentId { get; set; }
 }

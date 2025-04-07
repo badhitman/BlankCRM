@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
+using Newtonsoft.Json.Linq;
 
 namespace ApiDaichiBusinessService;
 
@@ -23,20 +24,91 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     {
         using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
 
-        TResponseModel<ProductsDaichiBusinessResultModel> data1 = default!;
-        TResponseModel<ProductsParamsDaichiBusinessResponseModel> data2 = default!;
-        TResponseModel<StoresDaichiBusinessResponseModel> data3 = default!;
-
+        TResponseModel<ProductsDaichiBusinessResultModel> products = default!;
+        TResponseModel<StoresDaichiBusinessResponseModel> stores = default!;
+        List<ParameterElementDaichiJsonModel> parametersAll = [];
         await Task.WhenAll([
-            Task.Run(async () => { data1 = await ProductsGetAsync(new ProductsRequestDaichiModel(), token); }, token),
-            Task.Run(async () => { data2 = await ProductsParamsGetAsync(new(){ PageSize = 100 }, token); }, token),
-            Task.Run(async () => { data3 = await StoresGetAsync(token); }, token)
+            Task.Run(async () =>
+            {
+                ProductParamsRequestDaichiModel _rq = new (){ PageSize = 100, Page = 1 };
+                TResponseModel<ProductsParamsDaichiBusinessResponseModel> data2 = await ProductsParamsGetAsync(_rq, token);
+                try
+                {
+                    while(data2.Response?.Result?.Data is not null && data2.Response.Result.Data.Count != 0)
+                    {
+                        parametersAll.AddRange( data2.Response.Result.Data.Values.Select(x =>
+                        {
+                            ParameterElementDaichiJsonModel res = x.ToObject<ParameterElementDaichiJsonModel>()!;
+                            JProperty[] _jpts = x.Properties().Where(x => x.Name.StartsWith("attr_", StringComparison.OrdinalIgnoreCase)).ToArray();
+                            res.Attributes = [.. _jpts.Select(x => x.First().ToObject<AttributeParameterDaichiModel>())];
+                            return res;
+                        }));
+                        _rq.Page++;
+                        data2 = await ProductsParamsGetAsync(_rq, token);
+                    }
+                }
+                catch(Exception ex){
+                    logger.LogError(ex, "Ошибка обработки товаров Daichi");
+                }
+
+            }, token),
+            Task.Run(async () => { products = await ProductsGetAsync(new ProductsRequestDaichiModel(), token); }, token),
+            Task.Run(async () => { stores = await StoresGetAsync(token); }, token)
             ]);
 
-        //await ctx.AddRangeAsync(parseData.Select(BreezRuElementModelDB.Build), token);
-        //await ctx.SaveChangesAsync(token);
+        if (stores.Response?.Result is null)
+            return ResponseBaseModel.CreateError("stores.Response?.Result is null");
 
-        return ResponseBaseModel.CreateSuccess($"Задание выполнено: {nameof(DownloadAndSaveAsync)}.");
+        if (products.Response?.GetProducts is null)
+            return ResponseBaseModel.CreateError("products.Response?.GetProducts");
+
+        await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await ctx.Database.BeginTransactionAsync(token);
+
+        await ctx.Stores.ExecuteDeleteAsync(cancellationToken: token);
+        await ctx.Products.ExecuteDeleteAsync(cancellationToken: token);
+        await ctx.Attributes.ExecuteDeleteAsync(cancellationToken: token);
+        await ctx.AvailabilityGoods.ExecuteDeleteAsync(cancellationToken: token);
+        await ctx.PricesProducts.ExecuteDeleteAsync(cancellationToken: token);
+        await ctx.ParametersCatalog.ExecuteDeleteAsync(cancellationToken: token);
+        await ctx.ParamsProducts.ExecuteDeleteAsync(cancellationToken: token);
+        await ctx.SectionsParameters.ExecuteDeleteAsync(cancellationToken: token);
+        await ctx.PhotosParameters.ExecuteDeleteAsync(cancellationToken: token);
+
+        List<StoreDaichiModelDB> storesDb = [.. stores.Response.Result.Select(StoreDaichiModelDB.Build)];
+        await ctx.AddRangeAsync(storesDb, token);
+        await ctx.SaveChangesAsync(token);
+
+        List<ProductDaichiModelDB> productsDb = [.. products.Response.GetProducts.Select(x => ProductDaichiModelDB.Build(x, storesDb))];
+        await ctx.AddRangeAsync(productsDb, token);
+        await ctx.SaveChangesAsync(token);
+
+        try
+        {
+            List<ParameterEntryDaichiModelDB> productsParametersDb = [.. parametersAll.Select(x => ParameterEntryDaichiModelDB.Build(x, productsDb))];
+            await ctx.AddRangeAsync(productsParametersDb, token);
+            await ctx.SaveChangesAsync(token);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Ошибка загрузки параметров Daichi");
+        }
+
+        await transaction.CommitAsync(token);
+
+        if (products.Response.Exceptions != null && products.Response.Exceptions.Count != 0)
+        {
+            ResponseBaseModel _r = ResponseBaseModel.CreateSuccess($"Задание выполнено (но с ошибками для {string.Join(",", products.Response.Exceptions.Select(z => z.Key))}): {nameof(DownloadAndSaveAsync)}.");
+
+            foreach (KeyValuePair<string, Exception> ex in products.Response.Exceptions)
+            {
+                _r.Messages.InjectException(ex.Value);
+                logger.LogError(ex.Value, $"Ошибка обработки товара: {ex.Key}");
+            }
+
+            return _r;
+        }
+        else
+            return ResponseBaseModel.CreateSuccess($"Задание выполнено: {nameof(DownloadAndSaveAsync)}.");
     }
 
     /// <inheritdoc/>
@@ -79,7 +151,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     {
         TResponseModel<ProductsParamsDaichiBusinessResponseModel> res = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString());
-        HttpResponseMessage response = await httpClient.GetAsync($"/productparams/get/?access-token={_conf.Value.Token}", token);
+        HttpResponseMessage response = await httpClient.GetAsync($"/productparams/get/?access-token={_conf.Value.Token}&page-size={req.PageSize}&page={req.Page}", token);
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -97,7 +169,14 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
             return res;
         }
 
-        res.Response = JsonConvert.DeserializeObject<ProductsParamsDaichiBusinessResponseModel>(responseBody);
+        try
+        {
+            res.Response = JsonConvert.DeserializeObject<ProductsParamsDaichiBusinessResponseModel>(responseBody);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Message, "Ошибка десериализации");
+        }
 
         if (res.Response is null)
         {

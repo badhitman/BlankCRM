@@ -65,4 +65,23 @@ public class ProductRusklimatModel : ProductRusklimatBaseModel
     /// для версии метода v2 - "уникальный идентификатор свойства": {"value": "значение свойства", "unit": "идентификатор единицы измерения(информацию по единицам измерения можно получить в другом методе - /api/v1/InternetPartner/units, см. Получение единиц измерения)"}
     /// </remarks>
     public Dictionary<string, JObject>? Properties { get; set; }
+
+    /// <summary>
+    /// Properties v2
+    /// </summary>
+    public Dictionary<string, ProductSimplePropertyModel>? PropertiesV2
+    {
+        get
+        {
+            if(Properties is null)
+                return null;
+
+            Dictionary<string, ProductSimplePropertyModel> res = [];
+
+            foreach (var kvp in Properties)
+                res.Add(kvp.Key, kvp.Value.ToObject<ProductSimplePropertyModel>()!);
+
+            return res;
+        }
+    }
 }

@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Связь свойства с товаром
 /// </summary>
-public class ProductPropertyRusklimatModelDB
+public class ProductPropertyRusklimatModelDB : ProductSimplePropertyModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -27,11 +27,20 @@ public class ProductPropertyRusklimatModelDB
     public int ProductId { get; set; }
 
     /// <summary>
-    /// Property
+    /// PropertyKey
     /// </summary>
-    public PropertyRusklimatModelDB? Property { get; set; }
-    /// <summary>
-    /// Property
-    /// </summary>
-    public int PropertyId { get; set; }
+    public string? PropertyKey { get; set; }
+
+
+    /// <inheritdoc/>
+    public static ProductPropertyRusklimatModelDB Build(KeyValuePair<string, ProductSimplePropertyModel> x, ProductRusklimatModelDB prod, PropertyRusklimatModelDB[] data)
+    {
+        return new()
+        {
+            Product = prod,
+            Value = x.Value.Value,
+            PropertyKey = x.Key,
+            Unit = x.Value.Unit,
+        };
+    }
 }

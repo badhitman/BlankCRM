@@ -24,4 +24,8 @@
 		<ProjectReference Include="..\DbLayerLib\DbLayerLib.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Migrations\ApiRusklimatCom\" />
+	</ItemGroup>
+
 </Project>

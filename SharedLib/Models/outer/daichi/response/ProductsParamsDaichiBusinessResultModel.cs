@@ -23,5 +23,5 @@ public class ProductsParamsDaichiBusinessResultModel
     /// Data
     /// </summary>
     [JsonProperty("data"), JsonPropertyName("data")]
-    public List<ParameterEntryDaichiModel>? Data { get; set; }
+    public Dictionary<string, JObject>? Data { get; set; }
 }

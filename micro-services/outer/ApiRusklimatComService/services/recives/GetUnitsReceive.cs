@@ -11,13 +11,13 @@ namespace Transmission.Receives.Outers.Rusklimat;
 /// GetUnits
 /// </summary>
 public class GetUnitsReceive(IRusklimatComApiService rusklimatRepo)
-    : IResponseReceive<object?, UnitsRusklimatResponseModel?>
+    : IResponseReceive<object?, TResponseModel<UnitsRusklimatResponseModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetUnitsRusklimatReceive;
 
     /// <inheritdoc/>
-    public async Task<UnitsRusklimatResponseModel?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)
+    public async Task<TResponseModel<UnitsRusklimatResponseModel>?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)
     {
         //ArgumentNullException.ThrowIfNull(payload);
         return await rusklimatRepo.GetUnitsAsync(token);

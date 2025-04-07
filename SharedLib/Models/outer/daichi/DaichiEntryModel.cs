@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace SharedLib;
 
 /// <inheritdoc/>
-[Index(nameof(XML_ID), IsUnique = true), Index(nameof(NAME))]
+[Index(nameof(XML_ID)), Index(nameof(NAME))]
 public class DaichiEntryModel
 {
     /// <inheritdoc/>

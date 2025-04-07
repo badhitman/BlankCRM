@@ -19,10 +19,10 @@ public static class RegisterMqListenerExtension
     {
         return services
             .RegisterMqListener<DownloadAndSaveReceive, object, ResponseBaseModel>()
-            .RegisterMqListener<GetCategoriesReceive, object, CategoriesRusklimatResponseModel>()
-            .RegisterMqListener<GetProductsReceive, PaginationRequestModel, ProductsRusklimatResponseModel>()
-            .RegisterMqListener<GetPropertiesReceive, object, PropertiesRusklimatResponseModel>()
-            .RegisterMqListener<GetUnitsReceive, object, UnitsRusklimatResponseModel>()
+            .RegisterMqListener<GetCategoriesReceive, object, TResponseModel<CategoriesRusklimatResponseModel>>()
+            .RegisterMqListener<GetProductsReceive, RusklimatPaginationRequestModel, TResponseModel<ProductsRusklimatResponseModel>>()
+            .RegisterMqListener<GetPropertiesReceive, object, TResponseModel<PropertiesRusklimatResponseModel>>()
+            .RegisterMqListener<GetUnitsReceive, object, TResponseModel<UnitsRusklimatResponseModel>>()
             ;
     }
 }

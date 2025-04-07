@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.ApiRusklimatCom
 {
     [DbContext(typeof(ApiRusklimatComContext))]
-    [Migration("20250405113839_ApiRusklimatComContext001")]
+    [Migration("20250408094134_ApiRusklimatComContext001")]
     partial class ApiRusklimatComContext001
     {
         /// <inheritdoc />
@@ -24,6 +24,24 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("SharedLib.CategoryRusklimatModelDB", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Parent")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Parent");
+
+                    b.ToTable("Categories", "public");
+                });
 
             modelBuilder.Entity("SharedLib.ProductInformationRusklimatModelDB", b =>
                 {
@@ -70,17 +88,19 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                     b.Property<string>("ProductId1")
                         .HasColumnType("text");
 
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("integer");
+                    b.Property<string>("PropertyKey")
+                        .HasColumnType("text");
 
-                    b.Property<string>("PropertyId1")
+                    b.Property<string>("Unit")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId1");
-
-                    b.HasIndex("PropertyId1");
 
                     b.ToTable("ProductsProperties", "public");
                 });
@@ -117,10 +137,16 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
+                    b.Property<int>("RemainsId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("VendorCode")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RemainsId")
+                        .IsUnique();
 
                     b.ToTable("Products", "public");
                 });
@@ -152,16 +178,10 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ProductId1")
-                        .HasColumnType("text");
-
                     b.Property<string>("Total")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId1");
 
                     b.ToTable("Remains", "public");
                 });
@@ -219,7 +239,7 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
             modelBuilder.Entity("SharedLib.ProductInformationRusklimatModelDB", b =>
                 {
                     b.HasOne("SharedLib.ProductRusklimatModelDB", "Product")
-                        .WithMany()
+                        .WithMany("Information")
                         .HasForeignKey("ProductId1");
 
                     b.Navigation("Product");
@@ -231,22 +251,18 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                         .WithMany("Properties")
                         .HasForeignKey("ProductId1");
 
-                    b.HasOne("SharedLib.PropertyRusklimatModelDB", "Property")
-                        .WithMany()
-                        .HasForeignKey("PropertyId1");
-
                     b.Navigation("Product");
-
-                    b.Navigation("Property");
                 });
 
-            modelBuilder.Entity("SharedLib.RemainsRusklimatModelDB", b =>
+            modelBuilder.Entity("SharedLib.ProductRusklimatModelDB", b =>
                 {
-                    b.HasOne("SharedLib.ProductRusklimatModelDB", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId1");
+                    b.HasOne("SharedLib.RemainsRusklimatModelDB", "Remains")
+                        .WithOne("Product")
+                        .HasForeignKey("SharedLib.ProductRusklimatModelDB", "RemainsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("Remains");
                 });
 
             modelBuilder.Entity("SharedLib.WarehouseRemainsRusklimatModelDB", b =>
@@ -262,11 +278,15 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
 
             modelBuilder.Entity("SharedLib.ProductRusklimatModelDB", b =>
                 {
+                    b.Navigation("Information");
+
                     b.Navigation("Properties");
                 });
 
             modelBuilder.Entity("SharedLib.RemainsRusklimatModelDB", b =>
                 {
+                    b.Navigation("Product");
+
                     b.Navigation("WarehousesRemains");
                 });
 #pragma warning restore 612, 618
