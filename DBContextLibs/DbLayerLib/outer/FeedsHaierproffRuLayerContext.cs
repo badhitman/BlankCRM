@@ -39,7 +39,7 @@ public abstract partial class FeedsHaierProffRuLayerContext : DbContext
     /// <summary>
     /// ProductsFeedsRss
     /// </summary>
-    public DbSet<FeedItemHaierModelDB> ProductsFeedsRss { get; set; }
+    public DbSet<ProductHaierModelDB> ProductsFeedsRss { get; set; }
 
     /// <summary>
     /// FilesFeedsRss
@@ -49,10 +49,10 @@ public abstract partial class FeedsHaierProffRuLayerContext : DbContext
     /// <summary>
     /// SectionOptionFeedItemHaierModelDB
     /// </summary>
-    public DbSet<SectionOptionFeedItemHaierModelDB> SectionsOptionsFeedsRss { get; set; }
+    public DbSet<SectionOptionHaierModelDB> SectionsOptionsFeedsRss { get; set; }
 
     /// <summary>
     /// OptionsFeedsRss
     /// </summary>
-    public DbSet<OptionFeedItemHaierModelDB> OptionsFeedsRss { get; set; }
+    public DbSet<OptionHaierModelDB> OptionsFeedsRss { get; set; }
 }

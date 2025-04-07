@@ -2,14 +2,16 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
 /// <summary>
-/// FileFeedItemHaierModelDB
+/// SectionOptionHaierModelDB
 /// </summary>
-public class FileFeedItemHaierModelDB : FileFeedItemHaierModel
+[Index(nameof(Name))]
+public class SectionOptionHaierModelDB
 {
     /// <summary>
     /// Идентификатор/Key
@@ -17,6 +19,8 @@ public class FileFeedItemHaierModelDB : FileFeedItemHaierModel
     [Key]
     public int Id { get; set; }
 
+    /// <inheritdoc/>
+    public required string Name { get; set; }
 
     /// <inheritdoc/>
     public ProductHaierModelDB? Product { get; set; }
@@ -24,14 +28,18 @@ public class FileFeedItemHaierModelDB : FileFeedItemHaierModel
     public int ProductId { get; set; }
 
     /// <inheritdoc/>
-    public static FileFeedItemHaierModelDB Build(FileFeedItemHaierModel x, ProductHaierModelDB p)
+    public List<OptionHaierModelDB>? Options { get; set; }
+
+    /// <inheritdoc/>
+    public static SectionOptionHaierModelDB Build(SectionOptionFeedItemHaierModel x, ProductHaierModelDB p)
     {
-        return new FileFeedItemHaierModelDB()
+        SectionOptionHaierModelDB res = new()
         {
             Name = x.Name,
-            Url = x.Url,
             Product = p,
             ProductId = p.Id,
         };
+        res.Options = [.. x.Options.Select(y => OptionHaierModelDB.Build(y, res))];
+        return res;
     }
 }

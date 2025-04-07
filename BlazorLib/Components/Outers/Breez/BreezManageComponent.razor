@@ -2,5 +2,11 @@
 
 <h3>Breez</h3>
 <div class="d-grid gap-2">
-    <button @onclick="Download" class="btn btn-primary" type="button">Загрузить</button>
+    <button disabled="@IsBusyProgress" @onclick="Download" class="btn btn-primary" type="button">
+        @if (IsBusyProgress)
+        {
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        }
+        <span class="@(IsBusyProgress ? "ms-2" : "")" role="status">@(IsBusyProgress ? "Загружается ..." : "Загрузить")</span>
+    </button>
 </div>

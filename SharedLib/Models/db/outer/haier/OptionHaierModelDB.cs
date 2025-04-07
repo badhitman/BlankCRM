@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// OptionFeedItemHaierModelDB
+/// OptionHaierModelDB
 /// </summary>
-public class OptionFeedItemHaierModelDB : OptionFeedItemHaierModel
+public class OptionHaierModelDB : OptionFeedItemHaierModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -18,7 +18,19 @@ public class OptionFeedItemHaierModelDB : OptionFeedItemHaierModel
     public int Id { get; set; }
 
     /// <inheritdoc/>
-    public SectionOptionFeedItemHaierModelDB? Section { get; set; }
+    public SectionOptionHaierModelDB? Section { get; set; }
     /// <inheritdoc/>
     public int SectionId { get; set; }
+
+    /// <inheritdoc/>
+    public static OptionHaierModelDB Build(OptionFeedItemHaierModel o, SectionOptionHaierModelDB s)
+    {
+        return new()
+        {
+            Name = o.Name,
+            Value = o.Value,
+            Section = s,
+            SectionId = s.Id,
+        };
+    }
 }

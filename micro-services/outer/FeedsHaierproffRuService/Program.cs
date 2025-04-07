@@ -116,7 +116,7 @@ public class Program
 
         builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.FeedsHaierProffRu.ToString(), cc =>
         {
-            cc.BaseAddress = new Uri($"https://haierproff.ru/feeds");            
+            cc.BaseAddress = new Uri($"https://haierproff.ru/feeds/");            
         });
 
         // Custom metrics for the application

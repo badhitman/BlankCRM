@@ -2,11 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// FeedItemHaierBaseModel
 /// </summary>
+[Index(nameof(Price)), Index(nameof(Category)), Index(nameof(ParentCategory)), Index(nameof(AllArticles))]
 public class FeedItemHaierBaseModel
 {
     /// <inheritdoc/>

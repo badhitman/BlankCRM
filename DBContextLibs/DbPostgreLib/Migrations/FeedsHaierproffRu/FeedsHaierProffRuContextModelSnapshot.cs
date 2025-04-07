@@ -22,7 +22,63 @@ namespace DbPostgreLib.Migrations.FeedsHaierProffRu
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("SharedLib.FeedItemHaierModelDB", b =>
+            modelBuilder.Entity("SharedLib.FileFeedItemHaierModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("FilesFeedsRss", "public");
+                });
+
+            modelBuilder.Entity("SharedLib.OptionHaierModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("SectionId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("SectionId");
+
+                    b.HasIndex("Value");
+
+                    b.ToTable("OptionsFeedsRss", "public");
+                });
+
+            modelBuilder.Entity("SharedLib.ProductHaierModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,62 +117,18 @@ namespace DbPostgreLib.Migrations.FeedsHaierProffRu
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AllArticles");
+
+                    b.HasIndex("Category");
+
+                    b.HasIndex("ParentCategory");
+
+                    b.HasIndex("Price");
+
                     b.ToTable("ProductsFeedsRss", "public");
                 });
 
-            modelBuilder.Entity("SharedLib.FileFeedItemHaierModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("FilesFeedsRss", "public");
-                });
-
-            modelBuilder.Entity("SharedLib.OptionFeedItemHaierModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("SectionId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SectionId");
-
-                    b.ToTable("OptionsFeedsRss", "public");
-                });
-
-            modelBuilder.Entity("SharedLib.SectionOptionFeedItemHaierModelDB", b =>
+            modelBuilder.Entity("SharedLib.SectionOptionHaierModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -132,6 +144,8 @@ namespace DbPostgreLib.Migrations.FeedsHaierProffRu
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("ProductId");
 
@@ -140,7 +154,7 @@ namespace DbPostgreLib.Migrations.FeedsHaierProffRu
 
             modelBuilder.Entity("SharedLib.FileFeedItemHaierModelDB", b =>
                 {
-                    b.HasOne("SharedLib.FeedItemHaierModelDB", "Product")
+                    b.HasOne("SharedLib.ProductHaierModelDB", "Product")
                         .WithMany("Files")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -149,9 +163,9 @@ namespace DbPostgreLib.Migrations.FeedsHaierProffRu
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("SharedLib.OptionFeedItemHaierModelDB", b =>
+            modelBuilder.Entity("SharedLib.OptionHaierModelDB", b =>
                 {
-                    b.HasOne("SharedLib.SectionOptionFeedItemHaierModelDB", "Section")
+                    b.HasOne("SharedLib.SectionOptionHaierModelDB", "Section")
                         .WithMany("Options")
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -160,9 +174,9 @@ namespace DbPostgreLib.Migrations.FeedsHaierProffRu
                     b.Navigation("Section");
                 });
 
-            modelBuilder.Entity("SharedLib.SectionOptionFeedItemHaierModelDB", b =>
+            modelBuilder.Entity("SharedLib.SectionOptionHaierModelDB", b =>
                 {
-                    b.HasOne("SharedLib.FeedItemHaierModelDB", "Product")
+                    b.HasOne("SharedLib.ProductHaierModelDB", "Product")
                         .WithMany("SectionsOptions")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -171,14 +185,14 @@ namespace DbPostgreLib.Migrations.FeedsHaierProffRu
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("SharedLib.FeedItemHaierModelDB", b =>
+            modelBuilder.Entity("SharedLib.ProductHaierModelDB", b =>
                 {
                     b.Navigation("Files");
 
                     b.Navigation("SectionsOptions");
                 });
 
-            modelBuilder.Entity("SharedLib.SectionOptionFeedItemHaierModelDB", b =>
+            modelBuilder.Entity("SharedLib.SectionOptionHaierModelDB", b =>
                 {
                     b.Navigation("Options");
                 });

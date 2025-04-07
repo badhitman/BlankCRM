@@ -110,10 +110,52 @@ namespace DbPostgreLib.Migrations.FeedsHaierProffRu
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OptionsFeedsRss_Name",
+                schema: "public",
+                table: "OptionsFeedsRss",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OptionsFeedsRss_SectionId",
                 schema: "public",
                 table: "OptionsFeedsRss",
                 column: "SectionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OptionsFeedsRss_Value",
+                schema: "public",
+                table: "OptionsFeedsRss",
+                column: "Value");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsFeedsRss_AllArticles",
+                schema: "public",
+                table: "ProductsFeedsRss",
+                column: "AllArticles");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsFeedsRss_Category",
+                schema: "public",
+                table: "ProductsFeedsRss",
+                column: "Category");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsFeedsRss_ParentCategory",
+                schema: "public",
+                table: "ProductsFeedsRss",
+                column: "ParentCategory");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsFeedsRss_Price",
+                schema: "public",
+                table: "ProductsFeedsRss",
+                column: "Price");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SectionsOptionsFeedsRss_Name",
+                schema: "public",
+                table: "SectionsOptionsFeedsRss",
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SectionsOptionsFeedsRss_ProductId",

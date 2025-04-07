@@ -8,6 +8,7 @@ using DbcLib;
 using System.Xml.Linq;
 using System.Text;
 using System.Collections.Generic;
+using DocumentFormat.OpenXml.InkML;
 
 namespace FeedsHaierProffRuService;
 
@@ -19,7 +20,6 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
 #pragma warning restore CS9113 // Параметр не прочитан.
     : IFeedsHaierProffRuService
 {
-
     /// <inheritdoc/>
 #pragma warning disable CS1998 // В асинхронном методе отсутствуют операторы await, будет выполнен синхронный метод
     public async Task<TResponseModel<List<FeedItemHaierModel>>> ProductsFeedGetAsync(CancellationToken token = default)
@@ -27,12 +27,12 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
     {
         TResponseModel<List<FeedItemHaierModel>> result = new();
         XDocument xd;
-#if DEBUG
+#if !DEBUG
         xd = XDocument.Parse(Encoding.UTF8.GetString(Properties.Resources.Haierproff_feed_demo_rss_xml));
 #else
         string msg, responseBody;
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.FeedsHaierProffRu.ToString());
-        HttpResponseMessage response = await httpClient.GetAsync("/cond/?type=partners", token);
+        HttpResponseMessage response = await httpClient.GetAsync("cond/?type=partners", token);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -50,7 +50,9 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
             result.AddError(msg);
             return result;
         }
+        responseBody = responseBody.Replace("&ndash;", "-").Replace("&shy;", "");
         xd = XDocument.Parse(responseBody);
+
 #endif
         if (xd.Root is null)
         {
@@ -58,7 +60,7 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
             return result;
         }
 
-        List<FeedItemHaierModel> parseData = [.. xd.Root.Descendants()
+        result.Response = [.. xd.Root.Descendants()
                       .First(i => i.Name.LocalName == "channel")
                       .Elements()
                       .Where(i => i.Name.LocalName == "item").Select(item =>
@@ -81,7 +83,7 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
                           return _el;
                       })];
 
-        result.AddSuccess($"Загружено {parseData.Count}");
+        result.AddSuccess($"Из RSS прочитано: {result.Response.Count}");
         return result;
     }
 
@@ -90,10 +92,23 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
     {
         ResponseBaseModel result = new();
         TResponseModel<List<FeedItemHaierModel>> read = await ProductsFeedGetAsync(token);
-
-        FeedsHaierProffRuContext ctx = await dbFactory.CreateDbContextAsync(token);
-
         result.AddRangeMessages(read.Messages);
+        if (read.Response is not null && read.Response.Count != 0)
+        {
+            FeedsHaierProffRuContext ctx = await dbFactory.CreateDbContextAsync(token);
+            await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await ctx.Database.BeginTransactionAsync(token);
+
+            await ctx.FilesFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
+            await ctx.OptionsFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
+            await ctx.SectionsOptionsFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
+            await ctx.ProductsFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
+
+            await ctx.AddRangeAsync(read.Response.Select(ProductHaierModelDB.Build), token);
+            await ctx.SaveChangesAsync(token);
+
+            await transaction.CommitAsync(token);
+        }
+
         return result;
     }
 
