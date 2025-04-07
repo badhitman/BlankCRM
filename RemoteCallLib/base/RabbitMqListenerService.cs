@@ -127,19 +127,19 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
             try
             {
                 sr = System.Text.Json.JsonSerializer.Deserialize<TRequest?>(ea.Body.ToArray());
-                answer.Response = await receiveService.ResponseHandleAction(sr);
+                answer.Response = await receiveService.ResponseHandleActionAsync(sr);
             }
             catch (Exception ex)
             {
                 answer.Messages.InjectException(ex);
                 LoggerRepo.LogError(ex, $"Ошибка выполнения удалённой команды: {QueueName}");
             }
-            answer.Finalized = DateTime.UtcNow;
+            answer.FinalizedServer = DateTime.UtcNow;
             if (!string.IsNullOrWhiteSpace(ea.BasicProperties.ReplyTo))
             {
                 try
                 {
-                    _channel.BasicPublish(exchange: "", routingKey: ea.BasicProperties.ReplyTo, basicProperties: null, body: System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(result_handler, GlobalStaticConstants.JsonSerializerSettings));
+                    _channel.BasicPublish(exchange: "", routingKey: ea.BasicProperties.ReplyTo, basicProperties: null, body: System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(answer));
                 }
                 finally
                 {
