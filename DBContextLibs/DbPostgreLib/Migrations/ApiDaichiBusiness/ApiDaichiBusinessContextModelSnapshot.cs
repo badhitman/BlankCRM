@@ -50,7 +50,15 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CODE");
+
+                    b.HasIndex("GROUP");
+
+                    b.HasIndex("NAME");
+
                     b.HasIndex("ParentId");
+
+                    b.HasIndex("VALUE");
 
                     b.ToTable("Attributes", "public");
                 });

@@ -23,7 +23,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("SharedLib.BreezRuElementModelDB", b =>
+            modelBuilder.Entity("SharedLib.BreezRuLeftoverModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,7 +88,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
                     b.HasIndex("TimeLastUpdate");
 
-                    b.ToTable("Goods", "public");
+                    b.ToTable("Leftovers", "public");
                 });
 #pragma warning restore 612, 618
         }

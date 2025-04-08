@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.ApiDaichiBusiness
 {
     [DbContext(typeof(ApiDaichiBusinessContext))]
-    [Migration("20250408054718_ApiDaichiBusinessContext001")]
+    [Migration("20250408135148_ApiDaichiBusinessContext001")]
     partial class ApiDaichiBusinessContext001
     {
         /// <inheritdoc />
@@ -53,7 +53,15 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CODE");
+
+                    b.HasIndex("GROUP");
+
+                    b.HasIndex("NAME");
+
                     b.HasIndex("ParentId");
+
+                    b.HasIndex("VALUE");
 
                     b.ToTable("Attributes", "public");
                 });

@@ -63,7 +63,7 @@ public class ProductsDaichiBusinessResultModel
         catch (Exception ex)
         {
             Exceptions ??= [];
-            Exceptions.TryAdd(entry.Name, ex);
+            Exceptions.TryAdd(entry.Name, new Exception(entry.First().ToString(), ex));
             return null;
         }
     }

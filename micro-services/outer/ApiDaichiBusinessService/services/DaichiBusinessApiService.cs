@@ -4,10 +4,10 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
-using Newtonsoft.Json.Linq;
 
 namespace ApiDaichiBusinessService;
 
@@ -175,7 +175,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Message, "Ошибка десериализации");
+            logger.LogError(ex.Message, $"Ошибка десериализации:\n{responseBody}");
         }
 
         if (res.Response is null)

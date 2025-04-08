@@ -2,11 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// AttributeParameterDaichiModel
 /// </summary>
+[Index(nameof(CODE)), Index(nameof(NAME)), Index(nameof(VALUE)), Index(nameof(GROUP))]
 public class AttributeParameterDaichiModel
 {
     /// <inheritdoc/>

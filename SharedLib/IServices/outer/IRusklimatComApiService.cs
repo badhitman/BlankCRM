@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// b2b rusklimat api
 /// </summary>
-public interface IRusklimatComApiService : IOuterApiBaseService
+public interface IRusklimatComApiService : IOuterApiService
 {
     /// <summary>
     /// Получение единиц измерения

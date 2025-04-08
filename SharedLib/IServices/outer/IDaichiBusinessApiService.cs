@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Daichi business api
 /// </summary>
-public interface IDaichiBusinessApiService : IOuterApiBaseService
+public interface IDaichiBusinessApiService : IOuterApiService
 {
     /// <summary>
     /// Получение списка доступных складов

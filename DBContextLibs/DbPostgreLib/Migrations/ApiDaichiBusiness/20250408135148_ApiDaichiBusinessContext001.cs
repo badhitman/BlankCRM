@@ -222,10 +222,34 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Attributes_CODE",
+                schema: "public",
+                table: "Attributes",
+                column: "CODE");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Attributes_GROUP",
+                schema: "public",
+                table: "Attributes",
+                column: "GROUP");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Attributes_NAME",
+                schema: "public",
+                table: "Attributes",
+                column: "NAME");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Attributes_ParentId",
                 schema: "public",
                 table: "Attributes",
                 column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Attributes_VALUE",
+                schema: "public",
+                table: "Attributes",
+                column: "VALUE");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AvailabilityGoods_ProductId",

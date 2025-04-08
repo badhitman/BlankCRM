@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Breez.ru api
 /// </summary>
-public interface IBreezRuApiService : IOuterApiBaseService
+public interface IBreezRuApiService : IOuterApiService
 {
     /// <summary>
     /// остатки на доступных складах

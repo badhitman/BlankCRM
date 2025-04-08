@@ -28,9 +28,9 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
         using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
         await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await ctx.Database.BeginTransactionAsync(token);
 
-        await ctx.Goods.ExecuteDeleteAsync(cancellationToken: token);
+        await ctx.Leftovers.ExecuteDeleteAsync(cancellationToken: token);
 
-        await ctx.AddRangeAsync(jsonData.Response.Select(BreezRuElementModelDB.Build), token);
+        await ctx.AddRangeAsync(jsonData.Response.Select(BreezRuLeftoverModelDB.Build), token);
         await ctx.SaveChangesAsync(token);
 
         await transaction.CommitAsync(token);

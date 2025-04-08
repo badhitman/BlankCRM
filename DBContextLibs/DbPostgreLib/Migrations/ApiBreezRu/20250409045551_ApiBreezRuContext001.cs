@@ -16,7 +16,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 name: "public");
 
             migrationBuilder.CreateTable(
-                name: "Goods",
+                name: "Leftovers",
                 schema: "public",
                 columns: table => new
                 {
@@ -36,55 +36,55 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Goods", x => x.Id);
+                    table.PrimaryKey("PK_Leftovers", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Goods_Articul",
+                name: "IX_Leftovers_Articul",
                 schema: "public",
-                table: "Goods",
+                table: "Leftovers",
                 column: "Articul");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Goods_CodeNC",
+                name: "IX_Leftovers_CodeNC",
                 schema: "public",
-                table: "Goods",
+                table: "Leftovers",
                 column: "CodeNC");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Goods_CurrencyBasePrice",
+                name: "IX_Leftovers_CurrencyBasePrice",
                 schema: "public",
-                table: "Goods",
+                table: "Leftovers",
                 column: "CurrencyBasePrice");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Goods_CurrencyRIC",
+                name: "IX_Leftovers_CurrencyRIC",
                 schema: "public",
-                table: "Goods",
+                table: "Leftovers",
                 column: "CurrencyRIC");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Goods_LoadedDateTime",
+                name: "IX_Leftovers_LoadedDateTime",
                 schema: "public",
-                table: "Goods",
+                table: "Leftovers",
                 column: "LoadedDateTime");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Goods_Quantity",
+                name: "IX_Leftovers_Quantity",
                 schema: "public",
-                table: "Goods",
+                table: "Leftovers",
                 column: "Quantity");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Goods_Stock",
+                name: "IX_Leftovers_Stock",
                 schema: "public",
-                table: "Goods",
+                table: "Leftovers",
                 column: "Stock");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Goods_TimeLastUpdate",
+                name: "IX_Leftovers_TimeLastUpdate",
                 schema: "public",
-                table: "Goods",
+                table: "Leftovers",
                 column: "TimeLastUpdate");
         }
 
@@ -92,7 +92,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Goods",
+                name: "Leftovers",
                 schema: "public");
         }
     }

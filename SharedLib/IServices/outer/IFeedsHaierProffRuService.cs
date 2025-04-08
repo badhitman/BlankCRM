@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// IFeedsHaierProffRuService
 /// </summary>
-public interface IFeedsHaierProffRuService : IOuterApiBaseService
+public interface IFeedsHaierProffRuService : IOuterApiService
 {
     /// <summary>
     /// Получение товаров из rss/feed

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.ApiBreezRu
 {
     [DbContext(typeof(ApiBreezRuContext))]
-    [Migration("20250402051731_ApiBreezRuContext001")]
+    [Migration("20250409045551_ApiBreezRuContext001")]
     partial class ApiBreezRuContext001
     {
         /// <inheritdoc />
@@ -26,7 +26,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("SharedLib.BreezRuElementModelDB", b =>
+            modelBuilder.Entity("SharedLib.BreezRuLeftoverModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,7 +91,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
                     b.HasIndex("TimeLastUpdate");
 
-                    b.ToTable("Goods", "public");
+                    b.ToTable("Leftovers", "public");
                 });
 #pragma warning restore 612, 618
         }

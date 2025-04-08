@@ -37,7 +37,7 @@ public abstract partial class ApiBreezRuLayerContext : DbContext
     }
 
     /// <summary>
-    /// Goods
+    /// остатки на складах
     /// </summary>
-    public DbSet<BreezRuElementModelDB> Goods { get; set; }
+    public DbSet<BreezRuLeftoverModelDB> Leftovers { get; set; }
 }

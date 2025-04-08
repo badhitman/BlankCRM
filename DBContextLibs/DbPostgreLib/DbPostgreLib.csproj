@@ -25,7 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Migrations\ApiRusklimatCom\" />
+	  <Folder Include="Migrations\ApiBreezRu\" />
 	</ItemGroup>
 
 </Project>
