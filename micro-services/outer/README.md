@@ -7,7 +7,9 @@
  - https://haierproff.ru - partners feeds (публичный)
 
 #### Настройки
-пример в [файле](outers-credentials-example.json)
+пример в [файле](outers-credentials-example.json).
+haietprof - предоставляет публичный rss поток без наличия.
+остальные источники требуют авторизации.
 ```json
 "RusklimarApiConfig": {
     "UserId": "0001112233",
