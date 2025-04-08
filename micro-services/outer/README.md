@@ -1,10 +1,10 @@
-﻿## Внешние источники данных (api/rest etc...)
+## Внешние источники данных (api/rest etc...)
 
 
  - https://breez.ru - api
  - https://daichi.ru - b2b
  - https://rusklimat.com - api
- - https://haierproff.ru - partners feeds
+ - https://haierproff.ru - partners feeds (публичный)
 
 #### Настройки
 пример в [файле](outers-credentials-example.json)
