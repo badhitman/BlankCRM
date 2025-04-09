@@ -1,4 +1,0 @@
-# DesignerMetaApp
-Design App
-
-# TERMS
