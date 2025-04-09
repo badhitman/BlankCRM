@@ -1,0 +1,95 @@
+﻿@using BlazorLib.Components.Kladr.control.find
+@inherits BlazorBusyComponentBaseModel
+
+<MudDialog>
+    <TitleContent>
+        <MudStack>@MudDialog.Title</MudStack>
+    </TitleContent>
+    <DialogContent>
+        <MudAutocomplete @bind-Value="SelectedRegionName"
+                         SearchFunc="SearchRegion"
+                         Disabled="IsBusyProgress"
+                         Placeholder="Регион"
+                         HelperText="Регион"
+                         HelperTextOnFocus
+                         Label="Регион"
+                         Dense />
+
+        @if (IsBusyProgress && CurrentRegion is null)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="mb-2" />
+        }
+        @if (SelectionProgressSteps.Count != 0)
+        {
+            <ul class="list-group list-group-flush mb-2">
+                @foreach (RootKLADRModelDB kladrRow in SelectionProgressSteps)
+                {
+                    <li class="list-group-item">@kladrRow.ToString()</li>
+                }
+            </ul>
+        }
+
+        @if (CurrentRegion is not null)
+        {
+            if (CurrentMD is null || CurrentMD.Level < KladrTypesObjectsEnum.Street)
+            {
+                <div class="input-group mb-3">
+                    @if (IsBusyProgress)
+                    {
+                        <button class="btn btn-outline-info" type="button" disabled title="Обработка запроса выполняется">
+                            <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                            <span class="visually-hidden" role="status">Loading...</span>
+                        </button>
+                    }
+                    <input @bind="FindName" type="text" class="form-control" placeholder="Поиск адреса" disabled="@IsBusyProgress">
+                    <button @onclick="async () => { if(!IsBusyProgress){ await RebuildTable(); }}" class="btn btn-outline-secondary" type="button" disabled="@IsBusyProgress">Найти</button>
+                </div>
+            }
+
+            @if (string.IsNullOrWhiteSpace(FindName) && SelectionProgressSteps.Count == 0)
+            {
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>Введите строку поиска.</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        С учётом <cite title="регистр символа будет учтён для точного совпадения">регистра</cite>
+                    </figcaption>
+                </figure>
+            }
+            else if (!hideTable)
+            {
+                <MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress">
+                    <ToolBarContent>
+                        <span class="font-monospace">@(IsBusyProgress ? "Запрос обрабатывается" : (partData is null || partData.Count == 0 ? "ни чего не найдено" : "Выберете из перечня, пожалуйста"))</span>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd><KladrFindTableRowComponent KladrRow="context" HighlightedText="@FindName" SelectionHandler="SelectRowAction" SkipBreadcrumbs="@(SelectionProgressSteps.Count + 1)" /></MudTd>
+                    </RowTemplate>
+                    <NoRecordsContent>
+                        <figure class="text-center">
+                            <blockquote class="blockquote">
+                                <p>Проверьте строку поиска.</p>
+                            </blockquote>
+                            <figcaption class="blockquote-footer">
+                                Поиск учитывает <cite title="регистр символа будет учтён для точного совпадения">регистр букв</cite>.
+                            </figcaption>
+                        </figure>
+                    </NoRecordsContent>
+                    <LoadingContent>
+                        <MudText>Поиск...</MudText>
+                    </LoadingContent>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+            }
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отмена</MudButton>
+    </DialogActions>
+</MudDialog>

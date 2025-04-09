@@ -1,0 +1,6 @@
+﻿<MudSelect T="string" Label="@Title" MultiSelection="true" @bind-Value="_value" @bind-SelectedValues="_options">
+    @foreach (var state in States)
+    {
+        <MudSelectItem T="string" Value="@state">@state</MudSelectItem>
+    }
+</MudSelect>

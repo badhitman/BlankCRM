@@ -1,0 +1,50 @@
+﻿@page "/Account/Manage/Email"
+@attribute [Authorize]
+@using System.Net.Mail
+
+@inject NavigationManager NavigationManager
+@inject IUsersProfilesService UsersProfilesRepo
+@inject IIdentityTransmission IdentityRepo
+
+@inherits BlazorBusyComponentBaseAuthModel
+
+<PageTitle>Управление электронной почтой</PageTitle>
+
+<h3>Управление электронной почтой</h3>
+
+<StatusMessage Messages="@Messages" />
+<div class="row">
+    <div class="col-md-6">
+        <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
+            <AntiforgeryToken />
+        </form>
+        <EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+            @if (isEmailConfirmed)
+            {
+                <div class="form-floating mb-3 input-group">
+                    <input type="text" value="@email" class="form-control" placeholder="Пожалуйста, введите свой адрес электронной почты." disabled />
+                    <div class="input-group-append">
+                        <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
+                    </div>
+                    <label for="email" class="form-label">Email</label>
+                </div>
+            }
+            else
+            {
+                <div class="form-floating mb-3">
+                    <input type="text" value="@email" class="form-control" placeholder="Пожалуйста, введите свой адрес электронной почты." disabled />
+                    <label for="email" class="form-label">Email</label>
+                    <button type="submit" class="btn btn-link" form="send-verification-form">Отправить письмо с подтверждением</button>
+                </div>
+            }
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Пожалуйста, введите новый адрес электронной почты." />
+                <label for="new-email" class="form-label">Новый E-mail</label>
+                <ValidationMessage For="() => Input.NewEmail" class="text-danger" />
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Изменить e-mail</button>
+        </EditForm>
+    </div>
+</div>

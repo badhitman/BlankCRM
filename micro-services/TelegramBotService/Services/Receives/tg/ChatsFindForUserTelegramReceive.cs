@@ -1,0 +1,25 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using RemoteCallLib;
+using SharedLib;
+
+namespace Transmission.Receives.telegram;
+
+/// <summary>
+/// Найти чаты пользователей
+/// </summary>
+public class ChatsFindForUserTelegramReceive(ITelegramBotService tgRepo)
+    : IResponseReceive<long[]?, List<ChatTelegramModelDB>?>
+{
+    /// <inheritdoc/>
+    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ChatsFindForUserTelegramReceive;
+
+    /// <inheritdoc/>
+    public async Task<List<ChatTelegramModelDB>?> ResponseHandleActionAsync(long[]? chats_ids, CancellationToken token = default)
+    {
+        ArgumentNullException.ThrowIfNull(chats_ids);
+        return await tgRepo.ChatsFindForUserTelegramAsync(chats_ids, token);
+    }
+}

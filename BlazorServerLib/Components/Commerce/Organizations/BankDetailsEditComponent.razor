@@ -1,0 +1,59 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentBaseAuthModel
+
+<MudDialog>
+    <TitleContent>
+        @MudDialog.Title
+    </TitleContent>
+    <DialogContent>
+        @if (BankDetails.OrganizationId < 1)
+        {
+            <figure class="text-center">
+                <blockquote class="blockquote">
+                    <p>Объект не записан.</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    Запишите организацию <cite title="CurrentOrganization.BansDetails is null">для добавления реквизитов</cite>
+                </figcaption>
+            </figure>
+        }
+        else if (bankDetailsEdit is null)
+        {
+            <p class="lead">
+                bankDetailsEdit is null
+            </p>
+        }
+        else
+        {
+            <div class="mb-2">
+                <label for="inputCurrentAccount" class="form-label">Расчетный счет</label>
+                <input @bind-value="bankDetailsEdit.CurrentAccount" @bind-value:event="oninput" type="text" id="inputCurrentAccount" class="form-control" aria-describedby="currentAccountHelpBlock">
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label for="inputBankName" class="form-label">Банк</label>
+                    <input @bind-value="bankDetailsEdit.Name" @bind-value:event="oninput" type="text" id="inputBankName" class="form-control" aria-describedby="bankNameHelpBlock">
+                </div>
+                <div class="col-md-4">
+                    <label for="inputBankBIC" class="form-label">БИК</label>
+                    <input @bind-value="bankDetailsEdit.BankBIC" @bind-value:event="oninput" type="text" id="inputBankBIC" class="form-control" aria-describedby="bankBICHelpBlock">
+                </div>
+                <div class="col-md-4">
+                    <label for="inputCorrespondentAccount" class="form-label">Корр. счет</label>
+                    <input @bind-value="bankDetailsEdit.CorrespondentAccount" @bind-value:event="oninput" type="text" id="inputCorrespondentAccount" class="form-control" aria-describedby="correspondentAccountHelpBlock">
+                </div>
+                <MudSwitch @bind-Value="bankDetailsEdit.IsDisabled" Label="Отключение" Color="Color.Success" />
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Адрес банка</label>
+                <input @bind-value="bankDetailsEdit.BankAddress" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">Город.</div>
+            </div>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>

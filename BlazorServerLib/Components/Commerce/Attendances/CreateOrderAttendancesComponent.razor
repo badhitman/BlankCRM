@@ -1,0 +1,127 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentBaseAuthModel
+
+<style>
+    .mud-table-cell-custom-group {
+        font-weight: 500;
+    }
+
+    .mud-table-cell-custom-group-footer {
+        padding-bottom: 50px;
+        text-align: right;
+    }
+</style>
+
+<div class="card">
+    <div class="card-body" id="select-range-dt">
+        <h5 class="card-title">
+            Услуги
+            @if (IsBusyProgress)
+            {
+                <sup class="spinner-grow spinner-grow-sm text-primary"></sup>
+            }
+            else
+            {
+                <sup title="Обновить" @onclick="ServerReload" style="cursor:pointer;" class="bi bi-arrow-clockwise text-success-emphasis"></sup>
+            }
+        </h5>
+        <div class="input-group mb-1 mt-2">
+            <label class="input-group-text" for="select-offer">Offer</label>
+            <select @bind="SelectedOfferId" class="form-select" aria-label="Выбор услуги" id="select-offer">
+                @foreach (IGrouping<NomenclatureModelDB?, OfferModelDB> opt_g in OffersNodes)
+                {
+                    <optgroup label="@opt_g.Key!.Name">
+                        @foreach (OfferModelDB opt in opt_g)
+                        {
+                            <option value="@opt.Id">@opt.GetName()</option>
+                        }
+                    </optgroup>
+                }
+            </select>
+        </div>
+
+        <MudDateRangePicker Label="Период"
+                            @bind-DateRange="SelectedDateRange"
+                            Orientation="Orientation.Landscape"
+                            Editable="true"
+                            PickerVariant="PickerVariant.Static"
+                            IsDateDisabledFunc="IsDateDisabledHandler"
+                            AdditionalDateClassesFunc="AdditionalDateClassesHandler" />
+
+        @if (_selectedSlots.Count == 0)
+        {
+            <hr />
+        }
+        else
+        {
+            <div class="card mb-1 mt-2">
+                <div class="card-header">Создание заявки</div>
+                <div class="card-body">
+                    <MudChipSet T="WorkScheduleModel" AllClosable OnClose="Closed">
+                        @foreach (WorkScheduleModel value in _selectedSlots.OrderBy(x => x.Date).ThenBy(x => x.StartPart))
+                        {
+                            <MudChip Value="value">@(value.ToString())</MudChip>
+                        }
+                    </MudChipSet>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2">
+                        <button @onclick="CreateOrder" class="btn btn-primary" type="button">Записаться</button>
+                        <button @onclick="() => _selectedSlots.Clear()" class="btn btn-outline-secondary" type="button">Отменить</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <MudTable Breakpoint="Breakpoint.Sm"
+                  Loading="IsBusyProgress"
+                  Hover="true"
+                  Height="500px"
+                  FixedHeader="true"
+                  Items="Elements"
+                  Virtualize="true"
+                  GroupBy="@_groupDefinition"
+                  GroupHeaderStyle="background-color:var(--mud-palette-background-gray)"
+                  GroupFooterClass="mb-4"
+                  Dense="true">
+            <ColGroup>
+                <col />
+                <col />
+                <col style="width: 60px;" />
+            </ColGroup>
+            <HeaderContent>
+                <MudTh>Дата/Организация</MudTh>
+                <MudTh>Период</MudTh>
+                <MudTh>Слоты</MudTh>
+            </HeaderContent>
+            <GroupHeaderTemplate>
+                <MudTh Class="mud-table-cell-custom-group" colspan="3">@($"{context.GroupName}: {context.Key}")</MudTh>
+            </GroupHeaderTemplate>
+            <RowTemplate>
+                <MudTd Class="@(context.IsStarted ? "mud-theme-primary" : context.IsGlobalPermission ? "fw-bold" : "")" DataLabel="Дата: Организация">
+                    @context.Organization.ToString()
+                </MudTd>
+                <MudTd DataLabel="Период">
+                    @{
+                        bool _is_selected = _selectedSlots.Contains(context);
+                    }
+                    @context.StartPart - @context.EndPart
+                    <MudIconButton OnClick="() => ToggleSelected(context)"
+                                   Class="ms-2"
+                                   Icon="@(_is_selected ? Icons.Material.Filled.Remove : Icons.Material.Filled.AlarmAdd)"
+                                   Size="Size.Small"
+                                   Color="@(_is_selected ? Color.Default : Color.Tertiary)"
+                                   title="@(_is_selected ? "Убрать запись" : "Добавить запись")" />
+                </MudTd>
+                <MudTd DataLabel="Слоты">@(context.QueueCapacity == 0 ? "∞" : context.QueueCapacity)</MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>Ничего не найдено</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>Загрузка...</MudText>
+            </LoadingContent>
+        </MudTable>
+    </div>
+</div>

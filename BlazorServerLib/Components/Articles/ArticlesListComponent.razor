@@ -1,0 +1,45 @@
+﻿@using MudBlazor
+@using System.Globalization
+
+@inherits BlazorBusyComponentBaseAuthModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table" Loading="IsBusyProgress">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Статьи</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Поиск по названию, тегу или рубрике" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="Updated" T="ArticleModelDB">Updated</MudTableSortLabel></MudTh>
+        <MudTh>Created</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Author</MudTh>
+        <MudTh>Rubrics</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Updated">
+            <a href="/articles/edit-card/@(context.Id)">
+                @context.LastUpdatedAtUTC?.GetCustomTime().ToString("d", GlobalStaticConstants.RU)
+                <sup>@context.LastUpdatedAtUTC?.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup>
+            </a>
+        </MudTd>
+        <MudTd DataLabel="Created">@context.CreatedAtUTC.GetCustomTime().ToString("d", GlobalStaticConstants.RU)</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Author">@(usersDump.FirstOrDefault(x => x.UserId == context.AuthorIdentityId)?.UserName ?? context.AuthorIdentityId)</MudTd>
+        <MudTd DataLabel="Rubrics">@context.RubricsJoins?.Count</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Данные отсутствуют</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Загрузка...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+<div class="d-grid gap-2 mt-2">
+    <a class="btn btn-primary" href="/articles/edit-card" role="button">Создать новый материал</a>
+</div>

@@ -1,0 +1,55 @@
+﻿@using BlazorLib
+@using SharedLib
+
+@inherits BlazorBusyComponentBaseModel
+
+<h3>Выполнение команд на удалённом сервере</h3>
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Дождитесь окончания загрузки.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Операция <cite title="не прерывайте её">выполняется</cite>
+        </figcaption>
+    </figure>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <div class="input-group my-2 border border-warning">
+                <span class="input-group-text">Новая команда:</span>
+                <input @bind-value="@newCommand.FileName" @bind-value:event="oninput" type="text" aria-label="File Name" placeholder="FileName" class="form-control">
+                <input @bind-value="@newCommand.Arguments" @bind-value:event="oninput" type="text" aria-label="Arguments" placeholder="Arguments" class="form-control">
+                <button @onclick="AddNewCommand" disabled="@(string.IsNullOrEmpty(newCommand.FileName))" class="btn btn-outline-secondary" type="button" id="button-addon2">Создать</button>
+            </div>
+            <hr />
+            @if (ExeCommands.Length == 0)
+            {
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>Команды отсутствуют.</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        Добавьте <cite title="bash/cmd">команду</cite> для выполнения на удалённом сервере
+                    </figcaption>
+                </figure>
+            }
+            else
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (ExeCommandModelDB rowCmd in ExeCommands)
+                    {
+                        <li @key="@($"r0-{rowCmd.Id}")" class="list-group-item">
+                            <RowCommandComponent CurrentCommand="rowCmd" ReloadCommandsHandle="ReloadCommands" />
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+}

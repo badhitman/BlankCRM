@@ -1,0 +1,50 @@
+﻿@using MudBlazor
+@using System.Globalization
+@inherits BlazorBusyComponentBaseAuthModel
+
+<MudTable Loading="IsBusyProgress" ServerData="ServerReload" Dense="true" Hover="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Заказы</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(OrderDocumentModelDB.CreatedAtUTC))" T="OrderDocumentModelDB">Создан</MudTableSortLabel></MudTh>
+        <MudTh>Информация</MudTh>
+        <MudTh>Сумма</MudTh>
+        <MudTh>Статус</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @{
+            IssueHelpdeskModelDB? hd_doc = IssuesCacheDump.FirstOrDefault(x => x.Id == context.HelpdeskId);
+        }
+        <MudTd DataLabel="Создан">
+            @{
+                DateTime msk_dt = context.CreatedAtUTC.GetCustomTime();
+            }
+            @if (hd_doc is null)
+            {
+                <span>
+                    @msk_dt.ToString("d", GlobalStaticConstants.RU) <sup>@msk_dt.ToString("t", GlobalStaticConstants.RU)</sup>
+                </span>
+            }
+            else
+            {
+                <a href="/issue-card/@context.HelpdeskId">
+                    @msk_dt.ToString("d", GlobalStaticConstants.RU) <sup>@msk_dt.ToString("t", GlobalStaticConstants.RU)</sup>
+                </a>
+            }
+        </MudTd>
+        <MudTd DataLabel="Информация">@context.Name</MudTd>
+        <MudTd DataLabel="Сумма">@context.TotalSumForRows()</MudTd>
+        <MudTd DataLabel="Статус">@hd_doc?.StatusDocument.DescriptionInfo()</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Данные отсутствуют</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Загрузка...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

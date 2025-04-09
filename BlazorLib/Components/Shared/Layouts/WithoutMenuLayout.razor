@@ -1,0 +1,24 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+<MudDialogProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+<MudSnackbarProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+<MudPopoverProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+
+<div class="page">
+    <main>
+        <div class="top-row px-4">
+            <a href="https://github.com/badhitman/BlankCRM" target="_blank">About</a>
+        </div>
+
+        <article class="content px-2">
+            @Body
+        </article>
+    </main>
+</div>
+
+<div id="blazor-error-ui">
+    Произошла необработанная ошибка.
+    <a href="" class="reload">Перезагрузить</a>
+    <a class="dismiss">🗙</a>
+</div>

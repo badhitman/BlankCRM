@@ -1,0 +1,16 @@
+[Unit]
+Description=tg.app.service
+
+[Service]
+WorkingDirectory=/srv/services/TelegramBotService
+ExecStart=/usr/bin/dotnet /srv/services/TelegramBotService/TelegramBotService.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=dotnet-tg-app
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target

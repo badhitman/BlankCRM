@@ -1,0 +1,117 @@
+﻿@using BlazorWebLib.Components.Commerce
+@using BlazorWebLib.Components.Helpdesk
+@using MudBlazor
+@inherits OffersTableBaseComponent
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+}
+else
+{
+    <div>
+        <div class="mb-3">
+            <label for="exampleInputName" class="form-label">Примечание</label>
+            <input @bind-value="editDocument.Name" @bind-value:event="oninput" type="text" class="form-control" id="exampleInputName" aria-describedby="nameHelp">
+            <div id="nameHelp" class="form-text">Наименование</div>
+        </div>
+        <div class="mb-3">
+            <MudTextField @bind-Value="editDocument.DeliveryDate" Format="yyyy-MM-dd" Label="Дата поставки" InputType="InputType.Date" />
+        </div>
+        <div class="mb-3">
+            <CascadingValue Value="RubricSelectAction">
+                <CascadingValue Value="RubricMetadataShadow">
+                    <RubricSelectorComponent @ref="ref_rubric" Title="Склад поступления" ContextName="@GlobalStaticConstants.Routes.WAREHOUSE_CONTROLLER_NAME" ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny" ShowDisabledRubrics="true" StartRubric="editDocument.WarehouseId" />
+                </CascadingValue>
+            </CascadingValue>
+        </div>
+        <div class="mb-3 form-check">
+            <input @bind="editDocument.IsDisabled" type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">@(editDocument.IsDisabled ? "Выключено (включить?)" : "Включено (выключить?)")</label>
+        </div>
+        <div class="d-grid gap-2 my-2">
+            <button @onclick="SaveDocument" disabled="@(!CanSave)" class="btn btn-primary" type="button">@(Id < 1 ? "Создать документ" : "Сохранить")</button>
+        </div>
+    </div>
+    @if (Id > 0)
+    {
+        <MudTable Hover="true"
+                  Loading="IsBusyProgress"
+                  ReadOnly="ReadOnly"
+                  SortLabel="@(nameof(RowOfOrderDocumentModelDB.Nomenclature.Name))"
+                  CanCancelEdit="true"
+                  Items="@CurrentDocument.Rows"
+                  RowEditPreview="RowEditPreviewHandler"
+                  RowEditCommit="RowEditCommitHandler"
+                  CancelEditIcon="@Icons.Material.Filled.Cancel"
+                  CancelEditTooltip="Отменить изменение"
+                  CommitEditTooltip="Сохранить изменения"
+                  RowEditCancel="RowEditCancelHandler"
+                  EditTrigger="@EditTrigger">
+
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">
+                    Номенклатура поступления
+                </MudText>
+                <MudSpacer />
+                @if (!ReadOnly)
+                {
+                    <div class="ms-3">
+                        <AddRowToOrderDocumentComponent ShowRegistersOffersQuantity="true" ForceAdding="true" @ref="addingDomRef" WarehouseId="editDocument.WarehouseId" AllOffers="allOffers" CurrentRows="CurrentDocument.Rows!.Select(x=>x.OfferId).ToList()" AddingOfferHandler="AddingOfferAction" />
+                    </div>
+                }
+            </ToolBarContent>
+            <ColGroup>
+                <col />
+                <col />
+                <col style="width:50px;" />
+                @if (EditTrigger == TableEditTrigger.EditButton)
+                {
+                    <col style="width:50px;" />
+                }
+            </ColGroup>
+            <HeaderContent>
+                <MudTh>Название</MudTh>
+                <MudTh>Количество</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">
+                    <a href="/nomenclature/offer-card/@context!.Offer!.Id">@context!.Offer!.GetName()</a>
+                </MudTd>
+                <MudTd DataLabel="Quantity">
+                    @context!.Quantity
+                </MudTd>
+                <MudTd><MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" /></MudTd>
+            </RowTemplate>
+            <RowEditingTemplate>
+                <MudTd DataLabel="Name">
+                    @context?.Offer?.GetName() // @(context?.Quantity * context?.Offer?.Price) руб.
+                </MudTd>
+                <MudTd DataLabel="Quantity">
+                    <MudNumericField @bind-Value="context!.Quantity" Required Min="1" />
+                </MudTd>
+            </RowEditingTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+            <EditButtonContent Context="button">
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+            </EditButtonContent>
+        </MudTable>
+    }
+    else
+    {
+        <figure class="text-center">
+            <blockquote class="blockquote">
+                <p>Документ не записан.</p>
+            </blockquote>
+            <figcaption class="blockquote-footer">
+                Для добавления строк <cite title="сохраните документ">запишите документ</cite>
+            </figcaption>
+        </figure>
+    }
+    <hr />
+    <span>Описание:</span>
+    <TinyMCE.Blazor.Editor @bind-Value="editDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" />
+}

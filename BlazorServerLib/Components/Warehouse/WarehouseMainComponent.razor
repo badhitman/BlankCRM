@@ -1,0 +1,46 @@
+﻿@using MudBlazor
+@inherits BlazorBusyComponentRubricsCachedModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Поступления</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Поиск по примечанию" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortDirection="SortDirection.Ascending" SortLabel="Name" T="WarehouseDocumentModelDB">Примечание</MudTableSortLabel></MudTh>
+        <MudTh>Доставка</MudTh>
+        <MudTh>Склад</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @{
+            DateTime cdt = context.CreatedAtUTC.GetCustomTime();
+            DateTime udt = context.LastAtUpdatedUTC.GetCustomTime();
+            DateTime ddt = context.DeliveryDate.GetCustomTime();
+        }
+        <MudTd DataLabel="Примечание"><a href="/nomenclature/warehouse/editing/@(context.Id)">@context.Name</a></MudTd>
+        <MudTd DataLabel="Доставка">
+            <span>@ddt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@ddt.ToString("t", GlobalStaticConstants.RU)</sup></span>
+        </MudTd>
+        <MudTd DataLabel="Склад">@(RubricsCache.FirstOrDefault(x => x.Id == context.WarehouseId)?.Name ?? context.WarehouseId.ToString())</MudTd>
+        <MudTd DataLabel="">
+            <span>@cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup></span>
+            /
+            <span>@udt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.ToString("t", GlobalStaticConstants.RU)</sup></span>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Данные отсутствуют</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Загрузка...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+<div class="d-grid gap-2 mt-3">
+    <a class="btn btn-primary" href="/nomenclature/warehouse/editing" role="button">Создать новый документ</a>
+</div>

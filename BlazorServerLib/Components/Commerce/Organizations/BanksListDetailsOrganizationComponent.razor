@@ -1,0 +1,112 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentBaseAuthModel
+
+<MudExpansionPanels @ref="PanelsRef">
+    <MudExpansionPanel MaxHeight="500" ExpandedChanged="OnExpandedChanged" Disabled="@(CurrentOrganization.Id < 1 || ReadOnly)">
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
+                <MudText>
+                    р/с:
+                    @if (CurrentOrganization.Id < 1)
+                    {
+                        <span>недоступен. объект организации не записан</span>
+                    }
+                    else if (CurrentOrganization.BanksDetails is null || CurrentOrganization.BanksDetails.Count == 0)
+                    {
+                        <span>отсутствует</span>
+                    }
+                    else if (CurrentOrganization.BankMainAccount == 0)
+                    {
+                        <span>не установлен</span>
+                    }
+                    else
+                    {
+                        <span>@CurrentOrganization.BanksDetails.First(x => x.Id == CurrentOrganization.BankMainAccount)</span>
+                    }
+                </MudText>
+                @if (IsBusyProgress)
+                {
+                    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+                }
+            </div>
+        </TitleContent>
+        <ChildContent>
+            @if (CurrentOrganization.BanksDetails is null)
+            {
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>Счета не загружены.</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        Данные по <cite title="CurrentOrganization.BansDetails is null">банковским счетам</cite> не загружены
+                    </figcaption>
+                </figure>
+            }
+            else if (CurrentOrganization.BanksDetails.Count == 0)
+            {
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>Нет ни одного счёта.</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        <cite title="расчётный счёт">Добавить банковский счёт</cite>
+                        <button @onclick="CreateNewBankDetails" type="button" class="btn btn-link">Добавить банковский счёт</button>
+                    </figcaption>
+                </figure>
+                @* <BankDetailsEditComponent BankDetails="BankDetailsModelDB.BuildEmpty(CurrentOrganization)" /> *@
+            }
+            else if (IsExpanded)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Счёт</th>
+                            <th scope="col">Банк</th>
+                            <th scope="col">БИК</th>
+                            <th scope="col">Корр.счёт</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (BankDetailsModelDB bank in CurrentOrganization.BanksDetails)
+                        {
+                            <tr>
+                                <td scope="row">
+                                    @bank.CurrentAccount
+                                    @if (bank.Id == CurrentOrganization.BankMainAccount)
+                                    {
+                                        <span class="mx-1 badge text-bg-primary">основной</span>
+                                    }
+                                    else
+                                    {
+                                        <sup title="сделать счёт основным для расчётов" style="cursor:pointer;" @onclick="() => SetBankDetailsAsMain(bank)" class="mx-1 link-secondary">сделать основным</sup>
+                                    }
+                                </td>
+                                <th>
+                                    @bank.Name
+                                </th>
+                                <th>
+                                    @bank.BankBIC
+                                </th>
+                                <th>
+                                    @bank.CorrespondentAccount
+                                </th>
+                                <th>
+                                    <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+                                        <MudIconButton OnClick="() => DeleteBankDetails(bank)" Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" />
+                                        <MudIconButton OnClick="() => OpenBankDetails(bank)" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" />
+                                    </MudButtonGroup>
+                                </th>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button title="Добавить расчётный счёт" @onclick="CreateNewBankDetails" class="btn btn-primary" type="button">Новый</button>
+                </div>
+            }
+        </ChildContent>
+    </MudExpansionPanel>
+</MudExpansionPanels>

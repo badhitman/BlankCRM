@@ -1,0 +1,77 @@
+﻿@page "/Account/Login"
+
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity
+
+<PageTitle>Вход</PageTitle>
+
+<h2>Вход</h2>
+<StatusMessage Messages="@Messages" />
+<div class="row">
+    <div class="col-md-4">
+        <section>
+            <StatusMessage Messages="@result?.Messages" />
+            @if (result?.RequiresTwoFactor == true)
+            {
+                <LoginWith2faComponent RememberMe="Input.RememberMe" RememberMachine ReturnUrl="@ReturnUrl" UserAlias="@result.UserId" />
+            }
+            else
+            {
+                <EditForm Model="Input" method="post" OnValidSubmit="OnValidSubmit" FormName="login">
+                    <DataAnnotationsValidator />
+                    <hr />
+                    <ValidationSummary class="text-danger" role="alert" />
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <label for="email" class="form-label">Email</label>
+                        <ValidationMessage For="() => Input.Email" class="text-danger" />
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                        <label for="password" class="form-label">Password</label>
+                        <ValidationMessage For="() => Input.Password" class="text-danger" />
+                    </div>
+                    <div class="checkbox mb-3">
+                        <label class="form-label">
+                            <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
+                            Запомнить меня
+                        </label>
+                    </div>
+                    <div>
+                        <button type="submit" class="w-100 btn btn-lg btn-primary">Вход</button>
+                    </div>
+                    <div class="mt-4">
+                        <p>
+                            <a href="Account/ForgotPassword">Забыли пароль?</a>
+                        </p>
+                        <p>
+                            <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Зарегистрируйтесь как новый пользователь</a>
+                        </p>
+                        <p>
+                            <a href="Account/ResendEmailConfirmation">Повторно отправить подтверждение по электронной почте</a>
+                        </p>
+                    </div>
+                </EditForm>
+            }
+        </section>
+    </div>
+
+    @if (IsDebug && result is not null)
+    {
+        <div class="col-md-6 col-md-offset-2">
+            <section>
+                <h3>Use another service to log in.</h3>
+                <hr />
+                @if (result.IsNotAllowed == true)
+                {
+                    <ul class="list-group">
+                        <li class="list-group-item">@(nameof(result.Succeeded)): @result.Succeeded</li>
+                        <li class="list-group-item">@(nameof(result.IsLockedOut)): @result.IsLockedOut</li>
+                        <li class="list-group-item">@(nameof(result.IsNotAllowed)): @result.IsNotAllowed</li>
+                        <li class="list-group-item">@(nameof(result.RequiresTwoFactor)): @result.RequiresTwoFactor</li>
+                    </ul>
+                }
+            </section>
+        </div>
+    }
+</div>

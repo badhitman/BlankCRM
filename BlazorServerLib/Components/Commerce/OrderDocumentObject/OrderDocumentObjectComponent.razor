@@ -1,0 +1,58 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentBaseAuthModel
+
+@if (IsBusyProgress || Document.OfficesTabs is null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+}
+else
+{
+    foreach (TabOfficeForOrderModelDb at in Document.OfficesTabs)
+    {
+        <div class="card mt-3">
+            <div class="card-header">
+                @(at.Office!.Name)
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Склад: @(currentWarehouses.FirstOrDefault(x => x.Id == at.WarehouseId)?.Name)</h5>
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Наименование</th>
+                            <th scope="col">Цена</th>
+                            <th scope="col">Кол-во</th>
+                            <th scope="col">Сумма</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (RowOfOrderDocumentModelDB row in at.Rows!)
+                        {
+                            <RowOfOrderDocumentComponent Row="row" />
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+@if (ShowingAttachmentsOrderArea)
+{
+    <div class="card my-3">
+        <div class="card-body">
+            <FilesContextViewComponent ApplicationsNames="@([GlobalStaticConstants.Routes.ORDER_CONTROLLER_NAME])"
+                                       PropertyName="@GlobalStaticConstants.Routes.ATTACHMENT_CONTROLLER_NAME"
+                                       PrefixPropertyName="@GlobalStaticConstants.Routes.USER_CONTROLLER_NAME"
+                                       OwnerPrimaryKey="Document.Id"
+                                       Title="Вложения"
+                                       ManageMode="true" />
+        </div>
+    </div>
+}
+
+<MudButton Class="mt-3" OnClick="OrderToCart" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Скопировать заказ в корзину</MudButton>
+@if (Issue.StatusDocument == StatusesDocumentsEnum.Created)
+{
+    <MudButton Class="mt-3" OnClick="OrderNull" Variant="Variant.Outlined" Color="Color.Secondary" FullWidth="true">Отмена заказа</MudButton>
+}
+<MudButton Class="mt-3" OnClick="OrderReport" Variant="Variant.Filled" Color="Color.Default" FullWidth="true">Скачать заказ</MudButton>

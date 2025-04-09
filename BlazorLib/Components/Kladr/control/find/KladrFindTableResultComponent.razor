@@ -1,0 +1,50 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentBaseModel
+
+@if (string.IsNullOrWhiteSpace(FindText))
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Пустая стркоа поиска.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Укажите строку для <cite title="Для поиска требуется текст запроса">поиска</cite>
+        </figcaption>
+    </figure>
+}
+else
+{
+    <MudSelect Label="Регион(ы) поиска"
+               Clearable
+               OnClose="() => InvokeAsync(tableRef!.ReloadServerData)"
+               OnClearButtonClick="() => InvokeAsync(tableRef!.ReloadServerData)"
+               MultiSelection @bind-SelectedValues="_regionsSelected"
+               Disabled="IsBusyProgress"
+               MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))"
+               T="string">
+        @foreach (var state in regions)
+        {
+            <MudSelectItem T="string" Value="@state.Code">@state</MudSelectItem>
+        }
+    </MudSelect>
+    <MudTable ServerData="ServerReload" Loading="IsBusyProgress" Dense Hover @ref="tableRef">
+        <HeaderContent>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>
+                <KladrFindTableRowComponent KladrRow="context" HighlightedText="@FindText" />
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>Ни чего не найдено</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Обработка запроса...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+}

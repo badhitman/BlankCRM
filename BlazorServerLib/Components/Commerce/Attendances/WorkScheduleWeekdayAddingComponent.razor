@@ -1,0 +1,22 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentBaseModel
+
+<div class="hstack gap-3 mb-2">
+    @* <div><h3>@(GlobalStaticConstants.RU.DateTimeFormat.GetDayName(Weekday))</h3></div> *@
+    <div class="mx-auto"></div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
+        @if (IsExpandAdding)
+        {
+            <MudTimePicker Label="Начало:" PickerVariant="PickerVariant.Dialog" Color="Color.Success" Rounded="true" @bind-Time="StartPart" />
+            <MudTimePicker Label="Конец:" PickerVariant="PickerVariant.Dialog" Color="Color.Secondary" Rounded="true" @bind-Time="EndPart" Class="me-2" />
+            <MudNumericField title="0 - безлимитное" T="uint" @bind-Value="QueueCapacity" Label="Вместимость" Variant="Variant.Text" Min="0" Immediate="true" />
+            <MudFab Size="Size.Small" StartIcon="@Icons.Material.Filled.Cancel" title="Отмена" OnClick="() => IsExpandAdding = false" />
+            <MudFab Size="Size.Small" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Save" title="Сохранить" OnClick="Save" Disabled="CantSave" />
+        }
+        else
+        {
+            <MudFab Size="Size.Small" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Add" title="Добавить период" OnClick="() => IsExpandAdding = true" />
+        }
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@using MudBlazor
+@using System.Globalization
+
+@inherits BlazorBusyComponentBaseModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Ошибки отправки команд в TelegramBot</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="CreatedAtUtc" T="ErrorSendingMessageTelegramBotModelDB">Date</MudTableSortLabel></MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Code</MudTh>
+        <MudTh>Message</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Date">
+            <span data-cd="@context.CreatedAtUtc">
+                @context.CreatedAtUtc.GetCustomTime().ToString("d", GlobalStaticConstants.RU) <sup>@context.CreatedAtUtc.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup>
+            </span>
+        </MudTd>
+        <MudTd DataLabel="Type">@context.ExceptionTypeName</MudTd>
+        <MudTd DataLabel="Code">@context.ErrorCode</MudTd>
+        <MudTd DataLabel="Message">
+            <code>[pm:@(context.ParseModeName ?? "null")]</code>
+            <p class="mb-1">@context.Message</p>
+            @if (!string.IsNullOrWhiteSpace(context.SignFrom))
+            {
+                <i>(sign:@context.SignFrom)</i>
+            }
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Данные отсутствуют</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Загрузка...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

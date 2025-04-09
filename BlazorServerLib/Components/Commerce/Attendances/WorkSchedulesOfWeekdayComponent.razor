@@ -1,0 +1,27 @@
+﻿@using System.Globalization
+@using MudBlazor
+
+@inherits BlazorBusyComponentBaseModel
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" data-cn="@this.GetType().Name" />
+}
+
+<div class="hstack gap-3 mb-2">
+    @* <div><h3>@(GlobalStaticConstants.RU.DateTimeFormat.GetDayName(Weekday))</h3></div> *@
+    <div class="mx-auto"></div>
+    <WorkScheduleWeekdayAddingComponent Weekday="Weekday" AddingWorkScheduleHandle="AddingWorkScheduleAction" />
+</div>
+<ul class="list-group">
+    @foreach (WeeklyScheduleModelDB _ws in WorkSchedules.OrderBy(x => x.StartPart).ThenByDescending(x => x.LastAtUpdatedUTC))
+    {
+        <WorkScheduleForWeekdayComponent WorkSchedule="_ws" @key="_ws.Id" />
+    }
+    @if (TotalElementsCount > WorkSchedules.Count)
+    {
+        <li @onclick="async () => { await LoadData((WorkSchedules.Count / 10), OfferCurrent); }" class="list-group-item d-flex justify-content-center">
+            Загрузить ещё...
+        </li>
+    }
+</ul>

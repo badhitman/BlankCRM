@@ -1,0 +1,11 @@
+﻿@page "/nomenclature/offer-card/{OfferId:int}"
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<OfferCardEditComponent OfferId="OfferId" />
+
+@code {
+    [Parameter]
+    public int OfferId { get; set; }
+}

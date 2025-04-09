@@ -1,0 +1,9 @@
+﻿@page "/Users/Profiles"
+@page "/Users"
+
+@attribute [Authorize(Roles = GlobalStaticConstants.Roles.Admin)]
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<PageTitle>Пользователи</PageTitle>
+<UsersTableComponent />

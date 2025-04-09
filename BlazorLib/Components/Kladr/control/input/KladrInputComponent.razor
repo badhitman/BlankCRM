@@ -1,0 +1,15 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+<div class="input-group mb-3">
+    <span class="input-group-text">Адрес:</span>
+    <input readonly type="text" placeholder="Выбор из классификатора" class="form-control" value="@KladrObject?.Name">
+    @if (IsBusyProgress)
+    {
+        <button class="btn btn-outline-info" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+            <span role="status">Loading...</span>
+        </button>
+    }
+    <button @onclick="OpenDialogAsync" type="button" class="btn btn-outline-secondary" disabled="@ReadOnly">Выбрать</button>
+    <button @onclick="ClearInput" type="button" class="btn btn-outline-secondary bi bi-x-lg" disabled="@(ReadOnly || string.IsNullOrWhiteSpace(KladrObject?.Id))"></button>
+</div>

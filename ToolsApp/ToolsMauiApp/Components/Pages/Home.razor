@@ -1,0 +1,9 @@
+﻿@page "/"
+@inject IJSRuntime js
+
+@using BlazorLib.Components.ToolsApp
+@using DbcLib
+
+<ToolsAppMainComponent />
+
+<p class='mt-2'>DataBase: @ToolsAppContext.DbPath</p>

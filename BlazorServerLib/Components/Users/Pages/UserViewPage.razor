@@ -1,0 +1,23 @@
+﻿@page "/Users/Profiles/view-{UserId:guid}"
+@attribute [Authorize(Roles = GlobalStaticConstants.Roles.Admin)]
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject IUsersProfilesService UsersProfilesRepo
+
+<PageTitle>Пользователь</PageTitle>
+
+<h3>Пользователь</h3>
+
+<div class="row">
+    <div class="col">
+        <RolesPage OwnerUserId="@UserId.ToString()" />
+    </div>
+    <div class="col">
+        <ClaimsManageComponent ClaimArea="ClaimAreasEnum.ForUser" OwnerId="@UserId.ToString()" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid UserId { get; set; }
+}

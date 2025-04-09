@@ -1,0 +1,34 @@
+﻿<sup>
+    @if (SelectedFieldsView?.Any(x => x.Equals(nameof(RootKLADRModelDB.CODE))) == true)
+    {
+        <u title="Код региона: два разряда">@MetaData.RegionCode</u>
+        <u title="Код района: три разряда" class="@(MetaData.AreaCode == "000" ? "opacity-50" : "")">@MetaData.AreaCode</u>
+        <u title="Код города: три разряда" class="@(MetaData.CityCode == "000" ? "opacity-50" : "")">@MetaData.CityCode</u>
+        <u title="Код населённого пункта: три разряда" class="@(MetaData.PopPointCode == "000" ? "opacity-50" : "")">@MetaData.PopPointCode</u>
+        @if (!string.IsNullOrWhiteSpace(MetaData.StreetCode))
+        {
+            <u title="Код улицы: четыре разряда" class="ms-1@(MetaData.StreetCode == "0000" ? " opacity-50" : "")">@MetaData.StreetCode</u>
+        }
+        @if (!string.IsNullOrWhiteSpace(MetaData.HomeCode))
+        {
+            <u title="Код дома: четыре разряда" class="ms-1@(MetaData.HomeCode == "0000" ? " opacity-50" : "")">@MetaData.HomeCode</u>
+        }
+        @if (!string.IsNullOrWhiteSpace(MetaData.SignOfRelevanceCode))
+        {
+            <u title="Код статуса: два разряда" class="ms-1@(MetaData.SignOfRelevanceCode == "00" ? " opacity-75" : "")">@MetaData.SignOfRelevanceCode</u>
+        }
+    }
+    @if (MetaData?.SignOfRelevance is not null && MetaData.SignOfRelevance != SignOfRelevanciesEnum.Actual)
+    {
+        <mark class="ms-2">@MetaData.SignOfRelevance.Value.DescriptionInfo()</mark>
+    }
+</sup>
+
+@code {
+    [Parameter, EditorRequired]
+    public required CodeKladrModel MetaData { get; set; }
+
+    /// <inheritdoc/>
+    [CascadingParameter, EditorRequired]
+    public required IReadOnlyCollection<string>? SelectedFieldsView { get; set; }
+}
