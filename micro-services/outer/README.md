@@ -1,13 +1,15 @@
-﻿## Внешние источники данных (api/rest etc...)
-
+## Внешние источники данных (api/rest etc...)
+каждый источник внешних данных - это отдельный микро-сервис со своей собственной базой данных.
 
  - https://breez.ru - api
  - https://daichi.ru - b2b
  - https://rusklimat.com - api
- - https://haierproff.ru - partners feeds
+ - https://haierproff.ru - partners feeds (публичный)
 
 #### Настройки
-пример в [файле](outers-credentials-example.json)
+пример в [файле](outers-credentials-example.json).
+haietprof - предоставляет публичный rss поток без наличия.
+остальные источники требуют авторизации.
 ```json
 "RusklimarApiConfig": {
     "UserId": "0001112233",

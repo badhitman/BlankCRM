@@ -9,7 +9,7 @@
 - Связь между службами через RabbitMQ[^1] в режиме `запрос-ответ`: при отправке сообщения в очередь, отправитель дожидается ответ (в границах таймаута) и возвращает результат вызывающему. При использовании вызова такой команды удалённого сервиса проходит так, как если бы это был обычный `await` запрос к базе данных или rest/api. Вместе с тем есть возможность отправить команду в режиме "отправил и забыл".
 - .NET Aspire: [набор инструментов для оркестрации](https://github.com/badhitman/BlankCRM/tree/main/BlankCRM.AppHost): мониторинг сервисов (телеметрия, трассировка). ![aspire main](img/aspire-main.png)
 - LDAP (ActiveDirectory) коннектор. предварительная версия
-
+- внешние [источники данных](https://github.com/badhitman/BlankCRM/blob/main/micro-services/outer/README.md): Rusklimat (Русклимат), Daichi, Haier, Breez
 
 Зависимости решения между проектами (в формате [Mermaid](https://mermaid.js.org)):
 
@@ -175,6 +175,9 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 
 #### [LdapService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/LdapService)
 - Интеграция AD через LDAP
+
+#### [outer api](https://github.com/badhitman/BlankCRM/blob/main/micro-services/outer/README.md)
+набор микро-сервисов для подключения внешних источников данных
 
 > все службы должны быть настроены, запущены вместе и соединены общим RabbitMQ и Redis. В противном случае в MQ очередях будут копиться запросы без ответов и функционал местами будет недоступен если ответственная служба не будет обрабатывать запросы.
 
