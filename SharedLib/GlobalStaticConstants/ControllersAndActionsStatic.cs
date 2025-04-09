@@ -455,6 +455,16 @@ public static partial class GlobalStaticConstants
         public const string LEFTOVERS_CONTROLLER_NAME = "leftovers";
 
         /// <summary>
+        /// Бренды
+        /// </summary>
+        public const string BRANDS_CONTROLLER_NAME = "brands";
+
+        /// <summary>
+        /// Tech
+        /// </summary>
+        public const string TECH_CONTROLLER_NAME = "tech";
+
+        /// <summary>
         /// Синхронизация
         /// </summary>
         public const string SYNCHRONIZATION_CONTROLLER_NAME = "synchronization";
@@ -463,6 +473,11 @@ public static partial class GlobalStaticConstants
         /// Health
         /// </summary>
         public const string HEALTH_CONTROLLER_NAME = "health";
+
+        /// <summary>
+        /// Product
+        /// </summary>
+        public const string PRODUCT_CONTROLLER_NAME = "product";
 
         /// <summary>
         /// rss
@@ -815,6 +830,11 @@ public static partial class GlobalStaticConstants
         public const string PRODUCTS_CONTROLLER_NAME = "products";
 
         /// <summary>
+        /// Catalog
+        /// </summary>
+        public const string CATALOG_CONTROLLER_NAME = "catalog";
+
+        /// <summary>
         /// Единицы измерения
         /// </summary>
         public const string UNITS_CONTROLLER_NAME = "units";
@@ -823,6 +843,11 @@ public static partial class GlobalStaticConstants
         /// Категории
         /// </summary>
         public const string CATEGORIES_CONTROLLER_NAME = "categories";
+
+        /// <summary>
+        /// Категория
+        /// </summary>
+        public const string CATEGORY_CONTROLLER_NAME = "category";
 
         /// <summary>
         /// Склады

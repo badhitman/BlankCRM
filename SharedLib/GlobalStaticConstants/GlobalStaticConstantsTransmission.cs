@@ -832,6 +832,21 @@ public static partial class GlobalStaticConstants
         public readonly static string LeftoversGetBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.LEFTOVERS_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
+        public readonly static string GetBrandsBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.BRANDS_CONTROLLER_NAME}", $"{Routes.GET_ACTION_NAME}-{Routes.CATALOG_CONTROLLER_NAME}");
+
+        /// <inheritdoc/>
+        public readonly static string GetCategoriesBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.CATEGORIES_CONTROLLER_NAME}", $"{Routes.GET_ACTION_NAME}-{Routes.CATALOG_CONTROLLER_NAME}");
+
+        /// <inheritdoc/>
+        public readonly static string GetProductsBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.PRODUCTS_CONTROLLER_NAME}", $"{Routes.GET_ACTION_NAME}-{Routes.CATALOG_CONTROLLER_NAME}");
+
+        /// <inheritdoc/>
+        public readonly static string GetTechCategoryBreezReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BREEZ_CONTROLLER_NAME, $"{Routes.TECH_CONTROLLER_NAME}-{Routes.CATEGORY_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string GetTechProductBreezReceive = Path.Combine(TransmissionQueueNamePrefix,Routes.BREEZ_CONTROLLER_NAME, $"{Routes.TECH_CONTROLLER_NAME}-{Routes.PRODUCT_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string DownloadAndSaveBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
 
         /// <inheritdoc/>

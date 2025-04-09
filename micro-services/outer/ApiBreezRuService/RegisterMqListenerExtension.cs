@@ -4,7 +4,6 @@
 
 using Transmission.Receives.Outers.Breez;
 using SharedLib;
-using System.Collections.Generic;
 
 namespace ApiBreezRuService;
 
@@ -22,6 +21,11 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<DownloadAndSaveReceive, object, ResponseBaseModel>()
             .RegisterMqListener<LeftoversGetReceive, string, TResponseModel<List<BreezRuLeftoverModel>>>()
             .RegisterMqListener<HealthCheckReceive, object, TResponseModel<List<RabbitMqManagementResponseModel>>>()
+            .RegisterMqListener<GetTechProductReceive, TechRequestModel, TResponseModel<List<TechProductBreezRuResponseModel>>>()
+            .RegisterMqListener<GetTechCategoryReceive, TechRequestModel, TResponseModel<List<TechCategoryBreezRuModel>>>()
+            .RegisterMqListener<GetProductsReceive, object, TResponseModel<List<ProductBreezRuModel>>>()
+            .RegisterMqListener<GetCategoriesReceive, object, TResponseModel<List<CategoryRealBreezRuModel>>>()
+            .RegisterMqListener<GetBrandsReceive, object, TResponseModel<List<BrandRealBreezRuModel>>>()
             ;
     }
 }

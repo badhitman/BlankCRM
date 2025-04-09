@@ -17,10 +17,10 @@ public interface IBreezRuApiService : IOuterApiService
     public Task<TResponseModel<List<BreezRuLeftoverModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<List<BrandBreezRuModel>>> GetBrandsAsync(CancellationToken token = default);
+    public Task<TResponseModel<List<BrandRealBreezRuModel>>> GetBrandsAsync(CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<List<CategoryBreezRuModel>>> GetCategoriesAsync(CancellationToken token = default);
+    public Task<TResponseModel<List<CategoryRealBreezRuModel>>> GetCategoriesAsync(CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TResponseModel<List<ProductBreezRuModel>>> GetProductsAsync(CancellationToken token = default);

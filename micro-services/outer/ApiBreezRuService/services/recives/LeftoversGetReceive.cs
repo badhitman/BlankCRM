@@ -8,7 +8,7 @@ using SharedLib;
 namespace Transmission.Receives.Outers.Breez;
 
 /// <summary>
-/// LeftoversGetAsyncReceive
+/// LeftoversGetReceive
 /// </summary>
 public class LeftoversGetReceive(IBreezRuApiService breezRepo)
     : IResponseReceive<string?, TResponseModel<List<BreezRuLeftoverModel>>?>

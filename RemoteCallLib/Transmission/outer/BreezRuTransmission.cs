@@ -12,34 +12,24 @@ namespace RemoteCallLib;
 public class BreezRuTransmission(IRabbitClient rabbitClient) : IBreezRuApiService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<BrandBreezRuModel>>> GetBrandsAsync(CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<TResponseModel<List<BrandRealBreezRuModel>>> GetBrandsAsync(CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<BrandRealBreezRuModel>>>(GlobalStaticConstants.TransmissionQueues.GetBrandsBreezReceive, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<CategoryBreezRuModel>>> GetCategoriesAsync(CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<TResponseModel<List<CategoryRealBreezRuModel>>> GetCategoriesAsync(CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<CategoryRealBreezRuModel>>>(GlobalStaticConstants.TransmissionQueues.GetCategoriesBreezReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<ProductBreezRuModel>>> GetProductsAsync(CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<ProductBreezRuModel>>>(GlobalStaticConstants.TransmissionQueues.GetProductsBreezReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<TechCategoryBreezRuModel>>> GetTechCategoryAsync(TechRequestModel req, CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<TechCategoryBreezRuModel>>>(GlobalStaticConstants.TransmissionQueues.GetTechCategoryBreezReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<TechProductBreezRuResponseModel>>> GetTechProductAsync(TechRequestModel req, CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<TechProductBreezRuResponseModel>>>(GlobalStaticConstants.TransmissionQueues.GetTechProductBreezReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
