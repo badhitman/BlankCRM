@@ -59,15 +59,5 @@ namespace FeedsHaierProffRuService.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
-        internal static byte[] Haierproff_feed_demo_rss_xml {
-            get {
-                object obj = ResourceManager.GetObject("Haierproff_feed_demo.rss.xml", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

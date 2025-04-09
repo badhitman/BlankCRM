@@ -13,14 +13,25 @@ namespace BlazorLib.Components.Outers.Haier;
 public partial class HaierManageComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IFeedsHaierProffRuService haierproffRepo { get; set; } = default!;
+    IFeedsHaierProffRuService haierProffRepo { get; set; } = default!;
 
+
+    TResponseModel<List<RabbitMqManagementResponseModel>>? HealthCheck;
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        HealthCheck = await haierProffRepo.HealthCheckAsync();
+        await SetBusyAsync(false);
+    }
 
     async Task Download()
     {
         await SetBusyAsync();
-        ResponseBaseModel res = await haierproffRepo.DownloadAndSaveAsync();
+        ResponseBaseModel res = await haierProffRepo.DownloadAndSaveAsync();
         SnackbarRepo.ShowMessagesResponse(res.Messages);
+        HealthCheck = await haierProffRepo.HealthCheckAsync();
         await SetBusyAsync(false);
     }
 }

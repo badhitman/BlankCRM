@@ -16,11 +16,22 @@ public partial class BreezManageComponent : BlazorBusyComponentBaseModel
     IBreezRuApiService breezRepo { get; set; } = default!;
 
 
+    TResponseModel<List<RabbitMqManagementResponseModel>>? HealthCheck;
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        HealthCheck = await breezRepo.HealthCheckAsync();
+        await SetBusyAsync(false);
+    }
+
     async Task Download()
     {
         await SetBusyAsync();
         ResponseBaseModel res = await breezRepo.DownloadAndSaveAsync();
         SnackbarRepo.ShowMessagesResponse(res.Messages);
+        HealthCheck = await breezRepo.HealthCheckAsync();
         await SetBusyAsync(false);
     }
 }

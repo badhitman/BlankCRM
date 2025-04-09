@@ -17,9 +17,7 @@ public class BreezRuTransmission(IRabbitClient rabbitClient) : IBreezRuApiServic
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RabbitMqManagementResponseModel>>> HealthCheckAsync(CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<RabbitMqManagementResponseModel>>>(GlobalStaticConstants.TransmissionQueues.HealthCheckBreezReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<BreezRuGoodsModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default)

@@ -23,6 +23,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<GetProductsReceive, RusklimatPaginationRequestModel, TResponseModel<ProductsRusklimatResponseModel>>()
             .RegisterMqListener<GetPropertiesReceive, object, TResponseModel<PropertiesRusklimatResponseModel>>()
             .RegisterMqListener<GetUnitsReceive, object, TResponseModel<UnitsRusklimatResponseModel>>()
+            .RegisterMqListener<HealthCheckReceive, object, TResponseModel<List<RabbitMqManagementResponseModel>>>()
             ;
     }
 }

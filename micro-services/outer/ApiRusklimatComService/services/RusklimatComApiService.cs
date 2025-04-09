@@ -30,7 +30,7 @@ public class RusklimatComApiService(
     const string _jwt = "rusklimat-jwt", _requestKeyCache = "rusklimat-RequestKey", _pref = "InternetPartner";
 
     /// <inheritdoc/>
-    public override string NameTemplateMQ => Path.Combine(GlobalStaticConstants.TransmissionQueueNamePrefix, GlobalStaticConstants.Routes.RUSKLIMAT_CONTROLLER_NAME);
+    public override string NameTemplateMQ => Path.Combine(GlobalStaticConstants.TransmissionQueueNamePrefix, $"{GlobalStaticConstants.Routes.RUSKLIMAT_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.SYNCHRONIZATION_CONTROLLER_NAME}");
 
     async Task GetClient(bool perm = false, CancellationToken token = default)
     {

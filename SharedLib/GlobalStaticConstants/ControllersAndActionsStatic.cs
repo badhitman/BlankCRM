@@ -460,6 +460,11 @@ public static partial class GlobalStaticConstants
         public const string SYNCHRONIZATION_CONTROLLER_NAME = "synchronization";
 
         /// <summary>
+        /// Health
+        /// </summary>
+        public const string HEALTH_CONTROLLER_NAME = "health";
+
+        /// <summary>
         /// rss
         /// </summary>
         public const string RSS_CONTROLLER_NAME = "rss";

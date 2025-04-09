@@ -33,7 +33,5 @@ public class RusklimatComTransmission(IRabbitClient rabbitClient) : IRusklimatCo
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RabbitMqManagementResponseModel>>> HealthCheckAsync(CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<RabbitMqManagementResponseModel>>>(GlobalStaticConstants.TransmissionQueues.HealthCheckRusklimatReceive, token: token) ?? new();
 }

@@ -17,7 +17,7 @@ public class DownloadAndSaveReceive(IBreezRuApiService breezRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.DownloadAndSaveBreezReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(object? nc = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)
     {
         //ArgumentNullException.ThrowIfNull(payload);
         return await breezRepo.DownloadAndSaveAsync(token);

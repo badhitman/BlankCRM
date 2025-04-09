@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using SharedLib;
 using Transmission.Receives.Outers.HaierProff;
+using SharedLib;
 
 namespace FeedsHaierProffRuService;
 
@@ -20,6 +20,7 @@ public static class RegisterMqListenerExtension
         return services
             .RegisterMqListener<DownloadAndSaveReceive, object, ResponseBaseModel>()
             .RegisterMqListener<ProductsFeedGetReceive, object, TResponseModel<List<FeedItemHaierModel>>>()
+            .RegisterMqListener<HealthCheckReceive, object, TResponseModel<List<RabbitMqManagementResponseModel>>>()
             ;
     }
 }

@@ -16,11 +16,22 @@ public partial class RusklimatManageComponent : BlazorBusyComponentBaseModel
     IRusklimatComApiService rusklimatRepo { get; set; } = default!;
 
 
+    TResponseModel<List<RabbitMqManagementResponseModel>>? HealthCheck;
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        HealthCheck = await rusklimatRepo.HealthCheckAsync();
+        await SetBusyAsync(false);
+    }
+
     async Task Download()
     {
         await SetBusyAsync();
         ResponseBaseModel res = await rusklimatRepo.DownloadAndSaveAsync();
         SnackbarRepo.ShowMessagesResponse(res.Messages);
+        HealthCheck = await rusklimatRepo.HealthCheckAsync();
         await SetBusyAsync(false);
     }
 }
