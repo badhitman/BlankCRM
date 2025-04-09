@@ -133,10 +133,13 @@ public class RusklimatComApiService(
         memoryCache.Set(_requestKeyCache, _rk.RequestKey, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
     }
 
-
     /// <inheritdoc/>
     public override async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
     {
+        TResponseModel<List<RabbitMqManagementResponseModel>> hc = await HealthCheckAsync(token);
+        if (hc.Response is null || hc.Response.Sum(x => x.messages) != 0)
+            return ResponseBaseModel.CreateWarning($"В очереди есть не выполненные задачи");
+
         TResponseModel<UnitsRusklimatResponseModel> getUnits = default!;
         TResponseModel<CategoriesRusklimatResponseModel> getCats = default!;
         TResponseModel<PropertiesRusklimatResponseModel> getProps = default!;
@@ -149,25 +152,56 @@ public class RusklimatComApiService(
                 RusklimatPaginationRequestModel _req = new() { PageNum = 1, PageSize = 1000 };
                 TResponseModel<ProductsRusklimatResponseModel> getProds = await GetProductsAsync(_req, token);
 
-                try
+                if (getProds.Response?.Data is null)
+                    logger.LogError($"Не удалось скачать `{nameof(GetProductsAsync)}`");
+                else
                 {
-                    while (getProds.Response?.Data is not null && getProds.Response.Data.Length != 0)
+                    try
                     {
-                        prodsData.AddRange(getProds.Response.Data);
-
-                        _req.PageNum++;
-                        getProds = await GetProductsAsync(_req, token);
+                        while (getProds.Response?.Data is not null && getProds.Response.Data.Length != 0)
+                        {
+                            prodsData.AddRange(getProds.Response.Data);
+                            logger.LogInformation($"Скачано +{getProds.Response.Data.Length} позиций `{nameof(GetProductsAsync)}` = {prodsData.Count}");
+                            _req.PageNum++;
+                            getProds = await GetProductsAsync(_req, token);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "Ошибка обработки товаров Rusklimat");
                     }
                 }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "Ошибка обработки товаров Rusklimat");
-                }
+            }, token),
+            Task.Run(async () =>
+            {
+                getUnits = await GetUnitsAsync(token);
+
+                if (getUnits.Response?.Data is null)
+                    logger.LogError($"Не удалось скачать `{nameof(GetUnitsAsync)}`");
+                else
+                    logger.LogInformation($"Скачано {getUnits.Response.Data.Length} позиций `{nameof(GetUnitsAsync)}`");
 
             }, token),
-            Task.Run(async () => { getUnits = await GetUnitsAsync(token); }, token),
-            Task.Run(async () => { getCats = await GetCategoriesAsync(token); }, token),
-            Task.Run(async () => { getProps = await GetPropertiesAsync(token); }, token)
+            Task.Run(async () =>
+            {
+                getCats = await GetCategoriesAsync(token);
+
+                if (getCats.Response?.Data is null)
+                    logger.LogError($"Не удалось скачать `{nameof(GetCategoriesAsync)}`");
+                else
+                    logger.LogInformation($"Скачано {getCats.Response.Data.Length} позиций `{nameof(GetCategoriesAsync)}`");
+
+            }, token),
+            Task.Run(async () =>
+            {
+                getProps = await GetPropertiesAsync(token);
+
+                if (getProps.Response?.Data is null)
+                    logger.LogError($"Не удалось скачать `{nameof(GetPropertiesAsync)}`");
+                else
+                    logger.LogInformation($"Скачано {getProps.Response.Data.Length} позиций `{nameof(GetPropertiesAsync)}`");
+
+            }, token)
         );
 
         if (getUnits.Response?.Data is null)
@@ -232,6 +266,7 @@ public class RusklimatComApiService(
         }
 
         HttpResponseMessage response = await httpClient.PostAsJsonAsync($"v2/{_pref}/{_conf.Value.PartnerId}/products/{requestKey}/?pageSize={req.PageSize}&page={req.PageNum}", req, token);
+        logger.LogInformation($"http запрос: {response.RequestMessage}");
         string msg;
         string responseBody = await response.Content.ReadAsStringAsync(token);
         if (!response.IsSuccessStatusCode)
@@ -280,8 +315,8 @@ public class RusklimatComApiService(
             return res;
         }
 
-
         HttpResponseMessage response = await httpClient.GetAsync($"{_conf.Value.Version}/{_pref}/categories/{requestKey}", token);
+        logger.LogInformation($"http запрос: {response.RequestMessage}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -330,6 +365,7 @@ public class RusklimatComApiService(
         }
 
         HttpResponseMessage response = await httpClient.GetAsync($"{_conf.Value.Version}/{_pref}/units", token);
+        logger.LogInformation($"http запрос: {response.RequestMessage}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -378,6 +414,7 @@ public class RusklimatComApiService(
         }
 
         HttpResponseMessage response = await httpClient.GetAsync($"{_conf.Value.Version}/{_pref}/properties/{requestKey}", token);
+        logger.LogInformation($"http запрос: {response.RequestMessage}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {

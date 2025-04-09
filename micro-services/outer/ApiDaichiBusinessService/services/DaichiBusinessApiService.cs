@@ -28,6 +28,10 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     /// <inheritdoc/>
     public override async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
     {
+        TResponseModel<List<RabbitMqManagementResponseModel>> hc = await HealthCheckAsync(token);
+        if (hc.Response is null || hc.Response.Sum(x => x.messages) != 0)
+            return ResponseBaseModel.CreateWarning($"В очереди есть не выполненные задачи");
+
         using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
 
         TResponseModel<ProductsDaichiBusinessResultModel> products = default!;
@@ -37,29 +41,49 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
             Task.Run(async () =>
             {
                 ProductParamsRequestDaichiModel _rq = new (){ PageSize = 100, Page = 1 };
-                TResponseModel<ProductsParamsDaichiBusinessResponseModel> data2 = await ProductsParamsGetAsync(_rq, token);
-                try
+                TResponseModel<ProductsParamsDaichiBusinessResponseModel> productsParameters = await ProductsParamsGetAsync(_rq, token);
+
+                if(productsParameters.Response?.Result?.Data is null)
+                    logger.LogError($"Не удалось скачать `{nameof(ProductsParamsGetAsync)}`");
+                else
                 {
-                    while(data2.Response?.Result?.Data is not null && data2.Response.Result.Data.Count != 0)
+                    try
                     {
-                        parametersAll.AddRange( data2.Response.Result.Data.Values.Select(x =>
+                        while(productsParameters.Response?.Result?.Data is not null && productsParameters.Response.Result.Data.Count != 0)
                         {
-                            ParameterElementDaichiJsonModel res = x.ToObject<ParameterElementDaichiJsonModel>()!;
-                            JProperty[] _jpts = x.Properties().Where(x => x.Name.StartsWith("attr_", StringComparison.OrdinalIgnoreCase)).ToArray();
-                            res.Attributes = [.. _jpts.Select(x => x.First().ToObject<AttributeParameterDaichiModel>())];
-                            return res;
-                        }));
-                        _rq.Page++;
-                        data2 = await ProductsParamsGetAsync(_rq, token);
+                            parametersAll.AddRange( productsParameters.Response.Result.Data.Values.Select(x =>
+                            {
+                                ParameterElementDaichiJsonModel res = x.ToObject<ParameterElementDaichiJsonModel>()!;
+                                JProperty[] _jpts = [.. x.Properties().Where(x => x.Name.StartsWith("attr_", StringComparison.OrdinalIgnoreCase))];
+                                res.Attributes = [.. _jpts.Select(x => x.First().ToObject<AttributeParameterDaichiModel>())];
+                                return res;
+                            }));
+                            _rq.Page++;
+                            logger.LogInformation($"Скачано +{productsParameters.Response.Result.Data.Count} позиций `{nameof(ProductsParamsGetAsync)}` = {parametersAll.Count}");
+                            productsParameters = await ProductsParamsGetAsync(_rq, token);
+                        }
+                    }
+                    catch(Exception ex){
+                        logger.LogError(ex, "Ошибка обработки товаров Daichi");
                     }
                 }
-                catch(Exception ex){
-                    logger.LogError(ex, "Ошибка обработки товаров Daichi");
-                }
-
             }, token),
-            Task.Run(async () => { products = await ProductsGetAsync(new ProductsRequestDaichiModel(), token); }, token),
-            Task.Run(async () => { stores = await StoresGetAsync(token); }, token)
+            Task.Run(async () =>
+            {
+                products = await ProductsGetAsync(new ProductsRequestDaichiModel(), token);
+                if(products.Response?.Result is null)
+                    logger.LogError($"Не удалось скачать `{nameof(ProductsGetAsync)}`");
+                else
+                    logger.LogInformation($"Скачано {products.Response.Result.Count} позиций `{nameof(ProductsGetAsync)}`");
+            }, token),
+            Task.Run(async () =>
+            {
+                stores = await StoresGetAsync(token);
+                if(stores.Response?.Result is null)
+                    logger.LogError($"Не удалось скачать `{nameof(StoresGetAsync)}`");
+                else
+                    logger.LogInformation($"Скачано {stores.Response.Result.Count} позиций `{nameof(StoresGetAsync)}`");
+            }, token)
             ]);
 
         if (stores.Response?.Result is null)
@@ -91,6 +115,15 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         try
         {
             List<ParameterEntryDaichiModelDB> productsParametersDb = [.. parametersAll.Select(x => ParameterEntryDaichiModelDB.Build(x, productsDb))];
+            int _sc = 0;
+            foreach (ParameterEntryDaichiModelDB[] itemsPart in productsParametersDb.Chunk(10))
+            {
+                await ctx.AddRangeAsync(itemsPart, token);
+                await ctx.SaveChangesAsync(token);
+                _sc += itemsPart.Length;
+                logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{productsParametersDb.Count})");
+            }
+
             await ctx.AddRangeAsync(productsParametersDb, token);
             await ctx.SaveChangesAsync(token);
         }
@@ -98,7 +131,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         {
             logger.LogError(ex, "Ошибка загрузки параметров Daichi");
         }
-
+        logger.LogInformation($"Данные записаны в БД. Закрытие транзакции.");
         await transaction.CommitAsync(token);
 
         if (products.Response.Exceptions != null && products.Response.Exceptions.Count != 0)
@@ -123,6 +156,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         TResponseModel<ProductsDaichiBusinessResultModel> res = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"/products/get/?access-token={_conf.Value.Token}&store-id={req.StoreId}", token);
+        logger.LogInformation($"http запрос: {response.RequestMessage}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -158,6 +192,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         TResponseModel<ProductsParamsDaichiBusinessResponseModel> res = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"/productparams/get/?access-token={_conf.Value.Token}&page-size={req.PageSize}&page={req.Page}", token);
+        logger.LogInformation($"http запрос: {response.RequestMessage}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {

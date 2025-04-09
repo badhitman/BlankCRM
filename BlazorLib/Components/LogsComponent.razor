@@ -4,7 +4,7 @@
 
 @inherits BlazorBusyComponentBaseModel
 
-@if (_metaData is not null)
+@if (!HidePanels && _metaData is not null)
 {
     <MudStack Row="true" Class="mb-4">
         @if (_metaData.ContextsPrefixesAvailable.Count != 0)
@@ -26,7 +26,7 @@
     </MudStack>
 }
 
-@if (favoritesRecords.Count != 0)
+@if (!HidePanels && favoritesRecords.Count != 0)
 {
     <MudStack Justify="@Justify.Center"
               Class="mud-width-full mb-3">

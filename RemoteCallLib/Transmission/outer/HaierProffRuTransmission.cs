@@ -13,7 +13,7 @@ public class HaierProffRuTransmission(IRabbitClient rabbitClient) : IFeedsHaierP
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.DownloadAndSaveHaierProffReceive, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.DownloadAndSaveHaierProffReceive, waitResponse: false, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RabbitMqManagementResponseModel>>> HealthCheckAsync(CancellationToken token = default)

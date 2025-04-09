@@ -13,7 +13,7 @@ public class RusklimatComTransmission(IRabbitClient rabbitClient) : IRusklimatCo
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.DownloadAndSaveRusklimatReceive, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.DownloadAndSaveRusklimatReceive, waitResponse: false, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<CategoriesRusklimatResponseModel>> GetCategoriesAsync(CancellationToken token = default)

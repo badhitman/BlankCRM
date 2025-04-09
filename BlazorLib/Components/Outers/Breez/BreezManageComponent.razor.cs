@@ -17,6 +17,7 @@ public partial class BreezManageComponent : BlazorBusyComponentBaseModel
 
 
     TResponseModel<List<RabbitMqManagementResponseModel>>? HealthCheck;
+    static string[] ApplicationsFilterSet = ["ApiBreezRu"];
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -30,7 +31,8 @@ public partial class BreezManageComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         ResponseBaseModel res = await breezRepo.DownloadAndSaveAsync();
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackbarRepo.Info("Задание отправлено в очередь");
+        await Task.Delay(5000);
         HealthCheck = await breezRepo.HealthCheckAsync();
         await SetBusyAsync(false);
     }

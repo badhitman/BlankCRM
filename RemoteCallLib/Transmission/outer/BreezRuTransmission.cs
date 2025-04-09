@@ -13,7 +13,7 @@ public class BreezRuTransmission(IRabbitClient rabbitClient) : IBreezRuApiServic
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.DownloadAndSaveBreezReceive, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.DownloadAndSaveBreezReceive, waitResponse: false, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RabbitMqManagementResponseModel>>> HealthCheckAsync(CancellationToken token = default)

@@ -11,11 +11,9 @@ using RemoteCallLib;
 namespace FeedsHaierProffRuService;
 
 /// <summary>
-/// HaierProffRuApiService
+/// HaierProffRuFeedsService
 /// </summary>
-#pragma warning disable CS9113 // Параметр не прочитан.
 public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILogger<HaierProffRuFeedsService> logger, IDbContextFactory<FeedsHaierProffRuContext> dbFactory)
-#pragma warning restore CS9113 // Параметр не прочитан.
 #pragma warning disable CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
     : OuterApiBaseServiceImpl(HttpClientFactory), IFeedsHaierProffRuService
 #pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
@@ -24,19 +22,52 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
     public override string NameTemplateMQ => Path.Combine(GlobalStaticConstants.TransmissionQueueNamePrefix, $"{GlobalStaticConstants.Routes.HAIERPROFF_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.SYNCHRONIZATION_CONTROLLER_NAME}");
 
     /// <inheritdoc/>
-#pragma warning disable CS1998 // В асинхронном методе отсутствуют операторы await, будет выполнен синхронный метод
+    public override async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
+    {
+        TResponseModel<List<RabbitMqManagementResponseModel>> hc = await HealthCheckAsync(token);
+        if (hc.Response is null || hc.Response.Sum(x => x.messages) != 0)
+            return ResponseBaseModel.CreateWarning($"В очереди есть не выполненные задачи");
+
+        ResponseBaseModel result = new();
+
+        TResponseModel<List<FeedItemHaierModel>> read = await ProductsFeedGetAsync(token);
+        result.AddRangeMessages(read.Messages);
+        if (read.Response is not null && read.Response.Count != 0)
+        {
+            FeedsHaierProffRuContext ctx = await dbFactory.CreateDbContextAsync(token);
+            logger.LogInformation($"Скачано {read.Response.Count} позиций. Подготовка к записи в БД (удаление старых данных и открытие транзакции)");
+            await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await ctx.Database.BeginTransactionAsync(token);
+
+            await ctx.FilesFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
+            await ctx.OptionsFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
+            await ctx.SectionsOptionsFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
+            await ctx.ProductsFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
+            int _sc = 0;
+            foreach (FeedItemHaierModel[] itemsPart in read.Response.Chunk(10))
+            {
+                await ctx.AddRangeAsync(itemsPart.Select(ProductHaierModelDB.Build), token);
+                await ctx.SaveChangesAsync(token);
+                _sc += itemsPart.Length;
+                logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{read.Response.Count})");
+            }
+
+            logger.LogInformation($"Данные записаны в БД. Закрытие транзакции.");
+            await transaction.CommitAsync(token);
+        }
+
+        return result;
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<List<FeedItemHaierModel>>> ProductsFeedGetAsync(CancellationToken token = default)
-#pragma warning restore CS1998 // В асинхронном методе отсутствуют операторы await, будет выполнен синхронный метод
     {
         TResponseModel<List<FeedItemHaierModel>> result = new();
         XDocument xd;
-#if !DEBUG
-        xd = XDocument.Parse(Encoding.UTF8.GetString(Properties.Resources.Haierproff_feed_demo_rss_xml));
-#else
+
         string msg, responseBody;
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.FeedsHaierProffRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync("cond/?type=partners", token);
-
+        logger.LogInformation($"http запрос: {response.RequestMessage}");
         if (!response.IsSuccessStatusCode)
         {
             msg = $"Error `{nameof(DownloadAndSaveAsync)}` (http code: {response.StatusCode}): {await response.Content.ReadAsStringAsync(token)}";
@@ -56,7 +87,6 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
         responseBody = responseBody.Replace("&ndash;", "-").Replace("&shy;", "");
         xd = XDocument.Parse(responseBody);
 
-#endif
         if (xd.Root is null)
         {
             result.AddError("XDocument.Root is null");
@@ -87,31 +117,6 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
                       })];
 
         result.AddSuccess($"Из RSS прочитано: {result.Response.Count}");
-        return result;
-    }
-
-    /// <inheritdoc/>
-    public override async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
-    {
-        ResponseBaseModel result = new();
-        TResponseModel<List<FeedItemHaierModel>> read = await ProductsFeedGetAsync(token);
-        result.AddRangeMessages(read.Messages);
-        if (read.Response is not null && read.Response.Count != 0)
-        {
-            FeedsHaierProffRuContext ctx = await dbFactory.CreateDbContextAsync(token);
-            await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await ctx.Database.BeginTransactionAsync(token);
-
-            await ctx.FilesFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
-            await ctx.OptionsFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
-            await ctx.SectionsOptionsFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
-            await ctx.ProductsFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
-
-            await ctx.AddRangeAsync(read.Response.Select(ProductHaierModelDB.Build), token);
-            await ctx.SaveChangesAsync(token);
-
-            await transaction.CommitAsync(token);
-        }
-
         return result;
     }
 

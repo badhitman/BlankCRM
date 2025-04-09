@@ -17,6 +17,18 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
     [Inject]
     ILogsService LogsRepo { get; set; } = default!;
 
+    /// <summary>
+    /// HidePanels
+    /// </summary>
+    [Parameter]
+    public bool HidePanels { get; set; }
+
+    /// <summary>
+    /// ApplicationsFilterSet
+    /// </summary>
+    [Parameter]
+    public string[]? ApplicationsFilterSet { get; set; }
+
 
     LogsMetadataResponseModel? _metaData;
     MudDateRangePicker _picker = default!;
@@ -187,6 +199,22 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
 
     TPaginationResponseModel<NLogRecordModelDB>? DirectPage;
 
+    string[]? ApplicationsFilter
+    {
+        get
+        {
+            List<string> _res = [];
+
+            if (ApplicationsFilterSet is not null)
+                _res.AddRange(ApplicationsFilterSet);
+
+            if (ApplicationsAvailable is not null)
+                _res.AddRange(ApplicationsAvailable.GetSelected());
+            _res = [.. _res.Distinct()];
+            return _res.Count == 0 ? null : [.. _res];
+        }
+    }
+
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
@@ -198,7 +226,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
             {
                 StartAt = DateRangeBind.Start,
                 FinalOff = DateRangeBind.End,
-                ApplicationsFilter = ApplicationsAvailable is null ? null : [.. ApplicationsAvailable.GetSelected()],
+                ApplicationsFilter = ApplicationsFilter,
                 ContextsPrefixesFilter = ContextsPrefixesAvailable is null ? null : [.. ContextsPrefixesAvailable.GetSelected()],
                 LevelsFilter = LevelsAvailable is null ? null : [.. LevelsAvailable.GetSelected()],
                 LoggersFilter = LoggersAvailable is null ? null : [.. LoggersAvailable.GetSelected()],
@@ -240,7 +268,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
 
         TPaginationResponseModel<NLogRecordModelDB> selector = default!;
         TResponseModel<LogsMetadataResponseModel> md = default!;
-        
+
         await Task.WhenAll([
                 Task.Run(async () => selector = await LogsRepo.LogsSelectAsync(req, token)),
                 Task.Run(async () => md = await LogsRepo.MetadataLogsAsync(new() { StartAt = DateRangeBind.Start, FinalOff = DateRangeBind.End })),

@@ -24,6 +24,10 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
     /// <inheritdoc/>
     public override async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
     {
+        TResponseModel<List<RabbitMqManagementResponseModel>> hc = await HealthCheckAsync(token);
+        if (hc.Response is null || hc.Response.Sum(x => x.messages) != 0)
+            return ResponseBaseModel.CreateWarning($"В очереди есть не выполненные задачи");
+
         string msg;
         TResponseModel<List<BreezRuGoodsModel>> jsonData = await LeftoversGetAsync(token: token);
         if (jsonData.Response is null)
@@ -32,13 +36,22 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             logger.LogError(msg);
             return ResponseBaseModel.CreateError(msg);
         }
+        logger.LogInformation($"Скачано {jsonData.Response.Count} позиций. Подготовка к записи в БД (удаление старых данных и открытие транзакции)");
         using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
         await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await ctx.Database.BeginTransactionAsync(token);
 
         await ctx.Leftovers.ExecuteDeleteAsync(cancellationToken: token);
 
-        await ctx.AddRangeAsync(jsonData.Response.Select(BreezRuLeftoverModelDB.Build), token);
-        await ctx.SaveChangesAsync(token);
+        BreezRuLeftoverModelDB[] leftovers = [.. jsonData.Response.Select(BreezRuLeftoverModelDB.Build)];
+
+        int _sc = 0;
+        foreach (BreezRuLeftoverModelDB[] itemsPart in leftovers.Chunk(10))
+        {
+            await ctx.AddRangeAsync(itemsPart, token);
+            await ctx.SaveChangesAsync(token);
+            _sc += itemsPart.Length;
+            logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{leftovers.Length})");
+        }
 
         await transaction.CommitAsync(token);
 
@@ -51,6 +64,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
         TResponseModel<List<BreezRuGoodsModel>> result = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync("leftovers/", token);
+        logger.LogInformation($"http запрос: {response.RequestMessage}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {

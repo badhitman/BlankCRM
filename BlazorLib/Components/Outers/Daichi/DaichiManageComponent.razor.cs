@@ -16,6 +16,8 @@ public partial class DaichiManageComponent : BlazorBusyComponentBaseModel
     IDaichiBusinessApiService daichiRepo { get; set; } = default!;
 
 
+    static string[] ApplicationsFilterSet = ["ApiDaichiBusiness"];
+
     TResponseModel<List<RabbitMqManagementResponseModel>>? HealthCheck;
 
     /// <inheritdoc/>
@@ -30,7 +32,8 @@ public partial class DaichiManageComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         ResponseBaseModel res = await daichiRepo.DownloadAndSaveAsync();
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackbarRepo.Info("Задание отправлено в очередь");
+        await Task.Delay(5000);
         HealthCheck = await daichiRepo.HealthCheckAsync();
         await SetBusyAsync(false);
     }
