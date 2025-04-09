@@ -29,7 +29,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return ResponseBaseModel.CreateWarning($"В очереди есть не выполненные задачи");
 
         string msg;
-        TResponseModel<List<BreezRuGoodsModel>> jsonData = await LeftoversGetAsync(token: token);
+        TResponseModel<List<BreezRuLeftoverModel>> jsonData = await LeftoversGetAsync(token: token);
         if (jsonData.Response is null)
         {
             msg = $"Error `{nameof(DownloadAndSaveAsync)}`: parseData.Response is null";
@@ -59,9 +59,9 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<BreezRuGoodsModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default)
+    public async Task<TResponseModel<List<BreezRuLeftoverModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default)
     {
-        TResponseModel<List<BreezRuGoodsModel>> result = new();
+        TResponseModel<List<BreezRuLeftoverModel>> result = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync("leftovers/", token);
         logger.LogInformation($"http запрос: {response.RequestMessage}");
@@ -83,7 +83,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return result;
         }
 
-        result.Response = JsonConvert.DeserializeObject<List<BreezRuGoodsModel>>(responseBody);
+        result.Response = JsonConvert.DeserializeObject<List<BreezRuLeftoverModel>>(responseBody);
 
         if (result.Response is null)
         {

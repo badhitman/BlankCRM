@@ -45,7 +45,7 @@ public class BreezRuLeftoverModelDB : BreezRuGoodsBaseModel
     public DateTime LoadedDateTime { get; set; }
 
     /// <inheritdoc/>
-    public static BreezRuLeftoverModelDB Build(BreezRuGoodsModel x)
+    public static BreezRuLeftoverModelDB Build(BreezRuLeftoverModel x)
     {
         return new()
         {

@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// BreezRuGoodsModel
 /// </summary>
-public class BreezRuGoodsModel : BreezRuGoodsBaseModel
+public class BreezRuLeftoverModel : BreezRuGoodsBaseModel
 {
     /// <summary>
     /// Цены

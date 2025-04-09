@@ -11,13 +11,13 @@ namespace Transmission.Receives.Outers.Breez;
 /// LeftoversGetAsyncReceive
 /// </summary>
 public class LeftoversGetReceive(IBreezRuApiService breezRepo)
-    : IResponseReceive<string?, TResponseModel<List<BreezRuGoodsModel>>?>
+    : IResponseReceive<string?, TResponseModel<List<BreezRuLeftoverModel>>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.LeftoversGetBreezReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<BreezRuGoodsModel>>?> ResponseHandleActionAsync(string? nc, CancellationToken token = default)
+    public async Task<TResponseModel<List<BreezRuLeftoverModel>>?> ResponseHandleActionAsync(string? nc, CancellationToken token = default)
     {
         //ArgumentNullException.ThrowIfNull(payload);
         return await breezRepo.LeftoversGetAsync(nc, token);

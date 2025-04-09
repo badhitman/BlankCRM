@@ -12,7 +12,7 @@ namespace SharedLib;
 public interface IBreezRuApiService : IOuterApiService
 {
     /// <summary>
-    /// остатки на доступных складах
+    /// остатки на складах
     /// </summary>
-    public Task<TResponseModel<List<BreezRuGoodsModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default);
+    public Task<TResponseModel<List<BreezRuLeftoverModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default);
 }
