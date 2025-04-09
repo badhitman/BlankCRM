@@ -29,4 +29,4 @@ haietprof - предоставляет публичный rss поток без 
 
 #### Процесс обработки
 Загрузка некоторых источников данных может длиться длительное время. В случае если в данный момоент выполняется загрузка - система отображает журнал логов:
-![dd](FeedsHaierProffRuService/img/download-progress.png)
+![download-progress](FeedsHaierProffRuService/img/download-progress.png)
