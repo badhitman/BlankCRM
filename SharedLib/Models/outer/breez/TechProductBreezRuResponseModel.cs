@@ -19,4 +19,17 @@ public class TechProductBreezRuResponseModel : ProductBreezRuLiteModel
     /// Объект, содержащий ТХи, где ключ - идентификатор ТХ, а значение - объект с ТХ
     /// </summary>
     public Dictionary<string, TechProductBreezRuModel>? Techs { get; set; }
+
+    /// <inheritdoc/>
+    public static TechProductBreezRuResponseModel Build(KeyValuePair<string, TechProductBreezRuResponseModel> x)
+    {
+        return new()
+        {
+            AccessoryNC = x.Value.AccessoryNC,
+            NarujNC = x.Value.NarujNC,
+            NC = x.Value.NC,
+            VnutrNC = x.Value.VnutrNC,
+            Techs = x.Value.Techs,
+        };
+    }
 }

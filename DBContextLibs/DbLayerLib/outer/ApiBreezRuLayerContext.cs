@@ -40,4 +40,45 @@ public abstract partial class ApiBreezRuLayerContext : DbContext
     /// остатки на складах
     /// </summary>
     public DbSet<BreezRuLeftoverModelDB> Leftovers { get; set; }
+
+    /// <summary>
+    /// Brands
+    /// </summary>
+    public DbSet<BrandBreezRuModelDB> Brands { get; set; }
+
+    /// <summary>
+    /// Categories
+    /// </summary>
+    public DbSet<CategoryBreezRuModelDB> Categories { get; set; }
+
+    /// <summary>
+    /// Products
+    /// </summary>
+    public DbSet<ProductBreezRuModelDB> Products { get; set; }
+
+    /// <summary>
+    /// ImagesProducts
+    /// </summary>
+    public DbSet<ImageProductBreezRuModelDB> ImagesProducts { get; set; }
+
+
+    /// <summary>
+    /// TechsCategories
+    /// </summary>
+    public DbSet<TechCategoryBreezRuModelDB> TechsCategories { get; set; }
+
+    /// <summary>
+    /// PropsTechsCategories
+    /// </summary>
+    public DbSet<TechPropertyCategoryBreezRuModelDB> PropsTechsCategories { get; set; }
+
+    /// <summary>
+    /// TechsProducts
+    /// </summary>
+    public DbSet<TechProductBreezRuResponseModelDB> TechsProducts { get; set; }
+
+    /// <summary>
+    /// PropsTechsProducts
+    /// </summary>
+    public DbSet<TechProductBreezRuModelDB> PropsTechsProducts { get; set; }
 }

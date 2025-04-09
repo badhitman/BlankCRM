@@ -16,7 +16,7 @@ public class TechProductBreezRuModel : TechBreezRuBaseModel
 {
     /// <inheritdoc/>
     [JsonProperty("id_char"), JsonPropertyName("id_char")]
-    public required string IdChar { get; set; }
+    public int IdChar { get; set; }
 
     /// <inheritdoc/>
     [JsonProperty("type"), JsonPropertyName("type")]

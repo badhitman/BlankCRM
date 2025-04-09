@@ -24,4 +24,21 @@ public class TechCategoryBreezRuModel : TechBreezRuBaseModel
     /// <inheritdoc/>
     [JsonProperty("data_type"), JsonPropertyName("data_type")]
     public string? DataType { get; set; }
+
+    /// <inheritdoc/>
+    public static TechCategoryBreezRuModel Build(KeyValuePair<string, TechCategoryBreezRuModel> x)
+    {
+        return new()
+        {
+            TechId = x.Value.TechId,
+            Title = x.Value.Title,
+            DataType = x.Value.DataType,
+            Filter = x.Value.Filter,
+            FilterType = x.Value.FilterType,
+            Group = x.Value.Group,
+            Order = x.Value.Order,
+            Required = x.Value.Required,
+            Unit = x.Value.Unit,
+        };
+    }
 }
