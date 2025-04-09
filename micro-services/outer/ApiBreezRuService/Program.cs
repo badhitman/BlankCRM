@@ -116,6 +116,14 @@ public class Program
             .AddScoped<IBreezRuApiService, BreezRuApiService>()
             ;
 
+        builder.Services.AddHttpClient(HttpClientsNamesEnum.RabbitMqManagement.ToString(), cc =>
+        {
+            cc.BaseAddress = new Uri($"http://{_mqConf.HostName}:{_mqConf.PortManagementPlugin}/");
+            string authenticationString = $"{_mqConf.UserName}:{_mqConf.Password}";
+            string base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(authenticationString));
+            cc.DefaultRequestHeaders.Add("Authorization", $"Basic {base64EncodedAuthenticationString}");
+        });
+
         builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString(), cc =>
         {
             cc.BaseAddress = new Uri($"https://api.breez.ru/v1/");

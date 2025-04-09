@@ -6,9 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
 using System.Xml.Linq;
-using System.Text;
-using System.Collections.Generic;
-using DocumentFormat.OpenXml.InkML;
+using RemoteCallLib;
 
 namespace FeedsHaierProffRuService;
 
@@ -18,8 +16,13 @@ namespace FeedsHaierProffRuService;
 #pragma warning disable CS9113 // Параметр не прочитан.
 public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILogger<HaierProffRuFeedsService> logger, IDbContextFactory<FeedsHaierProffRuContext> dbFactory)
 #pragma warning restore CS9113 // Параметр не прочитан.
-    : IFeedsHaierProffRuService
+#pragma warning disable CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
+    : OuterApiBaseServiceImpl(HttpClientFactory), IFeedsHaierProffRuService
+#pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
 {
+    /// <inheritdoc/>
+    public override string NameTemplateMQ => Path.Combine(GlobalStaticConstants.TransmissionQueueNamePrefix, GlobalStaticConstants.Routes.HAIERPROFF_CONTROLLER_NAME);
+
     /// <inheritdoc/>
 #pragma warning disable CS1998 // В асинхронном методе отсутствуют операторы await, будет выполнен синхронный метод
     public async Task<TResponseModel<List<FeedItemHaierModel>>> ProductsFeedGetAsync(CancellationToken token = default)
@@ -88,7 +91,7 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
+    public override async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
     {
         ResponseBaseModel result = new();
         TResponseModel<List<FeedItemHaierModel>> read = await ProductsFeedGetAsync(token);

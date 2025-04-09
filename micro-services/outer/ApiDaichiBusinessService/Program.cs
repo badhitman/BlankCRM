@@ -116,6 +116,14 @@ public class Program
             .AddScoped<IDaichiBusinessApiService, DaichiBusinessApiService>()
             ;
 
+        builder.Services.AddHttpClient(HttpClientsNamesEnum.RabbitMqManagement.ToString(), cc =>
+        {
+            cc.BaseAddress = new Uri($"http://{_mqConf.HostName}:{_mqConf.PortManagementPlugin}/");
+            string authenticationString = $"{_mqConf.UserName}:{_mqConf.Password}";
+            string base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(authenticationString));
+            cc.DefaultRequestHeaders.Add("Authorization", $"Basic {base64EncodedAuthenticationString}");
+        });
+
         builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString(), cc => { cc.BaseAddress = new Uri($"https://api.daichi.ru/b2b/{daichiCredentials.Version}"); });
 
         // Custom metrics for the application

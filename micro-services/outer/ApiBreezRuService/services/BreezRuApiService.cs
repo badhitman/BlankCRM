@@ -4,6 +4,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using RemoteCallLib;
 using SharedLib;
 using DbcLib;
 
@@ -12,10 +13,16 @@ namespace ApiBreezRuService;
 /// <summary>
 /// BreezRuApiService
 /// </summary>
-public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<BreezRuApiService> logger, IDbContextFactory<ApiBreezRuContext> dbFactory) : IBreezRuApiService
+public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<BreezRuApiService> logger, IDbContextFactory<ApiBreezRuContext> dbFactory)
+#pragma warning disable CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
+    : OuterApiBaseServiceImpl(HttpClientFactory), IBreezRuApiService
+#pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
 {
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
+    public override string NameTemplateMQ => Path.Combine(GlobalStaticConstants.TransmissionQueueNamePrefix, GlobalStaticConstants.Routes.BREEZ_CONTROLLER_NAME);
+
+    /// <inheritdoc/>
+    public override async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
     {
         string msg;
         TResponseModel<List<BreezRuGoodsModel>> jsonData = await LeftoversGetAsync(token: token);

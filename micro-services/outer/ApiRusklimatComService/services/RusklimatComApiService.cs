@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
 using System.Net.Http.Json;
+using RemoteCallLib;
 
 namespace ApiRusklimatComService;
 
@@ -20,11 +21,16 @@ public class RusklimatComApiService(
     IMemoryCache memoryCache,
     IOptions<AuthAlterModel> _conf,
     ILogger<RusklimatComApiService> logger,
-    IDbContextFactory<ApiRusklimatComContext> dbFactory) : IRusklimatComApiService, IDisposable
+#pragma warning disable CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
+    IDbContextFactory<ApiRusklimatComContext> dbFactory) : OuterApiBaseServiceImpl(HttpClientFactory), IRusklimatComApiService, IDisposable
+#pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
 {
     HttpClient? httpClient;
     string? requestKey;
     const string _jwt = "rusklimat-jwt", _requestKeyCache = "rusklimat-RequestKey", _pref = "InternetPartner";
+
+    /// <inheritdoc/>
+    public override string NameTemplateMQ => Path.Combine(GlobalStaticConstants.TransmissionQueueNamePrefix, GlobalStaticConstants.Routes.RUSKLIMAT_CONTROLLER_NAME);
 
     async Task GetClient(bool perm = false, CancellationToken token = default)
     {
@@ -129,7 +135,7 @@ public class RusklimatComApiService(
 
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
+    public override async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
     {
         TResponseModel<UnitsRusklimatResponseModel> getUnits = default!;
         TResponseModel<CategoriesRusklimatResponseModel> getCats = default!;

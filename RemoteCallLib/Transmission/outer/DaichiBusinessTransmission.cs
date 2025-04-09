@@ -16,6 +16,12 @@ public class DaichiBusinessTransmission(IRabbitClient rabbitClient) : IDaichiBus
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.DownloadAndSaveDaichiReceive, token: token) ?? new();
 
     /// <inheritdoc/>
+    public async Task<TResponseModel<List<RabbitMqManagementResponseModel>>> HealthCheckAsync(CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<ProductsDaichiBusinessResultModel>> ProductsGetAsync(ProductsRequestDaichiModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<ProductsDaichiBusinessResultModel>>(GlobalStaticConstants.TransmissionQueues.ProductsGetDaichiReceive, req, token: token) ?? new();
 

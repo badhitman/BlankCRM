@@ -5,14 +5,17 @@
 namespace SharedLib;
 
 /// <summary>
-/// IOuterApiBaseService
+/// IOuterApiService
 /// </summary>
 public interface IOuterApiService
 {
     /// <summary>
-    /// DownloadAndSaveAsync
+    /// Скачать данные и сохранить в БД
     /// </summary>
     public Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default);
-}
 
-//public abstract class 
+    /// <summary>
+    /// Получить задания-очереди которые в данный момент в работе
+    /// </summary>
+    public Task<TResponseModel<List<RabbitMqManagementResponseModel>>> HealthCheckAsync(CancellationToken token = default);
+}

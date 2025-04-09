@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
+using RemoteCallLib;
 
 namespace ApiDaichiBusinessService;
 
@@ -17,10 +18,15 @@ namespace ApiDaichiBusinessService;
 public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     IOptions<TokenVersionModel> _conf,
     ILogger<DaichiBusinessApiService> logger,
-    IDbContextFactory<ApiDaichiBusinessContext> dbFactory) : IDaichiBusinessApiService
+#pragma warning disable CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
+    IDbContextFactory<ApiDaichiBusinessContext> dbFactory) : OuterApiBaseServiceImpl(HttpClientFactory), IDaichiBusinessApiService
+#pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
 {
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
+    public override string NameTemplateMQ => Path.Combine(GlobalStaticConstants.TransmissionQueueNamePrefix, GlobalStaticConstants.Routes.DAICHI_CONTROLLER_NAME);
+
+    /// <inheritdoc/>
+    public override async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
     {
         using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
 
