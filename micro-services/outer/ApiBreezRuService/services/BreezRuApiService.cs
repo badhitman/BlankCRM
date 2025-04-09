@@ -59,6 +59,36 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
     }
 
     /// <inheritdoc/>
+    public async Task<TResponseModel<List<BrandBreezRuModel>>> GetBrandsAsync(CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<CategoryBreezRuModel>>> GetCategoriesAsync(CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<ProductBreezRuModel>>> GetProductsAsync(CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<TechCategoryBreezRuModel>>> GetTechCategoryAsync(TechRequestModel req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<TechProductBreezRuResponseModel>>> GetTechProductAsync(TechRequestModel req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<List<BreezRuLeftoverModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default)
     {
         TResponseModel<List<BreezRuLeftoverModel>> result = new();

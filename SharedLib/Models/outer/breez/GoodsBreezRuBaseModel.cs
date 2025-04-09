@@ -9,10 +9,10 @@ using Newtonsoft.Json;
 namespace SharedLib;
 
 /// <summary>
-/// BreezRuGoodsBaseModel
+/// GoodsBreezRuBaseModel
 /// </summary>
 [Index(nameof(CodeNC)), Index(nameof(Articul)), Index(nameof(Quantity)), Index(nameof(Stock)), Index(nameof(TimeLastUpdate))]
-public class BreezRuGoodsBaseModel
+public class GoodsBreezRuBaseModel
 {
     /// <summary>
     /// НС-код

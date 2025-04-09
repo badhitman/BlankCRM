@@ -11,7 +11,7 @@ namespace SharedLib;
 /// BreezRuElementModelDB
 /// </summary>
 [Index(nameof(CurrencyBasePrice)), Index(nameof(CurrencyRIC)), Index(nameof(LoadedDateTime))]
-public class BreezRuLeftoverModelDB : BreezRuGoodsBaseModel
+public class BreezRuLeftoverModelDB : GoodsBreezRuBaseModel
 {
     /// <summary>
     /// Идентификатор/Key
