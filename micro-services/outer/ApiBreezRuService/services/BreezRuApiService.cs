@@ -7,9 +7,6 @@ using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 using DbcLib;
-using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Spreadsheet;
-using EFCore.BulkExtensions;
 
 namespace ApiBreezRuService;
 
@@ -178,9 +175,8 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
         _sc = 0;
         foreach (ProductRealBreezRuModel[] productsPart in productsJson.Response.Chunk(100))
         {
-            await ctx.BulkInsertAsync(productsPart.Select(ProductBreezRuModelDB.Build), cancellationToken: token);
-            //await ctx.AddRangeAsync(productsPart.Select(ProductBreezRuModelDB.Build), token);
-            //await ctx.SaveChangesAsync(token);
+            await ctx.AddRangeAsync(productsPart.Select(ProductBreezRuModelDB.Build), token);
+            await ctx.SaveChangesAsync(token);
             _sc += productsPart.Length;
             logger.LogInformation($"Записана очередная порция `{nameof(productsPart)}` данных {productsPart.Length} ({_sc}/{productsJson.Response.Count})");
         }

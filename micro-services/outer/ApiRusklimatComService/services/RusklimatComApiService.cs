@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 using DbcLib;
-using EFCore.BulkExtensions;
 
 namespace ApiRusklimatComService;
 
@@ -234,24 +233,26 @@ public class RusklimatComApiService(
         await ctx.AddRangeAsync(getUnits.Response.Data, token);
         await ctx.SaveChangesAsync(token);
 
-        await ctx.BulkInsertAsync(getCats.Response.Data, cancellationToken: token);
-        //await ctx.AddRangeAsync(getCats.Response.Data, token);
+        await ctx.AddRangeAsync(getCats.Response.Data, token);
         await ctx.SaveChangesAsync(token);
 
-        await ctx.BulkInsertAsync(getProps.Response.Data, cancellationToken: token);
-        //await ctx.AddRangeAsync(getProps.Response.Data, token);
-        await ctx.SaveChangesAsync(token);
-
-        try
+        int _sc = 0;
+        foreach (PropertyRusklimatModelDB[] itemsPart in getProps.Response.Data.Chunk(50))
         {
-            List<ProductRusklimatModelDB> productsDb = [.. prodsData.Select(x => ProductRusklimatModelDB.Build(x, getProps.Response.Data))];
-            await ctx.BulkInsertAsync(productsDb, cancellationToken: token);
-            //await ctx.AddRangeAsync(productsDb, token);
-            //await ctx.SaveChangesAsync(token);
+            await ctx.AddRangeAsync(itemsPart, token);
+            await ctx.SaveChangesAsync(token);
+            _sc += itemsPart.Length;
+            logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{getProps.Response.Data.Length})");
         }
-        catch (Exception ex)
+
+        List<ProductRusklimatModelDB> productsDb = [.. prodsData.Select(x => ProductRusklimatModelDB.Build(x, getProps.Response.Data))];
+        _sc = 0;
+        foreach (ProductRusklimatModelDB[] itemsPart in productsDb.Chunk(50))
         {
-            logger.LogError(ex, "Ошибка загрузки товаров");
+            await ctx.AddRangeAsync(itemsPart, token);
+            await ctx.SaveChangesAsync(token);
+            _sc += itemsPart.Length;
+            logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{productsDb.Count})");
         }
 
         await transaction.CommitAsync(token);

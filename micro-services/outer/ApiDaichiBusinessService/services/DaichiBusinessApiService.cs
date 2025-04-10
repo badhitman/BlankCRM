@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
 using RemoteCallLib;
-using EFCore.BulkExtensions;
 
 namespace ApiDaichiBusinessService;
 
@@ -110,9 +109,9 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         await ctx.SaveChangesAsync(token);
 
         List<ProductDaichiModelDB> productsDb = [.. products.Response.GetProducts.Select(x => ProductDaichiModelDB.Build(x, storesDb))];
-        await ctx.BulkInsertAsync(productsDb, cancellationToken: token);
-        //await ctx.AddRangeAsync(productsDb, token);
-        //await ctx.SaveChangesAsync(token);
+        
+        await ctx.AddRangeAsync(productsDb, token);
+        await ctx.SaveChangesAsync(token);
 
         try
         {
@@ -120,9 +119,8 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
             int _sc = 0;
             foreach (ParameterEntryDaichiModelDB[] itemsPart in productsParametersDb.Chunk(10))
             {
-                await ctx.BulkInsertAsync(itemsPart, cancellationToken: token);
-                //await ctx.AddRangeAsync(itemsPart, token);
-                //await ctx.SaveChangesAsync(token);
+                await ctx.AddRangeAsync(itemsPart, token);
+                await ctx.SaveChangesAsync(token);
                 _sc += itemsPart.Length;
                 logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{productsParametersDb.Count})");
             }
@@ -216,7 +214,8 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Message, $"Ошибка десериализации:\n{responseBody}");
+            msg = $"Ошибка десериализации:\n{responseBody}";
+            logger.LogError(ex, msg);
         }
 
         if (res.Response is null)
