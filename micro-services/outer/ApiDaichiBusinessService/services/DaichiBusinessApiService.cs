@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
 using RemoteCallLib;
+using EFCore.BulkExtensions;
 
 namespace ApiDaichiBusinessService;
 
@@ -31,8 +32,6 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         TResponseModel<List<RabbitMqManagementResponseModel>> hc = await HealthCheckAsync(token);
         if (hc.Response is null || hc.Response.Sum(x => x.messages) != 0)
             return ResponseBaseModel.CreateWarning($"В очереди есть не выполненные задачи");
-
-        using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
 
         TResponseModel<ProductsDaichiBusinessResultModel> products = default!;
         TResponseModel<StoresDaichiBusinessResponseModel> stores = default!;
@@ -92,6 +91,8 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         if (products.Response?.GetProducts is null)
             return ResponseBaseModel.CreateError("products.Response?.GetProducts");
 
+        using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
+        
         await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await ctx.Database.BeginTransactionAsync(token);
 
         await ctx.Stores.ExecuteDeleteAsync(cancellationToken: token);
@@ -109,8 +110,9 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         await ctx.SaveChangesAsync(token);
 
         List<ProductDaichiModelDB> productsDb = [.. products.Response.GetProducts.Select(x => ProductDaichiModelDB.Build(x, storesDb))];
-        await ctx.AddRangeAsync(productsDb, token);
-        await ctx.SaveChangesAsync(token);
+        await ctx.BulkInsertAsync(productsDb, cancellationToken: token);
+        //await ctx.AddRangeAsync(productsDb, token);
+        //await ctx.SaveChangesAsync(token);
 
         try
         {
@@ -118,14 +120,12 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
             int _sc = 0;
             foreach (ParameterEntryDaichiModelDB[] itemsPart in productsParametersDb.Chunk(10))
             {
-                await ctx.AddRangeAsync(itemsPart, token);
-                await ctx.SaveChangesAsync(token);
+                await ctx.BulkInsertAsync(itemsPart, cancellationToken: token);
+                //await ctx.AddRangeAsync(itemsPart, token);
+                //await ctx.SaveChangesAsync(token);
                 _sc += itemsPart.Length;
                 logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{productsParametersDb.Count})");
             }
-
-            await ctx.AddRangeAsync(productsParametersDb, token);
-            await ctx.SaveChangesAsync(token);
         }
         catch (Exception ex)
         {
@@ -156,7 +156,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         TResponseModel<ProductsDaichiBusinessResultModel> res = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"/products/get/?access-token={_conf.Value.Token}&store-id={req.StoreId}", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -192,7 +192,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         TResponseModel<ProductsParamsDaichiBusinessResponseModel> res = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"/productparams/get/?access-token={_conf.Value.Token}&page-size={req.PageSize}&page={req.Page}", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {

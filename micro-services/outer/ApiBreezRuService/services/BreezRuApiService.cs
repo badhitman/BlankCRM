@@ -7,6 +7,9 @@ using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 using DbcLib;
+using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Spreadsheet;
+using EFCore.BulkExtensions;
 
 namespace ApiBreezRuService;
 
@@ -175,8 +178,9 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
         _sc = 0;
         foreach (ProductRealBreezRuModel[] productsPart in productsJson.Response.Chunk(100))
         {
-            await ctx.AddRangeAsync(productsPart.Select(ProductBreezRuModelDB.Build), token);
-            await ctx.SaveChangesAsync(token);
+            await ctx.BulkInsertAsync(productsPart.Select(ProductBreezRuModelDB.Build), cancellationToken: token);
+            //await ctx.AddRangeAsync(productsPart.Select(ProductBreezRuModelDB.Build), token);
+            //await ctx.SaveChangesAsync(token);
             _sc += productsPart.Length;
             logger.LogInformation($"Записана очередная порция `{nameof(productsPart)}` данных {productsPart.Length} ({_sc}/{productsJson.Response.Count})");
         }
@@ -185,7 +189,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
         {
             try
             {
-                List<TechCategoryBreezRuModelDB> tcList = [.._txCatsPart.Select(TechCategoryBreezRuModelDB.Build)];
+                List<TechCategoryBreezRuModelDB> tcList = [.. _txCatsPart.Select(TechCategoryBreezRuModelDB.Build)];
                 await ctx.AddRangeAsync(tcList, token);
                 await ctx.SaveChangesAsync(token);
                 _sc += _txCatsPart.Length;
@@ -201,7 +205,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
         {
             try
             {
-                List<TechProductBreezRuModelDB> tpList = [.._txProdsPart.Select(TechProductBreezRuModelDB.Build)];
+                List<TechProductBreezRuModelDB> tpList = [.. _txProdsPart.Select(TechProductBreezRuModelDB.Build)];
                 await ctx.AddRangeAsync(tpList, token);
                 await ctx.SaveChangesAsync(token);
                 _sc += _txProdsPart.Length;
@@ -225,7 +229,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
 
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"tech/?category={req.Id}", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         string responseBody = await response.Content.ReadAsStringAsync(token);
 
@@ -260,7 +264,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             result.AddError(msg);
             return result;
         }
-        msg = $"Прочитано [Технические характеристики Категории]: {result.Response.Count}";
+        msg = $"Прочитано [Технические характеристики Категории #{req.Id}]: {result.Response.Sum(x => x.Techs is null ? 0 : x.Techs.Count)}";
         result.AddSuccess(msg);
         logger.LogInformation(msg);
         return result;
@@ -272,7 +276,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
         TResponseModel<List<TechProductRealBreezRuModel>> result = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"tech/?id={req.Id}", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         string responseBody = await response.Content.ReadAsStringAsync(token);
         if (!response.IsSuccessStatusCode)
@@ -298,8 +302,8 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             result.AddError(msg);
             return result;
         }
-        result.Response =  [.. _techs.Select(x=>TechProductRealBreezRuModel.Build(x))];
-        msg = $"Прочитано [Технические характеристики Продукта]: {result.Response.Count}";
+        result.Response = [.. _techs.Select(TechProductRealBreezRuModel.Build)];
+        msg = $"Прочитано [Технические характеристики Продукта #{req.Id}]: {result.Response.Sum(x => (x.Techs is null ? 0 : x.Techs.Count))}";
         result.AddSuccess(msg);
         logger.LogInformation(msg);
         return result;
@@ -312,7 +316,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
 
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync("brands/", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -353,7 +357,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
 
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync("categories/", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -394,7 +398,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
 
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync("products/", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -433,7 +437,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
         TResponseModel<List<BreezRuLeftoverModel>> result = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync("leftovers/", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {

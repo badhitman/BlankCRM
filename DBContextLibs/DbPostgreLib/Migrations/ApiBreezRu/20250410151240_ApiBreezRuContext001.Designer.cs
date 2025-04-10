@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.ApiBreezRu
 {
     [DbContext(typeof(ApiBreezRuContext))]
-    [Migration("20250410104738_ApiBreezRuContext001")]
+    [Migration("20250410151240_ApiBreezRuContext001")]
     partial class ApiBreezRuContext001
     {
         /// <inheritdoc />

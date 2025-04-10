@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.ApiDaichiBusiness
 {
     [DbContext(typeof(ApiDaichiBusinessContext))]
-    [Migration("20250408135148_ApiDaichiBusinessContext001")]
+    [Migration("20250410151409_ApiDaichiBusinessContext001")]
     partial class ApiDaichiBusinessContext001
     {
         /// <inheritdoc />

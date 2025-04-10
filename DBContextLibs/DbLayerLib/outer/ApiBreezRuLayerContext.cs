@@ -25,7 +25,7 @@ public abstract partial class ApiBreezRuLayerContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
 #if DEBUG
-        options.EnableSensitiveDataLogging(true);
+        // options.EnableSensitiveDataLogging(true);
         options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
 #endif
     }

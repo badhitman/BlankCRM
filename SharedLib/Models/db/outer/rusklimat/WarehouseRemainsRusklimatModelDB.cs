@@ -2,11 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// Остатки на складах
 /// </summary>
+[Index(nameof(RemainValue))]
 public class WarehouseRemainsRusklimatModelDB:EntryModel
 {
     /// <summary>

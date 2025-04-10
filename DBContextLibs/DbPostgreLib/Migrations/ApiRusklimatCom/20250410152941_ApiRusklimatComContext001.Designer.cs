@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.ApiRusklimatCom
 {
     [DbContext(typeof(ApiRusklimatComContext))]
-    [Migration("20250408094134_ApiRusklimatComContext001")]
+    [Migration("20250410152941_ApiRusklimatComContext001")]
     partial class ApiRusklimatComContext001
     {
         /// <inheritdoc />
@@ -71,6 +71,8 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
 
                     b.HasIndex("ProductId1");
 
+                    b.HasIndex("TypeInfo");
+
                     b.ToTable("ProductsInformation", "public");
                 });
 
@@ -101,6 +103,8 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId1");
+
+                    b.HasIndex("PropertyKey");
 
                     b.ToTable("ProductsProperties", "public");
                 });
@@ -164,6 +168,8 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Sort");
+
                     b.ToTable("PropertiesCatalog", "public");
                 });
 
@@ -175,13 +181,12 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Total")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Total");
 
                     b.ToTable("Remains", "public");
                 });
@@ -232,6 +237,8 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                     b.HasIndex("Name");
 
                     b.HasIndex("ParentId");
+
+                    b.HasIndex("RemainValue");
 
                     b.ToTable("WarehousesRemains", "public");
                 });

@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
@@ -9,6 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// остатки
 /// </summary>
+[Index(nameof(Total))]
 public class RemainsRusklimatModelDB
 {
     /// <summary>
@@ -21,10 +23,6 @@ public class RemainsRusklimatModelDB
     /// Product
     /// </summary>
     public ProductRusklimatModelDB? Product { get; set; }
-    /// <summary>
-    /// Product
-    /// </summary>
-    public int ProductId { get; set; }
 
     /// <summary>
     /// Остатки на складах

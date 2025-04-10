@@ -26,6 +26,9 @@
 
 	<ItemGroup>
 	  <Folder Include="Migrations\ApiBreezRu\" />
+	  <Folder Include="Migrations\ApiDaichiBusiness\" />
+	  <Folder Include="Migrations\ApiRusklimatCom\" />
+	  <Folder Include="Migrations\FeedsHaierproffRu\" />
 	</ItemGroup>
 
 </Project>

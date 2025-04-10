@@ -67,7 +67,7 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
         string msg, responseBody;
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.FeedsHaierProffRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync("cond/?type=partners", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         if (!response.IsSuccessStatusCode)
         {
             msg = $"Error `{nameof(DownloadAndSaveAsync)}` (http code: {response.StatusCode}): {await response.Content.ReadAsStringAsync(token)}";

@@ -30,7 +30,7 @@ public class TechProductBreezRuModelDB : ProductBreezRuLiteModel
             NC = x.NC,
             VnutrNC = x.VnutrNC,
         };
-        //res.Properties = x.Techs is null ? null : [.. x.Techs.Select(x => PropertyTechProductBreezRuModelDB.Build(x, res))];
+        res.Properties = x.Techs is null ? null : [.. x.Techs.Select(x => PropertyTechProductBreezRuModelDB.Build(x, res))];
         return res;
     }
 }

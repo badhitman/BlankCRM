@@ -49,7 +49,6 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
                     Total = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -199,10 +198,34 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 column: "ProductId1");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductsInformation_TypeInfo",
+                schema: "public",
+                table: "ProductsInformation",
+                column: "TypeInfo");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductsProperties_ProductId1",
                 schema: "public",
                 table: "ProductsProperties",
                 column: "ProductId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsProperties_PropertyKey",
+                schema: "public",
+                table: "ProductsProperties",
+                column: "PropertyKey");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PropertiesCatalog_Sort",
+                schema: "public",
+                table: "PropertiesCatalog",
+                column: "Sort");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Remains_Total",
+                schema: "public",
+                table: "Remains",
+                column: "Total");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WarehousesRemains_Name",
@@ -215,6 +238,12 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 schema: "public",
                 table: "WarehousesRemains",
                 column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarehousesRemains_RemainValue",
+                schema: "public",
+                table: "WarehousesRemains",
+                column: "RemainValue");
         }
 
         /// <inheritdoc />

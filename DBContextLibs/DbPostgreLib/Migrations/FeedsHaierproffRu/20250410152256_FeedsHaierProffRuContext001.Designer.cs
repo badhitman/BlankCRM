@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.FeedsHaierProffRu
 {
     [DbContext(typeof(FeedsHaierProffRuContext))]
-    [Migration("20250407082045_FeedsHaierProffRuContext001")]
+    [Migration("20250410152256_FeedsHaierProffRuContext001")]
     partial class FeedsHaierProffRuContext001
     {
         /// <inheritdoc />

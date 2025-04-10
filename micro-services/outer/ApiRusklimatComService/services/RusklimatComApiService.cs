@@ -5,11 +5,12 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Net.Http.Json;
 using Newtonsoft.Json;
+using RemoteCallLib;
 using SharedLib;
 using DbcLib;
-using System.Net.Http.Json;
-using RemoteCallLib;
+using EFCore.BulkExtensions;
 
 namespace ApiRusklimatComService;
 
@@ -233,17 +234,20 @@ public class RusklimatComApiService(
         await ctx.AddRangeAsync(getUnits.Response.Data, token);
         await ctx.SaveChangesAsync(token);
 
-        await ctx.AddRangeAsync(getCats.Response.Data, token);
+        await ctx.BulkInsertAsync(getCats.Response.Data, cancellationToken: token);
+        //await ctx.AddRangeAsync(getCats.Response.Data, token);
         await ctx.SaveChangesAsync(token);
 
-        await ctx.AddRangeAsync(getProps.Response.Data, token);
+        await ctx.BulkInsertAsync(getProps.Response.Data, cancellationToken: token);
+        //await ctx.AddRangeAsync(getProps.Response.Data, token);
         await ctx.SaveChangesAsync(token);
 
         try
         {
             List<ProductRusklimatModelDB> productsDb = [.. prodsData.Select(x => ProductRusklimatModelDB.Build(x, getProps.Response.Data))];
-            await ctx.AddRangeAsync(productsDb, token);
-            await ctx.SaveChangesAsync(token);
+            await ctx.BulkInsertAsync(productsDb, cancellationToken: token);
+            //await ctx.AddRangeAsync(productsDb, token);
+            //await ctx.SaveChangesAsync(token);
         }
         catch (Exception ex)
         {
@@ -266,7 +270,7 @@ public class RusklimatComApiService(
         }
 
         HttpResponseMessage response = await httpClient.PostAsJsonAsync($"v2/{_pref}/{_conf.Value.PartnerId}/products/{requestKey}/?pageSize={req.PageSize}&page={req.PageNum}", req, token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         string responseBody = await response.Content.ReadAsStringAsync(token);
         if (!response.IsSuccessStatusCode)
@@ -316,7 +320,7 @@ public class RusklimatComApiService(
         }
 
         HttpResponseMessage response = await httpClient.GetAsync($"{_conf.Value.Version}/{_pref}/categories/{requestKey}", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -365,7 +369,7 @@ public class RusklimatComApiService(
         }
 
         HttpResponseMessage response = await httpClient.GetAsync($"{_conf.Value.Version}/{_pref}/units", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {
@@ -414,7 +418,7 @@ public class RusklimatComApiService(
         }
 
         HttpResponseMessage response = await httpClient.GetAsync($"{_conf.Value.Version}/{_pref}/properties/{requestKey}", token);
-        logger.LogInformation($"http запрос: {response.RequestMessage}");
+        logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
         string msg;
         if (!response.IsSuccessStatusCode)
         {

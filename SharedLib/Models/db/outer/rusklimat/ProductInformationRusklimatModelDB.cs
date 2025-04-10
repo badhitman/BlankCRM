@@ -2,11 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// ProductInformationRusklimatModelDB
 /// </summary>
+[Index(nameof(TypeInfo))]
 public class ProductInformationRusklimatModelDB : EntryModel
 {
     /// <summary>
