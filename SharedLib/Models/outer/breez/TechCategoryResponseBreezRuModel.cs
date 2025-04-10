@@ -13,5 +13,5 @@ public class TechCategoryResponseBreezRuModel
     public int Category { get; set; }
 
     /// <inheritdoc/>
-    public Dictionary<string, TechCategoryBreezRuModel>? Techs { get; set; }
+    public Dictionary<int, TechCategoryBreezRuModel>? Techs { get; set; }
 }

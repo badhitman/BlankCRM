@@ -10,32 +10,25 @@ namespace SharedLib;
 /// TechProductRealBreezRuModel
 /// </summary>
 [Index(nameof(Key))]
-public class TechProductRealBreezRuModel : TechProductBreezRuModel
+public class TechProductRealBreezRuModel : ProductBreezRuLiteModel
 {
     /// <inheritdoc/>
-    public required string Key { get; set; }
+    public required int Key { get; set; }
 
     /// <inheritdoc/>
-    public static TechProductRealBreezRuModel Build(KeyValuePair<string, TechProductBreezRuModel> x)
+    public Dictionary<int, PropTechProductBreezRuModel>? Techs { get; set; }
+
+    /// <inheritdoc/>
+    public static TechProductRealBreezRuModel Build(KeyValuePair<int, TechProductBreezRuResponseModel> x)
     {
         return new()
         {
             Key = x.Key,
-            Analog = x.Value.Analog,
-            First = x.Value.First,
-            Show = x.Value.Show,
-            SubCategory = x.Value.SubCategory,
-            Title = x.Value.Title,
-            TypeParameter = x.Value.TypeParameter,
-            Value = x.Value.Value,
-            Filter = x.Value.Filter,
-            FilterType = x.Value.FilterType,
-            Group = x.Value.Group,
-            IdChar = x.Value.IdChar,
-            Order = x.Value.Order,
-            Required = x.Value.Required,
-            Unit = x.Value.Unit,
-
+            AccessoryNC = x.Value.AccessoryNC,
+            NarujNC = x.Value.NarujNC,
+            NC = x.Value.NC,
+            VnutrNC = x.Value.VnutrNC,
+            Techs = x.Value.Techs
         };
     }
 }

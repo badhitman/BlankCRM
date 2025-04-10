@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// TechProductBreezRuModelDB
 /// </summary>
-public class TechProductBreezRuModelDB : TechProductRealBreezRuModel
+public class TechProductBreezRuModelDB : ProductBreezRuLiteModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -18,7 +18,19 @@ public class TechProductBreezRuModelDB : TechProductRealBreezRuModel
     public int Id { get; set; }
 
     /// <inheritdoc/>
-    public TechProductBreezRuResponseModelDB? Parent { get; set; }
+    public List<PropertyTechProductBreezRuModelDB>? Properties { get; set; }
+
     /// <inheritdoc/>
-    public int ParentId { get; set; }
+    public static TechProductBreezRuModelDB Build(TechProductRealBreezRuModel x)
+    {
+        TechProductBreezRuModelDB res = new()
+        {
+            NarujNC = x.NarujNC,
+            AccessoryNC = x.AccessoryNC,
+            NC = x.NC,
+            VnutrNC = x.VnutrNC,
+        };
+        //res.Properties = x.Techs is null ? null : [.. x.Techs.Select(x => PropertyTechProductBreezRuModelDB.Build(x, res))];
+        return res;
+    }
 }

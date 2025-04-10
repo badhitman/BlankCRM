@@ -70,7 +70,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return ResponseBaseModel.CreateError(msg);
         }
 
-        List<TechCategoryBreezRuModel> techForCatDump = [];
+        List<TechCategoryRealBreezRuModel> techForCatDump = [];
         List<TechProductRealBreezRuModel> techForProdDump = [];
 
         List<string> _errors = [];
@@ -80,11 +80,11 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
 
         foreach (CategoryRealBreezRuModel _cat in categoriesJson.Response)
         {
-            TResponseModel<List<TechCategoryBreezRuModel>> techForCat = await GetTechCategoryAsync(new() { Id = _cat.Key }, token);
+            TResponseModel<List<TechCategoryRealBreezRuModel>> techForCat = await GetTechCategoryAsync(new() { Id = _cat.Key }, token);
             if (techForCat?.Response is null || !techForCat.Success() || techForCat.Response.Count == 0)
             {
-                msg = $"Error `{nameof(DownloadAndSaveAsync)}`: {nameof(techForCat)}.Response is null || !{nameof(techForCat)}.Success() || {nameof(techForCat)}.Response.Count == 0";
-                logger.LogError(msg);
+                msg = $"Error `{nameof(DownloadAndSaveAsync)}`(id = {_cat.Key}): {nameof(techForCat)}.Response is null || !{nameof(techForCat)}.Success() || {nameof(techForCat)}.Response.Count == 0";
+                logger.LogWarning(msg);
                         lock(_errors)
                         {
                             _errors.Add(msg);
@@ -102,8 +102,8 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             TResponseModel<List<TechProductRealBreezRuModel>> techForProd = await GetTechProductAsync(new TechRequestModel() { Id = _pr.Key }, token);
             if (techForProd?.Response is null || !techForProd.Success() || techForProd.Response.Count == 0)
             {
-                msg = $"Error `{nameof(DownloadAndSaveAsync)}`: {nameof(techForProd)}.Response is null || !{nameof(techForProd)}.Success() || {nameof(techForProd)}.Response.Count == 0";
-                logger.LogError(msg);
+                msg = $"Error `{nameof(DownloadAndSaveAsync)}`(id = {_pr.Key}): {nameof(techForProd)}.Response is null || !{nameof(techForProd)}.Success() || {nameof(techForProd)}.Response.Count == 0";
+                logger.LogWarning(msg);
                 lock(_errors)
                         {
                             _errors.Add(msg);
@@ -117,7 +117,20 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             ]);
 
         if (_errors.Count != 0)
-            return ResponseBaseModel.CreateError($"Во время загрузки были зарегистрированы ошибки: {_errors.Count}");
+            logger.LogWarning($"Во время загрузки были зарегистрированы ошибки: {_errors.Count}");
+
+        if (techForCatDump.Count == 0)
+        {
+            msg = $"Error `{nameof(GetTechCategoryAsync)}`: {nameof(techForCatDump)}.Count == 0";
+            logger.LogError(msg);
+            return ResponseBaseModel.CreateError(msg);
+        }
+        if (techForProdDump.Count == 0)
+        {
+            msg = $"Error `{nameof(GetTechProductAsync)}`: {nameof(techForProdDump)}.Count == 0";
+            logger.LogError(msg);
+            return ResponseBaseModel.CreateError(msg);
+        }
 
         logger.LogInformation($"Скачано. Подготовка к записи в БД (удаление старых данных и открытие транзакции)");
         using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
@@ -136,12 +149,68 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
         BreezRuLeftoverModelDB[] leftovers = [.. leftoversJson.Response.Select(BreezRuLeftoverModelDB.Build)];
 
         int _sc = 0;
-        foreach (BreezRuLeftoverModelDB[] itemsPart in leftovers.Chunk(10))
+        foreach (BreezRuLeftoverModelDB[] leftoversPart in leftovers.Chunk(100))
         {
-            await ctx.AddRangeAsync(itemsPart, token);
+            await ctx.AddRangeAsync(leftoversPart, token);
             await ctx.SaveChangesAsync(token);
-            _sc += itemsPart.Length;
-            logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{leftovers.Length})");
+            _sc += leftoversPart.Length;
+            logger.LogInformation($"Записана очередная порция `{nameof(leftoversPart)}` данных {leftoversPart.Length} ({_sc}/{leftovers.Length})");
+        }
+        _sc = 0;
+        foreach (BrandRealBreezRuModel[] brandsPart in brandsJson.Response.Chunk(100))
+        {
+            await ctx.AddRangeAsync(brandsPart.Select(BrandBreezRuModelDB.Build), token);
+            await ctx.SaveChangesAsync(token);
+            _sc += brandsPart.Length;
+            logger.LogInformation($"Записана очередная порция `{nameof(brandsPart)}` данных {brandsPart.Length} ({_sc}/{brandsJson.Response.Count})");
+        }
+        _sc = 0;
+        foreach (CategoryRealBreezRuModel[] categoriesPart in categoriesJson.Response.Chunk(100))
+        {
+            await ctx.AddRangeAsync(categoriesPart.Select(CategoryBreezRuModelDB.Build), token);
+            await ctx.SaveChangesAsync(token);
+            _sc += categoriesPart.Length;
+            logger.LogInformation($"Записана очередная порция `{nameof(categoriesPart)}` данных {categoriesPart.Length} ({_sc}/{categoriesJson.Response.Count})");
+        }
+        _sc = 0;
+        foreach (ProductRealBreezRuModel[] productsPart in productsJson.Response.Chunk(100))
+        {
+            await ctx.AddRangeAsync(productsPart.Select(ProductBreezRuModelDB.Build), token);
+            await ctx.SaveChangesAsync(token);
+            _sc += productsPart.Length;
+            logger.LogInformation($"Записана очередная порция `{nameof(productsPart)}` данных {productsPart.Length} ({_sc}/{productsJson.Response.Count})");
+        }
+        _sc = 0;
+        foreach (TechCategoryRealBreezRuModel[] _txCatsPart in techForCatDump.Chunk(100))
+        {
+            try
+            {
+                List<TechCategoryBreezRuModelDB> tcList = [.._txCatsPart.Select(TechCategoryBreezRuModelDB.Build)];
+                await ctx.AddRangeAsync(tcList, token);
+                await ctx.SaveChangesAsync(token);
+                _sc += _txCatsPart.Length;
+                logger.LogInformation($"Записана очередная порция `{nameof(_txCatsPart)}` данных {_txCatsPart.Length} ({_sc}/{techForCatDump.Count})");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        _sc = 0;
+        foreach (TechProductRealBreezRuModel[] _txProdsPart in techForProdDump.Chunk(100))
+        {
+            try
+            {
+                List<TechProductBreezRuModelDB> tpList = [.._txProdsPart.Select(TechProductBreezRuModelDB.Build)];
+                await ctx.AddRangeAsync(tpList, token);
+                await ctx.SaveChangesAsync(token);
+                _sc += _txProdsPart.Length;
+                logger.LogInformation($"Записана очередная порция `{nameof(_txProdsPart)}` данных {_txProdsPart.Length} ({_sc}/{techForProdDump.Count})");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         await transaction.CommitAsync(token);
@@ -150,23 +219,23 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
 
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<TechCategoryBreezRuModel>>> GetTechCategoryAsync(TechRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<List<TechCategoryRealBreezRuModel>>> GetTechCategoryAsync(TechRequestModel req, CancellationToken token = default)
     {
-        TResponseModel<List<TechCategoryBreezRuModel>> result = new();
+        TResponseModel<List<TechCategoryRealBreezRuModel>> result = new();
 
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"tech/?category={req.Id}", token);
         logger.LogInformation($"http запрос: {response.RequestMessage}");
         string msg;
+        string responseBody = await response.Content.ReadAsStringAsync(token);
+
         if (!response.IsSuccessStatusCode)
         {
-            msg = $"Error `{nameof(GetTechCategoryAsync)}` (http code: {response.StatusCode}): {await response.Content.ReadAsStringAsync(token)}";
+            msg = $"Error `{nameof(GetTechCategoryAsync)}` (http code: {response.StatusCode}): {responseBody}";
             logger.LogError(msg);
             result.AddError(msg);
             return result;
         }
-        string responseBody = await response.Content.ReadAsStringAsync(token);
-
         if (string.IsNullOrWhiteSpace(responseBody))
         {
             msg = $"Error `{nameof(GetTechCategoryAsync)}`: string.IsNullOrWhiteSpace(responseBody)";
@@ -175,16 +244,15 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return result;
         }
 
-        Dictionary<string, TechCategoryBreezRuModel>? _techs = JsonConvert.DeserializeObject<TechCategoryResponseBreezRuModel>(responseBody)?.Techs;
-        if (_techs is null)
+        TechCategoryResponseBreezRuModel? _techs = JsonConvert.DeserializeObject<TechCategoryResponseBreezRuModel>(responseBody);
+        if (_techs?.Techs is null)
         {
-            msg = $"Error `{nameof(GetTechCategoryAsync)}`: Dictionary<string, TechCategoryBreezRuModel> techs is null";
+            msg = $"Error `{nameof(GetTechCategoryAsync)}`({nameof(req.Id)}:{req.Id}): Dictionary<string, TechCategoryBreezRuModel> techs is null\n{responseBody}";
             logger.LogError(msg);
             result.AddError(msg);
             return result;
         }
-        result.Response = [.. _techs.Select(TechCategoryBreezRuModel.Build)];
-
+        result.Response = [.. _techs.Techs.Select(x => TechCategoryRealBreezRuModel.Build(x, _techs.Category))];
         if (result.Response is null)
         {
             msg = $"Error `{nameof(GetTechCategoryAsync)}`: parseData is null";
@@ -192,7 +260,9 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             result.AddError(msg);
             return result;
         }
-        result.AddSuccess($"Прочитано [Технические характеристики Категории]: {result.Response.Count}");
+        msg = $"Прочитано [Технические характеристики Категории]: {result.Response.Count}";
+        result.AddSuccess(msg);
+        logger.LogInformation(msg);
         return result;
     }
 
@@ -200,19 +270,18 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
     public async Task<TResponseModel<List<TechProductRealBreezRuModel>>> GetTechProductAsync(TechRequestModel req, CancellationToken token = default)
     {
         TResponseModel<List<TechProductRealBreezRuModel>> result = new();
-
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"tech/?id={req.Id}", token);
         logger.LogInformation($"http запрос: {response.RequestMessage}");
         string msg;
+        string responseBody = await response.Content.ReadAsStringAsync(token);
         if (!response.IsSuccessStatusCode)
         {
-            msg = $"Error `{nameof(GetTechProductAsync)}` (http code: {response.StatusCode}): {await response.Content.ReadAsStringAsync(token)}";
+            msg = $"Error `{nameof(GetTechProductAsync)}` (http code: {response.StatusCode}): {responseBody}";
             logger.LogError(msg);
             result.AddError(msg);
             return result;
         }
-        string responseBody = await response.Content.ReadAsStringAsync(token);
         if (string.IsNullOrWhiteSpace(responseBody))
         {
             msg = $"Error `{nameof(GetTechProductAsync)}`: string.IsNullOrWhiteSpace(responseBody)";
@@ -221,15 +290,18 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return result;
         }
 
-        result.Response = [.. JsonConvert.DeserializeObject<Dictionary<string, TechProductBreezRuResponseModel>>(responseBody)!.SelectMany(x => x.Value.Techs!).Select(TechProductRealBreezRuModel.Build)];
-        if (result.Response is null)
+        Dictionary<int, TechProductBreezRuResponseModel>? _techs = JsonConvert.DeserializeObject<Dictionary<int, TechProductBreezRuResponseModel>>(responseBody);
+        if (_techs is null)
         {
-            msg = $"Error `{nameof(GetTechProductAsync)}`: parseData is null";
+            msg = $"Error `{nameof(GetTechProductAsync)}`({nameof(req.Id)}:{req.Id}): techs is null\n{responseBody}";
             logger.LogError(msg);
             result.AddError(msg);
             return result;
         }
-        result.AddSuccess($"Прочитано [Технические характеристики Продукта]: {result.Response.Count}");
+        result.Response =  [.. _techs.Select(x=>TechProductRealBreezRuModel.Build(x))];
+        msg = $"Прочитано [Технические характеристики Продукта]: {result.Response.Count}";
+        result.AddSuccess(msg);
+        logger.LogInformation(msg);
         return result;
     }
 
@@ -268,7 +340,9 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             result.AddError(msg);
             return result;
         }
-        result.AddSuccess($"Прочитано брэндов: {result.Response.Count}");
+        msg = $"Прочитано брэндов: {result.Response.Count}";
+        logger.LogInformation(msg);
+        result.AddSuccess(msg);
         return result;
     }
 
@@ -297,17 +371,19 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             result.AddError(msg);
             return result;
         }
-
-        result.Response = [.. JsonConvert.DeserializeObject<Dictionary<string, CategoryBreezRuModel>>(responseBody)!.Select(x => CategoryRealBreezRuModel.Build(x))];
-
-        if (result.Response is null)
+        Dictionary<int, CategoryBreezRuModel>? parseData = JsonConvert.DeserializeObject<Dictionary<int, CategoryBreezRuModel>>(responseBody);
+        if (parseData is null)
         {
             msg = $"Error `{nameof(GetCategoriesAsync)}`: parseData is null";
             logger.LogError(msg);
             result.AddError(msg);
             return result;
         }
-        result.AddSuccess($"Прочитано категорий: {result.Response.Count}");
+        result.Response = [.. parseData.Select(x => CategoryRealBreezRuModel.Build(x))];
+
+        msg = $"Прочитано категорий: {result.Response.Count}";
+        result.AddSuccess(msg);
+        logger.LogInformation(msg);
         return result;
     }
 
@@ -328,7 +404,6 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return result;
         }
         string responseBody = await response.Content.ReadAsStringAsync(token);
-
         if (string.IsNullOrWhiteSpace(responseBody))
         {
             msg = $"Error `{nameof(GetProductsAsync)}`: string.IsNullOrWhiteSpace(responseBody)";
@@ -336,20 +411,21 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             result.AddError(msg);
             return result;
         }
-
-        result.Response = [.. JsonConvert.DeserializeObject<Dictionary<string, ProductBreezRuModel>>(responseBody)!.Select(ProductRealBreezRuModel.Build)];
-
-        if (result.Response is null)
+        Dictionary<int, ProductBreezRuModel>? parseData = JsonConvert.DeserializeObject<Dictionary<int, ProductBreezRuModel>>(responseBody);
+        if (parseData is null)
         {
             msg = $"Error `{nameof(GetProductsAsync)}`: parseData is null";
             logger.LogError(msg);
             result.AddError(msg);
             return result;
         }
-        result.AddSuccess($"Прочитано товаров: {result.Response.Count}");
+        result.Response = [.. parseData.Select(ProductRealBreezRuModel.Build)];
+
+        msg = $"Прочитано товаров: {result.Response.Count}";
+        result.AddSuccess(msg);
+        logger.LogInformation(msg);
         return result;
     }
-
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<BreezRuLeftoverModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default)
@@ -367,7 +443,6 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             return result;
         }
         string responseBody = await response.Content.ReadAsStringAsync(token);
-
         if (string.IsNullOrWhiteSpace(responseBody))
         {
             msg = $"Error `{nameof(DownloadAndSaveAsync)}`: string.IsNullOrWhiteSpace(responseBody)";
@@ -377,7 +452,6 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
         }
 
         result.Response = JsonConvert.DeserializeObject<List<BreezRuLeftoverModel>>(responseBody);
-
         if (result.Response is null)
         {
             msg = $"Error `{nameof(DownloadAndSaveAsync)}`: parseData is null";
@@ -385,7 +459,9 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             result.AddError(msg);
             return result;
         }
-        result.AddSuccess($"Прочитано остатков: {result.Response.Count}");
+        msg = $"Прочитано остатков: {result.Response.Count}";
+        result.AddSuccess(msg);
+        logger.LogInformation(msg);
         return result;
     }
 }

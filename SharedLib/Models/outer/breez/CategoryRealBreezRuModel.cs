@@ -11,10 +11,10 @@ namespace SharedLib;
 public class CategoryRealBreezRuModel : CategoryBreezRuModel
 {
     /// <inheritdoc/>
-    public required string Key { get; set; }
+    public required int Key { get; set; }
 
     /// <inheritdoc/>
-    public static CategoryRealBreezRuModel Build(KeyValuePair<string, CategoryBreezRuModel> x)
+    public static CategoryRealBreezRuModel Build(KeyValuePair<int, CategoryBreezRuModel> x)
     {
         return new()
         {

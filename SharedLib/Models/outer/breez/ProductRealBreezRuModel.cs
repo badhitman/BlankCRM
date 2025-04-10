@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 
+
 namespace SharedLib;
 
 /// <summary>
@@ -11,10 +12,10 @@ namespace SharedLib;
 public class ProductRealBreezRuModel : ProductBreezRuModel
 {
     /// <inheritdoc/>
-    public required string Key { get; set; }
+    public required int Key { get; set; }
 
     /// <inheritdoc/>
-    public static ProductRealBreezRuModel Build(KeyValuePair<string, ProductBreezRuModel> x)
+    public static ProductRealBreezRuModel Build(KeyValuePair<int, ProductBreezRuModel> x)
     {
         return new()
         {

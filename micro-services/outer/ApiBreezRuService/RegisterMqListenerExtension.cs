@@ -22,7 +22,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<LeftoversGetReceive, string, TResponseModel<List<BreezRuLeftoverModel>>>()
             .RegisterMqListener<HealthCheckReceive, object, TResponseModel<List<RabbitMqManagementResponseModel>>>()
             .RegisterMqListener<GetTechProductReceive, TechRequestModel, TResponseModel<List<TechProductRealBreezRuModel>>>()
-            .RegisterMqListener<GetTechCategoryReceive, TechRequestModel, TResponseModel<List<TechCategoryBreezRuModel>>>()
+            .RegisterMqListener<GetTechCategoryReceive, TechRequestModel, TResponseModel<List<TechCategoryRealBreezRuModel>>>()
             .RegisterMqListener<GetProductsReceive, object, TResponseModel<List<ProductRealBreezRuModel>>>()
             .RegisterMqListener<GetCategoriesReceive, object, TResponseModel<List<CategoryRealBreezRuModel>>>()
             .RegisterMqListener<GetBrandsReceive, object, TResponseModel<List<BrandRealBreezRuModel>>>()

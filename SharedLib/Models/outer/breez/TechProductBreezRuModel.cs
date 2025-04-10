@@ -12,7 +12,7 @@ namespace SharedLib;
 /// TechProductBreezRuModel
 /// </summary>
 [Index(nameof(IdChar)), Index(nameof(TypeParameter)), Index(nameof(Show)), Index(nameof(First)), Index(nameof(SubCategory)), Index(nameof(Analog)), Index(nameof(Value))]
-public class TechProductBreezRuModel : TechBreezRuBaseModel
+public class PropTechProductBreezRuModel : TechBreezRuBaseModel
 {
     /// <inheritdoc/>
     [JsonProperty("id_char"), JsonPropertyName("id_char")]

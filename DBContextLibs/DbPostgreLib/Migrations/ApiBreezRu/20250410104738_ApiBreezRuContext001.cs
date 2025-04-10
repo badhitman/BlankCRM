@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -15,9 +14,6 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
         {
             migrationBuilder.EnsureSchema(
                 name: "public");
-
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:hstore", ",,");
 
             migrationBuilder.CreateTable(
                 name: "Brands",
@@ -49,7 +45,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     CHPU = table.Column<string>(type: "text", nullable: true),
                     Order = table.Column<string>(type: "text", nullable: true),
                     Level = table.Column<string>(type: "text", nullable: true),
-                    Key = table.Column<string>(type: "text", nullable: false)
+                    Key = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -103,9 +99,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     Booklet = table.Column<string>(type: "text", nullable: true),
                     Manual = table.Column<string>(type: "text", nullable: true),
                     BimModel = table.Column<string>(type: "text", nullable: true),
-                    VideoYoutube = table.Column<string>(type: "text", nullable: true),
-                    Price = table.Column<Dictionary<string, string>>(type: "hstore", nullable: true),
-                    Key = table.Column<string>(type: "text", nullable: false)
+                    VideoYoutube = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -180,7 +174,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     Required = table.Column<string>(type: "text", nullable: true),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Unit = table.Column<string>(type: "text", nullable: true),
-                    TechId = table.Column<string>(type: "text", nullable: false),
+                    TechId = table.Column<int>(type: "integer", nullable: false),
                     DataType = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -202,6 +196,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Key = table.Column<int>(type: "integer", nullable: false),
                     ParentId = table.Column<int>(type: "integer", nullable: false),
                     Group = table.Column<string>(type: "text", nullable: true),
                     Order = table.Column<string>(type: "text", nullable: true),
@@ -216,8 +211,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     First = table.Column<string>(type: "text", nullable: false),
                     SubCategory = table.Column<string>(type: "text", nullable: false),
                     Analog = table.Column<string>(type: "text", nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: false),
-                    Key = table.Column<string>(type: "text", nullable: false)
+                    Value = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -380,12 +374,6 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 schema: "public",
                 table: "PropsTechsProducts",
                 column: "IdChar");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PropsTechsProducts_Key",
-                schema: "public",
-                table: "PropsTechsProducts",
-                column: "Key");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PropsTechsProducts_ParentId",
