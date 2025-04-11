@@ -9,7 +9,7 @@ POST https://b2b.rusklimat.com/api/v1/auth/jwt/
 
 Онлайн документация: https://internet-partner.rusklimat.com/swagger/index.html
 
-#### Получение идентификатора
+#### Получение идентификатора (`requestKey`)
 GET /api/v1/InternetPartner/XXX-XXX-XXX/requestKey/
 где `XXX-XXX-XXX` это ваш идентификатор партнёра
 
