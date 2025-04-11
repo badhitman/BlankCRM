@@ -9,7 +9,7 @@
 #### Настройки
 Пример в [файле](outers-credentials-example.json).
 
-HaietProff - предоставляет публичный rss поток без наличия.
+HaierProff - предоставляет публичный rss поток без наличия.
 остальные источники требуют авторизации.
 ```json
 "RusklimarApiConfig": {
