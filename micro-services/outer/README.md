@@ -4,7 +4,7 @@
  - api.breez.ru - [breez api](https://github.com/badhitman/BlankCRM/tree/main/micro-services/outer/ApiBreezRuService)
  - daichi.ru - [b2b Daichi Business api](https://github.com/badhitman/BlankCRM/tree/main/micro-services/outer/ApiDaichiBusinessService)
  - rusklimat.com - [api Русклимат](https://github.com/badhitman/BlankCRM/tree/main/micro-services/outer/ApiRusklimatComService)
- - haierproff.ru - partners feeds (публичный)
+ - haierproff.ru - [partners feeds](https://github.com/badhitman/BlankCRM/tree/main/micro-services/outer/FeedsHaierProffRuService) (публичный)
 
 #### Настройки
 Пример в [файле](outers-credentials-example.json).
