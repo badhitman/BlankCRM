@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
 using RemoteCallLib;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace ApiDaichiBusinessService;
 
@@ -116,11 +115,10 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         logger.LogInformation($"Данные записаны в БД. Закрытие транзакции.");
         await transaction.CommitAsync(token);
 
-        await Task.WhenAll
-            (
-            productsParametersDb.Select(p => Task.Run(async () => await daichiTransmission.ParameterUpdateAsync(p, token), token))
-            .Union(productsDb.Select(g => Task.Run(async () => await daichiTransmission.ProductUpdateAsync(g, token), token)))
-            );
+        List<Task> _tasks = [];
+        productsParametersDb.ForEach(p => _tasks.Add(Task.Run(async () => await daichiTransmission.ParameterUpdateAsync(p, token), token)));
+        productsDb.ForEach(g => _tasks.Add(Task.Run(async () => await daichiTransmission.ProductUpdateAsync(g, token), token)));
+        await Task.WhenAll(_tasks);
 
         if (products.Response.Exceptions != null && !products.Response.Exceptions.IsEmpty)
         {

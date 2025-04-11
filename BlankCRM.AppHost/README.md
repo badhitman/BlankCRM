@@ -30,10 +30,17 @@ Aspire хост (`DesignerApp.AppHost`) настраивается в одном
     "CommerceConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=CommerceContext",
     "IdentityConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=IdentityContext",
     "TelegramBotConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=TelegramBotContext",
+    "KladrConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=KladrCloud;Timeout=300;CommandTimeout=300;Pooling=true;Minimum Pool Size=10;Maximum Pool Size=25;",
     "MainConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=MainContext",
     "CloudParametersConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=StorageContext",
     "HelpdeskConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=HelpDeskContext",
-    "ConstructorConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=ConstructorContext"
+    "ConstructorConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=ConstructorContext",
+	
+    "ApiBreezRuConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=ApiBreezRu;Timeout=300;CommandTimeout=300;Pooling=true;Minimum Pool Size=10;Maximum Pool Size=25;",
+    "ApiDaichiBusinessConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=ApiDaichiBusiness;Timeout=300;CommandTimeout=300;Pooling=true;Minimum Pool Size=10;Maximum Pool Size=25;",
+    "ApiRusklimatComConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=ApiRusklimatCom;Timeout=300;CommandTimeout=300;Pooling=true;Minimum Pool Size=10;Maximum Pool Size=25;",
+    "FeedsHaierProffRuConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=FeedsHaierProffRu;Timeout=300;CommandTimeout=300;Pooling=true;Minimum Pool Size=10;Maximum Pool Size=25;",
+
   }
 }
 ```

@@ -21,11 +21,11 @@ public class DaichiBusinessTransmission(IRabbitClient rabbitClient) : IDaichiBus
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ParameterUpdateAsync(ParameterEntryDaichiModelDB req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.ParameterUpdateDaichiReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.ParameterUpdateDaichiReceive, req, false, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ProductUpdateAsync(ProductDaichiModelDB req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.ProductUpdateDaichiReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.ProductUpdateDaichiReceive, req, false, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<ProductsDaichiBusinessResultModel>> ProductsGetAsync(ProductsRequestDaichiModel req, CancellationToken token = default)
