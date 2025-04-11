@@ -1,9 +1,9 @@
 ## Внешние источники данных (api/rest etc...)
 каждый источник внешних данных - это отдельный микро-сервис со своей собственной базой данных.
 
- - https://api.breez.ru
- - https://daichi.ru - b2b business
- - https://rusklimat.com - api
+ - https://api.breez.ru - breez api
+ - https://daichi.ru - b2b Daichi Business api
+ - https://rusklimat.com - api Русклимат
  - https://haierproff.ru - partners feeds (публичный)
 
 #### Настройки
