@@ -8,7 +8,8 @@
 
 #### Настройки
 Пример в [файле](outers-credentials-example.json).
-haietprof - предоставляет публичный rss поток без наличия.
+
+HaietProff - предоставляет публичный rss поток без наличия.
 остальные источники требуют авторизации.
 ```json
 "RusklimarApiConfig": {
