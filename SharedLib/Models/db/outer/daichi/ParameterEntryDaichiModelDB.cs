@@ -26,6 +26,16 @@ public class ParameterEntryDaichiModelDB : ParameterElementDaichiModel
     /// <inheritdoc/>
     public List<AttributeParameterDaichiModelDB>? Attributes { get; set; }
 
+    /// <summary>
+    /// Дата первого появления
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Дата обновления
+    /// </summary>
+    public DateTime UpdatedAt { get; set; }
+
     /// <inheritdoc/>
     public static ParameterEntryDaichiModelDB Build(ParameterElementDaichiJsonModel x, List<ProductDaichiModelDB> productsDb)
     {
@@ -44,9 +54,17 @@ public class ParameterEntryDaichiModelDB : ParameterElementDaichiModel
         if (x.PHOTOES is not null && x.PHOTOES.Length != 0)
             res.Photos = [.. x.PHOTOES.Select(y => new PhotoParameterDaichiModelDB() { Name = y, Parent = res })];
 
-        if(x.Attributes is not null && x.Attributes.Count != 0)
-        res.Attributes = [..x.Attributes.Select(y => AttributeParameterDaichiModelDB.Build(y,res))];
+        if (x.Attributes is not null && x.Attributes.Count != 0)
+            res.Attributes = [.. x.Attributes.Select(y => AttributeParameterDaichiModelDB.Build(y, res))];
 
         return res;
+    }
+
+    /// <inheritdoc/>
+    public void SetLive()
+    {
+        Attributes?.ForEach(pi => { pi.Parent = this; });
+        Photos?.ForEach(pp => { pp.Parent = this; });
+        Sections?.ForEach(pp => { pp.Parent = this; });
     }
 }

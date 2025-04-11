@@ -856,6 +856,11 @@ public static partial class GlobalStaticConstants
         /// <inheritdoc/>
         public readonly static string DownloadAndSaveDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
         /// <inheritdoc/>
+        public readonly static string ParameterUpdateDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.PROPERTY_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
+        /// <inheritdoc/>
+        public readonly static string ProductUpdateDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.PRODUCT_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
+
+        /// <inheritdoc/>
         public readonly static string ProductsGetDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", Routes.PRODUCTS_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
         /// <inheritdoc/>
         public readonly static string ProductsParamsGetDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.PRODUCTS_CONTROLLER_NAME}-{Routes.PARAMETERS_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");

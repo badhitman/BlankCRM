@@ -23,4 +23,14 @@ public interface IDaichiBusinessApiService : IOuterApiService
     /// Получение информации о характеристиках товаров
     /// </summary>
     public Task<TResponseModel<ProductsParamsDaichiBusinessResponseModel>> ProductsParamsGetAsync(ProductParamsRequestDaichiModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// ParameterUpdateAsync
+    /// </summary>
+    public Task<ResponseBaseModel> ParameterUpdateAsync(ParameterEntryDaichiModelDB req, CancellationToken token = default);
+
+    /// <summary>
+    /// ProductUpdateAsync
+    /// </summary>
+    public Task<ResponseBaseModel> ProductUpdateAsync(ProductDaichiModelDB req, CancellationToken token = default);
 }

@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Outers.Daichi;
 public partial class DaichiManageComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IDaichiBusinessApiService daichiRepo { get; set; } = default!;
+    IDaichiBusinessApiTransmission daichiRepo { get; set; } = default!;
 
 
     static string[] ApplicationsFilterSet = ["ApiDaichiBusiness"];

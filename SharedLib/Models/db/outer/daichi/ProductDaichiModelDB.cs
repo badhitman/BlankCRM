@@ -21,10 +21,20 @@ public class ProductDaichiModelDB : ProductDaichiBaseModel
     public ParamsProductDaichiModelDB? Params { get; set; }
 
     /// <inheritdoc/>
-    public List<PriceProductDaichiModelDB>? Prices { get; set; }
+    public AvailabilityProductsDaichiModelDB? StoreAvailability { get; set; }
 
     /// <inheritdoc/>
-    public AvailabilityProductsDaichiModelDB? StoreAvailability { get; set; }
+    public List<PriceProductDaichiModelDB>? Prices { get; set; }
+
+    /// <summary>
+    /// Дата первого появления
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Дата обновления
+    /// </summary>
+    public DateTime UpdatedAt { get; set; }
 
 
     /// <inheritdoc/>
@@ -82,5 +92,16 @@ public class ProductDaichiModelDB : ProductDaichiBaseModel
         };
 
         return res;
+    }
+
+    /// <inheritdoc/>
+    public void SetLive()
+    {
+        Prices?.ForEach(pp => { pp.Product = this; });
+
+        if (StoreAvailability is not null)
+            StoreAvailability.Product = this;
+        if (Params is not null)
+            Params.Product = this;
     }
 }

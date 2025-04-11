@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -21,6 +22,8 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     XML_ID = table.Column<string>(type: "text", nullable: false),
                     NAME = table.Column<string>(type: "text", nullable: false),
                     ID = table.Column<string>(type: "text", nullable: false),
@@ -39,6 +42,8 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     XML_ID = table.Column<string>(type: "text", nullable: false),
                     NAME = table.Column<string>(type: "text", nullable: false),
                     KeyIndex = table.Column<int>(type: "integer", nullable: false)

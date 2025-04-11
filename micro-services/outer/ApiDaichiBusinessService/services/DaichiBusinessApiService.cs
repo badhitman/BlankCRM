@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
 using RemoteCallLib;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace ApiDaichiBusinessService;
 
@@ -18,6 +19,7 @@ namespace ApiDaichiBusinessService;
 public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     IOptions<TokenVersionModel> _conf,
     ILogger<DaichiBusinessApiService> logger,
+    IDaichiBusinessApiTransmission daichiTransmission,
 #pragma warning disable CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
     IDbContextFactory<ApiDaichiBusinessContext> dbFactory) : OuterApiBaseServiceImpl(HttpClientFactory), IDaichiBusinessApiService
 #pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
@@ -91,7 +93,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
             return ResponseBaseModel.CreateError("products.Response?.GetProducts");
 
         using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
-        
+
         await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await ctx.Database.BeginTransactionAsync(token);
 
         await ctx.Stores.ExecuteDeleteAsync(cancellationToken: token);
@@ -109,23 +111,18 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         await ctx.SaveChangesAsync(token);
 
         List<ProductDaichiModelDB> productsDb = [.. products.Response.GetProducts.Select(x => ProductDaichiModelDB.Build(x, storesDb))];
-        
-        await ctx.AddRangeAsync(productsDb, token);
-        await ctx.SaveChangesAsync(token);
-
         List<ParameterEntryDaichiModelDB> productsParametersDb = [.. parametersAll.Select(x => ParameterEntryDaichiModelDB.Build(x, productsDb))];
-        int _sc = 0;
-        foreach (ParameterEntryDaichiModelDB[] paramsPart in productsParametersDb.Chunk(10))
-        {
-            await ctx.AddRangeAsync(paramsPart, token);
-            await ctx.SaveChangesAsync(token);
-            _sc += paramsPart.Length;
-            logger.LogInformation($"Записана очередная порция `{paramsPart.GetType().Name}` [{paramsPart.Length}] данных ({_sc}/{productsParametersDb.Count})");
-        }
+
         logger.LogInformation($"Данные записаны в БД. Закрытие транзакции.");
         await transaction.CommitAsync(token);
 
-        if (products.Response.Exceptions != null && products.Response.Exceptions.Count != 0)
+        await Task.WhenAll
+            (
+            productsParametersDb.Select(p => Task.Run(async () => await daichiTransmission.ParameterUpdateAsync(p, token), token))
+            .Union(productsDb.Select(g => Task.Run(async () => await daichiTransmission.ProductUpdateAsync(g, token), token)))
+            );
+
+        if (products.Response.Exceptions != null && !products.Response.Exceptions.IsEmpty)
         {
             ResponseBaseModel _r = ResponseBaseModel.CreateSuccess($"Задание выполнено (но с ошибками для {string.Join(",", products.Response.Exceptions.Select(z => z.Key))}): {nameof(DownloadAndSaveAsync)}.");
 
@@ -139,6 +136,82 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         }
         else
             return ResponseBaseModel.CreateSuccess($"Задание выполнено: {nameof(DownloadAndSaveAsync)}.");
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ParameterUpdateAsync(ParameterEntryDaichiModelDB req, CancellationToken token = default)
+    {
+        using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
+        ParameterEntryDaichiModelDB? prodDb = await ctx.ParametersCatalog
+          .Include(x => x.Attributes)
+          .Include(x => x.Photos)
+          .Include(x => x.Sections)
+          .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
+
+        req.UpdatedAt = DateTime.UtcNow;
+        string msg;
+        if (prodDb is null)
+        {
+            req.SetLive();
+            await ctx.ParametersCatalog.AddAsync(req, token);
+            await ctx.SaveChangesAsync(token);
+            msg = $"Добавлен новый параметр (каталог): #{req.XML_ID} '{req.NAME}'";
+            logger.LogInformation(msg);
+            return ResponseBaseModel.CreateSuccess(msg);
+        }
+
+        await ctx.ParametersCatalog
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+            .SetProperty(p => p.NAME, req.NAME)
+            .SetProperty(p => p.BRAND, req.BRAND)
+            .SetProperty(p => p.ID, req.ID)
+            .SetProperty(p => p.XML_ID, req.XML_ID)
+            .SetProperty(p => p.MAIN_SECTION, req.MAIN_SECTION)
+            .SetProperty(p => p.UpdatedAt, req.UpdatedAt), cancellationToken: token);
+
+        logger.LogInformation($"Параметр (каталог) #{req.Id} обновлён");
+
+        msg = $"Обновлён параметр (каталог): #{req.XML_ID} '{req.NAME}'";
+        logger.LogInformation(msg);
+        return ResponseBaseModel.CreateSuccess(msg);
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ProductUpdateAsync(ProductDaichiModelDB req, CancellationToken token = default)
+    {
+        using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
+        ProductDaichiModelDB? prodDb = await ctx.Products
+            .Include(x => x.Params)
+            .Include(x => x.Prices)
+            .Include(x => x.StoreAvailability)
+            .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
+
+        req.UpdatedAt = DateTime.UtcNow;
+        string msg;
+        if (prodDb is null)
+        {
+            req.SetLive();
+            await ctx.Products.AddAsync(req, token);
+            await ctx.SaveChangesAsync(token);
+            msg = $"Добавлен новый товар: #{req.XML_ID} '{req.NAME}'";
+            logger.LogInformation(msg);
+            return ResponseBaseModel.CreateSuccess(msg);
+        }
+
+        await ctx.Products
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+            .SetProperty(p => p.NAME, req.NAME)
+            .SetProperty(p => p.KeyIndex, req.KeyIndex)
+            .SetProperty(p => p.XML_ID, req.XML_ID)
+            .SetProperty(p => p.UpdatedAt, req.UpdatedAt), cancellationToken: token);
+
+        logger.LogInformation($"Товар #{req.Id} обновлён");
+
+        msg = $"Обновлён товар: #{req.XML_ID} '{req.NAME}'";
+        logger.LogInformation(msg);
+        return ResponseBaseModel.CreateSuccess(msg);
     }
 
     /// <inheritdoc/>

@@ -113,6 +113,7 @@ public class Program
         builder.Services.ApiDaichiBusinessRegisterMqListeners();
         #endregion
         builder.Services
+            .AddScoped<IDaichiBusinessApiTransmission, DaichiBusinessTransmission>()
             .AddScoped<IDaichiBusinessApiService, DaichiBusinessApiService>()
             ;
 

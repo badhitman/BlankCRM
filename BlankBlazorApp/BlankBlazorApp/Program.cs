@@ -221,10 +221,10 @@ builder.Services
     .AddScoped<IIdentityTransmission, IdentityTransmission>()
     .AddScoped<IWebTransmission, WebTransmission>()
 
-    .AddScoped<IBreezRuApiService, BreezRuTransmission>()
-    .AddScoped<IDaichiBusinessApiService, DaichiBusinessTransmission>()
+    .AddScoped<IDaichiBusinessApiTransmission, DaichiBusinessTransmission>()
     .AddScoped<IRusklimatComApiTransmission, RusklimatComTransmission>()
     .AddScoped<IFeedsHaierProffRuService, HaierProffRuTransmission>()
+    .AddScoped<IBreezRuApiService, BreezRuTransmission>()
     ;
 
 builder.Services.WebAppRegisterMqListeners();
