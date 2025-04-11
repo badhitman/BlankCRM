@@ -11,7 +11,7 @@ using RemoteCallLib;
 namespace FeedsHaierProffRuService;
 
 /// <summary>
-/// HaierProffRuFeedsService
+/// RSS feed HaierProff
 /// </summary>
 public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILogger<HaierProffRuFeedsService> logger, IDbContextFactory<FeedsHaierProffRuContext> dbFactory)
 #pragma warning disable CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.

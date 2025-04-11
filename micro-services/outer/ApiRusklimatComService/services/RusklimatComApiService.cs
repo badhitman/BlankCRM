@@ -14,7 +14,7 @@ using DbcLib;
 namespace ApiRusklimatComService;
 
 /// <summary>
-/// RusklimatComApiService
+/// b2b.rusklimat - REST API каталога ИП (Интернет Партнер)
 /// </summary>
 public class RusklimatComApiService(
     IHttpClientFactory HttpClientFactory,

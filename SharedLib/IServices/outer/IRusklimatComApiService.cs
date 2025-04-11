@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <summary>
-/// b2b rusklimat api
+/// b2b.rusklimat - REST API каталога ИП (Интернет Партнер)
 /// </summary>
 public interface IRusklimatComApiService : IOuterApiService
 {

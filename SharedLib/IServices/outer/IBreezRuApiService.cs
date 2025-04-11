@@ -7,7 +7,7 @@ using System.Threading;
 namespace SharedLib;
 
 /// <summary>
-/// Breez.ru api
+/// Интеграция API https://api.breez.ru
 /// </summary>
 public interface IBreezRuApiService : IOuterApiService
 {
@@ -16,13 +16,19 @@ public interface IBreezRuApiService : IOuterApiService
     /// </summary>
     public Task<TResponseModel<List<BreezRuLeftoverModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Бренды
+    /// </summary>
     public Task<TResponseModel<List<BrandRealBreezRuModel>>> GetBrandsAsync(CancellationToken token = default);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Категории
+    /// </summary>
     public Task<TResponseModel<List<CategoryRealBreezRuModel>>> GetCategoriesAsync(CancellationToken token = default);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Продукты
+    /// </summary>
     public Task<TResponseModel<List<ProductRealBreezRuModel>>> GetProductsAsync(CancellationToken token = default);
 
     /// <summary>

@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <summary>
-/// IFeedsHaierProffRuService
+/// RSS feed HaierProff
 /// </summary>
 public interface IFeedsHaierProffRuService : IOuterApiService
 {

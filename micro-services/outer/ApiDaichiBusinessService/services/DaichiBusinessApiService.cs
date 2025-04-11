@@ -13,7 +13,7 @@ using RemoteCallLib;
 namespace ApiDaichiBusinessService;
 
 /// <summary>
-/// DaichiBusinessApiService
+/// API Daichi Бизнес (daichi.business)
 /// </summary>
 public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     IOptions<TokenVersionModel> _conf,

@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <summary>
-/// Daichi business api
+/// API Daichi Бизнес (daichi.business)
 /// </summary>
 public interface IDaichiBusinessApiService : IOuterApiService
 {

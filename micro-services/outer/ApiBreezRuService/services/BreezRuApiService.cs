@@ -11,7 +11,7 @@ using DbcLib;
 namespace ApiBreezRuService;
 
 /// <summary>
-/// BreezRuApiService
+/// Интеграция API https://api.breez.ru
 /// </summary>
 public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<BreezRuApiService> logger, IDbContextFactory<ApiBreezRuContext> dbFactory)
 #pragma warning disable CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
