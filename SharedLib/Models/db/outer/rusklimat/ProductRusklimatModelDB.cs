@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-
 namespace SharedLib;
 
 /// <summary>
@@ -28,6 +27,33 @@ public class ProductRusklimatModelDB : ProductRusklimatBaseModel
     /// Остатки
     /// </summary>
     public int RemainsId { get; set; }
+
+    /// <summary>
+    /// Дата первого появления
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Дата обновления
+    /// </summary>
+    public DateTime UpdatedAt { get; set; }
+
+    /// <inheritdoc/>
+    public void SetLive()
+    {
+        Information?.ForEach(pi => { pi.Product = this; });
+        Properties?.ForEach(pp => { pp.Product = this; });
+
+        if (Remains is not null)
+        {
+            Remains.WarehousesRemains?.ForEach(wr =>
+            {
+                wr.Parent = Remains;
+                wr.Parent.Product = this;
+            });
+            Remains.Product = this;
+        }
+    }
 
     /// <inheritdoc/>
     public static ProductRusklimatModelDB Build(ProductRusklimatModel x, PropertyRusklimatModelDB[] data)

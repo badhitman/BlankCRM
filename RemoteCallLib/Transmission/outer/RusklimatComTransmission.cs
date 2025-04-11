@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// RusklimatComTransmission
 /// </summary>
-public class RusklimatComTransmission(IRabbitClient rabbitClient) : IRusklimatComApiService
+public class RusklimatComTransmission(IRabbitClient rabbitClient) : IRusklimatComApiTransmission
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
@@ -34,4 +34,8 @@ public class RusklimatComTransmission(IRabbitClient rabbitClient) : IRusklimatCo
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RabbitMqManagementResponseModel>>> HealthCheckAsync(CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<RabbitMqManagementResponseModel>>>(GlobalStaticConstants.TransmissionQueues.HealthCheckRusklimatReceive, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateProductAsync(ProductRusklimatModelDB req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.ProductUpdateRusklimatReceive, req, false, token: token) ?? new();
 }

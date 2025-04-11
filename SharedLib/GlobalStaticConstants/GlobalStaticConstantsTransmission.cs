@@ -869,6 +869,9 @@ public static partial class GlobalStaticConstants
         /// <inheritdoc/>
         public readonly static string DownloadAndSaveRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
         /// <inheritdoc/>
+        public readonly static string ProductUpdateRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.PRODUCT_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
+
+        /// <inheritdoc/>
         public readonly static string GetUnitsRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.UNITS_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
         /// <inheritdoc/>
         public readonly static string GetCategoriesRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.CATEGORIES_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");

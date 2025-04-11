@@ -43,12 +43,12 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
             await ctx.SectionsOptionsFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
             await ctx.ProductsFeedsRss.ExecuteDeleteAsync(cancellationToken: token);
             int _sc = 0;
-            foreach (FeedItemHaierModel[] itemsPart in read.Response.Chunk(10))
+            foreach (FeedItemHaierModel[] itemsPart in read.Response.Chunk(100))
             {
                 await ctx.AddRangeAsync(itemsPart.Select(ProductHaierModelDB.Build), token);
                 await ctx.SaveChangesAsync(token);
                 _sc += itemsPart.Length;
-                logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{read.Response.Count})");
+                logger.LogInformation($"Записана очередная порция `{itemsPart.GetType().Name}` [{itemsPart.Length}] данных ({_sc}/{read.Response.Count})");
             }
 
             logger.LogInformation($"Данные записаны в БД. Закрытие транзакции.");

@@ -19,7 +19,7 @@ public class ProductInformationRusklimatModelDB : EntryModel
     /// <summary>
     /// Product
     /// </summary>
-    public int ProductId { get; set; }
+    public string ProductId { get; set; } = default!;
 
     /// <summary>
     /// Тип информации (имя поля во входящем JSON объекте)

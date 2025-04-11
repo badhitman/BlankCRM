@@ -2,6 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+
 namespace SharedLib;
 
 /// <summary>
@@ -9,13 +12,19 @@ namespace SharedLib;
 /// </summary>
 public class ProductRusklimatBaseModel : EntryAltModel
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// НС код товара
+    /// </summary>
     public string? NSCode { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// уникальный идентификатор категории, к которой привязан товар
+    /// </summary>
     public string? CategoryId { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// артикул товара
+    /// </summary>
     public string? VendorCode { get; set; }
 
     /// <inheritdoc/>
@@ -29,7 +38,9 @@ public class ProductRusklimatBaseModel : EntryAltModel
     /// </summary>
     public decimal Price { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// индивидуальная цена партнёра, в случае, когда цена не установлена, будет отдан 0
+    /// </summary>
     public decimal ClientPrice { get; set; }
 
     /// <summary>

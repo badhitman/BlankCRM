@@ -124,6 +124,7 @@ public class Program
 
         builder.Services
             .AddScoped<IRusklimatComApiService, RusklimatComApiService>()
+            .AddScoped<IRusklimatComApiTransmission, RusklimatComTransmission>()
             ;
 
         builder.Services.AddHttpClient(HttpClientsNamesOuterEnum.AuthRusklimatComJWT.ToString(), cc =>

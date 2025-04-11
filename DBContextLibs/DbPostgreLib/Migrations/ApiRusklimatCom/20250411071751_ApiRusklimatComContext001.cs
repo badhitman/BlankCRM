@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -79,6 +80,8 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     RemainsId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
                     NSCode = table.Column<string>(type: "text", nullable: true),
                     CategoryId = table.Column<string>(type: "text", nullable: true),
@@ -132,8 +135,7 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductId1 = table.Column<string>(type: "text", nullable: true),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
+                    ProductId = table.Column<string>(type: "text", nullable: false),
                     TypeInfo = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false)
                 },
@@ -141,11 +143,12 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 {
                     table.PrimaryKey("PK_ProductsInformation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductsInformation_Products_ProductId1",
-                        column: x => x.ProductId1,
+                        name: "FK_ProductsInformation_Products_ProductId",
+                        column: x => x.ProductId,
                         principalSchema: "public",
                         principalTable: "Products",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -155,8 +158,7 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductId1 = table.Column<string>(type: "text", nullable: true),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
+                    ProductId = table.Column<string>(type: "text", nullable: false),
                     PropertyKey = table.Column<string>(type: "text", nullable: true),
                     Value = table.Column<string>(type: "text", nullable: false),
                     Unit = table.Column<string>(type: "text", nullable: true)
@@ -165,11 +167,12 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 {
                     table.PrimaryKey("PK_ProductsProperties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductsProperties_Products_ProductId1",
-                        column: x => x.ProductId1,
+                        name: "FK_ProductsProperties_Products_ProductId",
+                        column: x => x.ProductId,
                         principalSchema: "public",
                         principalTable: "Products",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -192,10 +195,10 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductsInformation_ProductId1",
+                name: "IX_ProductsInformation_ProductId",
                 schema: "public",
                 table: "ProductsInformation",
-                column: "ProductId1");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductsInformation_TypeInfo",
@@ -204,10 +207,10 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 column: "TypeInfo");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductsProperties_ProductId1",
+                name: "IX_ProductsProperties_ProductId",
                 schema: "public",
                 table: "ProductsProperties",
-                column: "ProductId1");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductsProperties_PropertyKey",

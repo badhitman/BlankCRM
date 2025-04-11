@@ -223,10 +223,10 @@ builder.Services
 
     .AddScoped<IBreezRuApiService, BreezRuTransmission>()
     .AddScoped<IDaichiBusinessApiService, DaichiBusinessTransmission>()
-    .AddScoped<IRusklimatComApiService, RusklimatComTransmission>()
+    .AddScoped<IRusklimatComApiTransmission, RusklimatComTransmission>()
     .AddScoped<IFeedsHaierProffRuService, HaierProffRuTransmission>()
     ;
-//
+
 builder.Services.WebAppRegisterMqListeners();
 #endregion
 

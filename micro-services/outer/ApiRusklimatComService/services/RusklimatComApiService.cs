@@ -18,6 +18,7 @@ namespace ApiRusklimatComService;
 /// </summary>
 public class RusklimatComApiService(
     IHttpClientFactory HttpClientFactory,
+    IRusklimatComApiTransmission russKlimatRemoteRepo,
     IMemoryCache memoryCache,
     IOptions<AuthAlterModel> _conf,
     ILogger<RusklimatComApiService> logger,
@@ -227,7 +228,6 @@ public class RusklimatComApiService(
         await ctx.PropertiesCatalog.ExecuteDeleteAsync(cancellationToken: token);
         await ctx.Remains.ExecuteDeleteAsync(cancellationToken: token);
         await ctx.WarehousesRemains.ExecuteDeleteAsync(cancellationToken: token);
-
         await ctx.Products.ExecuteDeleteAsync(cancellationToken: token);
 
         await ctx.AddRangeAsync(getUnits.Response.Data, token);
@@ -237,26 +237,67 @@ public class RusklimatComApiService(
         await ctx.SaveChangesAsync(token);
 
         int _sc = 0;
-        foreach (PropertyRusklimatModelDB[] itemsPart in getProps.Response.Data.Chunk(50))
+        foreach (PropertyRusklimatModelDB[] propertiesPart in getProps.Response.Data.Chunk(100))
         {
-            await ctx.AddRangeAsync(itemsPart, token);
+            await ctx.AddRangeAsync(propertiesPart, token);
             await ctx.SaveChangesAsync(token);
-            _sc += itemsPart.Length;
-            logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{getProps.Response.Data.Length})");
+            _sc += propertiesPart.Length;
+            logger.LogInformation($"Записана очередная порция `{propertiesPart.GetType().Name}` [{propertiesPart.Length}] данных ({_sc}/{getProps.Response.Data.Length})");
         }
 
         List<ProductRusklimatModelDB> productsDb = [.. prodsData.Select(x => ProductRusklimatModelDB.Build(x, getProps.Response.Data))];
-        _sc = 0;
-        foreach (ProductRusklimatModelDB[] itemsPart in productsDb.Chunk(50))
-        {
-            await ctx.AddRangeAsync(itemsPart, token);
-            await ctx.SaveChangesAsync(token);
-            _sc += itemsPart.Length;
-            logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{productsDb.Count})");
-        }
 
         await transaction.CommitAsync(token);
+        foreach (ProductRusklimatModelDB itemsPart in productsDb)
+            await russKlimatRemoteRepo.UpdateProductAsync(itemsPart, token);
+
         return ResponseBaseModel.CreateSuccess($"Обработано");
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateProductAsync(ProductRusklimatModelDB req, CancellationToken token = default)
+    {
+        using ApiRusklimatComContext ctx = await dbFactory.CreateDbContextAsync(token);
+        ProductRusklimatModelDB? prodDb = await ctx.Products
+            .Include(x => x.Information)
+            .Include(x => x.Properties)
+            .Include(x => x.Remains)
+            .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
+
+        req.UpdatedAt = DateTime.UtcNow;
+        string msg;
+        if (prodDb is null)
+        {
+            req.SetLive();
+            await ctx.Products.AddAsync(req, token);
+            await ctx.SaveChangesAsync(token);
+            msg = $"Добавлен новый товар: #{req.Id} '{req.Name}'";
+            logger.LogInformation(msg);
+            return ResponseBaseModel.CreateSuccess(msg);
+        }
+
+        await ctx.Products
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+            .SetProperty(p => p.Brand, req.Brand)
+            .SetProperty(p => p.InternetPrice, req.InternetPrice)
+            .SetProperty(p => p.ClientPrice, req.ClientPrice)
+            .SetProperty(p => p.Description, req.Description)
+            .SetProperty(p => p.VendorCode, req.VendorCode)
+            .SetProperty(p => p.UpdatedAt, req.UpdatedAt)
+            .SetProperty(p => p.Price, req.Price)
+            .SetProperty(p => p.NSCode, req.NSCode)
+            .SetProperty(p => p.Name, req.Name)
+            .SetProperty(p => p.Exclusive, req.Exclusive)
+            .SetProperty(p => p.Name, req.Name)
+            .SetProperty(p => p.Name, req.Name)
+            .SetProperty(p => p.CategoryId, req.CategoryId), cancellationToken: token);
+
+        logger.LogInformation($"Товар #{req.Id} обновлён");
+
+        msg = $"Обновлён товар: #{req.Id} '{req.Name}'";
+        logger.LogInformation(msg);
+        return ResponseBaseModel.CreateSuccess(msg);
     }
 
     /// <inheritdoc/>

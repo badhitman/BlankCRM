@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Outers.Rusklimat;
 public partial class RusklimatManageComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IRusklimatComApiService rusklimatRepo { get; set; } = default!;
+    IRusklimatComApiTransmission rusklimatRepo { get; set; } = default!;
 
 
     TResponseModel<List<RabbitMqManagementResponseModel>>? HealthCheck;

@@ -113,21 +113,14 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         await ctx.AddRangeAsync(productsDb, token);
         await ctx.SaveChangesAsync(token);
 
-        try
+        List<ParameterEntryDaichiModelDB> productsParametersDb = [.. parametersAll.Select(x => ParameterEntryDaichiModelDB.Build(x, productsDb))];
+        int _sc = 0;
+        foreach (ParameterEntryDaichiModelDB[] paramsPart in productsParametersDb.Chunk(10))
         {
-            List<ParameterEntryDaichiModelDB> productsParametersDb = [.. parametersAll.Select(x => ParameterEntryDaichiModelDB.Build(x, productsDb))];
-            int _sc = 0;
-            foreach (ParameterEntryDaichiModelDB[] itemsPart in productsParametersDb.Chunk(10))
-            {
-                await ctx.AddRangeAsync(itemsPart, token);
-                await ctx.SaveChangesAsync(token);
-                _sc += itemsPart.Length;
-                logger.LogInformation($"Записана очередная порция [{itemsPart.Length}] данных ({_sc}/{productsParametersDb.Count})");
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Ошибка загрузки параметров Daichi");
+            await ctx.AddRangeAsync(paramsPart, token);
+            await ctx.SaveChangesAsync(token);
+            _sc += paramsPart.Length;
+            logger.LogInformation($"Записана очередная порция `{paramsPart.GetType().Name}` [{paramsPart.Length}] данных ({_sc}/{productsParametersDb.Count})");
         }
         logger.LogInformation($"Данные записаны в БД. Закрытие транзакции.");
         await transaction.CommitAsync(token);

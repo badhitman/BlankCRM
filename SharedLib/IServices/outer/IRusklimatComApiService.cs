@@ -28,4 +28,9 @@ public interface IRusklimatComApiService : IOuterApiService
     /// Получение товаров каталога
     /// </summary>
     public Task<TResponseModel<ProductsRusklimatResponseModel>> GetProductsAsync(RusklimatPaginationRequestModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// Обновить/создать товар
+    /// </summary>
+    public Task<ResponseBaseModel> UpdateProductAsync(ProductRusklimatModelDB req, CancellationToken token = default);
 }

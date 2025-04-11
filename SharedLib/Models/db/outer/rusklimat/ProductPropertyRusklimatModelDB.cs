@@ -26,7 +26,7 @@ public class ProductPropertyRusklimatModelDB : ProductSimplePropertyModel
     /// <summary>
     /// Product
     /// </summary>
-    public int ProductId { get; set; }
+    public string ProductId { get; set; } = default!;
 
     /// <summary>
     /// PropertyKey
