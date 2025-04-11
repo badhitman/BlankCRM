@@ -289,8 +289,6 @@ public class RusklimatComApiService(
             .SetProperty(p => p.NSCode, req.NSCode)
             .SetProperty(p => p.Name, req.Name)
             .SetProperty(p => p.Exclusive, req.Exclusive)
-            .SetProperty(p => p.Name, req.Name)
-            .SetProperty(p => p.Name, req.Name)
             .SetProperty(p => p.CategoryId, req.CategoryId), cancellationToken: token);
 
         logger.LogInformation($"Товар #{req.Id} обновлён");
