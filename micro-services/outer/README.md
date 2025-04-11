@@ -1,10 +1,10 @@
 ## Внешние источники данных (api/rest etc...)
 каждый источник внешних данных - это отдельный микро-сервис со своей собственной базой данных.
 
- - https://api.breez.ru - breez api
- - https://daichi.ru - b2b Daichi Business api
- - https://rusklimat.com - api Русклимат
- - https://haierproff.ru - partners feeds (публичный)
+ - api.breez.ru - [breez api](https://github.com/badhitman/BlankCRM/tree/main/micro-services/outer/ApiBreezRuService)
+ - daichi.ru - [b2b Daichi Business api](https://github.com/badhitman/BlankCRM/tree/main/micro-services/outer/ApiDaichiBusinessService)
+ - rusklimat.com - [api Русклимат](https://github.com/badhitman/BlankCRM/tree/main/micro-services/outer/ApiRusklimatComService)
+ - haierproff.ru - partners feeds (публичный)
 
 #### Настройки
 Пример в [файле](outers-credentials-example.json).
