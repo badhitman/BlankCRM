@@ -203,9 +203,12 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     b.Property<string>("Brand")
                         .HasColumnType("text");
 
-                    b.Property<string>("CategoryId")
-                        .HasColumnType("text")
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("integer")
                         .HasAnnotation("Relational:JsonPropertyName", "category_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -234,6 +237,9 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
                     b.Property<string>("UTP")
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("VideoYoutube")
                         .HasColumnType("text")
@@ -386,12 +392,18 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "nc_accessory");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("NC")
                         .HasColumnType("text");
 
                     b.Property<string>("NarujNC")
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "nc_naruj");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("VnutrNC")
                         .HasColumnType("text")

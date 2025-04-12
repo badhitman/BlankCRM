@@ -25,7 +25,7 @@ public class ProductBreezRuBaseModel : ProductBreezRuLiteModel
     /// Идентификатор категории
     /// </summary>
     [JsonProperty("category_id"), JsonPropertyName("category_id")]
-    public string? CategoryId { get; set; }
+    public int? CategoryId { get; set; }
 
     /// <summary>
     /// Название серии

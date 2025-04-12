@@ -13,7 +13,10 @@ namespace ApiBreezRuService;
 /// <summary>
 /// Интеграция API https://api.breez.ru
 /// </summary>
-public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<BreezRuApiService> logger, IDbContextFactory<ApiBreezRuContext> dbFactory)
+public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
+    ILogger<BreezRuApiService> logger,
+    IBreezRuApiTransmission breexTransmission,
+    IDbContextFactory<ApiBreezRuContext> dbFactory)
 #pragma warning disable CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
     : OuterApiBaseServiceImpl(HttpClientFactory), IBreezRuApiService
 #pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
@@ -172,49 +175,108 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory, ILogger<Bre
             _sc += categoriesPart.Length;
             logger.LogInformation($"Записана очередная порция `{nameof(categoriesPart)}` данных {categoriesPart.Length} ({_sc}/{categoriesJson.Response.Count})");
         }
-        _sc = 0;
-        foreach (ProductRealBreezRuModel[] productsPart in productsJson.Response.Chunk(100))
-        {
-            await ctx.AddRangeAsync(productsPart.Select(ProductBreezRuModelDB.Build), token);
-            await ctx.SaveChangesAsync(token);
-            _sc += productsPart.Length;
-            logger.LogInformation($"Записана очередная порция `{nameof(productsPart)}` данных {productsPart.Length} ({_sc}/{productsJson.Response.Count})");
-        }
+
         _sc = 0;
         foreach (TechCategoryRealBreezRuModel[] _txCatsPart in techForCatDump.Chunk(100))
         {
-            try
-            {
-                List<TechCategoryBreezRuModelDB> tcList = [.. _txCatsPart.Select(TechCategoryBreezRuModelDB.Build)];
-                await ctx.AddRangeAsync(tcList, token);
-                await ctx.SaveChangesAsync(token);
-                _sc += _txCatsPart.Length;
-                logger.LogInformation($"Записана очередная порция `{nameof(_txCatsPart)}` данных {_txCatsPart.Length} ({_sc}/{techForCatDump.Count})");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-        _sc = 0;
-        foreach (TechProductRealBreezRuModel[] _txProdsPart in techForProdDump.Chunk(100))
-        {
-            try
-            {
-                List<TechProductBreezRuModelDB> tpList = [.. _txProdsPart.Select(TechProductBreezRuModelDB.Build)];
-                await ctx.AddRangeAsync(tpList, token);
-                await ctx.SaveChangesAsync(token);
-                _sc += _txProdsPart.Length;
-                logger.LogInformation($"Записана очередная порция `{nameof(_txProdsPart)}` данных {_txProdsPart.Length} ({_sc}/{techForProdDump.Count})");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            List<TechCategoryBreezRuModelDB> tcList = [.. _txCatsPart.Select(TechCategoryBreezRuModelDB.Build)];
+            await ctx.AddRangeAsync(tcList, token);
+            await ctx.SaveChangesAsync(token);
+            _sc += _txCatsPart.Length;
+            logger.LogInformation($"Записана очередная порция `{nameof(_txCatsPart)}` данных {_txCatsPart.Length} ({_sc}/{techForCatDump.Count})");
         }
 
         await transaction.CommitAsync(token);
+
+        foreach (ProductBreezRuModelDB p in productsJson.Response.Select(ProductBreezRuModelDB.Build))
+            await breexTransmission.ProductUpdateAsync(p, token);
+
+        foreach (TechProductBreezRuModelDB tp in techForProdDump.Select(TechProductBreezRuModelDB.Build))
+            await breexTransmission.TechProductUpdateAsync(tp, token);
+
         return ResponseBaseModel.CreateSuccess($"Задание выполнено: {nameof(DownloadAndSaveAsync)}. Записано элементов: {leftoversJson.Response.Count}");
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> TechProductUpdateAsync(TechProductBreezRuModelDB req, CancellationToken token = default)
+    {
+        using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
+        TechProductBreezRuModelDB? prodDb = await ctx.TechsProducts
+          .Include(x => x.Properties)
+          .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
+
+        req.UpdatedAt = DateTime.UtcNow;
+        string msg;
+        if (prodDb is null)
+        {
+            req.SetLive();
+            await ctx.TechsProducts.AddAsync(req, token);
+            await ctx.SaveChangesAsync(token);
+            msg = $"Добавлен новый tech-атрибут: #{req.NC}";
+            logger.LogInformation(msg);
+            return ResponseBaseModel.CreateSuccess(msg);
+        }
+
+        await ctx.TechsProducts
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+            .SetProperty(p => p.NarujNC, req.NarujNC)
+            .SetProperty(p => p.VnutrNC, req.VnutrNC)
+           .SetProperty(p => p.AccessoryNC, req.AccessoryNC)
+            .SetProperty(p => p.NC, req.NC)
+            .SetProperty(p => p.UpdatedAt, req.UpdatedAt), cancellationToken: token);
+
+        logger.LogInformation($"tech-атрибут обновлён");
+        msg = $"Обновлён tech-атрибут: #{req.Id}";
+        logger.LogInformation(msg);
+        return ResponseBaseModel.CreateSuccess(msg);
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ProductUpdateAsync(ProductBreezRuModelDB req, CancellationToken token = default)
+    {
+        using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
+        ProductBreezRuModelDB? prodDb = await ctx.Products
+          .Include(x => x.Images)
+          .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
+
+        req.UpdatedAt = DateTime.UtcNow;
+        string msg;
+        if (prodDb is null)
+        {
+            req.SetLive();
+            await ctx.Products.AddAsync(req, token);
+            await ctx.SaveChangesAsync(token);
+            msg = $"Добавлен новый товар: #{req.NC} '{req.Title}'";
+            logger.LogInformation(msg);
+            return ResponseBaseModel.CreateSuccess(msg);
+        }
+
+        await ctx.Products
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+            .SetProperty(p => p.NC, req.NC)
+            .SetProperty(p => p.Manual, req.Manual)
+            .SetProperty(p => p.NarujNC, req.NarujNC)
+            .SetProperty(p => p.VnutrNC, req.VnutrNC)
+            .SetProperty(p => p.AccessoryNC, req.AccessoryNC)
+            .SetProperty(p => p.Article, req.Article)
+            .SetProperty(p => p.BimModel, req.BimModel)
+            .SetProperty(p => p.VideoYoutube, req.VideoYoutube)
+            .SetProperty(p => p.UTP, req.UTP)
+            .SetProperty(p => p.Title, req.Title)
+            .SetProperty(p => p.Series, req.Series)
+            .SetProperty(p => p.PriceRIC, req.PriceRIC)
+            .SetProperty(p => p.PriceCurrencyRIC, req.PriceCurrencyRIC)
+            .SetProperty(p => p.Description, req.Description)
+            .SetProperty(p => p.CategoryId, req.CategoryId)
+            .SetProperty(p => p.Brand, req.Brand)
+            .SetProperty(p => p.Booklet, req.Booklet)
+            .SetProperty(p => p.UpdatedAt, req.UpdatedAt), cancellationToken: token);
+
+        msg = $"Обновлён товар: #{req.NC} [{req.Id}] '{req.Title}'";
+        logger.LogInformation(msg);
+        return ResponseBaseModel.CreateSuccess(msg);
     }
 
 

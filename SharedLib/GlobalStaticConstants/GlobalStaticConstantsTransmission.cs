@@ -850,6 +850,12 @@ public static partial class GlobalStaticConstants
         public readonly static string DownloadAndSaveBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
 
         /// <inheritdoc/>
+        public readonly static string ProductUpdateBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.PRODUCT_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
+
+        /// <inheritdoc/>
+        public readonly static string TechProductUpdateBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.TECH_CONTROLLER_NAME}-{Routes.PRODUCT_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
+
+        /// <inheritdoc/>
         public readonly static string HealthCheckBreezReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BREEZ_CONTROLLER_NAME, $"{Routes.HEALTH_CONTROLLER_NAME}-{Routes.CHECK_ACTION_NAME}");
 
 

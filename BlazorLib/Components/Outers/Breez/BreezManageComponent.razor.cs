@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Outers.Breez;
 public partial class BreezManageComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IBreezRuApiService breezRepo { get; set; } = default!;
+    IBreezRuApiTransmission breezRepo { get; set; } = default!;
 
 
     TResponseModel<List<RabbitMqManagementResponseModel>>? HealthCheck;

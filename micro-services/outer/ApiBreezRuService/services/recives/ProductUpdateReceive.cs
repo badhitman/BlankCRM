@@ -1,0 +1,25 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using RemoteCallLib;
+using SharedLib;
+
+namespace Transmission.Receives.Outers.Breez;
+
+/// <summary>
+/// ProductUpdateReceive
+/// </summary>
+public class ProductUpdateReceive(IBreezRuApiService breezRepo)
+    : IResponseReceive<ProductBreezRuModelDB?, ResponseBaseModel?>
+{
+    /// <inheritdoc/>
+    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProductUpdateBreezReceive;
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ProductBreezRuModelDB? req, CancellationToken token = default)
+    {
+        ArgumentNullException.ThrowIfNull(req);
+        return await breezRepo.ProductUpdateAsync(req,token);
+    }
+}

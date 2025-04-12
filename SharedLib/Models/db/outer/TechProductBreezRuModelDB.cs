@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using System.ComponentModel.DataAnnotations;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SharedLib;
 
@@ -20,6 +21,17 @@ public class TechProductBreezRuModelDB : ProductBreezRuLiteModel
     /// <inheritdoc/>
     public List<PropertyTechProductBreezRuModelDB>? Properties { get; set; }
 
+    /// <summary>
+    /// Дата первого появления
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Дата обновления
+    /// </summary>
+    public DateTime UpdatedAt { get; set; }
+
+
     /// <inheritdoc/>
     public static TechProductBreezRuModelDB Build(TechProductRealBreezRuModel x)
     {
@@ -32,5 +44,11 @@ public class TechProductBreezRuModelDB : ProductBreezRuLiteModel
         };
         res.Properties = x.Techs is null ? null : [.. x.Techs.Select(x => PropertyTechProductBreezRuModelDB.Build(x, res))];
         return res;
+    }
+
+    /// <inheritdoc/>
+    public void SetLive()
+    {
+        Properties?.ForEach(pi => { pi.Parent = this; });
     }
 }

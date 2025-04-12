@@ -9,7 +9,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// BreezRuTransmission
 /// </summary>
-public class BreezRuTransmission(IRabbitClient rabbitClient) : IBreezRuApiService
+public class BreezRuTransmission(IRabbitClient rabbitClient) : IBreezRuApiTransmission
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<List<BrandRealBreezRuModel>>> GetBrandsAsync(CancellationToken token = default)
@@ -42,4 +42,12 @@ public class BreezRuTransmission(IRabbitClient rabbitClient) : IBreezRuApiServic
     /// <inheritdoc/>
     public async Task<TResponseModel<List<BreezRuLeftoverModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<BreezRuLeftoverModel>>>(GlobalStaticConstants.TransmissionQueues.LeftoversGetBreezReceive, nc, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> TechProductUpdateAsync(TechProductBreezRuModelDB req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.TechProductUpdateBreezReceive, req, false, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ProductUpdateAsync(ProductBreezRuModelDB req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.ProductUpdateBreezReceive, req, false, token: token) ?? new();
 }

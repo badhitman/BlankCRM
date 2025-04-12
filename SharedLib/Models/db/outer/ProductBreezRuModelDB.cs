@@ -34,6 +34,17 @@ public class ProductBreezRuModelDB : ProductBreezRuBaseModel
     /// </summary>
     public string? PriceCurrencyRIC { get; set; }
 
+    /// <summary>
+    /// Дата первого появления
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Дата обновления
+    /// </summary>
+    public DateTime UpdatedAt { get; set; }
+
+
     /// <inheritdoc/>
     public static ProductBreezRuModelDB Build(ProductRealBreezRuModel x)
     {
@@ -59,5 +70,11 @@ public class ProductBreezRuModelDB : ProductBreezRuBaseModel
         };
         res.Images = x.Images is null || x.Images.Length == 0 ? null : [.. x.Images.Select(x => new ImageProductBreezRuModelDB() { Name = x, Product = res })];
         return res;
+    }
+
+    /// <inheritdoc/>
+    public void SetLive()
+    {
+        Images?.ForEach(pi => { pi.Product = this; });
     }
 }
