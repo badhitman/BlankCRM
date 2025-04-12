@@ -40,7 +40,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devops", "devops", "{3A274B
 		devops\build-win.ps1 = devops\build-win.ps1
 		devops\docker-compose.yml = devops\docker-compose.yml
 		devops\dumps.sh = devops\dumps.sh
-		devops\nlog-db-create.sql = devops\nlog-db-create.sql
 		devops\prod-builds.update.sh = devops\prod-builds.update.sh
 		devops\README.md = devops\README.md
 		devops\readme.stage.txt = devops\readme.stage.txt

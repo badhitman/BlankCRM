@@ -248,7 +248,8 @@ public class RusklimatComApiService(
         List<ProductRusklimatModelDB> productsDb = [.. prodsData.Select(x => ProductRusklimatModelDB.Build(x, getProps.Response.Data))];
 
         await transaction.CommitAsync(token);
-        await Task.WhenAll(productsDb.Select(p => Task.Run(async () => await russKlimatRemoteRepo.UpdateProductAsync(p, token))));
+        foreach (ProductRusklimatModelDB p in productsDb)
+            await russKlimatRemoteRepo.UpdateProductAsync(p, token);
 
         return ResponseBaseModel.CreateSuccess($"Обработано");
     }

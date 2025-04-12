@@ -13,6 +13,13 @@ services:
     ports:
       - 15672:15672
       - 5672:5672
+      - 15671:15671
+      - 15691:15691
+      - 15692:15692
+      - 25672:25672
+      - 4369:4369
+      - 5671:5671
+      - 5670:5670
 
   postgres:
     image: postgres
@@ -40,6 +47,15 @@ services:
       - /srv/tmp/dumps:/srv/tmp/dumps
     ports:
       - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: dev
+      ME_CONFIG_MONGODB_ADMINPASSWORD: dev
 
   redis:
     image: redis

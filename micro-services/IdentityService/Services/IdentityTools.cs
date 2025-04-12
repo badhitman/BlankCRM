@@ -1111,7 +1111,7 @@ public class IdentityTools(
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using IUserStore<ApplicationUser> userStore = scope.ServiceProvider.GetRequiredService<IUserStore<ApplicationUser>>();
 
-        IUserEmailStore<ApplicationUser> emailStore = GetEmailStore();
+        using IUserEmailStore<ApplicationUser> emailStore = (IUserEmailStore<ApplicationUser>)userStore;
         ApplicationUser user = IdentityStatic.CreateInstanceUser();
         await userStore.SetUserNameAsync(user, email, CancellationToken.None);
         await emailStore.SetEmailAsync(user, email, CancellationToken.None);
@@ -1139,8 +1139,11 @@ public class IdentityTools(
 
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         await userStore.SetUserNameAsync(user, req.Email, CancellationToken.None);
-        IUserEmailStore<ApplicationUser> emailStore = GetEmailStore();
+
+        using IUserEmailStore<ApplicationUser> emailStore = (IUserEmailStore<ApplicationUser>)userStore;
+
         await emailStore.SetEmailAsync(user, req.Email, CancellationToken.None);
+
         IdentityResult result = await userManager.CreateAsync(user, req.Password);
 
         if (!result.Succeeded)
@@ -1903,17 +1906,4 @@ public class IdentityTools(
         };
     }
     #endregion
-
-    IUserEmailStore<ApplicationUser> GetEmailStore()
-    {
-        using IServiceScope scope = serviceScopeFactory.CreateAsyncScope();
-        using IUserStore<ApplicationUser> userStore = scope.ServiceProvider.GetRequiredService<IUserStore<ApplicationUser>>();
-
-        using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        if (!userManager.SupportsUserEmail)
-        {
-            throw new NotSupportedException("Для пользовательского интерфейса по умолчанию требуется хранилище пользователей с поддержкой электронной почты.");
-        }
-        return (IUserEmailStore<ApplicationUser>)userStore;
-    }
 }

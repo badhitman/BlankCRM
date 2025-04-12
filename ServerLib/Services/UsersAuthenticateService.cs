@@ -301,7 +301,7 @@ public class UsersAuthenticateService(
         SignInResultResponseModel res = new();
         ApplicationUser? currentAppUser = await userManager.FindByEmailAsync(userEmail);
         if (currentAppUser is null)
-            return (SignInResultResponseModel)ResponseBaseModel.CreateError($"current user by email '{userEmail}' is null. error {{A19FC284-C437-4CC6-A7D2-C96FC6F6A42F}}");
+            return new SignInResultResponseModel() { Succeeded = false, Messages = ResponseBaseModel.CreateError($"current user by email '{userEmail}' is null. error {{A19FC284-C437-4CC6-A7D2-C96FC6F6A42F}}").Messages};
 
         TResponseModel<bool?> globalEnable2FA = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.GlobalEnable2FA, token);
         if (globalEnable2FA.Response == true)
