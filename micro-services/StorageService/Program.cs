@@ -163,6 +163,10 @@ public class Program
 
         using (IServiceScope ss = app.Services.CreateScope())
         {
+            IDbContextFactory<NLogsContext> logsDbFactory = ss.ServiceProvider.GetRequiredService<IDbContextFactory<NLogsContext>>();
+            NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
+            await ctx.Logs.AnyAsync();
+
             WebConfigModel wc_main = ss.ServiceProvider.GetRequiredService<WebConfigModel>();
             IWebTransmission webRemoteCall = ss.ServiceProvider.GetRequiredService<IWebTransmission>();
             TelegramBotConfigModel wc_remote = await webRemoteCall.GetWebConfigAsync();
