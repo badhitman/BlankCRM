@@ -214,6 +214,13 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     }
 
     /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<ProductDaichiModelDB>> ProductsSelectAsync(DaichiRequestModel req, CancellationToken token = default)
+    {
+        using ApiDaichiBusinessContext ctx = await dbFactory.CreateDbContextAsync(token);
+        return await ctx.ProductsSelect(req, token);
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<ProductsDaichiBusinessResultModel>> ProductsGetAsync(ProductsRequestDaichiModel req, CancellationToken token = default)
     {
         TResponseModel<ProductsDaichiBusinessResultModel> res = new();

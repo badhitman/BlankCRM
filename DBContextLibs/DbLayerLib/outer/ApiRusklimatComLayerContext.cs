@@ -37,6 +37,35 @@ public abstract partial class ApiRusklimatComLayerContext : DbContext
     }
 
     /// <summary>
+    /// ProductsSelect
+    /// </summary>
+    public async Task<TPaginationResponseModel<ProductRusklimatModelDB>> ProductsSelect(RusklimatRequestModel req, CancellationToken token = default)
+    {
+        TPaginationResponseModel<ProductRusklimatModelDB> res = new(req);
+
+        IQueryable<ProductRusklimatModelDB> q = from po in Products
+                                                where EF.Functions.ILike(po.Name!, $"%{req.SimpleRequest}%") ||
+                                                (po.Brand != null && EF.Functions.ILike(po.Brand, $"%{req.SimpleRequest}%")) ||
+                                                (po.NSCode != null && EF.Functions.ILike(po.NSCode, $"%{req.SimpleRequest}%")) ||
+                                                (po.VendorCode != null && EF.Functions.ILike(po.VendorCode, $"%{req.SimpleRequest}%"))
+                                                select po;
+
+        res.TotalRowsCount = await q.CountAsync(token);
+        Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<ProductRusklimatModelDB, List<ProductPropertyRusklimatModelDB>?> pq(IOrderedQueryable<ProductRusklimatModelDB> oq)
+            => oq.Skip(req.PageSize * req.PageNum)
+            .Take(req.PageSize)
+            .Include(x => x.Information)
+            .Include(x => x.Remains)
+            .Include(x => x.Properties);
+
+        res.Response = req.SortingDirection == DirectionsEnum.Up
+            ? await pq(q.OrderBy(x => x.Name)).ToListAsync(cancellationToken: token)
+            : await pq(q.OrderByDescending(x => x.Name)).ToListAsync(cancellationToken: token);
+
+        return res;
+    }
+
+    /// <summary>
     /// Товары
     /// </summary>
     public DbSet<ProductRusklimatModelDB> Products { get; set; }

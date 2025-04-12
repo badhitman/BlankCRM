@@ -1,0 +1,47 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Breez</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Title</MudTh>
+        <MudTh>NC</MudTh>
+        <MudTh>VnutrNC</MudTh>
+        <MudTh>NarujNC</MudTh>
+        <MudTh>AccessoryNC</MudTh>
+        <MudTh>Article</MudTh>
+        <MudTh>BimModel</MudTh>
+        <MudTh>Booklet</MudTh>
+        <MudTh>Brand</MudTh>
+        <MudTh>UTP</MudTh>
+        <MudTh>Series</MudTh>
+        <MudTh>PriceRIC</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Title">@context.Title</MudTd>
+        <MudTd DataLabel="NC">@context.NC</MudTd>
+        <MudTd DataLabel="VnutrNC">@context.VnutrNC</MudTd>
+        <MudTd DataLabel="NarujNC">@context.NarujNC</MudTd>
+        <MudTd DataLabel="AccessoryNC">@context.AccessoryNC</MudTd>
+        <MudTd DataLabel="Article">@context.Article</MudTd>
+        <MudTd DataLabel="BimModel">@context.BimModel</MudTd>
+        <MudTd DataLabel="Booklet">@context.Booklet</MudTd>
+        <MudTd DataLabel="Brand">@context.Brand</MudTd>
+        <MudTd DataLabel="UTP">@context.UTP</MudTd>
+        <MudTd DataLabel="Series">@context.Series</MudTd>
+        <MudTd DataLabel="Series">@context.PriceRIC @context.PriceCurrencyRIC</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Ни чего не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Загрузка...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

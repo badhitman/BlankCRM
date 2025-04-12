@@ -5,12 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// TechRequestModel
+/// HaierRequestModel
 /// </summary>
-public class TechRequestModel
+public class HaierRequestModel : SimplePaginationRequestModel
 {
-    /// <summary>
-    /// Запрашиваемый идентификатор
-    /// </summary>
-    public required int Id { get; set; }
+
 }

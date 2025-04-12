@@ -38,4 +38,8 @@ public class DaichiBusinessTransmission(IRabbitClient rabbitClient) : IDaichiBus
     /// <inheritdoc/>
     public async Task<TResponseModel<StoresDaichiBusinessResponseModel>> StoresGetAsync(CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<StoresDaichiBusinessResponseModel>>(GlobalStaticConstants.TransmissionQueues.StoresGetDaichiReceive, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<ProductDaichiModelDB>> ProductsSelectAsync(DaichiRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<ProductDaichiModelDB>>(GlobalStaticConstants.TransmissionQueues.ProductsSelectDaichiReceive, req, token: token) ?? new();
 }

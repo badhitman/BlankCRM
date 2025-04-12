@@ -21,6 +21,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<DownloadAndSaveReceive, object, ResponseBaseModel>()
             .RegisterMqListener<ProductsFeedGetReceive, object, TResponseModel<List<FeedItemHaierModel>>>()
             .RegisterMqListener<HealthCheckReceive, object, TResponseModel<List<RabbitMqManagementResponseModel>>>()
+            .RegisterMqListener<ProductsSelectReceive, HaierRequestModel, TPaginationResponseModel<ProductHaierModelDB>>()
             ;
     }
 }

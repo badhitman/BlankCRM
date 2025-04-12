@@ -34,7 +34,7 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
         result.AddRangeMessages(read.Messages);
         if (read.Response is not null && read.Response.Count != 0)
         {
-            FeedsHaierProffRuContext ctx = await dbFactory.CreateDbContextAsync(token);
+            using FeedsHaierProffRuContext ctx = await dbFactory.CreateDbContextAsync(token);
             logger.LogInformation($"Скачано {read.Response.Count} позиций. Подготовка к записи в БД (удаление старых данных и открытие транзакции)");
             await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await ctx.Database.BeginTransactionAsync(token);
 
@@ -56,6 +56,13 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
         }
 
         return result;
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<ProductHaierModelDB>> ProductsSelectAsync(HaierRequestModel req, CancellationToken token = default)
+    {
+        using FeedsHaierProffRuContext ctx = await dbFactory.CreateDbContextAsync(token);
+        return await ctx.ProductsSelectAsync(req, token);
     }
 
     /// <inheritdoc/>

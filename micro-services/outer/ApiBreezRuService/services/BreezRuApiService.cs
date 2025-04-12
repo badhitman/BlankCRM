@@ -102,7 +102,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
 
         foreach (ProductRealBreezRuModel _pr in productsJson.Response)
         {
-            TResponseModel<List<TechProductRealBreezRuModel>> techForProd = await GetTechProductAsync(new TechRequestModel() { Id = _pr.Key }, token);
+            TResponseModel<List<TechProductRealBreezRuModel>> techForProd = await GetTechProductAsync(new TechRequestBreezModel() { Id = _pr.Key }, token);
             if (techForProd?.Response is null || !techForProd.Success() || techForProd.Response.Count == 0)
             {
                 msg = $"Error `{nameof(DownloadAndSaveAsync)}`(id = {_pr.Key}): {nameof(techForProd)}.Response is null || !{nameof(techForProd)}.Success() || {nameof(techForProd)}.Response.Count == 0";
@@ -279,9 +279,15 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
         return ResponseBaseModel.CreateSuccess(msg);
     }
 
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<ProductBreezRuModelDB>> ProductsSelectAsync(BreezRequestModel req, CancellationToken token = default)
+    {
+        using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
+        return await ctx.ProductsSelect(req, token);
+    }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<TechCategoryRealBreezRuModel>>> GetTechCategoryAsync(TechRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<List<TechCategoryRealBreezRuModel>>> GetTechCategoryAsync(TechRequestBreezModel req, CancellationToken token = default)
     {
         TResponseModel<List<TechCategoryRealBreezRuModel>> result = new();
 
@@ -329,7 +335,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<TechProductRealBreezRuModel>>> GetTechProductAsync(TechRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<List<TechProductRealBreezRuModel>>> GetTechProductAsync(TechRequestBreezModel req, CancellationToken token = default)
     {
         TResponseModel<List<TechProductRealBreezRuModel>> result = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());

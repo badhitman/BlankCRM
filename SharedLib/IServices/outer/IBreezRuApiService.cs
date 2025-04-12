@@ -42,6 +42,11 @@ public interface IBreezRuApiService : IOuterApiService
     public Task<TResponseModel<List<ProductRealBreezRuModel>>> GetProductsAsync(CancellationToken token = default);
 
     /// <summary>
+    /// ProductsSelect
+    /// </summary>
+    public Task<TPaginationResponseModel<ProductBreezRuModelDB>> ProductsSelectAsync(BreezRequestModel req, CancellationToken token = default);
+
+    /// <summary>
     /// Технические характеристики Категории
     /// </summary>
     /// <remarks>
@@ -49,7 +54,7 @@ public interface IBreezRuApiService : IOuterApiService
     /// В случае, если категории с указанным идентификатором не существует, в JSON возвращается объект с ключом "error" и значением "Неверный ID".
     /// В XML возвращается объект "categories" с двумя объектами: "cat_id" содержащий запрошенный идентификатор и пустой "techs".
     /// </remarks>
-    public Task<TResponseModel<List<TechCategoryRealBreezRuModel>>> GetTechCategoryAsync(TechRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<List<TechCategoryRealBreezRuModel>>> GetTechCategoryAsync(TechRequestBreezModel req, CancellationToken token = default);
 
     /// <summary>
     /// Технические характеристики Продукта
@@ -60,5 +65,5 @@ public interface IBreezRuApiService : IOuterApiService
     /// В случае, если продукта с указанным идентификатором не существует, в JSON возвращается объект с ключом "error" и значением "Неверный ID",
     /// а в XML - пустой объект "product".
     /// </remarks>
-    public Task<TResponseModel<List<TechProductRealBreezRuModel>>> GetTechProductAsync(TechRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<List<TechProductRealBreezRuModel>>> GetTechProductAsync(TechRequestBreezModel req, CancellationToken token = default);
 }

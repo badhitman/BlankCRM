@@ -37,6 +37,38 @@ public abstract partial class ApiBreezRuLayerContext : DbContext
     }
 
     /// <summary>
+    /// ProductsSelect
+    /// </summary>
+    public async Task<TPaginationResponseModel<ProductBreezRuModelDB>> ProductsSelect(BreezRequestModel req, CancellationToken token = default)
+    {
+        TPaginationResponseModel<ProductBreezRuModelDB> res = new(req);
+
+        IQueryable<ProductBreezRuModelDB> q = from po in Products
+                                              where (po.Manual != null && EF.Functions.ILike(po.Manual, $"%{req.SimpleRequest}%")) ||
+                                              (po.VideoYoutube != null && EF.Functions.ILike(po.VideoYoutube, $"%{req.SimpleRequest}%")) ||
+                                              (po.UTP != null && EF.Functions.ILike(po.UTP, $"%{req.SimpleRequest}%")) ||
+                                              (po.AccessoryNC != null && EF.Functions.ILike(po.AccessoryNC, $"%{req.SimpleRequest}%")) ||
+                                              (po.NarujNC != null && EF.Functions.ILike(po.NarujNC, $"%{req.SimpleRequest}%")) ||
+                                              (po.Article != null && EF.Functions.ILike(po.Article, $"%{req.SimpleRequest}%")) ||
+                                              (po.BimModel != null && EF.Functions.ILike(po.BimModel, $"%{req.SimpleRequest}%")) ||
+                                              (po.Booklet != null && EF.Functions.ILike(po.Booklet, $"%{req.SimpleRequest}%")) ||
+                                              (po.Brand != null && EF.Functions.ILike(po.Brand, $"%{req.SimpleRequest}%")) ||
+                                              (po.VnutrNC != null && EF.Functions.ILike(po.VnutrNC, $"%{req.SimpleRequest}%")) ||
+                                              (po.Title != null && EF.Functions.ILike(po.Title, $"%{req.SimpleRequest}%")) ||
+                                              (po.Series != null && EF.Functions.ILike(po.Series, $"%{req.SimpleRequest}%")) ||
+                                              (po.NC != null && EF.Functions.ILike(po.NC, $"%{req.SimpleRequest}%")) ||
+                                              (po.Description != null && EF.Functions.ILike(po.Description, $"%{req.SimpleRequest}%"))
+                                              select po;
+
+        res.TotalRowsCount = await q.CountAsync(token);
+        res.Response = req.SortingDirection == DirectionsEnum.Up
+            ? await q.OrderBy(x => x.Title).Skip(req.PageSize * req.PageNum).Take(req.PageSize).Include(x => x.Images).ToListAsync(cancellationToken: token)
+            : await q.OrderByDescending(x => x.Title).Skip(req.PageSize * req.PageNum).Take(req.PageSize).Include(x => x.Images).ToListAsync(cancellationToken: token);
+
+        return res;
+    }
+
+    /// <summary>
     /// остатки на складах
     /// </summary>
     public DbSet<BreezRuLeftoverModelDB> Leftovers { get; set; }

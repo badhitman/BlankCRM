@@ -33,4 +33,9 @@ public interface IDaichiBusinessApiService : IOuterApiService
     /// ProductUpdateAsync
     /// </summary>
     public Task<ResponseBaseModel> ProductUpdateAsync(ProductDaichiModelDB req, CancellationToken token = default);
+
+    /// <summary>
+    /// ProductsSelect
+    /// </summary>
+    public Task<TPaginationResponseModel<ProductDaichiModelDB>> ProductsSelectAsync(DaichiRequestModel req, CancellationToken token = default);
 }

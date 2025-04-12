@@ -22,4 +22,8 @@ public class HaierProffRuTransmission(IRabbitClient rabbitClient) : IFeedsHaierP
     /// <inheritdoc/>
     public async Task<TResponseModel<List<FeedItemHaierModel>>> ProductsFeedGetAsync(CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<FeedItemHaierModel>>>(GlobalStaticConstants.TransmissionQueues.ProductsFeedGetHaierProffReceive, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<ProductHaierModelDB>> ProductsSelectAsync(HaierRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<ProductHaierModelDB>>(GlobalStaticConstants.TransmissionQueues.ProductsSelectHaierProffReceive, req, token: token) ?? new();
 }

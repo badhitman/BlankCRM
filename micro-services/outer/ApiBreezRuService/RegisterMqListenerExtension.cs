@@ -21,13 +21,14 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<DownloadAndSaveReceive, object, ResponseBaseModel>()
             .RegisterMqListener<LeftoversGetReceive, string, TResponseModel<List<BreezRuLeftoverModel>>>()
             .RegisterMqListener<HealthCheckReceive, object, TResponseModel<List<RabbitMqManagementResponseModel>>>()
-            .RegisterMqListener<GetTechProductReceive, TechRequestModel, TResponseModel<List<TechProductRealBreezRuModel>>>()
-            .RegisterMqListener<GetTechCategoryReceive, TechRequestModel, TResponseModel<List<TechCategoryRealBreezRuModel>>>()
+            .RegisterMqListener<GetTechProductReceive, TechRequestBreezModel, TResponseModel<List<TechProductRealBreezRuModel>>>()
+            .RegisterMqListener<GetTechCategoryReceive, TechRequestBreezModel, TResponseModel<List<TechCategoryRealBreezRuModel>>>()
             .RegisterMqListener<GetProductsReceive, object, TResponseModel<List<ProductRealBreezRuModel>>>()
             .RegisterMqListener<GetCategoriesReceive, object, TResponseModel<List<CategoryRealBreezRuModel>>>()
             .RegisterMqListener<GetBrandsReceive, object, TResponseModel<List<BrandRealBreezRuModel>>>()
             .RegisterMqListener<ProductUpdateReceive, ProductBreezRuModelDB, ResponseBaseModel>()
             .RegisterMqListener<TechProductUpdateReceive, TechProductBreezRuModelDB, ResponseBaseModel>()
+            .RegisterMqListener<ProductsSelectReceive, BreezRequestModel, TPaginationResponseModel<ProductBreezRuModelDB>>()
             ;
     }
 }

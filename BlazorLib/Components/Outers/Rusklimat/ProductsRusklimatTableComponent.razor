@@ -1,0 +1,39 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Rusklimat</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>NSCode</MudTh>
+        <MudTh>InternetPrice</MudTh>
+        <MudTh>ClientPrice</MudTh>
+        <MudTh>Price</MudTh>
+        <MudTh>VendorCode</MudTh>
+        <MudTh>Brand</MudTh>
+        <MudTh>Exclusive</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="NSCode">@context.NSCode</MudTd>
+        <MudTd DataLabel="InternetPrice">@context.InternetPrice</MudTd>
+        <MudTd DataLabel="ClientPrice">@context.ClientPrice</MudTd>
+        <MudTd DataLabel="Price">@context.Price</MudTd>
+        <MudTd DataLabel="VendorCode">@context.VendorCode</MudTd>
+        <MudTd DataLabel="Brand">@context.Brand</MudTd>
+        <MudTd DataLabel="Exclusive">@context.Exclusive</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Ни чего не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Загрузка...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

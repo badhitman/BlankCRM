@@ -11,13 +11,13 @@ namespace Transmission.Receives.Outers.Breez;
 /// GetTechCategoryReceive
 /// </summary>
 public class GetTechCategoryReceive(IBreezRuApiService breezRepo)
-    : IResponseReceive<TechRequestModel?, TResponseModel<List<TechCategoryRealBreezRuModel>>?>
+    : IResponseReceive<TechRequestBreezModel?, TResponseModel<List<TechCategoryRealBreezRuModel>>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetTechCategoryBreezReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<TechCategoryRealBreezRuModel>>?> ResponseHandleActionAsync(TechRequestModel? req, CancellationToken token = default)
+    public async Task<TResponseModel<List<TechCategoryRealBreezRuModel>>?> ResponseHandleActionAsync(TechRequestBreezModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await breezRepo.GetTechCategoryAsync(req, token);

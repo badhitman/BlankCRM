@@ -17,9 +17,9 @@ public class ProductUpdateReceive(IRusklimatComApiService rusklimatRepo)
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProductUpdateRusklimatReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ProductRusklimatModelDB? payload = null, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ProductRusklimatModelDB? req = null, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(payload);
-        return await rusklimatRepo.UpdateProductAsync(payload, token);
+        ArgumentNullException.ThrowIfNull(req);
+        return await rusklimatRepo.UpdateProductAsync(req, token);
     }
 }

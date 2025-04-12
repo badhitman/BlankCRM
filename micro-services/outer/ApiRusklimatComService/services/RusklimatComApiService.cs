@@ -299,6 +299,13 @@ public class RusklimatComApiService(
     }
 
     /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<ProductRusklimatModelDB>> ProductsSelectAsync(RusklimatRequestModel req, CancellationToken token = default)
+    {
+        using ApiRusklimatComContext ctx = await dbFactory.CreateDbContextAsync(token);
+        return await ctx.ProductsSelect(req, token);
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<ProductsRusklimatResponseModel>> GetProductsAsync(RusklimatPaginationRequestModel req, CancellationToken token = default)
     {
         TResponseModel<ProductsRusklimatResponseModel> res = new();

@@ -1,7 +1,8 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
 <h3>Breez</h3>
-
+<ProductsBreezTableComponent />
+<br />
 @if (HealthCheck?.Response is null)
 {
     <figure class="text-center">
@@ -10,9 +11,9 @@
         </blockquote>
     </figure>
 }
-else if (HealthCheck.Response.Count == 0 || HealthCheck.Response.Sum(x=>x.messages) == 0)
+else if (HealthCheck.Response.Count == 0 || HealthCheck.Response.Sum(x => x.messages) == 0)
 {
-    <div class="d-grid gap-2">
+    <div class="d-grid gap-2 mb-2">
         <button disabled="@IsBusyProgress" @onclick="Download" class="btn btn-primary" type="button">
             @if (IsBusyProgress)
             {

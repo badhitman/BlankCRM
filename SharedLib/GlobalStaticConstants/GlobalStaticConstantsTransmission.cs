@@ -858,6 +858,8 @@ public static partial class GlobalStaticConstants
         /// <inheritdoc/>
         public readonly static string HealthCheckBreezReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BREEZ_CONTROLLER_NAME, $"{Routes.HEALTH_CONTROLLER_NAME}-{Routes.CHECK_ACTION_NAME}");
 
+        /// <inheritdoc/>
+        public readonly static string ProductsSelectBreezReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BREEZ_CONTROLLER_NAME, Routes.PRODUCTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string DownloadAndSaveDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
@@ -874,6 +876,9 @@ public static partial class GlobalStaticConstants
         public readonly static string StoresGetDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.STORES_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
 
         /// <inheritdoc/>
+        public readonly static string ProductsSelectDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DAICHI_CONTROLLER_NAME, Routes.PRODUCTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string HealthCheckDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DAICHI_CONTROLLER_NAME, $"{Routes.HEALTH_CONTROLLER_NAME}-{Routes.CHECK_ACTION_NAME}");
 
 
@@ -881,6 +886,9 @@ public static partial class GlobalStaticConstants
         public readonly static string DownloadAndSaveRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
         /// <inheritdoc/>
         public readonly static string ProductUpdateRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.PRODUCT_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
+
+        /// <inheritdoc/>
+        public readonly static string ProductsSelectRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RUSKLIMAT_CONTROLLER_NAME, Routes.PRODUCTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string GetUnitsRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.API_CONTROLLER_NAME}", $"{Routes.UNITS_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
@@ -899,6 +907,9 @@ public static partial class GlobalStaticConstants
         public readonly static string DownloadAndSaveHaierProffReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.HAIERPROFF_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
         /// <inheritdoc/>
         public readonly static string ProductsFeedGetHaierProffReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.HAIERPROFF_CONTROLLER_NAME}-{Routes.RSS_CONTROLLER_NAME}", $"{Routes.PRODUCTS_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
+
+        /// <inheritdoc/>
+        public readonly static string ProductsSelectHaierProffReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.HAIERPROFF_CONTROLLER_NAME, Routes.PRODUCTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string HealthCheckHaierProffReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.HAIERPROFF_CONTROLLER_NAME, $"{Routes.HEALTH_CONTROLLER_NAME}-{Routes.CHECK_ACTION_NAME}");

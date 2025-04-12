@@ -25,6 +25,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<ParameterUpdateReceive, ParameterEntryDaichiModelDB, ResponseBaseModel>()
             .RegisterMqListener<ProductUpdateReceive, ProductDaichiModelDB, ResponseBaseModel>()
             .RegisterMqListener<HealthCheckReceive, object, TResponseModel<List<RabbitMqManagementResponseModel>>>()
+            .RegisterMqListener<ProductsSelectReceive, DaichiRequestModel, TPaginationResponseModel<ProductDaichiModelDB>>()
             ;
     }
 }

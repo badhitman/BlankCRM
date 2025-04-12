@@ -36,6 +36,33 @@ public abstract partial class ApiDaichiBusinessLayerContext : DbContext
         modelBuilder.HasDefaultSchema("public");
     }
 
+    /// <summary>
+    /// ProductsSelect
+    /// </summary>
+    public async Task<TPaginationResponseModel<ProductDaichiModelDB>> ProductsSelect(DaichiRequestModel req, CancellationToken token = default)
+    {
+        TPaginationResponseModel<ProductDaichiModelDB> res = new(req);
+
+        IQueryable<ProductDaichiModelDB> q = from po in Products
+                                             where EF.Functions.ILike(po.NAME, $"%{req.SimpleRequest}%") ||
+                                             EF.Functions.ILike(po.XML_ID, $"%{req.SimpleRequest}%")
+                                             select po;
+
+        res.TotalRowsCount = await q.CountAsync(token);
+        Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<ProductDaichiModelDB, List<PriceProductDaichiModelDB>?> pq(IOrderedQueryable<ProductDaichiModelDB> oq) 
+            => oq.Skip(req.PageSize * req.PageNum)
+            .Take(req.PageSize)
+            .Include(x => x.Params)
+            .Include(x => x.StoreAvailability)
+            .Include(x => x.Params)
+            .Include(x => x.Prices);
+
+        res.Response = req.SortingDirection == DirectionsEnum.Up
+            ? await pq(q.OrderBy(x => x.NAME)).ToListAsync(cancellationToken: token)
+            : await pq(q.OrderByDescending(x => x.NAME)).ToListAsync(cancellationToken: token);
+
+        return res;
+    }
 
     /// <inheritdoc/>
     public DbSet<StoreDaichiModelDB> Stores { get; set; }

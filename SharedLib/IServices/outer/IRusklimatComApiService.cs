@@ -33,4 +33,9 @@ public interface IRusklimatComApiService : IOuterApiService
     /// Обновить/создать товар
     /// </summary>
     public Task<ResponseBaseModel> UpdateProductAsync(ProductRusklimatModelDB req, CancellationToken token = default);
+
+    /// <summary>
+    /// ProductsSelect
+    /// </summary>
+    public Task<TPaginationResponseModel<ProductRusklimatModelDB>> ProductsSelectAsync(RusklimatRequestModel req, CancellationToken token = default);
 }

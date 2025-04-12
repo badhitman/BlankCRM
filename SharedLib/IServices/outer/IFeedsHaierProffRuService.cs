@@ -13,4 +13,9 @@ public interface IFeedsHaierProffRuService : IOuterApiService
     /// Получение товаров из rss/feed
     /// </summary>
     public Task<TResponseModel<List<FeedItemHaierModel>>> ProductsFeedGetAsync(CancellationToken token = default);
+
+    /// <summary>
+    /// ProductsSelect
+    /// </summary>
+    public Task<TPaginationResponseModel<ProductHaierModelDB>> ProductsSelectAsync(HaierRequestModel req, CancellationToken token = default);
 }

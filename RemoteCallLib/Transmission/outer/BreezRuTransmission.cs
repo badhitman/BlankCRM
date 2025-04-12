@@ -24,11 +24,11 @@ public class BreezRuTransmission(IRabbitClient rabbitClient) : IBreezRuApiTransm
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<ProductRealBreezRuModel>>>(GlobalStaticConstants.TransmissionQueues.GetProductsBreezReceive, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<TechCategoryRealBreezRuModel>>> GetTechCategoryAsync(TechRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<List<TechCategoryRealBreezRuModel>>> GetTechCategoryAsync(TechRequestBreezModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<TechCategoryRealBreezRuModel>>>(GlobalStaticConstants.TransmissionQueues.GetTechCategoryBreezReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<TechProductRealBreezRuModel>>> GetTechProductAsync(TechRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<List<TechProductRealBreezRuModel>>> GetTechProductAsync(TechRequestBreezModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<TechProductRealBreezRuModel>>>(GlobalStaticConstants.TransmissionQueues.GetTechProductBreezReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -50,4 +50,8 @@ public class BreezRuTransmission(IRabbitClient rabbitClient) : IBreezRuApiTransm
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ProductUpdateAsync(ProductBreezRuModelDB req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.ProductUpdateBreezReceive, req, false, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<ProductBreezRuModelDB>> ProductsSelectAsync(BreezRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<ProductBreezRuModelDB>>(GlobalStaticConstants.TransmissionQueues.ProductsSelectBreezReceive, req, token: token) ?? new();
 }
