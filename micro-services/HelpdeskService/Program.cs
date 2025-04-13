@@ -11,6 +11,7 @@ using OpenTelemetry;
 using System.Diagnostics.Metrics;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
+using System.Text;
 
 namespace HelpdeskService;
 
@@ -24,6 +25,7 @@ public class Program
     /// </summary>
     public static async Task Main(string[] args)
     {
+        Console.OutputEncoding = Encoding.UTF8;
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
         Logger logger = LogManager.GetCurrentClassLogger();
         builder.AddServiceDefaults();

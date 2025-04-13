@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using SharedLib;
+using System.Text;
 
 namespace DesignerApp.AppHost;
 
@@ -13,6 +14,7 @@ public class Program
     /// </summary>
     public static void Main(string[] args)
     {
+        Console.OutputEncoding = Encoding.UTF8;
         IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
         string _modePrefix = Environment.GetEnvironmentVariable(nameof(GlobalStaticConstants.TransmissionQueueNamePrefix)) ?? "";

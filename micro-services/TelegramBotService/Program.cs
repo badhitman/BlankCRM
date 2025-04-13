@@ -10,6 +10,7 @@ using System.Diagnostics.Metrics;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using System.Text;
 
 namespace TelegramBotService;
 
@@ -23,6 +24,7 @@ public class Program
     /// </summary>
     public static async Task Main(string[] args)
     {
+        Console.OutputEncoding = Encoding.UTF8;
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
         Logger logger = LogManager.GetCurrentClassLogger();
         builder.AddServiceDefaults();
