@@ -65,7 +65,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     CurrencyRIC = table.Column<string>(type: "text", nullable: true),
                     LoadedDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CodeNC = table.Column<string>(type: "text", nullable: true),
-                    Articul = table.Column<string>(type: "text", nullable: true),
+                    Article = table.Column<string>(type: "text", nullable: true),
                     Title = table.Column<string>(type: "text", nullable: true),
                     Quantity = table.Column<string>(type: "text", nullable: true),
                     Stock = table.Column<string>(type: "text", nullable: true),
@@ -242,10 +242,10 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Leftovers_Articul",
+                name: "IX_Leftovers_Article",
                 schema: "public",
                 table: "Leftovers",
-                column: "Articul");
+                column: "Article");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Leftovers_CodeNC",

@@ -280,7 +280,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ProductBreezRuModelDB>> ProductsSelectAsync(BreezRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<ProductViewBreezRuModeld>> ProductsSelectAsync(BreezRequestModel req, CancellationToken token = default)
     {
         using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
         return await ctx.ProductsSelect(req, token);

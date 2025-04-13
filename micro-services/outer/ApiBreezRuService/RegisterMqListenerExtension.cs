@@ -28,7 +28,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<GetBrandsReceive, object, TResponseModel<List<BrandRealBreezRuModel>>>()
             .RegisterMqListener<ProductUpdateReceive, ProductBreezRuModelDB, ResponseBaseModel>()
             .RegisterMqListener<TechProductUpdateReceive, TechProductBreezRuModelDB, ResponseBaseModel>()
-            .RegisterMqListener<ProductsSelectReceive, BreezRequestModel, TPaginationResponseModel<ProductBreezRuModelDB>>()
+            .RegisterMqListener<ProductsSelectReceive, BreezRequestModel, TPaginationResponseModel<ProductViewBreezRuModeld>>()
             ;
     }
 }

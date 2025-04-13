@@ -49,7 +49,7 @@ public class BreezRuLeftoverModelDB : GoodsBreezRuBaseModel
     {
         return new()
         {
-            Articul = x.Articul,
+            Article = x.Article,
             CodeNC = x.CodeNC,
             Quantity = x.Quantity,
             LoadedDateTime = DateTime.UtcNow,

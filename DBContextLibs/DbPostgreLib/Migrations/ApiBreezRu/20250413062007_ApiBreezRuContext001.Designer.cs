@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.ApiBreezRu
 {
     [DbContext(typeof(ApiBreezRuContext))]
-    [Migration("20250412075930_ApiBreezRuContext001")]
+    [Migration("20250413062007_ApiBreezRuContext001")]
     partial class ApiBreezRuContext001
     {
         /// <inheritdoc />
@@ -67,7 +67,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Articul")
+                    b.Property<string>("Article")
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "articul");
 
@@ -108,7 +108,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Articul");
+                    b.HasIndex("Article");
 
                     b.HasIndex("CodeNC");
 

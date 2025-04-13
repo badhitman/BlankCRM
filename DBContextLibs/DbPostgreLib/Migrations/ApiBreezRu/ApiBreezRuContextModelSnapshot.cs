@@ -64,7 +64,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Articul")
+                    b.Property<string>("Article")
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "articul");
 
@@ -105,7 +105,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Articul");
+                    b.HasIndex("Article");
 
                     b.HasIndex("CodeNC");
 

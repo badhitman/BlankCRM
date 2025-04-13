@@ -13,7 +13,6 @@ using OpenTelemetry;
 using SharedLib;
 using DbcLib;
 using NLog;
-using Newtonsoft.Json;
 
 namespace ApiBreezRuService;
 

@@ -44,7 +44,7 @@ public interface IBreezRuApiService : IOuterApiService
     /// <summary>
     /// ProductsSelect
     /// </summary>
-    public Task<TPaginationResponseModel<ProductBreezRuModelDB>> ProductsSelectAsync(BreezRequestModel req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<ProductViewBreezRuModeld>> ProductsSelectAsync(BreezRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// Технические характеристики Категории

@@ -52,6 +52,6 @@ public class BreezRuTransmission(IRabbitClient rabbitClient) : IBreezRuApiTransm
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.ProductUpdateBreezReceive, req, false, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ProductBreezRuModelDB>> ProductsSelectAsync(BreezRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<ProductBreezRuModelDB>>(GlobalStaticConstants.TransmissionQueues.ProductsSelectBreezReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseModel<ProductViewBreezRuModeld>> ProductsSelectAsync(BreezRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<ProductViewBreezRuModeld>>(GlobalStaticConstants.TransmissionQueues.ProductsSelectBreezReceive, req, token: token) ?? new();
 }

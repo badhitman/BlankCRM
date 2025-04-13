@@ -17,10 +17,10 @@ public partial class ProductsBreezTableComponent : BlazorBusyComponentBaseModel
     IBreezRuApiTransmission breezTrans { get; set; } = default!;
 
 
-    private MudTable<ProductBreezRuModelDB>? table;
+    private MudTable<ProductViewBreezRuModeld>? table;
 
     private string? searchString = null;
-    private async Task<TableData<ProductBreezRuModelDB>> ServerReload(TableState state, CancellationToken token)
+    private async Task<TableData<ProductViewBreezRuModeld>> ServerReload(TableState state, CancellationToken token)
     {
         BreezRequestModel req = new()
         {
@@ -31,9 +31,9 @@ public partial class ProductsBreezTableComponent : BlazorBusyComponentBaseModel
         };
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<ProductBreezRuModelDB> res = await breezTrans.ProductsSelectAsync(req, token);
+        TPaginationResponseModel<ProductViewBreezRuModeld> res = await breezTrans.ProductsSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
-        return new TableData<ProductBreezRuModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        return new TableData<ProductViewBreezRuModeld>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 
     async void OnSearch(string text)

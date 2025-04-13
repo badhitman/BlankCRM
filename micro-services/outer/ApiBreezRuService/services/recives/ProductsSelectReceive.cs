@@ -11,13 +11,13 @@ namespace Transmission.Receives.Outers.Breez;
 /// ProductsSelectReceive
 /// </summary>
 public class ProductsSelectReceive(IBreezRuApiService breezRepo)
-    : IResponseReceive<BreezRequestModel?, TPaginationResponseModel<ProductBreezRuModelDB>?>
+    : IResponseReceive<BreezRequestModel?, TPaginationResponseModel<ProductViewBreezRuModeld>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProductsSelectBreezReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ProductBreezRuModelDB>?> ResponseHandleActionAsync(BreezRequestModel? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<ProductViewBreezRuModeld>?> ResponseHandleActionAsync(BreezRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await breezRepo.ProductsSelectAsync(req, token);

@@ -11,7 +11,7 @@ namespace SharedLib;
 /// <summary>
 /// GoodsBreezRuBaseModel
 /// </summary>
-[Index(nameof(CodeNC)), Index(nameof(Articul)), Index(nameof(Quantity)), Index(nameof(Stock)), Index(nameof(TimeLastUpdate))]
+[Index(nameof(CodeNC)), Index(nameof(Article)), Index(nameof(Quantity)), Index(nameof(Stock)), Index(nameof(TimeLastUpdate))]
 public class GoodsBreezRuBaseModel
 {
     /// <summary>
@@ -24,7 +24,7 @@ public class GoodsBreezRuBaseModel
     /// Артикул
     /// </summary>
     [JsonProperty("articul"), JsonPropertyName("articul")]
-    public string? Articul { get; set; }
+    public string? Article { get; set; }
 
     /// <summary>
     /// Наименование товара
