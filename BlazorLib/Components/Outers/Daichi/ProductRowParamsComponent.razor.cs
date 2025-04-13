@@ -7,6 +7,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.Outers.Daichi;
 
+/// <summary>
+/// ProductRowParamsComponent
+/// </summary>
 public partial class ProductRowParamsComponent
 {
     /// <summary>
