@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// BreezRuElementModelDB
 /// </summary>
-[Index(nameof(CurrencyBasePrice)), Index(nameof(CurrencyRIC)), Index(nameof(LoadedDateTime))]
+[Index(nameof(CurrencyBasePrice)), Index(nameof(CurrencyRIC)), Index(nameof(CreatedAt)), Index(nameof(UpdatedAt))]
 public class BreezRuLeftoverModelDB : GoodsBreezRuBaseModel
 {
     /// <summary>
@@ -40,9 +40,15 @@ public class BreezRuLeftoverModelDB : GoodsBreezRuBaseModel
     public string? CurrencyRIC { get; set; }
 
     /// <summary>
-    /// LoadedDateTime
+    /// CreatedAt
     /// </summary>
-    public DateTime LoadedDateTime { get; set; }
+    public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// UpdatedAt
+    /// </summary>
+    public DateTime UpdatedAt { get; set; }
+
 
     /// <inheritdoc/>
     public static BreezRuLeftoverModelDB Build(BreezRuLeftoverModel x)
@@ -52,7 +58,8 @@ public class BreezRuLeftoverModelDB : GoodsBreezRuBaseModel
             Article = x.Article,
             CodeNC = x.CodeNC,
             Quantity = x.Quantity,
-            LoadedDateTime = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
             Stock = x.Stock,
             Title = x.Title,
             BasePrice = x.Price?.BasePrice,

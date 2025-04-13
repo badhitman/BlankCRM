@@ -265,6 +265,7 @@ public class RusklimatComApiService(
             .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
 
         req.UpdatedAt = DateTime.UtcNow;
+        req.CreatedAt = DateTime.UtcNow;
         string msg;
         if (prodDb is null)
         {

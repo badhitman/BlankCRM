@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.ApiRusklimatCom
 {
     [DbContext(typeof(ApiRusklimatComContext))]
-    [Migration("20250411071751_ApiRusklimatComContext001")]
+    [Migration("20250413072251_ApiRusklimatComContext001")]
     partial class ApiRusklimatComContext001
     {
         /// <inheritdoc />
@@ -152,8 +152,12 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("RemainsId")
                         .IsUnique();
+
+                    b.HasIndex("UpdatedAt");
 
                     b.ToTable("Products", "public");
                 });

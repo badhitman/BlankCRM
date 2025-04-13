@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.ApiBreezRu
 {
     [DbContext(typeof(ApiBreezRuContext))]
-    [Migration("20250413062007_ApiBreezRuContext001")]
+    [Migration("20250413071932_ApiBreezRuContext001")]
     partial class ApiBreezRuContext001
     {
         /// <inheritdoc />
@@ -78,14 +78,14 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "nc");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("CurrencyBasePrice")
                         .HasColumnType("text");
 
                     b.Property<string>("CurrencyRIC")
                         .HasColumnType("text");
-
-                    b.Property<DateTime>("LoadedDateTime")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Quantity")
                         .HasColumnType("text")
@@ -106,23 +106,28 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                         .HasColumnType("text")
                         .HasAnnotation("Relational:JsonPropertyName", "title");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Article");
 
                     b.HasIndex("CodeNC");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("CurrencyBasePrice");
 
                     b.HasIndex("CurrencyRIC");
-
-                    b.HasIndex("LoadedDateTime");
 
                     b.HasIndex("Quantity");
 
                     b.HasIndex("Stock");
 
                     b.HasIndex("TimeLastUpdate");
+
+                    b.HasIndex("UpdatedAt");
 
                     b.ToTable("Leftovers", "public");
                 });
@@ -262,6 +267,8 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("NC");
 
                     b.HasIndex("NarujNC");
@@ -273,6 +280,8 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     b.HasIndex("Title");
 
                     b.HasIndex("UTP");
+
+                    b.HasIndex("UpdatedAt");
 
                     b.HasIndex("VnutrNC");
 
@@ -416,9 +425,13 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
                     b.HasIndex("AccessoryNC");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("NC");
 
                     b.HasIndex("NarujNC");
+
+                    b.HasIndex("UpdatedAt");
 
                     b.HasIndex("VnutrNC");
 

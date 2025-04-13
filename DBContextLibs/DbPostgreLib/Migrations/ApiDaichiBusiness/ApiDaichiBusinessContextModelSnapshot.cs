@@ -140,7 +140,11 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("NAME");
+
+                    b.HasIndex("UpdatedAt");
 
                     b.HasIndex("XML_ID");
 
@@ -273,7 +277,11 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("NAME");
+
+                    b.HasIndex("UpdatedAt");
 
                     b.HasIndex("XML_ID");
 

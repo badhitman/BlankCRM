@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -21,6 +22,8 @@ namespace DbPostgreLib.Migrations.FeedsHaierProffRu
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Url = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<string>(type: "text", nullable: false),
@@ -140,6 +143,12 @@ namespace DbPostgreLib.Migrations.FeedsHaierProffRu
                 column: "Category");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductsFeedsRss_CreatedAt",
+                schema: "public",
+                table: "ProductsFeedsRss",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductsFeedsRss_ParentCategory",
                 schema: "public",
                 table: "ProductsFeedsRss",
@@ -150,6 +159,12 @@ namespace DbPostgreLib.Migrations.FeedsHaierProffRu
                 schema: "public",
                 table: "ProductsFeedsRss",
                 column: "Price");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsFeedsRss_UpdatedAt",
+                schema: "public",
+                table: "ProductsFeedsRss",
+                column: "UpdatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SectionsOptionsFeedsRss_Name",

@@ -182,11 +182,23 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
                 column: "Parent");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_CreatedAt",
+                schema: "public",
+                table: "Products",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_RemainsId",
                 schema: "public",
                 table: "Products",
                 column: "RemainsId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_UpdatedAt",
+                schema: "public",
+                table: "Products",
+                column: "UpdatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductsInformation_Name",

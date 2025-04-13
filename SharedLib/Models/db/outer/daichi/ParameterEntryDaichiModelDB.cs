@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
@@ -9,6 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// ParameterEntryDaichiModelDB
 /// </summary>
+[Index(nameof(CreatedAt)), Index(nameof(UpdatedAt))]
 public class ParameterEntryDaichiModelDB : ParameterElementDaichiModel
 {
     /// <summary>
@@ -35,6 +37,7 @@ public class ParameterEntryDaichiModelDB : ParameterElementDaichiModel
     /// Дата обновления
     /// </summary>
     public DateTime UpdatedAt { get; set; }
+
 
     /// <inheritdoc/>
     public static ParameterEntryDaichiModelDB Build(ParameterElementDaichiJsonModel x, List<ProductDaichiModelDB> productsDb)

@@ -63,7 +63,8 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     CurrencyBasePrice = table.Column<string>(type: "text", nullable: true),
                     RIC = table.Column<string>(type: "text", nullable: true),
                     CurrencyRIC = table.Column<string>(type: "text", nullable: true),
-                    LoadedDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CodeNC = table.Column<string>(type: "text", nullable: true),
                     Article = table.Column<string>(type: "text", nullable: true),
                     Title = table.Column<string>(type: "text", nullable: true),
@@ -254,6 +255,12 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 column: "CodeNC");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Leftovers_CreatedAt",
+                schema: "public",
+                table: "Leftovers",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Leftovers_CurrencyBasePrice",
                 schema: "public",
                 table: "Leftovers",
@@ -264,12 +271,6 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 schema: "public",
                 table: "Leftovers",
                 column: "CurrencyRIC");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Leftovers_LoadedDateTime",
-                schema: "public",
-                table: "Leftovers",
-                column: "LoadedDateTime");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Leftovers_Quantity",
@@ -288,6 +289,12 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 schema: "public",
                 table: "Leftovers",
                 column: "TimeLastUpdate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Leftovers_UpdatedAt",
+                schema: "public",
+                table: "Leftovers",
+                column: "UpdatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_AccessoryNC",
@@ -312,6 +319,12 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 schema: "public",
                 table: "Products",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_CreatedAt",
+                schema: "public",
+                table: "Products",
+                column: "CreatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_NarujNC",
@@ -342,6 +355,12 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 schema: "public",
                 table: "Products",
                 column: "Title");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_UpdatedAt",
+                schema: "public",
+                table: "Products",
+                column: "UpdatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_UTP",
@@ -416,6 +435,12 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 column: "AccessoryNC");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TechsProducts_CreatedAt",
+                schema: "public",
+                table: "TechsProducts",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TechsProducts_NarujNC",
                 schema: "public",
                 table: "TechsProducts",
@@ -426,6 +451,12 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                 schema: "public",
                 table: "TechsProducts",
                 column: "NC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TechsProducts_UpdatedAt",
+                schema: "public",
+                table: "TechsProducts",
+                column: "UpdatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TechsProducts_VnutrNC",

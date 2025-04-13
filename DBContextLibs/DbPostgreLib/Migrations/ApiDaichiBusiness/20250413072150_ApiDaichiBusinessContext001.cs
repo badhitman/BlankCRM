@@ -270,10 +270,22 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
                 column: "StoreId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ParametersCatalog_CreatedAt",
+                schema: "public",
+                table: "ParametersCatalog",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ParametersCatalog_NAME",
                 schema: "public",
                 table: "ParametersCatalog",
                 column: "NAME");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParametersCatalog_UpdatedAt",
+                schema: "public",
+                table: "ParametersCatalog",
+                column: "UpdatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ParametersCatalog_XML_ID",
@@ -325,10 +337,22 @@ namespace DbPostgreLib.Migrations.ApiDaichiBusiness
                 column: "XML_ID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_CreatedAt",
+                schema: "public",
+                table: "Products",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_NAME",
                 schema: "public",
                 table: "Products",
                 column: "NAME");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_UpdatedAt",
+                schema: "public",
+                table: "Products",
+                column: "UpdatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_XML_ID",

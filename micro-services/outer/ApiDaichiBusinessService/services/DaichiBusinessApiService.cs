@@ -148,6 +148,8 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
           .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
 
         req.UpdatedAt = DateTime.UtcNow;
+        req.CreatedAt = DateTime.UtcNow;
+
         string msg;
         if (prodDb is null)
         {
@@ -187,6 +189,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
             .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
 
         req.UpdatedAt = DateTime.UtcNow;
+        req.CreatedAt = DateTime.UtcNow;
         string msg;
         if (prodDb is null)
         {

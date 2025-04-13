@@ -149,8 +149,12 @@ namespace DbPostgreLib.Migrations.ApiRusklimatCom
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("RemainsId")
                         .IsUnique();
+
+                    b.HasIndex("UpdatedAt");
 
                     b.ToTable("Products", "public");
                 });

@@ -43,7 +43,7 @@ public abstract partial class ApiBreezRuLayerContext : DbContext
     {
         TPaginationResponseModel<ProductViewBreezRuModeld> res = new(req);
 
-        var q = from po in Products
+        var q = from po in Products.Include(x => x.Images)
                 where (po.Manual != null && EF.Functions.ILike(po.Manual, $"%{req.SimpleRequest}%")) ||
                 (po.VideoYoutube != null && EF.Functions.ILike(po.VideoYoutube, $"%{req.SimpleRequest}%")) ||
                 (po.UTP != null && EF.Functions.ILike(po.UTP, $"%{req.SimpleRequest}%")) ||
@@ -64,8 +64,8 @@ public abstract partial class ApiBreezRuLayerContext : DbContext
 
         res.TotalRowsCount = await q.CountAsync(token);
         res.Response = req.SortingDirection == DirectionsEnum.Up
-            ? [.. (await q.OrderBy(x => x.product.Title).Skip(req.PageSize * req.PageNum).Take(req.PageSize).Include(x => x.product.Images).ToListAsync(cancellationToken: token)).Select(x => ProductViewBreezRuModeld.Build(x.product, x.leftover))]
-            : [.. (await q.OrderByDescending(x => x.product.Title).Skip(req.PageSize * req.PageNum).Take(req.PageSize).Include(x => x.product.Images).ToListAsync(cancellationToken: token)).Select(x => ProductViewBreezRuModeld.Build(x.product, x.leftover))];
+            ? [.. (await q.OrderBy(x => x.product.Title).Skip(req.PageSize * req.PageNum).Take(req.PageSize).ToListAsync(cancellationToken: token)).Select(x => ProductViewBreezRuModeld.Build(x.product, x.leftover))]
+            : [.. (await q.OrderByDescending(x => x.product.Title).Skip(req.PageSize * req.PageNum).Take(req.PageSize).ToListAsync(cancellationToken: token)).Select(x => ProductViewBreezRuModeld.Build(x.product, x.leftover))];
 
         return res;
     }

@@ -5,11 +5,11 @@
         <MudText Typo="Typo.h6">Breez</MudText>
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Title</MudTh>
-        <MudTh>Quantity/BasePrice</MudTh>
+        <MudTh>Цена/Ост-ок</MudTh>
         <MudTh>NC</MudTh>
         <MudTh>VnutrNC</MudTh>
         <MudTh>NarujNC</MudTh>
@@ -23,8 +23,14 @@
         <MudTh>PriceRIC</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Title">@context.Title</MudTd>
-        <MudTd DataLabel="Title">@context.Leftover?.Quantity / @context.Leftover?.BasePrice</MudTd>
+        <MudTd DataLabel="Title">
+            @context.Title
+            @if(context.Images is not null && context.Images.Count !=0)
+            {
+                <sup class="ms-1 badge rounded-pill text-bg-primary">img`s: @context.Images.Count</sup>
+            }
+        </MudTd>
+        <MudTd DataLabel="Title">@context.Leftover?.BasePrice/@context.Leftover?.Quantity</MudTd>
         <MudTd DataLabel="NC">@context.NC</MudTd>
         <MudTd DataLabel="VnutrNC">@context.VnutrNC</MudTd>
         <MudTd DataLabel="NarujNC">@context.NarujNC</MudTd>

@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// ProductBreezRuModelDB
 /// </summary>
-[Index(nameof(PriceRIC))]
+[Index(nameof(PriceRIC)), Index(nameof(CreatedAt)), Index(nameof(UpdatedAt))]
 public class ProductBreezRuModelDB : ProductBreezRuBaseModel
 {
     /// <summary>

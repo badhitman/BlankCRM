@@ -2,11 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// ProductRusklimatModelDB
 /// </summary>
+[Index(nameof(CreatedAt)), Index(nameof(UpdatedAt))]
 public class ProductRusklimatModelDB : ProductRusklimatBaseModel
 {
     /// <summary>

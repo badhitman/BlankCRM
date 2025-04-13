@@ -2,14 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SharedLib;
 
 /// <summary>
 /// TechProductBreezRuModelDB
 /// </summary>
+[Index(nameof(CreatedAt)), Index(nameof(UpdatedAt))]
 public class TechProductBreezRuModelDB : ProductBreezRuLiteModel
 {
     /// <summary>

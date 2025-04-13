@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
@@ -9,6 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// ProductDaichiModelDB
 /// </summary>
+[Index(nameof(CreatedAt)), Index(nameof(UpdatedAt))]
 public class ProductDaichiModelDB : ProductDaichiBaseModel
 {
     /// <summary>

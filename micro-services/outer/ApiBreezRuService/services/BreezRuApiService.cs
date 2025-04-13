@@ -206,6 +206,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
           .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
 
         req.UpdatedAt = DateTime.UtcNow;
+        req.CreatedAt = DateTime.UtcNow;
         string msg;
         if (prodDb is null)
         {
@@ -241,6 +242,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
           .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
 
         req.UpdatedAt = DateTime.UtcNow;
+        req.CreatedAt = DateTime.UtcNow;
         string msg;
         if (prodDb is null)
         {
@@ -286,6 +288,8 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
         return await ctx.ProductsSelect(req, token);
     }
 
+
+    #region rest/api
     /// <inheritdoc/>
     public async Task<TResponseModel<List<TechCategoryRealBreezRuModel>>> GetTechCategoryAsync(TechRequestBreezModel req, CancellationToken token = default)
     {
@@ -532,4 +536,5 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
         logger.LogInformation(msg);
         return result;
     }
+    #endregion
 }
