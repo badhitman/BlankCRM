@@ -9,9 +9,15 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>NAME</MudTh>
+        <MudTh>Params</MudTh>
+        <MudTh>Store</MudTh>
+        <MudTh>Price`s</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="NAME">@context.NAME</MudTd>
+        <MudTd DataLabel="Params"><ProductRowParamsComponent Params="context.Params" /></MudTd>
+        <MudTd DataLabel="Store"><ProductRowStoreAvailabilityComponent StoreAvailability="context.StoreAvailability" /></MudTd>
+        <MudTd DataLabel="Price`s"><ProductRowPricesAvailabilityComponent Prices="@context.Prices" /></MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>Ни чего не найдено</MudText>

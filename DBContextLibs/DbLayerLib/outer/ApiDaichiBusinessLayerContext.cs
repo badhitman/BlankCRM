@@ -54,7 +54,6 @@ public abstract partial class ApiDaichiBusinessLayerContext : DbContext
             .Take(req.PageSize)
             .Include(x => x.Params)
             .Include(x => x.StoreAvailability)
-            .Include(x => x.Params)
             .Include(x => x.Prices);
 
         res.Response = req.SortingDirection == DirectionsEnum.Up
