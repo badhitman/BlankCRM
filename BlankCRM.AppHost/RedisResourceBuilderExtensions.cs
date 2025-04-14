@@ -10,15 +10,13 @@ internal static class RedisResourceBuilderExtensions
     public static IResourceBuilder<RedisResource> WithClearCommand(
         this IResourceBuilder<RedisResource> builder)
     {
-        builder.WithCommand(commandOptions: new CommandOptions() 
-        { 
-            UpdateState = OnUpdateResourceState, 
-            IconName = "AnimalRabbitOff", 
-            IconVariant = IconVariant.Filled, 
-        }, 
-        name: "clear-cache", 
-        displayName: "Clear Cache", 
-        executeCommand: context => OnRunClearCacheCommandAsync(builder, context));
+        builder.WithCommand(
+            name: "clear-cache",
+            displayName: "Clear Cache",
+            executeCommand: context => OnRunClearCacheCommandAsync(builder, context),
+            updateState: OnUpdateResourceState,
+            iconName: "AnimalRabbitOff",
+            iconVariant: IconVariant.Filled);
 
         return builder;
     }

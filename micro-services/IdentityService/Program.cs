@@ -18,7 +18,6 @@ using System.Diagnostics.Metrics;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Microsoft.Extensions.Options;
-using System.Text;
 
 namespace IdentityService;
 
@@ -32,7 +31,6 @@ public class Program
     /// </summary>
     public static void Main(string[] args)
     {
-        Console.OutputEncoding = Encoding.UTF8;
         Logger logger = LogManager.GetCurrentClassLogger();
 
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);

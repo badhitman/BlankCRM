@@ -21,12 +21,10 @@ using System.Diagnostics.Metrics;
 using OpenTelemetry.Trace;
 using OpenTelemetry;
 using Microsoft.Extensions.Options;
-using System.Text;
 #if !DEBUG
 using System.Reflection;
 #endif
 
-Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

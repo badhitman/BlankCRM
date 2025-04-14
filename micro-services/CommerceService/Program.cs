@@ -18,9 +18,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.Extensions.Options;
-using System.Text;
 
-Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);

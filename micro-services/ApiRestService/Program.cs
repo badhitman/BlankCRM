@@ -19,9 +19,7 @@ using OpenTelemetry.Trace;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using DbcLib;
-using System.Text;
 
-Console.OutputEncoding = Encoding.UTF8;
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

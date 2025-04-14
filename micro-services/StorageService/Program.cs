@@ -11,7 +11,6 @@ using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
-using System.Text;
 
 namespace StorageService;
 
@@ -25,7 +24,6 @@ public class Program
     /// </summary>
     public static async Task Main(string[] args)
     {
-        Console.OutputEncoding = Encoding.UTF8;
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
         Logger logger = LogManager.GetCurrentClassLogger();
         builder.AddServiceDefaults();
