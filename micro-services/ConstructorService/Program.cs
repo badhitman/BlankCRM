@@ -16,7 +16,9 @@ using OpenTelemetry;
 using System.Diagnostics.Metrics;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
+using System.Text;
 
+Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
