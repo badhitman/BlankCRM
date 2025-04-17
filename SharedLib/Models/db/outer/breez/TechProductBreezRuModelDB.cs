@@ -20,7 +20,7 @@ public class TechProductBreezRuModelDB : ProductBreezRuLiteModel
     public int Id { get; set; }
 
     /// <inheritdoc/>
-    public List<PropertyTechProductBreezRuModelDB>? Properties { get; set; }
+    public List<TechPropertyProductBreezRuModelDB>? Properties { get; set; }
 
     /// <summary>
     /// Дата первого появления
@@ -43,7 +43,7 @@ public class TechProductBreezRuModelDB : ProductBreezRuLiteModel
             NC = x.NC,
             VnutrNC = x.VnutrNC,
         };
-        res.Properties = x.Techs is null ? null : [.. x.Techs.Select(x => PropertyTechProductBreezRuModelDB.Build(x, res))];
+        res.Properties = x.Techs is null ? null : [.. x.Techs.Select(x => TechPropertyProductBreezRuModelDB.Build(x, res))];
         return res;
     }
 

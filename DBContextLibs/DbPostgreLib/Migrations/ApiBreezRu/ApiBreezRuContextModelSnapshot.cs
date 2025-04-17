@@ -18,7 +18,7 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -140,6 +140,9 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     b.Property<string>("CHPU")
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("Key")
                         .HasColumnType("integer");
 
@@ -152,6 +155,9 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -285,94 +291,6 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     b.ToTable("Products", "public");
                 });
 
-            modelBuilder.Entity("SharedLib.PropertyTechProductBreezRuModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Analog")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Filter")
-                        .HasColumnType("text");
-
-                    b.Property<string>("FilterType")
-                        .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "filter_type");
-
-                    b.Property<string>("First")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Group")
-                        .HasColumnType("text");
-
-                    b.Property<int>("IdChar")
-                        .HasColumnType("integer")
-                        .HasAnnotation("Relational:JsonPropertyName", "id_char");
-
-                    b.Property<int>("Key")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Order")
-                        .HasColumnType("text");
-
-                    b.Property<int>("ParentId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Required")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Show")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SubCategory")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "supcat");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("TypeParameter")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasAnnotation("Relational:JsonPropertyName", "type");
-
-                    b.Property<string>("Unit")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Analog");
-
-                    b.HasIndex("First");
-
-                    b.HasIndex("IdChar");
-
-                    b.HasIndex("ParentId");
-
-                    b.HasIndex("Show");
-
-                    b.HasIndex("SubCategory");
-
-                    b.HasIndex("TypeParameter");
-
-                    b.HasIndex("Value");
-
-                    b.ToTable("PropsTechsProducts", "public");
-                });
-
             modelBuilder.Entity("SharedLib.TechCategoryBreezRuModelDB", b =>
                 {
                     b.Property<int>("Id")
@@ -383,6 +301,12 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -484,6 +408,94 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     b.ToTable("PropsTechsCategories", "public");
                 });
 
+            modelBuilder.Entity("SharedLib.TechPropertyProductBreezRuModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Analog")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Filter")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FilterType")
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "filter_type");
+
+                    b.Property<string>("First")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Group")
+                        .HasColumnType("text");
+
+                    b.Property<int>("IdChar")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "id_char");
+
+                    b.Property<int>("Key")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Order")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Required")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Show")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SubCategory")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "supcat");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TypeParameter")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "type");
+
+                    b.Property<string>("Unit")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Analog");
+
+                    b.HasIndex("First");
+
+                    b.HasIndex("IdChar");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("Show");
+
+                    b.HasIndex("SubCategory");
+
+                    b.HasIndex("TypeParameter");
+
+                    b.HasIndex("Value");
+
+                    b.ToTable("PropsTechsProducts", "public");
+                });
+
             modelBuilder.Entity("SharedLib.ImageProductBreezRuModelDB", b =>
                 {
                     b.HasOne("SharedLib.ProductBreezRuModelDB", "Product")
@@ -495,9 +507,9 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("SharedLib.PropertyTechProductBreezRuModelDB", b =>
+            modelBuilder.Entity("SharedLib.TechPropertyCategoryBreezRuModelDB", b =>
                 {
-                    b.HasOne("SharedLib.TechProductBreezRuModelDB", "Parent")
+                    b.HasOne("SharedLib.TechCategoryBreezRuModelDB", "Parent")
                         .WithMany("Properties")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -506,9 +518,9 @@ namespace DbPostgreLib.Migrations.ApiBreezRu
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("SharedLib.TechPropertyCategoryBreezRuModelDB", b =>
+            modelBuilder.Entity("SharedLib.TechPropertyProductBreezRuModelDB", b =>
                 {
-                    b.HasOne("SharedLib.TechCategoryBreezRuModelDB", "Parent")
+                    b.HasOne("SharedLib.TechProductBreezRuModelDB", "Parent")
                         .WithMany("Properties")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Cascade)

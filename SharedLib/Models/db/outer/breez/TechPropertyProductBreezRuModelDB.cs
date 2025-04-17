@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// PropertyTechProductBreezRuModelDB
+/// TechPropertyProductBreezRuModelDB
 /// </summary>
-public class PropertyTechProductBreezRuModelDB : PropTechProductBreezRuModel
+public class TechPropertyProductBreezRuModelDB : PropTechProductBreezRuModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -26,7 +26,7 @@ public class PropertyTechProductBreezRuModelDB : PropTechProductBreezRuModel
     public int ParentId { get; set; }
 
     /// <inheritdoc/>
-    public static PropertyTechProductBreezRuModelDB Build(KeyValuePair<int, PropTechProductBreezRuModel> x, TechProductBreezRuModelDB res)
+    public static TechPropertyProductBreezRuModelDB Build(KeyValuePair<int, PropTechProductBreezRuModel> x, TechProductBreezRuModelDB res)
     {
         return new()
         {

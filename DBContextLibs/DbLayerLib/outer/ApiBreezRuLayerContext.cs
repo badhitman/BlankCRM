@@ -114,5 +114,5 @@ public abstract partial class ApiBreezRuLayerContext : DbContext
     /// <summary>
     /// PropsTechsProducts
     /// </summary>
-    public DbSet<PropertyTechProductBreezRuModelDB> PropsTechsProducts { get; set; }
+    public DbSet<TechPropertyProductBreezRuModelDB> PropsTechsProducts { get; set; }
 }
