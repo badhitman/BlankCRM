@@ -44,9 +44,6 @@
 		<ProjectReference Include="..\micro-services\outer\ApiDaichiBusinessService\ApiDaichiBusinessService.csproj" />
 		<ProjectReference Include="..\micro-services\outer\ApiRusklimatComService\ApiRusklimatComService.csproj" />
 		<ProjectReference Include="..\micro-services\outer\FeedsHaierProffRuService\FeedsHaierProffRuService.csproj" />
-		<ProjectReference Include="..\micro-services\outer\StockSharp\StockSharpJoinService\StockSharpJoinService.csproj" />
 	</ItemGroup>
-
-
 
 </Project>

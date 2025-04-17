@@ -4,8 +4,6 @@ VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSharpDriver", "StockSharpDriver\StockSharpDriver.csproj", "{317E4FEB-9A09-CDB5-757B-ABB927DD52B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSharpJoinService", "StockSharpJoinService\StockSharpJoinService.csproj", "{A790D418-C515-057E-810C-BA335303816B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSharpMauiApp", "..\..\..\ToolsApp\StockSharpMauiApp\StockSharpMauiApp.csproj", "{C47FD055-9E71-10F3-9BF6-3CF00099E7E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorLib", "..\..\..\BlazorLib\BlazorLib.csproj", "{6ECBD5A2-C98E-7217-ECFA-9695AB0DB52B}"
@@ -24,10 +22,6 @@ Global
 		{317E4FEB-9A09-CDB5-757B-ABB927DD52B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{317E4FEB-9A09-CDB5-757B-ABB927DD52B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{317E4FEB-9A09-CDB5-757B-ABB927DD52B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A790D418-C515-057E-810C-BA335303816B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A790D418-C515-057E-810C-BA335303816B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A790D418-C515-057E-810C-BA335303816B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A790D418-C515-057E-810C-BA335303816B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C47FD055-9E71-10F3-9BF6-3CF00099E7E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C47FD055-9E71-10F3-9BF6-3CF00099E7E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C47FD055-9E71-10F3-9BF6-3CF00099E7E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
