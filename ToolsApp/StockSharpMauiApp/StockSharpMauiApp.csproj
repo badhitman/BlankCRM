@@ -69,4 +69,8 @@
         <PackageReference Include="NetMQ" Version="4.0.1.14" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\BlazorLib\BlazorLib.csproj" />
+    </ItemGroup>
+
 </Project>
