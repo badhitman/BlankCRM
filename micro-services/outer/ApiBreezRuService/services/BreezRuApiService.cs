@@ -142,12 +142,12 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
         await ctx.Leftovers.ExecuteDeleteAsync(cancellationToken: token);
         await ctx.Brands.ExecuteDeleteAsync(cancellationToken: token);
         //await ctx.Categories.ExecuteDeleteAsync(cancellationToken: token);
-        await ctx.ImagesProducts.ExecuteDeleteAsync(cancellationToken: token);
+        //await ctx.ImagesProducts.ExecuteDeleteAsync(cancellationToken: token);
         //await ctx.Products.ExecuteDeleteAsync(cancellationToken: token);
         //await ctx.TechsProducts.ExecuteDeleteAsync(cancellationToken: token);
         //await ctx.TechsCategories.ExecuteDeleteAsync(cancellationToken: token);
-        await ctx.PropsTechsCategories.ExecuteDeleteAsync(cancellationToken: token);
-        await ctx.PropsTechsProducts.ExecuteDeleteAsync(cancellationToken: token);
+        //await ctx.PropsTechsCategories.ExecuteDeleteAsync(cancellationToken: token);
+        //await ctx.PropsTechsProducts.ExecuteDeleteAsync(cancellationToken: token);
 
         BreezRuLeftoverModelDB[] leftovers = [.. leftoversJson.Response.Select(BreezRuLeftoverModelDB.Build)];
 
