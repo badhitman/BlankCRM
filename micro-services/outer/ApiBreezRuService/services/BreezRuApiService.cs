@@ -167,26 +167,14 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
             _sc += brandsPart.Length;
             logger.LogInformation($"Записана очередная порция `{nameof(brandsPart)}` данных {brandsPart.Length} ({_sc}/{brandsJson.Response.Count})");
         }
-        _sc = 0;
-        foreach (CategoryRealBreezRuModel[] categoriesPart in categoriesJson.Response.Chunk(100))
-        {
-            await ctx.AddRangeAsync(categoriesPart.Select(CategoryBreezRuModelDB.Build), token);
-            await ctx.SaveChangesAsync(token);
-            _sc += categoriesPart.Length;
-            logger.LogInformation($"Записана очередная порция `{nameof(categoriesPart)}` данных {categoriesPart.Length} ({_sc}/{categoriesJson.Response.Count})");
-        }
-
-        _sc = 0;
-        foreach (TechCategoryRealBreezRuModel[] _txCatsPart in techForCatDump.Chunk(100))
-        {
-            List<TechCategoryBreezRuModelDB> tcList = [.. _txCatsPart.Select(TechCategoryBreezRuModelDB.Build)];
-            await ctx.AddRangeAsync(tcList, token);
-            await ctx.SaveChangesAsync(token);
-            _sc += _txCatsPart.Length;
-            logger.LogInformation($"Записана очередная порция `{nameof(_txCatsPart)}` данных {_txCatsPart.Length} ({_sc}/{techForCatDump.Count})");
-        }
 
         await transaction.CommitAsync(token);
+
+        foreach (CategoryRealBreezRuModel category in categoriesJson.Response)
+            await breexTransmission.CategoryUpdateAsync(CategoryBreezRuModelDB.Build(category), token);
+
+        foreach (TechCategoryBreezRuModelDB tc in techForCatDump.Select(TechCategoryBreezRuModelDB.Build))
+            await breexTransmission.TechCategoryUpdateAsync(tc, token);
 
         foreach (ProductBreezRuModelDB p in productsJson.Response.Select(ProductBreezRuModelDB.Build))
             await breexTransmission.ProductUpdateAsync(p, token);
@@ -282,12 +270,78 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
     }
 
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> CategoryUpdateAsync(CategoryBreezRuModelDB req, CancellationToken token = default)
+    {
+        using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
+        CategoryBreezRuModelDB? ctDb = await ctx.Categories
+          .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
+
+        req.UpdatedAt = DateTime.UtcNow;
+        req.CreatedAt = DateTime.UtcNow;
+        string msg;
+        if (ctDb is null)
+        {
+            // req.SetLive();
+            await ctx.Categories.AddAsync(req, token);
+            await ctx.SaveChangesAsync(token);
+            msg = $"Добавлен новая категория: CHPU:{req.CHPU} '{req.Title}'";
+            logger.LogInformation(msg);
+            return ResponseBaseModel.CreateSuccess(msg);
+        }
+
+        await ctx.Categories
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+            .SetProperty(p => p.Title, req.Title)
+            .SetProperty(p => p.Order, req.Order)
+            .SetProperty(p => p.CHPU, req.CHPU)
+            .SetProperty(p => p.Key, req.Key)
+            .SetProperty(p => p.Level, req.Level)
+            .SetProperty(p => p.UpdatedAt, req.UpdatedAt), cancellationToken: token);
+
+        msg = $"Обновлена категория: [{req.Id}] '{req.Title}'";
+        logger.LogInformation(msg);
+        return ResponseBaseModel.CreateSuccess(msg);
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> TechCategoryUpdateAsync(TechCategoryBreezRuModelDB req, CancellationToken token = default)
+    {
+        using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
+
+        TechCategoryBreezRuModelDB? ctDb = await ctx.TechsCategories
+         .FirstOrDefaultAsync(x => x.Id == req.Id, cancellationToken: token);
+
+        req.UpdatedAt = DateTime.UtcNow;
+        req.CreatedAt = DateTime.UtcNow;
+        string msg;
+        if (ctDb is null)
+        {
+            // req.SetLive();
+            await ctx.TechsCategories.AddAsync(req, token);
+            await ctx.SaveChangesAsync(token);
+            msg = $"Добавлен новая категория: `{nameof(req.CategoryId)}:{req.CategoryId}`";
+            logger.LogInformation(msg);
+            return ResponseBaseModel.CreateSuccess(msg);
+        }
+
+        await ctx.TechsCategories
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+            .SetProperty(p => p.CategoryId, req.CategoryId)
+            .SetProperty(p => p.UpdatedAt, req.UpdatedAt), cancellationToken: token);
+
+        msg = $"Обновлена категория: [{req.Id}] `{nameof(req.CategoryId)}:{req.CategoryId}`";
+        logger.LogInformation(msg);
+        return ResponseBaseModel.CreateSuccess(msg);
+    }
+
+    /// <inheritdoc/>
     public async Task<TPaginationResponseModel<ProductViewBreezRuModeld>> ProductsSelectAsync(BreezRequestModel req, CancellationToken token = default)
     {
         using ApiBreezRuContext ctx = await dbFactory.CreateDbContextAsync(token);
         return await ctx.ProductsSelect(req, token);
     }
-
 
     #region rest/api
     /// <inheritdoc/>

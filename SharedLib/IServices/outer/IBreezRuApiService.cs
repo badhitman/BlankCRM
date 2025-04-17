@@ -12,10 +12,20 @@ namespace SharedLib;
 public interface IBreezRuApiService : IOuterApiService
 {
     /// <summary>
+    /// CategoryUpdateAsync
+    /// </summary>
+    public Task<ResponseBaseModel> CategoryUpdateAsync(CategoryBreezRuModelDB req, CancellationToken token = default);
+
+    /// <summary>
     /// TechProductUpdateAsync
     /// </summary>
     public Task<ResponseBaseModel> TechProductUpdateAsync(TechProductBreezRuModelDB req, CancellationToken token = default);
-    
+
+    /// <summary>
+    /// TechCategoryUpdateAsync
+    /// </summary>
+    public Task<ResponseBaseModel> TechCategoryUpdateAsync(TechCategoryBreezRuModelDB req, CancellationToken token = default);
+
     /// <summary>
     /// ProductUpdateAsync
     /// </summary>

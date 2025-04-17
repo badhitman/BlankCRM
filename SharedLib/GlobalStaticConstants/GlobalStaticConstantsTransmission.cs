@@ -853,6 +853,12 @@ public static partial class GlobalStaticConstants
         public readonly static string ProductUpdateBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.PRODUCT_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
 
         /// <inheritdoc/>
+        public readonly static string CategoryUpdateBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.CATEGORY_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
+
+        /// <inheritdoc/>
+        public readonly static string TechCategoryUpdateBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.TECH_CONTROLLER_NAME}-{Routes.CATEGORY_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
+
+        /// <inheritdoc/>
         public readonly static string TechProductUpdateBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.TECH_CONTROLLER_NAME}-{Routes.PRODUCT_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
 
         /// <inheritdoc/>

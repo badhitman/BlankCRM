@@ -17,6 +17,16 @@ public class CategoryBreezRuModelDB : CategoryRealBreezRuModel
     [Key]
     public int Id { get; set; }
 
+    /// <summary>
+    /// Дата первого появления
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Дата обновления
+    /// </summary>
+    public DateTime UpdatedAt { get; set; }
+
     /// <inheritdoc/>
     public static CategoryBreezRuModelDB Build(CategoryRealBreezRuModel x)
     {

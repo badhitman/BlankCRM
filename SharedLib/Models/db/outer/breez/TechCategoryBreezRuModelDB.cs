@@ -27,6 +27,16 @@ public class TechCategoryBreezRuModelDB
     /// </summary>
     public List<TechPropertyCategoryBreezRuModelDB>? Properties { get; set; }
 
+    /// <summary>
+    /// Дата первого появления
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Дата обновления
+    /// </summary>
+    public DateTime UpdatedAt { get; set; }
+
     /// <inheritdoc/>
     public static TechCategoryBreezRuModelDB Build(TechCategoryRealBreezRuModel x)
     {

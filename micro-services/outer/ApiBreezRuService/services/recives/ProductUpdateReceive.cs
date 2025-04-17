@@ -23,3 +23,20 @@ public class ProductUpdateReceive(IBreezRuApiService breezRepo)
         return await breezRepo.ProductUpdateAsync(req,token);
     }
 }
+
+/// <summary>
+/// CategoryUpdateReceive
+/// </summary>
+public class CategoryUpdateReceive(IBreezRuApiService breezRepo)
+    : IResponseReceive<CategoryBreezRuModelDB?, ResponseBaseModel?>
+{
+    /// <inheritdoc/>
+    public static string QueueName => GlobalStaticConstants.TransmissionQueues.CategoryUpdateBreezReceive;
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(CategoryBreezRuModelDB? req, CancellationToken token = default)
+    {
+        ArgumentNullException.ThrowIfNull(req);
+        return await breezRepo.CategoryUpdateAsync(req, token);
+    }
+}
