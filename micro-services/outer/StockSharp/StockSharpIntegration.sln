@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSharpDriver", "StockSh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSharpJoinService", "StockSharpJoinService\StockSharpJoinService.csproj", "{A790D418-C515-057E-810C-BA335303816B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSharpMauiApp", "StockSharpMauiApp\StockSharpMauiApp.csproj", "{7FCF9880-C2D6-1253-DB48-90106C129CAD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSharpMauiApp", "..\..\..\ToolsApp\StockSharpMauiApp\StockSharpMauiApp.csproj", "{C47FD055-9E71-10F3-9BF6-3CF00099E7E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,10 +22,10 @@ Global
 		{A790D418-C515-057E-810C-BA335303816B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A790D418-C515-057E-810C-BA335303816B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A790D418-C515-057E-810C-BA335303816B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7FCF9880-C2D6-1253-DB48-90106C129CAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7FCF9880-C2D6-1253-DB48-90106C129CAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7FCF9880-C2D6-1253-DB48-90106C129CAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7FCF9880-C2D6-1253-DB48-90106C129CAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C47FD055-9E71-10F3-9BF6-3CF00099E7E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C47FD055-9E71-10F3-9BF6-3CF00099E7E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C47FD055-9E71-10F3-9BF6-3CF00099E7E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C47FD055-9E71-10F3-9BF6-3CF00099E7E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
