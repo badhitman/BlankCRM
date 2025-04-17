@@ -511,7 +511,7 @@ public partial class CommerceImplementService(
             .Orders
             .AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(req.Payload.SenderActionUserId) && !req.Payload.SenderActionUserId.Equals(GlobalStaticConstants.Roles.System))
+        if (!string.IsNullOrWhiteSpace(req.Payload.SenderActionUserId) && !req.Payload.SenderActionUserId.Equals(GlobalStaticConstantsRoles.Roles.System))
             q = q.Where(x => x.AuthorIdentityUserId == req.Payload.SenderActionUserId);
 
         if (req.Payload.Payload.OrganizationFilter.HasValue && req.Payload.Payload.OrganizationFilter.Value != 0)
@@ -1284,7 +1284,7 @@ public partial class CommerceImplementService(
 
         OrderDocumentModelDB orderDb = orderData.Response[0];
         UserInfoModel actor = rest.Response[0];
-        bool allowed = actor.IsAdmin || orderDb.AuthorIdentityUserId == actor.UserId || actor.UserId == GlobalStaticConstants.Roles.System;
+        bool allowed = actor.IsAdmin || orderDb.AuthorIdentityUserId == actor.UserId || actor.UserId == GlobalStaticConstantsRoles.Roles.System;
         if (!allowed && orderDb.HelpdeskId.HasValue && orderDb.HelpdeskId.Value > 0)
         {
             TResponseModel<IssueHelpdeskModelDB[]> issueData = await HelpdeskRepo.IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()

@@ -465,7 +465,7 @@ public class GeneratorCSharpService(CodeGeneratorConfigModel conf, MainProjectVi
                 await _writer.WriteLineAsync(string.Join(Environment.NewLine, GlobalTools.DescriptionHtmlToLinesRemark(doc_obj.Key.Document.Description).Select(x => $"{Tab}{Tab}/// {x}")));
                 await _writer.WriteLineAsync($"{Tab}{Tab}/// </remarks>");
             }
-            _writer.WriteLine($"{Tab}{Tab}public DbSet<{doc_obj.Key.TypeName}> {doc_obj.Key.TypeName}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX} {{ get; set; }}");
+            _writer.WriteLine($"{Tab}{Tab}public DbSet<{doc_obj.Key.TypeName}> {doc_obj.Key.TypeName}{GlobalStaticConstantsConstructor.CONTEXT_DATA_SET_PREFIX} {{ get; set; }}");
 
             bool is_first_schema_item = true;
             await _writer.WriteLineAsync();
@@ -478,7 +478,7 @@ public class GeneratorCSharpService(CodeGeneratorConfigModel conf, MainProjectVi
                     is_first_schema_item = false;
 
                 await _writer.WriteLineAsync(sb.UseSummaryText([schema.Route]).SummaryGet);
-                await _writer.WriteLineAsync($"{Tab}{Tab}public DbSet<{schema.TypeName}> {schema.TypeName}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX} {{ get; set; }}");
+                await _writer.WriteLineAsync($"{Tab}{Tab}public DbSet<{schema.TypeName}> {schema.TypeName}{GlobalStaticConstantsConstructor.CONTEXT_DATA_SET_PREFIX} {{ get; set; }}");
 
                 IEnumerable<FieldAkaDirectoryFitModel>? fieldsAtDirectories = schema
                         .Form
@@ -493,7 +493,7 @@ public class GeneratorCSharpService(CodeGeneratorConfigModel conf, MainProjectVi
                         await _writer.WriteLineAsync($"{Tab}{Tab}/// <summary>");
                         await _writer.WriteLineAsync($"{Tab}{Tab}/// MULTISELECT ENUMERATIONS: {schema.Route} ['{_fd.Name}' `{_fd.SystemName}`]");
                         await _writer.WriteLineAsync($"{Tab}{Tab}/// </summary>");
-                        await _writer.WriteLineAsync($"{Tab}{Tab}public DbSet<{_fd.DirectorySystemName}Multiple{schema.TypeName}> {_fd.DirectorySystemName}Multiple{schema.TypeName}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX} {{ get; set; }}");
+                        await _writer.WriteLineAsync($"{Tab}{Tab}public DbSet<{_fd.DirectorySystemName}Multiple{schema.TypeName}> {_fd.DirectorySystemName}Multiple{schema.TypeName}{GlobalStaticConstantsConstructor.CONTEXT_DATA_SET_PREFIX} {{ get; set; }}");
                     }
                 }
             }
@@ -555,7 +555,7 @@ public class GeneratorCSharpService(CodeGeneratorConfigModel conf, MainProjectVi
 
         #region main
         writer.WriteLine($"{Tab}{Tab}#region main");
-        string db_set_name = $"_db_context.{doc_obj.Key.TypeName}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}";
+        string db_set_name = $"_db_context.{doc_obj.Key.TypeName}{GlobalStaticConstantsConstructor.CONTEXT_DATA_SET_PREFIX}";
 
         builders_history.Add(builder
             .UseSummaryText($"Создать перечень новых объектов: '{doc_obj.Key.Document.Name}'")
@@ -620,7 +620,7 @@ public class GeneratorCSharpService(CodeGeneratorConfigModel conf, MainProjectVi
 
             foreach (EntrySchemaTypeModel table_schema in ext_source)
             {
-                db_set_name = $"_db_context.{table_schema.TypeName}{GlobalStaticConstants.CONTEXT_DATA_SET_PREFIX}";
+                db_set_name = $"_db_context.{table_schema.TypeName}{GlobalStaticConstantsConstructor.CONTEXT_DATA_SET_PREFIX}";
 
                 builders_history.Add(builder
                     .UseSummaryText($"Создать перечень новых объектов: '{table_schema.Tab.Name}' - '{table_schema.Form.Name}'")
@@ -741,7 +741,7 @@ public class GeneratorCSharpService(CodeGeneratorConfigModel conf, MainProjectVi
     /// DB TableAccess
     /// </summary>
     public virtual EntryTypeModel GetZipEntryNameForDbTableAccess(EntryDocumentTypeModel doc_obj)
-        => new($"{doc_obj.TypeName}{GlobalStaticConstants.DATABASE_TABLE_ACESSOR_PREFIX}", conf.AccessDataDirectoryPath);
+        => new($"{doc_obj.TypeName}{GlobalStaticConstantsConstructor.DATABASE_TABLE_ACESSOR_PREFIX}", conf.AccessDataDirectoryPath);
 
 
 

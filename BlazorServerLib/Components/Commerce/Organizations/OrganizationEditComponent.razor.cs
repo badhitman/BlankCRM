@@ -60,7 +60,7 @@ public partial class OrganizationEditComponent : BlazorBusyComponentBaseAuthMode
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         currentOrg = res.Response!.Single();
-        if (currentOrg is not null && (currentOrg.Users?.Any(x => x.UserPersonIdentityId == CurrentUserSession!.UserId) != true && !CurrentUserSession!.IsAdmin && CurrentUserSession!.Roles?.Any(x => GlobalStaticConstants.Roles.AllHelpDeskRoles.Contains(x)) != true))
+        if (currentOrg is not null && (currentOrg.Users?.Any(x => x.UserPersonIdentityId == CurrentUserSession!.UserId) != true && !CurrentUserSession!.IsAdmin && CurrentUserSession!.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true))
         {
             currentOrg = null;
             return;

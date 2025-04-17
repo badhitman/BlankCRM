@@ -54,7 +54,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         CurrentOrganization = res.Response!.Single();
-        if (CurrentOrganization is not null && (CurrentOrganization.Users?.Any(x => x.UserPersonIdentityId == CurrentUserSession!.UserId) != true && !CurrentUserSession!.IsAdmin && CurrentUserSession!.Roles?.Any(x => GlobalStaticConstants.Roles.AllHelpDeskRoles.Contains(x)) != true))
+        if (CurrentOrganization is not null && (CurrentOrganization.Users?.Any(x => x.UserPersonIdentityId == CurrentUserSession!.UserId) != true && !CurrentUserSession!.IsAdmin && CurrentUserSession!.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true))
             return;
     }
 

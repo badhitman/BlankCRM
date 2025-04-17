@@ -50,7 +50,7 @@ public partial class OrganizationsTableComponent : BlazorBusyComponentBaseAuthMo
         }
         else
         {
-            if (CurrentUserSession!.IsAdmin || CurrentUserSession!.Roles?.Any(x => GlobalStaticConstants.Roles.AllHelpDeskRoles.Contains(x)) == true)
+            if (CurrentUserSession!.IsAdmin || CurrentUserSession!.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) == true)
                 _filterUser = UserId;
             else
                 _filterUser = CurrentUserSession!.UserId;

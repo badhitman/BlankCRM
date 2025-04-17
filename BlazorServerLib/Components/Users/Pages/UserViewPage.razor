@@ -1,5 +1,5 @@
 ﻿@page "/Users/Profiles/view-{UserId:guid}"
-@attribute [Authorize(Roles = GlobalStaticConstants.Roles.Admin)]
+@attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @inject IUsersProfilesService UsersProfilesRepo

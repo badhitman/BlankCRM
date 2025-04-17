@@ -10,7 +10,7 @@
 </style>
 
 <MudPaper Class="pa-4 mt-3 position-relative">
-    <AuthorizeView Roles="@($"{GlobalStaticConstants.Roles.Admin}")">
+    <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
         <Authorized>
             <span title="Настройка отображения" @onclick="CancelChangeConfig" style="cursor:pointer;" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bi bi-gear-fill">
                 <span class="visually-hidden">view config</span>
@@ -44,7 +44,7 @@
             </MudTd>
             <MudTd DataLabel="Название">
                 <a href="/nomenclature/offer-card/@context.Id">@context.Name</a>
-                <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstants.Roles.Admin}")">
+                <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
                     <Authorized>
                         <sup class="text-secondary-emphasis">@context.QuantitiesTemplate</sup>
                     </Authorized>

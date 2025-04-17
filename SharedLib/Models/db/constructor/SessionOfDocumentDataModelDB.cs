@@ -95,9 +95,9 @@ public class SessionOfDocumentDataModelDB : EntryDescriptionOwnedModel, ICloneab
             return SessionStatus == SessionsStatusesEnum.InProgress && Guid.TryParse(SessionToken, out Guid _guid) && _guid != Guid.Empty && (DeadlineDate.HasValue && DeadlineDate.Value >= DateTime.UtcNow);
 
         if (Project is null)
-            return user.Roles?.Any(x => x.Equals(GlobalStaticConstants.Roles.Admin, StringComparison.OrdinalIgnoreCase)) == true;
+            return user.Roles?.Any(x => x.Equals(GlobalStaticConstantsRoles.Roles.Admin, StringComparison.OrdinalIgnoreCase)) == true;
 
-        return user.UserId.Equals(Project.OwnerUserId) || user.Roles?.Any(x => x.Equals(GlobalStaticConstants.Roles.Admin, StringComparison.OrdinalIgnoreCase)) == true;
+        return user.UserId.Equals(Project.OwnerUserId) || user.Roles?.Any(x => x.Equals(GlobalStaticConstantsRoles.Roles.Admin, StringComparison.OrdinalIgnoreCase)) == true;
     }
 
     /// <summary>

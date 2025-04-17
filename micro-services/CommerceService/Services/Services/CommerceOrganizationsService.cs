@@ -306,7 +306,7 @@ public partial class CommerceImplementService : ICommerceService
                     .Units
                     .FirstOrDefaultAsync(x => x.UserPersonIdentityId == req.SenderActionUserId && x.OrganizationId == duple.Id, cancellationToken: token);
 
-                if (!string.IsNullOrWhiteSpace(req.SenderActionUserId) && req.SenderActionUserId != GlobalStaticConstants.Roles.System && sq is not null)
+                if (!string.IsNullOrWhiteSpace(req.SenderActionUserId) && req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && sq is not null)
                 {
                     await context.AddAsync(new UserOrganizationModelDB()
                     {

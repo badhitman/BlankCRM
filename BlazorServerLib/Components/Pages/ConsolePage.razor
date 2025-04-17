@@ -2,6 +2,6 @@
 @using BlazorWebLib.Components.Helpdesk
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
-@attribute [Authorize(Roles = $"{GlobalStaticConstants.Roles.HelpDeskTelegramBotRubricsManage},{GlobalStaticConstants.Roles.Admin}")]
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotRubricsManage},{GlobalStaticConstantsRoles.Roles.Admin}")]
 
 <ConsoleHelpdeskComponent />

@@ -1,5 +1,5 @@
 ﻿@page "/telegram-bot/chat-page/{ChatId:int}"
-@attribute [Authorize(Roles = $"{GlobalStaticConstants.Roles.Admin},{GlobalStaticConstants.Roles.HelpDeskTelegramBotManager},{GlobalStaticConstants.Roles.HelpDeskTelegramBotUnit}")]
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager},{GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotUnit}")]
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @using BlazorWebLib.Components.Telegram

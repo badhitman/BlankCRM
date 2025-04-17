@@ -55,7 +55,7 @@ public class HelpdeskImplementService(
         if (!issues_data.Success() || issues_data.Response is null)
             return new() { Messages = issues_data.Messages };
 
-        if (!actor.IsAdmin && actor.UserId != GlobalStaticConstants.Roles.System && actor.Roles?.Any(role_actor => GlobalStaticConstants.Roles.AllHelpDeskRoles.Any(hd_role => hd_role == role_actor)) != true && !issues_data.Response.All(c => actor.UserId == c.AuthorIdentityUserId))
+        if (!actor.IsAdmin && actor.UserId != GlobalStaticConstantsRoles.Roles.System && actor.Roles?.Any(role_actor => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Any(hd_role => hd_role == role_actor)) != true && !issues_data.Response.All(c => actor.UserId == c.AuthorIdentityUserId))
         {
             res.AddError("У вас не достаточно прав");
             return res;
@@ -97,7 +97,7 @@ public class HelpdeskImplementService(
         if (!issues_data.Success() || issues_data.Response is null || issues_data.Response.Length == 0)
             return new() { Messages = issues_data.Messages };
 
-        TResponseModel<UserInfoModel[]> rest = req.SenderActionUserId == GlobalStaticConstants.Roles.System
+        TResponseModel<UserInfoModel[]> rest = req.SenderActionUserId == GlobalStaticConstantsRoles.Roles.System
             ? new() { Response = [UserInfoModel.BuildSystem()] }
             : await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
 
@@ -106,18 +106,18 @@ public class HelpdeskImplementService(
 
         UserInfoModel actor = rest.Response[0];
 
-        if (!actor.IsAdmin && actor.UserId != GlobalStaticConstants.Roles.System && actor.Roles?.Any(x => GlobalStaticConstants.Roles.AllHelpDeskRoles.Any(y => y == x)) != true && !issues_data.Response.All(iss => actor.UserId == iss.AuthorIdentityUserId))
+        if (!actor.IsAdmin && actor.UserId != GlobalStaticConstantsRoles.Roles.System && actor.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Any(y => y == x)) != true && !issues_data.Response.All(iss => actor.UserId == iss.AuthorIdentityUserId))
         {
             res.AddError("У вас не достаточно прав");
             return res;
         }
         List<Task> tasks = [];
         IssueHelpdeskModelDB issue_data = issues_data.Response.Single();
-        if (req.SenderActionUserId != GlobalStaticConstants.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
+        if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
         {
             await SubscribeUpdateAsync(new()
             {
-                SenderActionUserId = GlobalStaticConstants.Roles.System,
+                SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
                 Payload = new()
                 {
                     IssueId = issue_data.Id,
@@ -150,7 +150,7 @@ public class HelpdeskImplementService(
             res.AddInfo(msg);
 
             res.Response = msg_db.Id;
-            if (actor.UserId != GlobalStaticConstants.Roles.System)
+            if (actor.UserId != GlobalStaticConstantsRoles.Roles.System)
             {
                 p_req = new()
                 {
@@ -373,7 +373,7 @@ public class HelpdeskImplementService(
     {
         TResponseModel<bool?> res = new();
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        TResponseModel<UserInfoModel[]> rest = req.SenderActionUserId == GlobalStaticConstants.Roles.System
+        TResponseModel<UserInfoModel[]> rest = req.SenderActionUserId == GlobalStaticConstantsRoles.Roles.System
             ? new() { Response = [UserInfoModel.BuildSystem()] }
             : await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
 
@@ -394,17 +394,17 @@ public class HelpdeskImplementService(
         if (!issues_data.Success() || issues_data.Response is null || issues_data.Response.Length != 1)
             return new() { Messages = issues_data.Messages };
 
-        if (!actor.IsAdmin && actor.UserId != GlobalStaticConstants.Roles.System && actor.Roles?.Any(x => GlobalStaticConstants.Roles.AllHelpDeskRoles.Any(y => y == x)) != true && !issues_data.Response.All(iss => actor.UserId == iss.AuthorIdentityUserId))
+        if (!actor.IsAdmin && actor.UserId != GlobalStaticConstantsRoles.Roles.System && actor.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Any(y => y == x)) != true && !issues_data.Response.All(iss => actor.UserId == iss.AuthorIdentityUserId))
         {
             res.AddError("У вас не достаточно прав");
             return res;
         }
         var issue_data = issues_data.Response.Single();
-        if (req.SenderActionUserId != GlobalStaticConstants.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
+        if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
         {
             await SubscribeUpdateAsync(new()
             {
-                SenderActionUserId = GlobalStaticConstants.Roles.System,
+                SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
                 Payload = new()
                 {
                     IssueId = issue_data.Id,
@@ -936,11 +936,11 @@ public class HelpdeskImplementService(
         UserInfoModel actor = users_rest.Response.First(x => x.UserId == req.SenderActionUserId);
         UserInfoModel? requested_user = users_rest.Response.FirstOrDefault(x => x.UserId == req.Payload.UserId);
 
-        if (req.SenderActionUserId != GlobalStaticConstants.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
+        if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
         {
             await SubscribeUpdateAsync(new()
             {
-                SenderActionUserId = GlobalStaticConstants.Roles.System,
+                SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
                 Payload = new()
                 {
                     IssueId = issue_data.Id,
@@ -954,7 +954,7 @@ public class HelpdeskImplementService(
         {
             await SubscribeUpdateAsync(new()
             {
-                SenderActionUserId = GlobalStaticConstants.Roles.System,
+                SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
                 Payload = new()
                 {
                     IssueId = issue_data.Id,
@@ -1168,7 +1168,7 @@ public class HelpdeskImplementService(
                         Tag = issue.StatusDocument.DescriptionInfo(),
                         Description = msg,
                     },
-                    SenderActionUserId = GlobalStaticConstants.Roles.System,
+                    SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
                 },
                 IsMuteEmail = true,
                 IsMuteTelegram = true,
@@ -1178,7 +1178,7 @@ public class HelpdeskImplementService(
             await Task.WhenAll([
                 PulsePushAsync(p_req, token),
                 Task.Run(async () => { helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticConstants.CloudStorageMetadata.HelpdeskNotificationTelegramForCreateIssue); }, token),
-                MessageUpdateOrCreateAsync(new() { SenderActionUserId = GlobalStaticConstants.Roles.System, Payload = new() { MessageText = $"Пользователь `{actor.UserName}` создал новый запрос: {issue_upd.Payload.Name}", IssueId = issue.Id } }, token)]);
+                MessageUpdateOrCreateAsync(new() { SenderActionUserId = GlobalStaticConstantsRoles.Roles.System, Payload = new() { MessageText = $"Пользователь `{actor.UserName}` создал новый запрос: {issue_upd.Payload.Name}", IssueId = issue.Id } }, token)]);
 
             if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
             {
@@ -1200,7 +1200,7 @@ public class HelpdeskImplementService(
             if (issue.AuthorIdentityUserId == issue_upd.SenderActionUserId ||
                 issue.ExecutorIdentityUserId == issue_upd.SenderActionUserId ||
                 issue.Subscribers?.Any(x => x.UserId == issue_upd.SenderActionUserId) == true ||
-                actor.Roles?.Any(x => GlobalStaticConstants.Roles.AllHelpDeskRoles.Contains(x)) == true ||
+                actor.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) == true ||
                 actor.IsAdmin)
             {
                 res.Response = await context.Issues.Where(x => x.Id == issue_upd.Payload.Id)
@@ -1255,11 +1255,11 @@ public class HelpdeskImplementService(
                     }
                 };
                 tasks = [PulsePushAsync(p_req, token)];
-                if (issue_upd.SenderActionUserId != GlobalStaticConstants.Roles.System && issue.Subscribers?.Any(x => x.UserId == issue_upd.SenderActionUserId) != true)
+                if (issue_upd.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && issue.Subscribers?.Any(x => x.UserId == issue_upd.SenderActionUserId) != true)
                 {
                     tasks.Add(SubscribeUpdateAsync(new()
                     {
-                        SenderActionUserId = GlobalStaticConstants.Roles.System,
+                        SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
                         Payload = new()
                         {
                             IssueId = issue.Id,
@@ -1310,7 +1310,7 @@ public class HelpdeskImplementService(
             };
         }
 
-        if (req.SenderActionUserId == GlobalStaticConstants.Roles.System || issues_db.All(x => x.ExecutorIdentityUserId == req.SenderActionUserId) || issues_db.All(x => x.AuthorIdentityUserId == req.SenderActionUserId) || issues_db.All(x => x.Subscribers!.Any(x => x.UserId == req.SenderActionUserId)))
+        if (req.SenderActionUserId == GlobalStaticConstantsRoles.Roles.System || issues_db.All(x => x.ExecutorIdentityUserId == req.SenderActionUserId) || issues_db.All(x => x.AuthorIdentityUserId == req.SenderActionUserId) || issues_db.All(x => x.Subscribers!.Any(x => x.UserId == req.SenderActionUserId)))
             return new() { Response = issues_db };
 
         TResponseModel<UserInfoModel[]> rest_user_date = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
@@ -1320,7 +1320,7 @@ public class HelpdeskImplementService(
             return new() { Messages = rest_user_date.Messages };
         }
 
-        if (!rest_user_date.Response[0].IsAdmin && rest_user_date.Response[0].Roles?.Any(x => GlobalStaticConstants.Roles.AllHelpDeskRoles.Contains(x)) != true)
+        if (!rest_user_date.Response[0].IsAdmin && rest_user_date.Response[0].Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true)
         {
             loggerRepo.LogError($"Для получения обращений не достаточно прав: {mem_key}");
             return new()
@@ -1343,10 +1343,10 @@ public class HelpdeskImplementService(
         };
 
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
-        if (req.SenderActionUserId != GlobalStaticConstants.Roles.System && (!rest.Success() || rest.Response is null || rest.Response.Length != 1))
+        if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && (!rest.Success() || rest.Response is null || rest.Response.Length != 1))
             return new() { Messages = rest.Messages };
 
-        UserInfoModel actor = req.SenderActionUserId == GlobalStaticConstants.Roles.System ? UserInfoModel.BuildSystem() : rest.Response![0];
+        UserInfoModel actor = req.SenderActionUserId == GlobalStaticConstantsRoles.Roles.System ? UserInfoModel.BuildSystem() : rest.Response![0];
 
         TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
@@ -1391,8 +1391,8 @@ public class HelpdeskImplementService(
         if (!actor.IsAdmin &&
             issue_data.AuthorIdentityUserId != actor.UserId &&
             issue_data.ExecutorIdentityUserId != actor.UserId &&
-            actor.UserId != GlobalStaticConstants.Roles.System &&
-            actor.UserId != GlobalStaticConstants.Roles.HelpDeskTelegramBotManager)
+            actor.UserId != GlobalStaticConstantsRoles.Roles.System &&
+            actor.UserId != GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager)
         {
             res.AddError("Не достаточно прав для смены статуса");
             return res;
@@ -1412,11 +1412,11 @@ public class HelpdeskImplementService(
             Task.Run(async () => { CommerceStatusChangeOrderBodyNotificationWhatsapp = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationWhatsapp(prevStatus)); }, token),
             Task.Run(async () => { wc = await webTransmissionRepo.GetWebConfigAsync(); }, token)];
 
-        if (req.SenderActionUserId != GlobalStaticConstants.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
+        if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
         {
             tasks.Add(SubscribeUpdateAsync(new()
             {
-                SenderActionUserId = GlobalStaticConstants.Roles.System,
+                SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
                 Payload = new()
                 {
                     IssueId = issue_data.Id,
@@ -1594,7 +1594,7 @@ public class HelpdeskImplementService(
         if (!issues_data.Success() || issues_data.Response is null || issues_data.Response.Length == 0)
             return new() { Messages = issues_data.Messages };
         IssueHelpdeskModelDB issue_data = issues_data.Response.Single();
-        if (actor.UserId != GlobalStaticConstants.Roles.System && !actor.IsAdmin && actor.Roles?.Any(x => GlobalStaticConstants.Roles.AllHelpDeskRoles.Any(y => y == x)) != true && actor.UserId != issue_data.AuthorIdentityUserId)
+        if (actor.UserId != GlobalStaticConstantsRoles.Roles.System && !actor.IsAdmin && actor.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Any(y => y == x)) != true && actor.UserId != issue_data.AuthorIdentityUserId)
         {
             res.AddError("У вас не достаточно прав для выполнения этой операции");
             return res;
@@ -1619,7 +1619,7 @@ public class HelpdeskImplementService(
                 await context.SaveChangesAsync(token);
                 res.AddSuccess(msg);
 
-                if (req.SenderActionUserId != GlobalStaticConstants.Roles.System)
+                if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System)
                 {
                     p_req = new()
                     {
@@ -1653,7 +1653,7 @@ public class HelpdeskImplementService(
                     msg = $"Уведомления успешно {(req.Payload.IsSilent ? "отключены" : "включены")} для: {requested_user.UserName}";
                     res.AddSuccess(msg);
 
-                    if (req.SenderActionUserId != GlobalStaticConstants.Roles.System)
+                    if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System)
                     {
                         p_req = new()
                         {
@@ -1687,7 +1687,7 @@ public class HelpdeskImplementService(
                 msg = "Подписка успешно удалена";
                 res.AddSuccess(msg);
 
-                if (req.SenderActionUserId != GlobalStaticConstants.Roles.System)
+                if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System)
                 {
                     p_req = new()
                     {
@@ -1726,7 +1726,7 @@ public class HelpdeskImplementService(
 
         TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
-            SenderActionUserId = GlobalStaticConstants.Roles.System,
+            SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
             Payload = new() { IssuesIds = [req.Payload.Payload.IssueId], IncludeSubscribersOnly = true },
         }, token);
 

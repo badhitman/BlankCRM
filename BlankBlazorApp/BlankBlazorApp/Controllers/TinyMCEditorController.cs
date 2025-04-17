@@ -69,7 +69,7 @@ public class TinyMCEditorController(IStorageTransmission storeRepo) : Controller
             ContentType = file.ContentType,
         };
 
-        TResponseModel<StorageFileModelDB> rest = await storeRepo.SaveFileAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstants.Roles.System });
+        TResponseModel<StorageFileModelDB> rest = await storeRepo.SaveFileAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
         if (!rest.Success() || rest.Response is null || rest.Response.Id < 1)
             return StatusCode(500, new { location = "/img/noimage-simple.png" });
 

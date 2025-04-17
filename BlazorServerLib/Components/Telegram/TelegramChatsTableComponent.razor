@@ -61,11 +61,11 @@
                     {
                         <span class="badge text-bg-warning m-1">Admin</span>
                     }
-                    if (user.Roles!.Any(x => GlobalStaticConstants.Roles.AllHelpDeskRoles.Contains(x)))
+                    if (user.Roles!.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)))
                     {
                         <span title="@user.RolesAsString("; ").TrimEnd()" class="badge text-bg-success m-1 position-relative">
                             HD
-                            @if (user.Roles!.Contains(GlobalStaticConstants.Roles.HelpDeskTelegramBotManager))
+                            @if (user.Roles!.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager))
                             {
                                 <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                                     <span class="visually-hidden">New alerts</span>

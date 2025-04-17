@@ -37,7 +37,7 @@ else
         </div>
         <div class="card-body">
             <DynamicComponent Type="GetType(ViewSet.DescriptionInfo())" Parameters="Parameters" />
-            <AuthorizeView Roles="@GlobalStaticConstants.Roles.Admin">
+            <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
                 <Authorized>
                     <div class="card mt-3">
                         <div class="card-body">

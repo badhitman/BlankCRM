@@ -40,7 +40,7 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
         await HelpdeskRepo.PulsePushAsync(req_pulse, false);
         TResponseModel<int> add_msg_system = await HelpdeskRepo.MessageCreateOrUpdateAsync(new()
         {
-            SenderActionUserId = GlobalStaticConstants.Roles.System,
+            SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
             Payload = new() { MessageText = $"<b>Пользователь {CurrentUserSession!.UserName} отправил сообщение Telegram пользователю user-tg#{msg.UserTelegramId}</b>: {msg.Message}", IssueId = Issue.Id }
         });
         await SetBusyAsync(false);

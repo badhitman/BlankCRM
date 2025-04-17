@@ -17,7 +17,7 @@
     @if (Message is not null && Message.Id > 0)
     {
         <div class="position-absolute top-0 start-0 m-2 bi bi-send-fill font-monospace text-@_currentType.DescriptionInfo()">
-            &nbsp;@(Message.AuthorUserId == GlobalStaticConstants.Roles.System ? "Система" : (this.UsersIdentityDump?.FirstOrDefault(x => x.UserId == Message.AuthorUserId)?.UserName ?? Message.AuthorUserId))@(Message.AuthorUserId == CurrentUserSession!.UserId ? " - Вы" : "")
+            &nbsp;@(Message.AuthorUserId == GlobalStaticConstantsRoles.Roles.System ? "Система" : (this.UsersIdentityDump?.FirstOrDefault(x => x.UserId == Message.AuthorUserId)?.UserName ?? Message.AuthorUserId))@(Message.AuthorUserId == CurrentUserSession!.UserId ? " - Вы" : "")
         </div>
         @if (!IsEditMode && Message.AuthorUserId == CurrentUserSession!.UserId)
         {

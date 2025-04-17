@@ -27,7 +27,7 @@ public class OffersController(ICommerceTransmission commRepo) : ControllerBase
     [LoggerNolog]
 #endif
     public async Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelect(TPaginationRequestModel<OffersSelectRequestModel> req)
-        => await commRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstants.Roles.System });
+        => await commRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
 
     /// <summary>
     /// Чтение данных офферов (по идентификаторам)
@@ -40,5 +40,5 @@ public class OffersController(ICommerceTransmission commRepo) : ControllerBase
     [LoggerNolog]
 #endif
     public async Task<TResponseModel<OfferModelDB[]>> OffersRead(int[] req)
-        => await commRepo.OffersReadAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstants.Roles.System });
+        => await commRepo.OffersReadAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
 }

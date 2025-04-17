@@ -463,7 +463,7 @@ public class IdentityTools(
             res.AddError("Пустой запрос");
             return res;
         }
-        string[] find_users_ids = [.. users_ids.Where(x => x != GlobalStaticConstants.Roles.System)];
+        string[] find_users_ids = [.. users_ids.Where(x => x != GlobalStaticConstantsRoles.Roles.System)];
         if (find_users_ids.Length == 0)
         {
             res.Response = [.. users_ids.Select(x => UserInfoModel.BuildSystem())];
@@ -524,9 +524,9 @@ public class IdentityTools(
             };
         }
 
-        res.Response = users.Select(convert_user).ToArray();
+        res.Response = [.. users.Select(convert_user)];
 
-        if (users_ids.Any(x => x == GlobalStaticConstants.Roles.System))
+        if (users_ids.Any(x => x == GlobalStaticConstantsRoles.Roles.System))
             res.Response = [.. res.Response.Union([UserInfoModel.BuildSystem()])];
 
         find_users_ids = [.. find_users_ids.Where(x => !res.Response.Any(y => y.UserId == x))];
@@ -604,7 +604,7 @@ public class IdentityTools(
 
         res.Response = users.Select(convert_user).ToArray();
 
-        if (users_emails.Any(x => x == GlobalStaticConstants.Roles.System))
+        if (users_emails.Any(x => x == GlobalStaticConstantsRoles.Roles.System))
             res.Response = [.. res.Response.Union([UserInfoModel.BuildSystem()])];
 
         find_users_ids = [.. find_users_ids.Where(x => !res.Response.Any(y => y.UserId == x))];

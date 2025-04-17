@@ -18,7 +18,7 @@ public partial class StatusIssueComponent : IssueWrapBaseModel
     {
         List<StatusesDocumentsEnum> res = [];
 
-        if (CurrentUserSession!.IsAdmin || CurrentUserSession!.UserId == Issue.ExecutorIdentityUserId || CurrentUserSession!.Roles?.Contains(GlobalStaticConstants.Roles.HelpDeskTelegramBotManager) == true)
+        if (CurrentUserSession!.IsAdmin || CurrentUserSession!.UserId == Issue.ExecutorIdentityUserId || CurrentUserSession!.Roles?.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager) == true)
             res.AddRange(Enum.GetValues<StatusesDocumentsEnum>());
         else
         {

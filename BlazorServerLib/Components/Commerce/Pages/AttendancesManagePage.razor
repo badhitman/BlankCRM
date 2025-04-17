@@ -5,7 +5,7 @@
 @using MudBlazor
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
-@attribute [Authorize(Roles = $"{GlobalStaticConstants.Roles.Admin},{GlobalStaticConstants.Roles.Debug}")]
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug}")]
 @inherits BlazorBusyComponentBaseModel
 
 <PageTitle>Услуги</PageTitle>
@@ -19,13 +19,13 @@
     <MudTabPanel Text="Справочник">
         <AttendancesCatalogComponent />
     </MudTabPanel>
-    <AuthorizeView Roles="@($"{GlobalStaticConstants.Roles.Admin},{GlobalStaticConstants.Roles.CommerceManager},{GlobalStaticConstants.Roles.Debug}")">
+    <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.CommerceManager},{GlobalStaticConstantsRoles.Roles.Debug}")">
         <Authorized>
             <MudTabPanel Text="Управление">
                 <AttendancesManageComponent />
             </MudTabPanel>            
             <MudTabPanel Text="Права">
-                <UsersTableComponent HideClaimsColumn="true" HideRolesColumn="true" RolesMarkers="@showMarkersRoles" RolesManageKit="@showMarkersRoles.Select(x => x.Id).Union([GlobalStaticConstants.Roles.CommerceManager, GlobalStaticConstants.Roles.CommerceClient, GlobalStaticConstants.Roles.Debug])" />
+                <UsersTableComponent HideClaimsColumn="true" HideRolesColumn="true" RolesMarkers="@showMarkersRoles" RolesManageKit="@showMarkersRoles.Select(x => x.Id).Union([GlobalStaticConstantsRoles.Roles.CommerceManager, GlobalStaticConstantsRoles.Roles.CommerceClient, GlobalStaticConstantsRoles.Roles.Debug])" />
             </MudTabPanel>
         </Authorized>
     </AuthorizeView>

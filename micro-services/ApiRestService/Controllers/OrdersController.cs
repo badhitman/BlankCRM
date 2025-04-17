@@ -28,7 +28,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
     [LoggerNolog]
 #endif
     public async Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelect(TPaginationRequestModel<OrdersSelectRequestModel> req)
-        => await commRepo.OrdersSelectAsync(new TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>>() { Payload = new TAuthRequestModel<OrdersSelectRequestModel>() { Payload = req.Payload, SenderActionUserId = GlobalStaticConstants.Roles.System } });
+        => await commRepo.OrdersSelectAsync(new TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>>() { Payload = new TAuthRequestModel<OrdersSelectRequestModel>() { Payload = req.Payload, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System } });
 
     /// <summary>
     /// Прикрепить файл к заказу (счёт, акт и т.п.). Имя файла должно быть уникальным в контексте заказа. Если файл с таким именем существует, тогда он будет перезаписан новым
@@ -47,7 +47,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
             return response;
         }
 
-        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersReadAsync(new() { Payload = [OrderId], SenderActionUserId = GlobalStaticConstants.Roles.System });
+        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersReadAsync(new() { Payload = [OrderId], SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
 
         if (!call.Success())
         {
@@ -71,7 +71,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
             ApplicationName = Routes.ORDER_CONTROLLER_NAME,
             PropertyName = Routes.ATTACHMENT_CONTROLLER_NAME,
             PrefixPropertyName = Routes.REST_CONTROLLER_NAME,
-            AuthorUserIdentity = GlobalStaticConstants.Roles.System,
+            AuthorUserIdentity = GlobalStaticConstantsRoles.Roles.System,
             FileName = _file_name,
             ContentType = uploadedFile.ContentType,
             OwnerPrimaryKey = OrderId,
@@ -79,7 +79,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
             Payload = stream.ToArray(),
         };
 
-        return await storageRepo.SaveFileAsync(new() { Payload = reqSave, SenderActionUserId = GlobalStaticConstants.Roles.System });
+        return await storageRepo.SaveFileAsync(new() { Payload = reqSave, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
     }
 
     /// <summary>
@@ -114,7 +114,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     public async Task<TResponseModel<bool>> OrderStageSet([FromRoute] int OrderId, [FromRoute] StatusesDocumentsEnum Step)
     {
-        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersReadAsync(new() { Payload = [OrderId], SenderActionUserId = GlobalStaticConstants.Roles.System });
+        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersReadAsync(new() { Payload = [OrderId], SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
         TResponseModel<bool> response = new() { Response = false };
         if (!call.Success())
         {
@@ -137,7 +137,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
 
         TAuthRequestModel<IssuesReadRequestModel> req_hd = new()
         {
-            SenderActionUserId = GlobalStaticConstants.Roles.System,
+            SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
             Payload = new()
             {
                 IssuesIds = [order_doc.HelpdeskId.Value]
@@ -157,7 +157,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
         }
         TAuthRequestModel<StatusChangeRequestModel> status_change_req = new()
         {
-            SenderActionUserId = GlobalStaticConstants.Roles.System,
+            SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
             Payload = new()
             {
                 DocumentId = hd_obj.Id,

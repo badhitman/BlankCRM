@@ -470,7 +470,7 @@ public class StorageServiceImpl(
                                         PulseType = PulseIssuesTypesEnum.Files,
                                         Tag = Routes.ADD_ACTION_NAME
                                     },
-                                    SenderActionUserId = GlobalStaticConstants.Roles.System,
+                                    SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
                                 }
                             };
 
@@ -492,7 +492,7 @@ public class StorageServiceImpl(
                                 PulseType = PulseIssuesTypesEnum.Files,
                                 Tag = Routes.ADD_ACTION_NAME
                             },
-                            SenderActionUserId = GlobalStaticConstants.Roles.System,
+                            SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
                         }
                     };
                     await HelpdeskRepo.PulsePushAsync(reqPulse, false, token);

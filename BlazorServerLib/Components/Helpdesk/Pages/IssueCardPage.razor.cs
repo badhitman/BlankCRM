@@ -35,7 +35,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
 
     bool CanEdit =>
         CurrentUserSession!.IsAdmin ||
-        CurrentUserSession!.Roles?.Contains(GlobalStaticConstants.Roles.HelpDeskTelegramBotManager) == true ||
+        CurrentUserSession!.Roles?.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager) == true ||
         CurrentUserSession!.UserId == IssueSource?.ExecutorIdentityUserId ||
         CurrentUserSession!.UserId == IssueSource?.AuthorIdentityUserId;
 

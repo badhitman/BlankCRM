@@ -8,7 +8,7 @@
             <MudRadio T="UsersAreasHelpdeskEnum?" Value="@UsersAreasHelpdeskEnum.Executor">Я исполнитель</MudRadio>
             <MudRadio T="UsersAreasHelpdeskEnum?" Value="@UsersAreasHelpdeskEnum.Subscriber">Я подписчик</MudRadio>
             <MudRadio T="UsersAreasHelpdeskEnum?" Value="@UsersAreasHelpdeskEnum.Main">Все</MudRadio>
-            <AuthorizeView Roles="@GlobalStaticConstants.Roles.Admin">
+            <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
                 <Authorized>
                     <MudRadio T="UsersAreasHelpdeskEnum?" Value="null">root</MudRadio>
                 </Authorized>

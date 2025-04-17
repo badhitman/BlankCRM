@@ -7,7 +7,7 @@
             <StatusIssueComponent />
         </CascadingValue>
     </div>
-    <AuthorizeView Roles="@($"{string.Join(",",GlobalStaticConstants.Roles.AllHelpDeskRoles)},{GlobalStaticConstants.Roles.Admin}")">
+    <AuthorizeView Roles="@($"{string.Join(",",GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles)},{GlobalStaticConstantsRoles.Roles.Admin}")">
         <Authorized>
             <div class="px-1"><SubscribersIssueComponent /></div>
             @* <hr />

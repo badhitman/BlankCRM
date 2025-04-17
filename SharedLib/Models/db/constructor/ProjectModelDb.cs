@@ -63,6 +63,6 @@ public class ProjectModelDb : EntryDescriptionSwitchableModel
     /// </summary>
     public bool CanEdit(UserInfoModel userInfoModel)
     {
-        return !IsDisabled || OwnerUserId.Equals(userInfoModel.UserId) || userInfoModel.Roles?.Any(x => x.Equals(GlobalStaticConstants.Roles.Admin, StringComparison.OrdinalIgnoreCase)) == true;
+        return !IsDisabled || OwnerUserId.Equals(userInfoModel.UserId) || userInfoModel.Roles?.Any(x => x.Equals(GlobalStaticConstantsRoles.Roles.Admin, StringComparison.OrdinalIgnoreCase)) == true;
     }
 }

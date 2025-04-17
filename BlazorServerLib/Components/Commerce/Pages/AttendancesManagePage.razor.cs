@@ -33,6 +33,6 @@ public partial class AttendancesManagePage : BlazorBusyComponentBaseModel
     public Action<OfferModelDB?>? SelectOfferHandler { get; set; }
 
 
-    static readonly EntryAltModel[] showMarkersRoles = [new() { Id = GlobalStaticConstants.Roles.AttendancesExecutor, Name = "Исполнитель", },
-    new() { Id = GlobalStaticConstants.Roles.CommerceClient, Name = "Покупатель", }];
+    static readonly EntryAltModel[] showMarkersRoles = [new() { Id = GlobalStaticConstantsRoles.Roles.AttendancesExecutor, Name = "Исполнитель", },
+    new() { Id = GlobalStaticConstantsRoles.Roles.CommerceClient, Name = "Покупатель", }];
 }

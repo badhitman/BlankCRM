@@ -12,7 +12,7 @@
     <MudTabPanel Text="Справочник">
         <NomenclaturesManageComponent />
     </MudTabPanel>
-    <AuthorizeView Roles="@($"{GlobalStaticConstants.Roles.Admin},{GlobalStaticConstants.Roles.CommerceManager},{GlobalStaticConstants.Roles.Debug}")">
+    <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.CommerceManager},{GlobalStaticConstantsRoles.Roles.Debug}")">
         <Authorized>
             <MudTabPanel Text="Склады">
                 <MudPaper Class="ma-2" Elevation="3">

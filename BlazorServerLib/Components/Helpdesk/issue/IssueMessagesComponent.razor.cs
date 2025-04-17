@@ -77,7 +77,7 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
 
         string[] users_for_adding = Issue
             .Messages
-            .Where(x => x.AuthorUserId != GlobalStaticConstants.Roles.System && !UsersIdentityDump.Any(y => y.UserId == x.AuthorUserId))
+            .Where(x => x.AuthorUserId != GlobalStaticConstantsRoles.Roles.System && !UsersIdentityDump.Any(y => y.UserId == x.AuthorUserId))
             .Select(x => x.AuthorUserId)
             .ToArray();
 

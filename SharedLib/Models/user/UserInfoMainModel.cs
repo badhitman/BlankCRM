@@ -62,5 +62,5 @@ public record UserInfoMainModel
     /// </summary>
     [System.Text.Json.Serialization.JsonIgnore]
     [Newtonsoft.Json.JsonIgnore]
-    public bool IsAdmin => Roles?.Any(x => x.Equals(GlobalStaticConstants.Roles.Admin, StringComparison.OrdinalIgnoreCase)) == true;
+    public bool IsAdmin => Roles?.Any(x => x.Equals(GlobalStaticConstantsRoles.Roles.Admin, StringComparison.OrdinalIgnoreCase)) == true;
 }

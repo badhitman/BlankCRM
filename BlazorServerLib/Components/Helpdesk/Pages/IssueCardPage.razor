@@ -74,7 +74,7 @@ else
                                             }
                                         </MudTabs>
                                     </div>
-                                    <AuthorizeView Roles="@GlobalStaticConstants.Roles.Admin">
+                                    <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
                                         <Authorized>
                                             @if (ShowingWappiArea && UsersIdentityDump.Any(x => !string.IsNullOrWhiteSpace(x.PhoneNumber) && GlobalTools.IsPhoneNumber(x.PhoneNumber)))
                                             {

@@ -40,5 +40,5 @@ public class CommerceController(ICommerceTransmission commRepo) : ControllerBase
     [LoggerNolog]
 #endif
     public async Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesRead(int[] req)
-        => await commRepo.NomenclaturesReadAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstants.Roles.System });
+        => await commRepo.NomenclaturesReadAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
 }

@@ -63,10 +63,10 @@ public record UserInfoModel : UserInfoMainModel
     {
         return new()
         {
-            UserId = GlobalStaticConstants.Roles.System,
-            Email = GlobalStaticConstants.Roles.System,
+            UserId = GlobalStaticConstantsRoles.Roles.System,
+            Email = GlobalStaticConstantsRoles.Roles.System,
             EmailConfirmed = true,
-            Roles = [GlobalStaticConstants.Roles.System],
+            Roles = [GlobalStaticConstantsRoles.Roles.System],
             UserName = "Система",
         };
     }

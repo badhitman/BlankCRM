@@ -31,7 +31,7 @@ public class GetUsersOfIdentityReceive(IIdentityTools identityRepo, IMemoryCache
             res.AddError("Пустой запрос");
             return res;
         }
-        string[] find_users_ids = [.. users_ids.Where(x => x != GlobalStaticConstants.Roles.System).Order()];
+        string[] find_users_ids = [.. users_ids.Where(x => x != GlobalStaticConstantsRoles.Roles.System).Order()];
 
         string mem_token = $"{QueueName}-identity/{string.Join(",", find_users_ids)}";
         if (cache.TryGetValue(mem_token, out UserInfoModel[]? users_cache))

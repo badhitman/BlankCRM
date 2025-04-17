@@ -317,7 +317,7 @@ public partial class CommerceImplementService : ICommerceService
             res.AddInfo("Запись отсутствует");
         else
         {
-            if (orderAttendanceDB.AuthorIdentityUserId == req.SenderActionUserId || actor.IsAdmin || actor.Roles?.Contains(GlobalStaticConstants.Roles.System) == true)
+            if (orderAttendanceDB.AuthorIdentityUserId == req.SenderActionUserId || actor.IsAdmin || actor.Roles?.Contains(GlobalStaticConstantsRoles.Roles.System) == true)
             {
                 context.Remove(orderAttendanceDB);
                 await context.SaveChangesAsync(token);

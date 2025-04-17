@@ -30,7 +30,7 @@
                         }
                     </MudStack>
                     <MudSwitch Disabled="(IsBusyProgress || !CurrentUserSession!.IsAdmin)" @bind-Value="editOffer.IsDisabled" Label="Отключение" Color="Color.Secondary" />
-                    <AuthorizeView Roles="@GlobalStaticConstants.Roles.Admin">
+                    <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
                         <Authorized>
                             <div class="input-group has-validation my-3">
                                 <span class="input-group-text" id="basic-tmpl-@editOffer.Id" aria-describedby="validationQuantitiesTemplate">Шаблон количества</span>
@@ -78,7 +78,7 @@
                         </NotAuthorized>
                     </AuthorizeView>
                 </MudTabPanel>
-                <AuthorizeView Roles="@GlobalStaticConstants.Roles.Admin">
+                <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
                     <Authorized>
                         <MudTabPanel Text="Заказы">
                             <OrdersJournalComponent OfferFilter="editOffer.Id" />

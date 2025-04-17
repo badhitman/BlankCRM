@@ -134,7 +134,7 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
 
         TextMessage = Message?.MessageText;
 
-        if (Message?.AuthorUserId == GlobalStaticConstants.Roles.System)
+        if (Message?.AuthorUserId == GlobalStaticConstantsRoles.Roles.System)
             _currentType = AuthorsTypesEnum.System;
         else if (Message?.AuthorUserId == CurrentUserSession!.UserId)
             _currentType = AuthorsTypesEnum.My;

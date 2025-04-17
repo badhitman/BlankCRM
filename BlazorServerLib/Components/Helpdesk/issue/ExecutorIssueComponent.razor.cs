@@ -44,7 +44,7 @@ public partial class ExecutorIssueComponent : IssueWrapBaseModel
                 return;
             }
 
-            if (user_by_email.Roles?.Any(x => GlobalStaticConstants.Roles.AllHelpDeskRoles.Contains(x)) != true && !user_by_email.IsAdmin)
+            if (user_by_email.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true && !user_by_email.IsAdmin)
             {
                 SnackbarRepo.Error($"Пользователь {editExecutorEmail} не может быть установлен исполнителем: не является сотрудником");
                 return;
