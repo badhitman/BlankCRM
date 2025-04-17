@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using MudBlazor;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorWebLib.Components.Commerce.Attendances;
 
@@ -36,7 +37,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
     {
         TPaginationRequestModel<NomenclaturesSelectRequestModel> req = new()
         {
-            Payload = new() { ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME },
+            Payload = new() { ContextName = Routes.ATTENDANCES_CONTROLLER_NAME },
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortBy = state.SortLabel,
@@ -56,7 +57,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
             Payload = new RecordsAttendancesRequestModel()
             {
                 NomenclatureFilter = [.. resNomenclatures.Response.Select(x => x.Id)],
-                ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME,
+                ContextName = Routes.ATTENDANCES_CONTROLLER_NAME,
                 IncludeExternalData = true,
             },
             SenderActionUserId = CurrentUserSession!.UserId,

@@ -14,7 +14,7 @@ namespace Transmission.Receives.helpdesk;
 public class UpdateRubricsForArticleReceive(IArticlesService artRepo, ILogger<ArticleCreateOrUpdateReceive> loggerRepo) : IResponseReceive<ArticleRubricsSetModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.RubricsForArticleSetReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricsForArticleSetReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ArticleRubricsSetModel? req, CancellationToken token = default)

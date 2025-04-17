@@ -16,7 +16,7 @@ public class RemoveLoginReceive(IIdentityTools idRepo, ILogger<RemoveLoginReceiv
     : IResponseReceive<RemoveLoginRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.RemoveLoginForUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RemoveLoginForUserReceive;
 
     /// <summary>
     /// Пытается удалить предоставленную внешнюю информацию для входа из указанного userId

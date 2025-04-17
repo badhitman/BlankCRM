@@ -14,7 +14,7 @@ namespace Transmission.Receives.helpdesk;
 public class RubricCreateOrUpdateReceive(IHelpdeskService hdRepo, ILogger<RubricCreateOrUpdateReceive> loggerRepo) : IResponseReceive<RubricIssueHelpdeskModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.RubricForIssuesUpdateHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricForIssuesUpdateHelpdeskReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(RubricIssueHelpdeskModelDB? rubric, CancellationToken token = default)

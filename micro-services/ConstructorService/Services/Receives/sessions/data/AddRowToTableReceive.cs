@@ -14,7 +14,7 @@ namespace Transmission.Receives.constructor;
 public class AddRowToTableReceive(IConstructorService conService) : IResponseReceive<FieldSessionDocumentDataBaseModel?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.AddRowToTableReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.AddRowToTableReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(FieldSessionDocumentDataBaseModel? payload, CancellationToken token = default)

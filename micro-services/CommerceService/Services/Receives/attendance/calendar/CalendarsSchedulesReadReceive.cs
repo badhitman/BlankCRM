@@ -14,7 +14,7 @@ public class CalendarsSchedulesReadReceive(ICommerceService commerceRepo)
     : IResponseReceive<TAuthRequestModel<int[]>?, TResponseModel<List<CalendarScheduleModelDB>>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.CalendarsSchedulesReadCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CalendarsSchedulesReadCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<CalendarScheduleModelDB>>?> ResponseHandleActionAsync(TAuthRequestModel<int[]>? payload, CancellationToken token = default)

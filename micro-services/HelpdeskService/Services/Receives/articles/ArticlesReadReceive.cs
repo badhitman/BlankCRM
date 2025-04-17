@@ -14,7 +14,7 @@ namespace Transmission.Receives.helpdesk;
 public class ArticlesReadReceive(IArticlesService artRepo, ILogger<ArticlesReadReceive> loggerRepo) : IResponseReceive<int[]?, TResponseModel<ArticleModelDB[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ArticlesReadReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ArticlesReadReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<ArticleModelDB[]>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)

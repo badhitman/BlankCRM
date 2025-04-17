@@ -15,7 +15,7 @@ public class SendEmailReceive(IMailProviderService mailRepo, ILogger<SendEmailRe
     : IResponseReceive<SendEmailRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SendEmailReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SendEmailReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SendEmailRequestModel? email_send, CancellationToken token = default)

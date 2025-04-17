@@ -14,7 +14,7 @@ public class DownloadAndSaveReceive(IDaichiBusinessApiService daichiRepo)
     : IResponseReceive<object?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.DownloadAndSaveDaichiReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DownloadAndSaveDaichiReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)

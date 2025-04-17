@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace ApiRestService.Controllers;
 
@@ -22,7 +23,7 @@ public class InfoController : ControllerBase
     /// Получить информацию по текущему профилю (проверка токена доступа)
     /// </summary>
     /// <returns>Информация по текущему пользователю (имя и роли)</returns>
-    [HttpGet($"/{GlobalStaticConstants.Routes.API_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.INFO_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.MY_CONTROLLER_NAME}"), TypeFilter(typeof(RolesAuthorizationFilter))]
+    [HttpGet($"/{Routes.API_CONTROLLER_NAME}/{Routes.INFO_CONTROLLER_NAME}/{Routes.MY_CONTROLLER_NAME}"), TypeFilter(typeof(RolesAuthorizationFilter))]
     public ExpressProfileResponseModel GetMyProfile([FromServices] ExpressUserPermissionModel userPerm)
     {
         ExpressProfileResponseModel res = new()

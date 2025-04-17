@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class MoveTabOfDocumentSchemeReceive(IConstructorService conService) : IResponseReceive<TAuthRequestModel<MoveObjectModel>?, TResponseModel<DocumentSchemeConstructorModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.MoveTabOfDocumentSchemeReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MoveTabOfDocumentSchemeReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)

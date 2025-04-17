@@ -15,7 +15,7 @@ public class SetTwoFactorEnabledReceive(IIdentityTools idRepo, ILogger<SetTwoFac
     : IResponseReceive<SetTwoFactorEnabledRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetTwoFactorEnabledReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetTwoFactorEnabledReceive;
 
     /// <summary>
     /// Вкл/Выкл двухфакторную аутентификацию для указанного userId

@@ -1,4 +1,5 @@
 ﻿@using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
 
 @inherits BlazorBusyComponentBaseAuthModel
 
@@ -40,9 +41,9 @@ else
 {
     <div class="card my-3">
         <div class="card-body">
-            <FilesContextViewComponent ApplicationsNames="@([GlobalStaticConstants.Routes.ORDER_CONTROLLER_NAME])"
-                                       PropertyName="@GlobalStaticConstants.Routes.ATTACHMENT_CONTROLLER_NAME"
-                                       PrefixPropertyName="@GlobalStaticConstants.Routes.USER_CONTROLLER_NAME"
+            <FilesContextViewComponent ApplicationsNames="@([Routes.ORDER_CONTROLLER_NAME])"
+                                       PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
+                                       PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
                                        OwnerPrimaryKey="Document.Id"
                                        Title="Вложения"
                                        ManageMode="true" />

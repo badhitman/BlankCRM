@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class GetDirectoryReceive(IConstructorService conService) : IResponseReceive<int, TResponseModel<EntryDescriptionModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetDirectoryReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetDirectoryReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryDescriptionModel>?> ResponseHandleActionAsync(int payload, CancellationToken token = default)

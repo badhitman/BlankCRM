@@ -15,7 +15,7 @@ public class TelegramJoinAccountCreateReceive(IIdentityTools identityRepo, ILogg
     : IResponseReceive<string?, TResponseModel<TelegramJoinAccountModelDb>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.TelegramJoinAccountCreateReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountCreateReceive;
 
     /// <summary>
     /// Инициировать новую процедуру привязки Telegram аккаунта к учётной записи сайта

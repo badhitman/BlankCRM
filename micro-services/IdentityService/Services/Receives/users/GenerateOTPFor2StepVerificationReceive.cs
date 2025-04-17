@@ -15,7 +15,7 @@ public class GenerateOTPFor2StepVerificationReceive(IIdentityTools idRepo, ILogg
     : IResponseReceive<string?, TResponseModel<string>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GenerateToken2FAReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GenerateToken2FAReceive;
 
     /// <summary>
     /// Генерация (и отправка на Email++) 2fa токена

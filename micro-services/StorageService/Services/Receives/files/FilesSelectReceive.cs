@@ -15,7 +15,7 @@ public class FilesSelectReceive(ILogger<FilesSelectReceive> loggerRepo, ISeriali
     : IResponseReceive<TPaginationRequestModel<SelectMetadataRequestModel>?, TPaginationResponseModel<StorageFileModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.FilesSelectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FilesSelectReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<StorageFileModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<SelectMetadataRequestModel>? req, CancellationToken token = default)

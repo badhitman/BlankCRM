@@ -15,7 +15,7 @@ public class ClaimDeleteReceive(IIdentityTools idRepo, ILogger<ClaimDeleteReceiv
     : IResponseReceive<ClaimAreaIdModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ClaimDeleteReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ClaimDeleteReceive;
 
     /// <summary>
     /// Claim: Remove

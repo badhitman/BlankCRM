@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class SelectFormsReceive(IConstructorService conService) : IResponseReceive<SelectFormsModel?, TPaginationResponseModel<FormConstructorModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SelectFormsReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SelectFormsReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(SelectFormsModel? payload, CancellationToken token = default)

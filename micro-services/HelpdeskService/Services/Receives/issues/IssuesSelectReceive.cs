@@ -14,7 +14,7 @@ public class IssuesSelectReceive(IHelpdeskService hdRepo)
     : IResponseReceive<TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>>?, TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.IssuesSelectHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.IssuesSelectHelpdeskReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>>?> ResponseHandleActionAsync(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>>? req, CancellationToken token = default)

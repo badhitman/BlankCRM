@@ -12,6 +12,8 @@ using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
 using Microsoft.EntityFrameworkCore.Storage;
+using static SharedLib.GlobalStaticConstantsRoutes;
+using static SharedLib.GlobalStaticConstantsTransmission;
 
 namespace HelpdeskService;
 
@@ -158,7 +160,7 @@ public class HelpdeskImplementService(
                         {
                             IssueId = issue_data.Id,
                             PulseType = PulseIssuesTypesEnum.Messages,
-                            Tag = GlobalStaticConstants.Routes.ADD_ACTION_NAME,
+                            Tag = Routes.ADD_ACTION_NAME,
                             Description = $"Пользователь `{actor.UserName}` в обращение #{issue_data.Id} '{issue_data.Name}' добавил комментарий: {req.Payload.MessageText}",
                         },
                         SenderActionUserId = req.SenderActionUserId,
@@ -337,7 +339,7 @@ public class HelpdeskImplementService(
                         {
                             IssueId = issue_data.Id,
                             PulseType = PulseIssuesTypesEnum.Messages,
-                            Tag = GlobalStaticConstants.Routes.CHANGE_ACTION_NAME,
+                            Tag = Routes.CHANGE_ACTION_NAME,
                             Description = $"Пользователь <a href='/Users/Profiles/view-{actor.UserId}' target='_blank'>{actor.UserName}</a> изменил комментарий #{msg_db.Id}.<br /><dl><dt>старое:</dt><dd>{msg_db.MessageText}</dd><dt>новое:</dt><dd>{req.Payload.MessageText}</dd></dl>",
                         },
                         SenderActionUserId = req.SenderActionUserId,
@@ -437,7 +439,7 @@ public class HelpdeskImplementService(
                         {
                             IssueId = issue_data.Id,
                             PulseType = PulseIssuesTypesEnum.Vote,
-                            Tag = GlobalStaticConstants.Routes.ADD_ACTION_NAME,
+                            Tag = Routes.ADD_ACTION_NAME,
                             Description = $"Пользователь `{actor.UserName}` проголосовал за сообщение #{msg_db.Id}",
                         }
                     }
@@ -469,7 +471,7 @@ public class HelpdeskImplementService(
                         {
                             IssueId = issue_data.Id,
                             PulseType = PulseIssuesTypesEnum.Vote,
-                            Tag = GlobalStaticConstants.Routes.DELETE_ACTION_NAME,
+                            Tag = Routes.DELETE_ACTION_NAME,
                             Description = $"Пользователь `{actor.UserName}` удалил свой голос за сообщение #{msg_db.Id}",
                         }
                     }
@@ -672,7 +674,7 @@ public class HelpdeskImplementService(
         if (rubricId < 1)
             return res;
 
-        string mem_key = $"{GlobalStaticConstants.TransmissionQueues.RubricForIssuesReadHelpdeskReceive}-{rubricId}";
+        string mem_key = $"{TransmissionQueues.RubricForIssuesReadHelpdeskReceive}-{rubricId}";
         if (cache.TryGetValue(mem_key, out List<RubricIssueHelpdeskModelDB>? rubric))
         {
             res.Response = rubric;
@@ -826,7 +828,7 @@ public class HelpdeskImplementService(
                 SortingDirection = req.Payload.SortingDirection,
                 SortBy = req.Payload.SortBy,
                 TotalRowsCount = await q.CountAsync(cancellationToken: token),
-                Response = [.. data.Select(x => IssueHelpdeskModel.Build(x))]
+                Response = [.. data.Select(IssueHelpdeskModel.Build)]
             }
         };
     }
@@ -837,7 +839,7 @@ public class HelpdeskImplementService(
         if (req.PageSize < 10)
             req.PageSize = 10;
 
-        string ConsoleSegmentNewCacheToken(StatusesDocumentsEnum st) => $"{GlobalStaticConstants.Routes.CONSOLE_CONTROLLER_NAME}:{GlobalStaticConstants.Routes.SEGMENT_CONTROLLER_NAME}:{st}:{req.Payload.ProjectId}:{req.PageSize}:{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.{Guid.NewGuid()}";
+        string ConsoleSegmentNewCacheToken(StatusesDocumentsEnum st) => $"{Routes.CONSOLE_CONTROLLER_NAME}:{Routes.SEGMENT_CONTROLLER_NAME}:{st}:{req.Payload.ProjectId}:{req.PageSize}:{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.{Guid.NewGuid()}";
         string? cacheToken = null;
 
         if (req.PageNum == 0 && string.IsNullOrWhiteSpace(req.Payload.SearchQuery) && string.IsNullOrWhiteSpace(req.Payload.FilterUserId))
@@ -993,7 +995,7 @@ public class HelpdeskImplementService(
                         {
                             IssueId = issue_data.Id,
                             PulseType = PulseIssuesTypesEnum.Executor,
-                            Tag = GlobalStaticConstants.Routes.DELETE_ACTION_NAME,
+                            Tag = Routes.DELETE_ACTION_NAME,
                             Description = msg,
                         },
                         SenderActionUserId = req.SenderActionUserId
@@ -1023,7 +1025,7 @@ public class HelpdeskImplementService(
                             {
                                 IssueId = issue_data.Id,
                                 PulseType = PulseIssuesTypesEnum.Executor,
-                                Tag = GlobalStaticConstants.Routes.DELETE_ACTION_NAME,
+                                Tag = Routes.DELETE_ACTION_NAME,
                                 Description = msg,
                             },
                             SenderActionUserId = req.SenderActionUserId
@@ -1044,7 +1046,7 @@ public class HelpdeskImplementService(
                             {
                                 IssueId = issue_data.Id,
                                 PulseType = PulseIssuesTypesEnum.Executor,
-                                Tag = GlobalStaticConstants.Routes.DELETE_ACTION_NAME,
+                                Tag = Routes.DELETE_ACTION_NAME,
                                 Description = msg,
                             },
                             SenderActionUserId = req.SenderActionUserId
@@ -1246,7 +1248,7 @@ public class HelpdeskImplementService(
                         {
                             IssueId = issue.Id,
                             PulseType = PulseIssuesTypesEnum.Main,
-                            Tag = GlobalStaticConstants.Routes.UPDATE_ACTION_NAME,
+                            Tag = Routes.UPDATE_ACTION_NAME,
                             Description = msg,
                         },
                         SenderActionUserId = issue_upd.SenderActionUserId,
@@ -1280,7 +1282,7 @@ public class HelpdeskImplementService(
     public async Task<TResponseModel<IssueHelpdeskModelDB[]>> IssuesReadAsync(TAuthRequestModel<IssuesReadRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<IssueHelpdeskModelDB[]> res = new();
-        string mem_key = $"{GlobalStaticConstants.TransmissionQueues.IssuesGetHelpdeskReceive}-{string.Join(";", req.Payload.IssuesIds)}/{req.Payload.IncludeSubscribersOnly}({req.SenderActionUserId})";
+        string mem_key = $"{TransmissionQueues.IssuesGetHelpdeskReceive}-{string.Join(";", req.Payload.IssuesIds)}/{req.Payload.IncludeSubscribersOnly}({req.SenderActionUserId})";
         if (cache.TryGetValue(mem_key, out IssueHelpdeskModelDB[]? hd))
         {
             if (hd is null)
@@ -1628,7 +1630,7 @@ public class HelpdeskImplementService(
                             {
                                 IssueId = issue_data.Id,
                                 PulseType = PulseIssuesTypesEnum.Subscribes,
-                                Tag = GlobalStaticConstants.Routes.ADD_ACTION_NAME,
+                                Tag = Routes.ADD_ACTION_NAME,
                                 Description = $"Пользователь `{requested_user.UserName}` добавлен в подписчики",
                             }
                         }
@@ -1662,7 +1664,7 @@ public class HelpdeskImplementService(
                                 {
                                     IssueId = issue_data.Id,
                                     PulseType = PulseIssuesTypesEnum.Subscribes,
-                                    Tag = GlobalStaticConstants.Routes.CHANGE_ACTION_NAME,
+                                    Tag = Routes.CHANGE_ACTION_NAME,
                                     Description = msg,
                                 }
                             }
@@ -1696,7 +1698,7 @@ public class HelpdeskImplementService(
                             {
                                 IssueId = issue_data.Id,
                                 PulseType = PulseIssuesTypesEnum.Subscribes,
-                                Tag = GlobalStaticConstants.Routes.DELETE_ACTION_NAME,
+                                Tag = Routes.DELETE_ACTION_NAME,
                                 Description = $"Пользователь `{requested_user.UserName}` удалён из подписок",
                             }
                         }
@@ -1747,7 +1749,7 @@ public class HelpdeskImplementService(
         PulseIssuesTypesEnum[] _notifiesTypes = [PulseIssuesTypesEnum.Status, PulseIssuesTypesEnum.Subscribes, PulseIssuesTypesEnum.Messages, PulseIssuesTypesEnum.Files];
         if (!_notifiesTypes.Contains(req.Payload.Payload.PulseType))
             return res;
-        else if ((req.Payload.Payload.PulseType == PulseIssuesTypesEnum.Messages || req.Payload.Payload.PulseType == PulseIssuesTypesEnum.Subscribes) && req.Payload.Payload.Tag != GlobalStaticConstants.Routes.ADD_ACTION_NAME)
+        else if ((req.Payload.Payload.PulseType == PulseIssuesTypesEnum.Messages || req.Payload.Payload.PulseType == PulseIssuesTypesEnum.Subscribes) && req.Payload.Payload.Tag != Routes.ADD_ACTION_NAME)
             return res;
 
         IssueHelpdeskModelDB issue_data = issues_data.Response.Single();

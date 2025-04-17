@@ -1,4 +1,5 @@
-﻿@inherits BlazorBusyComponentBaseAuthModel
+﻿@using static SharedLib.GlobalStaticConstantsRoutes
+@inherits BlazorBusyComponentBaseAuthModel
 
 @if (editNomenclature is null)
 {
@@ -45,18 +46,18 @@ else
                     </div>
                     <div class="card mt-3">
                         <div class="card-body">
-                            <FilesContextViewComponent ApplicationsNames="@([GlobalStaticConstants.Routes.NOMENCLATURE_CONTROLLER_NAME])"
+                            <FilesContextViewComponent ApplicationsNames="@([Routes.NOMENCLATURE_CONTROLLER_NAME])"
                                                        Title="Файлы"
-                                                       PropertyName="@GlobalStaticConstants.Routes.ATTACHMENT_CONTROLLER_NAME"
-                                                       PrefixPropertyName="@GlobalStaticConstants.Routes.USER_CONTROLLER_NAME"
+                                                       PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
+                                                       PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
                                                        OwnerPrimaryKey="NomenclatureId"
                                                        @ref="filesViewRef"
                                                        ManageMode="true" />
                             <hr />
-                            <TagsViewComponent ApplicationsNames="@([GlobalStaticConstants.Routes.NOMENCLATURE_CONTROLLER_NAME])"
+                            <TagsViewComponent ApplicationsNames="@([Routes.NOMENCLATURE_CONTROLLER_NAME])"
                                                ManageMode="true"
-                                               PrefixPropertyName="@GlobalStaticConstants.Routes.DEFAULT_CONTROLLER_NAME"
-                                               PropertyName="@GlobalStaticConstants.Routes.METADATA_CONTROLLER_NAME"
+                                               PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
+                                               PropertyName="@Routes.METADATA_CONTROLLER_NAME"
                                                Title="Теги"
                                                OwnerPrimaryKey="@NomenclatureId" />
                         </div>

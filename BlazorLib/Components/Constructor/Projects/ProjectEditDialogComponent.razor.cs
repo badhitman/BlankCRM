@@ -8,6 +8,7 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 using static SharedLib.GlobalStaticConstants;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Constructor.Projects;
 

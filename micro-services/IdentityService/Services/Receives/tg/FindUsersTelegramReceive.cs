@@ -15,7 +15,7 @@ public class FindUsersTelegramReceive(IIdentityTools identityRepo)
     : IResponseReceive<FindRequestModel?, TPaginationResponseModel<TelegramUserViewModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.FindUsersTelegramReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindUsersTelegramReceive;
 
     /// <summary>
     /// Telegram пользователи (сохранённые).

@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class SetValueFieldSessionDocumentDataReceive(IConstructorService conService) : IResponseReceive<SetValueFieldDocumentDataModel?, TResponseModel<SessionOfDocumentDataModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetValueFieldSessionDocumentDataReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetValueFieldSessionDocumentDataReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleActionAsync(SetValueFieldDocumentDataModel? payload, CancellationToken token = default)

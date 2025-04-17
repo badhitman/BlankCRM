@@ -15,7 +15,7 @@ public class TelegramJoinAccountConfirmReceive(IIdentityTools identityRepo, ILog
     : IResponseReceive<TelegramJoinAccountConfirmModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.TelegramJoinAccountConfirmReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountConfirmReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramJoinAccountConfirmModel? confirm, CancellationToken token = default)

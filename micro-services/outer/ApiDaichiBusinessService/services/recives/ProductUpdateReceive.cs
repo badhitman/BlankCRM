@@ -14,7 +14,7 @@ public class ProductUpdateReceive(IDaichiBusinessApiService daichiRepo)
     : IResponseReceive<ProductDaichiModelDB?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProductUpdateDaichiReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProductUpdateDaichiReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ProductDaichiModelDB? req = null, CancellationToken token = default)

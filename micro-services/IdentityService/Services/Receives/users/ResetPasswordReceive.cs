@@ -19,7 +19,7 @@ public class ResetPasswordReceive(IIdentityTools idRepo, ILogger<ResetPasswordRe
     /// Сбрасывает пароль на указанный
     /// после проверки заданного сброса пароля.
     /// </summary>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ResetPasswordForUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ResetPasswordForUserReceive;
 
     /// <summary>
     /// Сбрасывает пароль на указанный

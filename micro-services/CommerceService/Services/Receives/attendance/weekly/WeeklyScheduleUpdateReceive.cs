@@ -16,7 +16,7 @@ public class WeeklyScheduleUpdateReceive(ICommerceService commerceRepo, ILogger<
     /// <summary>
     /// Обновление WorkSchedule
     /// </summary>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.WeeklyScheduleUpdateCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.WeeklyScheduleUpdateCommerceReceive;
 
     /// <summary>
     /// Обновление WorkSchedule

@@ -1,4 +1,8 @@
-﻿using System.Collections.Immutable;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;

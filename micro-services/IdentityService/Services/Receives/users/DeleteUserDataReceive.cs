@@ -15,7 +15,7 @@ public class DeleteUserDataReceive(IIdentityTools idRepo, ILogger<AddPasswordFor
     : IResponseReceive<DeleteUserDataRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.DeleteUserDataReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteUserDataReceive;
 
     /// <summary>
     /// Удалить Identity данные пользователя

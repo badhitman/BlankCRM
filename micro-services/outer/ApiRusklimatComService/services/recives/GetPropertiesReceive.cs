@@ -14,7 +14,7 @@ public class GetPropertiesReceive(IRusklimatComApiService rusklimatRepo)
     : IResponseReceive<object?, TResponseModel<PropertiesRusklimatResponseModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetPropertiesRusklimatReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetPropertiesRusklimatReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<PropertiesRusklimatResponseModel>?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)

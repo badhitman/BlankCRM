@@ -15,7 +15,7 @@ public class SetLockUserReceive(IIdentityTools idRepo, ILogger<SetLockUserReceiv
     : IResponseReceive<IdentityBooleanModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetLockUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetLockUserReceive;
 
     /// <summary>
     /// Установить блокировку пользователю

@@ -15,7 +15,7 @@ public class ChangePasswordForUserReceive(IIdentityTools idRepo, ILogger<ChangeP
     : IResponseReceive<IdentityChangePasswordModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ChangePasswordToUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ChangePasswordToUserReceive;
 
     /// <summary>
     /// Изменяет пароль пользователя после подтверждения правильности указанного currentPassword

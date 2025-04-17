@@ -17,7 +17,7 @@ public class OfferDeleteReceive(ICommerceService commerceRepo, ILogger<OfferDele
     /// <summary>
     /// Удалить оффер
     /// </summary>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OfferDeleteCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OfferDeleteCommerceReceive;
 
     /// <summary>
     /// Удалить оффер

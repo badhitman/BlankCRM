@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class GetMembersOfProjectReceive(IConstructorService conService) : IResponseReceive<int, TResponseModel<EntryAltModel[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetMembersOfProjectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetMembersOfProjectReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryAltModel[]>?> ResponseHandleActionAsync(int req, CancellationToken token = default)

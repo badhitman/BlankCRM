@@ -15,7 +15,7 @@ public class UpdateUserDetailsReceive(IIdentityTools idRepo, ILogger<UpdateUserD
     : IResponseReceive<IdentityDetailsModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.UpdateUserDetailsReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateUserDetailsReceive;
 
     /// <summary>
     /// Обновить пользователю поля: FirstName и LastName

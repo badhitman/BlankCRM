@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class GetTabOfDocumentSchemeReceive(IConstructorService conService) : IResponseReceive<int, TResponseModel<TabOfDocumentSchemeConstructorModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetTabOfDocumentSchemeReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetTabOfDocumentSchemeReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(int payload, CancellationToken token = default)

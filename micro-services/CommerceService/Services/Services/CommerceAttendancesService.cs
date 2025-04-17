@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace CommerceService;
 
@@ -96,7 +97,7 @@ public partial class CommerceImplementService : ICommerceService
         List<RecordsAttendanceModelDB> recordsForAdd = [.. records.Select(x => new RecordsAttendanceModelDB()
         {
             AuthorIdentityUserId = workSchedules.SenderActionUserId,
-            ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME,
+            ContextName = Routes.ATTENDANCES_CONTROLLER_NAME,
             DateExecute = x.Date,
             StartPart = TimeOnly.FromTimeSpan(x.StartPart),
             EndPart = TimeOnly.FromTimeSpan(x.EndPart),
@@ -137,7 +138,7 @@ public partial class CommerceImplementService : ICommerceService
         WorkFindRequestModel req = new()
         {
             OffersFilter = [workSchedules.Payload.Offer.Id],
-            ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME,
+            ContextName = Routes.ATTENDANCES_CONTROLLER_NAME,
             StartDate = records.Min(x => x.Date),
             EndDate = records.Max(x => x.Date),
         };
@@ -232,7 +233,7 @@ public partial class CommerceImplementService : ICommerceService
                     Description = $"Бронь: {string.Join(";", recordsForAdd.Select(x => x.ToString()))};",
                     IssueId = issue.Response,
                     PulseType = PulseIssuesTypesEnum.OrderAttendance,
-                    Tag = GlobalStaticConstants.Routes.CREATE_ACTION_NAME,
+                    Tag = Routes.CREATE_ACTION_NAME,
                 },
                 SenderActionUserId = workSchedules.SenderActionUserId,
             }
@@ -333,7 +334,7 @@ public partial class CommerceImplementService : ICommerceService
                                 Description = $"Запись удалена - {orderAttendanceDB}",
                                 IssueId = orderAttendanceDB.HelpdeskId.Value,
                                 PulseType = PulseIssuesTypesEnum.OrderAttendance,
-                                Tag = GlobalStaticConstants.Routes.DELETE_ACTION_NAME,
+                                Tag = Routes.DELETE_ACTION_NAME,
                             },
                             SenderActionUserId = req.SenderActionUserId,
                         }
@@ -409,7 +410,7 @@ public partial class CommerceImplementService : ICommerceService
                     Description = "",
                     IssueId = req.Payload.DocumentId,
                     PulseType = PulseIssuesTypesEnum.OrderAttendance,
-                    Tag = GlobalStaticConstants.Routes.CHANGE_ACTION_NAME,
+                    Tag = Routes.CHANGE_ACTION_NAME,
                 },
                 SenderActionUserId = req.SenderActionUserId,
             }
@@ -421,14 +422,14 @@ public partial class CommerceImplementService : ICommerceService
             context.UpdateRange(ordersDb);
             //
             reqPulse.Payload.Payload.Description += $"Отмена брони: {string.Join(";", ordersDb.Select(x => x.ToString()))};";
-            reqPulse.Payload.Payload.Tag = GlobalStaticConstants.Routes.CANCEL_ACTION_NAME;
+            reqPulse.Payload.Payload.Tag = Routes.CANCEL_ACTION_NAME;
         }
         else
         {
             WorkFindRequestModel get_balance_req = new()
             {
                 OffersFilter = ordersDb.Select(x => x.OfferId).Distinct().ToArray(),
-                ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME,
+                ContextName = Routes.ATTENDANCES_CONTROLLER_NAME,
                 StartDate = ordersDb.Min(x => x.DateExecute),
                 EndDate = ordersDb.Max(x => x.DateExecute),
             };
@@ -460,7 +461,7 @@ public partial class CommerceImplementService : ICommerceService
             }
 
             reqPulse.Payload.Payload.Description += $"Восстановление записей/брони: {string.Join(";", ordersDb.Select(x => x.ToString()))};";
-            reqPulse.Payload.Payload.Tag = GlobalStaticConstants.Routes.SET_ACTION_NAME;
+            reqPulse.Payload.Payload.Tag = Routes.SET_ACTION_NAME;
         }
         await HelpdeskRepo.PulsePushAsync(reqPulse, false, token);
         context.RemoveRange(offersLocked);

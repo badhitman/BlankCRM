@@ -15,7 +15,7 @@ public class ResetAuthenticatorKeyReceive(IIdentityTools idRepo, ILogger<ResetAu
     : IResponseReceive<string?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ResetAuthenticatorKeyReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ResetAuthenticatorKeyReceive;
 
     /// <summary>
     /// Сбрасывает ключ аутентификации для пользователя.

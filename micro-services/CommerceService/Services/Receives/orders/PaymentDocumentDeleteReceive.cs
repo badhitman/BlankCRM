@@ -15,7 +15,7 @@ public class PaymentDocumentDeleteReceive(ICommerceService commerceRepo, ILogger
     : IResponseReceive<TAuthRequestModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.PaymentDocumentDeleteCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PaymentDocumentDeleteCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)

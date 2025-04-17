@@ -15,7 +15,7 @@ public class ConfirmUserEmailCodeIdentityReceive(IIdentityTools IdentityRepo, IL
     : IResponseReceive<UserCodeModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ConfirmUserEmailCodeIdentityReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ConfirmUserEmailCodeIdentityReceive;
 
     /// <summary>
     /// Проверяет, соответствует ли токен подтверждения электронной почты указанному пользователю.

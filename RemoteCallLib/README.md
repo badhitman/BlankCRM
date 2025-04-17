@@ -10,7 +10,7 @@
 public class UpdateTelegramUserReceive(ITelegramWebService tgWebRepo, ILogger<UpdateTelegramUserReceive> _logger)
     : IResponseReceive<CheckTelegramUserHandleModel?, CheckTelegramUserModel?>
 {
-  public static string QueueName => GlobalStaticConstants.TransmissionQueues.UpdateTelegramUserReceive;
+  public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateTelegramUserReceive;
   public async Task<TResponseModel<CheckTelegramUserModel?>> ResponseHandleAction(CheckTelegramUserHandleModel? user)
   {
     ... код обработчика ...
@@ -19,7 +19,7 @@ public class UpdateTelegramUserReceive(ITelegramWebService tgWebRepo, ILogger<Up
 public class UpdateTelegramMainUserMessageReceive(ITelegramWebService tgWebRepo, ILogger<UpdateTelegramMainUserMessageReceive> _logger)
     : IResponseReceive<MainUserMessageModel?, object?>
 {
-  public static string QueueName => GlobalStaticConstants.TransmissionQueues.UpdateTelegramMainUserMessageReceive;
+  public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateTelegramMainUserMessageReceive;
   public async Task<TResponseModel<object?>> ResponseHandleAction(MainUserMessageModel? setMainMessage)
   {
     ... код обработчика ...
@@ -28,7 +28,7 @@ public class UpdateTelegramMainUserMessageReceive(ITelegramWebService tgWebRepo,
 public class TelegramJoinAccountDeleteReceive(ITelegramWebService tgWebRepo, ILogger<TelegramJoinAccountDeleteReceive> _logger) 
     : IResponseReceive<long, object?>
 {
-  public static string QueueName => GlobalStaticConstants.TransmissionQueues.TelegramJoinAccountDeleteReceive;
+  public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountDeleteReceive;
   public async Task<TResponseModel<object?>> ResponseHandleAction(long payload)
   {
     ... код обработчика ...
@@ -37,7 +37,7 @@ public class TelegramJoinAccountDeleteReceive(ITelegramWebService tgWebRepo, ILo
 public class TelegramJoinAccountConfirmReceive(ITelegramWebService tgWebRepo, ILogger<TelegramJoinAccountConfirmReceive> _logger)
     : IResponseReceive<TelegramJoinAccountConfirmModel?, object?>
 {
-  public static string QueueName => GlobalStaticConstants.TransmissionQueues.TelegramJoinAccountConfirmReceive;
+  public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountConfirmReceive;
   public async Task<TResponseModel<object?>> ResponseHandleAction(TelegramJoinAccountConfirmModel? confirm)
   {
     ... код обработчика ...
@@ -46,7 +46,7 @@ public class TelegramJoinAccountConfirmReceive(ITelegramWebService tgWebRepo, IL
 public class GetWebConfigReceive(IOptions<WebConfigModel> webConfig)
     : IResponseReceive<object?, WebConfigModel?>
 {
-  public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetWebConfigReceive;
+  public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetWebConfigReceive;
   public Task<TResponseModel<WebConfigModel?>> ResponseHandleAction(object? payload = null)
   {
     ... код обработчика ...
@@ -55,7 +55,7 @@ public class GetWebConfigReceive(IOptions<WebConfigModel> webConfig)
 public class GetTelegramUserReceive(ITelegramWebService tgWebRepo, ILogger<GetTelegramUserReceive> _logger)
     : IResponseReceive<long, TelegramUserBaseModelDb?>
 {
-  public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetTelegramUserReceive;
+  public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetTelegramUserReceive;
   public async Task<TResponseModel<TelegramUserBaseModelDb?>> ResponseHandleAction(long payload)
   {
     ... код обработчика ...
@@ -68,7 +68,7 @@ public class GetTelegramUserReceive(ITelegramWebService tgWebRepo, ILogger<GetTe
 public class SetWebConfigReceive(WebConfigModel webConfig, ILogger<SetWebConfigReceive> _logger)
     : IResponseReceive<WebConfigModel?, object?>
 {
-  public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetWebConfigReceive;
+  public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetWebConfigReceive;
   public Task<TResponseModel<object?>> ResponseHandleAction(WebConfigModel? payload)
   {
     ... код обработчика ...
@@ -77,7 +77,7 @@ public class SetWebConfigReceive(WebConfigModel webConfig, ILogger<SetWebConfigR
 public class SendTextMessageTelegramReceive(ITelegramBotClient _botClient, IWebRemoteTransmissionService webRemoteCall, ILogger<SendTextMessageTelegramReceive> _logger) 
     : IResponseReceive<SendTextMessageTelegramBotModel?, int?>
 {
-  public static string QueueName => GlobalStaticConstants.TransmissionQueues.SendTextMessageTelegramReceive;
+  public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SendTextMessageTelegramReceive;
   public async Task<TResponseModel<int?>> ResponseHandleAction(SendTextMessageTelegramBotModel? message)
   {
     ... код обработчика ...
@@ -86,7 +86,7 @@ public class SendTextMessageTelegramReceive(ITelegramBotClient _botClient, IWebR
 public class GetBotUsernameReceive(ITelegramBotClient _botClient, ILogger<GetBotUsernameReceive> _logger)
     : IResponseReceive<object?, string?>
 {
-  public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetBotUsernameReceive;
+  public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetBotUsernameReceive;
   public async Task<TResponseModel<string?>> ResponseHandleAction(object? payload = null)
   {
     ... код обработчика ...
@@ -126,15 +126,15 @@ public class TransmissionTelegramService(IRabbitClient rabbitClient) : ITelegram
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<string?>> GetBotUsername()
-        => await rabbitClient.MqRemoteCall<string?>(GlobalStaticConstants.TransmissionQueues.GetBotUsernameReceive);
+        => await rabbitClient.MqRemoteCall<string?>(GlobalStaticConstantsTransmission.TransmissionQueues.GetBotUsernameReceive);
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int?>> SendTextMessageTelegram(SendTextMessageTelegramBotModel message_telegram)
-        => await rabbitClient.MqRemoteCall<int?>(GlobalStaticConstants.TransmissionQueues.SendTextMessageTelegramReceive, message_telegram);
+        => await rabbitClient.MqRemoteCall<int?>(GlobalStaticConstantsTransmission.TransmissionQueues.SendTextMessageTelegramReceive, message_telegram);
 
     /// <inheritdoc/>
     public async Task<TResponseModel<object?>> SetWebConfig(WebConfigModel webConf)
-        => await rabbitClient.MqRemoteCall<object?>(GlobalStaticConstants.TransmissionQueues.SetWebConfigReceive, webConf);
+        => await rabbitClient.MqRemoteCall<object?>(GlobalStaticConstantsTransmission.TransmissionQueues.SetWebConfigReceive, webConf);
 }
 ```
 
@@ -147,27 +147,27 @@ public class TransmissionWebService(IRabbitClient rabbitClient) : IWebRemoteTran
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<object?>> TelegramJoinAccountConfirmToken(TelegramJoinAccountConfirmModel req)
-        => await rabbitClient.MqRemoteCall<object?>(GlobalStaticConstants.TransmissionQueues.TelegramJoinAccountConfirmReceive, req);
+        => await rabbitClient.MqRemoteCall<object?>(GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountConfirmReceive, req);
 
     /// <inheritdoc/>
     public async Task<TResponseModel<CheckTelegramUserModel?>> CheckTelegramUser(CheckTelegramUserHandleModel user)
-        => await rabbitClient.MqRemoteCall<CheckTelegramUserModel?>(GlobalStaticConstants.TransmissionQueues.UpdateTelegramUserReceive, user);
+        => await rabbitClient.MqRemoteCall<CheckTelegramUserModel?>(GlobalStaticConstantsTransmission.TransmissionQueues.UpdateTelegramUserReceive, user);
 
     /// <inheritdoc/>
     public async Task<TResponseModel<object?>> TelegramJoinAccountDelete(long telegramId)
-        => await rabbitClient.MqRemoteCall<object?>(GlobalStaticConstants.TransmissionQueues.TelegramJoinAccountDeleteReceive, telegramId);
+        => await rabbitClient.MqRemoteCall<object?>(GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountDeleteReceive, telegramId);
 
     /// <inheritdoc/>
     public async Task<TResponseModel<WebConfigModel?>> GetWebConfig()
-        => await rabbitClient.MqRemoteCall<WebConfigModel?>(GlobalStaticConstants.TransmissionQueues.GetWebConfigReceive);
+        => await rabbitClient.MqRemoteCall<WebConfigModel?>(GlobalStaticConstantsTransmission.TransmissionQueues.GetWebConfigReceive);
 
     /// <inheritdoc/>
     public async Task<TResponseModel<object?>> UpdateTelegramMainUserMessage(MainUserMessageModel setMainMessage)
-        => await rabbitClient.MqRemoteCall<object?>(GlobalStaticConstants.TransmissionQueues.UpdateTelegramMainUserMessageReceive, setMainMessage);
+        => await rabbitClient.MqRemoteCall<object?>(GlobalStaticConstantsTransmission.TransmissionQueues.UpdateTelegramMainUserMessageReceive, setMainMessage);
 
     /// <inheritdoc/>
     public async Task<TResponseModel<TelegramUserBaseModelDb?>> GetTelegramUser(long telegramUserId)
-        => await rabbitClient.MqRemoteCall<TelegramUserBaseModelDb?>(GlobalStaticConstants.TransmissionQueues.GetTelegramUserReceive, telegramUserId);
+        => await rabbitClient.MqRemoteCall<TelegramUserBaseModelDb?>(GlobalStaticConstantsTransmission.TransmissionQueues.GetTelegramUserReceive, telegramUserId);
 }
 ```
 

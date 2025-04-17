@@ -64,7 +64,7 @@ public class RabbitClient : IRabbitClient
         using Activity? activity = greeterActivitySource.StartActivity($"OTel.{queue}");
 
         Meter greeterMeter = new($"OTel.{AppName}", "1.0.0");
-        Counter<long> countGreetings = greeterMeter.CreateCounter<long>(GlobalStaticConstants.Routes.DURATION_ACTION_NAME, description: "Длительность в мс.");
+        Counter<long> countGreetings = greeterMeter.CreateCounter<long>(GlobalStaticConstantsRoutes.Routes.DURATION_ACTION_NAME, description: "Длительность в мс.");
 
         activity?.Start();
 
@@ -95,10 +95,10 @@ public class RabbitClient : IRabbitClient
             consumer.Received -= MessageReceivedEvent;
             string content = Encoding.UTF8.GetString(e.Body.ToArray());
 
-            if (!content.Contains(GlobalStaticConstants.Routes.PASSWORD_CONTROLLER_NAME, StringComparison.OrdinalIgnoreCase))
+            if (!content.Contains(GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME, StringComparison.OrdinalIgnoreCase))
                 activity?.SetBaggage(nameof(content), content);
             else
-                activity?.SetBaggage(nameof(content), $"MUTE: `{GlobalStaticConstants.Routes.PASSWORD_CONTROLLER_NAME}` - contains");
+                activity?.SetBaggage(nameof(content), $"MUTE: `{GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME}` - contains");
 
             try
             {

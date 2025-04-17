@@ -14,7 +14,7 @@ public class GetRoleReceive(IIdentityTools idRepo)
     : IResponseReceive<string?, TResponseModel<RoleInfoModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetRoleReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetRoleReceive;
 
     /// <summary>
     /// Get Role (by id)

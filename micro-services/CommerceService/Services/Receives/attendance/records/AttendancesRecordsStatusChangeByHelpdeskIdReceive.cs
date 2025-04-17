@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 public class AttendancesRecordsStatusChangeByHelpdeskIdReceive(ICommerceService commRepo) : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrdersAttendancesStatusesChangeByHelpdeskDocumentIdReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrdersAttendancesStatusesChangeByHelpdeskDocumentIdReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestModel<StatusChangeRequestModel>? req, CancellationToken token = default)

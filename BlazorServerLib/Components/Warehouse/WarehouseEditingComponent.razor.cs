@@ -7,6 +7,7 @@ using BlazorWebLib.Components.Commerce;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorWebLib.Components.Warehouse;
 
@@ -83,7 +84,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{GlobalStaticConstants.Routes.WAREHOUSE_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.BODY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={GlobalStaticConstants.Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={Id}";
+        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{Routes.WAREHOUSE_CONTROLLER_NAME}/{Routes.BODY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={Id}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
         await SetBusyAsync();

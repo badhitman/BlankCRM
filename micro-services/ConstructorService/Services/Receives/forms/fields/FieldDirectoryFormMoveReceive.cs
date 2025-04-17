@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class FieldDirectoryFormMoveReceive(IConstructorService conService) : IResponseReceive<TAuthRequestModel<MoveObjectModel>?, TResponseModel<FormConstructorModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.FieldDirectoryFormMoveReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FieldDirectoryFormMoveReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)

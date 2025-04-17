@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
+
 namespace SharedLib;
 
 /// <summary>

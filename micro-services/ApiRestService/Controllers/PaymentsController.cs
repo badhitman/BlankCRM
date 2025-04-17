@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace ApiRestService.Controllers;
 
@@ -21,7 +22,7 @@ public class PaymentsController(ICommerceTransmission commRepo) : ControllerBase
     /// <remarks>
     /// Роль: <see cref="ExpressApiRolesEnum.PaymentsWriteCommerce"/>
     /// </remarks>
-    [HttpPost($"/{GlobalStaticConstants.Routes.API_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.PAYMENT_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.UPDATE_ACTION_NAME}"), LoggerLog]
+    [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.PAYMENT_CONTROLLER_NAME}/{Routes.UPDATE_ACTION_NAME}"), LoggerLog]
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     public async Task<TResponseModel<int>> PaymentDocumentUpdate(PaymentDocumentBaseModel payment)
         => await commRepo.PaymentDocumentUpdateAsync(new() { Payload = payment, SenderActionUserId = GlobalStaticConstants.Roles.System });
@@ -32,7 +33,7 @@ public class PaymentsController(ICommerceTransmission commRepo) : ControllerBase
     /// <remarks>
     /// Роль: <see cref="ExpressApiRolesEnum.PaymentsWriteCommerce"/>
     /// </remarks>
-    [HttpDelete($"/{GlobalStaticConstants.Routes.API_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.PAYMENT_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.DELETE_ACTION_NAME}/{{payment_id}}"), LoggerLog]
+    [HttpDelete($"/{Routes.API_CONTROLLER_NAME}/{Routes.PAYMENT_CONTROLLER_NAME}/{Routes.DELETE_ACTION_NAME}/{{payment_id}}"), LoggerLog]
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     public async Task<ResponseBaseModel> PaymentDocumentDelete([FromRoute] int payment_id)
         => await commRepo.PaymentDocumentDeleteAsync(new() { Payload = payment_id, SenderActionUserId = GlobalStaticConstants.Roles.System });

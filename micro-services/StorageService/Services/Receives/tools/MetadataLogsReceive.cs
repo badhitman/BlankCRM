@@ -15,7 +15,7 @@ public class MetadataLogsReceive(ISerializeStorage storeRepo)
     : IResponseReceive<PeriodDatesTimesModel?, TResponseModel<LogsMetadataResponseModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.MetadataLogsReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MetadataLogsReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<LogsMetadataResponseModel>?> ResponseHandleActionAsync(PeriodDatesTimesModel? payload, CancellationToken token = default)

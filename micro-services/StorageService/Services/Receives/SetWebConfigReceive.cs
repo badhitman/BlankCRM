@@ -14,7 +14,7 @@ namespace Transmission.Receives.storage;
 public class SetWebConfigReceive(WebConfigModel webConfig, ILogger<SetWebConfigReceive> _logger) : IResponseReceive<WebConfigModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetWebConfigStorageReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetWebConfigStorageReceive;
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel?> ResponseHandleActionAsync(WebConfigModel? payload, CancellationToken token = default)

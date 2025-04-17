@@ -54,7 +54,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     {
         await ReadCurrentUser();
 
-        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{GlobalStaticConstants.Routes.CONSTRUCTOR_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.DIRECTORY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={GlobalStaticConstants.Routes.SET_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={SelectedDirectoryId}";
+        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{GlobalStaticConstantsRoutes.Routes.CONSTRUCTOR_CONTROLLER_NAME}/{GlobalStaticConstantsRoutes.Routes.DIRECTORY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={GlobalStaticConstantsRoutes.Routes.SET_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={SelectedDirectoryId}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
     }
 

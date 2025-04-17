@@ -16,7 +16,7 @@ public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, ILogg
     /// <summary>
     /// Обновление WorkScheduleCalendar
     /// </summary>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.CreateAttendanceRecordsCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CreateAttendanceRecordsCommerceReceive;
 
     /// <summary>
     /// Обновление WorkScheduleCalendar

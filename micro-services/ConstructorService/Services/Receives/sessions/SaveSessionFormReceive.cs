@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class SaveSessionFormReceive(IConstructorService conService) : IResponseReceive<SaveConstructorSessionRequestModel?, TResponseModel<ValueDataForSessionOfDocumentModelDB[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SaveSessionFormReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SaveSessionFormReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>?> ResponseHandleActionAsync(SaveConstructorSessionRequestModel? payload, CancellationToken token = default)

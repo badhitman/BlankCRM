@@ -13,7 +13,7 @@ public class ClearTempKladrReceive(ILogger<ClearTempKladrReceive> LoggerRepo, IK
     : IResponseReceive<object?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ClearTempKladrReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ClearTempKladrReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(object? req, CancellationToken token = default)

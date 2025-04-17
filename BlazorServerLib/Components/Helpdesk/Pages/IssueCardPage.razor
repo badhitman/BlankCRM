@@ -3,6 +3,7 @@
 @using BlazorWebLib.Components.Commerce
 @using BlazorWebLib.Components.Helpdesk.issue
 @using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize]
@@ -63,9 +64,9 @@ else
                                             @if (ShowingAttachmentsIssueArea)
                                             {
                                                 <MudTabPanel Text="Файлы">
-                                                    <FilesContextViewComponent ApplicationsNames="@([GlobalStaticConstants.Routes.ISSUE_CONTROLLER_NAME])"
-                                                                               PropertyName="@GlobalStaticConstants.Routes.ATTACHMENT_CONTROLLER_NAME"
-                                                                               PrefixPropertyName="@GlobalStaticConstants.Routes.USER_CONTROLLER_NAME"
+                                                    <FilesContextViewComponent ApplicationsNames="@([Routes.ISSUE_CONTROLLER_NAME])"
+                                                                               PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
+                                                                               PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
                                                                                OwnerPrimaryKey="Id"
                                                                                Title="Файлы"
                                                                                ManageMode="true" />

@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorWebLib.Components.Helpdesk.issue;
 
@@ -30,7 +31,7 @@ public partial class ChatsWappiIssueComponent : IssueWrapBaseModel
                     Description = $"Отправил сообщение в WhatsApp: {msg.Number}<hr/>{msg.Text}",
                     IssueId = Issue.Id,
                     PulseType = PulseIssuesTypesEnum.Messages,
-                    Tag = GlobalStaticConstants.Routes.WAPPI_CONTROLLER_NAME,
+                    Tag = Routes.WAPPI_CONTROLLER_NAME,
                 },
                 SenderActionUserId = CurrentUserSession!.UserId
             }

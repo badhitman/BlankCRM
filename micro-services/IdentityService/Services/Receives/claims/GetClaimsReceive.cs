@@ -14,7 +14,7 @@ public class GetClaimsReceive(IIdentityTools idRepo)
     : IResponseReceive<ClaimAreaOwnerModel?, List<ClaimBaseModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetClaimsReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetClaimsReceive;
 
     /// <summary>
     /// Get claims

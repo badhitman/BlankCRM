@@ -14,7 +14,7 @@ public class HealthCheckReceive(IFeedsHaierProffRuService haierRepo)
     : IResponseReceive<object?, TResponseModel<List<RabbitMqManagementResponseModel>>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.HealthCheckHaierProffReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.HealthCheckHaierProffReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RabbitMqManagementResponseModel>>?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)

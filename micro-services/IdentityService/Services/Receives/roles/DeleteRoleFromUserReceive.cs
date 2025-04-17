@@ -15,7 +15,7 @@ public class DeleteRoleFromUserReceive(IIdentityTools idRepo, ILogger<DeleteRole
     : IResponseReceive<RoleEmailModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.DeleteRoleFromUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteRoleFromUserReceive;
 
     /// <summary>
     /// Исключить пользователя из роли (лишить пользователя роли)

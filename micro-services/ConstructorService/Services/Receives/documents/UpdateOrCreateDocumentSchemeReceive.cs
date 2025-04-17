@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class UpdateOrCreateDocumentSchemeReceive(IConstructorService conService) : IResponseReceive<TAuthRequestModel<EntryConstructedModel>?, TResponseModel<DocumentSchemeConstructorModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.UpdateOrCreateDocumentSchemeReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateOrCreateDocumentSchemeReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<EntryConstructedModel>? payload, CancellationToken token = default)

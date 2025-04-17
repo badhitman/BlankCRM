@@ -227,7 +227,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{GlobalStaticConstants.Routes.CONSTRUCTOR_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.DIRECTORY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={GlobalStaticConstants.Routes.DEFAULT_CONTROLLER_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={SelectedDirectoryId}";
+        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{GlobalStaticConstantsRoutes.Routes.CONSTRUCTOR_CONTROLLER_NAME}/{GlobalStaticConstantsRoutes.Routes.DIRECTORY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={GlobalStaticConstantsRoutes.Routes.DEFAULT_CONTROLLER_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={SelectedDirectoryId}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
         await SetBusyAsync();

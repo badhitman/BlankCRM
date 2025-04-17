@@ -14,7 +14,7 @@ public class GetAuthenticatorKeyReceive(IIdentityTools idRepo)
     : IResponseReceive<string?, TResponseModel<string?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetAuthenticatorKeyReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetAuthenticatorKeyReceive;
 
     /// <summary>
     /// Ключ аутентификации пользователя.

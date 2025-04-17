@@ -14,7 +14,7 @@ namespace Transmission.Receives.commerce;
 public class RowsForWarehouseDocumentDeleteReceive(ICommerceService commRepo, ILogger<RowsForWarehouseDocumentDeleteReceive> loggerRepo) : IResponseReceive<int[]?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.RowsDeleteFromWarehouseDocumentCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RowsDeleteFromWarehouseDocumentCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)

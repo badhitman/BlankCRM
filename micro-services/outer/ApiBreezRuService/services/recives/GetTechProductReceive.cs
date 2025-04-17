@@ -14,7 +14,7 @@ public class GetTechProductReceive(IBreezRuApiService breezRepo)
     : IResponseReceive<TechRequestBreezModel?, TResponseModel<List<TechProductRealBreezRuModel>>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetTechProductBreezReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetTechProductBreezReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<TechProductRealBreezRuModel>>?> ResponseHandleActionAsync(TechRequestBreezModel? req, CancellationToken token = default)

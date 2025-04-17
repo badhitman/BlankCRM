@@ -18,7 +18,7 @@ public class GenerateEmailConfirmationIdentityReceive(IIdentityTools IdentityRep
     : IResponseReceive<SimpleUserIdentityModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GenerateEmailConfirmationIdentityReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GenerateEmailConfirmationIdentityReceive;
 
     /// <summary>
     /// Создает и отправляет токен подтверждения электронной почты для указанного пользователя.

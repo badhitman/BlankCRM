@@ -13,6 +13,7 @@ using IdentityLib;
 using System.Text;
 using SharedLib;
 using Newtonsoft.Json;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace IdentityService;
 
@@ -34,28 +35,28 @@ public class IdentityTools(
     /// <inheritdoc/>
     public async Task<TResponseModel<string>> CheckToken2FAAsync(CheckToken2FARequestModel req, CancellationToken tokenCan = default)
     {
-        MemCachePrefixModel pref = new(GlobalStaticConstants.Routes.TWOFACTOR_CONTROLLER_NAME, GlobalStaticConstants.Routes.ALIAS_CONTROLLER_NAME);
+        MemCachePrefixModel pref = new(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.ALIAS_CONTROLLER_NAME);
         string? userId = await memCache.GetStringValueAsync(pref, req.UserAlias, tokenCan);
         if (string.IsNullOrWhiteSpace(userId))
             return new() { Messages = [new() { Text = "Алиас пользователя отсутствует!", TypeMessage = ResultTypesEnum.Error }] };
 
         await memCache.RemoveAsync(pref, req.UserAlias, tokenCan);
 
-        string? token = await memCache.GetStringValueAsync(new MemCachePrefixModel(GlobalStaticConstants.Routes.TWOFACTOR_CONTROLLER_NAME, GlobalStaticConstants.Routes.TOKEN_CONTROLLER_NAME), userId, tokenCan);
+        string? token = await memCache.GetStringValueAsync(new MemCachePrefixModel(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.TOKEN_CONTROLLER_NAME), userId, tokenCan);
         if (string.IsNullOrWhiteSpace(token))
             return new() { Messages = [new() { Text = "Токен 2FA отсутствует!", TypeMessage = ResultTypesEnum.Error }] };
 
         if (!req.Token.Equals(token))
             return new() { Messages = [new() { Text = "Токен не верный!", TypeMessage = ResultTypesEnum.Error }] };
 
-        await memCache.RemoveAsync(new MemCachePrefixModel(GlobalStaticConstants.Routes.TWOFACTOR_CONTROLLER_NAME, GlobalStaticConstants.Routes.TOKEN_CONTROLLER_NAME), userId, tokenCan);
+        await memCache.RemoveAsync(new MemCachePrefixModel(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.TOKEN_CONTROLLER_NAME), userId, tokenCan);
         return new() { Response = userId, Messages = [new() { Text = "Токен верный", TypeMessage = ResultTypesEnum.Success }] };
     }
 
     /// <inheritdoc/>
     public async Task<TResponseModel<string>> ReadToken2FAAsync(string userId, CancellationToken token = default)
     {
-        return new() { Response = await memCache.GetStringValueAsync(new MemCachePrefixModel(GlobalStaticConstants.Routes.TWOFACTOR_CONTROLLER_NAME, GlobalStaticConstants.Routes.TOKEN_CONTROLLER_NAME), userId, token) };
+        return new() { Response = await memCache.GetStringValueAsync(new MemCachePrefixModel(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.TOKEN_CONTROLLER_NAME), userId, token) };
     }
 
     /// <inheritdoc/>
@@ -77,10 +78,10 @@ public class IdentityTools(
         if (!string.IsNullOrWhiteSpace(user.Email))
             await mailRepo.SendEmailAsync(user.Email, "Authentication 2FA token", token, token: tokenCan);
 
-        await memCache.SetStringAsync(new MemCachePrefixModel(GlobalStaticConstants.Routes.TWOFACTOR_CONTROLLER_NAME, GlobalStaticConstants.Routes.TOKEN_CONTROLLER_NAME), userId, token, TimeSpan.FromMinutes(5), tokenCan);
+        await memCache.SetStringAsync(new MemCachePrefixModel(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.TOKEN_CONTROLLER_NAME), userId, token, TimeSpan.FromMinutes(5), tokenCan);
 
         string aliasToken = Guid.NewGuid().ToString().Replace("-", "").Replace("{", "").Replace("}", "");
-        await memCache.SetStringAsync(new MemCachePrefixModel(GlobalStaticConstants.Routes.TWOFACTOR_CONTROLLER_NAME, GlobalStaticConstants.Routes.ALIAS_CONTROLLER_NAME), aliasToken, userId, TimeSpan.FromMinutes(5), tokenCan);
+        await memCache.SetStringAsync(new MemCachePrefixModel(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.ALIAS_CONTROLLER_NAME), aliasToken, userId, TimeSpan.FromMinutes(5), tokenCan);
 
         return new() { Response = aliasToken };
     }

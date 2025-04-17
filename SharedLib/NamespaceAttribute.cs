@@ -54,12 +54,14 @@ public partial class NamespaceAttribute : ValidationAttribute
         if (string.IsNullOrEmpty(ns))
             return false;
 
+        Regex MyRegexSystemName = new Regex(GlobalStaticConstants.SYSTEM_NAME_TEMPLATE, RegexOptions.Compiled);
+
         return Mode switch
         {
-            SegmentationsNamespaceModesEnum.BackSlash => Split(ns, Mode).All(x => MyRegexSystemName().IsMatch(x)),
-            SegmentationsNamespaceModesEnum.RightSlash => Split(ns, Mode).All(x => MyRegexSystemName().IsMatch(x)),
-            SegmentationsNamespaceModesEnum.DotOnly => Split(ns, Mode).All(x => MyRegexSystemName().IsMatch(x)),
-            SegmentationsNamespaceModesEnum.Any => Split(ns, Mode).All(x => MyRegexSystemName().IsMatch(x)),
+            SegmentationsNamespaceModesEnum.BackSlash => Split(ns, Mode).All(x => MyRegexSystemName.IsMatch(x)),
+            SegmentationsNamespaceModesEnum.RightSlash => Split(ns, Mode).All(x => MyRegexSystemName.IsMatch(x)),
+            SegmentationsNamespaceModesEnum.DotOnly => Split(ns, Mode).All(x => MyRegexSystemName.IsMatch(x)),
+            SegmentationsNamespaceModesEnum.Any => Split(ns, Mode).All(x => MyRegexSystemName.IsMatch(x)),
             _ => throw new Exception(),
         };
     }
@@ -85,8 +87,6 @@ public partial class NamespaceAttribute : ValidationAttribute
         return SegmentationsSymbolsMyRegex().Replace(raw_name_spice, set_segmentation_symbol);
     }
 
-    [GeneratedRegex(GlobalStaticConstants.SYSTEM_NAME_TEMPLATE, RegexOptions.Compiled)]
-    private static partial Regex MyRegexSystemName();
 
     [GeneratedRegex(@"[\./\\]")]
     public static partial Regex SegmentationsSymbolsMyRegex();

@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class ClearValuesForFieldNameReceive(IConstructorService conService) : IResponseReceive<FormFieldOfSessionModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ClearValuesForFieldNameReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ClearValuesForFieldNameReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(FormFieldOfSessionModel? payload, CancellationToken token = default)

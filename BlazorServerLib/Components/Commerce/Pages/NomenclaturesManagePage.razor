@@ -2,6 +2,7 @@
 @using BlazorWebLib.Components.Helpdesk
 @using BlazorWebLib.Components.Warehouse
 @using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize]
@@ -15,7 +16,7 @@
         <Authorized>
             <MudTabPanel Text="Склады">
                 <MudPaper Class="ma-2" Elevation="3">
-                    <RubricsManageComponent SingleLevelMode="true" ContextName="@GlobalStaticConstants.Routes.WAREHOUSE_CONTROLLER_NAME" />
+                    <RubricsManageComponent SingleLevelMode="true" ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME" />
                 </MudPaper>
             </MudTabPanel>
             <MudTabPanel Text="Поступления">

@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class SetStatusSessionDocumentReceive(IConstructorService conService) : IResponseReceive<SessionStatusModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetStatusSessionDocumentReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetStatusSessionDocumentReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SessionStatusModel? payload, CancellationToken token = default)

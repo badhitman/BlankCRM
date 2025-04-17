@@ -14,7 +14,7 @@ namespace Transmission.Receives.commerce;
 public class OrganizationSetLegalReceive(ICommerceService commerceRepo, ILogger<OrganizationSetLegalReceive> loggerRepo) : IResponseReceive<OrganizationLegalModel?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrganizationSetLegalCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrganizationSetLegalCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(OrganizationLegalModel? org, CancellationToken token = default)

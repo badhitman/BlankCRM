@@ -14,7 +14,7 @@ public class BankDetailsDeleteReceive(ICommerceService commerceRepo)
     : IResponseReceive<TAuthRequestModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.BankDetailsDeleteCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.BankDetailsDeleteCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)

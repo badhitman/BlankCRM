@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 using DbcLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace ApiDaichiBusinessService;
 
@@ -24,7 +25,7 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
 #pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
 {
     /// <inheritdoc/>
-    public override string NameTemplateMQ => Path.Combine(GlobalStaticConstants.TransmissionQueueNamePrefix, $"{GlobalStaticConstants.Routes.DAICHI_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.SYNCHRONIZATION_CONTROLLER_NAME}");
+    public override string NameTemplateMQ => Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}");
 
     /// <inheritdoc/>
     public override async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)

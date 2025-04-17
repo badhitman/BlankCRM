@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace ApiRestService.Controllers;
 
@@ -25,7 +26,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// <remarks>
     /// Роли: <see cref="ExpressApiRolesEnum.OrganizationsReadCommerce"/>, <see cref="ExpressApiRolesEnum.OrganizationsWriteCommerce"/>
     /// </remarks>
-    [HttpPut($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.READ_ACTION_NAME}")]
+    [HttpPut($"/api/{Routes.ORGANIZATIONS_CONTROLLER_NAME}/{Routes.READ_ACTION_NAME}")]
     public async Task<TResponseModel<OrganizationModelDB[]>> ReadOrganizations(int[] organizations_ids)
         => await commRepo.OrganizationsReadAsync(organizations_ids);
 
@@ -35,7 +36,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// <remarks>
     /// Роли: <see cref="ExpressApiRolesEnum.OrganizationsReadCommerce"/>, <see cref="ExpressApiRolesEnum.OrganizationsWriteCommerce"/>
     /// </remarks>
-    [HttpPut($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.SELECT_ACTION_NAME}")]
+    [HttpPut($"/api/{Routes.ORGANIZATIONS_CONTROLLER_NAME}/{Routes.SELECT_ACTION_NAME}")]
     public async Task<TPaginationResponseModel<OrganizationModelDB>> OrganizationsSelect(TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req)
         => await commRepo.OrganizationsSelectAsync(req);
 
@@ -45,7 +46,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// <remarks>
     /// Роли: <see cref="ExpressApiRolesEnum.OrganizationsReadCommerce"/>, <see cref="ExpressApiRolesEnum.OrganizationsWriteCommerce"/>
     /// </remarks>
-    [HttpPut($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.ADDRESSES_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.READ_ACTION_NAME}")]
+    [HttpPut($"/api/{Routes.ORGANIZATIONS_CONTROLLER_NAME}/{Routes.ADDRESSES_CONTROLLER_NAME}-{Routes.READ_ACTION_NAME}")]
     public async Task<TResponseModel<OfficeOrganizationModelDB[]>> OfficesOrganizationsRead(int[] ids)
         => await commRepo.OfficesOrganizationsReadAsync(ids);
 
@@ -57,7 +58,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// Роль: <see cref="ExpressApiRolesEnum.OrganizationsWriteCommerce"/>.
     /// Если организация находиться в статусе запроса изменения реквизитов - этот признак обнуляется.
     /// </remarks>
-    [HttpPost($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.LEGAL_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.UPDATE_ACTION_NAME}"), LoggerLog]
+    [HttpPost($"/api/{Routes.ORGANIZATIONS_CONTROLLER_NAME}/{Routes.LEGAL_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}"), LoggerLog]
 #if DEBUG
     [AllowAnonymous]
 #else
@@ -72,7 +73,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// <remarks>
     /// Роль: <see cref="ExpressApiRolesEnum.OrganizationsWriteCommerce"/>
     /// </remarks>
-    [HttpPost($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.UPDATE_ACTION_NAME}"), LoggerLog]
+    [HttpPost($"/api/{Routes.ORGANIZATIONS_CONTROLLER_NAME}/{Routes.UPDATE_ACTION_NAME}"), LoggerLog]
 #if DEBUG
     [AllowAnonymous]
 #else
@@ -87,7 +88,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// <remarks>
     /// Роль: <see cref="ExpressApiRolesEnum.OrganizationsWriteCommerce"/>
     /// </remarks>
-    [HttpPost($"/api/{GlobalStaticConstants.Routes.ORGANIZATIONS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.OFFICE_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.UPDATE_ACTION_NAME}"), LoggerLog]
+    [HttpPost($"/api/{Routes.ORGANIZATIONS_CONTROLLER_NAME}/{Routes.OFFICE_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}"), LoggerLog]
 #if DEBUG
     [AllowAnonymous]
 #else

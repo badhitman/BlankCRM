@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLib;
 using Microsoft.AspNetCore.Http.Extensions;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace ApiRestService.Controllers;
 
@@ -22,7 +23,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
     /// <remarks>
     /// Роли: <see cref="ExpressApiRolesEnum.OrdersReadCommerce"/>, <see cref="ExpressApiRolesEnum.OrdersWriteCommerce"/>
     /// </remarks>
-    [HttpPut($"/api/{GlobalStaticConstants.Routes.ORDERS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.SELECT_ACTION_NAME}")]
+    [HttpPut($"/api/{Routes.ORDERS_CONTROLLER_NAME}/{Routes.SELECT_ACTION_NAME}")]
 #if !DEBUG
     [LoggerNolog]
 #endif
@@ -35,7 +36,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
     /// <remarks>
     /// Роль: <see cref="ExpressApiRolesEnum.OrdersWriteCommerce"/>
     /// </remarks>
-    [HttpPost($"/api/{GlobalStaticConstants.Routes.ORDER_CONTROLLER_NAME}/{{OrderId}}/{GlobalStaticConstants.Routes.ATTACHMENT_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.ADD_ACTION_NAME}")]
+    [HttpPost($"/api/{Routes.ORDER_CONTROLLER_NAME}/{{OrderId}}/{Routes.ATTACHMENT_CONTROLLER_NAME}-{Routes.ADD_ACTION_NAME}")]
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     public async Task<TResponseModel<StorageFileModelDB>> AttachmentForOrder([FromRoute] int OrderId, IFormFile uploadedFile)
     {
@@ -67,9 +68,9 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
         uploadedFile.OpenReadStream().CopyTo(stream);
         StorageImageMetadataModel reqSave = new()
         {
-            ApplicationName = GlobalStaticConstants.Routes.ORDER_CONTROLLER_NAME,
-            PropertyName = GlobalStaticConstants.Routes.ATTACHMENT_CONTROLLER_NAME,
-            PrefixPropertyName = GlobalStaticConstants.Routes.REST_CONTROLLER_NAME,
+            ApplicationName = Routes.ORDER_CONTROLLER_NAME,
+            PropertyName = Routes.ATTACHMENT_CONTROLLER_NAME,
+            PrefixPropertyName = Routes.REST_CONTROLLER_NAME,
             AuthorUserIdentity = GlobalStaticConstants.Roles.System,
             FileName = _file_name,
             ContentType = uploadedFile.ContentType,
@@ -87,7 +88,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
     /// <remarks>
     /// Роль: <see cref="ExpressApiRolesEnum.OrdersWriteCommerce"/>
     /// </remarks>
-    [HttpPost($"/api/{GlobalStaticConstants.Routes.ORDER_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.ROW_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.UPDATE_ACTION_NAME}")]
+    [HttpPost($"/api/{Routes.ORDER_CONTROLLER_NAME}/{Routes.ROW_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}")]
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     public async Task<TResponseModel<int>> RowForOrderUpdate(RowOfOrderDocumentModelDB row)
         => await commRepo.RowForOrderUpdateAsync(row);
@@ -100,7 +101,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
     /// Роль: <see cref="ExpressApiRolesEnum.OrdersWriteCommerce"/>
     /// </remarks>
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
-    [HttpDelete($"/api/{GlobalStaticConstants.Routes.ORDERS_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.ROW_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.DELETE_ACTION_NAME}")]
+    [HttpDelete($"/api/{Routes.ORDERS_CONTROLLER_NAME}/{Routes.ROW_CONTROLLER_NAME}-{Routes.DELETE_ACTION_NAME}")]
     public async Task<TResponseModel<bool>> RowForOrderDelete([FromBody] int[] rows_ids)
         => await commRepo.RowsForOrderDeleteAsync(rows_ids);
 
@@ -109,7 +110,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
     /// </summary>
     /// <param name="OrderId">Идентификатор заказа</param>
     /// <param name="Step">Статус заказа, который нужно установить</param>
-    [HttpPost($"/api/{GlobalStaticConstants.Routes.ORDER_CONTROLLER_NAME}/{{OrderId}}/{GlobalStaticConstants.Routes.STAGE_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.UPDATE_ACTION_NAME}/{{Step}}")]
+    [HttpPost($"/api/{Routes.ORDER_CONTROLLER_NAME}/{{OrderId}}/{Routes.STAGE_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}/{{Step}}")]
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     public async Task<TResponseModel<bool>> OrderStageSet([FromRoute] int OrderId, [FromRoute] StatusesDocumentsEnum Step)
     {

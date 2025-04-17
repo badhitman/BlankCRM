@@ -14,7 +14,7 @@ public class GetCategoriesReceive(IRusklimatComApiService rusklimatRepo)
     : IResponseReceive<object?, TResponseModel<CategoriesRusklimatResponseModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetCategoriesRusklimatReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetCategoriesRusklimatReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<CategoriesRusklimatResponseModel>?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)

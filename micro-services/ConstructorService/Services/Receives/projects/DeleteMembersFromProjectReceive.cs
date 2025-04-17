@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class DeleteMembersFromProjectReceive(IConstructorService conService) : IResponseReceive<UsersProjectModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.DeleteMembersFromProjectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteMembersFromProjectReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UsersProjectModel? req, CancellationToken token = default)

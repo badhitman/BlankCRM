@@ -13,7 +13,7 @@ public class FlushTempKladrReceive(ILogger<FlushTempKladrReceive> LoggerRepo, IK
     : IResponseReceive<object?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.FlushTempKladrRecive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FlushTempKladrRecive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(object? req, CancellationToken token = default)

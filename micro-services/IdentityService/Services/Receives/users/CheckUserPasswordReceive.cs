@@ -17,7 +17,7 @@ public class CheckUserPasswordReceive(IIdentityTools idRepo)
     : IResponseReceive<IdentityPasswordModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.CheckUserPasswordReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CheckUserPasswordReceive;
 
     /// <summary>
     /// Возвращает флаг, указывающий, действителен ли данный password для указанного userId

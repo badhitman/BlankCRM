@@ -1,4 +1,8 @@
-﻿using System.Security.Cryptography;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using System.Security.Cryptography;
 
 namespace SharedLib;
 

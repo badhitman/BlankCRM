@@ -13,7 +13,7 @@ namespace Transmission.Receives.helpdesk;
 public class SubscribeUpdateReceive(IHelpdeskService hdRepo) : IResponseReceive<TAuthRequestModel<SubscribeUpdateRequestModel>?, TResponseModel<bool?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SubscribeIssueUpdateHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SubscribeIssueUpdateHelpdeskReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestModel<SubscribeUpdateRequestModel>? req, CancellationToken token = default)

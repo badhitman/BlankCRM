@@ -17,7 +17,7 @@ public class GetUsersIdentityByEmailReceive(IIdentityTools IdentityRepo, IMemory
     : IResponseReceive<string[]?, TResponseModel<UserInfoModel[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetUsersOfIdentityByEmailReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityByEmailReceive;
 
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);
 

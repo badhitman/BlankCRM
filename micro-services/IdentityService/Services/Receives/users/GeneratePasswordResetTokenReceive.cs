@@ -15,7 +15,7 @@ public class GeneratePasswordResetTokenReceive(IIdentityTools idRepo)
     : IResponseReceive<string?, TResponseModel<string?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GeneratePasswordResetTokenReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GeneratePasswordResetTokenReceive;
 
     /// <summary>
     /// Создает токен сброса пароля для указанного "userId", используя настроенного поставщика токенов сброса пароля.

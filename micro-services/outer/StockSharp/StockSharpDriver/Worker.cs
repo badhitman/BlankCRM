@@ -41,7 +41,7 @@ public class Worker : BackgroundService
 
     private void InitConnector()
     {
-        LuaFixMarketDataMessageAdapter luaFixMarketDataMessageAdapter = new LuaFixMarketDataMessageAdapter(Connector.TransactionIdGenerator)
+        LuaFixMarketDataMessageAdapter luaFixMarketDataMessageAdapter = new(Connector.TransactionIdGenerator)
         {
             Address = "localhost:5001".To<EndPoint>(),
             //Login = "quik",
@@ -57,6 +57,10 @@ public class Worker : BackgroundService
         };
         Connector.Adapter.InnerAdapters.Add(luaFixMarketDataMessageAdapter);
         Connector.Adapter.InnerAdapters.Add(luaFixTransactionMessageAdapter);
+
+        Connector.Adapter.SuppressReconnectingErrors = false;
+        Connector.ConnectionRestored += ConnectionRestored;
+
         // Подписка на событие успешного подключения
         Connector.Connected += ConnectedSS; ;
 
@@ -110,6 +114,11 @@ public class Worker : BackgroundService
         }
 
         ConfigManager.RegisterService<IExchangeInfoProvider>(new InMemoryExchangeInfoProvider());
+    }
+
+    private void ConnectionRestored(StockSharp.Messages.IMessageAdapter obj)
+    {
+        throw new NotImplementedException();
     }
 
     private void OrderCancelFailReceived(Subscription arg1, OrderFail arg2)

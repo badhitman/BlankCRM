@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 using MudBlazor;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorWebLib.Components.Commerce.Attendances;
 
@@ -106,7 +107,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
             StartDate = DateOnly.FromDateTime(_dateRange.Start.Value),
             EndDate = DateOnly.FromDateTime(_dateRange.End.Value),
             OffersFilter = [_selectedOfferId.Value],
-            ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME,
+            ContextName = Routes.ATTENDANCES_CONTROLLER_NAME,
         };
         await SetBusyAsync();
         WorksFindResponseModel res = await CommerceRepo.WorksSchedulesFindAsync(req);
@@ -171,7 +172,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
             SortingDirection = DirectionsEnum.Up,
             Payload = new()
             {
-                ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME
+                ContextName = Routes.ATTENDANCES_CONTROLLER_NAME
             }
         };
         await SetBusyAsync();

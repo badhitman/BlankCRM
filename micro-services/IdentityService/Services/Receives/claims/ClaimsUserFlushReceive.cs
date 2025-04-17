@@ -14,7 +14,7 @@ public class ClaimsUserFlushReceive(IIdentityTools idRepo)
     : IResponseReceive<string?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ClaimsForUserFlushReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ClaimsForUserFlushReceive;
 
     /// <summary>
     /// Установить пользователю Claim`s[TelegramId, FirstName, LastName, PhoneNum]

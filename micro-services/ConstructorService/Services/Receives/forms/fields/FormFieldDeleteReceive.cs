@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class FormFieldDeleteReceive(IConstructorService conService) : IResponseReceive<TAuthRequestModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.FormFieldDeleteReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FormFieldDeleteReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? payload, CancellationToken token = default)

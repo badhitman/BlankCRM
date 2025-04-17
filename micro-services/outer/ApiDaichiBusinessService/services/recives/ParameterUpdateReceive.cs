@@ -14,7 +14,7 @@ public class ParameterUpdateReceive(IDaichiBusinessApiService daichiRepo)
     : IResponseReceive<ParameterEntryDaichiModelDB?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ParameterUpdateDaichiReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ParameterUpdateDaichiReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ParameterEntryDaichiModelDB? req = null, CancellationToken token = default)

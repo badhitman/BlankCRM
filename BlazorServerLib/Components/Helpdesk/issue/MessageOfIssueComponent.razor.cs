@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using SharedLib;
 using System.ComponentModel;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorWebLib.Components.Helpdesk.issue;
 
@@ -125,7 +126,7 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
     {
         await base.OnInitializedAsync();
 
-        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{GlobalStaticConstants.Routes.ISSUE_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.MESSAGE_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.IMAGE_ACTION_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={Message?.Id}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={Issue.Id}";
+        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{Routes.ISSUE_CONTROLLER_NAME}/{Routes.MESSAGE_CONTROLLER_NAME}-{Routes.IMAGE_ACTION_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={Message?.Id}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={Issue.Id}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
         if (Message is null || Message.Id < 1)

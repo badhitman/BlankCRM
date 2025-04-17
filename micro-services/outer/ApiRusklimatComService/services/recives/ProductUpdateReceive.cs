@@ -14,7 +14,7 @@ public class ProductUpdateReceive(IRusklimatComApiService rusklimatRepo)
     : IResponseReceive<ProductRusklimatModelDB?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProductUpdateRusklimatReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProductUpdateRusklimatReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ProductRusklimatModelDB? req = null, CancellationToken token = default)

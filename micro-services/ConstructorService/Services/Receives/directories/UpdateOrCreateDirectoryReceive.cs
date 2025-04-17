@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class UpdateOrCreateDirectoryReceive(IConstructorService conService) : IResponseReceive<TAuthRequestModel<EntryConstructedModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.UpdateOrCreateDirectoryReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateOrCreateDirectoryReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<EntryConstructedModel>? payload, CancellationToken token = default)

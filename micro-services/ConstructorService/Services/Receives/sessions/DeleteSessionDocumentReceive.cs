@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class DeleteSessionDocumentReceive(IConstructorService conService) : IResponseReceive<int, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.DeleteSessionDocumentReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteSessionDocumentReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int payload, CancellationToken token = default)

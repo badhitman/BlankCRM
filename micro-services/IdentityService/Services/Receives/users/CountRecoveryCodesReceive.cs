@@ -15,7 +15,7 @@ public class CountRecoveryCodesReceive(IIdentityTools idRepo, ILogger<CountRecov
     : IResponseReceive<string?, TResponseModel<int?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.CountRecoveryCodesReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CountRecoveryCodesReceive;
 
     /// <summary>
     /// Возвращает количество кодов восстановления, действительных для пользователя

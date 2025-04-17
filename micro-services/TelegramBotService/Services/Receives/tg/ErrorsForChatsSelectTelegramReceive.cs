@@ -14,7 +14,7 @@ public class ErrorsForChatsSelectTelegramReceive(ITelegramBotService tgRepo)
     : IResponseReceive<TPaginationRequestModel<long[]>?, TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ErrorsForChatsSelectTelegramReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ErrorsForChatsSelectTelegramReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<long[]>? req, CancellationToken token = default)

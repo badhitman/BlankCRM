@@ -15,7 +15,7 @@ public class RecordsAttendancesSelectReceive(ICommerceService commerceRepo)
     : IResponseReceive<TPaginationRequestAuthModel<RecordsAttendancesRequestModel>?, TPaginationResponseModel<RecordsAttendanceModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.RecordsAttendancesSelectCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RecordsAttendancesSelectCommerceReceive;
 
     /// <summary>
     /// Подбор записей (актуальных)

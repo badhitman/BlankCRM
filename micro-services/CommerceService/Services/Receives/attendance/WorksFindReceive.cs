@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 public class WorksFindReceive(ICommerceService commerceRepo) : IResponseReceive<WorkFindRequestModel?, WorksFindResponseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.WorksSchedulesFindCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.WorksSchedulesFindCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<WorksFindResponseModel?> ResponseHandleActionAsync(WorkFindRequestModel? req, CancellationToken token = default)

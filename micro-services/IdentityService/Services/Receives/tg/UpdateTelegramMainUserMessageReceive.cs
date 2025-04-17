@@ -14,7 +14,7 @@ namespace Transmission.Receives.web;
 public class UpdateTelegramMainUserMessageReceive(IIdentityTools identityRepo, ILogger<UpdateTelegramMainUserMessageReceive> _logger) : IResponseReceive<MainUserMessageModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.UpdateTelegramMainUserMessageReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateTelegramMainUserMessageReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(MainUserMessageModel? setMainMessage, CancellationToken token = default)

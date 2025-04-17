@@ -15,7 +15,7 @@ public class ReadFileReceive(    ILogger<ReadFileReceive> LoggerRepo, ISerialize
     : IResponseReceive<TAuthRequestModel<RequestFileReadModel>?, TResponseModel<FileContentModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ReadFileReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ReadFileReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<FileContentModel>?> ResponseHandleActionAsync(TAuthRequestModel<RequestFileReadModel>? req, CancellationToken token = default)

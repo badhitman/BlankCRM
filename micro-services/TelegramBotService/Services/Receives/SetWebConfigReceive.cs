@@ -14,7 +14,7 @@ namespace Transmission.Receives.telegram;
 public class SetWebConfigReceive(TelegramBotConfigModel webConfig, ILogger<SetWebConfigReceive> _logger) : IResponseReceive<TelegramBotConfigModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetWebConfigTelegramReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetWebConfigTelegramReceive;
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramBotConfigModel? payload, CancellationToken token = default)

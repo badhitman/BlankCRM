@@ -13,7 +13,7 @@ namespace Transmission.Receives.helpdesk;
 public class StatusChangeReceive(IHelpdeskService hdRepo) : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.StatusChangeIssueHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.StatusChangeIssueHelpdeskReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestModel<StatusChangeRequestModel>? req, CancellationToken token = default)

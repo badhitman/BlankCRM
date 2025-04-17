@@ -5,6 +5,7 @@
 using static SharedLib.GlobalStaticConstants;
 using Microsoft.AspNetCore.Mvc;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace ApiRestService.Controllers;
 

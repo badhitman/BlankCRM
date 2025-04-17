@@ -15,7 +15,7 @@ public class CheckTelegramUserReceive(IIdentityTools identityRepo, ILogger<Check
     : IResponseReceive<CheckTelegramUserHandleModel?, TResponseModel<CheckTelegramUserAuthModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.CheckTelegramUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CheckTelegramUserReceive;
 
     /// <summary>
     /// Проверка пользователя (сообщение из службы TelegramBot серверной части сайта)

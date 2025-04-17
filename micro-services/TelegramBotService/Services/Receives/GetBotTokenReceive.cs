@@ -15,7 +15,7 @@ namespace Transmission.Receives.telegram;
 public class GetBotTokenReceive(IOptions<BotConfiguration> tgConfig, ILogger<GetBotTokenReceive> _logger) : IResponseReceive<object?, TResponseModel<string>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetBotTokenTelegramReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetBotTokenTelegramReceive;
 
     /// <inheritdoc/>
     public Task<TResponseModel<string>?> ResponseHandleActionAsync(object? payload, CancellationToken token = default)

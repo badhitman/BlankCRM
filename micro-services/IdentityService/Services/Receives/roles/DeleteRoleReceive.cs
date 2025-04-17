@@ -15,7 +15,7 @@ public class DeleteRoleReceive(IIdentityTools idRepo, ILogger<DeleteRoleReceive>
     : IResponseReceive<string?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.DeleteRoleReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteRoleReceive;
 
     /// <summary>
     /// Добавить роль пользователю (включить пользователя в роль)

@@ -17,7 +17,7 @@ public class TResponseModel<T> : ResponseBaseModel
     /// <summary>
     /// Базовая модель ответа/результата на запрос
     /// </summary>
-    public TResponseModel(IEnumerable<ResultMessage> messages) { Messages = messages.ToList(); }
+    public TResponseModel(IEnumerable<ResultMessage> messages) { Messages = [.. messages]; }
 
     /// <summary>
     /// Полезная нагрузка ответа

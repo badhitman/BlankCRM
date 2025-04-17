@@ -16,7 +16,7 @@ public class NomenclatureUpdateReceive(ICommerceService commerceRepo, ILogger<No
     /// <summary>
     /// Обновление номенклатуры
     /// </summary>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.NomenclatureUpdateCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.NomenclatureUpdateCommerceReceive;
 
     /// <summary>
     /// Обновление номенклатуры

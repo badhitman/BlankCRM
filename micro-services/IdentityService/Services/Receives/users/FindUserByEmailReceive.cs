@@ -15,7 +15,7 @@ public class FindUserByEmailReceive(IIdentityTools idRepo)
     : IResponseReceive<string?, TResponseModel<UserInfoModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.FindUserByEmailReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindUserByEmailReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<UserInfoModel>?> ResponseHandleActionAsync(string? req, CancellationToken token = default)

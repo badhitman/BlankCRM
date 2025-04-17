@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class CanEditProjectReceive(IConstructorService conService) : IResponseReceive<UserProjectModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.CanEditProjectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CanEditProjectReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UserProjectModel? req, CancellationToken token = default)

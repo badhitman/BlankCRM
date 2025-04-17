@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class CheckAndNormalizeSortIndexForElementsOfDirectoryReceive(IConstructorService conService) : IResponseReceive<int, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.CheckAndNormalizeSortIndexForElementsOfDirectoryReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CheckAndNormalizeSortIndexForElementsOfDirectoryReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int payload, CancellationToken token = default)

@@ -15,7 +15,7 @@ public class CreateNewUserWithPasswordReceive(IIdentityTools idRepo, ILogger<Cre
     : IResponseReceive<RegisterNewUserPasswordModel?, RegistrationNewUserResponseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.RegistrationNewUserWithPasswordReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RegistrationNewUserWithPasswordReceive;
 
     /// <inheritdoc/>
     public async Task<RegistrationNewUserResponseModel?> ResponseHandleActionAsync(RegisterNewUserPasswordModel? req, CancellationToken token = default)

@@ -15,7 +15,7 @@ public class PriceRuleUpdateReceive(ICommerceService commerceRepo, ILogger<Price
     : IResponseReceive<TAuthRequestModel<PriceRuleForOfferModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.PriceRuleUpdateCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PriceRuleUpdateCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<PriceRuleForOfferModelDB>? req, CancellationToken token = default)

@@ -16,7 +16,7 @@ public class AddPasswordForUserReceive(IIdentityTools idRepo, ILogger<AddPasswor
     : IResponseReceive<IdentityPasswordModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.AddPasswordToUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.AddPasswordToUserReceive;
 
     /// <summary>
     /// Добавляет password к указанному userId, только если у пользователя еще нет пароля.

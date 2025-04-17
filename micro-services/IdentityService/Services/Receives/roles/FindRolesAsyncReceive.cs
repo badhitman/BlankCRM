@@ -15,7 +15,7 @@ public class FindRolesAsyncReceive(IIdentityTools idRepo, ILogger<FindRolesAsync
     : IResponseReceive<FindWithOwnedRequestModel?, TPaginationResponseModel<RoleInfoModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.FindRolesAsyncReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindRolesAsyncReceive;
 
     /// <summary>
     /// Роли. Если указан 'OwnerId', то поиск ограничивается ролями данного пользователя

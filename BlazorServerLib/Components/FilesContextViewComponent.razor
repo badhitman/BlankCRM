@@ -1,5 +1,6 @@
 ﻿@using MudBlazor
 @using System.Globalization
+@using static SharedLib.GlobalStaticConstantsRoutes
 @inherits MetaPropertyBaseComponent
 
 <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="TableRef" Loading="IsBusyProgress">
@@ -70,10 +71,10 @@
                         <img style="max-height:500px;max-width:300px;" src="@($"/cloud-fs/read/{_selectedFile.Id}/{_selectedFile.FileName}")" class="rounded mx-auto d-block" alt="@_selectedFile.FileName">
                     }
                     <br />
-                    <TagsViewComponent ApplicationsNames="@([GlobalStaticConstants.Routes.FILE_CONTROLLER_NAME])"
+                    <TagsViewComponent ApplicationsNames="@([Routes.FILE_CONTROLLER_NAME])"
                                        ManageMode="true"
-                                       PrefixPropertyName="@GlobalStaticConstants.Routes.DEFAULT_CONTROLLER_NAME"
-                                       PropertyName="@GlobalStaticConstants.Routes.METADATA_CONTROLLER_NAME"
+                                       PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
+                                       PropertyName="@Routes.METADATA_CONTROLLER_NAME"
                                        Title="Теги"
                                        OwnerPrimaryKey="@_selectedFile.Id" />
                 </div>

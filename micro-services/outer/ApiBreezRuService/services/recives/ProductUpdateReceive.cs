@@ -4,6 +4,7 @@
 
 using RemoteCallLib;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsTransmission;
 
 namespace Transmission.Receives.Outers.Breez;
 
@@ -14,7 +15,7 @@ public class ProductUpdateReceive(IBreezRuApiService breezRepo)
     : IResponseReceive<ProductBreezRuModelDB?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProductUpdateBreezReceive;
+    public static string QueueName => TransmissionQueues.ProductUpdateBreezReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ProductBreezRuModelDB? req, CancellationToken token = default)
@@ -31,7 +32,7 @@ public class CategoryUpdateReceive(IBreezRuApiService breezRepo)
     : IResponseReceive<CategoryBreezRuModelDB?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.CategoryUpdateBreezReceive;
+    public static string QueueName => TransmissionQueues.CategoryUpdateBreezReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(CategoryBreezRuModelDB? req, CancellationToken token = default)

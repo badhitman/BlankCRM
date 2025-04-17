@@ -14,7 +14,7 @@ public class RubricsListReceive(IHelpdeskService hdRepo)
     : IResponseReceive<RubricsListRequestModel?, List<UniversalBaseModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.RubricsForIssuesListHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricsForIssuesListHelpdeskReceive;
 
     /// <summary>
     /// Получить рубрики, вложенные в рубрику <paramref name="req"/>.OwnerId (если не указано, то root перечень)

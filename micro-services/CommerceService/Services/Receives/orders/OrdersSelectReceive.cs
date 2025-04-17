@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 public class OrdersSelectReceive(ICommerceService commRepo) : IResponseReceive<TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>>?, TPaginationResponseModel<OrderDocumentModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrdersSelectCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrdersSelectCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<OrderDocumentModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>>? req, CancellationToken token = default)

@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class SetMarkerDeleteProjectReceive(IConstructorService conService) : IResponseReceive<SetMarkerProjectRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetMarkerDeleteProjectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetMarkerDeleteProjectReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SetMarkerProjectRequestModel? req, CancellationToken token = default)

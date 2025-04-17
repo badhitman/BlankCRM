@@ -14,7 +14,7 @@ public class PulseJournalSelectReceive(IHelpdeskService hdRepo)
     : IResponseReceive<TAuthRequestModel<TPaginationRequestModel<UserIssueModel>>?, TResponseModel<TPaginationResponseModel<PulseViewModel>>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.PulseJournalHelpdeskSelectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PulseJournalHelpdeskSelectReceive;
 
     /// <summary>
     /// PulseJournalReceive - of context user

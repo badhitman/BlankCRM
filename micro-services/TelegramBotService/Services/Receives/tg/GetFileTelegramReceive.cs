@@ -14,7 +14,7 @@ public class GetFileTelegramReceive(ITelegramBotService tgRepo)
     : IResponseReceive<string?, TResponseModel<byte[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ReadFileTelegramReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ReadFileTelegramReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<byte[]>?> ResponseHandleActionAsync(string? fileId, CancellationToken token = default)

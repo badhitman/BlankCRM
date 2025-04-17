@@ -15,7 +15,7 @@ public class VerifyTwoFactorTokenReceive(IIdentityTools idRepo, ILogger<VerifyTw
     : IResponseReceive<VerifyTwoFactorTokenRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.VerifyTwoFactorTokenReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.VerifyTwoFactorTokenReceive;
 
     /// <summary>
     /// Проверяет указанную двухфакторную аутентификацию VerificationCode на соответствие UserId

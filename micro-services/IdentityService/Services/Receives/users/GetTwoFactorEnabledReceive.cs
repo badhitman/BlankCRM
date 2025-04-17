@@ -14,7 +14,7 @@ public class GetTwoFactorEnabledReceive(IIdentityTools idRepo)
     : IResponseReceive<string?, TResponseModel<bool?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetTwoFactorEnabledReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetTwoFactorEnabledReceive;
 
     /// <summary>
     /// Включена ли для указанного <paramref name="userId"/> двухфакторная аутентификация

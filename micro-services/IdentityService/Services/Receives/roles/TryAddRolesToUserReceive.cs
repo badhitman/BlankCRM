@@ -15,7 +15,7 @@ public class TryAddRolesToUserReceive(IIdentityTools idRepo, ILogger<TryAddRoles
     : IResponseReceive<UserRolesModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.TryAddRolesToUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TryAddRolesToUserReceive;
 
     /// <summary>
     /// Попытка добавить роли пользователю. Если роли такой нет, то она будет создана.

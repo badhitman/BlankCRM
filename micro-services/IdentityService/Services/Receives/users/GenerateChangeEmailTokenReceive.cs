@@ -15,7 +15,7 @@ public class GenerateChangeEmailTokenReceive(IIdentityTools idRepo, ILogger<Gene
     : IResponseReceive<GenerateChangeEmailTokenRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GenerateChangeEmailTokenReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GenerateChangeEmailTokenReceive;
 
     /// <summary>
     /// Создает (и отправляет) токен изменения адреса электронной почты для указанного пользователя.

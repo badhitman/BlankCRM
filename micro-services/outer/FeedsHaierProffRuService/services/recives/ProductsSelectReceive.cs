@@ -14,7 +14,7 @@ public class ProductsSelectReceive(IFeedsHaierProffRuService haierRepo)
     : IResponseReceive<HaierRequestModel?, TPaginationResponseModel<ProductHaierModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProductsSelectHaierProffReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProductsSelectHaierProffReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<ProductHaierModelDB>?> ResponseHandleActionAsync(HaierRequestModel? req = null, CancellationToken token = default)

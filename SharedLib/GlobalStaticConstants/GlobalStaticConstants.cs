@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
 using System.Globalization;
 using Newtonsoft.Json;
 
@@ -43,9 +44,9 @@ public static partial class GlobalStaticConstants
     /// </summary>
     public static JsonSerializerSettings JsonSerializerSettings
         => new() { NullValueHandling = NullValueHandling.Ignore, ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
-        
+
     // public static readonly JsonSerializerOptions SerializerOptions = new() { ReferenceHandler = ReferenceHandler.IgnoreCycles, WriteIndented = true };
-     
+
     /// <summary>
     /// Русская (ru-RU) CultureInfo
     /// </summary>

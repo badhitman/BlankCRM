@@ -14,7 +14,7 @@ public class ChatTelegramReadReceive(ITelegramBotService tgRepo)
     : IResponseReceive<int, ChatTelegramModelDB?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ChatReadTelegramReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ChatReadTelegramReceive;
 
     /// <inheritdoc/>
     public async Task<ChatTelegramModelDB?> ResponseHandleActionAsync(int chat_id, CancellationToken token = default)

@@ -14,7 +14,7 @@ public class CheckToken2FAReceive(IIdentityTools idRepo)
     : IResponseReceive<CheckToken2FARequestModel?, TResponseModel<string>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.CheckToken2FAReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CheckToken2FAReceive;
 
     /// <summary>
     /// Проверка 2FA токена

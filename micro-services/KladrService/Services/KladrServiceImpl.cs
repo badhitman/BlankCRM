@@ -29,7 +29,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
         {
         resMq = await client.GetStringAsync<List<RabbitMqManagementResponseModel>>($"api/queues", cancellationToken : token);
          q = resMq.Response?
-            .Where(x => x.name?.Equals(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive) == true);
+            .Where(x => x.name?.Equals(GlobalStaticConstantsTransmission.TransmissionQueues.UploadPartTempKladrReceive) == true);
         }, token), Task.Run(async () =>
         {
 
@@ -52,7 +52,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
             DomaCount = await context.HousesKLADR.CountAsync()};
         }, token)]);
 
-        res.RabbitMqManagement = q?.FirstOrDefault(x => x.name?.Equals(GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive) == true);
+        res.RabbitMqManagement = q?.FirstOrDefault(x => x.name?.Equals(GlobalStaticConstantsTransmission.TransmissionQueues.UploadPartTempKladrReceive) == true);
         return res;
     }
 

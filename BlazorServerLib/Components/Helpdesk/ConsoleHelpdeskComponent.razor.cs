@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorWebLib.Components.Helpdesk;
 
@@ -40,8 +41,8 @@ public partial class ConsoleHelpdeskComponent : BlazorBusyComponentBaseAuthModel
 
     StorageMetadataModel SizeColumnsKeyStorage => new()
     {
-        ApplicationName = Path.Combine(GlobalStaticConstants.Routes.CONSOLE_CONTROLLER_NAME, GlobalStaticConstants.Routes.HELPDESK_CONTROLLER_NAME),
-        PropertyName = GlobalStaticConstants.Routes.SIZE_CONTROLLER_NAME,
+        ApplicationName = Path.Combine(Routes.CONSOLE_CONTROLLER_NAME, Routes.HELPDESK_CONTROLLER_NAME),
+        PropertyName = Routes.SIZE_CONTROLLER_NAME,
         PrefixPropertyName = CurrentUserSession!.UserId,
     };
 

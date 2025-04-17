@@ -15,7 +15,7 @@ public class ChangeEmailForUserReceive(IIdentityTools idRepo, ILogger<ChangeEmai
     : IResponseReceive<IdentityEmailTokenModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ChangeEmailForUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ChangeEmailForUserReceive;
 
     /// <summary>
     /// Обновляет адрес Email, если токен действительный для пользователя.    

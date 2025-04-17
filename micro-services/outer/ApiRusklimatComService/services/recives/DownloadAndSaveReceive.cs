@@ -14,7 +14,7 @@ public class DownloadAndSaveReceive(IRusklimatComApiService rusklimatRepo)
     : IResponseReceive<object?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.DownloadAndSaveRusklimatReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DownloadAndSaveRusklimatReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)

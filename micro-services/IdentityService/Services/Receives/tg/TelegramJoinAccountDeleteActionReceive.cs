@@ -15,7 +15,7 @@ public class TelegramJoinAccountDeleteActionReceive(IIdentityTools identityRepo,
     : IResponseReceive<string?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.TelegramJoinAccountDeleteActionReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountDeleteActionReceive;
 
     /// <summary>
     /// Удалить текущую процедуру привязки Telegram аккаунта к учётной записи сайта

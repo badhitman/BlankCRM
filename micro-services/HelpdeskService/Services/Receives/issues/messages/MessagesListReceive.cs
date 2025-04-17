@@ -14,7 +14,7 @@ public class MessagesListReceive(IHelpdeskService hdRepo)
     : IResponseReceive<TAuthRequestModel<int>?, TResponseModel<IssueMessageHelpdeskModelDB[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.MessagesOfIssueListHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MessagesOfIssueListHelpdeskReceive;
 
     /// <summary>
     /// Получить сообщения для инцидента

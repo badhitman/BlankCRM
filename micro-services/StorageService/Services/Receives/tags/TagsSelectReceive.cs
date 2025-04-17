@@ -15,7 +15,7 @@ public class TagsSelectReceive(ILogger<TagsSelectReceive> loggerRepo, ISerialize
     : IResponseReceive<TPaginationRequestModel<SelectMetadataRequestModel>?, TPaginationResponseModel<TagModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.TagsSelectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TagsSelectReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<TagModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<SelectMetadataRequestModel>? req, CancellationToken token = default)

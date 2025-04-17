@@ -16,7 +16,7 @@ public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, ILogg
     /// <summary>
     /// Обновление WorkScheduleCalendar
     /// </summary>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.AttendanceRecordDeleteCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.AttendanceRecordDeleteCommerceReceive;
 
     /// <summary>
     /// Обновление WorkScheduleCalendar

@@ -6,6 +6,7 @@ using BlazorWebLib.Components.Commerce.Attendances;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorWebLib.Components.Commerce.Pages;
 
@@ -71,7 +72,7 @@ public partial class AttendancesManageComponent : BlazorBusyComponentBaseAuthMod
             SortingDirection = DirectionsEnum.Up,
             Payload = new()
             {
-                ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME
+                ContextName = Routes.ATTENDANCES_CONTROLLER_NAME
             }
         };
         await SetBusyAsync();

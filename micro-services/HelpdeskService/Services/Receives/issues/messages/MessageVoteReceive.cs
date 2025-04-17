@@ -13,7 +13,7 @@ namespace Transmission.Receives.helpdesk;
 public class MessageVoteReceive(IHelpdeskService hdRepo) : IResponseReceive<TAuthRequestModel<VoteIssueRequestModel>?, TResponseModel<bool?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.MessageOfIssueVoteHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MessageOfIssueVoteHelpdeskReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestModel<VoteIssueRequestModel>? req, CancellationToken token = default)

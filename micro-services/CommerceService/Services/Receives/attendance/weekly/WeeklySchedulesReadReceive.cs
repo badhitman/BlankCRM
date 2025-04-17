@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 public class WeeklySchedulesReadReceive(ICommerceService commerceRepo) : IResponseReceive<int[]?, List<WeeklyScheduleModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.WeeklySchedulesReadCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.WeeklySchedulesReadCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<List<WeeklyScheduleModelDB>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)

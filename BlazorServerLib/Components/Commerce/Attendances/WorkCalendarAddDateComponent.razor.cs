@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorWebLib.Components.Commerce.Attendances;
 
@@ -57,7 +58,7 @@ public partial class WorkCalendarAddDateComponent : BlazorBusyComponentBaseAuthM
                 StartPart = StartPart.Value,
                 QueueCapacity = QueueCapacity,
                 Name = "",
-                ContextName = GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME,
+                ContextName = Routes.ATTENDANCES_CONTROLLER_NAME,
                 IsDisabled = true,
             },
             SenderActionUserId = CurrentUserSession.UserId

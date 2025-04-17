@@ -16,7 +16,7 @@ public class GetUsersOfIdentityReceive(IIdentityTools identityRepo, IMemoryCache
     : IResponseReceive<string[]?, TResponseModel<UserInfoModel[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetUsersOfIdentityReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityReceive;
 
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);
 

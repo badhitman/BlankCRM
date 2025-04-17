@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class RequestDocumentsSchemesReceive(IConstructorService conService) : IResponseReceive<RequestDocumentsSchemesModel?, TPaginationResponseModel<DocumentSchemeConstructorModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.RequestDocumentsSchemesReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RequestDocumentsSchemesReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(RequestDocumentsSchemesModel? payload, CancellationToken token = default)

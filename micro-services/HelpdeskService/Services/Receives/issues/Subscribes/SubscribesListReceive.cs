@@ -14,7 +14,7 @@ public class SubscribesListReceive(IHelpdeskService hdRepo)
     : IResponseReceive<TAuthRequestModel<int>?, TResponseModel<List<SubscriberIssueHelpdeskModelDB>>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SubscribesIssueListHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SubscribesIssueListHelpdeskReceive;
 
     /// <summary>
     /// Подписчики на события в обращении/инциденте

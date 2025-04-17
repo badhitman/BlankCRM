@@ -14,7 +14,7 @@ namespace Transmission.Receives.commerce;
 public class RowsForOrderDeleteReceive(ICommerceService commRepo, ILogger<RowsForOrderDeleteReceive> loggerRepo) : IResponseReceive<int[]?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.RowsDeleteFromOrderCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RowsDeleteFromOrderCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)

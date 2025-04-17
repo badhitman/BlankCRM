@@ -15,7 +15,7 @@ public class GetUserLoginsReceive(IIdentityTools idRepo, ILogger<AddPasswordForU
     : IResponseReceive<string?, TResponseModel<IEnumerable<UserLoginInfoModel>>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetUserLoginsReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetUserLoginsReceive;
 
     /// <summary>
     /// Извлекает связанные логины для указанного <param ref="userId"/>

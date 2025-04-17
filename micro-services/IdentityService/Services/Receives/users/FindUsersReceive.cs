@@ -14,7 +14,7 @@ public class FindUsersReceive(IIdentityTools idRepo)
     : IResponseReceive<FindWithOwnedRequestModel?, TPaginationResponseModel<UserInfoModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.FindUsersReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindUsersReceive;
 
     /// <summary>
     /// Пользователи

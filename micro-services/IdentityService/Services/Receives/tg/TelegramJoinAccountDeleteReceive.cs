@@ -15,7 +15,7 @@ public class TelegramJoinAccountDeleteReceive(IIdentityTools identityRepo, ILogg
     : IResponseReceive<TelegramAccountRemoveJoinRequestTelegramModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.TelegramJoinAccountDeleteReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountDeleteReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramAccountRemoveJoinRequestTelegramModel? payload, CancellationToken token = default)

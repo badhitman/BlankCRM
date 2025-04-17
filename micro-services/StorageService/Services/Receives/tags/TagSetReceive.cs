@@ -17,7 +17,7 @@ public class TagSetReceive(ILogger<TagSetReceive> loggerRepo, ISerializeStorage 
     : IResponseReceive<TagSetModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.TagSetReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TagSetReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TagSetModel? req, CancellationToken token = default)

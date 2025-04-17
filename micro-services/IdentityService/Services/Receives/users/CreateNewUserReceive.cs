@@ -16,7 +16,7 @@ public class CreateNewUserReceive(IIdentityTools idRepo, ILogger<CreateNewUserRe
     : IResponseReceive<string?, RegistrationNewUserResponseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.RegistrationNewUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RegistrationNewUserReceive;
 
     /// <inheritdoc/>
     public async Task<RegistrationNewUserResponseModel?> ResponseHandleActionAsync(string? req, CancellationToken token = default)

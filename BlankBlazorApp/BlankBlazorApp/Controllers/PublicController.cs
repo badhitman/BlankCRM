@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Web;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlankBlazorApp.Controllers;
 
@@ -22,7 +23,7 @@ public class PublicController(ITelegramTransmission tgRepo, IIdentityTransmissio
     /// <summary>
     /// Authorize
     /// </summary>
-    [HttpPost($"/{GlobalStaticConstants.Routes.TELEGRAM_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.AUTHORIZE_CONTROLLER_NAME}")]
+    [HttpPost($"/{Routes.TELEGRAM_CONTROLLER_NAME}/{Routes.AUTHORIZE_CONTROLLER_NAME}")]
     public async Task<IActionResult> Authorize([FromBody] TelegramAuthModel model)
     {
         if (string.IsNullOrEmpty(model.InitData))
@@ -73,7 +74,7 @@ public class PublicController(ITelegramTransmission tgRepo, IIdentityTransmissio
     /// <summary>
     /// Проверка сессии (авторизован или нет)
     /// </summary>
-    [HttpGet($"/{GlobalStaticConstants.Routes.AUTHORIZE_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.PING_ACTION_NAME}")]
+    [HttpGet($"/{Routes.AUTHORIZE_CONTROLLER_NAME}/{Routes.PING_ACTION_NAME}")]
     public IActionResult Ping()
     {
         return HttpContext.User.Identity?.IsAuthenticated == true

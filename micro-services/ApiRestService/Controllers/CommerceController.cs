@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace ApiRestService.Controllers;
 
@@ -21,7 +22,7 @@ public class CommerceController(ICommerceTransmission commRepo) : ControllerBase
     /// <remarks>
     /// Роли: <see cref="ExpressApiRolesEnum.OrdersReadCommerce"/>, <see cref="ExpressApiRolesEnum.OrdersWriteCommerce"/>
     /// </remarks>
-    [HttpPut($"/api/{GlobalStaticConstants.Routes.COMMERCE_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.ORDERS_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.SELECT_ACTION_NAME}")]
+    [HttpPut($"/api/{Routes.COMMERCE_CONTROLLER_NAME}/{Routes.ORDERS_CONTROLLER_NAME}-{Routes.SELECT_ACTION_NAME}")]
 #if !DEBUG
     [LoggerNolog]
 #endif
@@ -34,7 +35,7 @@ public class CommerceController(ICommerceTransmission commRepo) : ControllerBase
     /// <remarks>
     /// Роли: <see cref="ExpressApiRolesEnum.OrdersReadCommerce"/>, <see cref="ExpressApiRolesEnum.OrdersWriteCommerce"/>
     /// </remarks>
-    [HttpPut($"/api/{GlobalStaticConstants.Routes.COMMERCE_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.NOMENCLATURES_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.READ_ACTION_NAME}")]
+    [HttpPut($"/api/{Routes.COMMERCE_CONTROLLER_NAME}/{Routes.NOMENCLATURES_CONTROLLER_NAME}-{Routes.READ_ACTION_NAME}")]
 #if !DEBUG
     [LoggerNolog]
 #endif

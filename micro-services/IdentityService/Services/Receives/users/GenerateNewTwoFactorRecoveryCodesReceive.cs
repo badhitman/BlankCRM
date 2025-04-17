@@ -16,7 +16,7 @@ public class GenerateNewTwoFactorRecoveryCodesReceive(IIdentityTools idRepo, ILo
     : IResponseReceive<GenerateNewTwoFactorRecoveryCodesRequestModel?, TResponseModel<IEnumerable<string>?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GenerateNewTwoFactorRecoveryCodesReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GenerateNewTwoFactorRecoveryCodesReceive;
 
     /// <summary>
     /// Генерирует коды восстановления для пользователя, что делает недействительными все предыдущие коды восстановления для пользователя.

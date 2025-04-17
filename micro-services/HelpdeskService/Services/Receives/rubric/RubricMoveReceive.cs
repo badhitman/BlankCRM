@@ -15,7 +15,7 @@ public class RubricMoveReceive(IHelpdeskService hdRepo, ILogger<RubricMoveReceiv
     : IResponseReceive<TAuthRequestModel<RowMoveModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.RubricForIssuesMoveHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricForIssuesMoveHelpdeskReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<RowMoveModel>? req, CancellationToken token = default)

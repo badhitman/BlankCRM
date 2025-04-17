@@ -13,7 +13,7 @@ public class UploadPartTempKladrReceive(ILogger<UploadPartTempKladrReceive> Logg
     : IResponseReceive<UploadPartTableDataModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.UploadPartTempKladrReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UploadPartTempKladrReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UploadPartTableDataModel? req, CancellationToken token = default)

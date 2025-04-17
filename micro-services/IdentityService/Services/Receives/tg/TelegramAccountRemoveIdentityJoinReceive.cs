@@ -15,7 +15,7 @@ public class TelegramAccountRemoveIdentityJoinReceive(IIdentityTools identityRep
     : IResponseReceive<TelegramAccountRemoveJoinRequestIdentityModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.TelegramAccountRemoveIdentityJoinReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TelegramAccountRemoveIdentityJoinReceive;
 
     /// <summary>
     /// Удалить связь Telegram аккаунта с учётной записью сайта

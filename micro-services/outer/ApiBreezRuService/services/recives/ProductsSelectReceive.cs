@@ -14,7 +14,7 @@ public class ProductsSelectReceive(IBreezRuApiService breezRepo)
     : IResponseReceive<BreezRequestModel?, TPaginationResponseModel<ProductViewBreezRuModeld>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProductsSelectBreezReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProductsSelectBreezReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<ProductViewBreezRuModeld>?> ResponseHandleActionAsync(BreezRequestModel? req, CancellationToken token = default)

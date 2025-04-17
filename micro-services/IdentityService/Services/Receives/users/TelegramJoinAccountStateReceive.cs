@@ -16,7 +16,7 @@ public class TelegramJoinAccountStateReceive(IIdentityTools idRepo, ILogger<Tele
     : IResponseReceive<TelegramJoinAccountStateRequestModel?, TResponseModel<TelegramJoinAccountModelDb>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.TelegramJoinAccountStateReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountStateReceive;
 
     /// <summary>
     /// Получить состояние процедуры привязки аккаунта Telegram к учётной записи сайта (если есть).

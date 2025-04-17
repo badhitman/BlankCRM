@@ -14,7 +14,7 @@ namespace Transmission.Receives.storage;
 public class ReadParametersReceive(ISerializeStorage serializeStorageRepo, ILogger<ReadParametersReceive> LoggerRepo) : IResponseReceive<StorageMetadataModel[]?, TResponseModel<List<StorageCloudParameterPayloadModel>>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ReadCloudParametersReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ReadCloudParametersReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<StorageCloudParameterPayloadModel>>?> ResponseHandleActionAsync(StorageMetadataModel[]? request, CancellationToken token = default)

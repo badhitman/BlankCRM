@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorWebLib.Components.Commerce;
 
@@ -59,7 +60,7 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{GlobalStaticConstants.Routes.OFFER_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.BODY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={GlobalStaticConstants.Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={OfferId}";
+        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{Routes.OFFER_CONTROLLER_NAME}/{Routes.BODY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={OfferId}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
         await SetBusyAsync();

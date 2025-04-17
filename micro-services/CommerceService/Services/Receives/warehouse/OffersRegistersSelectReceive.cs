@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 public class OffersRegistersSelectReceive(ICommerceService commRepo) : IResponseReceive<TPaginationRequestModel<RegistersSelectRequestBaseModel>?, TPaginationResponseModel<OfferAvailabilityModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OffersRegistersSelectCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OffersRegistersSelectCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<RegistersSelectRequestBaseModel>? req, CancellationToken token = default)

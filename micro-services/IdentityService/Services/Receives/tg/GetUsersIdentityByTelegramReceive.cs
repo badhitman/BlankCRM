@@ -14,7 +14,7 @@ public class GetUsersIdentityByTelegramReceive(IIdentityTools identityRepo)
     : IResponseReceive<List<long>?, TResponseModel<UserInfoModel[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetUsersIdentityByTelegramReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersIdentityByTelegramReceive;
 
     /// <summary>
     /// Find user identity by telegram - receive

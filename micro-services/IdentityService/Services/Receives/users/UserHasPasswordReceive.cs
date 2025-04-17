@@ -14,7 +14,7 @@ public class UserHasPasswordReceive(IIdentityTools idRepo)
     : IResponseReceive<string?, TResponseModel<bool?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.UserHasPasswordReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UserHasPasswordReceive;
 
     /// <summary>
     /// Получает флаг, указывающий, есть ли у пользователя пароль

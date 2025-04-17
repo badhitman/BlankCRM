@@ -13,7 +13,7 @@ namespace Transmission.Receives.helpdesk;
 public class MessageUpdateOrCreateReceive(IHelpdeskService hdRepo) : IResponseReceive<TAuthRequestModel<IssueMessageHelpdeskBaseModel>?, TResponseModel<int?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.MessageOfIssueUpdateHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MessageOfIssueUpdateHelpdeskReceive;
 
     /// <summary>
     /// Сообщение в обращение

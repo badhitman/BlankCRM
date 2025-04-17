@@ -15,7 +15,7 @@ public class PaymentDocumentUpdateReceive(ICommerceService commerceRepo, ILogger
     : IResponseReceive<TAuthRequestModel<PaymentDocumentBaseModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.PaymentDocumentUpdateCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PaymentDocumentUpdateCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<PaymentDocumentBaseModel>? req, CancellationToken token = default)

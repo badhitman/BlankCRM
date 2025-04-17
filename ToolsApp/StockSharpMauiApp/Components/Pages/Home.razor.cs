@@ -1,4 +1,8 @@
-﻿using NetMQ;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using NetMQ;
 using NetMQ.Sockets;
 
 namespace StockSharpMauiApp.Components.Pages;

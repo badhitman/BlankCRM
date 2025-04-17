@@ -1,4 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace SharedLib;

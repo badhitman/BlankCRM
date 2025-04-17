@@ -14,7 +14,7 @@ public class TelegramMessageIncomingReceive(IHelpdeskService hdRepo)
     : IResponseReceive<TelegramIncomingMessageModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.IncomingTelegramMessageHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.IncomingTelegramMessageHelpdeskReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramIncomingMessageModel? req, CancellationToken token = default)

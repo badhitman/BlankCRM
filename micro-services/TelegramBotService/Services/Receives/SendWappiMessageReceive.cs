@@ -18,7 +18,7 @@ public class SendWappiMessageReceive(
     IStorageTransmission StorageTransmissionRepo) : IResponseReceive<EntryAltExtModel?, TResponseModel<SendMessageResponseModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SendWappiMessageReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SendWappiMessageReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<SendMessageResponseModel>?> ResponseHandleActionAsync(EntryAltExtModel? req, CancellationToken token = default)

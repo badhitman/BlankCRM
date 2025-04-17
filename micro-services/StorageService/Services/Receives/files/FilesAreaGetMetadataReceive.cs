@@ -18,7 +18,7 @@ public class FilesAreaGetMetadataReceive(ILogger<FilesSelectReceive> loggerRepo,
     : IResponseReceive<FilesAreaMetadataRequestModel?, TResponseModel<FilesAreaMetadataModel[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.FilesAreaGetMetadataReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FilesAreaGetMetadataReceive;
 
     /// <summary>
     /// Получить сводку (метаданные) по пространствам хранилища

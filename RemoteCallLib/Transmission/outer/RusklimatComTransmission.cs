@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsTransmission;
 
 namespace RemoteCallLib;
 
@@ -13,33 +14,33 @@ public class RusklimatComTransmission(IRabbitClient rabbitClient) : IRusklimatCo
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.DownloadAndSaveRusklimatReceive, waitResponse: false, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.DownloadAndSaveRusklimatReceive, waitResponse: false, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<CategoriesRusklimatResponseModel>> GetCategoriesAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<CategoriesRusklimatResponseModel>>(GlobalStaticConstants.TransmissionQueues.GetCategoriesRusklimatReceive, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<CategoriesRusklimatResponseModel>>(TransmissionQueues.GetCategoriesRusklimatReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<ProductsRusklimatResponseModel>> GetProductsAsync(RusklimatPaginationRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<ProductsRusklimatResponseModel>>(GlobalStaticConstants.TransmissionQueues.GetProductsRusklimatReceive, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<ProductsRusklimatResponseModel>>(TransmissionQueues.GetProductsRusklimatReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<PropertiesRusklimatResponseModel>> GetPropertiesAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<PropertiesRusklimatResponseModel>>(GlobalStaticConstants.TransmissionQueues.GetPropertiesRusklimatReceive, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<PropertiesRusklimatResponseModel>>(TransmissionQueues.GetPropertiesRusklimatReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<UnitsRusklimatResponseModel>> GetUnitsAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<UnitsRusklimatResponseModel>>(GlobalStaticConstants.TransmissionQueues.GetUnitsRusklimatReceive, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<UnitsRusklimatResponseModel>>(TransmissionQueues.GetUnitsRusklimatReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RabbitMqManagementResponseModel>>> HealthCheckAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<RabbitMqManagementResponseModel>>>(GlobalStaticConstants.TransmissionQueues.HealthCheckRusklimatReceive, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<RabbitMqManagementResponseModel>>>(TransmissionQueues.HealthCheckRusklimatReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<ProductRusklimatModelDB>> ProductsSelectAsync(RusklimatRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<ProductRusklimatModelDB>>(GlobalStaticConstants.TransmissionQueues.ProductsSelectRusklimatReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<ProductRusklimatModelDB>>(TransmissionQueues.ProductsSelectRusklimatReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateProductAsync(ProductRusklimatModelDB req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstants.TransmissionQueues.ProductUpdateRusklimatReceive, req, false, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.ProductUpdateRusklimatReceive, req, false, token: token) ?? new();
 }

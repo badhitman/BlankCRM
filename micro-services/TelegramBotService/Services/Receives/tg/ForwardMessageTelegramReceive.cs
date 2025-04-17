@@ -15,7 +15,7 @@ public class ForwardMessageTelegramReceive(ILogger<ForwardMessageTelegramReceive
     : IResponseReceive<ForwardMessageTelegramBotModel?, TResponseModel<MessageComplexIdsModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ForwardTextMessageTelegramReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ForwardTextMessageTelegramReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<MessageComplexIdsModel>?> ResponseHandleActionAsync(ForwardMessageTelegramBotModel? message, CancellationToken token = default)

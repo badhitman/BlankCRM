@@ -13,6 +13,7 @@ using MongoDB.Bson;
 using ImageMagick;
 using SharedLib;
 using DbcLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace StorageService;
 
@@ -411,33 +412,33 @@ public class StorageServiceImpl(
             string _h = $"Height:{image.Height}", _w = $"Width:{image.Width}";
             await context.AddAsync(new TagModelDB()
             {
-                ApplicationName = GlobalStaticConstants.Routes.FILE_CONTROLLER_NAME,
-                PropertyName = GlobalStaticConstants.Routes.METADATA_CONTROLLER_NAME,
+                ApplicationName = Routes.FILE_CONTROLLER_NAME,
+                PropertyName = Routes.METADATA_CONTROLLER_NAME,
                 CreatedAt = DateTime.UtcNow,
                 NormalizedTagNameUpper = _h.ToUpper(),
                 TagName = _h,
                 OwnerPrimaryKey = res.Response.Id,
-                PrefixPropertyName = GlobalStaticConstants.Routes.DEFAULT_CONTROLLER_NAME,
+                PrefixPropertyName = Routes.DEFAULT_CONTROLLER_NAME,
             }, token);
             await context.AddAsync(new TagModelDB()
             {
-                ApplicationName = GlobalStaticConstants.Routes.FILE_CONTROLLER_NAME,
-                PropertyName = GlobalStaticConstants.Routes.METADATA_CONTROLLER_NAME,
+                ApplicationName = Routes.FILE_CONTROLLER_NAME,
+                PropertyName = Routes.METADATA_CONTROLLER_NAME,
                 CreatedAt = DateTime.UtcNow,
                 NormalizedTagNameUpper = _w.ToUpper(),
                 TagName = _w,
                 OwnerPrimaryKey = res.Response.Id,
-                PrefixPropertyName = GlobalStaticConstants.Routes.DEFAULT_CONTROLLER_NAME,
+                PrefixPropertyName = Routes.DEFAULT_CONTROLLER_NAME,
             }, token);
             await context.AddAsync(new TagModelDB()
             {
-                ApplicationName = GlobalStaticConstants.Routes.FILE_CONTROLLER_NAME,
-                PropertyName = GlobalStaticConstants.Routes.METADATA_CONTROLLER_NAME,
+                ApplicationName = Routes.FILE_CONTROLLER_NAME,
+                PropertyName = Routes.METADATA_CONTROLLER_NAME,
                 CreatedAt = DateTime.UtcNow,
                 NormalizedTagNameUpper = nameof(GlobalTools.IsImageFile).ToUpper(),
                 TagName = nameof(GlobalTools.IsImageFile),
                 OwnerPrimaryKey = res.Response.Id,
-                PrefixPropertyName = GlobalStaticConstants.Routes.DEFAULT_CONTROLLER_NAME,
+                PrefixPropertyName = Routes.DEFAULT_CONTROLLER_NAME,
             }, token);
         }
 
@@ -447,7 +448,7 @@ public class StorageServiceImpl(
             string msg;
             switch (req.Payload.ApplicationName)
             {
-                case GlobalStaticConstants.Routes.ORDER_CONTROLLER_NAME:
+                case Routes.ORDER_CONTROLLER_NAME:
                     TResponseModel<OrderDocumentModelDB[]> get_order = await commRepo.OrdersReadAsync(new() { Payload = [req.Payload.OwnerPrimaryKey.Value], SenderActionUserId = req.SenderActionUserId }, token);
                     if (!get_order.Success() || get_order.Response is null)
                         res.AddRangeMessages(get_order.Messages);
@@ -467,7 +468,7 @@ public class StorageServiceImpl(
                                         Description = msg,
                                         IssueId = orderDb.HelpdeskId.Value,
                                         PulseType = PulseIssuesTypesEnum.Files,
-                                        Tag = GlobalStaticConstants.Routes.ADD_ACTION_NAME
+                                        Tag = Routes.ADD_ACTION_NAME
                                     },
                                     SenderActionUserId = GlobalStaticConstants.Roles.System,
                                 }
@@ -477,7 +478,7 @@ public class StorageServiceImpl(
                         }
                     }
                     break;
-                case GlobalStaticConstants.Routes.ISSUE_CONTROLLER_NAME:
+                case Routes.ISSUE_CONTROLLER_NAME:
                     msg = $"В <a href=\"{webConfig.ClearBaseUri}/issue-card/{req.Payload.OwnerPrimaryKey.Value}\">заявку #{req.Payload.OwnerPrimaryKey.Value}</a> добавлен файл '<u>{_file_name}</u>' {GlobalTools.SizeDataAsString(req.Payload.Payload.Length)}";
                     loggerRepo.LogInformation($"{msg} [{nameof(res.Response.PointId)}:{_uf}]");
                     reqPulse = new()
@@ -489,7 +490,7 @@ public class StorageServiceImpl(
                                 Description = msg,
                                 IssueId = req.Payload.OwnerPrimaryKey.Value,
                                 PulseType = PulseIssuesTypesEnum.Files,
-                                Tag = GlobalStaticConstants.Routes.ADD_ACTION_NAME
+                                Tag = Routes.ADD_ACTION_NAME
                             },
                             SenderActionUserId = GlobalStaticConstants.Roles.System,
                         }

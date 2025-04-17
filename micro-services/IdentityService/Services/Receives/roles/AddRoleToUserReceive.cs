@@ -15,7 +15,7 @@ public class AddRoleToUserReceive(IIdentityTools idRepo, ILogger<AddRoleToUserRe
     : IResponseReceive<RoleEmailModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.AddRoleToUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.AddRoleToUserReceive;
 
     /// <summary>
     /// Добавить роль пользователю (включить пользователя в роль)

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace ApiRestService.Controllers;
 

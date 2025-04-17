@@ -14,7 +14,7 @@ namespace Transmission.Receives.storage;
 public class FindParametersReceive(ISerializeStorage serializeStorageRepo, ILogger<FindParametersReceive> LoggerRepo) : IResponseReceive<RequestStorageBaseModel?, TResponseModel<FoundParameterModel[]?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.FindCloudParameterReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindCloudParameterReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<FoundParameterModel[]?>?> ResponseHandleActionAsync(RequestStorageBaseModel? request, CancellationToken token = default)

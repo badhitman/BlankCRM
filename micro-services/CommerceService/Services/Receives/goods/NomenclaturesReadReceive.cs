@@ -14,7 +14,7 @@ public class NomenclaturesReadReceive(ICommerceService commerceRepo)
     : IResponseReceive<TAuthRequestModel<int[]>?, TResponseModel<List<NomenclatureModelDB>>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.NomenclaturesReadCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.NomenclaturesReadCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<NomenclatureModelDB>>?> ResponseHandleActionAsync(TAuthRequestModel<int[]>? req, CancellationToken token = default)

@@ -12,7 +12,7 @@ public class KladrFindReceive(IKladrNavigationService kladrRepo)
     : IResponseReceive<KladrFindRequestModel?, TPaginationResponseModel<KladrResponseModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.KladrNavigationFindReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.KladrNavigationFindReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<KladrResponseModel>?> ResponseHandleActionAsync(KladrFindRequestModel? req, CancellationToken token = default)

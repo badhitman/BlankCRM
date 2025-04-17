@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 public class AttendancesRecordsByIssuesGetReceive(ICommerceService commRepo) : IResponseReceive<OrdersByIssuesSelectRequestModel?, TResponseModel<RecordsAttendanceModelDB[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrdersAttendancesByIssuesGetReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrdersAttendancesByIssuesGetReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<RecordsAttendanceModelDB[]>?> ResponseHandleActionAsync(OrdersByIssuesSelectRequestModel? payload, CancellationToken token = default)

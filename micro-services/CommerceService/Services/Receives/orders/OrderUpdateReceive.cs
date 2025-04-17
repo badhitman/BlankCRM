@@ -14,7 +14,7 @@ namespace Transmission.Receives.commerce;
 public class OrderUpdateReceive(ICommerceService commRepo, ILogger<OrderUpdateReceive> loggerRepo) : IResponseReceive<OrderDocumentModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrderUpdateCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrderUpdateCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(OrderDocumentModelDB? req, CancellationToken token = default)

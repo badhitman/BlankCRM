@@ -15,7 +15,7 @@ public class SaveFileReceive(ILogger<SaveFileReceive> LoggerRepo, ISerializeStor
     : IResponseReceive<TAuthRequestModel<StorageImageMetadataModel>?, TResponseModel<StorageFileModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SaveFileReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SaveFileReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<StorageFileModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<StorageImageMetadataModel>? req, CancellationToken token = default)

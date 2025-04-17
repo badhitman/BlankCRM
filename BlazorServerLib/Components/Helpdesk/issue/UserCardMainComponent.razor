@@ -1,4 +1,5 @@
-﻿@attribute [Authorize]
+﻿@using static SharedLib.GlobalStaticConstantsRoutes
+@attribute [Authorize]
 @inherits IssueWrapBaseModel
 
 <div class="offcanvas offcanvas-start show" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
@@ -9,14 +10,14 @@
     <div class="offcanvas-body">
         <NotificationsAreaTelegramIssueConfigComponent />
 
-        <NoteSimpleComponent ApplicationName="@GlobalStaticConstants.Routes.NOTES_CONTROLLER_NAME"
-                             PropertyName="@GlobalStaticConstants.Routes.USERS_CONTROLLER_NAME"
+        <NoteSimpleComponent ApplicationName="@Routes.NOTES_CONTROLLER_NAME"
+                             PropertyName="@Routes.USERS_CONTROLLER_NAME"
                              PrefixPropertyName="@($"{Author.UserName}")"
                              Label="О клиенте (общее)"
                              Hint="Единый параметр для всех сотрудников" />
 
-        <NoteSimpleComponent ApplicationName="@GlobalStaticConstants.Routes.NOTES_CONTROLLER_NAME"
-                             PropertyName="@($"{GlobalStaticConstants.Routes.HELPDESK_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.DOCUMENT_CONTROLLER_NAME}")"
+        <NoteSimpleComponent ApplicationName="@Routes.NOTES_CONTROLLER_NAME"
+                             PropertyName="@($"{Routes.HELPDESK_CONTROLLER_NAME}-{Routes.DOCUMENT_CONTROLLER_NAME}")"
                              PrefixPropertyName="@CurrentUserSession!.UserId"
                              OwnerPrimaryKey="Issue.Id"
                              Label="О заявке (приватно)"

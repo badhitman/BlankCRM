@@ -1,4 +1,5 @@
 ﻿@using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
 
 @inherits BlazorBusyComponentBaseAuthModel
 
@@ -8,7 +9,7 @@
         <MudStack Spacing="2" Class="pb-2">
             <MudButton OnClick="OnExpandCollapseClick" Variant="Variant.Outlined">@(_expanded ? "Отмена" : "Создать")</MudButton>
             <MudCollapse Expanded="_expanded">
-                <NomenclatureCreatingFormComponent ContextName="@GlobalStaticConstants.Routes.ATTENDANCES_CONTROLLER_NAME" NomenclatureCreatingHandler="CreateNomenclatureAction" />
+                <NomenclatureCreatingFormComponent ContextName="@Routes.ATTENDANCES_CONTROLLER_NAME" NomenclatureCreatingHandler="CreateNomenclatureAction" />
             </MudCollapse>
         </MudStack>
     }

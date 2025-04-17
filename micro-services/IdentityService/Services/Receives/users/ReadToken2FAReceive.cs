@@ -14,7 +14,7 @@ public class ReadToken2FAReceive(IIdentityTools idRepo)
     : IResponseReceive<string?, TResponseModel<string>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ReadToken2FAReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ReadToken2FAReceive;
 
     /// <summary>
     /// Чтение 2fa токена (из кеша)

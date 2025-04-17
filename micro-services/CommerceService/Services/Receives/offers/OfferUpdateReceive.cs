@@ -15,7 +15,7 @@ public class OfferUpdateReceive(ICommerceService commerceRepo, ILogger<OfferUpda
     : IResponseReceive<TAuthRequestModel<OfferModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OfferUpdateCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OfferUpdateCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<OfferModelDB>? req, CancellationToken token = default)

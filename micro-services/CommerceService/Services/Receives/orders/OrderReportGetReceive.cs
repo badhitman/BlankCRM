@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 public class OrderReportGetReceive(ICommerceService commRepo) : IResponseReceive<TAuthRequestModel<int>?, TResponseModel<FileAttachModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrderReportGetCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrderReportGetCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<FileAttachModel>?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)

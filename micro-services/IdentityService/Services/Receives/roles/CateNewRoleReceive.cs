@@ -15,7 +15,7 @@ public class CateNewRoleReceive(IIdentityTools idRepo, ILogger<CateNewRoleReceiv
     : IResponseReceive<string?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.CateNewRoleReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CateNewRoleReceive;
 
     /// <summary>
     /// Создать новую роль

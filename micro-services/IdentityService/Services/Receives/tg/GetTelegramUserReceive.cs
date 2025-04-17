@@ -15,7 +15,7 @@ public class GetTelegramUserReceive(IIdentityTools identityRepo, ILogger<GetTele
     : IResponseReceive<long, TResponseModel<TelegramUserBaseModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetTelegramUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetTelegramUserReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<TelegramUserBaseModel>?> ResponseHandleActionAsync(long payload, CancellationToken token = default)

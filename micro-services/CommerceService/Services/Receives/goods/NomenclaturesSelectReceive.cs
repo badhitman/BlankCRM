@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 public class NomenclaturesSelectReceive(ICommerceService commerceRepo) : IResponseReceive<TPaginationRequestModel<NomenclaturesSelectRequestModel>?, TPaginationResponseModel<NomenclatureModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.NomenclaturesSelectCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.NomenclaturesSelectCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<NomenclatureModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<NomenclaturesSelectRequestModel>? req, CancellationToken token = default)

@@ -14,7 +14,7 @@ public class ProductsGetReceive(IDaichiBusinessApiService daichiRepo)
     : IResponseReceive<ProductsRequestDaichiModel?, TResponseModel<ProductsDaichiBusinessResultModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ProductsGetDaichiReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProductsGetDaichiReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<ProductsDaichiBusinessResultModel>?> ResponseHandleActionAsync(ProductsRequestDaichiModel? payload, CancellationToken token = default)

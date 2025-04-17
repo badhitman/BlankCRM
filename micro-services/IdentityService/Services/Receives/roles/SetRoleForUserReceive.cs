@@ -15,7 +15,7 @@ public class SetRoleForUserReceive(IIdentityTools identityRepo, ILogger<SetRoleF
     : IResponseReceive<SetRoleForUserRequestModel?, TResponseModel<string[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetRoleForUserOfIdentityReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetRoleForUserOfIdentityReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<string[]>?> ResponseHandleActionAsync(SetRoleForUserRequestModel? req, CancellationToken token = default)

@@ -15,7 +15,7 @@ public class ClaimUpdateOrCreateReceive(IIdentityTools idRepo, ILogger<ClaimUpda
     : IResponseReceive<ClaimUpdateModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ClaimUpdateOrCreateReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ClaimUpdateOrCreateReceive;
 
     /// <summary>
     /// Claim: Update or create

@@ -15,7 +15,7 @@ public class PriceRuleDeleteReceive(ICommerceService commerceRepo, ILogger<Price
     : IResponseReceive<TAuthRequestModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.PriceRuleDeleteCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PriceRuleDeleteCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)

@@ -13,7 +13,7 @@ public class GetMetadataKladrReceive(ILogger<GetMetadataKladrReceive> loggerRepo
     : IResponseReceive<GetMetadataKladrRequestModel?, MetadataKladrModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetMetadataKladrReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetMetadataKladrReceive;
 
     /// <inheritdoc/>
     public async Task<MetadataKladrModel?> ResponseHandleActionAsync(GetMetadataKladrRequestModel? req, CancellationToken token = default)

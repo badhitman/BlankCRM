@@ -38,9 +38,9 @@ builder
 string _environmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? builder.Environment.EnvironmentName;
 logger.Warn($"init main: {_environmentName}");
 
-string _modePrefix = Environment.GetEnvironmentVariable(nameof(GlobalStaticConstants.TransmissionQueueNamePrefix)) ?? "";
-if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstants.TransmissionQueueNamePrefix.EndsWith(_modePrefix))
-    GlobalStaticConstants.TransmissionQueueNamePrefix += _modePrefix.Trim();
+string _modePrefix = Environment.GetEnvironmentVariable(nameof(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix)) ?? "";
+if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.EndsWith(_modePrefix))
+    GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix += _modePrefix.Trim();
 
 string curr_dir = Directory.GetCurrentDirectory();
 builder.Configuration.SetBasePath(curr_dir);

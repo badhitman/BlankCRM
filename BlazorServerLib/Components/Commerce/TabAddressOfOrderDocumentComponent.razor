@@ -1,10 +1,11 @@
 ﻿@using BlazorWebLib.Components.Helpdesk
 @using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
 @inherits OffersTableBaseComponent
 <div class="mb-3">
     <CascadingValue Value="RubricSelectAction">
         <CascadingValue Value="RubricMetadataShadow">
-            <RubricSelectorComponent @ref="ref_rubric" Title="Склад" ContextName="@GlobalStaticConstants.Routes.WAREHOUSE_CONTROLLER_NAME" ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny" ShowDisabledRubrics="true" StartRubric="CurrentTab.WarehouseId" />
+            <RubricSelectorComponent @ref="ref_rubric" Title="Склад" ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME" ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny" ShowDisabledRubrics="true" StartRubric="CurrentTab.WarehouseId" />
         </CascadingValue>
     </CascadingValue>
 </div>

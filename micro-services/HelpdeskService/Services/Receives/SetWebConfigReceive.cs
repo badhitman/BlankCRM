@@ -15,7 +15,7 @@ public class SetWebConfigReceive(IHelpdeskService hdRepo, ILogger<SetWebConfigRe
     : IResponseReceive<HelpdeskConfigModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SetWebConfigHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetWebConfigHelpdeskReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(HelpdeskConfigModel? payload, CancellationToken token = default)

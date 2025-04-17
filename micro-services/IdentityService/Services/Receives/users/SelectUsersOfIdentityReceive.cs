@@ -14,7 +14,7 @@ public class SelectUsersOfIdentityReceive(IIdentityTools identityRepo)
     : IResponseReceive<TPaginationRequestModel<SimpleBaseRequestModel>?, TPaginationResponseModel<UserInfoModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.SelectUsersOfIdentityReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SelectUsersOfIdentityReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<UserInfoModel>?> ResponseHandleActionAsync(TPaginationRequestModel<SimpleBaseRequestModel>? req, CancellationToken token = default)

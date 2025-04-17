@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 public class OrganizationsReadReceive(ICommerceService commerceRepo) : IResponseReceive<int[]?, TResponseModel<OrganizationModelDB[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.OrganizationsReadCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrganizationsReadCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<OrganizationModelDB[]>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)

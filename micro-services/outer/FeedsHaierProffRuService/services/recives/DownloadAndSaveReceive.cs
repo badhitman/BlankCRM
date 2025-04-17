@@ -14,7 +14,7 @@ public class DownloadAndSaveReceive(IFeedsHaierProffRuService haierRepo)
     : IResponseReceive<object?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.DownloadAndSaveHaierProffReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DownloadAndSaveHaierProffReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)

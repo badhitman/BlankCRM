@@ -7,6 +7,7 @@ using SharedLib;
 using DbcLib;
 using System.Xml.Linq;
 using RemoteCallLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace FeedsHaierProffRuService;
 
@@ -19,7 +20,7 @@ public class HaierProffRuFeedsService(IHttpClientFactory HttpClientFactory, ILog
 #pragma warning restore CS9107 // Параметр записан в состоянии включающего типа, а его значение также передается базовому конструктору. Значение также может быть записано базовым классом.
 {
     /// <inheritdoc/>
-    public override string NameTemplateMQ => Path.Combine(GlobalStaticConstants.TransmissionQueueNamePrefix, $"{GlobalStaticConstants.Routes.HAIERPROFF_CONTROLLER_NAME}-{GlobalStaticConstants.Routes.SYNCHRONIZATION_CONTROLLER_NAME}");
+    public override string NameTemplateMQ => Path.Combine(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix, $"{Routes.HAIERPROFF_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}");
 
     /// <inheritdoc/>
     public override async Task<ResponseBaseModel> DownloadAndSaveAsync(CancellationToken token = default)

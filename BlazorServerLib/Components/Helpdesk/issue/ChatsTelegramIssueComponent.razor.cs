@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorWebLib.Components.Helpdesk.issue;
 
@@ -30,7 +31,7 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
                     Description = $"Отправил сообщение в Telegram: user-tg#{msg.UserTelegramId}",
                     IssueId = Issue.Id,
                     PulseType = PulseIssuesTypesEnum.Messages,
-                    Tag = GlobalStaticConstants.Routes.TELEGRAM_CONTROLLER_NAME,
+                    Tag = Routes.TELEGRAM_CONTROLLER_NAME,
                 },
                 SenderActionUserId = CurrentUserSession!.UserId
             }

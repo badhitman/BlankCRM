@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class FindSessionsDocumentsByFormFieldNameReceive(IConstructorService conService) : IResponseReceive<FormFieldModel?, TResponseModel<EntryDictModel[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.FindSessionsDocumentsByFormFieldNameReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindSessionsDocumentsByFormFieldNameReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryDictModel[]>?> ResponseHandleActionAsync(FormFieldModel? payload, CancellationToken token = default)

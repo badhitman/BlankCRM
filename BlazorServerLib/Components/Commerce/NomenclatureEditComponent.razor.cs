@@ -7,6 +7,7 @@ using BlazorLib;
 using SharedLib;
 using System.Reflection;
 using BlazorWebLib.Components.Commerce.Attendances;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorWebLib.Components.Commerce;
 
@@ -78,7 +79,7 @@ public partial class NomenclatureEditComponent : BlazorBusyComponentBaseAuthMode
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{GlobalStaticConstants.Routes.NOMENCLATURE_CONTROLLER_NAME}/{GlobalStaticConstants.Routes.BODY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={GlobalStaticConstants.Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={NomenclatureId}";
+        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{Routes.NOMENCLATURE_CONTROLLER_NAME}/{Routes.BODY_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={NomenclatureId}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
         await base.OnInitializedAsync();

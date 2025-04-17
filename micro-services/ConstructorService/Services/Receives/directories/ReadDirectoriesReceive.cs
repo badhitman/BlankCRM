@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class ReadDirectoriesReceive(IConstructorService conService) : IResponseReceive<int[]?, List<EntryNestedModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.ReadDirectoriesReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ReadDirectoriesReceive;
 
     /// <inheritdoc/>
     public async Task<List<EntryNestedModel>?> ResponseHandleActionAsync(int[]? payload, CancellationToken token = default)

@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 public class WarehousesDocumentsReadReceive(ICommerceService commRepo) : IResponseReceive<int[]?, TResponseModel<WarehouseDocumentModelDB[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.WarehousesDocumentsReadCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.WarehousesDocumentsReadCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<WarehouseDocumentModelDB[]>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)

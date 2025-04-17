@@ -16,7 +16,7 @@ public class GetUserIdentityByTelegramReceive(IIdentityTools IdentityRepo, IMemo
     : IResponseReceive<long[]?, TResponseModel<UserInfoModel[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstants.TransmissionQueues.GetUsersOfIdentityByTelegramIdsReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityByTelegramIdsReceive;
 
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);
 
