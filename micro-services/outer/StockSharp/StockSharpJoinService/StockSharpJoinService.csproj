@@ -11,4 +11,8 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
 		<PackageReference Include="NetMQ" Version="4.0.1.14" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\..\SharedLib\SharedLib.csproj" />
+	</ItemGroup>
 </Project>
