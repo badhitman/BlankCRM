@@ -22,7 +22,7 @@ namespace SharedLib;
 public static partial class GlobalTools
 {
     /// <summary>
-    /// Расчитать хеш строки
+    /// Рассчитать хеш строки
     /// </summary>
     /// <param name="inputString">Строка для расчёта hash</param>
     /// <returns>hash строки</returns>
@@ -296,32 +296,6 @@ public static partial class GlobalTools
     {
         List<ValidationResult> validationResults = [];
         return new ValidateReportModel(Validator.TryValidateObject(object_for_validate, new ValidationContext(object_for_validate), validationResults, true), validationResults);
-    }
-
-    /// <summary>
-    /// Добавить информация об исключении
-    /// </summary>
-    public static void InjectException(this List<ResultMessage> sender, List<ValidationResult> validationResults)
-        => sender.AddRange(validationResults.Where(x => !string.IsNullOrWhiteSpace(x.ErrorMessage)).Select(x => new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = x.ErrorMessage! }));
-
-    /// <summary>
-    /// Добавить информация об исключении
-    /// </summary>
-    public static void InjectException(this List<ResultMessage> sender, Exception ex)
-    {
-        sender.Add(new() { TypeMessage = ResultTypesEnum.Error, Text = ex.Message });
-        if (ex.StackTrace != null)
-            sender.Add(new() { TypeMessage = ResultTypesEnum.Error, Text = ex.StackTrace });
-        int i = 0;
-        while (ex.InnerException != null)
-        {
-            i++;
-            sender.Add(new() { TypeMessage = ResultTypesEnum.Error, Text = $"InnerException -> {i}/ {ex.InnerException.Message}" });
-            if (ex.InnerException.StackTrace != null)
-                sender.Add(new() { TypeMessage = ResultTypesEnum.Error, Text = $"InnerException -> {i}/ {ex.InnerException.StackTrace}" });
-
-            ex = ex.InnerException;
-        }
     }
 
     /// <summary>
