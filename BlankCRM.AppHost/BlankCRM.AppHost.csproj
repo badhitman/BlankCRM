@@ -12,12 +12,12 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
-	  <DefineConstants>$(DefineConstants);OUTER_DATA</DefineConstants>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<DefineConstants>$(DefineConstants);OUTER_DATA</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -44,6 +44,7 @@
 		<ProjectReference Include="..\micro-services\outer\ApiDaichiBusinessService\ApiDaichiBusinessService.csproj" />
 		<ProjectReference Include="..\micro-services\outer\ApiRusklimatComService\ApiRusklimatComService.csproj" />
 		<ProjectReference Include="..\micro-services\outer\FeedsHaierProffRuService\FeedsHaierProffRuService.csproj" />
+		<ProjectReference Include="..\micro-services\outer\StockSharp\StockSharpJoinService\StockSharpJoinService.csproj" />
 	</ItemGroup>
 
 

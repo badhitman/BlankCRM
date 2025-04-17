@@ -17,7 +17,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
-		<PackageReference Include="MySql.EntityFrameworkCore" Version="9.0.0" />
+		<PackageReference Include="MySql.EntityFrameworkCore" Version="9.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
