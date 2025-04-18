@@ -14,7 +14,7 @@ namespace StockSharpJoinService;
 
 public class Worker : BackgroundService
 {
-    private const string _connectorFile = "ConnectorFile.json";
+    //private const string _connectorFile = "ConnectorFile.json";
     private readonly ILogger<Worker> _logger;
     private readonly ResponseSocket server;
     public Connector Connector;
@@ -99,19 +99,19 @@ public class Worker : BackgroundService
         // Ошибки снятия заявок
         Connector.OrderCancelFailReceived += OrderCancelFailReceived;
 
-        try
-        {
-            if (File.Exists(_connectorFile))
-            {
-                var ctx = new ContinueOnExceptionContext();
-                ctx.Error += ex => ex.LogError();
-                using (new Scope<ContinueOnExceptionContext>(ctx))
-                    Connector.Load(_connectorFile.Deserialize<SettingsStorage>());
-            }
-        }
-        catch
-        {
-        }
+        //try
+        //{
+        //    if (File.Exists(_connectorFile))
+        //    {
+        //        var ctx = new ContinueOnExceptionContext();
+        //        ctx.Error += ex => ex.LogError();
+        //        using (new Scope<ContinueOnExceptionContext>(ctx))
+        //            Connector.Load(_connectorFile.Deserialize<SettingsStorage>());
+        //    }
+        //}
+        //catch
+        //{
+        //}
 
         ConfigManager.RegisterService<IExchangeInfoProvider>(new InMemoryExchangeInfoProvider());
     }

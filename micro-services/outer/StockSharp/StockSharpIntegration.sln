@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{36D591C7-6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLibStandart21", "..\..\..\SharedLibStandart21\SharedLibStandart21.csproj", "{CE885F7A-8580-AC10-39BA-3CA73BD7B716}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeroMQCallLib", "..\..\..\RemoteCallLib\ZeroMQCallLib\ZeroMQCallLib.csproj", "{A4440145-B164-BEEC-B108-66938E6637D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{CE885F7A-8580-AC10-39BA-3CA73BD7B716}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE885F7A-8580-AC10-39BA-3CA73BD7B716}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE885F7A-8580-AC10-39BA-3CA73BD7B716}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4440145-B164-BEEC-B108-66938E6637D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4440145-B164-BEEC-B108-66938E6637D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4440145-B164-BEEC-B108-66938E6637D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4440145-B164-BEEC-B108-66938E6637D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{6ECBD5A2-C98E-7217-ECFA-9695AB0DB52B} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{A016319F-0590-9CA2-F6EA-DCDDB9FAFB8C} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{CE885F7A-8580-AC10-39BA-3CA73BD7B716} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{A4440145-B164-BEEC-B108-66938E6637D2} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {38B9F8A2-8A07-4116-80D5-377765DB0F1A}
