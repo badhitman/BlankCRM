@@ -71,7 +71,7 @@ public class RabbitClient : IRabbitClient
         string response_topic = waitResponse ? $"{RabbitConfigRepo.QueueMqNamePrefixForResponse}{queue}_{Guid.NewGuid()}" : "";
         activity?.SetTag(nameof(response_topic), response_topic);
 
-        using IConnection _connection = factory.CreateConnection(); ;
+        using IConnection _connection = factory.CreateConnection();
         using IModel _channel = _connection.CreateModel();
 
         IBasicProperties? properties = _channel.CreateBasicProperties();

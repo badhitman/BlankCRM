@@ -29,7 +29,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\DBContextLibs\DbPostgreLib\DbPostgreLib.csproj" />
 		<ProjectReference Include="..\IdentityLib\IdentityLib.csproj" />
-		<ProjectReference Include="..\RemoteCallLib\RemoteCallLib.csproj" />
+		<ProjectReference Include="..\RemoteCallLib\RabbitMQ\RabbitMQCallLib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
