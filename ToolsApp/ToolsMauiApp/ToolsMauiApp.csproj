@@ -44,35 +44,35 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-maccatalyst|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-windows10.0.19041.0|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-maccatalyst|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-windows10.0.19041.0|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -108,7 +108,7 @@
 		<PackageReference Include="System.Text.Json" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="3.0.71" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<ProjectReference Include="..\..\BlazorLib\BlazorLib.csproj" />
 		<ProjectReference Include="..\..\DBContextLibs\DbSqliteLib\DbSqliteLib.csproj" />
@@ -120,9 +120,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Update="wwwroot\js\site.js">
-	    <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-	  </Content>
+		<Content Update="wwwroot\js\site.js">
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+		</Content>
 	</ItemGroup>
 
 </Project>

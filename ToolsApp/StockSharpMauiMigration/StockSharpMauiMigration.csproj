@@ -30,6 +30,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\DBContextLibs\DbSqliteLib\DbSqliteLib.csproj" />
 		<ProjectReference Include="..\..\SharedLib\SharedLib.csproj" />
-		<ProjectReference Include="..\ToolsMauiLib\ToolsMauiLib.csproj" />
+		<ProjectReference Include="..\StockSharpMauiLib\StockSharpMauiLib.csproj" />
 	</ItemGroup>
 </Project>
