@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Text;
 using SharedLib;
 using ToolsMauiLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace ToolsMauiApp;
 

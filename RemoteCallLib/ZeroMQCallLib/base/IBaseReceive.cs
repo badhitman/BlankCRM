@@ -2,18 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Threading.Tasks;
-using System.Threading;
-
 namespace SharedLib;
 
 /// <summary>
 /// Обработчик входящего сообщения
 /// </summary>
-public interface IZeroMQReceive<TRequest, TResponse>: IBaseReceive
+public interface IBaseReceive
 {
     /// <summary>
-    /// Обработчик ответа на запрос
+    /// Имя очереди
     /// </summary>
-    public Task<TResponse> ResponseHandleActionAsync(TRequest payload, CancellationToken token = default);
+    public static string QueueName { get; } = string.Empty;
 }
