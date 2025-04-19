@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{36D591C7-6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLibStandart21", "..\..\..\SharedLibStandart21\SharedLibStandart21.csproj", "{CE885F7A-8580-AC10-39BA-3CA73BD7B716}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeroMQCallLib", "..\..\..\RemoteCallLib\ZeroMQCallLib\ZeroMQCallLib.csproj", "{A4440145-B164-BEEC-B108-66938E6637D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTCallLib", "..\..\..\RemoteCallLib\MQTTCallLib\MQTTCallLib.csproj", "{A4440145-B164-BEEC-B108-66938E6637D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSharpMauiLib", "..\..\..\ToolsApp\StockSharpMauiLib\StockSharpMauiLib.csproj", "{91BDAA8A-3BC7-F8BA-32FE-39E5B31AEC5D}"
 EndProject

@@ -22,7 +22,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-		<PackageReference Include="NetMQ" Version="4.0.1.14" />
 		<PackageReference Include="StockSharp.Algo" Version="5.0.213" />
 		<PackageReference Include="StockSharp.BusinessEntities" Version="5.0.202" />
 		<PackageReference Include="StockSharp.Configuration" Version="5.0.204" />
@@ -39,7 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\..\RemoteCallLib\ZeroMQCallLib\ZeroMQCallLib.csproj" />
+	  <ProjectReference Include="..\..\..\..\RemoteCallLib\MQTTCallLib\MQTTCallLib.csproj" />
 	  <ProjectReference Include="..\..\..\..\SharedLibStandart21\SharedLibStandart21.csproj" />
 	</ItemGroup>
 

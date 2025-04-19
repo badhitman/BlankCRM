@@ -5,7 +5,7 @@
 using SharedLib;
 using Microsoft.Extensions.DependencyInjection;
 using Transmission.Receives.StockSharp.Main;
-using ZeroMQCallLib;
+using MQTTCallLib;
 
 namespace StockSharpService;
 
@@ -20,7 +20,7 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection StockSharpRegisterMqListeners(this IServiceCollection services)
     {
         return services            
-            .RegisterMqListener<PingSharpMainReceive, object, ResponseBaseModel>()
+            .RegisterMqListenerCli<PingSharpMainReceive, object, ResponseBaseModel>()
             ;
     }
 }

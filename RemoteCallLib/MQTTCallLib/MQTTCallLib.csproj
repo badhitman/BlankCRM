@@ -12,10 +12,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.1" />
-		<PackageReference Include="NetMQ" Version="4.0.1.14" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="MQTTnet" Version="4.3.7.1207" />
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.0" />
 		<PackageReference Include="System.Text.Json" Version="6.0.11" />
 	</ItemGroup>

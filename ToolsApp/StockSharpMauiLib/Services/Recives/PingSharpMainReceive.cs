@@ -10,7 +10,7 @@ namespace Transmission.Receives.StockSharp.Main;
 /// PingSharpMain
 /// </summary>
 public class PingSharpMainReceive(IStockSharpMainService ssRepo) 
-    : IZeroMQReceive<object?, ResponseBaseModel?>
+    : IMQTTReceive<object?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PingStockSharpMainReceive;

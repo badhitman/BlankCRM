@@ -10,7 +10,7 @@ namespace Transmission.Receives.StockSharp.Driver;
 /// PingStockSharpDriver
 /// </summary>
 public class PingStockSharpDriverReceive(IStockSharpDriverService ssRepo)
-    : IZeroMQReceive<object?, ResponseBaseModel?>
+    : IMQTTReceive<object?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PingStockSharpDriverReceive;

@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// StockSharpDriverTransmission
 /// </summary>
-public partial class StockSharpDriverTransmission(IZeroMQClient rabbitClient) : IStockSharpDriverService
+public partial class StockSharpDriverTransmission(IMQTTClient rabbitClient) : IStockSharpDriverService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> PingAsync(CancellationToken cancellationToken = default)

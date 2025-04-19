@@ -252,7 +252,7 @@ else
 ```json
 {
   "MongoDBConfig": {
-    "Sheme": "mongodb",
+    "Scheme": "mongodb",
     "Host": "localhost",
     "Port": 27017,
     "Login": "",

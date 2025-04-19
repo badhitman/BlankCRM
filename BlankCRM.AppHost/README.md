@@ -85,7 +85,7 @@ Aspire хост (`DesignerApp.AppHost`) настраивается в одном
 ```json
 {
   "MongoDBConfig": {
-    "Sheme": "mongodb",
+    "Scheme": "mongodb",
     "Host": "localhost",
     "Port": 27017,
     "Login": "",
@@ -163,7 +163,7 @@ Aspire хост (`DesignerApp.AppHost`) настраивается в одном
 		"VirtualHost": "/"
 	},
 	"MongoDBConfig": {
-		"Sheme": "mongodb",
+		"Scheme": "mongodb",
 		"Host": "localhost",
 		"Port": 27017,
 		"Login": "",

@@ -145,7 +145,6 @@ public class RabbitClient : IRabbitClient
             }
         }
 
-        activity?.Stop();
         _channel!.QueueDeclare(queue: queue,
                       durable: true,
                       exclusive: false,
@@ -207,6 +206,8 @@ public class RabbitClient : IRabbitClient
         }
         else
             return Task.FromResult(default(T));
+
+        activity?.Stop();
 
         if ((typeof(T) != typeof(object) && (res_io is null || res_io.Response is null)))
         {

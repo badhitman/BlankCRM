@@ -192,7 +192,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLibStandart21", "Shar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bus", "bus", "{EF4FD4EC-A88C-4188-8560-8CDBA3D5480B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeroMQCallLib", "RemoteCallLib\ZeroMQCallLib\ZeroMQCallLib.csproj", "{FB07D95B-9C03-4CDD-AC2E-C4EA56FB0199}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTCallLib", "RemoteCallLib\ZeroMQCallLib\MQTTCallLib.csproj", "{FB07D95B-9C03-4CDD-AC2E-C4EA56FB0199}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSharpMauiApp", "ToolsApp\StockSharpMauiApp\StockSharpMauiApp.csproj", "{08521F09-4B38-8B8A-E3BF-4F61F36AC2A1}"
 EndProject
