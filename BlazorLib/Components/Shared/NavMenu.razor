@@ -61,7 +61,7 @@
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
 
-        TResponseModel<string?> res = await StoreRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.TitleMain);
+        TResponseModel<string?> res = await StoreRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.TitleMain);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         _textValue = res.Response ?? "App";
     }

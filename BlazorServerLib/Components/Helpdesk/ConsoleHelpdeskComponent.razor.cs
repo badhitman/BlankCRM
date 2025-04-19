@@ -33,7 +33,7 @@ public partial class ConsoleHelpdeskComponent : BlazorBusyComponentBaseAuthModel
         stepNum = 0;
 
         await SetBusyAsync();
-        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(FilterUserId, GlobalStaticConstants.CloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId), false);
+        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(FilterUserId, GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId), false);
         await SetBusyAsync(false);
         if (!res.Success())
             SnackbarRepo.ShowMessagesResponse(res.Messages);
@@ -67,7 +67,7 @@ public partial class ConsoleHelpdeskComponent : BlazorBusyComponentBaseAuthModel
         TResponseModel<bool> res = await StorageRepo.ReadParameterAsync<bool>(SizeColumnsKeyStorage);
         IsLarge = res.Response == true;
 
-        TResponseModel<string?> current_filter_user_res = await StorageRepo.ReadParameterAsync<string>(GlobalStaticConstants.CloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId));
+        TResponseModel<string?> current_filter_user_res = await StorageRepo.ReadParameterAsync<string>(GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId));
         FilterUserId = current_filter_user_res.Response;
 
         IsBusyProgress = false;

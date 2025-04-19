@@ -38,7 +38,7 @@ public partial class App
         if (!_isLoaded)
         {
             List<Task> _tasks = [Task.Run(async () => {
-                TResponseModel<bool> tgWebAppInclude = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticConstants.CloudStorageMetadata.ParameterIncludeTelegramBotWebApp);
+                TResponseModel<bool> tgWebAppInclude = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ParameterIncludeTelegramBotWebApp);
                 _includeTelegramBotWeAppScript = tgWebAppInclude.Success() && tgWebAppInclude.Response == true;
             })];
             _isLoaded = true;

@@ -97,7 +97,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
 
         await SetBusyAsync();
 
-        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(doc, GlobalStaticConstants.CloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
+        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(doc, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
 
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         SnackbarRepo.Add("Содержимое документа отправлено в корзину для формирования нового заказа", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
@@ -141,7 +141,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         SnackbarRepo.ShowMessagesResponse(getWarehouses.Messages);
         currentWarehouses = getWarehouses.Response ?? [];
 
-        TResponseModel<bool?> res = await StorageRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowingAttachmentsOrderArea);
+        TResponseModel<bool?> res = await StorageRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ShowingAttachmentsOrderArea);
         if (!res.Success())
             SnackbarRepo.ShowMessagesResponse(res.Messages);
 

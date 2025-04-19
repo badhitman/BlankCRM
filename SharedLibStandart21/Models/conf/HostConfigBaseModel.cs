@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Конфигурация хоста
 /// </summary>
-public class HostConfigModel
+public class HostConfigBaseModel
 {
     /// <summary>
     /// Хост
@@ -15,20 +15,15 @@ public class HostConfigModel
     public string Host { get; set; } = "localhost";
 
     /// <summary>
-    /// Порт (tcpip)
+    /// Порт (tcp/ip)
     /// </summary>
     public int Port { get; set; } = 5501;
-
-    /// <summary>
-    /// Схема (https/ssl)
-    /// </summary>
-    public string Sheme { get; set; } = "http";
 
     /// <summary>
     /// Преобразовать в строку конфигурации хоста
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => $"{Sheme}://{Host}{(Port == 80 ? string.Empty : $":{Port}")}";
+    public override string ToString() => $"{Host}{(Port == 80 ? string.Empty : $":{Port}")}";
 
     /// <summary>
     /// Получить полный URL

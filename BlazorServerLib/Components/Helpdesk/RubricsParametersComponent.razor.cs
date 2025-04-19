@@ -43,7 +43,7 @@ public partial class RubricsParametersComponent : BlazorBusyComponentBaseModel
     async Task SaveModeSelectingRubrics()
     {
         await SetBusyAsync();
-        TResponseModel<int> res = await SerializeStorageRepo.SaveParameterAsync<ModesSelectRubricsEnum?>(SelectedOption, GlobalStaticConstants.CloudStorageMetadata.ModeSelectingRubrics, true);
+        TResponseModel<int> res = await SerializeStorageRepo.SaveParameterAsync<ModesSelectRubricsEnum?>(SelectedOption, GlobalStaticCloudStorageMetadata.ModeSelectingRubrics, true);
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         StateHasChanged();
@@ -52,7 +52,7 @@ public partial class RubricsParametersComponent : BlazorBusyComponentBaseModel
     async Task ToggleShowingDisabledRubrics()
     {
         await SetBusyAsync();
-        TResponseModel<int> res = await SerializeStorageRepo.SaveParameterAsync<bool?>(ShowDisabledRubrics, GlobalStaticConstants.CloudStorageMetadata.ParameterShowDisabledRubrics, true);
+        TResponseModel<int> res = await SerializeStorageRepo.SaveParameterAsync<bool?>(ShowDisabledRubrics, GlobalStaticCloudStorageMetadata.ParameterShowDisabledRubrics, true);
 
         if (!res.Success())
             SnackbarRepo.ShowMessagesResponse(res.Messages);
@@ -63,8 +63,8 @@ public partial class RubricsParametersComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
-        TResponseModel<bool?> res_ShowDisabledRubrics = await SerializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ParameterShowDisabledRubrics);
-        TResponseModel<ModesSelectRubricsEnum?> res_ModeSelectingRubrics = await SerializeStorageRepo.ReadParameterAsync<ModesSelectRubricsEnum?>(GlobalStaticConstants.CloudStorageMetadata.ModeSelectingRubrics);
+        TResponseModel<bool?> res_ShowDisabledRubrics = await SerializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ParameterShowDisabledRubrics);
+        TResponseModel<ModesSelectRubricsEnum?> res_ModeSelectingRubrics = await SerializeStorageRepo.ReadParameterAsync<ModesSelectRubricsEnum?>(GlobalStaticCloudStorageMetadata.ModeSelectingRubrics);
         await SetBusyAsync(false);
         if (!res_ShowDisabledRubrics.Success())
             SnackbarRepo.ShowMessagesResponse(res_ShowDisabledRubrics.Messages);

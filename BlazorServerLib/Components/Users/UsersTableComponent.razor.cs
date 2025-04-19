@@ -188,7 +188,7 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
-        TResponseModel<bool?> res_ShowClaimsUsers = await SerializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ShowClaimsUser);
+        TResponseModel<bool?> res_ShowClaimsUsers = await SerializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ShowClaimsUser);
         showClaimsUsers = res_ShowClaimsUsers.Response == true;
 
         if (!string.IsNullOrWhiteSpace(OwnerRoleId))

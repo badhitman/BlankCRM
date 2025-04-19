@@ -233,25 +233,25 @@ public class HelpdeskImplementService(
                 tasks.Add(Task.Run(async () => { wc = await webTransmissionRepo.GetWebConfigAsync(); }, token));
                 tasks.Add(Task.Run(async () =>
                 {
-                    CommerceNewMessageOrderBodyNotificationWhatsapp = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderBodyNotificationWhatsapp);
+                    CommerceNewMessageOrderBodyNotificationWhatsapp = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotificationWhatsapp);
                     if (CommerceNewMessageOrderBodyNotificationWhatsapp.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotificationWhatsapp.Response))
                         wpMessage = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotificationWhatsapp.Response, wc.ClearBaseUri, _about_document, true);
                 }, token));
                 tasks.Add(Task.Run(async () =>
                 {
-                    CommerceNewMessageOrderBodyNotificationTelegram = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderBodyNotificationTelegram);
+                    CommerceNewMessageOrderBodyNotificationTelegram = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotificationTelegram);
                     if (CommerceNewMessageOrderBodyNotificationTelegram.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotificationTelegram.Response))
                         tg_message = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
                 }, token));
                 tasks.Add(Task.Run(async () =>
                 {
-                    CommerceNewMessageOrderBodyNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderBodyNotification);
+                    CommerceNewMessageOrderBodyNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotification);
                     if (CommerceNewMessageOrderBodyNotification.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotification.Response))
                         msg = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotification.Response, wc.ClearBaseUri, _about_document);
                 }, token));
                 tasks.Add(Task.Run(async () =>
                 {
-                    CommerceNewMessageOrderSubjectNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceNewMessageOrderSubjectNotification);
+                    CommerceNewMessageOrderSubjectNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderSubjectNotification);
                     if (CommerceNewMessageOrderSubjectNotification.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderSubjectNotification.Response))
                         subject_email = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderSubjectNotification.Response, wc.ClearBaseUri, _about_document);
                 }, token));
@@ -1078,7 +1078,7 @@ public class HelpdeskImplementService(
 
         List<Task> tasks = [
             Task.Run(async () => { users_rest = await IdentityRepo.GetUsersIdentityAsync([issue_upd.SenderActionUserId]); }, token),
-            Task.Run(async () => { res_ModeSelectingRubrics = await StorageRepo.ReadParameterAsync<ModesSelectRubricsEnum?>(GlobalStaticConstants.CloudStorageMetadata.ModeSelectingRubrics); }, token) ];
+            Task.Run(async () => { res_ModeSelectingRubrics = await StorageRepo.ReadParameterAsync<ModesSelectRubricsEnum?>(GlobalStaticCloudStorageMetadata.ModeSelectingRubrics); }, token) ];
 
         await Task.WhenAll(tasks);
         tasks.Clear();
@@ -1177,7 +1177,7 @@ public class HelpdeskImplementService(
             TResponseModel<long?> helpdesk_user_redirect_telegram_for_issue_rest = default!;
             await Task.WhenAll([
                 PulsePushAsync(p_req, token),
-                Task.Run(async () => { helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticConstants.CloudStorageMetadata.HelpdeskNotificationTelegramForCreateIssue); }, token),
+                Task.Run(async () => { helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpdeskNotificationTelegramForCreateIssue); }, token),
                 MessageUpdateOrCreateAsync(new() { SenderActionUserId = GlobalStaticConstantsRoles.Roles.System, Payload = new() { MessageText = $"Пользователь `{actor.UserName}` создал новый запрос: {issue_upd.Payload.Name}", IssueId = issue.Id } }, token)]);
 
             if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
@@ -1406,10 +1406,10 @@ public class HelpdeskImplementService(
 
         TelegramBotConfigModel wc = default!;
         List<Task> tasks = [
-            Task.Run(async () => { CommerceStatusChangeOrderSubjectNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderSubjectNotification(prevStatus)); }, token),
-            Task.Run(async () => { CommerceStatusChangeOrderBodyNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderBodyNotification(prevStatus)); }, token),
-            Task.Run(async () => { CommerceStatusChangeOrderBodyNotificationTelegram = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationTelegram(prevStatus)); }, token),
-            Task.Run(async () => { CommerceStatusChangeOrderBodyNotificationWhatsapp = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticConstants.CloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationWhatsapp(prevStatus)); }, token),
+            Task.Run(async () => { CommerceStatusChangeOrderSubjectNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceStatusChangeOrderSubjectNotification(prevStatus)); }, token),
+            Task.Run(async () => { CommerceStatusChangeOrderBodyNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceStatusChangeOrderBodyNotification(prevStatus)); }, token),
+            Task.Run(async () => { CommerceStatusChangeOrderBodyNotificationTelegram = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationTelegram(prevStatus)); }, token),
+            Task.Run(async () => { CommerceStatusChangeOrderBodyNotificationWhatsapp = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceStatusChangeOrderBodyNotificationWhatsapp(prevStatus)); }, token),
             Task.Run(async () => { wc = await webTransmissionRepo.GetWebConfigAsync(); }, token)];
 
         if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
@@ -1918,7 +1918,7 @@ public class HelpdeskImplementService(
         if (req.Chat?.Type != ChatsTypesTelegramEnum.Private)
             return ResponseBaseModel.CreateWarning("Чат не является частным (обработке в HelpDesk не подлежит)!");
 
-        TResponseModel<long?> helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticConstants.CloudStorageMetadata.HelpdeskNotificationsTelegramForUser(req.From!.UserTelegramId), token);
+        TResponseModel<long?> helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpdeskNotificationsTelegramForUser(req.From!.UserTelegramId), token);
         if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
         {
             TResponseModel<MessageComplexIdsModel> forward_res = await telegramRemoteRepo.ForwardMessageAsync(new()
@@ -1946,7 +1946,7 @@ public class HelpdeskImplementService(
                 ResponseBaseModel.Create(forward_res.Messages);
         }
 
-        helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticConstants.CloudStorageMetadata.HelpdeskNotificationTelegramGlobalForIncomingMessage, token);
+        helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpdeskNotificationTelegramGlobalForIncomingMessage, token);
         if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
         {
             TResponseModel<MessageComplexIdsModel> forward_res = await telegramRemoteRepo.ForwardMessageAsync(new()

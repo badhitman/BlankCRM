@@ -185,7 +185,7 @@ public class UpdateHandler(
         string msg;
         uc.DialogTelegramTypeHandler ??= typeof(DefaultTelegramDialogHandle).FullName;
 
-        TResponseModel<bool?> res_IsCommandModeTelegramBot = await serializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticConstants.CloudStorageMetadata.ParameterIsCommandModeTelegramBot, cancellationToken);
+        TResponseModel<bool?> res_IsCommandModeTelegramBot = await serializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ParameterIsCommandModeTelegramBot, cancellationToken);
 
         if (res_IsCommandModeTelegramBot.Response == true && !messageText.StartsWith('/') && eventType != MessagesTypesEnum.CallbackQuery)
             return;

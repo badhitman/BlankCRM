@@ -31,7 +31,7 @@ public class MongoConfigModel : HostConfigModel
     public override string ToString()
     {
         return string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password)
-            ? $"{Sheme}://{Host}:{Port}"
-            : $"{Sheme}://{Login}:{Password}@{Host}:{Port}";
+            ? $"{Scheme}://{Host}:{Port}"
+            : $"{Scheme}://{Login}:{Password}@{Host}:{Port}";
     }
 }
