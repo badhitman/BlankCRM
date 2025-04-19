@@ -177,7 +177,7 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 - Интеграция AD через LDAP
 
 #### [OuterApi's](https://github.com/badhitman/BlankCRM/blob/main/micro-services/outer/README.md)
-набор микро-сервисов для подключения внешних источников данных
+- Набор микро-сервисов для подключения внешних источников данных
 
 > все службы должны быть настроены, запущены вместе и соединены общим RabbitMQ и Redis. В противном случае в MQ очередях будут копиться запросы без ответов и функционал местами будет недоступен если ответственная служба не будет обрабатывать запросы.
 
