@@ -12,13 +12,15 @@ using NetMQ;
 
 namespace StockSharpJoinService;
 
+/// <inheritdoc/>
 public class Worker : BackgroundService
 {
     //private const string _connectorFile = "ConnectorFile.json";
-    private readonly ILogger<Worker> _logger;
-    private readonly ResponseSocket server;
-    public Connector Connector;
+    readonly ILogger<Worker> _logger;
+    readonly ResponseSocket server;
+    readonly Connector Connector;
 
+    /// <inheritdoc/>
     public Worker(ILogger<Worker> logger)
     {
         _logger = logger;
@@ -27,6 +29,7 @@ public class Worker : BackgroundService
         InitConnector();
     }
 
+    /// <inheritdoc/>
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
@@ -181,6 +184,7 @@ public class Worker : BackgroundService
         throw new NotImplementedException();
     }
 
+    /// <inheritdoc/>
     public override void Dispose()
     {
         server.Dispose();

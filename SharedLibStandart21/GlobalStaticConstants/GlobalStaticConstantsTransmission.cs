@@ -953,6 +953,12 @@ namespace SharedLib
             /// <inheritdoc/>
             public readonly static string FlushTempKladrRecive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.TEMP_CONTROLLER_NAME}", Routes.FLUSH_ACTION_NAME);
             #endregion
+
+            /// <inheritdoc/>
+            public readonly static string PingStockSharpDriverReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.STOCKSHARP_CONTROLLER_NAME}-{Routes.DRIVER_CONTROLLER_NAME}", Routes.PING_ACTION_NAME);
+
+            /// <inheritdoc/>
+            public readonly static string PingStockSharpMainReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.STOCKSHARP_CONTROLLER_NAME}-{Routes.MAIN_CONTROLLER_NAME}", Routes.PING_ACTION_NAME);
         }
     }
 }

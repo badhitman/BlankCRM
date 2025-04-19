@@ -2,22 +2,23 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using NetMQ;
-using NetMQ.Sockets;
+using Microsoft.AspNetCore.Components;
+using BlazorLib;
+using SharedLib;
 
 namespace StockSharpMauiApp.Components.Pages;
 
-public partial class Home
+public partial class Home : BlazorBusyComponentBaseModel
 {
-    static Task Click1()
+    [Inject]
+    IStockSharpDriverService ssRepo { get; set; } = default!;
+
+
+    async Task Click1()
     {
-        using (RequestSocket client = new())
-        {
-            client.Connect("tcp://127.0.0.1:5556");
-            client.SendFrame("Hello");
-            string msg = client.ReceiveFrameString();
-            Console.WriteLine("From Server: {0}", msg);
-        }
-        return Task.CompletedTask;
+        await SetBusyAsync();
+        ResponseBaseModel res = await ssRepo.PingAsync();
+        await SetBusyAsync(false);
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
     }
 }

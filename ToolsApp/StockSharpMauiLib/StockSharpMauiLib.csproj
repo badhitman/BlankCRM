@@ -22,6 +22,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\DBContextLibs\DbSqliteLib\DbSqliteLib.csproj" />
+		<ProjectReference Include="..\..\RemoteCallLib\ZeroMQCallLib\ZeroMQCallLib.csproj" />
 	</ItemGroup>
 
 </Project>

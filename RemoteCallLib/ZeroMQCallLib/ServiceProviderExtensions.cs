@@ -8,6 +8,9 @@ using SharedLib;
 
 namespace ZeroMQCallLib;
 
+/// <summary>
+/// ServiceProviderExtensions
+/// </summary>
 public static class ServiceProviderExtensions
 {
     /// <summary>
@@ -23,5 +26,4 @@ public static class ServiceProviderExtensions
 
         return sc;
     }
-
 }

@@ -7,6 +7,11 @@
 		<UserSecretsId>dotnet-StockSharpDriver-ddabf846-f53f-434a-a818-e9ef1aa49e1f</UserSecretsId>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<LangVersion>12.0</LangVersion>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<NoWarn>1701;1702;MSB3270;</NoWarn>
 	</PropertyGroup>

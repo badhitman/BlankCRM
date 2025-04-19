@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// Обработчик входящего сообщения
 /// </summary>
-public interface IZeroMQReceive<TRequest, TResponse>: IBaseReceive
+public interface IZeroMQReceive<TRequest, TResponse> : IBaseReceive
 {
     /// <summary>
     /// Обработчик ответа на запрос
