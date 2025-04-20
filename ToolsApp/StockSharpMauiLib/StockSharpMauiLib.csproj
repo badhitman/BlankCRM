@@ -15,6 +15,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Ecng.Serialization" Version="1.0.245" />
+		<PackageReference Include="StockSharp.Algo" Version="5.0.213" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
