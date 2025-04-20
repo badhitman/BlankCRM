@@ -12,12 +12,8 @@
 HaierProff - предоставляет публичный rss поток без наличия.
 остальные источники требуют авторизации.
 ```json
-"RusklimarApiConfig": {
-    "UserId": "0001112233",
-    "Password": "123123",
-    "Version": "v1"
-},
-"BreezApiConfig": {
+{
+  "BreezApiConfig": {
     "UserId": "",
     "Password": "",
     "Version": "v1"
@@ -26,6 +22,13 @@ HaierProff - предоставляет публичный rss поток без
     "Token": "",
     "Version": "v1"
   },
+  "RusklimarApiConfig": {
+    "PartnerId": "xxxxxxxxxxxx",
+    "UserId": "9990001122",
+    "Password": "------",
+    "Version": "v1"
+  }
+}
 ```
 
 #### Процесс обработки
