@@ -1,11 +1,11 @@
 ## DevOps
 
 ```
-apt-get update -y && upgrade -y && dist-upgrade -y && install git -y
+sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y && sudo apt-get install git -y
 
-apt-get install wget
-apt-get install nano
-apt-get install sqlite3
+sudo apt-get install wget
+sudo apt-get install nano
+sudo apt-get install sqlite3
 
 apt-get install ufw
 ufw allow 22
