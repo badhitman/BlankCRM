@@ -1,7 +1,7 @@
-﻿using CommunityToolkit.Maui.Core;
-using Ecng.Common;
+﻿using Ecng.Common;
 using Microsoft.AspNetCore.Components;
-using SharedLib;
+using MudBlazor;
+using BlazorLib;
 using StockSharp.BusinessEntities;
 using StockSharp.Messages;
 using System.Net;
@@ -78,7 +78,7 @@ public partial class TestComponent : IDisposable
                 return;
 
             // Обработка свечи
-            Console.WriteLine($"Свеча: {candle.OpenTime} - O:{candle.OpenPrice} H:{candle.HighPrice} L:{candle.LowPrice} C:{candle.ClosePrice} V:{candle.TotalVolume}");
+            SnackbarRepo.Info($"Свеча: {candle.OpenTime} - O:{candle.OpenPrice} H:{candle.HighPrice} L:{candle.LowPrice} C:{candle.ClosePrice} V:{candle.TotalVolume}");
         };
 
         // Обработка перехода подписки в онлайн-режим
@@ -87,7 +87,7 @@ public partial class TestComponent : IDisposable
             if (sub != subscription)
                 return;
 
-            Console.WriteLine("Подписка перешла в режим реального времени");
+            SnackbarRepo.Info("Подписка перешла в режим реального времени");
         };
 
         // Обработка ошибок подписки
@@ -96,7 +96,7 @@ public partial class TestComponent : IDisposable
             if (sub != subscription)
                 return;
 
-            Console.WriteLine($"Ошибка подписки: {error}");
+            SnackbarRepo.Info($"Ошибка подписки: {error}");
         };
 
         // Запуск подписки
@@ -111,19 +111,19 @@ public partial class TestComponent : IDisposable
                 return;
 
             // Обрабатываем полученную новость
-            Console.WriteLine($"Новость: {news.Id}");
-            Console.WriteLine($"Заголовок: {news.Headline}");
-            Console.WriteLine($"Источник: {news.Source}");
-            Console.WriteLine($"Время: {news.ServerTime}");
-            Console.WriteLine($"Ссылка: {news.Url}");
+            SnackbarRepo.Info($"Новость: {news.Id}");
+            SnackbarRepo.Info($"Заголовок: {news.Headline}");
+            SnackbarRepo.Info($"Источник: {news.Source}");
+            SnackbarRepo.Info($"Время: {news.ServerTime}");
+            SnackbarRepo.Info($"Ссылка: {news.Url}");
 
             // Если есть текст новости
             if (!string.IsNullOrEmpty(news.Story))
-                Console.WriteLine($"Текст: {news.Story}");
+                SnackbarRepo.Info($"Текст: {news.Story}");
 
             // Если новость связана с конкретными инструментами
             if (!string.IsNullOrWhiteSpace(news.Security.Id))
-                Console.WriteLine($"Инструмент: {news.Security.Id}");
+                SnackbarRepo.Info($"Инструмент: {news.Security.Id}");
         };
 
         // Создаем подписку на стакан для выбранного инструмента
@@ -136,7 +136,7 @@ public partial class TestComponent : IDisposable
                 return;
 
             // Обработка стакана
-            Console.WriteLine($"Стакан: {depth.SecurityId}, Время: {depth.ServerTime}");
+            SnackbarRepo.Info($"Стакан: {depth.SecurityId}, Время: {depth.ServerTime}");
             //Console.WriteLine($"Покупки (Bids): {depth.Bids.Count}, Продажи (Asks): {depth.Asks.Count}");
         };
 
@@ -154,7 +154,7 @@ public partial class TestComponent : IDisposable
                 return;
 
             // Обработка тика
-            Console.WriteLine($"Тик: {tick.SecurityId}, Время: {tick.ServerTime}, Цена: {tick.Price}, Объем: {tick.Volume}");
+            SnackbarRepo.Info($"Тик: {tick.SecurityId}, Время: {tick.ServerTime}, Цена: {tick.Price}, Объем: {tick.Volume}");
         };
 
         // Запуск подписки
@@ -185,13 +185,12 @@ public partial class TestComponent : IDisposable
             if (sub != level1Subscription)
                 return;
 
-            Console.WriteLine($"Level1: {level1.SecurityId}, Время: {level1.ServerTime}");
+            SnackbarRepo.Info($"Level1: {level1.SecurityId}, Время: {level1.ServerTime}");
 
             // Вывод значений полей Level1
             foreach (var pair in level1.Changes)
             {
-                Console.WriteLine($"Поле: {pair.Key}, Значение: {pair.Value}");
-                SnackbarRepo.
+                SnackbarRepo.Info($"Поле: {pair.Key}, Значение: {pair.Value}");
             }
         };
 

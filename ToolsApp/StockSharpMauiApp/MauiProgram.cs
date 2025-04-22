@@ -3,12 +3,10 @@
 ////////////////////////////////////////////////
 
 using Microsoft.Extensions.Logging;
-using CommunityToolkit.Maui;
 using DbcLib;
 using MudBlazor.Services;
 using SharedLib;
 using StockSharpService;
-using RemoteCallLib;
 using Transmission.Receives.StockSharp.Main;
 
 namespace StockSharpMauiApp;
@@ -19,7 +17,6 @@ public static class MauiProgram
     {
         var builder = MauiApp.CreateBuilder();
         builder.UseMauiApp<App>()
-            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
