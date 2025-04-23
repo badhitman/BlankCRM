@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSqliteLib", "..\..\..\DBC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbLayerLib", "..\..\..\DBContextLibs\DbLayerLib\DbLayerLib.csproj", "{A90C0A3C-5F16-C830-B2D0-4C9FC696D34C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleDebug", "ConsoleDebug\ConsoleDebug.csproj", "{90BCA5C8-253B-4D96-AA9D-A0386C843CF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,10 @@ Global
 		{A90C0A3C-5F16-C830-B2D0-4C9FC696D34C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A90C0A3C-5F16-C830-B2D0-4C9FC696D34C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A90C0A3C-5F16-C830-B2D0-4C9FC696D34C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90BCA5C8-253B-4D96-AA9D-A0386C843CF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90BCA5C8-253B-4D96-AA9D-A0386C843CF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90BCA5C8-253B-4D96-AA9D-A0386C843CF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90BCA5C8-253B-4D96-AA9D-A0386C843CF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
