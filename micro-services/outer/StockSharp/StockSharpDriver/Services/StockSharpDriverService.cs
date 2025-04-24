@@ -4,7 +4,7 @@
 
 using SharedLib;
 
-namespace StockSharpService;
+namespace StockSharpDriver;
 
 /// <summary>
 /// StockSharpDriverService
@@ -14,6 +14,7 @@ public class StockSharpDriverService : IStockSharpDriverService
     /// <inheritdoc/>
     public Task<ResponseBaseModel> PingAsync(CancellationToken cancellationToken = default)
     {
+        StockSharp.Algo.Connector Connector = new();
         return Task.FromResult(ResponseBaseModel.CreateSuccess($"Ok - {nameof(StockSharpDriverService)}"));
     }
 }

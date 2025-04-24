@@ -4,7 +4,7 @@
 
 using SharedLib;
 
-namespace Transmission.Receives.StockSharp.Main;
+namespace Transmission.Receives.StockSharpClient;
 
 /// <summary>
 /// PingSharpMain

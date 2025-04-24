@@ -3,7 +3,7 @@ using MQTTnet;
 using SharedLib;
 using MQTTnet.Diagnostics;
 
-namespace StockSharpJoinService;
+namespace StockSharpDriver;
 
 /// <inheritdoc/>
 public class Worker : BackgroundService

@@ -7,7 +7,8 @@ using DbcLib;
 using MudBlazor.Services;
 using SharedLib;
 using StockSharpService;
-using Transmission.Receives.StockSharp.Main;
+using RemoteCallLib;
+using Transmission.Receives.StockSharpClient;
 
 namespace StockSharpMauiApp;
 

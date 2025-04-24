@@ -2,12 +2,11 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.Extensions.Configuration;
 using RemoteCallLib;
 using SharedLib;
 using StockSharpService;
 
-namespace StockSharpJoinService;
+namespace StockSharpDriver;
 
 /// <summary>
 /// Program

@@ -4,7 +4,7 @@
 
 using SharedLib;
 
-namespace Transmission.Receives.StockSharp.Driver;
+namespace Transmission.Receives.StockSharpDriver;
 
 /// <summary>
 /// PingStockSharpDriver
