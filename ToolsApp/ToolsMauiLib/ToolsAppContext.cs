@@ -10,8 +10,7 @@ namespace DbcLib;
 /// Промежуточный/общий слой контекста базы данных
 /// </summary>
 public partial class ToolsAppContext(DbContextOptions<ToolsAppContext> options) : ToolsAppLayerContext(options)
-{
-    
+{    
     /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
