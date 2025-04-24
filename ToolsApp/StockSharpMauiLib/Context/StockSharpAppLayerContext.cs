@@ -45,5 +45,7 @@ public abstract partial class StockSharpAppLayerContext : DbContext
 #endif
     }
 
-    //public DbSet<ApiRestConfigModelDB> Configurations { get; set; }
+    public DbSet<InstrumentTradeModelDB> Instruments { get; set; }
+
+    public DbSet<ExchangeBoardModelDB> ExchangeBoards { get; set; }
 }
