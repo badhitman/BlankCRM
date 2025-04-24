@@ -18,6 +18,6 @@ public partial class StockSharpAppContext(DbContextOptions<StockSharpAppContext>
         base.OnConfiguring(options);
 
         options
-            .UseSqlite($"Filename={DbPath}");
+            .UseSqlite($"Filename={DbPath}", b => b.MigrationsAssembly("StockSharpMauiMigration"));
     }
 }
