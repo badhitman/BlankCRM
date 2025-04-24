@@ -18,7 +18,10 @@ public abstract partial class StockSharpAppLayerContext : DbContext
     /// <summary>
     /// db Path
     /// </summary>
-    public static readonly string DbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _ctxName, $"{AppDomain.CurrentDomain.FriendlyName}.db3");
+    /// <remarks>
+    /// ef core: c:\Users\User\AppData\Roaming\StockSharpAppContext\
+    /// </remarks>
+    public static string DbPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _ctxName, $"{AppDomain.CurrentDomain.FriendlyName}.db3");
 
 
     /// <inheritdoc/>
@@ -47,5 +50,7 @@ public abstract partial class StockSharpAppLayerContext : DbContext
 
     public DbSet<InstrumentTradeModelDB> Instruments { get; set; }
 
-    public DbSet<ExchangeBoardModelDB> ExchangeBoards { get; set; }
+    public DbSet<ExchangeBoardModelDB> BoardsExchange { get; set; }
+
+    public DbSet<InstrumentExternalIdModelDB> InstrumentsExternalsIds { get; set; }
 }

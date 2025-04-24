@@ -15,6 +15,11 @@ namespace SharedLib;
 /// </summary>
 public static partial class GlobalToolsStandart
 {
+    /// <inheritdoc/>
+    public static bool IsEmpty(this string sender)
+        => string.IsNullOrWhiteSpace(sender);
+
+
     /// <summary>
     /// Добавить информация об исключении
     /// </summary>

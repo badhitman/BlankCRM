@@ -9,6 +9,7 @@ using SharedLib;
 using StockSharpService;
 using RemoteCallLib;
 using Transmission.Receives.StockSharpClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace StockSharpMauiApp;
 
@@ -30,6 +31,7 @@ public static class MauiProgram
 #if DEBUG
             opt.EnableSensitiveDataLogging(true);
             opt.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+            opt.UseSqlite(StockSharpAppLayerContext.DbPath, b => b.MigrationsAssembly("StockSharpMauiMigration"));
 #endif
         });
 
