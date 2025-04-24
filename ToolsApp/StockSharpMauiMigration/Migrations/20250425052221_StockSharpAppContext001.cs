@@ -36,14 +36,11 @@ namespace StockSharpMauiMigration.Migrations
                     IdRemote = table.Column<string>(type: "TEXT", nullable: false),
                     Code = table.Column<string>(type: "TEXT", nullable: false),
                     ShortName = table.Column<string>(type: "TEXT", nullable: false),
+                    IsFavorite = table.Column<bool>(type: "INTEGER", nullable: false),
                     ExchangeBoardId = table.Column<int>(type: "INTEGER", nullable: false),
                     TypeInstrument = table.Column<int>(type: "INTEGER", nullable: true),
                     Currency = table.Column<int>(type: "INTEGER", nullable: true),
                     Class = table.Column<string>(type: "TEXT", nullable: false),
-                    PriceStep = table.Column<decimal>(type: "TEXT", nullable: true),
-                    VolumeStep = table.Column<decimal>(type: "TEXT", nullable: true),
-                    MinVolume = table.Column<decimal>(type: "TEXT", nullable: true),
-                    MaxVolume = table.Column<decimal>(type: "TEXT", nullable: true),
                     Multiplier = table.Column<decimal>(type: "TEXT", nullable: true),
                     Decimals = table.Column<int>(type: "INTEGER", nullable: true),
                     ExpiryDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
@@ -101,6 +98,11 @@ namespace StockSharpMauiMigration.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_BoardsExchange_LastAtUpdatedUTC",
+                table: "BoardsExchange",
+                column: "LastAtUpdatedUTC");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BoardsExchange_Name",
                 table: "BoardsExchange",
                 column: "Name");
@@ -109,6 +111,16 @@ namespace StockSharpMauiMigration.Migrations
                 name: "IX_Instruments_ExchangeBoardId",
                 table: "Instruments",
                 column: "ExchangeBoardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Instruments_IsFavorite",
+                table: "Instruments",
+                column: "IsFavorite");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Instruments_LastAtUpdatedUTC",
+                table: "Instruments",
+                column: "LastAtUpdatedUTC");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Instruments_Name",

@@ -38,6 +38,8 @@ namespace StockSharpMauiMigration.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LastAtUpdatedUTC");
+
                     b.HasIndex("Name");
 
                     b.ToTable("BoardsExchange");
@@ -134,13 +136,10 @@ namespace StockSharpMauiMigration.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsFavorite")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("LastAtUpdatedUTC")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal?>("MaxVolume")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal?>("MinVolume")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal?>("Multiplier")
@@ -155,9 +154,6 @@ namespace StockSharpMauiMigration.Migrations
 
                     b.Property<int?>("OptionType")
                         .HasColumnType("INTEGER");
-
-                    b.Property<decimal?>("PriceStep")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("PrimaryId")
                         .IsRequired()
@@ -186,12 +182,13 @@ namespace StockSharpMauiMigration.Migrations
                     b.Property<int?>("UnderlyingSecurityType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal?>("VolumeStep")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ExchangeBoardId");
+
+                    b.HasIndex("IsFavorite");
+
+                    b.HasIndex("LastAtUpdatedUTC");
 
                     b.HasIndex("Name");
 

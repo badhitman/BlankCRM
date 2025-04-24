@@ -18,10 +18,7 @@ public abstract partial class StockSharpAppLayerContext : DbContext
     /// <summary>
     /// db Path
     /// </summary>
-    /// <remarks>
-    /// ef core: c:\Users\User\AppData\Roaming\StockSharpAppContext\
-    /// </remarks>
-    public static string DbPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _ctxName, $"{AppDomain.CurrentDomain.FriendlyName}.db3");
+    public static string DbPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _ctxName, $"{(AppDomain.CurrentDomain.FriendlyName.Equals("ef", StringComparison.OrdinalIgnoreCase) ? "StockSharpAppData" : AppDomain.CurrentDomain.FriendlyName)}.db3");
 
 
     /// <inheritdoc/>
@@ -33,10 +30,10 @@ public abstract partial class StockSharpAppLayerContext : DbContext
         if (_fi.Directory?.Exists != true)
             Directory.CreateDirectory(Path.GetDirectoryName(DbPath)!);
 
-        if (!_fi.Exists)
-            Database.EnsureCreated();
-        else
-            Database.Migrate();
+        //if (!_fi.Exists)
+        //    Database.EnsureCreated();
+        //else
+        Database.Migrate();
     }
 
     /// <inheritdoc/>

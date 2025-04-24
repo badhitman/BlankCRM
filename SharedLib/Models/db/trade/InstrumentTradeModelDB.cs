@@ -2,11 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// InstrumentTradeModelDB
 /// </summary>
+[Index(nameof(IsFavorite))]
 public class InstrumentTradeModelDB : EntryUpdatedModel
 {
     /// <inheritdoc/>
@@ -17,6 +20,11 @@ public class InstrumentTradeModelDB : EntryUpdatedModel
 
     /// <inheritdoc/>
     public required string ShortName { get; set; }
+
+    /// <summary>
+    /// Добавлен в "Избранное"
+    /// </summary>
+    public bool IsFavorite { get; set; }
 
     /// <inheritdoc/>
     public ExchangeBoardModelDB? ExchangeBoard { get; set; }
@@ -34,18 +42,6 @@ public class InstrumentTradeModelDB : EntryUpdatedModel
 
     /// <inheritdoc/>
     public required string Class { get; set; }
-
-    /// <inheritdoc/>
-    public decimal? PriceStep { get; set; }
-
-    /// <inheritdoc/>
-    public decimal? VolumeStep { get; set; }
-
-    /// <inheritdoc/>
-    public decimal? MinVolume { get; set; }
-
-    /// <inheritdoc/>
-    public decimal? MaxVolume { get; set; }
 
     /// <summary>
     /// Lot multiplier.
@@ -110,38 +106,4 @@ public class InstrumentTradeModelDB : EntryUpdatedModel
     /// Underlying security type.
     /// </summary>
     public InstrumentsStockSharpTypesEnum? UnderlyingSecurityType { get; set; }
-
-    /// <summary>
-    /// To copy fields of the current instrument to destination.
-    /// </summary>
-    /// <param name="destination">The instrument in which you should to copy fields.</param>
-    public void CopyTo(InstrumentTradeModelDB destination)
-    {
-        ArgumentNullException.ThrowIfNull(destination);
-
-        destination.Id = Id;
-        destination.Name = Name;
-        destination.Code = Code;
-        destination.Class = Class;
-        destination.ShortName = ShortName;
-        destination.VolumeStep = VolumeStep;
-        destination.MinVolume = MinVolume;
-        destination.MaxVolume = MaxVolume;
-        destination.Multiplier = Multiplier;
-        destination.PriceStep = PriceStep;
-        destination.Decimals = Decimals;
-        destination.SettlementDate = SettlementDate;
-        destination.ExpiryDate = ExpiryDate;
-        destination.OptionType = OptionType;
-        destination.UnderlyingSecurityId = UnderlyingSecurityId;
-        //destination.ExternalId = ExternalId.Clone();
-        destination.Currency = Currency;
-        destination.CfiCode = CfiCode;
-        destination.UnderlyingSecurityType = UnderlyingSecurityType;
-        destination.Shortable = Shortable;
-        destination.FaceValue = FaceValue;
-        destination.SettlementType = SettlementType;
-        destination.OptionStyle = OptionStyle;
-        destination.PrimaryId = PrimaryId;
-    }
 }

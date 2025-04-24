@@ -13,7 +13,7 @@ using Ecng.ComponentModel;
 
 namespace StockSharpMauiApp.Components.Shared;
 
-public partial class TestComponent : IDisposable
+public partial class TestComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     ISnackbar SnackbarRepo { get; set; } = default!;
@@ -121,7 +121,6 @@ public partial class TestComponent : IDisposable
         };
         _connector.Adapter.InnerAdapters.Add(luaFixMarketDataMessageAdapter);
         _connector.Adapter.InnerAdapters.Add(luaFixTransactionMessageAdapter);
-
 
         #region event`s
         // Обработка полученных свечей
@@ -390,10 +389,10 @@ public partial class TestComponent : IDisposable
     //     Dispose(disposing: false);
     // }
 
-    public void Dispose()
+    public override void Dispose()
     {
         // Не изменяйте этот код. Разместите код очистки в методе "Dispose(bool disposing)".
         Dispose(disposing: true);
-        GC.SuppressFinalize(this);
+        base.Dispose();
     }
 }
