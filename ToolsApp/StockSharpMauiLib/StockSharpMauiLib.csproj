@@ -17,6 +17,11 @@
 	<ItemGroup>
 		<PackageReference Include="Ecng.Serialization" Version="1.0.245" />
 		<PackageReference Include="StockSharp.Algo" Version="5.0.213" />
+		<PackageReference Include="StockSharp.Fix" Version="5.0.206" />
+		<PackageReference Include="StockSharp.Fix.Core" Version="5.0.164" />
+		<PackageReference Include="StockSharp.Messages" Version="5.0.208" />
+		<PackageReference Include="StockSharp.Quik" Version="5.0.156" />
+		<PackageReference Include="StockSharp.QuikLua" Version="5.0.172" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />

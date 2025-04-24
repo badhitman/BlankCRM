@@ -77,6 +77,10 @@ public static class Extensions
         => SnackbarRepo.Add(message, Severity.Info, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
 
     /// <inheritdoc/>
+    public static void Warn(this ISnackbar SnackbarRepo, string message)
+        => SnackbarRepo.Add(message, Severity.Warning, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+
+    /// <inheritdoc/>
     public static void Success(this ISnackbar SnackbarRepo, string message)
         => SnackbarRepo.Add(message, Severity.Success, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
 

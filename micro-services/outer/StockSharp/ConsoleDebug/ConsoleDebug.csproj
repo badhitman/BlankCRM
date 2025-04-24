@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Ecng.Serialization" Version="1.0.245" />
+		<PackageReference Include="StockSharp.Algo" Version="5.0.213" />
+		<PackageReference Include="StockSharp.Fix" Version="5.0.206" />
+		<PackageReference Include="StockSharp.Fix.Core" Version="5.0.164" />
+		<PackageReference Include="StockSharp.Messages" Version="5.0.208" />
+		<PackageReference Include="StockSharp.Quik" Version="5.0.156" />
+		<PackageReference Include="StockSharp.QuikLua" Version="5.0.172" />
+	</ItemGroup>
+
+</Project>
