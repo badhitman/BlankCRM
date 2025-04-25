@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using SharedLib;
 using StockSharp.Algo;
 using StockSharp.BusinessEntities;
 
@@ -10,321 +9,321 @@ namespace StockSharpDriver;
 
 /// <inheritdoc/>
 public class ConnectionStockSharpWorker(
-    StockSharpClientConfigModel conf,
+    //StockSharpClientConfigModel conf,
     ILogger<ConnectionStockSharpWorker> _logger,
-    StockSharp.Algo.Connector _connector) : BackgroundService
+    Connector Connector) : BackgroundService
 {
     /// <inheritdoc/>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _connector.Connected += ConnectedHandle;
-        _connector.ConnectedEx += ConnectedExHandle;
-        _connector.Disconnected += DisconnectedHandle;
-        _connector.BoardReceived += BoardReceivedHandle;
-        _connector.CandleReceived += CandleReceivedHandle;
-        _connector.ConnectionLost += ConnectionLostHandle;
-        _connector.ConnectionError += ConnectionErrorHandle;
-        _connector.DataTypeReceived += DataTypeReceivedHandle;
-        _connector.ConnectionErrorEx += ConnectionErrorExHandle;
-        _connector.ConnectionRestored += ConnectionRestoredHandle;
-        _connector.CurrentTimeChanged += CurrentTimeChangedHandle;
-        _connector.ChangePasswordResult += ChangePasswordResultHandle;
-        _connector.DisconnectedEx += DisconnectedExHandle;
-        _connector.Disposed += DisposedHandle;
-        _connector.Error += ErrorHandle;
-        _connector.Level1Received += Level1ReceivedHandle;
-        _connector.Log += LogHandle;
-        _connector.LookupPortfoliosResult += LookupPortfoliosResultHandle;
-        _connector.LookupSecuritiesResult += LookupSecuritiesResultHandle;
-        _connector.MassOrderCanceled += MassOrderCanceledHandle;
-        _connector.MassOrderCanceled2 += MassOrderCanceled2Handle;
-        _connector.MassOrderCancelFailed += MassOrderCancelFailedHandle;
-        _connector.MassOrderCancelFailed2 += MassOrderCancelFailed2Handle;
-        _connector.NewMessage += NewMessageHandle;
-        _connector.NewsReceived += NewsReceivedHandle;
-        _connector.OrderBookReceived += OrderBookReceivedHandle;
-        _connector.OrderCancelFailReceived += OrderCancelFailReceivedHandle;
-        _connector.OrderEditFailReceived += OrderEditFailReceivedHandle;
-        _connector.OrderLogReceived += OrderLogReceivedHandle;
-        _connector.OrderReceived += OrderReceivedHandle;
-        _connector.OrderRegisterFailReceived += OrderRegisterFailReceivedHandle;
-        _connector.OwnTradeReceived += OwnTradeReceivedHandle;
-        _connector.ParentRemoved += ParentRemovedHandle;
-        _connector.PortfolioReceived += PortfolioReceivedHandle;
-        _connector.PositionReceived += PositionReceivedHandle;
-        _connector.SecurityReceived += SecurityReceivedHandle;
-        _connector.SubscriptionFailed += SubscriptionFailedHandle;
-        _connector.SubscriptionOnline += SubscriptionOnlineHandle;
-        _connector.SubscriptionReceived += SubscriptionReceivedHandle;
-        _connector.SubscriptionStarted += SubscriptionStartedHandle;
-        _connector.SubscriptionStopped += SubscriptionStoppedHandle;
-        _connector.TickTradeReceived += TickTradeReceivedHandle;
-        _connector.ValuesChanged += ValuesChangedHandle;
+        Connector.Connected += ConnectedHandle;
+        Connector.ConnectedEx += ConnectedExHandle;
+        Connector.Disconnected += DisconnectedHandle;
+        Connector.BoardReceived += BoardReceivedHandle;
+        Connector.CandleReceived += CandleReceivedHandle;
+        Connector.ConnectionLost += ConnectionLostHandle;
+        Connector.ConnectionError += ConnectionErrorHandle;
+        Connector.DataTypeReceived += DataTypeReceivedHandle;
+        Connector.ConnectionErrorEx += ConnectionErrorExHandle;
+        Connector.ConnectionRestored += ConnectionRestoredHandle;
+        Connector.CurrentTimeChanged += CurrentTimeChangedHandle;
+        Connector.ChangePasswordResult += ChangePasswordResultHandle;
+        Connector.DisconnectedEx += DisconnectedExHandle;
+        Connector.Disposed += DisposedHandle;
+        Connector.Error += ErrorHandle;
+        Connector.Level1Received += Level1ReceivedHandle;
+        Connector.Log += LogHandle;
+        Connector.LookupPortfoliosResult += LookupPortfoliosResultHandle;
+        Connector.LookupSecuritiesResult += LookupSecuritiesResultHandle;
+        Connector.MassOrderCanceled += MassOrderCanceledHandle;
+        Connector.MassOrderCanceled2 += MassOrderCanceled2Handle;
+        Connector.MassOrderCancelFailed += MassOrderCancelFailedHandle;
+        Connector.MassOrderCancelFailed2 += MassOrderCancelFailed2Handle;
+        Connector.NewMessage += NewMessageHandle;
+        Connector.NewsReceived += NewsReceivedHandle;
+        Connector.OrderBookReceived += OrderBookReceivedHandle;
+        Connector.OrderCancelFailReceived += OrderCancelFailReceivedHandle;
+        Connector.OrderEditFailReceived += OrderEditFailReceivedHandle;
+        Connector.OrderLogReceived += OrderLogReceivedHandle;
+        Connector.OrderReceived += OrderReceivedHandle;
+        Connector.OrderRegisterFailReceived += OrderRegisterFailReceivedHandle;
+        Connector.OwnTradeReceived += OwnTradeReceivedHandle;
+        Connector.ParentRemoved += ParentRemovedHandle;
+        Connector.PortfolioReceived += PortfolioReceivedHandle;
+        Connector.PositionReceived += PositionReceivedHandle;
+        Connector.SecurityReceived += SecurityReceivedHandle;
+        Connector.SubscriptionFailed += SubscriptionFailedHandle;
+        Connector.SubscriptionOnline += SubscriptionOnlineHandle;
+        Connector.SubscriptionReceived += SubscriptionReceivedHandle;
+        Connector.SubscriptionStarted += SubscriptionStartedHandle;
+        Connector.SubscriptionStopped += SubscriptionStoppedHandle;
+        Connector.TickTradeReceived += TickTradeReceivedHandle;
+        Connector.ValuesChanged += ValuesChangedHandle;
 
-        _connector.Connect();
+        Connector.Connect();
         while (!stoppingToken.IsCancellationRequested)
         {
             //logger.LogDebug();
             await Task.Delay(1000, stoppingToken);
         }
 
-        _logger.LogInformation($"call - {nameof(_connector.CancelOrders)}!");
-        _connector.CancelOrders();
+        _logger.LogInformation($"call - {nameof(Connector.CancelOrders)}!");
+        Connector.CancelOrders();
 
-        foreach (Subscription? sub in _connector.Subscriptions)
+        foreach (Subscription? sub in Connector.Subscriptions)
         {
-            _connector.UnSubscribe(sub);
-            _logger.LogInformation($"{nameof(_connector.UnSubscribe)} > {sub.GetType().FullName}");
+            Connector.UnSubscribe(sub);
+            _logger.LogInformation($"{nameof(Connector.UnSubscribe)} > {sub.GetType().FullName}");
         }
 
-        await _connector.DisconnectAsync(stoppingToken);
+        await Connector.DisconnectAsync(stoppingToken);
 
-        _connector.Connected -= ConnectedHandle;
-        _connector.ConnectedEx -= ConnectedExHandle;
-        _connector.Disconnected -= DisconnectedHandle;
-        _connector.BoardReceived -= BoardReceivedHandle;
-        _connector.CandleReceived -= CandleReceivedHandle;
-        _connector.ConnectionLost -= ConnectionLostHandle;
-        _connector.ConnectionError -= ConnectionErrorHandle;
-        _connector.DataTypeReceived -= DataTypeReceivedHandle;
-        _connector.ConnectionErrorEx -= ConnectionErrorExHandle;
-        _connector.ConnectionRestored -= ConnectionRestoredHandle;
-        _connector.CurrentTimeChanged -= CurrentTimeChangedHandle;
-        _connector.ChangePasswordResult -= ChangePasswordResultHandle;
-        _connector.DisconnectedEx -= DisconnectedExHandle;
-        _connector.Disposed -= DisposedHandle;
-        _connector.Error -= ErrorHandle;
-        _connector.Level1Received -= Level1ReceivedHandle;
-        _connector.Log -= LogHandle;
-        _connector.LookupPortfoliosResult -= LookupPortfoliosResultHandle;
-        _connector.LookupSecuritiesResult -= LookupSecuritiesResultHandle;
-        _connector.MassOrderCanceled -= MassOrderCanceledHandle;
-        _connector.MassOrderCanceled2 -= MassOrderCanceled2Handle;
-        _connector.MassOrderCancelFailed -= MassOrderCancelFailedHandle;
-        _connector.MassOrderCancelFailed2 -= MassOrderCancelFailed2Handle;
-        _connector.NewMessage -= NewMessageHandle;
-        _connector.NewsReceived -= NewsReceivedHandle;
-        _connector.OrderBookReceived -= OrderBookReceivedHandle;
-        _connector.OrderCancelFailReceived -= OrderCancelFailReceivedHandle;
-        _connector.OrderEditFailReceived -= OrderEditFailReceivedHandle;
-        _connector.OrderLogReceived -= OrderLogReceivedHandle;
-        _connector.OrderReceived -= OrderReceivedHandle;
-        _connector.OrderRegisterFailReceived -= OrderRegisterFailReceivedHandle;
-        _connector.OwnTradeReceived -= OwnTradeReceivedHandle;
-        _connector.ParentRemoved -= ParentRemovedHandle;
-        _connector.PortfolioReceived -= PortfolioReceivedHandle;
-        _connector.PositionReceived -= PositionReceivedHandle;
-        _connector.SecurityReceived -= SecurityReceivedHandle;
-        _connector.SubscriptionFailed -= SubscriptionFailedHandle;
-        _connector.SubscriptionOnline -= SubscriptionOnlineHandle;
-        _connector.SubscriptionReceived -= SubscriptionReceivedHandle;
-        _connector.SubscriptionStarted -= SubscriptionStartedHandle;
-        _connector.SubscriptionStopped -= SubscriptionStoppedHandle;
-        _connector.TickTradeReceived -= TickTradeReceivedHandle;
-        _connector.ValuesChanged -= ValuesChangedHandle;
+        Connector.Connected -= ConnectedHandle;
+        Connector.ConnectedEx -= ConnectedExHandle;
+        Connector.Disconnected -= DisconnectedHandle;
+        Connector.BoardReceived -= BoardReceivedHandle;
+        Connector.CandleReceived -= CandleReceivedHandle;
+        Connector.ConnectionLost -= ConnectionLostHandle;
+        Connector.ConnectionError -= ConnectionErrorHandle;
+        Connector.DataTypeReceived -= DataTypeReceivedHandle;
+        Connector.ConnectionErrorEx -= ConnectionErrorExHandle;
+        Connector.ConnectionRestored -= ConnectionRestoredHandle;
+        Connector.CurrentTimeChanged -= CurrentTimeChangedHandle;
+        Connector.ChangePasswordResult -= ChangePasswordResultHandle;
+        Connector.DisconnectedEx -= DisconnectedExHandle;
+        Connector.Disposed -= DisposedHandle;
+        Connector.Error -= ErrorHandle;
+        Connector.Level1Received -= Level1ReceivedHandle;
+        Connector.Log -= LogHandle;
+        Connector.LookupPortfoliosResult -= LookupPortfoliosResultHandle;
+        Connector.LookupSecuritiesResult -= LookupSecuritiesResultHandle;
+        Connector.MassOrderCanceled -= MassOrderCanceledHandle;
+        Connector.MassOrderCanceled2 -= MassOrderCanceled2Handle;
+        Connector.MassOrderCancelFailed -= MassOrderCancelFailedHandle;
+        Connector.MassOrderCancelFailed2 -= MassOrderCancelFailed2Handle;
+        Connector.NewMessage -= NewMessageHandle;
+        Connector.NewsReceived -= NewsReceivedHandle;
+        Connector.OrderBookReceived -= OrderBookReceivedHandle;
+        Connector.OrderCancelFailReceived -= OrderCancelFailReceivedHandle;
+        Connector.OrderEditFailReceived -= OrderEditFailReceivedHandle;
+        Connector.OrderLogReceived -= OrderLogReceivedHandle;
+        Connector.OrderReceived -= OrderReceivedHandle;
+        Connector.OrderRegisterFailReceived -= OrderRegisterFailReceivedHandle;
+        Connector.OwnTradeReceived -= OwnTradeReceivedHandle;
+        Connector.ParentRemoved -= ParentRemovedHandle;
+        Connector.PortfolioReceived -= PortfolioReceivedHandle;
+        Connector.PositionReceived -= PositionReceivedHandle;
+        Connector.SecurityReceived -= SecurityReceivedHandle;
+        Connector.SubscriptionFailed -= SubscriptionFailedHandle;
+        Connector.SubscriptionOnline -= SubscriptionOnlineHandle;
+        Connector.SubscriptionReceived -= SubscriptionReceivedHandle;
+        Connector.SubscriptionStarted -= SubscriptionStartedHandle;
+        Connector.SubscriptionStopped -= SubscriptionStoppedHandle;
+        Connector.TickTradeReceived -= TickTradeReceivedHandle;
+        Connector.ValuesChanged -= ValuesChangedHandle;
     }
 
-    private void ValuesChangedHandle(Security arg1, IEnumerable<KeyValuePair<StockSharp.Messages.Level1Fields, object>> arg2, DateTimeOffset arg3, DateTimeOffset arg4)
+    void ValuesChangedHandle(Security arg1, IEnumerable<KeyValuePair<StockSharp.Messages.Level1Fields, object>> arg2, DateTimeOffset arg3, DateTimeOffset arg4)
     {
         throw new NotImplementedException();
     }
 
-    private void TickTradeReceivedHandle(Subscription arg1, StockSharp.Messages.ITickTradeMessage arg2)
+    void TickTradeReceivedHandle(Subscription subscription, StockSharp.Messages.ITickTradeMessage msg)
     {
         throw new NotImplementedException();
     }
 
-    private void SubscriptionStoppedHandle(Subscription arg1, Exception arg2)
+    void SubscriptionStoppedHandle(Subscription subscription, Exception ex)
     {
         throw new NotImplementedException();
     }
 
-    private void SubscriptionStartedHandle(Subscription obj)
+    void SubscriptionStartedHandle(Subscription subscription)
     {
         throw new NotImplementedException();
     }
 
-    private void SubscriptionReceivedHandle(Subscription arg1, object arg2)
+    void SubscriptionReceivedHandle(Subscription subscription, object sender)
     {
         throw new NotImplementedException();
     }
 
-    private void SubscriptionOnlineHandle(Subscription obj)
+    void SubscriptionOnlineHandle(Subscription subscription)
     {
         throw new NotImplementedException();
     }
 
-    private void SubscriptionFailedHandle(Subscription arg1, Exception arg2, bool arg3)
+    void SubscriptionFailedHandle(Subscription subscription, Exception ex, bool arg)
     {
         throw new NotImplementedException();
     }
 
-    private void SecurityReceivedHandle(Subscription arg1, Security arg2)
+    void SecurityReceivedHandle(Subscription subscription, Security sec)
     {
         throw new NotImplementedException();
     }
 
-    private void PositionReceivedHandle(Subscription arg1, Position arg2)
+    void PositionReceivedHandle(Subscription subscription, Position pos)
     {
         throw new NotImplementedException();
     }
 
-    private void PortfolioReceivedHandle(Subscription arg1, Portfolio arg2)
+    void PortfolioReceivedHandle(Subscription subscription, Portfolio port)
     {
         throw new NotImplementedException();
     }
 
-    private void ParentRemovedHandle(Ecng.Logging.ILogSource obj)
+    void ParentRemovedHandle(Ecng.Logging.ILogSource sender)
     {
         throw new NotImplementedException();
     }
 
-    private void OwnTradeReceivedHandle(Subscription arg1, MyTrade arg2)
+    void OwnTradeReceivedHandle(Subscription subscription, MyTrade tr)
     {
         throw new NotImplementedException();
     }
 
-    private void OrderRegisterFailReceivedHandle(Subscription arg1, OrderFail arg2)
+    void OrderRegisterFailReceivedHandle(Subscription subscription, OrderFail orderF)
     {
         throw new NotImplementedException();
     }
 
-    private void OrderReceivedHandle(Subscription arg1, Order arg2)
+    void OrderReceivedHandle(Subscription subscription, Order oreder)
     {
         throw new NotImplementedException();
     }
 
-    private void OrderLogReceivedHandle(Subscription arg1, StockSharp.Messages.IOrderLogMessage arg2)
+    void OrderLogReceivedHandle(Subscription subscription, StockSharp.Messages.IOrderLogMessage order)
     {
         throw new NotImplementedException();
     }
 
-    private void OrderEditFailReceivedHandle(Subscription arg1, OrderFail arg2)
+    void OrderEditFailReceivedHandle(Subscription subscription, OrderFail orderF)
     {
         throw new NotImplementedException();
     }
 
-    private void OrderCancelFailReceivedHandle(Subscription arg1, OrderFail arg2)
+    void OrderCancelFailReceivedHandle(Subscription subscription, OrderFail orderF)
     {
         throw new NotImplementedException();
     }
 
-    private void OrderBookReceivedHandle(Subscription arg1, StockSharp.Messages.IOrderBookMessage arg2)
+    void OrderBookReceivedHandle(Subscription subscription, StockSharp.Messages.IOrderBookMessage orderBM)
     {
         throw new NotImplementedException();
     }
 
-    private void NewsReceivedHandle(Subscription arg1, News arg2)
+    void NewsReceivedHandle(Subscription subscription, News sender)
     {
         throw new NotImplementedException();
     }
 
-    private void NewMessageHandle(StockSharp.Messages.Message obj)
+    void NewMessageHandle(StockSharp.Messages.Message msg)
     {
         throw new NotImplementedException();
     }
 
-    private void MassOrderCancelFailed2Handle(long arg1, Exception arg2, DateTimeOffset arg3)
+    void MassOrderCancelFailed2Handle(long arg, Exception ex, DateTimeOffset dt)
     {
         throw new NotImplementedException();
     }
 
-    private void MassOrderCancelFailedHandle(long arg1, Exception arg2)
+    void MassOrderCancelFailedHandle(long arg, Exception ex)
     {
         throw new NotImplementedException();
     }
 
-    private void MassOrderCanceled2Handle(long arg1, DateTimeOffset arg2)
+    void MassOrderCanceled2Handle(long arg, DateTimeOffset dt)
     {
         throw new NotImplementedException();
     }
 
-    private void MassOrderCanceledHandle(long obj)
+    void MassOrderCanceledHandle(long sender)
     {
         throw new NotImplementedException();
     }
 
-    private void LookupSecuritiesResultHandle(StockSharp.Messages.SecurityLookupMessage arg1, IEnumerable<Security> arg2, Exception arg3)
+    void LookupSecuritiesResultHandle(StockSharp.Messages.SecurityLookupMessage slm, IEnumerable<Security> securities, Exception ex)
     {
         throw new NotImplementedException();
     }
 
-    private void LookupPortfoliosResultHandle(StockSharp.Messages.PortfolioLookupMessage arg1, IEnumerable<Portfolio> arg2, Exception arg3)
+    void LookupPortfoliosResultHandle(StockSharp.Messages.PortfolioLookupMessage arg1, IEnumerable<Portfolio> portfolios, Exception ex)
     {
         throw new NotImplementedException();
     }
 
-    private void LogHandle(Ecng.Logging.LogMessage obj)
+    void LogHandle(Ecng.Logging.LogMessage senderLog)
     {
         throw new NotImplementedException();
     }
 
-    private void Level1ReceivedHandle(Subscription arg1, StockSharp.Messages.Level1ChangeMessage arg2)
+    void Level1ReceivedHandle(Subscription subscription, StockSharp.Messages.Level1ChangeMessage levelCh)
     {
         throw new NotImplementedException();
     }
 
-    private void ErrorHandle(Exception obj)
+    void ErrorHandle(Exception ex)
     {
         throw new NotImplementedException();
     }
 
-    private void DisposedHandle()
+    void DisposedHandle()
     {
         throw new NotImplementedException();
     }
 
-    private void DisconnectedExHandle(StockSharp.Messages.IMessageAdapter obj)
+    void DisconnectedExHandle(StockSharp.Messages.IMessageAdapter sender)
     {
         throw new NotImplementedException();
     }
 
-    private void DisconnectedHandle()
+    void DisconnectedHandle()
     {
         throw new NotImplementedException();
     }
 
-    private void DataTypeReceivedHandle(Subscription arg1, StockSharp.Messages.DataType arg2)
+    void DataTypeReceivedHandle(Subscription subscription, StockSharp.Messages.DataType argDt)
     {
         throw new NotImplementedException();
     }
 
-    private void CurrentTimeChangedHandle(TimeSpan obj)
+    void CurrentTimeChangedHandle(TimeSpan sender)
     {
         throw new NotImplementedException();
     }
 
-    private void ConnectionRestoredHandle(StockSharp.Messages.IMessageAdapter obj)
+    void ConnectionRestoredHandle(StockSharp.Messages.IMessageAdapter sender)
     {
         throw new NotImplementedException();
     }
 
-    private void ConnectionLostHandle(StockSharp.Messages.IMessageAdapter obj)
+    void ConnectionLostHandle(StockSharp.Messages.IMessageAdapter sender)
     {
         throw new NotImplementedException();
     }
 
-    private void ConnectionErrorExHandle(StockSharp.Messages.IMessageAdapter arg1, Exception arg2)
+    void ConnectionErrorExHandle(StockSharp.Messages.IMessageAdapter sender, Exception ex)
     {
         throw new NotImplementedException();
     }
 
-    private void ConnectionErrorHandle(Exception obj)
+    void ConnectionErrorHandle(Exception ex)
     {
         throw new NotImplementedException();
     }
 
-    private void ConnectedExHandle(StockSharp.Messages.IMessageAdapter obj)
+    void ConnectedExHandle(StockSharp.Messages.IMessageAdapter sender)
     {
         throw new NotImplementedException();
     }
 
-    private void ConnectedHandle()
+    void ConnectedHandle()
     {
         throw new NotImplementedException();
     }
 
-    private void ChangePasswordResultHandle(long arg1, Exception arg2)
+    void ChangePasswordResultHandle(long arg, Exception ex)
     {
         throw new NotImplementedException();
     }
