@@ -17,7 +17,7 @@ namespace DbPostgreLib.Migrations.Commerce
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -415,6 +415,8 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LastAtUpdatedUTC");
+
                     b.HasIndex("Name");
 
                     b.HasIndex("OrganizationId");
@@ -665,6 +667,8 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LastAtUpdatedUTC");
 
                     b.HasIndex("Name");
 

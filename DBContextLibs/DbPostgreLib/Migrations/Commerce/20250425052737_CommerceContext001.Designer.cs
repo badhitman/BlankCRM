@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20250328020658_CommerceContext001")]
+    [Migration("20250425052737_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace DbPostgreLib.Migrations.Commerce
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -418,6 +418,8 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LastAtUpdatedUTC");
+
                     b.HasIndex("Name");
 
                     b.HasIndex("OrganizationId");
@@ -668,6 +670,8 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LastAtUpdatedUTC");
 
                     b.HasIndex("Name");
 
