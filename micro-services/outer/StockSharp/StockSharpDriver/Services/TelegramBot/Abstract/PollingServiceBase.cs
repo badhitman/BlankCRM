@@ -20,6 +20,7 @@ public abstract class PollingServiceBase<TReceiverService> : BackgroundService
         _logger = logger;
     }
 
+    /// <inheritdoc/>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Starting polling service");

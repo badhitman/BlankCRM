@@ -19,6 +19,12 @@ public class StockSharpClientConfigModel : HostConfigModel
     /// </summary>
     public string QueueMqNamePrefixForResponse { get; set; } = "response.bus-";
 
+    /// <summary>
+    /// Автоматическое снятие заявок при остановке службы
+    /// </summary>
+    public bool CancelOrdersWithStop { get; set; }
+
+
     /// <inheritdoc/>
     public static StockSharpClientConfigModel BuildEmpty()
     {

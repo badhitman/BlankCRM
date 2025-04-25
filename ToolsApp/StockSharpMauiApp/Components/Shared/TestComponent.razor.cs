@@ -122,6 +122,21 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
         _connector.Adapter.InnerAdapters.Add(luaFixMarketDataMessageAdapter);
         _connector.Adapter.InnerAdapters.Add(luaFixTransactionMessageAdapter);
 
+        /*
+         // Создаем подписку на 5-минутные свечи
+            Subscription subscription = new (DataType.TimeFrame(TimeSpan.FromMinutes(5)), security)
+            {
+                // Настраиваем параметры подписки через свойство MarketData
+                MarketData =
+                {
+                    // Запрашиваем данные за последние 30 дней
+                    From = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(30)),
+                    // null означает, что подписка после получения истории перейдет в режим реального времени
+                    To = null
+                }
+            };
+         */
+
         #region event`s
         // Обработка полученных свечей
         _connector.CandleReceived += (sub, candle)
@@ -187,153 +202,39 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
             }
         };
 
-        _connector.Connected += _connector_Connected;
-        _connector.ConnectedEx += _connector_ConnectedEx;
-        _connector.ConnectionError += _connector_ConnectionError;
-        _connector.ConnectionErrorEx += _connector_ConnectionErrorEx;
-        _connector.ConnectionLost += _connector_ConnectionLost;
-        _connector.SecurityReceived += _connector_SecurityReceived;
+        _connector.SecurityReceived += (Subscription arg1, Security arg2) =>
+        {
+            Security[] newItems = [.. _connector.Securities.Where(s => !mySecurities.Any(ss => ss.Name == s.Name))];
+            if (newItems.Length != 0)
+            {
+                myThread1 = new(() =>
+                {
+                    Thread.Sleep(205);
+                    InvokeAsync(StateHasChanged);
+                });
 
-        _connector.BoardReceived += _connector_BoardReceived;
-        _connector.DataTypeReceived += _connector_DataTypeReceived;
-        _connector.Disconnected += _connector_Disconnected;
-        _connector.DisconnectedEx += _connector_DisconnectedEx;
-        _connector.Error += _connector_Error;
-        //_connector.Log += _connector_Log;
-        _connector.OrderCancelFailReceived += _connector_OrderCancelFailReceived;
-        _connector.OrderLogReceived += _connector_OrderLogReceived;
-        _connector.OrderReceived += _connector_OrderReceived;
-        _connector.OrderRegisterFailReceived += _connector_OrderRegisterFailReceived;
-        _connector.OwnTradeReceived += _connector_OwnTradeReceived;
+                mySecurities.AddRange(newItems);
+
+                foreach (IGrouping<string, Security> bg in newItems.GroupBy(x => x.Board.Code))
+                {
+                    if (!mapSecurities.ContainsKey(bg.Key))
+                        mapSecurities.TryAdd(bg.Key, []);
+
+                    mapSecurities[bg.Key].AddRange(bg.Select(x => EntryAltModel.Build(x.Code, x.Name)));
+                }
+                _lastUpdate = DateTime.UtcNow;
+                statusLoadText = $"{mapSecurities.Count} ({mapSecurities.Sum(x => x.Value.Count)})";
+
+                InvokeAsync(StateHasChanged);
+                myThread1.Start();
+            }
+        };
 
         #endregion
 
         _connector.Connect();
 
-        /*Order order = new()
-        {
-            // устанавливается тип заявки, в данном примере лимитный
-            Type = OrderTypes.Limit,
-            // устанавливается портфель для исполнения заявки //NC0011100000
-            Portfolio = new Portfolio() {  ClientCode = "10028", Name = "NL0011100043", Security = _security },
-            // устанавливается объём заявки
-            Volume = 1,
-            // устанавливается цена заявки
-            Price = 3,
-            // устанавливается инструмент
-            Security = _security,
-            // устанавливается направление заявки, в данном примере покупка
-            Side = Sides.Buy,
-        };
-        //Метод RegisterOrder отправляет заявку на сервер
-        _connector.RegisterOrder(order);*/
-
         return base.OnInitializedAsync();
-    }
-
-    private void _connector_OwnTradeReceived(Subscription arg1, MyTrade arg2)
-    {
-        SnackbarRepo.Info($"OwnTradeReceived - {arg1}: {arg2}");
-    }
-
-    private void _connector_OrderRegisterFailReceived(Subscription arg1, OrderFail arg2)
-    {
-        SnackbarRepo.Error($"OrderRegisterFailReceived: {arg1} - {arg2}");
-    }
-
-    private void _connector_OrderReceived(Subscription arg1, Order arg2)
-    {
-        SnackbarRepo.Info($"OrderReceived - {arg1}: {arg2}");
-    }
-
-    private void _connector_OrderLogReceived(Subscription arg1, IOrderLogMessage arg2)
-    {
-        SnackbarRepo.Info($"OrderLogReceived: {arg1} - {arg2}");
-    }
-
-    private void _connector_OrderCancelFailReceived(Subscription arg1, OrderFail arg2)
-    {
-        SnackbarRepo.Error($"OrderCancelFailReceived: {arg1} - {arg2}");
-    }
-
-    private void _connector_Error(Exception obj)
-    {
-        SnackbarRepo.Error($"Error - {obj.Message}");
-    }
-
-    private void _connector_DisconnectedEx(IMessageAdapter obj)
-    {
-        SnackbarRepo.Warn($"DisconnectedEx - {obj}");
-    }
-
-    private void _connector_Disconnected()
-    {
-        SnackbarRepo.Warn($"Disconnected");
-    }
-
-    private void _connector_DataTypeReceived(Subscription arg1, DataType arg2)
-    {
-        SnackbarRepo.Info($"DataTypeReceived - {arg1}: {arg2}");
-    }
-
-    private void _connector_BoardReceived(Subscription arg1, ExchangeBoard arg2)
-    {
-        SnackbarRepo.Info($"BoardReceived - {arg1}: {arg2}");
-    }
-
-    private void _connector_SecurityReceived(Subscription arg1, Security arg2)
-    {
-        //SnackbarRepo.Warn($"SecurityReceived ({arg1}) - {arg2}");
-
-        Security[] newItems = [.. _connector.Securities.Where(s => !mySecurities.Any(ss => ss.Name == s.Name))];
-        if (newItems.Length != 0)
-        {
-            myThread1 = new(() =>
-            {
-                Thread.Sleep(205);
-                InvokeAsync(StateHasChanged);
-            });
-
-            mySecurities.AddRange(newItems);
-
-            foreach (IGrouping<string, Security> bg in newItems.GroupBy(x => x.Board.Code))
-            {
-                if (!mapSecurities.ContainsKey(bg.Key))
-                    mapSecurities.TryAdd(bg.Key, []);
-
-                mapSecurities[bg.Key].AddRange(bg.Select(x => EntryAltModel.Build(x.Code, x.Name)));
-            }
-            _lastUpdate = DateTime.UtcNow;
-            statusLoadText = $"{mapSecurities.Count} ({mapSecurities.Sum(x => x.Value.Count)})";
-
-            InvokeAsync(StateHasChanged);
-            myThread1.Start();
-        }
-    }
-
-    private void _connector_ConnectionLost(IMessageAdapter adapter)
-    {
-        SnackbarRepo.Warn($"ConnectionLost - {adapter}");
-    }
-
-    private void _connector_ConnectionErrorEx(IMessageAdapter adapter, Exception exception)
-    {
-        SnackbarRepo.Error($"ConnectionErrorEx - {adapter}: {exception.Message}");
-    }
-
-    private void _connector_ConnectionError(Exception exception)
-    {
-        SnackbarRepo.Error($"ConnectionError: {exception}");
-    }
-
-    private void _connector_ConnectedEx(IMessageAdapter adapter)
-    {
-        SnackbarRepo.Info($"ConnectedEx: {adapter}");
-    }
-
-    private void _connector_Connected()
-    {
-        SnackbarRepo.Success($"Connected");
     }
 
     protected virtual void Dispose(bool disposing)

@@ -1,19 +1,23 @@
-using MQTTnet.Server;
-using MQTTnet;
-using SharedLib;
+////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
 using MQTTnet.Diagnostics;
+using MQTTnet.Server;
+using SharedLib;
+using MQTTnet;
 
 namespace StockSharpDriver;
 
 /// <inheritdoc/>
-public class Worker : BackgroundService
+public class MqttServerWorker : BackgroundService
 {
     //private const string _connectorFile = "ConnectorFile.json";
-    readonly ILogger<Worker> _logger;
+    readonly ILogger<MqttServerWorker> _logger;
     readonly MqttServer server;
 
     /// <inheritdoc/>
-    public Worker(ILogger<Worker> logger, StockSharpClientConfigModel conf)
+    public MqttServerWorker(ILogger<MqttServerWorker> logger, StockSharpClientConfigModel conf)
     {
         _logger = logger;
         MqttFactory mqttFactory = new();
@@ -32,17 +36,14 @@ public class Worker : BackgroundService
         await server.StartAsync();
     }
 
-    class CustomLogger(ILogger<Worker> logger) : IMqttNetLogger
+    class CustomLogger(ILogger<MqttServerWorker> logger) : IMqttNetLogger
     {
         public bool IsEnabled => true;
 
         public void Publish(MqttNetLogLevel logLevel, string source, string message, object[]? parameters, Exception? exception)
         {
-
             if (parameters?.Length > 0)
-            {
                 message = string.Format(message, parameters);
-            }
 
             switch (logLevel)
             {

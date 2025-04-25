@@ -85,13 +85,24 @@ public class Program
                             return new TelegramBotClient(options, httpClient);
                         });
 
-                services.AddScoped<UpdateHandler>();
-                services.AddScoped<ReceiverService>();
-                services.AddHostedService<PollingService>();
+                services
+                    .AddScoped<UpdateHandler>()
+                    .AddScoped<ReceiverService>()
+                    .AddHostedService<PollingService>()
+                ;
 
+                StockSharp.Algo.Connector _connector = new();
                 _conf.Reload(bx.Configuration.GetSection("StockSharpDriverConfig").Get<StockSharpClientConfigModel>());
-                services.AddHostedService<Worker>();
-                services.AddSingleton(sp => _conf);
+
+                services
+                    .AddSingleton(sp => _conf)
+                    .AddSingleton(sp => _connector)
+                ;
+
+                services
+                    .AddHostedService<MqttServerWorker>()
+                    .AddHostedService<ConnectionStockSharpWorker>()
+                ;
 
                 #region MQ Transmission (remote methods call)
                 services.AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<StockSharpClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName));

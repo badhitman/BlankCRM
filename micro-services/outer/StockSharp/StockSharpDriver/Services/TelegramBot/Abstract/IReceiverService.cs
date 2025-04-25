@@ -5,5 +5,6 @@ namespace Telegram.Bot.Abstract;
 /// </summary>
 public interface IReceiverService
 {
+    /// <inheritdoc/>
     Task ReceiveAsync(CancellationToken stoppingToken);
 }
