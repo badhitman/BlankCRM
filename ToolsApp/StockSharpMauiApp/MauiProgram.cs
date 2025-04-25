@@ -15,6 +15,11 @@ namespace StockSharpMauiApp;
 
 public static class MauiProgram
 {
+    /// <summary>
+    /// db Path
+    /// </summary>
+    public static string DbPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), nameof(StockSharpAppContext), $"{(AppDomain.CurrentDomain.FriendlyName.Equals("ef", StringComparison.OrdinalIgnoreCase) ? "StockSharpAppData" : AppDomain.CurrentDomain.FriendlyName)}.db3");
+
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
@@ -26,12 +31,16 @@ public static class MauiProgram
         builder.Services.AddMauiBlazorWebView();
         builder.Services.AddMudServices();
 
+        FileInfo _fi = new(DbPath);
+        if (_fi.Directory?.Exists != true)
+            Directory.CreateDirectory(Path.GetDirectoryName(DbPath)!);
+
         builder.Services.AddDbContextFactory<StockSharpAppContext>(opt =>
         {
 #if DEBUG
             opt.EnableSensitiveDataLogging(true);
             opt.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
-            opt.UseSqlite(StockSharpAppLayerContext.DbPath, b => b.MigrationsAssembly("StockSharpMauiMigration"));
+            opt.UseSqlite(DbPath, b => b.MigrationsAssembly("StockSharpMauiMigration"));
 #endif
         });
 
@@ -48,7 +57,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<StockSharpClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName));
         //
         builder.Services
-            .AddScoped<IStockSharpDriverService, StockSharpNativeService>()
             .AddScoped<IStockSharpMainService, StockSharpMainService>()
             ;
         //

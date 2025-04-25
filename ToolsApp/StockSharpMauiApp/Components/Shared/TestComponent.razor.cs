@@ -16,7 +16,7 @@ namespace StockSharpMauiApp.Components.Shared;
 public partial class TestComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    ISnackbar SnackbarRepo { get; set; } = default!;
+    IStockSharpMainService ssMainRepo { get; set; } = default!;
 
 
     List<Portfolio> myPortfolios = [];
@@ -231,11 +231,6 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
         return base.OnInitializedAsync();
     }
 
-    private void _connector_SubscriptionFailed(Subscription arg1, Exception arg2, bool arg3)
-    {
-        SnackbarRepo.Error($"SubscriptionFailed - {arg1}: {arg2} /{arg3}");
-    }
-
     private void _connector_OwnTradeReceived(Subscription arg1, MyTrade arg2)
     {
         SnackbarRepo.Info($"OwnTradeReceived - {arg1}: {arg2}");
@@ -259,26 +254,6 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
     private void _connector_OrderCancelFailReceived(Subscription arg1, OrderFail arg2)
     {
         SnackbarRepo.Error($"OrderCancelFailReceived: {arg1} - {arg2}");
-    }
-
-    private void _connector_OrderCancelFailed(OrderFail obj)
-    {
-        SnackbarRepo.Error($"OrderCancelFailed - {obj}");
-    }
-
-    private void _connector_OrderBookReceived(Subscription arg1, IOrderBookMessage arg2)
-    {
-        SnackbarRepo.Info($"OrderBookReceived - {arg1}: {arg2}");
-    }
-
-    private void _connector_Log(Ecng.Logging.LogMessage obj)
-    {
-        SnackbarRepo.Info($"Log - {obj}");
-    }
-
-    private void _connector_Level1Received(Subscription arg1, Level1ChangeMessage arg2)
-    {
-        SnackbarRepo.Info($"Level1Received - {arg1}: {arg2}");
     }
 
     private void _connector_Error(Exception obj)

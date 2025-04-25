@@ -35,6 +35,8 @@
 		<PackageReference Include="StockSharp.Server.Core" Version="5.0.175" />
 		<PackageReference Include="StockSharp.Xignite" Version="5.0.130" />
 		<PackageReference Include="System.Text.Json" Version="6.0.11" />
+		<PackageReference Include="Telegram.Bot" Version="19.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

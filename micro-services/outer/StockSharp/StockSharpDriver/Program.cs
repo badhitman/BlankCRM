@@ -5,6 +5,8 @@
 using RemoteCallLib;
 using SharedLib;
 using StockSharpService;
+using Telegram.Bot;
+using Telegram.Bot.Services;
 
 namespace StockSharpDriver;
 
@@ -58,7 +60,7 @@ public class Program
                         }
                     }
                 }
-                ReadSecrets("secrets");
+                ReadSecrets($"secrets_{nameof(StockSharpDriver)}");
 
                 builder.AddEnvironmentVariables();
                 builder.AddCommandLine(args);
@@ -67,6 +69,26 @@ public class Program
             })
             .ConfigureServices((bx, services) =>
             {
+                // Register Bot configuration
+                services.Configure<BotConfiguration>(bx.Configuration.GetSection(BotConfiguration.Configuration));
+
+                // Register named HttpClient to benefits from IHttpClientFactory
+                // and consume it with ITelegramBotClient typed client.
+                // More read:
+                //  https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-5.0#typed-clients
+                //  https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
+                services.AddHttpClient("telegram_bot_client")
+                        .AddTypedClient<ITelegramBotClient>((httpClient, sp) =>
+                        {
+                            BotConfiguration? botConfig = sp.GetConfiguration<BotConfiguration>();
+                            TelegramBotClientOptions options = new(botConfig.BotToken);
+                            return new TelegramBotClient(options, httpClient);
+                        });
+
+                services.AddScoped<UpdateHandler>();
+                services.AddScoped<ReceiverService>();
+                services.AddHostedService<PollingService>();
+
                 _conf.Reload(bx.Configuration.GetSection("StockSharpDriverConfig").Get<StockSharpClientConfigModel>());
                 services.AddHostedService<Worker>();
                 services.AddSingleton(sp => _conf);
@@ -84,7 +106,19 @@ public class Program
             });
 
         IHost host = builderH.Build();
-        
+
         host.Run();
     }
+}
+
+/// <summary>
+/// BotConfiguration
+/// </summary>
+public class BotConfiguration
+{
+    /// <inheritdoc/>
+    public static readonly string Configuration = "BotConfiguration";
+
+    /// <inheritdoc/>
+    public string BotToken { get; set; } = "";
 }

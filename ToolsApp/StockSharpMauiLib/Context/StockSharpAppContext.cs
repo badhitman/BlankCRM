@@ -11,13 +11,5 @@ namespace DbcLib;
 /// </summary>
 public partial class StockSharpAppContext(DbContextOptions<StockSharpAppContext> options) : StockSharpAppLayerContext(options)
 {
-    
-    /// <inheritdoc/>
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-    {
-        base.OnConfiguring(options);
 
-        options
-            .UseSqlite($"Filename={DbPath}", b => b.MigrationsAssembly("StockSharpMauiMigration"));
-    }
 }
