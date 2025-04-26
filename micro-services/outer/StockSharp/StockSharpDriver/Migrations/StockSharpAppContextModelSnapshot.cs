@@ -136,6 +136,9 @@ namespace StockSharpDriver.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("BoardId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("CfiCode")
                         .HasColumnType("TEXT");
 
@@ -152,9 +155,6 @@ namespace StockSharpDriver.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("Decimals")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ExchangeBoardId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTimeOffset?>("ExpiryDate")
@@ -210,13 +210,13 @@ namespace StockSharpDriver.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BoardId");
+
                     b.HasIndex("CfiCode");
 
                     b.HasIndex("Class");
 
                     b.HasIndex("Code");
-
-                    b.HasIndex("ExchangeBoardId");
 
                     b.HasIndex("IdRemote");
 
@@ -229,6 +229,50 @@ namespace StockSharpDriver.Migrations
                     b.HasIndex("UnderlyingSecurityId");
 
                     b.ToTable("Instruments");
+                });
+
+            modelBuilder.Entity("SharedLib.PortfolioTradeModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BoardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ClientCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("Currency")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DepoName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsFavorite")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastAtUpdatedUTC")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("State")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoardId");
+
+                    b.HasIndex("IsFavorite");
+
+                    b.HasIndex("LastAtUpdatedUTC");
+
+                    b.ToTable("Portfolios");
                 });
 
             modelBuilder.Entity("SharedLib.BoardStockSharpModelDB", b =>
@@ -255,13 +299,24 @@ namespace StockSharpDriver.Migrations
 
             modelBuilder.Entity("SharedLib.InstrumentTradeModelDB", b =>
                 {
-                    b.HasOne("SharedLib.BoardStockSharpModelDB", "ExchangeBoard")
+                    b.HasOne("SharedLib.BoardStockSharpModelDB", "Board")
                         .WithMany("Instruments")
-                        .HasForeignKey("ExchangeBoardId")
+                        .HasForeignKey("BoardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ExchangeBoard");
+                    b.Navigation("Board");
+                });
+
+            modelBuilder.Entity("SharedLib.PortfolioTradeModelDB", b =>
+                {
+                    b.HasOne("SharedLib.BoardStockSharpModelDB", "Board")
+                        .WithMany()
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
                 });
 
             modelBuilder.Entity("SharedLib.BoardStockSharpModelDB", b =>

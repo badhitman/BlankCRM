@@ -17,7 +17,7 @@ public partial class InstrumentTradeModel
     public string? Name { get; set; }
 
     /// <inheritdoc/>
-    public virtual BoardStockSharpModel? ExchangeBoard { get; set; }
+    public virtual BoardStockSharpModel? Board { get; set; }
 
     /// <inheritdoc/>
     public virtual InstrumentExternalIdModel? ExternalId { get; set; }

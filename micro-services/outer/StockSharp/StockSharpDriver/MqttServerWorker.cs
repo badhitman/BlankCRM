@@ -40,7 +40,7 @@ public class MqttServerWorker : BackgroundService
     {
         public bool IsEnabled => true;
 
-        public void Publish(MqttNetLogLevel logLevel, string source, string message, object[]? parameters, Exception? exception)
+        public void Publish(MqttNetLogLevel logLevel, string source, string message, object[] parameters, Exception exception)
         {
             if (parameters?.Length > 0)
                 message = string.Format(message, parameters);

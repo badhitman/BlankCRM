@@ -25,12 +25,12 @@ public class InstrumentTradeModelDB : InstrumentTradeModel, IBaseStockSharpModel
     public bool IsFavorite { get; set; }
 
     /// <inheritdoc/>
-    public new InstrumentExternalIdModelDB? ExternalId { get; set; }
+    public new InstrumentExternalIdModelDB ExternalId { get; set; }
 
     /// <inheritdoc/>
-    public new BoardStockSharpModelDB? ExchangeBoard { get; set; }
+    public new BoardStockSharpModelDB Board { get; set; }
     /// <inheritdoc/>
-    public int ExchangeBoardId { get; set; }
+    public int BoardId { get; set; }
 
     /// <inheritdoc/>
     public DateTime LastAtUpdatedUTC { get; set; }

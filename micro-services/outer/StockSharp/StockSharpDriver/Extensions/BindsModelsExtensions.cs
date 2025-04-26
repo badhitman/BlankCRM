@@ -37,7 +37,7 @@ public static class BindsModelsExtensions
         main.OptionType = (OptionInstrumentTradeTypesEnum)Enum.Parse(typeof(OptionInstrumentTradeTypesEnum), Enum.GetName(inc.OptionType!.Value)!);
         main.OptionStyle = (OptionTradeInstrumentStylesEnum)Enum.Parse(typeof(OptionTradeInstrumentStylesEnum), Enum.GetName(inc.OptionStyle!.Value)!);
 
-        main.ExchangeBoard = new BoardStockSharpModel().Bind(inc.Board);
+        main.Board = new BoardStockSharpModel().Bind(inc.Board);
         main.ExternalId = new InstrumentExternalIdModel().Bind(inc.ExternalId);
 
         return main;
@@ -71,6 +71,19 @@ public static class BindsModelsExtensions
     {
         main.Name = inc.Name;
         main.CountryCode = (CountryCodesEnum)Enum.Parse(typeof(CountryCodesEnum), Enum.GetName(inc.CountryCode!.Value)!);
+        return main;
+    }
+
+    /// <inheritdoc/>
+    public static PortfolioTradeModel Bind(this PortfolioTradeModel main, Portfolio inc)
+    {
+        main.Board = new BoardStockSharpModel().Bind(inc.Board);
+        main.Currency = (CurrenciesTypesEnum?)Enum.Parse(typeof(CurrenciesTypesEnum), Enum.GetName(inc.Currency!.Value)!);
+        main.ClientCode = inc.ClientCode;
+        main.State = (PortfolioStatesEnum?)Enum.Parse(typeof(PortfolioStatesEnum), Enum.GetName(inc.State!.Value)!);
+        main.Name = inc.Name;
+        main.DepoName = inc.DepoName;
+        //
         return main;
     }
 }

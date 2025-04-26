@@ -2,25 +2,23 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
 /// <summary>
-/// Биржа
+/// Sides
 /// </summary>
-[Index(nameof(Name))]
-public class ExchangeStockSharpModelDB : ExchangeStockSharpModel
+public enum SidesEnum
 {
     /// <summary>
-    /// Идентификатор/Key
+    /// Buy.
     /// </summary>
-    [Key]
-    public int Id { get; set; }
-
+    [Display(Name = "Buy2")]
+    Buy,
     /// <summary>
-    /// Boards
+    /// Sell.
     /// </summary>
-    public List<BoardStockSharpModelDB> Boards { get; set; }
+    [Display(Name = "Sell2")]
+    Sell
 }

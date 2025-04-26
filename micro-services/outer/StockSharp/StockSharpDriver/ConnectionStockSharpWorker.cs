@@ -75,7 +75,7 @@ public class ConnectionStockSharpWorker(
         _logger.LogInformation($"call - {nameof(Connector.CancelOrders)}!");
         Connector.CancelOrders();
 
-        foreach (Subscription? sub in Connector.Subscriptions)
+        foreach (Subscription sub in Connector.Subscriptions)
         {
             Connector.UnSubscribe(sub);
             _logger.LogInformation($"{nameof(Connector.UnSubscribe)} > {sub.GetType().FullName}");
@@ -267,6 +267,8 @@ public class ConnectionStockSharpWorker(
 
     void LookupPortfoliosResultHandle(StockSharp.Messages.PortfolioLookupMessage arg1, IEnumerable<Portfolio> portfolios, Exception ex)
     {
+        foreach (Portfolio port in portfolios)
+            dataRepo.SavePortfolio(new PortfolioTradeModel().Bind(port));
         throw new NotImplementedException();
     }
 

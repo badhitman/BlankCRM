@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 namespace SharedLib;
 
 /// <summary>
-/// Площадка
+/// classPortfolioTradeModelDB
 /// </summary>
-[Index(nameof(LastAtUpdatedUTC)), Index(nameof(Code))]
-public class BoardStockSharpModelDB : BoardStockSharpModel, IBaseStockSharpModel
+[Index(nameof(IsFavorite)), Index(nameof(LastAtUpdatedUTC))]
+public class PortfolioTradeModelDB : PortfolioTradeModel, IBaseStockSharpModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -20,18 +20,14 @@ public class BoardStockSharpModelDB : BoardStockSharpModel, IBaseStockSharpModel
     public int Id { get; set; }
 
     /// <summary>
-    /// Exchange
+    /// Добавлен в "Избранное"
     /// </summary>
-    public new ExchangeStockSharpModelDB Exchange { get; set; }
-    /// <summary>
-    /// Exchange
-    /// </summary>
-    public int ExchangeId { get; set; }
+    public bool IsFavorite { get; set; }
 
-    /// <summary>
-    /// Инструменты (биржевые торговые)
-    /// </summary>
-    public List<InstrumentTradeModelDB> Instruments { get; set; }
+    /// <inheritdoc/>
+    public new BoardStockSharpModelDB Board { get; set; }
+    /// <inheritdoc/>
+    public int BoardId { get; set; }
 
     /// <inheritdoc/>
     public DateTime LastAtUpdatedUTC { get; set; }

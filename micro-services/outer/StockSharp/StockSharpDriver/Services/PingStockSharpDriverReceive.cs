@@ -10,13 +10,13 @@ namespace Transmission.Receives.StockSharpDriver;
 /// PingStockSharpDriver
 /// </summary>
 public class PingStockSharpDriverReceive(IStockSharpDriverService ssRepo)
-    : IMQTTReceive<object?, ResponseBaseModel?>
+    : IMQTTReceive<object, ResponseBaseModel>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PingStockSharpDriverReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(object? payload, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ResponseHandleActionAsync(object payload, CancellationToken token = default)
     {
         return await ssRepo.PingAsync(token);
     }

@@ -20,7 +20,7 @@ public class InstrumentExternalIdModelDB : InstrumentExternalIdModel, IBaseStock
     public int Id { get; set; }
 
     ///<inheritdoc/>
-    public InstrumentTradeModelDB? ParentInstrument { get; set; }
+    public InstrumentTradeModelDB ParentInstrument { get; set; }
     ///<inheritdoc/>
     public int ParentInstrumentId { get; set; }
 
@@ -84,7 +84,7 @@ public class InstrumentExternalIdModelDB : InstrumentExternalIdModel, IBaseStock
     }
 
     /// <inheritdoc/>
-    public override bool Equals(object? other)
+    public override bool Equals(object other)
     {
         if (other is null)
             return false;

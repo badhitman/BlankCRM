@@ -52,7 +52,7 @@ namespace StockSharpDriver.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     IsFavorite = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ExchangeBoardId = table.Column<int>(type: "INTEGER", nullable: false),
+                    BoardId = table.Column<int>(type: "INTEGER", nullable: false),
                     LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
@@ -80,8 +80,35 @@ namespace StockSharpDriver.Migrations
                 {
                     table.PrimaryKey("PK_Instruments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Instruments_Boards_ExchangeBoardId",
-                        column: x => x.ExchangeBoardId,
+                        name: "FK_Instruments_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Portfolios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    IsFavorite = table.Column<bool>(type: "INTEGER", nullable: false),
+                    BoardId = table.Column<int>(type: "INTEGER", nullable: false),
+                    LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    State = table.Column<int>(type: "INTEGER", nullable: true),
+                    Currency = table.Column<int>(type: "INTEGER", nullable: true),
+                    ClientCode = table.Column<string>(type: "TEXT", nullable: true),
+                    DepoName = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Portfolios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Portfolios_Boards_BoardId",
+                        column: x => x.BoardId,
                         principalTable: "Boards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -188,6 +215,11 @@ namespace StockSharpDriver.Migrations
                 column: "Sedol");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Instruments_BoardId",
+                table: "Instruments",
+                column: "BoardId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Instruments_CfiCode",
                 table: "Instruments",
                 column: "CfiCode");
@@ -201,11 +233,6 @@ namespace StockSharpDriver.Migrations
                 name: "IX_Instruments_Code",
                 table: "Instruments",
                 column: "Code");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Instruments_ExchangeBoardId",
-                table: "Instruments",
-                column: "ExchangeBoardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Instruments_IdRemote",
@@ -231,12 +258,30 @@ namespace StockSharpDriver.Migrations
                 name: "IX_Instruments_UnderlyingSecurityId",
                 table: "Instruments",
                 column: "UnderlyingSecurityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Portfolios_BoardId",
+                table: "Portfolios",
+                column: "BoardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Portfolios_IsFavorite",
+                table: "Portfolios",
+                column: "IsFavorite");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Portfolios_LastAtUpdatedUTC",
+                table: "Portfolios",
+                column: "LastAtUpdatedUTC");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "ExternalsIdsInstruments");
+
+            migrationBuilder.DropTable(
+                name: "Portfolios");
 
             migrationBuilder.DropTable(
                 name: "Instruments");

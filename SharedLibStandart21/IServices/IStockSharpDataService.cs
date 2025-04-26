@@ -13,4 +13,9 @@ public interface IStockSharpDataService
     /// Сохранить в БД инструмент
     /// </summary>
     public void SaveInstrument(InstrumentTradeModel instrument);
+
+    /// <summary>
+    /// SavePortfolio
+    /// </summary>
+    public void SavePortfolio(PortfolioTradeModel portfolio);
 }

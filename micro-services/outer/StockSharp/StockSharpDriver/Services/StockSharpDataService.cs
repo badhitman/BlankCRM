@@ -19,4 +19,11 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
         throw new NotImplementedException();
     }
+
+    /// <inheritdoc/>
+    public void SavePortfolio(PortfolioTradeModel portfolio)
+    {
+        using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
+        throw new NotImplementedException();
+    }
 }
