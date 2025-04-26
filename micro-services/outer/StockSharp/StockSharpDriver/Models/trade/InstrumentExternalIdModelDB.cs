@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharedLib;
 
@@ -19,63 +19,10 @@ public class InstrumentExternalIdModelDB : InstrumentExternalIdModel, IBaseStock
     [Key]
     public int Id { get; set; }
 
-    /// <summary>
-    /// Name
-    /// </summary>
-    public new required string Name { get; set; }
-
     ///<inheritdoc/>
     public InstrumentTradeModelDB? ParentInstrument { get; set; }
     ///<inheritdoc/>
     public int ParentInstrumentId { get; set; }
-
-    /// <summary>
-    /// ID in SEDOL format (Stock Exchange Daily Official List).
-    /// </summary>
-    [Display(Name = "Sedol")]
-    public new required string Sedol { get; set; }
-
-    /// <summary>
-    /// ID in CUSIP format (Committee on Uniform Securities Identification Procedures).
-    /// </summary>
-    [Display(Name = "Cusip")]
-    public new required string Cusip { get; set; }
-
-    /// <summary>
-    /// ID in ISIN format (International Securities Identification Number).
-    /// </summary>
-    [Display(Name = "Isin")]
-    public new required string Isin { get; set; }
-
-    /// <summary>
-    /// ID in RIC format (Reuters Instrument Code).
-    /// </summary>
-    [Display(Name = "Ric")]
-    public new required string Ric { get; set; }
-
-    /// <summary>
-    /// ID in Bloomberg format.
-    /// </summary>
-    [Display(Name = "Bloomberg")]
-    public new required string Bloomberg { get; set; }
-
-    /// <summary>
-    /// ID in IQFeed format.
-    /// </summary>
-    [Display(Name = "IQFeed")]
-    public new required string IQFeed { get; set; }
-
-    /// <summary>
-    /// ID in Interactive Brokers format.
-    /// </summary>
-    [Display(Name = "InteractiveBrokers")]
-    public new int? InteractiveBrokers { get; set; }
-
-    /// <summary>
-    /// ID in Plaza format.
-    /// </summary>
-    [Display(Name = "Plaza")]
-    public new required string Plaza { get; set; }
 
     /// <inheritdoc/>
     public DateTime LastAtUpdatedUTC { get; set; }
@@ -87,32 +34,32 @@ public class InstrumentExternalIdModelDB : InstrumentExternalIdModel, IBaseStock
     public override string ToString()
     {
         string text = string.Empty;
-        if (!Bloomberg.IsEmpty())
+        if (!string.IsNullOrWhiteSpace(Bloomberg))
         {
             text = text + " Bloom " + Bloomberg;
         }
 
-        if (!Cusip.IsEmpty())
+        if (!string.IsNullOrWhiteSpace(Cusip))
         {
             text = text + " CUSIP " + Cusip;
         }
 
-        if (!IQFeed.IsEmpty())
+        if (!string.IsNullOrWhiteSpace(IQFeed))
         {
             text = text + " IQFeed " + IQFeed;
         }
 
-        if (!Isin.IsEmpty())
+        if (!string.IsNullOrWhiteSpace(Isin))
         {
             text = text + " ISIN " + Isin;
         }
 
-        if (!Ric.IsEmpty())
+        if (!string.IsNullOrWhiteSpace(Ric))
         {
             text = text + " RIC " + Ric;
         }
 
-        if (!Sedol.IsEmpty())
+        if (!string.IsNullOrWhiteSpace(Sedol))
         {
             text = text + " SEDOL " + Sedol;
         }
@@ -122,7 +69,7 @@ public class InstrumentExternalIdModelDB : InstrumentExternalIdModel, IBaseStock
             text += $" InteractiveBrokers {InteractiveBrokers}";
         }
 
-        if (!Plaza.IsEmpty())
+        if (!string.IsNullOrWhiteSpace(Plaza))
         {
             text = text + " Plaza " + Plaza;
         }

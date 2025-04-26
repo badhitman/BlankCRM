@@ -989,6 +989,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string PING_ACTION_NAME = "ping";
 
         /// <summary>
+        /// Notify
+        /// </summary>
+        public const string NOTIFY_ACTION_NAME = "notify";
+
+        /// <summary>
         /// Create
         /// </summary>
         public const string CREATE_ACTION_NAME = "create";

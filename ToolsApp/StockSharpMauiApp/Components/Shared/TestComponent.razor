@@ -1,15 +1,15 @@
-﻿@using BlazorLib
-@using Ecng.Common;
-@using SharedLib;
+﻿@* @using Ecng.Common;
 @using StockSharp.BusinessEntities;
-@using StockSharp.Messages;
+@using StockSharp.Messages; *@
+@using BlazorLib
+@using SharedLib;
 @using System.Net;
 @using System.Security;
 
 @inherits BlazorBusyComponentBaseModel
 
 <h3>TestComponent</h3>
-<MudStack Row="true">
+@* <MudStack Row="true">
     <MudSelect T="Portfolio" @bind-Value="selectedPortfolio" Label="Портфель" Variant="Variant.Outlined">
         @if (myPortfolios is not null && myPortfolios.Count() != 0)
         {
@@ -61,4 +61,4 @@
             <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="NewOrder" Disabled="@(DecimalValue <= 0 || selectedPortfolio is null)" />
         }
     }
-</MudStack>
+</MudStack> *@

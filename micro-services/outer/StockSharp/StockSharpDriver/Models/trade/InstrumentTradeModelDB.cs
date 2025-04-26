@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharedLib;
 
@@ -19,40 +19,18 @@ public class InstrumentTradeModelDB : InstrumentTradeModel, IBaseStockSharpModel
     [Key]
     public int Id { get; set; }
 
+    /// <summary>
+    /// Добавлен в "Избранное"
+    /// </summary>
+    public bool IsFavorite { get; set; }
+
     /// <inheritdoc/>
     public new InstrumentExternalIdModelDB? ExternalId { get; set; }
 
     /// <inheritdoc/>
-    public new ExchangeBoardModelDB? ExchangeBoard { get; set; }
+    public new BoardStockSharpModelDB? ExchangeBoard { get; set; }
     /// <inheritdoc/>
     public int ExchangeBoardId { get; set; }
-
-    /// <inheritdoc/>
-    public new required string IdRemote { get; set; }
-
-    /// <inheritdoc/>
-    public new required string Code { get; set; }
-
-    /// <inheritdoc/>
-    public new required string ShortName { get; set; }
-
-    /// <inheritdoc/>
-    public new required string Class { get; set; }
-
-    /// <summary>
-    /// Type in ISO 10962 standard.
-    /// </summary>
-    public new required string CfiCode { get; set; }
-
-    /// <summary>
-    /// Identifier on primary exchange.
-    /// </summary>
-    public new required string PrimaryId { get; set; }
-
-    /// <summary>
-    /// Underlying asset on which the current security is built.
-    /// </summary>
-    public new required string UnderlyingSecurityId { get; set; }
 
     /// <inheritdoc/>
     public DateTime LastAtUpdatedUTC { get; set; }

@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// InstrumentTradeModel
 /// </summary>
-public class InstrumentTradeModel
+public partial class InstrumentTradeModel
 {
     /// <summary>
     /// Name
@@ -17,7 +17,7 @@ public class InstrumentTradeModel
     public string? Name { get; set; }
 
     /// <inheritdoc/>
-    public virtual ExchangeBoardModel? ExchangeBoard { get; set; }
+    public virtual BoardStockSharpModel? ExchangeBoard { get; set; }
 
     /// <inheritdoc/>
     public virtual InstrumentExternalIdModel? ExternalId { get; set; }
@@ -30,11 +30,6 @@ public class InstrumentTradeModel
 
     /// <inheritdoc/>
     public string? ShortName { get; set; }
-
-    /// <summary>
-    /// Добавлен в "Избранное"
-    /// </summary>
-    public bool IsFavorite { get; set; }
 
     /// <inheritdoc/>
     public virtual InstrumentsStockSharpTypesEnum? TypeInstrument { get; set; }

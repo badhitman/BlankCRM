@@ -5,12 +5,17 @@
 namespace SharedLib;
 
 /// <summary>
-/// ExchangeBoardModel
+/// ExchangeStockSharpModel
 /// </summary>
-public class ExchangeBoardModel
+public class ExchangeStockSharpModel
 {
     /// <summary>
     /// Name
     /// </summary>
     public virtual string? Name { get; set; }
+
+    /// <summary>
+    /// CountryCode
+    /// </summary>
+    public virtual CountryCodesEnum CountryCode { get; set; }
 }

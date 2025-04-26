@@ -12,13 +12,15 @@ namespace DbcLib;
 /// </summary>
 public partial class StockSharpAppContext(DbContextOptions<StockSharpAppContext> options) : StockSharpAppLayerContext(options)
 {
+    /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
         base.OnConfiguring(options);
         options
-            .UseSqlite($"Filename={DbPath}", b => b.MigrationsAssembly("StockSharpMauiMigration"));
+            .UseSqlite($"Filename={DbPath}");
     }
 
+    /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -26,7 +28,6 @@ public partial class StockSharpAppContext(DbContextOptions<StockSharpAppContext>
          modelBuilder.Entity<InstrumentTradeModelDB>()
             .HasOne(a => a.ExternalId)
             .WithOne(a => a.ParentInstrument)
-            .HasForeignKey<InstrumentExternalIdModelDB>(c => c.ParentInstrumentId);
-         
+            .HasForeignKey<InstrumentExternalIdModelDB>(c => c.ParentInstrumentId);         
     }
 }

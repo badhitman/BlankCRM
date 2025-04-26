@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////
 
 using SharedLib;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RemoteCallLib;
 
@@ -11,5 +13,7 @@ namespace RemoteCallLib;
 /// </summary>
 public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) : IStockSharpEventsService
 {
-
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ValuesChanged(ConnectorValuesChangedEventPayloadModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ValuesChangedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 }

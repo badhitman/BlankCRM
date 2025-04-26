@@ -4,13 +4,16 @@
 
 using SharedLib;
 using StockSharp.Algo;
+using StockSharp.Algo.Indicators;
 using StockSharp.BusinessEntities;
+using System.Linq;
 
 namespace StockSharpDriver;
 
 /// <inheritdoc/>
 public class ConnectionStockSharpWorker(
     //StockSharpClientConfigModel conf,
+    IStockSharpDataService dataRepo,
     ILogger<ConnectionStockSharpWorker> _logger,
     IStockSharpEventsService eventTrans,
     Connector Connector) : BackgroundService
@@ -127,11 +130,15 @@ public class ConnectionStockSharpWorker(
 
     void ValuesChangedHandle(Security instrument, IEnumerable<KeyValuePair<StockSharp.Messages.Level1Fields, object>> dataPayload, DateTimeOffset dtOffsetMaster, DateTimeOffset dtOffsetSlave)
     {
-        //ConnectorValuesChangedEventPayloadModel req;
-        //InstrumentTradeModelDB
-        //Level1FieldsStockSharpEnum
-        //eventTrans.ValuesChanged(instrument, dataPayload, dtOffsetMaster, dtOffsetSlave);
-        throw new NotImplementedException();
+        ConnectorValuesChangedEventPayloadModel req = new()
+        {
+            OffsetSlave = dtOffsetSlave,
+            OffsetMaster = dtOffsetMaster,
+            DataPayload = [.. dataPayload.Select(x => new KeyValuePair<Level1FieldsStockSharpEnum, object>((Level1FieldsStockSharpEnum)Enum.Parse(typeof(Level1FieldsStockSharpEnum), Enum.GetName(x.Key)!), x.Value))],
+            Instrument = new InstrumentTradeModel().Bind(instrument),
+        };
+        dataRepo.SaveInstrument(req.Instrument);
+        eventTrans.ValuesChanged(req);
     }
 
     void TickTradeReceivedHandle(Subscription subscription, StockSharp.Messages.ITickTradeMessage msg)
@@ -166,6 +173,7 @@ public class ConnectionStockSharpWorker(
 
     void SecurityReceivedHandle(Subscription subscription, Security sec)
     {
+        dataRepo.SaveInstrument(new InstrumentTradeModel().Bind(sec));
         throw new NotImplementedException();
     }
 
@@ -251,6 +259,9 @@ public class ConnectionStockSharpWorker(
 
     void LookupSecuritiesResultHandle(StockSharp.Messages.SecurityLookupMessage slm, IEnumerable<Security> securities, Exception ex)
     {
+        foreach (Security sec in securities)
+            dataRepo.SaveInstrument(new InstrumentTradeModel().Bind(sec));
+
         throw new NotImplementedException();
     }
 

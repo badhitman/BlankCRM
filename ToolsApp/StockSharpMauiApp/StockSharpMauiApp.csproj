@@ -69,7 +69,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\BlazorLib\BlazorLib.csproj" />
 		<ProjectReference Include="..\..\SharedLib\SharedLib.csproj" />
-		<ProjectReference Include="..\StockSharpMauiLib\StockSharpMauiLib.csproj" />
 	</ItemGroup>
 
 </Project>

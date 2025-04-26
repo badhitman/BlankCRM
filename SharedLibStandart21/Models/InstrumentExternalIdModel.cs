@@ -12,11 +12,6 @@ namespace SharedLib;
 public class InstrumentExternalIdModel
 {
     /// <summary>
-    /// Name
-    /// </summary>
-    public string? Name { get; set; }
-
-    /// <summary>
     /// ID in SEDOL format (Stock Exchange Daily Official List).
     /// </summary>
     [Display(Name = "Sedol")]

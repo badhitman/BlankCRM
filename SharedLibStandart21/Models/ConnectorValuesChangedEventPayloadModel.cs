@@ -2,18 +2,21 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System;
+using System.Collections.Generic;
+
 namespace SharedLib;
 
 /// <summary>
 /// ConnectorValuesChangedEventPayloadModel
 /// </summary>
-public class ConnectorValuesChangedEventPayloadModel
+public partial class ConnectorValuesChangedEventPayloadModel
 {
     /// <inheritdoc/>
-    public required InstrumentTradeModel Instrument { get; set; }
+    public InstrumentTradeModel? Instrument { get; set; }
 
     /// <inheritdoc/>
-    public required IEnumerable<KeyValuePair<Level1FieldsStockSharpEnum, object>> DataPayload { get; set; }
+    public KeyValuePair<Level1FieldsStockSharpEnum, object>[]? DataPayload { get; set; }
 
     /// <inheritdoc/>
     public DateTimeOffset OffsetMaster { get; set; }

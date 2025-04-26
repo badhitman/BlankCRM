@@ -2,17 +2,16 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharedLib;
 
 /// <summary>
-/// Электронная торговая биржа
+/// Площадка
 /// </summary>
-[Index(nameof(LastAtUpdatedUTC)), Index(nameof(Name))]
-public class ExchangeBoardModelDB : ExchangeBoardModel, IBaseStockSharpModel
+[Index(nameof(LastAtUpdatedUTC)), Index(nameof(Code))]
+public class BoardStockSharpModelDB : BoardStockSharpModel, IBaseStockSharpModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -20,8 +19,14 @@ public class ExchangeBoardModelDB : ExchangeBoardModel, IBaseStockSharpModel
     [Key]
     public int Id { get; set; }
 
-    /// <inheritdoc/>
-    public new required string Name { get; set; }
+    /// <summary>
+    /// Exchange
+    /// </summary>
+    public new ExchangeStockSharpModelDB? Exchange { get; set; }
+    /// <summary>
+    /// Exchange
+    /// </summary>
+    public int ExchangeId { get; set; }
 
     /// <summary>
     /// Инструменты (биржевые торговые)

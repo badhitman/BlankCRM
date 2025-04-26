@@ -3,43 +3,68 @@ using System;
 using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace StockSharpMauiMigration.Migrations
+namespace StockSharpDriver.Migrations
 {
     [DbContext(typeof(StockSharpAppContext))]
-    partial class StockSharpAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250426122606_StockSharpAppContext001")]
+    partial class StockSharpAppContext001
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.36");
 
-            modelBuilder.Entity("SharedLib.ExchangeBoardModelDB", b =>
+            modelBuilder.Entity("SharedLib.BoardStockSharpModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Code")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("ExchangeId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastAtUpdatedUTC")
                         .HasColumnType("TEXT");
 
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code");
+
+                    b.HasIndex("ExchangeId");
+
+                    b.HasIndex("LastAtUpdatedUTC");
+
+                    b.ToTable("Boards");
+                });
+
+            modelBuilder.Entity("SharedLib.ExchangeStockSharpModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CountryCode")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LastAtUpdatedUTC");
-
                     b.HasIndex("Name");
 
-                    b.ToTable("BoardsExchange");
+                    b.ToTable("Exchanges");
                 });
 
             modelBuilder.Entity("SharedLib.InstrumentExternalIdModelDB", b =>
@@ -49,47 +74,36 @@ namespace StockSharpMauiMigration.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Bloomberg")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Cusip")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("IQFeed")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("InteractiveBrokers")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Isin")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastAtUpdatedUTC")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ParentInstrumentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Plaza")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Ric")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Sedol")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -115,7 +129,7 @@ namespace StockSharpMauiMigration.Migrations
 
                     b.HasIndex("Sedol");
 
-                    b.ToTable("InstrumentsExternalsIds");
+                    b.ToTable("ExternalsIdsInstruments");
                 });
 
             modelBuilder.Entity("SharedLib.InstrumentTradeModelDB", b =>
@@ -125,15 +139,12 @@ namespace StockSharpMauiMigration.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CfiCode")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Class")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAtUTC")
@@ -155,7 +166,6 @@ namespace StockSharpMauiMigration.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("IdRemote")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsFavorite")
@@ -177,7 +187,6 @@ namespace StockSharpMauiMigration.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PrimaryId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset?>("SettlementDate")
@@ -187,7 +196,6 @@ namespace StockSharpMauiMigration.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ShortName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool?>("Shortable")
@@ -197,7 +205,6 @@ namespace StockSharpMauiMigration.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UnderlyingSecurityId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("UnderlyingSecurityType")
@@ -226,6 +233,17 @@ namespace StockSharpMauiMigration.Migrations
                     b.ToTable("Instruments");
                 });
 
+            modelBuilder.Entity("SharedLib.BoardStockSharpModelDB", b =>
+                {
+                    b.HasOne("SharedLib.ExchangeStockSharpModelDB", "Exchange")
+                        .WithMany("Boards")
+                        .HasForeignKey("ExchangeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Exchange");
+                });
+
             modelBuilder.Entity("SharedLib.InstrumentExternalIdModelDB", b =>
                 {
                     b.HasOne("SharedLib.InstrumentTradeModelDB", "ParentInstrument")
@@ -239,7 +257,7 @@ namespace StockSharpMauiMigration.Migrations
 
             modelBuilder.Entity("SharedLib.InstrumentTradeModelDB", b =>
                 {
-                    b.HasOne("SharedLib.ExchangeBoardModelDB", "ExchangeBoard")
+                    b.HasOne("SharedLib.BoardStockSharpModelDB", "ExchangeBoard")
                         .WithMany("Instruments")
                         .HasForeignKey("ExchangeBoardId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -248,9 +266,14 @@ namespace StockSharpMauiMigration.Migrations
                     b.Navigation("ExchangeBoard");
                 });
 
-            modelBuilder.Entity("SharedLib.ExchangeBoardModelDB", b =>
+            modelBuilder.Entity("SharedLib.BoardStockSharpModelDB", b =>
                 {
                     b.Navigation("Instruments");
+                });
+
+            modelBuilder.Entity("SharedLib.ExchangeStockSharpModelDB", b =>
+                {
+                    b.Navigation("Boards");
                 });
 
             modelBuilder.Entity("SharedLib.InstrumentTradeModelDB", b =>

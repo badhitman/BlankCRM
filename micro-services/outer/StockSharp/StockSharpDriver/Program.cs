@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DbcLib;
 using RemoteCallLib;
 using SharedLib;
 using StockSharpService;
@@ -69,6 +70,14 @@ public class Program
             })
             .ConfigureServices((bx, services) =>
             {
+                services.AddDbContextFactory<StockSharpAppContext>(opt =>
+                {
+#if DEBUG
+                    opt.EnableSensitiveDataLogging(true);
+                    //opt.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+#endif
+                });
+
                 // Register Bot configuration
                 services.Configure<BotConfiguration>(bx.Configuration.GetSection(BotConfiguration.Configuration));
 
@@ -108,9 +117,10 @@ public class Program
                 services.AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<StockSharpClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName));
                 //
                 services
-                .AddScoped<IStockSharpEventsService, StockSharpEventsServiceTransmission>()
-                .AddScoped<IStockSharpMainService, StockSharpMainServiceTransmission>()
-                .AddScoped<IStockSharpDriverService, StockSharpDriverService>()
+                    .AddSingleton<IStockSharpEventsService, StockSharpEventsServiceTransmission>()
+                    .AddSingleton<IStockSharpDataService, StockSharpDataService>()
+                    .AddScoped<IStockSharpMainService, StockSharpMainServiceTransmission>()
+                    .AddScoped<IStockSharpDriverService, StockSharpDriverService>()
                 ;
 
                 services.StockSharpRegisterMqListeners();

@@ -963,5 +963,8 @@ public static partial class GlobalStaticConstantsTransmission
 
         /// <inheritdoc/>
         public readonly static string PingStockSharpMainReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.STOCKSHARP_CONTROLLER_NAME}-{Routes.MAIN_CONTROLLER_NAME}", Routes.PING_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string ValuesChangedStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.VALUES_CONTROLLER_NAME}-{Routes.CHANGE_ACTION_NAME}", Routes.NOTIFY_ACTION_NAME);
     }
 }

@@ -5,1226 +5,1020 @@
 namespace SharedLib;
 
 /// <summary>
-/// CurrenciesTypesEnum
+/// Enumerates country codes corresponding to various countries, territories and regions.
 /// </summary>
-public enum CurrenciesTypesEnum
+public enum CountryCodesEnum
 {
     /// <summary>
-    /// Afghanistan, Afghanis.
+	/// Abkhazia.
+	/// </summary>
+	Abkhazia,
+    /// <summary>
+    /// Afghanistan.
+    /// </summary>
+    AF,
+    /// <summary>
+    /// Aland Islands.
+    /// </summary>
+    AX,
+    /// <summary>
+    /// Albania.
+    /// </summary>
+    AL,
+    /// <summary>
+    /// Algeria.
+    /// </summary>
+    DZ,
+    /// <summary>
+    /// American Samoa.
+    /// </summary>
+    AS,
+    /// <summary>
+    /// Andorra.
+    /// </summary>
+    AD,
+    /// <summary>
+    /// Angola.
+    /// </summary>
+    AO,
+    /// <summary>
+    /// Anguilla.
+    /// </summary>
+    AI,
+    /// <summary>
+    /// Antarctica.
     /// </summary>
-    AFA,
-
+    AQ,
     /// <summary>
-    /// Turkmenistan, Turkmenistani manat.
+    /// Antigua and Barbuda.
     /// </summary>
-    TMT,
-
+    AG,
     /// <summary>
-    /// Uzbekistan, Uzbekistan som.
+    /// Argentina.
     /// </summary>
-    UZS,
-
+    AR,
     /// <summary>
-    /// Tajikistan, Somoni.
+    /// Armenia.
     /// </summary>
-    TJS,
-
+    AM,
     /// <summary>
-    /// Armenia, Armenian dram.
+    /// Aruba.
     /// </summary>
-    AMD,
-
+    AW,
     /// <summary>
-    /// International Monetary Fund, Special Drawing Rights.
+    /// Australia.
     /// </summary>
-    XDR,
-
+    AU,
     /// <summary>
-    /// Azerbaijan, Azerbaijani manat.
+    /// Austria.
     /// </summary>
-    AZN,
-
+    AT,
     /// <summary>
-    /// Belarus, Belarusian ruble (до 01.07.2016).
+    /// Azerbaijan.
     /// </summary>
-    BYR,
-
+    AZ,
     /// <summary>
-    /// Belarus, Belarusian ruble (после 01.07.2016).
+    /// Bahamas.
     /// </summary>
-    BYN,
-
+    BS,
     /// <summary>
-    /// Romania, Romanian new leu.
+    /// Bahrain.
     /// </summary>
-    RON,
-
+    BH,
     /// <summary>
-    /// Bulgaria, Bulgarian lev.
+    /// Bangladesh.
     /// </summary>
-    BGN,
-
+    BD,
     /// <summary>
-    /// Kyrgyzstan, Kyrgyzstani som.
+    /// Barbados.
     /// </summary>
-    KGS,
-
+    BB,
     /// <summary>
-    /// Albania, Leke.
+    /// Basque Country.
     /// </summary>
-    ALL,
-
+    BasqueCountry,
     /// <summary>
-    /// Algeria, Algeria Dinars.
+    /// Belarus.
     /// </summary>
-    DZD,
-
+    BY,
     /// <summary>
-    /// Argentina, Pesos.
+    /// Belgium.
     /// </summary>
-    ARS,
-
+    BE,
     /// <summary>
-    /// Aruba, Guilders (also called Florins).
+    /// Belize.
     /// </summary>
-    AWG,
-
+    BZ,
     /// <summary>
-    /// Australia, Dollars.
+    /// Benin.
     /// </summary>
-    AUD,
-
+    BJ,
     /// <summary>
-    /// Bahamas, Dollars.
+    /// Bermuda.
     /// </summary>
-    BSD,
-
+    BM,
     /// <summary>
-    /// Bahrain, Dinars.
+    /// Bhutan.
     /// </summary>
-    BHD,
-
+    BT,
     /// <summary>
-    /// Bangladesh, Taka.
+    /// Bolivia.
     /// </summary>
-    BDT,
-
+    BO,
     /// <summary>
-    /// Barbados, Dollars.
+    /// Bosnia and Herzegovina.
     /// </summary>
-    BBD,
-
+    BA,
     /// <summary>
-    /// Belize, Dollars.
+    /// Botswana.
     /// </summary>
-    BZD,
-
+    BW,
     /// <summary>
-    /// Bermuda, Dollars.
+    /// Brazil.
     /// </summary>
-    BMD,
-
+    BR,
     /// <summary>
-    /// Bhutan, Ngultrum.
+    /// British Indian Ocean Territory.
     /// </summary>
-    BTN,
-
+    BritishAntarcticTerritory,
     /// <summary>
-    /// Bolivia, Bolivianos.
+    /// British Virgin Islands.
     /// </summary>
-    BOB,
-
+    VG,
     /// <summary>
-    /// Botswana, Pulas.
+    /// Brunei Darussalam.
     /// </summary>
-    BWP,
-
+    BN,
     /// <summary>
-    /// Brazil, Brazil Real.
+    /// Bulgaria.
     /// </summary>
-    BRL,
-
+    BG,
     /// <summary>
-    /// United Kingdom, Pounds sterling.
+    /// Burkina Faso.
     /// </summary>
-    GBP,
-
+    BF,
     /// <summary>
-    /// Brunei Darussalam, Dollars.
+    /// Burundi.
     /// </summary>
-    BND,
-
+    BI,
     /// <summary>
-    /// Burundi, Francs.
+    /// Cambodia.
     /// </summary>
-    BIF,
-
+    KH,
     /// <summary>
-    /// Communaute Financiere Africaine BCEAO, Francs.
+    /// Cameroon.
     /// </summary>
-    XOF,
-
+    CM,
     /// <summary>
-    /// Communaute Financiere Africaine BEAC, Francs.
+    /// Canada.
     /// </summary>
-    XAF,
-
+    CA,
     /// <summary>
-    /// Cambodia, Riels.
+    /// Cape Verde.
     /// </summary>
-    KHR,
-
+    CV,
     /// <summary>
-    /// Canada, Dollars.
+    /// Cayman Islands.
     /// </summary>
-    CAD,
-
+    KY,
     /// <summary>
-    /// Cape Verde, Escudos.
+    /// Central African Republic.
     /// </summary>
-    CVE,
-
+    CF,
     /// <summary>
-    /// Cayman Islands, Dollars.
+    /// Chad.
     /// </summary>
-    KYD,
-
+    TD,
     /// <summary>
-    /// Chile, Pesos.
+    /// Chile.
     /// </summary>
-    CLP,
-
+    CL,
     /// <summary>
-    /// China, Yuan Renminbi.
+    /// China.
     /// </summary>
-    CNY,
-
+    CN,
     /// <summary>
-    /// China, offshore RMB.
+    /// Christmas Island.
     /// </summary>
-    CNH,
-
+    CX,
     /// <summary>
-    /// Colombia, Pesos.
+    /// Cocos (Keeling) Islands.
     /// </summary>
-    COP,
-
+    CC,
     /// <summary>
-    /// Comoros, Francs.
+    /// Colombia.
     /// </summary>
-    KMF,
-
+    CO,
     /// <summary>
-    /// Costa Rica, Colones.
+    /// Commonwealth.
     /// </summary>
-    CRC,
-
+    Commonwealth,
     /// <summary>
-    /// Croatia, Kuna.
+    /// Comoros.
     /// </summary>
-    HRK,
-
+    KM,
     /// <summary>
-    /// Cuba, Pesos.
+    /// Congo (Brazzaville).
     /// </summary>
-    CUP,
-
+    CG,
     /// <summary>
-    /// Cyprus, Pounds.
+    /// Congo, Democratic Republic of the.
     /// </summary>
-    CYP,
-
+    CD,
     /// <summary>
-    /// Czech Republic, Koruny.
+    /// Cook Islands.
     /// </summary>
-    CZK,
-
+    CK,
     /// <summary>
-    /// Denmark, Kroner.
+    /// Costa Rica.
     /// </summary>
-    DKK,
-
+    CR,
     /// <summary>
-    /// Djibouti, Francs.
+    /// Cote d'Ivoire.
     /// </summary>
-    DJF,
-
+    CI,
     /// <summary>
-    /// Dominican Republic, Pesos.
+    /// Croatia.
     /// </summary>
-    DOP,
-
+    HR,
     /// <summary>
-    /// East Caribbean Dollars.
+    /// Cuba.
     /// </summary>
-    XCD,
-
+    CU,
     /// <summary>
-    /// Egypt, Pounds.
+    /// Curacao.
     /// </summary>
-    EGP,
-
+    CW,
     /// <summary>
-    /// El Salvador, Colones.
+    /// Cyprus.
     /// </summary>
-    SVC,
-
+    CY,
     /// <summary>
-    /// Estonia, Krooni.
+    /// Czech Republic.
     /// </summary>
-    EEK,
-
+    CZ,
     /// <summary>
-    /// Ethiopia, Birr.
+    /// Denmark.
     /// </summary>
-    ETB,
-
+    DK,
     /// <summary>
-    /// Euro Member Countries, Euro.
+    /// Djibouti.
     /// </summary>
-    EUR,
-
+    DJ,
     /// <summary>
-    /// Falkland Islands (Malvinas), Pounds.
+    /// Dominica.
     /// </summary>
-    FKP,
-
+    DM,
     /// <summary>
-    /// Gambia, Dalasi.
+    /// Dominican Republic.
     /// </summary>
-    GMD,
-
+    DO,
     /// <summary>
-    /// Ghana, Cedis.
+    /// Ecuador.
     /// </summary>
-    GHC,
-
+    EC,
     /// <summary>
-    /// Gibraltar, Pounds.
+    /// Egypt.
     /// </summary>
-    GIP,
-
+    EG,
     /// <summary>
-    /// Gold, Ounces.
+    /// El Salvador.
     /// </summary>
-    XAU,
-
+    SV,
     /// <summary>
-    /// Guatemala, Quetzales.
+    /// Equatorial Guinea.
     /// </summary>
-    GTQ,
-
+    GQ,
     /// <summary>
-    /// Guinea, Francs.
+    /// Eritrea.
     /// </summary>
-    GNF,
-
+    ER,
     /// <summary>
-    /// Guyana, Dollars.
+    /// Estonia.
     /// </summary>
-    GYD,
-
+    EE,
     /// <summary>
-    /// Haiti, Gourdes.
+    /// Ethiopia.
     /// </summary>
-    HTG,
-
+    ET,
     /// <summary>
-    /// Honduras, Lempiras.
+    /// European Union.
     /// </summary>
-    HNL,
-
+    EU,
     /// <summary>
-    /// Hong Kong, Dollars.
+    /// Falkland Islands (Malvinas).
     /// </summary>
-    HKD,
-
+    FK,
     /// <summary>
-    /// Hungary, Forint.
+    /// Faroe Islands.
     /// </summary>
-    HUF,
-
+    FO,
     /// <summary>
-    /// Iceland, Kronur.
+    /// Fiji.
     /// </summary>
-    ISK,
-
+    FJ,
     /// <summary>
-    /// India, Rupees.
+    /// Finland.
     /// </summary>
-    INR,
-
+    FI,
     /// <summary>
-    /// Indonesia, Rupiahs.
+    /// France.
     /// </summary>
-    IDR,
-
+    FR,
     /// <summary>
-    /// Iraq, Dinars.
+    /// French Polynesia.
     /// </summary>
-    IQD,
-
+    PF,
     /// <summary>
-    /// Israel, New Shekels.
+    /// French Southern Territories.
     /// </summary>
-    ILS,
-
+    TF,
     /// <summary>
-    /// Jamaica, Dollars.
+    /// Gabon.
     /// </summary>
-    JMD,
-
+    GA,
     /// <summary>
-    /// Japan, Yen.
+    /// Gambia.
     /// </summary>
-    JPY,
-
+    GM,
     /// <summary>
-    /// Jordan, Dinars.
+    /// Georgia.
     /// </summary>
-    JOD,
-
+    GE,
     /// <summary>
-    /// Kazakstan, Tenge.
+    /// Germany.
     /// </summary>
-    KZT,
-
+    DE,
     /// <summary>
-    /// Kenya, Shillings.
+    /// Ghana.
     /// </summary>
-    KES,
-
+    GH,
     /// <summary>
-    /// Korea (South), Won.
+    /// Gibraltar.
     /// </summary>
-    KRW,
-
+    GI,
     /// <summary>
-    /// Kuwait, Dinars.
+    /// Gosquared.
     /// </summary>
-    KWD,
-
+    Gosquared,
     /// <summary>
-    /// Laos, Kips.
+    /// Greece.
     /// </summary>
-    LAK,
-
+    GR,
     /// <summary>
-    ///  Latvia, Lati.
+    /// Greenland.
     /// </summary>
-    LVL,
-
+    GL,
     /// <summary>
-    /// Lebanon, Pounds.
+    /// Grenada.
     /// </summary>
-    LBP,
-
+    GD,
     /// <summary>
-    /// Lesotho, Maloti.
+    /// Guam.
     /// </summary>
-    LSL,
-
+    GU,
     /// <summary>
-    /// Liberia, Dollars.
+    /// Guatemala.
     /// </summary>
-    LRD,
-
+    GT,
     /// <summary>
-    /// Libya, Dinars.
+    /// Guernsey.
     /// </summary>
-    LYD,
-
+    GG,
     /// <summary>
-    /// Lithuania, Litai.
+    /// Guinea.
     /// </summary>
-    LTL,
-
+    GN,
     /// <summary>
-    /// Macau, Patacas.
+    /// Guinea-Bissau.
     /// </summary>
-    MOP,
-
+    GW,
     /// <summary>
-    /// Macedonia, Denars.
+    /// Guyana.
     /// </summary>
-    MKD,
-
+    GY,
     /// <summary>
-    /// Malagasy, Franc.
+    /// Haiti.
     /// </summary>
-    MGF,
-
+    HT,
     /// <summary>
-    /// Malawi, Kwachas.
+    /// Holy See (Vatican City State).
     /// </summary>
-    MWK,
-
+    VA,
     /// <summary>
-    /// Malaysia, Ringgits.
+    /// Honduras.
     /// </summary>
-    MYR,
-
+    HN,
     /// <summary>
-    ///  Maldives (Maldive Islands), Rufiyaa.
+    /// Hong Kong, Special Administrative Region of China.
     /// </summary>
-    MVR,
-
+    HK,
     /// <summary>
-    /// Malta, Liri.
+    /// Hungary.
     /// </summary>
-    MTL,
-
+    HU,
     /// <summary>
-    /// Mauritania, Ouguiyas.
+    /// Iceland.
     /// </summary>
-    MRO,
-
+    IS,
     /// <summary>
-    /// Mauritius, Rupees.
+    /// India.
     /// </summary>
-    MUR,
-
+    IN,
     /// <summary>
-    /// Mexico, Pesos.
+    /// Indonesia.
     /// </summary>
-    MXN,
-
+    ID,
     /// <summary>
-    /// Moldova, Lei.
+    /// Iran, Islamic Republic of.
     /// </summary>
-    MDL,
-
+    IR,
     /// <summary>
-    /// Mongolia, Tugriks.
+    /// Iraq.
     /// </summary>
-    MNT,
-
+    IQ,
     /// <summary>
-    /// Morocco, Dirhams.
+    /// Ireland.
     /// </summary>
-    MAD,
-
+    IE,
     /// <summary>
-    /// Mozambique, Meticais.
+    /// Isle of Man.
     /// </summary>
-    MZM,
-
+    IM,
     /// <summary>
-    /// Myanmar (Burma), Kyats.
+    /// Israel.
     /// </summary>
-    MMK,
-
+    IL,
     /// <summary>
-    /// Namibia, Dollars.
+    /// Italy.
     /// </summary>
-    NAD,
-
+    IT,
     /// <summary>
-    /// Nepal, Nepal Rupees.
+    /// Jamaica.
     /// </summary>
-    NPR,
-
+    JM,
     /// <summary>
-    /// Netherlands Antilles, Guilders (also called Florins).
+    /// Japan.
     /// </summary>
-    ANG,
-
+    JP,
     /// <summary>
-    /// New Zealand, Dollars.
+    /// Jersey.
     /// </summary>
-    NZD,
-
+    JE,
     /// <summary>
-    /// Nicaragua, Gold Cordobas.
+    /// Jordan.
     /// </summary>
-    NIO,
-
+    JO,
     /// <summary>
-    /// Nigeria, Nairas.
+    /// Kazakhstan.
     /// </summary>
-    NGN,
-
+    KZ,
     /// <summary>
-    /// Korea (North), Won.
+    /// Kenya.
     /// </summary>
-    KPW,
-
+    KE,
     /// <summary>
-    /// Norway, Krone.
+    /// Kiribati.
     /// </summary>
-    NOK,
-
+    KI,
     /// <summary>
-    /// Oman, Rials.
+    /// Korea, Democratic People's Republic of.
     /// </summary>
-    OMR,
-
+    KP,
     /// <summary>
-    /// Comptoirs Francais du Pacifique Francs.
+    /// Korea, Republic of.
     /// </summary>
-    XPF,
-
+    KR,
     /// <summary>
-    /// Pakistan, Rupees.
+    /// Kosovo.
     /// </summary>
-    PKR,
-
+    Kosovo,
     /// <summary>
-    /// Palladium Ounces.
+    /// Kuwait.
     /// </summary>
-    XPD,
-
+    KW,
     /// <summary>
-    /// Panama, Balboa.
+    /// Kyrgyzstan.
     /// </summary>
-    PAB,
-
+    KG,
     /// <summary>
-    /// Papua New Guinea, Kina.
+    /// Lao PDR.
     /// </summary>
-    PGK,
-
+    LA,
     /// <summary>
-    /// Paraguay, Guarani.
+    /// Latvia.
     /// </summary>
-    PYG,
-
+    LV,
     /// <summary>
-    /// Peru, Nuevos Soles.
+    /// Lebanon.
     /// </summary>
-    PEN,
-
+    LB,
     /// <summary>
-    /// Philippines, Pesos.
+    /// Lesotho.
     /// </summary>
-    PHP,
-
+    LS,
     /// <summary>
-    /// Platinum, Ounces.
+    /// Liberia.
     /// </summary>
-    XPT,
-
+    LR,
     /// <summary>
-    /// Poland, Zlotych.
+    /// Libya.
     /// </summary>
-    PLN,
-
+    LY,
     /// <summary>
-    /// Qatar, Rials.
+    /// Liechtenstein.
     /// </summary>
-    QAR,
-
+    LI,
     /// <summary>
-    ///  Russia, Abkhazia, South Ossetia, Russian rouble.
+    /// Lithuania.
     /// </summary>
-    RUB,
-
+    LT,
     /// <summary>
-    /// Samoa, Tala.
+    /// Luxembourg.
     /// </summary>
-    WST,
-
+    LU,
     /// <summary>
-    /// Sao Tome and Principe, Dobras.
+    /// Macao, Special Administrative Region of China.
     /// </summary>
-    STD,
-
+    MO,
     /// <summary>
-    /// Saudi Arabia, Riyals.
+    /// Macedonia, Republic of.
     /// </summary>
-    SAR,
-
+    MK,
     /// <summary>
-    /// Seychelles, Rupees.
+    /// Madagascar.
     /// </summary>
-    SCR,
-
+    MG,
     /// <summary>
-    /// Sierra Leone, Leones.
+    /// Malawi.
     /// </summary>
-    SLL,
-
+    MW,
     /// <summary>
-    /// Silver, Ounces.
+    /// Malaysia.
     /// </summary>
-    XAG,
-
+    MY,
     /// <summary>
-    /// Singapore, Dollars.
+    /// Maldives.
     /// </summary>
-    SGD,
-
+    MV,
     /// <summary>
-    /// Slovakia, Koruny.
+    /// Mali.
     /// </summary>
-    SKK,
-
+    ML,
     /// <summary>
-    /// Slovenia, Tolars.
+    /// Malta.
     /// </summary>
-    SIT,
-
+    MT,
     /// <summary>
-    /// Solomon Islands, Dollars.
+    /// Mars.
     /// </summary>
-    SBD,
-
+    Mars,
     /// <summary>
-    /// Somalia, Shillings.
+    /// Marshall Islands.
     /// </summary>
-    SOS,
-
+    MH,
     /// <summary>
-    /// South Africa, Rand.
+    /// Martinique.
     /// </summary>
-    ZAR,
-
+    MQ,
     /// <summary>
-    /// Sri Lanka, Rupees.
+    /// Mauritania.
     /// </summary>
-    LKR,
-
+    MR,
     /// <summary>
-    /// Saint Helena, Pounds.
+    /// Mauritius.
     /// </summary>
-    SHP,
-
+    MU,
     /// <summary>
-    /// Sudan, Dinars.
+    /// Mayotte.
     /// </summary>
-    SDD,
-
+    YT,
     /// <summary>
-    /// Surinamese dollar.
+    /// Mexico.
     /// </summary>
-    SRD,
-
+    MX,
     /// <summary>
-    /// Swaziland, Emalangeni.
+    /// Micronesia, Federated States of.
     /// </summary>
-    SZL,
-
+    FM,
     /// <summary>
-    /// Sweden, Kronor.
+    /// Moldova.
     /// </summary>
-    SEK,
-
+    MD,
     /// <summary>
-    /// Switzerland, Francs.
+    /// Monaco.
     /// </summary>
-    CHF,
-
+    MC,
     /// <summary>
-    /// Syria, Pounds.
+    /// Mongolia.
     /// </summary>
-    SYP,
-
+    MN,
     /// <summary>
-    /// Taiwan, New Dollars.
+    /// Montenegro.
     /// </summary>
-    TWD,
-
+    ME,
     /// <summary>
-    /// Tanzania, Shillings.
+    /// Montserrat.
     /// </summary>
-    TZS,
-
+    MS,
     /// <summary>
-    /// Thailand, Baht.
+    /// Morocco.
     /// </summary>
-    THB,
-
+    MA,
     /// <summary>
-    /// Tonga, Pa'anga.
+    /// Mozambique.
     /// </summary>
-    TOP,
-
+    MZ,
     /// <summary>
-    /// Trinidad and Tobago, Dollars.
+    /// Myanmar.
     /// </summary>
-    TTD,
-
+    MM,
     /// <summary>
-    /// Tunisia, Dinars.
+    /// Nagorno Karabakh.
     /// </summary>
-    TND,
-
+    NagornoKarabakh,
     /// <summary>
-    /// Turkey, Liras.
+    /// Namibia.
     /// </summary>
-    TRL,
-
+    NA,
     /// <summary>
-    /// United States of America, Dollars.
+    /// Nauru.
     /// </summary>
-    USD,
-
+    NR,
     /// <summary>
-    /// United Arab Emirates, Dirhams.
+    /// Nepal.
     /// </summary>
-    AED,
-
+    NP,
     /// <summary>
-    /// Uganda, Shillings.
+    /// Netherlands.
     /// </summary>
-    UGX,
-
+    NL,
     /// <summary>
-    /// Ukraine, Hryvnia.
+    /// Netherlands Antilles.
     /// </summary>
-    UAH,
-
+    AN,
     /// <summary>
-    /// Uruguay, Pesos.
+    /// New Caledonia.
     /// </summary>
-    UYU,
-
+    NC,
     /// <summary>
-    /// Vanuatu, Vatu.
+    /// New Zealand.
     /// </summary>
-    VUV,
-
+    NZ,
     /// <summary>
-    /// Venezuela, Bolivares.
+    /// Nicaragua.
     /// </summary>
-    VEB,
-
+    NI,
     /// <summary>
-    /// Viet Nam, Dong.
+    /// Niger.
     /// </summary>
-    VND,
-
+    NE,
     /// <summary>
-    /// Yemen, Rials.
+    /// Nigeria.
     /// </summary>
-    YER,
-
+    NG,
     /// <summary>
-    /// Serbian dinar.
+    /// Niue.
     /// </summary>
-    CSD,
-
+    NU,
     /// <summary>
-    /// Zambia, Kwacha.
+    /// Norfolk Island.
     /// </summary>
-    ZMK,
-
+    NF,
     /// <summary>
-    /// Zimbabwe, Zimbabwe Dollars.
+    /// Northern Mariana Islands.
     /// </summary>
-    ZWD,
-
+    MP,
     /// <summary>
-    /// Turkey, Northern Cyprus, Turkish lira.
+    /// Norway.
     /// </summary>
-    TRY,
-
+    NO,
     /// <summary>
-    /// Ven.
+    /// Northern Cyprus.
     /// </summary>
-    XVN,
-
+    NorthernCyprus,
     /// <summary>
-    /// Bitcoin.
+    /// Oman.
     /// </summary>
-    BTC,
-
+    OM,
     /// <summary>
-    /// United Kingdom, Pence sterling.
+    /// Pakistan.
     /// </summary>
-    GBX,
-
+    PK,
     /// <summary>
-    /// Ghana, Ghanaian Cedi.
+    /// Palau.
     /// </summary>
-    GHS,
-
+    PW,
     /// <summary>
-    /// China, offshore RMB.
+    /// Palestinian Territory, Occupied.
     /// </summary>
-    CNT,
-
+    PS,
     /// <summary>
-    /// Ethereum.
+    /// Panama.
     /// </summary>
-    ETH,
-
+    PA,
     /// <summary>
-    /// Litecoin.
+    /// Papua New Guinea.
     /// </summary>
-    LTC,
-
+    PG,
     /// <summary>
-    /// Ethereum Classic.
+    /// Paraguay.
     /// </summary>
-    ETC,
-
+    PY,
     /// <summary>
-    /// Tether USD.
+    /// Peru.
     /// </summary>
-    USDT,
-
+    PE,
     /// <summary>
-    /// Zcash.
+    /// Philippines.
     /// </summary>
-    ZEC,
-
+    PH,
     /// <summary>
-    /// Monero.
+    /// Pitcairn.
     /// </summary>
-    XMR,
-
+    PN,
     /// <summary>
-    /// Cardano.
+    /// Poland.
     /// </summary>
-    ADA,
-
+    PL,
     /// <summary>
-    /// IOTA.
+    /// Portugal.
     /// </summary>
-    MIOTA,
-
+    PT,
     /// <summary>
-    /// Ripple.
+    /// Puerto Rico.
     /// </summary>
-    XRP,
-
+    PR,
     /// <summary>
-    /// Dash.
+    /// Qatar.
     /// </summary>
-    DASH,
-
+    QA,
     /// <summary>
-    /// EOS.
+    /// Romania.
     /// </summary>
-    EOS,
-
+    RO,
     /// <summary>
-    /// Santiment.
+    /// Russian Federation.
     /// </summary>
-    SAN,
-
+    RU,
     /// <summary>
-    /// Omisego.
+    /// Rwanda.
     /// </summary>
-    OMG,
-
+    RW,
     /// <summary>
-    /// Bitcoin Cash.
+    /// Saint Helena.
     /// </summary>
-    BCH,
-
+    SH,
     /// <summary>
-    /// Neo.
+    /// Saint Kitts and Nevis.
     /// </summary>
-    NEO,
-
+    KN,
     /// <summary>
-    /// Metaverse.
+    /// Saint Lucia.
     /// </summary>
-    ETP,
-
+    LC,
     /// <summary>
-    /// Qtum.
+    /// Saint Vincent and Grenadines.
     /// </summary>
-    QTUM,
-
+    VC,
     /// <summary>
-    /// Aventus.
+    /// Saint-Barthelemy.
     /// </summary>
-    AVT,
-
+    BL,
     /// <summary>
-    /// Eidoo.
+    /// Saint-Martin (French part).
     /// </summary>
-    EDO,
-
+    MF,
     /// <summary>
-    /// Datacoin.
+    /// Samoa.
     /// </summary>
-    DTC,
-
+    WS,
     /// <summary>
-    /// Bitcoin Gold.
+    /// San Marino.
     /// </summary>
-    BTG,
-
+    SM,
     /// <summary>
-    /// QASH.
+    /// Sao Tome and Principe.
     /// </summary>
-    QASH,
-
+    ST,
     /// <summary>
-    /// Yoyow.
+    /// Saudi Arabia.
     /// </summary>
-    YOYOW,
-
+    SA,
     /// <summary>
-    /// Golem.
+    /// Scotland.
     /// </summary>
-    GNT,
-
+    Scotland,
     /// <summary>
-    /// Status.
+    /// Senegal.
     /// </summary>
-    SNT,
-
+    SN,
     /// <summary>
-    /// Tether EUR.
+    /// Serbia.
     /// </summary>
-    EURT,
-
+    RS,
     /// <summary>
-    /// Thai baht
+    /// Seychelles.
     /// </summary>
-    BAT,
-
+    SC,
     /// <summary>
-    /// MNA.
+    /// Sierra Leone.
     /// </summary>
-    MNA,
-
+    SL,
     /// <summary>
-    /// FunFair.
+    /// Singapore.
     /// </summary>
-    FUN,
-
+    SG,
     /// <summary>
-    /// ZRX.
+    /// Slovakia.
     /// </summary>
-    ZRX,
-
+    SK,
     /// <summary>
-    /// Time New Bank.
+    /// Slovenia.
     /// </summary>
-    TNB,
-
+    SI,
     /// <summary>
-    /// Sparks.
+    /// Solomon Islands.
     /// </summary>
-    SPK,
-
+    SB,
     /// <summary>
-    /// TRON.
+    /// Somalia.
     /// </summary>
-    TRX,
-
+    SO,
     /// <summary>
-    /// Ripio Credit Network.
+    /// Somaliland.
     /// </summary>
-    RCN,
-
+    Somaliland,
     /// <summary>
-    /// iExec.
+    /// South Africa.
     /// </summary>
-    RLC,
-
+    ZA,
     /// <summary>
-    /// AidCoin.
+    /// South Georgia and the South Sandwich Islands.
     /// </summary>
-    AID,
-
+    GS,
     /// <summary>
-    /// SnowGem.
+    /// South Ossetia.
     /// </summary>
-    SNG,
-
+    SouthOssetia,
     /// <summary>
-    /// Augur.
+    /// South Sudan.
     /// </summary>
-    REP,
-
+    SS,
     /// <summary>
-    /// Aelf.
+    /// Spain.
     /// </summary>
-    ELF,
-
+    ES,
     /// <summary>
-    /// South Africa, Rand. The Rand is subdivided into 100 cents.
+    /// Sri Lanka.
     /// </summary>
-    ZAC,
-
+    LK,
     /// <summary>
-    /// Deutsche Mark.
+    /// Sudan.
     /// </summary>
-    DEM,
-
+    SD,
     /// <summary>
-    /// Luxembourgish franc.
+    /// Suriname.
     /// </summary>
-    LUF,
-
+    SR,
     /// <summary>
-    /// Old Mexican Peso.
+    /// Swaziland.
     /// </summary>
-    MXP,
-
+    SZ,
     /// <summary>
-    /// Malagasy ariary.
+    /// Sweden.
     /// </summary>
-    MGA,
-
+    SE,
     /// <summary>
-    /// Angolan kwanza.
+    /// Switzerland.
     /// </summary>
-    AOA,
-
+    CH,
     /// <summary>
-    /// Fijian dollar.
+    /// Syrian Arab Republic (Syria).
     /// </summary>
-    FJD,
-
+    SY,
     /// <summary>
-    /// Congolese franc.
+    /// Taiwan, Republic of China.
     /// </summary>
-    CDF,
-
+    TW,
     /// <summary>
-    /// Sudanese pound.
+    /// Tajikistan.
     /// </summary>
-    SDG,
-
+    TJ,
     /// <summary>
-    /// Mauritanian ouguiya.
+    /// Tanzania, United Republic of.
     /// </summary>
-    MRU,
-
+    TZ,
     /// <summary>
-    /// Iranian rial.
+    /// Thailand.
     /// </summary>
-    IRR,
-
+    TH,
     /// <summary>
-    /// Zambian kwacha.
+    /// Timor-Leste.
     /// </summary>
-    ZMW,
-
+    TL,
     /// <summary>
-    /// Georgian lari.
+    /// Togo.
     /// </summary>
-    GEL,
+    TG,
     /// <summary>
-    /// Sao Tome and Principe dobra.
+    /// Tokelau.
     /// </summary>
-    STN,
-
+    TK,
     /// <summary>
-    /// Venezuelan bolivar.
+    /// Tonga.
     /// </summary>
-    VES,
-
+    TO,
     /// <summary>
-    /// South Sudanese pound.
+    /// Trinidad and Tobago.
     /// </summary>
-    SSP,
-
+    TT,
     /// <summary>
-    /// Eritrean nakfa.
+    /// Tunisia.
     /// </summary>
-    ERN,
-
+    TN,
     /// <summary>
-    /// Bosnia-Herzegovina Convertible Marka.
+    /// Turkey.
     /// </summary>
-    BAM,
-
+    TR,
     /// <summary>
-    /// Serbian dinar.
+    /// Turkmenistan.
     /// </summary>
-    RSD,
-
+    TM,
     /// <summary>
-    ///  Rwandan franc.
+    /// Turks and Caicos Islands.
     /// </summary>
-    RWF,
-
+    TC,
     /// <summary>
-    /// Mozambican metical.
+    /// Tuvalu.
     /// </summary>
-    MZN,
-
+    TV,
     /// <summary>
-    /// Afghan afghani
+    /// Uganda.
     /// </summary>
-    AFN,
-
+    UG,
     /// <summary>
-    /// USD Coin.
+    /// Ukraine.
     /// </summary>
-    USDC,
-
+    UA,
     /// <summary>
-    /// Binance USD.
+    /// United Arab Emirates.
     /// </summary>
-    BUSD,
-
+    AE,
     /// <summary>
-    /// Dai.
+    /// United Kingdom.
     /// </summary>
-    DAI,
-
+    GB,
     /// <summary>
-    /// True USD.
+    /// United States of America.
     /// </summary>
-    TUSD,
-
+    US,
     /// <summary>
-    /// Pax Dollar.
+    /// Uruguay.
     /// </summary>
-    USDP,
-
+    UY,
     /// <summary>
-    /// Frax.
+    /// Uzbekistan.
     /// </summary>
-    FRAX,
-
+    UZ,
     /// <summary>
-    /// USDD.
+    /// Vanuatu.
     /// </summary>
-    USDD,
-
+    VU,
     /// <summary>
-    /// Gemini Dollar.
+    /// Venezuela (Bolivarian Republic of).
     /// </summary>
-    GUSD,
-
+    VE,
     /// <summary>
-    /// XSGD.
+    /// Viet Nam.
     /// </summary>
-    XSGD,
-
+    VN,
     /// <summary>
-    /// Pax Gold.
+    /// Virgin Islands, US.
     /// </summary>
-    PAXG,
-
+    VI,
     /// <summary>
-    /// Tether Gold.
+    /// Wales.
     /// </summary>
-    XAUT,
-
+    Wales,
     /// <summary>
-    /// Liquity USD.
+    /// Wallis and Futuna Islands.
     /// </summary>
-    LUSD,
-
+    WF,
     /// <summary>
-    /// Micro Bitcoin.
+    /// Western Sahara.
     /// </summary>
-    MBC,
-
+    EH,
     /// <summary>
-    /// TerraUSD.
+    /// Yemen.
     /// </summary>
-    UST,
-
+    YE,
     /// <summary>
-    /// Brazilian Digital Token.
+    /// Zambia.
     /// </summary>
-    BRZ,
-
+    ZM,
     /// <summary>
-    /// USDe.
+    /// Zimbabwe.
     /// </summary>
-    USDE
+    ZW,
 }
