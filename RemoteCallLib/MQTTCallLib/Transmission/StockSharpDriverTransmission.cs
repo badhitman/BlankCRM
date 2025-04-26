@@ -11,9 +11,9 @@ namespace RemoteCallLib;
 /// <summary>
 /// StockSharpDriverTransmission
 /// </summary>
-public partial class StockSharpDriverTransmission(IMQTTClient rabbitClient) : IStockSharpDriverService
+public partial class StockSharpDriverTransmission(IMQTTClient mqClient) : IStockSharpDriverService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> PingAsync(CancellationToken cancellationToken = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PingStockSharpDriverReceive, token: cancellationToken) ?? new();
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PingStockSharpDriverReceive, token: cancellationToken) ?? new();
 }

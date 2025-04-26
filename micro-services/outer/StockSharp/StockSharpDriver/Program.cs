@@ -108,6 +108,7 @@ public class Program
                 services.AddSingleton<IMQTTClient>(x => new MQttClient(x.GetRequiredService<StockSharpClientConfigModel>(), x.GetRequiredService<ILogger<MQttClient>>(), appName));
                 //
                 services
+                .AddScoped<IStockSharpEventsService, StockSharpEventsServiceTransmission>()
                 .AddScoped<IStockSharpMainService, StockSharpMainServiceTransmission>()
                 .AddScoped<IStockSharpDriverService, StockSharpDriverService>()
                 ;

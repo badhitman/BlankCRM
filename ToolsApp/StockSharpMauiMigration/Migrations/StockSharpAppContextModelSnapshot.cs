@@ -26,9 +26,6 @@ namespace StockSharpMauiMigration.Migrations
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("LastAtUpdatedUTC")
                         .HasColumnType("TEXT");
 
@@ -55,6 +52,9 @@ namespace StockSharpMauiMigration.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Cusip")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -67,6 +67,13 @@ namespace StockSharpMauiMigration.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Isin")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastAtUpdatedUTC")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -87,8 +94,26 @@ namespace StockSharpMauiMigration.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Bloomberg");
+
+                    b.HasIndex("Cusip");
+
+                    b.HasIndex("IQFeed");
+
+                    b.HasIndex("InteractiveBrokers");
+
+                    b.HasIndex("Isin");
+
+                    b.HasIndex("LastAtUpdatedUTC");
+
                     b.HasIndex("ParentInstrumentId")
                         .IsUnique();
+
+                    b.HasIndex("Plaza");
+
+                    b.HasIndex("Ric");
+
+                    b.HasIndex("Sedol");
 
                     b.ToTable("InstrumentsExternalsIds");
                 });
@@ -120,9 +145,6 @@ namespace StockSharpMauiMigration.Migrations
                     b.Property<int?>("Decimals")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("ExchangeBoardId")
                         .HasColumnType("INTEGER");
 
@@ -146,7 +168,6 @@ namespace StockSharpMauiMigration.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("OptionStyle")
@@ -184,13 +205,23 @@ namespace StockSharpMauiMigration.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CfiCode");
+
+                    b.HasIndex("Class");
+
+                    b.HasIndex("Code");
+
                     b.HasIndex("ExchangeBoardId");
+
+                    b.HasIndex("IdRemote");
 
                     b.HasIndex("IsFavorite");
 
                     b.HasIndex("LastAtUpdatedUTC");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("PrimaryId");
+
+                    b.HasIndex("UnderlyingSecurityId");
 
                     b.ToTable("Instruments");
                 });

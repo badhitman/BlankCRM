@@ -11,9 +11,9 @@ namespace RemoteCallLib;
 /// <summary>
 /// StockSharpMainServiceTransmission
 /// </summary>
-public partial class StockSharpMainServiceTransmission(IMQTTClient rabbitClient) : IStockSharpMainService
+public partial class StockSharpMainServiceTransmission(IMQTTClient mqClient) : IStockSharpMainService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> PingAsync(CancellationToken cancellationToken = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PingStockSharpMainReceive, token: cancellationToken) ?? new();
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PingStockSharpMainReceive, token: cancellationToken) ?? new();
 }

@@ -10,10 +10,25 @@ namespace DbcLib;
 /// <inheritdoc/>
 public abstract partial class StockSharpAppLayerContext : DbContext
 {
+    /// <summary>
+    /// FileName
+    /// </summary>
+    private static readonly string _ctxName = nameof(StockSharpAppContext);
+
+    /// <summary>
+    /// db Path
+    /// </summary>
+    public static string DbPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _ctxName, $"{(AppDomain.CurrentDomain.FriendlyName.Equals("ef", StringComparison.OrdinalIgnoreCase) ? "StockSharpAppData" : AppDomain.CurrentDomain.FriendlyName)}.db3");
+
+
     /// <inheritdoc/>
     public StockSharpAppLayerContext(DbContextOptions options)
         : base(options)
     {
+        FileInfo _fi = new(DbPath);
+
+        if (_fi.Directory?.Exists != true)
+            Directory.CreateDirectory(Path.GetDirectoryName(DbPath)!);
         //if ()
         //    Database.EnsureCreated();
         //else
@@ -27,6 +42,7 @@ public abstract partial class StockSharpAppLayerContext : DbContext
         options.EnableSensitiveDataLogging(true);
         options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
 #endif
+        base.OnConfiguring(options);
     }
 
     public DbSet<InstrumentTradeModelDB> Instruments { get; set; }

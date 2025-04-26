@@ -6,8 +6,6 @@ using Microsoft.Extensions.Logging;
 using DbcLib;
 using MudBlazor.Services;
 using SharedLib;
-using StockSharpService;
-using RemoteCallLib;
 using Transmission.Receives.StockSharpClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,8 +37,8 @@ public static class MauiProgram
         {
 #if DEBUG
             opt.EnableSensitiveDataLogging(true);
-            opt.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
-            opt.UseSqlite(DbPath, b => b.MigrationsAssembly("StockSharpMauiMigration"));
+//            opt.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+//            opt.UseSqlite(DbPath, b => b.MigrationsAssembly("StockSharpMauiMigration"));
 #endif
         });
 
@@ -59,8 +57,7 @@ public static class MauiProgram
         builder.Services
             .AddScoped<IStockSharpMainService, StockSharpMainService>()
             ;
-        //
-        //builder.Services.StockSharpRegisterMqListeners();
+        
         #endregion
         return builder.Build();
     }

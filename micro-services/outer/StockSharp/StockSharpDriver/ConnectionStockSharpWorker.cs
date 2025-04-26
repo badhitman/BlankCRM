@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using SharedLib;
 using StockSharp.Algo;
 using StockSharp.BusinessEntities;
 
@@ -11,6 +12,7 @@ namespace StockSharpDriver;
 public class ConnectionStockSharpWorker(
     //StockSharpClientConfigModel conf,
     ILogger<ConnectionStockSharpWorker> _logger,
+    IStockSharpEventsService eventTrans,
     Connector Connector) : BackgroundService
 {
     /// <inheritdoc/>
@@ -123,8 +125,12 @@ public class ConnectionStockSharpWorker(
         Connector.ValuesChanged -= ValuesChangedHandle;
     }
 
-    void ValuesChangedHandle(Security arg1, IEnumerable<KeyValuePair<StockSharp.Messages.Level1Fields, object>> arg2, DateTimeOffset arg3, DateTimeOffset arg4)
+    void ValuesChangedHandle(Security instrument, IEnumerable<KeyValuePair<StockSharp.Messages.Level1Fields, object>> dataPayload, DateTimeOffset dtOffsetMaster, DateTimeOffset dtOffsetSlave)
     {
+        //ConnectorValuesChangedEventPayloadModel req;
+        //InstrumentTradeModelDB
+        //Level1FieldsStockSharpEnum
+        //eventTrans.ValuesChanged(instrument, dataPayload, dtOffsetMaster, dtOffsetSlave);
         throw new NotImplementedException();
     }
 

@@ -26,17 +26,4 @@ public static class ServiceProviderExtensions
 
         return sc;
     }
-
-    /// <summary>
-    /// Register Mq Listener
-    /// </summary>
-    public static IServiceCollection RegisterMqListenerCli<TQueue, TRequest, TResponse>(this IServiceCollection sc)
-        where TQueue : class, IMQTTReceive<TRequest?, TResponse?>
-        where TResponse : class, new()
-    {
-        sc.AddScoped<IMQTTReceive<TRequest?, TResponse?>, TQueue>();
-        sc.AddScoped<MQTTListenerService<TQueue, TRequest?, TResponse?>>();
-
-        return sc;
-    }
 }
