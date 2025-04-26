@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace SharedLib;
 
@@ -13,9 +13,24 @@ namespace SharedLib;
 public interface IStockSharpEventsService
 {
     /// <summary>
+    /// BoardReceived
+    /// </summary>
+    public Task<ResponseBaseModel> BoardReceived(BoardStockSharpModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// InstrumentReceived
     /// </summary>
-    public Task<ResponseBaseModel> InstrumentReceived(InstrumentTradeModel req);
+    public Task<ResponseBaseModel> InstrumentReceived(InstrumentTradeStockSharpModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// OrderReceived
+    /// </summary>
+    public Task<ResponseBaseModel> OrderReceived(OrderStockSharpModel req);
+
+    /// <summary>
+    /// PortfolioReceived
+    /// </summary>
+    public Task<ResponseBaseModel> PortfolioReceived(PortfolioStockSharpModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Security changed.

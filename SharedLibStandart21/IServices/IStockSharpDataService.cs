@@ -10,12 +10,22 @@ namespace SharedLib;
 public interface IStockSharpDataService
 {
     /// <summary>
-    /// Сохранить в БД инструмент
+    /// Save Board
     /// </summary>
-    public void SaveInstrument(InstrumentTradeModel instrument);
+    public void SaveBoard(BoardStockSharpModel req);
 
     /// <summary>
-    /// SavePortfolio
+    /// Сохранить в БД инструмент
     /// </summary>
-    public void SavePortfolio(PortfolioTradeModel portfolio);
+    public void SaveInstrument(InstrumentTradeStockSharpModel instrument);
+
+    /// <summary>
+    /// SaveOrder
+    /// </summary>
+    public void SaveOrder(OrderStockSharpModel req);
+
+    /// <summary>
+    /// Save Portfolio
+    /// </summary>
+    public void SavePortfolio(PortfolioStockSharpModel portfolio);
 }

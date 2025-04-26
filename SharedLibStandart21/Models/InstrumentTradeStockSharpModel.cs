@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// InstrumentTradeModel
 /// </summary>
-public partial class InstrumentTradeModel
+public partial class InstrumentTradeStockSharpModel
 {
     /// <summary>
     /// Name
@@ -20,7 +20,7 @@ public partial class InstrumentTradeModel
     public virtual BoardStockSharpModel? Board { get; set; }
 
     /// <inheritdoc/>
-    public virtual InstrumentExternalIdModel? ExternalId { get; set; }
+    public virtual InstrumentIdStockSharpBaseModel? ExternalId { get; set; }
 
     /// <inheritdoc/>
     public string? IdRemote { get; set; }

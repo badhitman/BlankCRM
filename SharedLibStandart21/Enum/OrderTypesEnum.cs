@@ -5,17 +5,20 @@
 namespace SharedLib;
 
 /// <summary>
-/// ExchangeStockSharpModel
+/// Order types.
 /// </summary>
-public class ExchangeStockSharpModel
+public enum OrderTypesEnum
 {
     /// <summary>
-    /// Name
+    /// Limit.
     /// </summary>
-    public virtual string? Name { get; set; }
-
+    Limit,
     /// <summary>
-    /// CountryCode
+    /// Market.
     /// </summary>
-    public virtual CountryCodesEnum? CountryCode { get; set; }
+    Market,
+    /// <summary>
+    /// Conditional (stop-loss, take-profit).
+    /// </summary>
+    Conditional
 }

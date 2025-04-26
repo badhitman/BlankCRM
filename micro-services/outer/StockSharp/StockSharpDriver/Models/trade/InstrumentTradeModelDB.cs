@@ -11,7 +11,7 @@ namespace SharedLib;
 /// InstrumentTradeModelDB
 /// </summary>
 [Index(nameof(IsFavorite)), Index(nameof(IdRemote)), Index(nameof(Code)), Index(nameof(Class)), Index(nameof(CfiCode)), Index(nameof(UnderlyingSecurityId)), Index(nameof(PrimaryId)), Index(nameof(LastAtUpdatedUTC))]
-public class InstrumentTradeModelDB : InstrumentTradeModel, IBaseStockSharpModel
+public class InstrumentTradeModelDB : InstrumentTradeStockSharpModel, IBaseStockSharpModel
 {
     /// <summary>
     /// Идентификатор/Key

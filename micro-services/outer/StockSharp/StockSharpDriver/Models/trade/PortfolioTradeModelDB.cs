@@ -11,7 +11,7 @@ namespace SharedLib;
 /// classPortfolioTradeModelDB
 /// </summary>
 [Index(nameof(IsFavorite)), Index(nameof(LastAtUpdatedUTC))]
-public class PortfolioTradeModelDB : PortfolioTradeModel, IBaseStockSharpModel
+public class PortfolioTradeModelDB : PortfolioStockSharpModel, IBaseStockSharpModel
 {
     /// <summary>
     /// Идентификатор/Key

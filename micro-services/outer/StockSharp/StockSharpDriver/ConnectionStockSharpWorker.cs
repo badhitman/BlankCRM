@@ -3,8 +3,8 @@
 ////////////////////////////////////////////////
 
 using StockSharp.BusinessEntities;
-using Newtonsoft.Json;
 using StockSharp.Algo;
+using Newtonsoft.Json;
 using SharedLib;
 
 namespace StockSharpDriver;
@@ -67,7 +67,7 @@ public class ConnectionStockSharpWorker(
         Connector.Connect();
         while (!stoppingToken.IsCancellationRequested)
         {
-            //logger.LogDebug();
+            // _logger.LogDebug($"`tic-tac`");
             await Task.Delay(200, stoppingToken);
         }
 
@@ -127,19 +127,16 @@ public class ConnectionStockSharpWorker(
         Connector.ValuesChanged -= ValuesChangedHandle;
     }
 
-    void SubscriptionFailedHandle(Subscription subscription, Exception ex, bool arg)
-    {
-        _logger.LogError(ex, $"Call > `{nameof(SubscriptionFailedHandle)}` [{nameof(arg)}:{arg}]: {JsonConvert.SerializeObject(subscription)}");
-    }
 
     void ValuesChangedHandle(Security instrument, IEnumerable<KeyValuePair<StockSharp.Messages.Level1Fields, object>> dataPayload, DateTimeOffset dtOffsetMaster, DateTimeOffset dtOffsetSlave)
     {
+        _logger.LogInformation($"Call > `{nameof(ValuesChangedHandle)}` [{dtOffsetMaster}]/[{dtOffsetSlave}]: {JsonConvert.SerializeObject(instrument)}\n\n{JsonConvert.SerializeObject(dataPayload)}");
         ConnectorValuesChangedEventPayloadModel req = new()
         {
             OffsetSlave = dtOffsetSlave,
             OffsetMaster = dtOffsetMaster,
             DataPayload = [.. dataPayload.Select(x => new KeyValuePair<Level1FieldsStockSharpEnum, object>((Level1FieldsStockSharpEnum)Enum.Parse(typeof(Level1FieldsStockSharpEnum), Enum.GetName(x.Key)!), x.Value))],
-            Instrument = new InstrumentTradeModel().Bind(instrument),
+            Instrument = new InstrumentTradeStockSharpModel().Bind(instrument),
         };
         dataRepo.SaveInstrument(req.Instrument);
         eventTrans.ValuesChanged(req);
@@ -147,37 +144,56 @@ public class ConnectionStockSharpWorker(
 
     void SecurityReceivedHandle(Subscription subscription, Security sec)
     {
-        InstrumentTradeModel req = new InstrumentTradeModel().Bind(sec);
+        _logger.LogInformation($"Call > `{nameof(SecurityReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(sec)}");
+        InstrumentTradeStockSharpModel req = new InstrumentTradeStockSharpModel().Bind(sec);
         dataRepo.SaveInstrument(req);
         eventTrans.InstrumentReceived(req);
     }
 
     void PortfolioReceivedHandle(Subscription subscription, Portfolio port)
     {
-        throw new NotImplementedException();
-    }
-
-    void LookupSecuritiesResultHandle(StockSharp.Messages.SecurityLookupMessage slm, IEnumerable<Security> securities, Exception ex)
-    {
-        foreach (Security sec in securities)
-            dataRepo.SaveInstrument(new InstrumentTradeModel().Bind(sec));
-
-        _logger.LogError(ex, $"Call > `{nameof(LookupSecuritiesResultHandle)}`: {JsonConvert.SerializeObject(slm)}");
-    }
-
-    void LookupPortfoliosResultHandle(StockSharp.Messages.PortfolioLookupMessage portfolioLM, IEnumerable<Portfolio> portfolios, Exception ex)
-    {
-        foreach (Portfolio port in portfolios)
-            dataRepo.SavePortfolio(new PortfolioTradeModel().Bind(port));
-
-        _logger.LogError(ex, $"Call > `{nameof(LookupPortfoliosResultHandle)}`: {JsonConvert.SerializeObject(portfolioLM)}");
+        _logger.LogInformation($"Call > `{nameof(PortfolioReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(port)}");
+        PortfolioStockSharpModel req = new PortfolioStockSharpModel().Bind(port);
+        dataRepo.SavePortfolio(req);
+        eventTrans.PortfolioReceived(req);
     }
 
     void BoardReceivedHandle(Subscription subscription, ExchangeBoard boardExchange)
     {
         _logger.LogWarning($"Call > `{nameof(BoardReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(boardExchange)}");
+        BoardStockSharpModel req = new BoardStockSharpModel().Bind(boardExchange);
+        dataRepo.SaveBoard(req);
+        eventTrans.BoardReceived(req);
+    }
+    void OrderReceivedHandle(Subscription subscription, Order oreder)
+    {
+        _logger.LogWarning($"Call > `{nameof(OrderReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(oreder)}");
+        OrderStockSharpModel req = new OrderStockSharpModel().Bind(oreder);
+        dataRepo.SaveOrder(req);
+        eventTrans.OrderReceived(req);
     }
 
+
+    void LookupSecuritiesResultHandle(StockSharp.Messages.SecurityLookupMessage slm, IEnumerable<Security> securities, Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(LookupSecuritiesResultHandle)}`: {JsonConvert.SerializeObject(slm)}");
+
+        foreach (Security sec in securities)
+            dataRepo.SaveInstrument(new InstrumentTradeStockSharpModel().Bind(sec));
+    }
+
+    void LookupPortfoliosResultHandle(StockSharp.Messages.PortfolioLookupMessage portfolioLM, IEnumerable<Portfolio> portfolios, Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(LookupPortfoliosResultHandle)}`: {JsonConvert.SerializeObject(portfolioLM)}");
+
+        foreach (Portfolio port in portfolios)
+            dataRepo.SavePortfolio(new PortfolioStockSharpModel().Bind(port));
+    }
+
+    void SubscriptionFailedHandle(Subscription subscription, Exception ex, bool arg)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(SubscriptionFailedHandle)}` [{nameof(arg)}:{arg}]: {JsonConvert.SerializeObject(subscription)}");
+    }
 
     #region todo
     void TickTradeReceivedHandle(Subscription subscription, StockSharp.Messages.ITickTradeMessage msg)
@@ -215,10 +231,6 @@ public class ConnectionStockSharpWorker(
     void OrderRegisterFailReceivedHandle(Subscription subscription, OrderFail orderF)
     {
         _logger.LogWarning($"Call > `{nameof(OrderRegisterFailReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(orderF)}");
-    }
-    void OrderReceivedHandle(Subscription subscription, Order oreder)
-    {
-        _logger.LogWarning($"Call > `{nameof(OrderReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(oreder)}");
     }
     void OrderLogReceivedHandle(Subscription subscription, StockSharp.Messages.IOrderLogMessage order)
     {

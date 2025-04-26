@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// PortfolioTradeModel
 /// </summary>
-public partial class PortfolioTradeModel
+public partial class PortfolioStockSharpModel
 {
     /// <summary>
     /// Name

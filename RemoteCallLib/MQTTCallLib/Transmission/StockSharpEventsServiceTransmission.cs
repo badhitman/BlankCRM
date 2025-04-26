@@ -14,7 +14,25 @@ namespace RemoteCallLib;
 public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) : IStockSharpEventsService
 {
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> InstrumentReceived(InstrumentTradeModel req)
+    public async Task<ResponseBaseModel> BoardReceived(BoardStockSharpModel req, CancellationToken cancellationToken = default)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> InstrumentReceived(InstrumentTradeStockSharpModel req, CancellationToken cancellationToken = default)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> OrderReceived(OrderStockSharpModel req)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> PortfolioReceived(PortfolioStockSharpModel req, CancellationToken cancellationToken = default)
     {
         throw new System.NotImplementedException();
     }

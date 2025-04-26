@@ -5,17 +5,16 @@
 namespace SharedLib;
 
 /// <summary>
-/// ExchangeStockSharpModel
+/// Margin modes.
 /// </summary>
-public class ExchangeStockSharpModel
+public enum MarginModesEnum
 {
     /// <summary>
-    /// Name
+    /// Cross margin mode.
     /// </summary>
-    public virtual string? Name { get; set; }
-
+    Cross,
     /// <summary>
-    /// CountryCode
+    /// Isolated margin mode.
     /// </summary>
-    public virtual CountryCodesEnum? CountryCode { get; set; }
+    Isolated
 }

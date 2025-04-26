@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// InstrumentExternalIdModel
+/// InstrumentIdStockSharpBaseModel
 /// </summary>
-public class InstrumentExternalIdModel
+public class InstrumentIdStockSharpBaseModel
 {
     /// <summary>
     /// ID in SEDOL format (Stock Exchange Daily Official List).
@@ -59,6 +59,8 @@ public class InstrumentExternalIdModel
     [Display(Name = "Plaza")]
     public string? Plaza { get; set; }
 
+
+    #region sys
     /// <inheritdoc/>
     public override string ToString()
     {
@@ -118,11 +120,11 @@ public class InstrumentExternalIdModel
         if (other is null)
             return false;
 
-        return Equals((InstrumentExternalIdModel)other);
+        return Equals((InstrumentIdStockSharpBaseModel)other);
     }
 
     /// <inheritdoc/>
-    public bool Equals(InstrumentExternalIdModel other)
+    public bool Equals(InstrumentIdStockSharpBaseModel other)
     {
         if (other is null)
         {
@@ -173,14 +175,15 @@ public class InstrumentExternalIdModel
     }
 
     /// <inheritdoc/>
-    public static bool operator !=(InstrumentExternalIdModel left, InstrumentExternalIdModel right)
+    public static bool operator !=(InstrumentIdStockSharpBaseModel left, InstrumentIdStockSharpBaseModel right)
     {
         return !(left == right);
     }
 
     /// <inheritdoc/>
-    public static bool operator ==(InstrumentExternalIdModel left, InstrumentExternalIdModel right)
+    public static bool operator ==(InstrumentIdStockSharpBaseModel left, InstrumentIdStockSharpBaseModel right)
     {
         return left?.Equals(right) ?? false;
     }
+    #endregion
 }
