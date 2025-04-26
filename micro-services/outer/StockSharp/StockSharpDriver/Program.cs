@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////
 
 using DbcLib;
+using NLog;
+using NLog.Extensions.Logging;
 using RemoteCallLib;
 using SharedLib;
 using StockSharpService;
@@ -21,6 +23,8 @@ public class Program
     /// </summary>
     public static void Main(string[] args)
     {
+        Logger logger = LogManager.GetCurrentClassLogger();
+
         StockSharpClientConfigModel _conf = StockSharpClientConfigModel.BuildEmpty();
         IHostBuilder builderH = Host.CreateDefaultBuilder(args);
 
@@ -70,6 +74,18 @@ public class Program
             })
             .ConfigureServices((bx, services) =>
             {
+                IConfigurationRoot config = new ConfigurationBuilder()
+                 .SetBasePath(System.IO.Directory.GetCurrentDirectory()) //From NuGet Package Microsoft.Extensions.Configuration.Json
+                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                 .Build();
+
+                services.AddLogging(loggingBuilder =>
+                {
+                    // configure Logging with NLog
+                    loggingBuilder.ClearProviders();
+                    loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                    loggingBuilder.AddNLog(config);
+                });
                 services.AddDbContextFactory<StockSharpAppContext>(opt =>
                 {
 #if DEBUG
@@ -128,7 +144,7 @@ public class Program
             });
 
         IHost host = builderH.Build();
-
+        logger.Info("Program has started.");
         host.Run();
     }
 }

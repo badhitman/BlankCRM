@@ -2,11 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using SharedLib;
-using StockSharp.Algo;
-using StockSharp.Algo.Indicators;
 using StockSharp.BusinessEntities;
-using System.Linq;
+using Newtonsoft.Json;
+using StockSharp.Algo;
+using SharedLib;
 
 namespace StockSharpDriver;
 
@@ -69,7 +68,7 @@ public class ConnectionStockSharpWorker(
         while (!stoppingToken.IsCancellationRequested)
         {
             //logger.LogDebug();
-            await Task.Delay(1000, stoppingToken);
+            await Task.Delay(200, stoppingToken);
         }
 
         _logger.LogInformation($"call - {nameof(Connector.CancelOrders)}!");
@@ -128,6 +127,11 @@ public class ConnectionStockSharpWorker(
         Connector.ValuesChanged -= ValuesChangedHandle;
     }
 
+    void SubscriptionFailedHandle(Subscription subscription, Exception ex, bool arg)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(SubscriptionFailedHandle)}` [{nameof(arg)}:{arg}]: {JsonConvert.SerializeObject(subscription)}");
+    }
+
     void ValuesChangedHandle(Security instrument, IEnumerable<KeyValuePair<StockSharp.Messages.Level1Fields, object>> dataPayload, DateTimeOffset dtOffsetMaster, DateTimeOffset dtOffsetSlave)
     {
         ConnectorValuesChangedEventPayloadModel req = new()
@@ -141,118 +145,14 @@ public class ConnectionStockSharpWorker(
         eventTrans.ValuesChanged(req);
     }
 
-    void TickTradeReceivedHandle(Subscription subscription, StockSharp.Messages.ITickTradeMessage msg)
-    {
-        throw new NotImplementedException();
-    }
-
-    void SubscriptionStoppedHandle(Subscription subscription, Exception ex)
-    {
-        throw new NotImplementedException();
-    }
-
-    void SubscriptionStartedHandle(Subscription subscription)
-    {
-        throw new NotImplementedException();
-    }
-
-    void SubscriptionReceivedHandle(Subscription subscription, object sender)
-    {
-        throw new NotImplementedException();
-    }
-
-    void SubscriptionOnlineHandle(Subscription subscription)
-    {
-        throw new NotImplementedException();
-    }
-
-    void SubscriptionFailedHandle(Subscription subscription, Exception ex, bool arg)
-    {
-        throw new NotImplementedException();
-    }
-
     void SecurityReceivedHandle(Subscription subscription, Security sec)
     {
-        dataRepo.SaveInstrument(new InstrumentTradeModel().Bind(sec));
-        throw new NotImplementedException();
-    }
-
-    void PositionReceivedHandle(Subscription subscription, Position pos)
-    {
-        throw new NotImplementedException();
+        InstrumentTradeModel req = new InstrumentTradeModel().Bind(sec);
+        dataRepo.SaveInstrument(req);
+        eventTrans.InstrumentReceived(req);
     }
 
     void PortfolioReceivedHandle(Subscription subscription, Portfolio port)
-    {
-        throw new NotImplementedException();
-    }
-
-    void ParentRemovedHandle(Ecng.Logging.ILogSource sender)
-    {
-        throw new NotImplementedException();
-    }
-
-    void OwnTradeReceivedHandle(Subscription subscription, MyTrade tr)
-    {
-        throw new NotImplementedException();
-    }
-
-    void OrderRegisterFailReceivedHandle(Subscription subscription, OrderFail orderF)
-    {
-        throw new NotImplementedException();
-    }
-
-    void OrderReceivedHandle(Subscription subscription, Order oreder)
-    {
-        throw new NotImplementedException();
-    }
-
-    void OrderLogReceivedHandle(Subscription subscription, StockSharp.Messages.IOrderLogMessage order)
-    {
-        throw new NotImplementedException();
-    }
-
-    void OrderEditFailReceivedHandle(Subscription subscription, OrderFail orderF)
-    {
-        throw new NotImplementedException();
-    }
-
-    void OrderCancelFailReceivedHandle(Subscription subscription, OrderFail orderF)
-    {
-        throw new NotImplementedException();
-    }
-
-    void OrderBookReceivedHandle(Subscription subscription, StockSharp.Messages.IOrderBookMessage orderBM)
-    {
-        throw new NotImplementedException();
-    }
-
-    void NewsReceivedHandle(Subscription subscription, News sender)
-    {
-        throw new NotImplementedException();
-    }
-
-    void NewMessageHandle(StockSharp.Messages.Message msg)
-    {
-        throw new NotImplementedException();
-    }
-
-    void MassOrderCancelFailed2Handle(long arg, Exception ex, DateTimeOffset dt)
-    {
-        throw new NotImplementedException();
-    }
-
-    void MassOrderCancelFailedHandle(long arg, Exception ex)
-    {
-        throw new NotImplementedException();
-    }
-
-    void MassOrderCanceled2Handle(long arg, DateTimeOffset dt)
-    {
-        throw new NotImplementedException();
-    }
-
-    void MassOrderCanceledHandle(long sender)
     {
         throw new NotImplementedException();
     }
@@ -262,98 +162,167 @@ public class ConnectionStockSharpWorker(
         foreach (Security sec in securities)
             dataRepo.SaveInstrument(new InstrumentTradeModel().Bind(sec));
 
-        throw new NotImplementedException();
+        _logger.LogError(ex, $"Call > `{nameof(LookupSecuritiesResultHandle)}`: {JsonConvert.SerializeObject(slm)}");
     }
 
-    void LookupPortfoliosResultHandle(StockSharp.Messages.PortfolioLookupMessage arg1, IEnumerable<Portfolio> portfolios, Exception ex)
+    void LookupPortfoliosResultHandle(StockSharp.Messages.PortfolioLookupMessage portfolioLM, IEnumerable<Portfolio> portfolios, Exception ex)
     {
         foreach (Portfolio port in portfolios)
             dataRepo.SavePortfolio(new PortfolioTradeModel().Bind(port));
-        throw new NotImplementedException();
-    }
 
-    void LogHandle(Ecng.Logging.LogMessage senderLog)
-    {
-        throw new NotImplementedException();
-    }
-
-    void Level1ReceivedHandle(Subscription subscription, StockSharp.Messages.Level1ChangeMessage levelCh)
-    {
-        throw new NotImplementedException();
-    }
-
-    void ErrorHandle(Exception ex)
-    {
-        throw new NotImplementedException();
-    }
-
-    void DisposedHandle()
-    {
-        throw new NotImplementedException();
-    }
-
-    void DisconnectedExHandle(StockSharp.Messages.IMessageAdapter sender)
-    {
-        throw new NotImplementedException();
-    }
-
-    void DisconnectedHandle()
-    {
-        throw new NotImplementedException();
-    }
-
-    void DataTypeReceivedHandle(Subscription subscription, StockSharp.Messages.DataType argDt)
-    {
-        throw new NotImplementedException();
-    }
-
-    void CurrentTimeChangedHandle(TimeSpan sender)
-    {
-        throw new NotImplementedException();
-    }
-
-    void ConnectionRestoredHandle(StockSharp.Messages.IMessageAdapter sender)
-    {
-        throw new NotImplementedException();
-    }
-
-    void ConnectionLostHandle(StockSharp.Messages.IMessageAdapter sender)
-    {
-        throw new NotImplementedException();
-    }
-
-    void ConnectionErrorExHandle(StockSharp.Messages.IMessageAdapter sender, Exception ex)
-    {
-        throw new NotImplementedException();
-    }
-
-    void ConnectionErrorHandle(Exception ex)
-    {
-        throw new NotImplementedException();
-    }
-
-    void ConnectedExHandle(StockSharp.Messages.IMessageAdapter sender)
-    {
-        throw new NotImplementedException();
-    }
-
-    void ConnectedHandle()
-    {
-        throw new NotImplementedException();
-    }
-
-    void ChangePasswordResultHandle(long arg, Exception ex)
-    {
-        throw new NotImplementedException();
-    }
-
-    void CandleReceivedHandle(Subscription subscription, StockSharp.Messages.ICandleMessage candleMessage)
-    {
-        throw new NotImplementedException();
+        _logger.LogError(ex, $"Call > `{nameof(LookupPortfoliosResultHandle)}`: {JsonConvert.SerializeObject(portfolioLM)}");
     }
 
     void BoardReceivedHandle(Subscription subscription, ExchangeBoard boardExchange)
     {
-        throw new NotImplementedException();
+        _logger.LogWarning($"Call > `{nameof(BoardReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(boardExchange)}");
     }
+
+
+    #region todo
+    void TickTradeReceivedHandle(Subscription subscription, StockSharp.Messages.ITickTradeMessage msg)
+    {
+        _logger.LogWarning($"Call > `{nameof(TickTradeReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(msg)}");
+    }
+    void SubscriptionStoppedHandle(Subscription subscription, Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(SubscriptionStoppedHandle)}`: {JsonConvert.SerializeObject(subscription)}");
+    }
+    void SubscriptionStartedHandle(Subscription subscription)
+    {
+        _logger.LogWarning($"Call > `{nameof(SubscriptionStartedHandle)}`: {JsonConvert.SerializeObject(subscription)}");
+    }
+    void SubscriptionReceivedHandle(Subscription subscription, object sender)
+    {
+        _logger.LogWarning($"Call > `{nameof(SubscriptionReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(sender)}");
+    }
+    void SubscriptionOnlineHandle(Subscription subscription)
+    {
+        _logger.LogWarning($"Call > `{nameof(SubscriptionOnlineHandle)}`: {JsonConvert.SerializeObject(subscription)}");
+    }
+    void PositionReceivedHandle(Subscription subscription, Position pos)
+    {
+        _logger.LogWarning($"Call > `{nameof(PositionReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(pos)}");
+    }
+    void ParentRemovedHandle(Ecng.Logging.ILogSource sender)
+    {
+        _logger.LogWarning($"Call > `{nameof(ParentRemovedHandle)}`: {JsonConvert.SerializeObject(sender)}");
+    }
+    void OwnTradeReceivedHandle(Subscription subscription, MyTrade tr)
+    {
+        _logger.LogWarning($"Call > `{nameof(OwnTradeReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(tr)}");
+    }
+    void OrderRegisterFailReceivedHandle(Subscription subscription, OrderFail orderF)
+    {
+        _logger.LogWarning($"Call > `{nameof(OrderRegisterFailReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(orderF)}");
+    }
+    void OrderReceivedHandle(Subscription subscription, Order oreder)
+    {
+        _logger.LogWarning($"Call > `{nameof(OrderReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(oreder)}");
+    }
+    void OrderLogReceivedHandle(Subscription subscription, StockSharp.Messages.IOrderLogMessage order)
+    {
+        _logger.LogWarning($"Call > `{nameof(OrderLogReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(order)}");
+    }
+    void OrderEditFailReceivedHandle(Subscription subscription, OrderFail orderF)
+    {
+        _logger.LogWarning($"Call > `{nameof(OrderEditFailReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(orderF)}");
+    }
+    void OrderCancelFailReceivedHandle(Subscription subscription, OrderFail orderF)
+    {
+        _logger.LogWarning($"Call > `{nameof(OrderCancelFailReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(orderF)}");
+    }
+    void OrderBookReceivedHandle(Subscription subscription, StockSharp.Messages.IOrderBookMessage orderBM)
+    {
+        _logger.LogWarning($"Call > `{nameof(OrderBookReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(orderBM)}");
+    }
+    void NewsReceivedHandle(Subscription subscription, News sender)
+    {
+        _logger.LogWarning($"Call > `{nameof(NewsReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(sender)}");
+    }
+    void NewMessageHandle(StockSharp.Messages.Message msg)
+    {
+        _logger.LogWarning($"Call > `{nameof(NewMessageHandle)}`: {JsonConvert.SerializeObject(msg)}");
+    }
+    void MassOrderCancelFailed2Handle(long arg, Exception ex, DateTimeOffset dt)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(MassOrderCancelFailed2Handle)}` [{nameof(arg)}:{arg}]: {dt}");
+    }
+    void MassOrderCancelFailedHandle(long arg, Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(MassOrderCancelFailedHandle)}` [{nameof(arg)}:{arg}]");
+    }
+    void MassOrderCanceled2Handle(long arg, DateTimeOffset dt)
+    {
+        _logger.LogWarning($"Call > `{nameof(MassOrderCanceled2Handle)}` [{nameof(arg)}:{arg}]: {dt}");
+    }
+    void MassOrderCanceledHandle(long sender)
+    {
+        _logger.LogWarning($"Call > `{nameof(MassOrderCanceledHandle)}`: {JsonConvert.SerializeObject(sender)}");
+    }
+    void LogHandle(Ecng.Logging.LogMessage senderLog)
+    {
+        _logger.LogWarning($"Call > `{nameof(LogHandle)}`: {senderLog}");
+    }
+    void Level1ReceivedHandle(Subscription subscription, StockSharp.Messages.Level1ChangeMessage levelCh)
+    {
+        _logger.LogWarning($"Call > `{nameof(Level1ReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(levelCh)}");
+    }
+    void ErrorHandle(Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(ErrorHandle)}`");
+    }
+    void DisposedHandle()
+    {
+        _logger.LogWarning($"Call > `{nameof(DisposedHandle)}`");
+    }
+    void DisconnectedExHandle(StockSharp.Messages.IMessageAdapter sender)
+    {
+        _logger.LogWarning($"Call > `{nameof(DisconnectedExHandle)}`: {JsonConvert.SerializeObject(sender)}");
+    }
+    void DisconnectedHandle()
+    {
+        _logger.LogWarning($"Call > `{nameof(DisconnectedHandle)}`");
+    }
+    void DataTypeReceivedHandle(Subscription subscription, StockSharp.Messages.DataType argDt)
+    {
+        _logger.LogWarning($"Call > `{nameof(DataTypeReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(argDt)}");
+    }
+    void CurrentTimeChangedHandle(TimeSpan sender)
+    {
+        _logger.LogWarning($"Call > `{nameof(CurrentTimeChangedHandle)}`: {JsonConvert.SerializeObject(sender)}");
+    }
+    void ConnectionRestoredHandle(StockSharp.Messages.IMessageAdapter sender)
+    {
+        _logger.LogWarning($"Call > `{nameof(ConnectionRestoredHandle)}`: {JsonConvert.SerializeObject(sender)}");
+    }
+    void ConnectionLostHandle(StockSharp.Messages.IMessageAdapter sender)
+    {
+        _logger.LogWarning($"Call > `{nameof(ConnectionLostHandle)}`: {JsonConvert.SerializeObject(sender)}");
+    }
+    void ConnectionErrorExHandle(StockSharp.Messages.IMessageAdapter sender, Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(ConnectionErrorExHandle)}`: {JsonConvert.SerializeObject(sender)}");
+    }
+    void ConnectionErrorHandle(Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(ConnectionErrorHandle)}`");
+    }
+    void ConnectedExHandle(StockSharp.Messages.IMessageAdapter sender)
+    {
+        _logger.LogWarning($"Call > `{nameof(ConnectedExHandle)}`: {JsonConvert.SerializeObject(sender)}");
+    }
+    void ConnectedHandle()
+    {
+        _logger.LogWarning($"Call > `{nameof(ConnectedHandle)}`");
+    }
+    void ChangePasswordResultHandle(long arg, Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(ChangePasswordResultHandle)}`: {arg}");
+    }
+    void CandleReceivedHandle(Subscription subscription, StockSharp.Messages.ICandleMessage candleMessage)
+    {
+        _logger.LogWarning($"Call > `{nameof(CandleReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(candleMessage)}");
+    }
+    #endregion
 }
