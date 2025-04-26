@@ -24,7 +24,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     StoreTelegramService storeTgRepo) : ITelegramBotService
 {
     /// <inheritdoc/>
-    public async Task<List<ChatTelegramModelDB>> ChatsFindForUserTelegramAsync(long[] chats_ids, CancellationToken token)
+    public async Task<List<ChatTelegramModelDB>> ChatsFindForUserTelegramAsync(long[] chats_ids, CancellationToken token = default)
     {
         TResponseModel<ChatTelegramModelDB[]?> res = new();
         using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
@@ -42,7 +42,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<List<ChatTelegramModelDB>> ChatsReadTelegramAsync(long[] chats_ids, CancellationToken token)
+    public async Task<List<ChatTelegramModelDB>> ChatsReadTelegramAsync(long[] chats_ids, CancellationToken token = default)
     {
         TResponseModel<ChatTelegramModelDB[]> res = new();
         using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
@@ -51,7 +51,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectTelegramAsync(TPaginationRequestModel<string?> req, CancellationToken token)
+    public async Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectTelegramAsync(TPaginationRequestModel<string?> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
@@ -92,7 +92,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<ChatTelegramModelDB> ChatTelegramReadAsync(int chatId, CancellationToken token)
+    public async Task<ChatTelegramModelDB> ChatTelegramReadAsync(int chatId, CancellationToken token = default)
     {
         TResponseModel<ChatTelegramModelDB> res = new();
         using TelegramBotContext context = await tgDbFactory.CreateDbContextAsync(token);
@@ -104,7 +104,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestModel<long[]> req, CancellationToken token)
+    public async Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestModel<long[]> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
@@ -137,7 +137,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MessageComplexIdsModel>> ForwardMessageTelegramAsync(ForwardMessageTelegramBotModel message, CancellationToken token)
+    public async Task<TResponseModel<MessageComplexIdsModel>> ForwardMessageTelegramAsync(ForwardMessageTelegramBotModel message, CancellationToken token = default)
     {
         TResponseModel<MessageComplexIdsModel> res = new();
         Message sender_msg;
@@ -182,7 +182,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>> GetBotUsernameAsync(CancellationToken token)
+    public async Task<TResponseModel<string>> GetBotUsernameAsync(CancellationToken token = default)
     {
         TResponseModel<string> res = new();
         Telegram.Bot.Types.User me;
@@ -203,7 +203,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<byte[]>> GetFileTelegramAsync(string fileId, CancellationToken token)
+    public async Task<TResponseModel<byte[]>> GetFileTelegramAsync(string fileId, CancellationToken token = default)
     {
         TResponseModel<byte[]> res = new();
         try
@@ -228,7 +228,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesSelectTelegramAsync(TPaginationRequestModel<SearchMessagesChatModel> req, CancellationToken token)
+    public async Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesSelectTelegramAsync(TPaginationRequestModel<SearchMessagesChatModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
@@ -306,7 +306,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MessageComplexIdsModel>> SendTextMessageTelegramAsync(SendTextMessageTelegramBotModel message, CancellationToken token)
+    public async Task<TResponseModel<MessageComplexIdsModel>> SendTextMessageTelegramAsync(SendTextMessageTelegramBotModel message, CancellationToken token = default)
     {
         TResponseModel<MessageComplexIdsModel> res = new();
         string msg;
