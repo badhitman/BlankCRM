@@ -29,6 +29,7 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         if (boardDb is null)
         {
             boardDb = (BoardStockSharpModelDB)req;
+            boardDb.CreatedAtUTC = DateTime.UtcNow;
             context.Boards.Add(boardDb);
         }
         else
@@ -74,13 +75,19 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         if (instrumentDb is null)
         {
             instrumentDb = (InstrumentStockSharpModelDB)req;
+            instrumentDb.CreatedAtUTC = DateTime.UtcNow;
             instrumentDb.BoardId = board.Id;
+            instrumentDb.Board = null;
+
             context.Instruments.Add(instrumentDb);
         }
         else
         {
             instrumentDb.SetUpdate(req);
+
             instrumentDb.BoardId = board.Id;
+            instrumentDb.Board = null;
+
             context.Instruments.Update(instrumentDb);
         }
         context.SaveChanges();
@@ -101,13 +108,19 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         if (portDb is null)
         {
             portDb = (PortfolioTradeModelDB)req;
+            portDb.CreatedAtUTC = DateTime.UtcNow;
             portDb.BoardId = board.Id;
+            portDb.Board = null;
+
             context.Portfolios.Add(portDb);
         }
         else
         {
             portDb.SetUpdate(req);
+
             portDb.BoardId = board.Id;
+            portDb.Board = null;
+
             context.Portfolios.Update(portDb);
         }
         context.SaveChanges();
@@ -119,17 +132,37 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
         OrderStockSharpModelDB orderDb = context.Orders.FirstOrDefault(x => x.TransactionId == req.TransactionId);
 
+        InstrumentStockSharpModelDB instrumentDb = null;
+        if (!string.IsNullOrWhiteSpace(req.Instrument.Name))
+            instrumentDb = context.Instruments.First(x => x.Id == SaveInstrument(req.Instrument));
+                 
+        PortfolioTradeModelDB portfolioDb = null;
+        if (!string.IsNullOrWhiteSpace(req.Portfolio.Name))
+            portfolioDb = context.Portfolios.First(x => x.Id == SavePortfolio(req.Portfolio));
+                 
         if (orderDb is null)
         {
             orderDb = (OrderStockSharpModelDB)req;
-            //orderDb.BoardId = board.Id;
-            //context.Portfolios.Add(orderDb);
+            orderDb.CreatedAtUTC = DateTime.UtcNow;
+            orderDb.InstrumentId = instrumentDb.Id;
+            orderDb.Instrument = null;
+
+            orderDb.PortfolioId = portfolioDb.Id;
+            orderDb.Portfolio = null;
+
+            context.Orders.Add(orderDb);
         }
         else
         {
             orderDb.SetUpdate(req);
-            //orderDb.BoardId = board.Id;
-            //context.Portfolios.Update(orderDb);
+
+            orderDb.InstrumentId = instrumentDb.Id;
+            orderDb.Instrument = null;
+
+            orderDb.PortfolioId = portfolioDb.Id;
+            orderDb.Portfolio = null;
+
+            context.Orders.Update(orderDb);
         }
         context.SaveChanges();
         return orderDb.IdPK;

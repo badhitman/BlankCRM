@@ -14,6 +14,11 @@ public static class BindsStockSharpModelsExtensions
 {
     public static OrderStockSharpModel Bind(this OrderStockSharpModel main, Order inc)
     {
+        main.Id = inc.Id;
+
+        main.Instrument = new InstrumentTradeStockSharpModel().Bind(inc.Security);
+        main.Portfolio = new PortfolioStockSharpModel().Bind(inc.Portfolio);
+
         main.State = (OrderStatesEnum)Enum.Parse(typeof(OrderStatesEnum), Enum.GetName(inc.State));
         main.PositionEffect = inc.PositionEffect is null ? null : (OrderPositionEffectsEnum)Enum.Parse(typeof(OrderPositionEffectsEnum), Enum.GetName(inc.PositionEffect.Value));
         main.TimeInForce = inc.TimeInForce is null ? null : (TimeInForceEnum)Enum.Parse(typeof(TimeInForceEnum), Enum.GetName(inc.TimeInForce.Value));
@@ -51,14 +56,10 @@ public static class BindsStockSharpModelsExtensions
         main.LatencyRegistration = inc.LatencyRegistration;
         main.LatencyEdition = inc.LatencyEdition;
         main.IsSystem = inc.IsSystem;
-        main.Id = inc.Id;
         main.CommissionCurrency = inc.CommissionCurrency;
         main.ClientCode = inc.ClientCode;
         main.CancelledTime = inc.CancelledTime;
         main.BrokerCode = inc.BrokerCode;
-
-        main.Instrument = new InstrumentTradeStockSharpModel().Bind(inc.Security);
-        main.Portfolio = new PortfolioStockSharpModel().Bind(inc.Portfolio);
 
         return main;
     }
