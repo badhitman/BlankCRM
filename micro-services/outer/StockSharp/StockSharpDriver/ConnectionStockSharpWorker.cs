@@ -139,7 +139,7 @@ public class ConnectionStockSharpWorker(
             Instrument = new InstrumentTradeStockSharpModel().Bind(instrument),
         };
         dataRepo.SaveInstrument(req.Instrument);
-        eventTrans.ValuesChanged(req);
+        eventTrans.ValuesChangedEvent(req);
     }
 
     void SecurityReceivedHandle(Subscription subscription, Security sec)
@@ -174,6 +174,7 @@ public class ConnectionStockSharpWorker(
     }
 
 
+    #region Exception`s
     void LookupSecuritiesResultHandle(StockSharp.Messages.SecurityLookupMessage slm, IEnumerable<Security> securities, Exception ex)
     {
         _logger.LogError(ex, $"Call > `{nameof(LookupSecuritiesResultHandle)}`: {JsonConvert.SerializeObject(slm)}");
@@ -194,15 +195,40 @@ public class ConnectionStockSharpWorker(
     {
         _logger.LogError(ex, $"Call > `{nameof(SubscriptionFailedHandle)}` [{nameof(arg)}:{arg}]: {JsonConvert.SerializeObject(subscription)}");
     }
+    void SubscriptionStoppedHandle(Subscription subscription, Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(SubscriptionStoppedHandle)}`: {JsonConvert.SerializeObject(subscription)}");
+    }
+    void MassOrderCancelFailed2Handle(long arg, Exception ex, DateTimeOffset dt)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(MassOrderCancelFailed2Handle)}` [{nameof(arg)}:{arg}]: {dt}");
+    }
+    void MassOrderCancelFailedHandle(long arg, Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(MassOrderCancelFailedHandle)}` [{nameof(arg)}:{arg}]");
+    }
+    void ConnectionErrorExHandle(StockSharp.Messages.IMessageAdapter sender, Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(ConnectionErrorExHandle)}`: {JsonConvert.SerializeObject(sender)}");
+    }
+    void ConnectionErrorHandle(Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(ConnectionErrorHandle)}`");
+    }
+    void ErrorHandle(Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(ErrorHandle)}`");
+    }
+    void ChangePasswordResultHandle(long arg, Exception ex)
+    {
+        _logger.LogError(ex, $"Call > `{nameof(ChangePasswordResultHandle)}`: {arg}");
+    }
+    #endregion
 
     #region todo
     void TickTradeReceivedHandle(Subscription subscription, StockSharp.Messages.ITickTradeMessage msg)
     {
         _logger.LogWarning($"Call > `{nameof(TickTradeReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(msg)}");
-    }
-    void SubscriptionStoppedHandle(Subscription subscription, Exception ex)
-    {
-        _logger.LogError(ex, $"Call > `{nameof(SubscriptionStoppedHandle)}`: {JsonConvert.SerializeObject(subscription)}");
     }
     void SubscriptionStartedHandle(Subscription subscription)
     {
@@ -256,14 +282,6 @@ public class ConnectionStockSharpWorker(
     {
         _logger.LogWarning($"Call > `{nameof(NewMessageHandle)}`: {JsonConvert.SerializeObject(msg)}");
     }
-    void MassOrderCancelFailed2Handle(long arg, Exception ex, DateTimeOffset dt)
-    {
-        _logger.LogError(ex, $"Call > `{nameof(MassOrderCancelFailed2Handle)}` [{nameof(arg)}:{arg}]: {dt}");
-    }
-    void MassOrderCancelFailedHandle(long arg, Exception ex)
-    {
-        _logger.LogError(ex, $"Call > `{nameof(MassOrderCancelFailedHandle)}` [{nameof(arg)}:{arg}]");
-    }
     void MassOrderCanceled2Handle(long arg, DateTimeOffset dt)
     {
         _logger.LogWarning($"Call > `{nameof(MassOrderCanceled2Handle)}` [{nameof(arg)}:{arg}]: {dt}");
@@ -279,10 +297,6 @@ public class ConnectionStockSharpWorker(
     void Level1ReceivedHandle(Subscription subscription, StockSharp.Messages.Level1ChangeMessage levelCh)
     {
         _logger.LogWarning($"Call > `{nameof(Level1ReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(levelCh)}");
-    }
-    void ErrorHandle(Exception ex)
-    {
-        _logger.LogError(ex, $"Call > `{nameof(ErrorHandle)}`");
     }
     void DisposedHandle()
     {
@@ -312,14 +326,6 @@ public class ConnectionStockSharpWorker(
     {
         _logger.LogWarning($"Call > `{nameof(ConnectionLostHandle)}`: {JsonConvert.SerializeObject(sender)}");
     }
-    void ConnectionErrorExHandle(StockSharp.Messages.IMessageAdapter sender, Exception ex)
-    {
-        _logger.LogError(ex, $"Call > `{nameof(ConnectionErrorExHandle)}`: {JsonConvert.SerializeObject(sender)}");
-    }
-    void ConnectionErrorHandle(Exception ex)
-    {
-        _logger.LogError(ex, $"Call > `{nameof(ConnectionErrorHandle)}`");
-    }
     void ConnectedExHandle(StockSharp.Messages.IMessageAdapter sender)
     {
         _logger.LogWarning($"Call > `{nameof(ConnectedExHandle)}`: {JsonConvert.SerializeObject(sender)}");
@@ -327,10 +333,6 @@ public class ConnectionStockSharpWorker(
     void ConnectedHandle()
     {
         _logger.LogWarning($"Call > `{nameof(ConnectedHandle)}`");
-    }
-    void ChangePasswordResultHandle(long arg, Exception ex)
-    {
-        _logger.LogError(ex, $"Call > `{nameof(ChangePasswordResultHandle)}`: {arg}");
     }
     void CandleReceivedHandle(Subscription subscription, StockSharp.Messages.ICandleMessage candleMessage)
     {

@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// InstrumentIdStockSharpBaseModel
+/// IdStockSharpBaseModel
 /// </summary>
-public class InstrumentIdStockSharpBaseModel
+public class IdStockSharpBaseModel
 {
     /// <summary>
     /// ID in SEDOL format (Stock Exchange Daily Official List).
@@ -120,11 +120,11 @@ public class InstrumentIdStockSharpBaseModel
         if (other is null)
             return false;
 
-        return Equals((InstrumentIdStockSharpBaseModel)other);
+        return Equals((IdStockSharpBaseModel)other);
     }
 
     /// <inheritdoc/>
-    public bool Equals(InstrumentIdStockSharpBaseModel other)
+    public bool Equals(IdStockSharpBaseModel other)
     {
         if (other is null)
         {
@@ -175,13 +175,13 @@ public class InstrumentIdStockSharpBaseModel
     }
 
     /// <inheritdoc/>
-    public static bool operator !=(InstrumentIdStockSharpBaseModel left, InstrumentIdStockSharpBaseModel right)
+    public static bool operator !=(IdStockSharpBaseModel left, IdStockSharpBaseModel right)
     {
         return !(left == right);
     }
 
     /// <inheritdoc/>
-    public static bool operator ==(InstrumentIdStockSharpBaseModel left, InstrumentIdStockSharpBaseModel right)
+    public static bool operator ==(IdStockSharpBaseModel left, IdStockSharpBaseModel right)
     {
         return left?.Equals(right) ?? false;
     }

@@ -11,7 +11,7 @@ namespace SharedLib;
 /// ID in other systems.
 /// </summary>
 [Index(nameof(LastAtUpdatedUTC)), Index(nameof(Plaza)), Index(nameof(InteractiveBrokers)), Index(nameof(IQFeed)), Index(nameof(Bloomberg)), Index(nameof(Ric)), Index(nameof(Isin)), Index(nameof(Cusip)), Index(nameof(Sedol))]
-public class InstrumentExternalIdModelDB : InstrumentIdStockSharpBaseModel, IBaseStockSharpModel
+public class ExternalIdInstrumentModelDB : IdStockSharpBaseModel, IBaseStockSharpModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -89,11 +89,11 @@ public class InstrumentExternalIdModelDB : InstrumentIdStockSharpBaseModel, IBas
         if (other is null)
             return false;
 
-        return Equals((InstrumentExternalIdModelDB)other);
+        return Equals((ExternalIdInstrumentModelDB)other);
     }
 
     /// <inheritdoc/>
-    public bool Equals(InstrumentExternalIdModelDB other)
+    public bool Equals(ExternalIdInstrumentModelDB other)
     {
         if (other is null)
         {
@@ -144,13 +144,13 @@ public class InstrumentExternalIdModelDB : InstrumentIdStockSharpBaseModel, IBas
     }
 
     /// <inheritdoc/>
-    public static bool operator !=(InstrumentExternalIdModelDB left, InstrumentExternalIdModelDB right)
+    public static bool operator !=(ExternalIdInstrumentModelDB left, ExternalIdInstrumentModelDB right)
     {
         return !(left == right);
     }
 
     /// <inheritdoc/>
-    public static bool operator ==(InstrumentExternalIdModelDB left, InstrumentExternalIdModelDB right)
+    public static bool operator ==(ExternalIdInstrumentModelDB left, ExternalIdInstrumentModelDB right)
     {
         return left?.Equals(right) ?? false;
     }

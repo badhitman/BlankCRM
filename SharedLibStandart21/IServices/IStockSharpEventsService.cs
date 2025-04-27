@@ -35,5 +35,5 @@ public interface IStockSharpEventsService
     /// <summary>
     /// Security changed.
     /// </summary>
-    public Task<ResponseBaseModel> ValuesChanged(ConnectorValuesChangedEventPayloadModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> ValuesChangedEvent(ConnectorValuesChangedEventPayloadModel req, CancellationToken cancellationToken = default);
 }

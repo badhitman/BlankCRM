@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// InstrumentIdStockSharpModel
 /// </summary>
-public class InstrumentIdStockSharpModel : InstrumentIdStockSharpBaseModel
+public class IdStockSharpModel : IdStockSharpBaseModel
 {
     /// <summary>
     /// Determines the id is StockSharp.Messages.SecurityId.Money or StockSharp.Messages.SecurityId.News.

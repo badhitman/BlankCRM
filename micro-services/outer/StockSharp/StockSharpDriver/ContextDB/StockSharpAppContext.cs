@@ -28,6 +28,6 @@ public partial class StockSharpAppContext(DbContextOptions<StockSharpAppContext>
          modelBuilder.Entity<InstrumentTradeModelDB>()
             .HasOne(a => a.ExternalId)
             .WithOne(a => a.ParentInstrument)
-            .HasForeignKey<InstrumentExternalIdModelDB>(c => c.ParentInstrumentId);         
+            .HasForeignKey<ExternalIdInstrumentModelDB>(c => c.ParentInstrumentId);         
     }
 }

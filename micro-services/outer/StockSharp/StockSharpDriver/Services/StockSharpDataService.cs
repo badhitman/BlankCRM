@@ -16,6 +16,8 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
     public void SaveBoard(BoardStockSharpModel req)
     {
         using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
+        
+        //BoardStockSharpModelDB boardDb = context.Boards.FirstOrDefault(x => x.Code == req.Code && x.);
         throw new NotImplementedException();
     }
 
