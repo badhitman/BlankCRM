@@ -45,17 +45,19 @@ public abstract partial class StockSharpAppLayerContext : DbContext
         base.OnConfiguring(options);
     }
 
-    /// <inheritdoc/>
-    public DbSet<ExchangeStockSharpModelDB> Exchanges { get; set; } = default!;
+    public DbSet<OrderStockSharpModelDB> Orders { get; set; }
 
     /// <inheritdoc/>
-    public DbSet<BoardStockSharpModelDB> Boards { get; set; } = default!;
+    public DbSet<ExchangeStockSharpModelDB> Exchanges { get; set; }
 
     /// <inheritdoc/>
-    public DbSet<InstrumentTradeModelDB> Instruments { get; set; } = default!;
+    public DbSet<BoardStockSharpModelDB> Boards { get; set; }
 
     /// <inheritdoc/>
-    public DbSet<ExternalIdInstrumentModelDB> ExternalsIdsInstruments { get; set; } = default!;
+    public DbSet<InstrumentTradeModelDB> Instruments { get; set; }
+
+    /// <inheritdoc/>
+    public DbSet<ExternalIdInstrumentModelDB> ExternalsIdsInstruments { get; set; }
 
     /// <inheritdoc/>
     public DbSet<PortfolioTradeModelDB> Portfolios { get; set; } = default!;

@@ -165,6 +165,7 @@ public class ConnectionStockSharpWorker(
         dataRepo.SaveBoard(req);
         eventTrans.BoardReceived(req);
     }
+
     void OrderReceivedHandle(Subscription subscription, Order oreder)
     {
         _logger.LogWarning($"Call > `{nameof(OrderReceivedHandle)}`: {JsonConvert.SerializeObject(subscription)}\n\n{JsonConvert.SerializeObject(oreder)}");

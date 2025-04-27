@@ -20,7 +20,7 @@ public partial class InstrumentTradeStockSharpModel
     public virtual BoardStockSharpModel? Board { get; set; }
 
     /// <inheritdoc/>
-    public virtual IdStockSharpBaseModel? ExternalId { get; set; }
+    public virtual IdInstrumentStockSharpModel? ExternalId { get; set; }
 
     /// <inheritdoc/>
     public string? IdRemote { get; set; }

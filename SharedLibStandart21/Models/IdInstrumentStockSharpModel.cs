@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// IdStockSharpBaseModel
 /// </summary>
-public class IdStockSharpBaseModel
+public class IdInstrumentStockSharpModel
 {
     /// <summary>
     /// ID in SEDOL format (Stock Exchange Daily Official List).
@@ -120,11 +120,11 @@ public class IdStockSharpBaseModel
         if (other is null)
             return false;
 
-        return Equals((IdStockSharpBaseModel)other);
+        return Equals((IdInstrumentStockSharpModel)other);
     }
 
     /// <inheritdoc/>
-    public bool Equals(IdStockSharpBaseModel other)
+    public bool Equals(IdInstrumentStockSharpModel other)
     {
         if (other is null)
         {
@@ -175,13 +175,13 @@ public class IdStockSharpBaseModel
     }
 
     /// <inheritdoc/>
-    public static bool operator !=(IdStockSharpBaseModel left, IdStockSharpBaseModel right)
+    public static bool operator !=(IdInstrumentStockSharpModel left, IdInstrumentStockSharpModel right)
     {
         return !(left == right);
     }
 
     /// <inheritdoc/>
-    public static bool operator ==(IdStockSharpBaseModel left, IdStockSharpBaseModel right)
+    public static bool operator ==(IdInstrumentStockSharpModel left, IdInstrumentStockSharpModel right)
     {
         return left?.Equals(right) ?? false;
     }

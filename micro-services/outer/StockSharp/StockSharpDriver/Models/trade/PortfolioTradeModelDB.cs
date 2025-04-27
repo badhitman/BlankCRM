@@ -30,6 +30,9 @@ public class PortfolioTradeModelDB : PortfolioStockSharpModel, IBaseStockSharpMo
     public int BoardId { get; set; }
 
     /// <inheritdoc/>
+    public List<OrderStockSharpModelDB> Orders { get; set; }
+
+    /// <inheritdoc/>
     public DateTime LastAtUpdatedUTC { get; set; }
 
     /// <inheritdoc/>

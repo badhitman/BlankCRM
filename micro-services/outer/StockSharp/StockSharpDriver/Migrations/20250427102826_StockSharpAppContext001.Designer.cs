@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace StockSharpDriver.Migrations
 {
     [DbContext(typeof(StockSharpAppContext))]
-    [Migration("20250426134223_StockSharpAppContext001")]
+    [Migration("20250427102826_StockSharpAppContext001")]
     partial class StockSharpAppContext001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,7 +54,7 @@ namespace StockSharpDriver.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CountryCode")
+                    b.Property<int?>("CountryCode")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -67,7 +67,7 @@ namespace StockSharpDriver.Migrations
                     b.ToTable("Exchanges");
                 });
 
-            modelBuilder.Entity("SharedLib.InstrumentExternalIdModelDB", b =>
+            modelBuilder.Entity("SharedLib.ExternalIdInstrumentModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -233,6 +233,162 @@ namespace StockSharpDriver.Migrations
                     b.ToTable("Instruments");
                 });
 
+            modelBuilder.Entity("SharedLib.OrderStockSharpModelDB", b =>
+                {
+                    b.Property<long?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal?>("AveragePrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BoardId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BrokerCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("CancelledTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClientCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("Commission")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CommissionCurrency")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("Currency")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset?>("ExpiryDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("InstrumentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("IsManual")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("IsMarketMaker")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("IsSystem")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastAtUpdatedUTC")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeSpan?>("LatencyCancellation")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeSpan?>("LatencyEdition")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeSpan?>("LatencyRegistration")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("Leverage")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset>("LocalTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("MarginMode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset?>("MatchedTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("MinVolume")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PortfolioId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("PositionEffect")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("PostOnly")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("SeqNum")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Side")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal?>("Slippage")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("State")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("StringId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("Time")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("TimeInForce")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("TransactionId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserOrderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("VisibleVolume")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Volume")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("Yield")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoardId");
+
+                    b.HasIndex("BrokerCode");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("InstrumentId");
+
+                    b.HasIndex("LastAtUpdatedUTC");
+
+                    b.HasIndex("PortfolioId");
+
+                    b.HasIndex("StringId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("Orders");
+                });
+
             modelBuilder.Entity("SharedLib.PortfolioTradeModelDB", b =>
                 {
                     b.Property<int>("Id")
@@ -288,11 +444,11 @@ namespace StockSharpDriver.Migrations
                     b.Navigation("Exchange");
                 });
 
-            modelBuilder.Entity("SharedLib.InstrumentExternalIdModelDB", b =>
+            modelBuilder.Entity("SharedLib.ExternalIdInstrumentModelDB", b =>
                 {
                     b.HasOne("SharedLib.InstrumentTradeModelDB", "ParentInstrument")
                         .WithOne("ExternalId")
-                        .HasForeignKey("SharedLib.InstrumentExternalIdModelDB", "ParentInstrumentId")
+                        .HasForeignKey("SharedLib.ExternalIdInstrumentModelDB", "ParentInstrumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -308,6 +464,25 @@ namespace StockSharpDriver.Migrations
                         .IsRequired();
 
                     b.Navigation("Board");
+                });
+
+            modelBuilder.Entity("SharedLib.OrderStockSharpModelDB", b =>
+                {
+                    b.HasOne("SharedLib.InstrumentTradeModelDB", "Instrument")
+                        .WithMany()
+                        .HasForeignKey("InstrumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedLib.PortfolioTradeModelDB", "Portfolio")
+                        .WithMany("Orders")
+                        .HasForeignKey("PortfolioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Instrument");
+
+                    b.Navigation("Portfolio");
                 });
 
             modelBuilder.Entity("SharedLib.PortfolioTradeModelDB", b =>
@@ -334,6 +509,11 @@ namespace StockSharpDriver.Migrations
             modelBuilder.Entity("SharedLib.InstrumentTradeModelDB", b =>
                 {
                     b.Navigation("ExternalId");
+                });
+
+            modelBuilder.Entity("SharedLib.PortfolioTradeModelDB", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

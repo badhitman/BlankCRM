@@ -11,7 +11,7 @@ namespace SharedLib;
 /// ID in other systems.
 /// </summary>
 [Index(nameof(LastAtUpdatedUTC)), Index(nameof(Plaza)), Index(nameof(InteractiveBrokers)), Index(nameof(IQFeed)), Index(nameof(Bloomberg)), Index(nameof(Ric)), Index(nameof(Isin)), Index(nameof(Cusip)), Index(nameof(Sedol))]
-public class ExternalIdInstrumentModelDB : IdStockSharpBaseModel, IBaseStockSharpModel
+public class ExternalIdInstrumentModelDB : IdInstrumentStockSharpModel, IBaseStockSharpModel
 {
     /// <summary>
     /// Идентификатор/Key

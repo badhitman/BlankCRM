@@ -13,11 +13,18 @@ namespace StockSharpDriver;
 /// </summary>
 public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> toolsDbFactory) : IStockSharpDataService
 {
+    /// <inheritdoc/>
     public void SaveBoard(BoardStockSharpModel req)
     {
-        using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
-        
+        using StockSharpAppContext context = toolsDbFactory.CreateDbContext();        
         //BoardStockSharpModelDB boardDb = context.Boards.FirstOrDefault(x => x.Code == req.Code && x.);
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public void SaveExchange(ExchangeStockSharpModel req)
+    {
+        using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
         throw new NotImplementedException();
     }
 
