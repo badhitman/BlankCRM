@@ -57,8 +57,5 @@ public abstract partial class StockSharpAppLayerContext : DbContext
     public DbSet<InstrumentTradeModelDB> Instruments { get; set; }
 
     /// <inheritdoc/>
-    public DbSet<ExternalIdInstrumentModelDB> ExternalsIdsInstruments { get; set; }
-
-    /// <inheritdoc/>
     public DbSet<PortfolioTradeModelDB> Portfolios { get; set; } = default!;
 }

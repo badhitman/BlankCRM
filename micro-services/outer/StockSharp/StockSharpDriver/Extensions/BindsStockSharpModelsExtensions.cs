@@ -89,7 +89,6 @@ public static class BindsStockSharpModelsExtensions
         main.OptionStyle = inc.OptionStyle is null ? null : (OptionTradeInstrumentStylesEnum)Enum.Parse(typeof(OptionTradeInstrumentStylesEnum), Enum.GetName(inc.OptionStyle.Value));
 
         main.Board = new BoardStockSharpModel().Bind(inc.Board);
-        main.ExternalId = new IdInstrumentStockSharpModel().Bind(inc.ExternalId);
 
         return main;
     }
@@ -122,21 +121,6 @@ public static class BindsStockSharpModelsExtensions
         main.Name = inc.Name;
         main.DepoName = inc.DepoName;
         //
-        return main;
-    }
-
-    /// <inheritdoc/>
-    public static IdInstrumentStockSharpModel Bind(this IdInstrumentStockSharpModel main, SecurityExternalId inc)
-    {
-        main.Cusip = inc.Cusip;
-        main.Sedol = inc.Sedol;
-        main.Bloomberg = inc.Bloomberg;
-        main.Ric = inc.Ric;
-        main.InteractiveBrokers = inc.InteractiveBrokers;
-        main.IQFeed = inc.IQFeed;
-        main.Isin = inc.Isin;
-        main.Plaza = inc.Plaza;
-
         return main;
     }
 }

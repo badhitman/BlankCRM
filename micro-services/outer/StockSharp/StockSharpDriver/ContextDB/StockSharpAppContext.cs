@@ -23,11 +23,6 @@ public partial class StockSharpAppContext(DbContextOptions<StockSharpAppContext>
     /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-        
-         modelBuilder.Entity<InstrumentTradeModelDB>()
-            .HasOne(a => a.ExternalId)
-            .WithOne(a => a.ParentInstrument)
-            .HasForeignKey<ExternalIdInstrumentModelDB>(c => c.ParentInstrumentId);         
+        base.OnModelCreating(modelBuilder);                
     }
 }

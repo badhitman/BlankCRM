@@ -25,9 +25,6 @@ public class InstrumentTradeModelDB : InstrumentTradeStockSharpModel, IBaseStock
     public bool IsFavorite { get; set; }
 
     /// <inheritdoc/>
-    public new ExternalIdInstrumentModelDB ExternalId { get; set; }
-
-    /// <inheritdoc/>
     public new BoardStockSharpModelDB Board { get; set; }
     /// <inheritdoc/>
     public int BoardId { get; set; }

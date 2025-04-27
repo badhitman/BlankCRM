@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace StockSharpDriver.Migrations
 {
     [DbContext(typeof(StockSharpAppContext))]
-    [Migration("20250427102826_StockSharpAppContext001")]
+    [Migration("20250427145408_StockSharpAppContext001")]
     partial class StockSharpAppContext001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,7 +31,7 @@ namespace StockSharpDriver.Migrations
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ExchangeId")
+                    b.Property<int?>("ExchangeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastAtUpdatedUTC")
@@ -65,71 +65,6 @@ namespace StockSharpDriver.Migrations
                     b.HasIndex("Name");
 
                     b.ToTable("Exchanges");
-                });
-
-            modelBuilder.Entity("SharedLib.ExternalIdInstrumentModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Bloomberg")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAtUTC")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Cusip")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("IQFeed")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("InteractiveBrokers")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Isin")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("LastAtUpdatedUTC")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ParentInstrumentId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Plaza")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Ric")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Sedol")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Bloomberg");
-
-                    b.HasIndex("Cusip");
-
-                    b.HasIndex("IQFeed");
-
-                    b.HasIndex("InteractiveBrokers");
-
-                    b.HasIndex("Isin");
-
-                    b.HasIndex("LastAtUpdatedUTC");
-
-                    b.HasIndex("ParentInstrumentId")
-                        .IsUnique();
-
-                    b.HasIndex("Plaza");
-
-                    b.HasIndex("Ric");
-
-                    b.HasIndex("Sedol");
-
-                    b.ToTable("ExternalsIdsInstruments");
                 });
 
             modelBuilder.Entity("SharedLib.InstrumentTradeModelDB", b =>
@@ -437,22 +372,9 @@ namespace StockSharpDriver.Migrations
                 {
                     b.HasOne("SharedLib.ExchangeStockSharpModelDB", "Exchange")
                         .WithMany("Boards")
-                        .HasForeignKey("ExchangeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ExchangeId");
 
                     b.Navigation("Exchange");
-                });
-
-            modelBuilder.Entity("SharedLib.ExternalIdInstrumentModelDB", b =>
-                {
-                    b.HasOne("SharedLib.InstrumentTradeModelDB", "ParentInstrument")
-                        .WithOne("ExternalId")
-                        .HasForeignKey("SharedLib.ExternalIdInstrumentModelDB", "ParentInstrumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ParentInstrument");
                 });
 
             modelBuilder.Entity("SharedLib.InstrumentTradeModelDB", b =>
@@ -504,11 +426,6 @@ namespace StockSharpDriver.Migrations
             modelBuilder.Entity("SharedLib.ExchangeStockSharpModelDB", b =>
                 {
                     b.Navigation("Boards");
-                });
-
-            modelBuilder.Entity("SharedLib.InstrumentTradeModelDB", b =>
-                {
-                    b.Navigation("ExternalId");
                 });
 
             modelBuilder.Entity("SharedLib.PortfolioTradeModelDB", b =>

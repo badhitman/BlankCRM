@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharedLib;
 
@@ -23,4 +23,12 @@ public class ExchangeStockSharpModelDB : ExchangeStockSharpModel
     /// Boards
     /// </summary>
     public List<BoardStockSharpModelDB> Boards { get; set; }
+
+    /// <inheritdoc/>
+    public void SetUpdate(ExchangeStockSharpModelDB req)
+    {
+        Boards = req.Boards;
+        CountryCode = req.CountryCode;
+        Name = req.Name;
+    }
 }

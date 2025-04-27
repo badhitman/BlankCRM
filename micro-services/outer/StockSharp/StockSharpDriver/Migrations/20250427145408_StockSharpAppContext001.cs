@@ -29,7 +29,7 @@ namespace StockSharpDriver.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ExchangeId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ExchangeId = table.Column<int>(type: "INTEGER", nullable: true),
                     LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Code = table.Column<string>(type: "TEXT", nullable: true)
@@ -41,8 +41,7 @@ namespace StockSharpDriver.Migrations
                         name: "FK_Boards_Exchanges_ExchangeId",
                         column: x => x.ExchangeId,
                         principalTable: "Exchanges",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -110,35 +109,6 @@ namespace StockSharpDriver.Migrations
                         name: "FK_Portfolios_Boards_BoardId",
                         column: x => x.BoardId,
                         principalTable: "Boards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ExternalsIdsInstruments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ParentInstrumentId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Sedol = table.Column<string>(type: "TEXT", nullable: true),
-                    Cusip = table.Column<string>(type: "TEXT", nullable: true),
-                    Isin = table.Column<string>(type: "TEXT", nullable: true),
-                    Ric = table.Column<string>(type: "TEXT", nullable: true),
-                    Bloomberg = table.Column<string>(type: "TEXT", nullable: true),
-                    IQFeed = table.Column<string>(type: "TEXT", nullable: true),
-                    InteractiveBrokers = table.Column<int>(type: "INTEGER", nullable: true),
-                    Plaza = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ExternalsIdsInstruments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ExternalsIdsInstruments_Instruments_ParentInstrumentId",
-                        column: x => x.ParentInstrumentId,
-                        principalTable: "Instruments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -229,57 +199,6 @@ namespace StockSharpDriver.Migrations
                 name: "IX_Exchanges_Name",
                 table: "Exchanges",
                 column: "Name");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExternalsIdsInstruments_Bloomberg",
-                table: "ExternalsIdsInstruments",
-                column: "Bloomberg");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExternalsIdsInstruments_Cusip",
-                table: "ExternalsIdsInstruments",
-                column: "Cusip");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExternalsIdsInstruments_InteractiveBrokers",
-                table: "ExternalsIdsInstruments",
-                column: "InteractiveBrokers");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExternalsIdsInstruments_IQFeed",
-                table: "ExternalsIdsInstruments",
-                column: "IQFeed");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExternalsIdsInstruments_Isin",
-                table: "ExternalsIdsInstruments",
-                column: "Isin");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExternalsIdsInstruments_LastAtUpdatedUTC",
-                table: "ExternalsIdsInstruments",
-                column: "LastAtUpdatedUTC");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExternalsIdsInstruments_ParentInstrumentId",
-                table: "ExternalsIdsInstruments",
-                column: "ParentInstrumentId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExternalsIdsInstruments_Plaza",
-                table: "ExternalsIdsInstruments",
-                column: "Plaza");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExternalsIdsInstruments_Ric",
-                table: "ExternalsIdsInstruments",
-                column: "Ric");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExternalsIdsInstruments_Sedol",
-                table: "ExternalsIdsInstruments",
-                column: "Sedol");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Instruments_BoardId",
@@ -384,9 +303,6 @@ namespace StockSharpDriver.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ExternalsIdsInstruments");
-
             migrationBuilder.DropTable(
                 name: "Orders");
 

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharedLib;
 
@@ -18,9 +19,6 @@ public partial class InstrumentTradeStockSharpModel
 
     /// <inheritdoc/>
     public virtual BoardStockSharpModel? Board { get; set; }
-
-    /// <inheritdoc/>
-    public virtual IdInstrumentStockSharpModel? ExternalId { get; set; }
 
     /// <inheritdoc/>
     public string? IdRemote { get; set; }

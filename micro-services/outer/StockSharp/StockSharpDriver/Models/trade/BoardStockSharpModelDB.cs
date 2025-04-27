@@ -26,7 +26,7 @@ public class BoardStockSharpModelDB : BoardStockSharpModel, IBaseStockSharpModel
     /// <summary>
     /// Exchange
     /// </summary>
-    public int ExchangeId { get; set; }
+    public int? ExchangeId { get; set; }
 
     /// <summary>
     /// Инструменты (биржевые торговые)
@@ -38,4 +38,15 @@ public class BoardStockSharpModelDB : BoardStockSharpModel, IBaseStockSharpModel
 
     /// <inheritdoc/>
     public DateTime CreatedAtUTC { get; set; }
+
+    /// <inheritdoc/>
+    public void SetUpdate(BoardStockSharpModelDB req)
+    {
+        Exchange = req.Exchange;
+        Instruments = req.Instruments;
+        Code = req.Code;
+        CreatedAtUTC = req.CreatedAtUTC;
+        ExchangeId = req.ExchangeId;
+        LastAtUpdatedUTC = DateTime.UtcNow;
+    }
 }
