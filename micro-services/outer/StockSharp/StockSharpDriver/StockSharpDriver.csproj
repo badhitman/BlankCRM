@@ -20,6 +20,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Remove="nlog\**" />
+		<Content Remove="nlog\**" />
+		<EmbeddedResource Remove="nlog\**" />
+		<None Remove="nlog\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Update="nlog.config" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
@@ -54,7 +61,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Migrations\" />
+		<Folder Include="Migrations\" />
 	</ItemGroup>
 
 </Project>

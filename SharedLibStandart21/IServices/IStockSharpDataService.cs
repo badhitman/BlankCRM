@@ -22,7 +22,7 @@ public interface IStockSharpDataService
     /// <summary>
     /// Сохранить в БД инструмент
     /// </summary>
-    public void SaveInstrument(InstrumentTradeStockSharpModel instrument);
+    public int SaveInstrument(InstrumentTradeStockSharpModel instrument);
 
     /// <summary>
     /// SaveOrder
@@ -32,5 +32,5 @@ public interface IStockSharpDataService
     /// <summary>
     /// Save Portfolio
     /// </summary>
-    public void SavePortfolio(PortfolioStockSharpModel portfolio);
+    public int SavePortfolio(PortfolioStockSharpModel portfolio);
 }

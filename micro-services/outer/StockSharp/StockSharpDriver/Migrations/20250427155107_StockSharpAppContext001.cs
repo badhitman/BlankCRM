@@ -30,7 +30,7 @@ namespace StockSharpDriver.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ExchangeId = table.Column<int>(type: "INTEGER", nullable: true),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Code = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -52,7 +52,7 @@ namespace StockSharpDriver.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     IsFavorite = table.Column<bool>(type: "INTEGER", nullable: false),
                     BoardId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     IdRemote = table.Column<string>(type: "TEXT", nullable: true),
@@ -94,7 +94,7 @@ namespace StockSharpDriver.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     IsFavorite = table.Column<bool>(type: "INTEGER", nullable: false),
                     BoardId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     State = table.Column<int>(type: "INTEGER", nullable: true),
@@ -121,7 +121,7 @@ namespace StockSharpDriver.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     InstrumentId = table.Column<int>(type: "INTEGER", nullable: false),
                     PortfolioId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     LatencyRegistration = table.Column<TimeSpan>(type: "TEXT", nullable: true),
                     LatencyCancellation = table.Column<TimeSpan>(type: "TEXT", nullable: true),
@@ -191,9 +191,9 @@ namespace StockSharpDriver.Migrations
                 column: "ExchangeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Boards_LastAtUpdatedUTC",
+                name: "IX_Boards_LastUpdatedAtUTC",
                 table: "Boards",
-                column: "LastAtUpdatedUTC");
+                column: "LastUpdatedAtUTC");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Exchanges_Name",
@@ -231,9 +231,9 @@ namespace StockSharpDriver.Migrations
                 column: "IsFavorite");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Instruments_LastAtUpdatedUTC",
+                name: "IX_Instruments_LastUpdatedAtUTC",
                 table: "Instruments",
-                column: "LastAtUpdatedUTC");
+                column: "LastUpdatedAtUTC");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Instruments_PrimaryId",
@@ -266,9 +266,9 @@ namespace StockSharpDriver.Migrations
                 column: "InstrumentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_LastAtUpdatedUTC",
+                name: "IX_Orders_LastUpdatedAtUTC",
                 table: "Orders",
-                column: "LastAtUpdatedUTC");
+                column: "LastUpdatedAtUTC");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_PortfolioId",
@@ -296,9 +296,9 @@ namespace StockSharpDriver.Migrations
                 column: "IsFavorite");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Portfolios_LastAtUpdatedUTC",
+                name: "IX_Portfolios_LastUpdatedAtUTC",
                 table: "Portfolios",
-                column: "LastAtUpdatedUTC");
+                column: "LastUpdatedAtUTC");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

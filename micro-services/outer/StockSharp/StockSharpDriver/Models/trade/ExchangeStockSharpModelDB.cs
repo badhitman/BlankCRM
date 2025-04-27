@@ -25,9 +25,8 @@ public class ExchangeStockSharpModelDB : ExchangeStockSharpModel
     public List<BoardStockSharpModelDB> Boards { get; set; }
 
     /// <inheritdoc/>
-    public void SetUpdate(ExchangeStockSharpModelDB req)
+    public void SetUpdate(ExchangeStockSharpModel req)
     {
-        Boards = req.Boards;
         CountryCode = req.CountryCode;
         Name = req.Name;
     }

@@ -9,13 +9,13 @@ namespace SharedLib;
 /// <summary>
 /// Базовая DB модель объекта с поддержкой -> int:Id +string:Name AND UpdatedAt
 /// </summary>
-[Index(nameof(LastAtUpdatedUTC))]
+[Index(nameof(LastUpdatedAtUTC))]
 public class EntryUpdatedModel : EntryModel
 {
     /// <summary>
     /// Дата последнего обновления
     /// </summary>
-    public DateTime LastAtUpdatedUTC { get; set; }
+    public DateTime LastUpdatedAtUTC { get; set; }
 
     /// <summary>
     /// Дата создания

@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// classPortfolioTradeModelDB
 /// </summary>
-[Index(nameof(IsFavorite)), Index(nameof(LastAtUpdatedUTC))]
+[Index(nameof(IsFavorite)), Index(nameof(LastUpdatedAtUTC))]
 public class PortfolioTradeModelDB : PortfolioStockSharpModel, IBaseStockSharpModel
 {
     /// <summary>
@@ -33,8 +33,19 @@ public class PortfolioTradeModelDB : PortfolioStockSharpModel, IBaseStockSharpMo
     public List<OrderStockSharpModelDB> Orders { get; set; }
 
     /// <inheritdoc/>
-    public DateTime LastAtUpdatedUTC { get; set; }
+    public DateTime LastUpdatedAtUTC { get; set; }
 
     /// <inheritdoc/>
     public DateTime CreatedAtUTC { get; set; }
+
+    /// <inheritdoc/>
+    public void SetUpdate(PortfolioStockSharpModel req)
+    {
+        LastUpdatedAtUTC = DateTime.UtcNow;
+        State = req.State;
+        Name = req.Name;
+        Currency = req.Currency;
+        DepoName = req.DepoName;
+        ClientCode = req.ClientCode;
+    }
 }

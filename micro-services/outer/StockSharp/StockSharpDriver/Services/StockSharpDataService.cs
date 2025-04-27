@@ -33,7 +33,7 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         }
         else
         {
-            boardDb.SetUpdate((BoardStockSharpModelDB)req);
+            boardDb.SetUpdate(req);
             context.Boards.Update(boardDb);
         }
         context.SaveChanges();
@@ -53,7 +53,7 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         }
         else
         {
-            exchangeDb.SetUpdate((ExchangeStockSharpModelDB)req);
+            exchangeDb.SetUpdate(req);
             context.Exchanges.Update(exchangeDb);
         }
         context.SaveChanges();
@@ -61,10 +61,9 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
     }
 
     /// <inheritdoc/>
-    public void SaveInstrument(InstrumentTradeStockSharpModel req)
+    public int SaveInstrument(InstrumentTradeStockSharpModel req)
     {
         using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
-
         BoardStockSharpModelDB board = null;
         if (!string.IsNullOrWhiteSpace(req.Board.Code))
             board = context.Boards.First(x => x.Id == SaveBoard(req.Board));
@@ -75,24 +74,47 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         if (instrumentDb is null)
         {
             instrumentDb = (InstrumentStockSharpModelDB)req;
+            instrumentDb.BoardId = board.Id;
             context.Instruments.Add(instrumentDb);
         }
         else
         {
-            instrumentDb.SetUpdate((InstrumentStockSharpModelDB)req);
+            instrumentDb.SetUpdate(req);
+            instrumentDb.BoardId = board.Id;
             context.Instruments.Update(instrumentDb);
         }
         context.SaveChanges();
-    }
-
-    public void SaveOrder(OrderStockSharpModel req)
-    {
-        using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
-        throw new NotImplementedException();
+        return instrumentDb.Id;
     }
 
     /// <inheritdoc/>
-    public void SavePortfolio(PortfolioStockSharpModel portfolio)
+    public int SavePortfolio(PortfolioStockSharpModel req)
+    {
+        using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
+        BoardStockSharpModelDB board = null;
+        if (!string.IsNullOrWhiteSpace(req.Board.Code))
+            board = context.Boards.First(x => x.Id == SaveBoard(req.Board));
+
+        PortfolioTradeModelDB portDb = context.Portfolios
+            .FirstOrDefault(x => x.Name == req.Name && x.DepoName == req.DepoName && x.Currency == req.Currency && x.BoardId == board.Id);
+
+        if (portDb is null)
+        {
+            portDb = (PortfolioTradeModelDB)req;
+            portDb.BoardId = board.Id;
+            context.Portfolios.Add(portDb);
+        }
+        else
+        {
+            portDb.SetUpdate(req);
+            portDb.BoardId = board.Id;
+            context.Portfolios.Update(portDb);
+        }
+        context.SaveChanges();
+        return portDb.Id;
+    }
+
+    public void SaveOrder(OrderStockSharpModel req)
     {
         using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
         throw new NotImplementedException();

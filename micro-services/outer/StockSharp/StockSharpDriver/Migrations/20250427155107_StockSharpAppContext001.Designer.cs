@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace StockSharpDriver.Migrations
 {
     [DbContext(typeof(StockSharpAppContext))]
-    [Migration("20250427145408_StockSharpAppContext001")]
+    [Migration("20250427155107_StockSharpAppContext001")]
     partial class StockSharpAppContext001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ namespace StockSharpDriver.Migrations
                     b.Property<int?>("ExchangeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -43,7 +43,7 @@ namespace StockSharpDriver.Migrations
 
                     b.HasIndex("ExchangeId");
 
-                    b.HasIndex("LastAtUpdatedUTC");
+                    b.HasIndex("LastUpdatedAtUTC");
 
                     b.ToTable("Boards");
                 });
@@ -67,7 +67,7 @@ namespace StockSharpDriver.Migrations
                     b.ToTable("Exchanges");
                 });
 
-            modelBuilder.Entity("SharedLib.InstrumentTradeModelDB", b =>
+            modelBuilder.Entity("SharedLib.InstrumentStockSharpModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,7 +106,7 @@ namespace StockSharpDriver.Migrations
                     b.Property<bool>("IsFavorite")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal?>("Multiplier")
@@ -159,7 +159,7 @@ namespace StockSharpDriver.Migrations
 
                     b.HasIndex("IsFavorite");
 
-                    b.HasIndex("LastAtUpdatedUTC");
+                    b.HasIndex("LastUpdatedAtUTC");
 
                     b.HasIndex("PrimaryId");
 
@@ -222,7 +222,7 @@ namespace StockSharpDriver.Migrations
                     b.Property<bool?>("IsSystem")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("TEXT");
 
                     b.Property<TimeSpan?>("LatencyCancellation")
@@ -313,7 +313,7 @@ namespace StockSharpDriver.Migrations
 
                     b.HasIndex("InstrumentId");
 
-                    b.HasIndex("LastAtUpdatedUTC");
+                    b.HasIndex("LastUpdatedAtUTC");
 
                     b.HasIndex("PortfolioId");
 
@@ -348,7 +348,7 @@ namespace StockSharpDriver.Migrations
                     b.Property<bool>("IsFavorite")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -363,7 +363,7 @@ namespace StockSharpDriver.Migrations
 
                     b.HasIndex("IsFavorite");
 
-                    b.HasIndex("LastAtUpdatedUTC");
+                    b.HasIndex("LastUpdatedAtUTC");
 
                     b.ToTable("Portfolios");
                 });
@@ -377,7 +377,7 @@ namespace StockSharpDriver.Migrations
                     b.Navigation("Exchange");
                 });
 
-            modelBuilder.Entity("SharedLib.InstrumentTradeModelDB", b =>
+            modelBuilder.Entity("SharedLib.InstrumentStockSharpModelDB", b =>
                 {
                     b.HasOne("SharedLib.BoardStockSharpModelDB", "Board")
                         .WithMany("Instruments")
@@ -390,7 +390,7 @@ namespace StockSharpDriver.Migrations
 
             modelBuilder.Entity("SharedLib.OrderStockSharpModelDB", b =>
                 {
-                    b.HasOne("SharedLib.InstrumentTradeModelDB", "Instrument")
+                    b.HasOne("SharedLib.InstrumentStockSharpModelDB", "Instrument")
                         .WithMany()
                         .HasForeignKey("InstrumentId")
                         .OnDelete(DeleteBehavior.Cascade)

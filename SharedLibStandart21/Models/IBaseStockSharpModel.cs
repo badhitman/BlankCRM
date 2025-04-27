@@ -16,7 +16,7 @@ public interface IBaseStockSharpModel
     /// Дата последнего обновления
     /// </summary>
     [Required]
-    public DateTime LastAtUpdatedUTC { get; set; }
+    public DateTime LastUpdatedAtUTC { get; set; }
 
     /// <summary>
     /// Дата создания

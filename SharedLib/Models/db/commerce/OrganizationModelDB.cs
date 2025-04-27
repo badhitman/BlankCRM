@@ -12,7 +12,7 @@ public class OrganizationModelDB : OrganizationLegalModel
     /// <summary>
     /// Дата последнего обновления
     /// </summary>
-    public DateTime LastAtUpdatedUTC { get; set; }
+    public DateTime LastUpdatedAtUTC { get; set; }
 
     /// <summary>
     /// Дата создания
