@@ -25,12 +25,12 @@ public interface IStockSharpDataService
     public int SaveInstrument(InstrumentTradeStockSharpModel instrument);
 
     /// <summary>
-    /// SaveOrder
-    /// </summary>
-    public void SaveOrder(OrderStockSharpModel req);
-
-    /// <summary>
     /// Save Portfolio
     /// </summary>
     public int SavePortfolio(PortfolioStockSharpModel portfolio);
+
+    /// <summary>
+    /// SaveOrder
+    /// </summary>
+    public int SaveOrder(OrderStockSharpModel req);
 }

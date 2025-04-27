@@ -168,7 +168,7 @@ namespace StockSharpDriver.Migrations
 
             modelBuilder.Entity("SharedLib.OrderStockSharpModelDB", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<int>("IdPK")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -207,6 +207,9 @@ namespace StockSharpDriver.Migrations
 
                     b.Property<DateTimeOffset?>("ExpiryDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<long?>("Id")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("InstrumentId")
                         .HasColumnType("INTEGER");
@@ -301,7 +304,7 @@ namespace StockSharpDriver.Migrations
                     b.Property<decimal?>("Yield")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdPK");
 
                     b.HasIndex("BoardId");
 

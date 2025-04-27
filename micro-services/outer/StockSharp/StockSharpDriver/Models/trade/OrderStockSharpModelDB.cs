@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
@@ -10,6 +11,9 @@ namespace SharedLib;
 /// <inheritdoc/>
 public class OrderStockSharpModelDB : OrderStockSharpModel, IBaseStockSharpModel
 {
+    [Key]
+    public int IdPK { get; set; }
+
     ///<inheritdoc/>
     public new InstrumentStockSharpModelDB Instrument { get; set; }
     ///<inheritdoc/>
@@ -25,4 +29,9 @@ public class OrderStockSharpModelDB : OrderStockSharpModel, IBaseStockSharpModel
 
     /// <inheritdoc/>
     public DateTime CreatedAtUTC { get; set; }
+
+    internal void SetUpdate(OrderStockSharpModel req)
+    {
+        throw new NotImplementedException();
+    }
 }

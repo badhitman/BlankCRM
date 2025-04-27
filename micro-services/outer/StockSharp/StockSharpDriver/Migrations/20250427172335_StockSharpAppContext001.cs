@@ -117,7 +117,7 @@ namespace StockSharpDriver.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                    IdPK = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     InstrumentId = table.Column<int>(type: "INTEGER", nullable: false),
                     PortfolioId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -126,6 +126,7 @@ namespace StockSharpDriver.Migrations
                     LatencyRegistration = table.Column<TimeSpan>(type: "TEXT", nullable: true),
                     LatencyCancellation = table.Column<TimeSpan>(type: "TEXT", nullable: true),
                     LatencyEdition = table.Column<TimeSpan>(type: "TEXT", nullable: true),
+                    Id = table.Column<long>(type: "INTEGER", nullable: true),
                     StringId = table.Column<string>(type: "TEXT", nullable: true),
                     BoardId = table.Column<string>(type: "TEXT", nullable: true),
                     Time = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
@@ -165,7 +166,7 @@ namespace StockSharpDriver.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.IdPK);
                     table.ForeignKey(
                         name: "FK_Orders_Instruments_InstrumentId",
                         column: x => x.InstrumentId,

@@ -23,6 +23,6 @@ public partial class StockSharpAppContext(DbContextOptions<StockSharpAppContext>
     /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);                
+        base.OnModelCreating(modelBuilder);         
     }
 }

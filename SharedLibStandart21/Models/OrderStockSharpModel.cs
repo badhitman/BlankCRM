@@ -49,7 +49,7 @@ public class OrderStockSharpModel
     /// <summary>
     /// Transaction ID. Automatically set when the StockSharp.BusinessEntities.ITransactionProvider.RegisterOrder(StockSharp.BusinessEntities.Order) method called.
     /// </summary>
-    public long TransactionId { get; set; }
+    public virtual long TransactionId { get; set; }
 
     /// <summary>
     /// Security, for which an order is being placed.

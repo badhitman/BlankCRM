@@ -114,9 +114,24 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         return portDb.Id;
     }
 
-    public void SaveOrder(OrderStockSharpModel req)
+    public int SaveOrder(OrderStockSharpModel req)
     {
         using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
-        throw new NotImplementedException();
+        OrderStockSharpModelDB orderDb = context.Orders.FirstOrDefault(x => x.TransactionId == req.TransactionId);
+
+        if (orderDb is null)
+        {
+            orderDb = (OrderStockSharpModelDB)req;
+            //orderDb.BoardId = board.Id;
+            //context.Portfolios.Add(orderDb);
+        }
+        else
+        {
+            orderDb.SetUpdate(req);
+            //orderDb.BoardId = board.Id;
+            //context.Portfolios.Update(orderDb);
+        }
+        context.SaveChanges();
+        return orderDb.IdPK;
     }
 }
