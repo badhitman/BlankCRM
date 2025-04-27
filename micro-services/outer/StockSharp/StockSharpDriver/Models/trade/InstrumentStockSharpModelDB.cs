@@ -11,7 +11,7 @@ namespace SharedLib;
 /// InstrumentTradeModelDB
 /// </summary>
 [Index(nameof(IsFavorite)), Index(nameof(IdRemote)), Index(nameof(Code)), Index(nameof(Class)), Index(nameof(CfiCode)), Index(nameof(UnderlyingSecurityId)), Index(nameof(PrimaryId)), Index(nameof(LastAtUpdatedUTC))]
-public class InstrumentTradeModelDB : InstrumentTradeStockSharpModel, IBaseStockSharpModel
+public class InstrumentStockSharpModelDB : InstrumentTradeStockSharpModel, IBaseStockSharpModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -34,4 +34,9 @@ public class InstrumentTradeModelDB : InstrumentTradeStockSharpModel, IBaseStock
 
     /// <inheritdoc/>
     public DateTime CreatedAtUTC { get; set; }
+
+    internal void SetUpdate(InstrumentStockSharpModelDB req)
+    {
+        throw new NotImplementedException();
+    }
 }

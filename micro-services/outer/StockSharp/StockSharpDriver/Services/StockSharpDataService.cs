@@ -14,7 +14,7 @@ namespace StockSharpDriver;
 public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> toolsDbFactory) : IStockSharpDataService
 {
     /// <inheritdoc/>
-    public void SaveBoard(BoardStockSharpModel req)
+    public int SaveBoard(BoardStockSharpModel req)
     {
         using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
         ExchangeStockSharpModelDB exchange = null;
@@ -37,10 +37,11 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
             context.Boards.Update(boardDb);
         }
         context.SaveChanges();
+        return boardDb.Id;
     }
 
     /// <inheritdoc/>
-    public void SaveExchange(ExchangeStockSharpModel req)
+    public int SaveExchange(ExchangeStockSharpModel req)
     {
         using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
         ExchangeStockSharpModelDB exchangeDb = context.Exchanges
@@ -56,6 +57,7 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
             context.Exchanges.Update(exchangeDb);
         }
         context.SaveChanges();
+        return exchangeDb.Id;
     }
 
     /// <inheritdoc/>
@@ -63,29 +65,23 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
     {
         using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
 
-        //if(!string.IsNullOrWhiteSpace(req.ExternalId.ToString()))
-
-
-        BoardStockSharpModel board = null;
+        BoardStockSharpModelDB board = null;
         if (!string.IsNullOrWhiteSpace(req.Board.Code))
+            board = context.Boards.First(x => x.Id == SaveBoard(req.Board));
+
+        InstrumentStockSharpModelDB instrumentDb = context.Instruments
+            .FirstOrDefault(x => x.Name == req.Name && x.Code == req.Code && x.BoardId == board.Id);
+
+        if (instrumentDb is null)
         {
-            SaveBoard(req.Board);
-            board = context.Boards.First(x => x.Code == req.Board.Code);
+            instrumentDb = (InstrumentStockSharpModelDB)req;
+            context.Instruments.Add(instrumentDb);
         }
-
-
-        var instrumentDb = context.Instruments
-           .FirstOrDefault(x => x.Name == req.Name);
-        //if (instrumentDb is null)
-        //{
-        //    instrumentDb = (InstrumentStockSharpModelDB)req;
-        //    context.Instruments.Add(instrumentDb);
-        //}
-        //else
-        //{
-        //    instrumentDb.SetUpdate((InstrumentStockSharpModelDB)req);
-        //    context.Instruments.Update(instrumentDb);
-        //}
+        else
+        {
+            instrumentDb.SetUpdate((InstrumentStockSharpModelDB)req);
+            context.Instruments.Update(instrumentDb);
+        }
         context.SaveChanges();
     }
 

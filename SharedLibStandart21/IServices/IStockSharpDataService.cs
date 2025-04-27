@@ -12,12 +12,12 @@ public interface IStockSharpDataService
     /// <summary>
     /// SaveExchange
     /// </summary>
-    public void SaveExchange(ExchangeStockSharpModel req);
+    public int SaveExchange(ExchangeStockSharpModel req);
 
     /// <summary>
     /// Save Board
     /// </summary>
-    public void SaveBoard(BoardStockSharpModel req);
+    public int SaveBoard(BoardStockSharpModel req);
 
     /// <summary>
     /// Сохранить в БД инструмент

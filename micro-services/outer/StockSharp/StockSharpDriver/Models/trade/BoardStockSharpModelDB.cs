@@ -31,7 +31,7 @@ public class BoardStockSharpModelDB : BoardStockSharpModel, IBaseStockSharpModel
     /// <summary>
     /// Инструменты (биржевые торговые)
     /// </summary>
-    public List<InstrumentTradeModelDB> Instruments { get; set; }
+    public List<InstrumentStockSharpModelDB> Instruments { get; set; }
 
     /// <inheritdoc/>
     public DateTime LastAtUpdatedUTC { get; set; }
