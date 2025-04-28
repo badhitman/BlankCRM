@@ -1,5 +1,9 @@
-﻿using BlazorLib;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
 using Microsoft.AspNetCore.Components;
+using BlazorLib;
 using SharedLib;
 
 namespace StockSharpMauiApp.Components.Shared;
@@ -7,42 +11,41 @@ namespace StockSharpMauiApp.Components.Shared;
 public partial class TestComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IStockSharpDriverService ssMainRepo { get; set; } = default!;
-
-    DateTime _lastUpdate = DateTime.UtcNow;
+    IStockSharpDriverService SsMainRepo { get; set; } = default!;
 
 
     List<BoardStockSharpModel>? myBoards;
-    BoardStockSharpModel? selectedBoard { get; set; }
+    BoardStockSharpModel? SelectedBoard { get; set; }
 
 
     List<PortfolioStockSharpModel>? myPortfolios;
-    PortfolioStockSharpModel? selectedPortfolio { get; set; }
+    PortfolioStockSharpModel? SelectedPortfolio { get; set; }
+    decimal? DecimalValue {  get; set; }
 
+    List<InstrumentTradeStockSharpModel>? myInstruments;
+    InstrumentTradeStockSharpModel? SelectedInstrument {  get; set; }
 
     bool disposedValue;
 
-    bool IncomingDataProgress => (DateTime.UtcNow - _lastUpdate).TotalMilliseconds < 200;
-
     Task NewOrder()
     {
-        //if (selectedPortfolio is null)
-        //{
-        //    SnackbarRepo.Error("Не выбран портфель");
-        //    return Task.CompletedTask;
-        //}
+        if (SelectedPortfolio is null)
+        {
+            SnackbarRepo.Error("Не выбран портфель");
+            return Task.CompletedTask;
+        }
 
-        //if (selectedTool is null)
-        //{
-        //    SnackbarRepo.Error("Не выбран инструмент");
-        //    return Task.CompletedTask;
-        //}
+        if (SelectedInstrument is null)
+        {
+            SnackbarRepo.Error("Не выбран инструмент");
+            return Task.CompletedTask;
+        }
 
-        //if (DecimalValue <= 0)
-        //{
-        //    SnackbarRepo.Error("Не указана стоимость");
-        //    return Task.CompletedTask;
-        //}
+        if (DecimalValue <= 0)
+        {
+            SnackbarRepo.Error("Не указана стоимость");
+            return Task.CompletedTask;
+        }
 
         //Security? currentSec = mySecurities.FirstOrDefault(x => x.Board.Code == selectedBoard && x.Code == selectedTool.Id);
         //if (currentSec is null)
@@ -66,8 +69,7 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
         //    // устанавливается направление заявки, в данном примере покупка
         //    Side = Sides.Buy,
         //};
-        ////Метод RegisterOrder отправляет заявку на сервер
-        //_connector.RegisterOrder(order);
+        
         return Task.CompletedTask;
     }
 
@@ -75,12 +77,17 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
 
-        TResponseModel<List<PortfolioStockSharpModel>> res = await ssMainRepo.GetPortfoliosAsync();
+        TResponseModel<List<PortfolioStockSharpModel>> res = await SsMainRepo.GetPortfoliosAsync();
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-
-        TResponseModel<List<BoardStockSharpModel>> res2 = await ssMainRepo.GetBoardsAsync();
+        TResponseModel<List<BoardStockSharpModel>> res2 = await SsMainRepo.GetBoardsAsync();
+        SnackbarRepo.ShowMessagesResponse(res2.Messages);
+        TResponseModel<List<InstrumentTradeStockSharpModel>> res3 = await SsMainRepo.GetInstrumentsAsync();
+        SnackbarRepo.ShowMessagesResponse(res3.Messages);
 
         myPortfolios = res.Response;
+        myBoards = res2.Response;
+        myInstruments = res3.Response;
+
         await SetBusyAsync(false);
     }
 

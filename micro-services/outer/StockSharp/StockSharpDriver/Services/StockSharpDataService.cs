@@ -33,12 +33,12 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
             boardDb.ExchangeId = exchange.Id;
             boardDb.Exchange = null;
 
-            context.Boards.Add(boardDb);
+            context.Add(boardDb);
         }
         else
         {
             boardDb.SetUpdate(req);
-            context.Boards.Update(boardDb);
+            context.Update(boardDb);
         }
         context.SaveChanges();
         return boardDb.Id;
@@ -53,12 +53,12 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         if (exchangeDb is null)
         {
             exchangeDb = new ExchangeStockSharpModelDB().Bind(req);
-            context.Exchanges.Add(exchangeDb);
+            context.Add(exchangeDb);
         }
         else
         {
             exchangeDb.SetUpdate(req);
-            context.Exchanges.Update(exchangeDb);
+            context.Update(exchangeDb);
         }
         context.SaveChanges();
         return exchangeDb.Id;
@@ -82,16 +82,12 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
             instrumentDb.BoardId = board.Id;
             instrumentDb.Board = null;
 
-            context.Instruments.Add(instrumentDb);
+            context.Add(instrumentDb);
         }
         else
         {
             instrumentDb.SetUpdate(req);
-
-            instrumentDb.BoardId = board.Id;
-            instrumentDb.Board = null;
-
-            context.Instruments.Update(instrumentDb);
+            context.Update(instrumentDb);
         }
         context.SaveChanges();
         return instrumentDb.Id;
@@ -119,16 +115,12 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
             portDb.BoardId = board?.Id;
             portDb.Board = null;
 
-            context.Portfolios.Add(portDb);
+            context.Add(portDb);
         }
         else
         {
             portDb.SetUpdate(req);
-
-            portDb.BoardId = board?.Id;
-            portDb.Board = null;
-
-            context.Portfolios.Update(portDb);
+            context.Update(portDb);
         }
         context.SaveChanges();
         return portDb.Id;
@@ -166,19 +158,12 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
             orderDb.PortfolioId = portfolioDb.Id;
             orderDb.Portfolio = null;
 
-            context.Orders.Add(orderDb);
+            context.Add(orderDb);
         }
         else
         {
             orderDb.SetUpdate(req);
-
-            orderDb.InstrumentId = instrumentDb.Id;
-            orderDb.Instrument = null;
-
-            orderDb.PortfolioId = portfolioDb.Id;
-            orderDb.Portfolio = null;
-
-            context.Orders.Update(orderDb);
+            context.Update(orderDb);
         }
         context.SaveChanges();
         return orderDb.IdPK;

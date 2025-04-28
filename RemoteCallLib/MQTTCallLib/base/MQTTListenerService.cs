@@ -98,18 +98,32 @@ public class MQTTListenerService<TQueue, TRequest, TResponse>
                 e.ReasonCode = MqttApplicationMessageReceivedReasonCode.UnspecifiedError;
                 e.ResponseReasonString = ex.Message;
             }
-
+            
             answer.FinalizedServer = DateTime.UtcNow;
             if (!string.IsNullOrWhiteSpace(e.ApplicationMessage.ResponseTopic))
             {
                 using IMqttClient mqttResponseClient = mqttFactory.CreateMqttClient();
                 await mqttResponseClient.ConnectAsync(GetMqttClientOptionsBuilder, stoppingToken);
 
-                MqttApplicationMessage applicationMessage = new MqttApplicationMessageBuilder()
-                    .WithTopic(e.ApplicationMessage.ResponseTopic)
-                    .WithPayload(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings))
-                    .Build();
-
+                MqttApplicationMessage applicationMessage;
+                try
+                {
+                    applicationMessage = new MqttApplicationMessageBuilder()
+                        .WithTopic(e.ApplicationMessage.ResponseTopic)
+                        .WithPayload(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings))
+                        .Build();
+                }
+                catch (Exception ex)
+                {
+                    answer.Response = default;
+                    LoggerRepo.LogError(ex, $"Ошибка `{ex.GetType().Name}` отправки ответа для топика {QueueName}");
+                    answer.Messages.InjectException(ex);
+                   
+                    applicationMessage = new MqttApplicationMessageBuilder()
+                        .WithTopic(e.ApplicationMessage.ResponseTopic)
+                        .WithPayload(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings))
+                        .Build();
+                }
                 await mqttResponseClient.PublishAsync(applicationMessage, stoppingToken);
             }
         };

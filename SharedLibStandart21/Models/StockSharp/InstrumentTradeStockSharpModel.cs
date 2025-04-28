@@ -101,4 +101,10 @@ public partial class InstrumentTradeStockSharpModel
     /// Underlying security type.
     /// </summary>
     public InstrumentsStockSharpTypesEnum? UnderlyingSecurityType { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"#{Code} '{Name}' {Currency} /{Class}";
+    }
 }

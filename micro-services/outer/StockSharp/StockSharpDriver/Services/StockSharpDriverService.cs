@@ -3,9 +3,9 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using StockSharp.Algo;
 using SharedLib;
 using DbcLib;
-using StockSharp.Algo;
 
 namespace StockSharpDriver;
 

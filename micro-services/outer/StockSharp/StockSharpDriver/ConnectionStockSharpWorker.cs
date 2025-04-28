@@ -176,7 +176,7 @@ public class ConnectionStockSharpWorker(
             DataPayload = [.. dataPayload.Select(x => new KeyValuePair<Level1FieldsStockSharpEnum, object>((Level1FieldsStockSharpEnum)Enum.Parse(typeof(Level1FieldsStockSharpEnum), Enum.GetName(x.Key)!), x.Value))],
             Instrument = new InstrumentTradeStockSharpModel().Bind(instrument),
         };
-        dataRepo.SaveInstrument(req.Instrument);
+        //dataRepo.SaveInstrument(req.Instrument);
         eventTrans.ValuesChangedEvent(req);
     }
 
@@ -218,8 +218,8 @@ public class ConnectionStockSharpWorker(
     {
         _logger.LogError(ex, $"Call > `{nameof(LookupSecuritiesResultHandle)}`: {JsonConvert.SerializeObject(slm)}");
 
-        foreach (Security sec in securities)
-            dataRepo.SaveInstrument(new InstrumentTradeStockSharpModel().Bind(sec));
+        //foreach (Security sec in securities)
+        //    dataRepo.SaveInstrument(new InstrumentTradeStockSharpModel().Bind(sec));
     }
 
     void LookupPortfoliosResultHandle(StockSharp.Messages.PortfolioLookupMessage portfolioLM, IEnumerable<Portfolio> portfolios, Exception ex)
@@ -248,7 +248,7 @@ public class ConnectionStockSharpWorker(
     }
     void ConnectionErrorExHandle(StockSharp.Messages.IMessageAdapter sender, Exception ex)
     {
-        _logger.LogError(ex, $"Call > `{nameof(ConnectionErrorExHandle)}`: {JsonConvert.SerializeObject(sender)}");
+        _logger.LogError(ex, $"Call > `{nameof(ConnectionErrorExHandle)}`");
     }
     void ConnectionErrorHandle(Exception ex)
     {
