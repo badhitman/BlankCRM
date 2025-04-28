@@ -7,10 +7,10 @@ namespace SharedLib;
 /// <summary>
 /// Запрос с пагинацией
 /// </summary>
-public class TPaginationRequestModel<T> : TPaginationRequestStandardModel<T>
+public class TPaginationRequestStandardModel<T> : PaginationRequestModel
 {
     /// <summary>
     /// Payload
     /// </summary>
-    public new required T Payload { get; set; }
+    public virtual T? Payload { get; set; }
 }
