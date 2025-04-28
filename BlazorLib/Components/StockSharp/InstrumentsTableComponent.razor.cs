@@ -4,6 +4,7 @@
 
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Newtonsoft.Json.Linq;
 using SharedLib;
 
 namespace BlazorLib.Components.StockSharp;
@@ -16,7 +17,19 @@ public partial class InstrumentsTableComponent : BlazorBusyComponentBaseModel
     [Inject]
     IStockSharpDriverService SsRepo { get; set; } = default!;
 
-    private async Task<TableData<InstrumentTradeStockSharpModel>> ServerReload(TableState state, CancellationToken token)
+    MudTable<InstrumentTradeStockSharpViewModel>? _tableRef;
+
+    async Task FavoriteToggle(InstrumentTradeStockSharpViewModel sender)
+    {
+        await SetBusyAsync();
+        ResponseBaseModel res = await SsRepo.InstrumentFavoriteToggleAsync(sender);
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
+        if (_tableRef is not null)
+            await _tableRef.ReloadServerData();
+    }
+
+    async Task<TableData<InstrumentTradeStockSharpViewModel>> ServerReload(TableState state, CancellationToken token)
     {
         TPaginationRequestStandardModel<InstrumentsRequestModel> req = new()
         {
@@ -26,8 +39,8 @@ public partial class InstrumentsTableComponent : BlazorBusyComponentBaseModel
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<InstrumentTradeStockSharpModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
+        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
-        return new TableData<InstrumentTradeStockSharpModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        return new TableData<InstrumentTradeStockSharpViewModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 }

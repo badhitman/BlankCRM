@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using StockSharp.Algo;
 using SharedLib;
 using DbcLib;
+using System.Threading;
 
 namespace StockSharpDriver;
 
@@ -78,7 +79,7 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<InstrumentTradeStockSharpModel>> InstrumentsSelectAsync(TPaginationRequestStandardModel<InstrumentsRequestModel> req, CancellationToken cancellationToken = default)
+    public async Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(TPaginationRequestStandardModel<InstrumentsRequestModel> req, CancellationToken cancellationToken = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -86,19 +87,39 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
         using StockSharpAppContext context = await toolsDbFactory.CreateDbContextAsync(cancellationToken);
         IQueryable<InstrumentStockSharpModelDB> q = context.Instruments.AsQueryable();
 
-        List<InstrumentStockSharpModelDB> _data = await q.ToListAsync(cancellationToken: cancellationToken);
+        List<InstrumentStockSharpModelDB> _data = await q
+            .Include(x => x.Board)
+            .ThenInclude(x => x.Exchange)
+            .Skip(req.PageSize * req.PageNum)
+            .Take(req.PageSize)
+            .ToListAsync(cancellationToken: cancellationToken);
 
-        TPaginationResponseModel<InstrumentTradeStockSharpModel> res = new()
+        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = new()
         {
             PageSize = req.PageSize,
             PageNum = req.PageNum,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: cancellationToken),
             SortingDirection = req.SortingDirection,
-            Response = [.. _data.Select(x => new InstrumentTradeStockSharpModel().Bind(x))]
+            Response = [.. _data.Select(x => new InstrumentTradeStockSharpViewModel().Bind(x))]
         };
 
         return res;
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default)
+    {
+        using StockSharpAppContext context = await toolsDbFactory.CreateDbContextAsync(cancellationToken);
+        InstrumentStockSharpModelDB instrumentDb = await context.Instruments.FirstOrDefaultAsync(x => x.IdRemote == req.IdRemote, cancellationToken: cancellationToken);
+        if (instrumentDb is null)
+            return ResponseBaseModel.CreateError("Инструмент не найден");
+
+        instrumentDb.IsFavorite = !instrumentDb.IsFavorite;
+        context.Update(instrumentDb);
+        await context.SaveChangesAsync(cancellationToken: cancellationToken);
+
+        return ResponseBaseModel.CreateSuccess("Запрос выполнен");
     }
 
     /// <inheritdoc/>

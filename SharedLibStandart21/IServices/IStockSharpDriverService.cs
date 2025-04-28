@@ -3,8 +3,8 @@
 ////////////////////////////////////////////////
 
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace SharedLib;
 
@@ -46,5 +46,10 @@ public interface IStockSharpDriverService : IStockSharpBaseService
     /// <summary>
     /// InstrumentsSelectAsync
     /// </summary>
-    public Task<TPaginationResponseModel<InstrumentTradeStockSharpModel>> InstrumentsSelectAsync(TPaginationRequestStandardModel<InstrumentsRequestModel> req, CancellationToken cancellationToken = default);
+    public Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(TPaginationRequestStandardModel<InstrumentsRequestModel> req, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// InstrumentSetFavoriteAsync
+    /// </summary>
+    public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);
 }

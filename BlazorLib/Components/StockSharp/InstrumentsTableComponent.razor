@@ -1,18 +1,28 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
-<MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress">
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress" @ref="_tableRef">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Инструменты</MudText>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="Name" T="InstrumentTradeStockSharpModel">Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Name" T="InstrumentTradeStockSharpViewModel">Name</MudTableSortLabel></MudTh>
         <MudTh>Code</MudTh>
         <MudTh>Currency</MudTh>
         <MudTh>Type</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Id">@context.IdRemote</MudTd>
+        <MudTd DataLabel="Id">
+            <MudStack Row="true">
+                @context.IdRemote
+                <MudSwitch ValueChanged="async () => await FavoriteToggle(context)"
+                           Disabled="IsBusyProgress"
+                           Value="context.IsFavorite"
+                           T="bool"
+                           Color="Color.Primary"
+                           Class="mr-n2 mb-6" />
+            </MudStack>
+        </MudTd>
         <MudTd DataLabel="Currency">@context.Currency</MudTd>
         <MudTd DataLabel="TypeInstrument">@context.TypeInstrument</MudTd>
     </RowTemplate>

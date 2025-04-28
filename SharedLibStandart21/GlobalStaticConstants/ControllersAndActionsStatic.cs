@@ -457,6 +457,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string INSTRUMENTS_CONTROLLER_NAME = "instruments";
 
         /// <summary>
+        /// Favorite
+        /// </summary>
+        public const string FAVORITE_CONTROLLER_NAME = "favorite";
+
+        /// <summary>
         /// StockSharp
         /// </summary>
         public const string STOCKSHARP_CONTROLLER_NAME = "StockSharp";
@@ -1192,6 +1197,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Get
         /// </summary>
         public const string GET_ACTION_NAME = "get";
+
+        /// <summary>
+        /// Toggle
+        /// </summary>
+        public const string TOGGLE_ACTION_NAME = "toggle";
 
         /// <summary>
         /// Calculate

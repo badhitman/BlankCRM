@@ -11,9 +11,9 @@ namespace Microsoft.Extensions.DependencyInjection;
 /// </summary>
 public static class BindsStockSharpModelsExtensionsViews
 {
-    public static InstrumentTradeStockSharpModel Bind(this InstrumentTradeStockSharpModel main, InstrumentStockSharpModelDB inc)
+    public static InstrumentTradeStockSharpViewModel Bind(this InstrumentTradeStockSharpViewModel main, InstrumentStockSharpModelDB inc)
     {
-        main.Board = new BoardStockSharpModel().Bind(inc.Board);
+        main.Board = inc.Board is null ? null : new BoardStockSharpModel().Bind(inc.Board);
 
         main.Currency = inc.Currency;
         main.Multiplier = inc.Multiplier;
@@ -35,13 +35,14 @@ public static class BindsStockSharpModelsExtensionsViews
         main.ExpiryDate = inc.ExpiryDate;
         main.Decimals = inc.Decimals;
         main.Code = inc.Code;
+        main.IsFavorite = inc.IsFavorite;
         return main;
     }
 
     public static BoardStockSharpModel Bind(this BoardStockSharpModel main, BoardStockSharpModelDB inc)
     {
         main.Code = inc.Code;
-        main.Exchange = new ExchangeStockSharpModel().Bind(inc.Exchange);
+        main.Exchange = inc.Exchange is null ? null : new ExchangeStockSharpModel().Bind(inc.Exchange);
         return main;
     }
 
