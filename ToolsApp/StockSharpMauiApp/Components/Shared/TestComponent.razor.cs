@@ -20,10 +20,10 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
 
     List<PortfolioStockSharpModel>? myPortfolios;
     PortfolioStockSharpModel? SelectedPortfolio { get; set; }
-    decimal? DecimalValue {  get; set; }
+    decimal? DecimalValue { get; set; }
 
     List<InstrumentTradeStockSharpModel>? myInstruments;
-    InstrumentTradeStockSharpModel? SelectedInstrument {  get; set; }
+    InstrumentTradeStockSharpModel? SelectedInstrument { get; set; }
 
     bool disposedValue;
 
@@ -69,7 +69,7 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
         //    // устанавливается направление заявки, в данном примере покупка
         //    Side = Sides.Buy,
         //};
-        
+
         return Task.CompletedTask;
     }
 
@@ -79,14 +79,15 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
 
         TResponseModel<List<PortfolioStockSharpModel>> res = await SsMainRepo.GetPortfoliosAsync();
         SnackbarRepo.ShowMessagesResponse(res.Messages);
+        myPortfolios = res.Response;
+
         TResponseModel<List<BoardStockSharpModel>> res2 = await SsMainRepo.GetBoardsAsync();
         SnackbarRepo.ShowMessagesResponse(res2.Messages);
-        TResponseModel<List<InstrumentTradeStockSharpModel>> res3 = await SsMainRepo.GetInstrumentsAsync();
-        SnackbarRepo.ShowMessagesResponse(res3.Messages);
-
-        myPortfolios = res.Response;
         myBoards = res2.Response;
-        myInstruments = res3.Response;
+
+        //TResponseModel<List<InstrumentTradeStockSharpModel>> res3 = await SsMainRepo.GetInstrumentsAsync();
+        //SnackbarRepo.ShowMessagesResponse(res3.Messages);
+        //myInstruments = res3.Response;
 
         await SetBusyAsync(false);
     }

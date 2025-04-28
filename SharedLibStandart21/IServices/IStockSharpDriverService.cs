@@ -14,6 +14,12 @@ namespace SharedLib;
 public interface IStockSharpDriverService : IStockSharpBaseService
 {
     /// <summary>
+    /// Получить инструменты по их идентификаторам
+    /// </summary>
+    /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
+    public Task<TResponseModel<List<InstrumentTradeStockSharpModel>>> GetInstrumentsAsync(int[]? ids = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Получить профили по их идентификаторам
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
@@ -30,12 +36,6 @@ public interface IStockSharpDriverService : IStockSharpBaseService
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
     public Task<TResponseModel<List<ExchangeStockSharpModel>>> GetExchangesAsync(int[]? ids = null, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Получить инструменты по их идентификаторам
-    /// </summary>
-    /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
-    public Task<TResponseModel<List<InstrumentTradeStockSharpModel>>> GetInstrumentsAsync(int[]? ids = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить заказы по их идентификаторам

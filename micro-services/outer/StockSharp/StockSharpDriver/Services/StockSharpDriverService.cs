@@ -15,6 +15,21 @@ namespace StockSharpDriver;
 public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> toolsDbFactory, Connector connector) : IStockSharpDriverService
 {
     /// <inheritdoc/>
+    public async Task<TResponseModel<List<InstrumentTradeStockSharpModel>>> GetInstrumentsAsync(int[] ids = null, CancellationToken cancellationToken = default)
+    {
+        using StockSharpAppContext context = await toolsDbFactory.CreateDbContextAsync(cancellationToken);
+        IQueryable<InstrumentStockSharpModelDB> q = ids is null || ids.Length == 0
+            ? context.Instruments.AsQueryable()
+            : context.Instruments.Where(x => ids.Contains(x.Id));
+        List<InstrumentStockSharpModelDB> data = await q.Include(x => x.Board).ThenInclude(x => x.Exchange).ToListAsync(cancellationToken: cancellationToken);
+
+        return new()
+        {
+            Response = [.. data]
+        };
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<List<BoardStockSharpModel>>> GetBoardsAsync(int[] ids = null, CancellationToken cancellationToken = default)
     {
         using StockSharpAppContext context = await toolsDbFactory.CreateDbContextAsync(cancellationToken);
@@ -40,21 +55,6 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
             ? context.Exchanges.AsQueryable()
             : context.Exchanges.Where(x => ids.Contains(x.Id));
         List<ExchangeStockSharpModelDB> data = await q.Include(x => x.Boards).ToListAsync(cancellationToken: cancellationToken);
-
-        return new()
-        {
-            Response = [.. data]
-        };
-    }
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<List<InstrumentTradeStockSharpModel>>> GetInstrumentsAsync(int[] ids = null, CancellationToken cancellationToken = default)
-    {
-        using StockSharpAppContext context = await toolsDbFactory.CreateDbContextAsync(cancellationToken);
-        IQueryable<InstrumentStockSharpModelDB> q = ids is null || ids.Length == 0
-            ? context.Instruments.AsQueryable()
-            : context.Instruments.Where(x => ids.Contains(x.Id));
-        List<InstrumentStockSharpModelDB> data = await q.Include(x => x.Board).ThenInclude(x => x.Exchange).ToListAsync(cancellationToken: cancellationToken);
 
         return new()
         {

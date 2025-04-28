@@ -1,8 +1,11 @@
-﻿@page "/weather"
+﻿@page "/instruments"
+@using BlazorLib.Components.StockSharp
 
 <h1>Weather</h1>
 
 <p>This component demonstrates showing data.</p>
+
+<InstrumentsTableComponent />
 
 @if (forecasts == null)
 {

@@ -35,7 +35,7 @@
         }
     </MudSelect>
 
-    <MudSelect T="InstrumentTradeStockSharpModel" @bind-Value="SelectedInstrument" Label="Инструмент" Variant="Variant.Outlined">
+    @* <MudSelect T="InstrumentTradeStockSharpModel" @bind-Value="SelectedInstrument" Label="Инструмент" Variant="Variant.Outlined">
         @if (SelectedBoard is not null && myInstruments is not null)
         {
             @foreach (InstrumentTradeStockSharpModel s in myInstruments.Where(x => x.Board is not null && x.Board == SelectedBoard))
@@ -49,7 +49,7 @@
         {
             SelectedInstrument = null;
         }
-    </MudSelect>
+    </MudSelect> *@
     @* @if (!string.IsNullOrWhiteSpace(SelectedInstrument?.Code))
     {
         <MudNumericField @bind-Value="DecimalValue" Label="Цена" Variant="Variant.Outlined" Immediate />

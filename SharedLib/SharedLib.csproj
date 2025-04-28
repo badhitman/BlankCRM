@@ -8,11 +8,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,11 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\SharedLibStandart21\SharedLibStandart21.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Models\StockSharp\" />
+		<ProjectReference Include="..\SharedLibStandart21\SharedLibStandart21.csproj" />
 	</ItemGroup>
 
 </Project>
