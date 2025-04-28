@@ -113,7 +113,7 @@ public static class BindsStockSharpModelsExtensions
     /// <inheritdoc/>
     public static PortfolioStockSharpModel Bind(this PortfolioStockSharpModel main, Portfolio inc)
     {
-        main.Board = new BoardStockSharpModel().Bind(inc.Board);
+        main.Board = inc.Board is null ? null : new BoardStockSharpModel().Bind(inc.Board);
 
         main.Currency = inc.Currency is null ? null : (CurrenciesTypesEnum)Enum.Parse(typeof(CurrenciesTypesEnum), Enum.GetName(inc.Currency.Value));
         main.State = inc.State is null ? null : (PortfolioStatesEnum)Enum.Parse(typeof(PortfolioStatesEnum), Enum.GetName(inc.State.Value));

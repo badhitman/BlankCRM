@@ -27,7 +27,7 @@ public class PortfolioTradeModelDB : PortfolioStockSharpModel, IBaseStockSharpMo
     /// <inheritdoc/>
     public new BoardStockSharpModelDB Board { get; set; }
     /// <inheritdoc/>
-    public int BoardId { get; set; }
+    public int? BoardId { get; set; }
 
     /// <inheritdoc/>
     public List<OrderStockSharpModelDB> Orders { get; set; }
