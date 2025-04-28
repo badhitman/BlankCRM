@@ -73,7 +73,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         doc.Id = 0;
         doc.ExternalDocumentId = null;
         doc.CreatedAtUTC = DateTime.UtcNow;
-        doc.LastAtUpdatedUTC = DateTime.UtcNow;
+        doc.LastUpdatedAtUTC = DateTime.UtcNow;
         doc.HelpdeskId = null;
         doc.Name = "Новый";
         doc.Information = null;

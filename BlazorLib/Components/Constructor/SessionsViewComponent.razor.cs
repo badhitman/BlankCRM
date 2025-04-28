@@ -74,7 +74,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
-            SimpleRequest = searchString,
+            FindQuery = searchString,
             DocumentSchemeId = SelectedDocumentSchemeId,
             FilterUserId = CurrentUserSession!.UserId,
             ProjectId = ParentFormsPage.MainProject.Id

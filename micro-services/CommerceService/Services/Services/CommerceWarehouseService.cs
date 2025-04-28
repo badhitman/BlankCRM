@@ -39,7 +39,7 @@ public partial class CommerceImplementService : ICommerceService
             req.Id = 0;
             req.Version = Guid.NewGuid();
             req.CreatedAtUTC = dtu;
-            req.LastAtUpdatedUTC = dtu;
+            req.LastUpdatedAtUTC = dtu;
             await context.AddAsync(req, token);
             await context.SaveChangesAsync(token);
             res.Response = req.Id;
@@ -175,7 +175,7 @@ public partial class CommerceImplementService : ICommerceService
                 .SetProperty(p => p.IsDisabled, req.IsDisabled)
                 .SetProperty(p => p.WarehouseId, req.WarehouseId)
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.LastAtUpdatedUTC, dtu), cancellationToken: token);
+                .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
         if (offersLocked.Length != 0)
             context.RemoveRange(offersLocked);
@@ -250,7 +250,7 @@ public partial class CommerceImplementService : ICommerceService
         foreach (int doc_id in _allOffersOfDocuments.Select(x => x.DocumentId).Distinct())
             await context.WarehouseDocuments.Where(x => x.Id == doc_id).ExecuteUpdateAsync(set => set
             .SetProperty(p => p.Version, Guid.NewGuid())
-            .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow), cancellationToken: token);
+            .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         foreach (var rowEl in _allOffersOfDocuments.Where(x => !x.IsDisabled))
         {
@@ -382,7 +382,7 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         await queryDocumentDb.ExecuteUpdateAsync(set => set
-             .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow)
+             .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
              .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
         if (req.Id < 1)
@@ -482,7 +482,7 @@ public partial class CommerceImplementService : ICommerceService
             q = q.Where(x => context.RowsWarehouses.Any(y => y.WarehouseDocumentId == x.Id && req.Payload.NomenclatureFilter.Any(i => i == y.NomenclatureId)));
 
         if (req.Payload.AfterDateUpdate is not null)
-            q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.AfterDateUpdate || (x.LastAtUpdatedUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.AfterDateUpdate));
+            q = q.Where(x => x.LastUpdatedAtUTC >= req.Payload.AfterDateUpdate || (x.LastUpdatedAtUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.AfterDateUpdate));
 
         if (req.Payload.AfterDeliveryDate is not null)
             q = q.Where(x => x.DeliveryDate >= req.Payload.AfterDeliveryDate || (x.DeliveryDate == DateTime.MinValue && x.DeliveryDate >= req.Payload.AfterDeliveryDate));

@@ -51,7 +51,7 @@
                 <MudTd DataLabel="Organization"><a href="/organizations/edit/@context.OrganizationId">@context.Organization!.ToString()</a></MudTd>
             }
             <MudTd Class="@GetCssColor(context.UserStatus)" DataLabel="Status">@context.UserStatus.DescriptionInfo()</MudTd>
-            <MudTd DataLabel="Updated">@context.LastAtUpdatedUTC.GetCustomTime()</MudTd>
+            <MudTd DataLabel="Updated">@context.LastUpdatedAtUTC.GetCustomTime()</MudTd>
         </RowTemplate>
         <RowEditingTemplate>
             @if (Organization is null || Organization.Id < 1)
@@ -68,7 +68,7 @@
                 </MudSelect>
             </MudTd>
             <MudTd DataLabel="Updated">
-                @context.LastAtUpdatedUTC.GetCustomTime()
+                @context.LastUpdatedAtUTC.GetCustomTime()
             </MudTd>
         </RowEditingTemplate>
         <NoRecordsContent>
@@ -108,7 +108,7 @@ else
                 <MudTd DataLabel="Organization"><a href="/organizations/edit/@context.OrganizationId">@context.Organization!.ToString()</a></MudTd>
             }
             <MudTd Class="@GetCssColor(context.UserStatus)" DataLabel="Status">@context.UserStatus.DescriptionInfo()</MudTd>
-            <MudTd DataLabel="Updated">@context.LastAtUpdatedUTC.GetCustomTime()</MudTd>
+            <MudTd DataLabel="Updated">@context.LastUpdatedAtUTC.GetCustomTime()</MudTd>
         </RowTemplate>
         <NoRecordsContent>
             <MudText>Данные по сотрудникам отсутствуют</MudText>

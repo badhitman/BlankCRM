@@ -1350,14 +1350,14 @@ public partial class FormsConstructorService(
 
         q = context_forms.Forms.Where(x => x.ProjectId == req.ProjectId).OrderBy(x => x.Name);
 
-        if (!string.IsNullOrWhiteSpace(req.Request.SimpleRequest))
+        if (!string.IsNullOrWhiteSpace(req.Request.FindQuery))
         {
             q = (from _form in q
                  join _field in context_forms.Fields on _form.Id equals _field.OwnerId into ps_field
                  from field in ps_field.DefaultIfEmpty()
                  where
-                 EF.Functions.Like(_form.Name.ToLower(), $"%{req.Request.SimpleRequest.ToLower()}%") ||
-                 EF.Functions.Like(field.Name.ToLower(), $"%{req.Request.SimpleRequest.ToLower()}%")
+                 EF.Functions.Like(_form.Name.ToLower(), $"%{req.Request.FindQuery.ToLower()}%") ||
+                 EF.Functions.Like(field.Name.ToLower(), $"%{req.Request.FindQuery.ToLower()}%")
                  group _form by _form into g
                  select g.Key)
              .OrderBy(x => x.Name)
@@ -2200,7 +2200,7 @@ public partial class FormsConstructorService(
             .Where(x => x.ProjectId == req.ProjectId)
             .AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(req.RequestPayload.SimpleRequest))
+        if (!string.IsNullOrWhiteSpace(req.RequestPayload.FindQuery))
         {
             query = (from _quest in query
                      join _page in context_forms.TabsOfDocumentsSchemes on _quest.Id equals _page.OwnerId into j_pages
@@ -2209,7 +2209,7 @@ public partial class FormsConstructorService(
                      from j_join_form in j_join_forms.DefaultIfEmpty()
                      join _form in context_forms.Forms on j_join_form.FormId equals _form.Id into j_forms
                      from j_form in j_forms.DefaultIfEmpty()
-                     where EF.Functions.Like(_quest.Name.ToUpper(), $"%{req.RequestPayload.SimpleRequest.ToUpper()}%") || EF.Functions.Like(j_form.Name.ToUpper(), $"%{req.RequestPayload.SimpleRequest.ToUpper()}%") || EF.Functions.Like(j_page.Name.ToUpper(), $"%{req.RequestPayload.SimpleRequest.ToUpper()}%")
+                     where EF.Functions.Like(_quest.Name.ToUpper(), $"%{req.RequestPayload.FindQuery.ToUpper()}%") || EF.Functions.Like(j_form.Name.ToUpper(), $"%{req.RequestPayload.FindQuery.ToUpper()}%") || EF.Functions.Like(j_page.Name.ToUpper(), $"%{req.RequestPayload.FindQuery.ToUpper()}%")
                      group _quest by _quest into g
                      select g.Key)
                         .AsQueryable();
@@ -3177,12 +3177,12 @@ public partial class FormsConstructorService(
         if (!string.IsNullOrWhiteSpace(req.FilterUserId))
             query = query.Where(x => x.AuthorUser == req.FilterUserId);
 
-        if (!string.IsNullOrWhiteSpace(req.SimpleRequest))
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
         {
             Expression<Func<SessionOfDocumentDataModelDB, bool>> expr = x
-                => EF.Functions.Like(x.NormalizedUpperName!, $"%{req.SimpleRequest.ToUpper()}%") ||
-                (x.SessionToken != null && x.SessionToken.ToLower() == req.SimpleRequest.ToLower()) ||
-                (!string.IsNullOrWhiteSpace(x.EmailsNotifications) && EF.Functions.Like(x.EmailsNotifications.ToLower(), $"%{req.SimpleRequest.ToLower()}%"));
+                => EF.Functions.Like(x.NormalizedUpperName!, $"%{req.FindQuery.ToUpper()}%") ||
+                (x.SessionToken != null && x.SessionToken.ToLower() == req.FindQuery.ToLower()) ||
+                (!string.IsNullOrWhiteSpace(x.EmailsNotifications) && EF.Functions.Like(x.EmailsNotifications.ToLower(), $"%{req.FindQuery.ToLower()}%"));
 
             query = query.Where(expr);
         }

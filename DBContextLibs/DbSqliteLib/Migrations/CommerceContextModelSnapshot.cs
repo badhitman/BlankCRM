@@ -97,7 +97,7 @@ namespace DbSqliteLib.Migrations
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -128,7 +128,7 @@ namespace DbSqliteLib.Migrations
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("TEXT");
 
                     b.Property<uint>("Multiplicity")
@@ -177,7 +177,7 @@ namespace DbSqliteLib.Migrations
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -238,7 +238,7 @@ namespace DbSqliteLib.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LegalAddress")
@@ -392,7 +392,7 @@ namespace DbSqliteLib.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("OrganizationId")

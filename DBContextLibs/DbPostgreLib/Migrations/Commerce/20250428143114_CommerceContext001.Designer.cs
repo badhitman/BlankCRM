@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20250425052737_CommerceContext001")]
+    [Migration("20250428143114_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -103,7 +103,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -207,7 +207,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -293,7 +293,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Multiplicity")
@@ -399,7 +399,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<string>("Information")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -418,7 +418,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LastAtUpdatedUTC");
+                    b.HasIndex("LastUpdatedAtUTC");
 
                     b.HasIndex("Name");
 
@@ -482,7 +482,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<string>("KPP")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("LegalAddress")
@@ -579,7 +579,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -643,7 +643,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<string>("Information")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -671,7 +671,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LastAtUpdatedUTC");
+                    b.HasIndex("LastUpdatedAtUTC");
 
                     b.HasIndex("Name");
 
@@ -808,7 +808,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("OrganizationId")
@@ -856,7 +856,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -912,7 +912,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastAtUpdatedUTC")
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")

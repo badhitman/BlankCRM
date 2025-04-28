@@ -44,10 +44,10 @@ public abstract partial class ApiRusklimatComLayerContext : DbContext
         TPaginationResponseModel<ProductRusklimatModelDB> res = new(req);
 
         IQueryable<ProductRusklimatModelDB> q = from po in Products
-                                                where EF.Functions.ILike(po.Name!, $"%{req.SimpleRequest}%") ||
-                                                (po.Brand != null && EF.Functions.ILike(po.Brand, $"%{req.SimpleRequest}%")) ||
-                                                (po.NSCode != null && EF.Functions.ILike(po.NSCode, $"%{req.SimpleRequest}%")) ||
-                                                (po.VendorCode != null && EF.Functions.ILike(po.VendorCode, $"%{req.SimpleRequest}%"))
+                                                where EF.Functions.ILike(po.Name!, $"%{req.FindQuery}%") ||
+                                                (po.Brand != null && EF.Functions.ILike(po.Brand, $"%{req.FindQuery}%")) ||
+                                                (po.NSCode != null && EF.Functions.ILike(po.NSCode, $"%{req.FindQuery}%")) ||
+                                                (po.VendorCode != null && EF.Functions.ILike(po.VendorCode, $"%{req.FindQuery}%"))
                                                 select po;
 
         res.TotalRowsCount = await q.CountAsync(token);

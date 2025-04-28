@@ -40,11 +40,11 @@ public partial class CommerceImplementService : ICommerceService
             q = q.Where(x => req.Payload.NomenclatureFilter.Any(i => i == x.NomenclatureId));
 
         if (req.Payload.AfterDateUpdate is not null)
-            q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.AfterDateUpdate || (x.LastAtUpdatedUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.AfterDateUpdate));
+            q = q.Where(x => x.LastUpdatedAtUTC >= req.Payload.AfterDateUpdate || (x.LastUpdatedAtUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.AfterDateUpdate));
 
         IOrderedQueryable<RecordsAttendanceModelDB> oq = req.SortingDirection == DirectionsEnum.Up
-           ? q.OrderBy(x => x.StartPart).ThenByDescending(x => x.LastAtUpdatedUTC)
-           : q.OrderByDescending(x => x.StartPart).ThenByDescending(x => x.LastAtUpdatedUTC);
+           ? q.OrderBy(x => x.StartPart).ThenByDescending(x => x.LastUpdatedAtUTC)
+           : q.OrderByDescending(x => x.StartPart).ThenByDescending(x => x.LastUpdatedAtUTC);
 
         IQueryable<RecordsAttendanceModelDB> pq = oq
             .Skip(req.PageNum * req.PageSize)
@@ -102,7 +102,7 @@ public partial class CommerceImplementService : ICommerceService
             StartPart = TimeOnly.FromTimeSpan(x.StartPart),
             EndPart = TimeOnly.FromTimeSpan(x.EndPart),
             CreatedAtUTC = DateTime.UtcNow,
-            LastAtUpdatedUTC = DateTime.UtcNow,
+            LastUpdatedAtUTC = DateTime.UtcNow,
             OfferId = workSchedules.Payload.Offer.Id,
             NomenclatureId = workSchedules.Payload.Offer.NomenclatureId,
             OrganizationId = x.Organization.Id,
@@ -471,7 +471,7 @@ public partial class CommerceImplementService : ICommerceService
                             .Where(x => x.HelpdeskId == req.Payload.DocumentId)
                             .ExecuteUpdateAsync(set => set
                             .SetProperty(p => p.StatusDocument, req.Payload.Step)
-                            .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow)
+                            .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
                             .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token) != 0;
 
         await transaction.CommitAsync(token);
@@ -531,11 +531,11 @@ public partial class CommerceImplementService : ICommerceService
             q = q.Where(x => req.Payload.Weekdays.Any(y => y == x.Weekday));
 
         if (req.Payload.AfterDateUpdate is not null)
-            q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.AfterDateUpdate || (x.LastAtUpdatedUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.AfterDateUpdate));
+            q = q.Where(x => x.LastUpdatedAtUTC >= req.Payload.AfterDateUpdate || (x.LastUpdatedAtUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.AfterDateUpdate));
 
         IOrderedQueryable<WeeklyScheduleModelDB> oq = req.SortingDirection == DirectionsEnum.Up
-           ? q.OrderBy(x => x.StartPart).ThenByDescending(x => x.LastAtUpdatedUTC)
-           : q.OrderByDescending(x => x.StartPart).ThenByDescending(x => x.LastAtUpdatedUTC);
+           ? q.OrderBy(x => x.StartPart).ThenByDescending(x => x.LastUpdatedAtUTC)
+           : q.OrderByDescending(x => x.StartPart).ThenByDescending(x => x.LastUpdatedAtUTC);
 
         IQueryable<WeeklyScheduleModelDB> pq = oq
             .Skip(req.PageNum * req.PageSize)
@@ -637,14 +637,14 @@ public partial class CommerceImplementService : ICommerceService
         req.Name = req.Name.Trim();
         req.Description = req.Description?.Trim();
         req.NormalizedNameUpper = req.Name.ToUpper();
-        req.LastAtUpdatedUTC = DateTime.UtcNow;
+        req.LastUpdatedAtUTC = DateTime.UtcNow;
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         if (req.Id < 1)
         {
             req.IsDisabled = true;
             req.Id = 0;
-            req.CreatedAtUTC = req.LastAtUpdatedUTC;
+            req.CreatedAtUTC = req.LastUpdatedAtUTC;
             context.Add(req);
             await context.SaveChangesAsync(token);
             res.Response = req.Id;
@@ -655,7 +655,7 @@ public partial class CommerceImplementService : ICommerceService
                 .Where(w => w.Id == req.Id)
                 .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.NormalizedNameUpper, req.NormalizedNameUpper)
-                .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow)
+                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
                 .SetProperty(p => p.Description, req.Description)
                 .SetProperty(p => p.IsDisabled, req.IsDisabled)
                 .SetProperty(p => p.StartPart, req.StartPart)
@@ -703,7 +703,7 @@ public partial class CommerceImplementService : ICommerceService
             req.Payload.IsDisabled = true;
             req.Payload.Id = 0;
             req.Payload.CreatedAtUTC = DateTime.UtcNow;
-            req.Payload.LastAtUpdatedUTC = DateTime.UtcNow;
+            req.Payload.LastUpdatedAtUTC = DateTime.UtcNow;
             context.Add(req.Payload);
             await context.SaveChangesAsync(token);
             res.Response = req.Payload.Id;
@@ -720,7 +720,7 @@ public partial class CommerceImplementService : ICommerceService
                 .SetProperty(p => p.EndPart, req.Payload.EndPart)
                 .SetProperty(p => p.StartPart, req.Payload.StartPart)
                 .SetProperty(p => p.DateScheduleCalendar, req.Payload.DateScheduleCalendar)
-                .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow)
+                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
                 .SetProperty(p => p.NormalizedNameUpper, req.Payload.NormalizedNameUpper), cancellationToken: token);
         }
 
@@ -748,11 +748,11 @@ public partial class CommerceImplementService : ICommerceService
             q = q.Where(x => req.Payload.Payload.NomenclatureFilter.Any(i => i == x.NomenclatureId));
 
         if (req.Payload.Payload.AfterDateUpdate is not null)
-            q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.Payload.AfterDateUpdate || (x.LastAtUpdatedUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.Payload.AfterDateUpdate));
+            q = q.Where(x => x.LastUpdatedAtUTC >= req.Payload.Payload.AfterDateUpdate || (x.LastUpdatedAtUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.Payload.AfterDateUpdate));
 
         IOrderedQueryable<CalendarScheduleModelDB> oq = req.Payload.SortingDirection == DirectionsEnum.Up
-           ? q.OrderBy(x => x.DateScheduleCalendar).ThenBy(x => x.StartPart).ThenByDescending(x => x.LastAtUpdatedUTC)
-           : q.OrderByDescending(x => x.DateScheduleCalendar).ThenByDescending(x => x.StartPart).ThenByDescending(x => x.LastAtUpdatedUTC);
+           ? q.OrderBy(x => x.DateScheduleCalendar).ThenBy(x => x.StartPart).ThenByDescending(x => x.LastUpdatedAtUTC)
+           : q.OrderByDescending(x => x.DateScheduleCalendar).ThenByDescending(x => x.StartPart).ThenByDescending(x => x.LastUpdatedAtUTC);
 
         IQueryable<CalendarScheduleModelDB> pq = oq
             .Skip(req.Payload.PageNum * req.Payload.PageSize)

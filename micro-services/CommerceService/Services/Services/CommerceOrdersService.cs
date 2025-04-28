@@ -88,7 +88,7 @@ public partial class CommerceImplementService(
 
         await context.Orders
                .Where(x => x.Id == req.Payload.OrderId)
-               .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastAtUpdatedUTC, dtu), cancellationToken: token);
+               .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
 
         if (!string.IsNullOrWhiteSpace(req.Payload.ExternalDocumentId) && payment_db?.ExternalDocumentId != req.Payload.ExternalDocumentId)
@@ -107,7 +107,7 @@ public partial class CommerceImplementService(
         DateTime dtu = DateTime.UtcNow;
         await context.Orders
                 .Where(x => context.Payments.Any(y => y.Id == req.Payload && y.OrderId == x.Id))
-                .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastAtUpdatedUTC, dtu), cancellationToken: token);
+                .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
         return ResponseBaseModel.CreateInfo($"Изменений бд: {await context.Payments.Where(x => x.Id == req.Payload).ExecuteDeleteAsync(cancellationToken: token)}");
     }
@@ -148,7 +148,7 @@ public partial class CommerceImplementService(
         if (req.Payload.Id < 1)
         {
             req.Payload.CreatedAtUTC = DateTime.UtcNow;
-            req.Payload.LastAtUpdatedUTC = DateTime.UtcNow;
+            req.Payload.LastUpdatedAtUTC = DateTime.UtcNow;
             await context.AddAsync(req, token);
             await context.SaveChangesAsync(token);
             res.AddSuccess("Создано новое правило ценообразования");
@@ -163,7 +163,7 @@ public partial class CommerceImplementService(
                 .SetProperty(p => p.Name, req.Payload.Name)
                 .SetProperty(p => p.PriceRule, req.Payload.PriceRule)
                 .SetProperty(p => p.QuantityRule, req.Payload.QuantityRule)
-                .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow), cancellationToken: token);
+                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
             res.AddSuccess("Правило ценообразования обновлено");
         }
@@ -222,7 +222,7 @@ public partial class CommerceImplementService(
                 NomenclatureId = req.Payload.NomenclatureId,
                 OfferUnit = req.Payload.OfferUnit,
                 Price = req.Payload.Price,
-                LastAtUpdatedUTC = dtu,
+                LastUpdatedAtUTC = dtu,
             };
 
             await context.AddAsync(req, token);
@@ -244,7 +244,7 @@ public partial class CommerceImplementService(
             .SetProperty(p => p.NomenclatureId, req.Payload.NomenclatureId)
             .SetProperty(p => p.OfferUnit, req.Payload.OfferUnit)
             .SetProperty(p => p.Price, req.Payload.Price)
-            .SetProperty(p => p.LastAtUpdatedUTC, dtu), cancellationToken: token);
+            .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
         res.AddSuccess($"Обновление `{GetType().Name}` выполнено");
         return res;
@@ -266,7 +266,7 @@ public partial class CommerceImplementService(
             q = q.Where(x => req.Payload.Payload.NomenclatureFilter.Any(y => y == x.NomenclatureId));
 
         if (req.Payload.Payload.AfterDateUpdate is not null)
-            q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.Payload.AfterDateUpdate);
+            q = q.Where(x => x.LastUpdatedAtUTC >= req.Payload.Payload.AfterDateUpdate);
 
         IOrderedQueryable<OfferModelDB> oq = req.Payload.SortingDirection == DirectionsEnum.Up
           ? q.OrderBy(x => x.CreatedAtUTC)
@@ -359,7 +359,7 @@ public partial class CommerceImplementService(
             return res;
         }
         DateTime dtu = DateTime.UtcNow;
-        nom.LastAtUpdatedUTC = dtu;
+        nom.LastUpdatedAtUTC = dtu;
 
         if (nom.Id < 1)
         {
@@ -387,7 +387,7 @@ public partial class CommerceImplementService(
             .SetProperty(p => p.IsDisabled, nom.IsDisabled)
             .SetProperty(p => p.ContextName, nom.ContextName)
             .SetProperty(p => p.ProjectId, nom.ProjectId)
-            .SetProperty(p => p.LastAtUpdatedUTC, dtu), cancellationToken: token);
+            .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
         msg = $"Обновление номенклатуры {about} выполнено";
         loggerRepo.LogInformation(msg);
@@ -421,7 +421,7 @@ public partial class CommerceImplementService(
             : context.Nomenclatures.Where(x => x.ContextName == req.Payload.ContextName).AsQueryable();
 
         if (req.Payload.AfterDateUpdate is not null)
-            q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.AfterDateUpdate);
+            q = q.Where(x => x.LastUpdatedAtUTC >= req.Payload.AfterDateUpdate);
 
         IOrderedQueryable<NomenclatureModelDB> oq = req.SortingDirection == DirectionsEnum.Up
           ? q.OrderBy(x => x.CreatedAtUTC)
@@ -527,7 +527,7 @@ public partial class CommerceImplementService(
             q = q.Where(x => context.RowsOrders.Any(y => y.OrderId == x.Id && req.Payload.Payload.NomenclatureFilter.Any(i => i == y.NomenclatureId)));
 
         if (req.Payload.Payload.AfterDateUpdate is not null)
-            q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.Payload.AfterDateUpdate || (x.LastAtUpdatedUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.Payload.AfterDateUpdate));
+            q = q.Where(x => x.LastUpdatedAtUTC >= req.Payload.Payload.AfterDateUpdate || (x.LastUpdatedAtUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.Payload.AfterDateUpdate));
 
         if (req.Payload.Payload.StatusesFilter is not null && req.Payload.Payload.StatusesFilter.Length != 0)
             q = q.Where(x => req.Payload.Payload.StatusesFilter.Any(y => y == x.StatusDocument));
@@ -678,7 +678,7 @@ public partial class CommerceImplementService(
                 .Where(x => x.Id == req.OrderId)
                 .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.LastAtUpdatedUTC, dtu), cancellationToken: token);
+                .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
         if (req.Id < 1)
         {
@@ -823,7 +823,7 @@ public partial class CommerceImplementService(
            .ToListAsync(cancellationToken: token);
 
         int[] documents_ids = [.. _allOffersOfDocuments.Select(x => x.DocumentId).Distinct()];
-        await context.Orders.Where(x => documents_ids.Any(y => y == x.Id)).ExecuteUpdateAsync(set => set.SetProperty(p => p.Version, Guid.NewGuid()).SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow), cancellationToken: token);
+        await context.Orders.Where(x => documents_ids.Any(y => y == x.Id)).ExecuteUpdateAsync(set => set.SetProperty(p => p.Version, Guid.NewGuid()).SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         foreach (var rowEl in _allOffersOfDocuments.Where(x => x.DocumentStatus != StatusesDocumentsEnum.Canceled))
         {
@@ -880,7 +880,7 @@ public partial class CommerceImplementService(
 
         string msg, waMsg;
         DateTime dtu = DateTime.UtcNow;
-        req.LastAtUpdatedUTC = dtu;
+        req.LastUpdatedAtUTC = dtu;
 
         OfferModelDB?[] allOffersReq = [.. req.OfficesTabs!
             .SelectMany(x => x.Rows!)
@@ -930,7 +930,7 @@ public partial class CommerceImplementService(
 
             req.Id = 0;
             req.CreatedAtUTC = dtu;
-            req.LastAtUpdatedUTC = dtu;
+            req.LastUpdatedAtUTC = dtu;
             req.Version = Guid.NewGuid();
             req.StatusDocument = StatusesDocumentsEnum.Created;
 
@@ -1126,7 +1126,7 @@ public partial class CommerceImplementService(
             .SetProperty(p => p.Name, req.Name)
             .SetProperty(p => p.Description, req.Description)
             .SetProperty(p => p.Version, Guid.NewGuid())
-            .SetProperty(p => p.LastAtUpdatedUTC, dtu), cancellationToken: token);
+            .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
         res.AddSuccess($"Обновление `документа-заказа` выполнено");
         return res;
@@ -1161,7 +1161,7 @@ public partial class CommerceImplementService(
             res.Response = await context
                     .Orders
                     .Where(x => x.HelpdeskId == req.Payload.DocumentId)
-                    .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow), cancellationToken: token) != 0;
+                    .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token) != 0;
 
             res.AddSuccess("Запрос смены статуса заказа выполнен вхолостую (строки в документе отсутствуют)");
             return res;
@@ -1249,7 +1249,7 @@ public partial class CommerceImplementService(
                             .Where(x => x.HelpdeskId == req.Payload.DocumentId)
                             .ExecuteUpdateAsync(set => set
                             .SetProperty(p => p.StatusDocument, req.Payload.Step)
-                            .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow)
+                            .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
                             .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token) != 0;
 
         await transaction.CommitAsync(token);

@@ -44,8 +44,8 @@ public abstract partial class ApiDaichiBusinessLayerContext : DbContext
         TPaginationResponseModel<ProductDaichiModelDB> res = new(req);
 
         IQueryable<ProductDaichiModelDB> q = from po in Products
-                                             where EF.Functions.ILike(po.NAME, $"%{req.SimpleRequest}%") ||
-                                             EF.Functions.ILike(po.XML_ID, $"%{req.SimpleRequest}%")
+                                             where EF.Functions.ILike(po.NAME, $"%{req.FindQuery}%") ||
+                                             EF.Functions.ILike(po.XML_ID, $"%{req.FindQuery}%")
                                              select po;
 
         res.TotalRowsCount = await q.CountAsync(token);

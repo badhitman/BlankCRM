@@ -15,7 +15,7 @@ public class AltSimplePaginationRequestModel : SimplePaginationRequestModel
         return new()
         {
             PageNum = pageNum,
-            SimpleRequest = simpleRequest,
+            FindQuery = simpleRequest,
             PageSize = pageSize,
             StrongMode = strongMode
         };

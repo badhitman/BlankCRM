@@ -17,7 +17,7 @@
     <RowTemplate>
         @{
             DateTime cdt = context.CreatedAtUTC.GetCustomTime();
-            DateTime udt = context.LastAtUpdatedUTC.GetCustomTime();
+            DateTime udt = context.LastUpdatedAtUTC.GetCustomTime();
             DateTime ddt = context.DeliveryDate.GetCustomTime();
         }
         <MudTd DataLabel="Примечание"><a href="/nomenclature/warehouse/editing/@(context.Id)">@context.Name</a></MudTd>

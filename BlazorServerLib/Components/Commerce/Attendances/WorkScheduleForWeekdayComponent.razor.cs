@@ -43,7 +43,7 @@ public partial class WorkScheduleForWeekdayComponent : BlazorBusyComponentBaseMo
         TResponseModel<int> res = await CommerceRepo.WeeklyScheduleUpdateAsync(WorkScheduleEdit);
         if (res.Success())
         {
-            WorkScheduleEdit.LastAtUpdatedUTC = DateTime.UtcNow;
+            WorkScheduleEdit.LastUpdatedAtUTC = DateTime.UtcNow;
             WorkSchedule = GlobalTools.CreateDeepCopy(WorkScheduleEdit)!;
         }
 

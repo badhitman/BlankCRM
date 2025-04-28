@@ -20,7 +20,7 @@ namespace DbSqliteLib.Migrations
                     BaseUnit = table.Column<int>(type: "INTEGER", nullable: false),
                     IsDisabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -45,7 +45,7 @@ namespace DbSqliteLib.Migrations
                     NewBankBIC = table.Column<string>(type: "TEXT", nullable: true),
                     IsDisabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Phone = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
@@ -75,7 +75,7 @@ namespace DbSqliteLib.Migrations
                     Price = table.Column<decimal>(type: "TEXT", nullable: false),
                     IsDisabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -124,7 +124,7 @@ namespace DbSqliteLib.Migrations
                     OrganizationId = table.Column<int>(type: "INTEGER", nullable: false),
                     IsDisabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -146,7 +146,7 @@ namespace DbSqliteLib.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     OrganizationId = table.Column<int>(type: "INTEGER", nullable: false),
                     UserPersonIdentityId = table.Column<string>(type: "TEXT", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

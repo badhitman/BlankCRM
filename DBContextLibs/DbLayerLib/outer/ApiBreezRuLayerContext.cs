@@ -44,20 +44,20 @@ public abstract partial class ApiBreezRuLayerContext : DbContext
         TPaginationResponseModel<ProductViewBreezRuModeld> res = new(req);
 
         var q = from po in Products.Include(x => x.Images)
-                where (po.Manual != null && EF.Functions.ILike(po.Manual, $"%{req.SimpleRequest}%")) ||
-                (po.VideoYoutube != null && EF.Functions.ILike(po.VideoYoutube, $"%{req.SimpleRequest}%")) ||
-                (po.UTP != null && EF.Functions.ILike(po.UTP, $"%{req.SimpleRequest}%")) ||
-                (po.AccessoryNC != null && EF.Functions.ILike(po.AccessoryNC, $"%{req.SimpleRequest}%")) ||
-                (po.NarujNC != null && EF.Functions.ILike(po.NarujNC, $"%{req.SimpleRequest}%")) ||
-                (po.Article != null && EF.Functions.ILike(po.Article, $"%{req.SimpleRequest}%")) ||
-                (po.BimModel != null && EF.Functions.ILike(po.BimModel, $"%{req.SimpleRequest}%")) ||
-                (po.Booklet != null && EF.Functions.ILike(po.Booklet, $"%{req.SimpleRequest}%")) ||
-                (po.Brand != null && EF.Functions.ILike(po.Brand, $"%{req.SimpleRequest}%")) ||
-                (po.VnutrNC != null && EF.Functions.ILike(po.VnutrNC, $"%{req.SimpleRequest}%")) ||
-                (po.Title != null && EF.Functions.ILike(po.Title, $"%{req.SimpleRequest}%")) ||
-                (po.Series != null && EF.Functions.ILike(po.Series, $"%{req.SimpleRequest}%")) ||
-                (po.NC != null && EF.Functions.ILike(po.NC, $"%{req.SimpleRequest}%")) ||
-                (po.Description != null && EF.Functions.ILike(po.Description, $"%{req.SimpleRequest}%"))
+                where (po.Manual != null && EF.Functions.ILike(po.Manual, $"%{req.FindQuery}%")) ||
+                (po.VideoYoutube != null && EF.Functions.ILike(po.VideoYoutube, $"%{req.FindQuery}%")) ||
+                (po.UTP != null && EF.Functions.ILike(po.UTP, $"%{req.FindQuery}%")) ||
+                (po.AccessoryNC != null && EF.Functions.ILike(po.AccessoryNC, $"%{req.FindQuery}%")) ||
+                (po.NarujNC != null && EF.Functions.ILike(po.NarujNC, $"%{req.FindQuery}%")) ||
+                (po.Article != null && EF.Functions.ILike(po.Article, $"%{req.FindQuery}%")) ||
+                (po.BimModel != null && EF.Functions.ILike(po.BimModel, $"%{req.FindQuery}%")) ||
+                (po.Booklet != null && EF.Functions.ILike(po.Booklet, $"%{req.FindQuery}%")) ||
+                (po.Brand != null && EF.Functions.ILike(po.Brand, $"%{req.FindQuery}%")) ||
+                (po.VnutrNC != null && EF.Functions.ILike(po.VnutrNC, $"%{req.FindQuery}%")) ||
+                (po.Title != null && EF.Functions.ILike(po.Title, $"%{req.FindQuery}%")) ||
+                (po.Series != null && EF.Functions.ILike(po.Series, $"%{req.FindQuery}%")) ||
+                (po.NC != null && EF.Functions.ILike(po.NC, $"%{req.FindQuery}%")) ||
+                (po.Description != null && EF.Functions.ILike(po.Description, $"%{req.FindQuery}%"))
                 join l in Leftovers on po.Article equals l.Article into grouping
                 from l in grouping.DefaultIfEmpty()
                 select new { product = po, leftover = l };

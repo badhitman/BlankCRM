@@ -44,10 +44,10 @@ public abstract partial class FeedsHaierProffRuLayerContext : DbContext
         TPaginationResponseModel<ProductHaierModelDB> res = new(req);
 
         IQueryable<ProductHaierModelDB> q = from po in ProductsFeedsRss
-                                            where EF.Functions.ILike(po.Name!, $"%{req.SimpleRequest}%") ||
-                                                (po.AllArticles != null && EF.Functions.ILike(po.AllArticles, $"%{req.SimpleRequest}%")) ||
-                                                (po.Category != null && EF.Functions.ILike(po.Category, $"%{req.SimpleRequest}%")) ||
-                                                (po.ParentCategory != null && EF.Functions.ILike(po.ParentCategory, $"%{req.SimpleRequest}%"))
+                                            where EF.Functions.ILike(po.Name!, $"%{req.FindQuery}%") ||
+                                                (po.AllArticles != null && EF.Functions.ILike(po.AllArticles, $"%{req.FindQuery}%")) ||
+                                                (po.Category != null && EF.Functions.ILike(po.Category, $"%{req.FindQuery}%")) ||
+                                                (po.ParentCategory != null && EF.Functions.ILike(po.ParentCategory, $"%{req.FindQuery}%"))
                                             select po;
 
         res.TotalRowsCount = await q.CountAsync(token);

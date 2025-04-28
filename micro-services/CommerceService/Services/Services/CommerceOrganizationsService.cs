@@ -201,7 +201,7 @@ public partial class CommerceImplementService : ICommerceService
         org_db.Email = org.Email;
         org_db.Phone = org.Phone;
         org_db.IsDisabled = org.IsDisabled;
-        org_db.LastAtUpdatedUTC = DateTime.UtcNow;
+        org_db.LastUpdatedAtUTC = DateTime.UtcNow;
 
         context.Update(org_db);
         await context.SaveChangesAsync(token);
@@ -245,7 +245,7 @@ public partial class CommerceImplementService : ICommerceService
             q = q.Where(x => context.Units.Any(y => y.OrganizationId == x.Id && y.UserStatus > UsersOrganizationsStatusesEnum.None && y.UserPersonIdentityId == req.SenderActionUserId));
 
         if (req.Payload.AfterDateUpdate is not null)
-            q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.AfterDateUpdate);
+            q = q.Where(x => x.LastUpdatedAtUTC >= req.Payload.AfterDateUpdate);
 
         if (!string.IsNullOrWhiteSpace(req.Payload.ForUserIdentityId))
             q = q.Where(x => context.Units.Any(y => y.OrganizationId == x.Id && y.UserPersonIdentityId == req.Payload.ForUserIdentityId));
@@ -310,7 +310,7 @@ public partial class CommerceImplementService : ICommerceService
                 {
                     await context.AddAsync(new UserOrganizationModelDB()
                     {
-                        LastAtUpdatedUTC = DateTime.UtcNow,
+                        LastUpdatedAtUTC = DateTime.UtcNow,
                         UserPersonIdentityId = req.SenderActionUserId,
                         OrganizationId = duple.Id,
                         UserStatus = UsersOrganizationsStatusesEnum.None,
@@ -340,13 +340,13 @@ public partial class CommerceImplementService : ICommerceService
             req.Payload.NewName = req.Payload.Name;
             req.Payload.NewLegalAddress = req.Payload.LegalAddress;
             req.Payload.NewKPP = req.Payload.KPP;
-            req.Payload.LastAtUpdatedUTC = DateTime.UtcNow;
+            req.Payload.LastUpdatedAtUTC = DateTime.UtcNow;
 
             await context.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
             await context.AddAsync(new UserOrganizationModelDB()
             {
-                LastAtUpdatedUTC = DateTime.UtcNow,
+                LastUpdatedAtUTC = DateTime.UtcNow,
                 UserPersonIdentityId = req.SenderActionUserId,
                 OrganizationId = req.Payload.Id,
                 UserStatus = UsersOrganizationsStatusesEnum.None,
@@ -400,7 +400,7 @@ public partial class CommerceImplementService : ICommerceService
             if (org_db.Email != req.Payload.Email || org_db.Phone != req.Payload.Phone || org_db.IsDisabled != req.Payload.IsDisabled)
                 await q
                    .ExecuteUpdateAsync(set => set
-                   .SetProperty(p => p.LastAtUpdatedUTC, lud)
+                   .SetProperty(p => p.LastUpdatedAtUTC, lud)
                    .SetProperty(p => p.Phone, req.Payload.Phone)
                    .SetProperty(p => p.Email, req.Payload.Email)
                    .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled)
@@ -439,7 +439,7 @@ public partial class CommerceImplementService : ICommerceService
                         .Where(x => x.Id == req.Payload.Id)
                         .ExecuteUpdateAsync(set => set
                         .SetProperty(p => p.UserStatus, req.Payload.UserStatus)
-                        .SetProperty(p => p.LastAtUpdatedUTC, DateTime.UtcNow), cancellationToken: token);
+                        .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         res.AddSuccess($"Обновление `{nameof(UserOrganizationUpdateAsync)}` выполнено");
         return res;
@@ -473,7 +473,7 @@ public partial class CommerceImplementService : ICommerceService
             : context.Units.AsQueryable();
 
         if (req.Payload.AfterDateUpdate is not null)
-            q = q.Where(x => x.LastAtUpdatedUTC >= req.Payload.AfterDateUpdate);
+            q = q.Where(x => x.LastUpdatedAtUTC >= req.Payload.AfterDateUpdate);
 
         if (req.Payload.OrganizationsFilter is not null && req.Payload.OrganizationsFilter.Length != 0)
         {

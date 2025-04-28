@@ -36,7 +36,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     BaseUnit = table.Column<int>(type: "integer", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
@@ -56,7 +56,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     NewName = table.Column<string>(type: "text", nullable: true),
                     NewLegalAddress = table.Column<string>(type: "text", nullable: true),
@@ -92,7 +92,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Version = table.Column<Guid>(type: "uuid", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
                 },
@@ -115,7 +115,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
                 },
@@ -188,7 +188,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     StatusDocument = table.Column<int>(type: "integer", nullable: false),
@@ -219,7 +219,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     OrganizationId = table.Column<int>(type: "integer", nullable: false),
                     UserStatus = table.Column<int>(type: "integer", nullable: false),
                     UserPersonIdentityId = table.Column<string>(type: "text", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -245,7 +245,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     EndPart = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     ContextName = table.Column<string>(type: "text", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     StatusDocument = table.Column<int>(type: "integer", nullable: false),
@@ -288,7 +288,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     DateScheduleCalendar = table.Column<string>(type: "character varying(10)", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
@@ -381,7 +381,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     PriceRule = table.Column<decimal>(type: "numeric", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
                 },
@@ -440,7 +440,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Weekday = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
-                    LastAtUpdatedUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
@@ -561,9 +561,9 @@ namespace DbPostgreLib.Migrations.Commerce
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AttendancesReg_LastAtUpdatedUTC",
+                name: "IX_AttendancesReg_LastUpdatedAtUTC",
                 table: "AttendancesReg",
-                column: "LastAtUpdatedUTC");
+                column: "LastUpdatedAtUTC");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AttendancesReg_Name",
@@ -757,9 +757,9 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_LastAtUpdatedUTC",
+                name: "IX_Orders_LastUpdatedAtUTC",
                 table: "Orders",
-                column: "LastAtUpdatedUTC");
+                column: "LastUpdatedAtUTC");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_Name",
