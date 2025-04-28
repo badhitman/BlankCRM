@@ -286,7 +286,7 @@ public interface IIdentityTransmission
     /// Telegram пользователи (сохранённые).
     /// Все пользователи, которые когда либо писали что либо в бота - сохраняются/кэшируются в БД.
     /// </summary>
-    public Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(FindRequestModel req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(SimplePaginationRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// Проверка Telegram пользователя

@@ -1369,7 +1369,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(FindRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(SimplePaginationRequestModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         IQueryable<TelegramUserModelDb> query = identityContext.TelegramUsers

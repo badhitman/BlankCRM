@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <summary>
-/// Простой запрос (с пагинацией)
+/// Простой запрос (с пагинацией)  SimplePaginationRequestModel
 /// </summary>
 public class SimplePaginationRequestModel : PaginationRequestModel
 {

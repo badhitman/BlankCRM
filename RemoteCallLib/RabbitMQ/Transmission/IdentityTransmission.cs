@@ -186,7 +186,7 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<TelegramJoinAccountModelDb>>(GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountCreateReceive, userId, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(FindRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(SimplePaginationRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<TelegramUserViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.FindUsersTelegramReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
