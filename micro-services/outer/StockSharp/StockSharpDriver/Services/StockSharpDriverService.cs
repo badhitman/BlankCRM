@@ -93,6 +93,8 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
         List<InstrumentStockSharpModelDB> _data = await q
             .Include(x => x.Board)
             .ThenInclude(x => x.Exchange)
+            .OrderBy(x => x.Name)
+            .ThenBy(x => x.Board.Code)
             .Skip(req.PageSize * req.PageNum)
             .Take(req.PageSize)
             .ToListAsync(cancellationToken: cancellationToken);
@@ -134,8 +136,6 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
         Security currentSec = connector.Securities.FirstOrDefault(x => x.Name == req.Instrument.Name && x.Code == req.Instrument.Code && x.Board.Code == board.Code && x.Board.Exchange.Name == board.Exchange.Name && x.Board.Exchange.CountryCode == board.Exchange.CountryCode);
         if (currentSec is null)
             return Task.FromResult(ResponseBaseModel.CreateError($"Инструмент не найден: {req.Instrument}"));
-
-        //Portfolio[] _portfolios = [.. connector.Portfolios];
 
         Portfolio selectedPortfolio = connector.Portfolios.FirstOrDefault(x => x.ClientCode == req.Portfolio.ClientCode && x.Name == req.Portfolio.Name);
         if (selectedPortfolio is null)
