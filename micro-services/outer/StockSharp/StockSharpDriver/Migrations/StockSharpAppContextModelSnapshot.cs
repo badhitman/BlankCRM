@@ -331,7 +331,7 @@ namespace StockSharpDriver.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("BoardId")
+                    b.Property<int?>("BoardId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ClientCode")
@@ -412,9 +412,7 @@ namespace StockSharpDriver.Migrations
                 {
                     b.HasOne("SharedLib.BoardStockSharpModelDB", "Board")
                         .WithMany()
-                        .HasForeignKey("BoardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BoardId");
 
                     b.Navigation("Board");
                 });
