@@ -42,4 +42,9 @@ public interface IStockSharpDriverService : IStockSharpBaseService
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
     public Task<TResponseModel<List<OrderStockSharpModel>>> GetOrdersAsync(int[]? ids = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// InstrumentsSelectAsync
+    /// </summary>
+    public Task<TPaginationResponseModel<InstrumentTradeStockSharpModel>> InstrumentsSelectAsync(TPaginationRequestStandardModel<InstrumentsRequestModel> req, CancellationToken cancellationToken = default);
 }

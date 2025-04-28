@@ -1,3 +1,28 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
-<h3>InstrumentsTableComponent</h3>
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Инструменты</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="Name" T="InstrumentTradeStockSharpModel">Name</MudTableSortLabel></MudTh>
+        <MudTh>Code</MudTh>
+        <MudTh>Currency</MudTh>
+        <MudTh>Type</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Id">@context.IdRemote</MudTd>
+        <MudTd DataLabel="Currency">@context.Currency</MudTd>
+        <MudTd DataLabel="TypeInstrument">@context.TypeInstrument</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Ни чего не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Загрузка...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

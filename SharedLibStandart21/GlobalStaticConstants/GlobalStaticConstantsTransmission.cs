@@ -991,6 +991,11 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string GetInstrumentsStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, $"{Routes.GET_ACTION_NAME}-{Routes.LIST_ACTION_NAME}");
 
         /// <summary>
+        /// InstrumentsSelectStockSharpReceive
+        /// </summary>
+        public readonly static string InstrumentsSelectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <summary>
         /// Получить заказы по их идентификаторам
         /// </summary>
         /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>

@@ -78,6 +78,30 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
     }
 
     /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<InstrumentTradeStockSharpModel>> InstrumentsSelectAsync(TPaginationRequestStandardModel<InstrumentsRequestModel> req, CancellationToken cancellationToken = default)
+    {
+        if (req.PageSize < 10)
+            req.PageSize = 10;
+
+        using StockSharpAppContext context = await toolsDbFactory.CreateDbContextAsync(cancellationToken);
+        IQueryable<InstrumentStockSharpModelDB> q = context.Instruments.AsQueryable();
+
+        List<InstrumentStockSharpModelDB> _data = await q.ToListAsync(cancellationToken: cancellationToken);
+
+        TPaginationResponseModel<InstrumentTradeStockSharpModel> res = new()
+        {
+            PageSize = req.PageSize,
+            PageNum = req.PageNum,
+            SortBy = req.SortBy,
+            TotalRowsCount = await q.CountAsync(cancellationToken: cancellationToken),
+            SortingDirection = req.SortingDirection,
+            Response = [.. _data.Select(x => new InstrumentTradeStockSharpModel().Bind(x))]
+        };
+
+        return res;
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<List<PortfolioStockSharpModel>>> GetPortfoliosAsync(int[] ids = null, CancellationToken cancellationToken = default)
     {
         using StockSharpAppContext context = await toolsDbFactory.CreateDbContextAsync(cancellationToken);

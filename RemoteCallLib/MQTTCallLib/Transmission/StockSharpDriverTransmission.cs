@@ -35,6 +35,10 @@ public partial class StockSharpDriverTransmission(IMQTTClient mqClient) : IStock
         => await mqClient.MqRemoteCallAsync<TResponseModel<List<PortfolioStockSharpModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetPortfoliosStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<InstrumentTradeStockSharpModel>> InstrumentsSelectAsync(TPaginationRequestStandardModel<InstrumentsRequestModel> req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<InstrumentTradeStockSharpModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentsSelectStockSharpReceive, req, token: cancellationToken) ?? new();
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> PingAsync(CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PingStockSharpDriverReceive, token: cancellationToken) ?? new();
 }
