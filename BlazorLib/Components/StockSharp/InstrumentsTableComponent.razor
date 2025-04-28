@@ -14,13 +14,15 @@
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Id">
             <MudStack Row="true">
-                @context.IdRemote
-                <MudSwitch ValueChanged="async () => await FavoriteToggle(context)"
-                           Disabled="IsBusyProgress"
-                           Value="context.IsFavorite"
-                           T="bool"
-                           Color="Color.Primary"
-                           Class="mr-n2 mb-6" />
+                <strong>@context.IdRemote</strong>
+                <div>
+                    <MudSwitch ValueChanged="async () => await FavoriteToggle(context)"
+                               Value="context.IsFavorite"
+                               ReadOnly="IsBusyProgress"
+                               Color="Color.Primary"
+                               Class="mr-n2 mb-6"
+                               T="bool"/>
+                </div>
             </MudStack>
         </MudTd>
         <MudTd DataLabel="Currency">@context.Currency</MudTd>

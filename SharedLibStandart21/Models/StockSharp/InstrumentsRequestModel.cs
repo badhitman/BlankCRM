@@ -9,5 +9,8 @@ namespace SharedLib;
 /// </summary>
 public class InstrumentsRequestModel
 {
-
+    /// <summary>
+    /// FavoriteFilter
+    /// </summary>
+    public bool? FavoriteFilter { get; set; }
 }

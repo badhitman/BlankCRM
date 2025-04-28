@@ -17,13 +17,16 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
     List<BoardStockSharpModel>? myBoards;
     BoardStockSharpModel? SelectedBoard { get; set; }
 
+    OrderTypesEnum orderTypeCreate = OrderTypesEnum.Market;
+    SidesEnum orderSideCreate = SidesEnum.Buy;
 
     List<PortfolioStockSharpModel>? myPortfolios;
     PortfolioStockSharpModel? SelectedPortfolio { get; set; }
     decimal? DecimalValue { get; set; }
 
-    List<InstrumentTradeStockSharpModel>? myInstruments;
-    InstrumentTradeStockSharpModel? SelectedInstrument { get; set; }
+    List<InstrumentTradeStockSharpViewModel>? myInstruments;
+    
+    InstrumentTradeStockSharpViewModel? SelectedInstrument { get; set; }
 
     bool disposedValue;
 
@@ -84,10 +87,9 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
         TResponseModel<List<BoardStockSharpModel>> res2 = await SsMainRepo.GetBoardsAsync();
         SnackbarRepo.ShowMessagesResponse(res2.Messages);
         myBoards = res2.Response;
-
-        //TResponseModel<List<InstrumentTradeStockSharpModel>> res3 = await SsMainRepo.GetInstrumentsAsync();
-        //SnackbarRepo.ShowMessagesResponse(res3.Messages);
-        //myInstruments = res3.Response;
+        TPaginationRequestStandardModel<InstrumentsRequestModel> req = new() { PageSize = 100, Payload = new() { FavoriteFilter = true } };
+        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res3 = await SsMainRepo.InstrumentsSelectAsync(req);
+        myInstruments = res3.Response;
 
         await SetBusyAsync(false);
     }

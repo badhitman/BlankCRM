@@ -35,12 +35,12 @@
         }
     </MudSelect>
 
-    @* <MudSelect T="InstrumentTradeStockSharpModel" @bind-Value="SelectedInstrument" Label="Инструмент" Variant="Variant.Outlined">
-        @if (SelectedBoard is not null && myInstruments is not null)
+    <MudSelect T="InstrumentTradeStockSharpViewModel" @bind-Value="SelectedInstrument" Label="Инструмент" Variant="Variant.Outlined">
+        @if (myInstruments is not null)
         {
-            @foreach (InstrumentTradeStockSharpModel s in myInstruments.Where(x => x.Board is not null && x.Board == SelectedBoard))
+            @foreach (InstrumentTradeStockSharpViewModel s in myInstruments.Where(x => SelectedBoard is null || (x.Board is not null && x.Board == SelectedBoard)))
             {
-                <MudSelectItem T="InstrumentTradeStockSharpModel" Value="s">
+                <MudSelectItem T="InstrumentTradeStockSharpViewModel" Value="s">
                     @s
                 </MudSelectItem>
             }
@@ -49,10 +49,25 @@
         {
             SelectedInstrument = null;
         }
-    </MudSelect> *@
-    @* @if (!string.IsNullOrWhiteSpace(SelectedInstrument?.Code))
-    {
+    </MudSelect>
+</MudStack>
+
+@if (!string.IsNullOrWhiteSpace(SelectedInstrument?.Code))
+{
+    <MudStack Row="true">
+        <MudSelect @bind-Value="orderTypeCreate" Label="Тип" Variant="Variant.Outlined">
+            @foreach (OrderTypesEnum margin in Enum.GetValues(typeof(OrderTypesEnum)).Cast<OrderTypesEnum>())
+            {
+                <MudSelectItem Value="margin">@margin</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect @bind-Value="orderSideCreate" Label="Направление" Variant="Variant.Outlined">
+            @foreach (SidesEnum margin in Enum.GetValues(typeof(SidesEnum)).Cast<SidesEnum>())
+            {
+                <MudSelectItem Value="margin">@margin</MudSelectItem>
+            }
+        </MudSelect>
         <MudNumericField @bind-Value="DecimalValue" Label="Цена" Variant="Variant.Outlined" Immediate />
         <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="NewOrder" Disabled="@(DecimalValue <= 0 || SelectedPortfolio is null)" />
-    } *@
-</MudStack> 
+    </MudStack>
+}

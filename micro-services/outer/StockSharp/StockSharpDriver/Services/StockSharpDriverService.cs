@@ -85,7 +85,7 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
             req.PageSize = 10;
 
         using StockSharpAppContext context = await toolsDbFactory.CreateDbContextAsync(cancellationToken);
-        IQueryable<InstrumentStockSharpModelDB> q = context.Instruments.AsQueryable();
+        IQueryable<InstrumentStockSharpModelDB> q = context.Instruments.Where(x => req.Payload.FavoriteFilter == null || x.IsFavorite == req.Payload.FavoriteFilter).AsQueryable();
 
         List<InstrumentStockSharpModelDB> _data = await q
             .Include(x => x.Board)

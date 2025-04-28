@@ -13,10 +13,12 @@ public enum OrderTypesEnum
     /// Limit.
     /// </summary>
     Limit,
+
     /// <summary>
     /// Market.
     /// </summary>
     Market,
+
     /// <summary>
     /// Conditional (stop-loss, take-profit).
     /// </summary>
