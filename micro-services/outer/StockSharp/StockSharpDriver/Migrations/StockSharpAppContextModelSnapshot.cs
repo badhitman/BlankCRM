@@ -26,22 +26,14 @@ namespace StockSharpDriver.Migrations
                     b.Property<string>("Code")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedAtUTC")
-                        .HasColumnType("TEXT");
-
                     b.Property<int?>("ExchangeId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("LastUpdatedAtUTC")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Code");
 
                     b.HasIndex("ExchangeId");
-
-                    b.HasIndex("LastUpdatedAtUTC");
 
                     b.ToTable("Boards");
                 });

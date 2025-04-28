@@ -30,8 +30,6 @@ namespace StockSharpDriver.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ExchangeId = table.Column<int>(type: "INTEGER", nullable: true),
-                    LastUpdatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedAtUTC = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Code = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -189,11 +187,6 @@ namespace StockSharpDriver.Migrations
                 name: "IX_Boards_ExchangeId",
                 table: "Boards",
                 column: "ExchangeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Boards_LastUpdatedAtUTC",
-                table: "Boards",
-                column: "LastUpdatedAtUTC");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Exchanges_Name",

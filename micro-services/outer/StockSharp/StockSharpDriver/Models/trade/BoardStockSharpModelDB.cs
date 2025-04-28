@@ -10,8 +10,8 @@ namespace SharedLib;
 /// <summary>
 /// Площадка
 /// </summary>
-[Index(nameof(LastUpdatedAtUTC)), Index(nameof(Code))]
-public class BoardStockSharpModelDB : BoardStockSharpModel, IBaseStockSharpModel
+[Index(nameof(Code))]
+public class BoardStockSharpModelDB : BoardStockSharpModel
 {
     /// <summary>
     /// Идентификатор/Key
@@ -34,15 +34,8 @@ public class BoardStockSharpModelDB : BoardStockSharpModel, IBaseStockSharpModel
     public List<InstrumentStockSharpModelDB> Instruments { get; set; }
 
     /// <inheritdoc/>
-    public DateTime LastUpdatedAtUTC { get; set; }
-
-    /// <inheritdoc/>
-    public DateTime CreatedAtUTC { get; set; }
-
-    /// <inheritdoc/>
     public void SetUpdate(BoardStockSharpModel req)
     {
         Code = req.Code;
-        LastUpdatedAtUTC = DateTime.UtcNow;
     }
 }

@@ -29,7 +29,6 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         if (boardDb is null)
         {
             boardDb = new BoardStockSharpModelDB().Bind(req);
-            boardDb.CreatedAtUTC = DateTime.UtcNow;
 
             boardDb.ExchangeId = exchange.Id;
             boardDb.Exchange = null;
@@ -103,17 +102,21 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
     {
         using StockSharpAppContext context = toolsDbFactory.CreateDbContext();
         BoardStockSharpModelDB board = null;
-        if (!string.IsNullOrWhiteSpace(req.Board.Code))
+        if (!string.IsNullOrWhiteSpace(req.Board?.Code))
             board = context.Boards.First(x => x.Id == SaveBoard(req.Board));
 
-        PortfolioTradeModelDB portDb = context.Portfolios
-            .FirstOrDefault(x => x.Name == req.Name && x.DepoName == req.DepoName && x.Currency == req.Currency && x.BoardId == board.Id);
+        IQueryable<PortfolioTradeModelDB> q = context.Portfolios
+            .Where(x => x.Name == req.Name && x.DepoName == req.DepoName && x.Currency == req.Currency);
+
+        PortfolioTradeModelDB portDb = board == null
+            ? q.FirstOrDefault(x => x.BoardId == null)
+            : q.FirstOrDefault(x => x.BoardId == board.Id);
 
         if (portDb is null)
         {
             portDb = new PortfolioTradeModelDB().Bind(req);
             portDb.CreatedAtUTC = DateTime.UtcNow;
-            portDb.BoardId = board.Id;
+            portDb.BoardId = board?.Id;
             portDb.Board = null;
 
             context.Portfolios.Add(portDb);
@@ -122,7 +125,7 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
         {
             portDb.SetUpdate(req);
 
-            portDb.BoardId = board.Id;
+            portDb.BoardId = board?.Id;
             portDb.Board = null;
 
             context.Portfolios.Update(portDb);
