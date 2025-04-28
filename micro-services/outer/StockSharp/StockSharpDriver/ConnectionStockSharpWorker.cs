@@ -355,7 +355,7 @@ public class ConnectionStockSharpWorker(
     }
     void CurrentTimeChangedHandle(TimeSpan sender)
     {
-        _logger.LogWarning($"Call > `{nameof(CurrentTimeChangedHandle)}`: {JsonConvert.SerializeObject(sender)}");
+        _logger.LogTrace($"Call > `{nameof(CurrentTimeChangedHandle)}`: {JsonConvert.SerializeObject(sender)}");
     }
     void ConnectionRestoredHandle(StockSharp.Messages.IMessageAdapter sender)
     {
