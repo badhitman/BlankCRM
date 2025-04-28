@@ -18,4 +18,10 @@ public class ExchangeStockSharpModel
     /// CountryCode
     /// </summary>
     public virtual CountryCodesEnum? CountryCode { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{Name} - {CountryCode}";
+    }
 }

@@ -182,7 +182,7 @@ public class ConnectionStockSharpWorker(
 
     void SecurityReceivedHandle(Subscription subscription, Security sec)
     {
-        _logger.LogDebug($"Call > `{nameof(SecurityReceivedHandle)}`: {JsonConvert.SerializeObject(sec)}");
+        _logger.LogTrace($"Call > `{nameof(SecurityReceivedHandle)}`: {JsonConvert.SerializeObject(sec)}");
         InstrumentTradeStockSharpModel req = new InstrumentTradeStockSharpModel().Bind(sec);
         dataRepo.SaveInstrument(req);
         eventTrans.InstrumentReceived(req);
@@ -275,7 +275,7 @@ public class ConnectionStockSharpWorker(
     }
     void SubscriptionReceivedHandle(Subscription subscription, object sender)
     {
-        _logger.LogWarning($"Call > `{nameof(SubscriptionReceivedHandle)}`: {JsonConvert.SerializeObject(sender)}");
+        _logger.LogTrace($"Call > `{nameof(SubscriptionReceivedHandle)}`: {JsonConvert.SerializeObject(sender)}");
     }
     void SubscriptionOnlineHandle(Subscription subscription)
     {

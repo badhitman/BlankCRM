@@ -18,8 +18,8 @@ public class GetExchangesStockSharpDriverReceive(IStockSharpDriverService ssRepo
     /// <inheritdoc/>
     public async Task<TResponseModel<List<ExchangeStockSharpModel>>> ResponseHandleActionAsync(int[] req, CancellationToken token = default)
     {
-        if (req is null)
-            throw new ArgumentNullException(nameof(req));
+        //if (req is null)
+        //    throw new ArgumentNullException(nameof(req));
 
         return await ssRepo.GetExchangesAsync(req, token);
     }

@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
-
 namespace SharedLib;
 
 /// <summary>
@@ -20,4 +18,10 @@ public class BoardStockSharpModel
     /// Exchange
     /// </summary>
     public virtual ExchangeStockSharpModel? Exchange { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{Code} ({Exchange})";
+    }
 }

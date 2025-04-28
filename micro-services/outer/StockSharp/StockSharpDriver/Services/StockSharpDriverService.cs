@@ -5,13 +5,14 @@
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
+using StockSharp.Algo;
 
 namespace StockSharpDriver;
 
 /// <summary>
 /// StockSharpDriverService
 /// </summary>
-public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> toolsDbFactory) : IStockSharpDriverService
+public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> toolsDbFactory, Connector connector) : IStockSharpDriverService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<List<BoardStockSharpModel>>> GetBoardsAsync(int[] ids = null, CancellationToken cancellationToken = default)
@@ -20,7 +21,10 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
         IQueryable<BoardStockSharpModelDB> q = ids is null || ids.Length == 0
             ? context.Boards.AsQueryable()
             : context.Boards.Where(x => ids.Contains(x.Id));
-        List<BoardStockSharpModelDB> data = await q.ToListAsync(cancellationToken: cancellationToken);
+
+        List<BoardStockSharpModelDB> data = await q
+            .Include(x => x.Exchange)
+            .ToListAsync(cancellationToken: cancellationToken);
 
         return new()
         {
@@ -35,7 +39,7 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
         IQueryable<ExchangeStockSharpModelDB> q = ids is null || ids.Length == 0
             ? context.Exchanges.AsQueryable()
             : context.Exchanges.Where(x => ids.Contains(x.Id));
-        List<ExchangeStockSharpModelDB> data = await q.ToListAsync(cancellationToken: cancellationToken);
+        List<ExchangeStockSharpModelDB> data = await q.Include(x => x.Boards).ToListAsync(cancellationToken: cancellationToken);
 
         return new()
         {
@@ -50,7 +54,7 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
         IQueryable<InstrumentStockSharpModelDB> q = ids is null || ids.Length == 0
             ? context.Instruments.AsQueryable()
             : context.Instruments.Where(x => ids.Contains(x.Id));
-        List<InstrumentStockSharpModelDB> data = await q.ToListAsync(cancellationToken: cancellationToken);
+        List<InstrumentStockSharpModelDB> data = await q.Include(x => x.Board).ThenInclude(x => x.Exchange).ToListAsync(cancellationToken: cancellationToken);
 
         return new()
         {
@@ -65,7 +69,7 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
         IQueryable<OrderStockSharpModelDB> q = ids is null || ids.Length == 0
             ? context.Orders.AsQueryable()
             : context.Orders.Where(x => ids.Contains(x.IdPK));
-        List<OrderStockSharpModelDB> data = await q.ToListAsync(cancellationToken: cancellationToken);
+        List<OrderStockSharpModelDB> data = await q.Include(x => x.Instrument).Include(x => x.Portfolio).ToListAsync(cancellationToken: cancellationToken);
 
         return new()
         {
@@ -80,7 +84,7 @@ public class StockSharpDriverService(IDbContextFactory<StockSharpAppContext> too
         IQueryable<PortfolioTradeModelDB> q = ids is null || ids.Length == 0
             ? context.Portfolios.AsQueryable()
             : context.Portfolios.Where(x => ids.Contains(x.Id));
-        List<PortfolioTradeModelDB> data = await q.ToListAsync(cancellationToken: cancellationToken);
+        List<PortfolioTradeModelDB> data = await q.Include(x => x.Board).ToListAsync(cancellationToken: cancellationToken);
 
         return new()
         {

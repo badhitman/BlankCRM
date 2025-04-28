@@ -37,16 +37,13 @@ public class MQttClient(StockSharpClientConfigModel mqConf, ILogger<MQttClient> 
     /// <inheritdoc/>
     public async Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default) where T : class
     {
-        using IMqttClient mqttClient = mqttFactory.CreateMqttClient();        
+        using IMqttClient mqttClient = mqttFactory.CreateMqttClient();
         using IMqttClient responseClient = mqttFactory.CreateMqttClient();
         string _sc = MQConfigRepo.ToString();
-        // Custom ActivitySource for the application
-        ActivitySource greeterActivitySource = new($"OTel.{AppName}");
-        // Create a new Activity scoped to the method
-        using Activity? activity = greeterActivitySource.StartActivity($"OTel.{queue}");
+
         Meter greeterMeter = new($"OTel.{AppName}", "1.0.0");
         Counter<long> countGreetings = greeterMeter.CreateCounter<long>(GlobalStaticConstantsRoutes.Routes.DURATION_ACTION_NAME, description: "Длительность в мс.");
-        activity?.Start();
+
         Stopwatch stopwatch = new();
         CancellationTokenSource cts = new();
         CancellationToken token = cts.Token;
@@ -64,18 +61,12 @@ public class MQttClient(StockSharpClientConfigModel mqConf, ILogger<MQttClient> 
         }
 
         string response_topic = waitResponse ? $"{MQConfigRepo.QueueMqNamePrefixForResponse}{queue}_{Guid.NewGuid()}" : "";
-        activity?.SetTag(nameof(response_topic), response_topic);
-        
+
         Task ResponseClient_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs eMsg)
         {
             responseClient.ApplicationMessageReceivedAsync -= ResponseClient_ApplicationMessageReceivedAsync;
             string msg;
             string content = Encoding.UTF8.GetString(eMsg.ApplicationMessage.PayloadSegment);
-
-            if (!content.Contains(GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME, StringComparison.OrdinalIgnoreCase))
-                activity?.SetBaggage(nameof(content), content);
-            else
-                activity?.SetBaggage(nameof(content), $"MUTE: `{GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME}` - contains");
 
             try
             {
@@ -163,8 +154,6 @@ public class MQttClient(StockSharpClientConfigModel mqConf, ILogger<MQttClient> 
         }
         else if (res_io is null)
             return default;
-
-        activity?.Stop();
 
         return res_io.Response;
     }

@@ -28,4 +28,10 @@ public partial class PortfolioStockSharpModel
 
     /// <inheritdoc/>
     public string? DepoName { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{Name} /{Currency} [{Board}]";
+    }
 }

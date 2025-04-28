@@ -18,8 +18,8 @@ public class GetOrdersStockSharpDriverReceive(IStockSharpDriverService ssRepo)
     /// <inheritdoc/>
     public async Task<TResponseModel<List<OrderStockSharpModel>>> ResponseHandleActionAsync(int[] req, CancellationToken token = default)
     {
-        if (req is null)
-            throw new ArgumentNullException(nameof(req));
+        //if (req is null)
+        //    throw new ArgumentNullException(nameof(req));
 
         return await ssRepo.GetOrdersAsync(req, token);
     }

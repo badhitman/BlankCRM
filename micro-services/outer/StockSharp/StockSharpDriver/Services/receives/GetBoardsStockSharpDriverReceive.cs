@@ -18,8 +18,8 @@ public class GetBoardsStockSharpDriverReceive(IStockSharpDriverService ssRepo)
     /// <inheritdoc/>
     public async Task<TResponseModel<List<BoardStockSharpModel>>> ResponseHandleActionAsync(int[] req, CancellationToken token = default)
     {
-        if(req is null)
-            throw new ArgumentNullException(nameof(req));
+        //if(req is null)
+        //    throw new ArgumentNullException(nameof(req));
 
         return await ssRepo.GetBoardsAsync(req, token);
     }

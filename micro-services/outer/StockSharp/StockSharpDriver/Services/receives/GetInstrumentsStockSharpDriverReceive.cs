@@ -18,8 +18,8 @@ public class GetInstrumentsStockSharpDriverReceive(IStockSharpDriverService ssRe
     /// <inheritdoc/>
     public async Task<TResponseModel<List<InstrumentTradeStockSharpModel>>> ResponseHandleActionAsync(int[] req, CancellationToken token = default)
     {
-        if (req is null)
-            throw new ArgumentNullException(nameof(req));
+        //if (req is null)
+        //    throw new ArgumentNullException(nameof(req));
 
         return await ssRepo.GetInstrumentsAsync(req, token);
     }

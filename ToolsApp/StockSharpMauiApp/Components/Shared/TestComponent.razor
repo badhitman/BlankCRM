@@ -1,7 +1,4 @@
-﻿@* @using Ecng.Common;
-@using StockSharp.BusinessEntities;
-@using StockSharp.Messages; *@
-@using BlazorLib
+﻿@using BlazorLib
 @using SharedLib;
 @using System.Net;
 @using System.Security;
@@ -9,37 +6,35 @@
 @inherits BlazorBusyComponentBaseModel
 
 <h3>TestComponent</h3>
-@* <MudStack Row="true">
-    <MudSelect T="Portfolio" @bind-Value="selectedPortfolio" Label="Портфель" Variant="Variant.Outlined">
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+}
+<MudStack Row="true">
+    <MudSelect T="PortfolioStockSharpModel" @bind-Value="selectedPortfolio" Label="Портфель" Variant="Variant.Outlined">
         @if (myPortfolios is not null && myPortfolios.Count() != 0)
         {
-            @foreach (Portfolio p in myPortfolios.ToArray())
+            @foreach (PortfolioStockSharpModel p in myPortfolios.ToArray())
             {
-                <MudSelectItem T="Portfolio" Value="p">
+                <MudSelectItem T="PortfolioStockSharpModel" Value="p">
                     @p
                 </MudSelectItem>
             }
         }
     </MudSelect>
 
-    @if (IncomingDataProgress)
-    {
-        <MudTextField Value="statusLoadText" Label="Получение данных..." Variant="Variant.Outlined" ReadOnly></MudTextField>
-    }
-    else
-    {
-        <MudSelect @bind-Value="selectedBoard" Label="Площадка" Variant="Variant.Outlined">
-            @if (mySecurities is not null && mySecurities.Count() != 0)
+    <MudSelect @bind-Value="selectedBoard" Label="Площадка" Variant="Variant.Outlined">
+        @if (myBoards is not null && myBoards.Count() != 0)
+        {
+            @foreach (BoardStockSharpModel b in myBoards)
             {
-                @foreach (string s in mapSecurities.Select(x => x.Key).ToArray())
-                {
-                    <MudSelectItem Value="s">
-                        @s [@mapSecurities[s].Count]
-                    </MudSelectItem>
-                }
+                <MudSelectItem Value="b">
+                    @b
+                </MudSelectItem>
             }
-        </MudSelect>
-
+        }
+    </MudSelect>
+    @* 
         <MudSelect T="EntryAltModel" @bind-Value="selectedTool" Label="Инструмент" Variant="Variant.Outlined">
             @if (selectedBoard is not null && !string.IsNullOrWhiteSpace(selectedBoard))
             {
@@ -60,5 +55,5 @@
             <MudNumericField @bind-Value="DecimalValue" Label="Цена" Variant="Variant.Outlined" Immediate />
             <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="NewOrder" Disabled="@(DecimalValue <= 0 || selectedPortfolio is null)" />
         }
-    }
-</MudStack> *@
+    *@
+</MudStack> 
