@@ -67,7 +67,8 @@
                 <MudSelectItem Value="margin">@margin</MudSelectItem>
             }
         </MudSelect>
-        <MudNumericField @bind-Value="DecimalValue" Label="Цена" Variant="Variant.Outlined" Immediate />
-        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="NewOrder" Disabled="@(DecimalValue <= 0 || SelectedPortfolio is null)" />
+        <MudNumericField @bind-Value="PriceNewOrder" Label="Цена" Variant="Variant.Outlined" Immediate />
+        <MudNumericField @bind-Value="VolumeNewOrder" Label="Объём" Variant="Variant.Outlined" Immediate />
+        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="NewOrder" Disabled="@(PriceNewOrder <= 0 || SelectedPortfolio is null)" />
     </MudStack>
 }

@@ -22,58 +22,54 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
 
     List<PortfolioStockSharpModel>? myPortfolios;
     PortfolioStockSharpModel? SelectedPortfolio { get; set; }
-    decimal? DecimalValue { get; set; }
+    decimal? PriceNewOrder { get; set; }
+    decimal? VolumeNewOrder { get; set; }
 
     List<InstrumentTradeStockSharpViewModel>? myInstruments;
-    
+
     InstrumentTradeStockSharpViewModel? SelectedInstrument { get; set; }
 
     bool disposedValue;
 
-    Task NewOrder()
+    async Task NewOrder()
     {
         if (SelectedPortfolio is null)
         {
             SnackbarRepo.Error("Не выбран портфель");
-            return Task.CompletedTask;
+            return;
         }
 
         if (SelectedInstrument is null)
         {
             SnackbarRepo.Error("Не выбран инструмент");
-            return Task.CompletedTask;
+            return;
         }
 
-        if (DecimalValue <= 0)
+        if (PriceNewOrder is null || PriceNewOrder <= 0)
         {
             SnackbarRepo.Error("Не указана стоимость");
-            return Task.CompletedTask;
+            return;
         }
 
-        //Security? currentSec = mySecurities.FirstOrDefault(x => x.Board.Code == selectedBoard && x.Code == selectedTool.Id);
-        //if (currentSec is null)
-        //{
-        //    SnackbarRepo.Error("Не найден инструмент");
-        //    return Task.CompletedTask;
-        //}
+        if (VolumeNewOrder is null || VolumeNewOrder <= 0)
+        {
+            SnackbarRepo.Error("Не указан объём");
+            return;
+        }
 
-        //Order order = new()
-        //{
-        //    // устанавливается тип заявки, в данном примере лимитный
-        //    Type = OrderTypes.Limit,
-        //    // устанавливается портфель для исполнения заявки
-        //    Portfolio = selectedPortfolio,
-        //    // устанавливается объём заявки
-        //    Volume = 1,
-        //    // устанавливается цена заявки
-        //    Price = DecimalValue,
-        //    // устанавливается инструмент
-        //    Security = currentSec,
-        //    // устанавливается направление заявки, в данном примере покупка
-        //    Side = Sides.Buy,
-        //};
-
-        return Task.CompletedTask;
+        await SetBusyAsync();
+        CreateOrderRequestModel req = new()
+        {
+            Instrument = SelectedInstrument,
+            OrderType = orderTypeCreate,
+            Portfolio = SelectedPortfolio,
+            Price = PriceNewOrder.Value,
+            Side = orderSideCreate,
+            Volume = VolumeNewOrder.Value,
+        };
+        ResponseBaseModel res = await SsMainRepo.OrderRegisterAsync(req);
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
     }
 
     protected override async Task OnInitializedAsync()

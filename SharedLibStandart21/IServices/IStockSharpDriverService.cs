@@ -52,4 +52,9 @@ public interface IStockSharpDriverService : IStockSharpBaseService
     /// InstrumentSetFavoriteAsync
     /// </summary>
     public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// OrderRegister
+    /// </summary>
+    public Task<ResponseBaseModel> OrderRegisterAsync(CreateOrderRequestModel req, CancellationToken cancellationToken = default);
 }
