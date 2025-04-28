@@ -962,9 +962,39 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string PingStockSharpDriverReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.STOCKSHARP_CONTROLLER_NAME}-{Routes.DRIVER_CONTROLLER_NAME}", Routes.PING_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string PingStockSharpMainReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.STOCKSHARP_CONTROLLER_NAME}-{Routes.MAIN_CONTROLLER_NAME}", Routes.PING_ACTION_NAME);
-
-        /// <inheritdoc/>
         public readonly static string ValuesChangedStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.VALUES_CONTROLLER_NAME}-{Routes.CHANGE_ACTION_NAME}", Routes.NOTIFY_ACTION_NAME);
+        #region
+
+
+        /// <summary>
+        /// Получить профили по их идентификаторам
+        /// </summary>
+        /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
+        public readonly static string GetPortfoliosStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.PORTFOLIOS_CONTROLLER_NAME, $"{Routes.GET_ACTION_NAME}-{Routes.LIST_ACTION_NAME}");
+
+        /// <summary>
+        /// Получить площадки бирж по их идентификаторам
+        /// </summary>
+        /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
+        public readonly static string GetBoardsStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.BOARDS_CONTROLLER_NAME, $"{Routes.GET_ACTION_NAME}-{Routes.LIST_ACTION_NAME}");
+
+        /// <summary>
+        /// Получить биржи по их идентификаторам
+        /// </summary>
+        /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
+        public readonly static string GetExchangesStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.EXCHANGES_CONTROLLER_NAME, $"{Routes.GET_ACTION_NAME}-{Routes.LIST_ACTION_NAME}");
+
+        /// <summary>
+        /// Получить инструменты по их идентификаторам
+        /// </summary>
+        /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
+        public readonly static string GetInstrumentsStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, $"{Routes.GET_ACTION_NAME}-{Routes.LIST_ACTION_NAME}");
+
+        /// <summary>
+        /// Получить заказы по их идентификаторам
+        /// </summary>
+        /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
+        public readonly static string GetOrdersStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME);
+        #endregion
     }
 }

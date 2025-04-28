@@ -437,6 +437,26 @@ public static partial class GlobalStaticConstantsRoutes
         public const string KLADR_CONTROLLER_NAME = "kladr";
 
         /// <summary>
+        /// Portfolios
+        /// </summary>
+        public const string PORTFOLIOS_CONTROLLER_NAME = "portfolios";
+
+        /// <summary>
+        /// Boards
+        /// </summary>
+        public const string BOARDS_CONTROLLER_NAME = "boards";
+
+        /// <summary>
+        /// Exchanges
+        /// </summary>
+        public const string EXCHANGES_CONTROLLER_NAME = "exchanges";
+
+        /// <summary>
+        /// Instruments
+        /// </summary>
+        public const string INSTRUMENTS_CONTROLLER_NAME = "instruments";
+
+        /// <summary>
         /// StockSharp
         /// </summary>
         public const string STOCKSHARP_CONTROLLER_NAME = "StockSharp";

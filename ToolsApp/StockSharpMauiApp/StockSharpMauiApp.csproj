@@ -68,6 +68,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\BlazorLib\BlazorLib.csproj" />
+		<ProjectReference Include="..\..\RemoteCallLib\MQTTCallLib\MQTTCallLib.csproj" />
 		<ProjectReference Include="..\..\SharedLib\SharedLib.csproj" />
 	</ItemGroup>
 

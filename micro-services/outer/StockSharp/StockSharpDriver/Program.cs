@@ -135,7 +135,6 @@ public class Program
                 services
                     .AddSingleton<IStockSharpEventsService, StockSharpEventsServiceTransmission>()
                     .AddSingleton<IStockSharpDataService, StockSharpDataService>()
-                    .AddScoped<IStockSharpMainService, StockSharpMainServiceTransmission>()
                     .AddScoped<IStockSharpDriverService, StockSharpDriverService>()
                 ;
 
