@@ -182,7 +182,7 @@ public class ConnectionStockSharpWorker(
 
     void SecurityReceivedHandle(Subscription subscription, Security sec)
     {
-        _logger.LogInformation($"Call > `{nameof(SecurityReceivedHandle)}`: {JsonConvert.SerializeObject(sec)}");
+        _logger.LogDebug($"Call > `{nameof(SecurityReceivedHandle)}`: {JsonConvert.SerializeObject(sec)}");
         InstrumentTradeStockSharpModel req = new InstrumentTradeStockSharpModel().Bind(sec);
         dataRepo.SaveInstrument(req);
         eventTrans.InstrumentReceived(req);
@@ -226,8 +226,8 @@ public class ConnectionStockSharpWorker(
     {
         _logger.LogError(ex, $"Call > `{nameof(LookupPortfoliosResultHandle)}`: {JsonConvert.SerializeObject(portfolioLM)}");
 
-        foreach (Portfolio port in portfolios)
-            dataRepo.SavePortfolio(new PortfolioStockSharpModel().Bind(port));
+        //foreach (Portfolio port in portfolios)
+        //    dataRepo.SavePortfolio(new PortfolioStockSharpModel().Bind(port));
     }
 
     void SubscriptionFailedHandle(Subscription subscription, Exception ex, bool arg)
@@ -331,7 +331,7 @@ public class ConnectionStockSharpWorker(
     }
     void LogHandle(Ecng.Logging.LogMessage senderLog)
     {
-        _logger.LogWarning($"Call > `{nameof(LogHandle)}`: {senderLog}");
+        _logger.LogTrace($"Call > `{nameof(LogHandle)}`: {senderLog}");
     }
     void Level1ReceivedHandle(Subscription subscription, StockSharp.Messages.Level1ChangeMessage levelCh)
     {

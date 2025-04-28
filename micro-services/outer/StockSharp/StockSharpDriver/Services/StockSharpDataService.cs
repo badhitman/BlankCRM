@@ -145,7 +145,16 @@ public class StockSharpDataService(IDbContextFactory<StockSharpAppContext> tools
 
         PortfolioTradeModelDB portfolioDb = null;
         if (!string.IsNullOrWhiteSpace(req.Portfolio.Name))
-            portfolioDb = context.Portfolios.First(x => x.Id == SavePortfolio(req.Portfolio));
+        {
+            portfolioDb = context.Portfolios
+                .FirstOrDefault(x =>
+                x.Name == req.Portfolio.Name &&
+                x.DepoName == req.Portfolio.DepoName &&
+                x.ClientCode == req.Portfolio.ClientCode &&
+                x.Currency == req.Portfolio.Currency);
+
+            portfolioDb ??= context.Portfolios.First(x => x.Id == SavePortfolio(req.Portfolio));
+        }
 
         if (orderDb is null)
         {
