@@ -12,7 +12,7 @@ public interface IStorageTransmission
     /// <summary>
     /// GoToPageForRow
     /// </summary>
-    public Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestModel<int> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// Metadata Logs
@@ -22,7 +22,7 @@ public interface IStorageTransmission
     /// <summary>
     /// Чтение логов
     /// </summary>
-    public Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// TagSet

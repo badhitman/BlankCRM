@@ -26,7 +26,7 @@ public class LogsService(ApiRestConfigModelDB _conf, IHttpClientFactory HttpClie
     };
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
@@ -41,7 +41,7 @@ public class LogsService(ApiRestConfigModelDB _conf, IHttpClientFactory HttpClie
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken cancellationToken = default)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken cancellationToken = default)
     {
         using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 

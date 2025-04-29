@@ -14,7 +14,7 @@ namespace StorageService;
 public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) : ILogsService
 {
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestModel<int> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -119,7 +119,7 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -127,27 +127,27 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
         using NLogsContext context = await logsDbFactory.CreateDbContextAsync(token);
         IQueryable<NLogRecordModelDB> q = context.Logs.AsQueryable();
 
-        if (req.Payload.StartAt.HasValue)
+        if (req.Payload is not null && req.Payload.StartAt.HasValue)
         {
             DateTime _dt = req.Payload.StartAt.Value.SetKindUtc();
             q = q.Where(x => x.RecordTime >= _dt);
         }
-        if (req.Payload.FinalOff.HasValue)
+        if (req.Payload is not null && req.Payload.FinalOff.HasValue)
         {
             DateTime _dt = req.Payload.FinalOff.Value.SetKindUtc().Date.AddHours(23).AddMinutes(59).AddSeconds(59);
             q = q.Where(x => x.RecordTime <= _dt);
         }
 
-        if (req.Payload.LevelsFilter is not null && req.Payload.LevelsFilter.Length != 0)
+        if (req.Payload is not null && req.Payload.LevelsFilter is not null && req.Payload.LevelsFilter.Length != 0)
             q = q.Where(x => req.Payload.LevelsFilter.Contains(x.RecordLevel));
 
-        if (req.Payload.LoggersFilter is not null && req.Payload.LoggersFilter.Length != 0)
+        if (req.Payload is not null && req.Payload.LoggersFilter is not null && req.Payload.LoggersFilter.Length != 0)
             q = q.Where(x => req.Payload.LoggersFilter.Contains(x.Logger));
 
-        if (req.Payload.ContextsPrefixesFilter is not null && req.Payload.ContextsPrefixesFilter.Length != 0)
+        if (req.Payload is not null && req.Payload.ContextsPrefixesFilter is not null && req.Payload.ContextsPrefixesFilter.Length != 0)
             q = q.Where(x => req.Payload.ContextsPrefixesFilter.Contains(x.ContextPrefix));
 
-        if (req.Payload.ApplicationsFilter is not null && req.Payload.ApplicationsFilter.Length != 0)
+        if (req.Payload is not null && req.Payload.ApplicationsFilter is not null && req.Payload.ApplicationsFilter.Length != 0)
             q = q.Where(x => req.Payload.ApplicationsFilter.Contains(x.ApplicationName));
 
         IOrderedQueryable<NLogRecordModelDB> oq = req.SortingDirection == DirectionsEnum.Up
