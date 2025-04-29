@@ -183,8 +183,11 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         table.NavigateTo(i - 1);
     }
 
-    static string GetClassLevel(string recordLevel)
+    static string GetClassLevel(string? recordLevel)
     {
+        if(string.IsNullOrWhiteSpace(recordLevel))
+            return "";
+
         if (recordLevel.StartsWith("I", StringComparison.OrdinalIgnoreCase))
             return "text-info";
 

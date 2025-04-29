@@ -10,7 +10,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// GoToPageForRowReceive
 /// </summary>
-public class GoToPageForRowReceive(ISerializeStorage storeRepo)
+public class GoToPageForRowReceive(ILogsService storeRepo)
     : IResponseReceive<TPaginationRequestModel<int>?, TPaginationResponseModel<NLogRecordModelDB>?>
 {
     /// <inheritdoc/>

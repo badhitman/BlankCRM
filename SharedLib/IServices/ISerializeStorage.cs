@@ -12,23 +12,6 @@ namespace SharedLib;
 /// </remarks>
 public interface ISerializeStorage
 {
-    #region logs
-    /// <summary>
-    /// Определить номер страницы для строки
-    /// </summary>
-    public Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestModel<int> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Чтение логов
-    /// </summary>
-    public Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestModel<LogsSelectRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// MetadataLogs
-    /// </summary>
-    public Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogsAsync(PeriodDatesTimesModel req, CancellationToken token = default);
-    #endregion
-
     #region tags
     /// <summary>
     /// FilesAreaGetMetadata

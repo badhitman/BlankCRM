@@ -26,6 +26,19 @@ public partial class NLogsLayerContext : DbContext
     }
 
     /// <inheritdoc/>
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<NLogRecordModelDB>().HasIndex(p => p.RecordTime);
+        modelBuilder.Entity<NLogRecordModelDB>().HasIndex(p => p.ApplicationName);
+        modelBuilder.Entity<NLogRecordModelDB>().HasIndex(p => p.ContextPrefix);
+        modelBuilder.Entity<NLogRecordModelDB>().HasIndex(p => p.RecordLevel);
+        modelBuilder.Entity<NLogRecordModelDB>().HasIndex(p => p.Logger);
+        modelBuilder.Entity<NLogRecordModelDB>().HasKey(p => p.Id);
+    }
+
+    /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
 #if DEBUG
@@ -37,5 +50,5 @@ public partial class NLogsLayerContext : DbContext
     /// <summary>
     /// Логи
     /// </summary>
-    public DbSet<NLogRecordModelDB> Logs { get; set; } = default!;    
+    public DbSet<NLogRecordModelDB> Logs { get; set; } = default!;
 }

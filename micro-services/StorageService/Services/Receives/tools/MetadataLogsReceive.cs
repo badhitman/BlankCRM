@@ -11,7 +11,7 @@ namespace Transmission.Receives.storage;
 /// MetadataLogsReceive
 /// </summary>
 /// <param name="storeRepo"></param>
-public class MetadataLogsReceive(ISerializeStorage storeRepo)
+public class MetadataLogsReceive(ILogsService storeRepo)
     : IResponseReceive<PeriodDatesTimesModel?, TResponseModel<LogsMetadataResponseModel>?>
 {
     /// <inheritdoc/>

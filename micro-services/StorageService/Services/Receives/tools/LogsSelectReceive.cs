@@ -10,7 +10,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// LogsSelectReceive
 /// </summary>
-public class LogsSelectReceive(ISerializeStorage storeRepo) 
+public class LogsSelectReceive(ILogsService storeRepo) 
     : IResponseReceive<TPaginationRequestModel<LogsSelectRequestModel>?, TPaginationResponseModel<NLogRecordModelDB>?>
 {
     /// <inheritdoc/>

@@ -135,8 +135,9 @@ public class Program
 
         builder.Services
             .AddScoped<ISerializeStorage, StorageServiceImpl>()
+            .AddScoped<ILogsService, LogsNavigationImpl>()
             ;
-
+        
         // Custom metrics for the application
         Meter greeterMeter = new($"OTel.{appName}", "1.0.0");
         OpenTelemetryBuilder otel = builder.Services.AddOpenTelemetry();

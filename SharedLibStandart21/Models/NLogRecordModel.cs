@@ -9,8 +9,19 @@ namespace SharedLib;
 /// <summary>
 /// NLogRecordModel
 /// </summary>
-public class NLogRecordModel
+public class NLogRecordModelDB
 {
+    /// <summary>
+    /// Key
+    /// </summary>
+    public int Id { get; set; }
+
+    /// <summary>
+    /// ApplicationName
+    /// </summary>
+    public string? ApplicationName { get; set; }
+
+
     /// <inheritdoc/>
     public string? ContextPrefix { get; set; }
 
@@ -41,4 +52,33 @@ public class NLogRecordModel
 
     /// <inheritdoc/>
     public string? AllEventProperties { get; set; }
+
+    /// <inheritdoc/>
+    public static bool operator ==(NLogRecordModelDB L1, NLogRecordModelDB L2)
+    {
+        return L1.Id == L2.Id;
+    }
+
+    /// <inheritdoc/>
+    public static bool operator !=(NLogRecordModelDB L1, NLogRecordModelDB L2)
+    {
+        return L1.Id != L2.Id;
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
+    }
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj)
+    {
+        if (obj == null) return false;
+
+        if (obj is NLogRecordModelDB _el)
+            return Id == _el.Id;
+
+        return false;
+    }
 }
