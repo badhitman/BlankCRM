@@ -3,14 +3,13 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
-using SharedLib;
 
 namespace DbcLib;
 
 /// <summary>
 /// Промежуточный/общий слой контекста базы данных
 /// </summary>
-public partial class StockSharpAppContext(DbContextOptions<StockSharpAppContext> options) : StockSharpAppLayerContext(options)
+public partial class NLogsContext(DbContextOptions<NLogsContext> options) : NLogsLayerContext(options)
 {
     /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -18,11 +17,5 @@ public partial class StockSharpAppContext(DbContextOptions<StockSharpAppContext>
         base.OnConfiguring(options);
         options
             .UseSqlite($"Filename={DbPath}");
-    }
-
-    /// <inheritdoc/>
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);         
     }
 }

@@ -213,6 +213,15 @@ public class ConnectionStockSharpWorker(
     }
 
 
+    void PositionReceivedHandle(Subscription subscription, Position pos)
+    {
+        _logger.LogWarning($"Call > `{nameof(PositionReceivedHandle)}`: {JsonConvert.SerializeObject(pos)}");
+    }
+    void OwnTradeReceivedHandle(Subscription subscription, MyTrade tr)
+    {
+        _logger.LogWarning($"Call > `{nameof(OwnTradeReceivedHandle)}`: {JsonConvert.SerializeObject(tr)}");
+    }
+
     #region Exception`s
     void LookupSecuritiesResultHandle(StockSharp.Messages.SecurityLookupMessage slm, IEnumerable<Security> securities, Exception ex)
     {
@@ -273,25 +282,13 @@ public class ConnectionStockSharpWorker(
     {
         _logger.LogWarning($"Call > `{nameof(SubscriptionStartedHandle)}`");
     }
-    void SubscriptionReceivedHandle(Subscription subscription, object sender)
-    {
-        _logger.LogTrace($"Call > `{nameof(SubscriptionReceivedHandle)}`: {JsonConvert.SerializeObject(sender)}");
-    }
     void SubscriptionOnlineHandle(Subscription subscription)
     {
         _logger.LogWarning($"Call > `{nameof(SubscriptionOnlineHandle)}`");
     }
-    void PositionReceivedHandle(Subscription subscription, Position pos)
-    {
-        _logger.LogWarning($"Call > `{nameof(PositionReceivedHandle)}`: {JsonConvert.SerializeObject(pos)}");
-    }
     void ParentRemovedHandle(Ecng.Logging.ILogSource sender)
     {
         _logger.LogWarning($"Call > `{nameof(ParentRemovedHandle)}`: {JsonConvert.SerializeObject(sender)}");
-    }
-    void OwnTradeReceivedHandle(Subscription subscription, MyTrade tr)
-    {
-        _logger.LogWarning($"Call > `{nameof(OwnTradeReceivedHandle)}`: {JsonConvert.SerializeObject(tr)}");
     }
     void OrderRegisterFailReceivedHandle(Subscription subscription, OrderFail orderF)
     {
@@ -317,10 +314,6 @@ public class ConnectionStockSharpWorker(
     {
         _logger.LogWarning($"Call > `{nameof(NewsReceivedHandle)}`: {JsonConvert.SerializeObject(sender)}");
     }
-    void NewMessageHandle(StockSharp.Messages.Message msg)
-    {
-        _logger.LogTrace($"Call > `{nameof(NewMessageHandle)}`: {JsonConvert.SerializeObject(msg)}");
-    }
     void MassOrderCanceled2Handle(long arg, DateTimeOffset dt)
     {
         _logger.LogWarning($"Call > `{nameof(MassOrderCanceled2Handle)}` [{nameof(arg)}:{arg}]: {dt}");
@@ -328,10 +321,6 @@ public class ConnectionStockSharpWorker(
     void MassOrderCanceledHandle(long sender)
     {
         _logger.LogWarning($"Call > `{nameof(MassOrderCanceledHandle)}`: {JsonConvert.SerializeObject(sender)}");
-    }
-    void LogHandle(Ecng.Logging.LogMessage senderLog)
-    {
-        _logger.LogTrace($"Call > `{nameof(LogHandle)}`: {senderLog}");
     }
     void Level1ReceivedHandle(Subscription subscription, StockSharp.Messages.Level1ChangeMessage levelCh)
     {
@@ -353,10 +342,6 @@ public class ConnectionStockSharpWorker(
     {
         _logger.LogWarning($"Call > `{nameof(DataTypeReceivedHandle)}`: {JsonConvert.SerializeObject(argDt)}");
     }
-    void CurrentTimeChangedHandle(TimeSpan sender)
-    {
-        _logger.LogTrace($"Call > `{nameof(CurrentTimeChangedHandle)}`: {JsonConvert.SerializeObject(sender)}");
-    }
     void ConnectionRestoredHandle(StockSharp.Messages.IMessageAdapter sender)
     {
         _logger.LogWarning($"Call > `{nameof(ConnectionRestoredHandle)}`: {JsonConvert.SerializeObject(sender)}");
@@ -376,6 +361,22 @@ public class ConnectionStockSharpWorker(
     void CandleReceivedHandle(Subscription subscription, StockSharp.Messages.ICandleMessage candleMessage)
     {
         _logger.LogWarning($"Call > `{nameof(CandleReceivedHandle)}`: {JsonConvert.SerializeObject(candleMessage)}");
+    }
+    void LogHandle(Ecng.Logging.LogMessage senderLog)
+    {
+        _logger.LogTrace($"Call > `{nameof(LogHandle)}`: {senderLog}");
+    }
+    void CurrentTimeChangedHandle(TimeSpan sender)
+    {
+        _logger.LogTrace($"Call > `{nameof(CurrentTimeChangedHandle)}`: {JsonConvert.SerializeObject(sender)}");
+    }
+    void NewMessageHandle(StockSharp.Messages.Message msg)
+    {
+        _logger.LogTrace($"Call > `{nameof(NewMessageHandle)}`: {JsonConvert.SerializeObject(msg)}");
+    }
+    void SubscriptionReceivedHandle(Subscription subscription, object sender)
+    {
+        _logger.LogTrace($"Call > `{nameof(SubscriptionReceivedHandle)}`: {JsonConvert.SerializeObject(sender)}");
     }
     #endregion
 }

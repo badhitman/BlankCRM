@@ -92,6 +92,13 @@ public class Program
                     opt.EnableSensitiveDataLogging(true);
                     //opt.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
 #endif
+                })
+                .AddDbContextFactory<NLogsContext>(opt =>
+                {
+#if DEBUG
+                    opt.EnableSensitiveDataLogging(true);
+                    //opt.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+#endif
                 });
 
                 // Register Bot configuration
