@@ -9,6 +9,7 @@ using NLog.Extensions.Logging;
 using RemoteCallLib;
 using SharedLib;
 using StockSharpService;
+using StorageService;
 using Telegram.Bot;
 using Telegram.Bot.Services;
 
@@ -119,6 +120,7 @@ public class Program
                         });
 
                 services
+                    .AddScoped<ILogsService, LogsNavigationImpl>()
                     .AddScoped<UpdateHandler>()
                     .AddScoped<ReceiverService>()
                     .AddHostedService<PollingService>()
