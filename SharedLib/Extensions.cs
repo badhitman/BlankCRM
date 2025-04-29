@@ -99,34 +99,6 @@ public static class Extensions
 
 
     /// <summary>
-    /// Создает новый объект System.DateTime, который имеет то же количество тактов,
-    /// что и указанный System.DateTime, но обозначается как местное время, всеобщее
-    /// координированное время (UTC) или ни то, ни другое, как указано значением System.DateTimeKind.
-    /// </summary>
-    public static DateTime? SetKindUtc(this DateTime? dateTime)
-    {
-        if (dateTime.HasValue)
-        {
-            return dateTime.Value.SetKindUtc();
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    /// <summary>
-    /// Создает новый объект System.DateTime, который имеет то же количество тактов,
-    /// что и указанный System.DateTime, но обозначается как местное время, всеобщее
-    /// координированное время (UTC) или ни то, ни другое, как указано указанным значением System.DateTimeKind.
-    /// </summary>
-    public static DateTime SetKindUtc(this DateTime dateTime)
-    {
-        if (dateTime.Kind == DateTimeKind.Utc) { return dateTime; }
-        return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
-    }
-
-    /// <summary>
     /// Отправка запроса GET согласно указанному универсальному коду ресурса (URI) и возврат текста ответа в виде строки в асинхронной операции.
     /// </summary>
     public static async Task<TResponseModel<T>> GetStringAsync<T>(this HttpClient httpCli, [StringSyntax(StringSyntaxAttribute.Uri)] string? requestUri, CancellationToken cancellationToken = default) where T : class

@@ -11,13 +11,13 @@ namespace Transmission.Receives.storage;
 /// GoToPageForRowReceive
 /// </summary>
 public class GoToPageForRowReceive(ILogsService storeRepo)
-    : IResponseReceive<TPaginationRequestStandardModel<int>?, TPaginationResponseModel<NLogRecordModelDB>?>
+    : IMQTTReceive<TPaginationRequestStandardModel<int>, TPaginationResponseModel<NLogRecordModelDB>>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GoToPageForRowReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<int>? payload, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<NLogRecordModelDB>> ResponseHandleActionAsync(TPaginationRequestStandardModel<int> payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await storeRepo.GoToPageForRowAsync(payload, token);

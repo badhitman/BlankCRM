@@ -88,19 +88,23 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
                 }, token),
                 Task.Run(async () => {
                     using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
-                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.RecordLevel).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => LevelsAvailable.Add(x.Key??"", x.Value));
+                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.RecordLevel).Select(x => new KeyValuePair<string, int>(x.Key, x.Count())).ToListAsync())
+                        .ForEach(x => LevelsAvailable.Add(x.Key, x.Value));
                 }, token),
                 Task.Run(async () => {
                     using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
-                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.ApplicationName).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => ApplicationsAvailable.Add(x.Key ?? "", x.Value));
+                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.ApplicationName).Select(x => new KeyValuePair<string, int>(x.Key, x.Count())).ToListAsync())
+                        .ForEach(x => ApplicationsAvailable.Add(x.Key, x.Value));
                 }, token),
                 Task.Run(async () => {
                     using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
-                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.ContextPrefix).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => ContextsPrefixesAvailable.Add(x.Key ?? "", x.Value));
+                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.ContextPrefix).Select(x => new KeyValuePair<string, int>(x.Key, x.Count())).ToListAsync())
+                        .ForEach(x => ContextsPrefixesAvailable.Add(x.Key , x.Value));
                 }, token),
                 Task.Run(async () => {
                     using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
-                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.Logger).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => LoggersAvailable.Add(x.Key ?? "", x.Value));
+                    (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.Logger).Select(x => new KeyValuePair<string, int>(x.Key, x.Count())).ToListAsync())
+                        .ForEach(x => LoggersAvailable.Add(x.Key , x.Value));
                 }, token),
             ]);
 

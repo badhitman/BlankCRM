@@ -18,20 +18,21 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection StorageRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<SaveParameterReceive,           StorageCloudParameterPayloadModel,                      TResponseModel<int?>>()
-            .RegisterMqListener<GoToPageForRowReceive,          TPaginationRequestModel<int>?,                          TPaginationResponseModel<NLogRecordModelDB>>()
-            .RegisterMqListener<SaveFileReceive,                TAuthRequestModel<StorageImageMetadataModel>,           TResponseModel<StorageFileModelDB>>()
-            .RegisterMqListener<TagSetReceive,                  TagSetModel,                                            ResponseBaseModel>()
-            .RegisterMqListener<MetadataLogsReceive,            PeriodDatesTimesModel,                                  TResponseModel<LogsMetadataResponseModel>>()
-            .RegisterMqListener<LogsSelectReceive,              TPaginationRequestModel<LogsSelectRequestModel>,        TPaginationResponseModel<NLogRecordModelDB>>()
-            .RegisterMqListener<SetWebConfigReceive,            WebConfigModel,                                         ResponseBaseModel>()
-            .RegisterMqListener<ReadFileReceive,                TAuthRequestModel<RequestFileReadModel>,                TResponseModel<FileContentModel>>()
-            .RegisterMqListener<TagsSelectReceive,              TPaginationRequestModel<SelectMetadataRequestModel>,    TPaginationResponseModel<TagModelDB>>()
-            .RegisterMqListener<FilesAreaGetMetadataReceive,    FilesAreaMetadataRequestModel,                          TResponseModel<FilesAreaMetadataModel[]>>()
-            .RegisterMqListener<FilesSelectReceive,             TPaginationRequestModel<SelectMetadataRequestModel>,    TPaginationResponseModel<StorageFileModelDB>>()
-            .RegisterMqListener<ReadParameterReceive,           StorageMetadataModel,                                   TResponseModel<StorageCloudParameterPayloadModel>>()
-            .RegisterMqListener<ReadParametersReceive,          StorageMetadataModel[],                                 TResponseModel<List<StorageCloudParameterPayloadModel>>>()
-            .RegisterMqListener<FindParametersReceive,          RequestStorageBaseModel,                                TResponseModel<FoundParameterModel[]?>>()
+            .RegisterMqListener<GoToPageForRowReceive, TPaginationRequestStandardModel<int>, TPaginationResponseModel<NLogRecordModelDB>>()
+            .RegisterMqListener<MetadataLogsReceive, PeriodDatesTimesModel, TResponseModel<LogsMetadataResponseModel>>()
+            .RegisterMqListener<LogsSelectReceive, TPaginationRequestStandardModel<LogsSelectRequestModel>, TPaginationResponseModel<NLogRecordModelDB>>()
+
+            .RegisterMqListener<SaveParameterReceive, StorageCloudParameterPayloadModel, TResponseModel<int?>>()
+            .RegisterMqListener<SaveFileReceive, TAuthRequestModel<StorageImageMetadataModel>, TResponseModel<StorageFileModelDB>>()
+            .RegisterMqListener<TagSetReceive, TagSetModel, ResponseBaseModel>()
+            .RegisterMqListener<SetWebConfigReceive, WebConfigModel, ResponseBaseModel>()
+            .RegisterMqListener<ReadFileReceive, TAuthRequestModel<RequestFileReadModel>, TResponseModel<FileContentModel>>()
+            .RegisterMqListener<TagsSelectReceive, TPaginationRequestModel<SelectMetadataRequestModel>, TPaginationResponseModel<TagModelDB>>()
+            .RegisterMqListener<FilesAreaGetMetadataReceive, FilesAreaMetadataRequestModel, TResponseModel<FilesAreaMetadataModel[]>>()
+            .RegisterMqListener<FilesSelectReceive, TPaginationRequestModel<SelectMetadataRequestModel>, TPaginationResponseModel<StorageFileModelDB>>()
+            .RegisterMqListener<ReadParameterReceive, StorageMetadataModel, TResponseModel<StorageCloudParameterPayloadModel>>()
+            .RegisterMqListener<ReadParametersReceive, StorageMetadataModel[], TResponseModel<List<StorageCloudParameterPayloadModel>>>()
+            .RegisterMqListener<FindParametersReceive, RequestStorageBaseModel, TResponseModel<FoundParameterModel[]?>>()
             ;
     }
 }

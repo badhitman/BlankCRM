@@ -5,6 +5,7 @@
 using SharedLib;
 using MQTTCallLib;
 using Transmission.Receives.StockSharpDriver;
+using Transmission.Receives.storage;
 
 namespace StockSharpService;
 
@@ -19,6 +20,10 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection StockSharpRegisterMqListeners(this IServiceCollection services)
     {
         return services
+            .RegisterMqListener<GoToPageForRowReceive, TPaginationRequestStandardModel<int>, TPaginationResponseModel<NLogRecordModelDB>>()
+            .RegisterMqListener<MetadataLogsReceive, PeriodDatesTimesModel, TResponseModel<LogsMetadataResponseModel>>()
+            .RegisterMqListener<LogsSelectReceive, TPaginationRequestStandardModel<LogsSelectRequestModel>, TPaginationResponseModel<NLogRecordModelDB>>()
+
             .RegisterMqListener<PingStockSharpDriverReceive, object, ResponseBaseModel>()
             .RegisterMqListener<GetPortfoliosStockSharpDriverReceive, int[], TResponseModel<List<PortfolioStockSharpModel>>>()
             .RegisterMqListener<GetBoardsStockSharpDriverReceive, int[], TResponseModel<List<BoardStockSharpModel>>>()
