@@ -13,26 +13,11 @@ namespace DbcLib;
 public partial class NLogsLayerContext : DbContext
 {
     /// <summary>
-    /// FileName
-    /// </summary>
-    private static readonly string _ctxName = nameof(NLogsLayerContext);
-
-    /// <summary>
-    /// db Path
-    /// </summary>
-    public static string DbPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _ctxName, $"{(AppDomain.CurrentDomain.FriendlyName.Equals("ef", StringComparison.OrdinalIgnoreCase) ? "NLogsData" : AppDomain.CurrentDomain.FriendlyName)}.db3");
-
-
-    /// <summary>
     /// Промежуточный/общий слой контекста базы данных
     /// </summary>
     public NLogsLayerContext(DbContextOptions options)
         : base(options)
     {
-        FileInfo _fi = new(DbPath);
-
-        if (_fi.Directory?.Exists != true)
-            Directory.CreateDirectory(Path.GetDirectoryName(DbPath)!);
         //#if DEBUG
         //  Database.EnsureCreated();
         //#else

@@ -408,3 +408,6 @@ FodyWeavers.xsd
 **/wwwroot/lib
 */wwwroot/lib
 /aspire-manifest.json
+/micro-services/outer/StockSharp/StockSharpDriver/logs-database.db3
+/micro-services/outer/StockSharp/StockSharpDriver/logs-database.db3-shm
+/micro-services/outer/StockSharp/StockSharpDriver/logs-database.db3-wal

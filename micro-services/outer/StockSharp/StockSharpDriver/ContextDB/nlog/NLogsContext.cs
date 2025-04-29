@@ -16,6 +16,12 @@ public partial class NLogsContext(DbContextOptions<NLogsContext> options) : NLog
     {
         base.OnConfiguring(options);
         options
-            .UseSqlite($"Filename={DbPath}");
+
+#if DEBUG
+            .UseSqlite(@"Data Source=c:\Users\User\source\repos\BlankCRM\micro-services\outer\StockSharp\StockSharpDriver\bin\Debug\net6.0\logs-database.db3;");
+#else
+            .UseSqlite($"Data Source=logs-database.db3;");
+#endif
+
     }
 }

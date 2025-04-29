@@ -133,12 +133,12 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
 
         if (req.Payload is not null && req.Payload.StartAt.HasValue)
         {
-            DateTime _dt = req.Payload.StartAt.Value.SetKindUtc();
+            DateTime _dt = req.Payload.StartAt.Value;
             q = q.Where(x => x.RecordTime >= _dt);
         }
         if (req.Payload is not null && req.Payload.FinalOff.HasValue)
         {
-            DateTime _dt = req.Payload.FinalOff.Value.SetKindUtc().Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+            DateTime _dt = req.Payload.FinalOff.Value.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
             q = q.Where(x => x.RecordTime <= _dt);
         }
 

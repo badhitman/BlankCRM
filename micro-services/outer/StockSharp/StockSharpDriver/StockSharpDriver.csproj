@@ -34,6 +34,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+		<PackageReference Include="NLog.Database" Version="5.4.0" />
 		<PackageReference Include="NLog.Extensions.Logging" Version="5.4.0" />
 		<PackageReference Include="StockSharp.Algo" Version="5.0.213" />
 		<PackageReference Include="StockSharp.BusinessEntities" Version="5.0.202" />
