@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
 
-namespace HelpdeskService;
+namespace HelpDeskService;
 
 /// <summary>
 /// Articles
 /// </summary>
-public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactory) : IArticlesService
+public class ArticlesService(IDbContextFactory<HelpDeskContext> helpdeskDbFactory) : IArticlesService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> ArticleCreateOrUpdateAsync(ArticleModelDB article, CancellationToken token = default)
@@ -27,7 +27,7 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
         }
 
         article.NormalizedNameUpper = article.Name.ToUpper();
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         DateTime dtu = DateTime.UtcNow;
         if (article.Id < 1)
@@ -58,7 +58,7 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
     /// <inheritdoc/>
     public async Task<TResponseModel<ArticleModelDB[]>> ArticlesReadAsync(int[] req, CancellationToken token = default)
     {
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 #if DEBUG
         var _res = await context.Articles
             .Where(x => req.Any(y => y == x.Id))
@@ -82,7 +82,7 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
         if (req.PageSize < 5)
             req.PageSize = 5;
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         IQueryable<ArticleModelDB> q = context
             .Articles
@@ -124,7 +124,7 @@ public class ArticlesService(IDbContextFactory<HelpdeskContext> helpdeskDbFactor
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>> UpdateRubricsForArticleAsync(ArticleRubricsSetModel req, CancellationToken token = default)
     {
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         if (req.RubricsIds.Length == 0)
             return new TResponseModel<bool>() { Response = await context.RubricsArticlesJoins.Where(x => x.ArticleId == req.ArticleId).ExecuteDeleteAsync(cancellationToken: token) != 0 };
 

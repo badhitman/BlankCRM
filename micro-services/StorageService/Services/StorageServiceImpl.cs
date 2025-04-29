@@ -30,7 +30,7 @@ public class StorageServiceImpl(
     IMongoDatabase mongoFs,
     IIdentityTransmission identityRepo,
     ICommerceTransmission commRepo,
-    IHelpdeskTransmission HelpdeskRepo,
+    IHelpDeskTransmission HelpDeskRepo,
     WebConfigModel webConfig,
     ILogger<StorageServiceImpl> loggerRepo) : ISerializeStorage
 {
@@ -184,7 +184,7 @@ public class StorageServiceImpl(
                             IncludeSubscribersOnly = false,
                         }
                     };
-                    TResponseModel<IssueHelpdeskModelDB[]> findIssues = await HelpdeskRepo.IssuesReadAsync(reqIssues, token);
+                    TResponseModel<IssueHelpDeskModelDB[]> findIssues = await HelpDeskRepo.IssuesReadAsync(reqIssues, token);
                     allowed = findIssues.Success() &&
                         findIssues.Response?.Any(x => x.AuthorIdentityUserId == req.SenderActionUserId || x.ExecutorIdentityUserId == req.SenderActionUserId || x.Subscribers?.Any(y => y.UserId == req.SenderActionUserId) == true) == true;
                 }
@@ -301,9 +301,9 @@ public class StorageServiceImpl(
                     else
                     {
                         OrderDocumentModelDB orderDb = get_order.Response.Single();
-                        if (orderDb.HelpdeskId.HasValue && orderDb.HelpdeskId.Value > 0)
+                        if (orderDb.HelpDeskId.HasValue && orderDb.HelpDeskId.Value > 0)
                         {
-                            msg = $"В <a href=\"{webConfig.ClearBaseUri}/issue-card/{orderDb.HelpdeskId.Value}\">заказ #{orderDb.Id}</a> добавлен файл '<u>{_file_name}</u>' {GlobalTools.SizeDataAsString(req.Payload.Payload.Length)}";
+                            msg = $"В <a href=\"{webConfig.ClearBaseUri}/issue-card/{orderDb.HelpDeskId.Value}\">заказ #{orderDb.Id}</a> добавлен файл '<u>{_file_name}</u>' {GlobalTools.SizeDataAsString(req.Payload.Payload.Length)}";
                             loggerRepo.LogInformation($"{msg} [{nameof(res.Response.PointId)}:{_uf}]");
                             reqPulse = new()
                             {
@@ -312,7 +312,7 @@ public class StorageServiceImpl(
                                     Payload = new()
                                     {
                                         Description = msg,
-                                        IssueId = orderDb.HelpdeskId.Value,
+                                        IssueId = orderDb.HelpDeskId.Value,
                                         PulseType = PulseIssuesTypesEnum.Files,
                                         Tag = Routes.ADD_ACTION_NAME
                                     },
@@ -320,7 +320,7 @@ public class StorageServiceImpl(
                                 }
                             };
 
-                            await HelpdeskRepo.PulsePushAsync(reqPulse, false, token);
+                            await HelpDeskRepo.PulsePushAsync(reqPulse, false, token);
                         }
                     }
                     break;
@@ -341,7 +341,7 @@ public class StorageServiceImpl(
                             SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
                         }
                     };
-                    await HelpdeskRepo.PulsePushAsync(reqPulse, false, token);
+                    await HelpDeskRepo.PulsePushAsync(reqPulse, false, token);
                     break;
             }
         }

@@ -170,9 +170,9 @@ public static partial class GlobalStaticConstants
     }
 
     /// <summary>
-    /// HelpdeskNotificationsTelegramAppName
+    /// HelpDeskNotificationsTelegramAppName
     /// </summary>
-    public const string HelpdeskNotificationsTelegramAppName = $"{Routes.HELPDESK_CONTROLLER_NAME}-{Routes.NOTIFICATIONS_CONTROLLER_NAME}/{Routes.TELEGRAM_CONTROLLER_NAME}";
+    public const string HelpDeskNotificationsTelegramAppName = $"{Routes.HELPDESK_CONTROLLER_NAME}-{Routes.NOTIFICATIONS_CONTROLLER_NAME}/{Routes.TELEGRAM_CONTROLLER_NAME}";
 
 
     /// <summary>

@@ -15,7 +15,7 @@ namespace SharedLib;
 /// </remarks>
 [Index(nameof(TokenAccess), IsUnique = true)]
 [Index(nameof(CreatedAt))]
-public class AnonymTelegramAccessHelpdeskModelDB
+public class AnonymTelegramAccessHelpDeskModelDB
 {
     /// <summary>
     /// Идентификатор/Key

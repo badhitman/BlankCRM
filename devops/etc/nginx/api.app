@@ -1,11 +1,11 @@
 server {
     listen 80;
-    server_name api.boxter-cdek.ru www.api.boxter-cdek.ru;
+    server_name api.iq-s.pro www.api.iq-s.pro;
     # return 301 https://$host$request_uri;
 	large_client_header_buffers 4 128k;
 	
-	access_log /var/log/nginx/nginx.http.api.boxter-cdek.ru.access.log;
-	error_log /var/log/nginx/nginx.http.api.boxter-cdek.ru.error.log;
+	access_log /var/log/nginx/nginx.http.api.iq-s.pro.access.log;
+	error_log /var/log/nginx/nginx.http.api.iq-s.pro.error.log;
 
 	add_header X-Content-Type-Options "nosniff";
 	add_header 'Access-Control-Allow-Headers' 'token-access,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type' always;
@@ -53,13 +53,13 @@ server {
 server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
-	server_name api.boxter-cdek.ru www.api.boxter-cdek.ru;
+	server_name api.iq-s.pro www.api.iq-s.pro;
 	ssl_certificate /etc/ssl/boxter-cdek/boxter-cdek.crt;
 	ssl_certificate_key /etc/ssl/boxter-cdek/boxter-cdek.key;
 	large_client_header_buffers 4 128k;
 
-	access_log /var/log/nginx/nginx.https.api.boxter-cdek.ru.access.log;
-	error_log /var/log/nginx/nginx.https.api.boxter-cdek.ru.error.log;
+	access_log /var/log/nginx/nginx.https.api.iq-s.pro.access.log;
+	error_log /var/log/nginx/nginx.https.api.iq-s.pro.error.log;
 
 	add_header X-Content-Type-Options "nosniff";
 	add_header 'Access-Control-Allow-Headers' 'token-access,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type' always;

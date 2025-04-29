@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using SharedLib;
 using System.Net.Mail;
 
-namespace BlazorWebLib.Components.Helpdesk.issue;
+namespace BlazorWebLib.Components.HelpDesk.issue;
 
 /// <summary>
 /// ExecutorIssueComponent
@@ -57,7 +57,7 @@ public partial class ExecutorIssueComponent : IssueWrapBaseModel
     async Task SetExecutor(string user_id)
     {
         await SetBusyAsync();
-        TResponseModel<bool> rest = await HelpdeskRepo.ExecuterUpdateAsync(new() { SenderActionUserId = CurrentUserSession!.UserId, Payload = new() { IssueId = Issue.Id, UserId = user_id } });
+        TResponseModel<bool> rest = await HelpDeskRepo.ExecuterUpdateAsync(new() { SenderActionUserId = CurrentUserSession!.UserId, Payload = new() { IssueId = Issue.Id, UserId = user_id } });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
 

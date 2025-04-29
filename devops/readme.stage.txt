@@ -8,7 +8,7 @@ rm -r /srv/services.stage/*
 cp -r /srv/git/builds/ApiRestService /srv/services.stage/ApiRestService
 cp -r /srv/git/builds/StorageService /srv/services.stage/StorageService
 cp -r /srv/git/builds/CommerceService /srv/services.stage/CommerceService
-cp -r /srv/git/builds/HelpdeskService /srv/services.stage/HelpdeskService
+cp -r /srv/git/builds/HelpDeskService /srv/services.stage/HelpDeskService
 cp -r /srv/git/builds/ConstructorService /srv/services.stage/ConstructorService
 cp -r /srv/git/builds/TelegramBotService /srv/services.stage/TelegramBotService
 cp -r /srv/git/builds/BlankBlazorApp /srv/services.stage/BlankBlazorApp

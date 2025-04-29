@@ -19,7 +19,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
     ICommerceTransmission CommerceRepo { get; set; } = default!;
 
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>
@@ -48,18 +48,18 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
 
 
     List<OrderDocumentModelDB> documentsPartData = [];
-    readonly List<IssueHelpdeskModelDB> IssuesCacheDump = [];
+    readonly List<IssueHelpDeskModelDB> IssuesCacheDump = [];
 
     async Task UpdateCacheIssues()
     {
         IEnumerable<int> q = documentsPartData
-            .Where(x => x.HelpdeskId.HasValue && x.HelpdeskId.Value > 0)
-            .Select(x => x.HelpdeskId!.Value);
+            .Where(x => x.HelpDeskId.HasValue && x.HelpDeskId.Value > 0)
+            .Select(x => x.HelpDeskId!.Value);
 
         if (!q.Any())
             return;
 
-        TResponseModel<IssueHelpdeskModelDB[]> res = await HelpdeskRepo.IssuesReadAsync(new()
+        TResponseModel<IssueHelpDeskModelDB[]> res = await HelpDeskRepo.IssuesReadAsync(new()
         {
             SenderActionUserId = CurrentUserSession!.UserId,
             Payload = new()

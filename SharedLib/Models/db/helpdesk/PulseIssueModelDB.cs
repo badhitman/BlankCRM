@@ -23,7 +23,7 @@ public class PulseIssueModelDB : PulseIssueBaseModel
     /// <summary>
     /// Issue
     /// </summary>
-    public IssueHelpdeskModelDB? Issue { get; set; }
+    public IssueHelpDeskModelDB? Issue { get; set; }
 
     /// <summary>
     /// CreatedAt

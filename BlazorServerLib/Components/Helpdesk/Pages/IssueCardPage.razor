@@ -1,7 +1,7 @@
 ﻿@page "/issue-card/{Id:int}"
 
 @using BlazorWebLib.Components.Commerce
-@using BlazorWebLib.Components.Helpdesk.issue
+@using BlazorWebLib.Components.HelpDesk.issue
 @using MudBlazor
 @using static SharedLib.GlobalStaticConstantsRoutes
 
@@ -46,7 +46,7 @@ else
                                             @if (OrdersAttendancesJournal is not null && OrdersAttendancesJournal.Length != 0)
                                             {
                                                 <MudTabPanel Text="@($"Услуг{(OrdersAttendancesJournal.Length == 1 ? "а" : "и")}")">
-                                                    <OrdersAttendancesListComponent HelpdeskIssueId="Id" OrdersAttendances="OrdersAttendancesJournal" UpdateRecords="ReloadRecords" />
+                                                    <OrdersAttendancesListComponent HelpDeskIssueId="Id" OrdersAttendances="OrdersAttendancesJournal" UpdateRecords="ReloadRecords" />
                                                 </MudTabPanel>
                                             }
                                             @if (CurrentUserSession!.IsAdmin)

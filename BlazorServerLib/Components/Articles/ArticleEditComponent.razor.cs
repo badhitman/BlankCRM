@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components.Articles;
 public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IHelpdeskTransmission ArticlesRepo { get; set; } = default!;
+    IHelpDeskTransmission ArticlesRepo { get; set; } = default!;
 
     [Inject]
     NavigationManager NavRepo { get; set; } = default!;

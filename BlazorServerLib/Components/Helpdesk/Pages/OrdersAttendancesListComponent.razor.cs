@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk.Pages;
+namespace BlazorWebLib.Components.HelpDesk.Pages;
 
 /// <summary>
 /// OrdersAttendancesListComponent
@@ -20,10 +20,10 @@ public partial class OrdersAttendancesListComponent(ICommerceTransmission Commer
     public required RecordsAttendanceModelDB[] OrdersAttendances { get; set; }
 
     /// <summary>
-    /// HelpdeskIssueId
+    /// HelpDeskIssueId
     /// </summary>
     [Parameter, EditorRequired]
-    public int HelpdeskIssueId { get; set; }
+    public int HelpDeskIssueId { get; set; }
 
     /// <summary>
     /// UpdateRecords
@@ -50,7 +50,7 @@ public partial class OrdersAttendancesListComponent(ICommerceTransmission Commer
         ResponseBaseModel resDel = await CommerceRepo.AttendanceRecordsDeleteAsync(new() { Payload = rec.Id, SenderActionUserId = CurrentUserSession.UserId });
         SnackbarRepo.ShowMessagesResponse(resDel.Messages);
 
-        TResponseModel<RecordsAttendanceModelDB[]> resReload = await CommerceRepo.OrdersAttendancesByIssuesAsync(new() { IssueIds = [HelpdeskIssueId] });
+        TResponseModel<RecordsAttendanceModelDB[]> resReload = await CommerceRepo.OrdersAttendancesByIssuesAsync(new() { IssueIds = [HelpDeskIssueId] });
         SnackbarRepo.ShowMessagesResponse(resReload.Messages);
 
         if (resReload.Success() && resReload.Response is not null)

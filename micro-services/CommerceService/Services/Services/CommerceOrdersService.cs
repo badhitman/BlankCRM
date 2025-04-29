@@ -26,7 +26,7 @@ public partial class CommerceImplementService(
     IIdentityTransmission identityRepo,
     IDbContextFactory<CommerceContext> commerceDbFactory,
     IWebTransmission webTransmissionRepo,
-    IHelpdeskTransmission HelpdeskRepo,
+    IHelpDeskTransmission HelpDeskRepo,
     ITelegramTransmission tgRepo,
     ILogger<CommerceImplementService> loggerRepo,
     WebConfigModel _webConf,
@@ -456,7 +456,7 @@ public partial class CommerceImplementService(
 
         IQueryable<OrderDocumentModelDB> q = context
             .Orders
-            .Where(x => req.IssueIds.Any(y => y == x.HelpdeskId))
+            .Where(x => req.IssueIds.Any(y => y == x.HelpDeskId))
             .AsQueryable();
 
         Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<OrderDocumentModelDB, NomenclatureModelDB?> inc_query = q
@@ -915,7 +915,7 @@ public partial class CommerceImplementService(
                 return res;
 
             int[] rubricsIds = [.. req.OfficesTabs.Select(x => x.WarehouseId).Distinct()];
-            TResponseModel<List<RubricIssueHelpdeskModelDB>> getRubrics = await HelpdeskRepo.RubricsGetAsync(rubricsIds, token);
+            TResponseModel<List<RubricIssueHelpDeskModelDB>> getRubrics = await HelpDeskRepo.RubricsGetAsync(rubricsIds, token);
             if (!getRubrics.Success())
             {
                 res.AddRangeMessages(getRubrics.Messages);
@@ -1037,7 +1037,7 @@ public partial class CommerceImplementService(
                     },
                 };
 
-                TResponseModel<int> issue = await HelpdeskRepo.IssueCreateOrUpdateAsync(issue_new, token);
+                TResponseModel<int> issue = await HelpDeskRepo.IssueCreateOrUpdateAsync(issue_new, token);
                 if (!issue.Success())
                 {
                     await transaction.RollbackAsync(token);
@@ -1045,7 +1045,7 @@ public partial class CommerceImplementService(
                     return res;
                 }
 
-                req.HelpdeskId = issue.Response;
+                req.HelpDeskId = issue.Response;
                 context.Update(req);
 
                 string subject_email = "Создан новый заказ";
@@ -1056,7 +1056,7 @@ public partial class CommerceImplementService(
                 if (CommerceNewOrderSubjectNotification?.Success() == true && !string.IsNullOrWhiteSpace(CommerceNewOrderSubjectNotification.Response))
                     subject_email = CommerceNewOrderSubjectNotification.Response;
 
-                subject_email = IHelpdeskService.ReplaceTags(subject_email, _dt, issue.Response, StatusesDocumentsEnum.Created, subject_email, _webConf.ClearBaseUri, _about_order);
+                subject_email = IHelpDeskService.ReplaceTags(subject_email, _dt, issue.Response, StatusesDocumentsEnum.Created, subject_email, _webConf.ClearBaseUri, _about_order);
                 res.AddSuccess(subject_email);
                 msg = $"<p>Заказ <b>'{issue_new.Payload.Name}' от [{_dtAsString}]</b> успешно создан.</p>" +
                         $"<p>/<a href='{_webConf.ClearBaseUri}'>{_webConf.ClearBaseUri}</a>/</p>";
@@ -1066,11 +1066,11 @@ public partial class CommerceImplementService(
 
                 if (CommerceNewOrderBodyNotification?.Success() == true && !string.IsNullOrWhiteSpace(CommerceNewOrderBodyNotification.Response))
                     msg = CommerceNewOrderBodyNotification.Response;
-                msg = IHelpdeskService.ReplaceTags(msg, _dt, issue.Response, StatusesDocumentsEnum.Created, msg, _webConf.ClearBaseUri, _about_order);
+                msg = IHelpDeskService.ReplaceTags(msg, _dt, issue.Response, StatusesDocumentsEnum.Created, msg, _webConf.ClearBaseUri, _about_order);
 
                 if (CommerceNewOrderBodyNotificationTelegram?.Success() == true && !string.IsNullOrWhiteSpace(CommerceNewOrderBodyNotificationTelegram.Response))
                     msg_for_tg = CommerceNewOrderBodyNotificationTelegram.Response;
-                msg_for_tg = IHelpdeskService.ReplaceTags(msg_for_tg, _dt, issue.Response, StatusesDocumentsEnum.Created, msg_for_tg, _webConf.ClearBaseUri, _about_order);
+                msg_for_tg = IHelpDeskService.ReplaceTags(msg_for_tg, _dt, issue.Response, StatusesDocumentsEnum.Created, msg_for_tg, _webConf.ClearBaseUri, _about_order);
 
                 tasks = [identityRepo.SendEmailAsync(new() { Email = actor.Response[0].Email!, Subject = subject_email, TextMessage = msg }, false, token)];
 
@@ -1085,7 +1085,7 @@ public partial class CommerceImplementService(
                         if (CommerceNewOrderBodyNotificationWhatsapp.Success() && !string.IsNullOrWhiteSpace(CommerceNewOrderBodyNotificationWhatsapp.Response))
                             waMsg = CommerceNewOrderBodyNotificationWhatsapp.Response;
 
-                        await tgRepo.SendWappiMessageAsync(new() { Number = actor.Response[0].PhoneNumber!, Text = IHelpdeskService.ReplaceTags(waMsg, _dt, issue.Response, StatusesDocumentsEnum.Created, waMsg, _webConf.ClearBaseUri, _about_order, true) }, false);
+                        await tgRepo.SendWappiMessageAsync(new() { Number = actor.Response[0].PhoneNumber!, Text = IHelpDeskService.ReplaceTags(waMsg, _dt, issue.Response, StatusesDocumentsEnum.Created, waMsg, _webConf.ClearBaseUri, _about_order, true) }, false);
                     }, token));
                 }
 
@@ -1133,13 +1133,13 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> StatusesOrdersChangeByHelpdeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> StatusesOrdersChangeByHelpDeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         string msg;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         OrderDocumentModelDB[] ordersDb = await context
             .Orders
-            .Where(x => x.HelpdeskId == req.Payload.DocumentId && x.StatusDocument != req.Payload.Step)
+            .Where(x => x.HelpDeskId == req.Payload.DocumentId && x.StatusDocument != req.Payload.Step)
             .Include(x => x.OfficesTabs!)
             .ThenInclude(x => x.Rows)
             .ToArrayAsync(cancellationToken: token);
@@ -1160,7 +1160,7 @@ public partial class CommerceImplementService(
         {
             res.Response = await context
                     .Orders
-                    .Where(x => x.HelpdeskId == req.Payload.DocumentId)
+                    .Where(x => x.HelpDeskId == req.Payload.DocumentId)
                     .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token) != 0;
 
             res.AddSuccess("Запрос смены статуса заказа выполнен вхолостую (строки в документе отсутствуют)");
@@ -1186,7 +1186,7 @@ public partial class CommerceImplementService(
         catch (Exception ex)
         {
             await transaction.RollbackAsync(token);
-            msg = $"Не удалось выполнить команду блокировки БД {nameof(StatusesOrdersChangeByHelpdeskDocumentIdAsync)}: ";
+            msg = $"Не удалось выполнить команду блокировки БД {nameof(StatusesOrdersChangeByHelpDeskDocumentIdAsync)}: ";
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError($"{msg}{ex.Message}");
             return res;
@@ -1246,7 +1246,7 @@ public partial class CommerceImplementService(
         await context.SaveChangesAsync(token);
         res.Response = await context
                             .Orders
-                            .Where(x => x.HelpdeskId == req.Payload.DocumentId)
+                            .Where(x => x.HelpDeskId == req.Payload.DocumentId)
                             .ExecuteUpdateAsync(set => set
                             .SetProperty(p => p.StatusDocument, req.Payload.Step)
                             .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
@@ -1285,14 +1285,14 @@ public partial class CommerceImplementService(
         OrderDocumentModelDB orderDb = orderData.Response[0];
         UserInfoModel actor = rest.Response[0];
         bool allowed = actor.IsAdmin || orderDb.AuthorIdentityUserId == actor.UserId || actor.UserId == GlobalStaticConstantsRoles.Roles.System;
-        if (!allowed && orderDb.HelpdeskId.HasValue && orderDb.HelpdeskId.Value > 0)
+        if (!allowed && orderDb.HelpDeskId.HasValue && orderDb.HelpDeskId.Value > 0)
         {
-            TResponseModel<IssueHelpdeskModelDB[]> issueData = await HelpdeskRepo.IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+            TResponseModel<IssueHelpDeskModelDB[]> issueData = await HelpDeskRepo.IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
             {
                 SenderActionUserId = req.SenderActionUserId,
                 Payload = new()
                 {
-                    IssuesIds = [orderDb.HelpdeskId.Value],
+                    IssuesIds = [orderDb.HelpDeskId.Value],
                     IncludeSubscribersOnly = true,
                 }
             }, token);
@@ -1301,7 +1301,7 @@ public partial class CommerceImplementService(
                 res.AddRangeMessages(issueData.Messages);
                 return res;
             }
-            IssueHelpdeskModelDB issueDb = issueData.Response[0];
+            IssueHelpDeskModelDB issueDb = issueData.Response[0];
             if (actor.UserId != issueDb.AuthorIdentityUserId && actor.UserId != issueDb.ExecutorIdentityUserId && !issueDb.Subscribers!.Any(s => s.UserId == actor.UserId))
             {
                 res.AddError("У вас не доступа к этому документу");
@@ -1390,7 +1390,7 @@ public partial class CommerceImplementService(
         }
 
         int[] rubricsIds = offersAll.SelectMany(x => x.Registers!).Select(x => x.WarehouseId).Distinct().ToArray();
-        TResponseModel<List<RubricIssueHelpdeskModelDB>> rubricsDb = await HelpdeskRepo.RubricsGetAsync(rubricsIds, token);
+        TResponseModel<List<RubricIssueHelpDeskModelDB>> rubricsDb = await HelpDeskRepo.RubricsGetAsync(rubricsIds, token);
         List<IGrouping<NomenclatureModelDB?, OfferModelDB>> gof = offersAll.GroupBy(x => x.Nomenclature).Where(x => x.Any(y => y.Registers!.Any(z => z.Quantity > 0))).ToList();
         try
         {
@@ -1500,7 +1500,7 @@ public partial class CommerceImplementService(
         return XLSStream.ToArray();
     }
 
-    static byte[] ExportPrice(List<IGrouping<NomenclatureModelDB?, OfferModelDB>> sourceTable, List<RubricIssueHelpdeskModelDB>? rubricsDb)
+    static byte[] ExportPrice(List<IGrouping<NomenclatureModelDB?, OfferModelDB>> sourceTable, List<RubricIssueHelpDeskModelDB>? rubricsDb)
     {
         WorkbookPart? wBookPart = null;
         using MemoryStream XLSStream = new();

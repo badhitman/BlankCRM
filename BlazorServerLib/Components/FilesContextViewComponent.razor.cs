@@ -26,7 +26,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
     IStorageTransmission FilesRepo { get; set; } = default!;
 
     [Inject]
-    IHelpdeskTransmission HdRepo { get; set; } = default!;
+    IHelpDeskTransmission HdRepo { get; set; } = default!;
 
     [Inject]
     ICommerceTransmission CommRepo { get; set; } = default!;

@@ -11,7 +11,7 @@ namespace SharedLib;
 /// Маркировка сообщения как `ответ на вопрос`
 /// </summary>
 [Index(nameof(IdentityUserId))]
-public class VoteHelpdeskModelDB
+public class VoteHelpDeskModelDB
 {
     /// <summary>
     /// Идентификатор/Key
@@ -22,7 +22,7 @@ public class VoteHelpdeskModelDB
     /// <summary>
     /// ParentMessage
     /// </summary>
-    public IssueMessageHelpdeskModelDB? Message { get; set; }
+    public IssueMessageHelpDeskModelDB? Message { get; set; }
     /// <summary>
     /// ParentMessage
     /// </summary>
@@ -31,7 +31,7 @@ public class VoteHelpdeskModelDB
     /// <summary>
     /// Issue
     /// </summary>
-    public IssueHelpdeskModelDB? Issue { get; set; }
+    public IssueHelpDeskModelDB? Issue { get; set; }
 
     /// <summary>
     /// Issue

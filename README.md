@@ -18,7 +18,7 @@
 title: Структура (зависимости) проектов в решении
 ---
 classDiagram
-note for DbPostgreLib "Если используется другая СУБД, тогда указатели  от [ServerLib] [TelegramBotService], [HelpdeskService] и [RemoteCallLib] должны ссылаться на соответсвующую библиотеку: [DbPostgreLib] или [DbMySQLLib]"
+note for DbPostgreLib "Если используется другая СУБД, тогда указатели  от [ServerLib] [TelegramBotService], [HelpDeskService] и [RemoteCallLib] должны ссылаться на соответсвующую библиотеку: [DbPostgreLib] или [DbMySQLLib]"
     SharedLib <|-- CodegeneratorLib
     SharedLib <|-- IdentityLib
     SharedLib <|-- DbLayerLib
@@ -44,8 +44,8 @@ note for DbPostgreLib "Если используется другая СУБД, 
     RemoteCallLib <|-- StorageService
     RemoteCallLib <|-- KladrService
     RemoteCallLib <|-- ConstructorService
-    RemoteCallLib <|-- HelpdeskService
-	DbPostgreLib <|-- HelpdeskService
+    RemoteCallLib <|-- HelpDeskService
+	DbPostgreLib <|-- HelpDeskService
     BlazorLib <|-- BlazorWebLib
     BlazorLib <|-- BlankBlazorApp_Client
     	
@@ -104,7 +104,7 @@ note for DbPostgreLib "Если используется другая СУБД, 
     class TelegramBotService["TelegramBotService"]{
         @Микросервис - TelegramBot/Wappi
     }
-    class HelpdeskService{
+    class HelpDeskService{
         @Микросервис - Хелпдеск/Сервисдеск/Таскменеджер
     }
     class CommerceService{
@@ -146,10 +146,10 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 - Сохраняет все входящие сообщения и позволяет в последствии работать с чатами другим сервисам.
 - В оригинальном исполнении `Worker Service`[^5].
 - Ответы на входящие Telegram сообщения обрабатывает реализация интерфейса `ITelegramDialogService`[^7]. Пользователям можно индивидуально устанавливать имя автоответчика[^2]. Это касается как простых текстовых `Message`, так и `CallbackQuery`.
-- Для обеспечения работы HelpDesk предусмотрен [командный режим работы бота](https://github.com/badhitman/BlankCRM/tree/main/micro-services/HelpdeskService#%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC-telegrambot). В этом режиме простые текстовые сообщения в бота не обрабатываются автоответчиком (равно как и отправка файлов, документов и т.п.). Сообщения сохраняются, но ответ не формируется если это не команда или **CallbackQuery**. Команды в TelegramBot начинаются с косой черты (/). Таким образом в командном режиме бот будет пытаться выполнить/обработать входящее сообщение только если текст сообщения является командой: начинается с косой черты (/) либо в случае если это **CallbackQuery**, а в остальных случаях клиент будет в свободной форме вести чат с ботом, а операторы HelpDesk должны будут ему отвечать от имени бота через WEB интерфейс или воспользовавшись режимом ['экспресс-ответа'](https://github.com/badhitman/BlankCRM/tree/main/HelpdeskService#%D1%8D%D0%BA%D1%81%D0%BF%D1%80%D0%B5%D1%81%D1%81-%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B).
+- Для обеспечения работы HelpDesk предусмотрен [командный режим работы бота](https://github.com/badhitman/BlankCRM/tree/main/micro-services/HelpDeskService#%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC-telegrambot). В этом режиме простые текстовые сообщения в бота не обрабатываются автоответчиком (равно как и отправка файлов, документов и т.п.). Сообщения сохраняются, но ответ не формируется если это не команда или **CallbackQuery**. Команды в TelegramBot начинаются с косой черты (/). Таким образом в командном режиме бот будет пытаться выполнить/обработать входящее сообщение только если текст сообщения является командой: начинается с косой черты (/) либо в случае если это **CallbackQuery**, а в остальных случаях клиент будет в свободной форме вести чат с ботом, а операторы HelpDesk должны будут ему отвечать от имени бота через WEB интерфейс или воспользовавшись режимом ['экспресс-ответа'](https://github.com/badhitman/BlankCRM/tree/main/HelpDeskService#%D1%8D%D0%BA%D1%81%D0%BF%D1%80%D0%B5%D1%81%D1%81-%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B).
 
-#### [HelpdeskService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/HelpdeskService) 
-- Система документооборота со своим собственным контекстом: `HelpdeskContext`.
+#### [HelpDeskService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/HelpDeskService) 
+- Система документооборота со своим собственным контекстом: `HelpDeskContext`.
 - Смена статуса документу. Исполнитель. SLA. Базовый набор работы с документами.
 - Готовый инструмент обработки обращений в формате HelpDesk\ServiceDesk.
 - используется сервисом `CommerceService` для 'ведения заказа'.

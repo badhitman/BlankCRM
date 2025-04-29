@@ -20,16 +20,16 @@ public abstract class BlazorBusyComponentRubricsCachedModel : BlazorBusyComponen
     protected ICommerceTransmission CommerceRepo { get; set; } = default!;
 
     /// <summary>
-    /// Helpdesk
+    /// HelpDesk
     /// </summary>
     [Inject]
-    protected IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    protected IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>
     /// RubricsCache
     /// </summary>
-    protected List<RubricIssueHelpdeskModelDB> RubricsCache = [];
+    protected List<RubricIssueHelpDeskModelDB> RubricsCache = [];
 
 
     /// <summary>
@@ -42,7 +42,7 @@ public abstract class BlazorBusyComponentRubricsCachedModel : BlazorBusyComponen
             return;
 
         await SetBusyAsync();
-        TResponseModel<List<RubricIssueHelpdeskModelDB>> rubrics = await HelpdeskRepo.RubricsGetAsync(rubricsIds);
+        TResponseModel<List<RubricIssueHelpDeskModelDB>> rubrics = await HelpDeskRepo.RubricsGetAsync(rubricsIds);
         SnackbarRepo.ShowMessagesResponse(rubrics.Messages);
         if (rubrics.Success() && rubrics.Response is not null && rubrics.Response.Count != 0)
             lock (RubricsCache)

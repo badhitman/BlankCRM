@@ -22,7 +22,7 @@
 /// </summary>
 public long? TelegramId { get; set; }
 ```
-это значение указывает на связь с аккаунтом Telegram. Информацию по самим пользователям Telegram можно получить из контекста `MainDbAppContext`. В таблице `TelegramUsers`
+это значение указывает на связь с аккаунтом Telegram. Информацию по самим пользователям Telegram можно получить из контекста `MainAppContext`. В таблице `TelegramUsers`
 ```c#
 /// <summary>
 /// Telegram пользователи

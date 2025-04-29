@@ -17,10 +17,19 @@ namespace DbPostgreLib.Migrations.Kladr
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("DbcLib.KladrLayerContext+KladrEntry", b =>
+                {
+                    b.Property<string>("CODE")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.ToTable("KladrEntry", "public");
+                });
 
             modelBuilder.Entity("SharedLib.AltnameKLADRModelDB", b =>
                 {

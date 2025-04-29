@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk.issue;
+namespace BlazorWebLib.Components.HelpDesk.issue;
 
 /// <summary>
 /// PulseJournalComponent
@@ -27,7 +27,7 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
     private async Task<TableData<PulseViewModel>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
-        TResponseModel<TPaginationResponseModel<PulseViewModel>> tp = await HelpdeskRepo.PulseSelectJournalAsync(new()
+        TResponseModel<TPaginationResponseModel<PulseViewModel>> tp = await HelpDeskRepo.PulseSelectJournalAsync(new()
         {
             Payload = new TPaginationRequestModel<UserIssueModel>()
             {

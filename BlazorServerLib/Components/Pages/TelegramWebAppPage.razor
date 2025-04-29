@@ -1,6 +1,6 @@
 ﻿@page "/web-app-tg/{TokenAccess}"
 
-@using BlazorWebLib.Components.Helpdesk
+@using BlazorWebLib.Components.HelpDesk
 @using MudBlazor
 
 @layout WithoutMenuLayout
@@ -13,7 +13,7 @@
 
 <AuthorizeView>
     <Authorized>
-        <MyHelpdeskComponent />
+        <MyHelpDeskComponent />
     </Authorized>
     <NotAuthorized>
         <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />

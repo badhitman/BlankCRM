@@ -8,15 +8,15 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk;
+namespace BlazorWebLib.Components.HelpDesk;
 
 /// <summary>
-/// HelpdeskJournalComponent
+/// HelpDeskJournalComponent
 /// </summary>
-public partial class HelpdeskJournalComponent : BlazorBusyComponentBaseAuthModel
+public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     IIdentityTransmission IdentityRepo { get; set; } = default!;
@@ -26,13 +26,13 @@ public partial class HelpdeskJournalComponent : BlazorBusyComponentBaseAuthModel
     ///Journal mode
     /// </summary>
     [Parameter, EditorRequired]
-    public required HelpdeskJournalModesEnum JournalMode { get; set; }
+    public required HelpDeskJournalModesEnum JournalMode { get; set; }
 
     /// <summary>
     /// UserArea
     /// </summary>
     [Parameter, EditorRequired]
-    public required UsersAreasHelpdeskEnum? UserArea { get; set; }
+    public required UsersAreasHelpDeskEnum? UserArea { get; set; }
 
     /// <summary>
     /// UserIdentityId
@@ -44,13 +44,13 @@ public partial class HelpdeskJournalComponent : BlazorBusyComponentBaseAuthModel
     /// SetTab
     /// </summary>
     [CascadingParameter, EditorRequired]
-    public required Action<HelpdeskJournalComponent> SetTab { get; set; }
+    public required Action<HelpDeskJournalComponent> SetTab { get; set; }
 
 
     /// <summary>
     /// SetArea
     /// </summary>
-    public void SetArea(UsersAreasHelpdeskEnum? set)
+    public void SetArea(UsersAreasHelpDeskEnum? set)
     {
         UserArea = set;
     }
@@ -60,7 +60,7 @@ public partial class HelpdeskJournalComponent : BlazorBusyComponentBaseAuthModel
     readonly List<UserInfoModel> usersDump = [];
 
     /// <inheritdoc/>
-    public MudTable<IssueHelpdeskModel> TableRef = default!;
+    public MudTable<IssueHelpDeskModel> TableRef = default!;
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -77,7 +77,7 @@ public partial class HelpdeskJournalComponent : BlazorBusyComponentBaseAuthModel
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server, with a token for canceling this request
     /// </summary>
-    private async Task<TableData<IssueHelpdeskModel>> ServerReload(TableState state, CancellationToken token)
+    private async Task<TableData<IssueHelpDeskModel>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
         await Task.Delay(1, token);
@@ -96,7 +96,7 @@ public partial class HelpdeskJournalComponent : BlazorBusyComponentBaseAuthModel
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
 
-        TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>> rest = await HelpdeskRepo
+        TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>> rest = await HelpDeskRepo
              .IssuesSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId }, token);
 
         IsBusyProgress = false;
@@ -104,7 +104,7 @@ public partial class HelpdeskJournalComponent : BlazorBusyComponentBaseAuthModel
             return new() { TotalItems = 0, Items = [] }; ;
 
         // Forward the provided token to methods which support it
-        List<IssueHelpdeskModel> data = rest.Response.Response;
+        List<IssueHelpDeskModel> data = rest.Response.Response;
         await UpdateUsersData(data.SelectMany(x => new string?[] { x.AuthorIdentityUserId, x.ExecutorIdentityUserId }).ToArray());
         // Return the data
         return new() { TotalItems = rest.Response.TotalRowsCount, Items = data };

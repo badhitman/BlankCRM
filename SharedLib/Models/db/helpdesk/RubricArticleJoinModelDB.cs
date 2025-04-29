@@ -20,7 +20,7 @@ public class RubricArticleJoinModelDB
     /// <summary>
     /// Rubric
     /// </summary>
-    public RubricIssueHelpdeskModelDB? Rubric { get; set; }
+    public RubricIssueHelpDeskModelDB? Rubric { get; set; }
 
     /// <summary>
     /// Rubric [FK]

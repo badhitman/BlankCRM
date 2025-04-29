@@ -390,7 +390,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<string>("ExternalDocumentId")
                         .HasColumnType("text");
 
-                    b.Property<int?>("HelpdeskId")
+                    b.Property<int?>("HelpDeskId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Information")
@@ -634,7 +634,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<string>("ExternalDocumentId")
                         .HasColumnType("text");
 
-                    b.Property<int?>("HelpdeskId")
+                    b.Property<int?>("HelpDeskId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Information")

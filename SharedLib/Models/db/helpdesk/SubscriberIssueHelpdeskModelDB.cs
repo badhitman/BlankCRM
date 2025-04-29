@@ -11,7 +11,7 @@ namespace SharedLib;
 /// Подписчик на собыия в обращении (ModelDB)
 /// </summary>
 [Index(nameof(UserId), nameof(IssueId), IsUnique = true)]
-public class SubscriberIssueHelpdeskModelDB
+public class SubscriberIssueHelpDeskModelDB
 {
     /// <summary>
     /// Идентификатор/Key
@@ -26,7 +26,7 @@ public class SubscriberIssueHelpdeskModelDB
     /// <summary>
     /// Обращение клиента с вопросом
     /// </summary>
-    public IssueHelpdeskModelDB? Issue { get; set; }
+    public IssueHelpDeskModelDB? Issue { get; set; }
 
     /// <summary>
     /// Пользователь, который подписан (of Identity)

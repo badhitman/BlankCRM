@@ -11,11 +11,11 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// Сдвинуть рубрику
 /// </summary>
-public class RubricMoveReceive(IHelpdeskService hdRepo, ILogger<RubricMoveReceive> loggerRepo)
+public class RubricMoveReceive(IHelpDeskService hdRepo, ILogger<RubricMoveReceive> loggerRepo)
     : IResponseReceive<TAuthRequestModel<RowMoveModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricForIssuesMoveHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricForIssuesMoveHelpDeskReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<RowMoveModel>? req, CancellationToken token = default)

@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components.Commerce;
 public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     ICommerceTransmission CommerceRepo { get; set; } = default!;
@@ -30,7 +30,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 
     UniversalBaseModel? SelectedRubric;
 
-    Dictionary<int, List<RubricIssueHelpdeskModelDB>> RubriciesCached = [];
+    Dictionary<int, List<RubricIssueHelpDeskModelDB>> RubriciesCached = [];
     string? addingAddress, addingContacts, addingName, addingDescr, addingKladrCode, addingKladrTitle;
 
 
@@ -126,7 +126,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 
             foreach (int i in added_rubrics)
             {
-                TResponseModel<List<RubricIssueHelpdeskModelDB>> res = await HelpdeskRepo.RubricReadAsync(i);
+                TResponseModel<List<RubricIssueHelpDeskModelDB>> res = await HelpDeskRepo.RubricReadAsync(i);
                 if (res.Success() && res.Response is not null)
                     RubriciesCached.Add(i, res.Response);
 
@@ -139,7 +139,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 
     string? GetCity(OfficeOrganizationModelDB ad)
     {
-        if (!RubriciesCached.TryGetValue(ad.ParentId, out List<RubricIssueHelpdeskModelDB>? value))
+        if (!RubriciesCached.TryGetValue(ad.ParentId, out List<RubricIssueHelpDeskModelDB>? value))
             return null;
 
         return value.LastOrDefault()?.Name;

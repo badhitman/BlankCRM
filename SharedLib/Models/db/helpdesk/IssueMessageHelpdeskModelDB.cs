@@ -12,7 +12,7 @@ namespace SharedLib;
 /// </summary>
 [Index(nameof(AuthorUserId))]
 [Index(nameof(CreatedAt), nameof(LastUpdateAt))]
-public class IssueMessageHelpdeskModelDB : IssueMessageHelpdeskBaseModel
+public class IssueMessageHelpDeskModelDB : IssueMessageHelpDeskBaseModel
 {
     /// <summary>
     /// Автор сообщения
@@ -22,7 +22,7 @@ public class IssueMessageHelpdeskModelDB : IssueMessageHelpdeskBaseModel
     /// <summary>
     /// Issue
     /// </summary>
-    public IssueHelpdeskModelDB? Issue { get; set; }
+    public IssueHelpDeskModelDB? Issue { get; set; }
 
     /// <summary>
     /// CreatedAt
@@ -37,5 +37,5 @@ public class IssueMessageHelpdeskModelDB : IssueMessageHelpdeskBaseModel
     /// <summary>
     /// Отметки как ответ
     /// </summary>
-    public List<VoteHelpdeskModelDB>? Votes { get; set; }
+    public List<VoteHelpDeskModelDB>? Votes { get; set; }
 }

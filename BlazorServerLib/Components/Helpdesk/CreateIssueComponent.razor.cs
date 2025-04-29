@@ -7,7 +7,7 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk;
+namespace BlazorWebLib.Components.HelpDesk;
 
 /// <summary>
 /// Create Issue
@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components.Helpdesk;
 public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     IStorageTransmission SerializeStorageRepo { get; set; } = default!;
@@ -33,7 +33,7 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required Action<HelpdeskJournalModesEnum> ReloadIssueJournal { get; set; }
+    public required Action<HelpDeskJournalModesEnum> ReloadIssueJournal { get; set; }
 
 
     bool CanCreate =>
@@ -60,7 +60,7 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
             return;
         }
 
-        TResponseModel<int> res = await HelpdeskRepo.IssueCreateOrUpdateAsync(new()
+        TResponseModel<int> res = await HelpDeskRepo.IssueCreateOrUpdateAsync(new()
         {
             SenderActionUserId = UserIdentityId,
             Payload = new()

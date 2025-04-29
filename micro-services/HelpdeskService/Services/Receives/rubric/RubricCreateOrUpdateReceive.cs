@@ -11,13 +11,13 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// CreateIssueTheme
 /// </summary>
-public class RubricCreateOrUpdateReceive(IHelpdeskService hdRepo, ILogger<RubricCreateOrUpdateReceive> loggerRepo) : IResponseReceive<RubricIssueHelpdeskModelDB?, TResponseModel<int>?>
+public class RubricCreateOrUpdateReceive(IHelpDeskService hdRepo, ILogger<RubricCreateOrUpdateReceive> loggerRepo) : IResponseReceive<RubricIssueHelpDeskModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricForIssuesUpdateHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricForIssuesUpdateHelpDeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(RubricIssueHelpdeskModelDB? rubric, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(RubricIssueHelpDeskModelDB? rubric, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(rubric);
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(rubric)}");

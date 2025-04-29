@@ -42,21 +42,21 @@ else
         <MudTabPanel Disabled="@(CurrentUser is null)" Text="Обращения">
             <CascadingValue Value="SetTab">
                 <TabSetComponent IsSilent="true" AsPills="true">
-                    <TabComponent SystemName="@(nameof(HelpdeskJournalModesEnum.ActualOnly))" Title="Открытые">
-                        <HelpdeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpdeskEnum.Author" JournalMode="HelpdeskJournalModesEnum.ActualOnly" />
+                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ActualOnly))" Title="Открытые">
+                        <HelpDeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.ActualOnly" />
                     </TabComponent>
-                    <TabComponent SystemName="@(nameof(HelpdeskJournalModesEnum.ArchiveOnly))" Title="Завершённые">
-                        <HelpdeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpdeskEnum.Author" JournalMode="HelpdeskJournalModesEnum.ArchiveOnly" />
+                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ArchiveOnly))" Title="Завершённые">
+                        <HelpDeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.ArchiveOnly" />
                     </TabComponent>
-                    <TabComponent SystemName="@(nameof(HelpdeskJournalModesEnum.All))" Title="Все">
-                        <HelpdeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpdeskEnum.Author" JournalMode="HelpdeskJournalModesEnum.All" />
+                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.All))" Title="Все">
+                        <HelpDeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.All" />
                     </TabComponent>
                 </TabSetComponent>
             </CascadingValue>
             <CreateIssueComponent Update="Update" UserIdentityId="@CurrentUser!.UserIdentityId" />
         </MudTabPanel>
         <MudTabPanel Disabled="@(CurrentUser is null)" Text="Настройки">
-            <ChatSettingsHelpdeskComponent Chat="Chat" />
+            <ChatSettingsHelpDeskComponent Chat="Chat" />
         </MudTabPanel>
     </MudTabs>
 }

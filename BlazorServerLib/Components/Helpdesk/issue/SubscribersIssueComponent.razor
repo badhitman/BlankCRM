@@ -33,7 +33,7 @@
                 }
                 else
                 {
-                    foreach (SubscriberIssueHelpdeskModelDB p in Issue.Subscribers)
+                    foreach (SubscriberIssueHelpDeskModelDB p in Issue.Subscribers)
                     {
                         <li class="list-group-item p-1 m-0">
                             @(UsersIdentityDump?.FirstOrDefault(x => x.UserId == p.UserId)?.UserName ?? p.UserId)

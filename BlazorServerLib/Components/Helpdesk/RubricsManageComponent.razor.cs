@@ -7,13 +7,13 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk;
+namespace BlazorWebLib.Components.HelpDesk;
 
 /// <inheritdoc/>
 public partial class RubricsManageComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>
@@ -157,7 +157,7 @@ public partial class RubricsManageComponent : BlazorBusyComponentBaseModel
     async Task<List<UniversalBaseModel>> RequestRubrics(int? parent_id = null)
     {
         await SetBusyAsync();
-        List<UniversalBaseModel> rest = await HelpdeskRepo.RubricsListAsync(new() { Request = parent_id ?? 0, ContextName = ContextName });
+        List<UniversalBaseModel> rest = await HelpDeskRepo.RubricsListAsync(new() { Request = parent_id ?? 0, ContextName = ContextName });
 
         rest = [.. rest.OrderBy(x => x.SortIndex)];
 

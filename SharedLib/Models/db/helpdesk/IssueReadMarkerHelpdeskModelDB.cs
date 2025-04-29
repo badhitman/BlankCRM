@@ -11,7 +11,7 @@ namespace SharedLib;
 /// IssueReadMarkerModelDB
 /// </summary>
 [Index(nameof(LastReadAt), nameof(UserIdentityId), IsUnique = true)]
-public class IssueReadMarkerHelpdeskModelDB
+public class IssueReadMarkerHelpDeskModelDB
 {
     /// <summary>
     /// Идентификатор/Key
@@ -27,7 +27,7 @@ public class IssueReadMarkerHelpdeskModelDB
     /// <summary>
     /// Issue
     /// </summary>
-    public IssueHelpdeskModelDB? Issue { get; set; }
+    public IssueHelpDeskModelDB? Issue { get; set; }
 
     /// <summary>
     /// LastReadAt

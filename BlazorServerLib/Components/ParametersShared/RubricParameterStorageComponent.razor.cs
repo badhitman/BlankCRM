@@ -2,7 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorWebLib.Components.Helpdesk;
+using BlazorWebLib.Components.HelpDesk;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
@@ -18,7 +18,7 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
     IStorageTransmission StoreRepo { get; set; } = default!;
 
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>
@@ -54,7 +54,7 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
 
     RubricSelectorComponent? ref_rubric;
     int? _rubricSelected;
-    List<RubricIssueHelpdeskModelDB>? RubricMetadataShadow;
+    List<RubricIssueHelpDeskModelDB>? RubricMetadataShadow;
     void RubricSelectAction(UniversalBaseModel? selectedRubric)
     {
         _rubricSelected = selectedRubric?.Id;
@@ -78,13 +78,13 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
         _rubricSelected = res_RubricIssueForCreateOrder.Response;
         if (ref_rubric is not null && _rubricSelected.HasValue)
         {
-            TResponseModel<List<RubricIssueHelpdeskModelDB>> res = await HelpdeskRepo.RubricReadAsync(_rubricSelected.Value);
+            TResponseModel<List<RubricIssueHelpDeskModelDB>> res = await HelpDeskRepo.RubricReadAsync(_rubricSelected.Value);
             await SetBusyAsync(false);
             SnackbarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;
             if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
             {
-                RubricIssueHelpdeskModelDB current_element = RubricMetadataShadow.Last();
+                RubricIssueHelpDeskModelDB current_element = RubricMetadataShadow.Last();
 
                 await ref_rubric.OwnerRubricSet(current_element.ParentId ?? 0);
                 await ref_rubric.SetRubric(current_element.Id, RubricMetadataShadow);

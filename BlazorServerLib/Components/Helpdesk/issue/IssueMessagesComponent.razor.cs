@@ -9,7 +9,7 @@ using SharedLib;
 using System.Net.Http;
 using static MudBlazor.CategoryTypes;
 
-namespace BlazorWebLib.Components.Helpdesk.issue;
+namespace BlazorWebLib.Components.HelpDesk.issue;
 
 /// <summary>
 /// IssueMessagesComponent
@@ -20,7 +20,7 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
     IIdentityTransmission IdentityRepo { get; set; } = default!;
 
 
-    MudTable<IssueMessageHelpdeskModelDB>? tableRef;
+    MudTable<IssueMessageHelpDeskModelDB>? tableRef;
 
     /// <summary>
     /// Добавляется новое сообщение
@@ -39,21 +39,21 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
         }
     }
 
-    IssueMessageHelpdeskModelDB[]? messages;
+    IssueMessageHelpDeskModelDB[]? messages;
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
-    private Task<TableData<IssueMessageHelpdeskModelDB>> ServerReload(TableState state, CancellationToken token)
+    private Task<TableData<IssueMessageHelpDeskModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         if (messages is null)
-            return Task.FromResult(new TableData<IssueMessageHelpdeskModelDB>() { TotalItems = 0, Items = [] });
+            return Task.FromResult(new TableData<IssueMessageHelpDeskModelDB>() { TotalItems = 0, Items = [] });
 
-        IssueMessageHelpdeskModelDB[] _messages = string.IsNullOrWhiteSpace(searchStringQuery)
+        IssueMessageHelpDeskModelDB[] _messages = string.IsNullOrWhiteSpace(searchStringQuery)
             ? messages
             : [.. messages.Where(x => x.MessageText.Contains(searchStringQuery, StringComparison.OrdinalIgnoreCase))];
 
-        return Task.FromResult(new TableData<IssueMessageHelpdeskModelDB>() { TotalItems = _messages.Length, Items = _messages.OrderBy(x => x.Id).Skip(state.PageSize * state.Page).Take(state.PageSize) });
+        return Task.FromResult(new TableData<IssueMessageHelpDeskModelDB>() { TotalItems = _messages.Length, Items = _messages.OrderBy(x => x.Id).Skip(state.PageSize * state.Page).Take(state.PageSize) });
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
     public async Task ReloadMessages()
     {
         await SetBusyAsync();
-        TResponseModel<IssueMessageHelpdeskModelDB[]> messages_rest = await HelpdeskRepo.MessagesListAsync(new()
+        TResponseModel<IssueMessageHelpDeskModelDB[]> messages_rest = await HelpDeskRepo.MessagesListAsync(new()
         {
             Payload = Issue.Id,
             SenderActionUserId = CurrentUserSession!.UserId,

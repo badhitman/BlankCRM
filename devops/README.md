@@ -46,7 +46,7 @@ git clone https://github.com/badhitman/HtmlGenerator.git
 dotnet publish -c Debug --output /srv/git/builds/ApiRestService /srv/git/BlankCRM/ApiRestService/ApiRestService.csproj
 dotnet publish -c Debug --output /srv/git/builds/StorageService /srv/git/BlankCRM/StorageService/StorageService.csproj
 dotnet publish -c Debug --output /srv/git/builds/CommerceService /srv/git/BlankCRM/CommerceService/CommerceService.csproj
-dotnet publish -c Debug --output /srv/git/builds/HelpdeskService /srv/git/BlankCRM/HelpdeskService/HelpdeskService.csproj
+dotnet publish -c Debug --output /srv/git/builds/HelpDeskService /srv/git/BlankCRM/HelpDeskService/HelpDeskService.csproj
 dotnet publish -c Debug --output /srv/git/builds/ConstructorService /srv/git/BlankCRM/ConstructorService/ConstructorService.csproj
 dotnet publish -c Debug --output /srv/git/builds/TelegramBotService /srv/git/BlankCRM/TelegramBotService/TelegramBotService.csproj
 
@@ -66,7 +66,7 @@ rm -r /srv/services/*
 cp -r /srv/git/builds/ApiRestService /srv/services/ApiRestService
 cp -r /srv/git/builds/StorageService /srv/services/StorageService
 cp -r /srv/git/builds/CommerceService /srv/services/CommerceService
-cp -r /srv/git/builds/HelpdeskService /srv/services/HelpdeskService
+cp -r /srv/git/builds/HelpDeskService /srv/services/HelpDeskService
 cp -r /srv/git/builds/ConstructorService /srv/services/ConstructorService
 cp -r /srv/git/builds/TelegramBotService /srv/services/TelegramBotService
 cp -r /srv/git/builds/BlankBlazorApp /srv/services/BlankBlazorApp

@@ -7,9 +7,9 @@ using System.ComponentModel;
 namespace SharedLib;
 
 /// <summary>
-/// Helpdesk journal modes: All, ActualOnly, ArchiveOnly
+/// HelpDesk journal modes: All, ActualOnly, ArchiveOnly
 /// </summary>
-public enum HelpdeskJournalModesEnum
+public enum HelpDeskJournalModesEnum
 {
     /// <summary>
     /// All

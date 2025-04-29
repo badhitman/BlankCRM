@@ -4,7 +4,6 @@
 
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
-using MudBlazor;
 using SharedLib;
 
 namespace BlazorWebLib.Components.Commerce.OrderDocumentObject;
@@ -14,10 +13,6 @@ namespace BlazorWebLib.Components.Commerce.OrderDocumentObject;
 /// </summary>
 public partial class RowOfOrderDocumentComponent : BlazorBusyComponentBaseModel
 {
-    [Inject]
-    ICommerceTransmission CommRepo { get; set; } = default!;
-
-
     /// <summary>
     /// Строка заказа (документа)
     /// </summary>
@@ -28,5 +23,5 @@ public partial class RowOfOrderDocumentComponent : BlazorBusyComponentBaseModel
     /// Issue
     /// </summary>
     [CascadingParameter, EditorRequired]
-    public required IssueHelpdeskModelDB Issue { get; set; }
+    public required IssueHelpDeskModelDB Issue { get; set; }
 }

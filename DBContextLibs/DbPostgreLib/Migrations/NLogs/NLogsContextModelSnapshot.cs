@@ -17,7 +17,7 @@ namespace DbPostgreLib.Migrations.NLogs
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -34,7 +34,6 @@ namespace DbPostgreLib.Migrations.NLogs
                         .HasColumnType("text");
 
                     b.Property<string>("ApplicationName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CallSite")
@@ -50,7 +49,6 @@ namespace DbPostgreLib.Migrations.NLogs
                         .HasColumnType("text");
 
                     b.Property<string>("RecordLevel")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("RecordMessage")

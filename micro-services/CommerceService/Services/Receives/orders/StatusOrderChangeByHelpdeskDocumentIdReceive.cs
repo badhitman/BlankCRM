@@ -9,9 +9,9 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// StatusOrderChangeByHelpdeskDocumentIdReceive
+/// StatusOrderChangeByHelpDeskDocumentIdReceive
 /// </summary>
-public class StatusOrderChangeByHelpdeskDocumentIdReceive(ICommerceService commRepo, ILogger<StatusOrderChangeByHelpdeskDocumentIdReceive> LoggerRepo) : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
+public class StatusOrderChangeByHelpDeskDocumentIdReceive(ICommerceService commRepo, ILogger<StatusOrderChangeByHelpDeskDocumentIdReceive> LoggerRepo) : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.StatusChangeOrderByHelpDeskDocumentIdReceive;
@@ -21,6 +21,6 @@ public class StatusOrderChangeByHelpdeskDocumentIdReceive(ICommerceService commR
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await commRepo.StatusesOrdersChangeByHelpdeskDocumentIdAsync(req, token);
+        return await commRepo.StatusesOrdersChangeByHelpDeskDocumentIdAsync(req, token);
     }
 }

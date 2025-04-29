@@ -123,7 +123,7 @@ public class Program
             .AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 
         builder.Services
-            .AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
+            .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
             .AddScoped<ICommerceTransmission, CommerceTransmission>()

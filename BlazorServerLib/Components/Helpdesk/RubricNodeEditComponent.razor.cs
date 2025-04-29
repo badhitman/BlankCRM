@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk;
+namespace BlazorWebLib.Components.HelpDesk;
 
 /// <summary>
 /// RubricNode: Edit
@@ -14,7 +14,7 @@ namespace BlazorWebLib.Components.Helpdesk;
 public partial class RubricNodeEditComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>
@@ -64,7 +64,7 @@ public partial class RubricNodeEditComponent : BlazorBusyComponentBaseAuthModel
             return;
 
         await SetBusyAsync();
-        ResponseBaseModel res = await HelpdeskRepo.RubricMoveAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { Direction = dir, ObjectId = rubric.Value!.Id, ContextName = ContextName } });
+        ResponseBaseModel res = await HelpDeskRepo.RubricMoveAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { Direction = dir, ObjectId = rubric.Value!.Id, ContextName = ContextName } });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         ReloadNodeHandle(ItemModel.ParentId ?? 0);
@@ -82,7 +82,7 @@ public partial class RubricNodeEditComponent : BlazorBusyComponentBaseAuthModel
         ItemModel.Name = itemSystemName;
 
         await SetBusyAsync();
-        TResponseModel<int> res = await HelpdeskRepo.RubricCreateOrUpdateAsync(new RubricIssueHelpdeskModelDB()
+        TResponseModel<int> res = await HelpDeskRepo.RubricCreateOrUpdateAsync(new RubricIssueHelpDeskModelDB()
         {
             Name = ItemModel.Name,
             Description = ItemModel.Description,

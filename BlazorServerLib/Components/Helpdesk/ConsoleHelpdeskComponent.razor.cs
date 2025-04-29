@@ -7,12 +7,12 @@ using BlazorLib;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
-namespace BlazorWebLib.Components.Helpdesk;
+namespace BlazorWebLib.Components.HelpDesk;
 
 /// <summary>
-/// ConsoleHelpdeskComponent
+/// ConsoleHelpDeskComponent
 /// </summary>
-public partial class ConsoleHelpdeskComponent : BlazorBusyComponentBaseAuthModel
+public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IStorageTransmission StorageRepo { get; set; } = default!;

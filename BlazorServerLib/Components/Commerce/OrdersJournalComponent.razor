@@ -15,7 +15,7 @@
     </HeaderContent>
     <RowTemplate>
         @{
-            IssueHelpdeskModelDB? hd_doc = IssuesCacheDump.FirstOrDefault(x => x.Id == context.HelpdeskId);
+            IssueHelpDeskModelDB? hd_doc = IssuesCacheDump.FirstOrDefault(x => x.Id == context.HelpDeskId);
         }
         <MudTd DataLabel="Создан">
             @{
@@ -29,7 +29,7 @@
             }
             else
             {
-                <a href="/issue-card/@context.HelpdeskId">
+                <a href="/issue-card/@context.HelpDeskId">
                     @msk_dt.ToString("d", GlobalStaticConstants.RU) <sup>@msk_dt.ToString("t", GlobalStaticConstants.RU)</sup>
                 </a>
             }

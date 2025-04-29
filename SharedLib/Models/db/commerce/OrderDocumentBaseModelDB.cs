@@ -37,7 +37,7 @@ public class OrderDocumentBaseModelDB : EntryUpdatedModel
     /// <remarks>
     /// До тех пор пока не указана заявка этот заказ всего лишь [Корзина]
     /// </remarks>
-    public int? HelpdeskId { get; set; }
+    public int? HelpDeskId { get; set; }
 
     /// <summary>
     /// Organization

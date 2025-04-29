@@ -5,7 +5,7 @@
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk.issue;
+namespace BlazorWebLib.Components.HelpDesk.issue;
 
 /// <summary>
 /// Участники диалога
@@ -43,7 +43,7 @@ public partial class StatusIssueComponent : IssueWrapBaseModel
     {
         await SetBusyAsync();
 
-        TResponseModel<bool> res = await HelpdeskRepo
+        TResponseModel<bool> res = await HelpDeskRepo
             .StatusChangeAsync(new()
             {
                 SenderActionUserId = CurrentUserSession!.UserId,

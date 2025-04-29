@@ -1,11 +1,11 @@
 ```
-Add-Migration MainContext001 -Context MainDbAppContext -Project DbSqliteLib -StartupProject BlankBlazorApp
-Update-Database -Context MainDbAppContext -Project DbSqliteLib -StartupProject BlankBlazorApp
+Add-Migration MainContext001 -Context MainAppContext -Project DbSqliteLib -StartupProject BlankBlazorApp
+Update-Database -Context MainAppContext -Project DbSqliteLib -StartupProject BlankBlazorApp
 ```
 
 ```
-Add-Migration HelpdeskContext001 -Context HelpdeskContext -Project DbSqliteLib -StartupProject HelpdeskService
-Update-Database -Context HelpdeskContext -Project DbSqliteLib -StartupProject HelpdeskService
+Add-Migration HelpDeskContext001 -Context HelpDeskContext -Project DbSqliteLib -StartupProject HelpDeskService
+Update-Database -Context HelpDeskContext -Project DbSqliteLib -StartupProject HelpDeskService
 ```
 
 ```

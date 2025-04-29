@@ -24,7 +24,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
     IIdentityTransmission IdentityRepo { get; set; } = default!;
 
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     private IEnumerable<ChatTelegramModelDB> pagedData = [];
@@ -33,7 +33,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
     private string? searchString = null;
 
     readonly List<UserInfoModel> UsersCache = [];
-    readonly Dictionary<string, IssueHelpdeskModel[]> IssuesCache = [];
+    readonly Dictionary<string, IssueHelpDeskModel[]> IssuesCache = [];
 
     async Task<TableData<ChatTelegramModelDB>> ServerReload(TableState state, CancellationToken token)
     {
@@ -86,18 +86,18 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
                 Payload = new()
                 {
                     IdentityUsersIds = [.. users_ids_identity],
-                    JournalMode = HelpdeskJournalModesEnum.All,
+                    JournalMode = HelpDeskJournalModesEnum.All,
                     IncludeSubscribers = true,
                 },
                 PageNum = 0,
                 PageSize = 100,
-                SortBy = nameof(IssueHelpdeskModel.LastUpdateAt),
+                SortBy = nameof(IssueHelpDeskModel.LastUpdateAt),
                 SortingDirection = DirectionsEnum.Down,
             },
             SenderActionUserId = CurrentUserSession.UserId
         };
         await SetBusyAsync();
-        TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>> issues_users_res = await HelpdeskRepo
+        TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>> issues_users_res = await HelpDeskRepo
                      .IssuesSelectAsync(req);
         IsBusyProgress = false;
 
@@ -109,7 +109,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
 
         foreach (UserInfoModel us in users_res.Response)
         {
-            IssueHelpdeskModel[] issues_for_user = [.. issues_users_res.Response.Response
+            IssueHelpDeskModel[] issues_for_user = [.. issues_users_res.Response.Response
                 .Where(x =>
                 x.ExecutorIdentityUserId == us.UserId ||
                 x.Subscribers!.Any(y => y.UserId == us.UserId) ||

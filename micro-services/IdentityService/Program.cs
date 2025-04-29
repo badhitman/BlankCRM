@@ -177,7 +177,7 @@ public class Program
 
         builder.Services
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
-            .AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
+            .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
             ;

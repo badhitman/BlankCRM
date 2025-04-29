@@ -46,7 +46,7 @@ public partial class App
             {
                 _tasks.AddRange([
                     TgRemoteCall.SetWebConfigTelegramAsync(WebConfig.Value, false),
-                    TgRemoteCall.SetWebConfigHelpdeskAsync(WebConfig.Value, false),
+                    TgRemoteCall.SetWebConfigHelpDeskAsync(WebConfig.Value, false),
                     TgRemoteCall.SetWebConfigStorageAsync(WebConfig.Value, false)]);
 
                 await Task.WhenAll(_tasks);

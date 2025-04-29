@@ -11,11 +11,11 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(IssueHelpdeskModel.CreatedAtUTC))" T="IssueHelpdeskModel">Создан</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(IssueHelpDeskModel.CreatedAtUTC))" T="IssueHelpDeskModel">Создан</MudTableSortLabel></MudTh>
         <MudTh>Статус</MudTh>
         <MudTh>Тема</MudTh>
         <MudTh>Рубрика</MudTh>
-        @if (UserArea == UsersAreasHelpdeskEnum.Author)
+        @if (UserArea == UsersAreasHelpDeskEnum.Author)
         {
             <MudTh>Исполнитель</MudTh>
         }
@@ -33,7 +33,7 @@
         <MudTd DataLabel="Статус">@context.StatusDocument.DescriptionInfo()</MudTd>
         <MudTd DataLabel="Тема">@context.Name</MudTd>
         <MudTd DataLabel="Рубрика">@context.RubricIssue?.Name</MudTd>
-        @if (UserArea == UsersAreasHelpdeskEnum.Author)
+        @if (UserArea == UsersAreasHelpDeskEnum.Author)
         {
             <MudTd>@(usersDump.FirstOrDefault(x => x.UserId == context.ExecutorIdentityUserId)?.UserName ?? context.ExecutorIdentityUserId)</MudTd>
         }

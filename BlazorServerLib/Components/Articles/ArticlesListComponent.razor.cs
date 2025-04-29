@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components.Articles;
 public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     IIdentityTransmission IdentityRepo { get; set; } = default!;
@@ -46,7 +46,7 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
 
-        TPaginationResponseModel<ArticleModelDB> rest = await HelpdeskRepo
+        TPaginationResponseModel<ArticleModelDB> rest = await HelpDeskRepo
             .ArticlesSelectAsync(req, token);
 
         await SetBusyAsync(false, token: token);

@@ -15,30 +15,30 @@ using Microsoft.EntityFrameworkCore.Storage;
 using static SharedLib.GlobalStaticConstantsRoutes;
 using static SharedLib.GlobalStaticConstantsTransmission;
 
-namespace HelpdeskService;
+namespace HelpDeskService;
 
 /// <summary>
-/// Helpdesk - Implement
+/// HelpDesk - Implement
 /// </summary>
-public class HelpdeskImplementService(
+public class HelpDeskImplementService(
     IIdentityTransmission IdentityRepo,
-    ILogger<HelpdeskImplementService> loggerRepo,
-    IDbContextFactory<HelpdeskContext> helpdeskDbFactory,
+    ILogger<HelpDeskImplementService> loggerRepo,
+    IDbContextFactory<HelpDeskContext> helpdeskDbFactory,
     IManualCustomCacheService cacheRepo,
-    IOptions<HelpdeskConfigModel> hdConf,
+    IOptions<HelpDeskConfigModel> hdConf,
     ICommerceTransmission commRepo,
     IMemoryCache cache,
     ITelegramTransmission telegramRemoteRepo,
     IStorageTransmission StorageRepo,
-    IWebTransmission webTransmissionRepo) : IHelpdeskService
+    IWebTransmission webTransmissionRepo) : IHelpDeskService
 {
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);
 
     #region messages
     /// <inheritdoc/>
-    public async Task<TResponseModel<IssueMessageHelpdeskModelDB[]>> MessagesListAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<IssueMessageHelpDeskModelDB[]>> MessagesListAsync(TAuthRequestModel<int> req, CancellationToken token = default)
     {
-        TResponseModel<IssueMessageHelpdeskModelDB[]> res = new();
+        TResponseModel<IssueMessageHelpDeskModelDB[]> res = new();
 
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length != 1)
@@ -46,7 +46,7 @@ public class HelpdeskImplementService(
 
         UserInfoModel actor = rest.Response[0];
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload], IncludeSubscribersOnly = true },
@@ -61,7 +61,7 @@ public class HelpdeskImplementService(
             return res;
         }
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         int[] issues_ids = issues_data.Response.Select(i => i.Id).ToArray();
 
@@ -76,7 +76,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestModel<IssueMessageHelpdeskBaseModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<int?> res = new();
@@ -88,7 +88,7 @@ public class HelpdeskImplementService(
         }
         req.Payload.MessageText = req.Payload.MessageText.Trim();
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = req.SenderActionUserId,
             Payload = new() { IssuesIds = [req.Payload.IssueId], IncludeSubscribersOnly = true },
@@ -112,7 +112,7 @@ public class HelpdeskImplementService(
             return res;
         }
         List<Task> tasks = [];
-        IssueHelpdeskModelDB issue_data = issues_data.Response.Single();
+        IssueHelpDeskModelDB issue_data = issues_data.Response.Single();
         if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && issue_data.Subscribers?.Any(x => x.UserId == req.SenderActionUserId) != true)
         {
             await SubscribeUpdateAsync(new()
@@ -128,9 +128,9 @@ public class HelpdeskImplementService(
             }, token);
         }
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
-        IssueMessageHelpdeskModelDB msg_db;
-        IssueReadMarkerHelpdeskModelDB? my_marker = null;
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        IssueMessageHelpDeskModelDB msg_db;
+        IssueReadMarkerHelpDeskModelDB? my_marker = null;
         DateTime dtn = DateTime.UtcNow;
         string msg;
         PulseRequestModel p_req;
@@ -235,30 +235,30 @@ public class HelpdeskImplementService(
                 {
                     CommerceNewMessageOrderBodyNotificationWhatsapp = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotificationWhatsapp);
                     if (CommerceNewMessageOrderBodyNotificationWhatsapp.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotificationWhatsapp.Response))
-                        wpMessage = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotificationWhatsapp.Response, wc.ClearBaseUri, _about_document, true);
+                        wpMessage = IHelpDeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotificationWhatsapp.Response, wc.ClearBaseUri, _about_document, true);
                 }, token));
                 tasks.Add(Task.Run(async () =>
                 {
                     CommerceNewMessageOrderBodyNotificationTelegram = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotificationTelegram);
                     if (CommerceNewMessageOrderBodyNotificationTelegram.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotificationTelegram.Response))
-                        tg_message = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
+                        tg_message = IHelpDeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
                 }, token));
                 tasks.Add(Task.Run(async () =>
                 {
                     CommerceNewMessageOrderBodyNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderBodyNotification);
                     if (CommerceNewMessageOrderBodyNotification.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotification.Response))
-                        msg = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotification.Response, wc.ClearBaseUri, _about_document);
+                        msg = IHelpDeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderBodyNotification.Response, wc.ClearBaseUri, _about_document);
                 }, token));
                 tasks.Add(Task.Run(async () =>
                 {
                     CommerceNewMessageOrderSubjectNotification = await StorageRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewMessageOrderSubjectNotification);
                     if (CommerceNewMessageOrderSubjectNotification.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderSubjectNotification.Response))
-                        subject_email = IHelpdeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderSubjectNotification.Response, wc.ClearBaseUri, _about_document);
+                        subject_email = IHelpDeskService.ReplaceTags(issue_data.Name, issue_data.CreatedAtUTC, issue_data.Id, issue_data.StatusDocument, CommerceNewMessageOrderSubjectNotification.Response, wc.ClearBaseUri, _about_document);
                 }, token));
                 await Task.WhenAll(tasks);
                 tasks.Clear();
 
-                IQueryable<SubscriberIssueHelpdeskModelDB> _qs = issue_data.Subscribers!.Where(x => !x.IsSilent).AsQueryable();
+                IQueryable<SubscriberIssueHelpDeskModelDB> _qs = issue_data.Subscribers!.Where(x => !x.IsSilent).AsQueryable();
 
                 string[] users_ids = [.. _qs.Select(x => x.UserId).Union([issue_data.AuthorIdentityUserId, issue_data.ExecutorIdentityUserId]).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct()!]; ;
 
@@ -267,18 +267,18 @@ public class HelpdeskImplementService(
                     OrderDocumentModelDB order_obj = find_orders.Response[0];
                     _about_document = $"Заказ '{order_obj.Name}' {order_obj.CreatedAtUTC.GetCustomTime().ToString("d", GlobalStaticConstants.RU)} {order_obj.CreatedAtUTC.GetCustomTime().ToString("t", GlobalStaticConstants.RU)}";
                     if (CommerceNewMessageOrderSubjectNotification.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderSubjectNotification.Response))
-                        subject_email = IHelpdeskService.ReplaceTags(order_obj.Name, order_obj.CreatedAtUTC, order_obj.HelpdeskId!.Value, order_obj.StatusDocument, CommerceNewMessageOrderSubjectNotification.Response, wc.ClearBaseUri, _about_document);
+                        subject_email = IHelpDeskService.ReplaceTags(order_obj.Name, order_obj.CreatedAtUTC, order_obj.HelpDeskId!.Value, order_obj.StatusDocument, CommerceNewMessageOrderSubjectNotification.Response, wc.ClearBaseUri, _about_document);
 
                     if (!CommerceNewMessageOrderBodyNotification.Success() || string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotification.Response))
                         msg = $"<p>Заказ '{order_obj.Name}' от [{order_obj.CreatedAtUTC.GetHumanDateTime()}]: Новое сообщение.</p>";
                     else
-                        msg = IHelpdeskService.ReplaceTags(order_obj.Name, order_obj.CreatedAtUTC, order_obj.HelpdeskId!.Value, order_obj.StatusDocument, CommerceNewMessageOrderBodyNotification.Response, wc.ClearBaseUri, _about_document);
+                        msg = IHelpDeskService.ReplaceTags(order_obj.Name, order_obj.CreatedAtUTC, order_obj.HelpDeskId!.Value, order_obj.StatusDocument, CommerceNewMessageOrderBodyNotification.Response, wc.ClearBaseUri, _about_document);
 
                     if (CommerceNewMessageOrderBodyNotificationTelegram.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotificationTelegram.Response))
-                        tg_message = IHelpdeskService.ReplaceTags(order_obj.Name, order_obj.CreatedAtUTC, order_obj.HelpdeskId!.Value, order_obj.StatusDocument, CommerceNewMessageOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
+                        tg_message = IHelpDeskService.ReplaceTags(order_obj.Name, order_obj.CreatedAtUTC, order_obj.HelpDeskId!.Value, order_obj.StatusDocument, CommerceNewMessageOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
 
                     if (CommerceNewMessageOrderBodyNotificationWhatsapp.Success() && !string.IsNullOrWhiteSpace(CommerceNewMessageOrderBodyNotificationWhatsapp.Response))
-                        wpMessage = IHelpdeskService.ReplaceTags(order_obj.Name, order_obj.CreatedAtUTC, order_obj.HelpdeskId!.Value, order_obj.StatusDocument, CommerceNewMessageOrderBodyNotificationWhatsapp.Response, wc.ClearBaseUri, _about_document, true);
+                        wpMessage = IHelpDeskService.ReplaceTags(order_obj.Name, order_obj.CreatedAtUTC, order_obj.HelpDeskId!.Value, order_obj.StatusDocument, CommerceNewMessageOrderBodyNotificationWhatsapp.Response, wc.ClearBaseUri, _about_document, true);
                     else
                         wpMessage = $"Заказ '{order_obj.Name}' от [{order_obj.CreatedAtUTC.GetHumanDateTime()}]: Новое сообщение.";
 
@@ -382,10 +382,10 @@ public class HelpdeskImplementService(
 
         UserInfoModel actor = rest.Response[0];
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
-        IssueMessageHelpdeskModelDB msg_db = await context.IssuesMessages.FirstAsync(x => x.Id == req.Payload.MessageId, cancellationToken: token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        IssueMessageHelpDeskModelDB msg_db = await context.IssuesMessages.FirstAsync(x => x.Id == req.Payload.MessageId, cancellationToken: token);
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [msg_db.IssueId], IncludeSubscribersOnly = true },
@@ -425,7 +425,7 @@ public class HelpdeskImplementService(
         {
             if (!vote_db_key.HasValue)
             {
-                VoteHelpdeskModelDB vote_db = new() { IdentityUserId = actor.UserId, IssueId = issue_data.Id, MessageId = msg_db.Id };
+                VoteHelpDeskModelDB vote_db = new() { IdentityUserId = actor.UserId, IssueId = issue_data.Id, MessageId = msg_db.Id };
                 await context.AddAsync(vote_db, token);
                 await context.SaveChangesAsync(token);
 
@@ -489,7 +489,7 @@ public class HelpdeskImplementService(
     /// <inheritdoc/>
     public async Task<List<UniversalBaseModel>> RubricsListAsync(RubricsListRequestModel req, CancellationToken token = default)
     {
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         IQueryable<UniversalBaseModel> q = context
             .Rubrics
             .Where(x => x.ProjectId == req.ProjectId && x.ContextName == req.ContextName)
@@ -518,7 +518,7 @@ public class HelpdeskImplementService(
     {
         ResponseBaseModel res = new();
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         var data = await context
         .Rubrics
@@ -540,7 +540,7 @@ public class HelpdeskImplementService(
             return res;
         }
 
-        List<RubricIssueHelpdeskModelDB> all = await context
+        List<RubricIssueHelpDeskModelDB> all = await context
             .Rubrics
             .Where(x => x.ContextName == req.Payload.ContextName && x.ParentId == data.ParentId)
             .OrderBy(x => x.SortIndex)
@@ -555,7 +555,7 @@ public class HelpdeskImplementService(
             }
             else
             {
-                RubricIssueHelpdeskModelDB r1 = all[i - 1], r2 = all[i];
+                RubricIssueHelpDeskModelDB r1 = all[i - 1], r2 = all[i];
                 uint val1 = r1.SortIndex, val2 = r2.SortIndex;
                 r1.SortIndex = uint.MaxValue;
                 context.Update(r1);
@@ -578,7 +578,7 @@ public class HelpdeskImplementService(
             }
             else
             {
-                RubricIssueHelpdeskModelDB r1 = all[i + 1], r2 = all[i];
+                RubricIssueHelpDeskModelDB r1 = all[i + 1], r2 = all[i];
                 uint val1 = r1.SortIndex, val2 = r2.SortIndex;
                 r1.SortIndex = uint.MaxValue;
                 context.Update(r1);
@@ -616,7 +616,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricIssueHelpdeskModelDB rubric, CancellationToken token = default)
+    public async Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricIssueHelpDeskModelDB rubric, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         Regex rx = new(@"\s+", RegexOptions.Compiled);
@@ -627,7 +627,7 @@ public class HelpdeskImplementService(
             return res;
         }
         rubric.NormalizedNameUpper = rubric.Name.ToUpper();
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         if (await context.Rubrics.AnyAsync(x => x.Id != rubric.Id && x.ParentId == rubric.ParentId && x.Name == rubric.Name, cancellationToken: token))
         {
@@ -667,23 +667,23 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricReadAsync(int rubricId, CancellationToken token = default)
+    public async Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricReadAsync(int rubricId, CancellationToken token = default)
     {
-        TResponseModel<List<RubricIssueHelpdeskModelDB>> res = new();
+        TResponseModel<List<RubricIssueHelpDeskModelDB>> res = new();
 
         if (rubricId < 1)
             return res;
 
-        string mem_key = $"{TransmissionQueues.RubricForIssuesReadHelpdeskReceive}-{rubricId}";
-        if (cache.TryGetValue(mem_key, out List<RubricIssueHelpdeskModelDB>? rubric))
+        string mem_key = $"{TransmissionQueues.RubricForIssuesReadHelpDeskReceive}-{rubricId}";
+        if (cache.TryGetValue(mem_key, out List<RubricIssueHelpDeskModelDB>? rubric))
         {
             res.Response = rubric;
             return res;
         }
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
-        RubricIssueHelpdeskModelDB? lpi = await context
+        RubricIssueHelpDeskModelDB? lpi = await context
             .Rubrics
             .Include(x => x.Parent)
             .FirstOrDefaultAsync(x => x.Id == rubricId, cancellationToken: token);
@@ -694,7 +694,7 @@ public class HelpdeskImplementService(
             return res;
         }
 
-        List<RubricIssueHelpdeskModelDB> ctrl = [lpi];
+        List<RubricIssueHelpDeskModelDB> ctrl = [lpi];
 
         while (lpi.Parent is not null)
         {
@@ -712,16 +712,16 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default)
+    public async Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default)
     {
-        TResponseModel<List<RubricIssueHelpdeskModelDB>> res = new();
+        TResponseModel<List<RubricIssueHelpDeskModelDB>> res = new();
         rubricsIds = [.. rubricsIds.Where(x => x > 0)];
         if (rubricsIds.Length == 0)
         {
             res.AddError("Пустой запрос");
             return res;
         }
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         res.Response = await context.Rubrics.Where(x => rubricsIds.Any(y => y == x.Id)).ToListAsync(cancellationToken: token);
         return res;
     }
@@ -729,7 +729,7 @@ public class HelpdeskImplementService(
 
     #region issues
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<SubscriberIssueHelpdeskModelDB>>> SubscribesListAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<SubscriberIssueHelpDeskModelDB>>> SubscribesListAsync(TAuthRequestModel<int> req, CancellationToken token = default)
     {
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length != 1)
@@ -737,7 +737,7 @@ public class HelpdeskImplementService(
 
         UserInfoModel actor = rest.Response[0];
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload], IncludeSubscribersOnly = true },
@@ -750,14 +750,14 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
     {
         if (req.Payload.PageSize < 5)
             req.Payload.PageSize = 5;
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
-        IQueryable<IssueHelpdeskModelDB> q = context
+        IQueryable<IssueHelpDeskModelDB> q = context
             .Issues
             .Where(x => x.ProjectId == req.Payload.Payload.ProjectId)
             .AsQueryable();
@@ -776,10 +776,10 @@ public class HelpdeskImplementService(
 
         switch (req.Payload.Payload.JournalMode)
         {
-            case HelpdeskJournalModesEnum.ActualOnly:
+            case HelpDeskJournalModesEnum.ActualOnly:
                 q = q.Where(x => x.StatusDocument <= StatusesDocumentsEnum.Progress);
                 break;
-            case HelpdeskJournalModesEnum.ArchiveOnly:
+            case HelpDeskJournalModesEnum.ArchiveOnly:
                 q = q.Where(x => x.StatusDocument > StatusesDocumentsEnum.Progress);
                 break;
             default:
@@ -788,16 +788,16 @@ public class HelpdeskImplementService(
 
         switch (req.Payload.Payload.UserArea)
         {
-            case UsersAreasHelpdeskEnum.Subscriber:
+            case UsersAreasHelpDeskEnum.Subscriber:
                 q = q.Where(x => context.SubscribersOfIssues.Any(y => y.IssueId == x.Id && req.Payload.Payload.IdentityUsersIds.Contains(y.UserId)));
                 break;
-            case UsersAreasHelpdeskEnum.Executor:
+            case UsersAreasHelpDeskEnum.Executor:
                 q = q.Where(x => req.Payload.Payload.IdentityUsersIds.Contains(x.ExecutorIdentityUserId));
                 break;
-            case UsersAreasHelpdeskEnum.Main:
+            case UsersAreasHelpDeskEnum.Main:
                 q = q.Where(x => req.Payload.Payload.IdentityUsersIds.Contains(x.ExecutorIdentityUserId) || context.SubscribersOfIssues.Any(y => y.IssueId == x.Id && req.Payload.Payload.IdentityUsersIds.Contains(y.UserId)));
                 break;
-            case UsersAreasHelpdeskEnum.Author:
+            case UsersAreasHelpDeskEnum.Author:
                 q = q.Where(x => req.Payload.Payload.IdentityUsersIds.Contains(x.AuthorIdentityUserId));
                 break;
             default:
@@ -815,7 +815,7 @@ public class HelpdeskImplementService(
             .Take(req.Payload.PageSize)
             .Include(x => x.RubricIssue);
 
-        List<IssueHelpdeskModelDB> data = req.Payload.Payload.IncludeSubscribers
+        List<IssueHelpDeskModelDB> data = req.Payload.Payload.IncludeSubscribers
             ? await inc.Include(x => x.Subscribers).ToListAsync(cancellationToken: token)
             : await inc.ToListAsync(cancellationToken: token);
 
@@ -828,13 +828,13 @@ public class HelpdeskImplementService(
                 SortingDirection = req.Payload.SortingDirection,
                 SortBy = req.Payload.SortBy,
                 TotalRowsCount = await q.CountAsync(cancellationToken: token),
-                Response = [.. data.Select(IssueHelpdeskModel.Build)]
+                Response = [.. data.Select(IssueHelpDeskModel.Build)]
             }
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<IssueHelpdeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -855,13 +855,13 @@ public class HelpdeskImplementService(
 
         if (!string.IsNullOrWhiteSpace(cacheToken))
         {
-            TPaginationResponseModel<IssueHelpdeskModel>? _fr = await cacheRepo.GetObjectAsync<TPaginationResponseModel<IssueHelpdeskModel>>(cacheToken, token);
+            TPaginationResponseModel<IssueHelpDeskModel>? _fr = await cacheRepo.GetObjectAsync<TPaginationResponseModel<IssueHelpDeskModel>>(cacheToken, token);
             if (_fr is not null)
                 return _fr;
         }
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
-        IQueryable<IssueHelpdeskModelDB> q = context
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        IQueryable<IssueHelpDeskModelDB> q = context
             .Issues
             .Where(x => x.ProjectId == req.Payload.ProjectId && x.StatusDocument == req.Payload.Status)
             .AsQueryable();
@@ -879,24 +879,24 @@ public class HelpdeskImplementService(
         if (!string.IsNullOrWhiteSpace(req.Payload.FilterUserId))
             q = q.Where(x => x.AuthorIdentityUserId == req.Payload.FilterUserId || x.ExecutorIdentityUserId == req.Payload.FilterUserId || context.SubscribersOfIssues.Any(y => y.IssueId == x.Id && y.UserId == req.Payload.FilterUserId));
 
-        IOrderedQueryable<IssueHelpdeskModelDB> oq = req.SortingDirection == DirectionsEnum.Up
+        IOrderedQueryable<IssueHelpDeskModelDB> oq = req.SortingDirection == DirectionsEnum.Up
             ? q.OrderBy(x => x.CreatedAtUTC)
             : q.OrderByDescending(x => x.CreatedAtUTC);
 
-        List<IssueHelpdeskModelDB> data = await oq
+        List<IssueHelpDeskModelDB> data = await oq
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize)
             .Include(x => x.RubricIssue)
             .ToListAsync(cancellationToken: token);
 
-        TPaginationResponseModel<IssueHelpdeskModel> res = new()
+        TPaginationResponseModel<IssueHelpDeskModel> res = new()
         {
             PageNum = req.PageNum,
             PageSize = req.PageSize,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = [.. data.Select(x => IssueHelpdeskModel.Build(x))]
+            Response = [.. data.Select(x => IssueHelpDeskModel.Build(x))]
         };
 
         if (!string.IsNullOrWhiteSpace(cacheToken))
@@ -911,7 +911,7 @@ public class HelpdeskImplementService(
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<bool> res = new();
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = req.SenderActionUserId,
             Payload = new IssuesReadRequestModel()
@@ -924,7 +924,7 @@ public class HelpdeskImplementService(
         if (!issues_data.Success() || issues_data.Response is null || issues_data.Response.Length == 0)
             return new() { Messages = issues_data.Messages };
 
-        IssueHelpdeskModelDB issue_data = issues_data.Response.Single();
+        IssueHelpDeskModelDB issue_data = issues_data.Response.Single();
 
         string[] users_ids = [req.SenderActionUserId, req.Payload.UserId, issue_data.ExecutorIdentityUserId ?? ""];
         users_ids = [.. users_ids.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct()];
@@ -965,7 +965,7 @@ public class HelpdeskImplementService(
             }, token);
         }
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         string msg;
         if (string.IsNullOrWhiteSpace(req.Payload.UserId))
         {
@@ -1096,10 +1096,10 @@ public class HelpdeskImplementService(
 
         string normalizedNameUpper = issue_upd.Payload.Name.ToUpper();
 
-        IssueHelpdeskModelDB issue;
+        IssueHelpDeskModelDB issue;
         DateTime dtn = DateTime.UtcNow;
         string msg;
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         PulseRequestModel p_req;
 
         ModesSelectRubricsEnum _current_mode_rubric = res_ModeSelectingRubrics.Response ?? ModesSelectRubricsEnum.AllowWithoutRubric;
@@ -1136,10 +1136,10 @@ public class HelpdeskImplementService(
                 LastUpdateAt = dtn,
             };
 
-            IssueReadMarkerHelpdeskModelDB my_mark = new() { Issue = issue, LastReadAt = dtn, UserIdentityId = issue_upd.SenderActionUserId };
+            IssueReadMarkerHelpDeskModelDB my_mark = new() { Issue = issue, LastReadAt = dtn, UserIdentityId = issue_upd.SenderActionUserId };
             issue.ReadMarkers = [my_mark];
 
-            SubscriberIssueHelpdeskModelDB my_subscr = new() { Issue = issue, UserId = issue_upd.SenderActionUserId };
+            SubscriberIssueHelpDeskModelDB my_subscr = new() { Issue = issue, UserId = issue_upd.SenderActionUserId };
             issue.Subscribers = [my_subscr];
 
             try
@@ -1177,7 +1177,7 @@ public class HelpdeskImplementService(
             TResponseModel<long?> helpdesk_user_redirect_telegram_for_issue_rest = default!;
             await Task.WhenAll([
                 PulsePushAsync(p_req, token),
-                Task.Run(async () => { helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpdeskNotificationTelegramForCreateIssue); }, token),
+                Task.Run(async () => { helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpDeskNotificationTelegramForCreateIssue); }, token),
                 MessageUpdateOrCreateAsync(new() { SenderActionUserId = GlobalStaticConstantsRoles.Roles.System, Payload = new() { MessageText = $"Пользователь `{actor.UserName}` создал новый запрос: {issue_upd.Payload.Name}", IssueId = issue.Id } }, token)]);
 
             if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
@@ -1279,11 +1279,11 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<IssueHelpdeskModelDB[]>> IssuesReadAsync(TAuthRequestModel<IssuesReadRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<IssueHelpDeskModelDB[]>> IssuesReadAsync(TAuthRequestModel<IssuesReadRequestModel> req, CancellationToken token = default)
     {
-        TResponseModel<IssueHelpdeskModelDB[]> res = new();
-        string mem_key = $"{TransmissionQueues.IssuesGetHelpdeskReceive}-{string.Join(";", req.Payload.IssuesIds)}/{req.Payload.IncludeSubscribersOnly}({req.SenderActionUserId})";
-        if (cache.TryGetValue(mem_key, out IssueHelpdeskModelDB[]? hd))
+        TResponseModel<IssueHelpDeskModelDB[]> res = new();
+        string mem_key = $"{TransmissionQueues.IssuesGetHelpDeskReceive}-{string.Join(";", req.Payload.IssuesIds)}/{req.Payload.IncludeSubscribersOnly}({req.SenderActionUserId})";
+        if (cache.TryGetValue(mem_key, out IssueHelpDeskModelDB[]? hd))
         {
             if (hd is null)
                 cache.Remove(mem_key);
@@ -1294,9 +1294,9 @@ public class HelpdeskImplementService(
             }
         }
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
-        IIncludableQueryable<IssueHelpdeskModelDB, List<SubscriberIssueHelpdeskModelDB>?> q = context.Issues.Where(x => req.Payload.IssuesIds.Any(y => y == x.Id)).Include(x => x.Subscribers);
-        IssueHelpdeskModelDB[]? issues_db = req.Payload.IncludeSubscribersOnly
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        IIncludableQueryable<IssueHelpDeskModelDB, List<SubscriberIssueHelpDeskModelDB>?> q = context.Issues.Where(x => req.Payload.IssuesIds.Any(y => y == x.Id)).Include(x => x.Subscribers);
+        IssueHelpDeskModelDB[]? issues_db = req.Payload.IncludeSubscribersOnly
             ? await q.ToArrayAsync(cancellationToken: token)
             : await q.Include(x => x.RubricIssue).Include(x => x.Messages).ToArrayAsync(cancellationToken: token);
 
@@ -1348,7 +1348,7 @@ public class HelpdeskImplementService(
 
         UserInfoModel actor = req.SenderActionUserId == GlobalStaticConstantsRoles.Roles.System ? UserInfoModel.BuildSystem() : rest.Response![0];
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload.DocumentId], IncludeSubscribersOnly = true },
@@ -1357,14 +1357,14 @@ public class HelpdeskImplementService(
         if (!issues_data.Success() || issues_data.Response is null || issues_data.Response.Length == 0)
             return new() { Messages = issues_data.Messages };
 
-        IssueHelpdeskModelDB issue_data = issues_data.Response.Single();
+        IssueHelpDeskModelDB issue_data = issues_data.Response.Single();
         StatusesDocumentsEnum prevStatus = issue_data.StatusDocument;
         StatusesDocumentsEnum nextStatus = req.Payload.Step;
 
         if (prevStatus == nextStatus)
         {
             res.AddInfo("Статус уже установлен");
-            await commRepo.StatusOrderChangeByHelpdeskDocumentIdAsync(new() { Payload = new() { DocumentId = issue_data.Id, Step = nextStatus, }, SenderActionUserId = req.SenderActionUserId }, false, token);
+            await commRepo.StatusOrderChangeByHelpDeskDocumentIdAsync(new() { Payload = new() { DocumentId = issue_data.Id, Step = nextStatus, }, SenderActionUserId = req.SenderActionUserId }, false, token);
             return res;
         }
 
@@ -1427,7 +1427,7 @@ public class HelpdeskImplementService(
             }, token));
         }
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         tasks.Add(context.Issues.Where(x => x.Id == issue_data.Id)
             .ExecuteUpdateAsync(set => set
@@ -1441,17 +1441,17 @@ public class HelpdeskImplementService(
         string _about_document = $"'{issue_data.Name}' {cdd.GetHumanDateTime()}";
         string subject_email = "Изменение статуса документа";
         if (CommerceStatusChangeOrderSubjectNotification?.Success() == true && !string.IsNullOrWhiteSpace(CommerceStatusChangeOrderSubjectNotification.Response))
-            subject_email = IHelpdeskService.ReplaceTags(issue_data.Name, cdd, issue_data.Id, nextStatus, CommerceStatusChangeOrderSubjectNotification.Response, wc.ClearBaseUri, _about_document);
+            subject_email = IHelpDeskService.ReplaceTags(issue_data.Name, cdd, issue_data.Id, nextStatus, CommerceStatusChangeOrderSubjectNotification.Response, wc.ClearBaseUri, _about_document);
 
         string msg = $"<p>Заявка '{_about_document} [изменение статуса]: `{prevStatus.DescriptionInfo()}` → `{nextStatus.DescriptionInfo()}`" +
                             $"<p>/<a href='{wc.ClearBaseUri}'>{wc.ClearBaseUri}</a>/</p>";
 
         if (CommerceStatusChangeOrderBodyNotification?.Success() == true && !string.IsNullOrWhiteSpace(CommerceStatusChangeOrderBodyNotification.Response))
-            msg = IHelpdeskService.ReplaceTags(issue_data.Name, cdd, issue_data.Id, nextStatus, CommerceStatusChangeOrderBodyNotification.Response, wc.ClearBaseUri, _about_document);
+            msg = IHelpDeskService.ReplaceTags(issue_data.Name, cdd, issue_data.Id, nextStatus, CommerceStatusChangeOrderBodyNotification.Response, wc.ClearBaseUri, _about_document);
 
         string tg_message = msg.Replace("<p>", "\n").Replace("</p>", "");
         if (CommerceStatusChangeOrderBodyNotificationTelegram?.Success() == true && !string.IsNullOrWhiteSpace(CommerceStatusChangeOrderBodyNotificationTelegram.Response))
-            tg_message = IHelpdeskService.ReplaceTags(issue_data.Name, cdd, issue_data.Id, nextStatus, CommerceStatusChangeOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
+            tg_message = IHelpDeskService.ReplaceTags(issue_data.Name, cdd, issue_data.Id, nextStatus, CommerceStatusChangeOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
 
         string wp_message = $"Заявка '{_about_document} [изменение статуса]: `{prevStatus.DescriptionInfo()}` → `{nextStatus.DescriptionInfo()}`" +
                             $"{wc.ClearBaseUri}";
@@ -1496,10 +1496,10 @@ public class HelpdeskImplementService(
         if (order_exist || order_attendance_exist)
         {
             if (order_exist)
-                await commRepo.StatusOrderChangeByHelpdeskDocumentIdAsync(new() { Payload = new() { DocumentId = issue_data.Id, Step = nextStatus, }, SenderActionUserId = req.SenderActionUserId }, false, token);
+                await commRepo.StatusOrderChangeByHelpDeskDocumentIdAsync(new() { Payload = new() { DocumentId = issue_data.Id, Step = nextStatus, }, SenderActionUserId = req.SenderActionUserId }, false, token);
 
             if (order_attendance_exist)
-                await commRepo.StatusesOrdersAttendancesChangeByHelpdeskDocumentIdAsync(new() { SenderActionUserId = req.SenderActionUserId, Payload = new() { DocumentId = issue_data.Id, Step = nextStatus, } }, false, token);
+                await commRepo.StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(new() { SenderActionUserId = req.SenderActionUserId, Payload = new() { DocumentId = issue_data.Id, Step = nextStatus, } }, false, token);
 
             OrderDocumentModelDB? order_obj = find_orders.Response?.FirstOrDefault();
             RecordsAttendanceModelDB? order_attendance = find_orders_attendances.Response?.FirstOrDefault();
@@ -1511,12 +1511,12 @@ public class HelpdeskImplementService(
                 users_ids.Add(order_attendance.AuthorIdentityUserId);
 
             string _docName = order_obj?.Name ?? order_attendance?.Name ?? "-no name-";
-            int _hdDocId = order_obj?.HelpdeskId ?? order_attendance?.HelpdeskId ?? 0;
+            int _hdDocId = order_obj?.HelpDeskId ?? order_attendance?.HelpDeskId ?? 0;
 
             _about_document = $"'{_docName}' {cdd.GetHumanDateTime()}";
 
             if (CommerceStatusChangeOrderSubjectNotification?.Success() == true && !string.IsNullOrWhiteSpace(CommerceStatusChangeOrderSubjectNotification.Response))
-                subject_email = IHelpdeskService.ReplaceTags(_docName, cdd, _hdDocId, nextStatus, CommerceStatusChangeOrderSubjectNotification.Response, wc.ClearBaseUri, _about_document);
+                subject_email = IHelpDeskService.ReplaceTags(_docName, cdd, _hdDocId, nextStatus, CommerceStatusChangeOrderSubjectNotification.Response, wc.ClearBaseUri, _about_document);
 
             msg = $"<p>Заказ '{_about_document} [изменение статуса]: `{prevStatus}` → `{nextStatus}`" +
                                 $"<p>/<a href='{wc.ClearBaseUri}'>{wc.ClearBaseUri}</a>/</p>";
@@ -1526,10 +1526,10 @@ public class HelpdeskImplementService(
                                $"{wc.ClearBaseUri}";
 
             if (CommerceStatusChangeOrderBodyNotification?.Success() == true && !string.IsNullOrWhiteSpace(CommerceStatusChangeOrderBodyNotification.Response))
-                msg = IHelpdeskService.ReplaceTags(_docName, cdd, _hdDocId, nextStatus, CommerceStatusChangeOrderBodyNotification.Response, wc.ClearBaseUri, _about_document);
+                msg = IHelpDeskService.ReplaceTags(_docName, cdd, _hdDocId, nextStatus, CommerceStatusChangeOrderBodyNotification.Response, wc.ClearBaseUri, _about_document);
 
             if (CommerceStatusChangeOrderBodyNotificationTelegram?.Success() == true && !string.IsNullOrWhiteSpace(CommerceStatusChangeOrderBodyNotificationTelegram.Response))
-                tg_message = IHelpdeskService.ReplaceTags(_docName, cdd, _hdDocId, nextStatus, CommerceStatusChangeOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
+                tg_message = IHelpDeskService.ReplaceTags(_docName, cdd, _hdDocId, nextStatus, CommerceStatusChangeOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
         }
 
         TResponseModel<UserInfoModel[]> users_notify = await IdentityRepo.GetUsersIdentityAsync(users_ids, token);
@@ -1581,7 +1581,7 @@ public class HelpdeskImplementService(
             actor = rest.Response.First(x => x.UserId == req.SenderActionUserId),
             requested_user = rest.Response.First(x => x.UserId == req.Payload.UserId);
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new IssuesReadRequestModel()
@@ -1593,14 +1593,14 @@ public class HelpdeskImplementService(
 
         if (!issues_data.Success() || issues_data.Response is null || issues_data.Response.Length == 0)
             return new() { Messages = issues_data.Messages };
-        IssueHelpdeskModelDB issue_data = issues_data.Response.Single();
+        IssueHelpDeskModelDB issue_data = issues_data.Response.Single();
         if (actor.UserId != GlobalStaticConstantsRoles.Roles.System && !actor.IsAdmin && actor.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Any(y => y == x)) != true && actor.UserId != issue_data.AuthorIdentityUserId)
         {
             res.AddError("У вас не достаточно прав для выполнения этой операции");
             return res;
         }
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         var sdb = await context
              .SubscribersOfIssues
@@ -1724,7 +1724,7 @@ public class HelpdeskImplementService(
             Response = false,
         };
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
             Payload = new() { IssuesIds = [req.Payload.Payload.IssueId], IncludeSubscribersOnly = true },
@@ -1733,7 +1733,7 @@ public class HelpdeskImplementService(
         if (!issues_data.Success() || issues_data.Response is null || issues_data.Response.Length == 0)
             return new() { Messages = issues_data.Messages };
 
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         await context.AddAsync(new PulseIssueModelDB()
         {
             AuthorUserIdentityId = req.Payload.SenderActionUserId,
@@ -1752,7 +1752,7 @@ public class HelpdeskImplementService(
         else if ((req.Payload.Payload.PulseType == PulseIssuesTypesEnum.Messages || req.Payload.Payload.PulseType == PulseIssuesTypesEnum.Subscribes) && req.Payload.Payload.Tag != Routes.ADD_ACTION_NAME)
             return res;
 
-        IssueHelpdeskModelDB issue_data = issues_data.Response.Single();
+        IssueHelpDeskModelDB issue_data = issues_data.Response.Single();
         await cacheRepo.RemoveAsync(GlobalStaticConstants.Cache.ConsoleSegmentStatusToken(issue_data.StatusDocument), token);
 
         List<string> users_ids = [issue_data.AuthorIdentityUserId];
@@ -1813,7 +1813,7 @@ public class HelpdeskImplementService(
 
         loggerRepo.LogDebug($"Запрос журнала активности пользователем: {JsonConvert.SerializeObject(actor)}");
 
-        TResponseModel<IssueHelpdeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload.Payload.IssueId], IncludeSubscribersOnly = true },
@@ -1824,7 +1824,7 @@ public class HelpdeskImplementService(
             loggerRepo.LogWarning($"Запрос журнала активности пользователем {actor.UserId} - отклонён");
             return new() { Messages = issues_data.Messages };
         }
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         IQueryable<PulseIssueModelDB> q = context
             .PulseEvents
@@ -1863,7 +1863,7 @@ public class HelpdeskImplementService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> TelegramMessageIncomingAsync(TelegramIncomingMessageModel req, CancellationToken token = default)
     {
-        using HelpdeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
         if (req.ReplyToMessage is not null)
         {
@@ -1918,7 +1918,7 @@ public class HelpdeskImplementService(
         if (req.Chat?.Type != ChatsTypesTelegramEnum.Private)
             return ResponseBaseModel.CreateWarning("Чат не является частным (обработке в HelpDesk не подлежит)!");
 
-        TResponseModel<long?> helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpdeskNotificationsTelegramForUser(req.From!.UserTelegramId), token);
+        TResponseModel<long?> helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpDeskNotificationsTelegramForUser(req.From!.UserTelegramId), token);
         if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
         {
             TResponseModel<MessageComplexIdsModel> forward_res = await telegramRemoteRepo.ForwardMessageAsync(new()
@@ -1946,7 +1946,7 @@ public class HelpdeskImplementService(
                 ResponseBaseModel.Create(forward_res.Messages);
         }
 
-        helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpdeskNotificationTelegramGlobalForIncomingMessage, token);
+        helpdesk_user_redirect_telegram_for_issue_rest = await StorageRepo.ReadParameterAsync<long?>(GlobalStaticCloudStorageMetadata.HelpDeskNotificationTelegramGlobalForIncomingMessage, token);
         if (helpdesk_user_redirect_telegram_for_issue_rest.Success() && helpdesk_user_redirect_telegram_for_issue_rest.Response.HasValue && helpdesk_user_redirect_telegram_for_issue_rest.Response != 0)
         {
             TResponseModel<MessageComplexIdsModel> forward_res = await telegramRemoteRepo.ForwardMessageAsync(new()
@@ -2017,7 +2017,7 @@ public class HelpdeskImplementService(
     }
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> SetWebConfigAsync(HelpdeskConfigModel req, CancellationToken token = default)
+    public Task<ResponseBaseModel> SetWebConfigAsync(HelpDeskConfigModel req, CancellationToken token = default)
     {
         if (!Uri.TryCreate(req.BaseUri, UriKind.Absolute, out _))
             return Task.FromResult(ResponseBaseModel.CreateError("BaseUri is null"));

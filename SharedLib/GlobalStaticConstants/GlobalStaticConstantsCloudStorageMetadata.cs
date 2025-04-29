@@ -199,7 +199,7 @@ public static class GlobalStaticCloudStorageMetadata
     /// <summary>
     /// Уведомления Telegram о созданных заявках
     /// </summary>
-    public static StorageMetadataModel HelpdeskNotificationTelegramForCreateIssue => new()
+    public static StorageMetadataModel HelpDeskNotificationTelegramForCreateIssue => new()
     {
         ApplicationName = Routes.HELPDESK_CONTROLLER_NAME,
         PropertyName = $"{Routes.TELEGRAM_CONTROLLER_NAME}-{Routes.NOTIFICATIONS_CONTROLLER_NAME}",
@@ -209,7 +209,7 @@ public static class GlobalStaticCloudStorageMetadata
     /// <summary>
     /// Настройка пересылки входящих сообщений в TelegramBot: глобально для пользователей на которых нет персональных подписок
     /// </summary>
-    public static StorageMetadataModel HelpdeskNotificationTelegramGlobalForIncomingMessage => new()
+    public static StorageMetadataModel HelpDeskNotificationTelegramGlobalForIncomingMessage => new()
     {
         ApplicationName = Routes.HELPDESK_CONTROLLER_NAME,
         PropertyName = $"{Routes.TELEGRAM_CONTROLLER_NAME}-{Routes.NOTIFICATIONS_CONTROLLER_NAME}",
@@ -383,7 +383,7 @@ public static class GlobalStaticCloudStorageMetadata
     public static StorageMetadataModel NotificationTelegramForIssueUser(string user_id)
         => new()
         {
-            ApplicationName = GlobalStaticConstants.HelpdeskNotificationsTelegramAppName,
+            ApplicationName = GlobalStaticConstants.HelpDeskNotificationsTelegramAppName,
             PropertyName = Routes.USER_CONTROLLER_NAME,
             PrefixPropertyName = user_id,
         };
@@ -402,7 +402,7 @@ public static class GlobalStaticCloudStorageMetadata
     /// <summary>
     /// Переадресация для пользователя
     /// </summary>
-    public static StorageMetadataModel HelpdeskNotificationsTelegramForUser(long chat_id) => new()
+    public static StorageMetadataModel HelpDeskNotificationsTelegramForUser(long chat_id) => new()
     {
         ApplicationName = Routes.HELPDESK_CONTROLLER_NAME,
         PropertyName = $"{Routes.TELEGRAM_CONTROLLER_NAME}-{Routes.NOTIFICATIONS_CONTROLLER_NAME}/{Routes.USER_CONTROLLER_NAME}",

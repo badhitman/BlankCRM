@@ -13,7 +13,7 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using System.Text;
 
-namespace HelpdeskService;
+namespace HelpDeskService;
 
 /// <summary>
 /// Program
@@ -92,7 +92,7 @@ public class Program
 
         builder.Services
         .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
-        .Configure<HelpdeskConfigModel>(builder.Configuration.GetSection(HelpdeskConfigModel.Configuration))
+        .Configure<HelpDeskConfigModel>(builder.Configuration.GetSection(HelpDeskConfigModel.Configuration))
         ;
 
         builder.Services.AddScoped<IArticlesService, ArticlesService>();
@@ -103,8 +103,8 @@ public class Program
 
         builder.Services.AddOptions();
         builder.Services.AddSingleton<IManualCustomCacheService, ManualCustomCacheService>();
-        string connectionString = builder.Configuration.GetConnectionString($"HelpdeskConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'HelpdeskConnection{_modePrefix}' not found.");
-        builder.Services.AddDbContextFactory<HelpdeskContext>(opt =>
+        string connectionString = builder.Configuration.GetConnectionString($"HelpDeskConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'HelpDeskConnection{_modePrefix}' not found.");
+        builder.Services.AddDbContextFactory<HelpDeskContext>(opt =>
     {
         opt.UseNpgsql(connectionString);
 
@@ -120,17 +120,17 @@ public class Program
         #region MQ Transmission (remote methods call)
         builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
         //
-        builder.Services.AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
+        builder.Services.AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<ICommerceTransmission, CommerceTransmission>()
-            .AddScoped<IHelpdeskService, HelpdeskImplementService>()
+            .AddScoped<IHelpDeskService, HelpDeskImplementService>()
             .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
             ;
         // 
-        builder.Services.HelpdeskRegisterMqListeners();
+        builder.Services.HelpDeskRegisterMqListeners();
         #endregion
 
         // Custom metrics for the application
@@ -160,7 +160,7 @@ public class Program
 
         using (IServiceScope ss = app.Services.CreateScope())
         {
-            IOptions<HelpdeskConfigModel> wc_main = ss.ServiceProvider.GetRequiredService<IOptions<HelpdeskConfigModel>>();
+            IOptions<HelpDeskConfigModel> wc_main = ss.ServiceProvider.GetRequiredService<IOptions<HelpDeskConfigModel>>();
             IWebTransmission webRemoteCall = ss.ServiceProvider.GetRequiredService<IWebTransmission>();
             TelegramBotConfigModel wc_remote = await webRemoteCall.GetWebConfigAsync();
             if (Uri.TryCreate(wc_remote.BaseUri, UriKind.Absolute, out _))
@@ -168,9 +168,9 @@ public class Program
 
 #if DEBUG
 #if DEMO
-            IDbContextFactory<HelpdeskContext> helpdeskDbFactory = ss.ServiceProvider.GetRequiredService<IDbContextFactory<HelpdeskContext>>();
-            using HelpdeskContext context_seed = await helpdeskDbFactory.CreateDbContextAsync();
-            List<RubricIssueHelpdeskModelDB> demo_rubrics = [.. await context_seed.Rubrics.ToArrayAsync()];
+            IDbContextFactory<HelpDeskContext> helpdeskDbFactory = ss.ServiceProvider.GetRequiredService<IDbContextFactory<HelpDeskContext>>();
+            using HelpDeskContext context_seed = await helpdeskDbFactory.CreateDbContextAsync();
+            List<RubricIssueHelpDeskModelDB> demo_rubrics = [.. await context_seed.Rubrics.ToArrayAsync()];
             if (demo_rubrics.Count == 0)
             {
                 demo_rubrics = [
@@ -201,12 +201,12 @@ public class Program
             //if (!await context_seed.Issues.AnyAsync())
             //{
             //    int[] rubric_ids = [.. demo_rubrics.Select(x => x.Id)];
-            //    List<HelpdeskIssueStepsEnum> Steps = [.. Enum.GetValues(typeof(HelpdeskIssueStepsEnum)).Cast<HelpdeskIssueStepsEnum>()];
+            //    List<HelpDeskIssueStepsEnum> Steps = [.. Enum.GetValues(typeof(HelpDeskIssueStepsEnum)).Cast<HelpDeskIssueStepsEnum>()];
 
-            //    List<IssueHelpdeskModelDB> issues = [];
+            //    List<IssueHelpDeskModelDB> issues = [];
             //    Random random = new();
             //    uint issues_demo_count = 1;
-            //    foreach (HelpdeskIssueStepsEnum st in Steps)
+            //    foreach (HelpDeskIssueStepsEnum st in Steps)
             //    {
             //        int size = random.Next(3, 30);
             //        for (int i = 0; i < size; i++)

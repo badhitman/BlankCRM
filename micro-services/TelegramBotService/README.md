@@ -45,7 +45,7 @@ services.AddScoped<ITelegramDialogService, DefaultTelegramDialogHandle>();
 /// </summary>
 public string? DialogTelegramTypeHandler { get; set; }
 ```
-(*контекст*: `MainDbAppContext`)
+(*контекст*: `MainAppContext`)
 ```c#
 /// <summary>
 /// Telegram пользователи

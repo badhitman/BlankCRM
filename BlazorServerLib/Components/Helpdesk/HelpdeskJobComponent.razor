@@ -4,13 +4,13 @@
 <nav class="bg-body-tertiary mb-2">
     <div class="container-fluid">
         <span class="navbar-brand" href="#">Фильтр: </span>
-        <MudRadioGroup T="UsersAreasHelpdeskEnum?" Disabled="IsBusyProgress" @bind-Value="SelectedOption">
-            <MudRadio T="UsersAreasHelpdeskEnum?" Value="@UsersAreasHelpdeskEnum.Executor">Я исполнитель</MudRadio>
-            <MudRadio T="UsersAreasHelpdeskEnum?" Value="@UsersAreasHelpdeskEnum.Subscriber">Я подписчик</MudRadio>
-            <MudRadio T="UsersAreasHelpdeskEnum?" Value="@UsersAreasHelpdeskEnum.Main">Все</MudRadio>
+        <MudRadioGroup T="UsersAreasHelpDeskEnum?" Disabled="IsBusyProgress" @bind-Value="SelectedOption">
+            <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Executor">Я исполнитель</MudRadio>
+            <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Subscriber">Я подписчик</MudRadio>
+            <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Main">Все</MudRadio>
             <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
                 <Authorized>
-                    <MudRadio T="UsersAreasHelpdeskEnum?" Value="null">root</MudRadio>
+                    <MudRadio T="UsersAreasHelpDeskEnum?" Value="null">root</MudRadio>
                 </Authorized>
             </AuthorizeView>
         </MudRadioGroup>
@@ -21,14 +21,14 @@
     <div class="card-body">
         <CascadingValue Value="SetTab">
             <TabSetComponent IsSilent="true" AsPills="true">
-                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpdeskJournalModesEnum.ActualOnly))" Title="Открытые">
-                    <HelpdeskJournalComponent UserArea="SelectedOption" JournalMode="HelpdeskJournalModesEnum.ActualOnly" />
+                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpDeskJournalModesEnum.ActualOnly))" Title="Открытые">
+                    <HelpDeskJournalComponent UserArea="SelectedOption" JournalMode="HelpDeskJournalModesEnum.ActualOnly" />
                 </TabComponent>
-                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpdeskJournalModesEnum.ArchiveOnly))" Title="Завершённые">
-                    <HelpdeskJournalComponent UserArea="SelectedOption" JournalMode="HelpdeskJournalModesEnum.ArchiveOnly" />
+                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpDeskJournalModesEnum.ArchiveOnly))" Title="Завершённые">
+                    <HelpDeskJournalComponent UserArea="SelectedOption" JournalMode="HelpDeskJournalModesEnum.ArchiveOnly" />
                 </TabComponent>
-                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpdeskJournalModesEnum.All))" Title="Все">
-                    <HelpdeskJournalComponent UserArea="SelectedOption" JournalMode="HelpdeskJournalModesEnum.All" />
+                <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpDeskJournalModesEnum.All))" Title="Все">
+                    <HelpDeskJournalComponent UserArea="SelectedOption" JournalMode="HelpDeskJournalModesEnum.All" />
                 </TabComponent>
             </TabSetComponent>
         </CascadingValue>
@@ -36,10 +36,10 @@
 </div>
 
 @code {
-    HelpdeskJournalComponent _tab = default!;
+    HelpDeskJournalComponent _tab = default!;
 
-    UsersAreasHelpdeskEnum? _selectedOption = UsersAreasHelpdeskEnum.Executor;
-    public UsersAreasHelpdeskEnum? SelectedOption
+    UsersAreasHelpDeskEnum? _selectedOption = UsersAreasHelpDeskEnum.Executor;
+    public UsersAreasHelpDeskEnum? SelectedOption
     {
         get => _selectedOption;
         set
@@ -59,7 +59,7 @@
         StateHasChanged();
     }
 
-    void SetTab(HelpdeskJournalComponent page)
+    void SetTab(HelpDeskJournalComponent page)
     {
         _tab = page;
     }

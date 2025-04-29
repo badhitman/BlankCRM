@@ -169,9 +169,9 @@ public class Program
             .WithReference(builder.AddConnectionString($"KladrConnection{_modePrefix}"))
             ;
 
-        IResourceBuilder<ProjectResource> helpdeskService = builder.AddProject<Projects.HelpdeskService>("helpdeskservice")
+        IResourceBuilder<ProjectResource> helpdeskService = builder.AddProject<Projects.HelpDeskService>("helpdeskservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
-            .WithReference(builder.AddConnectionString($"HelpdeskConnection{_modePrefix}"))
+            .WithReference(builder.AddConnectionString($"HelpDeskConnection{_modePrefix}"))
             .WithReference(redisConnectionStr)
             ;
 

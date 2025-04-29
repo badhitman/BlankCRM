@@ -15,7 +15,7 @@ namespace ApiRestService.Controllers;
 /// </summary>
 [Route("api/[controller]/[action]"), ApiController, ServiceFilter(typeof(UnhandledExceptionAttribute))]
 [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersReadCommerce)},{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
-public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmission hdRepo, IStorageTransmission storageRepo) : ControllerBase
+public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmission hdRepo, IStorageTransmission storageRepo) : ControllerBase
 {
     /// <summary>
     /// Подбор (поиск по параметрам) заказов
@@ -129,7 +129,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
 
         OrderDocumentModelDB order_doc = call.Response.Single();
 
-        if (order_doc.HelpdeskId.HasValue != true)
+        if (order_doc.HelpDeskId.HasValue != true)
         {
             response.AddError($"Заказ #{OrderId} не найден или у вас не достаточно прав для выполнения команды");
             return response;
@@ -140,16 +140,16 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpdeskTransmiss
             SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
             Payload = new()
             {
-                IssuesIds = [order_doc.HelpdeskId.Value]
+                IssuesIds = [order_doc.HelpDeskId.Value]
             }
         };
-        TResponseModel<IssueHelpdeskModelDB[]> find_helpdesk = await hdRepo.IssuesReadAsync(req_hd);
+        TResponseModel<IssueHelpDeskModelDB[]> find_helpdesk = await hdRepo.IssuesReadAsync(req_hd);
         if (!find_helpdesk.Success() || find_helpdesk.Response is null || find_helpdesk.Response.Length != 1)
         {
             response.AddRangeMessages(find_helpdesk.Messages);
             return response;
         }
-        IssueHelpdeskModelDB hd_obj = find_helpdesk.Response.Single();
+        IssueHelpDeskModelDB hd_obj = find_helpdesk.Response.Single();
         if (hd_obj.StatusDocument == Step)
         {
             response.AddInfo("Статус уже установлен!");

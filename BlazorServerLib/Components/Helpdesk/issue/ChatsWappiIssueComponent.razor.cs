@@ -7,7 +7,7 @@ using BlazorLib;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
-namespace BlazorWebLib.Components.Helpdesk.issue;
+namespace BlazorWebLib.Components.HelpDesk.issue;
 
 /// <summary>
 /// ChatsWappiIssueComponent
@@ -38,9 +38,9 @@ public partial class ChatsWappiIssueComponent : IssueWrapBaseModel
         };
         await SetBusyAsync();
         TResponseModel<int> add_msg_system = default!;
-        List<Task> tasks = [HelpdeskRepo.PulsePushAsync(req_pulse, false),
+        List<Task> tasks = [HelpDeskRepo.PulsePushAsync(req_pulse, false),
         Task.Run(async () => { 
-            add_msg_system = await HelpdeskRepo.MessageCreateOrUpdateAsync(new() { SenderActionUserId = GlobalStaticConstantsRoles.Roles.System, Payload = new() { MessageText = $"<b>Пользователь {CurrentUserSession!.UserName} отправил сообщение WhatsApp пользователю {msg.Number}</b>: {msg.Text}", IssueId = Issue.Id }});
+            add_msg_system = await HelpDeskRepo.MessageCreateOrUpdateAsync(new() { SenderActionUserId = GlobalStaticConstantsRoles.Roles.System, Payload = new() { MessageText = $"<b>Пользователь {CurrentUserSession!.UserName} отправил сообщение WhatsApp пользователю {msg.Number}</b>: {msg.Text}", IssueId = Issue.Id }});
         })];
         await Task.WhenAll(tasks);
         await SetBusyAsync(false);

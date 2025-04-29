@@ -2,7 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorWebLib.Components.Helpdesk;
+using BlazorWebLib.Components.HelpDesk;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
@@ -16,7 +16,7 @@ namespace BlazorWebLib.Components.Commerce.Organizations;
 public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     ICommerceTransmission CommerceRepo { get; set; } = default!;
@@ -72,12 +72,12 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         OfficeCurrent = res_address.Response!.Single();
         OfficeEdit = GlobalTools.CreateDeepCopy(OfficeCurrent) ?? throw new Exception();
 
-        TResponseModel<List<RubricIssueHelpdeskModelDB>> res_rubric = await HelpdeskRepo.RubricReadAsync(OfficeCurrent.ParentId);
+        TResponseModel<List<RubricIssueHelpDeskModelDB>> res_rubric = await HelpDeskRepo.RubricReadAsync(OfficeCurrent.ParentId);
         await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res_rubric.Messages);
         if (res_rubric.Success() && res_rubric.Response is not null && res_rubric.Response.Count != 0)
         {
-            RubricIssueHelpdeskModelDB r = res_rubric.Response.First();
+            RubricIssueHelpDeskModelDB r = res_rubric.Response.First();
             SelectedRubric = new UniversalBaseModel()
             {
                 Name = r.Name,

@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// Helpdesk (service)
+/// HelpDesk (service)
 /// </summary>
-public interface IHelpdeskService
+public interface IHelpDeskService
 {
     /// <summary>
     /// ReplaceTags
@@ -25,7 +25,7 @@ public interface IHelpdeskService
     /// <summary>
     /// Сообщение в обращение
     /// </summary>
-    public Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestModel<IssueMessageHelpdeskBaseModel> req, CancellationToken token = default);
+    public Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Message vote
@@ -35,24 +35,24 @@ public interface IHelpdeskService
     /// <summary>
     /// MessagesList
     /// </summary>
-    public Task<TResponseModel<IssueMessageHelpdeskModelDB[]>> MessagesListAsync(TAuthRequestModel<int> req, CancellationToken token = default);
+    public Task<TResponseModel<IssueMessageHelpDeskModelDB[]>> MessagesListAsync(TAuthRequestModel<int> req, CancellationToken token = default);
     #endregion
 
     #region issues
     /// <summary>
     /// SubscribesList
     /// </summary>
-    public Task<TResponseModel<List<SubscriberIssueHelpdeskModelDB>>> SubscribesListAsync(TAuthRequestModel<int> req, CancellationToken token = default);
+    public Task<TResponseModel<List<SubscriberIssueHelpDeskModelDB>>> SubscribesListAsync(TAuthRequestModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// IssuesSelect
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<IssueHelpdeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// ConsoleIssuesSelect
     /// </summary>
-    public Task<TPaginationResponseModel<IssueHelpdeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestModel<ConsoleIssuesRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestModel<ConsoleIssuesRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Subscribe update - of context user
@@ -77,7 +77,7 @@ public interface IHelpdeskService
     /// <summary>
     /// Read issue - of context user
     /// </summary>
-    public Task<TResponseModel<IssueHelpdeskModelDB[]>> IssuesReadAsync(TAuthRequestModel<IssuesReadRequestModel> req, CancellationToken token = default);
+    public Task<TResponseModel<IssueHelpDeskModelDB[]>> IssuesReadAsync(TAuthRequestModel<IssuesReadRequestModel> req, CancellationToken token = default);
     #endregion
 
     #region rubric
@@ -94,17 +94,17 @@ public interface IHelpdeskService
     /// <summary>
     /// Rubric create (or update)
     /// </summary>
-    public Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricIssueHelpdeskModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricIssueHelpDeskModelDB req, CancellationToken token = default);
 
     /// <summary>
     /// Rubric read
     /// </summary>
-    public Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricReadAsync(int rubricId, CancellationToken token = default);
+    public Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricReadAsync(int rubricId, CancellationToken token = default);
 
     /// <summary>
     /// Rubrics get
     /// </summary>
-    public Task<TResponseModel<List<RubricIssueHelpdeskModelDB>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default);
+    public Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default);
     #endregion
 
     #region pulse
@@ -134,7 +134,7 @@ public interface IHelpdeskService
     /// <summary>
     /// SetWebConfig
     /// </summary>
-    public Task<ResponseBaseModel> SetWebConfigAsync(HelpdeskConfigModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> SetWebConfigAsync(HelpDeskConfigModel req, CancellationToken token = default);
 
     /// <summary>
     /// Очистить кеш сегмента консоли

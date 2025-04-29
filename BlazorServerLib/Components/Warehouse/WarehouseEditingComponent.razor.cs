@@ -2,7 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorWebLib.Components.Helpdesk;
+using BlazorWebLib.Components.HelpDesk;
 using BlazorWebLib.Components.Commerce;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
@@ -23,7 +23,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     NavigationManager NavRepo { get; set; } = default!;
 
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>
@@ -40,7 +40,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     RubricSelectorComponent? ref_rubric;
     AddRowToOrderDocumentComponent? addingDomRef;
     RowOfWarehouseDocumentModelDB? elementBeforeEdit;
-    List<RubricIssueHelpdeskModelDB>? RubricMetadataShadow;
+    List<RubricIssueHelpDeskModelDB>? RubricMetadataShadow;
 
     bool CanSave => Id < 1 || !CurrentDocument.Equals(editDocument);
 
@@ -92,12 +92,12 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         await base.OnInitializedAsync();
         if (Id < 1)
         {
-            TResponseModel<List<RubricIssueHelpdeskModelDB>> res = await HelpdeskRepo.RubricReadAsync(0);
+            TResponseModel<List<RubricIssueHelpDeskModelDB>> res = await HelpDeskRepo.RubricReadAsync(0);
             SnackbarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;
             if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
             {
-                RubricIssueHelpdeskModelDB current_element = RubricMetadataShadow.Last();
+                RubricIssueHelpDeskModelDB current_element = RubricMetadataShadow.Last();
                 if (ref_rubric is not null)
                 {
                     await ref_rubric.OwnerRubricSet(current_element.ParentId ?? 0);
@@ -128,13 +128,13 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
         editDocument = GlobalTools.CreateDeepCopy(CurrentDocument)!;
 
-        TResponseModel<List<RubricIssueHelpdeskModelDB>> resShadow = await HelpdeskRepo.RubricReadAsync(editDocument.WarehouseId);
+        TResponseModel<List<RubricIssueHelpDeskModelDB>> resShadow = await HelpDeskRepo.RubricReadAsync(editDocument.WarehouseId);
         await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(resShadow.Messages);
         RubricMetadataShadow = resShadow.Response;
         if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
         {
-            RubricIssueHelpdeskModelDB current_element = RubricMetadataShadow.Last();
+            RubricIssueHelpDeskModelDB current_element = RubricMetadataShadow.Last();
             if (ref_rubric is not null)
             {
                 await ref_rubric.OwnerRubricSet(current_element.ParentId ?? 0);

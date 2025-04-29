@@ -9,7 +9,7 @@ namespace DbcLib;
 /// <summary>
 /// Промежуточный/общий слой контекста базы данных
 /// </summary>
-public partial class HelpdeskContext(DbContextOptions<HelpdeskContext> options) : HelpdeskLayerContext(options)
+public partial class HelpDeskContext(DbContextOptions<HelpDeskContext> options) : HelpDeskLayerContext(options)
 {
 
 }

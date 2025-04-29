@@ -4,12 +4,12 @@
 
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk;
+namespace BlazorWebLib.Components.HelpDesk;
 
 /// <summary>
-/// ParametersHelpdeskComponent
+/// ParametersHelpDeskComponent
 /// </summary>
-public partial class ToolsHelpdeskComponent
+public partial class ToolsHelpDeskComponent
 {
     static readonly EntryAltModel[] showMarkersRoles = [new() { Id = GlobalStaticConstantsRoles.Roles.CommerceClient, Name = "Покупатель" }];
 }

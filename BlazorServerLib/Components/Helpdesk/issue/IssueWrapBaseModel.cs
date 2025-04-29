@@ -7,7 +7,7 @@ using BlazorLib;
 using SharedLib;
 using MudBlazor;
 
-namespace BlazorWebLib.Components.Helpdesk.issue;
+namespace BlazorWebLib.Components.HelpDesk.issue;
 
 /// <summary>
 /// IssueWrapBaseModel
@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components.Helpdesk.issue;
 public abstract class IssueWrapBaseModel : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    internal IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    internal IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     internal NavigationManager NavRepo { get; set; } = default!;
@@ -25,7 +25,7 @@ public abstract class IssueWrapBaseModel : BlazorBusyComponentBaseAuthModel
     /// Issue
     /// </summary>
     [CascadingParameter, EditorRequired]
-    public required IssueHelpdeskModelDB Issue { get; set; }
+    public required IssueHelpDeskModelDB Issue { get; set; }
 
     /// <summary>
     /// can edit: is admin || executor || author || admin || helpdesk-manager

@@ -14,7 +14,7 @@ namespace Transmission.Receives.helpdesk;
 public class ArticlesSelectReceive(IArticlesService artRepo, ILogger<ArticlesSelectReceive> loggerRepo) : IResponseReceive<TPaginationRequestModel<SelectArticlesRequestModel>?, TPaginationResponseModel<ArticleModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ArticlesSelectHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ArticlesSelectHelpDeskReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<ArticleModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<SelectArticlesRequestModel>? req, CancellationToken token = default)

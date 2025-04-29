@@ -10,13 +10,13 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// ConsoleIssuesSelectReceive
 /// </summary>
-public class ConsoleIssuesSelectReceive(IHelpdeskService hdRepo) : IResponseReceive<TPaginationRequestModel<ConsoleIssuesRequestModel>?, TPaginationResponseModel<IssueHelpdeskModel>?>
+public class ConsoleIssuesSelectReceive(IHelpDeskService hdRepo) : IResponseReceive<TPaginationRequestModel<ConsoleIssuesRequestModel>?, TPaginationResponseModel<IssueHelpDeskModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ConsoleIssuesSelectHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ConsoleIssuesSelectHelpDeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<IssueHelpdeskModel>?> ResponseHandleActionAsync(TPaginationRequestModel<ConsoleIssuesRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<IssueHelpDeskModel>?> ResponseHandleActionAsync(TPaginationRequestModel<ConsoleIssuesRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await hdRepo.ConsoleIssuesSelectAsync(req, token);

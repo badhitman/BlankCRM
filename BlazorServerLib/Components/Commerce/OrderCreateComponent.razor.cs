@@ -348,7 +348,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             await StorageRepo
             .SaveParameterAsync<OrderDocumentModelDB?>(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
 
-            NavRepo.NavigateTo($"/issue-card/{doc.Response!.First().HelpdeskId}");
+            NavRepo.NavigateTo($"/issue-card/{doc.Response!.First().HelpDeskId}");
         }
         else
         {

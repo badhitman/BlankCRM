@@ -7,7 +7,7 @@ using System.Net.Mail;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk.issue;
+namespace BlazorWebLib.Components.HelpDesk.issue;
 
 /// <summary>
 /// Участники диалога
@@ -42,7 +42,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
 
         await SetBusyAsync();
 
-        TResponseModel<bool> add_subscriber_res = await HelpdeskRepo.SubscribeUpdateAsync(new()
+        TResponseModel<bool> add_subscriber_res = await HelpDeskRepo.SubscribeUpdateAsync(new()
         {
             SenderActionUserId = CurrentUserSession!.UserId,
             Payload = new()
@@ -59,7 +59,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
 
         addingSubscriber = null;
         await SetBusyAsync();
-        TResponseModel<List<SubscriberIssueHelpdeskModelDB>> res = await HelpdeskRepo.SubscribesListAsync(new() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<List<SubscriberIssueHelpDeskModelDB>> res = await HelpDeskRepo.SubscribesListAsync(new() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession!.UserId });
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         Issue.Subscribers = res.Response;
         IsBusyProgress = false;
@@ -71,7 +71,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
         await base.OnInitializedAsync();
     }
 
-    async Task NotifyBellToggle(SubscriberIssueHelpdeskModelDB p)
+    async Task NotifyBellToggle(SubscriberIssueHelpDeskModelDB p)
     {
         TAuthRequestModel<SubscribeUpdateRequestModel> req = new()
         {
@@ -87,7 +87,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
 
         await SetBusyAsync();
 
-        TResponseModel<bool> rest = await HelpdeskRepo.SubscribeUpdateAsync(req);
+        TResponseModel<bool> rest = await HelpDeskRepo.SubscribeUpdateAsync(req);
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
@@ -96,7 +96,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
             return;
         }
 
-        TResponseModel<List<SubscriberIssueHelpdeskModelDB>> res = await HelpdeskRepo.SubscribesListAsync(new TAuthRequestModel<int>() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<List<SubscriberIssueHelpDeskModelDB>> res = await HelpDeskRepo.SubscribesListAsync(new TAuthRequestModel<int>() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession!.UserId });
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         Issue.Subscribers = res.Response;
         IsBusyProgress = false;
@@ -117,12 +117,12 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
 
         await SetBusyAsync();
 
-        TResponseModel<bool> rest = await HelpdeskRepo.SubscribeUpdateAsync(req);
+        TResponseModel<bool> rest = await HelpDeskRepo.SubscribeUpdateAsync(req);
 
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
             return;
-        TResponseModel<List<SubscriberIssueHelpdeskModelDB>> res = await HelpdeskRepo.SubscribesListAsync(new TAuthRequestModel<int>() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<List<SubscriberIssueHelpDeskModelDB>> res = await HelpDeskRepo.SubscribesListAsync(new TAuthRequestModel<int>() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession!.UserId });
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         Issue.Subscribers = res.Response;
         IsBusyProgress = false;

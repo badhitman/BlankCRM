@@ -2,8 +2,8 @@
 Description=hd.app.stage.service
 
 [Service]
-WorkingDirectory=/srv/services.stage/HelpdeskService
-ExecStart=/usr/bin/dotnet /srv/services.stage/HelpdeskService/HelpdeskService.dll
+WorkingDirectory=/srv/services.stage/HelpDeskService
+ExecStart=/usr/bin/dotnet /srv/services.stage/HelpDeskService/HelpDeskService.dll
 Restart=always
 RestartSec=10
 KillSignal=SIGINT

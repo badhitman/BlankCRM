@@ -57,7 +57,7 @@ public interface ITelegramTransmission
     /// <summary>
     /// Установить WebConfig. От web части отправляется значение при загрузке браузера
     /// </summary>
-    public Task<ResponseBaseModel> SetWebConfigHelpdeskAsync(WebConfigModel webConf, bool waitResponse = true, CancellationToken token = default);
+    public Task<ResponseBaseModel> SetWebConfigHelpDeskAsync(WebConfigModel webConf, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
     /// Установить WebConfig. От web части отправляется значение при загрузке браузера

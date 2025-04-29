@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 namespace SharedLib;
 
 /// <summary>
-/// IssueHelpdeskModelDB
+/// IssueHelpDeskModelDB
 /// </summary>
 [Index(nameof(AuthorIdentityUserId), nameof(ExecutorIdentityUserId), nameof(LastUpdateAt), nameof(RubricIssueId), nameof(StatusDocument)), Index(nameof(NormalizedNameUpper))]
-public class IssueHelpdeskModelDB : IssueHelpdeskModel
+public class IssueHelpDeskModelDB : IssueHelpDeskModel
 {
     /// <inheritdoc/>
     public string? NormalizedNameUpper { get; set; }
@@ -23,12 +23,12 @@ public class IssueHelpdeskModelDB : IssueHelpdeskModel
     /// <summary>
     /// Messages
     /// </summary>
-    public List<IssueMessageHelpdeskModelDB>? Messages { get; set; }
+    public List<IssueMessageHelpDeskModelDB>? Messages { get; set; }
 
     /// <summary>
     /// ReadMarkers
     /// </summary>
-    public List<IssueReadMarkerHelpdeskModelDB>? ReadMarkers { get; set; }
+    public List<IssueReadMarkerHelpDeskModelDB>? ReadMarkers { get; set; }
 
     /// <summary>
     /// События

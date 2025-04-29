@@ -9,7 +9,7 @@ using SharedLib;
 using System.ComponentModel;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
-namespace BlazorWebLib.Components.Helpdesk.issue;
+namespace BlazorWebLib.Components.HelpDesk.issue;
 
 /// <summary>
 /// MessageOfIssueComponent
@@ -27,7 +27,7 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
     /// Message 
     /// </summary>
     [Parameter]
-    public IssueMessageHelpdeskModelDB? Message { get; set; }
+    public IssueMessageHelpDeskModelDB? Message { get; set; }
 
 
     /// <summary>
@@ -89,7 +89,7 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
             throw new ArgumentNullException(nameof(TextMessage));
 
         await SetBusyAsync();
-        TResponseModel<int> rest = await HelpdeskRepo
+        TResponseModel<int> rest = await HelpDeskRepo
             .MessageCreateOrUpdateAsync(new()
             {
                 SenderActionUserId = CurrentUserSession!.UserId,

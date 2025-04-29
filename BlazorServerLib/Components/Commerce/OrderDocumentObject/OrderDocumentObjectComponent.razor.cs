@@ -19,7 +19,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
     ICommerceTransmission CommRepo { get; set; } = default!;
 
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     IStorageTransmission StorageRepo { get; set; } = default!;
@@ -41,10 +41,10 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
     /// Issue
     /// </summary>
     [CascadingParameter, EditorRequired]
-    public required IssueHelpdeskModelDB Issue { get; set; }
+    public required IssueHelpDeskModelDB Issue { get; set; }
 
     bool ShowingAttachmentsOrderArea;
-    List<RubricIssueHelpdeskModelDB> currentWarehouses = default!;
+    List<RubricIssueHelpDeskModelDB> currentWarehouses = default!;
 
     async Task OrderReport()
     {
@@ -74,7 +74,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         doc.ExternalDocumentId = null;
         doc.CreatedAtUTC = DateTime.UtcNow;
         doc.LastUpdatedAtUTC = DateTime.UtcNow;
-        doc.HelpdeskId = null;
+        doc.HelpDeskId = null;
         doc.Name = "Новый";
         doc.Information = null;
 
@@ -122,7 +122,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         };
         await SetBusyAsync();
 
-        TResponseModel<bool> res = await HelpdeskRepo.StatusChangeAsync(req);
+        TResponseModel<bool> res = await HelpDeskRepo.StatusChangeAsync(req);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response && res.Success())
             NavRepo.ReloadPage();
@@ -137,7 +137,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         int[] orderWarehouses = [.. Document.OfficesTabs!.Select(x => x.WarehouseId).Distinct()];
         await SetBusyAsync();
 
-        TResponseModel<List<RubricIssueHelpdeskModelDB>> getWarehouses = await HelpdeskRepo.RubricsGetAsync(orderWarehouses);
+        TResponseModel<List<RubricIssueHelpDeskModelDB>> getWarehouses = await HelpDeskRepo.RubricsGetAsync(orderWarehouses);
         SnackbarRepo.ShowMessagesResponse(getWarehouses.Messages);
         currentWarehouses = getWarehouses.Response ?? [];
 

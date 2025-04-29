@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using SharedLib;
 using BlazorLib;
 
-namespace BlazorWebLib.Components.Helpdesk.issue;
+namespace BlazorWebLib.Components.HelpDesk.issue;
 
 /// <summary>
 /// IssueBodyComponent
@@ -21,7 +21,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
     /// IssueSource
     /// </summary>
     [Parameter, CascadingParameter]
-    public IssueHelpdeskModelDB? IssueSource { get; set; }
+    public IssueHelpDeskModelDB? IssueSource { get; set; }
 
     bool CanSave =>
         !string.IsNullOrWhiteSpace(NameIssueEdit) &&
@@ -47,7 +47,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
     bool IsEditMode { get; set; }
     UniversalBaseModel? SelectedRubric;
     RubricSelectorComponent? rubricSelector_ref;
-    List<RubricIssueHelpdeskModelDB>? RubricMetadataShadow;
+    List<RubricIssueHelpDeskModelDB>? RubricMetadataShadow;
 
     void RubricSelectAction(UniversalBaseModel? selectedRubric)
     {
@@ -72,7 +72,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
 
         await SetBusyAsync();
 
-        TResponseModel<int> res = await HelpdeskRepo.IssueCreateOrUpdateAsync(new()
+        TResponseModel<int> res = await HelpDeskRepo.IssueCreateOrUpdateAsync(new()
         {
             SenderActionUserId = CurrentUserSession!.UserId,
             Payload = new()
@@ -103,13 +103,13 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
         {
             await SetBusyAsync();
 
-            TResponseModel<List<RubricIssueHelpdeskModelDB>> res = await HelpdeskRepo.RubricReadAsync(Issue.RubricIssueId.Value);
+            TResponseModel<List<RubricIssueHelpDeskModelDB>> res = await HelpDeskRepo.RubricReadAsync(Issue.RubricIssueId.Value);
             IsBusyProgress = false;
             SnackbarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;
             if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
             {
-                RubricIssueHelpdeskModelDB current_element = RubricMetadataShadow.Last();
+                RubricIssueHelpDeskModelDB current_element = RubricMetadataShadow.Last();
 
                 await rubricSelector_ref.OwnerRubricSet(current_element.ParentId ?? 0);
                 await rubricSelector_ref.SetRubric(current_element.Id, RubricMetadataShadow);

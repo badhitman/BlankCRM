@@ -22,7 +22,7 @@ public partial interface ICommerceTransmission
     /// <summary>
     /// Смена статуса заявки (бронь)
     /// </summary>
-    public Task<TResponseModel<bool>> StatusesOrdersAttendancesChangeByHelpdeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
+    public Task<TResponseModel<bool>> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
     /// Получить заказы (по заявкам)

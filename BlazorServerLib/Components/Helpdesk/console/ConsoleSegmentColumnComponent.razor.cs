@@ -8,7 +8,7 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk.console;
+namespace BlazorWebLib.Components.HelpDesk.console;
 
 /// <summary>
 /// ConsoleSegmentColumnComponent
@@ -16,7 +16,7 @@ namespace BlazorWebLib.Components.Helpdesk.console;
 public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     ICommerceTransmission commRepo { get; set; } = default!;
@@ -58,7 +58,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
     static MarkupString MyMarkup(string descr_issue) =>
         new(descr_issue);
 
-    readonly List<IssueHelpdeskModel> Issues = [];
+    readonly List<IssueHelpDeskModel> Issues = [];
     int totalCount;
     int pageNum = 0;
 
@@ -66,7 +66,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
     {
         await SetBusyAsync();
 
-        TPaginationResponseModel<IssueHelpdeskModel> res = await HelpdeskRepo.ConsoleIssuesSelectAsync(new TPaginationRequestModel<ConsoleIssuesRequestModel>
+        TPaginationResponseModel<IssueHelpDeskModel> res = await HelpDeskRepo.ConsoleIssuesSelectAsync(new TPaginationRequestModel<ConsoleIssuesRequestModel>
         {
             PageNum = pageNum,
             PageSize = 5,
@@ -118,10 +118,10 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
                     {
                         foreach (OrderDocumentModelDB ro in rest.Response)
                         {
-                            if(!OrdersCache.ContainsKey(ro.HelpdeskId!.Value))
-                                OrdersCache.Add(ro.HelpdeskId!.Value, []);
+                            if(!OrdersCache.ContainsKey(ro.HelpDeskId!.Value))
+                                OrdersCache.Add(ro.HelpDeskId!.Value, []);
 
-                            OrdersCache[ro.HelpdeskId!.Value].Add(ro);
+                            OrdersCache[ro.HelpDeskId!.Value].Add(ro);
                         }
                     }
                 }
@@ -139,10 +139,10 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
                     {
                         foreach (RecordsAttendanceModelDB ro in restAttendance.Response)
                         {
-                            if(!OrdersAttendancesCache.ContainsKey(ro.HelpdeskId!.Value))
-                                OrdersAttendancesCache.Add(ro.HelpdeskId!.Value, []);
+                            if(!OrdersAttendancesCache.ContainsKey(ro.HelpDeskId!.Value))
+                                OrdersAttendancesCache.Add(ro.HelpDeskId!.Value, []);
 
-                            OrdersAttendancesCache[ro.HelpdeskId!.Value].Add(ro);
+                            OrdersAttendancesCache[ro.HelpDeskId!.Value].Add(ro);
                         }
                     }
                 }

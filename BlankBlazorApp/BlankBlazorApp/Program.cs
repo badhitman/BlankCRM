@@ -136,7 +136,7 @@ builder.Services.AddDbContextFactory<IdentityAppDbContext>(opt =>
     opt.UseNpgsql(connectionIdentityString));
 
 string connectionMainString = builder.Configuration.GetConnectionString($"MainConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'MainConnection{_modePrefix}' not found.");
-builder.Services.AddDbContextFactory<MainDbAppContext>(opt =>
+builder.Services.AddDbContextFactory<MainAppContext>(opt =>
     opt.UseNpgsql(connectionMainString));
 
 builder.Services.AddMudServices();
@@ -216,7 +216,7 @@ builder.Services.AddSingleton<IRabbitClient>(x =>
 builder.Services
     .AddScoped<ICommerceTransmission, CommerceTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()
-    .AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
+    .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
     .AddScoped<IStorageTransmission, StorageTransmission>()
     .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
     .AddScoped<IConstructorTransmission, ConstructorTransmission>()

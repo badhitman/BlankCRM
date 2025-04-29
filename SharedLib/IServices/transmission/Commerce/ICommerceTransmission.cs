@@ -22,7 +22,7 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     /// <summary>
     /// Status order change
     /// </summary>
-    public Task<TResponseModel<bool>> StatusOrderChangeByHelpdeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
+    public Task<TResponseModel<bool>> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
     /// Удалить ценообразование

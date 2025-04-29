@@ -33,7 +33,7 @@ Aspire хост (`DesignerApp.AppHost`) настраивается в одном
     "KladrConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=KladrCloud;Timeout=300;CommandTimeout=300;Pooling=true;Minimum Pool Size=10;Maximum Pool Size=25;",
     "MainConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=MainContext",
     "CloudParametersConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=StorageContext",
-    "HelpdeskConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=HelpDeskContext",
+    "HelpDeskConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=HelpDeskContext",
     "ConstructorConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=ConstructorContext",
 	
     "ApiBreezRuConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=ApiBreezRu;Timeout=300;CommandTimeout=300;Pooling=true;Minimum Pool Size=10;Maximum Pool Size=25;",
@@ -56,7 +56,7 @@ Aspire хост (`DesignerApp.AppHost`) настраивается в одном
     "TelegramBotConnection_second": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=TelegramBotContext",
     "MainConnection_second": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=MainContext",
     "CloudParametersConnection_second": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=StorageContext",
-    "HelpdeskConnection_second": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=HelpDeskContext",
+    "HelpDeskConnection_second": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=HelpDeskContext",
     "ConstructorConnection_second": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=ConstructorContext",
 	"NlogsConnection": "Server=localhost;Port=5432;User Id=nlog;Password=nlog;Database=NLogs"
   }
@@ -150,7 +150,7 @@ Aspire хост (`DesignerApp.AppHost`) настраивается в одном
 		"TelegramBotConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=TelegramBotContext",
 		"MainConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=MainContext",
 		"CloudParametersConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=StorageContext",
-		"HelpdeskConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=HelpDeskContext",
+		"HelpDeskConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=HelpDeskContext",
 		"ConstructorConnection": "Server=localhost;Port=5432;User Id=dev;Password=dev;Database=ConstructorContext",
 		"NlogsConnection": "Server=localhost;Port=5432;User Id=nlog;Password=nlog;Database=NLogs"
 	},

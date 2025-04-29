@@ -10,15 +10,15 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// Сообщение в обращение
 /// </summary>
-public class MessageUpdateOrCreateReceive(IHelpdeskService hdRepo) : IResponseReceive<TAuthRequestModel<IssueMessageHelpdeskBaseModel>?, TResponseModel<int?>?>
+public class MessageUpdateOrCreateReceive(IHelpDeskService hdRepo) : IResponseReceive<TAuthRequestModel<IssueMessageHelpDeskBaseModel>?, TResponseModel<int?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MessageOfIssueUpdateHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MessageOfIssueUpdateHelpDeskReceive;
 
     /// <summary>
     /// Сообщение в обращение
     /// </summary>
-    public async Task<TResponseModel<int?>?> ResponseHandleActionAsync(TAuthRequestModel<IssueMessageHelpdeskBaseModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<int?>?> ResponseHandleActionAsync(TAuthRequestModel<IssueMessageHelpDeskBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await hdRepo.MessageUpdateOrCreateAsync(req, token);

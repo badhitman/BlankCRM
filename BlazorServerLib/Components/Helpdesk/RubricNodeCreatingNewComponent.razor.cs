@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk;
+namespace BlazorWebLib.Components.HelpDesk;
 
 /// <summary>
 /// RubricNode: Creating New
@@ -15,12 +15,12 @@ namespace BlazorWebLib.Components.Helpdesk;
 public partial class RubricNodeCreatingNewComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required RubricsManageComponent HelpdeskParentView { get; set; }
+    public required RubricsManageComponent HelpDeskParentView { get; set; }
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
@@ -52,7 +52,7 @@ public partial class RubricNodeCreatingNewComponent : BlazorBusyComponentBaseMod
             throw new Exception();
 
         await SetBusyAsync();
-        TResponseModel<int> rest = await HelpdeskRepo.RubricCreateOrUpdateAsync(new() { Name = rubricName, ParentId = ItemModel.ParentId > 0 ? ItemModel.ParentId : null, ContextName = ContextName });
+        TResponseModel<int> rest = await HelpDeskRepo.RubricCreateOrUpdateAsync(new() { Name = rubricName, ParentId = ItemModel.ParentId > 0 ? ItemModel.ParentId : null, ContextName = ContextName });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
 

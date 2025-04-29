@@ -10,11 +10,11 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// PulseJournalReceive - of context user
 /// </summary>
-public class PulseJournalSelectReceive(IHelpdeskService hdRepo)
+public class PulseJournalSelectReceive(IHelpDeskService hdRepo)
     : IResponseReceive<TAuthRequestModel<TPaginationRequestModel<UserIssueModel>>?, TResponseModel<TPaginationResponseModel<PulseViewModel>>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PulseJournalHelpdeskSelectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PulseJournalHelpDeskSelectReceive;
 
     /// <summary>
     /// PulseJournalReceive - of context user

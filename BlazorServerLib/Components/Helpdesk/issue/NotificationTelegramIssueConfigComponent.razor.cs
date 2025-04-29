@@ -7,7 +7,7 @@ using SharedLib;
 using BlazorLib;
 using MudBlazor;
 
-namespace BlazorWebLib.Components.Helpdesk.issue;
+namespace BlazorWebLib.Components.HelpDesk.issue;
 
 /// <summary>
 /// NotificationTelegramIssueConfigComponent

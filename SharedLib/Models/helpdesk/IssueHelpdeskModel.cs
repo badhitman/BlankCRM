@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 namespace SharedLib;
 
 /// <summary>
-/// IssueHelpdeskModel
+/// IssueHelpDeskModel
 /// </summary>
 [Index(nameof(LastUpdateAt)), Index(nameof(CreatedAtUTC)), Index(nameof(StatusDocument)), Index(nameof(NormalizedDescriptionUpper)), Index(nameof(AuthorIdentityUserId))]
-public class IssueHelpdeskModel : EntryDescriptionModel
+public class IssueHelpDeskModel : EntryDescriptionModel
 {
     /// <summary>
     /// Шаг/статус обращения: "Создан", "В работе", "На проверке" и "Готово"
@@ -38,12 +38,12 @@ public class IssueHelpdeskModel : EntryDescriptionModel
     /// <summary>
     /// Subscribers
     /// </summary>
-    public List<SubscriberIssueHelpdeskModelDB>? Subscribers { get; set; }
+    public List<SubscriberIssueHelpDeskModelDB>? Subscribers { get; set; }
 
     /// <summary>
     /// Rubric Issue
     /// </summary>
-    public RubricIssueHelpdeskModelDB? RubricIssue { get; set; }
+    public RubricIssueHelpDeskModelDB? RubricIssue { get; set; }
 
     /// <summary>
     /// CreatedAt (UTC)
@@ -58,7 +58,7 @@ public class IssueHelpdeskModel : EntryDescriptionModel
     /// <summary>
     /// Build
     /// </summary>
-    public static IssueHelpdeskModel Build(IssueHelpdeskModelDB sender)
+    public static IssueHelpDeskModel Build(IssueHelpDeskModelDB sender)
     {
         return new()
         {

@@ -60,8 +60,8 @@ public class TelegramTransmission(IRabbitClient rabbitClient) : ITelegramTransmi
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<SendMessageResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.SendWappiMessageReceive, message, waitResponse, token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SetWebConfigHelpdeskAsync(WebConfigModel webConf, bool waitResponse = true, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SetWebConfigHelpdeskReceive, webConf, waitResponse, token) ?? new();
+    public async Task<ResponseBaseModel> SetWebConfigHelpDeskAsync(WebConfigModel webConf, bool waitResponse = true, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SetWebConfigHelpDeskReceive, webConf, waitResponse, token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SetWebConfigStorageAsync(WebConfigModel webConf, bool waitResponse = true, CancellationToken token = default)

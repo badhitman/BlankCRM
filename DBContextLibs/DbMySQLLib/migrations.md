@@ -1,6 +1,6 @@
 ```
-Add-Migration MainMySQLContext001 -Context MainDbAppContext -Project DbMySQLLib -StartupProject BlankBlazorApp
-Update-Database -Context MainDbAppContext -Project DbMySQLLib -StartupProject BlankBlazorApp
+Add-Migration MainMySQLContext001 -Context MainAppContext -Project DbMySQLLib -StartupProject BlankBlazorApp
+Update-Database -Context MainAppContext -Project DbMySQLLib -StartupProject BlankBlazorApp
 ```
 
 ```
@@ -14,8 +14,8 @@ Update-Database -Context NLogsContext -Project DbMySQLLib -StartupProject Storag
 ```
 
 ```
-Add-Migration HelpdeskMySQLContext001 -Context HelpdeskContext -Project DbMySQLLib -StartupProject HelpdeskService
-Update-Database -Context HelpdeskContext -Project DbMySQLLib -StartupProject HelpdeskService
+Add-Migration HelpDeskMySQLContext001 -Context HelpDeskContext -Project DbMySQLLib -StartupProject HelpDeskService
+Update-Database -Context HelpDeskContext -Project DbMySQLLib -StartupProject HelpDeskService
 ```
 
 ```

@@ -143,7 +143,7 @@ public class Program
 
         builder.Services
             .AddScoped<IWebTransmission, WebTransmission>()
-            .AddScoped<IHelpdeskTransmission, HelpdeskTransmission>()
+            .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
             ;

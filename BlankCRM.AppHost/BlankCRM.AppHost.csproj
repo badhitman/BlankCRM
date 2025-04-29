@@ -34,7 +34,7 @@
 		<ProjectReference Include="..\micro-services\ApiRestService\ApiRestService.csproj" />
 		<ProjectReference Include="..\micro-services\CommerceService\CommerceService.csproj" />
 		<ProjectReference Include="..\micro-services\ConstructorService\ConstructorService.csproj" />
-		<ProjectReference Include="..\micro-services\HelpdeskService\HelpdeskService.csproj" />
+		<ProjectReference Include="..\micro-services\HelpDeskService\HelpDeskService.csproj" />
 		<ProjectReference Include="..\micro-services\IdentityService\IdentityService.csproj" />
 		<ProjectReference Include="..\micro-services\KladrService\KladrService.csproj" />
 		<ProjectReference Include="..\micro-services\LdapService\LdapService.csproj" />

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk;
+namespace BlazorWebLib.Components.HelpDesk;
 
 /// <summary>
 /// Rubric selector
@@ -14,7 +14,7 @@ namespace BlazorWebLib.Components.Helpdesk;
 public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -28,7 +28,7 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
     public int? StartRubric { get; set; }
 
     [CascadingParameter]
-    List<RubricIssueHelpdeskModelDB>? RubricMetadataShadow { get; set; }
+    List<RubricIssueHelpDeskModelDB>? RubricMetadataShadow { get; set; }
 
     /// <inheritdoc/>
     [Parameter]
@@ -87,13 +87,13 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
         }
 
         await SetBusyAsync();
-        CurrentRubrics = await HelpdeskRepo.RubricsListAsync(new() { Request = ownerRubricId, ContextName = ContextName });
+        CurrentRubrics = await HelpDeskRepo.RubricsListAsync(new() { Request = ownerRubricId, ContextName = ContextName });
 
         await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
-    public async Task SetRubric(int rubric_id, List<RubricIssueHelpdeskModelDB>? set_rubricMetadataShadow)
+    public async Task SetRubric(int rubric_id, List<RubricIssueHelpDeskModelDB>? set_rubricMetadataShadow)
     {
         _selectedRubricId = rubric_id;
 
@@ -103,7 +103,7 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
         {
             await SetBusyAsync();
 
-            TResponseModel<List<RubricIssueHelpdeskModelDB>> dump_rubric = await HelpdeskRepo.RubricReadAsync(rubric_id);
+            TResponseModel<List<RubricIssueHelpDeskModelDB>> dump_rubric = await HelpDeskRepo.RubricReadAsync(rubric_id);
             RubricMetadataShadow = dump_rubric.Response;
             SnackbarRepo.ShowMessagesResponse(dump_rubric.Messages);
             IsBusyProgress = false;

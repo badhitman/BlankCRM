@@ -7,7 +7,7 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk.Pages;
+namespace BlazorWebLib.Components.HelpDesk.Pages;
 
 /// <summary>
 /// IssueCardPage
@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components.Helpdesk.Pages;
 public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IHelpdeskTransmission HelpdeskRepo { get; set; } = default!;
+    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     ICommerceTransmission CommRepo { get; set; } = default!;
@@ -39,7 +39,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
         CurrentUserSession!.UserId == IssueSource?.ExecutorIdentityUserId ||
         CurrentUserSession!.UserId == IssueSource?.AuthorIdentityUserId;
 
-    IssueHelpdeskModelDB? IssueSource { get; set; }
+    IssueHelpDeskModelDB? IssueSource { get; set; }
 
     /// <summary>
     /// UsersIdentityDump
@@ -116,7 +116,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
         };
 
         await SetBusyAsync();
-        TResponseModel<IssueHelpdeskModelDB[]> issue_res = await HelpdeskRepo.IssuesReadAsync(req);
+        TResponseModel<IssueHelpDeskModelDB[]> issue_res = await HelpDeskRepo.IssuesReadAsync(req);
         SnackbarRepo.ShowMessagesResponse(issue_res.Messages);
         IssueSource = issue_res.Response?.FirstOrDefault();
         IsBusyProgress = false;

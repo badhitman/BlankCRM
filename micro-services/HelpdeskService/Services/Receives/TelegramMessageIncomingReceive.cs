@@ -10,11 +10,11 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// TelegramMessageIncomingReceive
 /// </summary>
-public class TelegramMessageIncomingReceive(IHelpdeskService hdRepo)
+public class TelegramMessageIncomingReceive(IHelpDeskService hdRepo)
     : IResponseReceive<TelegramIncomingMessageModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.IncomingTelegramMessageHelpdeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.IncomingTelegramMessageHelpDeskReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramIncomingMessageModel? req, CancellationToken token = default)

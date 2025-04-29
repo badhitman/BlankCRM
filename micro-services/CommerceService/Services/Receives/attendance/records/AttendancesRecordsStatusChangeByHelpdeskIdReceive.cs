@@ -8,17 +8,17 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// AttendancesRecordsStatusChangeByHelpdeskIdReceive
+/// AttendancesRecordsStatusChangeByHelpDeskIdReceive
 /// </summary>
-public class AttendancesRecordsStatusChangeByHelpdeskIdReceive(ICommerceService commRepo) : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
+public class AttendancesRecordsStatusChangeByHelpDeskIdReceive(ICommerceService commRepo) : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrdersAttendancesStatusesChangeByHelpdeskDocumentIdReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrdersAttendancesStatusesChangeByHelpDeskDocumentIdReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestModel<StatusChangeRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.RecordsAttendancesStatusesChangeByHelpdeskIdAsync(req, token);
+        return await commRepo.RecordsAttendancesStatusesChangeByHelpDeskIdAsync(req, token);
     }
 }

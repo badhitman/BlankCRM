@@ -7,7 +7,7 @@ using BlazorLib;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
-namespace BlazorWebLib.Components.Helpdesk.issue;
+namespace BlazorWebLib.Components.HelpDesk.issue;
 
 /// <summary>
 /// ChatsTelegramIssueComponent
@@ -37,8 +37,8 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
             }
         };
         await SetBusyAsync();
-        await HelpdeskRepo.PulsePushAsync(req_pulse, false);
-        TResponseModel<int> add_msg_system = await HelpdeskRepo.MessageCreateOrUpdateAsync(new()
+        await HelpDeskRepo.PulsePushAsync(req_pulse, false);
+        TResponseModel<int> add_msg_system = await HelpDeskRepo.MessageCreateOrUpdateAsync(new()
         {
             SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
             Payload = new() { MessageText = $"<b>Пользователь {CurrentUserSession!.UserName} отправил сообщение Telegram пользователю user-tg#{msg.UserTelegramId}</b>: {msg.Message}", IssueId = Issue.Id }

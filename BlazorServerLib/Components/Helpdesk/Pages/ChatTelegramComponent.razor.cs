@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorWebLib.Components.Helpdesk.Pages;
+namespace BlazorWebLib.Components.HelpDesk.Pages;
 
 /// <summary>
 /// ChatTelegramComponent
@@ -27,14 +27,14 @@ public partial class ChatTelegramComponent : BlazorBusyComponentBaseModel
     public int? ChatId { get; set; }
 
 
-    HelpdeskJournalComponent? _tab;
+    HelpDeskJournalComponent? _tab;
 
     void Update()
     {
         _tab?.TableRef.ReloadServerData();
     }
 
-    void SetTab(HelpdeskJournalComponent page)
+    void SetTab(HelpDeskJournalComponent page)
     {
         _tab = page;
     }

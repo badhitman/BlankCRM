@@ -2,14 +2,14 @@
 Для упрощённого переключения между разными СУБД: **SQLite**, **MySql** и **PostgreSQL** используйте соответствующие рекомендации ниже.
 
 > [!NOTE]
-> После того как определена СУБД миграции следует применить для всех контекстов: `IdentityAppDbContext`, `MainDbAppContext`, `StorageContext`, `HelpdeskContext`, `TelegramBotContext`.
+> После того как определена СУБД миграции следует применить для всех контекстов: `IdentityContext`, `MainAppContext`и т.д.
 
 >Для работы с контекстом `IdentityAppDbContext` в консоли диспетчера пакетов используется **проект по умолчанию**: `IdentityLib`: [команды миграции подготовлены](https://github.com/badhitman/BlankCRM/blob/main/IdentityLib/migrations.md)
 
 >Для работы с нужным контекстом в консоли диспетчера пакетов используемый/требуемый **проект по умолчанию** один из: DbMySQLLib, DbPostgreLib или DbSqliteLib. В зависимости от выбранной СУБД нужно выбрать тот или иной проект: MySQL, Postgre или Sqlite. Запускаемым проектом используйте BlazorWebApp службу.
 
 ## Примеры конфигураций
-На примере `MainDbAppContext` и `MainDbAppContext`. Остальные контексты (`StorageContext`, `HelpdeskContext`, `TelegramBotContext`) устроены как `MainDbAppContext`, поэтому настройка для одного контекста наследуется на остальные.
+На примере `MainAppContext` и `MainAppContext`. Остальные контексты (`StorageContext`, `HelpDeskContext`, `TelegramBotContext`) устроены как `MainAppContext`, поэтому настройка для одного контекста наследуется на остальные.
 
 ### SQLite (установлен по умолчанию)
 - Для использования **SQLite** в библиотеке `IdentityLib` дополнительных пакетов не требуется.
@@ -52,15 +52,15 @@ builder.Services.AddDbContextFactory<IdentityAppDbContext>(opt =>
     opt.UseNpgsql(connectionIdentityString));
 
 string connectionMainString = builder.Configuration.GetConnectionString("MainConnection") ?? throw new InvalidOperationException("Connection string 'MainConnection' not found.");
-builder.Services.AddDbContextFactory<MainDbAppContext>(opt =>
+builder.Services.AddDbContextFactory<MainAppContext>(opt =>
     opt.UseNpgsql(connectionMainString));
-builder.Services.AddDbContext<MainDbAppContext>();
+builder.Services.AddDbContext<MainAppContext>();
 ```
 > [!TIP]
 > В исходном состоянии установлен именно SQLite, поэтому предварительных настроек не требуется, а вот миграции нужно/можно использовать.
 ```Batchfile
-Add-Migration MainContext001 -Context MainDbAppContext -Project DbSqliteLib -StartupProject ConstructorBlazorApp
-Update-Database -Context MainDbAppContext -Project DbSqliteLib -StartupProject ConstructorBlazorApp
+Add-Migration MainContext001 -Context MainAppContext -Project DbSqliteLib -StartupProject ConstructorBlazorApp
+Update-Database -Context MainAppContext -Project DbSqliteLib -StartupProject ConstructorBlazorApp
 
 Add-Migration IdentityContext001 -Context IdentityAppDbContext -Project IdentityLib -StartupProject ConstructorBlazorApp
 Update-Database -Context IdentityAppDbContext -Project IdentityLib -StartupProject ConstructorBlazorApp
@@ -106,7 +106,7 @@ builder.Services.AddDbContextFactory<IdentityAppDbContext>(opt =>
     opt.UseNpgsql(connectionIdentityString));
 
 string connectionMainString = builder.Configuration.GetConnectionString("MainConnection") ?? throw new InvalidOperationException("Connection string 'MainConnection' not found.");
-builder.Services.AddDbContextFactory<MainDbAppContext>(opt =>
+builder.Services.AddDbContextFactory<MainAppContext>(opt =>
     opt.UseNpgsql(connectionMainString));
 ```
 
@@ -151,7 +151,7 @@ builder.Services.AddDbContextFactory<IdentityAppDbContext>(opt =>
     opt.UseMySQL(connectionIdentityString));
 
 string connectionMainString = builder.Configuration.GetConnectionString("MainConnection") ?? throw new InvalidOperationException("Connection string 'MainConnection' not found.");
-builder.Services.AddDbContextFactory<MainDbAppContext>(opt =>
+builder.Services.AddDbContextFactory<MainAppContext>(opt =>
     opt.UseMySQL(connectionMainString));
-builder.Services.AddDbContext<MainDbAppContext>();
+builder.Services.AddDbContext<MainAppContext>();
 ```

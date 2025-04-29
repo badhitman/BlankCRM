@@ -357,7 +357,7 @@ public static partial class GlobalStaticConstantsRoutes
         public const string FILTER_CONTROLLER_NAME = "filter";
 
         /// <summary>
-        /// Helpdesk
+        /// HelpDesk
         /// </summary>
         public const string HELPDESK_CONTROLLER_NAME = "helpdesk";
 

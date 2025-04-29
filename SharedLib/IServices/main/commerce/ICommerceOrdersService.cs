@@ -89,7 +89,7 @@ public partial interface ICommerceService
     /// В запросе нельзя указывать идентификатор заказа: только идентификатор HelpDesk документа.
     /// Допускается ситуация, когда под одним идентификатором HelpDesk документа могут существовать несколько заказов (объединённые заказы).
     /// </remarks>
-    public Task<TResponseModel<bool>> StatusesOrdersChangeByHelpdeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default);
+    public Task<TResponseModel<bool>> StatusesOrdersChangeByHelpDeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Rows for order delete
