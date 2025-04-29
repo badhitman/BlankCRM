@@ -61,8 +61,4 @@
 		<ProjectReference Include="..\..\..\..\SharedLibStandart21\SharedLibStandart21.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Migrations\" />
-	</ItemGroup>
-
 </Project>

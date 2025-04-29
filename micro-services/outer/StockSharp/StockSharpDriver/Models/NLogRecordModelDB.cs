@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// NLog record
 /// </summary>
-[Index(nameof(RecordTime)), Index(nameof(ContextPrefix)), Index(nameof(RecordLevel)), Index(nameof(Logger))]
+[Index(nameof(RecordTime)), Index(nameof(ApplicationName)), Index(nameof(ContextPrefix)), Index(nameof(RecordLevel)), Index(nameof(Logger))]
 public class NLogRecordModelDB : NLogRecordModel
 {
     /// <summary>
@@ -18,6 +18,11 @@ public class NLogRecordModelDB : NLogRecordModel
     /// </summary>
     [Key]
     public int Id { get; set; }
+
+    /// <summary>
+    /// ApplicationName
+    /// </summary>
+    public string ApplicationName { get; set; }
 
     /// <inheritdoc/>
     public static bool operator ==(NLogRecordModelDB L1, NLogRecordModelDB L2)
