@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using DbcLib;
+using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Extensions.Logging;
 using RemoteCallLib;
@@ -150,7 +151,10 @@ public class Program
             });
 
         IHost host = builderH.Build();
-        logger.Info("Program has started.");
+        //IDbContextFactory<NLogsContext> logsDbFactory
+        IDbContextFactory<NLogsContext> _factNlogs = host.Services.GetRequiredService<IDbContextFactory<NLogsContext>>();
+        NLogsContext _ctxNlogs = _factNlogs.CreateDbContext();
+        logger.Info($"Program has started (logs count: {_ctxNlogs.Logs.Count()}).");
         host.Run();
     }
 }

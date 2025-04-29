@@ -44,8 +44,9 @@ public static class MauiProgram
         //
         builder.Services
             .AddScoped<IStockSharpDriverService, StockSharpDriverTransmission>()
+            .AddScoped<ILogsService, LogsServiceTransmission>()
             ;
-
+        
         #endregion
         return builder.Build();
     }

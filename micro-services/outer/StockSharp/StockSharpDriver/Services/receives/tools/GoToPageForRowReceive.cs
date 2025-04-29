@@ -14,7 +14,7 @@ public class GoToPageForRowReceive(ILogsService storeRepo)
     : IMQTTReceive<TPaginationRequestStandardModel<int>, TPaginationResponseModel<NLogRecordModelDB>>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GoToPageForRowReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GoToPageForRowLogsReceive;
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<NLogRecordModelDB>> ResponseHandleActionAsync(TPaginationRequestStandardModel<int> payload, CancellationToken token = default)
