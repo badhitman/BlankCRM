@@ -16,12 +16,6 @@ public partial class ExeCommandsComponent : BlazorBusyComponentBaseModel
     ApiRestConfigModelDB ApiConnect { get; set; } = default!;
 
     [Inject]
-    IServerToolsService ToolsLocalRepo { get; set; } = default!;
-
-    [Inject]
-    IClientRestToolsService ToolsExtRepo { get; set; } = default!;
-
-    [Inject]
     IToolsAppManager AppManagerRepo { get; set; } = default!;
 
 
