@@ -7,8 +7,8 @@ After=docker.service
 Type=oneshot
 RemainAfterExit=yes
 WorkingDirectory=/srv
-ExecStart=docker-compose up -d
-ExecStop=docker-compose down
+ExecStart=docker compose up -d
+ExecStop=docker compose down
 TimeoutStartSec=0
 User=root
 

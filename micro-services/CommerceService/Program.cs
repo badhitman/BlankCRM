@@ -51,13 +51,13 @@ builder.Configuration.SetBasePath(curr_dir);
 builder.Configuration.SetBasePath(curr_dir);
 string path_load = Path.Combine(curr_dir, "appsettings.json");
 if (Path.Exists(path_load))
-    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: true);
+    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 else
     logger.Warn($"отсутствует: {path_load}");
 
 path_load = Path.Combine(curr_dir, $"appsettings.{_environmentName}.json");
 if (Path.Exists(path_load))
-    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: true);
+    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 else
     logger.Warn($"отсутствует: {path_load}");
 
@@ -79,7 +79,7 @@ void ReadSecrets(string dirName)
         {
             path_load = Path.GetFullPath(secret);
             logger.Warn($"!secret load: {path_load}");
-            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: true);
+            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
         }
     }
     else

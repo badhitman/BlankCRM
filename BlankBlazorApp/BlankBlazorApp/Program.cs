@@ -53,7 +53,7 @@ string path_load = Path.Combine(curr_dir, "appsettings.json");
 if (Path.Exists(path_load))
 {
     logger.Warn($"config load: {path_load}\n{File.ReadAllText(path_load)}");
-    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: true);
+    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 }
 else
     logger.Warn($"отсутствует: {path_load}");
@@ -62,7 +62,7 @@ path_load = Path.Combine(curr_dir, $"appsettings.{_environmentName}.json");
 if (Path.Exists(path_load))
 {
     logger.Warn($"config load: {path_load}\n{File.ReadAllText(path_load)}");
-    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: true);
+    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 }
 else
     logger.Warn($"отсутствует: {path_load}");
@@ -71,7 +71,7 @@ path_load = Path.Combine(curr_dir, $"bottom-menu.json");
 if (Path.Exists(path_load))
 {
     logger.Warn($"config load: {path_load}\n{File.ReadAllText(path_load)}");
-    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: true);
+    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 }
 else
     logger.Warn($"отсутствует: {path_load}");
@@ -80,7 +80,7 @@ path_load = Path.Combine(curr_dir, $"bottom-menu.{_environmentName}.json");
 if (Path.Exists(path_load))
 {
     logger.Warn($"config load: {path_load}\n{File.ReadAllText(path_load)}");
-    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: true);
+    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 }
 else
     logger.Warn($"отсутствует: {path_load}");
@@ -103,7 +103,7 @@ void ReadSecrets(string dirName)
         {
             path_load = Path.GetFullPath(secret);
             logger.Warn($"!secret load: {path_load}");
-            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: true);
+            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
         }
     }
     else
@@ -276,10 +276,10 @@ else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    //app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();

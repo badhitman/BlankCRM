@@ -12,7 +12,7 @@ server {
 	add_header 'Access-Control-Allow-Headers' 'token-access, DNT, X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type' always;
 	
     location / {
-		proxy_pass http://localhost:5055;
+		proxy_pass https://localhost:5055;
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection $http_connection;
@@ -56,8 +56,8 @@ server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
 	server_name stage.api.iq-s.pro www.stage.api.iq-s.pro;
-	ssl_certificate /etc/ssl/boxter-cdek/boxter-cdek.crt;
-	ssl_certificate_key /etc/ssl/boxter-cdek/boxter-cdek.key;
+	ssl_certificate /etc/ssl/iq-s.pro/iq-s.pro.crt;
+	ssl_certificate_key /etc/ssl/iq-s.pro/iq-s.pro.key;
 	large_client_header_buffers 4 128k;
 
 	access_log /var/log/nginx/nginx.https.stage.api.iq-s.pro.access.log;

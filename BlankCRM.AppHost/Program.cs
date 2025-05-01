@@ -25,12 +25,12 @@ public class Program
         builder.Configuration.SetBasePath(curr_dir);
         string path_load = Path.Combine(curr_dir, "appsettings.json");
         if (Path.Exists(path_load))
-            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: true);
+            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 
         string _environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? builder.Environment.EnvironmentName;
         path_load = Path.Combine(curr_dir, $"appsettings.{_environmentName}.json");
         if (Path.Exists(path_load))
-            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: true);
+            builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
 
         void ReadSecrets(string dirName)
         {
@@ -47,7 +47,7 @@ public class Program
                 foreach (string secret in Directory.GetFiles(secretPath, $"*.json"))
                 {
                     path_load = Path.GetFullPath(secret);
-                    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: true);
+                    builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
                 }
             }
         }

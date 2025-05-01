@@ -215,7 +215,7 @@ for (int i = 0; i < 5 && !Directory.Exists(secretPath); i++)
   secretPath = Path.Combine("..", secretPath);
 if (Directory.Exists(secretPath))
   foreach (string secret in Directory.GetFiles(secretPath, $"*.json"))
-    configHost.AddJsonFile(Path.GetFullPath(secret), optional: true, reloadOnChange: true);
+    configHost.AddJsonFile(Path.GetFullPath(secret), optional: true, reloadOnChange: false);
 else
   logger.Warn("Секреты не найдены");
 ```

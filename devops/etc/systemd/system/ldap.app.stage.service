@@ -1,13 +1,13 @@
 [Unit]
-Description=hd.app.stage.service
+Description=ldap.app.stage.service
 
 [Service]
-WorkingDirectory=/srv/services.stage/HelpDeskService
-ExecStart=/usr/bin/dotnet /srv/services.stage/HelpDeskService/HelpDeskService.dll
+WorkingDirectory=/srv/services.stage/LdapService
+ExecStart=/usr/bin/dotnet /srv/services.stage/LdapService/LdapService.dll
 Restart=always
 RestartSec=10
 KillSignal=SIGINT
-SyslogIdentifier=dotnet-hd-app.stage
+SyslogIdentifier=dotnet-ldap-app.stage
 User=www-data
 Environment=DOTNET_ENVIRONMENT=Staging
 Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false

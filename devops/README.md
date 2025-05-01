@@ -21,6 +21,12 @@ chmod -R 777 /root/.vs-debugger
 chown -R www-data:www-data /srv/db-backups
 chmod -R 777 /srv/db-backups
 
+chown -R www-data:www-data /srv/git
+chmod -R 777 /srv/git
+
+chown -R www-data:www-data /srv/services
+chmod -R 777 /srv/services
+
 chown -R www-data:www-data /srv/Cloud.Disk
 chmod -R 777 /srv/Cloud.Disk
 
@@ -34,7 +40,7 @@ ln -s /etc/nginx/sites-available/api.staging.app /etc/nginx/sites-enabled/
 
 
 systemctl reload nginx
-docker-compose up -d
+docker compose up -d
 
 apt update -y && apt upgrade -y && apt dist-upgrade -y && apt install git -y
 
