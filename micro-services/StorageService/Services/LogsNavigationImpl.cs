@@ -76,9 +76,11 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
 
             return q;
         }
+        using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync(token);
 
-        await Task.WhenAll([
-                Task.Run(async () => {
+        if (await ctx.Logs.AnyAsync(cancellationToken: token))
+            await Task.WhenAll([
+                    Task.Run(async () => {
                     using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
                     minDate = await ctx.Logs.MinAsync(x => x.RecordTime);
                 }, token),
@@ -103,6 +105,8 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
                     (await QuerySet(ctx.Logs.AsQueryable()).GroupBy(x => x.Logger).Select(x => new KeyValuePair<string?, int>(x.Key, x.Count())).ToListAsync()).ForEach(x => LoggersAvailable.Add(x.Key ?? "", x.Value));
                 }, token),
             ]);
+
+
 
         return new()
         {
