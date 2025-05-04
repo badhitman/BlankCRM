@@ -4,18 +4,18 @@
 
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using Newtonsoft.Json.Linq;
 using SharedLib;
 
 namespace BlazorLib.Components.StockSharp;
 
 /// <summary>
-/// InstrumentsTableComponent
+/// InstrumentsTableStockSharpComponent
 /// </summary>
-public partial class InstrumentsTableComponent : BlazorBusyComponentBaseModel
+public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IStockSharpDriverService SsRepo { get; set; } = default!;
+
 
     MudTable<InstrumentTradeStockSharpViewModel>? _tableRef;
 
