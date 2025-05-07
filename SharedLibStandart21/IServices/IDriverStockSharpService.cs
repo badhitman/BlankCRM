@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// Драйвер StockSharp (NET6)
 /// </summary>
-public interface IStockSharpDriverService : IStockSharpBaseService
+public interface IDriverStockSharpService : IStockSharpBaseService
 {
     /// <summary>
     /// Connect
