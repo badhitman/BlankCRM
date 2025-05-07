@@ -1,8 +1,10 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
-<MudTable ServerData="ServerReload" Dense="true" Hover="true">
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="tableRef">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Adaptors</MudText>
+        <MudSpacer />
+        <MudCheckBox @bind-Value="offlineFilter" Color="@Color.Secondary" TriState="true">Offline filter</MudCheckBox>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Type</MudTh>

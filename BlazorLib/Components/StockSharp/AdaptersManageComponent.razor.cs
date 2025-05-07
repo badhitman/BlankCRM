@@ -17,6 +17,20 @@ public partial class AdaptersManageComponent : BlazorBusyComponentBaseModel
     IManageStockSharpService SsRepo { get; set; } = default!;
 
 
+    bool? _offlineFilter;
+    bool? offlineFilter
+    {
+        get => _offlineFilter;
+        set
+        {
+            _offlineFilter = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+
+    MudTable<FixMessageAdapterModelDB>? tableRef;
+
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server, with a token for canceling this request
     /// </summary>
@@ -26,10 +40,12 @@ public partial class AdaptersManageComponent : BlazorBusyComponentBaseModel
         {
             PageSize = state.PageSize,
             PageNum = state.Page,
+            Payload = new()
+            {
+                OfflineFilter = offlineFilter,
+            }
         };
         TPaginationResponseModel<FixMessageAdapterModelDB> res = await SsRepo.AdaptersSelectAsync(req, token);
-
-        // Return the data
-        return new TableData<FixMessageAdapterModelDB>() { TotalItems = 0, Items = [] };
+        return new TableData<FixMessageAdapterModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 }
