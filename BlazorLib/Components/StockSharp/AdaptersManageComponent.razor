@@ -2,7 +2,10 @@
 
 <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="tableRef">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Adaptors</MudText>
+        <MudText Class="me-2" Typo="Typo.h6">Adaptors</MudText>
+        <NavLink class="link-info" href="adapter/0/edit" title="добавить адаптер">
+            новый
+        </NavLink>
         <MudSpacer />
         <MudCheckBox @bind-Value="offlineFilter" Color="@Color.Secondary" TriState="true">Offline filter</MudCheckBox>
     </ToolBarContent>
@@ -13,8 +16,8 @@
         <MudTh>Login</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Type">@context.AdapterTypeName</MudTd>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Type"><a href="/adapter/@context.Id/edit">@context.AdapterTypeName</a></MudTd>
+        <MudTd DataLabel="Name"><a href="/adapter/@context.Id/edit">@context.Name</a></MudTd>
         <MudTd DataLabel="Address">@context.Address</MudTd>
         <MudTd DataLabel="Login">@context.Login</MudTd>
     </RowTemplate>

@@ -104,11 +104,21 @@ public class MQttClient(StockSharpClientConfigModel mqConf, ILogger<MQttClient> 
 
         if (waitResponse)
         {
-            await responseClient.ConnectAsync(GetMqttClientOptionsBuilder, tokenOuter);
-            await responseClient.SubscribeAsync(response_topic, cancellationToken: tokenOuter);
-
             stopwatch.Start();
-            await mqttClient.PublishAsync(applicationMessage, tokenOuter);
+            try
+            {
+                await responseClient.ConnectAsync(GetMqttClientOptionsBuilder, tokenOuter);
+                await responseClient.SubscribeAsync(response_topic, cancellationToken: tokenOuter);
+                await mqttClient.PublishAsync(applicationMessage, tokenOuter);
+            }
+            catch (Exception ex)
+            {
+                stopwatch.Stop();
+                _msg = $"Request MQ/IO error [{queue}]";
+                loggerRepo.LogError(ex, _msg);
+                return default;
+            }
+
             List<Task> tasks = [
                 Task.Run(async () => { await Task.Delay(MQConfigRepo.RemoteCallTimeoutMs); cts.Cancel(); }, tokenOuter),
                 Task.Run( () => {

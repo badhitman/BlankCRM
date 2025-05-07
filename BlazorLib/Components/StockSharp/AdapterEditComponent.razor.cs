@@ -24,7 +24,7 @@ public partial class AdapterEditComponent : BlazorBusyComponentBaseModel
     FixMessageAdapterModelDB? originAdapter;
     FixMessageAdapterModelDB? editAdapter;
 
-    AdaptersTypesNames? AdapterType { get; set; }
+    AdaptersTypesNames AdapterType { get; set; }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()

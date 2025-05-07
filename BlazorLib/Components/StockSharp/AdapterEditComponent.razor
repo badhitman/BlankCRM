@@ -18,7 +18,7 @@ else if (editAdapter is null)
 }
 else
 {
-    <MudSelect T="AdaptersTypesNames?" Label="Адаптер" @bind-Value="AdapterType">
+    <MudSelect T="AdaptersTypesNames" Label="Адаптер" @bind-Value="AdapterType">
         @foreach (AdaptersTypesNames state in Enum.GetValues<AdaptersTypesNames>())
         {
             <MudSelectItem T="AdaptersTypesNames" Value="@state">@state</MudSelectItem>
