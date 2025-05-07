@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// StockSharp - события
 /// </summary>
-public interface IStockSharpEventsService
+public interface IEventsStockSharpService
 {
     /// <summary>
     /// BoardReceived

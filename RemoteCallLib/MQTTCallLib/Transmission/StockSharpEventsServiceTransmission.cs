@@ -12,7 +12,7 @@ namespace RemoteCallLib;
 /// StockSharpEventsServiceTransmission
 /// </summary>
 #pragma warning disable CS1998 // В асинхронном методе отсутствуют операторы await, будет выполнен синхронный метод
-public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) : IStockSharpEventsService
+public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) : IEventsStockSharpService
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> BoardReceived(BoardStockSharpModel req, CancellationToken cancellationToken = default)

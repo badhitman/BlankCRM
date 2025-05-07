@@ -1324,6 +1324,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string CLOSE_ACTION_NAME = "close";
 
         /// <summary>
+        /// About
+        /// </summary>
+        public const string ABOUT_ACTION_NAME = "about";
+
+        /// <summary>
         /// Push
         /// </summary>
         public const string PUSH_ACTION_NAME = "push";
