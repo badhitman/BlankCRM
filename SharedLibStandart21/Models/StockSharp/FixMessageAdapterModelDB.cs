@@ -170,6 +170,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     {
         LastUpdatedAtUTC = DateTime.UtcNow;
 
+        AdapterTypeName = other.AdapterTypeName;
         Name = other.Name;
         IsOffline = other.IsOffline;
         IsResetCounter = other.IsResetCounter;

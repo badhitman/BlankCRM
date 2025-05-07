@@ -1,6 +1,6 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
-<h3>AdapterEditComponent</h3>
+<h3>Адаптер</h3>
 @if (IsBusyProgress)
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
@@ -18,10 +18,10 @@ else if (editAdapter is null)
 }
 else
 {
-    <MudSelect T="AdaptersTypesNames" Label="Адаптер" @bind-Value="AdapterType">
+    <MudSelect T="AdaptersTypesNames?" Label="Тип адаптера" @bind-Value="AdapterType">
         @foreach (AdaptersTypesNames state in Enum.GetValues<AdaptersTypesNames>())
         {
-            <MudSelectItem T="AdaptersTypesNames" Value="@state">@state</MudSelectItem>
+            <MudSelectItem T="AdaptersTypesNames?" Value="@state">@state</MudSelectItem>
         }
     </MudSelect>
     <div class="row g-3 mt-2">
@@ -33,7 +33,11 @@ else
             <label for="inputPassword4" class="form-label">Password</label>
             <input type="password" class="form-control" id="inputPassword4" @bind-value="editAdapter.Password" @bind-value:event="oninput">
         </div>
-        <div class="col-12">
+        <div class="col-6">
+            <label for="inputName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="inputName" @bind-value="editAdapter.Name" @bind-value:event="oninput">
+        </div>
+        <div class="col-6">
             <label for="inputAddress" class="form-label">Address</label>
             <input type="text" class="form-control" id="inputAddress" placeholder="localhost:5001" @bind-value="editAdapter.Address" @bind-value:event="oninput">
         </div>
@@ -54,7 +58,34 @@ else
             </div>
         </div>
         <div class="col-12">
-            <button class="btn btn-primary" disabled="@((editAdapter.Equals(originAdapter) && editAdapter.Id > 0) || string.IsNullOrWhiteSpace(editAdapter.Address))">@(string.IsNullOrWhiteSpace(editAdapter.Address) ? "Укажите адрес" : "Save")</button>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button @onclick="SaveAdapter" class="btn btn-primary" disabled="@((editAdapter.Equals(originAdapter) && editAdapter.Id > 0) || string.IsNullOrWhiteSpace(editAdapter.Address))">
+                    @if (string.IsNullOrWhiteSpace(editAdapter.Address))
+                    {
+                        <text>Укажите адрес</text>
+                    }
+                    else if (string.IsNullOrWhiteSpace(editAdapter.Name))
+                    {
+                        <text>Укажите название</text>
+                    }
+                    else
+                    {
+                        <text>Сохранить</text>
+                    }
+                </button>
+                @if (editAdapter.Id > 0)
+                {
+                    <button @onclick="DeleteAdapter" class="btn btn@(initDelete ? "" : "-outline")-danger">
+                        @(initDelete ? "Подтвердить удаление?" : "Удаление")
+                    </button>
+                    @if (initDelete)
+                    {
+                        <button @onclick="() => initDelete = false" class="btn btn-outline-info">
+                            Не удалять
+                        </button>
+                    }
+                }
+            </div>
         </div>
     </div>
 }
