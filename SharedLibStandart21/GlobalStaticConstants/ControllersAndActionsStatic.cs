@@ -442,6 +442,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string PORTFOLIOS_CONTROLLER_NAME = "portfolios";
 
         /// <summary>
+        /// Portfolio
+        /// </summary>
+        public const string PORTFOLIO_CONTROLLER_NAME = "portfolio";
+
+        /// <summary>
         /// Connection
         /// </summary>
         public const string CONNECTION_CONTROLLER_NAME = "connection";
@@ -457,9 +462,29 @@ public static partial class GlobalStaticConstantsRoutes
         public const string EXCHANGES_CONTROLLER_NAME = "exchanges";
 
         /// <summary>
+        /// Exchange
+        /// </summary>
+        public const string EXCHANGE_CONTROLLER_NAME = "exchange";
+
+        /// <summary>
         /// Instruments
         /// </summary>
         public const string INSTRUMENTS_CONTROLLER_NAME = "instruments";
+
+        /// <summary>
+        /// Instrument
+        /// </summary>
+        public const string INSTRUMENT_CONTROLLER_NAME = "instrument";
+
+        /// <summary>
+        /// Trade
+        /// </summary>
+        public const string TRADE_CONTROLLER_NAME = "trade";
+
+        /// <summary>
+        /// Board
+        /// </summary>
+        public const string BOARD_CONTROLLER_NAME = "board";
 
         /// <summary>
         /// Adapter

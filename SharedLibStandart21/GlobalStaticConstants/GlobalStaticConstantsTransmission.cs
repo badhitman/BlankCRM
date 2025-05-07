@@ -1030,6 +1030,21 @@ public static partial class GlobalStaticConstantsTransmission
         /// </summary>
         public readonly static string InstrumentsSelectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
 
+        /// <inheritdoc/>
+        public readonly static string SaveBoardStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.TRADE_CONTROLLER_NAME}-{Routes.BOARD_CONTROLLER_NAME}", Routes.SAVE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SaveExchangeStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.TRADE_CONTROLLER_NAME}-{Routes.EXCHANGE_CONTROLLER_NAME}", Routes.SAVE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SaveInstrumentStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.TRADE_CONTROLLER_NAME}-{Routes.INSTRUMENT_CONTROLLER_NAME}", Routes.SAVE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SaveOrderStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.TRADE_CONTROLLER_NAME}-{Routes.ORDER_CONTROLLER_NAME}", Routes.SAVE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SavePortfolioStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.TRADE_CONTROLLER_NAME}-{Routes.PORTFOLIO_CONTROLLER_NAME}", Routes.SAVE_ACTION_NAME);
+
         /// <summary>
         /// Получить заказы по их идентификаторам
         /// </summary>
