@@ -162,7 +162,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     /// <inheritdoc/>
     public static FixMessageAdapterModelDB? BuildEmpty()
     {
-        return new FixMessageAdapterModelDB();
+        return new FixMessageAdapterModelDB() { IsOffline = true };
     }
 
     /// <inheritdoc/>
