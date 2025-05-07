@@ -21,4 +21,9 @@ public interface IStockSharpDriverService : IStockSharpBaseService
     /// Disconnect
     /// </summary>
     public Task<ResponseBaseModel> Disconnect(CancellationToken? cancellationToken = default);
+
+    /// <summary>
+    /// OrderRegister
+    /// </summary>
+    public Task<ResponseBaseModel> OrderRegisterAsync(CreateOrderRequestModel req, CancellationToken cancellationToken = default);
 }
