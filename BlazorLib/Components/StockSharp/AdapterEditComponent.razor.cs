@@ -21,23 +21,29 @@ public partial class AdapterEditComponent : BlazorBusyComponentBaseModel
     public required int Id { get; set; }
 
 
-    FixMessageAdapterModelDB? currentAdapter;
+    FixMessageAdapterModelDB? originAdapter;
+    FixMessageAdapterModelDB? editAdapter;
+
+    AdaptersTypesNames? AdapterType { get; set; }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        if(Id < 1)
+        if (Id < 1)
         {
-            //currentAdapter = FixMessageAdapterModelDB.BuildEmpty();
+            originAdapter = FixMessageAdapterModelDB.BuildEmpty();
+            editAdapter = FixMessageAdapterModelDB.BuildEmpty();
             return;
         }
 
         await SetBusyAsync();
         TResponseModel<FixMessageAdapterModelDB[]> res = await SsRepo.AdaptersGetAsync([Id]);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
-        currentAdapter = res.Response?.Single();
+
+        originAdapter = res.Response?.Single();
+        editAdapter = GlobalTools.CreateDeepCopy(originAdapter);
         await SetBusyAsync(false);
     }
 }

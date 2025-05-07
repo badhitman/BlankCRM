@@ -28,7 +28,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     /// <summary>
     /// Имя адаптера (например: LuaFixMarketDataMessageAdapter или LuaFixTransactionMessageAdapter и т.п.)
     /// </summary>
-    public AdaptersTypesNames? AdapterTypeName { get; set; }
+    public AdaptersTypesNames AdapterTypeName { get; set; }
 
     /// <inheritdoc/>
     public string? Name { get; set; }
@@ -160,6 +160,12 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     public bool EnqueueSubscriptions { get; set; }
 
     /// <inheritdoc/>
+    public static FixMessageAdapterModelDB? BuildEmpty()
+    {
+        return new FixMessageAdapterModelDB();
+    }
+
+    /// <inheritdoc/>
     public void SetUpdate(FixMessageAdapterModelDB other)
     {
         LastUpdatedAtUTC = DateTime.UtcNow;
@@ -193,5 +199,112 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
         ReadTimeout = other.ReadTimeout;
         Accounts = other.Accounts;
         EnqueueSubscriptions = other.EnqueueSubscriptions;
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return $"{Name}`{CreatedAtUTC}`{Password}`{WriteTimeout}`{Login}`{IsDemo}`{TargetCompId}`{IsOffline}`{DateFormat}`{AdapterTypeName}`{SenderCompId}`{DoNotSendAccount}`{Address}`{TimeStampFormat}`{TimeFormat}`{Id}`{YearMonthFormat}`{LastUpdatedAtUTC}`{IsResetCounter}`{ClientVersion}`{OverrideExecIdByNative}`{CancelOnDisconnect}`{SupportUnknownExecutions}`{TargetHost}`{ValidateRemoteCertificates}`{CheckCertificateRevocation}`{SslCertificate}`{SslProtocol}`{ClientCode}`{EnqueueSubscriptions}`{ExchangeBoard}`{ReadTimeout}`{Accounts}".GetHashCode();
+    }
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+
+        if (obj is FixMessageAdapterModelDB other)
+        {
+            return Id == other.Id &&
+            LastUpdatedAtUTC == other.LastUpdatedAtUTC &&
+            CreatedAtUTC == other.CreatedAtUTC &&
+            AdapterTypeName == other.AdapterTypeName &&
+            Name == other.Name &&
+            IsOffline == other.IsOffline &&
+            IsResetCounter == other.IsResetCounter &&
+            IsDemo == other.IsDemo &&
+            Password == other.Password &&
+            Login == other.Login &&
+            TargetCompId == other.TargetCompId &&
+            DateFormat == other.DateFormat &&
+            SenderCompId == other.SenderCompId &&
+            Address == other.Address &&
+            TimeStampFormat == other.TimeStampFormat &&
+            TimeFormat == other.TimeFormat &&
+            YearMonthFormat == other.YearMonthFormat &&
+            ClientVersion == other.ClientVersion &&
+            OverrideExecIdByNative == other.OverrideExecIdByNative &&
+            DoNotSendAccount == other.DoNotSendAccount &&
+            CancelOnDisconnect == other.CancelOnDisconnect &&
+            SupportUnknownExecutions == other.SupportUnknownExecutions &&
+            TargetHost == other.TargetHost &&
+            ValidateRemoteCertificates == other.ValidateRemoteCertificates &&
+            CheckCertificateRevocation == other.CheckCertificateRevocation &&
+            SslCertificate == other.SslCertificate &&
+            SslProtocol == other.SslProtocol &&
+            ClientCode == other.ClientCode &&
+            ExchangeBoard == other.ExchangeBoard &&
+            WriteTimeout == other.WriteTimeout &&
+            ReadTimeout == other.ReadTimeout &&
+            Accounts == other.Accounts &&
+            EnqueueSubscriptions == other.EnqueueSubscriptions;
+        }
+
+        return base.Equals(obj);
+    }
+
+    /// <inheritdoc/>
+    public static bool operator ==(FixMessageAdapterModelDB a, FixMessageAdapterModelDB b)
+    {
+        if (a is null && b is null)
+            return true;
+        else if (a is null || b is null)
+            return false;
+
+
+        return a.Equals(b);
+    }
+
+    /// <inheritdoc/>
+    public static bool operator !=(FixMessageAdapterModelDB a, FixMessageAdapterModelDB b)
+    {
+        if (a is null && b is null)
+            return false;
+        else if (a is null || b is null)
+            return true;
+
+        return a.Id != b.Id ||
+           a.LastUpdatedAtUTC != b.LastUpdatedAtUTC ||
+           a.CreatedAtUTC != b.CreatedAtUTC ||
+           a.AdapterTypeName != b.AdapterTypeName ||
+           a.Name != b.Name ||
+           a.IsOffline != b.IsOffline ||
+           a.IsResetCounter != b.IsResetCounter ||
+           a.IsDemo != b.IsDemo ||
+           a.Password != b.Password ||
+           a.Login != b.Login ||
+           a.TargetCompId != b.TargetCompId ||
+           a.DateFormat != b.DateFormat ||
+           a.SenderCompId != b.SenderCompId ||
+           a.Address != b.Address ||
+           a.TimeStampFormat != b.TimeStampFormat ||
+           a.TimeFormat != b.TimeFormat ||
+           a.YearMonthFormat != b.YearMonthFormat ||
+           a.ClientVersion != b.ClientVersion ||
+           a.OverrideExecIdByNative != b.OverrideExecIdByNative ||
+           a.DoNotSendAccount != b.DoNotSendAccount ||
+           a.CancelOnDisconnect != b.CancelOnDisconnect ||
+           a.SupportUnknownExecutions != b.SupportUnknownExecutions ||
+           a.TargetHost != b.TargetHost ||
+           a.ValidateRemoteCertificates != b.ValidateRemoteCertificates ||
+           a.CheckCertificateRevocation != b.CheckCertificateRevocation ||
+           a.SslCertificate != b.SslCertificate ||
+           a.SslProtocol != b.SslProtocol ||
+           a.ClientCode != b.ClientCode ||
+           a.ExchangeBoard != b.ExchangeBoard ||
+           a.WriteTimeout != b.WriteTimeout ||
+           a.ReadTimeout != b.ReadTimeout ||
+           a.Accounts != b.Accounts ||
+           a.EnqueueSubscriptions != b.EnqueueSubscriptions;
     }
 }

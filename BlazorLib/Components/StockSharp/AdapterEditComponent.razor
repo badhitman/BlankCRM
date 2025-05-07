@@ -1,3 +1,60 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
 <h3>AdapterEditComponent</h3>
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+}
+else if (editAdapter is null)
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Адаптер не прочитан.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Ошибка получения данных адаптера
+        </figcaption>
+    </figure>
+}
+else
+{
+    <MudSelect T="AdaptersTypesNames?" Label="Адаптер" @bind-Value="AdapterType">
+        @foreach (AdaptersTypesNames state in Enum.GetValues<AdaptersTypesNames>())
+        {
+            <MudSelectItem T="AdaptersTypesNames" Value="@state">@state</MudSelectItem>
+        }
+    </MudSelect>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label for="inputLogin4" class="form-label">Login</label>
+            <input type="text" class="form-control" id="inputLogin4" @bind-value="editAdapter.Login" @bind-value:event="oninput">
+        </div>
+        <div class="col-md-6">
+            <label for="inputPassword4" class="form-label">Password</label>
+            <input type="password" class="form-control" id="inputPassword4" @bind-value="editAdapter.Password" @bind-value:event="oninput">
+        </div>
+        <div class="col-12">
+            <label for="inputAddress" class="form-label">Address</label>
+            <input type="text" class="form-control" id="inputAddress" placeholder="localhost:5001" @bind-value="editAdapter.Address" @bind-value:event="oninput">
+        </div>
+        <div class="col-6">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="gridCheck" @bind="editAdapter.IsDemo">
+                <label class="form-check-label" for="gridCheck">
+                    Demo mode
+                </label>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="gridCheck" @bind="editAdapter.IsOffline">
+                <label class="form-check-label" for="gridCheck">
+                    @(editAdapter.IsOffline ? "Отключён. Включить?" : "Активный. Отключить?")
+                </label>
+            </div>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-primary" disabled="@(editAdapter.Equals(originAdapter))">Save</button>
+        </div>
+    </div>
+}
