@@ -1,6 +1,19 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
 <h3>DashboardStockSharpComponent</h3>
+
+@if (AboutConnection is not null)
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Состояние подключения: @AboutConnection.ConnectionState?.DescriptionInfo()</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Can connect probe: <cite title="Проверка возможности подключения">@AboutConnection.CanConnect</cite>
+        </figcaption>
+    </figure>
+}
+
 <div class="d-grid gap-2">
     <button class="btn btn-primary" type="button">Connect</button>
 </div>

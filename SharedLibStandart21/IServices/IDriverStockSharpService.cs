@@ -15,7 +15,7 @@ public interface IDriverStockSharpService : IStockSharpBaseService
     /// <summary>
     /// CanConnect
     /// </summary>
-    public Task<AboutConnectResponseModel> AboutConnect(CancellationToken? cancellationToken = default);
+    public Task<AboutConnectResponseModel> AboutConnection(CancellationToken? cancellationToken = default);
 
     /// <summary>
     /// Connect
