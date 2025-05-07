@@ -8,6 +8,8 @@ using System.Linq;
 using System;
 using System.Globalization;
 using System.Net;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace SharedLib;
 
@@ -47,6 +49,23 @@ public static partial class GlobalToolsStandard
             throw new FormatException("Invalid port");
 
         return new IPEndPoint(ip, port);
+    }
+
+    /// <summary>
+    /// Получить значение атрибута Description
+    /// </summary>
+    public static string DescriptionInfo(this Enum enumValue)
+    {
+        foreach (FieldInfo field in enumValue.GetType().GetFields())
+        {
+            DescriptionAttribute? descriptionAttribute = field.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
+            if (descriptionAttribute != null && field.Name.Equals(enumValue.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                return descriptionAttribute.Description;
+            }
+        }
+
+        return enumValue.ToString();
     }
 
     /// <summary>

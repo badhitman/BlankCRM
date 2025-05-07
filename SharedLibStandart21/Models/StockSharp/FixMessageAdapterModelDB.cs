@@ -28,7 +28,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     /// <summary>
     /// Имя адаптера (например: LuaFixMarketDataMessageAdapter или LuaFixTransactionMessageAdapter и т.п.)
     /// </summary>
-    public string? AdapterTypeName { get; set; }
+    public AdaptersTypesNames? AdapterTypeName { get; set; }
 
     /// <inheritdoc/>
     public string? Name { get; set; }

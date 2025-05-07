@@ -418,23 +418,6 @@ public static partial class GlobalTools
     }
 
     /// <summary>
-    /// Получить значение атрибута Description
-    /// </summary>
-    public static string DescriptionInfo(this Enum enumValue)
-    {
-        foreach (FieldInfo field in enumValue.GetType().GetFields())
-        {
-            DescriptionAttribute? descriptionAttribute = field.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
-            if (descriptionAttribute != null && field.Name.Equals(enumValue.ToString(), StringComparison.OrdinalIgnoreCase))
-            {
-                return descriptionAttribute.Description;
-            }
-        }
-
-        return enumValue.ToString();
-    }
-
-    /// <summary>
     /// Получить тип по его имени
     /// </summary>
     public static Type? GetType(string strFullyQualifiedName)
