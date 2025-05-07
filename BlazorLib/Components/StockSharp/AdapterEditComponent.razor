@@ -21,7 +21,7 @@ else
     <MudSelect T="AdaptersTypesNames?" Label="Тип адаптера" @bind-Value="AdapterType">
         @foreach (AdaptersTypesNames state in Enum.GetValues<AdaptersTypesNames>())
         {
-            <MudSelectItem T="AdaptersTypesNames?" Value="@state">@state</MudSelectItem>
+            <MudSelectItem T="AdaptersTypesNames?" Value="@state">@state.DescriptionInfo()</MudSelectItem>
         }
     </MudSelect>
     <div class="row g-3 mt-2">

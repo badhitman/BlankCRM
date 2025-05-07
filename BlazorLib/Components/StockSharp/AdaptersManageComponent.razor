@@ -16,7 +16,7 @@
         <MudTh>Login</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Type"><a href="/adapter/@context.Id/edit">@context.AdapterTypeName</a></MudTd>
+        <MudTd DataLabel="Type"><a href="/adapter/@context.Id/edit">@context.AdapterTypeName.DescriptionInfo()</a></MudTd>
         <MudTd DataLabel="Name"><a href="/adapter/@context.Id/edit">@context.Name</a></MudTd>
         <MudTd DataLabel="Address">@context.Address</MudTd>
         <MudTd DataLabel="Login">@context.Login</MudTd>
