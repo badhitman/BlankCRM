@@ -442,6 +442,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string PORTFOLIOS_CONTROLLER_NAME = "portfolios";
 
         /// <summary>
+        /// Connection
+        /// </summary>
+        public const string CONNECTION_CONTROLLER_NAME = "connection";
+
+        /// <summary>
         /// Boards
         /// </summary>
         public const string BOARDS_CONTROLLER_NAME = "boards";
@@ -455,6 +460,16 @@ public static partial class GlobalStaticConstantsRoutes
         /// Instruments
         /// </summary>
         public const string INSTRUMENTS_CONTROLLER_NAME = "instruments";
+
+        /// <summary>
+        /// Adapter
+        /// </summary>
+        public const string ADAPTER_CONTROLLER_NAME = "adapter";
+
+        /// <summary>
+        /// Adapters
+        /// </summary>
+        public const string ADAPTERS_CONTROLLER_NAME = "adapters";
 
         /// <summary>
         /// Favorite
@@ -1272,6 +1287,16 @@ public static partial class GlobalStaticConstantsRoutes
         /// Изменение
         /// </summary>
         public const string CHANGE_ACTION_NAME = "change";
+
+        /// <summary>
+        /// Открыть
+        /// </summary>
+        public const string OPEN_ACTION_NAME = "open";
+
+        /// <summary>
+        /// Закрыть
+        /// </summary>
+        public const string CLOSE_ACTION_NAME = "close";
 
         /// <summary>
         /// Push

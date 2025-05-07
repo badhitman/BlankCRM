@@ -10,28 +10,18 @@ using SharedLib;
 namespace RemoteCallLib;
 
 /// <summary>
-/// LogsServiceTransmission
-/// </summary>
-public partial class LogsServiceTransmission(IMQTTClient mqClient) : ILogsService
-{
-    /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default)
-        => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<NLogRecordModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.GoToPageForRowLogsReceive, req, token: token) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default)
-        => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<NLogRecordModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.LogsSelectStorageReceive, req, token: token) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<LogsMetadataResponseModel>> MetadataLogsAsync(PeriodDatesTimesModel req, CancellationToken token = default)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<LogsMetadataResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.MetadataLogsReceive, req, token: token) ?? new();
-}
-
-/// <summary>
 /// StockSharpDriverTransmission
 /// </summary>
 public partial class StockSharpDriverTransmission(IMQTTClient mqClient) : IStockSharpDriverService
 {
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> Connect(CancellationToken? cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectStockSharpReceive, token: cancellationToken ?? CancellationToken.None) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> Disconnect(CancellationToken? cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DisconnectStockSharpReceive, token: cancellationToken ?? CancellationToken.None) ?? new();
+
     /// <inheritdoc/>
     public async Task<TResponseModel<List<BoardStockSharpModel>>> GetBoardsAsync(int[]? req = null, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<TResponseModel<List<BoardStockSharpModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetBoardsStockSharpReceive, req, token: cancellationToken) ?? new();
@@ -62,7 +52,7 @@ public partial class StockSharpDriverTransmission(IMQTTClient mqClient) : IStock
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> OrderRegisterAsync(CreateOrderRequestModel req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.OrderRegisterSelectStockSharpReceive, req, token: cancellationToken) ?? new();
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.OrderRegisterStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> PingAsync(CancellationToken cancellationToken = default)

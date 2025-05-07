@@ -6,7 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using Newtonsoft.Json;
+using System.Globalization;
+using System.Net;
 
 namespace SharedLib;
 
@@ -30,6 +31,22 @@ public static partial class GlobalToolsStandard
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// CreateIPEndPoint
+    /// </summary>
+    public static IPEndPoint CreateIPEndPoint(string endPoint)
+    {
+        string[] ep = endPoint.Split(':');
+        if (ep.Length != 2) throw new FormatException("Invalid endpoint format");
+        if (!IPAddress.TryParse(ep[0], out IPAddress ip))
+            throw new FormatException("Invalid ip-adress");
+
+        if (!int.TryParse(ep[1], NumberStyles.None, NumberFormatInfo.CurrentInfo, out int port))
+            throw new FormatException("Invalid port");
+
+        return new IPEndPoint(ip, port);
     }
 
     /// <summary>

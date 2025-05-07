@@ -1,0 +1,28 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Adaptors</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Type</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Address</MudTh>
+        <MudTh>Login</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Type">@context.AdapterTypeName</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Address">@context.Address</MudTd>
+        <MudTd DataLabel="Login">@context.Login</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Ни чего не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Загрузка...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

@@ -963,8 +963,13 @@ public static partial class GlobalStaticConstantsTransmission
 
         /// <inheritdoc/>
         public readonly static string ValuesChangedStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.VALUES_CONTROLLER_NAME}-{Routes.CHANGE_ACTION_NAME}", Routes.NOTIFY_ACTION_NAME);
-        #region
 
+        #region
+        /// <inheritdoc/>
+        public readonly static string DisconnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.OPEN_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string ConnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.CLOSE_ACTION_NAME);
 
         /// <summary>
         /// Получить профили по их идентификаторам
@@ -996,9 +1001,29 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string InstrumentFavoriteToggleStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, $"{Routes.TOGGLE_ACTION_NAME}-{Routes.FAVORITE_CONTROLLER_NAME}");
 
         /// <summary>
-        /// OrderRegisterSelectStockSharpReceive
+        /// OrderRegisterStockSharpReceive
         /// </summary>
-        public readonly static string OrderRegisterSelectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.REGISTRATION_ACTION_NAME);
+        public readonly static string OrderRegisterStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.REGISTRATION_ACTION_NAME);
+
+        /// <summary>
+        /// Добавить/обновить адаптер
+        /// </summary>
+        public readonly static string UpdateOrCreateAdapterStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.ADAPTER_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <summary>
+        /// Удалить адаптер
+        /// </summary>
+        public readonly static string DeleteAdapterStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.ADAPTER_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
+
+        /// <summary>
+        /// Подбор адаптеров
+        /// </summary>
+        public readonly static string AdaptersSelectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.ADAPTERS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <summary>
+        /// AdaptersGetStockSharpReceive
+        /// </summary>
+        public readonly static string AdaptersGetStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.ADAPTERS_CONTROLLER_NAME, $"{Routes.GET_ACTION_NAME}-{Routes.LIST_ACTION_NAME}");
 
         /// <summary>
         /// InstrumentsSelectStockSharpReceive
