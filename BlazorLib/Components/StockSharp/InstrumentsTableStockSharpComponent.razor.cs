@@ -14,7 +14,7 @@ namespace BlazorLib.Components.StockSharp;
 public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IStockSharpDataService SsRepo { get; set; } = default!;
+    IDataStockSharpService SsRepo { get; set; } = default!;
 
 
     MudTable<InstrumentTradeStockSharpViewModel>? _tableRef;

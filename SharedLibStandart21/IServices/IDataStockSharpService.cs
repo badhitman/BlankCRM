@@ -11,7 +11,7 @@ namespace SharedLib;
 /// <summary>
 /// StockSharp - служба доступа к данным БД
 /// </summary>
-public interface IStockSharpDataService
+public interface IDataStockSharpService
 {
     /// <summary>
     /// SaveExchange
