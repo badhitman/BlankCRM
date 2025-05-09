@@ -36,7 +36,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     /// <summary>
     /// Деактивирован?
     /// </summary>
-    public bool IsOffline { get; set; }
+    public bool IsOnline { get; set; }
 
     /// <summary>
     /// Should the sequence counter be reset.
@@ -162,7 +162,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     /// <inheritdoc/>
     public static FixMessageAdapterModelDB? BuildEmpty()
     {
-        return new FixMessageAdapterModelDB() { IsOffline = true };
+        return new FixMessageAdapterModelDB();
     }
 
     /// <inheritdoc/>
@@ -172,7 +172,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
 
         AdapterTypeName = other.AdapterTypeName;
         Name = other.Name;
-        IsOffline = other.IsOffline;
+        IsOnline = other.IsOnline;
         IsResetCounter = other.IsResetCounter;
         IsDemo = other.IsDemo;
         Password = other.Password;
@@ -205,7 +205,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return $"{Name}`{CreatedAtUTC}`{Password}`{WriteTimeout}`{Login}`{IsDemo}`{TargetCompId}`{IsOffline}`{DateFormat}`{AdapterTypeName}`{SenderCompId}`{DoNotSendAccount}`{Address}`{TimeStampFormat}`{TimeFormat}`{Id}`{YearMonthFormat}`{LastUpdatedAtUTC}`{IsResetCounter}`{ClientVersion}`{OverrideExecIdByNative}`{CancelOnDisconnect}`{SupportUnknownExecutions}`{TargetHost}`{ValidateRemoteCertificates}`{CheckCertificateRevocation}`{SslCertificate}`{SslProtocol}`{ClientCode}`{EnqueueSubscriptions}`{ExchangeBoard}`{ReadTimeout}`{Accounts}".GetHashCode();
+        return $"{Name}`{CreatedAtUTC}`{Password}`{WriteTimeout}`{Login}`{IsDemo}`{TargetCompId}`{IsOnline}`{DateFormat}`{AdapterTypeName}`{SenderCompId}`{DoNotSendAccount}`{Address}`{TimeStampFormat}`{TimeFormat}`{Id}`{YearMonthFormat}`{LastUpdatedAtUTC}`{IsResetCounter}`{ClientVersion}`{OverrideExecIdByNative}`{CancelOnDisconnect}`{SupportUnknownExecutions}`{TargetHost}`{ValidateRemoteCertificates}`{CheckCertificateRevocation}`{SslCertificate}`{SslProtocol}`{ClientCode}`{EnqueueSubscriptions}`{ExchangeBoard}`{ReadTimeout}`{Accounts}".GetHashCode();
     }
 
     /// <inheritdoc/>
@@ -221,7 +221,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
             CreatedAtUTC == other.CreatedAtUTC &&
             AdapterTypeName == other.AdapterTypeName &&
             Name == other.Name &&
-            IsOffline == other.IsOffline &&
+            IsOnline == other.IsOnline &&
             IsResetCounter == other.IsResetCounter &&
             IsDemo == other.IsDemo &&
             Password == other.Password &&
@@ -279,7 +279,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
            a.CreatedAtUTC != b.CreatedAtUTC ||
            a.AdapterTypeName != b.AdapterTypeName ||
            a.Name != b.Name ||
-           a.IsOffline != b.IsOffline ||
+           a.IsOnline != b.IsOnline ||
            a.IsResetCounter != b.IsResetCounter ||
            a.IsDemo != b.IsDemo ||
            a.Password != b.Password ||
