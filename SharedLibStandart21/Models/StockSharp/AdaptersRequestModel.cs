@@ -9,6 +9,14 @@ namespace SharedLib;
 /// </summary>
 public class AdaptersRequestModel
 {
-    /// <inheritdoc/>
-    public bool? OfflineFilter { get; set; }
+    /// <summary>
+    /// Только активные (фильтр)?
+    /// true - для получения только активных адаптеров.
+    /// false - будут возвращены только неактивные адаптеры.
+    /// (по умолчанию: NULL)
+    /// </summary>
+    /// <remarks>
+    /// если NULL (по умолчанию) - тогда в выдачу попадают все (в этом случае данная фильтрация игнорируется)
+    /// </remarks>
+    public bool? OnlineOnly { get; set; }
 }

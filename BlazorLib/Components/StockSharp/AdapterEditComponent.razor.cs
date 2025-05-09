@@ -16,7 +16,7 @@ public partial class AdapterEditComponent : BlazorBusyComponentBaseModel
     IManageStockSharpService SsRepo { get; set; } = default!;
 
     [Inject]
-    NavigationManager navRepo { get; set; } = default!;
+    NavigationManager NavRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -83,7 +83,7 @@ public partial class AdapterEditComponent : BlazorBusyComponentBaseModel
         var res = await SsRepo.DeleteAdapterAsync(editAdapter);
         initDelete = false;
         await SetBusyAsync(false);
-        navRepo.NavigateTo("adapters");
+        NavRepo.NavigateTo("adapters");
     }
 
     /// <inheritdoc/>

@@ -42,7 +42,7 @@ public partial class AdaptersManageComponent : BlazorBusyComponentBaseModel
             PageNum = state.Page,
             Payload = new()
             {
-                OfflineFilter = offlineFilter,
+                OnlineOnly = offlineFilter,
             }
         };
         TPaginationResponseModel<FixMessageAdapterModelDB> res = await SsRepo.AdaptersSelectAsync(req, token);
