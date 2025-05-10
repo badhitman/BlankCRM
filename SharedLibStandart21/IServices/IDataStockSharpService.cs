@@ -13,39 +13,6 @@ namespace SharedLib;
 /// </summary>
 public interface IDataStockSharpService
 {
-    #region flush
-    /// <summary>
-    /// SaveExchange
-    /// </summary>
-    public Task<TResponseModel<int>> SaveExchange(ExchangeStockSharpModel req);
-
-    /// <summary>
-    /// Save Board
-    /// </summary>
-    public Task<TResponseModel<int>> SaveBoard(BoardStockSharpModel req);
-
-    /// <summary>
-    /// Сохранить в БД инструмент
-    /// </summary>
-    public Task<TResponseModel<int>> SaveInstrument(InstrumentTradeStockSharpModel instrument);
-
-    /// <summary>
-    /// Save Portfolio
-    /// </summary>
-    public Task<TResponseModel<int>> SavePortfolio(PortfolioStockSharpModel portfolio);
-
-    /// <summary>
-    /// SaveOrder
-    /// </summary>
-    public Task<TResponseModel<int>> SaveOrder(OrderStockSharpModel req);
-
-    /// <summary>
-    /// SaveTrade
-    /// </summary>
-    public Task<TResponseModel<int>> SaveTrade(MyTradeStockSharpModel myTrade);
-    #endregion
-
-    #region data
     /// <summary>
     /// Получить инструменты по их идентификаторам
     /// </summary>
@@ -84,6 +51,5 @@ public interface IDataStockSharpService
     /// <summary>
     /// InstrumentSetFavoriteAsync
     /// </summary>
-    public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);
-    #endregion
+    public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);    
 }

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace RemoteCallLib;
 
 /// <summary>
-/// 
+/// DataStockSharpTransmission
 /// </summary>
 public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataStockSharpService
 {
@@ -41,29 +41,4 @@ public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataSto
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(TPaginationRequestStandardModel<InstrumentsRequestModel> req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentsSelectStockSharpReceive, req, token: cancellationToken) ?? new();
-
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> SaveBoard(BoardStockSharpModel req)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveBoardStockSharpReceive, req) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> SaveExchange(ExchangeStockSharpModel req)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveExchangeStockSharpReceive, req) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> SaveInstrument(InstrumentTradeStockSharpModel req)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveInstrumentStockSharpReceive, req) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> SaveOrder(OrderStockSharpModel req)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveOrderStockSharpReceive, req) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> SavePortfolio(PortfolioStockSharpModel req)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SavePortfolioStockSharpReceive, req) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> SaveTrade(MyTradeStockSharpModel myTrade)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveTradeStockSharpReceive, myTrade) ?? new();
 }
