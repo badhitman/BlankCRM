@@ -33,7 +33,19 @@ public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) :
     }
 
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> OwnTradeReceived(MyTradeStockSharpModel myTrade)
+    {
+        return ResponseBaseModel.CreateError("метод не реализован");
+    }
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> PortfolioReceived(PortfolioStockSharpModel req, CancellationToken cancellationToken = default)
+    {
+        return ResponseBaseModel.CreateError("метод не реализован");
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> PositionReceived(PositionStockSharpModel position)
     {
         return ResponseBaseModel.CreateError("метод не реализован");
     }

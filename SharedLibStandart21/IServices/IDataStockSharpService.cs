@@ -80,5 +80,10 @@ public interface IDataStockSharpService
     /// InstrumentSetFavoriteAsync
     /// </summary>
     public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// SaveTrade
+    /// </summary>
+    public Task<ResponseBaseModel> SaveTrade(MyTradeStockSharpModel myTrade);
     #endregion
 }

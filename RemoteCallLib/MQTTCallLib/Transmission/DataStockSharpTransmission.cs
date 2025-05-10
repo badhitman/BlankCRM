@@ -42,6 +42,7 @@ public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataSto
     public async Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(TPaginationRequestStandardModel<InstrumentsRequestModel> req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentsSelectStockSharpReceive, req, token: cancellationToken) ?? new();
 
+
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> SaveBoard(BoardStockSharpModel req)
         => await mqClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveBoardStockSharpReceive, req) ?? new();
@@ -61,4 +62,8 @@ public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataSto
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> SavePortfolio(PortfolioStockSharpModel req)
         => await mqClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SavePortfolioStockSharpReceive, req) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> SaveTrade(MyTradeStockSharpModel myTrade)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveTradeStockSharpReceive, myTrade) ?? new();
 }

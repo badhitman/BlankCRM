@@ -14,12 +14,12 @@ public enum TimeInForceEnum
     /// <summary>
     /// Good til cancelled.
     /// </summary>
-    [Display( Name = "GTC", Description = "GoodTilCancelled")]
+    [Display(Name = "GTC", Description = "GoodTilCancelled")]
     PutInQueue,
     /// <summary>
     /// Fill Or Kill.
     /// </summary>
-    [Display( Name = "FOK", Description = "FillOrKill")]
+    [Display(Name = "FOK", Description = "FillOrKill")]
     MatchOrCancel,
     /// <summary>
     /// Immediate Or Cancel.

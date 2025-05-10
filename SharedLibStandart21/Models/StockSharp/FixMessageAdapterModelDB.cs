@@ -4,6 +4,7 @@
 
 using System.Security.Authentication;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
@@ -15,6 +16,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     /// <summary>
     /// Id
     /// </summary>
+    [Key]
     public int Id { get; set; }
 
 

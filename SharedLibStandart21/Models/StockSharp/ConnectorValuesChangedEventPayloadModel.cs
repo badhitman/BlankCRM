@@ -13,7 +13,7 @@ namespace SharedLib;
 public partial class ConnectorValuesChangedEventPayloadModel
 {
     /// <inheritdoc/>
-    public InstrumentTradeStockSharpModel? Instrument { get; set; }
+    public virtual InstrumentTradeStockSharpModel? Instrument { get; set; }
 
     /// <inheritdoc/>
     public KeyValuePair<Level1FieldsStockSharpEnum, object>[]? DataPayload { get; set; }
