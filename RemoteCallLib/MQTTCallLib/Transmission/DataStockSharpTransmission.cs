@@ -64,6 +64,6 @@ public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataSto
         => await mqClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SavePortfolioStockSharpReceive, req) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> SaveTrade(MyTradeStockSharpModel myTrade)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveTradeStockSharpReceive, myTrade) ?? new();
+    public async Task<TResponseModel<int>> SaveTrade(MyTradeStockSharpModel myTrade)
+        => await mqClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveTradeStockSharpReceive, myTrade) ?? new();
 }

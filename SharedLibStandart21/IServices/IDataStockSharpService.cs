@@ -38,6 +38,11 @@ public interface IDataStockSharpService
     /// SaveOrder
     /// </summary>
     public Task<TResponseModel<int>> SaveOrder(OrderStockSharpModel req);
+
+    /// <summary>
+    /// SaveTrade
+    /// </summary>
+    public Task<TResponseModel<int>> SaveTrade(MyTradeStockSharpModel myTrade);
     #endregion
 
     #region data
@@ -80,10 +85,5 @@ public interface IDataStockSharpService
     /// InstrumentSetFavoriteAsync
     /// </summary>
     public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// SaveTrade
-    /// </summary>
-    public Task<ResponseBaseModel> SaveTrade(MyTradeStockSharpModel myTrade);
     #endregion
 }
