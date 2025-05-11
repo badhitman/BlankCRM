@@ -13,13 +13,13 @@ public sealed class IdentityEmailSender(IMailProviderService emailSender) : IEma
 {
     /// <inheritdoc/>
     public Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink) =>
-        emailSender.SendEmailAsync(email, "Подтвердите ваш адрес электронной почты", $"Пожалуйста, подтвердите свой аккаунт <a href='{confirmationLink}'>кликнув по ссылке</a>.");
+        emailSender.SendEmailAsync(email, "Confirm your email address", $"Please verify your account <a href='{confirmationLink}'>by clicking on the link</a>.");
     /// <inheritdoc/>
 
     public Task SendPasswordResetLinkAsync(ApplicationUser user, string email, string resetLink) =>
-        emailSender.SendEmailAsync(email, "Сброс пароля", $"Для сброса пароля - <a href='{resetLink}'>кликните по ссылке</a>.");
+        emailSender.SendEmailAsync(email, "Password reset", $"To reset your password - <a href='{resetLink}'>clicking on the link</a>.");
     /// <inheritdoc/>
 
     public Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode) =>
-        emailSender.SendEmailAsync(email, "Сброс пароля", $"Пожалуйста, сбросьте пароль, используя следующий код: {resetCode}");
+        emailSender.SendEmailAsync(email, "Password reset", $"Please reset your password using the following code: {resetCode}");
 }
