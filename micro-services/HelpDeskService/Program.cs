@@ -56,7 +56,7 @@ public class Program
         if (Path.Exists(path_load))
             builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
         else
-            logger.Warn($"отсутствует: {path_load}");
+            logger.Warn($"РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚: {path_load}");
 
         // Secrets
         void ReadSecrets(string dirName)
@@ -65,7 +65,7 @@ public class Program
             DirectoryInfo di = new(secretPath);
             for (int i = 0; i < 5 && !di.Exists; i++)
             {
-                logger.Warn($"файл секретов не найден (продолжение следует...): {di.FullName}");
+                logger.Warn($"С„Р°Р№Р» СЃРµРєСЂРµС‚РѕРІ РЅРµ РЅР°Р№РґРµРЅ (РїСЂРѕРґРѕР»Р¶РµРЅРёРµ СЃР»РµРґСѓРµС‚...): {di.FullName}");
                 secretPath = Path.Combine("..", secretPath);
                 di = new(secretPath);
             }
@@ -80,7 +80,7 @@ public class Program
                 }
             }
             else
-                logger.Warn($"Секреты `{dirName}` не найдены (совсем)");
+                logger.Warn($"РЎРµРєСЂРµС‚С‹ `{dirName}` РЅРµ РЅР°Р№РґРµРЅС‹ (СЃРѕРІСЃРµРј)");
         }
         ReadSecrets("secrets");
         if (!string.IsNullOrWhiteSpace(_modePrefix))
@@ -176,24 +176,24 @@ public class Program
                 demo_rubrics = [
                     new ()
             {
-                Name = "Секретарь",
-                NormalizedNameUpper = "СЕКРЕТАРЬ",
+                Name = "РЎРµРєСЂРµС‚Р°СЂСЊ",
+                NormalizedNameUpper = "РЎР•РљР Р•РўРђР Р¬",
                 SortIndex = 1,
             },
             new ()
             {
-                Name = "Техническая поддержка",
-                NormalizedNameUpper = "ТЕХНИЧЕСКАЯ ПОДДЕРЖКА",
+                Name = "РўРµС…РЅРёС‡РµСЃРєР°СЏ РїРѕРґРґРµСЂР¶РєР°",
+                NormalizedNameUpper = "РўР•РҐРќРР§Р•РЎРљРђРЇ РџРћР”Р”Р•Р Р–РљРђ",
                 SortIndex = 2,
             },
             new ()
             {
-                Name = "Другое",
-                NormalizedNameUpper = "ДРУГОЕ",
+                Name = "Р”СЂСѓРіРѕРµ",
+                NormalizedNameUpper = "Р”Р РЈР“РћР•",
                 SortIndex = 3,
             }];
-                demo_rubrics[0].NestedRubrics = [new() { Name = "Справки", NormalizedNameUpper = "СПРАВКИ", Parent = demo_rubrics[0], SortIndex = 1 }, new() { Name = "Жалобы", NormalizedNameUpper = "ЖАЛОБЫ", Parent = demo_rubrics[0], SortIndex = 2 }];
-                demo_rubrics[1].NestedRubrics = [new() { Name = "Линия 1", NormalizedNameUpper = "ЛИНИЯ 1", Parent = demo_rubrics[1], SortIndex = 1 }, new() { Name = "Линия 2", NormalizedNameUpper = "ЛИНИЯ 2", Parent = demo_rubrics[1], SortIndex = 2 }];
+                demo_rubrics[0].NestedRubrics = [new() { Name = "РЎРїСЂР°РІРєРё", NormalizedNameUpper = "РЎРџР РђР’РљР", Parent = demo_rubrics[0], SortIndex = 1 }, new() { Name = "Р–Р°Р»РѕР±С‹", NormalizedNameUpper = "Р–РђР›РћР‘Р«", Parent = demo_rubrics[0], SortIndex = 2 }];
+                demo_rubrics[1].NestedRubrics = [new() { Name = "Р›РёРЅРёСЏ 1", NormalizedNameUpper = "Р›РРќРРЇ 1", Parent = demo_rubrics[1], SortIndex = 1 }, new() { Name = "Р›РёРЅРёСЏ 2", NormalizedNameUpper = "Р›РРќРРЇ 2", Parent = demo_rubrics[1], SortIndex = 2 }];
                 await context_seed.AddRangeAsync(demo_rubrics);
                 await context_seed.SaveChangesAsync();
             }
@@ -214,10 +214,10 @@ public class Program
             //            issues.Add(new()
             //            {
             //                AuthorIdentityUserId = "",
-            //                Name = $"Тест {issues_demo_count++}",
-            //                NormalizedNameUpper = $"ТЕСТ {issues_demo_count}",
+            //                Name = $"РўРµСЃС‚ {issues_demo_count++}",
+            //                NormalizedNameUpper = $"РўР•РЎРў {issues_demo_count}",
             //                RubricIssueId = rubric_ids[random.Next(0, rubric_ids.Length)],
-            //                Description = $"Доброго дня. Это demo описание {issues_demo_count}",
+            //                Description = $"Р”РѕР±СЂРѕРіРѕ РґРЅСЏ. Р­С‚Рѕ demo РѕРїРёСЃР°РЅРёРµ {issues_demo_count}",
             //                StepIssue = st,
             //            });
             //        }

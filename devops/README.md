@@ -55,6 +55,11 @@ rm -r *
 git clone https://github.com/badhitman/BlankCRM.git
 git clone https://github.com/badhitman/HtmlGenerator.git
 
+cd /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/
+dotnet tool install -g Microsoft.Web.LibraryManager.Cli
+dotnet workload restore
+libman restore
+
 dotnet publish -c Debug --output /srv/git/builds/ApiRestService /srv/git/BlankCRM/micro-services/ApiRestService/ApiRestService.csproj
 dotnet publish -c Debug --output /srv/git/builds/StorageService /srv/git/BlankCRM/micro-services/StorageService/StorageService.csproj
 dotnet publish -c Debug --output /srv/git/builds/CommerceService /srv/git/BlankCRM/micro-services/CommerceService/CommerceService.csproj
@@ -78,7 +83,7 @@ dotnet publish -c Debug --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCR
 #  dotnet publish -c Release --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
 #  *** поэтому € его отдельно собираю локально, отправл€ю через sftp, распаковываю и продолжаю дальше буд-то команды корректно отработали
 
-journalctl -f -u constructor.app.service
+journalctl -e -f -u web.app.stage.service
 journalctl -f -u docker-compose-app.service
 
 systemctl status kladr.app.stage.service

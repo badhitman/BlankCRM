@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// В© https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +59,7 @@ public class Program
         if (Path.Exists(path_load))
             builder.Configuration.AddJsonFile(path_load, optional: true, reloadOnChange: false);
         else
-            logger.Warn($"отсутствует: {path_load}");
+            logger.Warn($"РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚: {path_load}");
 
         // Secrets
         void ReadSecrets(string dirName)
@@ -68,7 +68,7 @@ public class Program
             DirectoryInfo di = new(secretPath);
             for (int i = 0; i < 5 && !di.Exists; i++)
             {
-                logger.Warn($"файл секретов не найден (продолжение следует...): {di.FullName}");
+                logger.Warn($"С„Р°Р№Р» СЃРµРєСЂРµС‚РѕРІ РЅРµ РЅР°Р№РґРµРЅ (РїСЂРѕРґРѕР»Р¶РµРЅРёРµ СЃР»РµРґСѓРµС‚...): {di.FullName}");
                 secretPath = Path.Combine("..", secretPath);
                 di = new(secretPath);
             }
@@ -83,7 +83,7 @@ public class Program
                 }
             }
             else
-                logger.Warn($"Секреты `{dirName}` не найдены (совсем)");
+                logger.Warn($"РЎРµРєСЂРµС‚С‹ `{dirName}` РЅРµ РЅР°Р№РґРµРЅС‹ (СЃРѕРІСЃРµРј)");
         }
         ReadSecrets("secrets");
         if (!string.IsNullOrWhiteSpace(_modePrefix))
