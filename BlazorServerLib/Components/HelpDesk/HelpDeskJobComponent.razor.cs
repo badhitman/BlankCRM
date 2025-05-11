@@ -7,6 +7,9 @@ using SharedLib;
 
 namespace BlazorWebLib.Components.HelpDesk;
 
+/// <summary>
+/// HelpDeskJobComponent
+/// </summary>
 public partial class HelpDeskJobComponent : BlazorBusyComponentBaseModel
 {
     HelpDeskJournalComponent _tab = default!;
