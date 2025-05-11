@@ -9,7 +9,7 @@ cp -r /srv/git/builds/HelpDeskService /srv/services.stage/HelpDeskService
 cp -r /srv/git/builds/ConstructorService /srv/services.stage/ConstructorService
 cp -r /srv/git/builds/TelegramBotService /srv/services.stage/TelegramBotService
 cp -r /srv/git/builds/BlankBlazorApp /srv/services.stage/BlankBlazorApp
-cp -r /srv/git/builds/BlankBlazorApp /srv/services.stage/IdentityService
+cp -r /srv/git/builds/IdentityService /srv/services.stage/IdentityService
 cp -r /srv/git/builds/ApiBreezRuService /srv/services.stage/ApiBreezRuService
 cp -r /srv/git/builds/ApiDaichiBusinessService /srv/services.stage/ApiDaichiBusinessService
 cp -r /srv/git/builds/ApiRusklimatComService /srv/services.stage/ApiRusklimatComService

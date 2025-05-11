@@ -3,7 +3,7 @@ Description=web.app.stage.service
 
 [Service]
 WorkingDirectory=/srv/services.stage/BlankBlazorApp
-ExecStart=/usr/bin/dotnet /srv/services.stage/BlankBlazorApp/BlankBlazorApp.dll --urls "http://*:5050"
+ExecStart=/usr/bin/dotnet /srv/services.stage/BlankBlazorApp/BlankBlazorApp.dll --urls "https://*:5271,http://*:5272"
 Restart=always
 RestartSec=10
 KillSignal=SIGINT

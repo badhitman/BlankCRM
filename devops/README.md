@@ -33,6 +33,9 @@ chmod -R 777 /srv/services.stage
 chown -R www-data:www-data /srv/Cloud.Disk
 chmod -R 777 /srv/Cloud.Disk
 
+chown -R www-data:www-data /srv/tmp
+chmod -R 777 /srv/tmp
+
 # PROD
 ln -s /etc/nginx/sites-available/web.app /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/api.app /etc/nginx/sites-enabled/
@@ -79,13 +82,6 @@ cp -r /srv/git/builds/HelpDeskService /srv/services/HelpDeskService
 cp -r /srv/git/builds/ConstructorService /srv/services/ConstructorService
 cp -r /srv/git/builds/TelegramBotService /srv/services/TelegramBotService
 cp -r /srv/git/builds/BlankBlazorApp /srv/services/BlankBlazorApp
-
-chown -R www-data:www-data /srv/services.stage
-chmod -R 777 /srv/services.stage
-
-chown -R www-data:www-data /srv/tmp
-chmod -R 777 /srv/tmp
-
 
 systemctl start comm.app.service web.app.service bus.app.service tg.app.service api.app.service hd.app.service constructor.app.service
 
