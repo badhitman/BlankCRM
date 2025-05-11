@@ -3,13 +3,13 @@
 @inject IdentityRedirectManager RedirectManager
 @inject IUsersAuthenticateService UsersAuthRepo
 
-<PageTitle>Проверка кода восстановления</PageTitle>
+<PageTitle>Checking the recovery code</PageTitle>
 
-<h1>Проверка кода восстановления</h1>
+<h1>Checking the recovery code</h1>
 <hr />
 <StatusMessage Messages="@Messages" />
 <p>
-    Вы запросили вход с кодом восстановления. Этот логин не будет запомнен до тех пор, пока вы не предоставите код приложения для аутентификации при входе в систему или не отключите 2FA и не войдете в систему снова.
+    You have requested a login with a recovery code. This login will not be remembered until you provide the authenticator app code when you log in or turn off 2FA and log in again.
 </p>
 <div class="row">
     <div class="col-md-4">
@@ -18,10 +18,10 @@
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.RecoveryCode" class="form-control" autocomplete="off" placeholder="RecoveryCode" />
-                <label for="recovery-code" class="form-label">Код восстановления</label>
+                <label for="recovery-code" class="form-label">Recovery code</label>
                 <ValidationMessage For="() => Input.RecoveryCode" class="text-danger" />
             </div>
-            <button type="submit" class="btn btn-lg btn-primary">Авторизоваться</button>
+            <button type="submit" class="btn btn-lg btn-primary">Login</button>
         </EditForm>
     </div>
 </div>
@@ -40,7 +40,7 @@
         TResponseModel<UserInfoModel?> user = await UsersAuthRepo.GetTwoFactorAuthenticationUserAsync();
         Messages = user.Messages;
         if (user.Response is null)
-            throw new InvalidOperationException("Невозможно загрузить пользователя двухфакторной аутентификации.");
+            throw new InvalidOperationException("Unable to load two-factor authentication user.");
     }
 
     private async Task OnValidSubmitAsync()

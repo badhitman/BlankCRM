@@ -40,7 +40,7 @@ public partial class ConfirmEmailChangePage : ComponentBase
     {
         if (UserId is null || Email is null || Code is null)
         {
-            Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = "Ошибка: неверная ссылка для подтверждения изменения адреса электронной почты." }];
+            Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = "Error: The link to confirm your email address change is invalid." }];
             return;
         }
 
@@ -48,7 +48,7 @@ public partial class ConfirmEmailChangePage : ComponentBase
         Messages = findUsers.Messages;
         if (findUsers.Response is null)
         {
-            Messages.Add(new() { TypeMessage = ResultTypesEnum.Error, Text = $"Невозможно найти пользователя по идентификатору '{UserId}'" });
+            Messages.Add(new() { TypeMessage = ResultTypesEnum.Error, Text = $"Unable to find user by ID '{UserId}'" });
             return;
         }
 

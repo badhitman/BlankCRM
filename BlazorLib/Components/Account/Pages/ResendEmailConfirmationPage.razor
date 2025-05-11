@@ -4,10 +4,10 @@
 @inject IdentityRedirectManager RedirectManager
 @inject IIdentityTransmission IdentityRepo
 
-<PageTitle>Повторно отправить подтверждение по электронной почте</PageTitle>
+<PageTitle>Resend confirmation email</PageTitle>
 
-<h1>Повторно отправить подтверждение по электронной почте</h1>
-<h2>Введите адрес электронной почты.</h2>
+<h1>Resend confirmation email</h1>
+<h2>Enter your email address.</h2>
 <hr />
 <StatusMessage Messages="@Messages" />
 <div class="row">
@@ -20,7 +20,7 @@
                 <label for="email" class="form-label">Email</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Отправить</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Send</button>
         </EditForm>
     </div>
 </div>
