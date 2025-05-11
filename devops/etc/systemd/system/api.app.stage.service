@@ -3,7 +3,7 @@ Description=api.app.stage.service
 
 [Service]
 WorkingDirectory=/srv/services.stage/ApiRestService/
-ExecStart=/usr/bin/dotnet /srv/services.stage/ApiRestService/ApiRestService.dll --urls "http://*:5055"
+ExecStart=/usr/bin/dotnet /srv/services.stage/ApiRestService/ApiRestService.dll --urls "htts://*:5055;http://*:5056;"
 Restart=always
 RestartSec=10
 KillSignal=SIGINT

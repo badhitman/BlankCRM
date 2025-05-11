@@ -845,7 +845,16 @@ public class HelpDeskImplementService(
         if (req.PageNum == 0 && string.IsNullOrWhiteSpace(req.Payload.SearchQuery) && string.IsNullOrWhiteSpace(req.Payload.FilterUserId))
         {
             MemCacheComplexKeyModel mceKey = GlobalStaticConstants.Cache.ConsoleSegmentStatusToken(req.Payload.Status);
-            cacheToken = await cacheRepo.GetStringValueAsync(mceKey, token);
+
+            try
+            {
+                cacheToken = await cacheRepo.GetStringValueAsync(mceKey, token);
+            }
+            catch (Exception ex)
+            {
+                loggerRepo.LogError(ex, JsonConvert.SerializeObject(req));
+            }
+
             if (string.IsNullOrWhiteSpace(cacheToken))
             {
                 cacheToken = ConsoleSegmentNewCacheToken(req.Payload.Status);
