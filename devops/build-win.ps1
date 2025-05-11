@@ -25,5 +25,5 @@ if (-not (Test-Path -Path $7zipPath -PathType Leaf)) {
     throw "7 zip executable '$7zipPath' not found"
 }
 Set-Alias Start-SevenZip $7zipPath
-#Start-SevenZip a -mx=9 -sdel "C:/Users/User/Documents/publish/publish.7z" "C:/Users/User/Documents/publish/*"
-#Remove-Item -Recurse -Force -Exclude publish.7z 'C:/Users/User/Documents/publish/*'
+Start-SevenZip a -mx=9 -sdel "C:/Users/User/Documents/publish/publish.7z" "C:/Users/User/Documents/publish/*"
+Remove-Item -Recurse -Force -Exclude publish.7z 'C:/Users/User/Documents/publish/*'
