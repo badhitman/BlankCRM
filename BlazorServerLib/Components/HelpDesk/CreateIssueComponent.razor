@@ -7,7 +7,7 @@
 {
     <div class="text-center">
         <div class="spinner-border" role="status">
-            <span class="visually-hidden">Загрузка...</span>
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 }
@@ -15,10 +15,10 @@ else
 {
     if (!IsEditMode)
     {
-        <MudButton Href="/create-order" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="mb-2">Новый заказ</MudButton>
+        <MudButton Href="/create-order" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="mb-2">New order</MudButton>
         @if (_showCreateIssue)
         {
-            <MudButton OnClick="ToggleMode" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Новое обращение</MudButton>
+            <MudButton OnClick="ToggleMode" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">New issue</MudButton>
         }
     }
     else
@@ -26,7 +26,7 @@ else
         <MudCard>
             <MudCardHeader>
                 <CardHeaderContent>
-                    <MudText Typo="Typo.h6">Новое обращение</MudText>
+                    <MudText Typo="Typo.h6">New issue</MudText>
                 </CardHeaderContent>
                 <CardHeaderActions>
                     <MudIconButton Disabled="IsBusyProgress" OnClick="ToggleMode" Icon="@Icons.Material.Filled.Close" Color="Color.Default" />
@@ -38,15 +38,15 @@ else
                         <RubricSelectorComponent ModeSelectingRubrics="ModeSelectingRubrics" ShowDisabledRubrics="ShowDisabledRubrics" />
                     </CascadingValue>
                     <div>
-                        <label for="inputName" class="form-label">Название обращения</label>
-                        <input @bind-value="Name" @bind-value:event="oninput" type="text" id="inputName" class="form-control" placeholder="Заголовок">
+                        <label for="inputName" class="form-label">Theme of issue</label>
+                        <input @bind-value="Name" @bind-value:event="oninput" type="text" id="inputName" class="form-control" placeholder="Subject">
                     </div>
                     <InputRichTextComponent @bind-Value="Description" ReadOnly="IsBusyProgress" />
                 </MudStack>
             </MudCardContent>
             <MudCardActions>
-                <MudButton Disabled="(IsBusyProgress || !CanCreate)" OnClick="CreateIssue" Variant="Variant.Text" Color="Color.Success">Создать</MudButton>
-                <MudButton Disabled="IsBusyProgress" OnClick="ToggleMode" Variant="Variant.Text" Color="Color.Primary">Отмена</MudButton>
+                <MudButton Disabled="(IsBusyProgress || !CanCreate)" OnClick="CreateIssue" Variant="Variant.Text" Color="Color.Success">Create</MudButton>
+                <MudButton Disabled="IsBusyProgress" OnClick="ToggleMode" Variant="Variant.Text" Color="Color.Primary">Cancel</MudButton>
             </MudCardActions>
         </MudCard>
     }

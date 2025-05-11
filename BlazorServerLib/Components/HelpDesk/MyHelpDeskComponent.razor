@@ -5,13 +5,13 @@
 <br />
 <CascadingValue Value="SetTab">
     <TabSetComponent IsSilent="true" AsPills="true">
-        <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ActualOnly))" Title="Открытые">
+        <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ActualOnly))" Title="Opened">
             <HelpDeskJournalComponent UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.ActualOnly" />
         </TabComponent>
-        <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ArchiveOnly))" Title="Завершённые">
+        <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ArchiveOnly))" Title="Closed">
             <HelpDeskJournalComponent UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.ArchiveOnly" />
         </TabComponent>
-        <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.All))" Title="Все">
+        <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.All))" Title="All">
             <HelpDeskJournalComponent UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.All" />
         </TabComponent>
     </TabSetComponent>

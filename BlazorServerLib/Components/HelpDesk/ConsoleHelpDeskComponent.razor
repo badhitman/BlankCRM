@@ -9,9 +9,9 @@
         cursor: pointer;
     }
 
-    .size-console-change span.text-secondary:hover {
-        text-decoration: underline dotted;
-    }
+        .size-console-change span.text-secondary:hover {
+            text-decoration: underline dotted;
+        }
 </style>
 
 @if (IsBusyProgress)
@@ -24,10 +24,10 @@
         <h5 class="card-title">
             Консоль
             <sup class="size-console-change">
-                <span @onclick="async () =>{ if (IsLarge) { await ToggleSize(); } }" title="@(IsLarge ? "включён крупный режим. включить мелкий?" : "включён мелкий режим")" class="@(IsLarge ? "text-secondary" : "text-primary text-decoration-underline")">мелко</span> | <span @onclick="async () =>{ if (!IsLarge) { await ToggleSize(); } }" title="@(IsLarge ? "включён крупный режим" : "включён мелкий режим. включить крупный?")" class="@(IsLarge ? "text-primary text-decoration-underline" : "text-secondary")">крупно</span>
+                <span @onclick="async () =>{ if (IsLarge) { await ToggleSize(); } }" title="@(IsLarge ? "Large mode is on. Turn on small mode?" : "fine mode is on")" class="@(IsLarge ? "text-secondary" : "text-primary text-decoration-underline")">мелко</span> | <span @onclick="async () =>{ if (!IsLarge) { await ToggleSize(); } }" title="@(IsLarge ? "large mode is on" : "small mode is on. turn on large?")" class="@(IsLarge ? "text-primary text-decoration-underline" : "text-secondary")">size</span>
             </sup>
         </h5>
-        <h6 class="card-subtitle mb-2 text-body-secondary">Обзор обращений по статусам</h6>
+        <h6 class="card-subtitle mb-2 text-body-secondary">Review of requests by status</h6>
         <div class="container-fluid">
             <!-- Stack the columns on mobile by making one full-width and the other half-width -->
             <div class="row">

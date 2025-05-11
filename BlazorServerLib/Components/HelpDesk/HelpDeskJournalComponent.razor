@@ -5,34 +5,34 @@
 
 <MudTable @ref="TableRef" ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Заявки</MudText>
+        <MudText Typo="Typo.h6">Issues</MudText>
         <MudSpacer />
-        <MudTextField T="string" Clearable="true" ValueChanged="@(s => OnSearch(s))" title="Без учёта регистра" Placeholder="Поиск по теме обращения и имени рубрики" Adornment="Adornment.Start"
+        <MudTextField T="string" Clearable="true" ValueChanged="@(s => OnSearch(s))" title="Case insensitive" Placeholder="Search by topic of appeal and section name" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(IssueHelpDeskModel.CreatedAtUTC))" T="IssueHelpDeskModel">Создан</MudTableSortLabel></MudTh>
-        <MudTh>Статус</MudTh>
-        <MudTh>Тема</MudTh>
-        <MudTh>Рубрика</MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(IssueHelpDeskModel.CreatedAtUTC))" T="IssueHelpDeskModel">Created</MudTableSortLabel></MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>Subject</MudTh>
+        <MudTh>Rubric</MudTh>
         @if (UserArea == UsersAreasHelpDeskEnum.Author)
         {
-            <MudTh>Исполнитель</MudTh>
+            <MudTh>Executor</MudTh>
         }
         else
         {
-            <MudTh>Автор</MudTh>
+            <MudTh>Author</MudTh>
         }
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Создан">
+        <MudTd DataLabel="Created">
             <a href="@($"/issue-card/{context.Id}")">
                 @context.CreatedAtUTC.GetCustomTime().ToString("d", GlobalStaticConstants.RU)<sup>@context.CreatedAtUTC.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup>
             </a>
         </MudTd>
-        <MudTd DataLabel="Статус">@context.StatusDocument.DescriptionInfo()</MudTd>
-        <MudTd DataLabel="Тема">@context.Name</MudTd>
-        <MudTd DataLabel="Рубрика">@context.RubricIssue?.Name</MudTd>
+        <MudTd DataLabel="Status">@context.StatusDocument.DescriptionInfo()</MudTd>
+        <MudTd DataLabel="Subject">@context.Name</MudTd>
+        <MudTd DataLabel="Rubric">@context.RubricIssue?.Name</MudTd>
         @if (UserArea == UsersAreasHelpDeskEnum.Author)
         {
             <MudTd>@(usersDump.FirstOrDefault(x => x.UserId == context.ExecutorIdentityUserId)?.UserName ?? context.ExecutorIdentityUserId)</MudTd>
@@ -43,10 +43,10 @@
         }
     </RowTemplate>
     <NoRecordsContent>
-        <MudText>Ни одной записи не найдено</MudText>
+        <MudText>No records found</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>Загрузка данных...</MudText>
+        <MudText>Loading...</MudText>
     </LoadingContent>
     <PagerContent>
         <MudTablePager />

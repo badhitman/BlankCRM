@@ -5,16 +5,16 @@
         <h5 class="card-title">TelegramBot</h5>
         <ul class="list-group list-group-flush">
             <li class="list-group-item my-2">
-                <h6 class="card-subtitle mb-2 text-body-secondary">Маршрутизация входящих сообщений</h6>
-                <ChatSelectComponent Title="Переадресация Telegram сообщений для клиента"
+                <h6 class="card-subtitle mb-2 text-body-secondary">Routing incoming messages</h6>
+                <ChatSelectComponent Title="Telegram message forwarding for client"
                                      KeyStorage="GlobalStaticCloudStorageMetadata.HelpDeskNotificationsTelegramForUser(Chat.ChatTelegramId)"
-                                     Hint="Правило для всех входящих сообщений в бота, которые будут поступать от клиента. Команды и CallbackQuery не переадресовываются!" />
+                                     Hint="Rule for all incoming messages to the bot that will come from the client. Commands and CallbackQuery are not forwarded!" />
             </li>
             <li class="list-group-item my-2">
-                <h6 class="card-subtitle mb-2 text-body-secondary">Состояние службы</h6>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Service Status</h6>
                 <ErrorMessageTelegramBotComponent ChatId="Chat.ChatTelegramId" />
                 <div class="form-text">
-                    Если бота удалят, заблокируют в чате, тогда его попытки отправить туда сообщение будут завершаться ошибкой.
+                    If the bot is deleted or blocked in the chat, then its attempts to send a message there will end with an error.
                 </div>
             </li>
         </ul>

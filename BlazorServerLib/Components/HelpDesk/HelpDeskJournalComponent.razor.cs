@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
 using BlazorLib;
 using MudBlazor;
 using SharedLib;
@@ -105,7 +104,7 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
 
         // Forward the provided token to methods which support it
         List<IssueHelpDeskModel> data = rest.Response.Response;
-        await UpdateUsersData(data.SelectMany(x => new string?[] { x.AuthorIdentityUserId, x.ExecutorIdentityUserId }).ToArray());
+        await UpdateUsersData([.. data.SelectMany(x => new string?[] { x.AuthorIdentityUserId, x.ExecutorIdentityUserId })]);
         // Return the data
         return new() { TotalItems = rest.Response.TotalRowsCount, Items = data };
     }
