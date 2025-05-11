@@ -12,44 +12,44 @@ namespace SharedLib;
 public enum StatusesDocumentsEnum
 {
     /// <summary>
-    /// Создан
+    /// Created
     /// </summary>
-    [Description("Создан")]
+    [Description("Created")]
     Created = 0,
 
     /// <summary>
-    /// Возвращён в работу
+    /// Returned to work
     /// </summary>
-    [Description("Возвращён")]
+    [Description("Returned")]
     Reopen = 10,
 
     /// <summary>
-    /// Возвращён в работу
+    /// Pause
     /// </summary>
-    [Description("Пауза")]
+    [Description("Pause")]
     Pause = 20,
 
     /// <summary>
-    /// В работе
+    /// Progress
     /// </summary>
-    [Description("В работе")]
+    [Description("Progress")]
     Progress = 30,
 
     /// <summary>
-    /// На проверке
+    /// Review
     /// </summary>
-    [Description("Проверка")]
+    [Description("Review")]
     Check = 40,
 
     /// <summary>
-    /// Выполнен
+    /// Done
     /// </summary>
-    [Description("Выполнен")]
+    [Description("Done")]
     Done = 50,
 
     /// <summary>
-    /// Отменён
+    /// Cancel
     /// </summary>
-    [Description("Отменён")]
+    [Description("Cancel")]
     Canceled = 1000
 }
