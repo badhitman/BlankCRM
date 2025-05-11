@@ -27,6 +27,9 @@ chmod -R 777 /srv/git
 chown -R www-data:www-data /srv/services
 chmod -R 777 /srv/services
 
+chown -R www-data:www-data /srv/services.stage
+chmod -R 777 /srv/services.stage
+
 chown -R www-data:www-data /srv/Cloud.Disk
 chmod -R 777 /srv/Cloud.Disk
 
