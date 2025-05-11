@@ -11,14 +11,14 @@
 {
     <div class="text-center">
         <div class="spinner-border" role="status">
-            <span class="visually-hidden">Загрузка...</span>
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 }
 else if (Chat is null)
 {
     <div class="alert alert-primary" role="alert">
-        Не указан чат!
+        Chat not specified!
     </div>
 }
 else
@@ -26,7 +26,7 @@ else
     @if (Chat.UsersJoins!.Count > 1)
     {
         <h5 class="card-title">
-            Участники:
+            Members:
             @foreach (JoinUserChatModelDB uj in Chat.UsersJoins)
             {
                 <span class="badge rounded-pill text-bg-primary mx-1">@uj.User!.FirstName @uj.User.LastName@(string.IsNullOrWhiteSpace(uj.User.Username) ? "" : $" @{uj.User.Username}")</span>
@@ -39,23 +39,23 @@ else
         <MudTabPanel Text="Чат">
             <TelegramChatWrapComponent Chat="Chat" />
         </MudTabPanel>
-        <MudTabPanel Disabled="@(CurrentUser is null)" Text="Обращения">
+        <MudTabPanel Disabled="@(CurrentUser is null)" Text="Issues">
             <CascadingValue Value="SetTab">
                 <TabSetComponent IsSilent="true" AsPills="true">
-                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ActualOnly))" Title="Открытые">
+                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ActualOnly))" Title="Opened">
                         <HelpDeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.ActualOnly" />
                     </TabComponent>
-                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ArchiveOnly))" Title="Завершённые">
+                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ArchiveOnly))" Title="Closed">
                         <HelpDeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.ArchiveOnly" />
                     </TabComponent>
-                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.All))" Title="Все">
+                    <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.All))" Title="All">
                         <HelpDeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.All" />
                     </TabComponent>
                 </TabSetComponent>
             </CascadingValue>
             <CreateIssueComponent Update="Update" UserIdentityId="@CurrentUser!.UserIdentityId" />
         </MudTabPanel>
-        <MudTabPanel Disabled="@(CurrentUser is null)" Text="Настройки">
+        <MudTabPanel Disabled="@(CurrentUser is null)" Text="Settings">
             <ChatSettingsHelpDeskComponent Chat="Chat" />
         </MudTabPanel>
     </MudTabs>
