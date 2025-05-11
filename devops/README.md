@@ -78,25 +78,24 @@ dotnet publish -c Debug --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCR
 #  dotnet publish -c Release --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
 #  *** поэтому € его отдельно собираю локально, отправл€ю через sftp, распаковываю и продолжаю дальше буд-то команды корректно отработали
 
-systemctl stop web.app.service comm.app.service tg.app.service api.app.service bus.app.service constructor.app.service hd.app.service
-
-# rm -r /srv/git/builds/*
-rm -r /srv/services/*
-
-cp -r /srv/git/builds/ApiRestService /srv/services/ApiRestService
-cp -r /srv/git/builds/StorageService /srv/services/StorageService
-cp -r /srv/git/builds/CommerceService /srv/services/CommerceService
-cp -r /srv/git/builds/HelpDeskService /srv/services/HelpDeskService
-cp -r /srv/git/builds/ConstructorService /srv/services/ConstructorService
-cp -r /srv/git/builds/TelegramBotService /srv/services/TelegramBotService
-cp -r /srv/git/builds/BlankBlazorApp /srv/services/BlankBlazorApp
-
-systemctl start comm.app.service web.app.service bus.app.service tg.app.service api.app.service hd.app.service constructor.app.service
-
 journalctl -f -u constructor.app.service
 journalctl -f -u docker-compose-app.service
 
-systemctl status constructor.app.service
+systemctl status kladr.app.stage.service
+systemctl status ldap.app.stage.service
+systemctl status identity.app.stage.service
+systemctl status constructor.app.stage.service
+systemctl status hd.app.stage.service
+systemctl status api.app.stage.service
+systemctl status tg.app.stage.service
+systemctl status bus.app.stage.service
+systemctl status web.app.stage.service
+systemctl status comm.app.stage.service
+systemctl status feeds-haier-proff-ru-service.app.stage.service
+systemctl status api-rusklimat-com-service.app.stage.service
+systemctl status api-daichi-business-service.app.stage.service
+systemctl status api-breez-ru-service.app.stage.service
+
 ```
 
 #### Win
