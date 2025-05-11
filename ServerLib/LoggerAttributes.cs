@@ -1,4 +1,4 @@
-﻿namespace ServerLib;
+namespace ServerLib;
 
 /// <summary>
 /// Включает логирование для метода. Для класса контроллера включено всегда.

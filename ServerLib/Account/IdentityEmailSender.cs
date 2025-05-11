@@ -5,21 +5,21 @@ using SharedLib;
 namespace ServerLib;
 
 /// <summary>
-/// Инфраструктура ASP.NET Core Identity (не предназначено для использования в качестве абстракции электронной почты общего назначения).
-/// Отправка электронных писем с подтверждением и сбросом пароля.
+/// РРЅС„СЂР°СЃС‚СЂСѓРєС‚СѓСЂР° ASP.NET Core Identity (РЅРµ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅРѕ РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ РєР°С‡РµСЃС‚РІРµ Р°Р±СЃС‚СЂР°РєС†РёРё СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ).
+/// РћС‚РїСЂР°РІРєР° СЌР»РµРєС‚СЂРѕРЅРЅС‹С… РїРёСЃРµРј СЃ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµРј Рё СЃР±СЂРѕСЃРѕРј РїР°СЂРѕР»СЏ.
 /// This API supports the ASP.NET Core Identity infrastructure and is not intended to be used as a general purpose email abstraction. It should be implemented by the application so the Identity infrastructure can send confirmation and password reset emails.
 /// </summary>
 public sealed class IdentityEmailSender(IMailProviderService emailSender) : IEmailSender<ApplicationUser>
 {
     /// <inheritdoc/>
     public Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink) =>
-        emailSender.SendEmailAsync(email, "Подтвердите ваш адрес электронной почты", $"Пожалуйста, подтвердите свой аккаунт <a href='{confirmationLink}'>кликнув по ссылке</a>.");
+        emailSender.SendEmailAsync(email, "РџРѕРґС‚РІРµСЂРґРёС‚Рµ РІР°С€ Р°РґСЂРµСЃ СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹", $"РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РїРѕРґС‚РІРµСЂРґРёС‚Рµ СЃРІРѕР№ Р°РєРєР°СѓРЅС‚ <a href='{confirmationLink}'>РєР»РёРєРЅСѓРІ РїРѕ СЃСЃС‹Р»РєРµ</a>.");
     /// <inheritdoc/>
 
     public Task SendPasswordResetLinkAsync(ApplicationUser user, string email, string resetLink) =>
-        emailSender.SendEmailAsync(email, "Сброс пароля", $"Для сброса пароля - <a href='{resetLink}'>кликните по ссылке</a>.");
+        emailSender.SendEmailAsync(email, "РЎР±СЂРѕСЃ РїР°СЂРѕР»СЏ", $"Р”Р»СЏ СЃР±СЂРѕСЃР° РїР°СЂРѕР»СЏ - <a href='{resetLink}'>РєР»РёРєРЅРёС‚Рµ РїРѕ СЃСЃС‹Р»РєРµ</a>.");
     /// <inheritdoc/>
 
     public Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode) =>
-        emailSender.SendEmailAsync(email, "Сброс пароля", $"Пожалуйста, сбросьте пароль, используя следующий код: {resetCode}");
+        emailSender.SendEmailAsync(email, "РЎР±СЂРѕСЃ РїР°СЂРѕР»СЏ", $"РџРѕР¶Р°Р»СѓР№СЃС‚Р°, СЃР±СЂРѕСЃСЊС‚Рµ РїР°СЂРѕР»СЊ, РёСЃРїРѕР»СЊР·СѓСЏ СЃР»РµРґСѓСЋС‰РёР№ РєРѕРґ: {resetCode}");
 }
