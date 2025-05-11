@@ -10,17 +10,17 @@
 
 <div class="card mb-3">
     <div class="card-body">
-        <h5 class="card-title">TelegramBot уведомления</h5>
-        <h6 class="card-subtitle mb-2 text-body-secondary">Переадресация входящих сообщений</h6>
+        <h5 class="card-title">TelegramBot notifies</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">Forwarding incoming messages</h6>
 
         @if (chatsTelegram is null || chatsTelegram.Count == 0)
         {
             <figure class="text-center">
                 <blockquote class="blockquote">
-                    <p>Не найдено ни одного связанного Telegram чата.</p>
+                    <p>No related Telegram chats found.</p>
                 </blockquote>
                 <figcaption class="blockquote-footer">
-                    Отсутствуют пользователи <cite>TelegramBot</cite>
+                    There are no users <cite>TelegramBot</cite>
                 </figcaption>
             </figure>
         }
@@ -28,8 +28,8 @@
         {
             <CascadingValue Value="chatsTelegram">
                 <NotificationTelegramIssueConfigComponent KeyStorage="GlobalStaticCloudStorageMetadata.NotificationTelegramForIssueUser(Issue.AuthorIdentityUserId)"
-                                                          Title="Групповой чат или персональный"
-                                                          Hint="Правило переадресации для сообщений от клиента" />
+                                                          Title="Group chat or personal"
+                                                          Hint="Forwarding rule for messages from the client" />
             </CascadingValue>
         }
     </div>

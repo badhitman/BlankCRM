@@ -19,14 +19,14 @@
 {
     <figure class="text-center">
         <blockquote class="blockquote">
-            <p>Изменение статуса.</p>
+            <p>Change of status.</p>
         </blockquote>
         <figcaption class="blockquote-footer">
-            Подтверждаете <cite>смену состояния?</cite>
+            Do you confirm <cite>state change?</cite>
         </figcaption>
     </figure>
     <div class="d-grid gap-2">
-        <button disabled="@(!CanEdit || IsBusyProgress)" @onclick="SaveChange" class="btn btn-outline-primary" type="button">Подтвердить</button>
-        <button disabled="@(!CanEdit || IsBusyProgress)" @onclick="() => IssueStep = Issue.StatusDocument" class="btn btn-outline-info" type="button">Отмена</button>
+        <button disabled="@(!CanEdit || IsBusyProgress)" @onclick="SaveChange" class="btn btn-outline-primary" type="button">Confirm</button>
+        <button disabled="@(!CanEdit || IsBusyProgress)" @onclick="() => IssueStep = Issue.StatusDocument" class="btn btn-outline-info" type="button">Cancel</button>
     </div>
 }

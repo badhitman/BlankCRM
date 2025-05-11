@@ -6,8 +6,6 @@ using BlazorLib;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
-using System.Net.Http;
-using static MudBlazor.CategoryTypes;
 
 namespace BlazorWebLib.Components.HelpDesk.issue;
 

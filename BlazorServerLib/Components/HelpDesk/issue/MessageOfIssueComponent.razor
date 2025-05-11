@@ -4,7 +4,7 @@
 @if (IsCreatingNewMessage)
 {
     <p class="lead">
-        Новое сообщение.
+        New message.
     </p>
 }
 
@@ -17,7 +17,7 @@
     @if (Message is not null && Message.Id > 0)
     {
         <div class="position-absolute top-0 start-0 m-2 bi bi-send-fill font-monospace text-@_currentType.DescriptionInfo()">
-            &nbsp;@(Message.AuthorUserId == GlobalStaticConstantsRoles.Roles.System ? "Система" : (this.UsersIdentityDump?.FirstOrDefault(x => x.UserId == Message.AuthorUserId)?.UserName ?? Message.AuthorUserId))@(Message.AuthorUserId == CurrentUserSession!.UserId ? " - Вы" : "")
+            &nbsp;@(Message.AuthorUserId == GlobalStaticConstantsRoles.Roles.System ? "System" : (this.UsersIdentityDump?.FirstOrDefault(x => x.UserId == Message.AuthorUserId)?.UserName ?? Message.AuthorUserId))@(Message.AuthorUserId == CurrentUserSession!.UserId ? " - You" : "")
         </div>
         @if (!IsEditMode && Message.AuthorUserId == CurrentUserSession!.UserId)
         {
@@ -29,16 +29,16 @@
         {
             if (Message is null || Message.Id < 1)
             {
-                <span @onclick="Cancel" title="Отмена" class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-warning bi bi-x-circle-fill p-1" style="font-size: large;cursor:pointer;"><span class="visually-hidden">unread messages</span></span>
+                <span @onclick="Cancel" title="Cancel" class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-warning bi bi-x-circle-fill p-1" style="font-size: large;cursor:pointer;"><span class="visually-hidden">unread messages</span></span>
             }
             <TinyMCE.Blazor.Editor @bind-Value="TextMessage" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(IsBusyProgress)" />
             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
-                <button @onclick="SaveMessage" disabled="@(!CanSave || IsBusyProgress)" class="btn btn-@(!CanSave ? "outline-secondary" : "success") me-md-2 btn-sm" type="button">@(IsCreatingNewMessage ? "Отправить" : "Сохранить")</button>
-                <button @onclick="Cancel" disabled="@IsBusyProgress" class="btn btn-primary btn-sm" type="button">Отмена</button>
+                <button @onclick="SaveMessage" disabled="@(!CanSave || IsBusyProgress)" class="btn btn-@(!CanSave ? "outline-secondary" : "success") me-md-2 btn-sm" type="button">@(IsCreatingNewMessage ? "Send" : "Save")</button>
+                <button @onclick="Cancel" disabled="@IsBusyProgress" class="btn btn-primary btn-sm" type="button">Cancel</button>
             </div>
         }
         else
-        {            
+        {
             <iframe id="@($"frame:{_guid}")" srcdoc="@($"<html lang=\"ru\" data-bs-theme=\"dark\"><head>" +
                 "<meta charset=\"utf-8\">" +
                 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +

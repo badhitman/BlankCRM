@@ -28,7 +28,7 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
             {
                 Payload = new()
                 {
-                    Description = $"Отправил сообщение в Telegram: user-tg#{msg.UserTelegramId}",
+                    Description = $"Sent a message on Telegram: user-tg#{msg.UserTelegramId}",
                     IssueId = Issue.Id,
                     PulseType = PulseIssuesTypesEnum.Messages,
                     Tag = Routes.TELEGRAM_CONTROLLER_NAME,
@@ -41,7 +41,7 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
         TResponseModel<int> add_msg_system = await HelpDeskRepo.MessageCreateOrUpdateAsync(new()
         {
             SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
-            Payload = new() { MessageText = $"<b>Пользователь {CurrentUserSession!.UserName} отправил сообщение Telegram пользователю user-tg#{msg.UserTelegramId}</b>: {msg.Message}", IssueId = Issue.Id }
+            Payload = new() { MessageText = $"<b>User {CurrentUserSession!.UserName} sent a Telegram message to user user-tg#{msg.UserTelegramId}</b>: {msg.Message}", IssueId = Issue.Id }
         });
         await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(add_msg_system.Messages);

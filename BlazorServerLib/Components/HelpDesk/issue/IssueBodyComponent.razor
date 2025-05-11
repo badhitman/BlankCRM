@@ -8,22 +8,22 @@
         <CardHeaderContent>
             @if (IsEditMode)
             {
-                <MudTextField Immediate="true" @bind-Value="NameIssueEdit" Label="Тема обращения" Variant="Variant.Text"></MudTextField>
+                <MudTextField Immediate="true" @bind-Value="NameIssueEdit" Label="Subject issue" Variant="Variant.Text"></MudTextField>
             }
             else
             {
-                <MudText Typo="Typo.h6">Обращение: @Issue.Name</MudText>
+                <MudText Typo="Typo.h6">Issue: @Issue.Name</MudText>
             }
         </CardHeaderContent>
         <CardHeaderActions>
             @if (IsEditMode)
             {
-                <MudIconButton title="Сохранить" Disabled="@(!IsEdited || !CanSave)" OnClick="SaveIssue" Size="Size.Small" Icon="@Icons.Material.Filled.Save" Color="@(IsEdited ? Color.Primary : Color.Default)" />
-                <MudIconButton title="Отмена" OnClick="CancelEdit" Size="Size.Small" Icon="@Icons.Material.Filled.Cancel" />
+                <MudIconButton title="Save" Disabled="@(!IsEdited || !CanSave)" OnClick="SaveIssue" Size="Size.Small" Icon="@Icons.Material.Filled.Save" Color="@(IsEdited ? Color.Primary : Color.Default)" />
+                <MudIconButton title="Cancel" OnClick="CancelEdit" Size="Size.Small" Icon="@Icons.Material.Filled.Cancel" />
             }
             else
             {
-                <MudIconButton Disabled="@(!CanEdit)" title="Редактировать" OnClick="EditToggle" Size="Size.Small" Icon="@Icons.Material.Filled.Edit" />
+                <MudIconButton Disabled="@(!CanEdit)" title="Edit" OnClick="EditToggle" Size="Size.Small" Icon="@Icons.Material.Filled.Edit" />
             }
         </CardHeaderActions>
     </MudCardHeader>
@@ -40,9 +40,9 @@
         }
         else
         {
-            <span><b>Рубрика:</b> "@(Issue.RubricIssue?.Name ?? "- не указано -")"</span>
+            <span><b>Rubric:</b> "@(Issue.RubricIssue?.Name ?? "- not set -")"</span>
             <hr />
             @DescriptionHtml
-        }        
+        }
     </MudCardContent>
 </MudCard>

@@ -12,7 +12,7 @@
     @if (IsLarge)
     {
         <div class="ms-auto">
-            <input @bind-value="SearchQuery" @bind-value:event="oninput" title="Поиск обращений по теме, описанию и названию рубрики" type="text" class="form-control" placeholder="Поиск">
+            <input @bind-value="SearchQuery" @bind-value:event="oninput" title="Search for requests by topic, description and section name" type="text" class="form-control" placeholder="Search">
         </div>
     }
 </div>
@@ -21,10 +21,10 @@
 {
     <figure class="text-center">
         <blockquote class="blockquote">
-            <p>Данных нет.</p>
+            <p>No data available.</p>
         </blockquote>
         <figcaption class="blockquote-footer">
-            Обращений <cite title="В статусе @StepIssue.ToString() обращений нет">не найдено</cite>
+            Calls <cite title="There are no calls in the @StepIssue.ToString() status">not found</cite>
         </figcaption>
     </figure>
 }
@@ -40,7 +40,6 @@ else
                     <h7 class="card-subtitle mb-2 text-body-secondary">Рубрика: @issue_element.RubricIssue.Name</h7>
                 }
                 <hr class="mt-1 pt-1" />
-                @* @MyMarkup(issue_element.Description ?? "без описания") *@
                 @{
                     OrderDocumentModelDB? current_order = OrdersCache.ContainsKey(issue_element.Id) ? OrdersCache.FirstOrDefault(x => x.Key == issue_element.Id).Value.FirstOrDefault() : null;
                     List<RecordsAttendanceModelDB>? current_order_attendance = OrdersAttendancesCache.ContainsKey(issue_element.Id) ? OrdersAttendancesCache.FirstOrDefault(x => x.Key == issue_element.Id).Value : null;
@@ -50,9 +49,9 @@ else
                     <span>Юр.лицо: <u>@current_order.Organization!.Name</u></span>
                 }
                 <MudStack Row="true">
-                    <a title="открыть обращение" href="/issue-card/@issue_element.Id" class="card-link">Перейти</a>
+                    <a title="open an issue" href="/issue-card/@issue_element.Id" class="card-link">Goto</a>
                     <MudSpacer />
-                    <code title="Дата последнего обновления">
+                    <code title="Date of last update">
                         @(IsLarge ? issue_element.LastUpdateAt.ToString("dd.MM.yy HH:mm") : issue_element.LastUpdateAt.GetCustomTime().ToString("d", GlobalStaticConstants.RU))
                     </code>
                 </MudStack>
@@ -62,7 +61,7 @@ else
     @if (Issues.Count < totalCount)
     {
         <div class="d-grid gap-2">
-            <button @onclick="LoadData" class="btn btn-primary" type="button">Загрузить ещё</button>
+            <button @onclick="LoadData" class="btn btn-primary" type="button">Load more</button>
         </div>
     }
 }

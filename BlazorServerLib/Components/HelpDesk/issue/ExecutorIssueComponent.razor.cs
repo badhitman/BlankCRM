@@ -40,13 +40,13 @@ public partial class ExecutorIssueComponent : IssueWrapBaseModel
             IsBusyProgress = false;
             if (user_by_email is null)
             {
-                SnackbarRepo.Error($"Пользователь с таким email не найден: {editExecutorEmail}");
+                SnackbarRepo.Error($"User with this email not found: {editExecutorEmail}");
                 return;
             }
 
             if (user_by_email.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true && !user_by_email.IsAdmin)
             {
-                SnackbarRepo.Error($"Пользователь {editExecutorEmail} не может быть установлен исполнителем: не является сотрудником");
+                SnackbarRepo.Error($"User {editExecutorEmail} cannot be installed by the performer: is not an employee");
                 return;
             }
         }

@@ -9,7 +9,7 @@
 else
 {
     <div class="input-group mb-3">
-        <input placeholder="@(IsEditMode ? "Email исполнителя" : "")" @bind-value="editExecutorEmail" @bind-value:event="oninput" readonly="@(!IsEditMode)" type="text" class="form-control">
+        <input placeholder="@(IsEditMode ? "Email executor" : "")" @bind-value="editExecutorEmail" @bind-value:event="oninput" readonly="@(!IsEditMode)" type="text" class="form-control">
         <AuthorizeView Roles="@($"{string.Join(",",GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles)},{GlobalStaticConstantsRoles.Roles.Admin}")">
             <Authorized>
                 @if (IsEditMode)
@@ -26,18 +26,18 @@ else
                     {
                         @if (string.IsNullOrWhiteSpace(editExecutorEmail) || is_email)
                         {
-                            <button @onclick="SetNewExecutor" title="@(string.IsNullOrWhiteSpace(editExecutorEmail) ? "Открепить" : "Назначить") исполнителя" class="btn btn-outline-@(string.IsNullOrWhiteSpace(editExecutorEmail) ? "warning" : "success") bi bi-person-@(string.IsNullOrWhiteSpace(editExecutorEmail) ? "x-fill" : "fill-check")" type="button"></button>
+                            <button @onclick="SetNewExecutor" title="@(string.IsNullOrWhiteSpace(editExecutorEmail) ? "Unset" : "Set") executer" class="btn btn-outline-@(string.IsNullOrWhiteSpace(editExecutorEmail) ? "warning" : "success") bi bi-person-@(string.IsNullOrWhiteSpace(editExecutorEmail) ? "x-fill" : "fill-check")" type="button"></button>
                         }
                     }
-                    <button @onclick="EditModeToggle" title="Отмена" class="btn btn-outline-secondary bi bi-x-circle" type="button"></button>
+                    <button @onclick="EditModeToggle" title="Cancel" class="btn btn-outline-secondary bi bi-x-circle" type="button"></button>
                 }
                 else
                 {
                     if (CurrentUserSession!.UserId != Issue.ExecutorIdentityUserId)
                     {
-                        <button @onclick="SetMeAsExecutor" title="Назначить меня" class="btn btn-outline-secondary bi bi-person-raised-hand" type="button"></button>
+                        <button @onclick="SetMeAsExecutor" title="Nominate me" class="btn btn-outline-secondary bi bi-person-raised-hand" type="button"></button>
                     }
-                    <button @onclick="EditModeToggle" title="Установить" class="btn btn-outline-secondary bi bi-pencil" type="button"></button>
+                    <button @onclick="EditModeToggle" title="Set" class="btn btn-outline-secondary bi bi-pencil" type="button"></button>
                 }
             </Authorized>
         </AuthorizeView>

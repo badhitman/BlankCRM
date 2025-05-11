@@ -6,19 +6,19 @@
         IssueHelpDeskModel[] qcr = Issues.OrderBy(x => x.Id).ToArray();
         IssueHelpDeskModel cr = qcr.First();
     }
-    <span title="Рубрика: @cr.RubricIssue?.Name" class="badge text-bg-info m-1">@cr.Name</span>
+    <span title="Rubric: @cr.RubricIssue?.Name" class="badge text-bg-info m-1">@cr.Name</span>
     @if (Issues.Length > 1)
     {
         if (IsExpand)
         {
             foreach (IssueHelpDeskModel iss in qcr.Skip(1))
             {
-                <span title="Рубрика: @iss.RubricIssue?.Name" class="badge text-bg-info mx-1">@iss.Name</span>
+                <span title="Rubric: @iss.RubricIssue?.Name" class="badge text-bg-info mx-1">@iss.Name</span>
             }
         }
         else
         {
-            <i @onclick="() => IsExpand = true" title="Развернуть" class="issues-for-chat-info">
+            <i @onclick="() => IsExpand = true" title="Expand" class="issues-for-chat-info">
                 (+ @(Issues.Length - 2))
             </i>
         }

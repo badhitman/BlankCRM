@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
@@ -14,10 +13,6 @@ namespace BlazorWebLib.Components.HelpDesk.issue;
 /// </summary>
 public partial class ChatsWappiIssueComponent : IssueWrapBaseModel
 {
-    [Inject]
-    ITelegramTransmission TelegramRepo { get; set; } = default!;
-
-
     string[]? chats = null;
 
     async void SendMessageWhatsAppAction(EntryAltExtModel msg)
@@ -28,7 +23,7 @@ public partial class ChatsWappiIssueComponent : IssueWrapBaseModel
             {
                 Payload = new()
                 {
-                    Description = $"Отправил сообщение в WhatsApp: {msg.Number}<hr/>{msg.Text}",
+                    Description = $"Sent a message to WhatsApp: {msg.Number}<hr/>{msg.Text}",
                     IssueId = Issue.Id,
                     PulseType = PulseIssuesTypesEnum.Messages,
                     Tag = Routes.WAPPI_CONTROLLER_NAME,
@@ -39,7 +34,7 @@ public partial class ChatsWappiIssueComponent : IssueWrapBaseModel
         await SetBusyAsync();
         TResponseModel<int> add_msg_system = default!;
         List<Task> tasks = [HelpDeskRepo.PulsePushAsync(req_pulse, false),
-        Task.Run(async () => { 
+        Task.Run(async () => {
             add_msg_system = await HelpDeskRepo.MessageCreateOrUpdateAsync(new() { SenderActionUserId = GlobalStaticConstantsRoles.Roles.System, Payload = new() { MessageText = $"<b>Пользователь {CurrentUserSession!.UserName} отправил сообщение WhatsApp пользователю {msg.Number}</b>: {msg.Text}", IssueId = Issue.Id }});
         })];
         await Task.WhenAll(tasks);

@@ -14,9 +14,6 @@ namespace BlazorWebLib.Components.HelpDesk.issue;
 /// </summary>
 public partial class IssuesForChatComponent : BlazorBusyComponentBaseModel
 {
-    [Inject]
-    ILogger<IssuesForChatComponent> LoggerRepo { get; set; } = default!;
-
     /// <summary>
     /// Issues
     /// </summary>

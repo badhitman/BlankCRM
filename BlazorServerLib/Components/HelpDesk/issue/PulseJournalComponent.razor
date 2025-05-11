@@ -4,15 +4,15 @@
 
 <MudTable Loading="IsBusyProgress" ServerData="ServerReload" Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">История (события)</MudText>
+        <MudText Typo="Typo.h6">History (events)</MudText>
         <MudSpacer />
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(PulseViewModel.CreatedAt))" T="PulseViewModel">Дата</MudTableSortLabel></MudTh>
-        <MudTh>Автор</MudTh>
-        <MudTh>Тип</MudTh>
-        <MudTh>Признак</MudTh>
-        <MudTh>Инфо</MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(PulseViewModel.CreatedAt))" T="PulseViewModel">Date</MudTableSortLabel></MudTh>
+        <MudTh>Author</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Mark</MudTh>
+        <MudTh>Info</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Создан">
@@ -20,18 +20,18 @@
                 @context.CreatedAt.GetCustomTime().ToString("d", GlobalStaticConstants.RU) <sup>@context.CreatedAt.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup>
             </span>
         </MudTd>
-        <MudTd DataLabel="Тип">@(UsersIdentityDump.FirstOrDefault(x => x.UserId == context.AuthorUserIdentityId)?.UserName ?? context.AuthorUserIdentityId)</MudTd>
-        <MudTd DataLabel="Тип">@context.PulseType</MudTd>
-        <MudTd DataLabel="Признак">@context.Tag</MudTd>
-        <MudTd DataLabel="Инфо">
+        <MudTd DataLabel="Author">@(UsersIdentityDump.FirstOrDefault(x => x.UserId == context.AuthorUserIdentityId)?.UserName ?? context.AuthorUserIdentityId)</MudTd>
+        <MudTd DataLabel="Type">@context.PulseType</MudTd>
+        <MudTd DataLabel="Mark">@context.Tag</MudTd>
+        <MudTd DataLabel="Info">
             @ms(context.Description)
         </MudTd>
     </RowTemplate>
     <NoRecordsContent>
-        <MudText>Не найдено ни одной записи</MudText>
+        <MudText>No records found</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>Загрузка...</MudText>
+        <MudText>Loading...</MudText>
     </LoadingContent>
     <PagerContent>
         <MudTablePager />
