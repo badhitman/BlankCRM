@@ -36,7 +36,7 @@ public partial class FiltersUniversalComponent
         }
     }
 
-    string _value = "Не выбрано";
+    string _value = "Not select";
     string[] States => FiltersAvailable.Select(x => x.Key).Distinct().ToArray();
 
     /// <summary>

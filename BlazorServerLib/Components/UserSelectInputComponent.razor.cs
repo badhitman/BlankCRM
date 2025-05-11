@@ -42,7 +42,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
             LoadedData.AddRange(rest.Response);
 
             if (PageNum == 0)
-                LoadedData.Insert(0, new() { UserId = "", UserName = "Не выбран" });
+                LoadedData.Insert(0, new() { UserId = "", UserName = "Not select" });
 
             PageNum++;
         }
@@ -57,7 +57,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
             SelectedObject = new()
             {
                 UserId = "",
-                UserName = "Не выбрано",
+                UserName = "Not select",
             };
             SelectHandleAction(SelectedObject);
             return;

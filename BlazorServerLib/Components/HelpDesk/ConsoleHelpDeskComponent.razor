@@ -22,9 +22,9 @@
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">
-            Консоль
+            Console
             <sup class="size-console-change">
-                <span @onclick="async () =>{ if (IsLarge) { await ToggleSize(); } }" title="@(IsLarge ? "Large mode is on. Turn on small mode?" : "fine mode is on")" class="@(IsLarge ? "text-secondary" : "text-primary text-decoration-underline")">small</span> | <span @onclick="async () =>{ if (!IsLarge) { await ToggleSize(); } }" title="@(IsLarge ? "large mode is on" : "small mode is on. turn on large?")" class="@(IsLarge ? "text-primary text-decoration-underline" : "text-secondary")">size</span>
+                <span @onclick="async () =>{ if (IsLarge) { await ToggleSize(); } }" title="@(IsLarge ? "Large mode is on. Turn on small mode?" : "fine mode is on")" class="@(IsLarge ? "text-secondary" : "text-primary text-decoration-underline")">small</span> | <span @onclick="async () =>{ if (!IsLarge) { await ToggleSize(); } }" title="@(IsLarge ? "large mode is on" : "small mode is on. turn on large?")" class="@(IsLarge ? "text-primary text-decoration-underline" : "text-secondary")">large</span>
             </sup>
         </h5>
         <h6 class="card-subtitle mb-2 text-body-secondary">Review of requests by status</h6>
