@@ -3,9 +3,9 @@
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 
-<PageTitle>Вход</PageTitle>
+<PageTitle>SignIn</PageTitle>
 
-<h2>Вход</h2>
+<h2>SignIn</h2>
 <StatusMessage Messages="@Messages" />
 <div class="row">
     <div class="col-md-4">
@@ -34,21 +34,21 @@
                     <div class="checkbox mb-3">
                         <label class="form-label">
                             <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                            Запомнить меня
+                            Remember me
                         </label>
                     </div>
                     <div>
-                        <button type="submit" class="w-100 btn btn-lg btn-primary">Вход</button>
+                        <button type="submit" class="w-100 btn btn-lg btn-primary">LogIn</button>
                     </div>
                     <div class="mt-4">
                         <p>
-                            <a href="Account/ForgotPassword">Забыли пароль?</a>
+                            <a href="Account/ForgotPassword">Forgot your password?</a>
                         </p>
                         <p>
-                            <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Зарегистрируйтесь как новый пользователь</a>
+                            <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
                         </p>
                         <p>
-                            <a href="Account/ResendEmailConfirmation">Повторно отправить подтверждение по электронной почте</a>
+                            <a href="Account/ResendEmailConfirmation">Resend confirmation email</a>
                         </p>
                     </div>
                 </EditForm>

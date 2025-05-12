@@ -13,7 +13,7 @@
         <StatusMessage Messages="@identityErrors" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
-            <h2>Создать новый аккаунт.</h2>
+            <h2>Create a new account.</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
@@ -28,10 +28,10 @@
             </div>
             <div class="form-floating mb-3">
                 <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="confirm-password">Повтор Пароля</label>
+                <label for="confirm-password">Repeat Password</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Регистрация</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Registration</button>
         </EditForm>
     </div>
     <div class="col-md-6 col-md-offset-2">
