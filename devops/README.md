@@ -55,8 +55,9 @@ rm -r *
 git clone https://github.com/badhitman/BlankCRM.git
 git clone https://github.com/badhitman/HtmlGenerator.git
 cd /srv/git/BlankCRM
-dotnet tool install -g Microsoft.Web.LibraryManager.Cli
 dotnet workload restore
+dotnet tool install -g Microsoft.Web.LibraryManager.Cli
+cd /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp
 libman restore
 
 # Debug/Release
