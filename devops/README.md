@@ -54,25 +54,27 @@ cd /srv/git
 rm -r *
 git clone https://github.com/badhitman/BlankCRM.git
 git clone https://github.com/badhitman/HtmlGenerator.git
-cd /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/
+cd /srv/git/BlankCRM
 dotnet tool install -g Microsoft.Web.LibraryManager.Cli
 dotnet workload restore
 libman restore
 
-dotnet publish -c Debug --output /srv/git/builds/ApiRestService /srv/git/BlankCRM/micro-services/ApiRestService/ApiRestService.csproj
-dotnet publish -c Debug --output /srv/git/builds/StorageService /srv/git/BlankCRM/micro-services/StorageService/StorageService.csproj
-dotnet publish -c Debug --output /srv/git/builds/CommerceService /srv/git/BlankCRM/micro-services/CommerceService/CommerceService.csproj
-dotnet publish -c Debug --output /srv/git/builds/HelpDeskService /srv/git/BlankCRM/micro-services/HelpDeskService/HelpDeskService.csproj
-dotnet publish -c Debug --output /srv/git/builds/ConstructorService /srv/git/BlankCRM/micro-services/ConstructorService/ConstructorService.csproj
-dotnet publish -c Debug --output /srv/git/builds/TelegramBotService /srv/git/BlankCRM/micro-services/TelegramBotService/TelegramBotService.csproj
-dotnet publish -c Debug --output /srv/git/builds/KladrService /srv/git/BlankCRM/micro-services/KladrService/KladrService.csproj
-dotnet publish -c Debug --output /srv/git/builds/LdapService /srv/git/BlankCRM/micro-services/LdapService/LdapService.csproj
-dotnet publish -c Debug --output /srv/git/builds/ApiBreezRuService /srv/git/BlankCRM/micro-services/outer/ApiBreezRuService/ApiBreezRuService.csproj
-dotnet publish -c Debug --output /srv/git/builds/ApiDaichiBusinessService /srv/git/BlankCRM/micro-services/outer/ApiDaichiBusinessService/ApiDaichiBusinessService.csproj
-dotnet publish -c Debug --output /srv/git/builds/ApiRusklimatComService /srv/git/BlankCRM/micro-services/outer/ApiRusklimatComService/ApiRusklimatComService.csproj
-dotnet publish -c Debug --output /srv/git/builds/FeedsHaierProffRuService /srv/git/BlankCRM/micro-services/outer/FeedsHaierProffRuService/FeedsHaierProffRuService.csproj
-dotnet publish -c Debug --output /srv/git/builds/IdentityService /srv/git/BlankCRM/micro-services/IdentityService/IdentityService.csproj
-dotnet publish -c Debug --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
+# Debug/Release
+
+dotnet publish -c Release --output /srv/git/builds/ApiRestService /srv/git/BlankCRM/micro-services/ApiRestService/ApiRestService.csproj
+dotnet publish -c Release --output /srv/git/builds/StorageService /srv/git/BlankCRM/micro-services/StorageService/StorageService.csproj
+dotnet publish -c Release --output /srv/git/builds/CommerceService /srv/git/BlankCRM/micro-services/CommerceService/CommerceService.csproj
+dotnet publish -c Release --output /srv/git/builds/HelpDeskService /srv/git/BlankCRM/micro-services/HelpDeskService/HelpDeskService.csproj
+dotnet publish -c Release --output /srv/git/builds/ConstructorService /srv/git/BlankCRM/micro-services/ConstructorService/ConstructorService.csproj
+dotnet publish -c Release --output /srv/git/builds/TelegramBotService /srv/git/BlankCRM/micro-services/TelegramBotService/TelegramBotService.csproj
+dotnet publish -c Release --output /srv/git/builds/KladrService /srv/git/BlankCRM/micro-services/KladrService/KladrService.csproj
+dotnet publish -c Release --output /srv/git/builds/LdapService /srv/git/BlankCRM/micro-services/LdapService/LdapService.csproj
+dotnet publish -c Release --output /srv/git/builds/ApiBreezRuService /srv/git/BlankCRM/micro-services/outer/ApiBreezRuService/ApiBreezRuService.csproj
+dotnet publish -c Release --output /srv/git/builds/ApiDaichiBusinessService /srv/git/BlankCRM/micro-services/outer/ApiDaichiBusinessService/ApiDaichiBusinessService.csproj
+dotnet publish -c Release --output /srv/git/builds/ApiRusklimatComService /srv/git/BlankCRM/micro-services/outer/ApiRusklimatComService/ApiRusklimatComService.csproj
+dotnet publish -c Release --output /srv/git/builds/FeedsHaierProffRuService /srv/git/BlankCRM/micro-services/outer/FeedsHaierProffRuService/FeedsHaierProffRuService.csproj
+dotnet publish -c Release --output /srv/git/builds/IdentityService /srv/git/BlankCRM/micro-services/IdentityService/IdentityService.csproj
+dotnet publish -c Release --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
 
 #  *** этот билд требует значительной мощьности железа. на стоковом сервере не соберётся (ресурсоёмкий процесс, который вероятно не сможет корректно завершиться)
 #  cd /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/

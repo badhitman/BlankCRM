@@ -1,5 +1,6 @@
+/srv/dumps.sh
 systemctl stop web.app.service comm.app.service tg.app.service api.app.service bus.app.service constructor.app.service hd.app.service identity.app.service kladr.app.service ldap.app.service api-breez-ru-service.app.service api-daichi-business-service.app.service api-rusklimat-com-service.app.service feeds-haier-proff-ru-service.app.service
-# 7z a /srv/Cloud.Disk/services-snapshots/all_services_`date +%Y-%m-%d"_"%H_%M_%S`.7z /srv/services/*
+7z a /srv/Cloud.Disk/services-snapshots/all_services_`date +%Y-%m-%d"_"%H_%M_%S`.7z /srv/services/*
 rm -r /srv/services/*
 cp -r /srv/git/builds/ApiRestService /srv/services/ApiRestService
 cp -r /srv/git/builds/KladrService /srv/services/KladrService
