@@ -6,6 +6,7 @@ sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -
 sudo apt-get install wget
 sudo apt-get install nano
 sudo apt-get install sqlite3
+apt install emscripten
 
 apt-get install ufw
 ufw allow 22
@@ -44,6 +45,7 @@ ln -s /etc/nginx/sites-available/api.app /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/web.staging.app /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/api.staging.app /etc/nginx/sites-enabled/
 
+# ln -s /etc/nginx/sites-available/mongo.express /etc/nginx/sites-enabled/
 
 systemctl reload nginx
 docker compose up -d

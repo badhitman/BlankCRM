@@ -12,5 +12,5 @@ docker exec -t srv_postgres_1 pg_dump -c -U dev StorageContext --format=p --enco
 docker exec -t srv_postgres_1 pg_dump -c -U dev TelegramBotContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_TelegramBot_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv_postgres_1 pg_dump -c -U dev IdentityContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_Identity_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv_postgres_1 pg_dump -c -U dev ConstructorContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_Constructor_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
-docker exec -t srv_mongodb_1 mongodump --db files-system -u dev -p dev --authenticationDatabase admin --out /srv/tmp/dumps/mongodump/`date +"%Y-%m-%d"_"%H_%M_%S"`
+docker exec -t srv_mongo_1 mongodump --db files-system -u dev -p dev --authenticationDatabase admin --out /srv/tmp/dumps/mongodump/`date +"%Y-%m-%d"_"%H_%M_%S"`
 7z a /srv/Cloud.Disk/db-backups/all_dumps_`date +%Y-%m-%d"_"%H_%M_%S`.7z /srv/tmp/dumps/*
