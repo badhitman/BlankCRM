@@ -67,7 +67,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebLib", "BlazorServe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQCallLib", "RemoteCallLib\RabbitMQ\RabbitMQCallLib.csproj", "{AD9A4093-D7DA-4223-977B-EDDCB47C2903}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpDeskService", "micro-services\HelpdeskService\HelpDeskService.csproj", "{22770E54-F249-469A-BCD1-2A5C61120FCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpDeskService", "micro-services\HelpDeskService\HelpDeskService.csproj", "{22770E54-F249-469A-BCD1-2A5C61120FCD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodegeneratorLib", "CodegeneratorLib\CodegeneratorLib.csproj", "{A7535378-8361-4D80-8D1C-4BB9D06165DA}"
 EndProject
