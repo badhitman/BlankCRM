@@ -17,9 +17,20 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Type"><a href="/adapter/@context.Id/edit">@context.AdapterTypeName.DescriptionInfo()</a></MudTd>
-        <MudTd DataLabel="Name"><a href="/adapter/@context.Id/edit">@context.Name</a></MudTd>
+        <MudTd DataLabel="Name">
+            <a href="/adapter/@context.Id/edit">@context.Name</a>
+            <sup class="text-@(context.IsOnline ? "success" : "secondary")">
+                @(context.IsOnline ? "ON" : "disabled")
+            </sup>
+        </MudTd>
         <MudTd DataLabel="Address">@context.Address</MudTd>
-        <MudTd DataLabel="Login">@context.Login</MudTd>
+        <MudTd DataLabel="Login">
+            @if (context.IsDemo)
+            {
+                <MudChip T="string" Color="Color.Primary">DEMO MODE</MudChip>
+            }
+            <span>@context.Login</span>
+        </MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>Ни чего не найдено</MudText>

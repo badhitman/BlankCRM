@@ -2,9 +2,24 @@
 
 <h3>DashboardStockSharpComponent</h3>
 
-<div class="d-grid gap-2">
-    <button class="btn btn-primary" type="button">Connect</button>
-</div>
+@if (AboutConnection is null)
+{
+    <div class="alert alert-secondary" role="alert">
+        Диагностика подключения...
+    </div>
+}
+else
+{
+    <div class="d-grid gap-2">
+        <button disabled="@(IsBusyProgress || AboutConnection.ConnectionState != ConnectionStatesEnum.Disconnected)" @onclick="Connect" class="btn btn-primary" type="button">
+            @(AboutConnection.ConnectionState == ConnectionStatesEnum.Disconnected ? "Connect" : $"Current status: {AboutConnection.ConnectionState}...")
+        </button>
+        <button disabled="@(IsBusyProgress || AboutConnection.ConnectionState != ConnectionStatesEnum.Connected)" @onclick="Disconnect" class="btn btn-primary" type="button">
+            @(AboutConnection.ConnectionState == ConnectionStatesEnum.Connected ? "Disconnect" : $"Current status: {AboutConnection.ConnectionState}...")
+        </button>
+        <button disabled="@(IsBusyProgress)" @onclick="GetStatusConnection" class="btn btn-primary" type="button">Reload status connection</button>
+    </div>
+}
 
 @if (IsBusyProgress)
 {

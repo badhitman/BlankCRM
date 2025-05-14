@@ -36,12 +36,19 @@ public static partial class GlobalToolsStandard
     }
 
     /// <summary>
+    /// Является ли строка адресом IP
+    /// </summary>
+    public static bool IsIpAddress(string endPoint) => IPAddress.TryParse(endPoint.Split(':')[0], out _);
+
+    /// <summary>
     /// CreateIPEndPoint
     /// </summary>
     public static IPEndPoint CreateIPEndPoint(string endPoint)
     {
         string[] ep = endPoint.Split(':');
         if (ep.Length != 2) throw new FormatException("Invalid endpoint format");
+        if (ep[0].Equals("localhost"))
+            ep[0] = "127.0.0.1";
         if (!IPAddress.TryParse(ep[0], out IPAddress ip))
             throw new FormatException("Invalid ip-adress");
 
