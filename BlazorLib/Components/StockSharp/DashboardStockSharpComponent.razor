@@ -2,6 +2,11 @@
 
 <h3>DashboardStockSharpComponent</h3>
 
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+}
+
 @if (AboutConnection is null)
 {
     <div class="alert alert-secondary" role="alert">
@@ -21,11 +26,6 @@ else
     </div>
 }
 
-@if (IsBusyProgress)
-{
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
-}
-
 @if (AboutConnection is not null)
 {
     <figure class="text-center">
@@ -36,4 +36,8 @@ else
             Can connect probe: <cite title="Проверка возможности подключения">@AboutConnection.CanConnect</cite>
         </figcaption>
     </figure>
+}
+@if (AboutConnection?.ConnectionState == ConnectionStatesEnum.Connected)
+{
+    <TradingAreaComponent />
 }
