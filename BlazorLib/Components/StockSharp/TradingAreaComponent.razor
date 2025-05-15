@@ -1,3 +1,58 @@
-﻿@inherits BlazorBusyComponentBaseModel
+﻿@inherits StockSharpBaseComponent
 
-<h3>TradingAreaComponent</h3>
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+}
+
+@if (AboutConnection is null)
+{
+    <div class="alert alert-danger" role="alert">
+        Подключение к драйверу отсутствует
+    </div>
+}
+else if (AboutConnection.ConnectionState != ConnectionStatesEnum.Connected)
+{
+    <div class="alert alert-warning" role="alert">
+        Статус подключения: @AboutConnection.ConnectionState
+    </div>
+}
+else if (instruments is null)
+{
+    <div class="alert alert-warning" role="alert">
+        Не удалось получить рабочие инструменты
+    </div>
+}
+else if (instruments.Count == 0)
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Отсутствуют инструменты...</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Укажите инструменты <cite title="в работе учувствуют инструменты из избранного">с которыми вы хотите работать</cite>
+        </figcaption>
+    </figure>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Instrument</th>
+                <th scope="col">Base</th>
+                <th scope="col">Actions</th>
+                <th scope="col">Volume</th>
+                <th scope="col">Shift</th>
+                <th scope="col">Confines</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (InstrumentTradeStockSharpViewModel i in instruments)
+            {
+                <TradingRowComponent Instrument="i" />
+            }
+        </tbody>
+    </table>
+}

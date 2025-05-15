@@ -1,6 +1,4 @@
-﻿@inherits BlazorBusyComponentBaseModel
-
-<h3>DashboardStockSharpComponent</h3>
+﻿@inherits StockSharpBaseComponent
 
 @if (IsBusyProgress)
 {
@@ -37,6 +35,7 @@ else
         </figcaption>
     </figure>
 }
+
 @if (AboutConnection?.ConnectionState == ConnectionStatesEnum.Connected)
 {
     <TradingAreaComponent />
