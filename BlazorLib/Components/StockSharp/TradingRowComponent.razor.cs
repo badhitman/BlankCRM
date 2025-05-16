@@ -16,6 +16,10 @@ public partial class TradingRowComponent : StockSharpBaseComponent
     [Parameter, EditorRequired]
     public required InstrumentTradeStockSharpViewModel Instrument { get; set; }
 
+    /// <inheritdoc/>
+    [CascadingParameter, EditorRequired]
+    public required TradingAreaComponent Parent { get; set; }
+
 
     decimal _basePrice;
     /// <inheritdoc/>
@@ -25,6 +29,28 @@ public partial class TradingRowComponent : StockSharpBaseComponent
         private set
         {
             _basePrice = value;
+        }
+    }
+
+    decimal _valueOperation;
+    /// <inheritdoc/>
+    public decimal ValueOperation
+    {
+        get => _valueOperation;
+        private set
+        {
+            _valueOperation = value;
+        }
+    }
+
+    decimal _shiftPosition;
+    /// <inheritdoc/>
+    public decimal ShiftPosition
+    {
+        get => _shiftPosition;
+        private set
+        {
+            _shiftPosition = value;
         }
     }
 }

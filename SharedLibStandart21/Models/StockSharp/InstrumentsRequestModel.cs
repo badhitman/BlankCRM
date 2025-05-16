@@ -13,4 +13,6 @@ public class InstrumentsRequestModel
     /// FavoriteFilter
     /// </summary>
     public bool? FavoriteFilter { get; set; }
+
+
 }

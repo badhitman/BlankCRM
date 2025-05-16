@@ -49,10 +49,12 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (InstrumentTradeStockSharpViewModel i in instruments)
-            {
-                <TradingRowComponent Instrument="i" />
-            }
+            <CascadingValue Value="this">
+                @foreach (InstrumentTradeStockSharpViewModel i in instruments)
+                {
+                    <TradingRowComponent Instrument="i" />
+                }
+            </CascadingValue>
         </tbody>
     </table>
 }

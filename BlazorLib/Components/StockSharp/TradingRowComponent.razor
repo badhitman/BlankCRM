@@ -11,14 +11,14 @@
             <button type="button" class="btn btn-outline-primary">sell</button>
         </div>
     </td>
-    <td><input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example"></td>
-    <td><input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example"></td>
+    <td><MudNumericField Immediate @bind-Value="ValueOperation" Variant="Variant.Text" /></td>
+    <td><MudNumericField Immediate @bind-Value="ShiftPosition" Variant="Variant.Text" /></td>
     <td>
         <div class="input-group input-group-sm mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-sm">L1</span>
-            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-            <span class="input-group-text" id="inputGroup-sizing-sm">L2</span>
-            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            <span class="input-group-text">L1</span>
+            <input type="number" class="form-control">
+            <span class="input-group-text">L2</span>
+            <input type="number" class="form-control">
         </div>
     </td>
     <td><button type="button" class="btn btn-primary btn-sm">Reset</button></td>
