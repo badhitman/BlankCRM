@@ -4,7 +4,7 @@
     <th scope="row" title="@Instrument.Name">
         <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@Instrument.Code">
     </th>
-    <td><input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" aria-label=".form-control-sm example"></td>
+    <td><MudNumericField Immediate @bind-Value="BasePrice" Variant="Variant.Text" /></td>
     <td>
         <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
             <button type="button" class="btn btn-outline-primary">buy</button>

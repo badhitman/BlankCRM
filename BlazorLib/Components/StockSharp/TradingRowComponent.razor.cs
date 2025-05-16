@@ -15,4 +15,16 @@ public partial class TradingRowComponent : StockSharpBaseComponent
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required InstrumentTradeStockSharpViewModel Instrument { get; set; }
+
+
+    decimal _basePrice;
+    /// <inheritdoc/>
+    public decimal BasePrice
+    {
+        get => _basePrice;
+        private set
+        {
+            _basePrice = value;
+        }
+    }
 }
