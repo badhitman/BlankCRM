@@ -17,7 +17,7 @@
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search"
                       IconSize="Size.Medium"
-                      Class="mt-0" />
+                      Class="mt-0 me-1" />
         <MudSelect T="InstrumentsStockSharpTypesEnum"
                    Label="Type"
                    MultiSelection="true"
@@ -26,7 +26,7 @@
                    AdornmentIcon="@Icons.Material.Filled.Search"
                    IconSize="Size.Small"
                    Clearable
-                   FitContent
+                   Dense
                    Class="mt-0 me-1">
             @foreach (InstrumentsStockSharpTypesEnum state in Enum.GetValues<InstrumentsStockSharpTypesEnum>().OrderBy(x => x.DescriptionInfo()))
             {
@@ -41,8 +41,8 @@
                    AdornmentIcon="@Icons.Material.Filled.Search"
                    IconSize="Size.Small"
                    Clearable
-                   FitContent
-                   Class="mt-0 me-1">
+                   Dense
+                   Class="mt-0">
             @foreach (CurrenciesTypesEnum state in Enum.GetValues<CurrenciesTypesEnum>().OrderBy(x => x.DescriptionInfo()))
             {
                 <MudSelectItem T="CurrenciesTypesEnum" Value="@state">@state.DescriptionInfo()</MudSelectItem>

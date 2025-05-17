@@ -16,9 +16,29 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
     [Inject]
     IDataStockSharpService SsRepo { get; set; } = default!;
 
+    IEnumerable<InstrumentsStockSharpTypesEnum>? _typesSelected;
+    IEnumerable<InstrumentsStockSharpTypesEnum>? TypesSelected
+    {
+        get => _typesSelected;
+        set
+        {
+            _typesSelected = value;
+            if (_tableRef is not null)
+                InvokeAsync(_tableRef.ReloadServerData);
+        }
+    }
 
-    IEnumerable<InstrumentsStockSharpTypesEnum>? TypesSelected { get; set; }
-    IEnumerable<CurrenciesTypesEnum>? CurrenciesSelected { get; set; }
+    IEnumerable<CurrenciesTypesEnum>? _currenciesSelected;
+    IEnumerable<CurrenciesTypesEnum>? CurrenciesSelected
+    {
+        get => _currenciesSelected;
+        set
+        {
+            _currenciesSelected = value;
+            if (_tableRef is not null)
+                InvokeAsync(_tableRef.ReloadServerData);
+        }
+    }
 
 
     MudTable<InstrumentTradeStockSharpViewModel>? _tableRef;
