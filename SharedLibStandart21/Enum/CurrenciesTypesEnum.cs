@@ -9,6 +9,9 @@ namespace SharedLib;
 /// </summary>
 public enum CurrenciesTypesEnum
 {
+    /// <inheritdoc/>
+    None,
+
     /// <summary>
     /// Afghanistan, Afghanis.
     /// </summary>

@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.ComponentModel;
+
 namespace SharedLib;
 
 /// <summary>
@@ -9,10 +11,15 @@ namespace SharedLib;
 /// </summary>
 public enum SettlementTypesEnum
 {
+    /// <inheritdoc/>
+    [Description("None")]
+    None,
+
     /// <summary>
     /// Delivery.
     /// </summary>
     Delivery,
+
     /// <summary>
     /// Cash.
     /// </summary>

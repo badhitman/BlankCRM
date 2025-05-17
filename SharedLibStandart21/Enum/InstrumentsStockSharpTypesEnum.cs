@@ -11,6 +11,10 @@ namespace SharedLib;
 /// </summary>
 public enum InstrumentsStockSharpTypesEnum
 {
+    /// <inheritdoc/>
+    [Display(Name = "None")]
+    None,
+
     /// <summary>
     /// Shares
     /// </summary>

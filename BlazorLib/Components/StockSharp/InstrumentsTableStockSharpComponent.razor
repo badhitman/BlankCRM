@@ -4,9 +4,9 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">
             Инструменты
-            @* <sup>
-                <span>все</span> | <span>активные</span>
-            </sup> *@
+            <sup style="cursor:pointer" @onclick="StateFilterToggle">
+                <span class="link-@(_stateFilter ? "secondary" : "primary")">все</span> | <span class="link-@(_stateFilter ? "primary" : "secondary")">активные</span>
+            </sup>
         </MudText>
         <MudSpacer />
         <MudTextField T="string"
@@ -23,7 +23,7 @@
                    MultiSelection="true"
                    @bind-SelectedValues="TypesSelected"
                    Adornment="Adornment.Start"
-                   AdornmentIcon="@Icons.Material.Filled.Search"
+                   AdornmentIcon="@Icons.Material.Filled.Abc"
                    IconSize="Size.Small"
                    Clearable
                    Dense
@@ -38,7 +38,7 @@
                    MultiSelection="true"
                    @bind-SelectedValues="CurrenciesSelected"
                    Adornment="Adornment.Start"
-                   AdornmentIcon="@Icons.Material.Filled.Search"
+                   AdornmentIcon="@Icons.Material.Filled.AttachMoney"
                    IconSize="Size.Small"
                    Clearable
                    Dense
@@ -52,26 +52,28 @@
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="Name" T="InstrumentTradeStockSharpViewModel">Name</MudTableSortLabel></MudTh>
         <MudTh>Code</MudTh>
+        <MudTh>Status</MudTh>
         <MudTh>Currency</MudTh>
         <MudTh>Type</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Id">
-            <MudStack Row="true">
-                <strong>@context.IdRemote</strong>
-                <div>
-                    <MudSwitch ValueChanged="async () => await FavoriteToggle(context)"
-                               Value="context.IsFavorite"
-                               ReadOnly="IsBusyProgress"
-                               Color="Color.Primary"
-                               Class="mr-n2 mb-6"
-                               T="bool" />
-                </div>
-            </MudStack>
+        <MudTd DataLabel="Name">
+            <MudHighlighter Text="@context.Name" HighlightedText="@searchString" />
         </MudTd>
-        <MudTd DataLabel="Currency">@context.Currency</MudTd>
-        <MudTd DataLabel="TypeInstrument">@context.TypeInstrument</MudTd>
+        <MudTd DataLabel="Id">
+            <strong>
+                <MudHighlighter Text="@context.IdRemote" HighlightedText="@searchString" />
+            </strong>
+        </MudTd>
+        <MudTd DataLabel="Favorite">
+            <MudSwitch ValueChanged="async () => await FavoriteToggle(context)"
+                       Value="context.IsFavorite"
+                       ReadOnly="IsBusyProgress"
+                       Color="@(context.IsFavorite ? Color.Success : Color.Secondary)"
+                       T="bool" />
+        </MudTd>
+        <MudTd DataLabel="Currency">@((CurrenciesTypesEnum)context.Currency)</MudTd>
+        <MudTd DataLabel="TypeInstrument">@((InstrumentsStockSharpTypesEnum)context.TypeInstrument)</MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>Ни чего не найдено</MudText>

@@ -16,6 +16,7 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
     [Inject]
     IDataStockSharpService SsRepo { get; set; } = default!;
 
+
     IEnumerable<InstrumentsStockSharpTypesEnum>? _typesSelected;
     IEnumerable<InstrumentsStockSharpTypesEnum>? TypesSelected
     {
@@ -44,6 +45,14 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
     MudTable<InstrumentTradeStockSharpViewModel>? _tableRef;
     private string? searchString = null;
 
+    bool _stateFilter;
+    async Task StateFilterToggle()
+    {
+        _stateFilter = !_stateFilter;
+        if (_tableRef is not null)
+            await _tableRef.ReloadServerData();
+    }
+
     async Task OnSearch(string text)
     {
         searchString = text;
@@ -71,6 +80,7 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
             CurrenciesFilter = CurrenciesSelected is null || !CurrenciesSelected.Any() ? null : [.. CurrenciesSelected],
             TypesFilter = TypesSelected is null || !TypesSelected.Any() ? null : [.. TypesSelected],
+            FavoriteFilter = _stateFilter ? true : null
         };
         await SetBusyAsync(token: token);
         TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);

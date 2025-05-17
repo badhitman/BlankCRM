@@ -29,10 +29,10 @@ public partial class InstrumentTradeStockSharpModel
     public string? ShortName { get; set; }
 
     /// <inheritdoc/>
-    public InstrumentsStockSharpTypesEnum? TypeInstrument { get; set; }
+    public int TypeInstrument { get; set; }
 
     /// <inheritdoc/>
-    public CurrenciesTypesEnum? Currency { get; set; }
+    public int Currency { get; set; }
 
     /// <inheritdoc/>
     public string? Class { get; set; }
@@ -68,13 +68,13 @@ public partial class InstrumentTradeStockSharpModel
     public decimal? FaceValue { get; set; }
 
     /// <inheritdoc/>
-    public SettlementTypesEnum? SettlementType { get; set; }
+    public SettlementTypesEnum SettlementType { get; set; }
 
     /// <summary>
     /// OptionStyle
     /// </summary>
 
-    public OptionTradeInstrumentStylesEnum? OptionStyle { get; set; }
+    public OptionTradeInstrumentStylesEnum OptionStyle { get; set; }
 
     /// <summary>
     /// Identifier on primary exchange.
@@ -89,12 +89,12 @@ public partial class InstrumentTradeStockSharpModel
     /// <summary>
     /// Option type.
     /// </summary>
-    public OptionInstrumentTradeTypesEnum? OptionType { get; set; }
+    public OptionInstrumentTradeTypesEnum OptionType { get; set; }
 
     /// <summary>
     /// Underlying security type.
     /// </summary>
-    public InstrumentsStockSharpTypesEnum? UnderlyingSecurityType { get; set; }
+    public InstrumentsStockSharpTypesEnum UnderlyingSecurityType { get; set; }
 
     /// <summary>
     /// Can have short positions.
