@@ -2,9 +2,15 @@
 
 <MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress" @ref="_tableRef">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Инструменты</MudText>
+        <MudText Typo="Typo.h6">
+            Инструменты
+            @* <sup>
+                <span>все</span> | <span>активные</span>
+            </sup> *@
+        </MudText>
         <MudSpacer />
         <MudTextField T="string"
+                      Label="Find"
                       Immediate
                       ValueChanged="@(s => OnSearch(s))"
                       Placeholder="Search"
@@ -12,6 +18,36 @@
                       AdornmentIcon="@Icons.Material.Filled.Search"
                       IconSize="Size.Medium"
                       Class="mt-0" />
+        <MudSelect T="InstrumentsStockSharpTypesEnum"
+                   Label="Type"
+                   MultiSelection="true"
+                   @bind-SelectedValues="TypesSelected"
+                   Adornment="Adornment.Start"
+                   AdornmentIcon="@Icons.Material.Filled.Search"
+                   IconSize="Size.Small"
+                   Clearable
+                   FitContent
+                   Class="mt-0 me-1">
+            @foreach (InstrumentsStockSharpTypesEnum state in Enum.GetValues<InstrumentsStockSharpTypesEnum>().OrderBy(x => x.DescriptionInfo()))
+            {
+                <MudSelectItem T="InstrumentsStockSharpTypesEnum" Value="@state">@state.DescriptionInfo()</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="CurrenciesTypesEnum"
+                   Label="Currency"
+                   MultiSelection="true"
+                   @bind-SelectedValues="CurrenciesSelected"
+                   Adornment="Adornment.Start"
+                   AdornmentIcon="@Icons.Material.Filled.Search"
+                   IconSize="Size.Small"
+                   Clearable
+                   FitContent
+                   Class="mt-0 me-1">
+            @foreach (CurrenciesTypesEnum state in Enum.GetValues<CurrenciesTypesEnum>().OrderBy(x => x.DescriptionInfo()))
+            {
+                <MudSelectItem T="CurrenciesTypesEnum" Value="@state">@state.DescriptionInfo()</MudSelectItem>
+            }
+        </MudSelect>
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="Name" T="InstrumentTradeStockSharpViewModel">Name</MudTableSortLabel></MudTh>

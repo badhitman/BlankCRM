@@ -29,7 +29,7 @@ public partial class InstrumentTradeStockSharpModel
     public string? ShortName { get; set; }
 
     /// <inheritdoc/>
-    public virtual InstrumentsStockSharpTypesEnum? TypeInstrument { get; set; }
+    public InstrumentsStockSharpTypesEnum? TypeInstrument { get; set; }
 
     /// <inheritdoc/>
     public CurrenciesTypesEnum? Currency { get; set; }
@@ -92,14 +92,14 @@ public partial class InstrumentTradeStockSharpModel
     public OptionInstrumentTradeTypesEnum? OptionType { get; set; }
 
     /// <summary>
-    /// Can have short positions.
-    /// </summary>
-    public bool? Shortable { get; set; }
-
-    /// <summary>
     /// Underlying security type.
     /// </summary>
     public InstrumentsStockSharpTypesEnum? UnderlyingSecurityType { get; set; }
+
+    /// <summary>
+    /// Can have short positions.
+    /// </summary>
+    public bool? Shortable { get; set; }
 
     /// <inheritdoc/>
     public override string ToString()

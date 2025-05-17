@@ -13,4 +13,10 @@ public class InstrumentsRequestModel : SimplePaginationRequestModel
     /// FavoriteFilter
     /// </summary>
     public bool? FavoriteFilter { get; set; }
+
+    /// <inheritdoc/>
+    public InstrumentsStockSharpTypesEnum[]? TypesFilter { get; set; }
+
+    /// <inheritdoc/>
+    public CurrenciesTypesEnum[]? CurrenciesFilter { get; set; }
 }
