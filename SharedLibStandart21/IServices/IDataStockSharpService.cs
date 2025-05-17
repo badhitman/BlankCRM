@@ -46,7 +46,7 @@ public interface IDataStockSharpService
     /// <summary>
     /// InstrumentsSelectAsync
     /// </summary>
-    public Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(TPaginationRequestStandardModel<InstrumentsRequestModel> req, CancellationToken cancellationToken = default);
+    public Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(InstrumentsRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// InstrumentSetFavoriteAsync

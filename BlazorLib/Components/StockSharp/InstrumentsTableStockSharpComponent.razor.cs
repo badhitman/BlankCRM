@@ -16,8 +16,15 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
     [Inject]
     IDataStockSharpService SsRepo { get; set; } = default!;
 
-
     MudTable<InstrumentTradeStockSharpViewModel>? _tableRef;
+    private string? searchString = null;
+
+    async Task OnSearch(string text)
+    {
+        searchString = text;
+        if (_tableRef is not null)
+            await _tableRef.ReloadServerData();
+    }
 
     async Task FavoriteToggle(InstrumentTradeStockSharpViewModel sender)
     {
@@ -31,11 +38,11 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
 
     async Task<TableData<InstrumentTradeStockSharpViewModel>> ServerReload(TableState state, CancellationToken token)
     {
-        TPaginationRequestStandardModel<InstrumentsRequestModel> req = new()
+        InstrumentsRequestModel req = new()
         {
+            FindQuery = searchString,
             PageNum = state.Page,
             PageSize = state.PageSize,
-            Payload = new(),
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
         };
         await SetBusyAsync(token: token);

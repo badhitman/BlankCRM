@@ -24,14 +24,11 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        TPaginationRequestStandardModel<InstrumentsRequestModel> req = new()
+        InstrumentsRequestModel req = new()
         {
             PageNum = 0,
             PageSize = int.MaxValue,
-            Payload = new()
-            {
-                FavoriteFilter = true,
-            }
+            FavoriteFilter = true,
         };
         TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await DataRepo.InstrumentsSelectAsync(req);
         instruments = res.Response;
