@@ -9,7 +9,7 @@
     <MudStack Row="true" Class="mb-4">
         @if (_metaData.ContextsPrefixesAvailable?.Any() == true)
         {
-            <FiltersUniversalComponent FiltersAvailable="_metaData.ContextsPrefixesAvailable" Title="Префикс/Имя контура" @ref="ContextsPrefixesAvailable" CheckedChangedHandle="CheckedChangedAction" />
+            <FiltersUniversalComponent FiltersAvailable="_metaData.ContextsPrefixesAvailable" Title="Prefix/Contour Name" @ref="ContextsPrefixesAvailable" CheckedChangedHandle="CheckedChangedAction" />
         }
         @if (_metaData.ApplicationsAvailable?.Any() == true)
         {
@@ -145,10 +145,10 @@
         }
     </RowTemplate>
     <NoRecordsContent>
-        <MudText>Ни чего не найдено</MudText>
+        <MudText>Nothing found</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>Загрузка...</MudText>
+        <MudText>Downloading...</MudText>
     </LoadingContent>
     <PagerContent>
         <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"

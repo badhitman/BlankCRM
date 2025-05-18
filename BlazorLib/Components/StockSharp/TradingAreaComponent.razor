@@ -36,6 +36,14 @@ else if (instruments.Count == 0)
 }
 else
 {
+    <MudStack Row="true" Class="mb-2">
+        <MudIconButton Color="Color.Success" Icon="@Icons.Material.Filled.Start" />
+        <MudIconButton Color="Color.Warning" Icon="@Icons.Material.Filled.Stop" />
+        <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.FileDownload" />
+        <MudSpacer />
+        <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.KeyboardCommandKey" />
+    </MudStack>
+
     <table class="table table-striped">
         <thead>
             <tr>
