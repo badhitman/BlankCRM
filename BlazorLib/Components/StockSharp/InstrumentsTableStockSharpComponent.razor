@@ -3,9 +3,9 @@
 <MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress" @ref="_tableRef">
     <ToolBarContent>
         <MudText Typo="Typo.h6">
-            Инструменты
+            Instruments
             <sup style="cursor:pointer" @onclick="StateFilterToggle">
-                <span class="link-@(_stateFilter ? "secondary" : "primary")">все</span> | <span class="link-@(_stateFilter ? "primary" : "secondary")">активные</span>
+                <span class="link-@(_stateFilter ? "secondary" : "primary")">all</span> | <span class="link-@(_stateFilter ? "primary" : "secondary")">actual</span>
             </sup>
         </MudText>
         <MudSpacer />
