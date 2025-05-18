@@ -17,13 +17,19 @@
             else
             {
                 <div class="d-grid gap-2">
-                    <button disabled="@(IsBusyProgress || AboutConnection.ConnectionState != ConnectionStatesEnum.Disconnected)" @onclick="Connect" class="btn btn-primary" type="button">
+                    @{
+                        bool allowed = IsBusyProgress || AboutConnection.ConnectionState != ConnectionStatesEnum.Disconnected;
+                    }
+                    <button disabled="@allowed" @onclick="Connect" class="btn btn-@(allowed ? "outline-" : "")primary" type="button">
                         @(AboutConnection.ConnectionState == ConnectionStatesEnum.Disconnected ? "Connect" : $"Current status: {AboutConnection.ConnectionState}...")
                     </button>
-                    <button disabled="@(IsBusyProgress || AboutConnection.ConnectionState != ConnectionStatesEnum.Connected)" @onclick="Disconnect" class="btn btn-primary" type="button">
+                    @{
+                        bool allowed2 = IsBusyProgress || AboutConnection.ConnectionState != ConnectionStatesEnum.Connected;
+                    }
+                    <button disabled="@allowed2" @onclick="Disconnect" class="btn btn-@(allowed2 ? "outline-" : "")primary" type="button">
                         @(AboutConnection.ConnectionState == ConnectionStatesEnum.Connected ? "Disconnect" : $"Current status: {AboutConnection.ConnectionState}...")
                     </button>
-                    <button disabled="@(IsBusyProgress)" @onclick="GetStatusConnection" class="btn btn-primary" type="button">Reload status connection</button>
+                    <button disabled="@(IsBusyProgress)" @onclick="GetStatusConnection" class="btn btn-outline-info" type="button">Reload status connection</button>
                 </div>
             }
 

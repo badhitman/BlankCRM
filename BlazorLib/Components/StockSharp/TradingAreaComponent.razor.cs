@@ -24,6 +24,7 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        await SetBusyAsync();
         InstrumentsRequestModel req = new()
         {
             PageNum = 0,
@@ -32,5 +33,6 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
         };
         TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await DataRepo.InstrumentsSelectAsync(req);
         instruments = res.Response;
+        await SetBusyAsync(false);
     }
 }
