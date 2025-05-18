@@ -1,10 +1,5 @@
 ﻿@inherits StockSharpBaseComponent
 
-@if (IsBusyProgress)
-{
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
-}
-
 @if (AboutConnection is null)
 {
     <div class="alert alert-danger" role="alert">
@@ -16,6 +11,11 @@ else if (AboutConnection.ConnectionState != ConnectionStatesEnum.Connected)
     <div class="alert alert-warning" role="alert">
         Статус подключения: @AboutConnection.ConnectionState
     </div>
+}
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
 }
 else if (instruments is null)
 {

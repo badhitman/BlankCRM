@@ -5,38 +5,42 @@
     <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
 }
 
-@if (AboutConnection is null)
-{
-    <div class="alert alert-secondary" role="alert">
-        Диагностика подключения...
-    </div>
-}
-else
-{
-    <div class="d-grid gap-2">
-        <button disabled="@(IsBusyProgress || AboutConnection.ConnectionState != ConnectionStatesEnum.Disconnected)" @onclick="Connect" class="btn btn-primary" type="button">
-            @(AboutConnection.ConnectionState == ConnectionStatesEnum.Disconnected ? "Connect" : $"Current status: {AboutConnection.ConnectionState}...")
-        </button>
-        <button disabled="@(IsBusyProgress || AboutConnection.ConnectionState != ConnectionStatesEnum.Connected)" @onclick="Disconnect" class="btn btn-primary" type="button">
-            @(AboutConnection.ConnectionState == ConnectionStatesEnum.Connected ? "Disconnect" : $"Current status: {AboutConnection.ConnectionState}...")
-        </button>
-        <button disabled="@(IsBusyProgress)" @onclick="GetStatusConnection" class="btn btn-primary" type="button">Reload status connection</button>
-    </div>
-}
+<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+    <MudTabPanel Text="Connection">
+        <MudText>
+            @if (AboutConnection is null)
+            {
+                <div class="alert alert-secondary" role="alert">
+                    Диагностика подключения...
+                </div>
+            }
+            else
+            {
+                <div class="d-grid gap-2">
+                    <button disabled="@(IsBusyProgress || AboutConnection.ConnectionState != ConnectionStatesEnum.Disconnected)" @onclick="Connect" class="btn btn-primary" type="button">
+                        @(AboutConnection.ConnectionState == ConnectionStatesEnum.Disconnected ? "Connect" : $"Current status: {AboutConnection.ConnectionState}...")
+                    </button>
+                    <button disabled="@(IsBusyProgress || AboutConnection.ConnectionState != ConnectionStatesEnum.Connected)" @onclick="Disconnect" class="btn btn-primary" type="button">
+                        @(AboutConnection.ConnectionState == ConnectionStatesEnum.Connected ? "Disconnect" : $"Current status: {AboutConnection.ConnectionState}...")
+                    </button>
+                    <button disabled="@(IsBusyProgress)" @onclick="GetStatusConnection" class="btn btn-primary" type="button">Reload status connection</button>
+                </div>
+            }
 
-@if (AboutConnection is not null)
-{
-    <figure class="text-center">
-        <blockquote class="blockquote">
-            <p>Состояние подключения: @AboutConnection.ConnectionState?.DescriptionInfo()</p>
-        </blockquote>
-        <figcaption class="blockquote-footer">
-            Can connect probe: <cite title="Проверка возможности подключения">@AboutConnection.CanConnect</cite>
-        </figcaption>
-    </figure>
-}
-
-@if (AboutConnection?.ConnectionState == ConnectionStatesEnum.Connected)
-{
-    <TradingAreaComponent />
-}
+            @if (AboutConnection is not null)
+            {
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>Состояние подключения: @AboutConnection.ConnectionState?.DescriptionInfo()</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        Can connect probe: <cite title="Проверка возможности подключения">@AboutConnection.CanConnect</cite>
+                    </figcaption>
+                </figure>
+            }
+        </MudText>
+    </MudTabPanel>
+    <MudTabPanel Text="Trading">
+        <TradingAreaComponent />
+    </MudTabPanel>
+</MudTabs>
