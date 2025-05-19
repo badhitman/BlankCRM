@@ -41,6 +41,19 @@ else
         <MudIconButton OnClick="StopTradeAsync" Color="Color.Warning" Icon="@Icons.Material.Filled.Stop" />
         <MudIconButton OnClick="DownloadBaseAsync" Color="Color.Primary" Icon="@Icons.Material.Filled.FileDownload" />
         <MudSpacer />
+        <MudButton Variant="Variant.Outlined">x2</MudButton>
+        <MudButton Variant="Variant.Outlined">/2</MudButton>
+        <MudButton Variant="Variant.Outlined">S+</MudButton>
+        <MudButton Variant="Variant.Outlined">S-</MudButton>
+        <MudSpacer />
+        <MudNumericField @bind-Value="QuoteVolume" Label="Quote" Variant="Variant.Text" />
+        <MudCheckBox @bind-Value="IsSize" Label="IsSize"></MudCheckBox>
+        <MudNumericField @bind-Value="QuoteSizeVolume" Label="QuoteSizeVolume" Variant="Variant.Text" />
+        <MudNumericField @bind-Value="SkipSizeVolume" Label="SkipSizeVolume" Variant="Variant.Text" />
+        <MudSpacer />
+        <MudButton Variant="Variant.Outlined">S</MudButton>
+        <MudButton Variant="Variant.Outlined">L</MudButton>
+        <MudSpacer />
         <MudIconButton OnClick="ResetAllTradesAsync" Color="Color.Primary" Icon="@Icons.Material.Filled.KeyboardCommandKey" />
     </MudStack>
 

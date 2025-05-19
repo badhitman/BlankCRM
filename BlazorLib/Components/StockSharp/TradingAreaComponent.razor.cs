@@ -17,6 +17,10 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
     protected IDataStockSharpService DataRepo { get; set; } = default!;
 
 
+    int QuoteVolume {  get; set; }
+    bool IsSize {  get; set; }
+    int QuoteSizeVolume { get; set; }
+    int SkipSizeVolume { get; set; }
     List<InstrumentTradeStockSharpViewModel>? instruments;
 
     async Task StartTradeAsync()
