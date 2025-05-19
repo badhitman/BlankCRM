@@ -2,12 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System;
+
 namespace SharedLib;
 
 /// <summary>
 /// PortfolioTradeModel
 /// </summary>
-public partial class PortfolioStockSharpModel
+public partial class PortfolioStockSharpModel : IEquatable<PortfolioStockSharpModel>
 {
     /// <summary>
     /// Name
@@ -33,5 +35,33 @@ public partial class PortfolioStockSharpModel
     public override string ToString()
     {
         return $"{Name} /{Currency} [{Board}]";
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name, Board, ClientCode, State, Currency, DepoName);
+    }
+
+    /// <inheritdoc/>
+    public override bool Equals(object obj)
+    {
+        if (obj is null)
+            return false;
+
+        if (obj is PortfolioStockSharpModel other)
+            return Equals(other);
+
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public bool Equals(PortfolioStockSharpModel other)
+    {
+        return
+                other.State == State &&
+                other.ClientCode == ClientCode &&
+                other.Name == Name &&
+                other.DepoName == DepoName;
     }
 }

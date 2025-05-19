@@ -17,11 +17,15 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
     protected IDataStockSharpService DataRepo { get; set; } = default!;
 
 
-    int QuoteVolume {  get; set; }
-    bool IsSize {  get; set; }
+    int QuoteVolume { get; set; }
+    bool IsSize { get; set; }
     int QuoteSizeVolume { get; set; }
     int SkipSizeVolume { get; set; }
+
     List<InstrumentTradeStockSharpViewModel>? instruments;
+    List<PortfolioStockSharpModel>? portfolios;
+
+    PortfolioStockSharpModel? selectedPortfolio {  get; set; }
 
     async Task StartTradeAsync()
     {
@@ -49,14 +53,22 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
-        InstrumentsRequestModel req = new()
-        {
-            PageNum = 0,
-            PageSize = int.MaxValue,
-            FavoriteFilter = true,
-        };
-        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await DataRepo.InstrumentsSelectAsync(req);
-        instruments = res.Response;
+        await Task.WhenAll([
+            Task.Run(async () => {
+                InstrumentsRequestModel req = new()
+                    {
+                        PageNum = 0,
+                        PageSize = int.MaxValue,
+                        FavoriteFilter = true,
+                    };
+                TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await DataRepo.InstrumentsSelectAsync(req);
+                instruments = res.Response;
+            }),
+            Task.Run(async () => {
+                TResponseModel<List<PortfolioStockSharpModel>> res = await DataRepo.GetPortfoliosAsync();
+                portfolios = res.Response;
+            })]);
+
         await SetBusyAsync(false);
     }
 }

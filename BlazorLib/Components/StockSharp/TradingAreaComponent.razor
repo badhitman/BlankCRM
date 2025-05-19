@@ -34,6 +34,10 @@ else if (instruments.Count == 0)
         </figcaption>
     </figure>
 }
+else if (portfolios is null)
+{
+    <MudAlert Severity="Severity.Info">portfolios is null</MudAlert>
+}
 else
 {
     <MudStack Row="true" Class="mb-2">
@@ -53,6 +57,13 @@ else
         <MudSpacer />
         <MudButton Variant="Variant.Outlined">S</MudButton>
         <MudButton Variant="Variant.Outlined">L</MudButton>
+        <MudSpacer />
+        <MudSelect T="PortfolioStockSharpModel" Label="Portfolio" @bind-Value="selectedPortfolio">
+            @foreach (var state in portfolios)
+            {
+                <MudSelectItem T="PortfolioStockSharpModel" Value="@state">@state</MudSelectItem>
+            }
+        </MudSelect>
         <MudSpacer />
         <MudIconButton OnClick="ResetAllTradesAsync" Color="Color.Primary" Icon="@Icons.Material.Filled.KeyboardCommandKey" />
     </MudStack>
