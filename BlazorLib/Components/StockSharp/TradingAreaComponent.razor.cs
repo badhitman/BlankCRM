@@ -19,6 +19,26 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
 
     List<InstrumentTradeStockSharpViewModel>? instruments;
 
+    async Task StartTradeAsync()
+    {
+        await SetBusyAsync();
+        await SetBusyAsync(false);
+    }
+    async Task StopTradeAsync()
+    {
+        await SetBusyAsync();
+        await SetBusyAsync(false);
+    }
+    async Task DownloadBaseAsync()
+    {
+        await SetBusyAsync();
+        await SetBusyAsync(false);
+    }
+    async Task ResetAllTradesAsync()
+    {
+        await SetBusyAsync();
+        await SetBusyAsync(false);
+    }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()

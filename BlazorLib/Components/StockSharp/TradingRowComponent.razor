@@ -2,11 +2,11 @@
 
 <tr>
     <th scope="row" title="@Instrument.Name">
-        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@Instrument.Code">
+        <input type="text" readonly class="form-control-plaintext" value="@Instrument.Code">
     </th>
     <td><MudNumericField Immediate @bind-Value="BasePrice" Variant="Variant.Text" /></td>
     <td>
-        <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+        <div class="btn-group btn-group-sm" role="group">
             <button type="button" class="btn btn-outline-warning">buy</button>
             <button type="button" class="btn btn-outline-primary">sell</button>
         </div>
@@ -23,7 +23,7 @@
     </td>
     <td>
         <div class="input-group input-group-sm">
-            <button class="btn btn-outline-secondary bi bi-recycle" type="button"></button>
+            <button class="btn btn-outline-success bi bi-recycle" type="button"></button>
         </div>
     </td>
 </tr>
