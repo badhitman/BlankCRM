@@ -41,33 +41,31 @@ else if (portfolios is null)
 else
 {
     <MudStack Row="true" Class="mb-2">
-        <MudIconButton OnClick="StartTradeAsync" Color="Color.Success" Icon="@Icons.Material.Filled.Start" />
-        <MudIconButton OnClick="StopTradeAsync" Color="Color.Warning" Icon="@Icons.Material.Filled.Stop" />
-        <MudIconButton OnClick="DownloadBaseAsync" Color="Color.Primary" Icon="@Icons.Material.Filled.FileDownload" />
-        <MudSpacer />
-        <MudButton Variant="Variant.Outlined">x2</MudButton>
-        <MudButton Variant="Variant.Outlined">/2</MudButton>
-        <MudButton Variant="Variant.Outlined">S+</MudButton>
-        <MudButton Variant="Variant.Outlined">S-</MudButton>
-        <MudSpacer />
-        <MudNumericField @bind-Value="QuoteVolume" Label="Quote" Variant="Variant.Text" />
-        <MudCheckBox @bind-Value="IsSize" Label="IsSize"></MudCheckBox>
-        <MudNumericField @bind-Value="QuoteSizeVolume" Label="QuoteSizeVolume" Variant="Variant.Text" />
-        <MudNumericField @bind-Value="SkipSizeVolume" Label="SkipSizeVolume" Variant="Variant.Text" />
-        <MudSpacer />
-        <MudButton Variant="Variant.Outlined">S</MudButton>
-        <MudButton Variant="Variant.Outlined">L</MudButton>
-        <MudSpacer />
         <MudSelect T="PortfolioStockSharpModel" Label="Portfolio" @bind-Value="selectedPortfolio">
-            @foreach (var state in portfolios)
+            @foreach (PortfolioStockSharpModel _port in portfolios)
             {
-                <MudSelectItem T="PortfolioStockSharpModel" Value="@state">@state</MudSelectItem>
+                <MudSelectItem T="PortfolioStockSharpModel" Value="@_port">@_port</MudSelectItem>
             }
         </MudSelect>
         <MudSpacer />
+        <MudNumericField @bind-Value="QuoteVolume" Label="Quote" />
+        <MudNumericField @bind-Value="QuoteSizeVolume" Label="QSize" />
+        <MudNumericField @bind-Value="SkipSizeVolume" Label="Skip size" />
+    </MudStack>
+    <MudStack Row="true" Class="mb-2">
+        <MudIconButton OnClick="StartTradeAsync" Color="Color.Success" Icon="@Icons.Material.Filled.Start" />
+        <MudIconButton OnClick="StopTradeAsync" Color="Color.Warning" Icon="@Icons.Material.Filled.Stop" />
+        <MudIconButton OnClick="DownloadBaseAsync" Color="Color.Primary" Icon="@Icons.Material.Filled.FileDownload" />
+        <MudCheckBox @bind-Value="IsSize" Label="IsSize" Size="Size.Small"></MudCheckBox>
+        <MudButton Size="Size.Small" Color="Color.Secondary">x2</MudButton>
+        <MudButton Size="Size.Small" Color="Color.Secondary">/2</MudButton>
+        <MudButton Size="Size.Small" Color="Color.Secondary">S+</MudButton>
+        <MudButton Size="Size.Small" Color="Color.Secondary">S-</MudButton>
+        <MudSpacer />
+        <MudButton Size="Size.Small" Color="Color.Tertiary">S</MudButton>
+        <MudButton Size="Size.Small" Color="Color.Tertiary">L</MudButton>
         <MudIconButton OnClick="ResetAllTradesAsync" Color="Color.Primary" Icon="@Icons.Material.Filled.KeyboardCommandKey" />
     </MudStack>
-
     <table class="table table-striped">
         <thead>
             <tr>

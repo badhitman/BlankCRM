@@ -18,7 +18,7 @@ public partial class AdaptersManageComponent : BlazorBusyComponentBaseModel
 
 
     bool? _offlineFilter;
-    bool? offlineFilter
+    bool? OfflineFilter
     {
         get => _offlineFilter;
         set
@@ -42,7 +42,7 @@ public partial class AdaptersManageComponent : BlazorBusyComponentBaseModel
             PageNum = state.Page,
             Payload = new()
             {
-                OnlineOnly = offlineFilter,
+                OnlineOnly = OfflineFilter,
             }
         };
         TPaginationResponseModel<FixMessageAdapterModelDB> res = await SsRepo.AdaptersSelectAsync(req, token);
