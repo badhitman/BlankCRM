@@ -75,7 +75,7 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
     protected async Task SaveDocument()
     {
         if (ParentFormsPage.MainProject is null)
-            throw new Exception("Не выбран основной/используемый проект");
+            throw new Exception("No main/used project selected");
 
         await SetBusyAsync();
         

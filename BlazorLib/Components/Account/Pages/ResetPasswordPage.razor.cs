@@ -30,6 +30,7 @@ public partial class ResetPasswordPage
     [SupplyParameterFromQuery]
     private string? Code { get; set; }
 
+
     IEnumerable<ResultMessage>? Messages;
 
     /// <inheritdoc/>

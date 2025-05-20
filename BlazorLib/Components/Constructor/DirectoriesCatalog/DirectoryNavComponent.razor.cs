@@ -205,7 +205,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     public async Task ReloadDirectories(bool stateHasChanged = false)
     {
         if (ParentFormsPage.MainProject is null)
-            throw new Exception("Не выбран основной/используемый проект");
+            throw new Exception("No main/used project selected");
 
         ResetNavForm();
 

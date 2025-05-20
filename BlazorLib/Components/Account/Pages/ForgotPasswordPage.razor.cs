@@ -28,6 +28,7 @@ public partial class ForgotPasswordPage
     [SupplyParameterFromForm]
     private EmailSingleModel Input { get; set; } = new();
 
+
     List<ResultMessage> Messages = [];
 
     private async Task OnValidSubmitAsync()

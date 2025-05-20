@@ -33,6 +33,7 @@ public partial class ConfirmEmailChangePage : ComponentBase
     [SupplyParameterFromQuery]
     private string? Code { get; set; }
 
+
     List<ResultMessage> Messages = [];
 
     /// <inheritdoc/>

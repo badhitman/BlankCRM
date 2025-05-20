@@ -3,7 +3,7 @@
 @if (AboutConnection is null)
 {
     <div class="alert alert-danger" role="alert">
-        Подключение к драйверу отсутствует
+        There is no connection to the driver
     </div>
 }
 else if (AboutConnection.ConnectionState != ConnectionStatesEnum.Connected)
@@ -20,17 +20,17 @@ else if (AboutConnection.ConnectionState != ConnectionStatesEnum.Connected)
 else if (instruments is null)
 {
     <div class="alert alert-warning" role="alert">
-        Не удалось получить рабочие инструменты
+        Unable to retrieve working tools
     </div>
 }
 else if (instruments.Count == 0)
 {
     <figure class="text-center">
         <blockquote class="blockquote">
-            <p>Отсутствуют инструменты...</p>
+            <p>Missing tools...</p>
         </blockquote>
         <figcaption class="blockquote-footer">
-            Укажите инструменты <cite title="в работе учувствуют инструменты из избранного">с которыми вы хотите работать</cite>
+            Specify the tools <cite title="tools from favorites are used in the work">that you want to work with</cite>
         </figcaption>
     </figure>
 }

@@ -2,9 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -69,7 +67,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
     protected async Task<TableData<DocumentSchemeConstructorModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         if (ParentFormsPage.MainProject is null)
-            throw new Exception("Не выбран основной/используемый проект");
+            throw new Exception("No main/used project selected");
 
         SimplePaginationRequestModel req = new();
         await SetBusyAsync(token: token);
@@ -90,7 +88,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
     protected async Task DocumentOpenDialog(DocumentSchemeConstructorModelDB? document_scheme = null)
     {
         if (ParentFormsPage.MainProject is null)
-            throw new Exception("Не выбран основной/используемый проект");
+            throw new Exception("No main/used project selected");
 
         document_scheme ??= DocumentSchemeConstructorModelDB.BuildEmpty(ParentFormsPage.MainProject.Id);
         DialogParameters<EditDocumentSchemeDialogComponent> parameters = new()
@@ -100,7 +98,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
         };
 
         DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
-        IDialogReference result = await DialogServiceRepo.ShowAsync<EditDocumentSchemeDialogComponent>(document_scheme.Id < 1 ? "Создание новой анкеты/опроса" : $"Редактирование анкеты/опроса #{document_scheme.Id}", parameters, options);
+        IDialogReference result = await DialogServiceRepo.ShowAsync<EditDocumentSchemeDialogComponent>(document_scheme.Id < 1 ? "Creating a new questionnaire/survey" : $"Editing a questionnaire/survey #{document_scheme.Id}", parameters, options);
         if (table is not null)
             await table.ReloadServerData();
     }

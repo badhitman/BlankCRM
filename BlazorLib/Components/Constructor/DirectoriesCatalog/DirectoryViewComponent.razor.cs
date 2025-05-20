@@ -2,9 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Constructor.DirectoriesCatalog;
@@ -37,7 +35,7 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
     protected async void AddElementIntoDirectory()
     {
         if (createNewElementForDict.OwnerId < 1)
-            throw new Exception("Не выбран справочник/список");
+            throw new Exception("No directory/list selected");
 
         ValidateReportModel validate_obj = GlobalTools.ValidateObject(createNewElementForDict);
         if (!validate_obj.IsValid)

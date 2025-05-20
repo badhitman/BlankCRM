@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
@@ -64,7 +63,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
         ArgumentNullException.ThrowIfNull(ElementObjectEdit);
 
         await SetBusyAsync();
-        
+
         ResponseBaseModel rest = await ConstructorRepo.UpdateElementOfDirectoryAsync(new() { Payload = ElementObjectEdit, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
@@ -88,7 +87,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
 
     bool IsEdit = false;
     async Task EditToggle()
-    {        
+    {
         if (IsEdit)
         {
             ElementObjectOrign = null;
@@ -96,9 +95,9 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
             IsEdit = false;
             return;
         }
-        
+
         await SetBusyAsync();
-        
+
         TResponseModel<EntryDescriptionModel> res = await ConstructorRepo.GetElementOfDirectoryAsync(ElementObject.Id);
         ElementObjectOrign = res.Response ?? throw new Exception();
         ElementObjectEdit = GlobalTools.CreateDeepCopy(ElementObjectOrign);
@@ -112,7 +111,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     }
 
     /// <summary>
-    /// Находится ли элемент в самом верхнем (крайнем) положении
+    /// Is the element in its topmost (extreme) position?
     /// </summary>
     bool IsMostUp
     {
@@ -127,14 +126,14 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
         }
     }
     /// <summary>
-    /// Находится ли элемент в самом нижнем (крайнем) положении
+    /// Is the element in its lowest (extreme) position?
     /// </summary>
     bool IsMostDown
     {
         get
         {
             if (ParentDirectoryElementsList.EntriesElements is null)
-                throw new Exception("Элементы справочника IsNull");
+                throw new Exception("IsNull Directory Elements");
 
             return ParentDirectoryElementsList
                 .EntriesElements
@@ -146,7 +145,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     {
         IsEdit = false;
         await SetBusyAsync();
-        
+
         ResponseBaseModel rest = await ConstructorRepo.UpMoveElementOfDirectoryAsync(new() { Payload = ElementObject.Id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
         if (!rest.Success())
@@ -162,7 +161,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     {
         IsEdit = false;
         await SetBusyAsync();
-        
+
         ResponseBaseModel rest = await ConstructorRepo.DownMoveElementOfDirectoryAsync(new() { Payload = ElementObject.Id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
         if (!rest.Success())
@@ -178,7 +177,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
     protected async Task DeleteElementOfDirectory()
     {
         await SetBusyAsync();
-        
+
         ResponseBaseModel rest = await ConstructorRepo.DeleteElementFromDirectoryAsync(new() { Payload = ElementObject.Id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(rest.Messages);

@@ -55,7 +55,7 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
     protected override async Task OnInitializedAsync()
     {
         if (ParentFormsPage.MainProject is null)
-            throw new Exception("Не выбран основной/используемый проект");
+            throw new Exception("No main/used project selected");
 
         SelectFormsModel reqForms = new()
         {

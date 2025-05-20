@@ -201,7 +201,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     async Task RestUpdate()
     {
         if (ParentFormsPage.MainProject is null)
-            throw new Exception("Не выбран основной/используемый проект");
+            throw new Exception("No main/used project selected");
 
         await SetBusyAsync();
 
