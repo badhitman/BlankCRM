@@ -18,7 +18,6 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
 
 
     int QuoteVolume { get; set; }
-    bool IsSize { get; set; }
     int QuoteSizeVolume { get; set; }
     int SkipSizeVolume { get; set; }
 
