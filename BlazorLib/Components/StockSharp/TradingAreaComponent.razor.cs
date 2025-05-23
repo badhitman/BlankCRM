@@ -4,7 +4,6 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
-using System.Diagnostics.Metrics;
 
 namespace BlazorLib.Components.StockSharp;
 
