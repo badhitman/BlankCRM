@@ -20,7 +20,7 @@ public interface IDriverStockSharpService : IStockSharpBaseService
     /// <summary>
     /// Connect
     /// </summary>
-    public Task<ResponseBaseModel> Connect(CancellationToken? cancellationToken = default);
+    public Task<ResponseBaseModel> Connect(ConnectRequestModel req, CancellationToken? cancellationToken = default);
 
     /// <summary>
     /// Disconnect

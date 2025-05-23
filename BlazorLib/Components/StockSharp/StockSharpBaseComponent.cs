@@ -22,10 +22,10 @@ public class StockSharpBaseComponent : BlazorBusyComponentBaseModel
 
 
     /// <inheritdoc/>
-    protected async Task Connect()
+    protected async Task Connect(ConnectRequestModel req)
     {
         await SetBusyAsync();
-        ResponseBaseModel _con = await DriverRepo.Connect();
+        ResponseBaseModel _con = await DriverRepo.Connect(req);
         SnackbarRepo.ShowMessagesResponse(_con.Messages);
         await GetStatusConnection();
     }

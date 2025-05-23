@@ -4,6 +4,7 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
+using System.Diagnostics.Metrics;
 
 namespace BlazorLib.Components.StockSharp;
 
@@ -24,7 +25,11 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
     List<InstrumentTradeStockSharpViewModel>? instruments;
     List<PortfolioStockSharpModel>? portfolios;
 
-    PortfolioStockSharpModel? selectedPortfolio {  get; set; }
+    List<BoardStockSharpModel>? allBoards;
+    IEnumerable<BoardStockSharpModel>? SelectedBoards { get; set; }
+
+
+    PortfolioStockSharpModel? SelectedPortfolio { get; set; }
 
     async Task StartTradeAsync()
     {
@@ -47,6 +52,17 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
         await SetBusyAsync(false);
     }
 
+    async Task Connect()
+    {
+        ConnectRequestModel req = new()
+        {
+            BoardsFilter = SelectedBoards is null ? null : [.. SelectedBoards],
+            Instruments = instruments,
+            Portfolio = SelectedPortfolio
+        };
+        await Connect(req);
+    }
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
@@ -62,6 +78,10 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
                     };
                 TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await DataRepo.InstrumentsSelectAsync(req);
                 instruments = res.Response;
+            }),
+            Task.Run(async () => {
+                TResponseModel<List<BoardStockSharpModel>> res = await DataRepo.GetBoardsAsync();
+                allBoards = res.Response;
             }),
             Task.Run(async () => {
                 TResponseModel<List<PortfolioStockSharpModel>> res = await DataRepo.GetPortfoliosAsync();
