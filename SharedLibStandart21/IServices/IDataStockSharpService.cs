@@ -23,7 +23,7 @@ public interface IDataStockSharpService
     /// Получить профили по их идентификаторам
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
-    public Task<TResponseModel<List<PortfolioStockSharpModel>>> GetPortfoliosAsync(int[]? ids = null, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<List<PortfolioStockSharpViewModel>>> GetPortfoliosAsync(int[]? ids = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить площадки бирж по их идентификаторам

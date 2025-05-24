@@ -22,7 +22,7 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
     int SkipSizeVolume { get; set; }
 
     List<InstrumentTradeStockSharpViewModel>? instruments;
-    List<PortfolioStockSharpModel>? portfolios;
+    List<PortfolioStockSharpViewModel>? portfolios;
 
     List<BoardStockSharpModel>? allBoards;
     IEnumerable<BoardStockSharpModel>? SelectedBoards { get; set; }
@@ -83,7 +83,7 @@ public partial class TradingAreaComponent : StockSharpBaseComponent
                 allBoards = res.Response;
             }),
             Task.Run(async () => {
-                TResponseModel<List<PortfolioStockSharpModel>> res = await DataRepo.GetPortfoliosAsync();
+                TResponseModel<List<PortfolioStockSharpViewModel>> res = await DataRepo.GetPortfoliosAsync();
                 portfolios = res.Response;
             })]);
 
