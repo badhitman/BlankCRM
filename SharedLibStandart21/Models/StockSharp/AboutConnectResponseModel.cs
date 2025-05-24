@@ -2,12 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System;
+
 namespace SharedLib;
 
 /// <summary>
 /// AboutConnectResponseModel
 /// </summary>
-public class AboutConnectResponseModel:ResponseBaseModel
+public class AboutConnectResponseModel : ResponseBaseModel
 {
     /// <summary>
     /// CanConnect
@@ -18,4 +20,9 @@ public class AboutConnectResponseModel:ResponseBaseModel
     /// ConnectionState
     /// </summary>
     public ConnectionStatesEnum? ConnectionState { get; set; }
+
+    /// <summary>
+    /// LastConnectedAt
+    /// </summary>
+    public DateTime? LastConnectedAt { get; set; }
 }

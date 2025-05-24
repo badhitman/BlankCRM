@@ -25,7 +25,7 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel?>
     public override bool Equals(object obj)
     {
         if (obj is not null && obj is BoardStockSharpModel other)
-            return Code == other.Code && Exchange == other.Exchange;
+            return Code == other.Code && Exchange?.Equals(other.Exchange) == true;
 
         return false;
     }
