@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// InstrumentTradeStockSharpViewModel
 /// </summary>
-public partial class InstrumentTradeStockSharpViewModel: InstrumentTradeStockSharpModel
+public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSharpModel
 {
     /// <summary>
     /// IsFavorite

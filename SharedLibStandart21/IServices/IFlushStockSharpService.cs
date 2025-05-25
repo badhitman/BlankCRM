@@ -24,7 +24,7 @@ public interface IFlushStockSharpService
     /// <summary>
     /// Сохранить в БД инструмент
     /// </summary>
-    public Task<TResponseModel<int>> SaveInstrument(InstrumentTradeStockSharpModel instrument);
+    public Task<TResponseModel<InstrumentTradeStockSharpViewModel>> SaveInstrument(InstrumentTradeStockSharpModel instrument);
 
     /// <summary>
     /// Save Portfolio
