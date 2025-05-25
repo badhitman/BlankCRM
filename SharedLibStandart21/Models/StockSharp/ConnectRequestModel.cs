@@ -15,8 +15,5 @@ public class ConnectRequestModel
     public List<InstrumentTradeStockSharpViewModel>? Instruments { get; set; }
 
     /// <inheritdoc/>
-    public PortfolioStockSharpModel? Portfolio { get; set; }
-
-    /// <inheritdoc/>
     public List<BoardStockSharpModel>? BoardsFilter { get; set; }
 }

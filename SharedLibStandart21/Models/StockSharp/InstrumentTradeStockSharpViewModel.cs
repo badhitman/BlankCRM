@@ -12,6 +12,11 @@ namespace SharedLib;
 public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSharpModel
 {
     /// <summary>
+    /// Идентификатор/Key
+    /// </summary>
+    public int Id { get; set; }
+
+    /// <summary>
     /// IsFavorite
     /// </summary>
     public bool IsFavorite { get; set; }
