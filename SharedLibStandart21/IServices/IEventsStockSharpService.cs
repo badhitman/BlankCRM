@@ -20,7 +20,7 @@ public interface IEventsStockSharpService
     /// <summary>
     /// InstrumentReceived
     /// </summary>
-    public Task<ResponseBaseModel> InstrumentReceived(InstrumentTradeStockSharpModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> InstrumentReceived(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// OrderReceived

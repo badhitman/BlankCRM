@@ -26,4 +26,9 @@ public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSh
 
     /// <inheritdoc/>
     public DateTime CreatedAtUTC { get; set; }
+
+    public void Reload(InstrumentTradeStockSharpViewModel model)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -18,7 +18,7 @@ public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) :
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.BoardReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> InstrumentReceived(InstrumentTradeStockSharpModel req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> InstrumentReceived(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
