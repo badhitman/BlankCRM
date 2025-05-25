@@ -11,7 +11,6 @@ namespace RemoteCallLib;
 /// <summary>
 /// StockSharpEventsServiceTransmission
 /// </summary>
-#pragma warning disable CS1998 // В асинхронном методе отсутствуют операторы await, будет выполнен синхронный метод
 public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) : IEventsStockSharpService
 {
     /// <inheritdoc/>
@@ -42,4 +41,3 @@ public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) :
     public async Task<ResponseBaseModel> ValuesChangedEvent(ConnectorValuesChangedEventPayloadModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ValuesChangedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 }
-#pragma warning restore CS1998 // В асинхронном методе отсутствуют операторы await, будет выполнен синхронный метод

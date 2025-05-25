@@ -14,10 +14,6 @@ using Newtonsoft.Json;
 using MQTTnet;
 using MQTTnet.Client;
 using System.Text;
-#if !DEBUG
-using System.Text.Json.Serialization;
-using System.Text.Json;
-#endif
 
 namespace RemoteCallLib;
 
