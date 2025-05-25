@@ -16,39 +16,27 @@ public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) :
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> BoardReceived(BoardStockSharpModel req, CancellationToken cancellationToken = default)
-    {
-        return ResponseBaseModel.CreateError("метод не реализован");
-    }
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.BoardReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> InstrumentReceived(InstrumentTradeStockSharpModel req, CancellationToken cancellationToken = default)
-    {
-        return ResponseBaseModel.CreateError("метод не реализован");
-    }
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> OrderReceived(OrderStockSharpModel req)
-    {
-        return ResponseBaseModel.CreateError("метод не реализован");
-    }
+    public async Task<ResponseBaseModel> OrderReceived(OrderStockSharpModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.OrderReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> OwnTradeReceived(MyTradeStockSharpModel myTrade)
-    {
-        return ResponseBaseModel.CreateError("метод не реализован");
-    }
+    public async Task<ResponseBaseModel> OwnTradeReceived(MyTradeStockSharpModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.OwnTradeReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> PortfolioReceived(PortfolioStockSharpModel req, CancellationToken cancellationToken = default)
-    {
-        return ResponseBaseModel.CreateError("метод не реализован");
-    }
+    public async Task<ResponseBaseModel> PositionReceived(PositionStockSharpModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PositionReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> PositionReceived(PositionStockSharpModel position)
-    {
-        return ResponseBaseModel.CreateError("метод не реализован");
-    }
+    public async Task<ResponseBaseModel> PortfolioReceived(PortfolioStockSharpViewModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PortfolioReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ValuesChangedEvent(ConnectorValuesChangedEventPayloadModel req, CancellationToken cancellationToken = default)

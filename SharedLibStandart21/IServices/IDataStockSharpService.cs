@@ -17,7 +17,7 @@ public interface IDataStockSharpService
     /// Получить инструменты по их идентификаторам
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
-    public Task<TResponseModel<List<InstrumentTradeStockSharpModel>>> GetInstrumentsAsync(int[]? ids = null, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<List<InstrumentTradeStockSharpViewModel>>> GetInstrumentsAsync(int[]? ids = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить профили по их идентификаторам

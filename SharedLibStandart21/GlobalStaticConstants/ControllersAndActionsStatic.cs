@@ -447,6 +447,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string PORTFOLIO_CONTROLLER_NAME = "portfolio";
 
         /// <summary>
+        /// Position
+        /// </summary>
+        public const string POSITION_CONTROLLER_NAME = "position";
+
+        /// <summary>
+        /// OWN-TRADE
+        /// </summary>
+        public const string OWNTRADE_CONTROLLER_NAME = "own_trade";
+
+        /// <summary>
         /// Connection
         /// </summary>
         public const string CONNECTION_CONTROLLER_NAME = "connection";
@@ -505,6 +515,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// StockSharp
         /// </summary>
         public const string STOCKSHARP_CONTROLLER_NAME = "StockSharp";
+
+        /// <summary>
+        /// Event
+        /// </summary>
+        public const string EVENT_CONTROLLER_NAME = "event";
 
         /// <summary>
         /// Driver
@@ -1312,6 +1327,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Изменение
         /// </summary>
         public const string CHANGE_ACTION_NAME = "change";
+
+        /// <summary>
+        /// Received
+        /// </summary>
+        public const string RECEIVED_ACTION_NAME = "received";
 
         /// <summary>
         /// Открыть

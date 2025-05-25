@@ -25,22 +25,22 @@ public interface IEventsStockSharpService
     /// <summary>
     /// OrderReceived
     /// </summary>
-    public Task<ResponseBaseModel> OrderReceived(OrderStockSharpModel req);
+    public Task<ResponseBaseModel> OrderReceived(OrderStockSharpModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// OwnTradeReceived
     /// </summary>
-    public Task<ResponseBaseModel> OwnTradeReceived(MyTradeStockSharpModel myTrade);
+    public Task<ResponseBaseModel> OwnTradeReceived(MyTradeStockSharpModel myTrade, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// PortfolioReceived
     /// </summary>
-    public Task<ResponseBaseModel> PortfolioReceived(PortfolioStockSharpModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> PortfolioReceived(PortfolioStockSharpViewModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// PositionReceived
     /// </summary>
-    public Task<ResponseBaseModel> PositionReceived(PositionStockSharpModel position);
+    public Task<ResponseBaseModel> PositionReceived(PositionStockSharpModel position, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Security changed.

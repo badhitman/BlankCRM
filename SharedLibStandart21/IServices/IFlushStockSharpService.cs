@@ -29,7 +29,7 @@ public interface IFlushStockSharpService
     /// <summary>
     /// Save Portfolio
     /// </summary>
-    public Task<TResponseModel<int>> SavePortfolio(PortfolioStockSharpModel portfolio);
+    public Task<TResponseModel<PortfolioStockSharpViewModel>> SavePortfolio(PortfolioStockSharpModel portfolio);
 
     /// <summary>
     /// SaveOrder
