@@ -12,16 +12,6 @@ namespace SharedLib;
 public interface IFlushStockSharpService
 {
     /// <summary>
-    /// SaveExchange
-    /// </summary>
-    public Task<TResponseModel<int>> SaveExchange(ExchangeStockSharpModel req);
-
-    /// <summary>
-    /// Save Board
-    /// </summary>
-    public Task<TResponseModel<int>> SaveBoard(BoardStockSharpModel req);
-
-    /// <summary>
     /// Сохранить в БД инструмент
     /// </summary>
     public Task<TResponseModel<InstrumentTradeStockSharpViewModel>> SaveInstrument(InstrumentTradeStockSharpModel instrument);
@@ -30,6 +20,16 @@ public interface IFlushStockSharpService
     /// Save Portfolio
     /// </summary>
     public Task<TResponseModel<PortfolioStockSharpViewModel>> SavePortfolio(PortfolioStockSharpModel portfolio);
+
+    /// <summary>
+    /// SaveExchange
+    /// </summary>
+    public Task<TResponseModel<int>> SaveExchange(ExchangeStockSharpModel req);
+
+    /// <summary>
+    /// Save Board
+    /// </summary>
+    public Task<TResponseModel<int>> SaveBoard(BoardStockSharpModel req);
 
     /// <summary>
     /// SaveOrder
