@@ -36,6 +36,17 @@ public static partial class GlobalToolsStandard
     }
 
     /// <summary>
+    /// Создает новый объект System.DateTime, который имеет то же количество тактов,
+    /// что и указанный System.DateTime, но обозначается как местное время, всеобщее
+    /// координированное время (UTC) или ни то, ни другое, как указано указанным значением System.DateTimeKind.
+    /// </summary>
+    public static DateTime SetKindUtc(this DateTime dateTime)
+    {
+        if (dateTime.Kind == DateTimeKind.Utc) { return dateTime; }
+        return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+    }
+
+    /// <summary>
     /// Является ли строка адресом IP
     /// </summary>
     public static bool IsIpAddress(string endPoint) => IPAddress.TryParse(endPoint.Split(':')[0], out _);
@@ -73,17 +84,6 @@ public static partial class GlobalToolsStandard
         }
 
         return enumValue.ToString();
-    }
-
-    /// <summary>
-    /// Создает новый объект System.DateTime, который имеет то же количество тактов,
-    /// что и указанный System.DateTime, но обозначается как местное время, всеобщее
-    /// координированное время (UTC) или ни то, ни другое, как указано указанным значением System.DateTimeKind.
-    /// </summary>
-    public static DateTime SetKindUtc(this DateTime dateTime)
-    {
-        if (dateTime.Kind == DateTimeKind.Utc) { return dateTime; }
-        return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
     }
 
 
