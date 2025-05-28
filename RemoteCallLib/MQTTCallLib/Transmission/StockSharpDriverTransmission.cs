@@ -19,7 +19,7 @@ public partial class StockSharpDriverTransmission(IMQTTClient mqClient) : IDrive
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> Connect(ConnectRequestModel req, CancellationToken? cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectStockSharpReceive,req, token: cancellationToken ?? CancellationToken.None) ?? new();
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ConnectStockSharpReceive, req, token: cancellationToken ?? CancellationToken.None) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> Disconnect(CancellationToken? cancellationToken = default)
@@ -32,4 +32,8 @@ public partial class StockSharpDriverTransmission(IMQTTClient mqClient) : IDrive
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> PingAsync(CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PingStockSharpDriverReceive, token: cancellationToken) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> StrategyStartAsync(StrategyStartRequestModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.StrategyStartStockSharpDriverReceive, req, token: cancellationToken) ?? new();
 }

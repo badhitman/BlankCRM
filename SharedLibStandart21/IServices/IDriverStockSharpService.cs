@@ -13,7 +13,7 @@ namespace SharedLib;
 public interface IDriverStockSharpService : IStockSharpBaseService
 {
     /// <summary>
-    /// AboutConnection
+    /// About Connection
     /// </summary>
     public Task<AboutConnectResponseModel> AboutConnection(CancellationToken? cancellationToken = default);
 
@@ -28,7 +28,12 @@ public interface IDriverStockSharpService : IStockSharpBaseService
     public Task<ResponseBaseModel> Disconnect(CancellationToken? cancellationToken = default);
 
     /// <summary>
-    /// OrderRegisterAsync
+    /// Order Register
     /// </summary>
     public Task<ResponseBaseModel> OrderRegisterAsync(CreateOrderRequestModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Strategy Start
+    /// </summary>
+    public Task<ResponseBaseModel> StrategyStartAsync(StrategyStartRequestModel req, CancellationToken cancellationToken = default);
 }

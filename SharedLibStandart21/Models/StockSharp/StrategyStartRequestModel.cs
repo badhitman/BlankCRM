@@ -7,10 +7,10 @@ using System.Collections.Generic;
 namespace SharedLib;
 
 /// <summary>
-/// ConnectRequestModel
+/// StrategyStartRequestModel
 /// </summary>
-public class ConnectRequestModel
+public class StrategyStartRequestModel
 {
     /// <inheritdoc/>
-    public List<BoardStockSharpModel>? BoardsFilter { get; set; }
+    public List<StrategyTradeStockSharpModel>? Instruments { get; set; }
 }

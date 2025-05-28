@@ -137,6 +137,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string ORDER_CONTROLLER_NAME = "order";
 
         /// <summary>
+        /// Simple
+        /// </summary>
+        public const string SIMPLE_CONTROLLER_NAME = "simple";
+
+        /// <summary>
         /// Warehouse
         /// </summary>
         public const string WAREHOUSE_CONTROLLER_NAME = "warehouse";
@@ -480,6 +485,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Instruments
         /// </summary>
         public const string INSTRUMENTS_CONTROLLER_NAME = "instruments";
+
+        /// <summary>
+        /// Strategy
+        /// </summary>
+        public const string STRATEGY_CONTROLLER_NAME = "strategy";
 
         /// <summary>
         /// Instrument
