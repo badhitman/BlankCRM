@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// OrdersSelectStockSharpRequestModel
+/// MyTradeSelectStockSharpRequestModel
 /// </summary>
-public class OrdersSelectStockSharpRequestModel : PaginationRequestModel
+public class MyTradeSelectStockSharpRequestModel : PaginationRequestModel
 {
 
 }

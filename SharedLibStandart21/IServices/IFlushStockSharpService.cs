@@ -27,6 +27,11 @@ public interface IFlushStockSharpService
     public Task<TResponseModel<OrderStockSharpViewModel>> SaveOrder(OrderStockSharpModel req);
 
     /// <summary>
+    /// SaveTrade
+    /// </summary>
+    public Task<TResponseModel<MyTradeStockSharpViewModel>> SaveTrade(MyTradeStockSharpModel myTrade);
+
+    /// <summary>
     /// SaveExchange
     /// </summary>
     public Task<TResponseModel<int>> SaveExchange(ExchangeStockSharpModel req);
@@ -35,9 +40,4 @@ public interface IFlushStockSharpService
     /// Save Board
     /// </summary>
     public Task<TResponseModel<int>> SaveBoard(BoardStockSharpModel req);
-
-    /// <summary>
-    /// SaveTrade
-    /// </summary>
-    public Task<TResponseModel<int>> SaveTrade(MyTradeStockSharpModel myTrade);
 }

@@ -22,6 +22,21 @@ public interface IManageStockSharpService
     /// </summary>
     public Task<TPaginationResponseModel<OrderStockSharpViewModel>> OrdersSelectAsync(TPaginationRequestStandardModel<OrdersSelectStockSharpRequestModel> req, CancellationToken cancellationToken = default);
 
+
+
+
+
+
+    /// <summary>
+    /// AdaptersSelectAsync
+    /// </summary>
+    public Task<TPaginationResponseModel<MyTradeStockSharpViewModel>> TradesSelectAsync(TPaginationRequestStandardModel<MyTradeSelectStockSharpRequestModel> req, CancellationToken cancellationToken = default);
+
+
+
+
+
+
     /// <summary>
     /// AdaptersSelectAsync
     /// </summary>
