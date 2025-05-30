@@ -1027,6 +1027,11 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string OrderRegisterStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.REGISTRATION_ACTION_NAME);
 
         /// <summary>
+        /// OrderRegisterRequestStockSharpReceive
+        /// </summary>
+        public readonly static string OrderRegisterRequestStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, $"{Routes.REQUEST_ACTION_NAME}-{Routes.REGISTRATION_ACTION_NAME}");
+
+        /// <summary>
         /// StrategyStartStockSharpDriverReceive
         /// </summary>
         public readonly static string StrategyStartStockSharpDriverReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.STRATEGY_CONTROLLER_NAME, Routes.SIMPLE_CONTROLLER_NAME, Routes.START_ACTION_NAME);

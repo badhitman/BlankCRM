@@ -42,4 +42,24 @@ public class CreateOrderRequestModel
     /// направление заявки
     /// </summary>
     public SidesEnum Side {  get; set; }
+
+    /// <summary>
+    /// IsManual
+    /// </summary>
+    public bool? IsManual { get; set; }
+
+    /// <summary>
+    /// IsMarketMaker
+    /// </summary>
+    public bool? IsMarketMaker { get; set; }
+
+    /// <summary>
+    /// IsSystem
+    /// </summary>
+    public bool? IsSystem { get; set; }
+
+    /// <summary>
+    /// Comment
+    /// </summary>
+    public string? Comment { get; set; }
 }
