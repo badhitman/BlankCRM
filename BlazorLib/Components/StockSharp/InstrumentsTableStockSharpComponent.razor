@@ -64,6 +64,7 @@
             <strong>
                 <MudHighlighter Text="@context.IdRemote" HighlightedText="@searchString" />
             </strong>
+            <MarkersOfInstrumentComponent Instrument="context" />
         </MudTd>
         <MudTd DataLabel="Favorite">
             <MudSwitch ValueChanged="async () => await FavoriteToggle(context)"

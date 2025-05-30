@@ -1017,6 +1017,12 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string GetInstrumentsStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, $"{Routes.GET_ACTION_NAME}-{Routes.LIST_ACTION_NAME}");
 
         /// <summary>
+        /// Получить инструменты по их идентификаторам
+        /// </summary>
+        /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
+        public readonly static string GetMarkersForInstrumentsStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.MARKERS_CONTROLLER_NAME}-for-{Routes.INSTRUMENT_CONTROLLER_NAME}", $"{Routes.GET_ACTION_NAME}-{Routes.LIST_ACTION_NAME}");
+
+        /// <summary>
         /// InstrumentFavoriteToggleStockSharpReceive
         /// </summary>
         public readonly static string InstrumentFavoriteToggleStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, $"{Routes.TOGGLE_ACTION_NAME}-{Routes.FAVORITE_CONTROLLER_NAME}");

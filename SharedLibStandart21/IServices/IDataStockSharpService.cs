@@ -14,6 +14,11 @@ namespace SharedLib;
 public interface IDataStockSharpService
 {
     /// <summary>
+    /// GetMarkersForInstrumentAsync
+    /// </summary>
+    public Task<TResponseModel<List<MarkerInstrumentStockSharpViewModel>>> GetMarkersForInstrumentAsync(int InstrumentId, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Получить инструменты по их идентификаторам
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
