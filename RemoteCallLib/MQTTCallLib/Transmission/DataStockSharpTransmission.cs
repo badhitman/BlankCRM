@@ -27,8 +27,8 @@ public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataSto
         => await mqClient.MqRemoteCallAsync<TResponseModel<List<InstrumentTradeStockSharpViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetInstrumentsStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<MarkerInstrumentStockSharpViewModel>>> GetMarkersForInstrumentAsync(int InstrumentId, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<List<MarkerInstrumentStockSharpViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetMarkersForInstrumentsStockSharpReceive, InstrumentId, token: cancellationToken) ?? new();
+    public async Task<TResponseModel<List<MarkerInstrumentStockSharpViewModel>>> GetMarkersForInstrumentAsync(int instrumentId, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<TResponseModel<List<MarkerInstrumentStockSharpViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetMarkersForInstrumentsStockSharpReceive, instrumentId, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<OrderStockSharpModel>>> GetOrdersAsync(int[]? req = null, CancellationToken cancellationToken = default)
@@ -45,4 +45,8 @@ public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataSto
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(InstrumentsRequestModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentsSelectStockSharpReceive, req, token: cancellationToken) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> SetMarkersForInstrumentAsync(SetMarkersForInstrumentRequestModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SetMarkersForInstrumentStockSharpReceive, req, token: cancellationToken) ?? new();
 }

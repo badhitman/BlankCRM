@@ -11,7 +11,7 @@
 else
 {
     <MudSelect Disabled="IsBusyProgress" T="MarkersInstrumentStockSharpEnum" Label="Markers" MultiSelection="true" @bind-SelectedValues="_options">
-        @foreach (MarkersInstrumentStockSharpEnum state in Enum.GetValues<MarkersInstrumentStockSharpEnum>())
+        @foreach (MarkersInstrumentStockSharpEnum state in AllMarkers)
         {
             <MudSelectItem Disabled="IsBusyProgress" T="MarkersInstrumentStockSharpEnum" Value="state">@state</MudSelectItem>
         }

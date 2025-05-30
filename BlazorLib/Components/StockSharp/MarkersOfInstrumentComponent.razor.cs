@@ -12,6 +12,10 @@ namespace BlazorLib.Components.StockSharp;
 /// </summary>
 public partial class MarkersOfInstrumentComponent : BlazorBusyComponentBaseModel
 {
+    [Inject]
+    IDataStockSharpService SsRepo { get; set; } = default!;
+
+
     /// <summary>
     /// Instrument
     /// </summary>
@@ -19,13 +23,19 @@ public partial class MarkersOfInstrumentComponent : BlazorBusyComponentBaseModel
     public required InstrumentTradeStockSharpViewModel Instrument { get; set; }
 
 
-    MarkersInstrumentStockSharpEnum[] _states = [];
+    List<MarkerInstrumentStockSharpViewModel> orignMarkers = [];
+
+
+    readonly MarkersInstrumentStockSharpEnum[] AllMarkers = Enum.GetValues<MarkersInstrumentStockSharpEnum>();
+
+    //Enum.GetValues<MarkersInstrumentStockSharpEnum>()
+    //MarkersInstrumentStockSharpEnum[] _states = []; // orignMarkers
     private IEnumerable<MarkersInstrumentStockSharpEnum> _options
     {
-        get => _states;
+        get => AllMarkers.Where(x => orignMarkers.Any(y => y.MarkerDescriptor == x));
         set
         {
-            _states = (MarkersInstrumentStockSharpEnum[])value;
+            //_states = (MarkersInstrumentStockSharpEnum[])value;
         }
     }
 
@@ -33,7 +43,9 @@ public partial class MarkersOfInstrumentComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
-
+        TResponseModel<List<MarkerInstrumentStockSharpViewModel>> res = await SsRepo.GetMarkersForInstrumentAsync(Instrument.Id);
+        orignMarkers = res.Response ?? [];
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
     }
 }

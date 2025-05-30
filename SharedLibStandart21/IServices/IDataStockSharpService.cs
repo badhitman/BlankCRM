@@ -14,9 +14,14 @@ namespace SharedLib;
 public interface IDataStockSharpService
 {
     /// <summary>
+    /// SetMarkersForInstrumentAsync
+    /// </summary>
+    public Task<ResponseBaseModel> SetMarkersForInstrumentAsync(SetMarkersForInstrumentRequestModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// GetMarkersForInstrumentAsync
     /// </summary>
-    public Task<TResponseModel<List<MarkerInstrumentStockSharpViewModel>>> GetMarkersForInstrumentAsync(int InstrumentId, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<List<MarkerInstrumentStockSharpViewModel>>> GetMarkersForInstrumentAsync(int instrumentId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить инструменты по их идентификаторам
@@ -56,5 +61,5 @@ public interface IDataStockSharpService
     /// <summary>
     /// InstrumentSetFavoriteAsync
     /// </summary>
-    public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);    
+    public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);
 }
