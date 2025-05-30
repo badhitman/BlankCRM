@@ -87,10 +87,11 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
     }
 
     /// <inheritdoc/>
-    public async Task UnregisterAction(CancellationToken stoppingToken = default)
+    public Task UnregisterAction(CancellationToken stoppingToken = default)
     {
+        mqttClient.Dispose();
         Notify = null;
-        await mqttClient.DisconnectAsync(new(), stoppingToken);
+        return Task.CompletedTask;
     }
 
     MqttClientOptions GetMqttClientOptionsBuilder
