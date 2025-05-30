@@ -52,7 +52,8 @@
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="Name" T="InstrumentTradeStockSharpViewModel">Name</MudTableSortLabel></MudTh>
         <MudTh>Code</MudTh>
-        <MudTh>Status</MudTh>
+        <MudTh>Markers</MudTh>
+        <MudTh>Favorite</MudTh>
         <MudTh>Currency</MudTh>
         <MudTh>Type</MudTh>
     </HeaderContent>
@@ -60,10 +61,12 @@
         <MudTd DataLabel="Name">
             <MudHighlighter Text="@context.Name" HighlightedText="@searchString" />
         </MudTd>
-        <MudTd DataLabel="Id">
-            <strong>
+        <MudTd DataLabel="Code">
+            <strong class="me-2">
                 <MudHighlighter Text="@context.IdRemote" HighlightedText="@searchString" />
             </strong>
+        </MudTd>
+        <MudTd DataLabel="Markers">
             <MarkersOfInstrumentComponent Instrument="context" />
         </MudTd>
         <MudTd DataLabel="Favorite">
@@ -74,7 +77,7 @@
                        T="bool" />
         </MudTd>
         <MudTd DataLabel="Currency">@((CurrenciesTypesEnum)context.Currency)</MudTd>
-        <MudTd DataLabel="TypeInstrument">@((InstrumentsStockSharpTypesEnum)context.TypeInstrument)</MudTd>
+        <MudTd DataLabel="Type">@((InstrumentsStockSharpTypesEnum)context.TypeInstrument)</MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>Nothing found</MudText>

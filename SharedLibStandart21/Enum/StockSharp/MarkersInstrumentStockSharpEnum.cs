@@ -1,9 +1,9 @@
 ﻿namespace SharedLib;
 
 /// <summary>
-/// InstrumentStockSharpMarkersEnum
+/// MarkersInstrumentStockSharpEnum
 /// </summary>
-public enum InstrumentStockSharpMarkersEnum
+public enum MarkersInstrumentStockSharpEnum
 {
     /// <inheritdoc/>
     IsNew,
