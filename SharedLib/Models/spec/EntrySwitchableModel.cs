@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// Базовая DB модель объекта с поддержкой -> int:Id +string:Name +bool:IsDeleted
 /// </summary>
-[Index(nameof(Name))]
+[Index(nameof(Name)), Index(nameof(IsDisabled))]
 public class EntrySwitchableModel : IdSwitchableModel
 {
     /// <inheritdoc/>

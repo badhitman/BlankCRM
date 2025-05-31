@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Ошибка отправки сообщения TelegramBot
 /// </summary>
-[Index(nameof(ChatId))]
+[Index(nameof(ChatId)), Index(nameof(IsDisabled))]
 public class ErrorSendingMessageTelegramBotModelDB : IdSwitchableModel
 {
     /// <summary>
