@@ -14,12 +14,12 @@ public class PositionStockSharpModel
     /// <summary>
     /// Portfolio, in which position is created.
     /// </summary>
-    public PortfolioStockSharpModel? Portfolio { get; set; }
+    public PortfolioStockSharpModel Portfolio { get; set; }
 
     /// <summary>
     /// Security, for which a position was created.
     /// </summary>
-    public virtual InstrumentTradeStockSharpModel? Instrument { get; set; }
+    public virtual InstrumentTradeStockSharpModel Instrument { get; set; }
 
 
     /// <summary>
@@ -90,7 +90,7 @@ public class PositionStockSharpModel
     /// <summary>
     /// Text position description.
     /// </summary>
-    public string? Description { get; set; }
+    public string Description { get; set; }
 
     /// <summary>
     /// Portfolio currency.

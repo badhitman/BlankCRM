@@ -11,6 +11,9 @@ namespace SharedLib;
 /// WorkScheduleBaseModelDB
 /// </summary>
 [Index(nameof(StartPart), nameof(EndPart))]
+[Index(nameof(NormalizedNameUpper)), Index(nameof(ContextName))]
+[Index(nameof(SortIndex), nameof(ParentId), nameof(ContextName), IsUnique = true)]
+[Index(nameof(Name)), Index(nameof(IsDisabled))]
 public class WorkScheduleBaseModelDB : UniversalLayerModel
 {
     /// <summary>

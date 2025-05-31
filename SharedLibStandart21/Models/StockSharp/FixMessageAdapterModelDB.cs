@@ -33,7 +33,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     public AdaptersTypesNames AdapterTypeName { get; set; }
 
     /// <inheritdoc/>
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// Деактивирован?
@@ -49,44 +49,44 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     public bool IsDemo { get; set; }
 
     /// <inheritdoc/>
-    public string? Password { get; set; }
+    public string Password { get; set; }
 
     /// <inheritdoc/>
-    public string? Login { get; set; }
+    public string Login { get; set; }
 
     /// <inheritdoc/>
-    public string? TargetCompId { get; set; }
+    public string TargetCompId { get; set; }
 
     /// <summary>
     /// Date format.
     /// </summary>
-    public string? DateFormat { get; set; }
+    public string DateFormat { get; set; }
 
     /// <inheritdoc/>
-    public string? SenderCompId { get; set; }
+    public string SenderCompId { get; set; }
 
     /// <summary>
     /// Address
     /// </summary>
-    public string? Address { get; set; }
+    public string Address { get; set; }
 
     /// <summary>
     /// Timestamp format.
     /// </summary>
-    public string? TimeStampFormat { get; set; }
+    public string TimeStampFormat { get; set; }
 
     /// <summary>
     /// Time format.
     /// </summary>
-    public string? TimeFormat { get; set; }
+    public string TimeFormat { get; set; }
 
     /// <summary>
     /// Year month format.
     /// </summary>
-    public string? YearMonthFormat { get; set; }
+    public string YearMonthFormat { get; set; }
 
     /// <inheritdoc/>
-    public string? ClientVersion { get; set; }
+    public string ClientVersion { get; set; }
 
     /// <summary>
     /// Override exec id by native identifier (if present in FIX message).
@@ -111,7 +111,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     /// <summary>
     /// The name of the server that shares SSL connection.
     /// </summary>
-    public string? TargetHost { get; set; }
+    public string TargetHost { get; set; }
 
     /// <summary>
     /// Validate remove certificates.
@@ -126,7 +126,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     /// <summary>
     /// SSL certificate.
     /// </summary>
-    public string? SslCertificate { get; set; }
+    public string SslCertificate { get; set; }
 
     /// <summary>
     /// SSL protocol to establish connect.
@@ -136,12 +136,12 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     /// <summary>
     /// Client code assigned by the broker.
     /// </summary>
-    public string? ClientCode { get; set; }
+    public string ClientCode { get; set; }
 
     /// <summary>
     /// Board, where securities are traded.
     /// </summary>
-    public string? ExchangeBoard { get; set; }
+    public string ExchangeBoard { get; set; }
 
     /// <summary>
     /// The timeout of sending data. The default value is System.TimeSpan.Zero.
@@ -156,13 +156,13 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     /// <summary>
     /// Accounts associated with FIX login.
     /// </summary>
-    public string? Accounts { get; set; }
+    public string Accounts { get; set; }
 
     /// <inheritdoc/>
     public bool EnqueueSubscriptions { get; set; }
 
     /// <inheritdoc/>
-    public static FixMessageAdapterModelDB? BuildEmpty()
+    public static FixMessageAdapterModelDB BuildEmpty()
     {
         return new FixMessageAdapterModelDB();
     }
@@ -211,7 +211,7 @@ public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
     }
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj)
+    public override bool Equals(object obj)
     {
         if (obj is null)
             return false;

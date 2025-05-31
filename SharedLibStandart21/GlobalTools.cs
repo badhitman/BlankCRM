@@ -76,7 +76,7 @@ public static partial class GlobalToolsStandard
     {
         foreach (FieldInfo field in enumValue.GetType().GetFields())
         {
-            DescriptionAttribute? descriptionAttribute = field.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
+            DescriptionAttribute descriptionAttribute = field.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
             if (descriptionAttribute != null && field.Name.Equals(enumValue.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 return descriptionAttribute.Description;

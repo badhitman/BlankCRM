@@ -9,17 +9,17 @@ namespace SharedLib;
 /// <summary>
 /// BoardStockSharpModel
 /// </summary>
-public class BoardStockSharpModel : IEquatable<BoardStockSharpModel?>
+public class BoardStockSharpModel : IEquatable<BoardStockSharpModel>
 {
     /// <summary>
     /// Code
     /// </summary>
-    public virtual string? Code { get; set; }
+    public virtual string Code { get; set; }
 
     /// <summary>
     /// Exchange
     /// </summary>
-    public virtual ExchangeStockSharpModel? Exchange { get; set; }
+    public virtual ExchangeStockSharpModel Exchange { get; set; }
 
     /// <inheritdoc/>
     public override bool Equals(object obj)
@@ -31,7 +31,7 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel?>
     }
 
     /// <inheritdoc/>
-    public bool Equals(BoardStockSharpModel? other)
+    public bool Equals(BoardStockSharpModel other)
     {
         if (other is null)
             return false;
@@ -52,7 +52,7 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel?>
     }
 
     /// <inheritdoc/>
-    public static bool operator ==(BoardStockSharpModel? left, BoardStockSharpModel? right)
+    public static bool operator ==(BoardStockSharpModel left, BoardStockSharpModel right)
     {
         if (left is null && right is null)
             return true;
@@ -64,7 +64,7 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel?>
     }
 
     /// <inheritdoc/>
-    public static bool operator !=(BoardStockSharpModel? left, BoardStockSharpModel? right)
+    public static bool operator !=(BoardStockSharpModel left, BoardStockSharpModel right)
     {
         if (left is null && right is null)
             return false;

@@ -12,10 +12,10 @@ public class OrderRegisterRequestModel
     /// <summary>
     /// Board
     /// </summary>
-    public BoardStockSharpModel? Board {  get; set; }
+    public BoardStockSharpModel Board {  get; set; }
 
     /// <inheritdoc/>
-    public string? SecCode { get; set; }
+    public string SecCode { get; set; }
 
     /// <inheritdoc/>
     public decimal Price { get; set; }
@@ -27,8 +27,8 @@ public class OrderRegisterRequestModel
     public SidesEnum Direction { get; set; }
 
     /// <inheritdoc/>
-    public string? ClientCode { get; set; }
+    public string ClientCode { get; set; }
 
     /// <inheritdoc/>
-    public string? ConfirmRequestToken { get; set; }
+    public string ConfirmRequestToken { get; set; }
 }

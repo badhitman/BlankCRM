@@ -19,11 +19,11 @@ public class NLogRecordModelDB
     /// <summary>
     /// ApplicationName
     /// </summary>
-    public string? ApplicationName { get; set; }
+    public string ApplicationName { get; set; }
 
 
     /// <inheritdoc/>
-    public string? ContextPrefix { get; set; }
+    public string ContextPrefix { get; set; }
 
     /// <summary>
     /// RecordTime
@@ -33,25 +33,25 @@ public class NLogRecordModelDB
     /// <summary>
     /// RecordLevel
     /// </summary>
-    public virtual string? RecordLevel { get; set; }
+    public virtual string RecordLevel { get; set; }
 
     /// <inheritdoc/>
-    public string? RecordMessage { get; set; }
+    public string RecordMessage { get; set; }
 
     /// <inheritdoc/>
-    public string? ExceptionMessage { get; set; }
+    public string ExceptionMessage { get; set; }
 
     /// <inheritdoc/>
-    public string? Logger { get; set; }
+    public string Logger { get; set; }
 
     /// <inheritdoc/>
-    public string? CallSite { get; set; }
+    public string CallSite { get; set; }
 
     /// <inheritdoc/>
-    public string? StackTrace { get; set; }
+    public string StackTrace { get; set; }
 
     /// <inheritdoc/>
-    public string? AllEventProperties { get; set; }
+    public string AllEventProperties { get; set; }
 
     /// <inheritdoc/>
     public static bool operator ==(NLogRecordModelDB L1, NLogRecordModelDB L2)
@@ -72,7 +72,7 @@ public class NLogRecordModelDB
     }
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj)
+    public override bool Equals(object obj)
     {
         if (obj == null) return false;
 

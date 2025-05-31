@@ -12,5 +12,5 @@ namespace SharedLib;
 public class StrategyStartRequestModel
 {
     /// <inheritdoc/>
-    public List<StrategyTradeStockSharpModel>? Instruments { get; set; }
+    public List<StrategyTradeStockSharpModel> Instruments { get; set; }
 }

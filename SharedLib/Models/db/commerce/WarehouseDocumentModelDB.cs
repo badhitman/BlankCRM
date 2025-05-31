@@ -11,6 +11,7 @@ namespace SharedLib;
 /// WarehouseDocumentModelDB
 /// </summary>
 [Index(nameof(DeliveryDate)), Index(nameof(NormalizedUpperName)), Index(nameof(WarehouseId))]
+[Index(nameof(Name)), Index(nameof(IsDisabled))]
 public class WarehouseDocumentModelDB : EntrySwitchableUpdatedModel
 {
     /// <summary>

@@ -29,5 +29,7 @@ public class TResponseMQBaseModel<T> : ResponseBaseModel
     /// <summary>
     /// Полезная нагрузка ответа
     /// </summary>
+#pragma warning disable CS8632 // Аннотацию для ссылочных типов, допускающих значения NULL, следует использовать в коде только в контексте аннотаций "#nullable".
     public virtual T? Response { get; set; }
+#pragma warning restore CS8632 // Аннотацию для ссылочных типов, допускающих значения NULL, следует использовать в коде только в контексте аннотаций "#nullable".
 }

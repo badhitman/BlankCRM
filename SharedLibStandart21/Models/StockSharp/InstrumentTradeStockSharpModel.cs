@@ -14,19 +14,19 @@ public partial class InstrumentTradeStockSharpModel
     /// <summary>
     /// Name
     /// </summary>
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     /// <inheritdoc/>
-    public virtual BoardStockSharpModel? Board { get; set; }
+    public virtual BoardStockSharpModel Board { get; set; }
 
     /// <inheritdoc/>
-    public string? IdRemote { get; set; }
+    public string IdRemote { get; set; }
 
     /// <inheritdoc/>
-    public string? Code { get; set; }
+    public string Code { get; set; }
 
     /// <inheritdoc/>
-    public string? ShortName { get; set; }
+    public string ShortName { get; set; }
 
     /// <inheritdoc/>
     public int TypeInstrument { get; set; }
@@ -35,7 +35,7 @@ public partial class InstrumentTradeStockSharpModel
     public int Currency { get; set; }
 
     /// <inheritdoc/>
-    public string? Class { get; set; }
+    public string Class { get; set; }
 
     /// <summary>
     /// Lot multiplier.
@@ -60,7 +60,7 @@ public partial class InstrumentTradeStockSharpModel
     /// <summary>
     /// Type in ISO 10962 standard.
     /// </summary>
-    public string? CfiCode { get; set; }
+    public string CfiCode { get; set; }
 
     /// <summary>
     /// Face value.
@@ -79,12 +79,12 @@ public partial class InstrumentTradeStockSharpModel
     /// <summary>
     /// Identifier on primary exchange.
     /// </summary>
-    public string? PrimaryId { get; set; }
+    public string PrimaryId { get; set; }
 
     /// <summary>
     /// Underlying asset on which the current security is built.
     /// </summary>
-    public string? UnderlyingSecurityId { get; set; }
+    public string UnderlyingSecurityId { get; set; }
 
     /// <summary>
     /// Option type.

@@ -10,13 +10,13 @@ namespace SharedLib;
 public class MyTradeStockSharpModel
 {
     /// <inheritdoc/>
-    public virtual OrderStockSharpModel? Order { get; set; }
+    public virtual OrderStockSharpModel Order { get; set; }
 
     /// <inheritdoc/>
     public decimal? Commission { get; set; }
 
     /// <inheritdoc/>
-    public string? CommissionCurrency { get; set; }
+    public string CommissionCurrency { get; set; }
 
     /// <inheritdoc/>
     public decimal? Slippage { get; set; }

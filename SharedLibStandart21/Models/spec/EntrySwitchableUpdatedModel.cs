@@ -2,16 +2,18 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace SharedLib;
 
 /// <summary>
 /// Базовая DB модель объекта с поддержкой -> int:Id +string:Name +bool:IsDeleted AND UpdatedAt
 /// </summary>
-[Index(nameof(Name)), Index(nameof(IsDisabled))]
-public class EntrySwitchableUpdatedModel : EntrySwitchableModel
+public class EntrySwitchableUpdatedModel : IdSwitchableModel
 {
+    /// <inheritdoc/>
+    public virtual string Name { get; set; }
+
     /// <summary>
     /// Дата последнего обновления
     /// </summary>
@@ -25,5 +27,5 @@ public class EntrySwitchableUpdatedModel : EntrySwitchableModel
     /// <summary>
     /// Описание/примечание для объекта
     /// </summary>
-    public string? Description { get; set; }
+    public string Description { get; set; }
 }

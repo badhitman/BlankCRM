@@ -10,6 +10,7 @@ namespace SharedLib;
 /// Правило ценообразования для торгового предложения (для расчёта скидки по документу)
 /// </summary>
 [Index(nameof(OfferId), nameof(QuantityRule), IsUnique = true)]
+[Index(nameof(Name)), Index(nameof(IsDisabled))]
 public class PriceRuleForOfferModelDB : EntrySwitchableUpdatedModel
 {
     /// <summary>

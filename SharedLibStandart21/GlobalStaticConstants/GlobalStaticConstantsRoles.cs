@@ -30,7 +30,7 @@ namespace SharedLib
             public const string System = "system";
 
             #region HelpDesk
-            static string[]? _allHelpDeskRoles = null;
+            static string[] _allHelpDeskRoles = null;
             /// <summary>
             /// Все роли HelpDesk
             /// </summary>

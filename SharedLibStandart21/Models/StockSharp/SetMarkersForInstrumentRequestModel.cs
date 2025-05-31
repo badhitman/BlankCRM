@@ -13,5 +13,5 @@ public class SetMarkersForInstrumentRequestModel
     public int InstrumentId { get; set; }
 
     /// <inheritdoc/>
-    public MarkersInstrumentStockSharpEnum[]? SetMarkers {  get; set; }
+    public MarkersInstrumentStockSharpEnum[] SetMarkers {  get; set; }
 }

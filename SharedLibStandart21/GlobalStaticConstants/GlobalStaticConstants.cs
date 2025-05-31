@@ -56,7 +56,7 @@ public static partial class GlobalStaticConstants
     public static readonly CultureInfo RU = CultureInfo.GetCultureInfo("ru-RU");
 
 
-    static string? _initSalt;
+    static string _initSalt;
     /// <summary>
     /// InitSalt
     /// </summary>

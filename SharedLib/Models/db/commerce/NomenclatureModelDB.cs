@@ -2,11 +2,16 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// Номенклатура
 /// </summary>
+[Index(nameof(NormalizedNameUpper)), Index(nameof(ContextName))]
+[Index(nameof(SortIndex), nameof(ParentId), nameof(ContextName), IsUnique = true)]
+[Index(nameof(Name)), Index(nameof(IsDisabled))]
 public class NomenclatureModelDB : UniversalLayerModel
 {
     /// <summary>

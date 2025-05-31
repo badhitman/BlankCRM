@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharedLib;
@@ -9,6 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// Торговое предложение
 /// </summary>
+[Index(nameof(Name)), Index(nameof(IsDisabled))]
 public class OfferModelDB : EntrySwitchableUpdatedModel
 {
     /// <summary>
