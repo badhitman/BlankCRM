@@ -22,5 +22,5 @@ public class RowMoveModel
     /// <summary>
     /// ContextName
     /// </summary>
-    public required string? ContextName { get; set; }
+    public string ContextName { get; set; }
 }
