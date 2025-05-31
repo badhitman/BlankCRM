@@ -2,10 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System;
 
 namespace SharedLib;
 
@@ -15,34 +15,34 @@ namespace SharedLib;
 public partial class ResponseBaseModel
 {
     /// <inheritdoc/>
-    public static ResponseBaseModel CreateWarning(string msg) => new ResponseBaseModel() { Messages = new List<ResultMessage> { new ResultMessage() { TypeMessage = ResultTypesEnum.Warning, Text = msg } } };
+    public static ResponseBaseModel CreateWarning(string msg) => new() { Messages = new List<ResultMessage> { new() { TypeMessage = ResultTypesEnum.Warning, Text = msg } } };
 
     /// <inheritdoc/>
-    public static ResponseBaseModel CreateError(string msg) => new ResponseBaseModel() { Messages = new List<ResultMessage> { new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = msg } } };
+    public static ResponseBaseModel CreateError(string msg) => new() { Messages = new List<ResultMessage> { new() { TypeMessage = ResultTypesEnum.Error, Text = msg } } };
     /// <inheritdoc/>
-    public static List<ResultMessage> ErrorMessage(string msg) => new List<ResultMessage> { new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = msg } };
+    public static List<ResultMessage> ErrorMessage(string msg) => [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = msg }];
 
     /// <inheritdoc/>
     public static ResponseBaseModel CreateError(List<ValidationResult> validationResults)
     {
-        ResponseBaseModel err = new ResponseBaseModel();
+        ResponseBaseModel err = new();
         err.Messages.InjectException(validationResults);
         return err;
     }
 
     /// <inheritdoc/>
-    public static ResponseBaseModel CreateInfo(string msg) => new ResponseBaseModel() { Messages = new List<ResultMessage> { new ResultMessage() { TypeMessage = ResultTypesEnum.Info, Text = msg } } };
+    public static ResponseBaseModel CreateInfo(string msg) => new() { Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Info, Text = msg }] };
 
     /// <inheritdoc/>
-    public static ResponseBaseModel CreateSuccess(string msg) => new ResponseBaseModel() { Messages = new List<ResultMessage> { new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg } } };
+    public static ResponseBaseModel CreateSuccess(string msg) => new() { Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg }] };
     /// <inheritdoc/>
-    public static List<ResultMessage> SuccessMessage(string msg) => new List<ResultMessage> { new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg } };
+    public static List<ResultMessage> SuccessMessage(string msg) => [new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg }];
 
 
     /// <summary>
     /// Сообщения, которые сервер присоединяет к ответу
     /// </summary>
-    public List<ResultMessage> Messages { get; set; } = new List<ResultMessage>();
+    public List<ResultMessage> Messages { get; set; } = [];
 
     /// <summary>
     /// Результат обработки запроса.
@@ -55,14 +55,14 @@ public partial class ResponseBaseModel
     /// </summary>
     public string Message()
     {
-        Messages ??= new List<ResultMessage>();
+        Messages ??= [];
         return Messages.Count != 0 ? $"{string.Join($",{Environment.NewLine}", Messages.Select(x => $"[{x}]"))};" : string.Empty;
     }
 
     /// <summary>
     /// Сообщение со статусными сообщениями
     /// </summary>
-    public static ResponseBaseModel Create(IEnumerable<ResultMessage> messages) => new ResponseBaseModel() { Messages = messages.ToList() };
+    public static ResponseBaseModel Create(IEnumerable<ResultMessage> messages) => new() { Messages = [.. messages] };
 
 
 
@@ -75,13 +75,13 @@ public partial class ResponseBaseModel
     /// <inheritdoc/>
     public static ResponseBaseModel CreateError(Exception ex)
     {
-        ResponseBaseModel err = new ResponseBaseModel();
+        ResponseBaseModel err = new();
         err.Messages.InjectException(ex);
         return err;
     }
 
     /// <inheritdoc/>
-    public static ResponseBaseModel CreateSuccess(IEnumerable<string> messages) => new ResponseBaseModel() { Messages = messages.Select(msg => new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg }).ToList() };
+    public static ResponseBaseModel CreateSuccess(IEnumerable<string> messages) => new() { Messages = [.. messages.Select(msg => new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg })] };
 
     /// <summary>
     /// Добавить сообщение об успешном выполнении операции
@@ -137,7 +137,7 @@ public partial class ResponseBaseModel
     /// <returns>Текущий объект, но с уже добавленным сообщением</returns>
     public ResponseBaseModel AddMessage(ResultTypesEnum type, string text)
     {
-        Messages ??= new List<ResultMessage>();
+        Messages ??= [];
         Messages.Add(new ResultMessage() { TypeMessage = type, Text = text });
         return this;
     }

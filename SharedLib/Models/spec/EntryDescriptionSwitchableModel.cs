@@ -2,11 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// Базовая DB модель объекта с поддержкой -> int:Id +string:Name +string:Description +bool:IsDeleted
 /// </summary>
+[Index(nameof(Name)), Index(nameof(IsDisabled))]
 public class EntryDescriptionSwitchableModel : EntrySwitchableModel
 {
     /// <summary>
