@@ -616,7 +616,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricIssueHelpDeskModelDB rubric, CancellationToken token = default)
+    public async Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricStandardModel rubric, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         Regex rx = new(@"\s+", RegexOptions.Compiled);
@@ -667,15 +667,15 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricIssueHelpDeskModelDB>?>> RubricReadAsync(int rubricId, CancellationToken token = default)
+    public async Task<TResponseModel<List<RubricStandardModel>?>> RubricReadAsync(int rubricId, CancellationToken token = default)
     {
-        TResponseModel<List<RubricIssueHelpDeskModelDB>?> res = new();
+        TResponseModel<List<RubricStandardModel>?> res = new();
 
         if (rubricId < 1)
             return res;
 
         string mem_key = $"{TransmissionQueues.RubricForIssuesReadHelpDeskReceive}-{rubricId}";
-        if (cache.TryGetValue(mem_key, out List<RubricIssueHelpDeskModelDB>? rubric))
+        if (cache.TryGetValue(mem_key, out List<RubricStandardModel>? rubric))
         {
             res.Response = rubric;
             return res;
@@ -683,7 +683,7 @@ public class HelpDeskImplementService(
 
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
-        RubricIssueHelpDeskModelDB? lpi = await context
+        RubricStandardModel? lpi = await context
             .Rubrics
             .Include(x => x.Parent)
             .FirstOrDefaultAsync(x => x.Id == rubricId, cancellationToken: token);
@@ -694,7 +694,7 @@ public class HelpDeskImplementService(
             return res;
         }
 
-        List<RubricIssueHelpDeskModelDB> ctrl = [lpi];
+        List<RubricStandardModel> ctrl = [lpi];
 
         while (lpi.Parent is not null)
         {
@@ -712,9 +712,9 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default)
+    public async Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default)
     {
-        TResponseModel<List<RubricIssueHelpDeskModelDB>> res = new();
+        TResponseModel<List<RubricStandardModel>> res = new();
         rubricsIds = [.. rubricsIds.Where(x => x > 0)];
         if (rubricsIds.Length == 0)
         {
@@ -722,7 +722,8 @@ public class HelpDeskImplementService(
             return res;
         }
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
-        res.Response = await context.Rubrics.Where(x => rubricsIds.Any(y => y == x.Id)).ToListAsync(cancellationToken: token);
+        List<RubricIssueHelpDeskModelDB> resDb = await context.Rubrics.Where(x => rubricsIds.Any(y => y == x.Id)).ToListAsync(cancellationToken: token);
+        res.Response = [.. resDb.Select(x => x)];
         return res;
     }
     #endregion

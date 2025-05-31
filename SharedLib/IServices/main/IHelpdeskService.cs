@@ -94,17 +94,17 @@ public interface IHelpDeskService
     /// <summary>
     /// Rubric create (or update)
     /// </summary>
-    public Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricIssueHelpDeskModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricStandardModel req, CancellationToken token = default);
 
     /// <summary>
     /// Rubric read
     /// </summary>
-    public Task<TResponseModel<List<RubricIssueHelpDeskModelDB>?>> RubricReadAsync(int rubricId, CancellationToken token = default);
+    public Task<TResponseModel<List<RubricStandardModel>?>> RubricReadAsync(int rubricId, CancellationToken token = default);
 
     /// <summary>
     /// Rubrics get
     /// </summary>
-    public Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default);
+    public Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default);
     #endregion
 
     #region pulse

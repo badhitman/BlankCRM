@@ -2,55 +2,43 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace SharedLib;
 
 /// <summary>
 /// Рубрики
 /// </summary>
-[Index(nameof(NormalizedNameUpper)), Index(nameof(ContextName)), Index(nameof(Name)), Index(nameof(IsDisabled))]
-[Index(nameof(SortIndex), nameof(ParentId), nameof(ContextName), IsUnique = true)]
-public class RubricIssueHelpDeskModelDB : RubricStandardModel
+public class RubricStandardModel : UniversalLayerModel
 {
     /// <inheritdoc/>
-    public new List<RubricIssueHelpDeskModelDB>? NestedRubrics { get; set; }
-
-    /// <summary>
-    /// Обращения в рубрике
-    /// </summary>
-    public List<IssueHelpDeskModelDB>? Issues { get; set; }
-
-    /// <summary>
-    /// ArticlesJoins
-    /// </summary>
-    public List<RubricArticleJoinModelDB>? ArticlesJoins { get; set; }
+    public virtual List<RubricStandardModel> NestedRubrics { get; set; }
 
     /// <summary>
     /// Владелец (вышестоящая рубрика)
     /// </summary>
-    public new RubricIssueHelpDeskModelDB? Parent { get; set; }
+    public virtual RubricStandardModel Parent { get; set; }
 
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj)
+    public override bool Equals(object obj)
     {
         if (obj == null) return false;
 
-        if (obj is RubricIssueHelpDeskModelDB e)
+        if (obj is RubricStandardModel e)
             return Name == e.Name && Description == e.Description && Id == e.Id && e.SortIndex == SortIndex && e.ParentId == ParentId && e.ProjectId == ProjectId;
 
         return false;
     }
 
     /// <inheritdoc/>
-    public static bool operator ==(RubricIssueHelpDeskModelDB? e1, RubricIssueHelpDeskModelDB? e2)
+    public static bool operator ==(RubricStandardModel e1, RubricStandardModel e2)
         =>
         (e1 is null && e2 is null) ||
         (e1?.Id == e2?.Id && e1?.Name == e2?.Name && e1?.Description == e2?.Description && e1?.SortIndex == e2?.SortIndex && e1?.ParentId == e2?.ParentId && e1?.ProjectId == e2?.ProjectId);
 
     /// <inheritdoc/>
-    public static bool operator !=(RubricIssueHelpDeskModelDB? e1, RubricIssueHelpDeskModelDB? e2)
+    public static bool operator !=(RubricStandardModel e1, RubricStandardModel e2)
         =>
         (e1 is null && e2 is not null) ||
         (e1 is not null && e2 is null) ||
