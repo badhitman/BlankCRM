@@ -454,10 +454,10 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentityAsync(string[] users_ids, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]?>> GetUsersOfIdentityAsync(string[] users_ids, CancellationToken token = default)
     {
         users_ids = [.. users_ids.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct()];
-        TResponseModel<UserInfoModel[]> res = new() { Response = [] };
+        TResponseModel<UserInfoModel[]?> res = new() { Response = [] };
         if (users_ids.Length == 0)
         {
             res.AddError("Пустой запрос");
@@ -537,10 +537,10 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByEmailAsync(string[] users_emails, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]?>> GetUsersIdentityByEmailAsync(string[] users_emails, CancellationToken token = default)
     {
         users_emails = [.. users_emails.Where(x => MailAddress.TryCreate(x, out _)).Select(x => x.ToUpper())];
-        TResponseModel<UserInfoModel[]> res = new() { Response = [] };
+        TResponseModel<UserInfoModel[]?> res = new() { Response = [] };
         if (users_emails.Length == 0)
         {
             res.AddError("Пустой запрос");
@@ -1181,10 +1181,10 @@ public class IdentityTools(
 
     #region telegram
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByTelegramAsync(List<long> tg_ids, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]?>> GetUsersIdentityByTelegramAsync(List<long> tg_ids, CancellationToken token = default)
     {
         tg_ids = [.. tg_ids.Where(x => x != 0)];
-        TResponseModel<UserInfoModel[]> response = new() { Response = [] };
+        TResponseModel<UserInfoModel[]?> response = new() { Response = [] };
         if (tg_ids.Count == 0)
         {
             response.AddError("Пустой запрос");
@@ -1199,7 +1199,7 @@ public class IdentityTools(
 
         string[] users_ids = [.. users.Select(x => x.Id)];
 
-        TResponseModel<UserInfoModel[]> res_find_users_identity = await GetUsersOfIdentityAsync(users_ids, token);
+        TResponseModel<UserInfoModel[]?> res_find_users_identity = await GetUsersOfIdentityAsync(users_ids, token);
         if (!res_find_users_identity.Success())
         {
             response.AddRangeMessages(res_find_users_identity.Messages);
@@ -1435,7 +1435,7 @@ public class IdentityTools(
 
         if (MailAddress.TryCreate(userIdentityDb.Email, out _))
         {
-            TResponseModel<TelegramUserBaseModel> tg_user_dump = await GetTelegramUserCachedInfoAsync(req.TelegramId, token);
+            TResponseModel<TelegramUserBaseModel?> tg_user_dump = await GetTelegramUserCachedInfoAsync(req.TelegramId, token);
             await mailRepo.SendEmailAsync(userIdentityDb.Email, "Удаление привязки Telegram к учётной записи", $"Telegram аккаунт {tg_user_dump.Response} отключён от вашей учётной записи на сайте.", token: token);
         }
 
@@ -1459,10 +1459,10 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TelegramUserBaseModel>> GetTelegramUserCachedInfoAsync(long telegramId, CancellationToken token = default)
+    public async Task<TResponseModel<TelegramUserBaseModel?>> GetTelegramUserCachedInfoAsync(long telegramId, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
-        TResponseModel<TelegramUserBaseModel> res = new() { Response = TelegramUserBaseModel.Build(await identityContext.TelegramUsers.FirstOrDefaultAsync(x => x.TelegramId == telegramId, cancellationToken: token)) };
+        TResponseModel<TelegramUserBaseModel?> res = new() { Response = TelegramUserBaseModel.Build(await identityContext.TelegramUsers.FirstOrDefaultAsync(x => x.TelegramId == telegramId, cancellationToken: token)) };
         if (res.Response is null)
             res.AddInfo($"Пользователь Telegram #{telegramId} не найден в кешэ БД");
 

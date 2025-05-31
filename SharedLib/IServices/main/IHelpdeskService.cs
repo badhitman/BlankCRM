@@ -99,7 +99,7 @@ public interface IHelpDeskService
     /// <summary>
     /// Rubric read
     /// </summary>
-    public Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricReadAsync(int rubricId, CancellationToken token = default);
+    public Task<TResponseModel<List<RubricIssueHelpDeskModelDB>?>> RubricReadAsync(int rubricId, CancellationToken token = default);
 
     /// <summary>
     /// Rubrics get

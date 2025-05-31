@@ -34,7 +34,7 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
 
         string msg;
 
-        TResponseModel<List<BreezRuLeftoverModel>>? leftoversJson = null;
+        TResponseModel<List<BreezRuLeftoverModel>?>? leftoversJson = null;
         TResponseModel<List<BrandRealBreezRuModel>>? brandsJson = null;
         TResponseModel<List<CategoryRealBreezRuModel>>? categoriesJson = null;
         TResponseModel<List<ProductRealBreezRuModel>>? productsJson = null;

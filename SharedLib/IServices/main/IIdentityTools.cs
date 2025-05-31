@@ -253,7 +253,7 @@ public interface IIdentityTools
     /// Получить информацию по пользователю (из БД).
     /// Данные возвращаются из кэша: каждое сообщение в TelegramBot кеширует информацию о пользователе в БД
     /// </summary>
-    public Task<TResponseModel<TelegramUserBaseModel>> GetTelegramUserCachedInfoAsync(long telegramId, CancellationToken token = default);
+    public Task<TResponseModel<TelegramUserBaseModel?>> GetTelegramUserCachedInfoAsync(long telegramId, CancellationToken token = default);
 
     /// <summary>
     /// Удалить связь Telegram аккаунта с учётной записью сайта

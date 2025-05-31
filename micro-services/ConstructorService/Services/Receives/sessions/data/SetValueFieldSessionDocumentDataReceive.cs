@@ -10,13 +10,14 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Установить значение свойства сессии
 /// </summary>
-public class SetValueFieldSessionDocumentDataReceive(IConstructorService conService) : IResponseReceive<SetValueFieldDocumentDataModel?, TResponseModel<SessionOfDocumentDataModelDB>?>
+public class SetValueFieldSessionDocumentDataReceive(IConstructorService conService) 
+    : IResponseReceive<SetValueFieldDocumentDataModel?, TResponseModel<SessionOfDocumentDataModelDB?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetValueFieldSessionDocumentDataReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleActionAsync(SetValueFieldDocumentDataModel? payload, CancellationToken token = default)
+    public async Task<TResponseModel<SessionOfDocumentDataModelDB?>?> ResponseHandleActionAsync(SetValueFieldDocumentDataModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.SetValueFieldSessionDocumentDataAsync(payload, token);

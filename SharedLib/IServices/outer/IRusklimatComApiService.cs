@@ -22,7 +22,7 @@ public interface IRusklimatComApiService : IOuterApiService
     /// <summary>
     /// Получение свойств товаров
     /// </summary>
-    public Task<TResponseModel<PropertiesRusklimatResponseModel>> GetPropertiesAsync(CancellationToken token = default);
+    public Task<TResponseModel<PropertiesRusklimatResponseModel?>> GetPropertiesAsync(CancellationToken token = default);
 
     /// <summary>
     /// Получение товаров каталога

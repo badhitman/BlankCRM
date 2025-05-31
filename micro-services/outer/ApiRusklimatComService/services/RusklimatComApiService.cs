@@ -143,8 +143,8 @@ public class RusklimatComApiService(
             return ResponseBaseModel.CreateWarning($"В очереди есть не выполненные задачи");
 
         TResponseModel<UnitsRusklimatResponseModel?> getUnits = default!;
-        TResponseModel<CategoriesRusklimatResponseModel> getCats = default!;
-        TResponseModel<PropertiesRusklimatResponseModel> getProps = default!;
+        TResponseModel<CategoriesRusklimatResponseModel?> getCats = default!;
+        TResponseModel<PropertiesRusklimatResponseModel?> getProps = default!;
 
         List<ProductRusklimatModel> prodsData = [];
 
@@ -409,7 +409,7 @@ public class RusklimatComApiService(
     /// <inheritdoc/>
     public async Task<TResponseModel<UnitsRusklimatResponseModel?>> GetUnitsAsync(CancellationToken token = default)
     {
-        TResponseModel<UnitsRusklimatResponseModel> res = new();
+        TResponseModel<UnitsRusklimatResponseModel?> res = new();
         await GetClient(token: token);
         if (httpClient is null)
         {
@@ -456,9 +456,9 @@ public class RusklimatComApiService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<PropertiesRusklimatResponseModel>> GetPropertiesAsync(CancellationToken token = default)
+    public async Task<TResponseModel<PropertiesRusklimatResponseModel?>> GetPropertiesAsync(CancellationToken token = default)
     {
-        TResponseModel<PropertiesRusklimatResponseModel> res = new();
+        TResponseModel<PropertiesRusklimatResponseModel?> res = new();
         await GetClient(token: token);
         if (httpClient is null)
         {

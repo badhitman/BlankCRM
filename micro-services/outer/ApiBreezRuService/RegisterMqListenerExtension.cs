@@ -19,7 +19,7 @@ public static class RegisterMqListenerExtension
     {
         return services
             .RegisterMqListener<DownloadAndSaveReceive, object, ResponseBaseModel>()
-            .RegisterMqListener<LeftoversGetReceive, string, TResponseModel<List<BreezRuLeftoverModel>>>()
+            .RegisterMqListener<LeftoversGetReceive, string, TResponseModel<List<BreezRuLeftoverModel>?>>()
             .RegisterMqListener<HealthCheckReceive, object, TResponseModel<List<RabbitMqManagementResponseModel>>>()
             .RegisterMqListener<GetTechProductReceive, TechRequestBreezModel, TResponseModel<List<TechProductRealBreezRuModel>>>()
             .RegisterMqListener<GetTechCategoryReceive, TechRequestBreezModel, TResponseModel<List<TechCategoryRealBreezRuModel>>>()

@@ -184,7 +184,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     /// <inheritdoc/>
     public async Task<TResponseModel<string?>> GetBotUsernameAsync(CancellationToken token = default)
     {
-        TResponseModel<string> res = new();
+        TResponseModel<string?> res = new();
         Telegram.Bot.Types.User me;
         string msg;
         try
@@ -306,9 +306,9 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MessageComplexIdsModel>> SendTextMessageTelegramAsync(SendTextMessageTelegramBotModel message, CancellationToken token = default)
+    public async Task<TResponseModel<MessageComplexIdsModel?>> SendTextMessageTelegramAsync(SendTextMessageTelegramBotModel message, CancellationToken token = default)
     {
-        TResponseModel<MessageComplexIdsModel> res = new();
+        TResponseModel<MessageComplexIdsModel?> res = new();
         string msg;
         if (string.IsNullOrWhiteSpace(message.Message))
         {

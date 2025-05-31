@@ -30,7 +30,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<TagsSelectReceive, TPaginationRequestModel<SelectMetadataRequestModel>, TPaginationResponseModel<TagModelDB>>()
             .RegisterMqListener<FilesAreaGetMetadataReceive, FilesAreaMetadataRequestModel, TResponseModel<FilesAreaMetadataModel[]>>()
             .RegisterMqListener<FilesSelectReceive, TPaginationRequestModel<SelectMetadataRequestModel>, TPaginationResponseModel<StorageFileModelDB>>()
-            .RegisterMqListener<ReadParameterReceive, StorageMetadataModel, TResponseModel<StorageCloudParameterPayloadModel>>()
+            .RegisterMqListener<ReadParameterReceive, StorageMetadataModel, TResponseModel<StorageCloudParameterPayloadModel?>>()
             .RegisterMqListener<ReadParametersReceive, StorageMetadataModel[], TResponseModel<List<StorageCloudParameterPayloadModel>>>()
             .RegisterMqListener<FindParametersReceive, RequestStorageBaseModel, TResponseModel<FoundParameterModel[]?>>()
             ;

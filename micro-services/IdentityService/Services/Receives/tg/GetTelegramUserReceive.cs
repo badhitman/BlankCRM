@@ -12,15 +12,15 @@ namespace Transmission.Receives.web;
 /// Данные возвращаются из кэша: каждое сообщение в TelegramBot кеширует информацию о пользователе в БД
 /// </summary>
 public class GetTelegramUserReceive(IIdentityTools identityRepo, ILogger<GetTelegramUserReceive> _logger) 
-    : IResponseReceive<long, TResponseModel<TelegramUserBaseModel>?>
+    : IResponseReceive<long, TResponseModel<TelegramUserBaseModel?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetTelegramUserReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TelegramUserBaseModel>?> ResponseHandleActionAsync(long payload, CancellationToken token = default)
+    public async Task<TResponseModel<TelegramUserBaseModel?>?> ResponseHandleActionAsync(long payload, CancellationToken token = default)
     {
-        TResponseModel<TelegramUserBaseModel> res = new();
+        TResponseModel<TelegramUserBaseModel?> res = new();
         string msg;
         if (payload == 0)
         {

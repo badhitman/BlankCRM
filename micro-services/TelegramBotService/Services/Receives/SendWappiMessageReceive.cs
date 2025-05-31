@@ -15,17 +15,17 @@ namespace Transmission.Receives.telegram;
 public class SendWappiMessageReceive(
     ILogger<SendWappiMessageReceive> _logger,
     IHttpClientFactory HttpClientFactory,
-    IStorageTransmission StorageTransmissionRepo) : IResponseReceive<EntryAltExtModel?, TResponseModel<SendMessageResponseModel>?>
+    IStorageTransmission StorageTransmissionRepo) : IResponseReceive<EntryAltExtModel?, TResponseModel<SendMessageResponseModel?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SendWappiMessageReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SendMessageResponseModel>?> ResponseHandleActionAsync(EntryAltExtModel? req, CancellationToken token = default)
+    public async Task<TResponseModel<SendMessageResponseModel?>?> ResponseHandleActionAsync(EntryAltExtModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        TResponseModel<SendMessageResponseModel> res = new();
+        TResponseModel<SendMessageResponseModel?> res = new();
 
         TResponseModel<string?> wappiToken = default!, wappiProfileId = default!;
         TResponseModel<bool?> wappiEnable = default!;

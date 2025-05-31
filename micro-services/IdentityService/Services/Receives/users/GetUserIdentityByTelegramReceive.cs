@@ -13,7 +13,7 @@ namespace IdentityService.Services.Receives.users;
 /// Find user identity by telegram - receive
 /// </summary>
 public class GetUserIdentityByTelegramReceive(IIdentityTools IdentityRepo, IMemoryCache cache)
-    : IResponseReceive<long[]?, TResponseModel<UserInfoModel[]>?>
+    : IResponseReceive<long[]?, TResponseModel<UserInfoModel[]?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityByTelegramIdsReceive;

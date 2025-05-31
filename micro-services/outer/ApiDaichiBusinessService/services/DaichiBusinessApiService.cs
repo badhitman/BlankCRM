@@ -34,14 +34,14 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
         if (hc.Response is null || hc.Response.Sum(x => x.messages) != 0)
             return ResponseBaseModel.CreateWarning($"В очереди есть не выполненные задачи");
 
-        TResponseModel<ProductsDaichiBusinessResultModel> products = default!;
-        TResponseModel<StoresDaichiBusinessResponseModel> stores = default!;
+        TResponseModel<ProductsDaichiBusinessResultModel?> products = default!;
+        TResponseModel<StoresDaichiBusinessResponseModel?> stores = default!;
         List<ParameterElementDaichiJsonModel> parametersAll = [];
         await Task.WhenAll([
             Task.Run(async () =>
             {
                 ProductParamsRequestDaichiModel _rq = new (){ PageSize = 100, Page = 1 };
-                TResponseModel<ProductsParamsDaichiBusinessResponseModel> productsParameters = await ProductsParamsGetAsync(_rq, token);
+                TResponseModel<ProductsParamsDaichiBusinessResponseModel?> productsParameters = await ProductsParamsGetAsync(_rq, token);
 
                 if(productsParameters.Response?.Result?.Data is null)
                     logger.LogError($"Не удалось скачать `{nameof(ProductsParamsGetAsync)}`");
@@ -225,9 +225,9 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ProductsDaichiBusinessResultModel>> ProductsGetAsync(ProductsRequestDaichiModel req, CancellationToken token = default)
+    public async Task<TResponseModel<ProductsDaichiBusinessResultModel?>> ProductsGetAsync(ProductsRequestDaichiModel req, CancellationToken token = default)
     {
-        TResponseModel<ProductsDaichiBusinessResultModel> res = new();
+        TResponseModel<ProductsDaichiBusinessResultModel?> res = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"/products/get/?access-token={_conf.Value.Token}&store-id={req.StoreId}", token);
         logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
@@ -261,9 +261,9 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ProductsParamsDaichiBusinessResponseModel>> ProductsParamsGetAsync(ProductParamsRequestDaichiModel req, CancellationToken token = default)
+    public async Task<TResponseModel<ProductsParamsDaichiBusinessResponseModel?>> ProductsParamsGetAsync(ProductParamsRequestDaichiModel req, CancellationToken token = default)
     {
-        TResponseModel<ProductsParamsDaichiBusinessResponseModel> res = new();
+        TResponseModel<ProductsParamsDaichiBusinessResponseModel?> res = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"/productparams/get/?access-token={_conf.Value.Token}&page-size={req.PageSize}&page={req.Page}", token);
         logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");
@@ -305,9 +305,9 @@ public class DaichiBusinessApiService(IHttpClientFactory HttpClientFactory,
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StoresDaichiBusinessResponseModel>> StoresGetAsync(CancellationToken token = default)
+    public async Task<TResponseModel<StoresDaichiBusinessResponseModel?>> StoresGetAsync(CancellationToken token = default)
     {
-        TResponseModel<StoresDaichiBusinessResponseModel> res = new();
+        TResponseModel<StoresDaichiBusinessResponseModel?> res = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiDaichiBusiness.ToString());
         HttpResponseMessage response = await httpClient.GetAsync($"/stores/get/?access-token={_conf.Value.Token}", token);
         string msg;

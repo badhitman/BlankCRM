@@ -14,7 +14,7 @@ namespace IdentityService.Services.Receives.users;
 /// Получить пользователей из Identity по их Email
 /// </summary>
 public class GetUsersIdentityByEmailReceive(IIdentityTools IdentityRepo, IMemoryCache cache)
-    : IResponseReceive<string[]?, TResponseModel<UserInfoModel[]>?>
+    : IResponseReceive<string[]?, TResponseModel<UserInfoModel[]?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityByEmailReceive;

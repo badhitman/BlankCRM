@@ -13,12 +13,12 @@ public interface IConstructorService
     /// <summary>
     /// Получить сессию
     /// </summary>
-    public Task<TResponseModel<SessionOfDocumentDataModelDB>> GetSessionDocumentDataAsync(string guid_session, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<SessionOfDocumentDataModelDB?>> GetSessionDocumentDataAsync(string guid_session, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Установить значение свойства сессии
     /// </summary>
-    public Task<TResponseModel<SessionOfDocumentDataModelDB>> SetValueFieldSessionDocumentDataAsync(SetValueFieldDocumentDataModel req, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<SessionOfDocumentDataModelDB?>> SetValueFieldSessionDocumentDataAsync(SetValueFieldDocumentDataModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Отправить опрос на проверку (от клиента)
@@ -91,7 +91,7 @@ public interface IConstructorService
     /// <summary>
     /// Получить текущий основной/используемый проект
     /// </summary>
-    public Task<TResponseModel<MainProjectViewModel>> GetCurrentMainProjectAsync(string user_id, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<MainProjectViewModel?>> GetCurrentMainProjectAsync(string user_id, CancellationToken cancellationToken = default);
     #endregion
 
     /// <summary>
@@ -136,7 +136,7 @@ public interface IConstructorService
     /// <summary>
     /// Получить элементы справочника/списка
     /// </summary>
-    public Task<TResponseModel<List<EntryModel>>> GetElementsOfDirectoryAsync(int directory_id, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<List<EntryModel>?>> GetElementsOfDirectoryAsync(int directory_id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Создать элемент справочника
@@ -187,7 +187,7 @@ public interface IConstructorService
     /// <summary>
     /// Получить форму
     /// </summary>
-    public Task<TResponseModel<FormConstructorModelDB>> GetFormAsync(int form_id, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<FormConstructorModelDB?>> GetFormAsync(int form_id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Обновить/создать форму (имя, описание, `признак таблицы`)
@@ -246,7 +246,7 @@ public interface IConstructorService
     /// <summary>
     /// Обновить/создать схему документа
     /// </summary>
-    public Task<TResponseModel<DocumentSchemeConstructorModelDB>> UpdateOrCreateDocumentSchemeAsync(TAuthRequestModel<EntryConstructedModel> req, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<DocumentSchemeConstructorModelDB?>> UpdateOrCreateDocumentSchemeAsync(TAuthRequestModel<EntryConstructedModel> req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Запрос схем документов
@@ -256,7 +256,7 @@ public interface IConstructorService
     /// <summary>
     /// Получить схему документа
     /// </summary>
-    public Task<TResponseModel<DocumentSchemeConstructorModelDB>> GetDocumentSchemeAsync(int questionnaire_id, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<DocumentSchemeConstructorModelDB?>> GetDocumentSchemeAsync(int questionnaire_id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Удалить схему документа
@@ -278,7 +278,7 @@ public interface IConstructorService
     /// <summary>
     /// Получить страницу анкеты/опроса
     /// </summary>
-    public Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> GetTabOfDocumentSchemeAsync(int questionnaire_page_id, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB?>> GetTabOfDocumentSchemeAsync(int questionnaire_page_id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Удалить страницу опроса/анкеты
@@ -289,7 +289,7 @@ public interface IConstructorService
     /// <summary>
     /// Получить связь [таба/вкладки схемы документа] с [формой]
     /// </summary>
-    public Task<TResponseModel<FormToTabJoinConstructorModelDB>> GetTabDocumentSchemeJoinFormAsync(int questionnaire_page_join_form_id, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<FormToTabJoinConstructorModelDB?>> GetTabDocumentSchemeJoinFormAsync(int questionnaire_page_join_form_id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Обновить/создать связь [таба/вкладки схемы документа] с [формой]
@@ -325,12 +325,12 @@ public interface IConstructorService
     /// <summary>
     /// Получить сессию
     /// </summary>
-    public Task<TResponseModel<SessionOfDocumentDataModelDB>> GetSessionDocumentAsync(SessionGetModel req, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<SessionOfDocumentDataModelDB?>> GetSessionDocumentAsync(SessionGetModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Обновить (или создать) сессию опроса/анкеты
     /// </summary>
-    public Task<TResponseModel<SessionOfDocumentDataModelDB>> UpdateOrCreateSessionDocumentAsync(SessionOfDocumentDataModelDB session, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<SessionOfDocumentDataModelDB?>> UpdateOrCreateSessionDocumentAsync(SessionOfDocumentDataModelDB session, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Запросить порцию сессий (с пагинацией)

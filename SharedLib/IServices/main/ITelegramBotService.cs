@@ -52,7 +52,7 @@ public interface ITelegramBotService
     /// <summary>
     /// SendTextMessageTelegram
     /// </summary>
-    public Task<TResponseModel<MessageComplexIdsModel>> SendTextMessageTelegramAsync(SendTextMessageTelegramBotModel req, CancellationToken token = default);
+    public Task<TResponseModel<MessageComplexIdsModel?>> SendTextMessageTelegramAsync(SendTextMessageTelegramBotModel req, CancellationToken token = default);
 
     /// <summary>
     /// MessagesSelectTelegram

@@ -581,11 +581,11 @@ public class StorageServiceImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageCloudParameterPayloadModel>> ReadParameterAsync(StorageMetadataModel req, CancellationToken token = default)
+    public async Task<TResponseModel<StorageCloudParameterPayloadModel?>> ReadParameterAsync(StorageMetadataModel req, CancellationToken token = default)
     {
         req.Normalize();
         string mem_key = $"{req.PropertyName}/{req.OwnerPrimaryKey}/{req.PrefixPropertyName}/{req.ApplicationName}".Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
-        TResponseModel<StorageCloudParameterPayloadModel> res = new();
+        TResponseModel<StorageCloudParameterPayloadModel?> res = new();
         if (cache.TryGetValue(mem_key, out StorageCloudParameterPayloadModel? sd))
         {
             res.Response = sd;
@@ -635,7 +635,7 @@ public class StorageServiceImpl(
         await Task.WhenAll(req.Select(x => Task.Run(async () =>
         {
             x.Normalize();
-            TResponseModel<StorageCloudParameterPayloadModel> _subResult = await ReadParameterAsync(x);
+            TResponseModel<StorageCloudParameterPayloadModel?> _subResult = await ReadParameterAsync(x);
             if (_subResult.Success() && _subResult.Response is not null)
                 res.Add(_subResult.Response);
             if (_subResult.Messages.Count != 0)

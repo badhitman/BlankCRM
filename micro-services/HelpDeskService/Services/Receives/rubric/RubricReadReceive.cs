@@ -10,7 +10,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// Прочитать рубрику (со всеми вышестоящими владельцами)
 /// </summary>
-public class RubricReadReceive(IHelpDeskService hdRepo) : IResponseReceive<int, TResponseModel<List<RubricIssueHelpDeskModelDB>>?>
+public class RubricReadReceive(IHelpDeskService hdRepo) : IResponseReceive<int, TResponseModel<List<RubricIssueHelpDeskModelDB>?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricForIssuesReadHelpDeskReceive;
@@ -18,7 +18,7 @@ public class RubricReadReceive(IHelpDeskService hdRepo) : IResponseReceive<int, 
     /// <summary>
     /// Прочитать рубрику (со всеми вышестоящими владельцами)
     /// </summary>
-    public async Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>?> ResponseHandleActionAsync(int rubricId, CancellationToken token = default)
+    public async Task<TResponseModel<List<RubricIssueHelpDeskModelDB>?>?> ResponseHandleActionAsync(int rubricId, CancellationToken token = default)
     {
         return await hdRepo.RubricReadAsync(rubricId, token);
     }

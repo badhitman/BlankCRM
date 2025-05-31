@@ -18,9 +18,9 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection ApiDaichiBusinessRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<StoresGetReceive, object?, TResponseModel<StoresDaichiBusinessResponseModel>>()
-            .RegisterMqListener<ProductsParamsGetReceive, ProductParamsRequestDaichiModel, TResponseModel<ProductsParamsDaichiBusinessResponseModel>>()
-            .RegisterMqListener<ProductsGetReceive, ProductsRequestDaichiModel, TResponseModel<ProductsDaichiBusinessResultModel>>()
+            .RegisterMqListener<StoresGetReceive, object?, TResponseModel<StoresDaichiBusinessResponseModel?>>()
+            .RegisterMqListener<ProductsParamsGetReceive, ProductParamsRequestDaichiModel, TResponseModel<ProductsParamsDaichiBusinessResponseModel?>>()
+            .RegisterMqListener<ProductsGetReceive, ProductsRequestDaichiModel, TResponseModel<ProductsDaichiBusinessResultModel?>>()
             .RegisterMqListener<DownloadAndSaveReceive, object, ResponseBaseModel>()
             .RegisterMqListener<ParameterUpdateReceive, ParameterEntryDaichiModelDB, ResponseBaseModel>()
             .RegisterMqListener<ProductUpdateReceive, ProductDaichiModelDB, ResponseBaseModel>()

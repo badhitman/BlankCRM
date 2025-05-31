@@ -667,9 +667,9 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricReadAsync(int rubricId, CancellationToken token = default)
+    public async Task<TResponseModel<List<RubricIssueHelpDeskModelDB>?>> RubricReadAsync(int rubricId, CancellationToken token = default)
     {
-        TResponseModel<List<RubricIssueHelpDeskModelDB>> res = new();
+        TResponseModel<List<RubricIssueHelpDeskModelDB>?> res = new();
 
         if (rubricId < 1)
             return res;

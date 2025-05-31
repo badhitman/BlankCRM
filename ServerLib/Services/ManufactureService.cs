@@ -166,9 +166,9 @@ public class ManufactureService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ManageManufactureModelDB>> ReadManufactureConfigAsync(int projectId, string userId, CancellationToken token = default)
+    public async Task<TResponseModel<ManageManufactureModelDB?>> ReadManufactureConfigAsync(int projectId, string userId, CancellationToken token = default)
     {
-        TResponseModel<ManageManufactureModelDB> res = new();
+        TResponseModel<ManageManufactureModelDB?> res = new();
         TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentityAsync([userId], token);
         if (!findUsers.Success() || findUsers.Response is null)
         {

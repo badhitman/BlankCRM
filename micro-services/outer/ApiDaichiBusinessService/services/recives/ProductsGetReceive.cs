@@ -11,13 +11,13 @@ namespace Transmission.Receives.Outers.Daichi;
 /// ProductsGetReceive
 /// </summary>
 public class ProductsGetReceive(IDaichiBusinessApiService daichiRepo)
-    : IResponseReceive<ProductsRequestDaichiModel?, TResponseModel<ProductsDaichiBusinessResultModel>?>
+    : IResponseReceive<ProductsRequestDaichiModel?, TResponseModel<ProductsDaichiBusinessResultModel?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProductsGetDaichiReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ProductsDaichiBusinessResultModel>?> ResponseHandleActionAsync(ProductsRequestDaichiModel? payload, CancellationToken token = default)
+    public async Task<TResponseModel<ProductsDaichiBusinessResultModel?>?> ResponseHandleActionAsync(ProductsRequestDaichiModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await daichiRepo.ProductsGetAsync(payload, token);

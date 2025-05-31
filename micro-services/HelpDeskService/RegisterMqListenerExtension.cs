@@ -31,7 +31,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<ArticlesReadReceive, int[], TResponseModel<ArticleModelDB[]>>()
             .RegisterMqListener<ArticleCreateOrUpdateReceive, ArticleModelDB, TResponseModel<int>>()
             .RegisterMqListener<IssuesReadReceive, TAuthRequestModel<IssuesReadRequestModel>, TResponseModel<IssueHelpDeskModelDB[]>>()
-            .RegisterMqListener<RubricReadReceive, int, TResponseModel<List<RubricIssueHelpDeskModelDB>>>()
+            .RegisterMqListener<RubricReadReceive, int, TResponseModel<List<RubricIssueHelpDeskModelDB>?>>()
             .RegisterMqListener<RubricsGetReceive, int[], TResponseModel<List<RubricIssueHelpDeskModelDB>>>()
             .RegisterMqListener<SubscribeUpdateReceive, TAuthRequestModel<SubscribeUpdateRequestModel>, TResponseModel<bool?>>()
             .RegisterMqListener<SubscribesListReceive, TAuthRequestModel<int>, TResponseModel<List<SubscriberIssueHelpDeskModelDB>>>()

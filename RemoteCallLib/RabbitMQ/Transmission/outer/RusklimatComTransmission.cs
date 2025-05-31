@@ -17,16 +17,16 @@ public class RusklimatComTransmission(IRabbitClient rabbitClient) : IRusklimatCo
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.DownloadAndSaveRusklimatReceive, waitResponse: false, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<CategoriesRusklimatResponseModel>> GetCategoriesAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<CategoriesRusklimatResponseModel>>(TransmissionQueues.GetCategoriesRusklimatReceive, token: token) ?? new();
+    public async Task<TResponseModel<CategoriesRusklimatResponseModel?>> GetCategoriesAsync(CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<CategoriesRusklimatResponseModel?>>(TransmissionQueues.GetCategoriesRusklimatReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<ProductsRusklimatResponseModel?>> GetProductsAsync(RusklimatPaginationRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<ProductsRusklimatResponseModel?>>(TransmissionQueues.GetProductsRusklimatReceive, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<PropertiesRusklimatResponseModel>> GetPropertiesAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<PropertiesRusklimatResponseModel>>(TransmissionQueues.GetPropertiesRusklimatReceive, token: token) ?? new();
+    public async Task<TResponseModel<PropertiesRusklimatResponseModel?>> GetPropertiesAsync(CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<PropertiesRusklimatResponseModel?>>(TransmissionQueues.GetPropertiesRusklimatReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<UnitsRusklimatResponseModel?>> GetUnitsAsync(CancellationToken token = default)
