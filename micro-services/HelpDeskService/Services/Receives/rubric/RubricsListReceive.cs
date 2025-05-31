@@ -10,7 +10,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// Получить рубрики, вложенные в рубрику (если не указано, то root перечень)
 /// </summary>
-public class RubricsListReceive(IHelpDeskService hdRepo)
+public class RubricsListReceive(IRubricsService hdRepo)
     : IResponseReceive<RubricsListRequestModel?, List<UniversalBaseModel>?>
 {
     /// <inheritdoc/>

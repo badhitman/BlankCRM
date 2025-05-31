@@ -42,7 +42,7 @@ public class HelpDeskTransmission(IRabbitClient rabbitClient) : IHelpDeskTransmi
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricIssueHelpDeskModelDB issueTheme, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.RubricForIssuesUpdateHelpDeskReceive, issueTheme, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.RubricForIssuesUpdateReceive, issueTheme, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<List<UniversalBaseModel>> RubricsListAsync(RubricsListRequestModel req, CancellationToken token = default)

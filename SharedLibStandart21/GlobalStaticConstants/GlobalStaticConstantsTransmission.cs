@@ -714,7 +714,7 @@ public static partial class GlobalStaticConstantsTransmission
 
         #region HelpDesk
         /// <inheritdoc/>
-        public readonly static string RubricForIssuesUpdateHelpDeskReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.HELPDESK_CONTROLLER_NAME, $"{Routes.ISSUE_CONTROLLER_NAME}-{Routes.RUBRIC_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
+        public readonly static string RubricForIssuesUpdateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.HELPDESK_CONTROLLER_NAME, $"{Routes.ISSUE_CONTROLLER_NAME}-{Routes.RUBRIC_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string ArticleUpdateHelpDeskReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.HELPDESK_CONTROLLER_NAME, Routes.ARTICLE_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);

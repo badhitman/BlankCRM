@@ -11,7 +11,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// Сдвинуть рубрику
 /// </summary>
-public class RubricMoveReceive(IHelpDeskService hdRepo, ILogger<RubricMoveReceive> loggerRepo)
+public class RubricMoveReceive(IRubricsService hdRepo, ILogger<RubricMoveReceive> loggerRepo)
     : IResponseReceive<TAuthRequestModel<RowMoveModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

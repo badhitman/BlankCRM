@@ -19,7 +19,7 @@ public static class RegisterMqListenerExtension
     {
         return services
             .RegisterMqListener<RubricsListReceive, RubricsListRequestModel, List<UniversalBaseModel>>()
-            .RegisterMqListener<RubricCreateOrUpdateReceive, RubricIssueHelpDeskModelDB, TResponseModel<int>>()
+            .RegisterMqListener<RubricCreateOrUpdateReceive, RubricStandardModel, TResponseModel<int>>()
             .RegisterMqListener<IssuesSelectReceive, TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>>, TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>>()
             .RegisterMqListener<ArticlesSelectReceive, TPaginationRequestModel<SelectArticlesRequestModel>, TPaginationResponseModel<ArticleModelDB>>()
             .RegisterMqListener<IssueCreateOrUpdateReceive, TAuthRequestModel<UniversalUpdateRequestModel>, TResponseModel<int>>()

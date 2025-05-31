@@ -125,6 +125,7 @@ public class Program
             .AddScoped<ITelegramTransmission, TelegramTransmission>()
             .AddScoped<ICommerceTransmission, CommerceTransmission>()
             .AddScoped<IHelpDeskService, HelpDeskImplementService>()
+            .AddScoped<IRubricsService, RubricsImplementService>()
             .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
