@@ -23,28 +23,33 @@ public partial class MarkersOfInstrumentComponent : BlazorBusyComponentBaseModel
     public required InstrumentTradeStockSharpViewModel Instrument { get; set; }
 
 
-    List<MarkerInstrumentStockSharpViewModel> orignMarkers = [];
+    List<MarkerInstrumentStockSharpViewModel> originMarkers = [];
 
     readonly MarkersInstrumentStockSharpEnum[] AllMarkers = Enum.GetValues<MarkersInstrumentStockSharpEnum>();
 
-    private IEnumerable<MarkersInstrumentStockSharpEnum> _options
+    IEnumerable<MarkersInstrumentStockSharpEnum>? _selectedOptions;
+    private IEnumerable<MarkersInstrumentStockSharpEnum>? SelectedOptions
     {
-        get => AllMarkers.Where(x => orignMarkers.Any(y => y.MarkerDescriptor == x));
-        set => InvokeAsync(async () => await SetMarkers(value));
+        get => _selectedOptions;
+        set
+        {
+            _selectedOptions = value;
+            InvokeAsync(SetMarkers);
+        }
     }
 
-    async Task SetMarkers(IEnumerable<MarkersInstrumentStockSharpEnum>? set)
+    async Task SetMarkers()
     {
         await SetBusyAsync();
         SetMarkersForInstrumentRequestModel req = new()
         {
             InstrumentId = Instrument.Id,
-            SetMarkers = set is null ? null : [.. set]
+            SetMarkers = SelectedOptions is null ? null : [.. SelectedOptions]
         };
         ResponseBaseModel? resUpd = await SsRepo.SetMarkersForInstrumentAsync(req);
         SnackbarRepo.ShowMessagesResponse(resUpd.Messages);
         TResponseModel<List<MarkerInstrumentStockSharpViewModel>> res = await SsRepo.GetMarkersForInstrumentAsync(Instrument.Id);
-        orignMarkers = res.Response ?? [];
+        originMarkers = res.Response ?? [];
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
     }
@@ -54,7 +59,8 @@ public partial class MarkersOfInstrumentComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         TResponseModel<List<MarkerInstrumentStockSharpViewModel>> res = await SsRepo.GetMarkersForInstrumentAsync(Instrument.Id);
-        orignMarkers = res.Response ?? [];
+        originMarkers = res.Response ?? [];
+        _selectedOptions = originMarkers.Select(x=>x.MarkerDescriptor);
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
     }
