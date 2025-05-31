@@ -25,18 +25,28 @@ public partial class MarkersOfInstrumentComponent : BlazorBusyComponentBaseModel
 
     List<MarkerInstrumentStockSharpViewModel> orignMarkers = [];
 
-
     readonly MarkersInstrumentStockSharpEnum[] AllMarkers = Enum.GetValues<MarkersInstrumentStockSharpEnum>();
 
-    //Enum.GetValues<MarkersInstrumentStockSharpEnum>()
-    //MarkersInstrumentStockSharpEnum[] _states = []; // orignMarkers
     private IEnumerable<MarkersInstrumentStockSharpEnum> _options
     {
         get => AllMarkers.Where(x => orignMarkers.Any(y => y.MarkerDescriptor == x));
-        set
+        set => InvokeAsync(async () => await SetMarkers(value));
+    }
+
+    async Task SetMarkers(IEnumerable<MarkersInstrumentStockSharpEnum>? set)
+    {
+        await SetBusyAsync();
+        SetMarkersForInstrumentRequestModel req = new()
         {
-            //_states = (MarkersInstrumentStockSharpEnum[])value;
-        }
+            InstrumentId = Instrument.Id,
+            SetMarkers = set is null ? null : [.. set]
+        };
+        ResponseBaseModel? resUpd = await SsRepo.SetMarkersForInstrumentAsync(req);
+        SnackbarRepo.ShowMessagesResponse(resUpd.Messages);
+        TResponseModel<List<MarkerInstrumentStockSharpViewModel>> res = await SsRepo.GetMarkersForInstrumentAsync(Instrument.Id);
+        orignMarkers = res.Response ?? [];
+        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
