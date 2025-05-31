@@ -23,7 +23,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     NavigationManager NavRepo { get; set; } = default!;
 
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IRubricsTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>

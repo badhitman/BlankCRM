@@ -17,6 +17,10 @@ public abstract class IssueWrapBaseModel : BlazorBusyComponentBaseAuthModel
     internal IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
+    internal IRubricsTransmission RubricsRepo { get; set; } = default!;
+
+
+    [Inject]
     internal NavigationManager NavRepo { get; set; } = default!;
 
 

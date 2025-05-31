@@ -21,6 +21,11 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
     [Inject]
     IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
+
+    [Inject]
+    IRubricsTransmission RubricsRepo { get; set; } = default!;
+
+
     [Inject]
     IStorageTransmission StorageRepo { get; set; } = default!;
 
@@ -137,7 +142,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         int[] orderWarehouses = [.. Document.OfficesTabs!.Select(x => x.WarehouseId).Distinct()];
         await SetBusyAsync();
 
-        TResponseModel<List<RubricIssueHelpDeskModelDB>> getWarehouses = await HelpDeskRepo.RubricsGetAsync(orderWarehouses);
+        TResponseModel<List<RubricIssueHelpDeskModelDB>> getWarehouses = await RubricsRepo.RubricsGetAsync(orderWarehouses);
         SnackbarRepo.ShowMessagesResponse(getWarehouses.Messages);
         currentWarehouses = getWarehouses.Response ?? [];
 

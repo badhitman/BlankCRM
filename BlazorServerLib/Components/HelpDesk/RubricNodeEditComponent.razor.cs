@@ -14,7 +14,7 @@ namespace BlazorWebLib.Components.HelpDesk;
 public partial class RubricNodeEditComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IRubricsTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>

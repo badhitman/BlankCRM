@@ -13,7 +13,7 @@ namespace BlazorWebLib.Components.HelpDesk;
 public partial class RubricsManageComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IRubricsTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>

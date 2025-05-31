@@ -2,6 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace SharedLib;
 
 /// <summary>
@@ -27,7 +31,7 @@ public interface IRubricsService
     /// <summary>
     /// Rubric read
     /// </summary>
-    public Task<TResponseModel<List<RubricStandardModel>?>> RubricReadAsync(int rubricId, CancellationToken token = default);
+    public Task<TResponseModel<List<RubricStandardModel>>> RubricReadAsync(int rubricId, CancellationToken token = default);
 
     /// <summary>
     /// Rubrics get

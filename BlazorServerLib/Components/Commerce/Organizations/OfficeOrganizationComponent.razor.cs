@@ -6,7 +6,6 @@ using BlazorWebLib.Components.HelpDesk;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BlazorWebLib.Components.Commerce.Organizations;
 
@@ -16,7 +15,7 @@ namespace BlazorWebLib.Components.Commerce.Organizations;
 public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IRubricsTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
     ICommerceTransmission CommerceRepo { get; set; } = default!;

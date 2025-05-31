@@ -217,6 +217,7 @@ builder.Services
     .AddScoped<ICommerceTransmission, CommerceTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()
     .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
+    .AddScoped<IRubricsTransmission, RubricsTransmission>()
     .AddScoped<IStorageTransmission, StorageTransmission>()
     .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
     .AddScoped<IConstructorTransmission, ConstructorTransmission>()

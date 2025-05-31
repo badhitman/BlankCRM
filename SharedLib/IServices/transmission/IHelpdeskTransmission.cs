@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <summary>
-/// Удалённый вызов команд в HelpDesk службе
+/// IHelpDeskTransmission
 /// </summary>
 public interface IHelpDeskTransmission
 {
@@ -34,33 +34,6 @@ public interface IHelpDeskTransmission
     /// Создать (обновить) статью
     /// </summary>
     public Task<TResponseModel<int>> ArticleCreateOrUpdateAsync(ArticleModelDB article, CancellationToken token = default);
-    #endregion
-
-    #region rubric
-    /// <summary>
-    /// Получить темы обращений
-    /// </summary>
-    public Task<List<UniversalBaseModel>> RubricsListAsync(RubricsListRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Создать тему для обращений
-    /// </summary>
-    public Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricIssueHelpDeskModelDB issueTheme, CancellationToken token = default);
-
-    /// <summary>
-    /// Сдвинуть рубрику
-    /// </summary>
-    public Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestModel<RowMoveModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Прочитать данные рубрики (вместе со всеми вышестоящими родителями)
-    /// </summary>
-    public Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricReadAsync(int rubricId, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить рубрики
-    /// </summary>
-    public Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricsGetAsync(IEnumerable<int> rubricsIds, CancellationToken token = default);
     #endregion
 
     #region issue
@@ -131,4 +104,34 @@ public interface IHelpDeskTransmission
     /// </summary>
     public Task<TResponseModel<IssueMessageHelpDeskModelDB[]>> MessagesListAsync(TAuthRequestModel<int> req, CancellationToken token = default);
     #endregion
+}
+/// <summary>
+/// IRubricsTransmission
+/// </summary>
+public interface IRubricsTransmission
+{
+    /// <summary>
+    /// Получить темы обращений
+    /// </summary>
+    public Task<List<UniversalBaseModel>> RubricsListAsync(RubricsListRequestModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// Создать тему для обращений
+    /// </summary>
+    public Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricIssueHelpDeskModelDB issueTheme, CancellationToken token = default);
+
+    /// <summary>
+    /// Сдвинуть рубрику
+    /// </summary>
+    public Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestModel<RowMoveModel> req, CancellationToken token = default);
+
+    /// <summary>
+    /// Прочитать данные рубрики (вместе со всеми вышестоящими родителями)
+    /// </summary>
+    public Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricReadAsync(int rubricId, CancellationToken token = default);
+
+    /// <summary>
+    /// Получить рубрики
+    /// </summary>
+    public Task<TResponseModel<List<RubricIssueHelpDeskModelDB>>> RubricsGetAsync(IEnumerable<int> rubricsIds, CancellationToken token = default);
 }

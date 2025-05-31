@@ -23,7 +23,7 @@ public abstract class BlazorBusyComponentRubricsCachedModel : BlazorBusyComponen
     /// HelpDesk
     /// </summary>
     [Inject]
-    protected IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    protected IRubricsTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <summary>

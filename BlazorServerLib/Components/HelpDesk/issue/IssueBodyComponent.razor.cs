@@ -103,7 +103,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
         {
             await SetBusyAsync();
 
-            TResponseModel<List<RubricIssueHelpDeskModelDB>> res = await HelpDeskRepo.RubricReadAsync(Issue.RubricIssueId.Value);
+            TResponseModel<List<RubricIssueHelpDeskModelDB>> res = await RubricsRepo.RubricReadAsync(Issue.RubricIssueId.Value);
             IsBusyProgress = false;
             SnackbarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;

@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components.HelpDesk;
 public partial class RubricNodeCreatingNewComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
+    IRubricsTransmission HelpDeskRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>

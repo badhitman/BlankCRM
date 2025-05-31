@@ -27,6 +27,7 @@ public partial class CommerceImplementService(
     IDbContextFactory<CommerceContext> commerceDbFactory,
     IWebTransmission webTransmissionRepo,
     IHelpDeskTransmission HelpDeskRepo,
+    IRubricsTransmission RubricsRepo,
     ITelegramTransmission tgRepo,
     ILogger<CommerceImplementService> loggerRepo,
     WebConfigModel _webConf,
@@ -915,7 +916,7 @@ public partial class CommerceImplementService(
                 return res;
 
             int[] rubricsIds = [.. req.OfficesTabs.Select(x => x.WarehouseId).Distinct()];
-            TResponseModel<List<RubricIssueHelpDeskModelDB>> getRubrics = await HelpDeskRepo.RubricsGetAsync(rubricsIds, token);
+            TResponseModel<List<RubricIssueHelpDeskModelDB>> getRubrics = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
             if (!getRubrics.Success())
             {
                 res.AddRangeMessages(getRubrics.Messages);
@@ -1390,7 +1391,7 @@ public partial class CommerceImplementService(
         }
 
         int[] rubricsIds = offersAll.SelectMany(x => x.Registers!).Select(x => x.WarehouseId).Distinct().ToArray();
-        TResponseModel<List<RubricIssueHelpDeskModelDB>> rubricsDb = await HelpDeskRepo.RubricsGetAsync(rubricsIds, token);
+        TResponseModel<List<RubricIssueHelpDeskModelDB>> rubricsDb = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
         List<IGrouping<NomenclatureModelDB?, OfferModelDB>> gof = offersAll.GroupBy(x => x.Nomenclature).Where(x => x.Any(y => y.Registers!.Any(z => z.Quantity > 0))).ToList();
         try
         {
