@@ -22,11 +22,11 @@ public class GetUsersIdentityByEmailReceive(IIdentityTools IdentityRepo, IMemory
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]>?> ResponseHandleActionAsync(string[]? users_emails = null, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]?>?> ResponseHandleActionAsync(string[]? users_emails = null, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(users_emails);
         users_emails = [.. users_emails.Where(x => MailAddress.TryCreate(x, out _)).Select(x => x.ToUpper())];
-        TResponseModel<UserInfoModel[]> res = new() { Response = [] };
+        TResponseModel<UserInfoModel[]?> res = new() { Response = [] };
         if (users_emails.Length == 0)
         {
             res.AddError("Пустой запрос");

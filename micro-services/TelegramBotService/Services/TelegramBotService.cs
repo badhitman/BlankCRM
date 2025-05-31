@@ -182,7 +182,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>> GetBotUsernameAsync(CancellationToken token = default)
+    public async Task<TResponseModel<string?>> GetBotUsernameAsync(CancellationToken token = default)
     {
         TResponseModel<string> res = new();
         Telegram.Bot.Types.User me;

@@ -34,7 +34,7 @@ public interface IBreezRuApiService : IOuterApiService
     /// <summary>
     /// остатки на складах
     /// </summary>
-    public Task<TResponseModel<List<BreezRuLeftoverModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default);
+    public Task<TResponseModel<List<BreezRuLeftoverModel>?>> LeftoversGetAsync(string? nc = null, CancellationToken token = default);
 
     /// <summary>
     /// Бренды

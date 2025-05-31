@@ -54,7 +54,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>> ReadToken2FAAsync(string userId, CancellationToken token = default)
+    public async Task<TResponseModel<string?>> ReadToken2FAAsync(string userId, CancellationToken token = default)
     {
         return new() { Response = await memCache.GetStringValueAsync(new MemCachePrefixModel(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.TOKEN_CONTROLLER_NAME), userId, token) };
     }

@@ -555,9 +555,9 @@ public class BreezRuApiService(IHttpClientFactory HttpClientFactory,
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<BreezRuLeftoverModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default)
+    public async Task<TResponseModel<List<BreezRuLeftoverModel>?>> LeftoversGetAsync(string? nc = null, CancellationToken token = default)
     {
-        TResponseModel<List<BreezRuLeftoverModel>> result = new();
+        TResponseModel<List<BreezRuLeftoverModel>?> result = new();
         using HttpClient httpClient = HttpClientFactory.CreateClient(HttpClientsNamesOuterEnum.ApiBreezRu.ToString());
         HttpResponseMessage response = await httpClient.GetAsync("leftovers/", token);
         logger.LogInformation($"http запрос: {response.RequestMessage?.RequestUri}");

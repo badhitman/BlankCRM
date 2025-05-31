@@ -17,7 +17,7 @@ public interface IIdentityTools
     /// <summary>
     /// Чтение 2fa токена (из кеша)
     /// </summary>
-    public Task<TResponseModel<string>> ReadToken2FAAsync(string userId, CancellationToken token = default);
+    public Task<TResponseModel<string?>> ReadToken2FAAsync(string userId, CancellationToken token = default);
 
     /// <summary>
     /// Генерация 2fa токена (и отправка на Email++)
@@ -129,12 +129,12 @@ public interface IIdentityTools
     /// <summary>
     /// Получить пользователей из Identity по их идентификаторам
     /// </summary>
-    public Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentityAsync(string[] req, CancellationToken token = default);
+    public Task<TResponseModel<UserInfoModel[]?>> GetUsersOfIdentityAsync(string[] req, CancellationToken token = default);
 
     /// <summary>
     /// Получить пользователей из Identity по их Email
     /// </summary>
-    public Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByEmailAsync(string[] req, CancellationToken token = default);
+    public Task<TResponseModel<UserInfoModel[]?>> GetUsersIdentityByEmailAsync(string[] req, CancellationToken token = default);
 
     /// <summary>
     /// Обновляет адрес Email, если токен действительный для пользователя.
@@ -221,7 +221,7 @@ public interface IIdentityTools
     /// <summary>
     /// Find user identity by telegram - receive
     /// </summary>
-    public Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByTelegramAsync(List<long> req, CancellationToken token = default);
+    public Task<TResponseModel<UserInfoModel[]?>> GetUsersIdentityByTelegramAsync(List<long> req, CancellationToken token = default);
 
     /// <summary>
     /// Инициировать новую процедуру привязки Telegram аккаунта к учётной записи сайта

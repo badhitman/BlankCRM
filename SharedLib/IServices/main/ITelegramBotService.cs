@@ -42,7 +42,7 @@ public interface ITelegramBotService
     /// <summary>
     /// GetBotUsername
     /// </summary>
-    public Task<TResponseModel<string>> GetBotUsernameAsync(CancellationToken token = default);
+    public Task<TResponseModel<string?>> GetBotUsernameAsync(CancellationToken token = default);
 
     /// <summary>
     /// GetFileTelegram

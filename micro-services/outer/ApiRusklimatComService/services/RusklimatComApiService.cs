@@ -142,7 +142,7 @@ public class RusklimatComApiService(
         if (hc.Response is null || hc.Response.Sum(x => x.messages) != 0)
             return ResponseBaseModel.CreateWarning($"В очереди есть не выполненные задачи");
 
-        TResponseModel<UnitsRusklimatResponseModel> getUnits = default!;
+        TResponseModel<UnitsRusklimatResponseModel?> getUnits = default!;
         TResponseModel<CategoriesRusklimatResponseModel> getCats = default!;
         TResponseModel<PropertiesRusklimatResponseModel> getProps = default!;
 
@@ -152,7 +152,7 @@ public class RusklimatComApiService(
             Task.Run(async () =>
             {
                 RusklimatPaginationRequestModel _req = new() { PageNum = 1, PageSize = 1000 };
-                TResponseModel<ProductsRusklimatResponseModel> getProds = await GetProductsAsync(_req, token);
+                TResponseModel<ProductsRusklimatResponseModel?> getProds = await GetProductsAsync(_req, token);
 
                 if (getProds.Response?.Data is null)
                     logger.LogError($"Не удалось скачать `{nameof(GetProductsAsync)}`");
@@ -308,9 +308,9 @@ public class RusklimatComApiService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ProductsRusklimatResponseModel>> GetProductsAsync(RusklimatPaginationRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<ProductsRusklimatResponseModel?>> GetProductsAsync(RusklimatPaginationRequestModel req, CancellationToken token = default)
     {
-        TResponseModel<ProductsRusklimatResponseModel> res = new();
+        TResponseModel<ProductsRusklimatResponseModel?> res = new();
         await GetClient(token: token);
         if (httpClient is null)
         {
@@ -358,9 +358,9 @@ public class RusklimatComApiService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<CategoriesRusklimatResponseModel>> GetCategoriesAsync(CancellationToken token = default)
+    public async Task<TResponseModel<CategoriesRusklimatResponseModel?>> GetCategoriesAsync(CancellationToken token = default)
     {
-        TResponseModel<CategoriesRusklimatResponseModel> res = new();
+        TResponseModel<CategoriesRusklimatResponseModel?> res = new();
         await GetClient(token: token);
         if (httpClient is null)
         {
@@ -407,7 +407,7 @@ public class RusklimatComApiService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UnitsRusklimatResponseModel>> GetUnitsAsync(CancellationToken token = default)
+    public async Task<TResponseModel<UnitsRusklimatResponseModel?>> GetUnitsAsync(CancellationToken token = default)
     {
         TResponseModel<UnitsRusklimatResponseModel> res = new();
         await GetClient(token: token);

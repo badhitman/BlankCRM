@@ -40,8 +40,8 @@ public class BreezRuTransmission(IRabbitClient rabbitClient) : IBreezRuApiTransm
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<RabbitMqManagementResponseModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.HealthCheckBreezReceive, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<BreezRuLeftoverModel>>> LeftoversGetAsync(string? nc = null, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<BreezRuLeftoverModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.LeftoversGetBreezReceive, nc, token: token) ?? new();
+    public async Task<TResponseModel<List<BreezRuLeftoverModel>?>> LeftoversGetAsync(string? nc = null, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<BreezRuLeftoverModel>?>>(GlobalStaticConstantsTransmission.TransmissionQueues.LeftoversGetBreezReceive, nc, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> TechProductUpdateAsync(TechProductBreezRuModelDB req, CancellationToken token = default)
