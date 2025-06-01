@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorWebLib.Components.HelpDesk;
+namespace BlazorWebLib.Components.Rubrics;
 
 /// <summary>
 /// RubricNode: Edit

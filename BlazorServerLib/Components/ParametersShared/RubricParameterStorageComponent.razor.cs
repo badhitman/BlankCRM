@@ -6,6 +6,7 @@ using BlazorWebLib.Components.HelpDesk;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using BlazorWebLib.Components.Rubrics;
 
 namespace BlazorWebLib.Components.ParametersShared;
 
@@ -54,7 +55,7 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
 
     RubricSelectorComponent? ref_rubric;
     int? _rubricSelected;
-    List<RubricIssueHelpDeskModelDB>? RubricMetadataShadow;
+    List<RubricStandardModel>? RubricMetadataShadow;
     void RubricSelectAction(UniversalBaseModel? selectedRubric)
     {
         _rubricSelected = selectedRubric?.Id;
@@ -78,13 +79,13 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
         _rubricSelected = res_RubricIssueForCreateOrder.Response;
         if (ref_rubric is not null && _rubricSelected.HasValue)
         {
-            TResponseModel<List<RubricIssueHelpDeskModelDB>> res = await HelpDeskRepo.RubricReadAsync(_rubricSelected.Value);
+            TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(_rubricSelected.Value);
             await SetBusyAsync(false);
             SnackbarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;
             if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
             {
-                RubricIssueHelpDeskModelDB current_element = RubricMetadataShadow.Last();
+                RubricStandardModel current_element = RubricMetadataShadow.Last();
 
                 await ref_rubric.OwnerRubricSet(current_element.ParentId ?? 0);
                 await ref_rubric.SetRubric(current_element.Id, RubricMetadataShadow);

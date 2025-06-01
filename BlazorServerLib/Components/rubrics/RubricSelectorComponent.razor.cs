@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 
-namespace BlazorWebLib.Components.HelpDesk;
+namespace BlazorWebLib.Components.Rubrics;
 
 /// <summary>
 /// Rubric selector
@@ -28,7 +28,7 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
     public int? StartRubric { get; set; }
 
     [CascadingParameter]
-    List<RubricIssueHelpDeskModelDB>? RubricMetadataShadow { get; set; }
+    List<RubricStandardModel>? RubricMetadataShadow { get; set; }
 
     /// <inheritdoc/>
     [Parameter]
@@ -93,7 +93,7 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
     }
 
     /// <inheritdoc/>
-    public async Task SetRubric(int rubric_id, List<RubricIssueHelpDeskModelDB>? set_rubricMetadataShadow)
+    public async Task SetRubric(int rubric_id, List<RubricStandardModel>? set_rubricMetadataShadow)
     {
         _selectedRubricId = rubric_id;
 
@@ -103,7 +103,7 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
         {
             await SetBusyAsync();
 
-            TResponseModel<List<RubricIssueHelpDeskModelDB>> dump_rubric = await HelpDeskRepo.RubricReadAsync(rubric_id);
+            TResponseModel<List<RubricStandardModel>> dump_rubric = await HelpDeskRepo.RubricReadAsync(rubric_id);
             RubricMetadataShadow = dump_rubric.Response;
             SnackbarRepo.ShowMessagesResponse(dump_rubric.Messages);
             IsBusyProgress = false;

@@ -7,7 +7,7 @@ using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.HelpDesk;
+namespace BlazorWebLib.Components.Rubrics;
 
 /// <inheritdoc/>
 public partial class RubricsManageComponent : BlazorBusyComponentBaseModel

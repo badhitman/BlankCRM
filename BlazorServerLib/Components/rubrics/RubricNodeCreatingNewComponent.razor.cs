@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorWebLib.Components.HelpDesk;
+namespace BlazorWebLib.Components.Rubrics;
 
 /// <summary>
 /// RubricNode: Creating New

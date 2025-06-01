@@ -49,7 +49,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
     public required IssueHelpDeskModelDB Issue { get; set; }
 
     bool ShowingAttachmentsOrderArea;
-    List<RubricIssueHelpDeskModelDB> currentWarehouses = default!;
+    List<RubricStandardModel> currentWarehouses = default!;
 
     async Task OrderReport()
     {
@@ -142,7 +142,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         int[] orderWarehouses = [.. Document.OfficesTabs!.Select(x => x.WarehouseId).Distinct()];
         await SetBusyAsync();
 
-        TResponseModel<List<RubricIssueHelpDeskModelDB>> getWarehouses = await RubricsRepo.RubricsGetAsync(orderWarehouses);
+        TResponseModel<List<RubricStandardModel>> getWarehouses = await RubricsRepo.RubricsGetAsync(orderWarehouses);
         SnackbarRepo.ShowMessagesResponse(getWarehouses.Messages);
         currentWarehouses = getWarehouses.Response ?? [];
 

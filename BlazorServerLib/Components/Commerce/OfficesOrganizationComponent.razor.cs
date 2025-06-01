@@ -30,7 +30,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 
     UniversalBaseModel? SelectedRubric;
 
-    Dictionary<int, List<RubricIssueHelpDeskModelDB>> RubriciesCached = [];
+    Dictionary<int, List<RubricStandardModel>> RubriciesCached = [];
     string? addingAddress, addingContacts, addingName, addingDescr, addingKladrCode, addingKladrTitle;
 
 
@@ -126,7 +126,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 
             foreach (int i in added_rubrics)
             {
-                TResponseModel<List<RubricIssueHelpDeskModelDB>> res = await HelpDeskRepo.RubricReadAsync(i);
+                TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(i);
                 if (res.Success() && res.Response is not null)
                     RubriciesCached.Add(i, res.Response);
 
@@ -139,7 +139,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 
     string? GetCity(OfficeOrganizationModelDB ad)
     {
-        if (!RubriciesCached.TryGetValue(ad.ParentId, out List<RubricIssueHelpDeskModelDB>? value))
+        if (!RubriciesCached.TryGetValue(ad.ParentId, out List<RubricStandardModel>? value))
             return null;
 
         return value.LastOrDefault()?.Name;

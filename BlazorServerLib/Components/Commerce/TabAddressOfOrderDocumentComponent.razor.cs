@@ -6,6 +6,7 @@ using BlazorWebLib.Components.HelpDesk;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 using BlazorLib;
+using BlazorWebLib.Components.Rubrics;
 
 namespace BlazorWebLib.Components.Commerce;
 
@@ -38,7 +39,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
     AddRowToOrderDocumentComponent? addingDomRef;
     RowOfOrderDocumentModelDB? elementBeforeEdit;
     RubricSelectorComponent? ref_rubric;
-    List<RubricIssueHelpDeskModelDB>? RubricMetadataShadow;
+    List<RubricStandardModel>? RubricMetadataShadow;
     bool _showingPriceSelectorOrder;
 
     /// <inheritdoc/>
@@ -48,7 +49,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
         await SetBusyAsync();
 
         List<Task> tasks = [
-            Task.Run(async () => { TResponseModel<List<RubricIssueHelpDeskModelDB>> res = await HelpDeskRepo.RubricReadAsync(0); SnackbarRepo.ShowMessagesResponse(res.Messages); RubricMetadataShadow = res.Response; }),
+            Task.Run(async () => { TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(0); SnackbarRepo.ShowMessagesResponse(res.Messages); RubricMetadataShadow = res.Response; }),
             CacheRegistersUpdate(offers: CurrentTab.Rows!.Select(x => x.OfferId).ToArray(),goods: [],CurrentTab.WarehouseId, true),
             Task.Run(async () => { TResponseModel<bool?> showingPriceSelectorOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ShowingPriceSelectorOrder); _showingPriceSelectorOrder = showingPriceSelectorOrder.Response == true; if (!showingPriceSelectorOrder.Success()) SnackbarRepo.ShowMessagesResponse(showingPriceSelectorOrder.Messages); }) ];
 
@@ -58,7 +59,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
 
         if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
         {
-            RubricIssueHelpDeskModelDB current_element = RubricMetadataShadow.Last();
+            RubricStandardModel current_element = RubricMetadataShadow.Last();
             if (ref_rubric is not null)
             {
                 await ref_rubric.OwnerRubricSet(current_element.ParentId ?? 0);

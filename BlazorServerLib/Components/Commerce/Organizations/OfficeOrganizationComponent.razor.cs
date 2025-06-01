@@ -6,6 +6,7 @@ using BlazorWebLib.Components.HelpDesk;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using BlazorWebLib.Components.Rubrics;
 
 namespace BlazorWebLib.Components.Commerce.Organizations;
 
@@ -71,12 +72,12 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         OfficeCurrent = res_address.Response!.Single();
         OfficeEdit = GlobalTools.CreateDeepCopy(OfficeCurrent) ?? throw new Exception();
 
-        TResponseModel<List<RubricIssueHelpDeskModelDB>> res_rubric = await HelpDeskRepo.RubricReadAsync(OfficeCurrent.ParentId);
+        TResponseModel<List<RubricStandardModel>> res_rubric = await HelpDeskRepo.RubricReadAsync(OfficeCurrent.ParentId);
         await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(res_rubric.Messages);
         if (res_rubric.Success() && res_rubric.Response is not null && res_rubric.Response.Count != 0)
         {
-            RubricIssueHelpDeskModelDB r = res_rubric.Response.First();
+            RubricStandardModel r = res_rubric.Response.First();
             SelectedRubric = new UniversalBaseModel()
             {
                 Name = r.Name,

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
+using BlazorWebLib.Components.Rubrics;
 
 namespace BlazorWebLib.Components.Warehouse;
 
@@ -40,7 +41,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     RubricSelectorComponent? ref_rubric;
     AddRowToOrderDocumentComponent? addingDomRef;
     RowOfWarehouseDocumentModelDB? elementBeforeEdit;
-    List<RubricIssueHelpDeskModelDB>? RubricMetadataShadow;
+    List<RubricStandardModel>? RubricMetadataShadow;
 
     bool CanSave => Id < 1 || !CurrentDocument.Equals(editDocument);
 
@@ -92,12 +93,12 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         await base.OnInitializedAsync();
         if (Id < 1)
         {
-            TResponseModel<List<RubricIssueHelpDeskModelDB>> res = await HelpDeskRepo.RubricReadAsync(0);
+            TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(0);
             SnackbarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;
             if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
             {
-                RubricIssueHelpDeskModelDB current_element = RubricMetadataShadow.Last();
+                RubricStandardModel current_element = RubricMetadataShadow.Last();
                 if (ref_rubric is not null)
                 {
                     await ref_rubric.OwnerRubricSet(current_element.ParentId ?? 0);
@@ -128,13 +129,13 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
         editDocument = GlobalTools.CreateDeepCopy(CurrentDocument)!;
 
-        TResponseModel<List<RubricIssueHelpDeskModelDB>> resShadow = await HelpDeskRepo.RubricReadAsync(editDocument.WarehouseId);
+        TResponseModel<List<RubricStandardModel>> resShadow = await HelpDeskRepo.RubricReadAsync(editDocument.WarehouseId);
         await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(resShadow.Messages);
         RubricMetadataShadow = resShadow.Response;
         if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
         {
-            RubricIssueHelpDeskModelDB current_element = RubricMetadataShadow.Last();
+            RubricStandardModel current_element = RubricMetadataShadow.Last();
             if (ref_rubric is not null)
             {
                 await ref_rubric.OwnerRubricSet(current_element.ParentId ?? 0);

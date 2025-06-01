@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 using BlazorLib;
+using BlazorWebLib.Components.Rubrics;
 
 namespace BlazorWebLib.Components.HelpDesk.issue;
 
@@ -47,7 +48,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
     bool IsEditMode { get; set; }
     UniversalBaseModel? SelectedRubric;
     RubricSelectorComponent? rubricSelector_ref;
-    List<RubricIssueHelpDeskModelDB>? RubricMetadataShadow;
+    List<RubricStandardModel>? RubricMetadataShadow;
 
     void RubricSelectAction(UniversalBaseModel? selectedRubric)
     {
@@ -103,13 +104,13 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
         {
             await SetBusyAsync();
 
-            TResponseModel<List<RubricIssueHelpDeskModelDB>> res = await RubricsRepo.RubricReadAsync(Issue.RubricIssueId.Value);
+            TResponseModel<List<RubricStandardModel>> res = await RubricsRepo.RubricReadAsync(Issue.RubricIssueId.Value);
             IsBusyProgress = false;
             SnackbarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;
             if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
             {
-                RubricIssueHelpDeskModelDB current_element = RubricMetadataShadow.Last();
+                RubricStandardModel current_element = RubricMetadataShadow.Last();
 
                 await rubricSelector_ref.OwnerRubricSet(current_element.ParentId ?? 0);
                 await rubricSelector_ref.SetRubric(current_element.Id, RubricMetadataShadow);

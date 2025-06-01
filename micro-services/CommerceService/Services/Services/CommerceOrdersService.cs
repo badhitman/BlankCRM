@@ -10,7 +10,6 @@ using HtmlGenerator.html5.textual;
 using HtmlGenerator.html5.tables;
 using HtmlGenerator.html5.areas;
 using DocumentFormat.OpenXml;
-using System.Globalization;
 using Newtonsoft.Json;
 using System.Text;
 using System.Data;
@@ -916,7 +915,7 @@ public partial class CommerceImplementService(
                 return res;
 
             int[] rubricsIds = [.. req.OfficesTabs.Select(x => x.WarehouseId).Distinct()];
-            TResponseModel<List<RubricIssueHelpDeskModelDB>> getRubrics = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
+            TResponseModel<List<RubricStandardModel>> getRubrics = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
             if (!getRubrics.Success())
             {
                 res.AddRangeMessages(getRubrics.Messages);
@@ -1391,7 +1390,7 @@ public partial class CommerceImplementService(
         }
 
         int[] rubricsIds = offersAll.SelectMany(x => x.Registers!).Select(x => x.WarehouseId).Distinct().ToArray();
-        TResponseModel<List<RubricIssueHelpDeskModelDB>> rubricsDb = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
+        TResponseModel<List<RubricStandardModel>> rubricsDb = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
         List<IGrouping<NomenclatureModelDB?, OfferModelDB>> gof = offersAll.GroupBy(x => x.Nomenclature).Where(x => x.Any(y => y.Registers!.Any(z => z.Quantity > 0))).ToList();
         try
         {
@@ -1501,7 +1500,7 @@ public partial class CommerceImplementService(
         return XLSStream.ToArray();
     }
 
-    static byte[] ExportPrice(List<IGrouping<NomenclatureModelDB?, OfferModelDB>> sourceTable, List<RubricIssueHelpDeskModelDB>? rubricsDb)
+    static byte[] ExportPrice(List<IGrouping<NomenclatureModelDB?, OfferModelDB>> sourceTable, List<RubricStandardModel>? rubricsDb)
     {
         WorkbookPart? wBookPart = null;
         using MemoryStream XLSStream = new();
