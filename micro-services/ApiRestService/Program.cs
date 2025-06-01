@@ -136,7 +136,8 @@ builder.Services
     .AddScoped<ICommerceTransmission, CommerceTransmission>()
     .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
     .AddScoped<IStorageTransmission, StorageTransmission>()
-    .AddScoped<IKladrService, KladrServiceTransmission>()
+    .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
+    .AddScoped<IKladrService, KladrServiceTransmission>()//
     ;
 #endregion
 

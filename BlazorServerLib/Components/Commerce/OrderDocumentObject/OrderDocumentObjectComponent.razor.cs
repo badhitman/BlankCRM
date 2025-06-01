@@ -27,7 +27,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
 
 
     [Inject]
-    IStorageTransmission StorageRepo { get; set; } = default!;
+    IParametersStorageTransmission StorageRepo { get; set; } = default!;
 
     [Inject]
     NavigationManager NavRepo { get; set; } = default!;

@@ -2,13 +2,12 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorWebLib.Components.HelpDesk;
 using BlazorWebLib.Components.Commerce;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
-using BlazorWebLib.Components.Rubrics;
+using BlazorLib.Components.Rubrics;
 
 namespace BlazorWebLib.Components.Warehouse;
 

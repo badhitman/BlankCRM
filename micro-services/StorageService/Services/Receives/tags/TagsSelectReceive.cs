@@ -11,14 +11,14 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// TagsSelectReceive
 /// </summary>
-public class TagsSelectReceive(ILogger<TagsSelectReceive> loggerRepo, ISerializeStorage serializeStorageRepo) 
-    : IResponseReceive<TPaginationRequestModel<SelectMetadataRequestModel>?, TPaginationResponseModel<TagModelDB>?>
+public class TagsSelectReceive(ILogger<TagsSelectReceive> loggerRepo, IParametersStorage serializeStorageRepo) 
+    : IResponseReceive<TPaginationRequestModel<SelectMetadataRequestModel>?, TPaginationResponseModel<TagViewModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TagsSelectReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TagModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<SelectMetadataRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<TagViewModel>?> ResponseHandleActionAsync(TPaginationRequestModel<SelectMetadataRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

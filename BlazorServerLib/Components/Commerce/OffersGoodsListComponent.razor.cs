@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components.Commerce;
 public partial class OffersGoodsListComponent : BlazorRegistersComponent
 {
     [Inject]
-    IStorageTransmission StorageTransmissionRepo { get; set; } = default!;
+    IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
 
 
     /// <summary>

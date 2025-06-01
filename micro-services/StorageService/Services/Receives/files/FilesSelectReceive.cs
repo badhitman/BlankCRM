@@ -11,7 +11,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// FilesSelectReceive
 /// </summary>
-public class FilesSelectReceive(ILogger<FilesSelectReceive> loggerRepo, ISerializeStorage serializeStorageRepo) 
+public class FilesSelectReceive(ILogger<FilesSelectReceive> loggerRepo, IFilesStorage serializeStorageRepo) 
     : IResponseReceive<TPaginationRequestModel<SelectMetadataRequestModel>?, TPaginationResponseModel<StorageFileModelDB>?>
 {
     /// <inheritdoc/>

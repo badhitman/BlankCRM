@@ -20,14 +20,14 @@
                     }
                     else
                     {
-                        <MudChipSet Disabled="IsBusyProgress" T="TagModelDB"
+                        <MudChipSet Disabled="IsBusyProgress" T="TagViewModel"
                                     CheckMark="false"
                                     AllClosable="@true"
                                     OnClose="@OnChipClosed">
                             @for (int i = 0; i < TagsSets!.Count; i++)
                             {
                                 int _ix = i;
-                                TagModelDB _el = TagsSets![_ix];
+                                TagViewModel _el = TagsSets![_ix];
                                 <MudChip Variant="@Variant.Text" Value="@_el" Text="@_el.TagName" />
                             }
                         </MudChipSet>

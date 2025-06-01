@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components;
 public partial class NoteSimpleComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IStorageTransmission StorageRepo { get; set; } = default!;
+    IParametersStorageTransmission StorageRepo { get; set; } = default!;
 
 
     /// <summary>
@@ -87,7 +87,7 @@ public partial class NoteSimpleComponent : BlazorBusyComponentBaseModel
     {
         domId = $"{OwnerPrimaryKey}/{nameof(NoteSimpleComponent)}{ApplicationName}{PropertyName}{PrefixPropertyName}";
         await SetBusyAsync();
-        TResponseModel<string?> rest = await StorageRepo.ReadParameterAsync<string>(KeyStorage);
+        TResponseModel<string?> rest = await StorageRepo.ReadParameterAsync<string?>(KeyStorage);
         IsBusyProgress = false;
         initValue = rest.Response;
         editValue = initValue;

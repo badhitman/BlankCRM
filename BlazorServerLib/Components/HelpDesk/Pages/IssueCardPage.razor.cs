@@ -21,7 +21,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
     ICommerceTransmission CommRepo { get; set; } = default!;
 
     [Inject]
-    IStorageTransmission StorageTransmissionRepo { get; set; } = default!;
+    IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
 
     [Inject]
     IIdentityTransmission IdentityRepo { get; set; } = default!;

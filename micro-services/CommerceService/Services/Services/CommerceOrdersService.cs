@@ -30,7 +30,7 @@ public partial class CommerceImplementService(
     ITelegramTransmission tgRepo,
     ILogger<CommerceImplementService> loggerRepo,
     WebConfigModel _webConf,
-    IStorageTransmission StorageTransmissionRepo) : ICommerceService
+    IParametersStorageTransmission StorageTransmissionRepo) : ICommerceService
 {
     #region payment-document
     /// <inheritdoc/>

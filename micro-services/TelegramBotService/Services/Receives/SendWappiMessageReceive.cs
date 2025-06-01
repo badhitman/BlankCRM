@@ -15,7 +15,7 @@ namespace Transmission.Receives.telegram;
 public class SendWappiMessageReceive(
     ILogger<SendWappiMessageReceive> _logger,
     IHttpClientFactory HttpClientFactory,
-    IStorageTransmission StorageTransmissionRepo) : IResponseReceive<EntryAltExtModel?, TResponseModel<SendMessageResponseModel?>?>
+    IParametersStorageTransmission StorageTransmissionRepo) : IResponseReceive<EntryAltExtModel?, TResponseModel<SendMessageResponseModel?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SendWappiMessageReceive;

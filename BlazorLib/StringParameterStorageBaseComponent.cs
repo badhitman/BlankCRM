@@ -13,7 +13,7 @@ namespace BlazorLib;
 public class StringParameterStorageBaseComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IStorageTransmission StoreRepo { get; set; } = default!;
+    IParametersStorageTransmission StoreRepo { get; set; } = default!;
 
 
     /// <summary>

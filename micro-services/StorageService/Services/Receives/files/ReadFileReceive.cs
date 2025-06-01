@@ -11,7 +11,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// Read file
 /// </summary>
-public class ReadFileReceive(    ILogger<ReadFileReceive> LoggerRepo, ISerializeStorage serializeStorageRepo) 
+public class ReadFileReceive(    ILogger<ReadFileReceive> LoggerRepo, IFilesStorage serializeStorageRepo) 
     : IResponseReceive<TAuthRequestModel<RequestFileReadModel>?, TResponseModel<FileContentModel>?>
 {
     /// <inheritdoc/>

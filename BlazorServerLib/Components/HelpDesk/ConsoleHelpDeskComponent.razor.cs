@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components.HelpDesk;
 public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IStorageTransmission StorageRepo { get; set; } = default!;
+    IParametersStorageTransmission StorageRepo { get; set; } = default!;
 
 
     readonly List<StatusesDocumentsEnum> Steps = [.. Enum.GetValues(typeof(StatusesDocumentsEnum)).Cast<StatusesDocumentsEnum>()];
@@ -67,7 +67,7 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
         TResponseModel<bool> res = await StorageRepo.ReadParameterAsync<bool>(SizeColumnsKeyStorage);
         IsLarge = res.Response == true;
 
-        TResponseModel<string?> current_filter_user_res = await StorageRepo.ReadParameterAsync<string>(GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId));
+        TResponseModel<string> current_filter_user_res = await StorageRepo.ReadParameterAsync<string>(GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId));
         FilterUserId = current_filter_user_res.Response;
 
         IsBusyProgress = false;

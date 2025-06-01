@@ -75,7 +75,7 @@ public class RubricsImplementService(
             return res;
         }
 
-        List<RubricIssueHelpDeskModelDB> all = await context
+        List<RubricModelDB> all = await context
             .Rubrics
             .Where(x => x.ContextName == req.Payload.ContextName && x.ParentId == data.ParentId)
             .OrderBy(x => x.SortIndex)
@@ -90,7 +90,7 @@ public class RubricsImplementService(
             }
             else
             {
-                RubricIssueHelpDeskModelDB r1 = all[i - 1], r2 = all[i];
+                RubricModelDB r1 = all[i - 1], r2 = all[i];
                 uint val1 = r1.SortIndex, val2 = r2.SortIndex;
                 r1.SortIndex = uint.MaxValue;
                 context.Update(r1);
@@ -113,7 +113,7 @@ public class RubricsImplementService(
             }
             else
             {
-                RubricIssueHelpDeskModelDB r1 = all[i + 1], r2 = all[i];
+                RubricModelDB r1 = all[i + 1], r2 = all[i];
                 uint val1 = r1.SortIndex, val2 = r2.SortIndex;
                 r1.SortIndex = uint.MaxValue;
                 context.Update(r1);
@@ -257,7 +257,7 @@ public class RubricsImplementService(
             return res;
         }
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
-        List<RubricIssueHelpDeskModelDB> resDb = await context.Rubrics.Where(x => rubricsIds.Any(y => y == x.Id)).ToListAsync(cancellationToken: token);
+        List<RubricModelDB> resDb = await context.Rubrics.Where(x => rubricsIds.Any(y => y == x.Id)).ToListAsync(cancellationToken: token);
         res.Response = [.. resDb.Select(x => x)];
         return res;
     }

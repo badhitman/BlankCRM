@@ -15,10 +15,10 @@ namespace BlazorWebLib.Components;
 public partial class TagsViewComponent : MetaPropertyBaseComponent
 {
     [Inject]
-    IStorageTransmission TagsRepo { get; set; } = default!;
+    IParametersStorageTransmission TagsRepo { get; set; } = default!;
 
 
-    List<TagModelDB> TagsSets { get; set; } = [];
+    List<TagViewModel> TagsSets { get; set; } = [];
 
     MudAutocomplete<string?>? maRef;
     string? _value;
@@ -58,7 +58,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
             await maRef.ClearAsync();
     }
 
-    private async Task OnChipClosed(MudChip<TagModelDB> chip)
+    private async Task OnChipClosed(MudChip<TagViewModel> chip)
     {
         if (!string.IsNullOrWhiteSpace(chip.Value?.TagName) && OwnerPrimaryKey.HasValue)
         {
@@ -99,7 +99,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
             SortingDirection = DirectionsEnum.Down,
         };
 
-        TPaginationResponseModel<TagModelDB> res = await TagsRepo.TagsSelectAsync(req, token);
+        TPaginationResponseModel<TagViewModel> res = await TagsRepo.TagsSelectAsync(req, token);
 
         if (res.TotalRowsCount > req.PageSize)
             SnackbarRepo.Error($"Записей больше: {res.TotalRowsCount}");
@@ -130,7 +130,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
             SortingDirection = DirectionsEnum.Down,
         };
 
-        TPaginationResponseModel<TagModelDB> res = await TagsRepo.TagsSelectAsync(req);
+        TPaginationResponseModel<TagViewModel> res = await TagsRepo.TagsSelectAsync(req);
 
         if (res.TotalRowsCount > req.PageSize)
             SnackbarRepo.Error($"Записей больше: {res.TotalRowsCount}");

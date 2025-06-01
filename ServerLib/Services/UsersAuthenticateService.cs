@@ -19,7 +19,7 @@ public class UsersAuthenticateService(
     ILogger<UsersAuthenticateService> loggerRepo,
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager,
-    IStorageTransmission StorageTransmissionRepo,
+    IParametersStorageTransmission StorageTransmissionRepo,
     IIdentityTransmission identityRepo,
     IHttpContextAccessor httpContextAccessor,
     IOptions<UserManageConfigModel> userManageConfig) : IUsersAuthenticateService

@@ -43,7 +43,7 @@ public class IssueHelpDeskModel : EntryDescriptionModel
     /// <summary>
     /// Rubric Issue
     /// </summary>
-    public RubricIssueHelpDeskModelDB? RubricIssue { get; set; }
+    public RubricModelDB? RubricIssue { get; set; }
 
     /// <summary>
     /// CreatedAt (UTC)

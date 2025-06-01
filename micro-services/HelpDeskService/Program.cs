@@ -128,6 +128,7 @@ public class Program
             .AddScoped<IRubricsService, RubricsImplementService>()
             .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
+            .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
             ;
         // 
@@ -171,7 +172,7 @@ public class Program
 #if DEMO
             IDbContextFactory<HelpDeskContext> helpdeskDbFactory = ss.ServiceProvider.GetRequiredService<IDbContextFactory<HelpDeskContext>>();
             using HelpDeskContext context_seed = await helpdeskDbFactory.CreateDbContextAsync();
-            List<RubricIssueHelpDeskModelDB> demo_rubrics = [.. await context_seed.Rubrics.ToArrayAsync()];
+            List<RubricModelDB> demo_rubrics = [.. await context_seed.Rubrics.ToArrayAsync()];
             if (demo_rubrics.Count == 0)
             {
                 demo_rubrics = [

@@ -28,7 +28,7 @@ public class HelpDeskImplementService(
     ICommerceTransmission commRepo,
     IMemoryCache cache,
     ITelegramTransmission telegramRemoteRepo,
-    IStorageTransmission StorageRepo,
+    IParametersStorageTransmission StorageRepo,
     IWebTransmission webTransmissionRepo) : IHelpDeskService
 {
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);

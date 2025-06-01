@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 using BlazorLib;
-using BlazorWebLib.Components.Rubrics;
+using BlazorLib.Components.Rubrics;
 
 namespace BlazorWebLib.Components.HelpDesk.issue;
 
@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components.HelpDesk.issue;
 public partial class IssueBodyComponent : IssueWrapBaseModel
 {
     [Inject]
-    IStorageTransmission SerializeStorageRepo { get; set; } = default!;
+    IParametersStorageTransmission SerializeStorageRepo { get; set; } = default!;
 
 
     /// <summary>

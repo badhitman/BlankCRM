@@ -11,7 +11,7 @@ namespace BlankBlazorApp.Components;
 public partial class App
 {
     [Inject]
-    IStorageTransmission StoreRepo { get; set; } = default!;
+    IParametersStorageTransmission StoreRepo { get; set; } = default!;
 
     [Inject]
     ITelegramTransmission TgRemoteCall { get; set; } = default!;

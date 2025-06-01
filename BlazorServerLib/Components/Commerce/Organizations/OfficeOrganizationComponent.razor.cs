@@ -2,11 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorWebLib.Components.HelpDesk;
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
-using BlazorWebLib.Components.Rubrics;
+using BlazorLib.Components.Rubrics;
 
 namespace BlazorWebLib.Components.Commerce.Organizations;
 

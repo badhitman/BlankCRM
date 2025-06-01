@@ -2,11 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorWebLib.Components.HelpDesk;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 using BlazorLib;
-using BlazorWebLib.Components.Rubrics;
+using BlazorLib.Components.Rubrics;
 
 namespace BlazorWebLib.Components.Commerce;
 
@@ -16,7 +15,7 @@ namespace BlazorWebLib.Components.Commerce;
 public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseComponent
 {
     [Inject]
-    IStorageTransmission StorageTransmissionRepo { get; set; } = default!;
+    IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
 
     [Inject]
     IRubricsTransmission HelpDeskRepo { get; set; } = default!;
@@ -50,7 +49,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
 
         List<Task> tasks = [
             Task.Run(async () => { TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(0); SnackbarRepo.ShowMessagesResponse(res.Messages); RubricMetadataShadow = res.Response; }),
-            CacheRegistersUpdate(offers: CurrentTab.Rows!.Select(x => x.OfferId).ToArray(),goods: [],CurrentTab.WarehouseId, true),
+            CacheRegistersUpdate(offers: [.. CurrentTab.Rows!.Select(x => x.OfferId)],goods: [],CurrentTab.WarehouseId, true),
             Task.Run(async () => { TResponseModel<bool?> showingPriceSelectorOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ShowingPriceSelectorOrder); _showingPriceSelectorOrder = showingPriceSelectorOrder.Response == true; if (!showingPriceSelectorOrder.Success()) SnackbarRepo.ShowMessagesResponse(showingPriceSelectorOrder.Messages); }) ];
 
         await Task.WhenAll(tasks);

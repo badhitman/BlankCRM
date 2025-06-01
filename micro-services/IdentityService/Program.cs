@@ -180,6 +180,7 @@ public class Program
             .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
+            .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
             ;
 
         builder.Services.IdentityRegisterMqListeners();

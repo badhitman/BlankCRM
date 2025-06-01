@@ -11,15 +11,11 @@ namespace SharedLib;
 /// </summary>
 [Index(nameof(NormalizedTagNameUpper))]
 [Index(nameof(NormalizedTagNameUpper), nameof(OwnerPrimaryKey), nameof(ApplicationName), IsUnique = true, Name = "IX_TagNameOwnerKeyUnique")]
-public class TagModelDB : StorageBaseModelDB
+[Index(nameof(CreatedAt))]
+[Index(nameof(PrefixPropertyName), nameof(OwnerPrimaryKey))]
+[Index(nameof(ApplicationName), nameof(PropertyName))]
+[PrimaryKey(nameof(Id))]
+public class TagModelDB : TagViewModel
 {
-    /// <summary>
-    /// NormalizedTagNameUpper
-    /// </summary>
-    public required string NormalizedTagNameUpper { get; set; }
-
-    /// <summary>
-    /// Имя параметра
-    /// </summary>
-    public required string TagName { get; set; }
+    
 }

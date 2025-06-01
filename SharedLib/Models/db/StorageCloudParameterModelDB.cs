@@ -8,15 +8,11 @@ namespace SharedLib;
 
 /// <inheritdoc/>
 [Index(nameof(TypeName))]
-public class StorageCloudParameterModelDB : StorageBaseModelDB
+[Index(nameof(CreatedAt))]
+[Index(nameof(PrefixPropertyName), nameof(OwnerPrimaryKey))]
+[Index(nameof(ApplicationName), nameof(PropertyName))]
+[PrimaryKey(nameof(Id))]
+public class StorageCloudParameterModelDB : StorageCloudParameterViewModel
 {
-    /// <summary>
-    /// Данные (сериализованные)
-    /// </summary>
-    public required string SerializedDataJson { get; set; }
-
-    /// <summary>
-    /// Тип сериализуемого параметра
-    /// </summary>
-    public required string TypeName { get; set; }
+    
 }

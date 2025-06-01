@@ -16,7 +16,7 @@ namespace BlazorWebLib.Components.Commerce;
 public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IStorageTransmission StorageRepo { get; set; } = default!;
+    IParametersStorageTransmission StorageRepo { get; set; } = default!;
 
     [Inject]
     NavigationManager NavRepo { get; set; } = default!;
@@ -438,7 +438,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             SnackbarRepo.Error($"Записей больше: {res.TotalRowsCount}");
 
         Organizations = res.Response;
-        TResponseModel<OrderDocumentModelDB?> current_cart = await StorageRepo
+        TResponseModel<OrderDocumentModelDB> current_cart = await StorageRepo
             .ReadParameterAsync<OrderDocumentModelDB>(GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId));
 
         CurrentCart = current_cart.Response ?? new()

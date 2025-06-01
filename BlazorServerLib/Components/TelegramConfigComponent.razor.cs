@@ -15,7 +15,7 @@ namespace BlazorWebLib.Components;
 public partial class TelegramConfigComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IStorageTransmission SerializeStorageRepo { get; set; } = default!;
+    IParametersStorageTransmission SerializeStorageRepo { get; set; } = default!;
 
 
     bool _isCommandModeTelegramBot;

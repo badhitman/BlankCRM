@@ -14,7 +14,7 @@ namespace Transmission.Receives.storage;
 /// <remarks>
 /// Общий размер и количество группируется по AppName
 /// </remarks>
-public class FilesAreaGetMetadataReceive(ILogger<FilesSelectReceive> loggerRepo, ISerializeStorage serializeStorageRepo)
+public class FilesAreaGetMetadataReceive(ILogger<FilesSelectReceive> loggerRepo, IFilesStorage serializeStorageRepo)
     : IResponseReceive<FilesAreaMetadataRequestModel?, TResponseModel<FilesAreaMetadataModel[]>?>
 {
     /// <inheritdoc/>

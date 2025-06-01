@@ -17,7 +17,7 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
     IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
-    IStorageTransmission SerializeStorageRepo { get; set; } = default!;
+    IParametersStorageTransmission SerializeStorageRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>

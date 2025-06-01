@@ -118,6 +118,7 @@ builder.Services.AddScoped<IWebTransmission, WebTransmission>()
     .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
     .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
     .AddScoped<IStorageTransmission, StorageTransmission>()
+    .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
     .AddScoped<IIdentityTransmission, IdentityTransmission>()
     ;
 //

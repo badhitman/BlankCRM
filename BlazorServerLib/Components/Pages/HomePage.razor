@@ -22,7 +22,7 @@ else
 
 @code {
     [Inject]
-    IStorageTransmission StoreRepo { get; set; } = default!;
+    IParametersStorageTransmission StoreRepo { get; set; } = default!;
 
 
     MarkupString ms => (MarkupString)(_textValue ?? "<h1>Hello, world!</h1> Welcome to your new app.");

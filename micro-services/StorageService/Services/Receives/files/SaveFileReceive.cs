@@ -11,7 +11,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// Save file
 /// </summary>
-public class SaveFileReceive(ILogger<SaveFileReceive> LoggerRepo, ISerializeStorage serializeStorageRepo)
+public class SaveFileReceive(ILogger<SaveFileReceive> LoggerRepo, IFilesStorage serializeStorageRepo)
     : IResponseReceive<TAuthRequestModel<StorageImageMetadataModel>?, TResponseModel<StorageFileModelDB>?>
 {
     /// <inheritdoc/>

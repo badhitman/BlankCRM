@@ -219,6 +219,7 @@ builder.Services
     .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
     .AddScoped<IRubricsTransmission, RubricsTransmission>()
     .AddScoped<IStorageTransmission, StorageTransmission>()
+    .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
     .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
     .AddScoped<IConstructorTransmission, ConstructorTransmission>()
     .AddScoped<IIdentityTransmission, IdentityTransmission>()

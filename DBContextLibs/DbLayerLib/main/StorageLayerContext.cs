@@ -36,6 +36,12 @@ public partial class StorageLayerContext : DbContext
     public DbSet<StorageCloudParameterModelDB> CloudProperties { get; set; } = default!;
 
     /// <summary>
+    /// Тэги
+    /// </summary>
+    public DbSet<TagModelDB> CloudTags { get; set; } = default!;
+
+
+    /// <summary>
     /// Файлы
     /// </summary>
     public DbSet<StorageFileModelDB> CloudFiles { get; set; } = default!;
@@ -44,9 +50,4 @@ public partial class StorageLayerContext : DbContext
     /// RulesFilesAccess
     /// </summary>
     public DbSet<AccessFileRuleModelDB> RulesFilesAccess { get; set; } = default!;
-
-    /// <summary>
-    /// Тэги
-    /// </summary>
-    public DbSet<TagModelDB> CloudTags { get; set; } = default!;
 }

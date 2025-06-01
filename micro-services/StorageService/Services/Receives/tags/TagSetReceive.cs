@@ -13,7 +13,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// TagSetReceive
 /// </summary>
-public class TagSetReceive(ILogger<TagSetReceive> loggerRepo, ISerializeStorage serializeStorageRepo)
+public class TagSetReceive(ILogger<TagSetReceive> loggerRepo, IParametersStorage serializeStorageRepo)
     : IResponseReceive<TagSetModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

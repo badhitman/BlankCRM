@@ -10,7 +10,11 @@ namespace SharedLib;
 /// Хранимый файл (локальное хранилище)
 /// </summary>
 [Index(nameof(PointId)), Index(nameof(AuthorIdentityId)), Index(nameof(FileName))]
-public class StorageFileMiddleModel : StorageBaseModelDB
+[Index(nameof(CreatedAt))]
+[Index(nameof(PrefixPropertyName), nameof(OwnerPrimaryKey))]
+[Index(nameof(ApplicationName), nameof(PropertyName))]
+[PrimaryKey(nameof(Id))]
+public class StorageFileMiddleModel : StorageBaseModel
 {
     /// <summary>
     /// AuthorIdentityId
