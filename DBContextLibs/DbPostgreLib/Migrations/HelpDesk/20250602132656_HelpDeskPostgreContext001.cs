@@ -86,7 +86,7 @@ namespace DbPostgreLib.Migrations.HelpDesk
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
@@ -345,11 +345,6 @@ namespace DbPostgreLib.Migrations.HelpDesk
                 column: "LastUpdatedAtUTC");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Articles_Name",
-                table: "Articles",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ForwardedMessages_CreatedAtUtc",
                 table: "ForwardedMessages",
                 column: "CreatedAtUtc");
@@ -399,11 +394,6 @@ namespace DbPostgreLib.Migrations.HelpDesk
                 name: "IX_Issues_LastUpdateAt",
                 table: "Issues",
                 column: "LastUpdateAt");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Issues_Name",
-                table: "Issues",
-                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Issues_NormalizedDescriptionUpper",

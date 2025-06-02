@@ -647,11 +647,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Directories_Name",
-                table: "Directories",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Directories_Name_ProjectId",
                 table: "Directories",
                 columns: new[] { "Name", "ProjectId" },
@@ -673,11 +668,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DirectoriesSnapshots_Name",
-                table: "DirectoriesSnapshots",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DirectoriesSnapshots_OwnerId",
                 table: "DirectoriesSnapshots",
                 column: "OwnerId");
@@ -687,11 +677,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 table: "DirectoriesSnapshots",
                 column: "TokenUniqueRoute",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DocumentSchemes_Name",
-                table: "DocumentSchemes",
-                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocumentSchemes_Name_ProjectId",
@@ -715,11 +700,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentsSnapshots_Name",
-                table: "DocumentsSnapshots",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DocumentsSnapshots_OwnerId",
                 table: "DocumentsSnapshots",
                 column: "OwnerId");
@@ -729,11 +709,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 table: "DocumentsSnapshots",
                 column: "TokenUniqueRoute",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ElementsOfDirectories_Name",
-                table: "ElementsOfDirectories",
-                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ElementsOfDirectories_Name_ParentId",
@@ -752,11 +727,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 column: "SortIndex");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ElementsOfDirectoriesSnapshots_Name",
-                table: "ElementsOfDirectoriesSnapshots",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ElementsOfDirectoriesSnapshots_OwnerId",
                 table: "ElementsOfDirectoriesSnapshots",
                 column: "OwnerId");
@@ -766,11 +736,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 table: "ElementsOfDirectoriesSnapshots",
                 column: "TokenUniqueRoute",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Fields_Name",
-                table: "Fields",
-                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Fields_OwnerId",
@@ -798,11 +763,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 column: "DirectoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FieldsSnapshots_Name",
-                table: "FieldsSnapshots",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FieldsSnapshots_OwnerId_SortIndex",
                 table: "FieldsSnapshots",
                 columns: new[] { "OwnerId", "SortIndex" },
@@ -813,11 +773,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 table: "FieldsSnapshots",
                 column: "TokenUniqueRoute",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Forms_Name",
-                table: "Forms",
-                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Forms_Name_ProjectId",
@@ -846,11 +801,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FormsSnapshots_Name",
-                table: "FormsSnapshots",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FormsSnapshots_OwnerId",
                 table: "FormsSnapshots",
                 column: "OwnerId");
@@ -865,11 +815,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 name: "IX_LinksDirectoriesToForms_DirectoryId",
                 table: "LinksDirectoriesToForms",
                 column: "DirectoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LinksDirectoriesToForms_Name",
-                table: "LinksDirectoriesToForms",
-                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LinksDirectoriesToForms_OwnerId",
@@ -927,11 +872,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 column: "OwnerUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectsSnapshots_Name",
-                table: "ProjectsSnapshots",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProjectsSnapshots_ProjectId",
                 table: "ProjectsSnapshots",
                 column: "ProjectId");
@@ -966,11 +906,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 name: "IX_Sessions_LastDocumentUpdateActivity",
                 table: "Sessions",
                 column: "LastDocumentUpdateActivity");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Sessions_Name",
-                table: "Sessions",
-                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sessions_OwnerId_ProjectId_NormalizedUpperName",
@@ -1025,11 +960,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 column: "TabId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TabsOfDocumentsSchemes_Name",
-                table: "TabsOfDocumentsSchemes",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TabsOfDocumentsSchemes_Name_OwnerId",
                 table: "TabsOfDocumentsSchemes",
                 columns: new[] { "Name", "OwnerId" },
@@ -1047,11 +977,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TabsSnapshots_Name",
-                table: "TabsSnapshots",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TabsSnapshots_OwnerId",
                 table: "TabsSnapshots",
                 column: "OwnerId");
@@ -1066,11 +991,6 @@ namespace DbPostgreLib.Migrations.Constructor
                 name: "IX_ValuesSessions_JoinFormToTabId",
                 table: "ValuesSessions",
                 column: "JoinFormToTabId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ValuesSessions_Name",
-                table: "ValuesSessions",
-                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ValuesSessions_OwnerId",

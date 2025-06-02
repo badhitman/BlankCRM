@@ -13,7 +13,6 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
-		<DefineConstants>$(DefineConstants);OUTER_DATA</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -40,10 +39,6 @@
 		<ProjectReference Include="..\micro-services\LdapService\LdapService.csproj" />
 		<ProjectReference Include="..\micro-services\StorageService\StorageService.csproj" />
 		<ProjectReference Include="..\micro-services\TelegramBotService\TelegramBotService.csproj" />
-		<ProjectReference Include="..\micro-services\outer\ApiBreezRuService\ApiBreezRuService.csproj" />
-		<ProjectReference Include="..\micro-services\outer\ApiDaichiBusinessService\ApiDaichiBusinessService.csproj" />
-		<ProjectReference Include="..\micro-services\outer\ApiRusklimatComService\ApiRusklimatComService.csproj" />
-		<ProjectReference Include="..\micro-services\outer\FeedsHaierProffRuService\FeedsHaierProffRuService.csproj" />
 	</ItemGroup>
 
 </Project>

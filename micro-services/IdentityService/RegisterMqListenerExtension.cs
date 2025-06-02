@@ -18,7 +18,7 @@ public static class RegisterMqListenerExtension
     /// RegisterMqListeners
     /// </summary>
     public static IServiceCollection IdentityRegisterMqListeners(this IServiceCollection services)
-    {//ReadToken2FAReceive
+    {
         return services
             .RegisterMqListener<ClaimsUserFlushReceive, string, TResponseModel<bool>>()
             .RegisterMqListener<GetUsersIdentityByEmailReceive, string[], TResponseModel<UserInfoModel[]?>>()

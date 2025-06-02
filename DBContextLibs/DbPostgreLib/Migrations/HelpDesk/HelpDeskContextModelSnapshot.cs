@@ -128,8 +128,6 @@ namespace DbPostgreLib.Migrations.HelpDesk
 
                     b.HasIndex("LastUpdatedAtUTC");
 
-                    b.HasIndex("Name");
-
                     b.ToTable("Articles");
                 });
 
@@ -222,8 +220,6 @@ namespace DbPostgreLib.Migrations.HelpDesk
                     b.HasIndex("CreatedAtUTC");
 
                     b.HasIndex("LastUpdateAt");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("NormalizedDescriptionUpper");
 
@@ -388,7 +384,7 @@ namespace DbPostgreLib.Migrations.HelpDesk
                     b.ToTable("RubricsArticlesJoins");
                 });
 
-            modelBuilder.Entity("SharedLib.RubricIssueHelpDeskModelDB", b =>
+            modelBuilder.Entity("SharedLib.RubricModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -412,7 +408,6 @@ namespace DbPostgreLib.Migrations.HelpDesk
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NormalizedNameUpper")
@@ -515,7 +510,7 @@ namespace DbPostgreLib.Migrations.HelpDesk
 
             modelBuilder.Entity("SharedLib.IssueHelpDeskModelDB", b =>
                 {
-                    b.HasOne("SharedLib.RubricIssueHelpDeskModelDB", "RubricIssue")
+                    b.HasOne("SharedLib.RubricModelDB", "RubricIssue")
                         .WithMany("Issues")
                         .HasForeignKey("RubricIssueId");
 
@@ -563,7 +558,7 @@ namespace DbPostgreLib.Migrations.HelpDesk
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharedLib.RubricIssueHelpDeskModelDB", "Rubric")
+                    b.HasOne("SharedLib.RubricModelDB", "Rubric")
                         .WithMany("ArticlesJoins")
                         .HasForeignKey("RubricId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -574,9 +569,9 @@ namespace DbPostgreLib.Migrations.HelpDesk
                     b.Navigation("Rubric");
                 });
 
-            modelBuilder.Entity("SharedLib.RubricIssueHelpDeskModelDB", b =>
+            modelBuilder.Entity("SharedLib.RubricModelDB", b =>
                 {
-                    b.HasOne("SharedLib.RubricIssueHelpDeskModelDB", "Parent")
+                    b.HasOne("SharedLib.RubricModelDB", "Parent")
                         .WithMany("NestedRubrics")
                         .HasForeignKey("ParentId");
 
@@ -639,7 +634,7 @@ namespace DbPostgreLib.Migrations.HelpDesk
                     b.Navigation("Votes");
                 });
 
-            modelBuilder.Entity("SharedLib.RubricIssueHelpDeskModelDB", b =>
+            modelBuilder.Entity("SharedLib.RubricModelDB", b =>
                 {
                     b.Navigation("ArticlesJoins");
 

@@ -35,7 +35,7 @@ namespace DbPostgreLib.Migrations.Commerce
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     BaseUnit = table.Column<int>(type: "integer", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
@@ -91,7 +91,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     WarehouseId = table.Column<int>(type: "integer", nullable: false),
                     Version = table.Column<Guid>(type: "uuid", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
@@ -114,7 +114,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Multiplicity = table.Column<decimal>(type: "numeric", nullable: false),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
@@ -380,7 +380,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     QuantityRule = table.Column<decimal>(type: "numeric", nullable: false),
                     PriceRule = table.Column<decimal>(type: "numeric", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
@@ -566,11 +566,6 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "LastUpdatedAtUTC");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AttendancesReg_Name",
-                table: "AttendancesReg",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AttendancesReg_NomenclatureId",
                 table: "AttendancesReg",
                 column: "NomenclatureId");
@@ -732,11 +727,6 @@ namespace DbPostgreLib.Migrations.Commerce
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Offices_Name",
-                table: "Offices",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Offices_OrganizationId",
                 table: "Offices",
                 column: "OrganizationId");
@@ -760,11 +750,6 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_Orders_LastUpdatedAtUTC",
                 table: "Orders",
                 column: "LastUpdatedAtUTC");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_Name",
-                table: "Orders",
-                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_OrganizationId",
@@ -792,11 +777,6 @@ namespace DbPostgreLib.Migrations.Commerce
                 table: "Organizations",
                 column: "OGRN",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_Name",
-                table: "Payments",
-                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_OrderId",

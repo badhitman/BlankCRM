@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.TelegramBot
 {
     [DbContext(typeof(TelegramBotContext))]
-    [Migration("20250430110816_TelegramBotContext001")]
+    [Migration("20250602132834_TelegramBotContext001")]
     partial class TelegramBotContext001
     {
         /// <inheritdoc />

@@ -124,6 +124,7 @@ builder.Services.AddScoped<IWebTransmission, WebTransmission>()
     .AddScoped<IStorageTransmission, StorageTransmission>()
     .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
     .AddScoped<IIdentityTransmission, IdentityTransmission>()
+    .AddScoped<IRubricsTransmission, RubricsTransmission>()
     ;
 //
 builder.Services.CommerceRegisterMqListeners();

@@ -208,7 +208,6 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NormalizedNameUpper")
@@ -297,7 +296,6 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("numeric");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("NomenclatureId")
@@ -362,8 +360,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("OrganizationId");
 
                     b.ToTable("Offices");
@@ -416,8 +412,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasKey("Id");
 
                     b.HasIndex("LastUpdatedAtUTC");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("OrganizationId");
 
@@ -552,8 +546,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("OrderId");
 
                     b.ToTable("Payments");
@@ -580,7 +572,6 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("OfferId")
@@ -669,8 +660,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasKey("Id");
 
                     b.HasIndex("LastUpdatedAtUTC");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("NomenclatureId");
 
@@ -857,7 +846,6 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NormalizedUpperName")

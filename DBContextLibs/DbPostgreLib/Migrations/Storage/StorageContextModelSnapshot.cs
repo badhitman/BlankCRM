@@ -56,7 +56,6 @@ namespace DbPostgreLib.Migrations.Storage
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ApplicationName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
@@ -69,15 +68,12 @@ namespace DbPostgreLib.Migrations.Storage
                         .HasColumnType("text");
 
                     b.Property<string>("PropertyName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SerializedDataJson")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("TypeName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -102,7 +98,6 @@ namespace DbPostgreLib.Migrations.Storage
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ApplicationName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("AuthorIdentityId")
@@ -136,7 +131,6 @@ namespace DbPostgreLib.Migrations.Storage
                         .HasColumnType("text");
 
                     b.Property<string>("PropertyName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ReferrerMain")
@@ -172,14 +166,12 @@ namespace DbPostgreLib.Migrations.Storage
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ApplicationName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NormalizedTagNameUpper")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("OwnerPrimaryKey")
@@ -189,11 +181,9 @@ namespace DbPostgreLib.Migrations.Storage
                         .HasColumnType("text");
 
                     b.Property<string>("PropertyName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("TagName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

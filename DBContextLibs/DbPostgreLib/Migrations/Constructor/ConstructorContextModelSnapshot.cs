@@ -58,8 +58,6 @@ namespace DbPostgreLib.Migrations.Constructor
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("TokenUniqueRoute")
                         .IsUnique();
 
@@ -95,8 +93,6 @@ namespace DbPostgreLib.Migrations.Constructor
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("ProjectId");
 
@@ -137,8 +133,6 @@ namespace DbPostgreLib.Migrations.Constructor
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("OwnerId");
 
                     b.HasIndex("TokenUniqueRoute")
@@ -174,8 +168,6 @@ namespace DbPostgreLib.Migrations.Constructor
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("OwnerId");
 
@@ -257,8 +249,6 @@ namespace DbPostgreLib.Migrations.Constructor
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("Name", "ProjectId")
@@ -295,8 +285,6 @@ namespace DbPostgreLib.Migrations.Constructor
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("OwnerId");
 
                     b.HasIndex("TokenUniqueRoute")
@@ -327,8 +315,6 @@ namespace DbPostgreLib.Migrations.Constructor
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("ParentId");
 
@@ -380,8 +366,6 @@ namespace DbPostgreLib.Migrations.Constructor
 
                     b.HasIndex("DirectoryId");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("OwnerId");
 
                     b.HasIndex("Required");
@@ -429,8 +413,6 @@ namespace DbPostgreLib.Migrations.Constructor
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("OwnerId");
 
                     b.HasIndex("Required");
@@ -474,8 +456,6 @@ namespace DbPostgreLib.Migrations.Constructor
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("NormalizedUpperName");
 
@@ -540,8 +520,6 @@ namespace DbPostgreLib.Migrations.Constructor
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("OwnerId");
 
@@ -776,8 +754,6 @@ namespace DbPostgreLib.Migrations.Constructor
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectsSnapshots");
@@ -871,8 +847,6 @@ namespace DbPostgreLib.Migrations.Constructor
 
                     b.HasIndex("LastDocumentUpdateActivity");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("SessionStatus");
@@ -907,8 +881,6 @@ namespace DbPostgreLib.Migrations.Constructor
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("OwnerId");
 
@@ -952,8 +924,6 @@ namespace DbPostgreLib.Migrations.Constructor
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("OwnerId");
 
                     b.HasIndex("TokenUniqueRoute")
@@ -992,8 +962,6 @@ namespace DbPostgreLib.Migrations.Constructor
                     b.HasKey("Id");
 
                     b.HasIndex("JoinFormToTabId");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("OwnerId");
 

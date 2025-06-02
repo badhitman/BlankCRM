@@ -22,8 +22,8 @@ namespace DbPostgreLib.Migrations.Storage
                     FileLength = table.Column<long>(type: "bigint", nullable: false),
                     ContentType = table.Column<string>(type: "text", nullable: true),
                     ReferrerMain = table.Column<string>(type: "text", nullable: true),
-                    ApplicationName = table.Column<string>(type: "text", nullable: false),
-                    PropertyName = table.Column<string>(type: "text", nullable: false),
+                    ApplicationName = table.Column<string>(type: "text", nullable: true),
+                    PropertyName = table.Column<string>(type: "text", nullable: true),
                     PrefixPropertyName = table.Column<string>(type: "text", nullable: true),
                     OwnerPrimaryKey = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -42,13 +42,13 @@ namespace DbPostgreLib.Migrations.Storage
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SerializedDataJson = table.Column<string>(type: "text", nullable: false),
-                    TypeName = table.Column<string>(type: "text", nullable: false),
-                    ApplicationName = table.Column<string>(type: "text", nullable: false),
-                    PropertyName = table.Column<string>(type: "text", nullable: false),
+                    ApplicationName = table.Column<string>(type: "text", nullable: true),
+                    PropertyName = table.Column<string>(type: "text", nullable: true),
                     PrefixPropertyName = table.Column<string>(type: "text", nullable: true),
                     OwnerPrimaryKey = table.Column<int>(type: "integer", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    SerializedDataJson = table.Column<string>(type: "text", nullable: true),
+                    TypeName = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -61,13 +61,13 @@ namespace DbPostgreLib.Migrations.Storage
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    NormalizedTagNameUpper = table.Column<string>(type: "text", nullable: false),
-                    TagName = table.Column<string>(type: "text", nullable: false),
-                    ApplicationName = table.Column<string>(type: "text", nullable: false),
-                    PropertyName = table.Column<string>(type: "text", nullable: false),
+                    ApplicationName = table.Column<string>(type: "text", nullable: true),
+                    PropertyName = table.Column<string>(type: "text", nullable: true),
                     PrefixPropertyName = table.Column<string>(type: "text", nullable: true),
                     OwnerPrimaryKey = table.Column<int>(type: "integer", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    NormalizedTagNameUpper = table.Column<string>(type: "text", nullable: true),
+                    TagName = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

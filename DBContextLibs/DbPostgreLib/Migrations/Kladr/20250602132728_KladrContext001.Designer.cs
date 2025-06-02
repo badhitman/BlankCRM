@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Kladr
 {
     [DbContext(typeof(KladrContext))]
-    [Migration("20250430110440_KladrContext001")]
+    [Migration("20250602132728_KladrContext001")]
     partial class KladrContext001
     {
         /// <inheritdoc />
