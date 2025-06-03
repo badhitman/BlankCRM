@@ -234,7 +234,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
 
                     totalTransferData += ms.Length;
                     ValueProgress = totalReadData / (forUpdateOrAddSum / 100);
-                    InfoAbout = $"Отправлено файлов: {_cntFiles} шт. (~{GlobalTools.SizeDataAsString(totalReadData)} zip:{GlobalTools.SizeDataAsString(totalTransferData)})";
+                    InfoAbout = $"Отправлено файлов: {_cntFiles} шт. (~{GlobalToolsStandard.SizeDataAsString(totalReadData)} zip:{GlobalToolsStandard.SizeDataAsString(totalTransferData)})";
 
                     if (sessionPartUpload.Response.FilePartsMetadata.Count == 1)
                     {
@@ -278,7 +278,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
         //await ParentPage.HoldPageUpdate(false);
 
         if (totalTransferData != 0)
-            SnackbarRepo.Add($"Отправлено: {GlobalTools.SizeDataAsString(totalTransferData)}", MudBlazor.Severity.Info, c => c.DuplicatesBehavior = MudBlazor.SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Add($"Отправлено: {GlobalToolsStandard.SizeDataAsString(totalTransferData)}", MudBlazor.Severity.Info, c => c.DuplicatesBehavior = MudBlazor.SnackbarDuplicatesBehavior.Allow);
         await SetBusyAsync(false);
     }
 

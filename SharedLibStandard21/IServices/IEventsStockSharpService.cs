@@ -13,6 +13,11 @@ namespace SharedLib;
 public interface IEventsStockSharpService
 {
     /// <summary>
+    /// TelegramBotStarting
+    /// </summary>
+    public Task<ResponseBaseModel> TelegramBotStarting(UserTelegramBaseModel bot, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// BoardReceived
     /// </summary>
     public Task<ResponseBaseModel> BoardReceived(BoardStockSharpModel req, CancellationToken cancellationToken = default);

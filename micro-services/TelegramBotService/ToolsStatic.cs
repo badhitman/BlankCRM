@@ -17,7 +17,7 @@ public static class ToolsStatic
     /// </summary>
     public static IAlbumInputMedia ConvertFile(FileAttachModel sender_file)
     {
-        if (GlobalTools.IsImageFile(sender_file.Name))
+        if (GlobalToolsStandard.IsImageFile(sender_file.Name))
             return new InputMediaPhoto(InputFile.FromStream(new MemoryStream(sender_file.Data), sender_file.Name));
 
         return new InputMediaDocument(InputFile.FromStream(new MemoryStream(sender_file.Data), sender_file.Name));

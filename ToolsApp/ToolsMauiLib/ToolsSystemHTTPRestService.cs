@@ -100,7 +100,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpCl
             res.AddInfo($"Файлов в удалённой папке нет");
         else
         {
-            res.AddInfo($"Файлов в удалённой папке: {res.Response.Count} ({GlobalTools.SizeDataAsString(res.Response.Sum(x => x.Size))})");
+            res.AddInfo($"Файлов в удалённой папке: {res.Response.Count} ({GlobalToolsStandard.SizeDataAsString(res.Response.Sum(x => x.Size))})");
             res.Response.ForEach(x =>
             {
                 x.FullName = x.FullName.Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);

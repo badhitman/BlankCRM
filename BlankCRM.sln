@@ -184,7 +184,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KladrService", "micro-servi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LdapService", "micro-services\LdapService\LdapService.csproj", "{AA5E2529-197B-643D-00FB-3E0F14F5D73C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLibStandart21", "SharedLibStandart21\SharedLibStandart21.csproj", "{94578E30-A2DA-4970-92E6-E4F2F45B2243}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLibStandard21", "SharedLibStandard21\SharedLibStandard21.csproj", "{94578E30-A2DA-4970-92E6-E4F2F45B2243}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bus", "bus", "{EF4FD4EC-A88C-4188-8560-8CDBA3D5480B}"
 EndProject

@@ -39,7 +39,7 @@
         <MudTd DataLabel="FileName">
             <a target="_blank" href="/cloud-fs/read/@context.Id/@context.FileName">@context.FileName</a> <sup title="скачать" style="cursor:pointer;" @onclick="() => FileManage(context)" class="bi bi-cloud-download-fill"></sup>
         </MudTd>
-        <MudTd DataLabel="FileLength">@(GlobalTools.SizeDataAsString(context.FileLength))</MudTd>
+        <MudTd DataLabel="FileLength">@(GlobalToolsStandard.SizeDataAsString(context.FileLength))</MudTd>
         <MudTd DataLabel="ContentType">@context.ContentType</MudTd>
         <MudTd DataLabel="Property">@context.PropertyName</MudTd>
         <MudTd DataLabel="Prefix">@context.PrefixPropertyName</MudTd>
@@ -65,8 +65,8 @@
                     <button @onclick="CloseFileManager" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>@_selectedFile.FileName - @GlobalTools.SizeDataAsString(_selectedFile.FileLength)</p>
-                    @if (GlobalTools.IsImageFile(_selectedFile.FileName))
+                    <p>@_selectedFile.FileName - @GlobalToolsStandard.SizeDataAsString(_selectedFile.FileLength)</p>
+                    @if (GlobalToolsStandard.IsImageFile(_selectedFile.FileName))
                     {
                         <img style="max-height:500px;max-width:300px;" src="@($"/cloud-fs/read/{_selectedFile.Id}/{_selectedFile.FileName}")" class="rounded mx-auto d-block" alt="@_selectedFile.FileName">
                     }
@@ -106,14 +106,14 @@
 
 @if (loadedFiles.Count != 0)
 {
-    <code>Выбранные файлы (@(GlobalTools.SizeDataAsString(loadedFiles.Sum(x => x.Size)))):</code>
+    <code>Выбранные файлы (@(GlobalToolsStandard.SizeDataAsString(loadedFiles.Sum(x => x.Size)))):</code>
     <ol class="list-group list-group-numbered mb-2">
         @foreach (IBrowserFile file_element in loadedFiles)
         {
             <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
                     <div class="fw-bold">@file_element.Name</div>
-                    @GlobalTools.SizeDataAsString(file_element.Size)
+                    @GlobalToolsStandard.SizeDataAsString(file_element.Size)
                 </div>
                 <span title="последнее изменение" class="badge text-bg-primary rounded-pill">@file_element.LastModified</span>
             </li>

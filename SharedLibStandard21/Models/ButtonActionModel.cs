@@ -5,17 +5,17 @@
 namespace SharedLib;
 
 /// <summary>
-/// MessageComplexIdsModel
+/// Кнопка действия
 /// </summary>
-public class MessageComplexIdsModel
+public class ButtonActionModel
 {
     /// <summary>
-    /// Telegram
+    /// Title
     /// </summary>
-    public required int TelegramId { get; set; }
+    public string Title { get; set; }
 
     /// <summary>
-    /// База данных
+    /// Data
     /// </summary>
-    public required int DatabaseId { get; set; }
+    public string Data { get; set; }
 }

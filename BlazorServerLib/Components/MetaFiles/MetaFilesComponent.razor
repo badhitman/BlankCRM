@@ -15,7 +15,7 @@
             @for (int i = 0; i < _included.Count; i++)
             {
                 int index = i;
-                <MudCheckBox @bind-Value="_included[index]">`@FilesAreaMetadata[index].ApplicationName` @(GlobalTools.SizeDataAsString(FilesAreaMetadata[index].SizeFilesSum)) (файлов: @FilesAreaMetadata[index].CountFiles)</MudCheckBox>
+                <MudCheckBox @bind-Value="_included[index]">`@FilesAreaMetadata[index].ApplicationName` @(GlobalToolsStandard.SizeDataAsString(FilesAreaMetadata[index].SizeFilesSum)) (файлов: @FilesAreaMetadata[index].CountFiles)</MudCheckBox>
             }
         </div>
 

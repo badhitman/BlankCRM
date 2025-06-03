@@ -40,7 +40,7 @@
         }
     </MudSelect>
     <br />
-    <code>Выбранные файлы (@(GlobalTools.SizeDataAsString(loadedFiles.Sum(x => x.Size)))):</code>
+    <code>Выбранные файлы (@(GlobalToolsStandard.SizeDataAsString(loadedFiles.Sum(x => x.Size)))):</code>
     <ol class="list-group list-group-numbered mb-2">
         @foreach (IBrowserFile FileViewElement in loadedFiles)
         {

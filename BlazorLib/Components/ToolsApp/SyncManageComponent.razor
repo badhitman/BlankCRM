@@ -50,7 +50,7 @@
 
                         <dt class="col-sm-3">Размер</dt>
                         <dd class="col-sm-9">
-                            @GlobalTools.SizeDataAsString(localScan.Response.Sum(x => x.Size))
+                            @GlobalToolsStandard.SizeDataAsString(localScan.Response.Sum(x => x.Size))
                         </dd>
                     </dl>
                 }
@@ -88,7 +88,7 @@
 
                         <dt class="col-sm-3">Размер</dt>
                         <dd class="col-sm-9">
-                            @GlobalTools.SizeDataAsString(remoteScan.Response.Sum(x => x.Size))
+                            @GlobalToolsStandard.SizeDataAsString(remoteScan.Response.Sum(x => x.Size))
                         </dd>
                     </dl>
                 }
@@ -115,7 +115,7 @@
             <div class="card-body">
                 <MudTable Items="@forDelete.OrderBy(x => x.ScopeName)" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<ToolsFilesResponseModel,bool>(FilterFunc1)">
                     <ToolBarContent>
-                        <MudText Typo="Typo.h6">Удаление файлов (@forDelete.Length шт. @GlobalTools.SizeDataAsString(forDelete.Sum(x => x.Size))):</MudText>
+                        <MudText Typo="Typo.h6">Удаление файлов (@forDelete.Length шт. @GlobalToolsStandard.SizeDataAsString(forDelete.Sum(x => x.Size))):</MudText>
                         <MudSpacer />
                         <MudTextField @bind-Value="searchStringQuery" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent>
@@ -127,7 +127,7 @@
                     <RowTemplate>
                         <MudTd DataLabel="SafeScopeName">@context.SafeScopeName</MudTd>
                         <MudTd DataLabel="Hash">@context.Hash</MudTd>
-                        <MudTd DataLabel="Size">@GlobalTools.SizeDataAsString(context.Size)</MudTd>
+                        <MudTd DataLabel="Size">@GlobalToolsStandard.SizeDataAsString(context.Size)</MudTd>
                     </RowTemplate>
                     <PagerContent>
                         <MudTablePager />
@@ -151,7 +151,7 @@
                         <MudText Typo="Typo.h6">
                             Изменения файлов
                             <sup>
-                                (@forUpdateOrAdd.Length шт. @GlobalTools.SizeDataAsString(forUpdateOrAddSum)):
+                                (@forUpdateOrAdd.Length шт. @GlobalToolsStandard.SizeDataAsString(forUpdateOrAddSum)):
                             </sup>
                         </MudText>
                         <MudSpacer />
@@ -167,12 +167,12 @@
                             ToolsFilesResponseModel? _localMd = localScan?.Response?.FirstOrDefault(x => x.SafeScopeName == context.SafeScopeName);
                             ToolsFilesResponseModel? _remoteMd = remoteScan?.Response?.FirstOrDefault(x => x.SafeScopeName == context.SafeScopeName);
                             string? _localMdSize =
-                            _localMd is null ? "" : GlobalTools.SizeDataAsString(_localMd.Size),
-                            _remoteMdSize = _remoteMd is null ? "" : GlobalTools.SizeDataAsString(_remoteMd.Size);
+                            _localMd is null ? "" : GlobalToolsStandard.SizeDataAsString(_localMd.Size),
+                            _remoteMdSize = _remoteMd is null ? "" : GlobalToolsStandard.SizeDataAsString(_remoteMd.Size);
                         }
                         <MudTd DataLabel="SafeScopeName">@context.SafeScopeName</MudTd>
                         <MudTd DataLabel="Hash">@($"L[{_localMd?.Size} {_localMd?.Hash}] R[{(_remoteMd is null ? "новый" : $"{_remoteMd.Size} {_remoteMd.Hash}")}]")</MudTd>
-                        <MudTd DataLabel="Size">@GlobalTools.SizeDataAsString(context.Size)</MudTd>
+                        <MudTd DataLabel="Size">@GlobalToolsStandard.SizeDataAsString(context.Size)</MudTd>
                     </RowTemplate>
                     <PagerContent>
                         <MudTablePager />

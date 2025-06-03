@@ -1296,11 +1296,11 @@ public class IdentityTools(
         await identityContext.SaveChangesAsync(token);
         if (MailAddress.TryCreate(user.Email, out _))
         {
-            TResponseModel<string> bot_username_res = await tgRemoteRepo.GetBotUsernameAsync(token);
-            string? bot_username = bot_username_res.Response;
+            TResponseModel<UserTelegramBaseModel> bot_username_res = await tgRemoteRepo.GetBotUsernameAsync(token);
+            UserTelegramBaseModel? bot_username = bot_username_res.Response;
             //
             string msg = $"Создана ссылка привязки Telegram аккаунта к учётной записи сайта.<br/>";
-            msg += $"Нужно подтвердить операцию через Telegram бота. Для этого нужно в TelegramBot @{bot_username} отправить токен:<br/><u><b>{act.GuidToken}</b></u><br/>Или ссылкой: <a href='https://t.me/{bot_username}?start={act.GuidToken}'>https://t.me/{bot_username}?start={act.GuidToken}</a><br/>";
+            msg += $"Нужно подтвердить операцию через Telegram бота. Для этого нужно в TelegramBot @{bot_username.Username} отправить токен:<br/><u><b>{act.GuidToken}</b></u><br/>Или ссылкой: <a href='https://t.me/{bot_username.Username}?start={act.GuidToken}'>https://t.me/{bot_username.Username}?start={act.GuidToken}</a><br/>";
             await mailRepo.SendEmailAsync(user.Email, "Статус привязки Telegram к у/з", msg, token: token);
         }
 
@@ -1509,11 +1509,11 @@ public class IdentityTools(
             if (MailAddress.TryCreate(user.Email, out _))
             {
                 string msg;
-                TResponseModel<string> bot_username_res = await tgRemoteRepo.GetBotUsernameAsync(token);
-                string? bot_username = bot_username_res.Response;
+                TResponseModel<UserTelegramBaseModel> bot_username_res = await tgRemoteRepo.GetBotUsernameAsync(token);
+                UserTelegramBaseModel? bot_username = bot_username_res.Response;
 
                 msg = $"Существует ссылка привязки Telegram аккаунта к учётной записи сайта действительная до {act.CreatedAt.AddMinutes(req.TelegramJoinAccountTokenLifetimeMinutes)} ({DateTime.UtcNow - lifeTime}).<br/>";
-                msg += $"Нужно подтвердить операцию через Telegram бота. Для этого нужно в TelegramBot @{bot_username} отправить токен:<br/><u><b>{act.GuidToken}</b></u><br/>Или ссылкой: <a href='https://t.me/{bot_username}?start={act.GuidToken}'>https://t.me/{bot_username}?start={act.GuidToken}</a><br/>";
+                msg += $"Нужно подтвердить операцию через Telegram бота. Для этого нужно в TelegramBot @{bot_username.Username} отправить токен:<br/><u><b>{act.GuidToken}</b></u><br/>Или ссылкой: <a href='https://t.me/{bot_username.Username}?start={act.GuidToken}'>https://t.me/{bot_username.Username}?start={act.GuidToken}</a><br/>";
                 await mailRepo.SendEmailAsync(user.Email, "Статус привязки Telegram к у/з", msg, token: token);
             }
             else

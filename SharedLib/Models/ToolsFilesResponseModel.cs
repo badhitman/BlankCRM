@@ -46,7 +46,7 @@ public class ToolsFilesResponseModel
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{GlobalTools.SizeDataAsString(Size)} - {ScopeName}";
+        return $"{GlobalToolsStandard.SizeDataAsString(Size)} - {ScopeName}";
     }
 
     /// <inheritdoc/>

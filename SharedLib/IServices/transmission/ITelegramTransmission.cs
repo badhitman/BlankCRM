@@ -27,7 +27,7 @@ public interface ITelegramTransmission
     /// <summary>
     /// Получить Username для TelegramBot
     /// </summary>
-    public Task<TResponseModel<string>> GetBotUsernameAsync(CancellationToken token = default);
+    public Task<TResponseModel<UserTelegramBaseModel>> GetBotUsernameAsync(CancellationToken token = default);
 
     /// <summary>
     /// Отправить сообщение через Telegram бота

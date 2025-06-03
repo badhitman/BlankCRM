@@ -82,7 +82,7 @@ public class ToolsController(
         FilePartMetadataModel currentPartMetadata = sessionUploadPart.FilePartsMetadata.First(x => x.PartFileId == fileToken);
 
         if (currentPartMetadata.PartFileSize != uploadedFile.Length)
-            return ResponseBaseModel.CreateError($"Размер пакета данных ожидался {GlobalTools.SizeDataAsString(currentPartMetadata.PartFileSize)}, а в запросе получено {GlobalTools.SizeDataAsString(uploadedFile.Length)}");
+            return ResponseBaseModel.CreateError($"Размер пакета данных ожидался {GlobalToolsStandard.SizeDataAsString(currentPartMetadata.PartFileSize)}, а в запросе получено {GlobalToolsStandard.SizeDataAsString(uploadedFile.Length)}");
 
         if (sessionUploadPart.FilePartsMetadata.Count == 1)
         {

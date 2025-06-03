@@ -2,9 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace SharedLib;
 
@@ -14,80 +12,29 @@ namespace SharedLib;
 [Index(nameof(ChatTelegramId), IsUnique = true), Index(nameof(NormalizedFirstNameUpper)), Index(nameof(LastUpdateUtc))]
 [Index(nameof(NormalizedLastNameUpper)), Index(nameof(NormalizedTitleUpper)), Index(nameof(NormalizedUsernameUpper))]
 [Index(nameof(Type)), Index(nameof(Title)), Index(nameof(Username)), Index(nameof(FirstName)), Index(nameof(LastName)), Index(nameof(IsForum))]
-public class ChatTelegramModelDB
+[PrimaryKey(nameof(Id))]
+public class ChatTelegramModelDB : ChatTelegramViewModel
 {
-    /// <summary>
-    /// Идентификатор/Key
-    /// </summary>
-    [Key]
-    public int Id { get; set; }
-
-    /// <summary>
-    /// Unique identifier for this chat. This number may have more
-    /// than 32 significant bits and some programming languages may have
-    /// difficulty/silent defects in interpreting it. But it has
-    /// at most 52 significant bits, so a signed 64-bit integer
-    /// or double-precision float type are safe for storing this identifier.
-    /// </summary>
-    [JsonProperty(Required = Required.Always)]
-    public long ChatTelegramId { get; set; }
-
-    /// <summary>
-    /// Type of chat, can be either “private”, “group”, “supergroup” or “channel”
-    /// </summary>
-    [JsonProperty(Required = Required.Always)]
-    public ChatsTypesTelegramEnum Type { get; set; }
-
-
-    /// <summary>
-    /// Optional. Title, for supergroups, channels and group chats
-    /// </summary>
-    public string? Title { get; set; }
     /// <summary>
     /// Optional. Title, for supergroups, channels and group chats
     /// </summary>
     public string? NormalizedTitleUpper { get; set; }
 
-
-    /// <summary>
-    /// Optional. Username, for private chats, supergroups and channels if available
-    /// </summary>
-    public string? Username { get; set; }
     /// <summary>
     /// Optional. Username, for private chats, supergroups and channels if available
     /// </summary>
     public string? NormalizedUsernameUpper { get; set; }
 
-
-    /// <summary>
-    /// Optional. First name of the other party in a private chat
-    /// </summary>
-    public string? FirstName { get; set; }
     /// <summary>
     /// Optional. First name of the other party in a private chat
     /// </summary>
     public string? NormalizedFirstNameUpper { get; set; }
 
-
-    /// <summary>
-    /// Optional. Last name of the other party in a private chat
-    /// </summary>
-    public string? LastName { get; set; }
     /// <summary>
     /// Optional. Last name of the other party in a private chat
     /// </summary>
     public string? NormalizedLastNameUpper { get; set; }
 
-
-    /// <summary>
-    /// Optional. <see langword="true"/>, if the supergroup chat is a forum (has topics enabled)
-    /// </summary>
-    public bool? IsForum { get; set; }
-
-    /// <summary>
-    /// LastUpdateUtc
-    /// </summary>
-    public DateTime LastUpdateUtc { get; set; }
 
     /// <summary>
     /// LastMessageId

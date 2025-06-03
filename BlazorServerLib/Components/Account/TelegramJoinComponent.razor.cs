@@ -43,7 +43,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
 
     UserInfoModel User = default!;
 
-    string? bot_username;
+    UserTelegramBaseModel? bot_username;
 
     TelegramJoinAccountModelDb? TelegramJoinAccount;
     List<ResultMessage> Messages = [];
@@ -56,7 +56,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
             if (TelegramJoinAccount is null)
                 return $"Для привязки{(User.TelegramId.HasValue ? " нового" : "")} аккаунта Telegram к вашей учётной записи выпустите токен (кнопка: 'Создать токен').";
 
-            string? tg_link = string.IsNullOrWhiteSpace(bot_username) ? null : $"<a target='_blank' href='https://t.me/{bot_username}?start={TelegramJoinAccount.GuidToken}'>https://t.me/{bot_username}?start={TelegramJoinAccount.GuidToken}</a>";
+            string? tg_link = string.IsNullOrWhiteSpace(bot_username?.Username) ? null : $"<a target='_blank' href='https://t.me/{bot_username}?start={TelegramJoinAccount.GuidToken}'>https://t.me/{bot_username}?start={TelegramJoinAccount.GuidToken}</a>";
             return $"Вам создан токен {TelegramJoinAccount.GuidToken}. Теперь его нужно отправить в Telegram бота @{TelegramBotUsername} (или воспользоваться ссылкой: {tg_link}).";
         }
     }
@@ -121,7 +121,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
         await ReadState(false);
         await SetBusyAsync();
 
-        TResponseModel<string> bot_username_res = await TelegramRemoteRepo.GetBotUsernameAsync();
+        TResponseModel<UserTelegramBaseModel> bot_username_res = await TelegramRemoteRepo.GetBotUsernameAsync();
         IsBusyProgress = false;
         bot_username = bot_username_res.Response;
         Messages.AddRange(bot_username_res.Messages);

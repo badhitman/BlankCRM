@@ -182,10 +182,10 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string?>> GetBotUsernameAsync(CancellationToken token = default)
+    public async Task<TResponseModel<UserTelegramBaseModel?>> AboutBotAsync(CancellationToken token = default)
     {
-        TResponseModel<string?> res = new();
-        Telegram.Bot.Types.User me;
+        TResponseModel<UserTelegramBaseModel?> res = new();
+        User me;
         string msg;
         try
         {
@@ -198,7 +198,17 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             res.Messages.InjectException(ex);
             return res;
         }
-        res.Response = me.Username;
+        res.Response = new()
+        {
+            AddedToAttachmentMenu = me.AddedToAttachmentMenu,
+            FirstName = me.FirstName,
+            IsBot = me.IsBot,
+            IsPremium = me.IsPremium,
+            LanguageCode = me.LanguageCode,
+            LastName = me.LastName,
+            Username = me.Username,
+            UserTelegramId = me.Id,
+        };
         return res;
     }
 
@@ -354,7 +364,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 {
                     FileAttachModel file = message.Files[0];
 
-                    if (GlobalTools.IsImageFile(file.Name))
+                    if (GlobalToolsStandard.IsImageFile(file.Name))
                     {
                         sender_msg = await _botClient.SendPhoto(chatId: message.UserTelegramId, photo: InputFile.FromStream(new MemoryStream(file.Data), file.Name), caption: msg_text, replyMarkup: replyKB, parseMode: parse_mode, replyParameters: message.ReplyToMessageId!.Value, cancellationToken: token);
                     }

@@ -240,7 +240,7 @@ public class StorageFilesImpl(
         await context.AddAsync(res.Response, token);
         await context.SaveChangesAsync(token);
 
-        if (GlobalTools.IsImageFile(_file_name))
+        if (GlobalToolsStandard.IsImageFile(_file_name))
         {
             using MagickImage image = new(req.Payload.Payload);
             //
@@ -270,8 +270,8 @@ public class StorageFilesImpl(
                 ApplicationName = Routes.FILE_CONTROLLER_NAME,
                 PropertyName = Routes.METADATA_CONTROLLER_NAME,
                 CreatedAt = DateTime.UtcNow,
-                NormalizedTagNameUpper = nameof(GlobalTools.IsImageFile).ToUpper(),
-                TagName = nameof(GlobalTools.IsImageFile),
+                NormalizedTagNameUpper = nameof(GlobalToolsStandard.IsImageFile).ToUpper(),
+                TagName = nameof(GlobalToolsStandard.IsImageFile),
                 OwnerPrimaryKey = res.Response.Id,
                 PrefixPropertyName = Routes.DEFAULT_CONTROLLER_NAME,
             }, token);
@@ -292,7 +292,7 @@ public class StorageFilesImpl(
                         OrderDocumentModelDB orderDb = get_order.Response.Single();
                         if (orderDb.HelpDeskId.HasValue && orderDb.HelpDeskId.Value > 0)
                         {
-                            msg = $"В <a href=\"{webConfig.ClearBaseUri}/issue-card/{orderDb.HelpDeskId.Value}\">заказ #{orderDb.Id}</a> добавлен файл '<u>{_file_name}</u>' {GlobalTools.SizeDataAsString(req.Payload.Payload.Length)}";
+                            msg = $"В <a href=\"{webConfig.ClearBaseUri}/issue-card/{orderDb.HelpDeskId.Value}\">заказ #{orderDb.Id}</a> добавлен файл '<u>{_file_name}</u>' {GlobalToolsStandard.SizeDataAsString(req.Payload.Payload.Length)}";
                             loggerRepo.LogInformation($"{msg} [{nameof(res.Response.PointId)}:{_uf}]");
                             reqPulse = new()
                             {
@@ -314,7 +314,7 @@ public class StorageFilesImpl(
                     }
                     break;
                 case Routes.ISSUE_CONTROLLER_NAME:
-                    msg = $"В <a href=\"{webConfig.ClearBaseUri}/issue-card/{req.Payload.OwnerPrimaryKey.Value}\">заявку #{req.Payload.OwnerPrimaryKey.Value}</a> добавлен файл '<u>{_file_name}</u>' {GlobalTools.SizeDataAsString(req.Payload.Payload.Length)}";
+                    msg = $"В <a href=\"{webConfig.ClearBaseUri}/issue-card/{req.Payload.OwnerPrimaryKey.Value}\">заявку #{req.Payload.OwnerPrimaryKey.Value}</a> добавлен файл '<u>{_file_name}</u>' {GlobalToolsStandard.SizeDataAsString(req.Payload.Payload.Length)}";
                     loggerRepo.LogInformation($"{msg} [{nameof(res.Response.PointId)}:{_uf}]");
                     reqPulse = new()
                     {

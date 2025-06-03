@@ -23,10 +23,10 @@
 else
 {
     <div class="row">
-        <p>Сервис TelegramBot: @(string.IsNullOrWhiteSpace(telegram_username) ? "не отвечает" : $"@{telegram_username}")</p>
-        @if (!string.IsNullOrWhiteSpace(telegram_username))
+        <p>Сервис TelegramBot: @(string.IsNullOrWhiteSpace(telegram_username?.Username) ? "не отвечает" : $"@{telegram_username.Username}")</p>
+        @if (!string.IsNullOrWhiteSpace(telegram_username?.Username))
         {
-            <TelegramJoinComponent TelegramBotUsername="@telegram_username" />
+            <TelegramJoinComponent TelegramBotUsername="@telegram_username.Username" />
         }
     </div>
 }
@@ -36,13 +36,13 @@ else
     private HttpContext HttpContext { get; set; } = default!;
 
     List<ResultMessage> Messages = [];
-    string? telegram_username;
+    UserTelegramBaseModel? telegram_username;
 
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
         
-        TResponseModel<string> telegram_rest = await TelegramRemoteRepo.GetBotUsernameAsync();
+        TResponseModel<UserTelegramBaseModel> telegram_rest = await TelegramRemoteRepo.GetBotUsernameAsync();
         await InvokeAsync(() =>
         {
             if (!telegram_rest.Success())

@@ -317,6 +317,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string TELEGRAM_CONTROLLER_NAME = "telegram";
 
         /// <summary>
+        /// Bot
+        /// </summary>
+        public const string BOT_CONTROLLER_NAME = "bot";
+
+        /// <summary>
         /// Mode
         /// </summary>
         public const string MODE_CONTROLLER_NAME = "mode";

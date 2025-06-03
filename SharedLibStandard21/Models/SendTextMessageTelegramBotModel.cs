@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.Collections.Generic;
+
 namespace SharedLib;
 
 /// <summary>
@@ -12,7 +14,7 @@ public class SendTextMessageTelegramBotModel
     /// <summary>
     /// Получатель сообщения
     /// </summary>
-    public required long UserTelegramId { get; set; }
+    public long UserTelegramId { get; set; }
 
     /// <summary>
     /// MainTelegramMessageId
@@ -22,7 +24,7 @@ public class SendTextMessageTelegramBotModel
     /// <summary>
     /// Текст сообщения
     /// </summary>
-    public required string Message { get; set; }
+    public string Message { get; set; }
 
     /// <summary>
     /// Имя режима парсинга сообщений Telegram (default: Html). Пример: Html, Markdown, MarkdownV2
@@ -33,7 +35,7 @@ public class SendTextMessageTelegramBotModel
     /// <summary>
     /// Подпись (от кого сообщение). Если null, то подписи не будет
     /// </summary>
-    public string? From { get; set; }
+    public string From { get; set; }
 
     /// <summary>
     /// Если сообщение является ответом, идентификатор исходного сообщения
@@ -43,10 +45,10 @@ public class SendTextMessageTelegramBotModel
     /// <summary>
     /// Клавиатура ответа.
     /// </summary>
-    public List<IEnumerable<ButtonActionModel>>? ReplyKeyboard { get; set; }
+    public List<IEnumerable<ButtonActionModel>> ReplyKeyboard { get; set; }
 
     /// <summary>
     /// Data
     /// </summary>
-    public List<FileAttachModel>? Files { get; set; }
+    public List<FileAttachModel> Files { get; set; }
 }

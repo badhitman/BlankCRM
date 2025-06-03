@@ -117,4 +117,37 @@ public static partial class GlobalToolsStandard
             ex = ex.InnerException;
         }
     }
+
+    /// <summary>
+    /// Преобразовать размер файла в читаемый вид
+    /// </summary>
+    public static string SizeDataAsString(long SizeFile)
+    {
+        if (SizeFile < 1024)
+            return SizeFile.ToString() + " bytes";
+        else if (SizeFile < 1024 * 1024)
+            return Math.Round((double)SizeFile / 1024, 2).ToString() + " KB";
+        else if (SizeFile < 1024 * 1024 * 1024)
+            return Math.Round((double)SizeFile / 1024 / 1024, 2).ToString() + " MB";
+        else
+            return Math.Round((double)SizeFile / 1024 / 1024 / 1024, 3).ToString() + " GB";
+    }
+
+    /// <summary>
+    /// файл является изображением
+    /// </summary>
+    public static bool IsImageFile(string file_tag)
+    {
+        return file_tag
+            .EndsWith("GIF", StringComparison.OrdinalIgnoreCase) ||
+            file_tag.EndsWith("JPG", StringComparison.OrdinalIgnoreCase) ||
+            file_tag.EndsWith("JPEG", StringComparison.OrdinalIgnoreCase) ||
+            file_tag.EndsWith("PNG", StringComparison.OrdinalIgnoreCase) ||
+            file_tag.EndsWith("BMP", StringComparison.OrdinalIgnoreCase) ||
+            file_tag.EndsWith("BMP2", StringComparison.OrdinalIgnoreCase) ||
+            file_tag.EndsWith("BMP3", StringComparison.OrdinalIgnoreCase) ||
+            file_tag.EndsWith("ICO", StringComparison.OrdinalIgnoreCase) ||
+            file_tag.EndsWith("HEIC", StringComparison.OrdinalIgnoreCase) ||
+            file_tag.EndsWith("JBIG", StringComparison.OrdinalIgnoreCase);
+    }
 }

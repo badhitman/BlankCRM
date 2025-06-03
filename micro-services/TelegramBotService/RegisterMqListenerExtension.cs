@@ -21,7 +21,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<SendTextMessageTelegramReceive, SendTextMessageTelegramBotModel, TResponseModel<MessageComplexIdsModel?>>()
             .RegisterMqListener<SetWebConfigReceive, TelegramBotConfigModel, ResponseBaseModel>()
             .RegisterMqListener<GetBotTokenReceive, object, TResponseModel<string>>()
-            .RegisterMqListener<GetBotUsernameReceive, object, TResponseModel<string?>>()
+            .RegisterMqListener<AboutBotReceive, object, TResponseModel<UserTelegramBaseModel?>>()
             .RegisterMqListener<ChatsReadTelegramReceive, long[], List<ChatTelegramModelDB>>()
             .RegisterMqListener<MessagesSelectTelegramReceive, TPaginationRequestModel<SearchMessagesChatModel>, TPaginationResponseModel<MessageTelegramModelDB>>()
             .RegisterMqListener<GetFileTelegramReceive, string, TResponseModel<byte[]>>()
