@@ -49,7 +49,7 @@ public class RubricsService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestModel<RowMoveModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RubricMoveAsync(TRequestModel<RowMoveModel> req, CancellationToken token = default)
     {
         ResponseBaseModel res = new();
 

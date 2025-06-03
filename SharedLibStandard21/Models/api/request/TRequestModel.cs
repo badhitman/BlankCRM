@@ -7,10 +7,10 @@ namespace SharedLib;
 /// <summary>
 /// Авторизованный запрос (от имени пользователя)
 /// </summary>
-public class TAuthRequestModel<T> : TRequestModel<T>
+public class TRequestModel<T>
 {
     /// <summary>
-    /// Пользователь, который отправил запрос (id Identity)
+    /// Request
     /// </summary>
-    public string SenderActionUserId { get; set; }
+    public T Payload { get; set; }
 }

@@ -13,9 +13,9 @@ using System.Security.Claims;
 namespace ServerLib;
 
 /// <summary>
-/// Ёто AuthenticationStateProvider на стороне сервера, который повторно провер¤ет метку безопасности дл¤ подключенного пользовател¤
-/// каждые 30 минут, когда подключен интерактивный канал. ќн также использует PersistentComponentState дл¤ передачи состо¤ни¤ аутентификации
-/// клиенту, которое затем фиксируетс¤ на врем¤ существовани¤ приложени¤ WebAssembly.
+/// AuthenticationStateProvider на стороне сервера, который повторно проверяет метку безопасности для подключенного пользователя
+/// каждые 30 минут, когда подключен интерактивный канал. ќн также использует PersistentComponentState дл¤ передачи состояния аутентификации
+/// клиенту, которое затем фиксируется на врем¤ существования приложения WebAssembly.
 /// </summary>
 public sealed class PersistingRevalidatingAuthenticationStateProvider(ILoggerFactory loggerFactory,
         IServiceScopeFactory scopeFactory,

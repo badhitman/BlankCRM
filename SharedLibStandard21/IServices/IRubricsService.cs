@@ -21,7 +21,7 @@ public interface IRubricsService
     /// <summary>
     /// RubricMove
     /// </summary>
-    public Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestModel<RowMoveModel> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> RubricMoveAsync(TRequestModel<RowMoveModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Rubric create (or update)

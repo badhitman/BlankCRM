@@ -10,7 +10,7 @@ namespace BlazorLib.Components.Rubrics;
 /// <summary>
 /// RubricNode: Edit
 /// </summary>
-public partial class RubricNodeEditComponent : BlazorBusyComponentBaseAuthModel
+public partial class RubricNodeEditComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IRubricsTransmission RubricsRepo { get; set; } = default!;
@@ -59,11 +59,11 @@ public partial class RubricNodeEditComponent : BlazorBusyComponentBaseAuthModel
 
     async Task MoveRow(DirectionsEnum dir, TreeItemDataRubricModel rubric)
     {
-        if (ItemModel is null || CurrentUserSession is null)
+        if (ItemModel is null)
             return;
 
         await SetBusyAsync();
-        ResponseBaseModel res = await RubricsRepo.RubricMoveAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { Direction = dir, ObjectId = rubric.Value!.Id, ContextName = ContextName } });
+        ResponseBaseModel res = await RubricsRepo.RubricMoveAsync(new() { Payload = new() { Direction = dir, ObjectId = rubric.Value!.Id, ContextName = ContextName } });
         IsBusyProgress = false;
         SnackbarRepo.ShowMessagesResponse(res.Messages);
         ReloadNodeHandle(ItemModel.ParentId ?? 0);
