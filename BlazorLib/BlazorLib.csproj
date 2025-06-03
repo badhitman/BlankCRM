@@ -20,10 +20,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.4" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.4" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.4" />
-		<PackageReference Include="MudBlazor" Version="8.5.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.5" />
+		<PackageReference Include="MudBlazor" Version="8.7.0" />
 		<PackageReference Include="TinyMCE.Blazor" Version="2.1.0" />
 	</ItemGroup>
 

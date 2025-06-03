@@ -22,7 +22,7 @@
 		<PackageReference Include="NLog.Extensions.Logging" Version="5.4.0" />
 		<PackageReference Include="NLog.Web.AspNetCore" Version="5.4.0" />
 		<PackageReference Include="NLog.Database" Version="5.4.0" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.5" />
 	</ItemGroup>
 
 	<ItemGroup>
