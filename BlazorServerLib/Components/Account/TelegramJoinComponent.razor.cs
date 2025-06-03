@@ -121,7 +121,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
         await ReadState(false);
         await SetBusyAsync();
 
-        TResponseModel<UserTelegramBaseModel> bot_username_res = await TelegramRemoteRepo.GetBotUsernameAsync();
+        TResponseModel<UserTelegramBaseModel> bot_username_res = await TelegramRemoteRepo.AboutBotAsync();
         IsBusyProgress = false;
         bot_username = bot_username_res.Response;
         Messages.AddRange(bot_username_res.Messages);

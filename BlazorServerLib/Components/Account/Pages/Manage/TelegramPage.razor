@@ -42,7 +42,7 @@ else
     {
         await SetBusyAsync();
         
-        TResponseModel<UserTelegramBaseModel> telegram_rest = await TelegramRemoteRepo.GetBotUsernameAsync();
+        TResponseModel<UserTelegramBaseModel> telegram_rest = await TelegramRemoteRepo.AboutBotAsync();
         await InvokeAsync(() =>
         {
             if (!telegram_rest.Success())

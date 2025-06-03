@@ -1296,7 +1296,7 @@ public class IdentityTools(
         await identityContext.SaveChangesAsync(token);
         if (MailAddress.TryCreate(user.Email, out _))
         {
-            TResponseModel<UserTelegramBaseModel> bot_username_res = await tgRemoteRepo.GetBotUsernameAsync(token);
+            TResponseModel<UserTelegramBaseModel> bot_username_res = await tgRemoteRepo.AboutBotAsync(token);
             UserTelegramBaseModel? bot_username = bot_username_res.Response;
             //
             string msg = $"Создана ссылка привязки Telegram аккаунта к учётной записи сайта.<br/>";
@@ -1509,7 +1509,7 @@ public class IdentityTools(
             if (MailAddress.TryCreate(user.Email, out _))
             {
                 string msg;
-                TResponseModel<UserTelegramBaseModel> bot_username_res = await tgRemoteRepo.GetBotUsernameAsync(token);
+                TResponseModel<UserTelegramBaseModel> bot_username_res = await tgRemoteRepo.AboutBotAsync(token);
                 UserTelegramBaseModel? bot_username = bot_username_res.Response;
 
                 msg = $"Существует ссылка привязки Telegram аккаунта к учётной записи сайта действительная до {act.CreatedAt.AddMinutes(req.TelegramJoinAccountTokenLifetimeMinutes)} ({DateTime.UtcNow - lifeTime}).<br/>";

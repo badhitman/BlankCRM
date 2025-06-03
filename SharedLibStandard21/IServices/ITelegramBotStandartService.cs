@@ -17,7 +17,6 @@ public interface ITelegramBotStandardService
     /// </summary>
     public Task<TResponseModel<UserTelegramBaseModel>> AboutBotAsync(CancellationToken token = default);
 
-
     /// <summary>
     /// SendTextMessageTelegram
     /// </summary>

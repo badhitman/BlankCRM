@@ -36,7 +36,7 @@ public class TelegramTransmission(IRabbitClient rabbitClient) : ITelegramTransmi
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<MessageComplexIdsModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ForwardTextMessageTelegramReceive, message, waitResponse, token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserTelegramBaseModel>> GetBotUsernameAsync(CancellationToken token = default)
+    public async Task<TResponseModel<UserTelegramBaseModel>> AboutBotAsync(CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<UserTelegramBaseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetBotUsernameReceive, token: token) ?? new();
 
     /// <inheritdoc/>
