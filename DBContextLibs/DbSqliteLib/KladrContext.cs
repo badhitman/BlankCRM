@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SharedLib;
 
 namespace DbcLib;
@@ -10,7 +11,7 @@ namespace DbcLib;
 /// <summary>
 /// Промежуточный/общий слой контекста базы данных
 /// </summary>
-public partial class KladrContext(DbContextOptions<KladrContext> options) : KladrLayerContext(options)
+public partial class KladrContext(DbContextOptions<KladrContext> options, ILogger<KladrContext> logger) : KladrLayerContext(options, logger)
 {
     /// <inheritdoc/>
     public override async Task EmptyTemplateTablesAsync(bool forTemplate = true)

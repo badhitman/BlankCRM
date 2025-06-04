@@ -52,6 +52,7 @@
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="Name" T="InstrumentTradeStockSharpViewModel">Name</MudTableSortLabel></MudTh>
         <MudTh>Code</MudTh>
+        <MudTh>Rubrics</MudTh>
         <MudTh>Markers</MudTh>
         <MudTh>Favorite</MudTh>
         <MudTh>Currency</MudTh>
@@ -65,6 +66,9 @@
             <strong class="me-2">
                 <MudHighlighter Text="@context.IdRemote" HighlightedText="@searchString" />
             </strong>
+        </MudTd>
+        <MudTd DataLabel="Rubrics">
+            <MarkersOfInstrumentComponent Instrument="context" />
         </MudTd>
         <MudTd DataLabel="Markers">
             <MarkersOfInstrumentComponent Instrument="context" />
