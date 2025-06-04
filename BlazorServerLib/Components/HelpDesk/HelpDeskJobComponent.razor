@@ -1,21 +1,18 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 @using MudBlazor
 
-<nav class="bg-body-tertiary mb-2">
-    <div class="container-fluid">
-        <span class="navbar-brand" href="#">Filter: </span>
-        <MudRadioGroup T="UsersAreasHelpDeskEnum?" Disabled="IsBusyProgress" @bind-Value="SelectedOption">
-            <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Executor">I executor</MudRadio>
-            <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Subscriber">I subscriber</MudRadio>
-            <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Main">All</MudRadio>
-            <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
-                <Authorized>
-                    <MudRadio T="UsersAreasHelpDeskEnum?" Value="null">root</MudRadio>
-                </Authorized>
-            </AuthorizeView>
-        </MudRadioGroup>
-    </div>
-</nav>
+<MudField Label="Filter:" Variant="Variant.Outlined" InnerPadding="false" Class="pa-2">
+    <MudRadioGroup T="UsersAreasHelpDeskEnum?" Disabled="IsBusyProgress" @bind-Value="SelectedOption">
+        <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Executor">I executor</MudRadio>
+        <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Subscriber">I subscriber</MudRadio>
+        <MudRadio T="UsersAreasHelpDeskEnum?" Value="@UsersAreasHelpDeskEnum.Main">All</MudRadio>
+        <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
+            <Authorized>
+                <MudRadio T="UsersAreasHelpDeskEnum?" Value="null">root</MudRadio>
+            </Authorized>
+        </AuthorizeView>
+    </MudRadioGroup>
+</MudField>
 
 <div class="card">
     <div class="card-body">

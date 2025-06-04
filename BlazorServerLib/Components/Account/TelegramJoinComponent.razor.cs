@@ -56,7 +56,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
             if (TelegramJoinAccount is null)
                 return $"Для привязки{(User.TelegramId.HasValue ? " нового" : "")} аккаунта Telegram к вашей учётной записи выпустите токен (кнопка: 'Создать токен').";
 
-            string? tg_link = string.IsNullOrWhiteSpace(bot_username?.Username) ? null : $"<a target='_blank' href='https://t.me/{bot_username}?start={TelegramJoinAccount.GuidToken}'>https://t.me/{bot_username}?start={TelegramJoinAccount.GuidToken}</a>";
+            string? tg_link = string.IsNullOrWhiteSpace(bot_username?.Username) ? null : $"<a target='_blank' href='https://t.me/{bot_username.Username}?start={TelegramJoinAccount.GuidToken}'>https://t.me/{bot_username.Username}?start={TelegramJoinAccount.GuidToken}</a>";
             return $"Вам создан токен {TelegramJoinAccount.GuidToken}. Теперь его нужно отправить в Telegram бота @{TelegramBotUsername} (или воспользоваться ссылкой: {tg_link}).";
         }
     }

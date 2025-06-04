@@ -220,7 +220,7 @@ public class UsersAuthenticateService(
     public async Task<RegistrationNewUserResponseModel> RegisterNewUserAsync(RegisterNewUserPasswordModel req, CancellationToken token = default)
     {
         if (!UserConfMan.UserRegistrationIsAllowed(req.Email))
-            return new() { Messages = [new() { Text = $"Ошибка регистрации {UserConfMan.DenyAuthorization?.Message}", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = $"Registration error {UserConfMan.DenyAuthorization?.Message}", TypeMessage = ResultTypesEnum.Error }] };
 
         RegistrationNewUserResponseModel regUserRes = await identityRepo.CreateNewUserWithPasswordAsync(req, token);
         if (!regUserRes.Success() || string.IsNullOrWhiteSpace(regUserRes.Response) || regUserRes.RequireConfirmedEmail == true)
@@ -229,7 +229,7 @@ public class UsersAuthenticateService(
         ApplicationUser? user = await userManager.FindByIdAsync(regUserRes.Response);
         if (user is null)
         {
-            regUserRes.AddError("Созданный пользователь не найден");
+            regUserRes.AddError("Created user not found");
             return regUserRes;
         }
 

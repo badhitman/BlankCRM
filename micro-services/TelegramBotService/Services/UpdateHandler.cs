@@ -99,14 +99,20 @@ public class UpdateHandler(
                                     cancellationToken: cancellationToken);
 
 #if DEBUG
-                    await botClient.EditMessageText(
-                        chatId: msg_s.Chat.Id,
-                        messageId: msg_s.MessageId,
-                        text: $"#<b>{msg_s.MessageId}</b>\n{msg}",
-                        parseMode: ParseMode.Html,
-                        cancellationToken: cancellationToken);
+                    try
+                    {
+                        await botClient.EditMessageText(
+                                                chatId: msg_s.Chat.Id,
+                                                messageId: msg_s.MessageId,
+                                                text: $"#<b>{msg_s.MessageId}</b>\n{msg}",
+                                                parseMode: ParseMode.Html,
+                                                cancellationToken: cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, $"Telegram.MessageId: {msg_s.MessageId}");
+                    }
 #endif
-
                 }
 
                 return;
