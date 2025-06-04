@@ -63,8 +63,6 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         if (!string.IsNullOrWhiteSpace(chip.Value?.TagName) && OwnerPrimaryKey.HasValue)
         {
             await SetBusyAsync();
-
-            await SetBusyAsync();
             TResponseModel<bool> res = await TagsRepo.TagSetAsync(new()
             {
                 PrefixPropertyName = PrefixPropertyName,
@@ -74,10 +72,8 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
                 Id = OwnerPrimaryKey.Value,
                 Set = false
             });
+            SnackbarRepo.ShowMessagesResponse(res.Messages);
             await ReloadTags();
-            await SetBusyAsync(false);
-            if (!res.Success())
-                SnackbarRepo.ShowMessagesResponse(res.Messages);
         }
     }
 

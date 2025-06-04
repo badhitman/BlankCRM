@@ -66,10 +66,10 @@ public class ParametersStorage(
         }
         else
         {
-            if (q.Any())
-                res.AddSuccess("Тег успешно установлен");
+            if (!q.Any())
+                res.AddSuccess("Тег отсутствует");
             else
-                res.AddInfo("Тег отсутствует");
+                res.AddInfo($"Тег удалён: {q.ExecuteDeleteAsync(cancellationToken: token)}");
         }
 
         return res;
