@@ -340,12 +340,11 @@ public partial class CommerceImplementService(
     #endregion
 
     #region nomenclatures
-
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> NomenclatureUpdateAsync(NomenclatureModelDB nom, CancellationToken token = default)
     {
         nom.Name = nom.Name.Trim();
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(nom, GlobalStaticConstants.JsonSerializerSettings)}");
+        // loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(nom, GlobalStaticConstants.JsonSerializerSettings)}");
         TResponseModel<int> res = new() { Response = 0 };
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         string msg, about = $"'{nom.Name}' /{nom.BaseUnit}";
@@ -366,7 +365,9 @@ public partial class CommerceImplementService(
             nom.Id = 0;
             nom.CreatedAtUTC = dtu;
             nomenclature_db = nom;
-            nom.SortIndex = await context.Nomenclatures.MaxAsync(x => x.SortIndex, cancellationToken: token) + 1;
+            nom.SortIndex = await context.Nomenclatures.AnyAsync(cancellationToken: token)
+                ? await context.Nomenclatures.MaxAsync(x => x.SortIndex, cancellationToken: token) + 1
+                : 0;
 
             await context.AddAsync(nomenclature_db, token);
             await context.SaveChangesAsync(token);

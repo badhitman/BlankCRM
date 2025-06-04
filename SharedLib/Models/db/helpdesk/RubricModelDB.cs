@@ -31,6 +31,27 @@ public class RubricModelDB : RubricStandardModel
     /// </summary>
     public new RubricModelDB? Parent { get; set; }
 
+    /// <inheritdoc/>
+    public static RubricModelDB Build(RubricStandardModel sender)
+    {
+        return new()
+        {
+            ContextName = sender.ContextName,
+            CreatedAtUTC = sender.CreatedAtUTC,
+            Description = sender.Description,
+            Id = sender.Id,
+            IsDisabled = sender.IsDisabled,
+            LastUpdatedAtUTC = sender.LastUpdatedAtUTC,
+            ParentId = sender.ParentId,
+            ProjectId = sender.ProjectId,
+            Name = sender.Name,
+            NormalizedNameUpper = sender.NormalizedNameUpper,
+            SortIndex = sender.SortIndex,
+
+            NestedRubrics = sender.NestedRubrics is null ? null : [.. sender.NestedRubrics.Select(Build)],
+            Parent = sender.Parent is null ? null : Build(sender.Parent),
+        };
+    }
 
     /// <inheritdoc/>
     public override bool Equals(object? obj)
