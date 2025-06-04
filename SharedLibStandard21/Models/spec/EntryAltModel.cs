@@ -15,10 +15,10 @@ public class EntryAltModel
 {
     /// <inheritdoc/>
     [Key]
-    public required string Id { get; set; }
+    public  string Id { get; set; }
 
     /// <inheritdoc/>
-    public required string? Name { get; set; }
+    public  string Name { get; set; }
 
     /// <inheritdoc/>
     public static EntryAltModel Build(string id, string name) => new() { Id = id, Name = name };
@@ -46,7 +46,7 @@ public class EntryAltModel
         => e1.Id != e2.Id || e1.Name != e2.Name;
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj)
+    public override bool Equals(object obj)
     {
         if (obj is null)
             return false;

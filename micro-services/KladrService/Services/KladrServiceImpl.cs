@@ -160,7 +160,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
 
         try
         {
-            await context.FlushTempKladr();
+            await context.FlushTempKladr(token);
             return ResponseBaseModel.CreateSuccess("Ok");
         }
         catch (Exception ex)

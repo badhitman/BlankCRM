@@ -12,5 +12,5 @@ public class EntryAltDescriptionModel : EntryAltModel
     /// <summary>
     /// Описание
     /// </summary>
-    public string? Description { get; set; }
+    public string Description { get; set; }
 }
