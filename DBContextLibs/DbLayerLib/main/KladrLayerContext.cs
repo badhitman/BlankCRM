@@ -5,16 +5,19 @@
 using Microsoft.EntityFrameworkCore;
 using DbLayerLib;
 using SharedLib;
+using Microsoft.Extensions.Logging;
 
 namespace DbcLib;
 
 /// <inheritdoc/>
 public abstract partial class KladrLayerContext : DbContext
 {
+    ILogger<KladrLayerContext> logger;
     /// <inheritdoc/>
-    public KladrLayerContext(DbContextOptions options)
+    public KladrLayerContext(DbContextOptions options, ILogger<KladrLayerContext> _logger)
         : base(options)
     {
+        logger = _logger;
         //#if DEBUG
         //        Database.EnsureCreated();
         //#else
@@ -256,25 +259,25 @@ public abstract partial class KladrLayerContext : DbContext
     /// Переместить данные из временных таблиц в прод
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "EF1002:Risk of vulnerability to SQL injection.", Justification = "<CustomAttr>")]
-    public async Task FlushTempKladr()
+    public async Task FlushTempKladr(CancellationToken token = default)
     {
-        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await Database.BeginTransactionAsync();
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await Database.BeginTransactionAsync(token);
 
-        await AltnamesKLADR.ExecuteDeleteAsync();
-        await NamesMapsKLADR.ExecuteDeleteAsync();
-        await ObjectsKLADR.ExecuteDeleteAsync();
-        await SocrbasesKLADR.ExecuteDeleteAsync();
-        await StreetsKLADR.ExecuteDeleteAsync();
-        await HousesKLADR.ExecuteDeleteAsync();
+        logger.LogInformation($"altnames delete: {await AltnamesKLADR.ExecuteDeleteAsync(cancellationToken: token)}");
+        logger.LogInformation($"names delete: {await NamesMapsKLADR.ExecuteDeleteAsync(cancellationToken: token)}");
+        logger.LogInformation($"objects delete: {await ObjectsKLADR.ExecuteDeleteAsync(cancellationToken: token)}");
+        logger.LogInformation($"socrbases delete: {await SocrbasesKLADR.ExecuteDeleteAsync(cancellationToken: token)}");
+        logger.LogInformation($"streets delete: {await StreetsKLADR.ExecuteDeleteAsync(cancellationToken: token)}");
+        logger.LogInformation($"houses delete: {await HousesKLADR.ExecuteDeleteAsync(cancellationToken: token)}");
+        
+        logger.LogInformation($"insert streets: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<StreetKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()}", cancellationToken: token)}");
+        logger.LogInformation($"insert altnames: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<AltnameKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<AltnameTempKLADRModelDB>()}", cancellationToken: token)}");
+        logger.LogInformation($"insert names: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<NameMapKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<NameMapTempKLADRModelDB>()}", cancellationToken: token)}");
+        logger.LogInformation($"insert objects: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<ObjectKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<ObjectTempKLADRModelDB>()}", cancellationToken: token)}");
+        logger.LogInformation($"insert socrbases: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<SocrbaseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<SocrbaseTempKLADRModelDB>()}", cancellationToken: token)}");
+        logger.LogInformation($"insert houses: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<HouseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()}", cancellationToken: token)}");
 
-        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<StreetKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()}");
-        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<AltnameKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<AltnameTempKLADRModelDB>()}");
-        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<NameMapKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<NameMapTempKLADRModelDB>()}");
-        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<ObjectKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<ObjectTempKLADRModelDB>()}");
-        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<SocrbaseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<SocrbaseTempKLADRModelDB>()}");
-        await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<HouseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()}");
-
-        await transaction.CommitAsync();
+        await transaction.CommitAsync(token);
     }
 
 

@@ -15,10 +15,11 @@ using static SharedLib.GlobalStaticConstantsRoutes;
 namespace StorageService;
 
 /// <summary>
-/// Хранилище файлов приложений
+/// Хранилище файлов приложений IMongoDatabase mongoFs = mongoCli.GetDatabase("");
 /// </summary>
 public class StorageFilesImpl(
     IDbContextFactory<StorageContext> cloudParametersDbFactory,
+    //MongoClient mongoCli,
     IMongoDatabase mongoFs,
     IIdentityTransmission identityRepo,
     ICommerceTransmission commRepo,
@@ -26,6 +27,7 @@ public class StorageFilesImpl(
     WebConfigModel webConfig,
     ILogger<ParametersStorage> loggerRepo) : IFilesStorage
 {
+    
 #if DEBUG
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(2);
 #else
@@ -185,7 +187,7 @@ public class StorageFilesImpl(
             res.AddError($"Файл #{req.Payload} не прочитан");
             return res;
         }
-
+        
         using MemoryStream stream = new();
         GridFSBucket gridFS = new(mongoFs);
         await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);

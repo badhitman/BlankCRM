@@ -225,7 +225,7 @@ public partial class CommerceImplementService(
                 LastUpdatedAtUTC = dtu,
             };
 
-            await context.AddAsync(req, token);
+            await context.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
             res.AddSuccess("Предложение добавлено");
             res.Response = req.Payload.Id;

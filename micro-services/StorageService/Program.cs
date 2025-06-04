@@ -97,7 +97,9 @@ public class Program
         builder.Services.AddSingleton<WebConfigModel>();
 
         MongoConfigModel _jo = builder.Configuration.GetSection(MongoConfigModel.Configuration).Get<MongoConfigModel>()!;
-        builder.Services.AddSingleton(new MongoClient(_jo.ToString()).GetDatabase(_jo.FilesSystemName));
+        string _mcs = _jo.ToString();
+        IMongoDatabase _mcli = new MongoClient(_mcs).GetDatabase(_jo.FilesSystemName);
+        builder.Services.AddSingleton(sp => _mcli);
 
         builder.Services.AddMemoryCache();
 

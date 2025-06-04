@@ -5,19 +5,20 @@
 using Microsoft.EntityFrameworkCore;
 using DbLayerLib;
 using SharedLib;
+using Microsoft.Extensions.Logging;
 
 namespace DbcLib;
 
 /// <summary>
 /// Промежуточный/общий слой контекста базы данных
 /// </summary>
-public partial class KladrContext(DbContextOptions<KladrContext> options) : KladrLayerContext(options)
+public partial class KladrContext(DbContextOptions<KladrContext> options, ILogger<KladrContext> loigger) : KladrLayerContext(options, loigger)
 {
     /// <inheritdoc/>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "EF1002:Risk of vulnerability to SQL injection.", Justification = "<CustomAttr>")]
-    public override async Task EmptyTemplateTablesAsync(bool forTemplate = true)
+    public override async Task EmptyTemplateTablesAsync(bool forTemp = true)
     {
-        if (forTemplate)
+        if (forTemp)
         {
             await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()}");
             await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {this.GetTableNameWithScheme<AltnameTempKLADRModelDB>()}");
