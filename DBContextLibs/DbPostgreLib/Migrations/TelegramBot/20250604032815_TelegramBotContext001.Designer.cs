@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.TelegramBot
 {
     [DbContext(typeof(TelegramBotContext))]
-    [Migration("20250602132834_TelegramBotContext001")]
+    [Migration("20250604032815_TelegramBotContext001")]
     partial class TelegramBotContext001
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace DbPostgreLib.Migrations.TelegramBot
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -561,7 +561,6 @@ namespace DbPostgreLib.Migrations.TelegramBot
                         .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsBot")
@@ -583,7 +582,6 @@ namespace DbPostgreLib.Migrations.TelegramBot
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NormalizedFirstNameUpper")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NormalizedLastNameUpper")

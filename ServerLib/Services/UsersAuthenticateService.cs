@@ -233,7 +233,7 @@ public class UsersAuthenticateService(
             return regUserRes;
         }
 
-        await signInManager.SignInAsync(user, isPersistent: false);
+        // await signInManager.SignInAsync(user, isPersistent: false);
         return regUserRes;
     }
 

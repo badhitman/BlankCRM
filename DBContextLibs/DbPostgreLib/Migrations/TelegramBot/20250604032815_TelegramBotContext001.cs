@@ -18,19 +18,19 @@ namespace DbPostgreLib.Migrations.TelegramBot
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    NormalizedTitleUpper = table.Column<string>(type: "text", nullable: true),
+                    NormalizedUsernameUpper = table.Column<string>(type: "text", nullable: true),
+                    NormalizedFirstNameUpper = table.Column<string>(type: "text", nullable: true),
+                    NormalizedLastNameUpper = table.Column<string>(type: "text", nullable: true),
+                    LastMessageId = table.Column<int>(type: "integer", nullable: false),
                     ChatTelegramId = table.Column<long>(type: "bigint", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: true),
-                    NormalizedTitleUpper = table.Column<string>(type: "text", nullable: true),
                     Username = table.Column<string>(type: "text", nullable: true),
-                    NormalizedUsernameUpper = table.Column<string>(type: "text", nullable: true),
                     FirstName = table.Column<string>(type: "text", nullable: true),
-                    NormalizedFirstNameUpper = table.Column<string>(type: "text", nullable: true),
                     LastName = table.Column<string>(type: "text", nullable: true),
-                    NormalizedLastNameUpper = table.Column<string>(type: "text", nullable: true),
                     IsForum = table.Column<bool>(type: "boolean", nullable: true),
-                    LastUpdateUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastMessageId = table.Column<int>(type: "integer", nullable: false)
+                    LastUpdateUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,15 +68,15 @@ namespace DbPostgreLib.Migrations.TelegramBot
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserTelegramId = table.Column<long>(type: "bigint", nullable: false),
                     IsBot = table.Column<bool>(type: "boolean", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    NormalizedFirstNameUpper = table.Column<string>(type: "text", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: true),
                     LastName = table.Column<string>(type: "text", nullable: true),
-                    NormalizedLastNameUpper = table.Column<string>(type: "text", nullable: true),
                     Username = table.Column<string>(type: "text", nullable: true),
-                    NormalizedUsernameUpper = table.Column<string>(type: "text", nullable: true),
                     LanguageCode = table.Column<string>(type: "text", nullable: true),
                     IsPremium = table.Column<bool>(type: "boolean", nullable: true),
                     AddedToAttachmentMenu = table.Column<bool>(type: "boolean", nullable: true),
+                    NormalizedFirstNameUpper = table.Column<string>(type: "text", nullable: true),
+                    NormalizedLastNameUpper = table.Column<string>(type: "text", nullable: true),
+                    NormalizedUsernameUpper = table.Column<string>(type: "text", nullable: true),
                     LastUpdateUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastMessageId = table.Column<int>(type: "integer", nullable: false)
                 },

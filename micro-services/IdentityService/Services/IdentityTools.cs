@@ -1037,7 +1037,7 @@ public class IdentityTools(
         {
             if (claims_db.Length != 0)
             {
-                claims_ids = claims_db.Select(x => x.Id).ToArray();
+                claims_ids = [.. claims_db.Select(x => x.Id)];
                 res.Response = await identityContext.UserClaims.Where(x => claims_ids.Contains(x.Id)).ExecuteDeleteAsync(cancellationToken: token) != 0 || res.Response;
             }
         }
@@ -1168,12 +1168,12 @@ public class IdentityTools(
             RequireConfirmedPhoneNumber = userManager.Options.SignIn.RequireConfirmedPhoneNumber,
             Response = userId
         };
-        res.AddSuccess("Регистрация выполнена.");
+        res.AddSuccess("Registration completed.");
 
         if (userManager.Options.SignIn.RequireConfirmedAccount)
         {
-            res.AddInfo("Требуется подтверждение учетной записи.");
-            res.AddWarning("Проверьте свой E-mail .");
+            res.AddInfo("Account verification required.");
+            res.AddWarning("Check your incoming email.");
         }
 
         return res;

@@ -41,7 +41,7 @@ Update-Database -Context NLogsContext -Project DbPostgreLib -StartupProject Stor
 
 
 
-
+Исключены из решения
 ```
 Add-Migration ApiBreezRuContext001 -Context ApiBreezRuContext -Project DbPostgreLib -StartupProject ApiBreezRuService
 Update-Database -Context ApiBreezRuContext -Project DbPostgreLib -StartupProject ApiBreezRuService
