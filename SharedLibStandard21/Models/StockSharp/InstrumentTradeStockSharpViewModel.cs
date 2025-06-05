@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 
 namespace SharedLib;
 
@@ -28,8 +29,14 @@ public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSh
     public DateTime CreatedAtUTC { get; set; }
 
     /// <inheritdoc/>
+    public virtual List<MarkerInstrumentStockSharpViewModel> Markers { get; set; }
+
+
+    /// <inheritdoc/>
     public virtual void Reload(InstrumentTradeStockSharpViewModel model)
     {
+        Markers = model.Markers;
+
         Board = model.Board;
         UnderlyingSecurityType = model.UnderlyingSecurityType;
         UnderlyingSecurityId = model.UnderlyingSecurityId;

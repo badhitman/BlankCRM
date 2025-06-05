@@ -25,7 +25,7 @@ public partial class RubricsManageComponent : BlazorBusyComponentBaseModel
     /// ValueChanged
     /// </summary>
     [Parameter]
-    public TreeViewOptionsModel? SelectedValuesChanged { get; set; }
+    public TreeViewOptionsHandler? SelectedValuesChanged { get; set; }
 
     /// <summary>
     /// Без вложенных узлов
@@ -146,10 +146,7 @@ public partial class RubricsManageComponent : BlazorBusyComponentBaseModel
         List<UniversalBaseModel> rubrics = await RequestRubrics(parentValue.Id);
         TreeItemDataRubricModel findNode = FindNode(parentValue.Id, InitialTreeItems) ?? throw new Exception();
 
-        findNode.Children = ConvertRubrics(rubrics)!;
-        //if ()
-        //    findNode.Children.ForEach(r => { r.Expandable = false; });
-
+        findNode.Children = ConvertRubrics(rubrics)!;        
         return findNode.Children;
     }
 

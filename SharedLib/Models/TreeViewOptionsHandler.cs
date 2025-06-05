@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// TreeViewOptionsModel
+/// TreeViewOptionsHandler
 /// </summary>
-public class TreeViewOptionsModel
+public class TreeViewOptionsHandler
 {
     /// <summary>
     /// SelectedValuesChangedHandler

@@ -1164,6 +1164,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string START_ACTION_NAME = "start";
 
         /// <summary>
+        /// Stop
+        /// </summary>
+        public const string STOP_ACTION_NAME = "stop";
+
+        /// <summary>
         /// Request
         /// </summary>
         public const string REQUEST_ACTION_NAME = "request";

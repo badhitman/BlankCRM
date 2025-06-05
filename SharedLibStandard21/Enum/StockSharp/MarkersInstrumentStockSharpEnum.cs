@@ -1,4 +1,6 @@
-﻿namespace SharedLib;
+﻿using System.ComponentModel;
+
+namespace SharedLib;
 
 /// <summary>
 /// MarkersInstrumentStockSharpEnum
@@ -6,8 +8,14 @@
 public enum MarkersInstrumentStockSharpEnum
 {
     /// <inheritdoc/>
+    [Description("IsNew")]
     IsNew,
 
     /// <inheritdoc/>
-    Illiquid
+    [Description("Illiquid")]
+    Illiquid,
+
+    /// <inheritdoc/>
+    [Description("IsMarketMaker")]
+    IsMarketMaker
 }
