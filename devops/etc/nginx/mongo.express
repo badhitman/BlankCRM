@@ -54,7 +54,7 @@ server {
  	listen 443 ssl;
  	listen [::]:443 ssl;
  	server_name mongo-express.iq-s.pro;
- 	ssl_certificate /etc/ssl/sites/iq-s.pro.cert;
+ 	ssl_certificate /etc/ssl/sites/iq-s.pro.crt;
  	ssl_certificate_key /etc/ssl/sites/iq-s.pro.key;
  	large_client_header_buffers 4 128k;
  

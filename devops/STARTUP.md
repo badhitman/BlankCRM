@@ -131,8 +131,6 @@ ln -s /etc/nginx/sites-available/web.staging.app /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/api.staging.app /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/mongo.express /etc/nginx/sites-enabled/
 systemctl reload nginx
-```
-```
 dotnet publish -c Debug --output /srv/git/builds/ApiRestService /srv/git/BlankCRM/micro-services/ApiRestService/ApiRestService.csproj
 dotnet publish -c Debug --output /srv/git/builds/StorageService /srv/git/BlankCRM/micro-services/StorageService/StorageService.csproj
 dotnet publish -c Debug --output /srv/git/builds/CommerceService /srv/git/BlankCRM/micro-services/CommerceService/CommerceService.csproj
@@ -143,8 +141,6 @@ dotnet publish -c Debug --output /srv/git/builds/KladrService /srv/git/BlankCRM/
 dotnet publish -c Debug --output /srv/git/builds/LdapService /srv/git/BlankCRM/micro-services/LdapService/LdapService.csproj
 dotnet publish -c Debug --output /srv/git/builds/IdentityService /srv/git/BlankCRM/micro-services/IdentityService/IdentityService.csproj
 dotnet publish -c Debug --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
-```
-```
 cd /srv/git/BlankCRM/devops/
 cp docker-compose.yml dumps.sh prod-builds.update.sh stage-builds.update.sh /srv/
 chown -R www-data:www-data /srv/dumps.sh
