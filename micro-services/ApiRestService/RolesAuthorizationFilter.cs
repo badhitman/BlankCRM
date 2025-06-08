@@ -20,7 +20,7 @@ public class RolesAuthorizationFilter(IOptions<RestApiConfigBaseModel> _conf, Ex
     {
         _http_context = context.HttpContext;
         string token = ReadTokenFromRequest();
-        ExpressUserPermissionModel? perm = _conf.Value?.Permissions?.FirstOrDefault(x => x.Secret?.Equals(token, StringComparison.OrdinalIgnoreCase) == true);
+        ExpressUserPermissionModel? perm = _conf.Value?.Permissions?.FirstOrDefault(x => x.Secret != Guid.Empty.ToString() && x.Secret?.Equals(token, StringComparison.OrdinalIgnoreCase) == true);
 
         if (perm is null)
         {
