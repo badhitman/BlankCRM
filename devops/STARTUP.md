@@ -1,8 +1,8 @@
 ## Startup
 
 ```
-apt update -y && apt upgrade -y && apt dist-upgrade -y && apt install git -y && apt install -y emscripten
-apt install -y nmon && apt install -y wget && apt install -y nano && apt install -y ufw && apt install -y nginx
+apt update -y && apt upgrade -y && apt dist-upgrade -y
+apt install -y nmon wget nano ufw nginx git emscripten p7zip-rar p7zip-full
 ```
 
 ```
@@ -91,7 +91,7 @@ ufw-docker check
 #### Directories
 
 ```
-mkdir /srv/secrets /srv/db-backups /srv/git /srv/services /srv/services.stage /srv/Cloud.Disk /srv/tmp /root/.vs-debugger
+mkdir -p /srv/secrets /srv/db-backups /srv/git /srv/services /srv/services.stage /srv/Cloud.Disk /srv/tmp/dumps /root/.vs-debugger
 ```
 
 ```
