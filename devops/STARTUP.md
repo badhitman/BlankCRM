@@ -171,6 +171,19 @@ chmod -R 755 /srv/stage-builds.update.sh
 ```
 cd /srv/git/BlankCRM/devops/etc/systemd/system/
 cp api.app.service api.app.stage.service bus.app.service bus.app.stage.service comm.app.service comm.app.stage.service constructor.app.service constructor.app.stage.service docker-compose-app.service hd.app.service hd.app.stage.service identity.app.service identity.app.stage.service kladr.app.service kladr.app.stage.service ldap.app.service ldap.app.stage.service tg.app.service tg.app.stage.service web.app.service web.app.stage.service /etc/systemd/system/
+
+systemctl enable api.app.stage.service
+systemctl enable web.app.stage.service
+systemctl enable comm.app.stage.service
+systemctl enable tg.app.stage.service
+systemctl enable bus.app.stage.service
+systemctl enable constructor.app.stage.service
+systemctl enable identity.app.stage.service
+systemctl enable hd.app.stage.service
+systemctl enable ldap.app.stage.service
+systemctl enable kladr.app.stage.service
+systemctl enable docker-compose-app.service
+
 systemctl start api.app.service
 systemctl start api.app.stage.service
 systemctl start bus.app.service
