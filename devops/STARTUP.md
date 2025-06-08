@@ -91,7 +91,7 @@ ufw-docker check
 #### Directories
 
 ```
-mkdir /root/.vs-debugger /srv/db-backups /srv/git /srv/services /srv/services.stage /srv/Cloud.Disk /srv/tmp
+mkdir /srv/secrets /srv/db-backups /srv/git /srv/services /srv/services.stage /srv/Cloud.Disk /srv/tmp /root/.vs-debugger
 ```
 
 ```
@@ -109,6 +109,8 @@ chown -R www-data:www-data /srv/Cloud.Disk
 chmod -R 777 /srv/Cloud.Disk
 chown -R www-data:www-data /srv/tmp
 chmod -R 777 /srv/tmp
+chown -R www-data:www-data /srv/secrets
+chmod -R 777 /srv/secrets
 ```
 
 #### Sources + Builds
@@ -122,6 +124,7 @@ dotnet workload install wasm-tools
 dotnet workload restore
 dotnet tool install -g Microsoft.Web.LibraryManager.Cli
 libman restore
+# Debug/Release
 dotnet publish -c Debug --output /srv/git/builds/ApiRestService /srv/git/BlankCRM/micro-services/ApiRestService/ApiRestService.csproj
 dotnet publish -c Debug --output /srv/git/builds/StorageService /srv/git/BlankCRM/micro-services/StorageService/StorageService.csproj
 dotnet publish -c Debug --output /srv/git/builds/CommerceService /srv/git/BlankCRM/micro-services/CommerceService/CommerceService.csproj
@@ -144,8 +147,6 @@ chown -R www-data:www-data /srv/prod-builds.update.sh
 chmod -R 755 /srv/prod-builds.update.sh
 chown -R www-data:www-data /srv/stage-builds.update.sh
 chmod -R 755 /srv/stage-builds.update.sh
-cd /srv/git/BlankCRM/devops/etc/systemd/system/
-cp api.app.service api.app.stage.service bus.app.service bus.app.stage.service comm.app.service comm.app.stage.service constructor.app.service constructor.app.stage.service docker-compose-app.service hd.app.service hd.app.stage.service identity.app.service identity.app.stage.service kladr.app.service kladr.app.stage.service ldap.app.service ldap.app.stage.service tg.app.service tg.app.stage.service web.app.service web.app.stage.service /etc/systemd/system/
 ```
 
 #### Systemd

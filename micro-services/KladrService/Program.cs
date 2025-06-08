@@ -73,7 +73,7 @@ public class Program
                 }
             }
             else
-                logger.Warn($"—екреты `{dirName}` не найдены (совсем)");
+                logger.Warn($"секреты `{dirName}` не найдены (совсем)");
         }
         ReadSecrets("secrets");
         if (!string.IsNullOrWhiteSpace(_modePrefix))
