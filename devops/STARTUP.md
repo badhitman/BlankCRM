@@ -184,6 +184,17 @@ systemctl enable ldap.app.stage.service
 systemctl enable kladr.app.stage.service
 systemctl enable docker-compose-app.service
 
+systemctl enable api.app.service
+systemctl enable web.app.service
+systemctl enable comm.app.service
+systemctl enable tg.app.service
+systemctl enable bus.app.service
+systemctl enable constructor.app.service
+systemctl enable identity.app.service
+systemctl enable hd.app.service
+systemctl enable ldap.app.service
+systemctl enable kladr.app.service
+
 systemctl start api.app.service
 systemctl start api.app.stage.service
 systemctl start bus.app.service

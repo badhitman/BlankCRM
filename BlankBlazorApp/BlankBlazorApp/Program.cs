@@ -160,7 +160,11 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddMemoryCache();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllers();
-builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentityCore<ApplicationUser>(options =>
+{ 
+    options.SignIn.RequireConfirmedAccount = true;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789-._@+";
+})
     .AddRoles<ApplicationRole>()
     .AddRoleManager<RoleManager<ApplicationRole>>()
     .AddEntityFrameworkStores<IdentityAppDbContext>()
