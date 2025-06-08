@@ -112,7 +112,6 @@ chmod -R 777 /srv/tmp
 ```
 
 #### Sources + Builds
-
 ```
 cd /srv/git
 rm -r *
@@ -133,6 +132,10 @@ dotnet publish -c Debug --output /srv/git/builds/KladrService /srv/git/BlankCRM/
 dotnet publish -c Debug --output /srv/git/builds/LdapService /srv/git/BlankCRM/micro-services/LdapService/LdapService.csproj
 dotnet publish -c Debug --output /srv/git/builds/IdentityService /srv/git/BlankCRM/micro-services/IdentityService/IdentityService.csproj
 dotnet publish -c Debug --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
+```
+
+#### Scripts
+```
 cd /srv/git/BlankCRM/devops/
 cp docker-compose.yml dumps.sh prod-builds.update.sh stage-builds.update.sh /srv/
 chown -R www-data:www-data /srv/dumps.sh
@@ -141,8 +144,38 @@ chown -R www-data:www-data /srv/prod-builds.update.sh
 chmod -R 755 /srv/prod-builds.update.sh
 chown -R www-data:www-data /srv/stage-builds.update.sh
 chmod -R 755 /srv/stage-builds.update.sh
+cd /srv/git/BlankCRM/devops/etc/systemd/system/
+cp api.app.service api.app.stage.service bus.app.service bus.app.stage.service comm.app.service comm.app.stage.service constructor.app.service constructor.app.stage.service docker-compose-app.service hd.app.service hd.app.stage.service identity.app.service identity.app.stage.service kladr.app.service kladr.app.stage.service ldap.app.service ldap.app.stage.service tg.app.service tg.app.stage.service web.app.service web.app.stage.service /etc/systemd/system/
 ```
 
+#### Systemd
+```
+cd /srv/git/BlankCRM/devops/etc/systemd/system/
+cp api.app.service api.app.stage.service bus.app.service bus.app.stage.service comm.app.service comm.app.stage.service constructor.app.service constructor.app.stage.service docker-compose-app.service hd.app.service hd.app.stage.service identity.app.service identity.app.stage.service kladr.app.service kladr.app.stage.service ldap.app.service ldap.app.stage.service tg.app.service tg.app.stage.service web.app.service web.app.stage.service /etc/systemd/system/
+systemctl start api.app.service
+systemctl start api.app.stage.service
+systemctl start bus.app.service
+systemctl start bus.app.stage.service
+systemctl start comm.app.service
+systemctl start comm.app.stage.service
+systemctl start constructor.app.service
+systemctl start constructor.app.stage.service
+systemctl start docker-compose-app.service
+systemctl start hd.app.service
+systemctl start hd.app.stage.service
+systemctl start identity.app.service
+systemctl start identity.app.stage.service
+systemctl start kladr.app.service
+systemctl start kladr.app.stage.service
+systemctl start ldap.app.service
+systemctl start ldap.app.stage.service
+systemctl start tg.app.service
+systemctl start tg.app.stage.service
+systemctl start web.app.service
+systemctl start web.app.stage.service
+```
+
+#### Nginx
 ```
 cp /srv/git/BlankCRM/devops/etc/nginx/api.app /srv/git/BlankCRM/devops/etc/nginx/mongo.express /srv/git/BlankCRM/devops/etc/nginx/web.app /etc/nginx/sites-available
 cp /srv/git/BlankCRM/devops/etc/nginx/stage/api.staging.app /srv/git/BlankCRM/devops/etc/nginx/stage/web.staging.app /etc/nginx/sites-available
@@ -154,6 +187,8 @@ ln -s /etc/nginx/sites-available/mongo.express /etc/nginx/sites-enabled/
 systemctl reload nginx
 ```
 
+#### Compose
+for: rabbitmq, postgres, redis, mongo + mongo-express
 ```
 cd /srv
 docker compose up -d

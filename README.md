@@ -122,6 +122,9 @@ note for DbPostgreLib "Если используется другая СУБД, 
     }
 ```
 
+#### Startup
+readme for startup - https://github.com/badhitman/BlankCRM/blob/main/devops/STARTUP.md
+
 ### Службы (активные/запускаемые):
 В случае использования Aspire, [достаточно запустить только хост-оркестратор](https://github.com/badhitman/BlankCRM/tree/main/BlankCRM.AppHost). Создание файла манифеста:
 ```PowerShell
