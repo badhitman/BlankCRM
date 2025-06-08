@@ -2,7 +2,7 @@
 
 ```
 apt update -y && apt upgrade -y && apt dist-upgrade -y && apt install git -y && apt install -y emscripten
-apt install -y nmon && apt install -y wget && apt install -y nano && apt install -y ufw
+apt install -y nmon && apt install -y wget && apt install -y nano && apt install -y ufw && apt install -y nginx
 ```
 
 ```
@@ -123,8 +123,15 @@ dotnet workload install wasm-tools
 dotnet workload restore
 dotnet tool install -g Microsoft.Web.LibraryManager.Cli
 libman restore
+cp /srv/git/BlankCRM/devops/etc/nginx/api.app /srv/git/BlankCRM/devops/etc/nginx/mongo.express /srv/git/BlankCRM/devops/etc/nginx/web.app /etc/nginx/sites-available
+cp /srv/git/BlankCRM/devops/etc/nginx/stage/api.staging.app /srv/git/BlankCRM/devops/etc/nginx/stage/web.staging.app /etc/nginx/sites-available
+ln -s /etc/nginx/sites-available/web.app /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/api.app /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/web.staging.app /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/api.staging.app /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/mongo.express /etc/nginx/sites-enabled/
+systemctl reload nginx
 ```
-
 ```
 dotnet publish -c Debug --output /srv/git/builds/ApiRestService /srv/git/BlankCRM/micro-services/ApiRestService/ApiRestService.csproj
 dotnet publish -c Debug --output /srv/git/builds/StorageService /srv/git/BlankCRM/micro-services/StorageService/StorageService.csproj
@@ -136,5 +143,19 @@ dotnet publish -c Debug --output /srv/git/builds/KladrService /srv/git/BlankCRM/
 dotnet publish -c Debug --output /srv/git/builds/LdapService /srv/git/BlankCRM/micro-services/LdapService/LdapService.csproj
 dotnet publish -c Debug --output /srv/git/builds/IdentityService /srv/git/BlankCRM/micro-services/IdentityService/IdentityService.csproj
 dotnet publish -c Debug --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
+```
+```
+cd /srv/git/BlankCRM/devops/
+cp docker-compose.yml dumps.sh prod-builds.update.sh stage-builds.update.sh /srv/
+chown -R www-data:www-data /srv/dumps.sh
+chmod -R 755 /srv/dumps.sh
+chown -R www-data:www-data /srv/prod-builds.update.sh
+chmod -R 755 /srv/prod-builds.update.sh
+chown -R www-data:www-data /srv/stage-builds.update.sh
+chmod -R 755 /srv/stage-builds.update.sh
+```
 
+```
+cd /srv
+docker compose up -d
 ```

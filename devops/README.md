@@ -75,14 +75,6 @@ dotnet publish -c Debug --output /srv/git/builds/LdapService /srv/git/BlankCRM/m
 dotnet publish -c Debug --output /srv/git/builds/IdentityService /srv/git/BlankCRM/micro-services/IdentityService/IdentityService.csproj
 dotnet publish -c Debug --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
 
-#  *** этот билд требует значительной мощьности железа. на стоковом сервере не соберЄтс€ (ресурсоЄмкий процесс, который веро€тно не сможет корректно завершитьс€)
-#  cd /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/
-#  dotnet tool install -g Microsoft.Web.LibraryManager.Cli
-#  dotnet workload restore
-#  libman restore
-#  dotnet publish -c Release --output /srv/git/builds/BlankBlazorApp /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
-#  *** поэтому € его отдельно собираю локально, отправл€ю через sftp, распаковываю и продолжаю дальше буд-то команды корректно отработали
-
 journalctl -e -f -u web.app.stage.service
 journalctl -f -u docker-compose-app.service
 
@@ -96,11 +88,6 @@ systemctl status tg.app.stage.service
 systemctl status bus.app.stage.service
 systemctl status web.app.stage.service
 systemctl status comm.app.stage.service
-systemctl status feeds-haier-proff-ru-service.app.stage.service
-systemctl status api-rusklimat-com-service.app.stage.service
-systemctl status api-daichi-business-service.app.stage.service
-systemctl status api-breez-ru-service.app.stage.service
-
 ```
 
 #### Win

@@ -54,8 +54,8 @@ server {
  	listen 443 ssl;
  	listen [::]:443 ssl;
 	server_name api.iq-s.pro www.api.iq-s.pro;
-	ssl_certificate /etc/ssl/iq-s.pro/iq-s.pro.crt;
-	ssl_certificate_key /etc/ssl/iq-s.pro/iq-s.pro.key;
+	ssl_certificate /etc/ssl/sites/iq-s.pro.crt;
+	ssl_certificate_key /etc/ssl/sites/iq-s.pro.key;
  	large_client_header_buffers 4 128k;
  
 	access_log /var/log/nginx/nginx.https.api.iq-s.pro.access.log;

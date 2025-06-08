@@ -9,8 +9,8 @@ server {
  	listen 443 ssl;
  	listen [::]:443 ssl;
 	server_name stage.iq-s.pro www.stage.iq-s.pro;
-	ssl_certificate /etc/ssl/iq-s.pro/iq-s.pro.crt;
-	ssl_certificate_key /etc/ssl/iq-s.pro/iq-s.pro.key;
+	ssl_certificate /etc/ssl/sites/iq-s.pro.crt;
+	ssl_certificate_key /etc/ssl/sites/iq-s.pro.key;
  	large_client_header_buffers 4 128k;
  
 	access_log /var/log/nginx/nginx.web.stage.iq-s.pro.access.log;

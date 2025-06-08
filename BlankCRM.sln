@@ -50,6 +50,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{9C0D49D9-C7B9-4960-AF82-361448F4965A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nginx", "nginx", "{A7D9597F-4160-4A52-ADBD-078CFB815FA7}"
+	ProjectSection(SolutionItems) = preProject
+		devops\etc\nginx\mongo.express = devops\etc\nginx\mongo.express
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "systemd", "systemd", "{5B966126-26F6-4699-92C7-1F1A582A7EE3}"
 	ProjectSection(SolutionItems) = preProject
@@ -90,14 +93,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolsMauiApp", "ToolsApp\To
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stage", "stage", "{CEF1BB59-528D-4BE0-AF5D-08FBB8C347A8}"
 	ProjectSection(SolutionItems) = preProject
-		devops\etc\systemd\system\api-breez-ru-service.app.stage.service = devops\etc\systemd\system\api-breez-ru-service.app.stage.service
-		devops\etc\systemd\system\api-daichi-business-service.app.stage.service = devops\etc\systemd\system\api-daichi-business-service.app.stage.service
-		devops\etc\systemd\system\api-rusklimat-com-service.app.stage.service = devops\etc\systemd\system\api-rusklimat-com-service.app.stage.service
 		devops\etc\systemd\system\api.app.stage.service = devops\etc\systemd\system\api.app.stage.service
 		devops\etc\systemd\system\bus.app.stage.service = devops\etc\systemd\system\bus.app.stage.service
 		devops\etc\systemd\system\comm.app.stage.service = devops\etc\systemd\system\comm.app.stage.service
 		devops\etc\systemd\system\constructor.app.stage.service = devops\etc\systemd\system\constructor.app.stage.service
-		devops\etc\systemd\system\feeds-haier-proff-ru-service.app.stage.service = devops\etc\systemd\system\feeds-haier-proff-ru-service.app.stage.service
 		devops\etc\systemd\system\hd.app.stage.service = devops\etc\systemd\system\hd.app.stage.service
 		devops\etc\systemd\system\identity.app.stage.service = devops\etc\systemd\system\identity.app.stage.service
 		devops\etc\systemd\system\kladr.app.stage.service = devops\etc\systemd\system\kladr.app.stage.service
@@ -120,14 +119,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prod", "prod", "{37D5BDC9-3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prod", "prod", "{1B873580-3AB0-498C-B6DC-A7F9ABFE7670}"
 	ProjectSection(SolutionItems) = preProject
-		devops\etc\systemd\system\api-breez-ru-service.app.service = devops\etc\systemd\system\api-breez-ru-service.app.service
-		devops\etc\systemd\system\api-daichi-business-service.app.service = devops\etc\systemd\system\api-daichi-business-service.app.service
-		devops\etc\systemd\system\api-rusklimat-com-service.app.service = devops\etc\systemd\system\api-rusklimat-com-service.app.service
 		devops\etc\systemd\system\api.app.service = devops\etc\systemd\system\api.app.service
 		devops\etc\systemd\system\bus.app.service = devops\etc\systemd\system\bus.app.service
 		devops\etc\systemd\system\comm.app.service = devops\etc\systemd\system\comm.app.service
 		devops\etc\systemd\system\constructor.app.service = devops\etc\systemd\system\constructor.app.service
-		devops\etc\systemd\system\feeds-haier-proff-ru-service.app.service = devops\etc\systemd\system\feeds-haier-proff-ru-service.app.service
 		devops\etc\systemd\system\hd.app.service = devops\etc\systemd\system\hd.app.service
 		devops\etc\systemd\system\identity.app.service = devops\etc\systemd\system\identity.app.service
 		devops\etc\systemd\system\kladr.app.service = devops\etc\systemd\system\kladr.app.service

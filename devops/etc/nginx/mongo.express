@@ -1,11 +1,11 @@
 server {
     listen 80;
-    server_name mongo-express.sportslog.net;
+    server_name mongo-express.iq-s.pro;
     # return 301 https://$host$request_uri;
 	large_client_header_buffers 4 128k;
 	
-	access_log /var/log/nginx/nginx.http.mongo-express.sportslog.net.access.log;
-	error_log /var/log/nginx/nginx.http.mongo-express.sportslog.net.error.log;
+	access_log /var/log/nginx/nginx.http.mongo-express.iq-s.pro.access.log;
+	error_log /var/log/nginx/nginx.http.mongo-express.iq-s.pro.error.log;
 
 	add_header X-Content-Type-Options "nosniff";
 	add_header 'Access-Control-Allow-Headers' 'token-access,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type' always;
@@ -53,13 +53,13 @@ server {
 server {
  	listen 443 ssl;
  	listen [::]:443 ssl;
- 	server_name mongo-express.sportslog.net;
- 	ssl_certificate /etc/ssl/sportslog.net.cert;
- 	ssl_certificate_key /etc/ssl/sportslog.net.key;
+ 	server_name mongo-express.iq-s.pro;
+ 	ssl_certificate /etc/ssl/iq-s.pro.cert;
+ 	ssl_certificate_key /etc/ssl/iq-s.pro.key;
  	large_client_header_buffers 4 128k;
  
- 	access_log /var/log/nginx/nginx.https.mongo-express.sportslog.net.access.log;
- 	error_log /var/log/nginx/nginx.https.mongo-express.sportslog.net.error.log;
+ 	access_log /var/log/nginx/nginx.https.mongo-express.iq-s.pro.access.log;
+ 	error_log /var/log/nginx/nginx.https.mongo-express.iq-s.pro.error.log;
  
  	add_header X-Content-Type-Options "nosniff";
  	add_header 'Access-Control-Allow-Headers' 'token-access,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type' always;
