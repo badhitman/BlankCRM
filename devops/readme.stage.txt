@@ -15,10 +15,6 @@ cp -r /srv/git/builds/TelegramBotService /srv/services.stage/TelegramBotService
 cp -r /srv/git/builds/KladrService /srv/services.stage/KladrService
 cp -r /srv/git/builds/LdapService /srv/services.stage/LdapService
 cp -r /srv/git/builds/BlankBlazorApp /srv/services.stage/BlankBlazorApp
-cp -r /srv/git/builds/ApiBreezRuService /srv/services.stage/ApiBreezRuService
-cp -r /srv/git/builds/ApiDaichiBusinessService /srv/services.stage/ApiDaichiBusinessService
-cp -r /srv/git/builds/ApiRusklimatComService /srv/services.stage/ApiRusklimatComService
-cp -r /srv/git/builds/FeedsHaierProffRuService /srv/services.stage/FeedsHaierProffRuService
 
 chown -R www-data:www-data /srv/services.stage
 chmod -R 777 /srv/services.stage

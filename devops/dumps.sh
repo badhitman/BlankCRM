@@ -1,8 +1,4 @@
 rm -r /srv/tmp/dumps/*
-docker exec -t srv_postgres_1 pg_dump -c -U dev FeedsHaierProffRuContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_FeedsHaierProffRu_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
-docker exec -t srv_postgres_1 pg_dump -c -U dev ApiBreezRuContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_ApiBreezRu_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
-docker exec -t srv_postgres_1 pg_dump -c -U dev ApiRusklimatComContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_ApiRusklimatComContext_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
-docker exec -t srv_postgres_1 pg_dump -c -U dev ApiDaichiBusinessContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_ApiDaichiBusiness_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv_postgres_1 pg_dump -c -U dev NLogsContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_NLogs_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv_postgres_1 pg_dump -c -U dev KladrContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_Kladr_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv_postgres_1 pg_dump -c -U dev MainAppContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_MainApp_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz

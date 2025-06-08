@@ -17,10 +17,6 @@ dotnet publish -c Debug --output C:/Users/User/Documents/publish/HelpDeskService
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/ConstructorService C:/Users/User/source/repos/BlankCRM/micro-services/ConstructorService/ConstructorService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/TelegramBotService C:/Users/User/source/repos/BlankCRM/micro-services/TelegramBotService/TelegramBotService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/BlankBlazorApp C:/Users/User/source/repos/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
-dotnet publish -c Debug --output C:/Users/User/Documents/publish/ApiBreezRuService C:/Users/User/source/repos/BlankCRM/micro-services/outer/ApiBreezRuService/ApiBreezRuService.csproj
-dotnet publish -c Debug --output C:/Users/User/Documents/publish/ApiDaichiBusinessService C:/Users/User/source/repos/BlankCRM/micro-services/outer/ApiDaichiBusinessService/ApiDaichiBusinessService.csproj
-dotnet publish -c Debug --output C:/Users/User/Documents/publish/ApiRusklimatComService C:/Users/User/source/repos/BlankCRM/micro-services/outer/ApiRusklimatComService/ApiRusklimatComService.csproj
-dotnet publish -c Debug --output C:/Users/User/Documents/publish/FeedsHaierProffRuService C:/Users/User/source/repos/BlankCRM/micro-services/outer/FeedsHaierProffRuService/FeedsHaierProffRuService.csproj
 if (-not (Test-Path -Path $7zipPath -PathType Leaf)) {
     throw "7 zip executable '$7zipPath' not found"
 }

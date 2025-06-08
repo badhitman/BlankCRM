@@ -113,6 +113,18 @@ chown -R www-data:www-data /srv/secrets
 chmod -R 777 /srv/secrets
 ```
 
+#### Secrets base
+```
+cd /srv/secrets
+wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/api-access.json
+wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/connections-strings.Development.json
+wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/email-conf.Development.json
+wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/mongo-conf.json
+wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/rabbitmq-conf.Development.json
+wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/telegram-bot.Development.json
+wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/top-menu.Development.json
+```
+
 #### Sources + Builds
 ```
 cd /srv/git
@@ -147,6 +159,12 @@ chown -R www-data:www-data /srv/prod-builds.update.sh
 chmod -R 755 /srv/prod-builds.update.sh
 chown -R www-data:www-data /srv/stage-builds.update.sh
 chmod -R 755 /srv/stage-builds.update.sh
+```
+
+#### Engine
+```
+/srv/stage-builds.update.sh
+/srv/prod-builds.update.sh
 ```
 
 #### Systemd
@@ -194,3 +212,4 @@ for: rabbitmq, postgres, redis, mongo + mongo-express
 cd /srv
 docker compose up -d
 ```
+
