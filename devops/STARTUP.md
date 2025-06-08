@@ -123,14 +123,6 @@ dotnet workload install wasm-tools
 dotnet workload restore
 dotnet tool install -g Microsoft.Web.LibraryManager.Cli
 libman restore
-cp /srv/git/BlankCRM/devops/etc/nginx/api.app /srv/git/BlankCRM/devops/etc/nginx/mongo.express /srv/git/BlankCRM/devops/etc/nginx/web.app /etc/nginx/sites-available
-cp /srv/git/BlankCRM/devops/etc/nginx/stage/api.staging.app /srv/git/BlankCRM/devops/etc/nginx/stage/web.staging.app /etc/nginx/sites-available
-ln -s /etc/nginx/sites-available/web.app /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/api.app /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/web.staging.app /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/api.staging.app /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/mongo.express /etc/nginx/sites-enabled/
-systemctl reload nginx
 dotnet publish -c Debug --output /srv/git/builds/ApiRestService /srv/git/BlankCRM/micro-services/ApiRestService/ApiRestService.csproj
 dotnet publish -c Debug --output /srv/git/builds/StorageService /srv/git/BlankCRM/micro-services/StorageService/StorageService.csproj
 dotnet publish -c Debug --output /srv/git/builds/CommerceService /srv/git/BlankCRM/micro-services/CommerceService/CommerceService.csproj
@@ -149,6 +141,17 @@ chown -R www-data:www-data /srv/prod-builds.update.sh
 chmod -R 755 /srv/prod-builds.update.sh
 chown -R www-data:www-data /srv/stage-builds.update.sh
 chmod -R 755 /srv/stage-builds.update.sh
+```
+
+```
+cp /srv/git/BlankCRM/devops/etc/nginx/api.app /srv/git/BlankCRM/devops/etc/nginx/mongo.express /srv/git/BlankCRM/devops/etc/nginx/web.app /etc/nginx/sites-available
+cp /srv/git/BlankCRM/devops/etc/nginx/stage/api.staging.app /srv/git/BlankCRM/devops/etc/nginx/stage/web.staging.app /etc/nginx/sites-available
+ln -s /etc/nginx/sites-available/web.app /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/api.app /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/web.staging.app /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/api.staging.app /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/mongo.express /etc/nginx/sites-enabled/
+systemctl reload nginx
 ```
 
 ```
