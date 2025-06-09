@@ -16,8 +16,7 @@ ufw enable
 install - https://learn.microsoft.com/ru-ru/dotnet/core/install/linux-ubuntu-install?tabs=dotnet9&pivots=os-linux-ubuntu-2404
 ```
 sudo add-apt-repository ppa:dotnet/backports
-sudo apt-get update && \
-  sudo apt-get install -y dotnet-sdk-9.0
+sudo apt update && sudo apt install -y dotnet-sdk-9.0
 sudo apt install zlib1g
 ```
 
@@ -79,17 +78,16 @@ doc - https://github.com/chaifeng/ufw-docker?tab=readme-ov-file#install
 ```
 sudo wget -O /usr/local/bin/ufw-docker \
   https://github.com/chaifeng/ufw-docker/raw/master/ufw-docker
-sudo chmod +x /usr/local/bin/ufw-docker
+sudo chmod 755 /usr/local/bin/ufw-docker
 ufw-docker install
 ```
 
 check
 ```
-ufw-docker check
+sudo ufw-docker check
 ```
 
 #### Directories
-
 ```
 mkdir -p /srv/secrets /srv/db-backups /srv/git /srv/services /srv/services.stage /srv/Cloud.Disk /srv/tmp/dumps /root/.vs-debugger
 ```
@@ -134,6 +132,7 @@ git clone https://github.com/badhitman/HtmlGenerator.git
 cd /srv/git/BlankCRM/BlankBlazorApp/BlankBlazorApp
 dotnet workload install wasm-tools
 dotnet workload restore
+# sudo ln -s ~/.dotnet/tools/libman /usr/local/bin/libman
 dotnet tool install -g Microsoft.Web.LibraryManager.Cli
 libman restore
 # Debug/Release
@@ -170,8 +169,9 @@ chmod -R 755 /srv/stage-builds.update.sh
 #### Systemd
 ```
 cd /srv/git/BlankCRM/devops/etc/systemd/system/
-cp api.app.service api.app.stage.service bus.app.service bus.app.stage.service comm.app.service comm.app.stage.service constructor.app.service constructor.app.stage.service docker-compose-app.service hd.app.service hd.app.stage.service identity.app.service identity.app.stage.service kladr.app.service kladr.app.stage.service ldap.app.service ldap.app.stage.service tg.app.service tg.app.stage.service web.app.service web.app.stage.service /etc/systemd/system/
+cp docker-compose-app.service api.app.stage.service bus.app.stage.service comm.app.stage.service constructor.app.stage.service hd.app.stage.service identity.app.stage.service kladr.app.stage.service ldap.app.stage.service tg.app.stage.service web.app.stage.service /etc/systemd/system/
 
+systemctl enable docker-compose-app.service
 systemctl enable api.app.stage.service
 systemctl enable web.app.stage.service
 systemctl enable comm.app.stage.service
@@ -182,48 +182,26 @@ systemctl enable identity.app.stage.service
 systemctl enable hd.app.stage.service
 systemctl enable ldap.app.stage.service
 systemctl enable kladr.app.stage.service
-systemctl enable docker-compose-app.service
 
-systemctl enable api.app.service
-systemctl enable web.app.service
-systemctl enable comm.app.service
-systemctl enable tg.app.service
-systemctl enable bus.app.service
-systemctl enable constructor.app.service
-systemctl enable identity.app.service
-systemctl enable hd.app.service
-systemctl enable ldap.app.service
-systemctl enable kladr.app.service
-
-systemctl start api.app.service
-systemctl start api.app.stage.service
-systemctl start bus.app.service
-systemctl start bus.app.stage.service
-systemctl start comm.app.service
-systemctl start comm.app.stage.service
-systemctl start constructor.app.service
-systemctl start constructor.app.stage.service
 systemctl start docker-compose-app.service
-systemctl start hd.app.service
+systemctl start api.app.stage.service
+systemctl start bus.app.stage.service
+systemctl start comm.app.stage.service
+systemctl start constructor.app.stage.service
 systemctl start hd.app.stage.service
-systemctl start identity.app.service
 systemctl start identity.app.stage.service
-systemctl start kladr.app.service
 systemctl start kladr.app.stage.service
-systemctl start ldap.app.service
 systemctl start ldap.app.stage.service
-systemctl start tg.app.service
 systemctl start tg.app.stage.service
-systemctl start web.app.service
 systemctl start web.app.stage.service
 ```
 
 #### Nginx
 ```
-cp /srv/git/BlankCRM/devops/etc/nginx/api.app /srv/git/BlankCRM/devops/etc/nginx/mongo.express /srv/git/BlankCRM/devops/etc/nginx/web.app /etc/nginx/sites-available
-cp /srv/git/BlankCRM/devops/etc/nginx/stage/api.staging.app /srv/git/BlankCRM/devops/etc/nginx/stage/web.staging.app /etc/nginx/sites-available
-ln -s /etc/nginx/sites-available/web.app /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/api.app /etc/nginx/sites-enabled/
+cd /srv/git/BlankCRM/devops/etc/nginx/
+cp mongo.express /etc/nginx/sites-available
+cd /srv/git/BlankCRM/devops/etc/nginx/stage/
+cp api.staging.app web.staging.app /etc/nginx/sites-available
 ln -s /etc/nginx/sites-available/web.staging.app /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/api.staging.app /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/mongo.express /etc/nginx/sites-enabled/
@@ -237,3 +215,8 @@ cd /srv
 docker compose up -d
 ```
 
+```
+docker exec -t srv-postgres-1 psql -c "CREATE USER dev WITH PASSWORD 'dev';"
+docker exec -t srv-postgres-1 psql -c "CREATE USER kladr WITH PASSWORD 'kladr';"
+docker exec -t srv-postgres-1 psql -c "CREATE USER nlog WITH PASSWORD 'nlog';"
+```
