@@ -23,7 +23,17 @@
 else
 {
     <div class="row">
-        <p>Сервис TelegramBot: @(string.IsNullOrWhiteSpace(telegram_username?.Username) ? "не отвечает" : $"@{telegram_username.Username}")</p>
+        <p>
+            Сервис TelegramBot:
+            @if (string.IsNullOrWhiteSpace(telegram_username?.Username))
+            {
+                <text>не отвечает (или не настроен)</text>
+            }
+            else
+            {
+                <a href="https://t.me/@telegram_username.Username">&#64;@telegram_username.Username</a>
+            }
+        </p>
         @if (!string.IsNullOrWhiteSpace(telegram_username?.Username))
         {
             <TelegramJoinComponent TelegramBotUsername="@telegram_username.Username" />
@@ -41,7 +51,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
-        
+
         TResponseModel<UserTelegramBaseModel> telegram_rest = await TelegramRemoteRepo.AboutBotAsync();
         await InvokeAsync(() =>
         {

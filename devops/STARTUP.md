@@ -160,18 +160,14 @@ chown -R www-data:www-data /srv/stage-builds.update.sh
 chmod -R 755 /srv/stage-builds.update.sh
 ```
 
-#### Engine
-```
-/srv/stage-builds.update.sh
-/srv/prod-builds.update.sh
-```
-
 #### Systemd
 ```
 cd /srv/git/BlankCRM/devops/etc/systemd/system/
 cp docker-compose-app.service api.app.stage.service bus.app.stage.service comm.app.stage.service constructor.app.stage.service hd.app.stage.service identity.app.stage.service kladr.app.stage.service ldap.app.stage.service tg.app.stage.service web.app.stage.service /etc/systemd/system/
 
 systemctl enable docker-compose-app.service
+systemctl start docker-compose-app.service
+
 systemctl enable api.app.stage.service
 systemctl enable web.app.stage.service
 systemctl enable comm.app.stage.service
@@ -183,7 +179,6 @@ systemctl enable hd.app.stage.service
 systemctl enable ldap.app.stage.service
 systemctl enable kladr.app.stage.service
 
-systemctl start docker-compose-app.service
 systemctl start api.app.stage.service
 systemctl start bus.app.stage.service
 systemctl start comm.app.stage.service
@@ -208,15 +203,10 @@ ln -s /etc/nginx/sites-available/mongo.express /etc/nginx/sites-enabled/
 systemctl reload nginx
 ```
 
-#### Compose
-for: rabbitmq, postgres, redis, mongo + mongo-express
+#### Start
+installation of secrets (logins, passwords, etc.): databases, email, rabbitmq, TelegramBot token as well as tokens for access via api/rest (if planned)
+simple - https://github.com/badhitman/BlankCRM/tree/main/devops/secrets
 ```
-cd /srv
-docker compose up -d
-```
-
-```
-docker exec -t srv-postgres-1 psql -c "CREATE USER dev WITH PASSWORD 'dev';"
-docker exec -t srv-postgres-1 psql -c "CREATE USER kladr WITH PASSWORD 'kladr';"
-docker exec -t srv-postgres-1 psql -c "CREATE USER nlog WITH PASSWORD 'nlog';"
+/srv/stage-builds.update.sh
+/srv/prod-builds.update.sh
 ```
