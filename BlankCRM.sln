@@ -44,7 +44,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devops", "devops", "{3A274B
 		devops\README.md = devops\README.md
 		devops\readme.stage.txt = devops\readme.stage.txt
 		devops\stage-builds.update.sh = devops\stage-builds.update.sh
-		devops\STARTUP.md = devops\STARTUP.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{9C0D49D9-C7B9-4960-AF82-361448F4965A}"
