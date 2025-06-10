@@ -168,11 +168,31 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpCl
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
         string routeUri = $"/{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.METADATA_CONTROLLER_NAME}/{Routes.CALCULATE_ACTION_NAME}";
+        string sd = "";
 
-        HttpResponseMessage response = await client.PostAsJsonAsync(routeUri, req, cancellationToken: cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        string sd = await response.Content.ReadAsStringAsync(cancellationToken);
+        for (int i = 0; i < 3; i++)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.PostAsJsonAsync(routeUri, req, cancellationToken: cancellationToken);
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                    Console.WriteLine($"{response.StatusCode}");
+                response.EnsureSuccessStatusCode();
+
+                sd = await response.Content.ReadAsStringAsync(cancellationToken);
+                break;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                await Task.Delay(1000, cancellationToken);
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(sd))
+            return new() { Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = "response empty" }] };
+
         return JsonConvert.DeserializeObject<MetadataKladrModel>(sd)!;
     }
 
@@ -181,11 +201,29 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpCl
     {
         using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
         string routeUri = $"/{Routes.API_CONTROLLER_NAME}/{Routes.KLADR_CONTROLLER_NAME}/{Routes.TEMP_CONTROLLER_NAME}/{Routes.UPLOAD_ACTION_NAME}-{Routes.PART_CONTROLLER_NAME}";
+        string sd = "";
+        for (int i = 0; i < 3; i++)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.PostAsJsonAsync(routeUri, req, cancellationToken: cancellationToken);
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                    Console.WriteLine($"{response.StatusCode}");
 
-        HttpResponseMessage response = await client.PostAsJsonAsync(routeUri, req, cancellationToken: cancellationToken);
-        response.EnsureSuccessStatusCode();
+                response.EnsureSuccessStatusCode();
+                sd = await response.Content.ReadAsStringAsync(cancellationToken);
+                break;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                await Task.Delay(1000, cancellationToken);
+            }
+        }
 
-        string sd = await response.Content.ReadAsStringAsync(cancellationToken);
+        if (string.IsNullOrWhiteSpace(sd))
+            return ResponseBaseModel.CreateError($"response empty");
+
         return JsonConvert.DeserializeObject<ResponseBaseModel>(sd)!;
     }
 

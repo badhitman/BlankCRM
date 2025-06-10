@@ -13,4 +13,7 @@ public class StrategyStartRequestModel
 {
     /// <inheritdoc/>
     public List<StrategyTradeStockSharpModel> Instruments { get; set; }
+
+    /// <inheritdoc/>
+    public BoardStockSharpModel Board { get; set; }
 }

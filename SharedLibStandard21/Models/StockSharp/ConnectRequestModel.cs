@@ -11,6 +11,5 @@ namespace SharedLib;
 /// </summary>
 public class ConnectRequestModel
 {
-    /// <inheritdoc/>
-    public List<BoardStockSharpModel> BoardsFilter { get; set; }
+    
 }
