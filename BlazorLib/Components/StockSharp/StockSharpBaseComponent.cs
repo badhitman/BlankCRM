@@ -47,8 +47,15 @@ public class StockSharpBaseComponent : BlazorBusyComponentBaseModel
     {
         if (!IsBusyProgress)
             await SetBusyAsync();
+
         AboutConnection = await DriverRepo.AboutConnection();
         SnackbarRepo.ShowMessagesResponse(AboutConnection.Messages);
+
+        if(AboutConnection.Messages.Count == 0)
+        {
+            SnackbarRepo.Info(AboutConnection.ConnectionState.ToString() ?? "error");
+        }
+
         await SetBusyAsync(false);
     }
 
