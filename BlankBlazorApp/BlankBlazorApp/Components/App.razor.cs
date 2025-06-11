@@ -51,8 +51,6 @@ public partial class App
 
                 await Task.WhenAll(_tasks);
             }
-
         }
-
     }
 }
