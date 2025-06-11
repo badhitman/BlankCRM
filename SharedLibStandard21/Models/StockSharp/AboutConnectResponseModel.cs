@@ -25,4 +25,14 @@ public class AboutConnectResponseModel : ResponseBaseModel
     /// LastConnectedAt
     /// </summary>
     public DateTime? LastConnectedAt { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void Update(UpdateConnectionHandleModel req)
+    {
+        CanConnect = req.CanConnect;
+        ConnectionState = req.ConnectionState;
+        LastConnectedAt = DateTime.UtcNow;
+    }
 }

@@ -43,18 +43,13 @@ public class StockSharpBaseComponent : BlazorBusyComponentBaseModel
     }
 
     /// <inheritdoc/>
-    protected async Task GetStatusConnection()
+    protected virtual async Task GetStatusConnection()
     {
         if (!IsBusyProgress)
             await SetBusyAsync();
 
         AboutConnection = await DriverRepo.AboutConnection();
         SnackbarRepo.ShowMessagesResponse(AboutConnection.Messages);
-
-        if(AboutConnection.Messages.Count == 0)
-        {
-            SnackbarRepo.Info(AboutConnection.ConnectionState.ToString() ?? "error");
-        }
 
         await SetBusyAsync(false);
     }

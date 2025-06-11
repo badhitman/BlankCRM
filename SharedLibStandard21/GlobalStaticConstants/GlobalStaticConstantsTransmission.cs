@@ -968,6 +968,9 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string TelegramBotStartingStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.TELEGRAM_CONTROLLER_NAME}-{Routes.BOT_CONTROLLER_NAME}-{Routes.START_ACTION_NAME}");//TelegramBotStarting
 
         /// <inheritdoc/>
+        public readonly static string UpdateConnectionStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.CONNECTION_CONTROLLER_NAME}-{Routes.STATE_ACTION_NAME}-{Routes.UPDATE_ACTION_NAME}");
+
+        /// <inheritdoc/>
         public readonly static string PortfolioReceivedStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.PORTFOLIO_CONTROLLER_NAME}-{Routes.RECEIVED_ACTION_NAME}");
 
         /// <inheritdoc/>
