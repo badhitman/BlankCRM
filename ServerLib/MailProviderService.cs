@@ -33,12 +33,12 @@ public class MailProviderService(IOptions<SmtpConfigModel> _config, ILogger<Mail
             loggerRepo.LogError(_msg);
             return ResponseBaseModel.CreateError(_msg);
         }
-        
+
         TextFormat format = Enum.Parse<TextFormat>(mimekit_format, true);
         MimeMessage? emailMessage = new();
 
         emailMessage.From.Add(new MailboxAddress(_config.Value.PublicName, _config.Value.Email));
-        
+
         if (email == "*")
             foreach (string _mail in _config.Value.EmailNotificationRecipients)
                 emailMessage.To.Add(new MailboxAddress(string.Empty, _mail));
@@ -72,9 +72,11 @@ public class MailProviderService(IOptions<SmtpConfigModel> _config, ILogger<Mail
         try
         {
             res = await client.SendAsync(emailMessage);
+            loggerRepo.LogWarning($"sending email: {res}");
         }
         catch (Exception ex)
         {
+            loggerRepo.LogError(ex, "exception sending email");
             return ResponseBaseModel.CreateError(ex);
         }
 
