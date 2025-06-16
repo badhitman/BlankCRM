@@ -35,12 +35,12 @@ public interface IDriverStockSharpService : IStockSharpBaseService
     /// <summary>
     /// Strategy Start
     /// </summary>
-    public Task<ResponseBaseModel> StrategyStartAsync(StrategyStartRequestModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> StartStrategy(StrategyStartRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Strategy Stop
     /// </summary>
-    public Task<ResponseBaseModel> StrategyStopAsync(StrategyStopRequestModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> StopStrategy(StrategyStopRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// OrderRegisterRequest

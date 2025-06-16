@@ -11,24 +11,19 @@ namespace SharedLib;
 /// </summary>
 public class AboutConnectResponseModel : ResponseBaseModel
 {
-    /// <summary>
-    /// CanConnect
-    /// </summary>
+    /// <inheritdoc/>
     public bool CanConnect { get; set; }
 
-    /// <summary>
-    /// ConnectionState
-    /// </summary>
+    /// <inheritdoc/>
     public ConnectionStatesEnum? ConnectionState { get; set; }
 
-    /// <summary>
-    /// LastConnectedAt
-    /// </summary>
+    /// <inheritdoc/>
     public DateTime? LastConnectedAt { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <inheritdoc/>
+    public bool StrategyStarted { get; set; }
+
+    /// <inheritdoc/>
     public void Update(UpdateConnectionHandleModel req)
     {
         CanConnect = req.CanConnect;
