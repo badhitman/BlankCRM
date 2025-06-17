@@ -114,21 +114,29 @@ public class ParametersStorage(
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = trc,
-            Response = [.._resDb.Select(x=>(TagViewModel)x)],
+            Response = [.. _resDb.Select(x => (TagViewModel)x)],
         };
     }
     #endregion
 
     #region storage parameters
     /// <inheritdoc/>
-    public async Task<T?[]> FindAsync<T>(RequestStorageBaseModel req, CancellationToken token = default)
+    public async Task<T?[]> FindAsync<T>(FindStorageBaseModel req, CancellationToken token = default)
     {
         req.Normalize();
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         string _tn = typeof(T).FullName ?? throw new Exception();
-        StorageCloudParameterModelDB[] _dbd = await context
-            .CloudProperties
-            .Where(x => x.TypeName == _tn && x.ApplicationName == req.ApplicationName && x.PropertyName == req.PropertyName)
+
+        IQueryable<StorageCloudParameterModelDB> q = context
+            .CloudProperties.Where(x => x.TypeName == _tn);
+
+        if (!string.IsNullOrWhiteSpace(req.ApplicationName))
+            q = q.Where(x => x.ApplicationName == req.ApplicationName);
+
+        if (!string.IsNullOrWhiteSpace(req.PropertyName))
+            q = q.Where(x => x.PropertyName == req.PropertyName);
+
+        StorageCloudParameterModelDB[] _dbd = await q
             .ToArrayAsync(cancellationToken: token);
 
         return [.. _dbd.Select(x => JsonConvert.DeserializeObject<T>(x.SerializedDataJson))];
@@ -333,14 +341,21 @@ public class ParametersStorage(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FoundParameterModel[]?>> FindAsync(RequestStorageBaseModel req, CancellationToken token = default)
+    public async Task<TResponseModel<FoundParameterModel[]?>> FindRawAsync(FindStorageBaseModel req, CancellationToken token = default)
     {
         req.Normalize();
         TResponseModel<FoundParameterModel[]?> res = new();
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
-        StorageCloudParameterModelDB[] prop_db = await context
-            .CloudProperties
-            .Where(x => req.PropertyName == x.PropertyName && req.ApplicationName == x.ApplicationName)
+        IQueryable<StorageCloudParameterModelDB> q = context
+            .CloudProperties.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.ApplicationName))
+            q = q.Where(x => x.ApplicationName == req.ApplicationName);
+
+        if (!string.IsNullOrWhiteSpace(req.PropertyName))
+            q = q.Where(x => x.PropertyName == req.PropertyName);
+
+        StorageCloudParameterModelDB[] prop_db = await q
             .ToArrayAsync(cancellationToken: token);
 
         res.Response = [.. prop_db

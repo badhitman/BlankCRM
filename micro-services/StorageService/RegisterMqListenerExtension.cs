@@ -21,7 +21,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<SaveParameterReceive, StorageCloudParameterPayloadModel, TResponseModel<int?>>()
             .RegisterMqListener<ReadParameterReceive, StorageMetadataModel, TResponseModel<StorageCloudParameterPayloadModel?>>()
             .RegisterMqListener<ReadParametersReceive, StorageMetadataModel[], TResponseModel<List<StorageCloudParameterPayloadModel>>>()
-            .RegisterMqListener<FindParametersReceive, RequestStorageBaseModel, TResponseModel<FoundParameterModel[]?>>()
+            .RegisterMqListener<FindParametersReceive, FindStorageBaseModel, TResponseModel<FoundParameterModel[]?>>()
 
             .RegisterMqListener<TagSetReceive, TagSetModel, ResponseBaseModel>()
             .RegisterMqListener<TagsSelectReceive, TPaginationRequestModel<SelectMetadataRequestModel>, TPaginationResponseModel<TagViewModel>>()
