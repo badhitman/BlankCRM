@@ -32,7 +32,6 @@ public interface IParametersStorage
     /// <summary>
     /// Сохранить параметр
     /// </summary>
-    /// <typeparam name="T">Тип сохраняемых данных (сериализируемый)</typeparam>
     public Task SaveAsync<T>(T obj, StorageMetadataModel set, bool trimHistory = false, CancellationToken token = default);
 
     /// <summary>
@@ -48,8 +47,7 @@ public interface IParametersStorage
     /// <summary>
     /// Поиск значений параметров
     /// </summary>
-    /// <typeparam name="T">Тип данных (для десериализации из JSON)</typeparam>
-    public Task<T[]> FindAsync<T>(RequestStorageBaseModel req, CancellationToken token = default);
+    public Task<T[]> FindAsync<T>(FindStorageBaseModel req, CancellationToken token = default);
 
     /// <summary>
     /// FlushParameterAsync
@@ -75,8 +73,8 @@ public interface IParametersStorage
     public Task<TResponseModel<List<StorageCloudParameterPayloadModel>>> ReadParametersAsync(StorageMetadataModel[] req, CancellationToken token = default);
 
     /// <summary>
-    /// Поиск значений параметров
+    /// Поиск значений параметров (JSON данные)
     /// </summary>
-    public Task<TResponseModel<FoundParameterModel[]>> FindAsync(RequestStorageBaseModel req, CancellationToken token = default);
+    public Task<TResponseModel<FoundParameterModel[]>> FindRawAsync(FindStorageBaseModel req, CancellationToken token = default);
     #endregion
 }

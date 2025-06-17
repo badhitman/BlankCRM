@@ -202,6 +202,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string OFFERS_CONTROLLER_NAME = "offers";
 
         /// <summary>
+        /// Objects
+        /// </summary>
+        public const string OBJECTS_CONTROLLER_NAME = "objects";
+
+        /// <summary>
+        /// Object
+        /// </summary>
+        public const string OBJECT_CONTROLLER_NAME = "object";
+
+        /// <summary>
         /// Column
         /// </summary>
         public const string COLUMN_CONTROLLER_NAME = "column";

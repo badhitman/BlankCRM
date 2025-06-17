@@ -832,6 +832,9 @@ public static partial class GlobalStaticConstantsTransmission
 
         /// <inheritdoc/>
         public readonly static string FindCloudParameterReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CLOUD_CONTROLLER_NAME, Routes.PROPERTY_CONTROLLER_NAME, Routes.FIND_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string FindCloudParametersObjectsReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CLOUD_CONTROLLER_NAME, $"{Routes.PROPERTY_CONTROLLER_NAME}-as-{Routes.OBJECTS_CONTROLLER_NAME}", Routes.FIND_ACTION_NAME);
         #endregion
 
         #region Outer
