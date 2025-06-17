@@ -961,6 +961,7 @@ public static partial class GlobalStaticConstantsTransmission
         /// <inheritdoc/>
         public readonly static string PingStockSharpDriverReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.STOCKSHARP_CONTROLLER_NAME}-{Routes.DRIVER_CONTROLLER_NAME}", Routes.PING_ACTION_NAME);
 
+        #region events/notifies
         /// <inheritdoc/>
         public readonly static string ValuesChangedStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.VALUES_CONTROLLER_NAME}-{Routes.CHANGE_ACTION_NAME}");
 
@@ -987,8 +988,12 @@ public static partial class GlobalStaticConstantsTransmission
 
         /// <inheritdoc/>
         public readonly static string OwnTradeReceivedStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.OWNTRADE_CONTROLLER_NAME}-{Routes.RECEIVED_ACTION_NAME}");
+        #endregion
 
-        #region
+        #region stock-sharp
+        /// <inheritdoc/>
+        public readonly static string TradeInstrumentStrategyStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.TRADE_CONTROLLER_NAME}-{Routes.INSTRUMENT_CONTROLLER_NAME}-{Routes.STRATEGY_CONTROLLER_NAME}");
+
         /// <inheritdoc/>
         public readonly static string DisconnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.OPEN_ACTION_NAME);
 

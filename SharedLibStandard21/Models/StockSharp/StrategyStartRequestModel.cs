@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Collections.Generic;
-
 namespace SharedLib;
 
 /// <summary>
@@ -12,8 +10,8 @@ namespace SharedLib;
 public class StrategyStartRequestModel
 {
     /// <inheritdoc/>
-    public List<StrategyTradeStockSharpModel> Instruments { get; set; }
+    public BoardStockSharpModel Board { get; set; }
 
     /// <inheritdoc/>
-    public BoardStockSharpModel Board { get; set; }
+    public PortfolioStockSharpModel SelectedPortfolio { get; set; }
 }

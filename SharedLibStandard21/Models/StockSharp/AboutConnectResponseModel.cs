@@ -30,4 +30,15 @@ public class AboutConnectResponseModel : ResponseBaseModel
         ConnectionState = req.ConnectionState;
         LastConnectedAt = DateTime.UtcNow;
     }
+
+    /// <inheritdoc/>
+    public void Update(AboutConnectResponseModel req)
+    {
+        CanConnect = req.CanConnect;
+        ConnectionState = req.ConnectionState;
+        LastConnectedAt = req.LastConnectedAt;
+        StrategyStarted = req.StrategyStarted;
+        if (req.Messages.Count != 0)
+            Messages.AddRange(req.Messages);
+    }
 }
