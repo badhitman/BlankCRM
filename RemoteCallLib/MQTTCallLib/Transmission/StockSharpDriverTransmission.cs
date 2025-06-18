@@ -26,6 +26,11 @@ public partial class StockSharpDriverTransmission(IMQTTClient mqClient) : IDrive
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DisconnectStockSharpReceive, token: cancellationToken ?? CancellationToken.None) ?? new();
 
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> Terminate(CancellationToken? cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.TerminateStockSharpReceive, token: cancellationToken ?? CancellationToken.None) ?? new();
+
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> OrderRegisterAsync(CreateOrderRequestModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.OrderRegisterStockSharpReceive, req, token: cancellationToken) ?? new();
 

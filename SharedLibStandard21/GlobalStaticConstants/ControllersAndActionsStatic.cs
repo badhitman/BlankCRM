@@ -1379,6 +1379,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string OPEN_ACTION_NAME = "open";
 
         /// <summary>
+        /// Terminate
+        /// </summary>
+        public const string TERMINATE_ACTION_NAME = "terminate";
+
+        /// <summary>
         /// Закрыть
         /// </summary>
         public const string CLOSE_ACTION_NAME = "close";

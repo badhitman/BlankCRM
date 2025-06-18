@@ -1001,6 +1001,9 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string DisconnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.OPEN_ACTION_NAME);
 
         /// <inheritdoc/>
+        public readonly static string TerminateStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.TERMINATE_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string ConnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.CLOSE_ACTION_NAME);
 
         /// <inheritdoc/>
