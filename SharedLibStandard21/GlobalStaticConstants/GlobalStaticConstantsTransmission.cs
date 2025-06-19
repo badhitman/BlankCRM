@@ -998,13 +998,13 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string TradeInstrumentStrategyStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.TRADE_CONTROLLER_NAME}-{Routes.INSTRUMENT_CONTROLLER_NAME}-{Routes.STRATEGY_CONTROLLER_NAME}");
 
         /// <inheritdoc/>
-        public readonly static string DisconnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.OPEN_ACTION_NAME);
+        public readonly static string DisconnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.CLOSE_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string TerminateStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.TERMINATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string ConnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.CLOSE_ACTION_NAME);
+        public readonly static string ConnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.OPEN_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string AboutConnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.ABOUT_ACTION_NAME);

@@ -39,6 +39,8 @@ public class StockSharpBaseComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         ResponseBaseModel _con = await DriverRepo.Disconnect();
         SnackbarRepo.ShowMessagesResponse(_con.Messages);
+        //_con = await DriverRepo.Terminate();
+        //SnackbarRepo.ShowMessagesResponse(_con.Messages);
         await GetStatusConnection();
     }
 
