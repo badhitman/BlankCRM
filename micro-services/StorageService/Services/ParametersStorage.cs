@@ -121,7 +121,7 @@ public class ParametersStorage(
 
     #region storage parameters
     /// <inheritdoc/>
-    public async Task<T?[]> FindAsync<T>(FindStorageBaseModel req, CancellationToken token = default)
+    public async Task<FundedParametersModel<T?>[]> FindAsync<T>(FindStorageBaseModel req, CancellationToken token = default)
     {
         req.Normalize();
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
@@ -139,7 +139,16 @@ public class ParametersStorage(
         StorageCloudParameterModelDB[] _dbd = await q
             .ToArrayAsync(cancellationToken: token);
 
-        return [.. _dbd.Select(x => JsonConvert.DeserializeObject<T>(x.SerializedDataJson))];
+        return [.. _dbd.Select(x => new FundedParametersModel<T?>()
+        {
+             ApplicationName = x.ApplicationName,
+             PropertyName = x.PropertyName,
+             CreatedAt = x.CreatedAt,
+             Id = x.Id,
+             OwnerPrimaryKey = x.OwnerPrimaryKey,
+             PrefixPropertyName = x.PrefixPropertyName,
+             Payload = JsonConvert.DeserializeObject<T>(x.SerializedDataJson)
+        })];
     }
 
     /// <inheritdoc/>
