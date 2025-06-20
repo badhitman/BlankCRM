@@ -24,12 +24,12 @@ public interface IFlushStockSharpService
     /// <summary>
     /// SaveOrder
     /// </summary>
-    public Task<TResponseModel<OrderStockSharpViewModel>> SaveOrder(OrderStockSharpModel req);
+    public Task<TResponseModel<OrderStockSharpViewModel>> SaveOrder(OrderStockSharpModel req, InstrumentTradeStockSharpViewModel instrumentDBRes);
 
     /// <summary>
     /// SaveTrade
     /// </summary>
-    public Task<TResponseModel<MyTradeStockSharpViewModel>> SaveTrade(MyTradeStockSharpModel myTrade);
+    public Task<TResponseModel<MyTradeStockSharpViewModel>> SaveTrade(MyTradeStockSharpModel myTrade, InstrumentTradeStockSharpViewModel instrument);
 
     /// <summary>
     /// SaveExchange
