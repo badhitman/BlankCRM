@@ -68,13 +68,13 @@ public partial class InstrumentTradeStockSharpModel
     public decimal? FaceValue { get; set; }
 
     /// <inheritdoc/>
-    public SettlementTypesEnum SettlementType { get; set; }
+    public int SettlementType { get; set; }
 
     /// <summary>
     /// OptionStyle
     /// </summary>
 
-    public OptionTradeInstrumentStylesEnum OptionStyle { get; set; }
+    public int OptionStyle { get; set; }
 
     /// <summary>
     /// Identifier on primary exchange.
@@ -89,7 +89,7 @@ public partial class InstrumentTradeStockSharpModel
     /// <summary>
     /// Option type.
     /// </summary>
-    public OptionInstrumentTradeTypesEnum OptionType { get; set; }
+    public int OptionType { get; set; }
 
     /// <summary>
     /// Underlying security type.
