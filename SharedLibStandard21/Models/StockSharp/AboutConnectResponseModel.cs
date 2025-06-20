@@ -38,7 +38,6 @@ public class AboutConnectResponseModel : ResponseBaseModel
         ConnectionState = req.ConnectionState;
         LastConnectedAt = req.LastConnectedAt;
         StrategyStarted = req.StrategyStarted;
-        if (req.Messages.Count != 0)
-            Messages.AddRange(req.Messages);
+        Messages = req.Messages;
     }
 }
