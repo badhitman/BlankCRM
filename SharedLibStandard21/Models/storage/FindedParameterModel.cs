@@ -30,4 +30,9 @@ public class FoundParameterModel
     /// Создание
     /// </summary>
     public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Имя тип данных (тип хранимого значения)
+    /// </summary>
+    public string TypeName { get; set; }
 }
