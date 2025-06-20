@@ -104,6 +104,6 @@ public partial class InstrumentTradeStockSharpModel
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"#{Code} '{Name}' {Currency} /{Class}";
+        return $"#{Code} '{Name}' {(CurrenciesTypesEnum)Currency} /{Class}";
     }
 }
