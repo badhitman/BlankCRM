@@ -7,7 +7,7 @@ using System;
 namespace SharedLib;
 
 /// <summary>
-/// PortfolioTradeModel
+/// PortfolioStockSharpModel
 /// </summary>
 public partial class PortfolioStockSharpModel : IEquatable<PortfolioStockSharpModel>
 {

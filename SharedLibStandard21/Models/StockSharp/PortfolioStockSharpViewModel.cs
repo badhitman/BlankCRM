@@ -12,18 +12,18 @@ namespace SharedLib;
 public partial class PortfolioStockSharpViewModel : PortfolioStockSharpModel
 {
     /// <inheritdoc/>
-    public DateTime LastUpdatedAtUTC { get; set; }
-
-    /// <inheritdoc/>
-    public DateTime CreatedAtUTC { get; set; }
-
-    /// <inheritdoc/>
     public int Id { get; set; }
 
     /// <summary>
     /// Добавлен в "Избранное"
     /// </summary>
     public bool IsFavorite { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime LastUpdatedAtUTC { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime CreatedAtUTC { get; set; }
 
     /// <inheritdoc/>
     public void Reload(PortfolioStockSharpViewModel model)

@@ -34,10 +34,10 @@ public interface IFlushStockSharpService
     /// <summary>
     /// SaveExchange
     /// </summary>
-    public Task<TResponseModel<int>> SaveExchange(ExchangeStockSharpModel req);
+    public Task<TResponseModel<ExchangeStockSharpViewModel>> SaveExchange(ExchangeStockSharpModel req);
 
     /// <summary>
     /// Save Board
     /// </summary>
-    public Task<TResponseModel<int>> SaveBoard(BoardStockSharpModel req);
+    public Task<TResponseModel<BoardStockSharpViewModel>> SaveBoard(BoardStockSharpModel req);
 }
