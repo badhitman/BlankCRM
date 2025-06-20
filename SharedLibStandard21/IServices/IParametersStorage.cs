@@ -47,7 +47,7 @@ public interface IParametersStorage
     /// <summary>
     /// Поиск значений параметров
     /// </summary>
-    public Task<T[]> FindAsync<T>(FindStorageBaseModel req, CancellationToken token = default);
+    public Task<FundedParametersModel<T>[]> FindAsync<T>(FindStorageBaseModel req, CancellationToken token = default);
 
     /// <summary>
     /// FlushParameterAsync
