@@ -26,7 +26,7 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
     public decimal ShiftPosition { get; set; }
 
     /// <inheritdoc/>
-    public bool IsMM { get; set; }
+    public bool IsSmall { get; set; }
 
     /// <inheritdoc/>
     public decimal L1 { get; set; }
@@ -65,7 +65,7 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
             BasePrice = basePrice,
             ValueOperation = valueOperation,
             ShiftPosition = shiftPosition,
-            IsMM = isMom,
+            IsSmall = isMom,
             L1 = l1,
             L2 = l2,
         };
@@ -100,7 +100,7 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
         BasePrice = strategyTrade.BasePrice;
         ValueOperation = strategyTrade.ValueOperation;
         ShiftPosition = strategyTrade.ShiftPosition;
-        IsMM = strategyTrade.IsMM;
+        IsSmall = strategyTrade.IsSmall;
         L1 = strategyTrade.L1;
         L2 = strategyTrade.L2;
     }
