@@ -26,16 +26,28 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
     public decimal ShiftPosition { get; set; }
 
     /// <inheritdoc/>
-    public bool IsMM { get; set; }
+    public decimal SmallBidVolume { get; set; }
 
     /// <inheritdoc/>
-    public decimal L1 { get; set; }
+    public decimal SmallOfferVolume { get; set; }
 
     /// <inheritdoc/>
-    public decimal L2 { get; set; }
+    public decimal SmallOffset { get; set; }
 
     /// <inheritdoc/>
-    public static StrategyTradeStockSharpModel Build(InstrumentTradeStockSharpViewModel instrument, decimal basePrice, decimal valueOperation, decimal shiftPosition, bool isMom, decimal l1, decimal l2)
+    public decimal WorkingVolume { get; set; }
+
+    /// <inheritdoc/>
+    public bool IsSmall { get; set; }
+
+    /// <inheritdoc/>
+    public decimal LowLimit { get; set; }
+
+    /// <inheritdoc/>
+    public decimal HightLimit { get; set; }
+
+    /// <inheritdoc/>
+    public static StrategyTradeStockSharpModel Build(InstrumentTradeStockSharpViewModel instrument, decimal basePrice, decimal valueOperation, decimal shiftPosition, decimal smallBidVolume, decimal smallOfferVolume, decimal smallOffset, decimal workingVolume, bool isSmall, decimal lowLimit, decimal hightLimit)
     {
         return new()
         {
@@ -65,9 +77,13 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
             BasePrice = basePrice,
             ValueOperation = valueOperation,
             ShiftPosition = shiftPosition,
-            IsMM = isMom,
-            L1 = l1,
-            L2 = l2,
+            SmallBidVolume = smallBidVolume,
+            SmallOfferVolume = smallOfferVolume,
+            SmallOffset = smallOffset,
+            WorkingVolume = workingVolume,
+            IsSmall = isSmall,
+            LowLimit = lowLimit,
+            HightLimit = hightLimit,
         };
     }
 
@@ -100,8 +116,12 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
         BasePrice = strategyTrade.BasePrice;
         ValueOperation = strategyTrade.ValueOperation;
         ShiftPosition = strategyTrade.ShiftPosition;
-        IsMM = strategyTrade.IsMM;
-        L1 = strategyTrade.L1;
-        L2 = strategyTrade.L2;
+        SmallBidVolume = strategyTrade.SmallBidVolume;
+        SmallOfferVolume = strategyTrade.SmallOfferVolume;
+        SmallOffset = strategyTrade.SmallOffset;
+        WorkingVolume = strategyTrade.WorkingVolume;
+        IsSmall = strategyTrade.IsSmall;
+        LowLimit = strategyTrade.LowLimit;
+        HightLimit = strategyTrade.HightLimit;
     }
 }
