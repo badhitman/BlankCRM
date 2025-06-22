@@ -147,6 +147,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string SIMPLE_CONTROLLER_NAME = "simple";
 
         /// <summary>
+        /// Curve
+        /// </summary>
+        public const string CURVE_CONTROLLER_NAME = "curve";
+
+        /// <summary>
         /// Warehouse
         /// </summary>
         public const string WAREHOUSE_CONTROLLER_NAME = "warehouse";
@@ -1177,6 +1182,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Stop
         /// </summary>
         public const string STOP_ACTION_NAME = "stop";
+
+        /// <summary>
+        /// Shift
+        /// </summary>
+        public const string SHIFT_ACTION_NAME = "shift";
 
         /// <summary>
         /// Request
