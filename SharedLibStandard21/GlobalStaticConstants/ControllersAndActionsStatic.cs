@@ -147,6 +147,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string SIMPLE_CONTROLLER_NAME = "simple";
 
         /// <summary>
+        /// Limits
+        /// </summary>
+        public const string LIMITS_CONTROLLER_NAME = "limits";
+
+        /// <summary>
         /// Curve
         /// </summary>
         public const string CURVE_CONTROLLER_NAME = "curve";

@@ -24,6 +24,18 @@ public class AboutConnectResponseModel : ResponseBaseModel
     public bool StrategyStarted { get; set; }
 
     /// <inheritdoc/>
+    public decimal LowLimit { get; set; }
+
+    /// <inheritdoc/>
+    public decimal HighLimit { get; set; }
+
+    /// <inheritdoc/>
+    public decimal LowYieldLimit { get; set; }
+
+    /// <inheritdoc/>
+    public decimal HighYieldLimit { get; set; }
+
+    /// <inheritdoc/>
     public void Update(UpdateConnectionHandleModel req)
     {
         CanConnect = req.CanConnect;

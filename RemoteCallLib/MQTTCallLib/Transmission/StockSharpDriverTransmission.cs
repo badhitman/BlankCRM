@@ -53,4 +53,8 @@ public partial class StockSharpDriverTransmission(IMQTTClient mqClient) : IDrive
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ShiftCurve(ShiftCurveRequestModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ShiftCurveStockSharpDriverReceive, req, token: cancellationToken) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> LimitsStrategiesUpdate(LimitsStrategiesUpdateRequestModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.LimitsStrategiesUpdateStockSharpDriverReceive, req, token: cancellationToken) ?? new();
 }

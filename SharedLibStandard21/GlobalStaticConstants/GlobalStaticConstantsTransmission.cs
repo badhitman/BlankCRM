@@ -1070,6 +1070,11 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string ShiftCurveStockSharpDriverReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.STRATEGY_CONTROLLER_NAME, Routes.CURVE_CONTROLLER_NAME, Routes.SHIFT_ACTION_NAME);
 
         /// <summary>
+        /// LimitsStrategiesUpdateStockSharpDriverReceive
+        /// </summary>
+        public readonly static string LimitsStrategiesUpdateStockSharpDriverReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.STRATEGY_CONTROLLER_NAME, Routes.LIMITS_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <summary>
         /// Добавить/обновить адаптер
         /// </summary>
         public readonly static string UpdateOrCreateAdapterStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.ADAPTER_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
