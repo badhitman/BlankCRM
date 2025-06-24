@@ -411,3 +411,4 @@ FodyWeavers.xsd
 /micro-services/outer/StockSharp/StockSharpDriver/logs-database.db3
 /micro-services/outer/StockSharp/StockSharpDriver/logs-database.db3-shm
 /micro-services/outer/StockSharp/StockSharpDriver/logs-database.db3-wal
+/devops/docker-volumes
