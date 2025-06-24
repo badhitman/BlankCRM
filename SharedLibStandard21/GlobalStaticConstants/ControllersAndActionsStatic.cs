@@ -562,6 +562,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string STOCKSHARP_CONTROLLER_NAME = "StockSharp";
 
         /// <summary>
+        /// Securities
+        /// </summary>
+        public const string SECURITIES_CONTROLLER_NAME = "securities";
+
+        /// <summary>
+        /// Criteria
+        /// </summary>
+        public const string CRITERIA_CONTROLLER_NAME = "criteria";
+
+        /// <summary>
         /// Event
         /// </summary>
         public const string EVENT_CONTROLLER_NAME = "event";
@@ -1102,6 +1112,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Cancel
         /// </summary>
         public const string CANCEL_ACTION_NAME = "cancel";
+
+        /// <summary>
+        /// Lookup
+        /// </summary>
+        public const string LOOKUP_ACTION_NAME = "lookup";
 
         /// <summary>
         /// Disable

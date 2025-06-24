@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.IO;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace SharedLib;
@@ -234,6 +235,16 @@ public static class GlobalStaticCloudStorageMetadata
         ApplicationName = Routes.WAPPI_CONTROLLER_NAME,
         PropertyName = $"{Routes.PROFILE_ACTION_NAME}-{Routes.IDENTITY_CONTROLLER_NAME}",
         PrefixPropertyName = Routes.GLOBAL_CONTROLLER_NAME,
+    };
+
+    /// <summary>
+    /// SecuritiesCriteriaCodeFilterStockSharp
+    /// </summary>
+    public static StorageMetadataModel SecuritiesCriteriaCodeFilterStockSharp => new()
+    {
+        ApplicationName = Routes.STOCKSHARP_CONTROLLER_NAME,
+        PropertyName = $"{Routes.SECURITIES_CONTROLLER_NAME}-{Routes.CRITERIA_CONTROLLER_NAME}-{Routes.LOOKUP_ACTION_NAME}",
+        PrefixPropertyName = $"{Routes.DEFAULT_CONTROLLER_NAME}-{Routes.CODE_CONTROLLER_NAME}-{Routes.FILTER_CONTROLLER_NAME}"
     };
 
     #region commerce notifications

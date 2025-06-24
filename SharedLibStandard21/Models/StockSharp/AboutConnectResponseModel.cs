@@ -30,6 +30,9 @@ public class AboutConnectResponseModel : ResponseBaseModel
     public decimal HighLimit { get; set; }
 
     /// <inheritdoc/>
+    public string SecurityCriteriaCodeFilterStockSharp { get; set; }
+
+    /// <inheritdoc/>
     public void Update(UpdateConnectionHandleModel req)
     {
         CanConnect = req.CanConnect;
@@ -44,6 +47,9 @@ public class AboutConnectResponseModel : ResponseBaseModel
         ConnectionState = req.ConnectionState;
         LastConnectedAt = req.LastConnectedAt;
         StrategyStarted = req.StrategyStarted;
+        LowLimit = req.LowLimit;
+        HighLimit = req.HighLimit;
+        SecurityCriteriaCodeFilterStockSharp = req.SecurityCriteriaCodeFilterStockSharp;
         Messages = req.Messages;
     }
 }
