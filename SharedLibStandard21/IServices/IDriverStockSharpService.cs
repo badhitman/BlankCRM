@@ -15,28 +15,33 @@ public interface IDriverStockSharpService : IStockSharpBaseService
     /// <summary>
     /// About Connection
     /// </summary>
-    public Task<AboutConnectResponseModel> AboutConnection(CancellationToken? cancellationToken = default);
+    public Task<AboutConnectResponseModel> AboutConnection(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Connect
     /// </summary>
-    public Task<ResponseBaseModel> Connect(ConnectRequestModel req, CancellationToken? cancellationToken = default);
+    public Task<ResponseBaseModel> Connect(ConnectRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Disconnect
     /// </summary>
-    public Task<ResponseBaseModel> Disconnect(CancellationToken? cancellationToken = default);
+    public Task<ResponseBaseModel> Disconnect(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Terminate
     /// </summary>
-    public Task<ResponseBaseModel> Terminate(CancellationToken? cancellationToken = default);
+    public Task<ResponseBaseModel> Terminate(CancellationToken cancellationToken = default);
 
 
     /// <summary>
     /// Order Register
     /// </summary>
     public Task<ResponseBaseModel> OrderRegisterAsync(CreateOrderRequestModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// ResetStrategy
+    /// </summary>
+    public Task<ResponseBaseModel> ResetStrategy(ResetStrategyRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Strategy Start
