@@ -39,13 +39,16 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
     public bool IsSmall { get; set; }
 
     /// <inheritdoc/>
+    public bool IsAlter { get; set; }
+
+    /// <inheritdoc/>
     public decimal LowLimit { get; set; }
 
     /// <inheritdoc/>
     public decimal HightLimit { get; set; }
 
     /// <inheritdoc/>
-    public static StrategyTradeStockSharpModel Build(InstrumentTradeStockSharpViewModel instrument, decimal basePrice, decimal valueOperation, decimal shiftPosition, decimal smallBidVolume, decimal smallOfferVolume, decimal smallOffset, decimal workingVolume, bool isSmall, decimal lowLimit, decimal hightLimit)
+    public static StrategyTradeStockSharpModel Build(InstrumentTradeStockSharpViewModel instrument, decimal basePrice, decimal valueOperation, decimal shiftPosition, decimal smallBidVolume, decimal smallOfferVolume, decimal smallOffset, decimal workingVolume, bool isSmall, bool isAlter, decimal lowLimit, decimal hightLimit)
     {
         return new()
         {
@@ -80,6 +83,7 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
             SmallOffset = smallOffset,
             WorkingVolume = workingVolume,
             IsSmall = isSmall,
+            IsAlter = isAlter,
             LowLimit = lowLimit,
             HightLimit = hightLimit,
         };
@@ -118,6 +122,7 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
         SmallOfferVolume = strategyTrade.SmallOfferVolume;
         SmallOffset = strategyTrade.SmallOffset;
         WorkingVolume = strategyTrade.WorkingVolume;
+        IsAlter = strategyTrade.IsAlter;
         IsSmall = strategyTrade.IsSmall;
         LowLimit = strategyTrade.LowLimit;
         HightLimit = strategyTrade.HightLimit;
