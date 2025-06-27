@@ -21,7 +21,7 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
     public decimal ValueOperation { get; set; }
 
     /// <inheritdoc/>
-    public decimal ShiftPosition { get; set; }
+    public decimal Offset { get; set; }
 
     /// <inheritdoc/>
     public decimal SmallBidVolume { get; set; }
@@ -77,7 +77,7 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
             //
             BasePrice = basePrice,
             ValueOperation = valueOperation,
-            ShiftPosition = shiftPosition,
+            Offset = shiftPosition,
             SmallBidVolume = smallBidVolume,
             SmallOfferVolume = smallOfferVolume,
             SmallOffset = smallOffset,
@@ -117,7 +117,7 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
         //
         BasePrice = strategyTrade.BasePrice;
         ValueOperation = strategyTrade.ValueOperation;
-        ShiftPosition = strategyTrade.ShiftPosition;
+        Offset = strategyTrade.Offset;
         SmallBidVolume = strategyTrade.SmallBidVolume;
         SmallOfferVolume = strategyTrade.SmallOfferVolume;
         SmallOffset = strategyTrade.SmallOffset;
