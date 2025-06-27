@@ -15,7 +15,7 @@ public interface IEventsStockSharpService
     /// <summary>
     /// ToastClientShow
     /// </summary>
-    public Task<ResponseBaseModel> ToastClientShow(ToastModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> ToastClientShow(ToastShowClientModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// UpdateConnectionHandle
