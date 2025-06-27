@@ -387,6 +387,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string DATA_CONTROLLER_NAME = "data";
 
         /// <summary>
+        /// Path
+        /// </summary>
+        public const string PATH_CONTROLLER_NAME = "path";
+
+        /// <summary>
+        /// Program
+        /// </summary>
+        public const string PROGRAM_CONTROLLER_NAME = "program";
+
+        /// <summary>
         /// Filter
         /// </summary>
         public const string FILTER_CONTROLLER_NAME = "filter";

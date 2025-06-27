@@ -1,9 +1,13 @@
 ﻿@using BlazorLib.Components.ParametersShared
 
-<StringParameterStorageComponent Label="Instrument code-filter"
+<StringParameterStorageComponent Label="Instrument`s code-filter"
                                  HelperText="Securities lookup criteria by code"
                                  KeyStorage="GlobalStaticCloudStorageMetadata.SecuritiesCriteriaCodeFilterStockSharp" />
 
 <StringParameterStorageComponent Label="Client code"
                                  HelperText="Client code assigned by the broker."
                                  KeyStorage="GlobalStaticCloudStorageMetadata.ClientCodeBrokerStockSharp" />
+
+<StringParameterStorageComponent Label="Path data"
+                                 HelperText="Program data path"
+                                 KeyStorage="GlobalStaticCloudStorageMetadata.ProgramDataPathStockSharp" />
