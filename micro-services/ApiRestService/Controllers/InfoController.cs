@@ -53,12 +53,12 @@ public class InfoController : ControllerBase
     /// </summary>
     /// <returns>Типовой ответ</returns>
     [HttpGet($"/api/values/{nameof(RedirectToLoginPath)}")]
-    public ResponseBaseModel RedirectToLoginPath([FromQuery] string? ReturnUrl) => new() { Messages = [new() { Text = "Требуется пройти авторизацию", TypeMessage = ResultTypesEnum.Error }] };
+    public ResponseBaseModel RedirectToLoginPath([FromQuery] string? ReturnUrl) => new() { Messages = [new() { Text = "Требуется пройти авторизацию", TypeMessage = MessagesTypesEnum.Error }] };
 
     /// <summary>
     /// Ответ на запрос от редиректа Identity для запрета доступа Identity
     /// </summary>
     /// <returns>Типовой ответ</returns>
     [HttpGet($"/api/values/{nameof(RedirectToAccessDeniedPath)}")]
-    public ResponseBaseModel RedirectToAccessDeniedPath([FromQuery] string? ReturnUrl) => new() { Messages = [new() { Text = "Доступ запрещён", TypeMessage = ResultTypesEnum.Error }] };
+    public ResponseBaseModel RedirectToAccessDeniedPath([FromQuery] string? ReturnUrl) => new() { Messages = [new() { Text = "Доступ запрещён", TypeMessage = MessagesTypesEnum.Error }] };
 }

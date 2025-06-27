@@ -96,23 +96,23 @@ public static partial class GlobalToolsStandard
     /// Добавить информация об исключении
     /// </summary>
     public static void InjectException(this List<ResultMessage> sender, List<ValidationResult> validationResults)
-        => sender.AddRange(validationResults.Where(x => !string.IsNullOrWhiteSpace(x.ErrorMessage)).Select(x => new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = x.ErrorMessage! }));
+        => sender.AddRange(validationResults.Where(x => !string.IsNullOrWhiteSpace(x.ErrorMessage)).Select(x => new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = x.ErrorMessage! }));
 
     /// <summary>
     /// Добавить информация об исключении
     /// </summary>
     public static void InjectException(this List<ResultMessage> sender, Exception ex)
     {
-        sender.Add(new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = ex.Message });
+        sender.Add(new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = ex.Message });
         if (ex.StackTrace != null)
-            sender.Add(new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = ex.StackTrace });
+            sender.Add(new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = ex.StackTrace });
         int i = 0;
         while (ex.InnerException != null)
         {
             i++;
-            sender.Add(new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = $"InnerException -> {i}/ {ex.InnerException.Message}" });
+            sender.Add(new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = $"InnerException -> {i}/ {ex.InnerException.Message}" });
             if (ex.InnerException.StackTrace != null)
-                sender.Add(new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = $"InnerException -> {i}/ {ex.InnerException.StackTrace}" });
+                sender.Add(new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = $"InnerException -> {i}/ {ex.InnerException.StackTrace}" });
 
             ex = ex.InnerException;
         }

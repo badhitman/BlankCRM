@@ -48,7 +48,7 @@ public partial class ConfirmEmailPage : ComponentBase
             Messages.AddRange(result.Messages);
             if (!result.Success())
             {
-                Messages.Add(new() { TypeMessage = ResultTypesEnum.Success, Text = "Ошибка подтверждения электронной почты." });
+                Messages.Add(new() { TypeMessage = MessagesTypesEnum.Success, Text = "Ошибка подтверждения электронной почты." });
             }
         }
     }

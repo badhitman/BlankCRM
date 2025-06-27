@@ -240,7 +240,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
                     {
                         TResponseModel<string> resUpd = await RestClientRepo.UpdateFileAsync(tFile.SafeScopeName, SyncDirectory.RemoteDirectory, ms.ToArray());
 
-                        if (resUpd.Messages.Any(x => x.TypeMessage == ResultTypesEnum.Error || x.TypeMessage >= ResultTypesEnum.Info))
+                        if (resUpd.Messages.Any(x => x.TypeMessage == MessagesTypesEnum.Error || x.TypeMessage >= MessagesTypesEnum.Info))
                             SnackbarRepo.ShowMessagesResponse(resUpd.Messages);
 
                         using FileStream stream = File.OpenRead(_fnT);

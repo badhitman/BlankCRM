@@ -17,13 +17,12 @@ public partial class StatusMessage : ComponentBase
     public IEnumerable<ResultMessage>? Messages { get; set; }
 
     /// <inheritdoc/>
-    public static string getCssItem(ResultTypesEnum res_type) => res_type switch
+    public static string getCssItem(MessagesTypesEnum res_type) => res_type switch
     {
-        ResultTypesEnum.Success => "success",
-        ResultTypesEnum.Info => "primary",
-        ResultTypesEnum.Warning => "warning",
-        ResultTypesEnum.Error => "danger",
-        ResultTypesEnum.Alert => "info",
+        MessagesTypesEnum.Success => "success",
+        MessagesTypesEnum.Info => "primary",
+        MessagesTypesEnum.Warning => "warning",
+        MessagesTypesEnum.Error => "danger",
         _ => "secondary"
     };
 }

@@ -497,6 +497,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string CONNECTION_CONTROLLER_NAME = "connection";
 
         /// <summary>
+        /// Toast
+        /// </summary>
+        public const string TOAST_CONTROLLER_NAME = "toast";
+
+        /// <summary>
         /// Boards
         /// </summary>
         public const string BOARDS_CONTROLLER_NAME = "boards";
@@ -562,9 +567,19 @@ public static partial class GlobalStaticConstantsRoutes
         public const string STOCKSHARP_CONTROLLER_NAME = "StockSharp";
 
         /// <summary>
+        /// Broker
+        /// </summary>
+        public const string BROKER_CONTROLLER_NAME = "broker";
+
+        /// <summary>
         /// Securities
         /// </summary>
         public const string SECURITIES_CONTROLLER_NAME = "securities";
+
+        /// <summary>
+        /// Client
+        /// </summary>
+        public const string CLIENT_CONTROLLER_NAME = "client";
 
         /// <summary>
         /// Criteria

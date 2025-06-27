@@ -54,7 +54,7 @@ public class UsersAuthenticateService(
                     return new()
                     {
                         Succeeded = false,
-                        Messages = [new() { Text = $"Пользователь {checkToken.Response} не найден", TypeMessage = ResultTypesEnum.Error }]
+                        Messages = [new() { Text = $"Пользователь {checkToken.Response} не найден", TypeMessage = MessagesTypesEnum.Error }]
                     };
                 }
 
@@ -69,7 +69,7 @@ public class UsersAuthenticateService(
                     {
                         IsLockedOut = true,
                         Succeeded = false,
-                        Messages = [new() { Text = "Пользователь заблокирован", TypeMessage = ResultTypesEnum.Error }]
+                        Messages = [new() { Text = "Пользователь заблокирован", TypeMessage = MessagesTypesEnum.Error }]
                     };
 
                 if (!isEmailConfirmed)
@@ -77,21 +77,21 @@ public class UsersAuthenticateService(
                     {
                         IsNotAllowed = true,
                         Succeeded = false,
-                        Messages = [new() { Text = "Email пользователя не подтверждён", TypeMessage = ResultTypesEnum.Error }]
+                        Messages = [new() { Text = "Email пользователя не подтверждён", TypeMessage = MessagesTypesEnum.Error }]
                     };
 
                 await SignInAsync(checkToken.Response, isPersistent, token);
                 return new()
                 {
                     Succeeded = true,
-                    Messages = [new() { TypeMessage = ResultTypesEnum.Success, Text = "Проверка пройдена успешно" }]
+                    Messages = [new() { TypeMessage = MessagesTypesEnum.Success, Text = "Проверка пройдена успешно" }]
                 };
             }
         }
 
         return new()
         {
-            Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = "Ошибка" }]
+            Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка" }]
         };
     }
 
@@ -145,7 +145,7 @@ public class UsersAuthenticateService(
             return new()
             {
                 IsLockedOut = result.IsLockedOut,
-                Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = msg }],
+                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = msg }],
                 IsNotAllowed = result.IsNotAllowed,
                 RequiresTwoFactor = result.RequiresTwoFactor,
                 Succeeded = result.Succeeded,
@@ -168,7 +168,7 @@ public class UsersAuthenticateService(
         {
             IdentityName = info?.Principal.Identity?.Name,
             UserLoginInfoData = info is null ? null : new UserLoginInfoModel(info.LoginProvider, info.ProviderKey, info.ProviderDisplayName),
-            Messages = [info is null ? new() { Text = "`ExternalLoginInfo` is null. error {89E9E6CA-C9AB-4CB5-8972-681E675381F6}", TypeMessage = ResultTypesEnum.Error } : new() { Text = "login information, source and externally source principal for a user record", TypeMessage = ResultTypesEnum.Success }]
+            Messages = [info is null ? new() { Text = "`ExternalLoginInfo` is null. error {89E9E6CA-C9AB-4CB5-8972-681E675381F6}", TypeMessage = MessagesTypesEnum.Error } : new() { Text = "login information, source and externally source principal for a user record", TypeMessage = MessagesTypesEnum.Success }]
         };
     }
 
@@ -220,7 +220,7 @@ public class UsersAuthenticateService(
     public async Task<RegistrationNewUserResponseModel> RegisterNewUserAsync(RegisterNewUserPasswordModel req, CancellationToken token = default)
     {
         if (!UserConfMan.UserRegistrationIsAllowed(req.Email))
-            return new() { Messages = [new() { Text = $"Registration error {UserConfMan.DenyAuthorization?.Message}", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = $"Registration error {UserConfMan.DenyAuthorization?.Message}", TypeMessage = MessagesTypesEnum.Error }] };
 
         RegistrationNewUserResponseModel regUserRes = await identityRepo.CreateNewUserWithPasswordAsync(req, token);
         if (!regUserRes.Success() || string.IsNullOrWhiteSpace(regUserRes.Response) || regUserRes.RequireConfirmedEmail == true)
@@ -275,7 +275,7 @@ public class UsersAuthenticateService(
         {
             Messages = result.Errors.Select(x => new ResultMessage()
             {
-                TypeMessage = ResultTypesEnum.Error,
+                TypeMessage = MessagesTypesEnum.Error,
                 Text = $"[{x.Code}: {x.Description}]"
             }).ToList()
         };
@@ -296,12 +296,12 @@ public class UsersAuthenticateService(
     public async Task<SignInResultResponseModel> PasswordSignInAsync(string userEmail, string password, bool isPersistent, CancellationToken token = default)
     {
         if (!UserConfMan.UserAuthorizationIsAllowed(userEmail))
-            return new() { Messages = [new() { Text = $"Ошибка авторизации {UserConfMan.DenyAuthorization?.Message}", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = $"Ошибка авторизации {UserConfMan.DenyAuthorization?.Message}", TypeMessage = MessagesTypesEnum.Error }] };
 
         SignInResultResponseModel res = new();
         ApplicationUser? currentAppUser = await userManager.FindByEmailAsync(userEmail);
         if (currentAppUser is null)
-            return new SignInResultResponseModel() { Succeeded = false, Messages = ResponseBaseModel.CreateError($"current user by email '{userEmail}' is null. error {{A19FC284-C437-4CC6-A7D2-C96FC6F6A42F}}").Messages};
+            return new SignInResultResponseModel() { Succeeded = false, Messages = ResponseBaseModel.CreateError($"current user by email '{userEmail}' is null. error {{A19FC284-C437-4CC6-A7D2-C96FC6F6A42F}}").Messages };
 
         TResponseModel<bool?> globalEnable2FA = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.GlobalEnable2FA, token);
         if (globalEnable2FA.Response == true)

@@ -48,4 +48,9 @@ public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) :
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateConnectionHandle(UpdateConnectionHandleModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.UpdateConnectionStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ToastClientShow(ToastModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ToastClientShowStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
+
 }

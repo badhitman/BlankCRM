@@ -50,6 +50,6 @@
             throw new InvalidOperationException("Произошла непредвиденная ошибка при отключении 2FA.");
         }
 
-        Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Warning, Text = "2фа отключен. Вы можете повторно включить 2FA при настройке приложения для аутентификации." }];
+        Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Warning, Text = "2фа отключен. Вы можете повторно включить 2FA при настройке приложения для аутентификации." }];
     }
 }

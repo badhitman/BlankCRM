@@ -169,7 +169,7 @@ public class UpdateHandler(
             ResponseBaseModel hd_res = await helpdeskRepo.TelegramMessageIncomingAsync(hd_request, cancellationToken);
 
             if (message.Chat.Type == ChatType.Private)
-                await Usage(uc.Response, message.MessageId, MessagesTypesEnum.TextMessage, message.Chat.Id, messageText, cancellationToken);
+                await Usage(uc.Response, message.MessageId, TelegramMessagesTypesEnum.TextMessage, message.Chat.Id, messageText, cancellationToken);
         }
     }
 
@@ -183,17 +183,17 @@ public class UpdateHandler(
 
         await botClient.SendChatAction(callbackQuery.Message.Chat.Id, ChatAction.Typing, cancellationToken: cancellationToken);
         TResponseModel<CheckTelegramUserAuthModel> uc = await identityRepo.CheckTelegramUserAsync(CheckTelegramUserHandleModel.Build(callbackQuery.From.Id, callbackQuery.From.FirstName, callbackQuery.From.LastName, callbackQuery.From.Username, callbackQuery.From.IsBot), cancellationToken);
-        await Usage(uc.Response!, callbackQuery.Message.MessageId, MessagesTypesEnum.CallbackQuery, callbackQuery.Message.Chat.Id, callbackQuery.Data, cancellationToken);
+        await Usage(uc.Response!, callbackQuery.Message.MessageId, TelegramMessagesTypesEnum.CallbackQuery, callbackQuery.Message.Chat.Id, callbackQuery.Data, cancellationToken);
     }
 
-    private async Task Usage(TelegramUserBaseModel uc, int incomingMessageId, MessagesTypesEnum eventType, ChatId chatId, string messageText, CancellationToken cancellationToken)
+    private async Task Usage(TelegramUserBaseModel uc, int incomingMessageId, TelegramMessagesTypesEnum eventType, ChatId chatId, string messageText, CancellationToken cancellationToken)
     {
         string msg;
         uc.DialogTelegramTypeHandler ??= typeof(DefaultTelegramDialogHandle).FullName;
 
         TResponseModel<bool?> res_IsCommandModeTelegramBot = await serializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ParameterIsCommandModeTelegramBot, cancellationToken);
 
-        if (res_IsCommandModeTelegramBot.Response == true && !messageText.StartsWith('/') && eventType != MessagesTypesEnum.CallbackQuery)
+        if (res_IsCommandModeTelegramBot.Response == true && !messageText.StartsWith('/') && eventType != TelegramMessagesTypesEnum.CallbackQuery)
             return;
 
         ITelegramDialogService? receiveService;

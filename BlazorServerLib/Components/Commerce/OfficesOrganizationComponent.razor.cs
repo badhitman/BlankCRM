@@ -130,7 +130,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
                 if (res.Success() && res.Response is not null)
                     RubriciesCached.Add(i, res.Response);
 
-                if (res.Messages.Any(x => x.TypeMessage > ResultTypesEnum.Info))
+                if (res.Messages.Any(x => x.TypeMessage > MessagesTypesEnum.Info))
                     SnackbarRepo.ShowMessagesResponse(res.Messages);
             }
             await SetBusyAsync(false);

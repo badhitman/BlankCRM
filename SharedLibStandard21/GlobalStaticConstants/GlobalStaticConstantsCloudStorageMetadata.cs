@@ -237,6 +237,18 @@ public static class GlobalStaticCloudStorageMetadata
         PrefixPropertyName = Routes.GLOBAL_CONTROLLER_NAME,
     };
 
+    // ClientCode
+
+    /// <summary>
+    /// Client code assigned by the broker.
+    /// </summary>
+    public static StorageMetadataModel ClientCodeBrokerStockSharp => new()
+    {
+        ApplicationName = Routes.STOCKSHARP_CONTROLLER_NAME,
+        PropertyName = $"{Routes.CLIENT_CONTROLLER_NAME}-{Routes.CODE_CONTROLLER_NAME}",
+        PrefixPropertyName = Routes.BROKER_CONTROLLER_NAME
+    };
+
     /// <summary>
     /// SecuritiesCriteriaCodeFilterStockSharp
     /// </summary>

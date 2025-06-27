@@ -27,5 +27,5 @@ public class TelegramDialogRequestModel
     /// <summary>
     /// Тип входящего сообщения
     /// </summary>
-    public required MessagesTypesEnum TypeMessage { get; set; }
+    public required TelegramMessagesTypesEnum TypeMessage { get; set; }
 }

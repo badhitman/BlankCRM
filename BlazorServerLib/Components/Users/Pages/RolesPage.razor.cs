@@ -77,7 +77,7 @@ public partial class RolesPage
     {
         if (string.IsNullOrWhiteSpace(roleName))
         {
-            Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = "удаление роли без имени" }];
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "удаление роли без имени" }];
             return;
         }
 
@@ -98,7 +98,7 @@ public partial class RolesPage
     {
         if (string.IsNullOrWhiteSpace(added_role_name))
         {
-            Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = "Не указано имя роли" }];
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "Не указано имя роли" }];
             return;
         }
         ResponseBaseModel rest = !string.IsNullOrEmpty(UserInfo?.Email)

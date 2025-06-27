@@ -40,7 +40,7 @@ public partial class EmailPage : BlazorBusyComponentBaseAuthModel
     {
         if (Input.NewEmail is null || Input.NewEmail == email)
         {
-            Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = "Ваш адрес электронной почты не изменился." }];
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "Ваш адрес электронной почты не изменился." }];
             return;
         }
 
@@ -52,7 +52,7 @@ public partial class EmailPage : BlazorBusyComponentBaseAuthModel
     {
         if (!MailAddress.TryCreate(email, out _))
         {
-            Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = $"email [{email}] имеет не корректный формат" }];
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = $"email [{email}] имеет не корректный формат" }];
             return;
         }
         ResponseBaseModel rest = await IdentityRepo.GenerateEmailConfirmationAsync(new() { Email = email, BaseAddress = NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri });

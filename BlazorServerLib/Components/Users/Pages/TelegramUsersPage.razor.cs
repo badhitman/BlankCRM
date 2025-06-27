@@ -43,7 +43,7 @@ public partial class TelegramUsersPage
             if (res.Response is null)
             {
                 string msg = "TelegramUsers is null. error {204B22F2-A5B3-4EEF-BC9B-494CEBF266E8}";
-                Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = msg }];
+                Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = msg }];
                 throw new Exception(msg);
             }
 

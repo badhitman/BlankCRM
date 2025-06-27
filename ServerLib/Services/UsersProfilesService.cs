@@ -284,7 +284,7 @@ public class UsersProfilesService(
             if (user_id is null)
             {
                 msg = "HttpContext is null (текущий пользователь) не авторизован. info D485BA3C-081C-4E2F-954D-759A181DCE78";
-                return new() { Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Info, Text = msg }] };
+                return new() { Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Info, Text = msg }] };
             }
             else
             {

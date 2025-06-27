@@ -1072,7 +1072,7 @@ public class HelpDeskImplementService(
             await ConsoleSegmentCacheEmptyAsync(token: token);
             return new()
             {
-                Messages = [new() { TypeMessage = ResultTypesEnum.Warning, Text = "Обращение не найдено или у вас нет к нему доступа" }]
+                Messages = [new() { TypeMessage = MessagesTypesEnum.Warning, Text = "Обращение не найдено или у вас нет к нему доступа" }]
             };
         }
 
@@ -1091,7 +1091,7 @@ public class HelpDeskImplementService(
             loggerRepo.LogError($"Для получения обращений не достаточно прав: {mem_key}");
             return new()
             {
-                Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = "Обращение не найдено или у вас нет к нему доступа" }]
+                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Обращение не найдено или у вас нет к нему доступа" }]
             };
         }
 

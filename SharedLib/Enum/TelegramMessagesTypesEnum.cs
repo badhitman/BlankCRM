@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Типы входящих сообщений
 /// </summary>
-public enum MessagesTypesEnum
+public enum TelegramMessagesTypesEnum
 {
     /// <summary>
     /// Стандартное текстовое сообщение

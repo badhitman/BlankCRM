@@ -47,7 +47,7 @@ public partial class EnableAuthenticatorPage : BlazorBusyComponentBaseAuthModel
         Messages = is_2fa_token_valid_rest.Messages;
         if (!is_2fa_token_valid_rest.Success())
         {
-            Messages.Add(new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = "Ошибка: код подтверждения недействителен." });
+            Messages.Add(new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка: код подтверждения недействителен." });
             return;
         }
 
@@ -56,7 +56,7 @@ public partial class EnableAuthenticatorPage : BlazorBusyComponentBaseAuthModel
         if (!stf_res.Success())
             return;
 
-        Messages.Add(new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = "Ваше приложение-аутентификатор проверено." });
+        Messages.Add(new ResultMessage() { TypeMessage = MessagesTypesEnum.Success, Text = "Ваше приложение-аутентификатор проверено." });
 
         TResponseModel<int?> cnt_rc = await UsersProfilesRepo.CountRecoveryCodesAsync();
         Messages.AddRange(cnt_rc.Messages);
@@ -72,7 +72,7 @@ public partial class EnableAuthenticatorPage : BlazorBusyComponentBaseAuthModel
         else
         {
             message = "Ваше приложение-аутентификатор проверено.";
-            Messages.Add(new() { TypeMessage = ResultTypesEnum.Info, Text = message });
+            Messages.Add(new() { TypeMessage = MessagesTypesEnum.Info, Text = message });
         }
     }
 
@@ -82,7 +82,7 @@ public partial class EnableAuthenticatorPage : BlazorBusyComponentBaseAuthModel
         if (!MailAddress.TryCreate(CurrentUserSession!.Email, out _))
         {
             msg = "email имеет не корректный формат. error {F0A2EF98-5C04-46D2-8A93-711BC9827EF9}";
-            Messages.Add(new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = msg });
+            Messages.Add(new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = msg });
             throw new Exception(msg);
         }
 
@@ -91,7 +91,7 @@ public partial class EnableAuthenticatorPage : BlazorBusyComponentBaseAuthModel
         if (string.IsNullOrEmpty(unformatted_key_rest.Response))
         {
             msg = "string.IsNullOrEmpty(unformatted_key_rest.ResponseString). error {F0A2EF98-5C04-46D2-8A93-711BC9827EF9}";
-            Messages.Add(new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = msg });
+            Messages.Add(new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = msg });
             throw new Exception(msg);
         }
 

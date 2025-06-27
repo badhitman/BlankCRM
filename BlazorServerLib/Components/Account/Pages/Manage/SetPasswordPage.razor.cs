@@ -45,6 +45,6 @@ public partial class SetPasswordPage : BlazorBusyComponentBaseAuthModel
         Messages = rest.Messages;
         if (!rest.Success())
             return;
-        Messages.Add(new() { TypeMessage = ResultTypesEnum.Warning, Text = "Ваш пароль установлен." });
+        Messages.Add(new() { TypeMessage = MessagesTypesEnum.Warning, Text = "Ваш пароль установлен." });
     }
 }

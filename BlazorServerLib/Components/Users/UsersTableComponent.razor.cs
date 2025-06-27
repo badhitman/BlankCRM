@@ -129,13 +129,13 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
     {
         if (string.IsNullOrEmpty(RoleInfo?.Name))
         {
-            Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = "пустое имя роли. error {062C0753-24D3-4F84-A635-514832D978D0}" }];
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "пустое имя роли. error {062C0753-24D3-4F84-A635-514832D978D0}" }];
             return;
         }
 
         if (!MailAddress.TryCreate(user_email, out _))
         {
-            Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = "исключение пользователя без email" }];
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "исключение пользователя без email" }];
             return;
         }
 
@@ -154,12 +154,12 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
     {
         if (!MailAddress.TryCreate(added_user_email, out _))
         {
-            Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = "email пользователя не корректный" }];
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "email пользователя не корректный" }];
             return;
         }
         if (string.IsNullOrWhiteSpace(RoleInfo?.Name))
         {
-            Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = "role name IsNullOrWhiteSpace. error {2DFAFA92-B8E8-4914-832B-1DE267D39A18}" }];
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "role name IsNullOrWhiteSpace. error {2DFAFA92-B8E8-4914-832B-1DE267D39A18}" }];
             return;
         }
 

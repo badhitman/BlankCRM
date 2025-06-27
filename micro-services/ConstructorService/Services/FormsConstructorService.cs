@@ -2027,7 +2027,7 @@ public partial class FormsConstructorService(
             form_field_db.Required = req.Payload.Required;
         }
 
-        if (res.Messages.Any(x => x.TypeMessage == ResultTypesEnum.Warning))
+        if (res.Messages.Any(x => x.TypeMessage == MessagesTypesEnum.Warning))
         {
             msg = $"Поле (списочного типа) формы #{req.Payload.Id} обновлено в БД";
             context_forms.Update(form_field_db);

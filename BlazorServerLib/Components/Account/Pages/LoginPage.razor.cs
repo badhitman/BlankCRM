@@ -103,7 +103,7 @@ public partial class LoginPage(IUsersAuthenticateService UserAuthManage, Navigat
         else
         {
             Logger.LogWarning("Invalid authenticator code entered.");
-            Messages =[new() { TypeMessage = ResultTypesEnum.Error, Text = "Неверный код аутентификации." }];
+            Messages =[new() { TypeMessage = MessagesTypesEnum.Error, Text = "Неверный код аутентификации." }];
         }
     }
 }

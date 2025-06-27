@@ -55,7 +55,7 @@ public class DefaultTelegramDialogHandle(IIdentityTransmission identityRepo, ILo
                 {
                     resp.Response += $"Вы не авторизованы. Привяжите свой Telegram аккаунт к учётной записи на сайте <a href='{webConf.BaseUri}Account/Manage/Telegram'>{webConf.BaseUri}Account/Manage/Telegram</a>, что бы получить доступ";
                 }
-                resp.MainTelegramMessageId = tgDialog.TypeMessage == MessagesTypesEnum.TextMessage
+                resp.MainTelegramMessageId = tgDialog.TypeMessage == TelegramMessagesTypesEnum.TextMessage
                     ? null
                     : resp.MainTelegramMessageId;
                 break;

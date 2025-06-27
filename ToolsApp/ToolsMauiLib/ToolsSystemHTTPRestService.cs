@@ -191,7 +191,7 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpCl
         }
 
         if (string.IsNullOrWhiteSpace(sd))
-            return new() { Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = "response empty" }] };
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "response empty" }] };
 
         return JsonConvert.DeserializeObject<MetadataKladrModel>(sd)!;
     }

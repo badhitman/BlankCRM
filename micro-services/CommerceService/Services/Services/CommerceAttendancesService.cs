@@ -487,7 +487,7 @@ public partial class CommerceImplementService : ICommerceService
             return new()
             {
                 Response = [],
-                Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = "Запрос не может быть пустым" }]
+                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Запрос не может быть пустым" }]
             };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);

@@ -15,12 +15,12 @@ namespace SharedLib;
 public partial class ResponseBaseModel
 {
     /// <inheritdoc/>
-    public static ResponseBaseModel CreateWarning(string msg) => new() { Messages = new List<ResultMessage> { new() { TypeMessage = ResultTypesEnum.Warning, Text = msg } } };
+    public static ResponseBaseModel CreateWarning(string msg) => new() { Messages = new List<ResultMessage> { new() { TypeMessage = MessagesTypesEnum.Warning, Text = msg } } };
 
     /// <inheritdoc/>
-    public static ResponseBaseModel CreateError(string msg) => new() { Messages = new List<ResultMessage> { new() { TypeMessage = ResultTypesEnum.Error, Text = msg } } };
+    public static ResponseBaseModel CreateError(string msg) => new() { Messages = new List<ResultMessage> { new() { TypeMessage = MessagesTypesEnum.Error, Text = msg } } };
     /// <inheritdoc/>
-    public static List<ResultMessage> ErrorMessage(string msg) => [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = msg }];
+    public static List<ResultMessage> ErrorMessage(string msg) => [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = msg }];
 
     /// <inheritdoc/>
     public static ResponseBaseModel CreateError(List<ValidationResult> validationResults)
@@ -31,12 +31,12 @@ public partial class ResponseBaseModel
     }
 
     /// <inheritdoc/>
-    public static ResponseBaseModel CreateInfo(string msg) => new() { Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Info, Text = msg }] };
+    public static ResponseBaseModel CreateInfo(string msg) => new() { Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Info, Text = msg }] };
 
     /// <inheritdoc/>
-    public static ResponseBaseModel CreateSuccess(string msg) => new() { Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg }] };
+    public static ResponseBaseModel CreateSuccess(string msg) => new() { Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Success, Text = msg }] };
     /// <inheritdoc/>
-    public static List<ResultMessage> SuccessMessage(string msg) => [new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg }];
+    public static List<ResultMessage> SuccessMessage(string msg) => [new ResultMessage() { TypeMessage = MessagesTypesEnum.Success, Text = msg }];
 
 
     /// <summary>
@@ -48,7 +48,7 @@ public partial class ResponseBaseModel
     /// Результат обработки запроса.
     /// True - если удачно без ошибок. False  - если возникла ошибка
     /// </summary>
-    public virtual bool Success() => !Messages.Any(x => x.TypeMessage == ResultTypesEnum.Error);
+    public virtual bool Success() => !Messages.Any(x => x.TypeMessage == MessagesTypesEnum.Error);
 
     /// <summary>
     /// Сообщение сервера. Если IsSuccess == false, то будет сообщение об ошибке
@@ -81,14 +81,14 @@ public partial class ResponseBaseModel
     }
 
     /// <inheritdoc/>
-    public static ResponseBaseModel CreateSuccess(IEnumerable<string> messages) => new() { Messages = [.. messages.Select(msg => new ResultMessage() { TypeMessage = ResultTypesEnum.Success, Text = msg })] };
+    public static ResponseBaseModel CreateSuccess(IEnumerable<string> messages) => new() { Messages = [.. messages.Select(msg => new ResultMessage() { TypeMessage = MessagesTypesEnum.Success, Text = msg })] };
 
     /// <summary>
     /// Добавить сообщение об успешном выполнении операции
     /// </summary>
     /// <param name="text">Текст сообщения</param>
     /// <returns>Текущий объект, но с уже добавленным сообщением</returns>
-    public ResponseBaseModel AddSuccess(string text) => AddMessage(ResultTypesEnum.Success, text);
+    public ResponseBaseModel AddSuccess(string text) => AddMessage(MessagesTypesEnum.Success, text);
     /// <summary>
     /// Добавить сообщения об успешном выполнении операции
     /// </summary>
@@ -97,7 +97,7 @@ public partial class ResponseBaseModel
     public ResponseBaseModel AddSuccess(IEnumerable<string> messages)
     {
         foreach (string text in messages)
-            AddMessage(ResultTypesEnum.Success, text);
+            AddMessage(MessagesTypesEnum.Success, text);
         return this;
     }
 
@@ -106,28 +106,21 @@ public partial class ResponseBaseModel
     /// </summary>
     /// <param name="text">Текст сообщения</param>
     /// <returns>Текущий объект, но с уже добавленным сообщением</returns>
-    public ResponseBaseModel AddInfo(string text) => AddMessage(ResultTypesEnum.Info, text);
+    public ResponseBaseModel AddInfo(string text) => AddMessage(MessagesTypesEnum.Info, text);
 
     /// <summary>
     /// Добавить сообщение об ошибке к результату запроса
     /// </summary>
     /// <param name="text">Текст сообщения</param>
     /// <returns>Текущий объект, но с уже добавленным сообщением</returns>
-    public ResponseBaseModel AddError(string text) => AddMessage(ResultTypesEnum.Error, text);
-
-    /// <summary>
-    /// Добавить сообщение с уведомлением к результату запроса
-    /// </summary>
-    /// <param name="text">Текст сообщения</param>
-    /// <returns>Текущий объект, но с уже добавленным сообщением</returns>
-    public ResponseBaseModel AddAlert(string text) => AddMessage(ResultTypesEnum.Alert, text);
+    public ResponseBaseModel AddError(string text) => AddMessage(MessagesTypesEnum.Error, text);
 
     /// <summary>
     /// Добавить сообщение с важным сообщением к результату запроса
     /// </summary>
     /// <param name="text">Текст сообщения</param>
     /// <returns>Текущий объект, но с уже добавленным сообщением</returns>
-    public ResponseBaseModel AddWarning(string text) => AddMessage(ResultTypesEnum.Warning, text);
+    public ResponseBaseModel AddWarning(string text) => AddMessage(MessagesTypesEnum.Warning, text);
 
     /// <summary>
     /// Добавить сообщение
@@ -135,7 +128,7 @@ public partial class ResponseBaseModel
     /// <param name="type">Тип сообщения</param>
     /// <param name="text">Текст сообщения</param>
     /// <returns>Текущий объект, но с уже добавленным сообщением</returns>
-    public ResponseBaseModel AddMessage(ResultTypesEnum type, string text)
+    public ResponseBaseModel AddMessage(MessagesTypesEnum type, string text)
     {
         Messages ??= [];
         Messages.Add(new ResultMessage() { TypeMessage = type, Text = text });

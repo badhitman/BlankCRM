@@ -38,19 +38,19 @@ public class IdentityTools(
         MemCachePrefixModel pref = new(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.ALIAS_CONTROLLER_NAME);
         string? userId = await memCache.GetStringValueAsync(pref, req.UserAlias, tokenCan);
         if (string.IsNullOrWhiteSpace(userId))
-            return new() { Messages = [new() { Text = "Алиас пользователя отсутствует!", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = "Алиас пользователя отсутствует!", TypeMessage = MessagesTypesEnum.Error }] };
 
         await memCache.RemoveAsync(pref, req.UserAlias, tokenCan);
 
         string? token = await memCache.GetStringValueAsync(new MemCachePrefixModel(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.TOKEN_CONTROLLER_NAME), userId, tokenCan);
         if (string.IsNullOrWhiteSpace(token))
-            return new() { Messages = [new() { Text = "Токен 2FA отсутствует!", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = "Токен 2FA отсутствует!", TypeMessage = MessagesTypesEnum.Error }] };
 
         if (!req.Token.Equals(token))
-            return new() { Messages = [new() { Text = "Токен не верный!", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = "Токен не верный!", TypeMessage = MessagesTypesEnum.Error }] };
 
         await memCache.RemoveAsync(new MemCachePrefixModel(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.TOKEN_CONTROLLER_NAME), userId, tokenCan);
-        return new() { Response = userId, Messages = [new() { Text = "Токен верный", TypeMessage = ResultTypesEnum.Success }] };
+        return new() { Response = userId, Messages = [new() { Text = "Токен верный", TypeMessage = MessagesTypesEnum.Success }] };
     }
 
     /// <inheritdoc/>
@@ -67,7 +67,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(userId); ;
         if (user is null)
-            return new() { Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = $"Пользователь #{userId} не найден" }] };
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Пользователь #{userId} не найден" }] };
 
         IList<string> providers = await userManager.GetValidTwoFactorProvidersAsync(user);
         if (!providers.Contains("Email"))
@@ -94,7 +94,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(userId); ;
         if (user is null)
-            return new() { Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = $"Пользователь #{userId} не найден" }] };
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Пользователь #{userId} не найден" }] };
 
         IList<UserLoginInfo> data_logins = await userManager.GetLoginsAsync(user);
         return new()
@@ -111,7 +111,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(req.UserId); ;
         if (user is null)
-            return new() { Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = $"Пользователь #{req.UserId} не найден" }] };
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Пользователь #{req.UserId} не найден" }] };
 
         string msg;
         if (!await userManager.CheckPasswordAsync(user, req.Password))
@@ -132,7 +132,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(req.UserId); ;
         if (user is null)
-            return new() { Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = $"Пользователь #{req.UserId} не найден" }] };
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Пользователь #{req.UserId} не найден" }] };
 
         bool user_has_pass = await userManager.HasPasswordAsync(user);
 
@@ -141,7 +141,7 @@ public class IdentityTools(
 
         IdentityResult result = await userManager.DeleteAsync(user);
         if (!result.Succeeded)
-            return ResponseBaseModel.Create(result.Errors.Select(x => new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = $"[{x.Code}:{x.Description}]" }));
+            return ResponseBaseModel.Create(result.Errors.Select(x => new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = $"[{x.Code}:{x.Description}]" }));
 
         return ResponseBaseModel.CreateSuccess("Данные пользователя удалены!");
     }
@@ -154,7 +154,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(userId); ;
         if (user is null)
-            return new() { Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = $"Пользователь #{userId} не найден" }] };
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Пользователь #{userId} не найден" }] };
 
         return new()
         {
@@ -170,7 +170,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(userId); ;
         if (user is null)
-            return new() { Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = $"Пользователь #{userId} не найден" }] };
+            return new() { Messages = [new() { TypeMessage =    MessagesTypesEnum.Error, Text = $"Пользователь #{userId} не найден" }] };
 
         return new() { Response = await userManager.GetTwoFactorEnabledAsync(user) };
     }
@@ -209,7 +209,7 @@ public class IdentityTools(
         IdentityResult res = await userManager.ResetAuthenticatorKeyAsync(user);
 
         if (!res.Succeeded)
-            return ResponseBaseModel.Create(res.Errors.Select(x => new ResultMessage() { Text = $"[{x.Code}:{x.Description}]", TypeMessage = ResultTypesEnum.Error }));
+            return ResponseBaseModel.Create(res.Errors.Select(x => new ResultMessage() { Text = $"[{x.Code}:{x.Description}]", TypeMessage = MessagesTypesEnum.Error }));
 
         string msg = $"Пользователь с идентификатором '{userId}' сбросил ключ приложения для аутентификации.";
         loggerRepo.LogInformation(msg);
@@ -229,7 +229,7 @@ public class IdentityTools(
 
         IdentityResult result = await userManager.RemoveLoginAsync(user, req.LoginProvider, req.ProviderKey);
         if (!result.Succeeded)
-            return new() { Messages = result.Errors.Select(x => new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = $"[{x.Code}:{x.Description}]" }).ToList() };
+            return new() { Messages = result.Errors.Select(x => new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = $"[{x.Code}:{x.Description}]" }).ToList() };
 
         return ResponseBaseModel.CreateSuccess("Успешно удалено");
     }
@@ -242,7 +242,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(req.UserId); ;
         if (user is null)
-            return new() { Messages = [new() { Text = $"Пользователь #{req.UserId} не найден", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = $"Пользователь #{req.UserId} не найден", TypeMessage = MessagesTypesEnum.Error }] };
 
         bool is2faTokenValid = await userManager.VerifyTwoFactorTokenAsync(
            user, userManager.Options.Tokens.AuthenticatorTokenProvider, req.VerificationCode);
@@ -260,7 +260,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(userId); ;
         if (user is null)
-            return new() { Messages = [new() { Text = $"Пользователь #{userId} не найден", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = $"Пользователь #{userId} не найден", TypeMessage = MessagesTypesEnum.Error }] };
 
         return new() { Response = await userManager.CountRecoveryCodesAsync(user) };
     }
@@ -277,7 +277,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(req.UserId); ;
         if (user is null)
-            return new() { Messages = [new() { Text = $"Пользователь #{req.UserId} не найден", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = $"Пользователь #{req.UserId} не найден", TypeMessage = MessagesTypesEnum.Error }] };
 
         string code = await userManager.GenerateChangeEmailTokenAsync(user, req.NewEmail);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -296,7 +296,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(req.UserId); ;
         if (user is null)
-            return new() { Messages = [new() { Text = $"Пользователь #{req.UserId} не найден", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = $"Пользователь #{req.UserId} не найден", TypeMessage = MessagesTypesEnum.Error }] };
 
         return new() { Response = await userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, req.Number) };
     }
@@ -309,7 +309,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(userId); ;
         if (user is null)
-            return new() { Messages = [new() { Text = $"Пользователь #{userId} не найден", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = $"Пользователь #{userId} не найден", TypeMessage = MessagesTypesEnum.Error }] };
 
         string? unformattedKey = await userManager.GetAuthenticatorKeyAsync(user);
         if (string.IsNullOrEmpty(unformattedKey))
@@ -332,7 +332,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(userId); ;
         if (user is null)
-            return new() { Messages = [new() { Text = $"Пользователь #{userId} не найден", TypeMessage = ResultTypesEnum.Error }] };
+            return new() { Messages = [new() { Text = $"Пользователь #{userId} не найден", TypeMessage = MessagesTypesEnum.Error }] };
 
         return new()
         {
@@ -375,7 +375,7 @@ public class IdentityTools(
         if (!changePasswordResult.Succeeded)
             return new()
             {
-                Messages = [.. changePasswordResult.Errors.Select(x => new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = $"[{x.Code}: {x.Description}]" })],
+                Messages = [.. changePasswordResult.Errors.Select(x => new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = $"[{x.Code}: {x.Description}]" })],
             };
 
         msg = $"Пользователю [`{user.Id}`/`{user.Email}`] успешно изменён пароль.";
@@ -399,7 +399,7 @@ public class IdentityTools(
             {
                 Messages = [.. addPasswordResult.Errors.Select(e => new ResultMessage()
                 {
-                    TypeMessage = ResultTypesEnum.Error,
+                    TypeMessage = MessagesTypesEnum.Error,
                     Text = $"[{e.Code}: {e.Description}]"
                 })]
             };
@@ -865,7 +865,7 @@ public class IdentityTools(
             {
                 Messages = [.. result.Errors.Select(x => new ResultMessage()
                 {
-                    TypeMessage = ResultTypesEnum.Error,
+                    TypeMessage = MessagesTypesEnum.Error,
                     Text = $"[{x.Code}: {x.Description}]"
                 })]
             };
@@ -1120,7 +1120,7 @@ public class IdentityTools(
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         IdentityResult result = await userManager.CreateAsync(user);
         if (!result.Succeeded)
-            return new() { Messages = result.Errors.Select(x => new ResultMessage() { Text = $"[{x.Code}: {x.Description}]", TypeMessage = ResultTypesEnum.Error }).ToList() };
+            return new() { Messages = result.Errors.Select(x => new ResultMessage() { Text = $"[{x.Code}: {x.Description}]", TypeMessage = MessagesTypesEnum.Error }).ToList() };
 
         return new()
         {
@@ -1148,7 +1148,7 @@ public class IdentityTools(
         IdentityResult result = await userManager.CreateAsync(user, req.Password);
 
         if (!result.Succeeded)
-            return new() { Messages = result.Errors.Select(x => new ResultMessage() { Text = $"[{x.Code}: {x.Description}]", TypeMessage = ResultTypesEnum.Error }).ToList() };
+            return new() { Messages = result.Errors.Select(x => new ResultMessage() { Text = $"[{x.Code}: {x.Description}]", TypeMessage = MessagesTypesEnum.Error }).ToList() };
 
         string userId = await userManager.GetUserIdAsync(user);
         loggerRepo.LogInformation($"User #{userId} [{req.Email}] created a new account with password.");
@@ -1304,7 +1304,7 @@ public class IdentityTools(
             await mailRepo.SendEmailAsync(user.Email, "Статус привязки Telegram к у/з", msg, token: token);
         }
 
-        return new() { Response = act, Messages = [new() { TypeMessage = ResultTypesEnum.Success, Text = "Токен сформирован" }] };
+        return new() { Response = act, Messages = [new() { TypeMessage = MessagesTypesEnum.Success, Text = "Токен сформирован" }] };
     }
 
     /// <inheritdoc/>
@@ -1522,7 +1522,7 @@ public class IdentityTools(
 
         TResponseModel<TelegramJoinAccountModelDb> res = new() { Response = act };
         if (req.EmailNotify)
-            res.AddAlert($"Проверьте свой ящик Email. Информация вам отправлена");
+            res.AddWarning($"Проверьте свой ящик Email. Информация вам отправлена");
 
         return res;
     }
@@ -1818,7 +1818,7 @@ public class IdentityTools(
 
         return new()
         {
-            Messages = ir.Errors.Select(x => new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = $"[{x.Code}: {x.Description}]" }).ToList()
+            Messages = ir.Errors.Select(x => new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = $"[{x.Code}: {x.Description}]" }).ToList()
         };
     }
 
@@ -1847,7 +1847,7 @@ public class IdentityTools(
 
         return new()
         {
-            Messages = ir.Errors.Select(x => new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = $"[{x.Code}: {x.Description}]" }).ToList()
+            Messages = ir.Errors.Select(x => new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = $"[{x.Code}: {x.Description}]" }).ToList()
         };
     }
 
@@ -1875,7 +1875,7 @@ public class IdentityTools(
 
         return new()
         {
-            Messages = ir.Errors.Select(x => new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = $"[{x.Code}: {x.Description}]" }).ToList()
+            Messages = ir.Errors.Select(x => new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = $"[{x.Code}: {x.Description}]" }).ToList()
         };
     }
 
@@ -1903,7 +1903,7 @@ public class IdentityTools(
 
         return new()
         {
-            Messages = ir.Errors.Select(x => new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = $"[{x.Code}: {x.Description}]" }).ToList()
+            Messages = ir.Errors.Select(x => new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = $"[{x.Code}: {x.Description}]" }).ToList()
         };
     }
     #endregion

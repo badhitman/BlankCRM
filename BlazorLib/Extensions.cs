@@ -58,10 +58,10 @@ public static class Extensions
         {
             _style = m.TypeMessage switch
             {
-                ResultTypesEnum.Success => Severity.Success,
-                ResultTypesEnum.Info => Severity.Info,
-                ResultTypesEnum.Warning => Severity.Warning,
-                ResultTypesEnum.Error => Severity.Error,
+                MessagesTypesEnum.Success => Severity.Success,
+                MessagesTypesEnum.Info => Severity.Info,
+                MessagesTypesEnum.Warning => Severity.Warning,
+                MessagesTypesEnum.Error => Severity.Error,
                 _ => Severity.Normal
             };
             SnackbarRepo.Add(m.Text, _style, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);

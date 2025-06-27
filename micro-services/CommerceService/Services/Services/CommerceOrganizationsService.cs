@@ -42,7 +42,7 @@ public partial class CommerceImplementService : ICommerceService
             {
                 return new()
                 {
-                    Messages = [new() { Text = "Контракт уже установлен", TypeMessage = ResultTypesEnum.Info }],
+                    Messages = [new() { Text = "Контракт уже установлен", TypeMessage = MessagesTypesEnum.Info }],
                     Response = false,
                 };
             }
@@ -58,14 +58,14 @@ public partial class CommerceImplementService : ICommerceService
                 loggerRepo.LogError(ex, msg);
                 return new()
                 {
-                    Messages = [new() { Text = $"{msg}: {ex.Message}", TypeMessage = ResultTypesEnum.Error }],
+                    Messages = [new() { Text = $"{msg}: {ex.Message}", TypeMessage = MessagesTypesEnum.Error }],
                     Response = false,
                 };
             }
 
             return new()
             {
-                Messages = [new() { Text = "Контракт создан", TypeMessage = ResultTypesEnum.Success }],
+                Messages = [new() { Text = "Контракт создан", TypeMessage = MessagesTypesEnum.Success }],
                 Response = true,
             };
         }
@@ -75,13 +75,13 @@ public partial class CommerceImplementService : ICommerceService
             {
                 return new()
                 {
-                    Messages = [new() { Text = "Контракта нет", TypeMessage = ResultTypesEnum.Info }],
+                    Messages = [new() { Text = "Контракта нет", TypeMessage = MessagesTypesEnum.Info }],
                     Response = false,
                 };
             }
             return new()
             {
-                Messages = [new() { Text = "Контракт удалён", TypeMessage = ResultTypesEnum.Success }],
+                Messages = [new() { Text = "Контракт удалён", TypeMessage = MessagesTypesEnum.Success }],
                 Response = await context.Contractors.Where(x => x.OrganizationId == req.Payload.OrganizationId && x.OfferId == req.Payload.OfferId).ExecuteDeleteAsync(cancellationToken: token) > 0,
             };
         }

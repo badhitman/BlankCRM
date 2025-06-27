@@ -975,6 +975,9 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string UpdateConnectionStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.CONNECTION_CONTROLLER_NAME}-{Routes.STATE_ACTION_NAME}-{Routes.UPDATE_ACTION_NAME}");
 
         /// <inheritdoc/>
+        public readonly static string ToastClientShowStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.CLIENT_CONTROLLER_NAME}-{Routes.TOAST_CONTROLLER_NAME}", Routes.SHOW_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string PortfolioReceivedStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.PORTFOLIO_CONTROLLER_NAME}-{Routes.RECEIVED_ACTION_NAME}");
 
         /// <inheritdoc/>

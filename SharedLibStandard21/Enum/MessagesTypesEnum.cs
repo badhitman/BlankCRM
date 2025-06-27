@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Типы сообщений результат выполнения запроса
 /// </summary>
-public enum ResultTypesEnum
+public enum MessagesTypesEnum
 {
     /// <summary>
     /// Ошибка
@@ -30,14 +30,8 @@ public enum ResultTypesEnum
     Info = 2,
 
     /// <summary>
-    /// Уведомление
-    /// </summary>
-    [Description("Уведомление")]
-    Alert = 3,
-
-    /// <summary>
     /// Важное сообщение
     /// </summary>
     [Description("Важно")]
-    Warning = 4
+    Warning = 3
 }

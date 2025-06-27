@@ -42,7 +42,7 @@ public partial class RegisterConfirmationPage
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
             string msg = "Ошибка поиска пользователя по адресу электронной почты.";
-            Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = msg }];
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = msg }];
         }
     }
 }

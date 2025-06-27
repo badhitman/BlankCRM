@@ -13,6 +13,11 @@ namespace SharedLib;
 public interface IEventsStockSharpService
 {
     /// <summary>
+    /// ToastClientShow
+    /// </summary>
+    public Task<ResponseBaseModel> ToastClientShow(ToastModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// UpdateConnectionHandle
     /// </summary>
     public Task<ResponseBaseModel> UpdateConnectionHandle(UpdateConnectionHandleModel req, CancellationToken cancellationToken = default);

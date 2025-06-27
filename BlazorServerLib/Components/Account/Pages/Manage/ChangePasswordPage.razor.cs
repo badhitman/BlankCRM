@@ -45,6 +45,6 @@ public partial class ChangePasswordPage
         if (!changePasswordResult.Success())
             return;
 
-        Messages = [new ResultMessage() { TypeMessage = ResultTypesEnum.Error, Text = "Ваш пароль был изменен" }];
+        Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "Ваш пароль был изменен" }];
     }
 }

@@ -31,6 +31,6 @@
     {
         ResponseBaseModel rest = await UsersProfilesRepo.SetTwoFactorEnabledAsync(false);
         Messages = rest.Messages;
-        Messages.Add(new() { TypeMessage = ResultTypesEnum.Warning, Text = "Ключ вашего приложения для аутентификации был сброшен, вам нужно будет настроить приложение для аутентификации, используя новый ключ." });
+        Messages.Add(new() { TypeMessage = MessagesTypesEnum.Warning, Text = "Ключ вашего приложения для аутентификации был сброшен, вам нужно будет настроить приложение для аутентификации, используя новый ключ." });
     }
 }
