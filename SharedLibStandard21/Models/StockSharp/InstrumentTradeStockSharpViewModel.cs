@@ -31,6 +31,8 @@ public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSh
     /// <inheritdoc/>
     public virtual List<MarkerInstrumentStockSharpViewModel> Markers { get; set; }
 
+    /// <inheritdoc/>
+    public new BoardStockSharpViewModel Board { get; set; }
 
     /// <inheritdoc/>
     public virtual void Reload(InstrumentTradeStockSharpViewModel model)

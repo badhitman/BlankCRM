@@ -3,7 +3,7 @@
 <MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress" @ref="_tableRef">
     <ToolBarContent>
         <MudText Typo="Typo.h6">
-            <span @onclick="_tableRef!.ReloadServerData">Instruments</span>
+            <span title="Click for reload instruments" style="cursor:pointer;" @onclick="_tableRef!.ReloadServerData">Instruments</span>
             <sup style="cursor:pointer" @onclick="StateFilterToggle">
                 <span class="link-@(_stateFilter ? "secondary" : "primary")">all</span> | <span class="link-@(_stateFilter ? "primary" : "secondary")">actual</span>
             </sup>
@@ -18,27 +18,12 @@
                       AdornmentIcon="@Icons.Material.Filled.Search"
                       IconSize="Size.Medium"
                       Class="mt-0 me-1" />
-        <MudSelect T="InstrumentsStockSharpTypesEnum"
-                   Label="Type"
-                   MultiSelection="true"
-                   @bind-SelectedValues="TypesSelected"
-                   Adornment="Adornment.Start"
-                   AdornmentIcon="@Icons.Material.Filled.Abc"
-                   IconSize="Size.Small"
-                   Clearable
-                   Dense
-                   Class="mt-0 me-1">
-            @foreach (InstrumentsStockSharpTypesEnum state in Enum.GetValues<InstrumentsStockSharpTypesEnum>().OrderBy(x => x.DescriptionInfo()))
-            {
-                <MudSelectItem T="InstrumentsStockSharpTypesEnum" Value="@state">@state.DescriptionInfo()</MudSelectItem>
-            }
-        </MudSelect>
         <MudSelect T="BoardStockSharpViewModel"
-                   Label="Type"
+                   Label="Boards"
                    MultiSelection="true"
                    @bind-SelectedValues="SelectedBoards"
                    Adornment="Adornment.Start"
-                   AdornmentIcon="@Icons.Material.Filled.Abc"
+                   AdornmentIcon="@Icons.Custom.Uncategorized.ChessKnight"
                    IconSize="Size.Small"
                    Clearable
                    Dense
@@ -63,6 +48,21 @@
                 <MudSelectItem T="CurrenciesTypesEnum" Value="@state">@state.DescriptionInfo()</MudSelectItem>
             }
         </MudSelect>
+        <MudSelect T="InstrumentsStockSharpTypesEnum"
+                   Label="Type"
+                   MultiSelection="true"
+                   @bind-SelectedValues="TypesSelected"
+                   Adornment="Adornment.Start"
+                   AdornmentIcon="@Icons.Material.Filled.Abc"
+                   IconSize="Size.Small"
+                   Clearable
+                   Dense
+                   Class="mt-0 me-1">
+            @foreach (InstrumentsStockSharpTypesEnum state in Enum.GetValues<InstrumentsStockSharpTypesEnum>().OrderBy(x => x.DescriptionInfo()))
+            {
+                <MudSelectItem T="InstrumentsStockSharpTypesEnum" Value="@state">@state.DescriptionInfo()</MudSelectItem>
+            }
+        </MudSelect>
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="Name" T="InstrumentTradeStockSharpViewModel">Name</MudTableSortLabel></MudTh>
@@ -75,7 +75,11 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">
-            <MudHighlighter Text="@context.Name" HighlightedText="@searchString" />
+            <div class="hstack">
+                <MudHighlighter Text="@context.Name" HighlightedText="@searchString" />
+                <sup @onclick="() => ManualOrder(context)" title="order create" style="cursor:pointer;" class="ms-1 text-primary bi bi-arrow-through-heart"></sup>
+            </div>
+
         </MudTd>
         <MudTd DataLabel="Code">
             <strong class="me-2">
@@ -108,3 +112,14 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
+
+<MudDialog @bind-Visible="ManualOrderCreating" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> New order
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <TestComponent SetInstrument="manualOrderContext" />
+    </DialogContent>
+</MudDialog>

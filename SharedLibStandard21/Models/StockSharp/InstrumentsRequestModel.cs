@@ -23,5 +23,5 @@ public class InstrumentsRequestModel : SimplePaginationRequestModel
     public CurrenciesTypesEnum[] CurrenciesFilter { get; set; }
 
     /// <inheritdoc/>
-    public int[] SelectedBoards { get; set; }
+    public int[] BoardsFilter { get; set; }
 }

@@ -17,6 +17,10 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
     IDataStockSharpService SsRepo { get; set; } = default!;
 
 
+    InstrumentTradeStockSharpViewModel? manualOrderContext;
+    bool ManualOrderCreating;
+    private readonly DialogOptions _dialogOptions = new() { FullWidth = true, MaxWidth = MaxWidth.ExtraLarge };
+
     IEnumerable<InstrumentsStockSharpTypesEnum>? _typesSelected;
     IEnumerable<InstrumentsStockSharpTypesEnum>? TypesSelected
     {
@@ -74,6 +78,11 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
             await _tableRef.ReloadServerData();
     }
 
+    void ManualOrder(InstrumentTradeStockSharpViewModel req)
+    {
+        manualOrderContext = req;
+        ManualOrderCreating = true;
+    }
 
     async Task ReloadBoards()
     {
