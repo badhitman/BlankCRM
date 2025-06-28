@@ -65,7 +65,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
 
     string StyleSup(InstrumentTradeStockSharpViewModel ctx) => EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt ? "" : "cursor:pointer;";
 
-    string ClassSup(InstrumentTradeStockSharpViewModel ctx) => EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt ? "" : "ms-1 text-primary bi bi-arrow-through-heart";
+    string ClassSup(InstrumentTradeStockSharpViewModel ctx) => EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt ? "ms-1 text-default bi bi-arrow-through-heart opacity-25" : "ms-1 text-primary bi bi-arrow-through-heart";
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()

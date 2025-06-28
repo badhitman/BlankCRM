@@ -74,10 +74,10 @@
         <MudTh>Type</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Name" title="@((DateTime.UtcNow - context.LastUpdatedAtUTC).Duration().ToReadableString())">
+        <MudTd DataLabel="Name" title="@($"last updated: {(DateTime.UtcNow - context.LastUpdatedAtUTC).Duration().ToReadableString()}")">
             <div class="hstack">
                 <MudHighlighter Text="@context.Name" HighlightedText="@searchString" />
-                <sup @onclick="() => { if (!EachDisable) { ManualOrder(context); } }" title="order create" style="@StyleSup(context)" class="@ClassSup(context)"></sup>
+                <sup @onclick="() => { if (!EachDisable) { ManualOrder(context); } }" style="@StyleSup(context)" class="@ClassSup(context)"></sup>
             </div>
         </MudTd>
         <MudTd DataLabel="Code">
