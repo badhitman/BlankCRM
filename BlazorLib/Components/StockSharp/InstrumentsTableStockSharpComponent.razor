@@ -74,7 +74,7 @@
         <MudTh>Type</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Name">
+        <MudTd DataLabel="Name" title="@((DateTime.UtcNow - context.LastUpdatedAtUTC).Duration().ToReadableString())">
             <div class="hstack">
                 <MudHighlighter Text="@context.Name" HighlightedText="@searchString" />
                 <sup @onclick="() => { if (!EachDisable) { ManualOrder(context); } }" title="order create" style="@StyleSup(context)" class="@ClassSup(context)"></sup>

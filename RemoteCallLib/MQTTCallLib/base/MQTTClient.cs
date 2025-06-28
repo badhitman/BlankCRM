@@ -91,7 +91,7 @@ public class MQttClient(StockSharpClientConfigModel mqConf, ILogger<MQttClient> 
             return Task.CompletedTask;
         }
         responseClient.ApplicationMessageReceivedAsync += ResponseClient_ApplicationMessageReceivedAsync;
-        loggerRepo.LogDebug($"Sending message into queue [{queue}]", request_payload_json);
+        loggerRepo.LogTrace($"Sending message into queue [{queue}]", request_payload_json);
         MqttClientConnectResult res = await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder, tokenOuter);
 
         MqttApplicationMessage applicationMessage = new MqttApplicationMessageBuilder()
