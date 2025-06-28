@@ -45,7 +45,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         }
     }
 
-
+    List<InstrumentTradeStockSharpViewModel> InstrumentsPartData;
     IEnumerable<BoardStockSharpViewModel>? _selectedBoards;
     IEnumerable<BoardStockSharpViewModel> SelectedBoards
     {
@@ -131,6 +131,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         };
         await SetBusyAsync(token: token);
         TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
+        InstrumentsPartData = res.Response;
         await SetBusyAsync(false, token: token);
         return new TableData<InstrumentTradeStockSharpViewModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
