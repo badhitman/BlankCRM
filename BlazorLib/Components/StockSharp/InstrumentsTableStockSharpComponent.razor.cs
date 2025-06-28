@@ -11,7 +11,7 @@ namespace BlazorLib.Components.StockSharp;
 /// <summary>
 /// InstrumentsTableStockSharpComponent
 /// </summary>
-public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBaseModel
+public partial class InstrumentsTableStockSharpComponent : StockSharpAboutComponent
 {
     [Inject]
     IDataStockSharpService SsRepo { get; set; } = default!;
@@ -62,6 +62,10 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
     private string? searchString = null;
 
     readonly List<BoardStockSharpViewModel> Boards = [];
+
+    string StyleSup(InstrumentTradeStockSharpViewModel ctx) => EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt ? "" : "cursor:pointer;";
+
+    string ClassSup(InstrumentTradeStockSharpViewModel ctx) => EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt ? "" : "ms-1 text-primary bi bi-arrow-through-heart";
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -116,7 +120,7 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
     {
         InstrumentsRequestModel req = new()
         {
-            //SelectedBoards = SelectedBoards.Select(x=>x.id)
+            BoardsFilter = [.. SelectedBoards.Select(x => x.Id)],
             FindQuery = searchString,
             PageNum = state.Page,
             PageSize = state.PageSize,

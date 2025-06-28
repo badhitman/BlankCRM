@@ -1,4 +1,4 @@
-﻿@inherits BlazorBusyComponentBaseModel
+﻿@inherits StockSharpAboutComponent
 
 <MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress" @ref="_tableRef">
     <ToolBarContent>
@@ -77,9 +77,8 @@
         <MudTd DataLabel="Name">
             <div class="hstack">
                 <MudHighlighter Text="@context.Name" HighlightedText="@searchString" />
-                <sup @onclick="() => ManualOrder(context)" title="order create" style="cursor:pointer;" class="ms-1 text-primary bi bi-arrow-through-heart"></sup>
+                <sup @onclick="() => { if (!EachDisable) { ManualOrder(context); } }" title="order create" style="@StyleSup(context)" class="@ClassSup(context)"></sup>
             </div>
-
         </MudTd>
         <MudTd DataLabel="Code">
             <strong class="me-2">
