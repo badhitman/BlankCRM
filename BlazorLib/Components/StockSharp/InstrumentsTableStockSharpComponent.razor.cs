@@ -42,8 +42,29 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
     }
 
 
+    IEnumerable<BoardStockSharpViewModel>? _selectedBoards;
+    IEnumerable<BoardStockSharpViewModel> SelectedBoards
+    {
+        get => _selectedBoards ?? [];
+        set
+        {
+            _selectedBoards = value;
+            if (_tableRef is not null)
+                InvokeAsync(_tableRef.ReloadServerData);
+        }
+    }
+
     MudTable<InstrumentTradeStockSharpViewModel>? _tableRef;
     private string? searchString = null;
+
+    readonly List<BoardStockSharpViewModel> Boards = [];
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await ReloadBoards();
+    }
 
     bool _stateFilter;
     async Task StateFilterToggle()
@@ -51,6 +72,18 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
         _stateFilter = !_stateFilter;
         if (_tableRef is not null)
             await _tableRef.ReloadServerData();
+    }
+
+
+    async Task ReloadBoards()
+    {
+        TResponseModel<List<BoardStockSharpViewModel>> boardsRes = await SsRepo.GetBoardsAsync();
+        lock (Boards)
+        {
+            Boards.Clear();
+            if (boardsRes.Response is not null)
+                Boards.AddRange(boardsRes.Response);
+        }
     }
 
     async Task OnSearch(string text)
@@ -74,6 +107,7 @@ public partial class InstrumentsTableStockSharpComponent : BlazorBusyComponentBa
     {
         InstrumentsRequestModel req = new()
         {
+            //SelectedBoards = SelectedBoards.Select(x=>x.id)
             FindQuery = searchString,
             PageNum = state.Page,
             PageSize = state.PageSize,

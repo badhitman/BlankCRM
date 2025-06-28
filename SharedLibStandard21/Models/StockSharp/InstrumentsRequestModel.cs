@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.Collections.Generic;
+
 namespace SharedLib;
 
 /// <summary>
@@ -19,4 +21,7 @@ public class InstrumentsRequestModel : SimplePaginationRequestModel
 
     /// <inheritdoc/>
     public CurrenciesTypesEnum[] CurrenciesFilter { get; set; }
+
+    /// <inheritdoc/>
+    public int[] SelectedBoards { get; set; }
 }

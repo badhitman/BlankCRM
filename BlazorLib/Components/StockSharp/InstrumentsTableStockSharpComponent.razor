@@ -3,7 +3,7 @@
 <MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress" @ref="_tableRef">
     <ToolBarContent>
         <MudText Typo="Typo.h6">
-            Instruments
+            <span @onclick="_tableRef!.ReloadServerData">Instruments</span>
             <sup style="cursor:pointer" @onclick="StateFilterToggle">
                 <span class="link-@(_stateFilter ? "secondary" : "primary")">all</span> | <span class="link-@(_stateFilter ? "primary" : "secondary")">actual</span>
             </sup>
@@ -31,6 +31,21 @@
             @foreach (InstrumentsStockSharpTypesEnum state in Enum.GetValues<InstrumentsStockSharpTypesEnum>().OrderBy(x => x.DescriptionInfo()))
             {
                 <MudSelectItem T="InstrumentsStockSharpTypesEnum" Value="@state">@state.DescriptionInfo()</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="BoardStockSharpViewModel"
+                   Label="Type"
+                   MultiSelection="true"
+                   @bind-SelectedValues="SelectedBoards"
+                   Adornment="Adornment.Start"
+                   AdornmentIcon="@Icons.Material.Filled.Abc"
+                   IconSize="Size.Small"
+                   Clearable
+                   Dense
+                   Class="mt-0 me-1">
+            @foreach (BoardStockSharpViewModel state in Boards)
+            {
+                <MudSelectItem T="BoardStockSharpViewModel" Value="@state">@state</MudSelectItem>
             }
         </MudSelect>
         <MudSelect T="CurrenciesTypesEnum"
