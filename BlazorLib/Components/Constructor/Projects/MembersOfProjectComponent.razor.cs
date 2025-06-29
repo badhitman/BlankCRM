@@ -48,7 +48,7 @@ public partial class MembersOfProjectComponent : BlazorBusyComponentBaseModel
         TResponseModel<UserInfoModel>? user_info = await IdentityRepo.FindUserByEmailAsync(emailForAddMember);
 
         if (user_info.Response is null)
-            SnackbarRepo.Add($"Пользователь с Email '{emailForAddMember}' не найден", Severity.Error, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Пользователь с Email '{emailForAddMember}' не найден");
         else
         {
             ResponseBaseModel adding_member = await ConstructorRepo.AddMembersToProjectAsync(new() { ProjectId = ProjectView.Id, UsersIds = [user_info.Response.UserId] });

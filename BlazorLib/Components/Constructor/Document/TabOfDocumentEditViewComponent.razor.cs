@@ -156,7 +156,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         }
         if (rest.Response is null)
         {
-            SnackbarRepo.Add($"Ошибка 671CB343-ADD5-46AE-91F8-24175FBF2592 Content [rest.DocumentScheme is null]", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка 671CB343-ADD5-46AE-91F8-24175FBF2592 Content [rest.DocumentScheme is null]");
             return;
         }
 
@@ -251,7 +251,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         }
         if (rest.Response is null)
         {
-            SnackbarRepo.Add($"Ошибка 07653445-0B30-46CB-9B79-3B068BAB9AEB rest.Content.DocumentPage is null", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка 07653445-0B30-46CB-9B79-3B068BAB9AEB rest.Content.DocumentPage is null");
             return;
         }
         int i = DocumentPage.Id;
@@ -277,12 +277,12 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Add($"Ошибка 815BCE17-9180-4C27-8016-BEB5244A3454 Action: {rest.Message()}", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка 815BCE17-9180-4C27-8016-BEB5244A3454 Action: {rest.Message()}");
             return;
         }
         if (rest.Response is null)
         {
-            SnackbarRepo.Add($"Ошибка 5B879025-EC6E-4989-9A75-5844BD20DF0B Content [rest.Content.DocumentPage is null]", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка 5B879025-EC6E-4989-9A75-5844BD20DF0B Content [rest.Content.DocumentPage is null]");
             return;
         }
 

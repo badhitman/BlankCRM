@@ -268,7 +268,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
                 }
                 catch (Exception ex)
                 {
-                    SnackbarRepo.Add(ex.Message, MudBlazor.Severity.Error, c => c.DuplicatesBehavior = MudBlazor.SnackbarDuplicatesBehavior.Allow);
+                    SnackbarRepo.Error(ex.Message);
                     LoggerRepo.LogError(ex, $"Ошибка отправки порции данных: {tFile}");
                 }
             }
@@ -278,7 +278,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
         //await ParentPage.HoldPageUpdate(false);
 
         if (totalTransferData != 0)
-            SnackbarRepo.Add($"Отправлено: {GlobalToolsStandard.SizeDataAsString(totalTransferData)}", MudBlazor.Severity.Info, c => c.DuplicatesBehavior = MudBlazor.SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Info($"Отправлено: {GlobalToolsStandard.SizeDataAsString(totalTransferData)}");
         await SetBusyAsync(false);
     }
 

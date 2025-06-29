@@ -58,7 +58,7 @@ public partial class GeneratorClientViewComponent : FieldComponentBaseModel
         _gen = DeclarationAbstraction.GetHandlerService(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor, "")!.ToString()!) as FieldValueGeneratorAbstraction;
         if (_gen is null)
         {
-            SnackbarRepo.Add($"Параметры поля-генератора имеют не корректный формат. Не найден генератор.\n\n{Field.MetadataValueType}", Severity.Error, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Параметры поля-генератора имеют не корректный формат. Не найден генератор.\n\n{Field.MetadataValueType}");
             return;
         }
 

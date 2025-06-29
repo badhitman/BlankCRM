@@ -136,7 +136,7 @@ public partial class ManufactureComponent : BlazorBusyComponentBaseAuthModel
 
         if (_err.Length != 0)
         {
-            SnackbarRepo.Add($"Существуют конфликты имён перечислений: {string.Join(";", _err.Select(x => $"{x.SystemName} - {x.Count}"))};", Severity.Error, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Существуют конфликты имён перечислений: {string.Join(";", _err.Select(x => $"{x.SystemName} - {x.Count}"))};");
             return;
         }
 
@@ -149,7 +149,7 @@ public partial class ManufactureComponent : BlazorBusyComponentBaseAuthModel
 
         if (_err.Length != 0)
         {
-            SnackbarRepo.Add($"Существуют конфликты имён документов: {string.Join(";", _err.Select(x => $"{x.SystemName} - {x.Count}"))};", Severity.Error, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Существуют конфликты имён документов: {string.Join(";", _err.Select(x => $"{x.SystemName} - {x.Count}"))};");
             return;
         }
 

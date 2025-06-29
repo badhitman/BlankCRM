@@ -86,7 +86,7 @@ public static class Extensions
 
     /// <inheritdoc/>
     public static void Error(this ISnackbar SnackbarRepo, List<ValidationResult> ValidationResults)
-        => ValidationResults.ForEach(x => SnackbarRepo.Add(x.ErrorMessage ?? "-error-", Severity.Error, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow));
+        => ValidationResults.ForEach(x => SnackbarRepo.Error(x.ErrorMessage ?? "-error-"));
 
     /// <inheritdoc/>
     public static DirectionsEnum GetVerticalDirection(this SortDirection sort_direction)

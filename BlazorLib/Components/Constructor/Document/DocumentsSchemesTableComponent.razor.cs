@@ -53,7 +53,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Add($"Ошибка F1AADB25-31FF-4305-90A9-4B71184434CC Action: {rest.Message()}", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка F1AADB25-31FF-4305-90A9-4B71184434CC Action: {rest.Message()}");
             return;
         }
 
@@ -77,7 +77,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
 
         if (data.Response is null)
         {
-            SnackbarRepo.Add($"rest.Content.Documents is null. error 62D3109B-7349-48E8-932B-762D5B0EA585", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"rest.Content.Documents is null. error 62D3109B-7349-48E8-932B-762D5B0EA585");
             return new TableData<DocumentSchemeConstructorModelDB>() { TotalItems = data.TotalRowsCount, Items = data.Response };
         }
 

@@ -87,12 +87,12 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
             SnackbarRepo.ShowMessagesResponse(rest.Messages);
             if (rest.Response is null)
             {
-                SnackbarRepo.Add($"Ошибка A3D19BFC-38BB-4932-85DD-54C306D8C83E rest.Content.DocumentScheme", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+                SnackbarRepo.Error($"Ошибка A3D19BFC-38BB-4932-85DD-54C306D8C83E rest.Content.DocumentScheme");
                 return;
             }
             if (!rest.Success())
             {
-                SnackbarRepo.Add($"Ошибка 55685D9E-E9D0-4937-A727-5BCC9FAD4381 Action: {rest.Message()}", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+                SnackbarRepo.Error($"Ошибка 55685D9E-E9D0-4937-A727-5BCC9FAD4381 Action: {rest.Message()}");
                 return;
             }
             DocumentScheme = rest.Response;
@@ -105,7 +105,7 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
     {
         if (PagesNotExist)
         {
-            SnackbarRepo.Add($"PagesNotExist. Ошибка 6264F83F-DF3F-4860-BC18-5288AB335985", Severity.Error, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"PagesNotExist. Ошибка 6264F83F-DF3F-4860-BC18-5288AB335985");
             return;
         }
         int i = DocumentScheme.Tabs!.FindIndex(x => x.Id == init_id);
@@ -131,14 +131,14 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
     {
         if (PagesNotExist)
         {
-            SnackbarRepo.Add($"PagesNotExist. Ошибка 5FD8058E-50B0-49DA-8808-DB7C2BED80C2", Severity.Error, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"PagesNotExist. Ошибка 5FD8058E-50B0-49DA-8808-DB7C2BED80C2");
             return;
         }
 
         TabOfDocumentSchemeConstructorModelDB? _page = DocumentScheme.Tabs!.FirstOrDefault(x => x.Id == id);
         if (_page is null)
         {
-            SnackbarRepo.Add($"_page is null. Ошибка CBDF9789-4A28-4869-A214-A4702A432DA6", Severity.Error, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"_page is null. Ошибка CBDF9789-4A28-4869-A214-A4702A432DA6");
             return;
         }
         _page.Name = name;

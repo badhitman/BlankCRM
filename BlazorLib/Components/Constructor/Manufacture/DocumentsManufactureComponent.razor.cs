@@ -100,7 +100,7 @@ public partial class DocumentsManufactureComponent : BlazorBusyComponentBaseMode
             else
             {
                 string msg = "ошибка 60F310E5-52C0-4E13-AD2C-10D9B09B6DD8";
-                SnackbarRepo.Add(msg, Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+                SnackbarRepo.Error(msg);
                 _res.Information = msg;
             }
 

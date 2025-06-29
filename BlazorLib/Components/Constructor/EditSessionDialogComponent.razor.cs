@@ -43,7 +43,7 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
     protected async Task ClipboardCopyHandle()
     {
         await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", UrlSession);
-        SnackbarRepo.Add($"Ссылка {Session.SessionToken} скопирована в буфер обмена", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+        SnackbarRepo.Info($"Ссылка {Session.SessionToken} скопирована в буфер обмена");
     }
 
     /// <inheritdoc/>
@@ -51,7 +51,7 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
     {
         session_origin.SessionToken = null;
         await SaveForm();
-        SnackbarRepo.Add($"Ссылка аннулирована", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+        SnackbarRepo.Info($"Ссылка аннулирована");
     }
 
     /// <inheritdoc/>
@@ -59,7 +59,7 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
     {
         session_origin.SessionToken = Guid.Empty.ToString();
         await SaveForm();
-        SnackbarRepo.Add($"Ссылка перевыпущена", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+        SnackbarRepo.Info($"Ссылка перевыпущена");
     }
 
     /// <inheritdoc/>
@@ -111,13 +111,13 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Add($"Ошибка 0D394723-0AEC-4CF0-9005-32CB3C39F17C Action: {rest.Message()}", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка 0D394723-0AEC-4CF0-9005-32CB3C39F17C Action: {rest.Message()}");
             return;
         }
 
         if (rest.Response is null)
         {
-            SnackbarRepo.Add($"Ошибка C4F58BEC-547A-4F61-9D40-D9B6F8FC051D rest.Content.Form is null", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка C4F58BEC-547A-4F61-9D40-D9B6F8FC051D rest.Content.Form is null");
             return;
         }
 

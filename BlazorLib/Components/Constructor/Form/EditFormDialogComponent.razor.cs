@@ -72,7 +72,7 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
         }
         if (rest.Response is null)
         {
-            SnackbarRepo.Add($"Ошибка B64393D8-9C60-4A84-9790-15EFA6A74ABB rest content form is null", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка B64393D8-9C60-4A84-9790-15EFA6A74ABB rest content form is null");
             return;
         }
 

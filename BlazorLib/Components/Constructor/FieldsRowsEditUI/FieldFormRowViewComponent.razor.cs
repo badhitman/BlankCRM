@@ -85,7 +85,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
                 else
                 {
                     string msg = "ошибка CDAD94BA-51E8-49F4-9B15-6901494B8EE4";
-                    SnackbarRepo.Add(msg, Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+                    SnackbarRepo.Error(msg);
                     _type_name = msg;
                 }
             }
@@ -132,7 +132,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
                 else
                 {
                     string msg = "ошибка 640D6DCE-0027-425E-81D1-00C16A2D5FCB";
-                    SnackbarRepo.Add(msg, Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+                    SnackbarRepo.Error(msg);
                     _information_field = msg;
                     return (MarkupString)_information_field;
                 }
@@ -152,7 +152,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             else if (Field is FieldFormAkaDirectoryConstructorModelDB df)
                 return df.SortIndex < (Form.Fields?.Count + Form.FieldsDirectoriesLinks?.Count);
             else
-                SnackbarRepo.Add("ошибка C0688447-05EE-4982-B9E0-D48C7DA89C3F", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+                SnackbarRepo.Error("ошибка C0688447-05EE-4982-B9E0-D48C7DA89C3F");
 
             return false;
         }
@@ -168,7 +168,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             else if (Field is FieldFormAkaDirectoryConstructorModelDB df)
                 return df.SortIndex > 1;
             else
-                SnackbarRepo.Add("ошибка EAAC696C-1CDE-41C3-8009-8F8FD4CC2D8E", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+                SnackbarRepo.Error("ошибка EAAC696C-1CDE-41C3-8009-8F8FD4CC2D8E");
 
             return false;
         }
@@ -190,7 +190,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
                     return false;
             }
             else
-                SnackbarRepo.Add($"`{_field_master.GetType().Name}`. ошибка 418856D6-DBCA-4AC3-9322-9C86D6EF115B", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+                SnackbarRepo.Error($"`{_field_master.GetType().Name}`. ошибка 418856D6-DBCA-4AC3-9322-9C86D6EF115B");
 
             return true;
         }
@@ -319,7 +319,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         }
         else
         {
-            SnackbarRepo.Add("Ошибка 9ACCA3B7-52ED-4687-BEC2-C16AC6A2C3C0", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error("Ошибка 9ACCA3B7-52ED-4687-BEC2-C16AC6A2C3C0");
             IsBusyProgress = false;
             return;
         }
@@ -351,13 +351,13 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Add($"Ошибка CD1DAE53-0199-40BE-9EF2-4A3347BAF5E9 Action: {rest.Message()}", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка CD1DAE53-0199-40BE-9EF2-4A3347BAF5E9 Action: {rest.Message()}");
             return;
         }
 
         if (rest.Response?.Fields is null || rest.Response?.FieldsDirectoriesLinks is null)
         {
-            SnackbarRepo.Add($"Ошибка DA9D4B08-EBB7-47C3-BA72-F3BB81E1A7E3 rest.Content.Form?.Fields is null || rest.Content.Form?.FormsDirectoriesLinks is null", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка DA9D4B08-EBB7-47C3-BA72-F3BB81E1A7E3 rest.Content.Form?.Fields is null || rest.Content.Form?.FormsDirectoriesLinks is null");
             return;
         }
 
@@ -405,7 +405,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         }
         else
         {
-            SnackbarRepo.Add($"{_field_master.GetType().FullName}. ошибка C5CB2F55-D973-405F-B92E-144C1ABE2591", Severity.Error, cf => cf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"{_field_master.GetType().FullName}. ошибка C5CB2F55-D973-405F-B92E-144C1ABE2591");
             IsBusyProgress = false;
             return;
         }
@@ -440,7 +440,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             rest = await ConstructorRepo.FormFieldDirectoryDeleteAsync(new() { Payload = df.Id, SenderActionUserId = CurrentUserSession!.UserId });
         else
         {
-            SnackbarRepo.Add($"{_field_master.GetType().FullName}. ошибка 1BCDEFB4-55F5-4A5A-BA61-3EAD2E9063D2", Severity.Error, cf => cf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"{_field_master.GetType().FullName}. ошибка 1BCDEFB4-55F5-4A5A-BA61-3EAD2E9063D2");
             IsBusyProgress = false;
             return;
         }
@@ -492,7 +492,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
                 IsMultiSelect = df.IsMultiSelect,
             };
         else
-            SnackbarRepo.Add("error 81F06C12-3641-473B-A2DA-9EFC853A0709", Severity.Error, cf => cf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error("error 81F06C12-3641-473B-A2DA-9EFC853A0709");
 
         _type_name = null;
         _information_field = null;
@@ -513,7 +513,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             rest = await ConstructorRepo.FieldDirectoryFormMoveAsync(new() { Payload = new() { Id = df.Id, Direct = DirectionsEnum.Up }, SenderActionUserId = CurrentUserSession!.UserId });
         else
         {
-            SnackbarRepo.Add("ошибка 591195A4-959D-4CDD-9410-F8984F790CBE", Severity.Error, cf => cf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error("ошибка 591195A4-959D-4CDD-9410-F8984F790CBE");
             IsBusyProgress = false;
             return;
         }
@@ -530,7 +530,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
 
         if (rest.Response is null)
         {
-            SnackbarRepo.Add($"Ошибка AA01EFE2-DF81-4CDC-8CAB-D2CAC6B34912 rest.Content.Form is null", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка AA01EFE2-DF81-4CDC-8CAB-D2CAC6B34912 rest.Content.Form is null");
             return;
         }
         Form.Reload(rest.Response);
@@ -550,7 +550,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             rest = await ConstructorRepo.FieldDirectoryFormMoveAsync(new() { Payload = new() { Id = df.Id, Direct = DirectionsEnum.Down }, SenderActionUserId = CurrentUserSession!.UserId });
         else
         {
-            SnackbarRepo.Add("ошибка 8768E090-BE63-4FE4-A693-7E24ED1A1876", Severity.Error, cf => cf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error("ошибка 8768E090-BE63-4FE4-A693-7E24ED1A1876");
             IsBusyProgress = false;
             return;
         }
@@ -567,7 +567,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
 
         if (rest.Response is null)
         {
-            SnackbarRepo.Add($"Ошибка 04BD92F1-0B55-46C5-93B3-4DACB7374565 rest.Content.Form is null", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка 04BD92F1-0B55-46C5-93B3-4DACB7374565 rest.Content.Form is null");
             return;
         }
         Form.Reload(rest.Response);

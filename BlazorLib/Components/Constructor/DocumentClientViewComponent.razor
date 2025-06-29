@@ -51,7 +51,7 @@ else
                 tab_of_document_scheme.Owner ??= SessionOfDocumentData.Owner;
                 if (tab_of_document_scheme.Owner is null)
                 {
-                    SnackbarRepo.Add($"");
+                    SnackbarRepo.Error("tab_of_document_scheme.Owner is null");
                 }
                 <MudTabPanel ID="@tab_of_document_scheme.Id"
                              Text="@tab_of_document_scheme.Name"

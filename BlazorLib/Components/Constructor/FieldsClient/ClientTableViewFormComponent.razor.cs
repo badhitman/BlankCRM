@@ -91,7 +91,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
     {
         if (SessionDocument is null)
         {
-            SnackbarRepo.Add("SessionDocument is null. error 6146B0D1-0BF3-4CA5-BBF5-5EA64ACA709E", Severity.Error, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error("SessionDocument is null. error 6146B0D1-0BF3-4CA5-BBF5-5EA64ACA709E");
             return;
         }
 
@@ -107,7 +107,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
             SnackbarRepo.ShowMessagesResponse(rest.Messages);
             if (!rest.Success())
             {
-                SnackbarRepo.Add($"Ошибка E7BD5ADD-8CAF-434B-8AB8-94167CCB3337 Action: {rest.Message()}", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+                SnackbarRepo.Error($"Ошибка E7BD5ADD-8CAF-434B-8AB8-94167CCB3337 Action: {rest.Message()}");
                 return;
             }
             await ReloadSession();
@@ -119,7 +119,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
     {
         if (SessionDocument is null)
         {
-            SnackbarRepo.Add("SessionDocument is null. error DDD591F2-F3DE-4BF1-91DB-B0C4E5D7C93C", Severity.Error, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error("SessionDocument is null. error DDD591F2-F3DE-4BF1-91DB-B0C4E5D7C93C");
             return;
         }
 
@@ -136,7 +136,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Add($"Ошибка B4812CDF-E4F0-46D5-981B-422DC3F966D7 Action: {rest.Message()}", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка B4812CDF-E4F0-46D5-981B-422DC3F966D7 Action: {rest.Message()}");
             return;
         }
         uint row_num = (uint)rest.Response;
@@ -165,7 +165,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
     {
         if (SessionDocument is null)
         {
-            SnackbarRepo.Add("SessionDocument is null. error BCBB2599-4CC1-433A-A5BC-21114935105F", Severity.Error, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error("SessionDocument is null. error BCBB2599-4CC1-433A-A5BC-21114935105F");
             return;
         }
         await SetBusyAsync();
@@ -177,7 +177,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         SnackbarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Add($"Ошибка 3755827F-4811-4927-8ABC-66896D12803B Action: {rest.Message()}", Severity.Error, conf => conf.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            SnackbarRepo.Error($"Ошибка 3755827F-4811-4927-8ABC-66896D12803B Action: {rest.Message()}");
             return;
         }
 
