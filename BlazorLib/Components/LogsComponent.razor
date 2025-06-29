@@ -117,7 +117,7 @@
             @context.ApplicationName
             @if (!string.IsNullOrWhiteSpace(context.ContextPrefix) && context.ApplicationName != context.ContextPrefix)
             {
-                <sup>@context.ContextPrefix</sup>
+                <sup class="ms-1">@context.ContextPrefix</sup>
             }
         </MudTd>
         <MudTd DataLabel="Message" Class="@_classLevel">@context.RecordMessage</MudTd>
