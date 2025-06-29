@@ -82,8 +82,17 @@ public class EventNotifyReceive<T> : IEventNotifyReceive<T>
 
         mqttClient.ApplicationMessageReceivedAsync += ApplicationMessageReceived;
 
-        await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder, stoppingToken);
-        await mqttClient.SubscribeAsync(QueueName, cancellationToken: stoppingToken);
+        try
+        {
+            await mqttClient.ConnectAsync(GetMqttClientOptionsBuilder, stoppingToken);
+            await mqttClient.SubscribeAsync(QueueName, cancellationToken: stoppingToken);
+        }
+        catch (Exception ex)
+        {
+            LoggerRepo.LogError(ex, "can`t connect/subscribe");
+            mqttClient.ApplicationMessageReceivedAsync -= ApplicationMessageReceived;
+            return;
+        }
     }
 
     /// <inheritdoc/>

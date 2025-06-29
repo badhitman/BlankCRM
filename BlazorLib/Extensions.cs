@@ -17,7 +17,7 @@ namespace BlazorLib;
 public static class Extensions
 {
     static List<MessageViewModel> MessagesHistory { get; set; } = [];
-    static List<ToastShowClientModel> ToastsHistory { get; set; } = [];
+    static List<ToastViewClientModel> ToastsHistory { get; set; } = [];
 
     /// <summary>
     /// Получить данные по текущему пользователю
@@ -55,7 +55,7 @@ public static class Extensions
     }
 
     /// <inheritdoc/>
-    public static List<ToastShowClientModel> GetHistoryToasts(this ISnackbar SnackBarRepo)
+    public static List<ToastViewClientModel> GetHistoryToasts(this ISnackbar SnackBarRepo)
     {
         lock (MessagesHistory)
         {
@@ -64,11 +64,13 @@ public static class Extensions
     }
 
     /// <inheritdoc/>
-    public static void SaveToast(this ISnackbar SnackbarRepo, ToastShowClientModel tst)
+    public static void SaveToast(this ISnackbar SnackBarRepo, ToastShowClientModel tst)
     {
         lock (ToastsHistory)
         {
-            ToastsHistory.Add(tst);
+            ToastsHistory.Add(new() { DateTimeRecord = DateTime.UtcNow, HeadTitle = tst.HeadTitle, MessageText = tst.MessageText, TypeMessage = tst.TypeMessage });
+            while (ToastsHistory.Count > 1000)
+                ToastsHistory.RemoveAt(0);
         }
     }
 
@@ -271,5 +273,12 @@ public static class Extensions
         /// Points
         /// </summary>
         public List<DateTime> Points { get; set; } = points;
+    }
+
+    /// <inheritdoc/>
+    public class ToastViewClientModel : ToastShowClientModel
+    {
+        /// <inheritdoc/>
+        public DateTime DateTimeRecord { get; set; }
     }
 }

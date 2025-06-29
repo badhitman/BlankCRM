@@ -94,7 +94,7 @@ public static class Extensions
     public static string GetHumanDateTime(this DateTime dateTime, string timeZone = "Europe/Moscow")
     {
         DateTime _cdt = TimeZoneInfo.ConvertTime(dateTime, TimeZoneInfo.FindSystemTimeZoneById(timeZone));
-        return $"{_cdt.ToString("d", GlobalStaticConstants.RU)} {_cdt.ToString("t", GlobalStaticConstants.RU)}";
+        return $"{_cdt.ToString("d", GlobalStaticConstants.RU)} {_cdt.ToString("T", GlobalStaticConstants.RU)}";
     }
 
 

@@ -1,19 +1,20 @@
 ﻿@using static BlazorLib.Extensions
-<h3>Snacks history</h3>
 
-<MudTable Items="Elements" Dense Hover Bordered Striped Filter="new Func<ToastShowClientModel, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+<MudTable Items="Elements" Dense Hover Bordered Striped Filter="new Func<ToastViewClientModel, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Toast`s</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
+        <MudTh>d/t</MudTh>
         <MudTh>Title</MudTh>
         <MudTh>Type</MudTh>
         <MudTh>Text</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="d/t">            @context.HeadTitle        </MudTd>
+        <MudTd DataLabel="d/t">@context.DateTimeRecord.GetHumanDateTime()</MudTd>
+        <MudTd DataLabel="Title">@context.HeadTitle</MudTd>
         <MudTd DataLabel="Type">@context.TypeMessage</MudTd>
         <MudTd DataLabel="Text">@context.MessageText</MudTd>
     </RowTemplate>
@@ -29,10 +30,10 @@
     public ISnackbar SnackBarRepo { get; set; } = default!;
 
     private string searchString1 = "";
-    private ToastShowClientModel? selectedItem1 = null;
-    private HashSet<ToastShowClientModel> selectedItems = new HashSet<ToastShowClientModel>();
+    private ToastViewClientModel? selectedItem1 = null;
+    private HashSet<ToastViewClientModel> selectedItems = new HashSet<ToastViewClientModel>();
 
-    private IEnumerable<ToastShowClientModel> Elements = [];
+    private IEnumerable<ToastViewClientModel> Elements = [];
 
     /// <inheritdoc/>
     protected override void OnInitialized()
@@ -40,7 +41,7 @@
         Elements = SnackBarRepo.GetHistoryToasts();
     }
 
-    private bool FilterFunc1(ToastShowClientModel element) => FilterFunc(element, searchString1);
+    private bool FilterFunc1(ToastViewClientModel element) => FilterFunc(element, searchString1);
 
     private bool FilterFunc(ToastShowClientModel element, string searchString)
     {
