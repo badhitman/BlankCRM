@@ -36,6 +36,7 @@ public class StockSharpAboutComponent : BlazorBusyComponentBaseModel
             AboutConnection.Update(await DriverRepo.AboutConnection());
 
         await SetBusyAsync(false);
+        SnackbarRepo.ShowMessagesResponse(AboutConnection.Messages);
     }
 
     /// <inheritdoc/>

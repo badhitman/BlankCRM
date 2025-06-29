@@ -37,5 +37,7 @@ public partial class PortfolioStockSharpViewModel : PortfolioStockSharpModel
         IsFavorite = model.IsFavorite;
         ClientCode = model.ClientCode;
         LastUpdatedAtUTC = model.LastUpdatedAtUTC;
+        CurrentValue = model.CurrentValue;
+        BeginValue = model.BeginValue;
     }
 }
