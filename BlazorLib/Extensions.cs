@@ -2,12 +2,12 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.AspNetCore.Components;
 using System.Security.Claims;
 using SharedLib;
 using MudBlazor;
-using System.ComponentModel.DataAnnotations;
 
 namespace BlazorLib;
 
@@ -16,7 +16,8 @@ namespace BlazorLib;
 /// </summary>
 public static class Extensions
 {
-    static List<ResultMessage> MessagesHistory { get; set; } = [];
+    static List<MessageViewModel> MessagesHistory { get; set; } = [];
+    static List<ToastShowClientModel> ToastsHistory { get; set; } = [];
 
     /// <summary>
     /// Получить данные по текущему пользователю
@@ -53,10 +54,28 @@ public static class Extensions
         };
     }
 
+    /// <inheritdoc/>
+    public static List<ToastShowClientModel> GetHistoryToasts(this ISnackbar SnackBarRepo)
+    {
+        lock (MessagesHistory)
+        {
+            return [.. ToastsHistory.Select(x => x)];
+        }
+    }
+
+    /// <inheritdoc/>
+    public static void SaveToast(this ISnackbar SnackbarRepo, ToastShowClientModel tst)
+    {
+        lock (ToastsHistory)
+        {
+            ToastsHistory.Add(tst);
+        }
+    }
+
     /// <summary>
     /// GetHistoryMessages
     /// </summary>
-    public static List<ResultMessage> GetHistoryMessages(this ISnackbar SnackbarRepo)
+    public static List<MessageViewModel> GetHistoryMessages(this ISnackbar SnackbarRepo)
     {
         lock (MessagesHistory)
         {
@@ -65,7 +84,7 @@ public static class Extensions
     }
 
     /// <inheritdoc/>
-    public static void ShowMessagesResponse(this ISnackbar SnackbarRepo, IEnumerable<ResultMessage> messages)
+    public static void ShowMessagesResponse(this ISnackbar SnackBarRepo, IEnumerable<ResultMessage> messages)
     {
         if (!messages.Any())
             return;
@@ -83,8 +102,14 @@ public static class Extensions
                     MessagesTypesEnum.Error => Severity.Error,
                     _ => Severity.Normal
                 };
-                SnackbarRepo.Add(m.Text, _style, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
-                MessagesHistory.Add(m);
+                SnackBarRepo.Add(m.Text, _style, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+
+                int _ix = MessagesHistory.Count - 1;
+                if (_ix == -1 || !MessagesHistory[_ix].Message.Equals(m))
+                    MessagesHistory.Add(new(m, [DateTime.UtcNow]));
+                else
+                    MessagesHistory[_ix].Points.Add(DateTime.UtcNow);
+
                 while (MessagesHistory.Count > 110)
                     MessagesHistory.RemoveAt(0);
             }
@@ -96,8 +121,14 @@ public static class Extensions
     {
         lock (MessagesHistory)
         {
-            MessagesHistory.Add(new() { TypeMessage = MessagesTypesEnum.Error, Text = message });
             SnackbarRepo.Add(message, Severity.Error, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+
+            int _ix = MessagesHistory.Count - 1;
+            if (_ix == -1 || MessagesHistory[_ix].Message.TypeMessage != MessagesTypesEnum.Error && MessagesHistory[_ix].Message.Text != message)
+                MessagesHistory.Add(new(new() { TypeMessage = MessagesTypesEnum.Error, Text = message }, [DateTime.UtcNow]));
+            else
+                MessagesHistory[_ix].Points.Add(DateTime.UtcNow);
+
             while (MessagesHistory.Count > 110)
                 MessagesHistory.RemoveAt(0);
         }
@@ -110,8 +141,13 @@ public static class Extensions
         {
             ValidationResults.ForEach(x =>
             {
-                MessagesHistory.Add(new() { TypeMessage = MessagesTypesEnum.Error, Text = x.ErrorMessage ?? "-error-" });
                 SnackbarRepo.Error(x.ErrorMessage ?? "-error-");
+
+                int _ix = MessagesHistory.Count - 1;
+                if (_ix == -1 || MessagesHistory[_ix].Message.TypeMessage != MessagesTypesEnum.Error || MessagesHistory[_ix].Message.Text != x.ErrorMessage)
+                    MessagesHistory.Add(new(new() { TypeMessage = MessagesTypesEnum.Error, Text = x.ErrorMessage }, [DateTime.UtcNow]));
+                else
+                    MessagesHistory[_ix].Points.Add(DateTime.UtcNow);
             });
         }
     }
@@ -121,8 +157,14 @@ public static class Extensions
     {
         lock (MessagesHistory)
         {
-            MessagesHistory.Add(new() { TypeMessage = MessagesTypesEnum.Info, Text = message });
             SnackbarRepo.Add(message, Severity.Info, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+
+            int _ix = MessagesHistory.Count - 1;
+            if (_ix == -1 || MessagesHistory[_ix].Message.TypeMessage != MessagesTypesEnum.Info || MessagesHistory[_ix].Message.Text != message)
+                MessagesHistory.Add(new(new() { Text = message, TypeMessage = MessagesTypesEnum.Info }, [DateTime.UtcNow]));
+            else
+                MessagesHistory[_ix].Points.Add(DateTime.UtcNow);
+
             while (MessagesHistory.Count > 110)
                 MessagesHistory.RemoveAt(0);
         }
@@ -133,8 +175,14 @@ public static class Extensions
     {
         lock (MessagesHistory)
         {
-            MessagesHistory.Add(new() { TypeMessage = MessagesTypesEnum.Warning, Text = message });
             SnackbarRepo.Add(message, Severity.Warning, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+
+            int _ix = MessagesHistory.Count - 1;
+            if (_ix == -1 || MessagesHistory[_ix].Message.TypeMessage != MessagesTypesEnum.Warning || MessagesHistory[_ix].Message.Text != message)
+                MessagesHistory.Add(new(new() { TypeMessage = MessagesTypesEnum.Warning, Text = message }, [DateTime.UtcNow]));
+            else
+                MessagesHistory[_ix].Points.Add(DateTime.UtcNow);
+
             while (MessagesHistory.Count > 110)
                 MessagesHistory.RemoveAt(0);
         }
@@ -145,8 +193,14 @@ public static class Extensions
     {
         lock (MessagesHistory)
         {
-            MessagesHistory.Add(new() { TypeMessage = MessagesTypesEnum.Success, Text = message });
             SnackbarRepo.Add(message, Severity.Success, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+
+            int _ix = MessagesHistory.Count - 1;
+            if (_ix == -1 || MessagesHistory[_ix].Message.TypeMessage != MessagesTypesEnum.Success || MessagesHistory[_ix].Message.Text != message)
+                MessagesHistory.Add(new(new() { TypeMessage = MessagesTypesEnum.Success, Text = message }, [DateTime.UtcNow]));
+            else
+                MessagesHistory[_ix].Points.Add(DateTime.UtcNow);
+
             while (MessagesHistory.Count > 110)
                 MessagesHistory.RemoveAt(0);
         }
@@ -201,5 +255,21 @@ public static class Extensions
 
         value = default;
         return false;
+    }
+
+    /// <summary>
+    /// MessageViewModel
+    /// </summary>
+    public class MessageViewModel(ResultMessage msg, List<DateTime> points)
+    {
+        /// <summary>
+        /// Message
+        /// </summary>
+        public ResultMessage Message { get; set; } = msg;
+
+        /// <summary>
+        /// Points
+        /// </summary>
+        public List<DateTime> Points { get; set; } = points;
     }
 }

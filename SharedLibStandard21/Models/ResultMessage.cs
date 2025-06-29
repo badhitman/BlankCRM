@@ -19,6 +19,18 @@ public class ResultMessage
     /// </summary>
     public string Text { get; set; } = string.Empty;
 
+    /// <inheritdoc/>
+    public override bool Equals(object obj)
+    {
+        if (obj is null)
+            return false;
+
+        if (obj is ResultMessage other)
+            return other.TypeMessage == TypeMessage && other.Text == Text;
+
+        return false;
+    }
+
     /// <inheritdoc/>        
     public override string ToString() => $"({TypeMessage}) {Text}";
 }

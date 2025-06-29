@@ -1,0 +1,49 @@
+﻿@using static BlazorLib.Extensions
+<h3>Snacks history</h3>
+
+<MudTable Items="Elements" Dense Hover Bordered Striped Filter="new Func<ToastShowClientModel, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Toast`s</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Title</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Text</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="d/t">            @context.HeadTitle        </MudTd>
+        <MudTd DataLabel="Type">@context.TypeMessage</MudTd>
+        <MudTd DataLabel="Text">@context.MessageText</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+@code {
+    /// <summary>
+    /// SnackBar
+    /// </summary>
+    [Inject]
+    public ISnackbar SnackBarRepo { get; set; } = default!;
+
+    private string searchString1 = "";
+    private ToastShowClientModel? selectedItem1 = null;
+    private HashSet<ToastShowClientModel> selectedItems = new HashSet<ToastShowClientModel>();
+
+    private IEnumerable<ToastShowClientModel> Elements = [];
+
+    /// <inheritdoc/>
+    protected override void OnInitialized()
+    {
+        Elements = SnackBarRepo.GetHistoryToasts();
+    }
+
+    private bool FilterFunc1(ToastShowClientModel element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(ToastShowClientModel element, string searchString)
+    {
+        return element.MessageText?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true || element.HeadTitle?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true;
+    }
+}
