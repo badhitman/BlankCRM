@@ -1,5 +1,5 @@
-﻿@using BlazorLib.Components.Shared
-@using Microsoft.AspNetCore.Components.Web
+﻿@using Microsoft.AspNetCore.Components.Web
+@using BlazorLib.Components.Shared
 @using SharedLib
 
 @inherits BlazorBusyComponentBaseModel
@@ -79,7 +79,6 @@
         {
             <MudTh>App</MudTh>
         }
-
         <MudTh>Message</MudTh>
         <MudTh>Level</MudTh>
         @if (StackTrace)
@@ -127,7 +126,6 @@
                 }
             </MudTd>
         }
-
         <MudTd DataLabel="Message" Class="@_classLevel">@context.RecordMessage</MudTd>
         <MudTd DataLabel="Level" Class="@_classLevel">@context.RecordLevel</MudTd>
 
