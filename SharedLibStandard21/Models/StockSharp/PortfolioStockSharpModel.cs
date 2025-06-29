@@ -32,6 +32,12 @@ public partial class PortfolioStockSharpModel : IEquatable<PortfolioStockSharpMo
     public string DepoName { get; set; }
 
     /// <inheritdoc/>
+    public decimal? BeginValue { get; set; }
+
+    /// <inheritdoc/>
+    public decimal? CurrentValue { get; set; }
+
+    /// <inheritdoc/>
     public override string ToString()
     {
         return $"{Name} /{Currency}{(Board is null ? null : $"[{Board}]")}";
@@ -62,6 +68,8 @@ public partial class PortfolioStockSharpModel : IEquatable<PortfolioStockSharpMo
                 other.State == State &&
                 other.ClientCode == ClientCode &&
                 other.Name == Name &&
+                other.BeginValue == BeginValue &&
+                other.CurrentValue == CurrentValue &&
                 other.DepoName == DepoName;
     }
 }
