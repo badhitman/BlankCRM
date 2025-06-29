@@ -75,7 +75,11 @@
     <HeaderContent>
         <MudTh></MudTh>
         <MudTh><MudTableSortLabel SortLabel="RecordTime" T="NLogRecordModelDB">RecordTime</MudTableSortLabel></MudTh>
-        <MudTh>App</MudTh>
+        @if (!HideAppColumn)
+        {
+            <MudTh>App</MudTh>
+        }
+
         <MudTh>Message</MudTh>
         <MudTh>Level</MudTh>
         @if (StackTrace)
@@ -113,13 +117,17 @@
                            OnClick="() => SelectRow(context)" />
         </MudTd>
         <MudTd DataLabel="RecordTime" Class="@_classLevel">@context.RecordTime</MudTd>
-        <MudTd DataLabel="App" Class="@_classLevel">
-            @context.ApplicationName
-            @if (!string.IsNullOrWhiteSpace(context.ContextPrefix) && context.ApplicationName != context.ContextPrefix)
-            {
-                <sup class="ms-1">@context.ContextPrefix</sup>
-            }
-        </MudTd>
+        @if (!HideAppColumn)
+        {
+            <MudTd DataLabel="App" Class="@_classLevel">
+                @context.ApplicationName
+                @if (!string.IsNullOrWhiteSpace(context.ContextPrefix) && context.ApplicationName != context.ContextPrefix)
+                {
+                    <sup class="ms-1">@context.ContextPrefix</sup>
+                }
+            </MudTd>
+        }
+
         <MudTd DataLabel="Message" Class="@_classLevel">@context.RecordMessage</MudTd>
         <MudTd DataLabel="Level" Class="@_classLevel">@context.RecordLevel</MudTd>
 

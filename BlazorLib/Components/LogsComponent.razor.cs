@@ -24,6 +24,12 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
     public bool HidePanels { get; set; }
 
     /// <summary>
+    /// HideAppColumn
+    /// </summary>
+    [Parameter]
+    public bool HideAppColumn { get; set; }
+
+    /// <summary>
     /// ApplicationsFilterSet
     /// </summary>
     [Parameter]
