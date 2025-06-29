@@ -32,7 +32,7 @@ public partial class DaichiManageComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         ResponseBaseModel res = await daichiRepo.DownloadAndSaveAsync();
-        SnackbarRepo.Info("Задание отправлено в очередь");
+        SnackBarRepo.Info("Задание отправлено в очередь");
         await Task.Delay(5000);
         HealthCheck = await daichiRepo.HealthCheckAsync();
         await SetBusyAsync(false);

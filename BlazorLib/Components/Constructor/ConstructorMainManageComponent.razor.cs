@@ -47,7 +47,7 @@ public partial class ConstructorMainManageComponent : BlazorBusyComponentBaseAut
         TResponseModel<MainProjectViewModel> currentMainProject = await ConstructorRepo.GetCurrentMainProjectAsync(CurrentUserSession!.UserId);
 
         if (!currentMainProject.Success())
-            SnackbarRepo.ShowMessagesResponse(currentMainProject.Messages);
+            SnackBarRepo.ShowMessagesResponse(currentMainProject.Messages);
 
         MainProject = currentMainProject.Response;
         CanEditProject = MainProject is not null && (!MainProject.IsDisabled || MainProject.OwnerUserId.Equals(CurrentUserSession!.UserId) || CurrentUserSession!.IsAdmin);

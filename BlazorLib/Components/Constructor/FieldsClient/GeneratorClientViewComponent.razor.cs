@@ -58,14 +58,14 @@ public partial class GeneratorClientViewComponent : FieldComponentBaseModel
         _gen = DeclarationAbstraction.GetHandlerService(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Descriptor, "")!.ToString()!) as FieldValueGeneratorAbstraction;
         if (_gen is null)
         {
-            SnackbarRepo.Error($"Параметры поля-генератора имеют не корректный формат. Не найден генератор.\n\n{Field.MetadataValueType}");
+            SnackBarRepo.Error($"Параметры поля-генератора имеют не корректный формат. Не найден генератор.\n\n{Field.MetadataValueType}");
             return;
         }
 
         if (SessionDocument is not null)
         {
             TResponseModel<string[]> res_elements = _gen.GetListElements(Field, SessionDocument, PageJoinForm, GroupByRowNum);
-            SnackbarRepo.ShowMessagesResponse(res_elements.Messages);
+            SnackBarRepo.ShowMessagesResponse(res_elements.Messages);
             if (res_elements.Success() && res_elements.Response is not null)
                 Elements = res_elements.Response;
         }

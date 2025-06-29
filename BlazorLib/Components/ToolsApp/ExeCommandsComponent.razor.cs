@@ -43,7 +43,7 @@ public partial class ExeCommandsComponent : BlazorBusyComponentBaseModel
         //await ParentPage.HoldPageUpdate(true);
         await SetBusyAsync();
         ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateExeCommandAsync(newCommand);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         
         if(res.Success())
             newCommand = ExeCommandModelDB.BuildEmpty(ApiConnect.Id);

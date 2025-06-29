@@ -54,15 +54,15 @@ public partial class TabsOfDocumentViewComponent : BlazorBusyComponentBaseModel
             TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetTabOfDocumentSchemeAsync(TabOfDocumentScheme.Id);
             IsBusyProgress = false;
 
-            SnackbarRepo.ShowMessagesResponse(rest.Messages);
+            SnackBarRepo.ShowMessagesResponse(rest.Messages);
             if (!rest.Success())
             {
-                SnackbarRepo.Error($"Ошибка 16188CA3-EC20-4743-A31C-DA497CABDEB5 Action: {rest.Message()}");
+                SnackBarRepo.Error($"Ошибка 16188CA3-EC20-4743-A31C-DA497CABDEB5 Action: {rest.Message()}");
                 return;
             }
             if (rest.Response is null)
             {
-                SnackbarRepo.Error($"Ошибка E7427B3A-68CB-4560-B2E0-4AF69F2EDA72 [rest.Content.DocumentPage is null]");
+                SnackBarRepo.Error($"Ошибка E7427B3A-68CB-4560-B2E0-4AF69F2EDA72 [rest.Content.DocumentPage is null]");
                 return;
             }
             TabOfDocumentScheme = rest.Response;
@@ -98,12 +98,12 @@ public partial class TabsOfDocumentViewComponent : BlazorBusyComponentBaseModel
     {
         if (TabOfDocumentScheme.JoinsForms is null)
         {
-            SnackbarRepo.Info($"Дозагрузка `{nameof(TabOfDocumentScheme.JoinsForms)}` в `{nameof(TabOfDocumentScheme)} ['{TabOfDocumentScheme.Name}' #{TabOfDocumentScheme.Id}]`");
+            SnackBarRepo.Info($"Дозагрузка `{nameof(TabOfDocumentScheme.JoinsForms)}` в `{nameof(TabOfDocumentScheme)} ['{TabOfDocumentScheme.Name}' #{TabOfDocumentScheme.Id}]`");
             await SetBusyAsync();
             TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetTabOfDocumentSchemeAsync(TabOfDocumentScheme.Id);
             IsBusyProgress = false;
 
-            SnackbarRepo.ShowMessagesResponse(rest.Messages);
+            SnackBarRepo.ShowMessagesResponse(rest.Messages);
             TabOfDocumentScheme.JoinsForms = rest.Response?.JoinsForms;
         }
     }

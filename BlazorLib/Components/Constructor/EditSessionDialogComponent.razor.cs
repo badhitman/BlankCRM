@@ -43,7 +43,7 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
     protected async Task ClipboardCopyHandle()
     {
         await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", UrlSession);
-        SnackbarRepo.Info($"Ссылка {Session.SessionToken} скопирована в буфер обмена");
+        SnackBarRepo.Info($"Ссылка {Session.SessionToken} скопирована в буфер обмена");
     }
 
     /// <inheritdoc/>
@@ -51,7 +51,7 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
     {
         session_origin.SessionToken = null;
         await SaveForm();
-        SnackbarRepo.Info($"Ссылка аннулирована");
+        SnackBarRepo.Info($"Ссылка аннулирована");
     }
 
     /// <inheritdoc/>
@@ -59,7 +59,7 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
     {
         session_origin.SessionToken = Guid.Empty.ToString();
         await SaveForm();
-        SnackbarRepo.Info($"Ссылка перевыпущена");
+        SnackBarRepo.Info($"Ссылка перевыпущена");
     }
 
     /// <inheritdoc/>
@@ -108,16 +108,16 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.UpdateOrCreateSessionDocumentAsync(session_origin);
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Error($"Ошибка 0D394723-0AEC-4CF0-9005-32CB3C39F17C Action: {rest.Message()}");
+            SnackBarRepo.Error($"Ошибка 0D394723-0AEC-4CF0-9005-32CB3C39F17C Action: {rest.Message()}");
             return;
         }
 
         if (rest.Response is null)
         {
-            SnackbarRepo.Error($"Ошибка C4F58BEC-547A-4F61-9D40-D9B6F8FC051D rest.Content.Form is null");
+            SnackBarRepo.Error($"Ошибка C4F58BEC-547A-4F61-9D40-D9B6F8FC051D rest.Content.Form is null");
             return;
         }
 

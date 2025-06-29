@@ -63,7 +63,7 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync();
         TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.FormUpdateOrCreateAsync(new() { Payload = FormEditObject, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
@@ -72,7 +72,7 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
         }
         if (rest.Response is null)
         {
-            SnackbarRepo.Error($"Ошибка B64393D8-9C60-4A84-9790-15EFA6A74ABB rest content form is null");
+            SnackBarRepo.Error($"Ошибка B64393D8-9C60-4A84-9790-15EFA6A74ABB rest content form is null");
             return;
         }
 

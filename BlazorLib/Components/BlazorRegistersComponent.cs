@@ -62,7 +62,7 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
         await SetBusyAsync(false);
 
         if (offersRegisters.TotalRowsCount > offersRegisters.PageSize)
-            SnackbarRepo.Error($"Записей больше: {offersRegisters.TotalRowsCount}");
+            SnackBarRepo.Error($"Записей больше: {offersRegisters.TotalRowsCount}");
 
         if (offersRegisters.Response is not null && offersRegisters.Response.Count != 0)
         {

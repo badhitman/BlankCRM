@@ -85,7 +85,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
                 else
                 {
                     string msg = "ошибка CDAD94BA-51E8-49F4-9B15-6901494B8EE4";
-                    SnackbarRepo.Error(msg);
+                    SnackBarRepo.Error(msg);
                     _type_name = msg;
                 }
             }
@@ -122,7 +122,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
                         if (lost_fields.Length != 0)
                         {
                             string msg = $"Некоторых полей нет в форме: {string.Join("; ", lost_fields)};";
-                            SnackbarRepo.Error(msg);
+                            SnackBarRepo.Error(msg);
                             _information_field = $"{_information_field} <span class='font-monospace text-danger'>{msg}</span>";
                         }
                     }
@@ -132,7 +132,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
                 else
                 {
                     string msg = "ошибка 640D6DCE-0027-425E-81D1-00C16A2D5FCB";
-                    SnackbarRepo.Error(msg);
+                    SnackBarRepo.Error(msg);
                     _information_field = msg;
                     return (MarkupString)_information_field;
                 }
@@ -152,7 +152,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             else if (Field is FieldFormAkaDirectoryConstructorModelDB df)
                 return df.SortIndex < (Form.Fields?.Count + Form.FieldsDirectoriesLinks?.Count);
             else
-                SnackbarRepo.Error("ошибка C0688447-05EE-4982-B9E0-D48C7DA89C3F");
+                SnackBarRepo.Error("ошибка C0688447-05EE-4982-B9E0-D48C7DA89C3F");
 
             return false;
         }
@@ -168,7 +168,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             else if (Field is FieldFormAkaDirectoryConstructorModelDB df)
                 return df.SortIndex > 1;
             else
-                SnackbarRepo.Error("ошибка EAAC696C-1CDE-41C3-8009-8F8FD4CC2D8E");
+                SnackBarRepo.Error("ошибка EAAC696C-1CDE-41C3-8009-8F8FD4CC2D8E");
 
             return false;
         }
@@ -190,7 +190,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
                     return false;
             }
             else
-                SnackbarRepo.Error($"`{_field_master.GetType().Name}`. ошибка 418856D6-DBCA-4AC3-9322-9C86D6EF115B");
+                SnackBarRepo.Error($"`{_field_master.GetType().Name}`. ошибка 418856D6-DBCA-4AC3-9322-9C86D6EF115B");
 
             return true;
         }
@@ -223,7 +223,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         ResponseBaseModel rest = await ConstructorRepo.ClearValuesForFieldNameAsync(new() { FormId = Form.Id, FieldName = Field.Name, SessionId = session_id });
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
             return;
 
@@ -237,7 +237,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     {
         _elements = elements;
         if (_elements.Length == 0)
-            SnackbarRepo.Info("Ссылок нет");
+            SnackBarRepo.Info("Ссылок нет");
 
         StateHasChanged();
     }
@@ -269,7 +269,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
                         if (string.IsNullOrWhiteSpace(parameter))
                         {
                             IsBusyProgress = false;
-                            SnackbarRepo.Error("Укажите маску. Выбран режим [Маска], но сама маска не установлена.");
+                            SnackBarRepo.Error("Укажите маску. Выбран режим [Маска], но сама маска не установлена.");
                             return;
                         }
                         break;
@@ -319,13 +319,13 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         }
         else
         {
-            SnackbarRepo.Error("Ошибка 9ACCA3B7-52ED-4687-BEC2-C16AC6A2C3C0");
+            SnackBarRepo.Error("Ошибка 9ACCA3B7-52ED-4687-BEC2-C16AC6A2C3C0");
             IsBusyProgress = false;
             return;
         }
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
@@ -348,16 +348,16 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(Field.OwnerId);
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Error($"Ошибка CD1DAE53-0199-40BE-9EF2-4A3347BAF5E9 Action: {rest.Message()}");
+            SnackBarRepo.Error($"Ошибка CD1DAE53-0199-40BE-9EF2-4A3347BAF5E9 Action: {rest.Message()}");
             return;
         }
 
         if (rest.Response?.Fields is null || rest.Response?.FieldsDirectoriesLinks is null)
         {
-            SnackbarRepo.Error($"Ошибка DA9D4B08-EBB7-47C3-BA72-F3BB81E1A7E3 rest.Content.Form?.Fields is null || rest.Content.Form?.FormsDirectoriesLinks is null");
+            SnackBarRepo.Error($"Ошибка DA9D4B08-EBB7-47C3-BA72-F3BB81E1A7E3 rest.Content.Form?.Fields is null || rest.Content.Form?.FormsDirectoriesLinks is null");
             return;
         }
 
@@ -405,7 +405,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         }
         else
         {
-            SnackbarRepo.Error($"{_field_master.GetType().FullName}. ошибка C5CB2F55-D973-405F-B92E-144C1ABE2591");
+            SnackBarRepo.Error($"{_field_master.GetType().FullName}. ошибка C5CB2F55-D973-405F-B92E-144C1ABE2591");
             IsBusyProgress = false;
             return;
         }
@@ -440,13 +440,13 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             rest = await ConstructorRepo.FormFieldDirectoryDeleteAsync(new() { Payload = df.Id, SenderActionUserId = CurrentUserSession!.UserId });
         else
         {
-            SnackbarRepo.Error($"{_field_master.GetType().FullName}. ошибка 1BCDEFB4-55F5-4A5A-BA61-3EAD2E9063D2");
+            SnackBarRepo.Error($"{_field_master.GetType().FullName}. ошибка 1BCDEFB4-55F5-4A5A-BA61-3EAD2E9063D2");
             IsBusyProgress = false;
             return;
         }
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         if (!rest.Success())
         {
@@ -492,7 +492,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
                 IsMultiSelect = df.IsMultiSelect,
             };
         else
-            SnackbarRepo.Error("error 81F06C12-3641-473B-A2DA-9EFC853A0709");
+            SnackBarRepo.Error("error 81F06C12-3641-473B-A2DA-9EFC853A0709");
 
         _type_name = null;
         _information_field = null;
@@ -513,13 +513,13 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             rest = await ConstructorRepo.FieldDirectoryFormMoveAsync(new() { Payload = new() { Id = df.Id, Direct = DirectionsEnum.Up }, SenderActionUserId = CurrentUserSession!.UserId });
         else
         {
-            SnackbarRepo.Error("ошибка 591195A4-959D-4CDD-9410-F8984F790CBE");
+            SnackBarRepo.Error("ошибка 591195A4-959D-4CDD-9410-F8984F790CBE");
             IsBusyProgress = false;
             return;
         }
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         if (!rest.Success())
         {
@@ -530,7 +530,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
 
         if (rest.Response is null)
         {
-            SnackbarRepo.Error($"Ошибка AA01EFE2-DF81-4CDC-8CAB-D2CAC6B34912 rest.Content.Form is null");
+            SnackBarRepo.Error($"Ошибка AA01EFE2-DF81-4CDC-8CAB-D2CAC6B34912 rest.Content.Form is null");
             return;
         }
         Form.Reload(rest.Response);
@@ -550,13 +550,13 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             rest = await ConstructorRepo.FieldDirectoryFormMoveAsync(new() { Payload = new() { Id = df.Id, Direct = DirectionsEnum.Down }, SenderActionUserId = CurrentUserSession!.UserId });
         else
         {
-            SnackbarRepo.Error("ошибка 8768E090-BE63-4FE4-A693-7E24ED1A1876");
+            SnackBarRepo.Error("ошибка 8768E090-BE63-4FE4-A693-7E24ED1A1876");
             IsBusyProgress = false;
             return;
         }
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         if (!rest.Success())
         {
@@ -567,7 +567,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
 
         if (rest.Response is null)
         {
-            SnackbarRepo.Error($"Ошибка 04BD92F1-0B55-46C5-93B3-4DACB7374565 rest.Content.Form is null");
+            SnackBarRepo.Error($"Ошибка 04BD92F1-0B55-46C5-93B3-4DACB7374565 rest.Content.Form is null");
             return;
         }
         Form.Reload(rest.Response);

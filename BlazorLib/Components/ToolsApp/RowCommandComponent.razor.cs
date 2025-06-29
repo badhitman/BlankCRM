@@ -47,7 +47,7 @@ public partial class RowCommandComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         TResponseModel<string> res = await ToolsExtRepo.ExeCommandAsync(CurrentCommand);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         DialogParameters<ResultExeCommandComponent> parameters = new()
         {
@@ -74,7 +74,7 @@ public partial class RowCommandComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateExeCommandAsync(CurrentCommand);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         OriginCommand = GlobalTools.CreateDeepCopy(CurrentCommand)!;
         await SetBusyAsync(false);
         ReloadCommandsHandle();
@@ -85,7 +85,7 @@ public partial class RowCommandComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         ResponseBaseModel res = await AppManagerRepo.DeleteExeCommandAsync(CurrentCommand.Id);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         ReloadCommandsHandle();
     }

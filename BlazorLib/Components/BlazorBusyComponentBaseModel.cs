@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
 
 #if DEBUG
 
@@ -18,14 +17,11 @@ namespace BlazorLib;
 /// </summary>
 public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
 {
-    [Inject]
-    ILogger<BlazorBusyComponentBaseModel> Logger { get; set; } = default!;
-
     /// <summary>
     /// Snackbar
     /// </summary>
     [Inject]
-    public ISnackbar SnackbarRepo { get; set; } = default!;
+    public ISnackbar SnackBarRepo { get; set; } = default!;
 
 
     bool _isBusyProgress;

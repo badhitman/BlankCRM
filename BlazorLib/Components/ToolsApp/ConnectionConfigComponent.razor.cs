@@ -131,7 +131,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
             ApiConnect.Update(backupConf);
 
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(GetMe.Messages);
+        SnackBarRepo.ShowMessagesResponse(GetMe.Messages);
 
         if (!testForm && ExpFormRef is not null && GetMe.Success())
             await ExpFormRef.CollapseAsync();
@@ -151,7 +151,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
         };
         await SetBusyAsync();
         TResponseModel<int> res = await AppManagerRepo.UpdateOrCreateConfigAsync(req);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         if (res.Success())
             SetActiveHandler(req.Id > 0 ? req.Id : res.Response);

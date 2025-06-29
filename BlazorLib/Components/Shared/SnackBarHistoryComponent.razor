@@ -1,5 +1,46 @@
-﻿<h3>SnackBarHistoryComponent</h3>
+﻿<h3>Snacks history</h3>
 
+<MudTable Items="Elements" Dense Hover Bordered Striped Filter="new Func<ResultMessage, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Messages</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Type</MudTh>
+        <MudTh>Text</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.TypeMessage</MudTd>
+        <MudTd DataLabel="Sign">@context.Text</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 @code {
+    /// <summary>
+    /// SnackBar
+    /// </summary>
+    [Inject]
+    public ISnackbar SnackBarRepo { get; set; } = default!;
 
+    private string searchString1 = "";
+    private ResultMessage? selectedItem1 = null;
+    private HashSet<ResultMessage> selectedItems = new HashSet<ResultMessage>();
+
+    private IEnumerable<ResultMessage> Elements = new List<ResultMessage>();
+
+    /// <inheritdoc/>
+    protected override void OnInitialized()
+    {
+        Elements = SnackBarRepo.GetHistoryMessages();
+    }
+
+    private bool FilterFunc1(ResultMessage element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(ResultMessage element, string searchString)
+    {
+        return true;
+    }
 }

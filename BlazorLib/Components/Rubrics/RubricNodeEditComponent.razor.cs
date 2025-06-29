@@ -65,7 +65,7 @@ public partial class RubricNodeEditComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         ResponseBaseModel res = await RubricsRepo.RubricMoveAsync(new() { Payload = new() { Direction = dir, ObjectId = rubric.Value!.Id, ContextName = ContextName } });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         ReloadNodeHandle(ItemModel.ParentId ?? 0);
     }
 
@@ -92,7 +92,7 @@ public partial class RubricNodeEditComponent : BlazorBusyComponentBaseModel
             IsDisabled = ItemModel.IsDisabled,
         });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         ItemUpdateHandle(ItemModel);
     }
 

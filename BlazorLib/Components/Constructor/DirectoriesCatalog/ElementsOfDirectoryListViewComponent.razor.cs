@@ -43,7 +43,7 @@ public partial class ElementsOfDirectoryListViewComponent : BlazorBusyComponentB
         IsBusyProgress = false;
 
         if (!rest.Success())
-            SnackbarRepo.ShowMessagesResponse(rest.Messages);
+            SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         EntriesElements = rest.Response;
 

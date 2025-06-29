@@ -87,7 +87,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
 
         if (rest.Response is null)
         {
-            SnackbarRepo.Error($"rest.Content.Sessions is null. error B1F8BCC4-952B-4C5E-B573-6FA5AD7F3A8A");
+            SnackBarRepo.Error($"rest.Content.Sessions is null. error B1F8BCC4-952B-4C5E-B573-6FA5AD7F3A8A");
             return new TableData<SessionOfDocumentDataModelDB>() { TotalItems = totalItems, Items = sessions };
         }
 
@@ -104,10 +104,10 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = session.Id, IncludeExtra = false });
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Error($"Ошибка E42D6754-5044-4D2E-BB8B-549CA385CCC2 Action: {rest.Message()}");
+            SnackBarRepo.Error($"Ошибка E42D6754-5044-4D2E-BB8B-549CA385CCC2 Action: {rest.Message()}");
             return;
         }
         StateHasChanged();
@@ -129,7 +129,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         ResponseBaseModel rest = await ConstructorRepo.DeleteSessionDocumentAsync(session_id);
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
             return;
 
@@ -157,7 +157,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     {
         if (string.IsNullOrWhiteSpace(NameSessionForCreate))
         {
-            SnackbarRepo.Error("Укажите имя ссылки");
+            SnackBarRepo.Error("Укажите имя ссылки");
             return;
         }
 
@@ -176,13 +176,13 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.UpdateOrCreateSessionDocumentAsync(req);
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
             return;
 
         if (rest.Response is null)
         {
-            SnackbarRepo.Error($"rest.Content.SessionDocument is null. error 9B2E03C0-0434-4F1A-B4E9-7020575DBDDF");
+            SnackBarRepo.Error($"rest.Content.SessionDocument is null. error 9B2E03C0-0434-4F1A-B4E9-7020575DBDDF");
             return;
         }
 
@@ -211,7 +211,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
 
         if (rest.Response is null)
         {
-            SnackbarRepo.Error($"rest.Content.Documents is null. error 0A875193-08AA-4678-824D-213BCE33080F");
+            SnackBarRepo.Error($"rest.Content.Documents is null. error 0A875193-08AA-4678-824D-213BCE33080F");
             return;
         }
 

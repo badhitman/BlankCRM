@@ -35,7 +35,7 @@ public partial class DoneClientViewComponent : BlazorBusyComponentBaseModel
     {
         if (string.IsNullOrWhiteSpace(SessionDocument.SessionToken))
         {
-            SnackbarRepo.Error("string.IsNullOrWhiteSpace(SessionDocument.SessionToken). error 5E2D7979-53E7-4130-8DF2-53C00D378BEA");
+            SnackBarRepo.Error("string.IsNullOrWhiteSpace(SessionDocument.SessionToken). error 5E2D7979-53E7-4130-8DF2-53C00D378BEA");
             return;
         }
 
@@ -49,7 +49,7 @@ public partial class DoneClientViewComponent : BlazorBusyComponentBaseModel
         ResponseBaseModel rest = await ConstructorRepo.SetDoneSessionDocumentDataAsync(SessionDocument.SessionToken);
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Success())
             SessionDocument.SessionStatus = SessionsStatusesEnum.Sended;
     }

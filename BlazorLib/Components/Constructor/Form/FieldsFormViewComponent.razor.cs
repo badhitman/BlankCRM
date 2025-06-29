@@ -52,14 +52,14 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
                 StateHasChanged();
                 rest = await ConstructorRepo.GetFormAsync(Form.Id);
                 IsBusyProgress = false;
-                SnackbarRepo.ShowMessagesResponse(rest.Messages);
+                SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
                 if (rest.Response is null)
-                    SnackbarRepo.Error($"Ошибка 129E30BB-F331-4EA1-961C-33F52E13443F rest.Content.Form is null");
+                    SnackBarRepo.Error($"Ошибка 129E30BB-F331-4EA1-961C-33F52E13443F rest.Content.Form is null");
 
                 if (!rest.Success())
                 {
-                    SnackbarRepo.Error($"Ошибка 32E7BE10-7C10-4FC0-80A0-23CF9D176278 Action: {rest.Message()}");
+                    SnackBarRepo.Error($"Ошибка 32E7BE10-7C10-4FC0-80A0-23CF9D176278 Action: {rest.Message()}");
                     return;
                 }
 
@@ -90,7 +90,7 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
     {
         if (_field_master is null)
         {
-            SnackbarRepo.Error("child_field_form is null. error FEF46EC6-F26F-4FE2-B569-FFA5D8470171");
+            SnackBarRepo.Error("child_field_form is null. error FEF46EC6-F26F-4FE2-B569-FFA5D8470171");
             return;
         }
         ResponseBaseModel rest;
@@ -121,14 +121,14 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
         }
         else
         {
-            SnackbarRepo.Error("Тип поля не определён 050A59F3-028D-41C8-81AC-34F66EBF3840");
+            SnackBarRepo.Error("Тип поля не определён 050A59F3-028D-41C8-81AC-34F66EBF3840");
             IsBusyProgress = false;
             return;
         }
 
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
@@ -191,7 +191,7 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
         else
         {
             string msg = $"Тип поля не распознан: {_sender.GetType().FullName}";
-            SnackbarRepo.Error($"{msg} 7AC47E91-6CA2-433F-A981-E1E585E04695");
+            SnackBarRepo.Error($"{msg} 7AC47E91-6CA2-433F-A981-E1E585E04695");
             throw new Exception(msg);
         }
 

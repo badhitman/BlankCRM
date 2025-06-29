@@ -136,7 +136,7 @@ public partial class ManufactureComponent : BlazorBusyComponentBaseAuthModel
 
         if (_err.Length != 0)
         {
-            SnackbarRepo.Error($"Существуют конфликты имён перечислений: {string.Join(";", _err.Select(x => $"{x.SystemName} - {x.Count}"))};");
+            SnackBarRepo.Error($"Существуют конфликты имён перечислений: {string.Join(";", _err.Select(x => $"{x.SystemName} - {x.Count}"))};");
             return;
         }
 
@@ -149,7 +149,7 @@ public partial class ManufactureComponent : BlazorBusyComponentBaseAuthModel
 
         if (_err.Length != 0)
         {
-            SnackbarRepo.Error($"Существуют конфликты имён документов: {string.Join(";", _err.Select(x => $"{x.SystemName} - {x.Count}"))};");
+            SnackBarRepo.Error($"Существуют конфликты имён документов: {string.Join(";", _err.Select(x => $"{x.SystemName} - {x.Count}"))};");
             return;
         }
 
@@ -158,7 +158,7 @@ public partial class ManufactureComponent : BlazorBusyComponentBaseAuthModel
         downloadSource = await gen.GetZipArchive(struct_project);
         if (!downloadSource.Success())
         {
-            SnackbarRepo.ShowMessagesResponse(downloadSource.Messages);
+            SnackBarRepo.ShowMessagesResponse(downloadSource.Messages);
             return;
         }
         ArgumentNullException.ThrowIfNull(downloadSource.Response);

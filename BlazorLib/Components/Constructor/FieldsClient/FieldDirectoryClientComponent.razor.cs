@@ -74,7 +74,7 @@ public partial class FieldDirectoryClientComponent : FieldComponentBaseModel
                     detect_value = DirectoryObject.Childs.Any() ? DirectoryObject.Childs.FirstOrDefault(x => selectedIds.Contains(x.Id)) : null;
 
                     if (detect_value is null)
-                        SnackbarRepo.Error($"{nameof(detect_value)} is null for '{FieldValue}'. error 2357552A-D878-4849-ADC5-98C070EC279F");
+                        SnackBarRepo.Error($"{nameof(detect_value)} is null for '{FieldValue}'. error 2357552A-D878-4849-ADC5-98C070EC279F");
                 }
             }
         }

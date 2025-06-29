@@ -46,14 +46,14 @@ public partial class TableCalculationKitComponent : BlazorBusyComponentBaseModel
         int i = f.IndexOf(_separator);
         if (i <= 0 || i == (f.Length - 1))
         {
-            SnackbarRepo.Error($"В значении '{f}' не найден символ-сепаратор '{_separator}' (либо его позиция: крайняя). error A3D99C8E-2645-4148-A88A-95F8431F933D");
+            SnackBarRepo.Error($"В значении '{f}' не найден символ-сепаратор '{_separator}' (либо его позиция: крайняя). error A3D99C8E-2645-4148-A88A-95F8431F933D");
             return null;
         }
         string id_str = f[..i];
 
         if (!int.TryParse(id_str, out int id_int) || id_int <= 0)
         {
-            SnackbarRepo.Error($"Строка '{id_str}' не является [Int числом], либо его значение меньше нуля. error 2ADDB354-B526-43BF-86F5-1891FE950C02");
+            SnackBarRepo.Error($"Строка '{id_str}' не является [Int числом], либо его значение меньше нуля. error 2ADDB354-B526-43BF-86F5-1891FE950C02");
             return null;
         }
 
@@ -62,7 +62,7 @@ public partial class TableCalculationKitComponent : BlazorBusyComponentBaseModel
 
         if (fb is null)
         {
-            SnackbarRepo.Error($"Поле [{f}] не найдено в форме. error 7BC10674-769F-4D9C-B99E-D235646A2E79");
+            SnackBarRepo.Error($"Поле [{f}] не найдено в форме. error 7BC10674-769F-4D9C-B99E-D235646A2E79");
             return null;
         }
         return new() { FieldType = fb.GetType(), FieldId = fb.Id, FieldName = fb.Name, ProjectVersionStamp = SessionDocument.Project!.SchemeLastUpdated };

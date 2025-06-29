@@ -67,7 +67,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
         ResponseBaseModel rest = await ConstructorRepo.UpdateElementOfDirectoryAsync(new() { Payload = ElementObjectEdit, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
             return;
 
@@ -150,7 +150,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
         IsBusyProgress = false;
         if (!rest.Success())
         {
-            SnackbarRepo.ShowMessagesResponse(rest.Messages);
+            SnackBarRepo.ShowMessagesResponse(rest.Messages);
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
         }
@@ -166,7 +166,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
         IsBusyProgress = false;
         if (!rest.Success())
         {
-            SnackbarRepo.ShowMessagesResponse(rest.Messages);
+            SnackBarRepo.ShowMessagesResponse(rest.Messages);
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
         }
@@ -180,7 +180,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
 
         ResponseBaseModel rest = await ConstructorRepo.DeleteElementFromDirectoryAsync(new() { Payload = ElementObject.Id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();

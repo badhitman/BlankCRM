@@ -31,7 +31,7 @@ public partial class BreezManageComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         ResponseBaseModel res = await breezRepo.DownloadAndSaveAsync();
-        SnackbarRepo.Info("Задание отправлено в очередь");
+        SnackBarRepo.Info("Задание отправлено в очередь");
         await Task.Delay(5000);
         HealthCheck = await breezRepo.HealthCheckAsync();
         await SetBusyAsync(false);

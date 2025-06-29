@@ -45,25 +45,25 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
     {
         if (SelectedPortfolio is null)
         {
-            SnackbarRepo.Error("Не выбран портфель");
+            SnackBarRepo.Error("Не выбран портфель");
             return;
         }
 
         if (SelectedInstrument is null)
         {
-            SnackbarRepo.Error("Не выбран инструмент");
+            SnackBarRepo.Error("Не выбран инструмент");
             return;
         }
 
         if (PriceNewOrder is null || PriceNewOrder <= 0)
         {
-            SnackbarRepo.Error("Не указана стоимость");
+            SnackBarRepo.Error("Не указана стоимость");
             return;
         }
 
         if (VolumeNewOrder is null || VolumeNewOrder <= 0)
         {
-            SnackbarRepo.Error("Не указан объём");
+            SnackBarRepo.Error("Не указан объём");
             return;
         }
 
@@ -78,7 +78,7 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
             Volume = VolumeNewOrder.Value,
         };
         ResponseBaseModel res = await SsDrvRepo.OrderRegisterAsync(req);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
     }
 
@@ -92,7 +92,7 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
                     if(SetInstrument is null)
                     {
                         TResponseModel<List<BoardStockSharpViewModel>> resBoards = await SsMainRepo.GetBoardsAsync();
-                        SnackbarRepo.ShowMessagesResponse(resBoards.Messages);
+                        SnackBarRepo.ShowMessagesResponse(resBoards.Messages);
                         myBoards = resBoards.Response;
                     }
                     else
@@ -113,7 +113,7 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
                 }),
                 Task.Run(async () => {
                     TResponseModel<List<PortfolioStockSharpViewModel>> resPortfolios = await SsMainRepo.GetPortfoliosAsync();
-                    SnackbarRepo.ShowMessagesResponse(resPortfolios.Messages);
+                    SnackBarRepo.ShowMessagesResponse(resPortfolios.Messages);
                     myPortfolios = resPortfolios.Response;
                 }),
             ]);

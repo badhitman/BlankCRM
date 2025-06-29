@@ -50,13 +50,13 @@ public partial class AdapterEditComponent : BlazorBusyComponentBaseModel
     {
         if (editAdapter is null)
         {
-            SnackbarRepo.Error("adapter is null");
+            SnackBarRepo.Error("adapter is null");
             return;
         }
 
         await SetBusyAsync();
         TResponseModel<FixMessageAdapterModelDB> res = await SsRepo.UpdateOrCreateAdapterAsync(editAdapter);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success() && res.Response is not null && res.Response.Id > 0)
         {
             originAdapter = res.Response;
@@ -69,7 +69,7 @@ public partial class AdapterEditComponent : BlazorBusyComponentBaseModel
     {
         if (editAdapter is null)
         {
-            SnackbarRepo.Error("adapter is null");
+            SnackBarRepo.Error("adapter is null");
             return;
         }
 
@@ -100,7 +100,7 @@ public partial class AdapterEditComponent : BlazorBusyComponentBaseModel
 
         await SetBusyAsync();
         TResponseModel<FixMessageAdapterModelDB[]> res = await SsRepo.AdaptersGetAsync([Id]);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         originAdapter = res.Response?.Single();
         editAdapter = GlobalTools.CreateDeepCopy(originAdapter);

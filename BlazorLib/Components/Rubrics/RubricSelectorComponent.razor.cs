@@ -104,7 +104,7 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
 
             TResponseModel<List<RubricStandardModel>> dump_rubric = await RubricsRepo.RubricReadAsync(rubric_id);
             RubricMetadataShadow = dump_rubric.Response;
-            SnackbarRepo.ShowMessagesResponse(dump_rubric.Messages);
+            SnackBarRepo.ShowMessagesResponse(dump_rubric.Messages);
             IsBusyProgress = false;
         }
     }

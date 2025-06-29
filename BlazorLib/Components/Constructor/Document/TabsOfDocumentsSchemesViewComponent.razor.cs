@@ -67,7 +67,7 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
         IsBusyProgress = false;
 
         if (rest.TotalRowsCount > rest.PageSize)
-            SnackbarRepo.Error($"Записей больше: {rest.TotalRowsCount}");
+            SnackBarRepo.Error($"Записей больше: {rest.TotalRowsCount}");
 
         if (rest.Response is null)
             throw new Exception($"Ошибка 973D18EE-ED49-442D-B12B-CDC5A32C8A51 rest.Content.Elements is null");
@@ -84,15 +84,15 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
             StateHasChanged();
             TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetDocumentSchemeAsync(DocumentScheme.Id);
             IsBusyProgress = false;
-            SnackbarRepo.ShowMessagesResponse(rest.Messages);
+            SnackBarRepo.ShowMessagesResponse(rest.Messages);
             if (rest.Response is null)
             {
-                SnackbarRepo.Error($"Ошибка A3D19BFC-38BB-4932-85DD-54C306D8C83E rest.Content.DocumentScheme");
+                SnackBarRepo.Error($"Ошибка A3D19BFC-38BB-4932-85DD-54C306D8C83E rest.Content.DocumentScheme");
                 return;
             }
             if (!rest.Success())
             {
-                SnackbarRepo.Error($"Ошибка 55685D9E-E9D0-4937-A727-5BCC9FAD4381 Action: {rest.Message()}");
+                SnackBarRepo.Error($"Ошибка 55685D9E-E9D0-4937-A727-5BCC9FAD4381 Action: {rest.Message()}");
                 return;
             }
             DocumentScheme = rest.Response;
@@ -105,7 +105,7 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
     {
         if (PagesNotExist)
         {
-            SnackbarRepo.Error($"PagesNotExist. Ошибка 6264F83F-DF3F-4860-BC18-5288AB335985");
+            SnackBarRepo.Error($"PagesNotExist. Ошибка 6264F83F-DF3F-4860-BC18-5288AB335985");
             return;
         }
         int i = DocumentScheme.Tabs!.FindIndex(x => x.Id == init_id);
@@ -131,14 +131,14 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
     {
         if (PagesNotExist)
         {
-            SnackbarRepo.Error($"PagesNotExist. Ошибка 5FD8058E-50B0-49DA-8808-DB7C2BED80C2");
+            SnackBarRepo.Error($"PagesNotExist. Ошибка 5FD8058E-50B0-49DA-8808-DB7C2BED80C2");
             return;
         }
 
         TabOfDocumentSchemeConstructorModelDB? _page = DocumentScheme.Tabs!.FirstOrDefault(x => x.Id == id);
         if (_page is null)
         {
-            SnackbarRepo.Error($"_page is null. Ошибка CBDF9789-4A28-4869-A214-A4702A432DA6");
+            SnackBarRepo.Error($"_page is null. Ошибка CBDF9789-4A28-4869-A214-A4702A432DA6");
             return;
         }
         _page.Name = name;

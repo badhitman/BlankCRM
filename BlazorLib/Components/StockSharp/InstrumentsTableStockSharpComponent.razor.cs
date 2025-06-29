@@ -109,7 +109,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     {
         await SetBusyAsync();
         ResponseBaseModel res = await SsRepo.InstrumentFavoriteToggleAsync(sender);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         if (_tableRef is not null)
             await _tableRef.ReloadServerData();

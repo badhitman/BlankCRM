@@ -17,6 +17,8 @@ public class StockSharpAboutComponent : BlazorBusyComponentBaseModel
     protected IDriverStockSharpService DriverRepo { get; set; } = default!;
 
 
+    List<ResultMessage> MessagesHistory = [];
+
     /// <inheritdoc/>
     protected AboutConnectResponseModel? AboutConnection;
 
@@ -36,9 +38,9 @@ public class StockSharpAboutComponent : BlazorBusyComponentBaseModel
             AboutConnection.Update(await DriverRepo.AboutConnection());
 
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(AboutConnection.Messages);
+        SnackBarRepo.ShowMessagesResponse(AboutConnection.Messages);
         if (AboutConnection.ConnectionState is not null)
-            SnackbarRepo.Info(AboutConnection.ConnectionState.ToString()!);
+            SnackBarRepo.Info(AboutConnection.ConnectionState.ToString()!);
     }
 
     /// <inheritdoc/>

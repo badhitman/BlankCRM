@@ -66,7 +66,7 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
         await SetBusyAsync();
         TResponseModel<int> res = await StoreRepo.SaveParameterAsync(_rubricSelected, KeyStorage, true);
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
     }
 
     /// <inheritdoc/>
@@ -79,7 +79,7 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
         {
             TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(_rubricSelected.Value);
             await SetBusyAsync(false);
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;
             if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
             {

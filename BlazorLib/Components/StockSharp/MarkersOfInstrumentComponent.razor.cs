@@ -47,10 +47,10 @@ public partial class MarkersOfInstrumentComponent : BlazorBusyComponentBaseModel
             SetMarkers = SelectedOptions is null ? null : [.. SelectedOptions]
         };
         ResponseBaseModel? resUpd = await SsRepo.SetMarkersForInstrumentAsync(req);
-        SnackbarRepo.ShowMessagesResponse(resUpd.Messages);
+        SnackBarRepo.ShowMessagesResponse(resUpd.Messages);
         TResponseModel<List<MarkerInstrumentStockSharpViewModel>> res = await SsRepo.GetMarkersForInstrumentAsync(Instrument.Id);
         originMarkers = res.Response ?? [];
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
     }
 
@@ -61,7 +61,7 @@ public partial class MarkersOfInstrumentComponent : BlazorBusyComponentBaseModel
         TResponseModel<List<MarkerInstrumentStockSharpViewModel>> res = await SsRepo.GetMarkersForInstrumentAsync(Instrument.Id);
         originMarkers = res.Response ?? [];
         _selectedOptions = originMarkers.Select(x => x.MarkerDescriptor).Order();
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
     }
 }

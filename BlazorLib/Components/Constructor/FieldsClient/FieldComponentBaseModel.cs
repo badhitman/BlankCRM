@@ -107,7 +107,7 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
 
         if (!rest.Success())
         {
-            SnackbarRepo.ShowMessagesResponse(rest.Messages);
+            SnackBarRepo.ShowMessagesResponse(rest.Messages);
             return;
         }
         if (rest.Response is null)

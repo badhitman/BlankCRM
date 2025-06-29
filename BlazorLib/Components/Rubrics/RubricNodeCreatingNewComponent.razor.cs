@@ -53,7 +53,7 @@ public partial class RubricNodeCreatingNewComponent : BlazorBusyComponentBaseMod
         await SetBusyAsync();
         TResponseModel<int> rest = await RubricsRepo.RubricCreateOrUpdateAsync(new() { Name = rubricName, ParentId = ItemModel.ParentId > 0 ? ItemModel.ParentId : null, ContextName = ContextName });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         ReloadNodeHandle(Item.Value?.ParentId ?? 0);
     }

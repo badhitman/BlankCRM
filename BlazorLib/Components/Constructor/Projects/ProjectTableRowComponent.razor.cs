@@ -68,7 +68,7 @@ public partial class ProjectTableRowComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync();
         ResponseBaseModel res = await ConstructorRepo.SetMarkerDeleteProjectAsync(new() { ProjectId = ProjectRow.Id, Marker = !ProjectRow.IsDisabled });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await ParentProjectsList.ReloadListProjects();
         ParentProjectsList.StateHasChangedCall();
     }
@@ -80,7 +80,7 @@ public partial class ProjectTableRowComponent : BlazorBusyComponentBaseAuthModel
 
         ResponseBaseModel res = await ConstructorRepo.SetProjectAsMainAsync(new() { ProjectId = ProjectRow.Id, UserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();

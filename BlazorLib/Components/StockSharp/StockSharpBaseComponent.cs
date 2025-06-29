@@ -16,7 +16,7 @@ public class StockSharpBaseComponent : StockSharpAboutComponent
     {
         await SetBusyAsync();
         ResponseBaseModel _con = await DriverRepo.Connect(req);
-        SnackbarRepo.ShowMessagesResponse(_con.Messages);
+        SnackBarRepo.ShowMessagesResponse(_con.Messages);
         await GetStatusConnection();
     }
 
@@ -25,7 +25,7 @@ public class StockSharpBaseComponent : StockSharpAboutComponent
     {
         await SetBusyAsync();
         ResponseBaseModel _con = await DriverRepo.Disconnect();
-        SnackbarRepo.ShowMessagesResponse(_con.Messages);
+        SnackBarRepo.ShowMessagesResponse(_con.Messages);
         //_con = await DriverRepo.Terminate();
         //SnackbarRepo.ShowMessagesResponse(_con.Messages);
         await GetStatusConnection();

@@ -79,7 +79,7 @@ public partial class ProjectEditDialogComponent : BlazorBusyComponentBaseModel
         {
             TResponseModel<int> res = await ConstructorRepo.CreateProjectAsync(new() { Project = projectObject, UserId = CurrentUser.UserId });
             IsBusyProgress = false;
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
             {
                 ProjectForEdit.Id = res.Response;
@@ -92,7 +92,7 @@ public partial class ProjectEditDialogComponent : BlazorBusyComponentBaseModel
         {
             ResponseBaseModel res = await ConstructorRepo.UpdateProjectAsync(projectObject);
             IsBusyProgress = false;
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
             {
                 ProjectForEdit.Reload(projectObject);

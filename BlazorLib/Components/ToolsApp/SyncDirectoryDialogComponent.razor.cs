@@ -58,12 +58,12 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
     {
         if (SyncDir is null)
         {
-            SnackbarRepo.Error("SyncDir is null");
+            SnackBarRepo.Error("SyncDir is null");
             return;
         }
         if (SyncDir.Id == 0)
         {
-            SnackbarRepo.Error("SyncDir.Id == 0");
+            SnackBarRepo.Error("SyncDir.Id == 0");
             return;
         }
 
@@ -74,7 +74,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
         }
         await SetBusyAsync();
         ResponseBaseModel res = await AppManagerRepo.DeleteSyncDirectoryAsync(SyncDir.Id);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         MudDialog.Close(DialogResult.Ok(true));
     }
@@ -91,7 +91,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
         };
         await SetBusyAsync();
         ResponseBaseModel res = await AppManagerRepo.UpdateOrCreateSyncDirectoryAsync(req);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
 
         MudDialog.Close(DialogResult.Ok(true));
@@ -103,7 +103,7 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
     {
         if (SyncDir is null)
         {
-            SnackbarRepo.Error("SyncDir is null");
+            SnackBarRepo.Error("SyncDir is null");
             return;
         }
 
@@ -122,20 +122,20 @@ public partial class SyncDirectoryDialogComponent : BlazorBusyComponentBaseModel
             : new(SyncDir.LocalDirectory);
 
         if (LocalDirectoryInfo is null)
-            SnackbarRepo.Error("Не указана локальная папка");
+            SnackBarRepo.Error("Не указана локальная папка");
         else if (!LocalDirectoryInfo.Exists)
-            SnackbarRepo.Error("Локальной папки не существует");
+            SnackBarRepo.Error("Локальной папки не существует");
         else
-            SnackbarRepo.Success("Локальная папка существует");
+            SnackBarRepo.Success("Локальная папка существует");
 
         RemoteDirectoryInfo = string.IsNullOrWhiteSpace(SyncDir?.RemoteDirectory)
                 ? null
                 : await RestClientRepo.DirectoryExistAsync(SyncDir.RemoteDirectory);
 
         if (RemoteDirectoryInfo is not null)
-            SnackbarRepo.ShowMessagesResponse(RemoteDirectoryInfo.Messages);
+            SnackBarRepo.ShowMessagesResponse(RemoteDirectoryInfo.Messages);
         else
-            SnackbarRepo.Error("Не указана директория на удалённом сервере");
+            SnackBarRepo.Error("Не указана директория на удалённом сервере");
 
         if (backupDir is not null)
             SyncDir?.Update(backupDir);

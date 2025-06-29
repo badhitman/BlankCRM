@@ -48,11 +48,11 @@ public partial class MembersOfProjectComponent : BlazorBusyComponentBaseModel
         TResponseModel<UserInfoModel>? user_info = await IdentityRepo.FindUserByEmailAsync(emailForAddMember);
 
         if (user_info.Response is null)
-            SnackbarRepo.Error($"Пользователь с Email '{emailForAddMember}' не найден");
+            SnackBarRepo.Error($"Пользователь с Email '{emailForAddMember}' не найден");
         else
         {
             ResponseBaseModel adding_member = await ConstructorRepo.AddMembersToProjectAsync(new() { ProjectId = ProjectView.Id, UsersIds = [user_info.Response.UserId] });
-            SnackbarRepo.ShowMessagesResponse(adding_member.Messages);
+            SnackBarRepo.ShowMessagesResponse(adding_member.Messages);
         }
         IsBusyProgress = false;
         emailForAddMember = null;
@@ -71,7 +71,7 @@ public partial class MembersOfProjectComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         ResponseBaseModel res = await ConstructorRepo.DeleteMembersFromProjectAsync(new() { ProjectId = ProjectView.Id, UsersIds = [chip.Value.Id] });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         TResponseModel<EntryAltModel[]> rest_members = await ConstructorRepo.GetMembersOfProjectAsync(ProjectView.Id);
         ProjectView.Members = new(rest_members.Response ?? throw new Exception());
 

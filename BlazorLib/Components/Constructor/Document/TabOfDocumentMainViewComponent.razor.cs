@@ -67,7 +67,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
         ResponseBaseModel rest = await ConstructorRepo.DeleteTabDocumentSchemeJoinFormAsync(new() { Payload = PageJoinForm.Id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
@@ -123,7 +123,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.MoveTabDocumentSchemeJoinFormAsync(new() { Payload = new() { Id = PageJoinForm.Id, Direct = direct }, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
@@ -153,7 +153,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
         ResponseBaseModel rest = await ConstructorRepo.CreateOrUpdateTabDocumentSchemeJoinFormAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
@@ -193,7 +193,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
             TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(PageJoinForm.FormId);
             IsBusyProgress = false;
 
-            SnackbarRepo.ShowMessagesResponse(rest.Messages);
+            SnackBarRepo.ShowMessagesResponse(rest.Messages);
             PageJoinForm.Form = rest.Response;
         }
     }

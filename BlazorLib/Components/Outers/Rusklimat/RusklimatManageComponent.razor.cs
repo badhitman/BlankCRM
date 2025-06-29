@@ -31,7 +31,7 @@ public partial class RusklimatManageComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         ResponseBaseModel res = await rusklimatRepo.DownloadAndSaveAsync();
-        SnackbarRepo.Info("Задание отправлено в очередь");
+        SnackBarRepo.Info("Задание отправлено в очередь");
         await Task.Delay(5000);
         HealthCheck = await rusklimatRepo.HealthCheckAsync();
         await SetBusyAsync(false);

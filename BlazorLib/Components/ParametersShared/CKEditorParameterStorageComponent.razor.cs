@@ -63,7 +63,7 @@ public partial class CKEditorParameterStorageComponent : BlazorBusyComponentBase
         await SetBusyAsync();
         TResponseModel<string?> res = await StoreRepo.ReadParameterAsync<string?>(KeyStorage);
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         _textValue = res.Response;
     }
 }

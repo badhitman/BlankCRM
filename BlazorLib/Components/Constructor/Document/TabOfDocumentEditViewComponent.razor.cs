@@ -147,7 +147,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.MoveTabOfDocumentSchemeAsync(new() { Payload = new() { Id = DocumentPage.Id, Direct = direct }, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
@@ -156,7 +156,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         }
         if (rest.Response is null)
         {
-            SnackbarRepo.Error($"Ошибка 671CB343-ADD5-46AE-91F8-24175FBF2592 Content [rest.DocumentScheme is null]");
+            SnackBarRepo.Error($"Ошибка 671CB343-ADD5-46AE-91F8-24175FBF2592 Content [rest.DocumentScheme is null]");
             return;
         }
 
@@ -178,7 +178,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         ResponseBaseModel rest = await ConstructorRepo.DeleteTabOfDocumentSchemeAsync(new() { Payload = DocumentPage.Id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
@@ -220,7 +220,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         });
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
@@ -242,7 +242,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.CreateOrUpdateTabOfDocumentSchemeAsync(new() { Payload = new EntryDescriptionOwnedModel() { Id = DocumentPage.Id, OwnerId = DocumentPage.OwnerId, Name = DocumentPage.Name, Description = DocumentPage.Description }, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
@@ -251,7 +251,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         }
         if (rest.Response is null)
         {
-            SnackbarRepo.Error($"Ошибка 07653445-0B30-46CB-9B79-3B068BAB9AEB rest.Content.DocumentPage is null");
+            SnackBarRepo.Error($"Ошибка 07653445-0B30-46CB-9B79-3B068BAB9AEB rest.Content.DocumentPage is null");
             return;
         }
         int i = DocumentPage.Id;
@@ -274,15 +274,15 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetTabOfDocumentSchemeAsync(DocumentPage.Id);
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Error($"Ошибка 815BCE17-9180-4C27-8016-BEB5244A3454 Action: {rest.Message()}");
+            SnackBarRepo.Error($"Ошибка 815BCE17-9180-4C27-8016-BEB5244A3454 Action: {rest.Message()}");
             return;
         }
         if (rest.Response is null)
         {
-            SnackbarRepo.Error($"Ошибка 5B879025-EC6E-4989-9A75-5844BD20DF0B Content [rest.Content.DocumentPage is null]");
+            SnackBarRepo.Error($"Ошибка 5B879025-EC6E-4989-9A75-5844BD20DF0B Content [rest.Content.DocumentPage is null]");
             return;
         }
 

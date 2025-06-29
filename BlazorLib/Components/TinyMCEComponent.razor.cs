@@ -77,7 +77,7 @@ public partial class TinyMCEComponent : BlazorBusyComponentBaseModel
         TResponseModel<string?> res = await StoreRepo.ReadParameterAsync<string?>(KeyStorage);
 
         if (!res.Success())
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         _textValue = res.Response;
         IsBusyProgress = false;

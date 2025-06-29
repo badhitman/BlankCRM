@@ -50,10 +50,10 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
         ResponseBaseModel rest = await ConstructorRepo.DeleteDocumentSchemeAsync(new() { Payload = questionnaire_id, SenderActionUserId = CurrentUserSession!.UserId });
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Error($"Ошибка F1AADB25-31FF-4305-90A9-4B71184434CC Action: {rest.Message()}");
+            SnackBarRepo.Error($"Ошибка F1AADB25-31FF-4305-90A9-4B71184434CC Action: {rest.Message()}");
             return;
         }
 
@@ -77,7 +77,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
 
         if (data.Response is null)
         {
-            SnackbarRepo.Error($"rest.Content.Documents is null. error 62D3109B-7349-48E8-932B-762D5B0EA585");
+            SnackBarRepo.Error($"rest.Content.Documents is null. error 62D3109B-7349-48E8-932B-762D5B0EA585");
             return new TableData<DocumentSchemeConstructorModelDB>() { TotalItems = data.TotalRowsCount, Items = data.Response };
         }
 

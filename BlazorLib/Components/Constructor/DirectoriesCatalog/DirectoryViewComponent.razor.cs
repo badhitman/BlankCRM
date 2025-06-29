@@ -40,7 +40,7 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
         ValidateReportModel validate_obj = GlobalTools.ValidateObject(createNewElementForDict);
         if (!validate_obj.IsValid)
         {
-            SnackbarRepo.Error(validate_obj.ValidationResults);
+            SnackBarRepo.Error(validate_obj.ValidationResults);
             return;
         }
 
@@ -50,7 +50,7 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
         createNewElementForDict = OwnedNameModel.BuildEmpty(createNewElementForDict.OwnerId);
         IsBusyProgress = false;
         StateHasChanged();
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         if (directoryNav_ref is not null)
             await directoryNav_ref.SetBusyAsync();

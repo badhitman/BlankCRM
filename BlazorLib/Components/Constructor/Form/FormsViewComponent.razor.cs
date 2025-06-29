@@ -55,10 +55,10 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
         TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(form.Id);
         IsBusyProgress = false;
 
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            SnackbarRepo.Error($"Ошибка BDED4783-A604-4347-A344-1B66064CDDE8 Action: {rest.Message()}");
+            SnackBarRepo.Error($"Ошибка BDED4783-A604-4347-A344-1B66064CDDE8 Action: {rest.Message()}");
             return;
         }
         StateHasChanged();
@@ -100,7 +100,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
     {
         if (ParentFormsPage.MainProject is null)
         {
-            SnackbarRepo.Error("Не выбран основной/текущий проект");
+            SnackBarRepo.Error("Не выбран основной/текущий проект");
             return;
         }
 

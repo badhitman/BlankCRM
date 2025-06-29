@@ -31,7 +31,7 @@ public partial class HaierManageComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         ResponseBaseModel res = await haierProffRepo.DownloadAndSaveAsync();
-        SnackbarRepo.Info("Задание отправлено в очередь");
+        SnackBarRepo.Info("Задание отправлено в очередь");
         await Task.Delay(5000);
         HealthCheck = await haierProffRepo.HealthCheckAsync();
         await SetBusyAsync(false);

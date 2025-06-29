@@ -95,20 +95,20 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
             : new(SyncDirectory.LocalDirectory);
 
         if (LocalDirectoryInfo is null)
-            SnackbarRepo.Error("Не указана локальная папка");
+            SnackBarRepo.Error("Не указана локальная папка");
         else if (!LocalDirectoryInfo.Exists)
-            SnackbarRepo.Error("Локальной папки не существует");
+            SnackBarRepo.Error("Локальной папки не существует");
         else
-            SnackbarRepo.Success("Локальная папка существует");
+            SnackBarRepo.Success("Локальная папка существует");
 
         RemoteDirectoryInfo = string.IsNullOrWhiteSpace(SyncDirectory.RemoteDirectory)
                 ? null
                 : await RestClientRepo.DirectoryExistAsync(SyncDirectory.RemoteDirectory);
 
         if (RemoteDirectoryInfo is not null)
-            SnackbarRepo.ShowMessagesResponse(RemoteDirectoryInfo.Messages);
+            SnackBarRepo.ShowMessagesResponse(RemoteDirectoryInfo.Messages);
         else
-            SnackbarRepo.Error("Не указана директория на удалённом сервере");
+            SnackBarRepo.Error("Не указана директория на удалённом сервере");
 
 
         await SetBusyAsync(false);
@@ -119,7 +119,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
     {
         if (string.IsNullOrWhiteSpace(SyncDirectory.RemoteDirectory) || string.IsNullOrWhiteSpace(SyncDirectory.LocalDirectory))
         {
-            SnackbarRepo.Error("RemoteDirectory or LocalDirectory: is empty");
+            SnackBarRepo.Error("RemoteDirectory or LocalDirectory: is empty");
             return;
         }
 
@@ -134,7 +134,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
         //await ParentPage.HoldPageUpdate(false);
         if (localScan?.Response is null || remoteScan?.Response is null)
         {
-            SnackbarRepo.Error("localScan is null || remoteScan is null");
+            SnackBarRepo.Error("localScan is null || remoteScan is null");
             await SetBusyAsync(false);
             return;
         }
@@ -155,19 +155,19 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
     {
         if (forDelete is null || forUpdateOrAdd is null)
         {
-            SnackbarRepo.Error("forDelete is null || forUpdateOrAdd is null");
+            SnackBarRepo.Error("forDelete is null || forUpdateOrAdd is null");
             return;
         }
 
         if (string.IsNullOrWhiteSpace(SyncDirectory.RemoteDirectory))
         {
-            SnackbarRepo.Error("RemoteDirectory is empty");
+            SnackBarRepo.Error("RemoteDirectory is empty");
             return;
         }
 
         if (string.IsNullOrWhiteSpace(SyncDirectory.LocalDirectory))
         {
-            SnackbarRepo.Error("LocalDirectory is empty");
+            SnackBarRepo.Error("LocalDirectory is empty");
             return;
         }
 
@@ -228,7 +228,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
 
                     if (sessionPartUpload.Response is null || !sessionPartUpload.Success())
                     {
-                        SnackbarRepo.Error($"Ошибка открытия сессии отправки файла: {sessionPartUpload.Message()}");
+                        SnackBarRepo.Error($"Ошибка открытия сессии отправки файла: {sessionPartUpload.Message()}");
                         return;
                     }
 
@@ -241,13 +241,13 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
                         TResponseModel<string> resUpd = await RestClientRepo.UpdateFileAsync(tFile.SafeScopeName, SyncDirectory.RemoteDirectory, ms.ToArray());
 
                         if (resUpd.Messages.Any(x => x.TypeMessage == MessagesTypesEnum.Error || x.TypeMessage >= MessagesTypesEnum.Info))
-                            SnackbarRepo.ShowMessagesResponse(resUpd.Messages);
+                            SnackBarRepo.ShowMessagesResponse(resUpd.Messages);
 
                         using FileStream stream = File.OpenRead(_fnT);
                         _hash = Convert.ToBase64String(md5.ComputeHash(stream));
 
                         if (_hash != resUpd.Response)
-                            SnackbarRepo.Error($"Hash file conflict `{tFile.FullName}`: L[{_hash}]{_fnT} R[{Path.Combine(tFile.SafeScopeName, SyncDirectory.RemoteDirectory)}]");
+                            SnackBarRepo.Error($"Hash file conflict `{tFile.FullName}`: L[{_hash}]{_fnT} R[{Path.Combine(tFile.SafeScopeName, SyncDirectory.RemoteDirectory)}]");
                     }
                     else
                     {
@@ -258,7 +258,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
                             ms.Read(_buff, 0, _buff.Length);
                             ResponseBaseModel _subRest = await RestClientRepo.FilePartUploadAsync(new SessionFileRequestModel(sessionPartUpload.Response.SessionId, fileMd.PartFileId, _buff, Path.GetFileName(tFile.FullName), fileMd.PartFileIndex));
                             if (!_subRest.Success())
-                                SnackbarRepo.ShowMessagesResponse(_subRest.Messages);
+                                SnackBarRepo.ShowMessagesResponse(_subRest.Messages);
 
                             StateHasChanged();
                         }
@@ -268,7 +268,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
                 }
                 catch (Exception ex)
                 {
-                    SnackbarRepo.Error(ex.Message);
+                    SnackBarRepo.Error(ex.Message);
                     LoggerRepo.LogError(ex, $"Ошибка отправки порции данных: {tFile}");
                 }
             }
@@ -278,7 +278,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
         //await ParentPage.HoldPageUpdate(false);
 
         if (totalTransferData != 0)
-            SnackbarRepo.Info($"Отправлено: {GlobalToolsStandard.SizeDataAsString(totalTransferData)}");
+            SnackBarRepo.Info($"Отправлено: {GlobalToolsStandard.SizeDataAsString(totalTransferData)}");
         await SetBusyAsync(false);
     }
 
@@ -287,7 +287,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
         localScan = null;
         if (string.IsNullOrWhiteSpace(SyncDirectory.LocalDirectory))
         {
-            SnackbarRepo.Error("Не указана текущая локальная папка клиента");
+            SnackBarRepo.Error("Не указана текущая локальная папка клиента");
             return;
         }
 
@@ -307,7 +307,7 @@ public partial class SyncManageComponent : BlazorBusyComponentBaseModel
         remoteScan = null;
         if (string.IsNullOrWhiteSpace(SyncDirectory.RemoteDirectory))
         {
-            SnackbarRepo.Error("Не указана папка удалённого сервера");
+            SnackBarRepo.Error("Не указана папка удалённого сервера");
             return;
         }
 
