@@ -1,6 +1,11 @@
 ﻿@inherits StockSharpAboutComponent
 
-<MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress" @ref="_tableRef">
+<MudTable ServerData="ServerReload"
+          Dense="true"
+          Hover="true"
+          Loading="IsBusyProgress"
+          Striped
+          @ref="_tableRef">
     <ToolBarContent>
         <MudText Typo="Typo.h6">
             <span title="Click for reload instruments" style="cursor:pointer;" @onclick="_tableRef!.ReloadServerData">Instruments</span>

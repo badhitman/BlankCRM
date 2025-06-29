@@ -37,6 +37,8 @@ public class StockSharpAboutComponent : BlazorBusyComponentBaseModel
 
         await SetBusyAsync(false);
         SnackbarRepo.ShowMessagesResponse(AboutConnection.Messages);
+        if (AboutConnection.ConnectionState is not null)
+            SnackbarRepo.Info(AboutConnection.ConnectionState.ToString()!);
     }
 
     /// <inheritdoc/>

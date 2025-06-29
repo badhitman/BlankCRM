@@ -237,7 +237,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     {
         _elements = elements;
         if (_elements.Length == 0)
-            SnackbarRepo.Add("Ссылок нет");
+            SnackbarRepo.Info("Ссылок нет");
 
         StateHasChanged();
     }

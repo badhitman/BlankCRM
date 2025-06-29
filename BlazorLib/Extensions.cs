@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.AspNetCore.Components;
 using System.Security.Claims;
 using SharedLib;
@@ -12,6 +16,8 @@ namespace BlazorLib;
 /// </summary>
 public static class Extensions
 {
+    static List<ResultMessage> MessagesHistory { get; set; } = [];
+
     /// <summary>
     /// Получить данные по текущему пользователю
     /// </summary>
@@ -47,6 +53,17 @@ public static class Extensions
         };
     }
 
+    /// <summary>
+    /// GetHistoryMessages
+    /// </summary>
+    public static List<ResultMessage> GetHistoryMessages(this ISnackbar SnackbarRepo)
+    {
+        lock (MessagesHistory)
+        {
+            return [.. MessagesHistory.Select(x => x)];
+        }
+    }
+
     /// <inheritdoc/>
     public static void ShowMessagesResponse(this ISnackbar SnackbarRepo, IEnumerable<ResultMessage> messages)
     {
@@ -54,39 +71,86 @@ public static class Extensions
             return;
 
         Severity _style;
-        foreach (ResultMessage m in messages)
+        lock (MessagesHistory)
         {
-            _style = m.TypeMessage switch
+            foreach (ResultMessage m in messages)
             {
-                MessagesTypesEnum.Success => Severity.Success,
-                MessagesTypesEnum.Info => Severity.Info,
-                MessagesTypesEnum.Warning => Severity.Warning,
-                MessagesTypesEnum.Error => Severity.Error,
-                _ => Severity.Normal
-            };
-            SnackbarRepo.Add(m.Text, _style, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+                _style = m.TypeMessage switch
+                {
+                    MessagesTypesEnum.Success => Severity.Success,
+                    MessagesTypesEnum.Info => Severity.Info,
+                    MessagesTypesEnum.Warning => Severity.Warning,
+                    MessagesTypesEnum.Error => Severity.Error,
+                    _ => Severity.Normal
+                };
+                SnackbarRepo.Add(m.Text, _style, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+                MessagesHistory.Add(m);
+                while (MessagesHistory.Count > 110)
+                    MessagesHistory.RemoveAt(0);
+            }
         }
     }
 
     /// <inheritdoc/>
     public static void Error(this ISnackbar SnackbarRepo, string message)
-        => SnackbarRepo.Add(message, Severity.Error, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
-
-    /// <inheritdoc/>
-    public static void Info(this ISnackbar SnackbarRepo, string message)
-        => SnackbarRepo.Add(message, Severity.Info, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
-
-    /// <inheritdoc/>
-    public static void Warn(this ISnackbar SnackbarRepo, string message)
-        => SnackbarRepo.Add(message, Severity.Warning, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
-
-    /// <inheritdoc/>
-    public static void Success(this ISnackbar SnackbarRepo, string message)
-        => SnackbarRepo.Add(message, Severity.Success, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+    {
+        lock (MessagesHistory)
+        {
+            MessagesHistory.Add(new() { TypeMessage = MessagesTypesEnum.Error, Text = message });
+            SnackbarRepo.Add(message, Severity.Error, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            while (MessagesHistory.Count > 110)
+                MessagesHistory.RemoveAt(0);
+        }
+    }
 
     /// <inheritdoc/>
     public static void Error(this ISnackbar SnackbarRepo, List<ValidationResult> ValidationResults)
-        => ValidationResults.ForEach(x => SnackbarRepo.Error(x.ErrorMessage ?? "-error-"));
+    {
+        lock (MessagesHistory)
+        {
+            ValidationResults.ForEach(x =>
+            {
+                MessagesHistory.Add(new() { TypeMessage = MessagesTypesEnum.Error, Text = x.ErrorMessage ?? "-error-" });
+                SnackbarRepo.Error(x.ErrorMessage ?? "-error-");
+            });
+        }
+    }
+
+    /// <inheritdoc/>
+    public static void Info(this ISnackbar SnackbarRepo, string message)
+    {
+        lock (MessagesHistory)
+        {
+            MessagesHistory.Add(new() { TypeMessage = MessagesTypesEnum.Info, Text = message });
+            SnackbarRepo.Add(message, Severity.Info, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            while (MessagesHistory.Count > 110)
+                MessagesHistory.RemoveAt(0);
+        }
+    }
+
+    /// <inheritdoc/>
+    public static void Warn(this ISnackbar SnackbarRepo, string message)
+    {
+        lock (MessagesHistory)
+        {
+            MessagesHistory.Add(new() { TypeMessage = MessagesTypesEnum.Warning, Text = message });
+            SnackbarRepo.Add(message, Severity.Warning, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            while (MessagesHistory.Count > 110)
+                MessagesHistory.RemoveAt(0);
+        }
+    }
+
+    /// <inheritdoc/>
+    public static void Success(this ISnackbar SnackbarRepo, string message)
+    {
+        lock (MessagesHistory)
+        {
+            MessagesHistory.Add(new() { TypeMessage = MessagesTypesEnum.Success, Text = message });
+            SnackbarRepo.Add(message, Severity.Success, opt => opt.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+            while (MessagesHistory.Count > 110)
+                MessagesHistory.RemoveAt(0);
+        }
+    }
 
     /// <inheritdoc/>
     public static DirectionsEnum GetVerticalDirection(this SortDirection sort_direction)
