@@ -77,7 +77,7 @@ public static class Extensions
     /// <summary>
     /// GetHistoryMessages
     /// </summary>
-    public static List<MessageViewModel> GetHistoryMessages(this ISnackbar SnackbarRepo)
+    public static List<MessageViewModel> GetHistoryMessages(this ISnackbar SnackBarRepo)
     {
         lock (MessagesHistory)
         {
