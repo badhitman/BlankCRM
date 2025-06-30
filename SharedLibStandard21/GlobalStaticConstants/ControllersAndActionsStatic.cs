@@ -1214,6 +1214,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string UPDATE_ACTION_NAME = "update";
 
         /// <summary>
+        /// Initial
+        /// </summary>
+        public const string INITIAL_CONTROLLER_NAME = "initial";
+
+        /// <summary>
+        /// Load
+        /// </summary>
+        public const string LOAD_ACTION_NAME = "load";
+
+        /// <summary>
         /// Upload
         /// </summary>
         public const string UPLOAD_ACTION_NAME = "upload";
