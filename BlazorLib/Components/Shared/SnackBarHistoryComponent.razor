@@ -1,6 +1,6 @@
 ﻿@using static BlazorLib.Extensions
 
-<MudTable Items="Elements" Dense Hover Bordered Striped Filter="new Func<MessageViewModel, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+<MudTable Items="Elements" Dense Hover Bordered Striped Filter="new Func<MessageViewModel?, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Snack`s</MudText>
         <MudSpacer />
@@ -37,7 +37,7 @@
     public ISnackbar SnackBarRepo { get; set; } = default!;
 
     private string searchString1 = "";
-    private MessageViewModel? selectedItem1 = null;
+    private MessageViewModel? selectedItem1;
     private HashSet<MessageViewModel> selectedItems = new HashSet<MessageViewModel>();
 
     private IEnumerable<MessageViewModel> Elements = [];
@@ -48,10 +48,10 @@
         Elements = SnackBarRepo.GetHistoryMessages();
     }
 
-    private bool FilterFunc1(MessageViewModel element) => FilterFunc(element, searchString1);
+    private bool FilterFunc1(MessageViewModel? element) => FilterFunc(element, searchString1);
 
-    private bool FilterFunc(MessageViewModel element, string searchString)
+    private bool FilterFunc(MessageViewModel? element, string searchString)
     {
-        return element.Message.Text?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true;
+        return element?.Message.Text?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true;
     }
 }

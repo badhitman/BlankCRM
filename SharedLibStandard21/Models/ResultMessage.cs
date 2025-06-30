@@ -2,12 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System;
+using System.Collections.Generic;
+
 namespace SharedLib;
 
 /// <summary>
 /// Сопроводительное сообщение к результату выполнения операции сервером
 /// </summary>
-public class ResultMessage
+public class ResultMessage : IEquatable<ResultMessage>
 {
     /// <summary>
     /// Тип сообщения (ошибка, инфо и т.п.)
@@ -31,6 +34,42 @@ public class ResultMessage
         return false;
     }
 
+    /// <inheritdoc/>  
+    public bool Equals(ResultMessage other)
+    {
+        return other is not null &&
+               TypeMessage == other.TypeMessage &&
+               Text == other.Text;
+    }
+
+    /// <inheritdoc/>  
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(TypeMessage, Text);
+    }
+
     /// <inheritdoc/>        
     public override string ToString() => $"({TypeMessage}) {Text}";
+
+    /// <inheritdoc/>  
+    public static bool operator ==(ResultMessage left, ResultMessage right)
+    {
+        if(left is null && right is null)
+            return true;
+        if (left is null || right is null)
+            return false;
+
+        return left.Equals(right);
+    }
+
+    /// <inheritdoc/>  
+    public static bool operator !=(ResultMessage left, ResultMessage right)
+    {
+        if (left is null && right is null)
+            return false;
+        if (left is null || right is null)
+            return true;
+
+        return !left.Equals(right);
+    }
 }
