@@ -1,6 +1,6 @@
 ﻿@using static BlazorLib.Extensions
 
-<MudTable Items="Elements" Dense Hover Bordered Striped Filter="new Func<ToastViewClientModel, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+<MudTable Items="Elements" Dense Hover Bordered Striped Filter="new Func<ToastViewClientModel, bool>(FilterFunc1)">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Toast`s</MudText>
         <MudSpacer />
@@ -30,7 +30,6 @@
     public ISnackbar SnackBarRepo { get; set; } = default!;
 
     private string searchString1 = "";
-    private ToastViewClientModel? selectedItem1 = null;
     private HashSet<ToastViewClientModel> selectedItems = new HashSet<ToastViewClientModel>();
 
     private IEnumerable<ToastViewClientModel> Elements = [];

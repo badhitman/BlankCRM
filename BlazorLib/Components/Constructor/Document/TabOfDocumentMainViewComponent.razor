@@ -22,7 +22,7 @@ else if (PageJoinForm.Form is null)
 }
 else
 {
-    <div dom-guid="{}" @key="@($"{PageJoinForm.GetType().FullName}{PageJoinForm.Id}")" class="card @(InUse ? "" : "border-dark ")mb-3@(CurrentFormJoinEdit> 0 && CurrentFormJoinEdit != PageJoinForm.Id ? " opacity-25" : "")">
+    <div @key="@($"{PageJoinForm.GetType().FullName}{PageJoinForm.Id}")" class="card @(InUse ? "" : "border-dark ")mb-3@(CurrentFormJoinEdit > 0 && CurrentFormJoinEdit != PageJoinForm.Id ? " opacity-25" : "")">
         @if (!InUse)
         {
             <div class="card-header">
@@ -82,8 +82,8 @@ else
                         <MudSpacer />
                         <div>
                             <MudIconButton OnClick="DeleteJoinForm" Disabled="@(IsEdited || IsDisabled)" Icon="@Icons.Material.Filled.Delete" Color="Color.Primary" Size="Size.Small" />
-                            <MudIconButton OnClick="async () => { await DocumentPageJoinFormMove( DirectionsEnum.Down); }" Disabled="@(IsEdited || IsDisabled || !CanDown)" Icon="@Icons.Material.Filled.ArrowDownward" Color="Color.Primary" Size="Size.Small" />
-                            <MudIconButton OnClick="async () => { await DocumentPageJoinFormMove( DirectionsEnum.Up); }" Disabled="@(IsEdited || IsDisabled || !CanUp)" Icon="@Icons.Material.Filled.ArrowUpward" Color="Color.Primary" Size="Size.Small" />
+                            <MudIconButton OnClick="async () => { await DocumentPageJoinFormMove(DirectionsEnum.Down); }" Disabled="@(IsEdited || IsDisabled || !CanDown)" Icon="@Icons.Material.Filled.ArrowDownward" Color="Color.Primary" Size="Size.Small" />
+                            <MudIconButton OnClick="async () => { await DocumentPageJoinFormMove(DirectionsEnum.Up); }" Disabled="@(IsEdited || IsDisabled || !CanUp)" Icon="@Icons.Material.Filled.ArrowUpward" Color="Color.Primary" Size="Size.Small" />
                         </div>
                     }
                 </div>

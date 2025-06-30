@@ -1,6 +1,9 @@
 ﻿@inherits BlazorBusyComponentBaseAuthModel
 
-<MudTable Class="d-flex flex-column flex-grow-1" Loading="IsBusyProgress" ServerData="@(new Func<TableState, CancellationToken, Task<TableData<DocumentSchemeConstructorModelDB>>>(ServerReload))" Dense="true" Hover="true" Striped="true" @ref="table">
+<MudTable Class="d-flex flex-column flex-grow-1"
+          Loading="IsBusyProgress"
+          ServerData="@(new Func<TableState, CancellationToken, Task<TableData<DocumentSchemeConstructorModelDB>>>(ServerReload))"
+          Dense Hover Striped @ref="table">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Questionnaires</MudText>
         <MudIconButton Disabled="@(!ParentFormsPage.CanEditProject)" title="Create a new survey/questionnaire" OnClick="() => DocumentOpenDialog()" Icon="@Icons.Material.Filled.AddBox"></MudIconButton>
