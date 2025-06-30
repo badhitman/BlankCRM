@@ -26,10 +26,6 @@ public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) :
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.OrderReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> OwnTradeReceived(MyTradeStockSharpModel req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.OwnTradeReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
-
-    /// <inheritdoc/>
     public async Task<ResponseBaseModel> PositionReceived(PositionStockSharpModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PositionReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
 

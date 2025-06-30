@@ -30,11 +30,6 @@ public partial class ManageStockSharpTransmission(IMQTTClient mqClient) : IManag
         => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<OrderStockSharpViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrdersSelectStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<MyTradeStockSharpViewModel>> TradesSelectAsync(TPaginationRequestStandardModel<MyTradeSelectStockSharpRequestModel> req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<MyTradeStockSharpViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.MyTradesSelectStockSharpReceive, req, token: cancellationToken) ?? new();
-
-
-    /// <inheritdoc/>
     public async Task<TResponseModel<FixMessageAdapterModelDB>> UpdateOrCreateAdapterAsync(FixMessageAdapterModelDB req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<TResponseModel<FixMessageAdapterModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.UpdateOrCreateAdapterStockSharpReceive, req, token: cancellationToken) ?? new();
 }

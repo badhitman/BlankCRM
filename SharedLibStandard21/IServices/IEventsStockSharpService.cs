@@ -43,11 +43,6 @@ public interface IEventsStockSharpService
     public Task<ResponseBaseModel> OrderReceived(OrderStockSharpModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// OwnTradeReceived
-    /// </summary>
-    public Task<ResponseBaseModel> OwnTradeReceived(MyTradeStockSharpModel myTrade, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// PortfolioReceived
     /// </summary>
     public Task<ResponseBaseModel> PortfolioReceived(PortfolioStockSharpViewModel req, CancellationToken cancellationToken = default);
