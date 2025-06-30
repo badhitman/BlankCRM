@@ -110,7 +110,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
 
             await ms.DisposeAsync();
             res = await FilesRepo.SaveFileAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
         }
 
         loadedFiles.Clear();
@@ -128,7 +128,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
             return;
 
         await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", $"{NavRepo.BaseUri}cloud-fs/read/{_selectedFile.Id}/{_selectedFile.FileName}");
-        SnackbarRepo.Add($"Ссылка {_selectedFile.FileName} скопирована в буфер обмена", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+        SnackBarRepo.Add($"Ссылка {_selectedFile.FileName} скопирована в буфер обмена", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
     }
 
     async Task DownloadFile()

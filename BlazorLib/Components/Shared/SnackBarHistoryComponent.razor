@@ -1,6 +1,6 @@
 ﻿@using static BlazorLib.Extensions
 
-<MudTable Items="Elements" Dense Hover Bordered Striped Filter="new Func<MessageViewModel?, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+<MudTable Items="Elements" Dense Hover Bordered Striped Filter="new Func<MessageViewModel, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Snack`s</MudText>
         <MudSpacer />

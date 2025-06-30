@@ -47,7 +47,7 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
 
         if (!string.IsNullOrWhiteSpace(phoneNum) && !GlobalTools.IsPhoneNumber(phoneNum))
         {
-            SnackbarRepo.Error("Телефон должен быть в формате: +79994440011");
+            SnackBarRepo.Error("Телефон должен быть в формате: +79994440011");
             return;
         }
 
@@ -58,7 +58,7 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
         //AuthenticationState ar = await AuthRepo.GetAuthenticationStateAsync();
         // ar.User.Claims.ToList().ForEach(x => { x. });
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Success())
         {
             CurrentUserSession.GivenName = firstName;

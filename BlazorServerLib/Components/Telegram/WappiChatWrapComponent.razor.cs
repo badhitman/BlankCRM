@@ -46,7 +46,7 @@ public partial class WappiChatWrapComponent : BlazorBusyComponentBaseModel
         _textSendMessage = "";
 
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         
         if (SendMessageHandle is not null)
             SendMessageHandle(req);

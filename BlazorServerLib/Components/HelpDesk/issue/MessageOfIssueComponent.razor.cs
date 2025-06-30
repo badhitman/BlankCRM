@@ -101,7 +101,7 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
                 }
             });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         ParentListIssues.AddingNewMessage = false;
         IsEditMode = false;
         await ParentListIssues.ReloadMessages();

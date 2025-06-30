@@ -66,10 +66,10 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
         await SetBusyAsync();
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([SelectedUser]);
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Response is null || rest.Response.Length == 0)
         {
-            SnackbarRepo.Error($"Не найден запрашиваемый пользователь #{SelectedUser}");
+            SnackBarRepo.Error($"Не найден запрашиваемый пользователь #{SelectedUser}");
             return;
         }
         SelectedObject = rest.Response.Single();

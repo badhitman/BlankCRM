@@ -68,7 +68,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
         };
         await SetBusyAsync(token: token);
         TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId }, token);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (res.Response?.Response is not null)
         {
@@ -90,7 +90,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
             TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq, token);
 
             if (recordsSelect.TotalRowsCount > recReq.PageSize)
-                SnackbarRepo.Error($"Записей больше: {recordsSelect.TotalRowsCount}");
+                SnackBarRepo.Error($"Записей больше: {recordsSelect.TotalRowsCount}");
 
             currentRecords = recordsSelect.Response ?? [];
             IsBusyProgress = false;

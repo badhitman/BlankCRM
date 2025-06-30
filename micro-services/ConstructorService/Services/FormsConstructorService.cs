@@ -32,7 +32,7 @@ public partial class FormsConstructorService(
     public async Task<TResponseModel<SessionOfDocumentDataModelDB?>> GetSessionDocumentDataAsync(string guid_session, CancellationToken cancellationToken = default)
     {
         if (!Guid.TryParse(guid_session, out Guid guid_parsed) || guid_parsed == Guid.Empty)
-            return new() { Messages = [new() { TypeMessage = ResultTypesEnum.Error, Text = "Токен сессии имеет не корректный формат" }] };
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Токен сессии имеет не корректный формат" }] };
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
@@ -1850,7 +1850,7 @@ public partial class FormsConstructorService(
             form_field_db.Required = req.Payload.Required;
         }
 
-        if (res.Messages.Any(x => x.TypeMessage == ResultTypesEnum.Warning))
+        if (res.Messages.Any(x => x.TypeMessage == MessagesTypesEnum.Warning))
         {
             context_forms.Update(form_field_db);
             msg = $"Поле (простого типа) формы #{req.Payload.Id} обновлено в БД";
@@ -2570,7 +2570,7 @@ public partial class FormsConstructorService(
             tab_of_document_scheme_db.Description = req.Payload.Description;
         }
 
-        if (res.Messages.Any(x => x.TypeMessage == ResultTypesEnum.Warning))
+        if (res.Messages.Any(x => x.TypeMessage == MessagesTypesEnum.Warning))
         {
             context_forms.Update(tab_of_document_scheme_db);
             msg = $"Страница опроса/анкеты #{req.Payload.Id} обновлено в БД";
@@ -2826,7 +2826,7 @@ public partial class FormsConstructorService(
             questionnaire_page_join_db.IsTable = req.Payload.IsTable;
         }
 
-        if (res.Messages.Any(x => x.TypeMessage == ResultTypesEnum.Warning))
+        if (res.Messages.Any(x => x.TypeMessage == MessagesTypesEnum.Warning))
         {
             context_forms.Update(questionnaire_page_join_db);
             msg = $"Связь формы и страницы опроса/анкеты #{req.Payload.Id} обновлено в БД";
@@ -3096,7 +3096,7 @@ public partial class FormsConstructorService(
 
             await context_forms.AddAsync(session_json, cancellationToken);
             await context_forms.SaveChangesAsync(cancellationToken);
-            return new() { Response = session_json, Messages = [new() { TypeMessage = ResultTypesEnum.Success, Text = $"Создана сессия #{session_json.Id}" }] };
+            return new() { Response = session_json, Messages = [new() { TypeMessage = MessagesTypesEnum.Success, Text = $"Создана сессия #{session_json.Id}" }] };
         }
         session_db = await context_forms.Sessions.FirstOrDefaultAsync(x => x.Id == session_json.Id, cancellationToken: cancellationToken);
         string msg;

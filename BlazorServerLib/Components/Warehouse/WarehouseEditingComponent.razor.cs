@@ -56,7 +56,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         if (element is RowOfWarehouseDocumentModelDB _el)
         {
             TResponseModel<int> res = await CommRepo.RowForWarehouseUpdateAsync(_el);
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
         }
         await ReadDocument();
         base.RowEditCommitHandler(element);
@@ -67,7 +67,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         await SetBusyAsync();
         TResponseModel<int> res = await CommRepo.WarehouseUpdateAsync(editDocument);
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (editDocument.Id < 1 && res.Response > 0)
             NavRepo.NavigateTo($"/nomenclature/warehouse/editing/{res.Response}");
         else if (res.Success())
@@ -93,7 +93,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         if (Id < 1)
         {
             TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(0);
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;
             if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
             {
@@ -122,7 +122,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
         await SetBusyAsync();
         TResponseModel<WarehouseDocumentModelDB[]> res = await CommRepo.WarehousesReadAsync([Id]);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success() && res.Response is not null)
             CurrentDocument = res.Response.First();
 
@@ -130,7 +130,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
         TResponseModel<List<RubricStandardModel>> resShadow = await HelpDeskRepo.RubricReadAsync(editDocument.WarehouseId);
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(resShadow.Messages);
+        SnackBarRepo.ShowMessagesResponse(resShadow.Messages);
         RubricMetadataShadow = resShadow.Response;
         if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
         {
@@ -162,7 +162,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
             await SetBusyAsync();
             res = await CommRepo.RowForWarehouseUpdateAsync(_newRow);
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
             await SetBusyAsync(false);
             if (!res.Success())
                 return;
@@ -176,7 +176,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             CurrentDocument.Rows[exist_row].Quantity = +off.Quantity;
             await SetBusyAsync();
             res = await CommRepo.RowForWarehouseUpdateAsync(CurrentDocument.Rows[exist_row]);
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
             await SetBusyAsync(false);
         }
 
@@ -218,7 +218,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
         await SetBusyAsync();
         TResponseModel<bool> res = await CommRepo.RowsForWarehouseDeleteAsync([currentRow.Id]);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         if (!res.Success())
             return;

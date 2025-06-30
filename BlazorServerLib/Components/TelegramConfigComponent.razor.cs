@@ -28,7 +28,7 @@ public partial class TelegramConfigComponent : BlazorBusyComponentBaseModel
         IsBusyProgress = false;
 
         if (!res_IsCommandModeTelegramBot.Success())
-            SnackbarRepo.ShowMessagesResponse(res_IsCommandModeTelegramBot.Messages);
+            SnackBarRepo.ShowMessagesResponse(res_IsCommandModeTelegramBot.Messages);
 
         _isCommandModeTelegramBot = res_IsCommandModeTelegramBot.Response == true;
     }

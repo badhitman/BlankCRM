@@ -80,7 +80,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
             KladrTitle = addingKladrTitle!,
         });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success())
             return;
 
@@ -131,7 +131,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
                     RubriciesCached.Add(i, res.Response);
 
                 if (res.Messages.Any(x => x.TypeMessage > MessagesTypesEnum.Info))
-                    SnackbarRepo.ShowMessagesResponse(res.Messages);
+                    SnackBarRepo.ShowMessagesResponse(res.Messages);
             }
             await SetBusyAsync(false);
         }

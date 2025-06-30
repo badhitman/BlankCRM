@@ -18,9 +18,6 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
     ITelegramTransmission TgRepo { get; set; } = default!;
 
     [Inject]
-    ISnackbar SnackBarRepo { get; set; } = default!;
-
-    [Inject]
     IIdentityTransmission IdentityRepo { get; set; } = default!;
 
     [Inject]

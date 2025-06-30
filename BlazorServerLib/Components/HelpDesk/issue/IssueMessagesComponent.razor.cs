@@ -67,7 +67,7 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
         });
         IsBusyProgress = false;
         messages = messages_rest.Response;
-        SnackbarRepo.ShowMessagesResponse(messages_rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(messages_rest.Messages);
         if (!messages_rest.Success() || messages_rest.Response is null)
             return;
 
@@ -82,7 +82,7 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
         if (users_for_adding.Length != 0)
         {
             TResponseModel<UserInfoModel[]> users_data_identity = await IdentityRepo.GetUsersIdentityAsync([.. users_for_adding.Distinct()]);
-            SnackbarRepo.ShowMessagesResponse(users_data_identity.Messages);
+            SnackBarRepo.ShowMessagesResponse(users_data_identity.Messages);
             if (users_data_identity.Response is not null && users_data_identity.Response.Length != 0)
                 UsersIdentityDump.AddRange(users_data_identity.Response);
         }

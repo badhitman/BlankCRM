@@ -44,7 +44,7 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
             Payload = new() { MessageText = $"<b>User {CurrentUserSession!.UserName} sent a Telegram message to user user-tg#{msg.UserTelegramId}</b>: {msg.Message}", IssueId = Issue.Id }
         });
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(add_msg_system.Messages);
+        SnackBarRepo.ShowMessagesResponse(add_msg_system.Messages);
     }
 
     /// <inheritdoc/>

@@ -43,7 +43,7 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
             },
             SenderActionUserId = CurrentUserSession.UserId,
         }, token);
-        SnackbarRepo.ShowMessagesResponse(tp.Messages);
+        SnackBarRepo.ShowMessagesResponse(tp.Messages);
         IsBusyProgress = false;
 
         if (!tp.Success() || tp.Response?.Response is null)
@@ -59,7 +59,7 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
             await SetBusyAsync(token: token);
             TResponseModel<UserInfoModel[]> users_add = await IdentityRepo.GetUsersIdentityAsync(users_ids, token);
             IsBusyProgress = false;
-            SnackbarRepo.ShowMessagesResponse(users_add.Messages);
+            SnackBarRepo.ShowMessagesResponse(users_add.Messages);
             if (users_add.Response is not null)
                 UsersIdentityDump.AddRange(users_add.Response);
         }

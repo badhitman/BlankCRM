@@ -39,7 +39,7 @@ else
 
         await SetBusyAsync(false);
         if (!res.Success())
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         _textValue = res.Response;
     }

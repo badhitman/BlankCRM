@@ -72,7 +72,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
 
         if (!res.Success() || res.Response is null || res.Response.Length != 1)
         {
-            SnackbarRepo.Error("Ошибка добавления пользователя");
+            SnackBarRepo.Error("Ошибка добавления пользователя");
             return;
         }
 
@@ -87,10 +87,10 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
             SenderActionUserId = CurrentUserSession.UserId,
         };
         TResponseModel<int> sr = await CommerceRepo.UserOrganizationUpdateAsync(req);
-        SnackbarRepo.ShowMessagesResponse(sr.Messages);
+        SnackBarRepo.ShowMessagesResponse(sr.Messages);
         AddingUserEmail = "";
 
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         await tableRef.ReloadServerData();
     }
@@ -133,7 +133,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
         await SetBusyAsync();
         TResponseModel<int> res = await CommerceRepo.UserOrganizationUpdateAsync(new TAuthRequestModel<UserOrganizationModelDB>() { Payload = sender, SenderActionUserId = CurrentUserSession.UserId });
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await tableRef.ReloadServerData();
     }
 
@@ -181,7 +181,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
         await SetBusyAsync(token: token);
         TResponseModel<TPaginationResponseModel<UserOrganizationModelDB>> res = await CommerceRepo.UsersOrganizationsSelectAsync(req, token);
         await SetBusyAsync(false, token);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success() || res.Response?.Response is null)
             return new TableData<UserOrganizationModelDB>() { TotalItems = 0, Items = [] };
 

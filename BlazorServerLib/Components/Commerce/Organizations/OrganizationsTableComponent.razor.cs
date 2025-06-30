@@ -62,7 +62,7 @@ public partial class OrganizationsTableComponent : BlazorBusyComponentBaseAuthMo
         {
             await SetBusyAsync();
             TResponseModel<UserInfoModel[]> user_res = await IdentityRepo.GetUsersIdentityAsync([UserId]);
-            SnackbarRepo.ShowMessagesResponse(user_res.Messages);
+            SnackBarRepo.ShowMessagesResponse(user_res.Messages);
             CurrentViewUser = user_res.Response?.FirstOrDefault();
             await SetBusyAsync(false);
         }

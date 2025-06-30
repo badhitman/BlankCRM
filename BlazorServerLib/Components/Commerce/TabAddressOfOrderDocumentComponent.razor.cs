@@ -48,9 +48,9 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
         await SetBusyAsync();
 
         List<Task> tasks = [
-            Task.Run(async () => { TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(0); SnackbarRepo.ShowMessagesResponse(res.Messages); RubricMetadataShadow = res.Response; }),
+            Task.Run(async () => { TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(0); SnackBarRepo.ShowMessagesResponse(res.Messages); RubricMetadataShadow = res.Response; }),
             CacheRegistersUpdate(offers: [.. CurrentTab.Rows!.Select(x => x.OfferId)],goods: [],CurrentTab.WarehouseId, true),
-            Task.Run(async () => { TResponseModel<bool?> showingPriceSelectorOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ShowingPriceSelectorOrder); _showingPriceSelectorOrder = showingPriceSelectorOrder.Response == true; if (!showingPriceSelectorOrder.Success()) SnackbarRepo.ShowMessagesResponse(showingPriceSelectorOrder.Messages); }) ];
+            Task.Run(async () => { TResponseModel<bool?> showingPriceSelectorOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ShowingPriceSelectorOrder); _showingPriceSelectorOrder = showingPriceSelectorOrder.Response == true; if (!showingPriceSelectorOrder.Success()) SnackBarRepo.ShowMessagesResponse(showingPriceSelectorOrder.Messages); }) ];
 
         await Task.WhenAll(tasks);
 

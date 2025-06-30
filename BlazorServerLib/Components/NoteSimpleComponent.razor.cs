@@ -77,7 +77,7 @@ public partial class NoteSimpleComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         TResponseModel<int> rest = await StorageRepo.SaveParameterAsync(editValue, KeyStorage, false);
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         IsBusyProgress = false;
         initValue = editValue;
     }

@@ -61,7 +61,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         };
         await SetBusyAsync();
         TResponseModel<FileAttachModel> res = await CommRepo.OrderReportGetAsync(req);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         if (res.Success() && res.Response is not null && res.Response.Data.Length != 0)
         {
@@ -104,8 +104,8 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
 
         TResponseModel<int> res = await StorageRepo.SaveParameterAsync(doc, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
 
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
-        SnackbarRepo.Add("Содержимое документа отправлено в корзину для формирования нового заказа", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.Add("Содержимое документа отправлено в корзину для формирования нового заказа", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
 
         if (res.Success())
             NavRepo.NavigateTo("/create-order");
@@ -128,7 +128,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         await SetBusyAsync();
 
         TResponseModel<bool> res = await HelpDeskRepo.StatusChangeAsync(req);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response && res.Success())
             NavRepo.ReloadPage();
 
@@ -143,12 +143,12 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         await SetBusyAsync();
 
         TResponseModel<List<RubricStandardModel>> getWarehouses = await RubricsRepo.RubricsGetAsync(orderWarehouses);
-        SnackbarRepo.ShowMessagesResponse(getWarehouses.Messages);
+        SnackBarRepo.ShowMessagesResponse(getWarehouses.Messages);
         currentWarehouses = getWarehouses.Response ?? [];
 
         TResponseModel<bool?> res = await StorageRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ShowingAttachmentsOrderArea);
         if (!res.Success())
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         ShowingAttachmentsOrderArea = res.Response == true;
         await SetBusyAsync(false);

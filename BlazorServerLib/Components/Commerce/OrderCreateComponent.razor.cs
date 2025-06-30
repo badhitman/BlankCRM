@@ -176,7 +176,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync(false);
         if (!offersRes.Success() || offersRes.Response is null || offersRes.Response.Length == 0)
         {
-            SnackbarRepo.ShowMessagesResponse(offersRes.Messages);
+            SnackBarRepo.ShowMessagesResponse(offersRes.Messages);
             return;
         }
 
@@ -325,13 +325,13 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
 
         if (CurrentCart.OfficesTabs?.Any(x => x.Rows is null || x.Rows.Count == 0) == true)
         {
-            SnackbarRepo.Error("Присутствуют адреса без номенклатуры заказа. Исключите пустую вкладку или заполните её данными");
+            SnackBarRepo.Error("Присутствуют адреса без номенклатуры заказа. Исключите пустую вкладку или заполните её данными");
             return;
         }
 
         await SetBusyAsync();
         TResponseModel<int> rest = await CommerceRepo.OrderUpdateAsync(CurrentCart);
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         if (rest.Response == 0)
         {
@@ -380,7 +380,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
         //await SetBusy();
         TResponseModel<List<PriceRuleForOfferModelDB>> res = await CommerceRepo.PricesRulesGetForOffersAsync(new() { Payload = [.. offers_load], SenderActionUserId = CurrentUserSession.UserId });
         //await SetBusy(false);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (res.Success() && res.Response is not null)
             offers_load.ForEach(x =>
@@ -435,7 +435,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             return;
 
         if (res.TotalRowsCount > req.PageSize)
-            SnackbarRepo.Error($"Записей больше: {res.TotalRowsCount}");
+            SnackBarRepo.Error($"Записей больше: {res.TotalRowsCount}");
 
         Organizations = res.Response;
         TResponseModel<OrderDocumentModelDB> current_cart = await StorageRepo

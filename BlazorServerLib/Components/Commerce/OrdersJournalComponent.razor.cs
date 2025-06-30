@@ -67,7 +67,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
                 IssuesIds = [.. q],
             }
         });
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is not null)
             IssuesCacheDump.AddRange(res.Response);
     }

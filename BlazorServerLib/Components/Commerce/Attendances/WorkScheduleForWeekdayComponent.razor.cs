@@ -48,7 +48,7 @@ public partial class WorkScheduleForWeekdayComponent : BlazorBusyComponentBaseMo
         }
 
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
     }
 
     /// <inheritdoc/>

@@ -70,7 +70,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
         await SetBusyAsync(false, token: token);
 
         if (recordsSelect.TotalRowsCount > recReq.PageSize)
-            SnackbarRepo.Error($"Записей больше: {recordsSelect.TotalRowsCount}");
+            SnackBarRepo.Error($"Записей больше: {recordsSelect.TotalRowsCount}");
 
         List<RecordsAttendanceModelDB> currentRecords = recordsSelect.Response ?? [];
 

@@ -71,6 +71,6 @@ public partial class WorkScheduleWeekdayAddingComponent : BlazorBusyComponentBas
             AddingWorkScheduleHandle(ws);
         }
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
     }
 }

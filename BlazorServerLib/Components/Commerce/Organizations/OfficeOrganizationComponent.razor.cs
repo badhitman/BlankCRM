@@ -67,13 +67,13 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         TResponseModel<OfficeOrganizationModelDB[]> res_address = await CommerceRepo
             .OfficesOrganizationsReadAsync([AddressForOrganization]);
 
-        SnackbarRepo.ShowMessagesResponse(res_address.Messages);
+        SnackBarRepo.ShowMessagesResponse(res_address.Messages);
         OfficeCurrent = res_address.Response!.Single();
         OfficeEdit = GlobalTools.CreateDeepCopy(OfficeCurrent) ?? throw new Exception();
 
         TResponseModel<List<RubricStandardModel>> res_rubric = await HelpDeskRepo.RubricReadAsync(OfficeCurrent.ParentId);
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(res_rubric.Messages);
+        SnackBarRepo.ShowMessagesResponse(res_rubric.Messages);
         if (res_rubric.Success() && res_rubric.Response is not null && res_rubric.Response.Count != 0)
         {
             RubricStandardModel r = res_rubric.Response.First();
@@ -120,7 +120,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
             Id = AddressForOrganization,
         });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success())
             return;
 

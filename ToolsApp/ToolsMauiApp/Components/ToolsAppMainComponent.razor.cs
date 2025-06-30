@@ -45,7 +45,7 @@ public partial class ToolsAppMainComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         ResponseBaseModel res = await AppManagerRepo.DeleteConfigAsync(ApiConnect.Id);
         deleteInit = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         await InitSelector();
     }

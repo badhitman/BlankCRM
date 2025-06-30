@@ -52,7 +52,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         await SetBusyAsync();
         TResponseModel<OrganizationModelDB[]> res = await CommerceRepo.OrganizationsReadAsync([CurrentOrganization.Id]);
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         CurrentOrganization = res.Response!.Single();
         if (CurrentOrganization is not null && (CurrentOrganization.Users?.Any(x => x.UserPersonIdentityId == CurrentUserSession!.UserId) != true && !CurrentUserSession!.IsAdmin && CurrentUserSession!.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true))
             return;
@@ -70,7 +70,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await ReadOrganization();
     }
 
@@ -100,7 +100,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
         TResponseModel<bool> res = await CommerceRepo.OrganizationSetLegalAsync(req);
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         NavigationRepo.ReloadPage();
     }
 
@@ -114,7 +114,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (CurrentOrganization.Id == 0)
         {

@@ -39,7 +39,7 @@ public partial class ChatsWappiIssueComponent : IssueWrapBaseModel
         })];
         await Task.WhenAll(tasks);
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(add_msg_system.Messages);
+        SnackBarRepo.ShowMessagesResponse(add_msg_system.Messages);
     }
 
     /// <inheritdoc/>

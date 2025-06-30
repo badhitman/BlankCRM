@@ -69,7 +69,7 @@ public partial class TelegramChatWrapComponent : BlazorBusyComponentBaseModel
             await _messagesTelegramComponent.TableRef.ReloadServerData();
 
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         loadedFiles.Clear();
         _inputFileId = Guid.NewGuid().ToString();
         if (SendMessageHandle is not null)

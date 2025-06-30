@@ -24,7 +24,7 @@ public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         ResponseBaseModel res = await RemoteClient.FlushTempKladrAsync();
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await ReloadData();
     }
 
@@ -33,7 +33,7 @@ public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         ResponseBaseModel res = await RemoteClient.ClearTempKladrAsync();
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await ReloadData();
     }
 

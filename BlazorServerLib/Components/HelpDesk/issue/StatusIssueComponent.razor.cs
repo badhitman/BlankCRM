@@ -54,7 +54,7 @@ public partial class StatusIssueComponent : IssueWrapBaseModel
                 }
             });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success())
             return;
 

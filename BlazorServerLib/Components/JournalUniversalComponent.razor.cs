@@ -123,7 +123,7 @@ public partial class JournalUniversalComponent : BlazorBusyComponentBaseModel
         {
             await SetBusyAsync();
             TResponseModel<EntryAltModel[]?> res = await JournalRepo.GetColumnsForJournalAsync(SelectedJournal, ProjectId);
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
             ColumnsNames = res.Response;
             IsBusyProgress = false;
         }

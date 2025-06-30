@@ -68,7 +68,7 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
 
         TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersIdentityAsync(_ids);
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is null)
             return;
         usersDump.AddRange(res.Response);

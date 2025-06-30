@@ -79,7 +79,7 @@ public abstract class DocumentEditBaseComponent : DocumenBodyBaseComponent
         if (DocumentKey.HasValue && DocumentKey.Value > 0 && IsEdited)
         {
             sender.HoldTab = true;
-            SnackbarRepo.Add("Существуют не сохранённые изменения. Сохраните форму!", Severity.Info);
+            SnackBarRepo.Add("Существуют не сохранённые изменения. Сохраните форму!", Severity.Info);
             return;
         }
         CurrentTab = sender;

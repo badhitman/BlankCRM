@@ -47,7 +47,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         });
 
         if (!res.Success())
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
         else
         {
             await ReloadTags();
@@ -72,7 +72,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
                 Id = OwnerPrimaryKey.Value,
                 Set = false
             });
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
             await ReloadTags();
         }
     }
@@ -98,7 +98,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         TPaginationResponseModel<TagViewModel> res = await TagsRepo.TagsSelectAsync(req, token);
 
         if (res.TotalRowsCount > req.PageSize)
-            SnackbarRepo.Error($"Записей больше: {res.TotalRowsCount}");
+            SnackBarRepo.Error($"Записей больше: {res.TotalRowsCount}");
 
         List<string> res_data = res.Response?.Where(x => TagsSets?.Any(y => y.TagName.Equals(x.TagName, StringComparison.OrdinalIgnoreCase)) != true).Select(x => x.TagName).ToList() ?? [];
 
@@ -129,7 +129,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         TPaginationResponseModel<TagViewModel> res = await TagsRepo.TagsSelectAsync(req);
 
         if (res.TotalRowsCount > req.PageSize)
-            SnackbarRepo.Error($"Записей больше: {res.TotalRowsCount}");
+            SnackBarRepo.Error($"Записей больше: {res.TotalRowsCount}");
 
         await SetBusyAsync(false);
         if (res.Response is not null)

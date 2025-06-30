@@ -49,7 +49,7 @@ public partial class BankDetailsEditComponent : BlazorBusyComponentBaseAuthModel
             SenderActionUserId = CurrentUserSession.UserId
         });
 
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
 
         if (res.Success())

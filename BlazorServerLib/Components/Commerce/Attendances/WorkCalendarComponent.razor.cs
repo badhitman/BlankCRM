@@ -99,7 +99,7 @@ public partial class WorkCalendarComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusyAsync();
         TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>> res = await CommerceRepo.CalendarsSchedulesSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is not null)
         {
             countPages = (int)Math.Ceiling((decimal)res.Response.TotalRowsCount / res.Response.PageSize);

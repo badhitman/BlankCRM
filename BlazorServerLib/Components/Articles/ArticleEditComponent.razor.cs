@@ -47,7 +47,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
 
         TResponseModel<int> res = await ArticlesRepo.ArticleCreateOrUpdateAsync(editArticle);
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (editArticle.Id < 1 && res.Response > 0)
             NavRepo.NavigateTo($"/articles/edit-card/{res.Response}");
         else
@@ -63,7 +63,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
 
         TResponseModel<ArticleModelDB[]> res = await ArticlesRepo.ArticlesReadAsync([ArticleId]);
         await SetBusyAsync(false);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is null)
             throw new Exception();
 
@@ -79,7 +79,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
         ResponseBaseModel res = await ArticlesRepo.UpdateRubricsForArticleAsync(new() { ArticleId = ArticleId, RubricsIds = req.Select(x => x!.Id).ToArray() });
         await LoadArticleData();
         // await SetBusy(false);
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
     }
 
     /// <inheritdoc/>

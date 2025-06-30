@@ -55,7 +55,7 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
-            SnackbarRepo.Error("Не указано имя");
+            SnackBarRepo.Error("Не указано имя");
             return;
         }
 
@@ -70,7 +70,7 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
             }
         });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success())
             ToggleMode();
         Update();
@@ -87,9 +87,9 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
         IsBusyProgress = false;
 
         if (!res.Success())
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res_ModeSelectingRubrics.Success())
-            SnackbarRepo.ShowMessagesResponse(res_ModeSelectingRubrics.Messages);
+            SnackBarRepo.ShowMessagesResponse(res_ModeSelectingRubrics.Messages);
 
         if (res_ModeSelectingRubrics.Response is null || (int)res_ModeSelectingRubrics.Response == 0)
             res_ModeSelectingRubrics.Response = ModesSelectRubricsEnum.AllowWithoutRubric;

@@ -81,7 +81,7 @@ public partial class ChatSelectInputComponent : LazySelectorComponent<ChatTelegr
         if (rest.Count == 0)
         {
             await SetBusyAsync(false);
-            SnackbarRepo.Error($"Не найден запрашиваемый чат #{SelectedChat}");
+            SnackBarRepo.Error($"Не найден запрашиваемый чат #{SelectedChat}");
             return;
         }
         SelectedObject = rest.Single();

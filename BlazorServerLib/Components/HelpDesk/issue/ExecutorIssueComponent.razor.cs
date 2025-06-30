@@ -40,13 +40,13 @@ public partial class ExecutorIssueComponent : IssueWrapBaseModel
             IsBusyProgress = false;
             if (user_by_email is null)
             {
-                SnackbarRepo.Error($"User with this email not found: {editExecutorEmail}");
+                SnackBarRepo.Error($"User with this email not found: {editExecutorEmail}");
                 return;
             }
 
             if (user_by_email.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true && !user_by_email.IsAdmin)
             {
-                SnackbarRepo.Error($"User {editExecutorEmail} cannot be installed by the performer: is not an employee");
+                SnackBarRepo.Error($"User {editExecutorEmail} cannot be installed by the performer: is not an employee");
                 return;
             }
         }
@@ -59,7 +59,7 @@ public partial class ExecutorIssueComponent : IssueWrapBaseModel
         await SetBusyAsync();
         TResponseModel<bool> rest = await HelpDeskRepo.ExecuterUpdateAsync(new() { SenderActionUserId = CurrentUserSession!.UserId, Payload = new() { IssueId = Issue.Id, UserId = user_id } });
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         if (!rest.Success())
             return;
@@ -78,7 +78,7 @@ public partial class ExecutorIssueComponent : IssueWrapBaseModel
             TResponseModel<UserInfoModel[]> res_user = await IdentityRepo.GetUsersIdentityAsync([user_id]);
             IsBusyProgress = false;
 
-            SnackbarRepo.ShowMessagesResponse(res_user.Messages);
+            SnackBarRepo.ShowMessagesResponse(res_user.Messages);
             if (!res_user.Success() || res_user.Response is null || res_user.Response.Length != 1)
                 return;
 

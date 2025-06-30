@@ -84,7 +84,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
                 Id = Issue.Id,
             }
         });
-        SnackbarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         IsBusyProgress = false;
         if (!res.Success())
             return;
@@ -106,7 +106,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
 
             TResponseModel<List<RubricStandardModel>> res = await RubricsRepo.RubricReadAsync(Issue.RubricIssueId.Value);
             IsBusyProgress = false;
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;
             if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
             {
@@ -131,9 +131,9 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
         IsBusyProgress = false;
 
         if (!res.Success())
-            SnackbarRepo.ShowMessagesResponse(res.Messages);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res_ModeSelectingRubrics.Success())
-            SnackbarRepo.ShowMessagesResponse(res_ModeSelectingRubrics.Messages);
+            SnackBarRepo.ShowMessagesResponse(res_ModeSelectingRubrics.Messages);
 
         if (res_ModeSelectingRubrics.Response is null || (int)res_ModeSelectingRubrics.Response == 0)
             res_ModeSelectingRubrics.Response = ModesSelectRubricsEnum.AllowWithoutRubric;

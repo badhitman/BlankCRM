@@ -36,7 +36,7 @@ public partial class FileItemForMessageComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         TResponseModel<byte[]> rest = await telegramRepo.GetFileAsync(FileElement.FileId);
         IsBusyProgress = false;
-        SnackbarRepo.ShowMessagesResponse(rest.Messages);
+        SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Response is not null)
         {
             MemoryStream ms = new(rest.Response);
