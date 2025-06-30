@@ -36,6 +36,9 @@ public class AboutConnectResponseModel : ResponseBaseModel
     public string ClientCode { get; set; }
 
     /// <inheritdoc/>
+    public string ProgramPath { get; set; }
+
+    /// <inheritdoc/>
     public void Update(UpdateConnectionHandleModel req)
     {
         CanConnect = req.CanConnect;
@@ -54,6 +57,7 @@ public class AboutConnectResponseModel : ResponseBaseModel
         HighLimit = req.HighLimit;
         SecurityCriteriaCodeFilterStockSharp = req.SecurityCriteriaCodeFilterStockSharp;
         ClientCode = req.ClientCode;
+        ProgramPath = req.ProgramPath;
         Messages = req.Messages;
     }
 }

@@ -10,7 +10,7 @@
         <MudText Typo="Typo.h6">
             <span title="Click for reload instruments" style="cursor:pointer;" @onclick="_tableRef!.ReloadServerData">Instruments</span>
             <sup style="cursor:pointer" @onclick="StateFilterToggle">
-                <span class="link-@(_stateFilter ? "secondary" : "primary")">all</span> | <span class="link-@(_stateFilter ? "primary" : "secondary")">actual</span>
+                <span class="link-@(_stateFilter ? "secondary" : "primary")">all</span> | <span class="link-@(_stateFilter ? "primary" : "secondary")">favotites</span>
             </sup>
         </MudText>
         <MudSpacer />
@@ -35,7 +35,7 @@
                    Class="mt-0 me-1">
             @foreach (BoardStockSharpViewModel state in Boards)
             {
-                <MudSelectItem T="BoardStockSharpViewModel" Value="@state">@state</MudSelectItem>
+                <MudSelectItem Disabled="AboutConnection is not null && state.LastUpdatedAtUTC < AboutConnection.LastConnectedAt" T="BoardStockSharpViewModel" Value="@state">@state</MudSelectItem>
             }
         </MudSelect>
         <MudSelect T="CurrenciesTypesEnum"
