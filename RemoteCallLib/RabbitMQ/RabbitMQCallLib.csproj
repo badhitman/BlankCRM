@@ -17,15 +17,15 @@
 
 	<ItemGroup>
 		<PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
-		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.3" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.5" />
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.6" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.6" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.6" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.6" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.6" />
 		<PackageReference Include="MongoDB.Driver.Core" Version="2.30.0" />
 		<PackageReference Include="MongoDB.Driver.GridFS" Version="2.30.0" />
 		<PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
-		<PackageReference Include="StackExchange.Redis" Version="2.8.37" />
+		<PackageReference Include="StackExchange.Redis" Version="2.8.41" />
 		<ProjectReference Include="..\..\..\HtmlGenerator\HtmlGenerator.csproj" />
 	</ItemGroup>
 	<Target Name="CopyFilesAfterPublish" AfterTargets="AfterPublish">
