@@ -42,7 +42,7 @@
     <MudSelect T="PortfolioStockSharpModel" @bind-Value="SelectedPortfolio" Label="Портфель" Variant="Variant.Outlined">
         @if (myPortfolios is not null && myPortfolios.Count() != 0)
         {
-            @foreach (PortfolioStockSharpModel p in myPortfolios.ToArray())
+            @foreach (PortfolioStockSharpModel p in myPortfolios)
             {
                 <MudSelectItem T="PortfolioStockSharpModel" Value="p">
                     @p

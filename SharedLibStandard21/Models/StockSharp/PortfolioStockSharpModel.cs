@@ -68,8 +68,7 @@ public partial class PortfolioStockSharpModel : IEquatable<PortfolioStockSharpMo
                 other.State == State &&
                 other.ClientCode == ClientCode &&
                 other.Name == Name &&
-                other.BeginValue == BeginValue &&
-                other.CurrentValue == CurrentValue &&
-                other.DepoName == DepoName;
+                other.DepoName == DepoName &&
+                ((other.Board is null && Board is null) || other.Board?.Equals(Board) == true);
     }
 }
