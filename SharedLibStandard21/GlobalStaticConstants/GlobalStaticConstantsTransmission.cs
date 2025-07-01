@@ -88,7 +88,7 @@ public static partial class GlobalStaticConstantsTransmission
         /// <summary>
         /// Удалить Identity данные пользователя
         /// </summary>
-        public readonly static string DeleteUserDataReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.USER_CONTROLLER_NAME}-{Routes.DATA_ACTION_NAME}", Routes.DELETE_ACTION_NAME);
+        public readonly static string DeleteUserDataReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.USER_CONTROLLER_NAME}-{Routes.DATA_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
 
         /// <summary>
         /// Получает флаг, указывающий, есть ли у пользователя пароль
@@ -150,12 +150,12 @@ public static partial class GlobalStaticConstantsTransmission
         /// <summary>
         /// TelegramJoinAccountStateReceive
         /// </summary>
-        public readonly static string TelegramJoinAccountStateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.TELEGRAM_CONTROLLER_NAME}-{Routes.ACCOUNT_CONTROLLER_NAME}", $"{Routes.JOIN_ACTION_NAME}-{Routes.STATE_ACTION_NAME}");
+        public readonly static string TelegramJoinAccountStateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.TELEGRAM_CONTROLLER_NAME}-{Routes.ACCOUNT_CONTROLLER_NAME}", $"{Routes.JOIN_ACTION_NAME}-{Routes.STATE_CONTROLLER_NAME}");
 
         /// <summary>
         /// SendPasswordResetLinkReceive
         /// </summary>
-        public readonly static string SendPasswordResetLinkReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.USER_CONTROLLER_NAME}-{Routes.PASSWORD_CONTROLLER_NAME}", $"{Routes.SEND_ACTION_NAME}-{Routes.RESET_ACTION_NAME}-{Routes.LINK_ACTION_NAME}");
+        public readonly static string SendPasswordResetLinkReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.USER_CONTROLLER_NAME}-{Routes.PASSWORD_CONTROLLER_NAME}", $"{Routes.SEND_ACTION_NAME}-{Routes.RESET_ACTION_NAME}-{Routes.LINK_CONTROLLER_NAME}");
 
         /// <summary>
         /// TryAddRolesToUserReceive
@@ -793,7 +793,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string LogsSelectStorageReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TOOLS_CONTROLLER_NAME, Routes.LOGS_ACTION_NAME, Routes.SELECT_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string GoToPageForRowLogsReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TOOLS_CONTROLLER_NAME, $"{Routes.LOGS_ACTION_NAME}-{Routes.PAGE_ACTION_NAME}", $"{Routes.GOTO_ACTION_NAME}-for-{Routes.RECORD_CONTROLLER_NAME}");
+        public readonly static string GoToPageForRowLogsReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TOOLS_CONTROLLER_NAME, $"{Routes.LOGS_ACTION_NAME}-{Routes.PAGE_CONTROLLER_NAME}", $"{Routes.GOTO_ACTION_NAME}-for-{Routes.RECORD_CONTROLLER_NAME}");
 
         /// <inheritdoc/>
         public readonly static string MetadataLogsReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TOOLS_CONTROLLER_NAME, Routes.LOGS_ACTION_NAME, Routes.METADATA_CONTROLLER_NAME);
@@ -857,7 +857,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string GetTechProductBreezReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BREEZ_CONTROLLER_NAME, $"{Routes.TECH_CONTROLLER_NAME}-{Routes.PRODUCT_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string DownloadAndSaveBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
+        public readonly static string DownloadAndSaveBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_CONTROLLER_NAME}");
 
         /// <inheritdoc/>
         public readonly static string ProductUpdateBreezReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.BREEZ_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.PRODUCT_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
@@ -878,7 +878,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string ProductsSelectBreezReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BREEZ_CONTROLLER_NAME, Routes.PRODUCTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string DownloadAndSaveDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
+        public readonly static string DownloadAndSaveDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_CONTROLLER_NAME}");
         /// <inheritdoc/>
         public readonly static string ParameterUpdateDaichiReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.DAICHI_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.PROPERTY_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
         /// <inheritdoc/>
@@ -899,7 +899,7 @@ public static partial class GlobalStaticConstantsTransmission
 
 
         /// <inheritdoc/>
-        public readonly static string DownloadAndSaveRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
+        public readonly static string DownloadAndSaveRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_CONTROLLER_NAME}");
         /// <inheritdoc/>
         public readonly static string ProductUpdateRusklimatReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.RUSKLIMAT_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.PRODUCT_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
 
@@ -920,7 +920,7 @@ public static partial class GlobalStaticConstantsTransmission
 
 
         /// <inheritdoc/>
-        public readonly static string DownloadAndSaveHaierProffReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.HAIERPROFF_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
+        public readonly static string DownloadAndSaveHaierProffReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.HAIERPROFF_CONTROLLER_NAME}-{Routes.SYNCHRONIZATION_CONTROLLER_NAME}", $"{Routes.DOWNLOAD_ACTION_NAME}-{Routes.DATA_CONTROLLER_NAME}");
         /// <inheritdoc/>
         public readonly static string ProductsFeedGetHaierProffReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.HAIERPROFF_CONTROLLER_NAME}-{Routes.RSS_CONTROLLER_NAME}", $"{Routes.PRODUCTS_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");
 
@@ -933,7 +933,7 @@ public static partial class GlobalStaticConstantsTransmission
 
         #region kladr
         /// <inheritdoc/>
-        public readonly static string KladrNavigationGetObjectReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.NAVIGATION_CONTROLLER_NAME}", $"{Routes.GET_ACTION_NAME}-{Routes.DATA_ACTION_NAME}");
+        public readonly static string KladrNavigationGetObjectReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.NAVIGATION_CONTROLLER_NAME}", $"{Routes.GET_ACTION_NAME}-{Routes.DATA_CONTROLLER_NAME}");
 
         /// <inheritdoc/>
         public readonly static string KladrNavigationListReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.NAVIGATION_CONTROLLER_NAME}", Routes.LIST_ACTION_NAME);
@@ -972,7 +972,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string TelegramBotStartingStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.TELEGRAM_CONTROLLER_NAME}-{Routes.BOT_CONTROLLER_NAME}-{Routes.START_ACTION_NAME}");//TelegramBotStarting
 
         /// <inheritdoc/>
-        public readonly static string UpdateConnectionStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.CONNECTION_CONTROLLER_NAME}-{Routes.STATE_ACTION_NAME}-{Routes.UPDATE_ACTION_NAME}");
+        public readonly static string UpdateConnectionStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.CONNECTION_CONTROLLER_NAME}-{Routes.STATE_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}");
 
         /// <inheritdoc/>
         public readonly static string ToastClientShowStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.CLIENT_CONTROLLER_NAME}-{Routes.TOAST_CONTROLLER_NAME}", Routes.SHOW_ACTION_NAME);
@@ -1010,7 +1010,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string ConnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.OPEN_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string AboutConnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.ABOUT_ACTION_NAME);
+        public readonly static string AboutConnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.ABOUT_CONTROLLER_NAME);
 
         /// <summary>
         /// Получить профили по их идентификаторам
@@ -1080,7 +1080,7 @@ public static partial class GlobalStaticConstantsTransmission
         /// <summary>
         /// InitialLoadStockSharpDriverReceive
         /// </summary>
-        public readonly static string InitialLoadStockSharpDriverReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.STRATEGY_CONTROLLER_NAME, Routes.INITIAL_CONTROLLER_NAME, Routes.LOAD_ACTION_NAME);
+        public readonly static string InitialLoadStockSharpDriverReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.STRATEGY_CONTROLLER_NAME, Routes.INITIAL_ACTION_NAME, Routes.LOAD_ACTION_NAME);
 
         /// <summary>
         /// ResetStrategyStockSharpDriverReceive

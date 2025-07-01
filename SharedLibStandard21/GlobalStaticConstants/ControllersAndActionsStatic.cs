@@ -1135,6 +1135,87 @@ public static partial class GlobalStaticConstantsRoutes
         /// Пароль
         /// </summary>
         public const string PASSWORD_CONTROLLER_NAME = "password";
+
+
+        /// <summary>
+        /// About
+        /// </summary>
+        public const string ABOUT_CONTROLLER_NAME = "about";
+
+        /// <summary>
+        /// Профиль
+        /// </summary>
+        public const string PROFILE_CONTROLLER_NAME = "profile";
+
+        /// <summary>
+        /// State
+        /// </summary>
+        public const string STATE_CONTROLLER_NAME = "state";
+
+        /// <summary>
+        /// Опрос/анкета
+        /// </summary>
+        public const string QUESTIONNAIRE_CONTROLLER_NAME = "questionnaire";
+
+        /// <summary>
+        /// Уточнение
+        /// </summary>
+        public const string CLARIFICATION_CONTROLLER_NAME = "clarification";
+
+        /// <summary>
+        /// Комментарий
+        /// </summary>
+        public const string COMMENT_CONTROLLER_NAME = "comment";
+
+        /// <summary>
+        /// Очередь
+        /// </summary>
+        public const string QUEUE_CONTROLLER_NAME = "queue";
+
+        /// <summary>
+        /// Потоки
+        /// </summary>
+        public const string THREADS_CONTROLLER_NAME = "threads";
+
+        /// <summary>
+        /// Ссылки
+        /// </summary>
+        public const string LINKS_CONTROLLER_NAME = "links";
+
+        /// <summary>
+        /// Ссылка
+        /// </summary>
+        public const string LINK_CONTROLLER_NAME = "link";
+
+        /// <summary>
+        /// Группы
+        /// </summary>
+        public const string GROUPS_CONTROLLER_NAME = "groups";
+
+        /// <summary>
+        /// Systems
+        /// </summary>
+        public const string SYSTEMS_CONTROLLER_NAME = "systems";
+
+        /// <summary>
+        /// Совладельцы
+        /// </summary>
+        public const string CO_OWNER_CONTROLLER_NAME = "co-owner";
+
+        /// <summary>
+        /// Участники
+        /// </summary>
+        public const string MEMEBERS_CONTROLLER_NAME = "members";
+
+        /// <summary>
+        /// ВСЕ
+        /// </summary>
+        public const string ALL_CONTROLLER_NAME = "all";
+
+        /// <summary>
+        /// menu
+        /// </summary>
+        public const string MENU_CONTROLLER_NAME = "menu";
         #endregion
 
         #region ACTION
@@ -1221,7 +1302,7 @@ public static partial class GlobalStaticConstantsRoutes
         /// <summary>
         /// Initial
         /// </summary>
-        public const string INITIAL_CONTROLLER_NAME = "initial";
+        public const string INITIAL_ACTION_NAME = "initial";
 
         /// <summary>
         /// Load
@@ -1459,19 +1540,9 @@ public static partial class GlobalStaticConstantsRoutes
         public const string CLOSE_ACTION_NAME = "close";
 
         /// <summary>
-        /// About
-        /// </summary>
-        public const string ABOUT_ACTION_NAME = "about";
-
-        /// <summary>
         /// Push
         /// </summary>
         public const string PUSH_ACTION_NAME = "push";
-
-        /// <summary>
-        /// Профиль
-        /// </summary>
-        public const string PROFILE_ACTION_NAME = "profile";
 
         /// <summary>
         /// Выйти
@@ -1494,16 +1565,6 @@ public static partial class GlobalStaticConstantsRoutes
         public const string REGISTRATION_ACTION_NAME = "registration";
 
         /// <summary>
-        /// Статус
-        /// </summary>
-        public const string STATUS_ACTION_NAME = "status";
-
-        /// <summary>
-        /// State
-        /// </summary>
-        public const string STATE_ACTION_NAME = "state";
-
-        /// <summary>
         /// reopen
         /// </summary>
         public const string REOPEN_ACTION_NAME = "reopen";
@@ -1514,129 +1575,9 @@ public static partial class GlobalStaticConstantsRoutes
         public const string FORCE_ACTION_NAME = "force";
 
         /// <summary>
-        /// Формы
-        /// </summary>
-        public const string FORMS_ACTION_NAME = "forms";
-
-        /// <summary>
-        /// Опрос/анкета
-        /// </summary>
-        public const string QUESTIONNAIRE_ACTION_NAME = "questionnaire";
-
-        /// <summary>
-        /// Сессия
-        /// </summary>
-        public const string SESSION_ACTION_NAME = "session";
-
-        /// <summary>
-        /// Страница
-        /// </summary>
-        public const string PAGE_ACTION_NAME = "page";
-
-        /// <summary>
-        /// Форма
-        /// </summary>
-        public const string FORM_ACTION_NAME = "form";
-
-        /// <summary>
-        /// Поле/свойство
-        /// </summary>
-        public const string FIELDS_ACTION_NAME = "fields";
-
-        /// <summary>
-        /// данные
-        /// </summary>
-        public const string DATA_ACTION_NAME = "data";
-
-        /// <summary>
         /// Загрузка
         /// </summary>
         public const string DOWNLOAD_ACTION_NAME = "download";
-
-        /// <summary>
-        /// Справочники
-        /// </summary>
-        public const string DIRECTORIES_ACTION_NAME = "directories";
-
-        /// <summary>
-        /// Элементы
-        /// </summary>
-        public const string ELEMENTS_ACTION_NAME = "elements";
-
-        /// <summary>
-        /// Уточнение
-        /// </summary>
-        public const string CLARIFICATION_ACTION_NAME = "clarification";
-
-        /// <summary>
-        /// Комментарий
-        /// </summary>
-        public const string COMMENT_ACTION_NAME = "comment";
-
-        /// <summary>
-        /// Отчёт
-        /// </summary>
-        public const string REPORT_ACTION_NAME = "report";
-
-        /// <summary>
-        /// Очередь
-        /// </summary>
-        public const string QUEUE_ACTION_NAME = "queue";
-
-        /// <summary>
-        /// Документ
-        /// </summary>
-        public const string DOCUMENT_ACTION_NAME = "document";
-
-        /// <summary>
-        /// Потоки
-        /// </summary>
-        public const string THREADS_ACTION_NAME = "threads";
-
-        /// <summary>
-        /// Строки
-        /// </summary>
-        public const string ROWS_ACTION_NAME = "rows";
-
-        /// <summary>
-        /// Поле
-        /// </summary>
-        public const string FIELD_ACTION_NAME = "field";
-
-        /// <summary>
-        /// Ссылки
-        /// </summary>
-        public const string LINKS_ACTION_NAME = "links";
-
-        /// <summary>
-        /// Ссылка
-        /// </summary>
-        public const string LINK_ACTION_NAME = "link";
-
-        /// <summary>
-        /// Группы
-        /// </summary>
-        public const string GROUPS_ACTION_NAME = "groups";
-
-        /// <summary>
-        /// Systems
-        /// </summary>
-        public const string SYSTEMS_ACTION_NAME = "systems";
-
-        /// <summary>
-        /// Совладельцы
-        /// </summary>
-        public const string CO_OWNER_ACTION_NAME = "co-owner";
-
-        /// <summary>
-        /// Участники
-        /// </summary>
-        public const string MEMEBERS_ACTION_NAME = "members";
-
-        /// <summary>
-        /// ВСЕ
-        /// </summary>
-        public const string ALL_ACTION_NAME = "all";
 
         /// <summary>
         /// По пользователю
@@ -1652,11 +1593,6 @@ public static partial class GlobalStaticConstantsRoutes
         /// Запрос поиска данных
         /// </summary>
         public const string REQUEST_SEARCH_ACTION_NAME = "request-search";
-
-        /// <summary>
-        /// menu
-        /// </summary>
-        public const string MENU_ACTION_NAME = "menu";
 
         /// <summary>
         /// Перезагрузка

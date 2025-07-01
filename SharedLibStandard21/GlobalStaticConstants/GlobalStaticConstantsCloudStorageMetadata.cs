@@ -233,7 +233,7 @@ public static class GlobalStaticCloudStorageMetadata
     public static StorageMetadataModel WappiProfileId => new()
     {
         ApplicationName = Routes.WAPPI_CONTROLLER_NAME,
-        PropertyName = $"{Routes.PROFILE_ACTION_NAME}-{Routes.IDENTITY_CONTROLLER_NAME}",
+        PropertyName = $"{Routes.PROFILE_CONTROLLER_NAME}-{Routes.IDENTITY_CONTROLLER_NAME}",
         PrefixPropertyName = Routes.GLOBAL_CONTROLLER_NAME,
     };
 

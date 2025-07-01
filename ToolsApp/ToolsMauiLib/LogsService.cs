@@ -33,7 +33,7 @@ public class LogsService(ApiRestConfigModelDB _conf, IHttpClientFactory HttpClie
         string json = System.Text.Json.JsonSerializer.Serialize(req, _serializerOptions);
         StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        using HttpResponseMessage response = await _client.PostAsync(new Uri($"/{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.PAGE_ACTION_NAME}/{Routes.GOTO_ACTION_NAME}-for-{Routes.RECORD_CONTROLLER_NAME}"), content, cancellationToken);
+        using HttpResponseMessage response = await _client.PostAsync(new Uri($"/{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.PAGE_CONTROLLER_NAME}/{Routes.GOTO_ACTION_NAME}-for-{Routes.RECORD_CONTROLLER_NAME}"), content, cancellationToken);
 
         string rj = await response.Content.ReadAsStringAsync(cancellationToken);
 
