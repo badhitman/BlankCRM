@@ -567,6 +567,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string ADAPTERS_CONTROLLER_NAME = "adapters";
 
         /// <summary>
+        /// Quote
+        /// </summary>
+        public const string QUOTE_CONTROLLER_NAME = "quote";
+
+        /// <summary>
         /// Favorite
         /// </summary>
         public const string FAVORITE_CONTROLLER_NAME = "favorite";
