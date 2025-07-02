@@ -572,6 +572,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string QUOTE_CONTROLLER_NAME = "quote";
 
         /// <summary>
+        /// Volume
+        /// </summary>
+        public const string VOLUME_CONTROLLER_NAME = "volume";
+
+        /// <summary>
         /// Favorite
         /// </summary>
         public const string FAVORITE_CONTROLLER_NAME = "favorite";
@@ -1233,6 +1238,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Disable
         /// </summary>
         public const string DISABLE_ACTION_NAME = "disable";
+
+        /// <summary>
+        /// Skip
+        /// </summary>
+        public const string SKIP_ACTION_NAME = "skip";
 
         /// <summary>
         /// Ping

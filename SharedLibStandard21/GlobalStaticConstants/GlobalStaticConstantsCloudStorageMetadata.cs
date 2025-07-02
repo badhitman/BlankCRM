@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.IO;
 using static SharedLib.GlobalStaticConstantsRoutes;
+using System.IO;
 
 namespace SharedLib;
 
@@ -11,7 +11,7 @@ namespace SharedLib;
 /// <summary>
 /// Cloud storage metadata
 /// </summary>
-public static class GlobalStaticCloudStorageMetadata
+public static partial class GlobalStaticCloudStorageMetadata
 {
     /// <summary>
     /// HomePagePublic
