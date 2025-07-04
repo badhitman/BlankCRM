@@ -65,10 +65,4 @@ public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSh
         Id = model.Id;
         CreatedAtUTC = model.CreatedAtUTC;
     }
-
-    /// <inheritdoc/>
-    public override string ToString()
-    {
-        return base.ToString();
-    }
 }
