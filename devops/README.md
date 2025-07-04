@@ -47,7 +47,7 @@ check
 docker run hello-world
 ```
 
-for fix error (if if an error occurs) `Package docker-ce-cli is not available, but is referred to by another package.` (origin doc - https://forums.docker.com/t/installing-docker-on-buster-e-package-docker-ce-has-no-installation-candidate/108397/16)
+for fix error (if an error occurs) `Package docker-ce-cli is not available, but is referred to by another package.` (origin doc - https://forums.docker.com/t/installing-docker-on-buster-e-package-docker-ce-has-no-installation-candidate/108397/16)
 ```
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o  /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
