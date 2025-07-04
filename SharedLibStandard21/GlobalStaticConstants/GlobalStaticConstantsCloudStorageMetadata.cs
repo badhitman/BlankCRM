@@ -259,6 +259,17 @@ public static partial class GlobalStaticCloudStorageMetadata
     };
 
     /// <summary>
+    /// TradeInstrumentStrategyStockSharp
+    /// </summary>
+    public static StorageMetadataModel TradeInstrumentStrategyStockSharp(int ownerId) => new()
+    {
+        ApplicationName = GlobalStaticConstantsTransmission.TransmissionQueues.TradeInstrumentStrategyStockSharpReceive,
+        OwnerPrimaryKey = ownerId,
+        PropertyName = $"{Routes.CLIENT_CONTROLLER_NAME}-{Routes.CODE_CONTROLLER_NAME}",
+        PrefixPropertyName = Routes.BROKER_CONTROLLER_NAME
+    };
+
+    /// <summary>
     /// SecuritiesCriteriaCodeFilterStockSharp
     /// </summary>
     public static StorageMetadataModel SecuritiesCriteriaCodeFilterStockSharp => new()
