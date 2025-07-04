@@ -1,11 +1,12 @@
-## DevOps
-## Startup
+## Startup - Ubuntu 24.04 LTS
 
+Prepare
 ```
 apt update -y && apt upgrade -y && apt dist-upgrade -y
-apt install -y nmon wget nano ufw nginx git emscripten p7zip-rar p7zip-full
+apt install -y nmon wget nano ufw nginx git p7zip-rar p7zip-full emscripten zlib1g
 ```
 
+UFW (Uncomplicated Firewall) simple configuration
 ```
 ufw allow 22
 ufw allow 443
@@ -13,16 +14,15 @@ ufw allow 80
 ufw enable
 ```
 
-#### .NET9 - Ubuntu 24.04 LTS
-install - https://learn.microsoft.com/ru-ru/dotnet/core/install/linux-ubuntu-install?tabs=dotnet9&pivots=os-linux-ubuntu-2404
+#### .NET9
+ref - https://learn.microsoft.com/ru-ru/dotnet/core/install/linux-ubuntu-install?tabs=dotnet9&pivots=os-linux-ubuntu-2404
 ```
 sudo add-apt-repository ppa:dotnet/backports
 sudo apt update && sudo apt install -y dotnet-sdk-9.0
-sudo apt install zlib1g
 ```
 
 #### Docker
-install - https://docs.docker.com/engine/install/ubuntu/
+ref - https://docs.docker.com/engine/install/ubuntu/
 1. Set up Docker's apt repository.
 ```
 sudo apt-get install ca-certificates curl
@@ -42,20 +42,22 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-fix error `Package docker-ce-cli is not available, but is referred to by another package.` (origin doc - https://forums.docker.com/t/installing-docker-on-buster-e-package-docker-ce-has-no-installation-candidate/108397/16)
+check
+```
+docker run hello-world
+```
+
+for fix error (if if an error occurs) `Package docker-ce-cli is not available, but is referred to by another package.` (origin doc - https://forums.docker.com/t/installing-docker-on-buster-e-package-docker-ce-has-no-installation-candidate/108397/16)
 ```
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o  /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
 ```
 
-check
-```
-docker run hello-world
-```
+and retry check `docker run hello-world` (if required)
 
 #### Lazydocker
-install - https://lindevs.com/install-lazydocker-on-ubuntu
+ref - https://lindevs.com/install-lazydocker-on-ubuntu
 ```
 LAZYDOCKER_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+')
 curl -Lo lazydocker.tar.gz "https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz"
@@ -75,7 +77,7 @@ rm -rf lazydocker.tar.gz lazydocker-temp
 ```
 
 #### ufw-docker
-doc - https://github.com/chaifeng/ufw-docker?tab=readme-ov-file#install
+ref - https://github.com/chaifeng/ufw-docker?tab=readme-ov-file#install
 ```
 sudo wget -O /usr/local/bin/ufw-docker \
   https://github.com/chaifeng/ufw-docker/raw/master/ufw-docker
@@ -112,7 +114,7 @@ chown -R www-data:www-data /srv/secrets
 chmod -R 777 /srv/secrets
 ```
 
-#### Secrets base
+#### Secrets base (sample files)
 ```
 cd /srv/secrets
 wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/api-access.json
@@ -123,6 +125,7 @@ wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops
 wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/telegram-bot.Development.json
 wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/top-menu.Development.json
 ```
+edit these files for your infrastructure - ligins, passwords, etc.
 
 #### Sources + Builds
 ```
@@ -204,9 +207,7 @@ ln -s /etc/nginx/sites-available/mongo.express /etc/nginx/sites-enabled/
 systemctl reload nginx
 ```
 
-#### Start
-installation of secrets (logins, passwords, etc.): databases, email, rabbitmq, TelegramBot token as well as tokens for access via api/rest (if planned)
-simple - https://github.com/badhitman/BlankCRM/tree/main/devops/secrets
+#### Update services (stage + prod)
 ```
 /srv/stage-builds.update.sh
 /srv/prod-builds.update.sh
