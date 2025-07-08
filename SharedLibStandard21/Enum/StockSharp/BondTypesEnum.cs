@@ -1,9 +1,9 @@
 ﻿namespace SharedLib;
 
 /// <summary>
-/// BndTypeEnum
+/// BndTypes
 /// </summary>
-public enum BndTypeEnum
+public enum BondTypesEnum
 {
     /// <inheritdoc/>
     Govt,

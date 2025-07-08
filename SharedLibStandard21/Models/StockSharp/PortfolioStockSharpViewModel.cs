@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.ComponentModel.DataAnnotations;
 using System;
 
 namespace SharedLib;
@@ -12,6 +13,7 @@ namespace SharedLib;
 public partial class PortfolioStockSharpViewModel : PortfolioStockSharpModel
 {
     /// <inheritdoc/>
+    [Key]
     public int Id { get; set; }
 
     /// <summary>

@@ -28,7 +28,14 @@ public partial class InstrumentTradeStockSharpModel
     /// <inheritdoc/>
     public string ShortName { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// TypeInstrument
+    /// </summary>
+    /// <remarks>
+    /// InstrumentsStockSharpTypesEnum: Swap, Repo, Volatility, Strategy, Indicator, Receipt,
+    /// Gdr, Spread, Loan, MultiLeg, Etf, CryptoCurrency, Adr, Fund, Weather, News, Cfd,
+    /// Commodity, Forward, Warrant, Bond, Currency, Index, Option, Future, Stock
+    /// </remarks>
     public int TypeInstrument { get; set; }
 
     /// <inheritdoc/>
@@ -67,13 +74,20 @@ public partial class InstrumentTradeStockSharpModel
     /// </summary>
     public decimal? FaceValue { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Settlement type.
+    /// </summary>
+    /// <remarks>
+    /// public enum SettlementTypesEnum: Delivery, Cash
+    /// </remarks>
     public int SettlementType { get; set; }
 
     /// <summary>
     /// OptionStyle
     /// </summary>
-
+    /// <remarks>
+    /// OptionTradeInstrumentStylesEnum: European, American, Exotic
+    /// </remarks>
     public int OptionStyle { get; set; }
 
     /// <summary>
@@ -89,12 +103,18 @@ public partial class InstrumentTradeStockSharpModel
     /// <summary>
     /// Option type.
     /// </summary>
+    /// <remarks>
+    /// OptionInstrumentTradeTypesEnum: Call, Put
+    /// </remarks>
     public int OptionType { get; set; }
 
     /// <summary>
     /// Underlying security type.
     /// </summary>
-    public InstrumentsStockSharpTypesEnum UnderlyingSecurityType { get; set; }
+    /// <remarks>
+    /// InstrumentsStockSharpTypesEnum: Stock, Repo, Volatility, Strategy, Future, Indicator, Receipt, Gdr, Spread, Loan, MultiLeg, Etf, CryptoCurrency, Adr, Fund, Weather, News, Cfd, Commodity, Swap, Forward, Warrant, Bond, Currency, Index, Option
+    /// </remarks>
+    public int UnderlyingSecurityType { get; set; }
 
     /// <summary>
     /// Can have short positions.

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
@@ -12,6 +13,7 @@ namespace SharedLib;
 public class MarkerInstrumentStockSharpViewModel : IEquatable<MarkerInstrumentStockSharpViewModel>
 {
     /// <inheritdoc/>
+    [Key]
     public int Id { get; set; }
 
     /// <inheritdoc/>

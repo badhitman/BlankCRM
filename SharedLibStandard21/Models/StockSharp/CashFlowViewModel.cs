@@ -8,17 +8,20 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// OrderStockSharpViewModel
+/// CashFlowViewModel
 /// </summary>
-public class OrderStockSharpViewModel : OrderStockSharpModel
+public class CashFlowViewModel
 {
     /// <inheritdoc/>
     [Key]
-    public int IdPK { get; set; }
+    public int Id { get; set; }
 
     /// <inheritdoc/>
-    public DateTime LastUpdatedAtUTC { get; set; }
-
+    public DateTime PaymentDate { get; set; }
+    
     /// <inheritdoc/>
-    public DateTime CreatedAtUTC { get; set; }
+    public decimal PaymentValue { get; set; }
+    
+    /// <inheritdoc/>
+    public CashFlowTypesEnum CashFlowType { get; set; }
 }

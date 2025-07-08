@@ -2,8 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System;
+using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System;
 
 namespace SharedLib;
 
@@ -15,6 +16,7 @@ public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSh
     /// <summary>
     /// Идентификатор/Key
     /// </summary>
+    [Key]
     public int Id { get; set; }
 
     /// <summary>
