@@ -36,6 +36,17 @@ public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSh
     /// <inheritdoc/>
     public new BoardStockSharpViewModel Board { get; set; }
 
+
+    /// <inheritdoc/>
+    public DateTime IssueDate { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime Maturity { get; set; }
+
+    /// <inheritdoc/>
+    public decimal RateCoup { get; set; }
+
+
     /// <inheritdoc/>
     public virtual void Reload(InstrumentTradeStockSharpViewModel model)
     {
