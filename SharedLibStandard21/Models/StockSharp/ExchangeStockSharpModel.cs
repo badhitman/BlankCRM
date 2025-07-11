@@ -19,7 +19,7 @@ public class ExchangeStockSharpModel : IEquatable<ExchangeStockSharpModel>
     /// <summary>
     /// CountryCode
     /// </summary>
-    public virtual CountryCodesEnum? CountryCode { get; set; }
+    public virtual int? CountryCode { get; set; }
 
 
     /// <inheritdoc/>

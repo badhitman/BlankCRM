@@ -1,0 +1,27 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+<MudDialog>
+    <TitleContent>
+        Dialog Title
+    </TitleContent>
+    <DialogContent>
+        <MudCard>
+            <MudCardContent>
+                <MudForm Spacing="2">
+                    <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="PaymentDate" InputType="InputType.Date" />
+                    <MudNumericField @bind-Value="PaymentValue" Label="Payment Value" />
+                    <MudSelect T="CashFlowTypesEnum" Label="US States" MultiSelection="true" @bind-SelectedValues="_options">
+                        @foreach (CashFlowTypesEnum state in Enum.GetValues(typeof(CashFlowTypesEnum)))
+                        {
+                            <MudSelectItem T="CashFlowTypesEnum" Value="@state">@state</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudForm>
+            </MudCardContent>
+        </MudCard>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">OK</MudButton>
+    </DialogActions>
+</MudDialog>

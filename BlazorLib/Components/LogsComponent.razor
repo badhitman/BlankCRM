@@ -69,7 +69,7 @@
         <MudCheckBox @bind-Value="StackTrace" Label="StackTrace" />
         <MudCheckBox @bind-Value="CallSite" Label="CallSite" />
         <MudCheckBox @bind-Value="Logger" Label="Logger" />
-        <MudCheckBox @bind-Value="ExceptionMessage" Label="ExceptionMessage" />
+        <MudCheckBox @bind-Value="Exception" Label="Exception" />
         <MudCheckBox @bind-Value="AllEventProperties" Label="AllEventProperties" />
     </ToolBarContent>
     <HeaderContent>
@@ -93,9 +93,9 @@
         {
             <MudTh>Logger</MudTh>
         }
-        @if (ExceptionMessage)
+        @if (Exception)
         {
-            <MudTh>ExceptionMessage</MudTh>
+            <MudTh>Exception</MudTh>
         }
         @if (AllEventProperties)
         {
@@ -141,9 +141,9 @@
         {
             <MudTd DataLabel="Logger">@context.Logger</MudTd>
         }
-        @if (ExceptionMessage)
+        @if (Exception)
         {
-            <MudTd DataLabel="ExceptionMessage">@context.ExceptionMessage</MudTd>
+            <MudTd DataLabel="Exception">@context.ExceptionMessage</MudTd>
         }
         @if (AllEventProperties)
         {

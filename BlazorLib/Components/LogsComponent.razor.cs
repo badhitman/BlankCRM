@@ -59,7 +59,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
     }
 
     bool _ExceptionMessage;
-    bool ExceptionMessage
+    bool Exception
     {
         get => _ExceptionMessage;
         set
