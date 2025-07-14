@@ -16,6 +16,9 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     [Inject]
     IDataStockSharpService SsRepo { get; set; } = default!;
 
+    [Inject]
+    IDialogService DialogRepo { get; set; } = default!;
+
 
     InstrumentTradeStockSharpViewModel? manualOrderContext;
     bool ManualOrderCreating;
@@ -62,9 +65,15 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
 
     readonly List<BoardStockSharpViewModel> Boards = [];
 
-    string StyleSup(InstrumentTradeStockSharpViewModel ctx) => EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt ? "" : "cursor:pointer;";
+    string StyleTradeSup(InstrumentTradeStockSharpViewModel ctx) => EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt ? "" : "cursor:pointer;";
 
-    string ClassSup(InstrumentTradeStockSharpViewModel ctx) => EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt ? "ms-1 text-default bi bi-arrow-through-heart opacity-25" : "ms-1 text-primary bi bi-arrow-through-heart";
+    string ClassTradeSup(InstrumentTradeStockSharpViewModel ctx)
+    {
+        string _res = "ms-1 bi bi-coin text-";
+        return EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt
+            ? $"{_res}default opacity-25"
+            : $"{_res}primary";
+    }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -115,6 +124,14 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
             await _tableRef.ReloadServerData();
     }
 
+
+    Task<IDialogReference> OpenDialogAsync(InstrumentTradeStockSharpViewModel Instrument)
+    {
+        DialogOptions options = new() { CloseOnEscapeKey = true, BackdropClick = true, FullScreen = true, FullWidth = true, };
+        DialogParameters<InstrumentEditComponent> parameters = new() { { x => x.Instrument, Instrument } };
+        return DialogRepo.ShowAsync<InstrumentEditComponent>("Instrument edit", parameters, options);
+    }
+
     async Task<TableData<InstrumentTradeStockSharpViewModel>> ServerReload(TableState state, CancellationToken token)
     {
         InstrumentsRequestModel req = new()
@@ -130,7 +147,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         };
         await SetBusyAsync(token: token);
         TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
-        
+
         await SetBusyAsync(false, token: token);
         return new TableData<InstrumentTradeStockSharpViewModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

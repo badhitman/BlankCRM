@@ -8,8 +8,7 @@ using SharedLib;
 
 namespace BlazorLib.Components.StockSharp;
 
-/// <inheritdoc/>
-public partial class CashFlowEditDialogComponent : BlazorBusyComponentBaseModel
+public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
 {
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
@@ -19,7 +18,7 @@ public partial class CashFlowEditDialogComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public required InstrumentTradeStockSharpViewModel Instrument { get; set; }
 
-    decimal? PaymentValue {  get; set; }
+    decimal? PaymentValue { get; set; }
 
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
 

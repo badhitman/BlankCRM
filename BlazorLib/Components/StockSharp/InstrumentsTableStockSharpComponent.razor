@@ -82,7 +82,8 @@
         <MudTd DataLabel="Name" title="@($"last updated: {(DateTime.UtcNow - context.LastUpdatedAtUTC).Duration().ToReadableString()}")">
             <div class="hstack">
                 <MudHighlighter Text="@context.Name" HighlightedText="@searchString" />
-                <sup @onclick="() => { if (!EachDisable) { ManualOrder(context); } }" style="@StyleSup(context)" class="@ClassSup(context)"></sup>
+                <sup style="cursor:pointer;" class="bi bi-gear ms-1" @onclick="() => OpenDialogAsync(context)"></sup>
+                <sup @onclick="() => { if (!EachDisable) { ManualOrder(context); } }" style="@StyleTradeSup(context)" class="@ClassTradeSup(context)"></sup>
             </div>
         </MudTd>
         <MudTd DataLabel="Code">

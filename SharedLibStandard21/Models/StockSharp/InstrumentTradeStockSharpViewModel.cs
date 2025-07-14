@@ -37,14 +37,37 @@ public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSh
     public new BoardStockSharpViewModel Board { get; set; }
 
 
+    #region manual properties 
+
+    /// <summary>
+    /// <see cref="BondsTypesInstrumentsManualEnum"/>
+    /// </summary>
+    public int BondTypeInstrumentManual { get; set; }
+
+    /// <summary>
+    /// <see cref="TypesInstrumentsManualEnum"/>
+    /// </summary>
+    public int TypeInstrumentManual { get; set; }
+
+    /// <inheritdoc/>
+    public string ISIN { get; set; }
+
     /// <inheritdoc/>
     public DateTime IssueDate { get; set; }
 
     /// <inheritdoc/>
-    public DateTime Maturity { get; set; }
+    public DateTime MaturityDate { get; set; }
 
     /// <inheritdoc/>
-    public decimal RateCoup { get; set; }
+    public decimal CouponRate { get; set; }
+
+    /// <inheritdoc/>
+    public decimal LastFairPrice { get; set; }
+
+    /// <inheritdoc/>
+    public string Comment { get; set; }
+
+    #endregion
 
 
     /// <inheritdoc/>
