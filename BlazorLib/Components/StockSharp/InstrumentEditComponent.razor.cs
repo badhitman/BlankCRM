@@ -8,6 +8,7 @@ using SharedLib;
 
 namespace BlazorLib.Components.StockSharp;
 
+/// <inheritdoc/>
 public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
 {
     [CascadingParameter]
@@ -18,14 +19,44 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public required InstrumentTradeStockSharpViewModel Instrument { get; set; }
 
+
     DateTime? IssueDate { get; set; }
     DateTime? MaturityDate { get; set; }
-    IEnumerable<BondsTypesInstrumentsManualEnum> OptionsBondsTypes { get; set; } = new HashSet<BondsTypesInstrumentsManualEnum>();
-    IEnumerable<TypesInstrumentsManualEnum> OptionsTypesInstruments { get; set; } = new HashSet<TypesInstrumentsManualEnum>();
+    BondsTypesInstrumentsManualEnum BondTypeManual { get; set; }
+    TypesInstrumentsManualEnum TypeInstrumentManual { get; set; }
     string? ISIN { get; set; }
     decimal CouponRate { get; set; }
     decimal LastFairPrice { get; set; }
     string? Comment { get; set; }
+
+    void Reset()
+    {
+        IssueDate = Instrument.IssueDate;
+        MaturityDate = Instrument.MaturityDate;
+        BondTypeManual = (BondsTypesInstrumentsManualEnum)Instrument.BondTypeInstrumentManual;
+        TypeInstrumentManual = (TypesInstrumentsManualEnum)Instrument.TypeInstrumentManual;
+        ISIN = Instrument.ISIN;
+        CouponRate = Instrument.CouponRate;
+        LastFairPrice = Instrument.LastFairPrice;
+        Comment = Instrument.Comment;
+    }
+
+    /// <inheritdoc/>
+    protected override void OnInitialized()
+    {
+        Reset();
+        base.OnInitialized();
+    }
+
+    bool IsEdited =>
+        IssueDate != Instrument.IssueDate ||
+        MaturityDate != Instrument.MaturityDate ||
+        BondTypeManual != (BondsTypesInstrumentsManualEnum)Instrument.BondTypeInstrumentManual ||
+        TypeInstrumentManual != (TypesInstrumentsManualEnum)Instrument.TypeInstrumentManual ||
+        ISIN != Instrument.ISIN ||
+        CouponRate != Instrument.CouponRate ||
+        LastFairPrice != Instrument.LastFairPrice ||
+        Comment != Instrument.Comment;
 
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
