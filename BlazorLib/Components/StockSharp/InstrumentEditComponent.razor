@@ -5,8 +5,13 @@
         <MudCard>
             <MudCardContent>
                 <MudForm Spacing="2">
-                    <MudTextField @bind-Value="ISIN" Label="ISIN" Variant="Variant.Text" Immediate></MudTextField>
                     <MudGrid>
+                        <MudItem xs="6" sm="6">
+                            <MudTextField @bind-Value="Name" Label="Name" Variant="Variant.Text" Immediate></MudTextField>
+                        </MudItem>
+                        <MudItem xs="6" sm="6">
+                            <MudTextField @bind-Value="ISIN" Label="ISIN" Variant="Variant.Text" Immediate></MudTextField>
+                        </MudItem>
                         <MudItem xs="6" sm="3">
                             <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Issue Date" InputType="InputType.Date" @bind-Value="IssueDate" />
                         </MudItem>
@@ -20,7 +25,7 @@
                             <MudNumericField @bind-Value="LastFairPrice" Label="Last Fair Price" />
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudSelect T="BondsTypesInstrumentsManualEnum" Label="Bond Type" @bind-SelectedValue="BondTypeManual">
+                            <MudSelect T="BondsTypesInstrumentsManualEnum" Label="Bond Type" @bind-Value="BondTypeManual">
                                 @foreach (BondsTypesInstrumentsManualEnum state in Enum.GetValues(typeof(BondsTypesInstrumentsManualEnum)))
                                 {
                                     <MudSelectItem T="BondsTypesInstrumentsManualEnum" Value="@state">@state</MudSelectItem>
@@ -28,7 +33,7 @@
                             </MudSelect>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudSelect T="TypesInstrumentsManualEnum" Label="Type Instrument" @bind-SelectedValue="TypeInstrumentManual">
+                            <MudSelect T="TypesInstrumentsManualEnum" Label="Type Instrument" @bind-Value="TypeInstrumentManual">
                                 @foreach (TypesInstrumentsManualEnum state in Enum.GetValues(typeof(TypesInstrumentsManualEnum)))
                                 {
                                     <MudSelectItem T="TypesInstrumentsManualEnum" Value="@state">@state</MudSelectItem>
@@ -48,7 +53,7 @@
         <MudButton Disabled="!IsEdited" Color="Color.Primary" OnClick="Submit">OK</MudButton>
         @if (IsEdited)
         {
-            <MudButton OnClick="Reset">Reset</MudButton>
+            <MudButton OnClick="Reset">Reset changes</MudButton>
         }
     </DialogActions>
 </MudDialog>

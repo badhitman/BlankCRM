@@ -11,6 +11,9 @@ namespace BlazorLib.Components.StockSharp;
 /// <inheritdoc/>
 public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
 {
+    [Inject]
+    IDataStockSharpService StockSharpDataRepo { get; set; } = default!;
+
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
 
@@ -25,6 +28,7 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
     BondsTypesInstrumentsManualEnum BondTypeManual { get; set; }
     TypesInstrumentsManualEnum TypeInstrumentManual { get; set; }
     string? ISIN { get; set; }
+    string? Name { get; set; }
     decimal CouponRate { get; set; }
     decimal LastFairPrice { get; set; }
     string? Comment { get; set; }
@@ -39,6 +43,7 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
         CouponRate = Instrument.CouponRate;
         LastFairPrice = Instrument.LastFairPrice;
         Comment = Instrument.Comment;
+        Name = Instrument.Name;
     }
 
     /// <inheritdoc/>
@@ -58,6 +63,24 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
         LastFairPrice != Instrument.LastFairPrice ||
         Comment != Instrument.Comment;
 
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    async Task Submit()
+    {
+        await SetBusyAsync();
+        Instrument.IssueDate = IssueDate ?? default;
+        Instrument.MaturityDate = MaturityDate ?? default;
+        Instrument.BondTypeInstrumentManual = (int)BondTypeManual;
+        Instrument.TypeInstrumentManual = (int)TypeInstrumentManual;
+        Instrument.ISIN = ISIN;
+        Instrument.CouponRate = CouponRate;
+        Instrument.LastFairPrice = LastFairPrice;
+        Instrument.Comment = Comment;
+        Instrument.Name = Name;
+
+        ResponseBaseModel res =  await StockSharpDataRepo.UpdateInstrumentAsync(Instrument);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
     void Cancel() => MudDialog.Cancel();
 }

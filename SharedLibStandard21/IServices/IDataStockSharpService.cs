@@ -14,6 +14,11 @@ namespace SharedLib;
 public interface IDataStockSharpService
 {
     /// <summary>
+    /// UpdateInstrumentAsync
+    /// </summary>
+    public Task<ResponseBaseModel> UpdateInstrumentAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// SetMarkersForInstrumentAsync
     /// </summary>
     public Task<ResponseBaseModel> SetMarkersForInstrumentAsync(SetMarkersForInstrumentRequestModel req, CancellationToken cancellationToken = default);
@@ -28,6 +33,16 @@ public interface IDataStockSharpService
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
     public Task<TResponseModel<List<InstrumentTradeStockSharpViewModel>>> GetInstrumentsAsync(int[] ids = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// InstrumentsSelectAsync
+    /// </summary>
+    public Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(InstrumentsRequestModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// InstrumentSetFavoriteAsync
+    /// </summary>
+    public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить профили по их идентификаторам
@@ -52,14 +67,4 @@ public interface IDataStockSharpService
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
     public Task<TResponseModel<List<OrderStockSharpModel>>> GetOrdersAsync(int[] ids = null, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// InstrumentsSelectAsync
-    /// </summary>
-    public Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(InstrumentsRequestModel req, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// InstrumentSetFavoriteAsync
-    /// </summary>
-    public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);
 }
