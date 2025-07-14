@@ -37,7 +37,7 @@ public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSh
     public new BoardStockSharpViewModel Board { get; set; }
 
 
-    #region manual properties 
+    #region manual properties
 
     /// <summary>
     /// <see cref="BondsTypesInstrumentsManualEnum"/>

@@ -1,21 +1,44 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
 <MudDialog>
-    <TitleContent>
-        Dialog Title
-    </TitleContent>
     <DialogContent>
         <MudCard>
             <MudCardContent>
                 <MudForm Spacing="2">
-                    <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="PaymentDate" InputType="InputType.Date" />
-                    <MudNumericField @bind-Value="PaymentValue" Label="Payment Value" />
-                    <MudSelect T="CashFlowTypesEnum" Label="US States" MultiSelection="true" @bind-SelectedValues="_options">
-                        @foreach (CashFlowTypesEnum state in Enum.GetValues(typeof(CashFlowTypesEnum)))
-                        {
-                            <MudSelectItem T="CashFlowTypesEnum" Value="@state">@state</MudSelectItem>
-                        }
-                    </MudSelect>
+                    <MudTextField @bind-Value="ISIN" Label="ISIN" Variant="Variant.Text"></MudTextField>
+                    <MudGrid>
+                        <MudItem xs="6" sm="3">
+                            <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Issue Date" InputType="InputType.Date" @bind-Value="IssueDate" />
+                        </MudItem>
+                        <MudItem xs="6" sm="3">
+                            <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Maturity Date" InputType="InputType.Date" @bind-Value="MaturityDate" />
+                        </MudItem>
+                        <MudItem xs="6" sm="3">
+                            <MudNumericField @bind-Value="CouponRate" Label="Coupon Rate" />
+                        </MudItem>
+                        <MudItem xs="6" sm="3">
+                            <MudNumericField @bind-Value="LastFairPrice" Label="Last Fair Price" />
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudSelect T="BondsTypesInstrumentsManualEnum" Label="Bond Type" @bind-SelectedValues="OptionsBondsTypes">
+                                @foreach (BondsTypesInstrumentsManualEnum state in Enum.GetValues(typeof(BondsTypesInstrumentsManualEnum)))
+                                {
+                                    <MudSelectItem T="BondsTypesInstrumentsManualEnum" Value="@state">@state</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudSelect T="TypesInstrumentsManualEnum" Label="Type Instrument" @bind-SelectedValues="OptionsTypesInstruments">
+                                @foreach (TypesInstrumentsManualEnum state in Enum.GetValues(typeof(TypesInstrumentsManualEnum)))
+                                {
+                                    <MudSelectItem T="TypesInstrumentsManualEnum" Value="@state">@state</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField T="string" Label="Comment" Variant="Variant.Outlined" Text="@Comment" Lines="3" />
+                        </MudItem>
+                    </MudGrid>
                 </MudForm>
             </MudCardContent>
         </MudCard>

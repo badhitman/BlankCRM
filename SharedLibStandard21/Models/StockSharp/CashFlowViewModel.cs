@@ -18,10 +18,12 @@ public class CashFlowViewModel
 
     /// <inheritdoc/>
     public DateTime PaymentDate { get; set; }
-    
+
     /// <inheritdoc/>
     public decimal PaymentValue { get; set; }
-    
-    /// <inheritdoc/>
-    public CashFlowTypesEnum CashFlowType { get; set; }
+
+    /// <summary>
+    /// <see cref="CashFlowTypesEnum"/>
+    /// </summary>
+    public int CashFlowType { get; set; }
 }

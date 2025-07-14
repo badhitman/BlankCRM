@@ -18,10 +18,15 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public required InstrumentTradeStockSharpViewModel Instrument { get; set; }
 
-    decimal? PaymentValue { get; set; }
+    DateTime? IssueDate { get; set; }
+    DateTime? MaturityDate { get; set; }
+    IEnumerable<BondsTypesInstrumentsManualEnum> OptionsBondsTypes { get; set; } = new HashSet<BondsTypesInstrumentsManualEnum>();
+    IEnumerable<TypesInstrumentsManualEnum> OptionsTypesInstruments { get; set; } = new HashSet<TypesInstrumentsManualEnum>();
+    string? ISIN { get; set; }
+    decimal CouponRate { get; set; }
+    decimal LastFairPrice { get; set; }
+    string? Comment { get; set; }
 
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
-
     void Cancel() => MudDialog.Cancel();
-    private IEnumerable<CashFlowTypesEnum> _options = new HashSet<CashFlowTypesEnum>();
 }

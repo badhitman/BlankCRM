@@ -127,7 +127,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
 
     Task<IDialogReference> OpenDialogAsync(InstrumentTradeStockSharpViewModel Instrument)
     {
-        DialogOptions options = new() { CloseOnEscapeKey = true, BackdropClick = true, FullScreen = true, FullWidth = true, };
+        DialogOptions options = new() { CloseOnEscapeKey = true, BackdropClick = true, FullWidth = true, };
         DialogParameters<InstrumentEditComponent> parameters = new() { { x => x.Instrument, Instrument } };
         return DialogRepo.ShowAsync<InstrumentEditComponent>("Instrument edit", parameters, options);
     }
