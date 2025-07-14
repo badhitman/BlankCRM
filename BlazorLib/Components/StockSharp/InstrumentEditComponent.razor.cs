@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
+using System.Globalization;
 
 namespace BlazorLib.Components.StockSharp;
 
@@ -29,9 +30,19 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
     TypesInstrumentsManualEnum TypeInstrumentManual { get; set; }
     string? ISIN { get; set; }
     string? Name { get; set; }
-    decimal CouponRate { get; set; }
-    decimal LastFairPrice { get; set; }
+    decimal CouponRate { get; set; } = 1;
+    decimal LastFairPrice { get; set; } = 9;
     string? Comment { get; set; }
+
+    MudNumericField<decimal>? _crRef;
+    MudNumericField<decimal>? _lfpRef;
+    CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
+
+    /// <inheritdoc/>
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+    }
 
     void Reset()
     {
@@ -49,11 +60,12 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
-        Reset();
         base.OnInitialized();
+        Reset();
     }
 
     bool IsEdited =>
+        Name != Instrument.Name ||
         IssueDate != Instrument.IssueDate ||
         MaturityDate != Instrument.MaturityDate ||
         BondTypeManual != (BondsTypesInstrumentsManualEnum)Instrument.BondTypeInstrumentManual ||

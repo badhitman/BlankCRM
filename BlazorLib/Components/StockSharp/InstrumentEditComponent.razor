@@ -6,24 +6,13 @@
             <MudCardContent>
                 <MudForm Spacing="2">
                     <MudGrid>
-                        <MudItem xs="6" sm="6">
+                        <MudItem xs="12" md="6">
                             <MudTextField @bind-Value="Name" Label="Name" Variant="Variant.Text" Immediate></MudTextField>
                         </MudItem>
-                        <MudItem xs="6" sm="6">
+                        <MudItem xs="12" md="6">
                             <MudTextField @bind-Value="ISIN" Label="ISIN" Variant="Variant.Text" Immediate></MudTextField>
                         </MudItem>
-                        <MudItem xs="6" sm="3">
-                            <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Issue Date" InputType="InputType.Date" @bind-Value="IssueDate" />
-                        </MudItem>
-                        <MudItem xs="6" sm="3">
-                            <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Maturity Date" InputType="InputType.Date" @bind-Value="MaturityDate" />
-                        </MudItem>
-                        <MudItem xs="6" sm="3">
-                            <MudNumericField @bind-Value="CouponRate" Label="Coupon Rate" />
-                        </MudItem>
-                        <MudItem xs="6" sm="3">
-                            <MudNumericField @bind-Value="LastFairPrice" Label="Last Fair Price" />
-                        </MudItem>
+
                         <MudItem xs="12" sm="6">
                             <MudSelect T="BondsTypesInstrumentsManualEnum" Label="Bond Type" @bind-Value="BondTypeManual">
                                 @foreach (BondsTypesInstrumentsManualEnum state in Enum.GetValues(typeof(BondsTypesInstrumentsManualEnum)))
@@ -40,6 +29,20 @@
                                 }
                             </MudSelect>
                         </MudItem>
+
+                        <MudItem xs="6" sm="3">
+                            <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Issue Date" InputType="InputType.Date" @bind-Value="IssueDate" />
+                        </MudItem>
+                        <MudItem xs="6" sm="3">
+                            <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Maturity Date" InputType="InputType.Date" @bind-Value="MaturityDate" />
+                        </MudItem>
+                        <MudItem xs="6" sm="3">
+                            <MudNumericField T="decimal" @bind-Value="CouponRate" Label="Coupon Rate" Immediate @ref="_crRef" Format="N2" Culture="@_en" />
+                        </MudItem>
+                        <MudItem xs="6" sm="3">
+                            <MudNumericField T="decimal" @bind-Value="LastFairPrice" Label="Last Fair Price" Immediate @ref="_lfpRef" Format="N2" Culture="@_en" />
+                        </MudItem>
+
                         <MudItem xs="12">
                             <MudTextField @bind-Text="Comment" T="string" Label="Comment" Variant="Variant.Outlined" Lines="3" Immediate />
                         </MudItem>
@@ -47,6 +50,17 @@
                 </MudForm>
             </MudCardContent>
         </MudCard>
+        <MudExpansionPanel Class="mt-1">
+            <TitleContent>
+                <div class="d-flex">
+                    <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
+                    <MudText>Cash <strong>Flows</strong></MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                Panel Content
+            </ChildContent>
+        </MudExpansionPanel>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
