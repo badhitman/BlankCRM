@@ -12,7 +12,7 @@
     </MudItem>
     <MudItem xs="12" md="4">
         <MudTextField @bind-Value="_datePayment"
-                      T="DateOnly?"
+                      T="DateTime?"
                       Label="Date"
                       Format="yyyy-MM-dd"
                       InputType="InputType.Date"
@@ -36,26 +36,58 @@
                        Variant="Variant.Outlined"
                        Color="Color.Primary"
                        OnClick="AddNewFlow"
-                       Disabled="@(_valuePayment <= 0 || !_datePayment.HasValue || _datePayment < DateOnly.FromDateTime(DateTime.Now))" />
+                       Disabled="@(_valuePayment <= 0 || !_datePayment.HasValue || _datePayment < DateTime.Now)" />
     </MudItem>
 </MudGrid>
 
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th scope="col">Date</th>
-            <th scope="col">Value</th>
-            <th scope="col">Type</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (CashFlowViewModel cf in CashFlow)
-        {
-            <tr>
-                <th scope="row">@cf.PaymentDate.ToShortDateString()</th>
-                <td>@cf.PaymentValue</td>
-                <td>@((CashFlowTypesEnum)cf.CashFlowType)</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<MudTable Items="@Elements" Dense Hover CanCancelEdit Loading="IsBusyProgress"
+          @bind-SelectedItem="selectedItem1" SortLabel="Sort By" CommitEditTooltip="Commit Edit"
+          RowEditPreview="BackupItem" RowEditCancel="ResetItemToOriginalValues"
+          RowEditCommit="ItemHasBeenCommitted" IsEditRowSwitchingBlocked EditTrigger="@TableEditTrigger.EditButton">
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<CashFlowViewModel, object>(x => x.PaymentDate)" InitialDirection="SortDirection.Ascending">Date</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<CashFlowViewModel, object>(x => x.PaymentValue)">Value</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<CashFlowViewModel, object>(x => x.CashFlowType)">Type</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Date">@context!.PaymentDate.ToShortDateString()</MudTd>
+        <MudTd DataLabel="Value">@context!.PaymentValue</MudTd>
+        <MudTd DataLabel="Type">@((CashFlowTypesEnum)context!.CashFlowType)</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+
+        <MudTd DataLabel="Date">
+            <MudTextField @bind-Value="context!.PaymentDate"
+                          T="DateTime"
+                          Label="Date"
+                          Format="yyyy-MM-dd"
+                          InputType="InputType.Date"
+                          Margin="Margin.Dense" />
+        </MudTd>
+        <MudTd DataLabel="Value">
+            <MudNumericField @bind-Value="context!.PaymentValue"
+                             T="decimal"
+                             Label="Value"
+                             Format="N2"
+                             Culture="@_en"
+                             Margin="Margin.Dense" />
+        </MudTd>
+        <MudTd DataLabel="Type">
+            <MudSelect @bind-Value="context!.CashFlowType"
+                       Label="Type"
+                       Variant="Variant.Outlined"
+                       Margin="Margin.Dense">
+                @foreach (CashFlowTypesEnum state in Enum.GetValues(typeof(CashFlowTypesEnum)))
+                {
+                    <MudSelectItem Value="@((int)state)">@state</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+    </RowEditingTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+    <EditButtonContent Context="button">
+        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+    </EditButtonContent>
+</MudTable>

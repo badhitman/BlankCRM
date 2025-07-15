@@ -13,16 +13,24 @@ namespace SharedLib;
 /// </summary>
 public interface IDataStockSharpService
 {
+    #region CashFlow
     /// <summary>
-    /// CashFlowUpdateAsync
+    /// CashFlow Update
     /// </summary>
     public Task<ResponseBaseModel> CashFlowUpdateAsync(CashFlowViewModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// CashFlowList
+    /// Get CashFlowList for instrument
     /// </summary>
     public Task<TResponseModel<List<CashFlowViewModel>>> CashFlowList(int instrumentId, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Delete CashFlow
+    /// </summary>
+    public Task<ResponseBaseModel> CashFlowDelete(int cashFlowId, CancellationToken cancellationToken = default);
+    #endregion
+
+    #region Instrument
     /// <summary>
     /// UpdateInstrumentAsync
     /// </summary>
@@ -52,7 +60,8 @@ public interface IDataStockSharpService
     /// <summary>
     /// InstrumentSetFavoriteAsync
     /// </summary>
-    public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(int instrumentId, CancellationToken cancellationToken = default);
+    #endregion
 
     /// <summary>
     /// Получить профили по их идентификаторам

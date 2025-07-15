@@ -14,10 +14,21 @@ namespace RemoteCallLib;
 /// </summary>
 public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataStockSharpService
 {
+    #region CashFlow
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> CashFlowDelete(int cashFlowId, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.CashFlowDeleteStockSharpReceive, cashFlowId, token: cancellationToken) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<CashFlowViewModel>>> CashFlowList(int instrumentId, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<TResponseModel<List<CashFlowViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.CashFlowListStockSharpReceive, instrumentId, token: cancellationToken) ?? new();
+
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> CashFlowUpdateAsync(CashFlowViewModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.CashFlowUpdateStockSharpReceive, req, token: cancellationToken) ?? new();
+    #endregion
 
+    #region Instrument
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateInstrumentAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.UpdateInstrumentStockSharpReceive, req, token: cancellationToken) ?? new();
@@ -27,8 +38,8 @@ public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataSto
         => await mqClient.MqRemoteCallAsync<TResponseModel<List<InstrumentTradeStockSharpViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetInstrumentsStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentFavoriteToggleStockSharpReceive, req, token: cancellationToken) ?? new();
+    public async Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(int instrumentId, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentFavoriteToggleStockSharpReceive, instrumentId, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(InstrumentsRequestModel req, CancellationToken cancellationToken = default)
@@ -41,6 +52,11 @@ public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataSto
     /// <inheritdoc/>
     public async Task<TResponseModel<List<MarkerInstrumentStockSharpViewModel>>> GetMarkersForInstrumentAsync(int instrumentId, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<TResponseModel<List<MarkerInstrumentStockSharpViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetMarkersForInstrumentsStockSharpReceive, instrumentId, token: cancellationToken) ?? new();
+    #endregion
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<PortfolioStockSharpViewModel>>> GetPortfoliosAsync(int[]? req = null, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<TResponseModel<List<PortfolioStockSharpViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetPortfoliosStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<BoardStockSharpViewModel>>> GetBoardsAsync(int[]? req = null, CancellationToken cancellationToken = default)
@@ -53,12 +69,4 @@ public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataSto
     /// <inheritdoc/>
     public async Task<TResponseModel<List<OrderStockSharpModel>>> GetOrdersAsync(int[]? req = null, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<TResponseModel<List<OrderStockSharpModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetOrdersStockSharpReceive, req, token: cancellationToken) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<List<PortfolioStockSharpViewModel>>> GetPortfoliosAsync(int[]? req = null, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<List<PortfolioStockSharpViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetPortfoliosStockSharpReceive, req, token: cancellationToken) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<List<CashFlowViewModel>>> CashFlowList(int instrumentId, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<List<CashFlowViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.CashFlowListStockSharpReceive, instrumentId, token: cancellationToken) ?? new();
 }

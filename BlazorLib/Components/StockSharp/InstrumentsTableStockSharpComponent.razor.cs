@@ -117,7 +117,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     async Task FavoriteToggle(InstrumentTradeStockSharpViewModel sender)
     {
         await SetBusyAsync();
-        ResponseBaseModel res = await SsRepo.InstrumentFavoriteToggleAsync(sender);
+        ResponseBaseModel res = await SsRepo.InstrumentFavoriteToggleAsync(sender.Id);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         if (_tableRef is not null)
