@@ -487,6 +487,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string PORTFOLIOS_CONTROLLER_NAME = "portfolios";
 
         /// <summary>
+        /// Cash
+        /// </summary>
+        public const string CASH_CONTROLLER_NAME = "cash";
+
+        /// <summary>
         /// Portfolio
         /// </summary>
         public const string PORTFOLIO_CONTROLLER_NAME = "portfolio";
