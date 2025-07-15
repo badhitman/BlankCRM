@@ -8,7 +8,7 @@
                          Format="N2"
                          Culture="@_en"
                          Variant="Variant.Outlined"
-                         Margin="Margin.Dense" />
+                         Margin="Margin.Dense" Disabled="IsBusyProgress" />
     </MudItem>
     <MudItem xs="12" md="4">
         <MudTextField @bind-Value="_datePayment"
@@ -17,14 +17,14 @@
                       Format="yyyy-MM-dd"
                       InputType="InputType.Date"
                       Variant="Variant.Outlined"
-                      Margin="Margin.Dense" />
+                      Margin="Margin.Dense" Disabled="IsBusyProgress" />
     </MudItem>
     <MudItem xs="12" md="3">
         <MudSelect @bind-Value="_cashFlowType"
                    T="CashFlowTypesEnum"
                    Label="Type"
                    Variant="Variant.Outlined"
-                   Margin="Margin.Dense">
+                   Margin="Margin.Dense" Disabled="IsBusyProgress">
             @foreach (CashFlowTypesEnum state in Enum.GetValues(typeof(CashFlowTypesEnum)))
             {
                 <MudSelectItem T="CashFlowTypesEnum" Value="@state">@state</MudSelectItem>
@@ -36,7 +36,7 @@
                        Variant="Variant.Outlined"
                        Color="Color.Primary"
                        OnClick="AddNewFlow"
-                       Disabled="@(_valuePayment <= 0 || !_datePayment.HasValue || _datePayment < DateTime.Now)" />
+                       Disabled="@(IsBusyProgress || _valuePayment <= 0 || !_datePayment.HasValue || _datePayment < DateTime.Now)" />
     </MudItem>
 </MudGrid>
 
