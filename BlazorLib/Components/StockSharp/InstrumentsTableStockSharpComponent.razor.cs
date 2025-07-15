@@ -129,7 +129,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     {
         DialogOptions options = new() { CloseOnEscapeKey = true, BackdropClick = true, FullWidth = true, };
         DialogParameters<InstrumentEditComponent> parameters = new() { { x => x.Instrument, Instrument } };
-        IDialogReference res = await DialogRepo.ShowAsync<InstrumentEditComponent>("Instrument edit", parameters, options);
+        IDialogReference res = await DialogRepo.ShowAsync<InstrumentEditComponent>($"Instrument edit: {Instrument.IdRemote}", parameters, options);
         await res.Result.WaitAsync(cancellationToken: CancellationToken.None);
         if (_tableRef is not null)
             await _tableRef.ReloadServerData();

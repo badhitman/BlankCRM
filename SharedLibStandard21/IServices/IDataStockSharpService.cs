@@ -14,6 +14,11 @@ namespace SharedLib;
 public interface IDataStockSharpService
 {
     /// <summary>
+    /// CashFlowUpdateAsync
+    /// </summary>
+    public Task<ResponseBaseModel> CashFlowUpdateAsync(CashFlowViewModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// CashFlowList
     /// </summary>
     public Task<TResponseModel<List<CashFlowViewModel>>> CashFlowList(int instrumentId, CancellationToken cancellationToken = default);

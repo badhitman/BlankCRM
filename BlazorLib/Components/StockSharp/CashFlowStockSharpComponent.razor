@@ -1,28 +1,61 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
+<MudGrid>
+    <MudItem xs="12" md="3">
+        <MudNumericField @bind-Value="_valuePayment"
+                         T="decimal?"
+                         Label="Value"
+                         Format="N2"
+                         Culture="@_en"
+                         Variant="Variant.Outlined"
+                         Margin="Margin.Dense" />
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <MudTextField @bind-Value="_datePayment"
+                      T="DateOnly?"
+                      Label="Date"
+                      Format="yyyy-MM-dd"
+                      InputType="InputType.Date"
+                      Variant="Variant.Outlined"
+                      Margin="Margin.Dense" />
+    </MudItem>
+    <MudItem xs="12" md="3">
+        <MudSelect @bind-Value="_cashFlowType"
+                   T="CashFlowTypesEnum"
+                   Label="Type"
+                   Variant="Variant.Outlined"
+                   Margin="Margin.Dense">
+            @foreach (CashFlowTypesEnum state in Enum.GetValues(typeof(CashFlowTypesEnum)))
+            {
+                <MudSelectItem T="CashFlowTypesEnum" Value="@state">@state</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="2" Class="d-flex align-content-center flex-wrap ">
+        <MudIconButton Icon="@Icons.Material.Filled.AddCircle"
+                       Variant="Variant.Outlined"
+                       Color="Color.Primary"
+                       OnClick="AddNewFlow"
+                       Disabled="@(_valuePayment <= 0 || !_datePayment.HasValue || _datePayment < DateOnly.FromDateTime(DateTime.Now))" />
+    </MudItem>
+</MudGrid>
+
 <table class="table table-striped table-hover">
     <thead>
         <tr>
-            <th scope="col">Payment Date </th>
-            <th scope="col">Payment Value</th>
+            <th scope="col">Date</th>
+            <th scope="col">Value</th>
             <th scope="col">Type</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>John</td>
-            <td>Doe</td>
-        </tr>
+        @foreach (CashFlowViewModel cf in CashFlow)
+        {
+            <tr>
+                <th scope="row">@cf.PaymentDate.ToShortDateString()</th>
+                <td>@cf.PaymentValue</td>
+                <td>@((CashFlowTypesEnum)cf.CashFlowType)</td>
+            </tr>
+        }
     </tbody>
 </table>

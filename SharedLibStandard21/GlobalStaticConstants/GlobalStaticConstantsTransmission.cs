@@ -1021,6 +1021,9 @@ public static partial class GlobalStaticConstantsTransmission
         /// <inheritdoc/>
         public readonly static string CashFlowListStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.CASH_CONTROLLER_NAME}-{Routes.FLOW_CONTROLLER_NAME}", $"{Routes.GET_ACTION_NAME}-{Routes.LIST_ACTION_NAME}");
 
+        /// <inheritdoc/>
+        public readonly static string CashFlowUpdateStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.CASH_CONTROLLER_NAME}-{Routes.FLOW_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
+
         /// <summary>
         /// Получить площадки бирж по их идентификаторам
         /// </summary>

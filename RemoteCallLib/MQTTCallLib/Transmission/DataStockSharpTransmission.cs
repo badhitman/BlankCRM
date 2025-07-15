@@ -15,6 +15,10 @@ namespace RemoteCallLib;
 public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataStockSharpService
 {
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> CashFlowUpdateAsync(CashFlowViewModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.CashFlowUpdateStockSharpReceive, req, token: cancellationToken) ?? new();
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateInstrumentAsync(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.UpdateInstrumentStockSharpReceive, req, token: cancellationToken) ?? new();
 
