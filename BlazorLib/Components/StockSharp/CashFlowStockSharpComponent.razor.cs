@@ -45,8 +45,8 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
         ResponseBaseModel res = await StockSharpRepo.CashFlowDelete(_initDeleteCashFlow);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         _initDeleteCashFlow = 0;
-        TResponseModel<List<CashFlowViewModel>> res = await StockSharpRepo.CashFlowList(InstrumentId);
-        Elements = res.Response;
+        TResponseModel<List<CashFlowViewModel>> resC = await StockSharpRepo.CashFlowList(InstrumentId);
+        Elements = resC.Response;
         await SetBusyAsync(false);
     }
 
