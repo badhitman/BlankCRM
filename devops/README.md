@@ -125,7 +125,7 @@ wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops
 wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/telegram-bot.Development.json
 wget https://raw.githubusercontent.com/badhitman/BlankCRM/refs/heads/main/devops/secrets/top-menu.Development.json
 ```
-edit these files for your infrastructure - ligins, passwords, etc.
+edit these files for your infrastructure - logins, passwords, etc.
 
 #### Sources + Builds
 ```

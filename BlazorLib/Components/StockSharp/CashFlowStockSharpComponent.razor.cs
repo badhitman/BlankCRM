@@ -25,13 +25,32 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
 
 
     List<CashFlowViewModel> Elements = [];
-    readonly CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
+    static readonly CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
     decimal? _valuePayment = 0;
     CashFlowTypesEnum _cashFlowType;
     DateTime? _datePayment;
 
+    CashFlowViewModel? selectedItem1 = null;
+    CashFlowViewModel? elementBeforeEdit;
+    int _initDeleteCashFlow;
+
+    async Task InitDeleteCashFlow(int _cashFlowId)
+    {
+        if (_initDeleteCashFlow == 0 || _initDeleteCashFlow != _cashFlowId)
+        {
+            _initDeleteCashFlow = _cashFlowId;
+            return;
+        }
+        await SetBusyAsync();
+        ResponseBaseModel res = await StockSharpRepo.CashFlowDelete(_initDeleteCashFlow);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        _initDeleteCashFlow = 0;
+        await SetBusyAsync(false);
+    }
+
     async Task AddNewFlow()
     {
+        _initDeleteCashFlow = 0;
         if (!_datePayment.HasValue || !_valuePayment.HasValue)
             return;
 
@@ -63,18 +82,16 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync(false);
     }
 
-
-    private CashFlowViewModel? selectedItem1 = null;
-    private CashFlowViewModel? elementBeforeEdit;
-
     void BackupItem(object element)
     {
+        _initDeleteCashFlow = 0;
         if (element is CashFlowViewModel cfm)
             elementBeforeEdit = GlobalTools.CreateDeepCopy(cfm);
     }
 
     void ItemHasBeenCommitted(object element)
     {
+        _initDeleteCashFlow = 0;
         if (element is CashFlowViewModel cfm)
         {
             CashFlowViewModel _cfm = GlobalTools.CreateDeepCopy(cfm)!;
@@ -92,6 +109,7 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
 
     void ResetItemToOriginalValues(object element)
     {
+        _initDeleteCashFlow = 0;
         if (elementBeforeEdit is null)
         {
             SnackBarRepo.Error("elementBeforeEdit is null");
@@ -99,7 +117,7 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
         }
 
        ((CashFlowViewModel)element).PaymentDate = elementBeforeEdit.PaymentDate;
-       ((CashFlowViewModel)element).PaymentValue = elementBeforeEdit.PaymentValue;
-       ((CashFlowViewModel)element).CashFlowType = elementBeforeEdit.CashFlowType;
+        ((CashFlowViewModel)element).PaymentValue = elementBeforeEdit.PaymentValue;
+        ((CashFlowViewModel)element).CashFlowType = elementBeforeEdit.CashFlowType;
     }
 }

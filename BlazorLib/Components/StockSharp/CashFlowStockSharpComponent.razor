@@ -50,12 +50,19 @@
         <MudTh><MudTableSortLabel SortBy="new Func<CashFlowViewModel, object>(x => x.CashFlowType)">Type</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Date">@context!.PaymentDate.ToShortDateString()</MudTd>
+        <MudTd DataLabel="Date">
+            @context!.PaymentDate.ToShortDateString()
+            <sup class="bi bi-x @(_initDeleteCashFlow == context.Id ? "text-danger-emphasis" : "")" title="удаление CashFlow" style="cursor:pointer;" @onclick="async () => await InitDeleteCashFlow(context.Id)">
+                @if (_initDeleteCashFlow == context.Id)
+                {
+                    <text>Подтвердить удаление</text>
+                }
+            </sup>
+        </MudTd>
         <MudTd DataLabel="Value">@context!.PaymentValue</MudTd>
         <MudTd DataLabel="Type">@((CashFlowTypesEnum)context!.CashFlowType)</MudTd>
     </RowTemplate>
     <RowEditingTemplate>
-
         <MudTd DataLabel="Date">
             <MudTextField @bind-Value="context!.PaymentDate"
                           T="DateTime"
