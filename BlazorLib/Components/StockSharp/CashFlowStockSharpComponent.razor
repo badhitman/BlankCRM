@@ -1,15 +1,6 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
 <MudGrid>
-    <MudItem xs="12" md="3">
-        <MudNumericField @bind-Value="_valuePayment"
-                         T="decimal?"
-                         Label="Value"
-                         Format="N2"
-                         Culture="@_en"
-                         Variant="Variant.Outlined"
-                         Margin="Margin.Dense" Disabled="IsBusyProgress" />
-    </MudItem>
     <MudItem xs="12" md="4">
         <MudTextField @bind-Value="_datePayment"
                       T="DateTime?"
@@ -18,6 +9,15 @@
                       InputType="InputType.Date"
                       Variant="Variant.Outlined"
                       Margin="Margin.Dense" Disabled="IsBusyProgress" />
+    </MudItem>
+    <MudItem xs="12" md="3">
+        <MudNumericField @bind-Value="_valuePayment"
+                         T="decimal?"
+                         Label="Value"
+                         Format="N2"
+                         Culture="@_en"
+                         Variant="Variant.Outlined"
+                         Margin="Margin.Dense" Disabled="IsBusyProgress" />
     </MudItem>
     <MudItem xs="12" md="3">
         <MudSelect @bind-Value="_cashFlowType"

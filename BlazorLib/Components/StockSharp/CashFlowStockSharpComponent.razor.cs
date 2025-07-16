@@ -86,9 +86,11 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
 
     void BackupItem(object element)
     {
-        _initDeleteCashFlow = 0;
         if (element is CashFlowViewModel cfm)
             elementBeforeEdit = GlobalTools.CreateDeepCopy(cfm);
+
+        _initDeleteCashFlow = 0;
+        StateHasChanged();
     }
 
     void ItemHasBeenCommitted(object element)
