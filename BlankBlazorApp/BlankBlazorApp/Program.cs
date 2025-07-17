@@ -161,7 +161,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllers();
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
-{ 
+{
     options.SignIn.RequireConfirmedAccount = true;
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789-._@+";
 })
@@ -174,7 +174,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     ;
 
 Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-builder.Services.AddLocalization(lo => lo.ResourcesPath = "Resources");
+builder.Services.AddLocalization();
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     CultureInfo[] supportedCultures = [new CultureInfo("en-US"), GlobalStaticConstants.RU];
@@ -263,6 +263,14 @@ otel.WithTracing(tracing =>
 });
 
 WebApplication app = builder.Build();
+
+string[] supportedCultures = ["en-US", "ru-RU"];
+RequestLocalizationOptions localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
 
 app.MapDefaultEndpoints();
 

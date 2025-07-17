@@ -1,11 +1,12 @@
 ﻿@page "/Account/Login"
 
+@using BlazorLib.Components.Shared
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 
-<PageTitle>SignIn</PageTitle>
+<PageTitle>@localizer["SignIn"]</PageTitle>
 
-<h2>SignIn</h2>
+<h2>@localizer["SignIn"]</h2>
 <StatusMessage Messages="@Messages" />
 <div class="row">
     <div class="col-md-4">

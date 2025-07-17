@@ -12,6 +12,7 @@
 
     <main>
         <div class="top-row px-4">
+            <CultureSelector />
             @if (NavMainMenu.TopNavMenuItems?.Any() == true)
             {
                 foreach (NavItemModel nav_item in NavMainMenu.TopNavMenuItems)

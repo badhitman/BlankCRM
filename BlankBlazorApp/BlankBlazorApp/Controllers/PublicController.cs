@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,6 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Web;
 using SharedLib;
-using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlankBlazorApp.Controllers;
 

@@ -137,7 +137,7 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 #### [BlankBlazorApp](https://github.com/badhitman/BlankCRM/tree/main/BlankBlazorApp/BlankBlazorApp)
 - Blazor вэб сервер
 - Рендеринг: `InteractiveServerRenderMode(prerender: false)`
-- Авторизация типовая `Microsoft.AspNetCore.Identity` ([documents](https://learn.microsoft.com/ru-ru/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio))
+- Авторизация типовая `Microsoft.AspNetCore.Identity` ([documents](https://learn.microsoft.com/ru-ru/aspnet/core/security/authentication/identity?view=aspnetcore-9.0&tabs=visual-studio))
 - В Frontend добавлен базовый функционал для работы с Пользователями, Ролями, Claims и Telegram[^4]
 - Служба равно как и другие службы использует RabbitMQ для обслуживания входящих команд, на которые она зарегистрировала свои обработчики[^1]
 

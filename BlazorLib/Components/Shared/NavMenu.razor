@@ -1,6 +1,7 @@
 ﻿@implements IDisposable
 
 @inject IParametersStorageTransmission StoreRepo
+@inject IStringLocalizer<Resources> localizer
 @inject NavigationManager NavigationManager
 @inject ISnackbar SnackbarRepo
 
@@ -10,11 +11,11 @@
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" id="main-nav-dom" class="navbar-toggler" />
+<input type="checkbox" id="main-nav-dom" class="navbar-toggler" />
 
 <div class="nav-scrollable" onclick="document.querySelector('#main-nav-dom').click()">
     <nav class="flex-column">
-        <NavMainMenuComponent NavMenuItems="NavMainMenu.NavMenuItems" />        
+        <NavMainMenuComponent NavMenuItems="NavMainMenu.NavMenuItems" />
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
@@ -27,7 +28,7 @@
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
                         <button type="submit" class="nav-link px-2">
-                            <span aria-hidden="true"></span> Logout
+                            <span aria-hidden="true"></span> @localizer["Logout"]
                         </button>
                     </form>
                 </div>
@@ -35,12 +36,12 @@
             <NotAuthorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link px-3" href="Account/Register">
-                        <span aria-hidden="true"></span> Registration
+                        <span aria-hidden="true"></span> @localizer["Registration"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link px-3" href="Account/Login">
-                        <span aria-hidden="true"></span> Login
+                        <span aria-hidden="true"></span> @localizer["Login"]
                     </NavLink>
                 </div>
             </NotAuthorized>
@@ -55,9 +56,10 @@
     private string? currentUrl;
     string _textValue = "App";
 
-
     protected override async Task OnInitializedAsync()
     {
+        var v = localizer.GetAllStrings();
+
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
 

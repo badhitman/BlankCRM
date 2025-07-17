@@ -9,6 +9,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using SharedLib;
 using BlazorLib;
+using Microsoft.Extensions.Localization;
+using BlazorLib.Locales;
+
 
 namespace BlazorWebLib.Components.Account.Pages;
 
@@ -22,6 +25,9 @@ public partial class LoginPage(IUsersAuthenticateService UserAuthManage, Navigat
 
     [Inject]
     ILogger<LoginPage> Logger { get; set; } = default!;
+
+    [Inject] 
+    IStringLocalizer<Resources> localizer  { get; set; } = default!;
 
 
     [CascadingParameter]
