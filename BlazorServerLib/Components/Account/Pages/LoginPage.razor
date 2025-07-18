@@ -1,8 +1,8 @@
 ﻿@page "/Account/Login"
 
-@using BlazorLib.Components.Shared
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using BlazorLib.Components.Shared
 
 <PageTitle>@localizer["SignIn"]</PageTitle>
 
@@ -35,21 +35,29 @@
                     <div class="checkbox mb-3">
                         <label class="form-label">
                             <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                            Remember me
+                            @localizer["Remember me"]
                         </label>
                     </div>
                     <div>
-                        <button type="submit" class="w-100 btn btn-lg btn-primary">LogIn</button>
+                        <button type="submit" class="w-100 btn btn-lg btn-primary">
+                            @localizer["Login"]
+                        </button>
                     </div>
                     <div class="mt-4">
                         <p>
-                            <a href="Account/ForgotPassword">Forgot your password?</a>
+                            <a href="Account/ForgotPassword">
+                                @localizer["Forgot your password?"]
+                            </a>
                         </p>
                         <p>
-                            <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
+                            <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">
+                                @localizer["Register as a new user"]
+                            </a>
                         </p>
                         <p>
-                            <a href="Account/ResendEmailConfirmation">Resend confirmation email</a>
+                            <a href="Account/ResendEmailConfirmation">
+                                @localizer["Resend confirmation email"]
+                            </a>
                         </p>
                     </div>
                 </EditForm>
