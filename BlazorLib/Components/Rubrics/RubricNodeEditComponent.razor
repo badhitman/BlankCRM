@@ -20,7 +20,7 @@
         }
         else
         {
-            <span class="font-monospace">@Item.Text</span>
+            @ItemBody
         }
     </MudStack>
     <div style="justify-self: end;">
@@ -52,6 +52,7 @@
         </div>
     </div>
 </div>
+
 @code {
     [Inject]
     IRubricsTransmission RubricsRepo { get; set; } = default!;
@@ -81,6 +82,8 @@
     [CascadingParameter, EditorRequired]
     public required TreeItemDataRubricModel Item { get; set; }
 
+    [Parameter, EditorRequired]
+    public required RenderFragment ItemBody { get; set; }
 
     bool IsRenameMode;
 
@@ -97,6 +100,7 @@
     static MoveRowStatesEnum[] CantUpMove => [MoveRowStatesEnum.Start, MoveRowStatesEnum.Singleton];
 
     static MoveRowStatesEnum[] CantDownMove => [MoveRowStatesEnum.End, MoveRowStatesEnum.Singleton];
+
 
     async Task MoveRow(DirectionsEnum dir, TreeItemDataRubricModel rubric)
     {

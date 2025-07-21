@@ -1,10 +1,10 @@
-@typeparam TItem
+@typeparam TEntity where TEntity : RubricNodeBodyComponent
 
 @using MudBlazor
 
 @inherits BlazorBusyComponentBaseModel
 
-<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%" class="@(ItemModel?.IsDisabled == true ? "text-decoration-line-through opacity-25": "")">
+<div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%" class="@(ItemModel?.IsDisabled == true ? "text-decoration-line-through opacity-25" : "")">
     <MudStack Row="true">
         <span class="font-monospace visually-hidden">Создать новый элемент</span>
     </MudStack>
@@ -34,14 +34,15 @@
         }
     </div>
 </div>
-@code{
+
+@code {
     [Inject]
     IRubricsTransmission RubricsRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
-    public required RubricsManageComponent<TItem> HelpDeskParentView { get; set; }
+    public required RubricsManageComponent<TEntity> HelpDeskParentView { get; set; }
 
     /// <inheritdoc/>
     [CascadingParameter, EditorRequired]
