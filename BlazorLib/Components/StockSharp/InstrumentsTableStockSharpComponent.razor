@@ -113,6 +113,30 @@
         {
             <MudTh>Decimals</MudTh>
         }
+        @if (_columnsSelected?.Contains(_isin) == true)
+        {
+            <MudTh>ISIN</MudTh>
+        }
+        @if (_columnsSelected?.Contains(_issD) == true)
+        {
+            <MudTh>Issue</MudTh>
+        }
+        @if (_columnsSelected?.Contains(_mtD) == true)
+        {
+            <MudTh>Maturity</MudTh>
+        }
+        @if (_columnsSelected?.Contains(_cr) == true)
+        {
+            <MudTh>CouponRate</MudTh>
+        }
+        @if (_columnsSelected?.Contains(_lfP) == true)
+        {
+            <MudTh>LastFairPrice</MudTh>
+        }
+        @if (_columnsSelected?.Contains(_cmnt) == true)
+        {
+            <MudTh>Comment</MudTh>
+        }
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name" title="@($"last updated: {(DateTime.UtcNow - context.LastUpdatedAtUTC).Duration().ToReadableString()}")">
@@ -160,6 +184,40 @@
         @if (_columnsSelected?.Contains(_dc) == true)
         {
             <MudTd DataLabel="Settlement">@(context.Decimals)</MudTd>
+        }
+        @if (_columnsSelected?.Contains(_isin) == true)
+        {
+            <MudTd DataLabel="ISIN">@(context.ISIN)</MudTd>
+        }
+        @if (_columnsSelected?.Contains(_issD) == true)
+        {
+            <MudTd DataLabel="Issue">
+                @if (context.IssueDate != default)
+                {
+                    <text>@(context.IssueDate.ToShortDateString())</text>
+                }
+            </MudTd>
+        }
+        @if (_columnsSelected?.Contains(_mtD) == true)
+        {
+            <MudTd DataLabel="Maturity">
+                @if (context.MaturityDate != default)
+                {
+                    <text>@(context.MaturityDate.ToShortDateString())</text>
+                }
+            </MudTd>
+        }
+        @if (_columnsSelected?.Contains(_cr) == true)
+        {
+            <MudTd DataLabel="CouponRate">@(context.CouponRate)</MudTd>
+        }
+        @if (_columnsSelected?.Contains(_lfP) == true)
+        {
+            <MudTd DataLabel="LastFairPrice">@(context.LastFairPrice)</MudTd>
+        }
+        @if (_columnsSelected?.Contains(_cmnt) == true)
+        {
+            <MudTd DataLabel="Comment">@(context.Comment)</MudTd>
         }
     </RowTemplate>
     <NoRecordsContent>
