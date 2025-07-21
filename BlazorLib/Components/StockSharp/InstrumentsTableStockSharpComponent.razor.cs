@@ -19,10 +19,30 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     [Inject]
     IDialogService DialogRepo { get; set; } = default!;
 
-
     InstrumentTradeStockSharpViewModel? manualOrderContext;
     bool ManualOrderCreating;
     private readonly DialogOptions _dialogOptions = new() { FullWidth = true, MaxWidth = MaxWidth.ExtraLarge };
+
+    static string _mtp = nameof(InstrumentTradeStockSharpModel.Multiplier),
+        _std = nameof(InstrumentTradeStockSharpModel.SettlementDate),
+        _fv = nameof(InstrumentTradeStockSharpModel.FaceValue),
+        _dc = nameof(InstrumentTradeStockSharpModel.Decimals),
+        _mcs = "Markers",
+        _fvt = "Favorite";
+    static string[] columnsExt = [_mtp, _dc, _std, _fv, _mcs, _fvt];
+
+
+    IEnumerable<string>? _columnsSelected;
+    IEnumerable<string>? ColumnsSelected
+    {
+        get => _columnsSelected;
+        set
+        {
+            _columnsSelected = value;
+            if (_tableRef is not null)
+                InvokeAsync(_tableRef.ReloadServerData);
+        }
+    }
 
     IEnumerable<InstrumentsStockSharpTypesEnum>? _typesSelected;
     IEnumerable<InstrumentsStockSharpTypesEnum>? TypesSelected

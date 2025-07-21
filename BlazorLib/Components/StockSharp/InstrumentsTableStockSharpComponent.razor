@@ -1,8 +1,8 @@
 ﻿@inherits StockSharpAboutComponent
 
 <MudTable ServerData="ServerReload"
-          Dense="true"
-          Hover="true"
+          Dense
+          Hover
           Loading="IsBusyProgress"
           Striped
           @ref="_tableRef">
@@ -10,7 +10,7 @@
         <MudText Typo="Typo.h6">
             <span title="Click for reload instruments" style="cursor:pointer;" @onclick="_tableRef!.ReloadServerData">Instruments</span>
             <sup style="cursor:pointer" @onclick="StateFilterToggle">
-                <span class="link-@(_stateFilter ? "secondary" : "primary")">all</span> | <span class="link-@(_stateFilter ? "primary" : "secondary")">favotites</span>
+                <span class="link-@(_stateFilter ? "secondary" : "primary")">all</span> | <span class="link-@(_stateFilter ? "primary" : "secondary")">favorites</span>
             </sup>
         </MudText>
         <MudSpacer />
@@ -25,7 +25,7 @@
                       Class="mt-0 me-1" />
         <MudSelect T="BoardStockSharpViewModel"
                    Label="Boards"
-                   MultiSelection="true"
+                   MultiSelection
                    @bind-SelectedValues="SelectedBoards"
                    Adornment="Adornment.Start"
                    AdornmentIcon="@Icons.Custom.Uncategorized.ChessKnight"
@@ -40,7 +40,7 @@
         </MudSelect>
         <MudSelect T="CurrenciesTypesEnum"
                    Label="Currency"
-                   MultiSelection="true"
+                   MultiSelection
                    @bind-SelectedValues="CurrenciesSelected"
                    Adornment="Adornment.Start"
                    AdornmentIcon="@Icons.Material.Filled.AttachMoney"
@@ -55,7 +55,7 @@
         </MudSelect>
         <MudSelect T="InstrumentsStockSharpTypesEnum"
                    Label="Type"
-                   MultiSelection="true"
+                   MultiSelection
                    @bind-SelectedValues="TypesSelected"
                    Adornment="Adornment.Start"
                    AdornmentIcon="@Icons.Material.Filled.Abc"
@@ -68,14 +68,51 @@
                 <MudSelectItem T="InstrumentsStockSharpTypesEnum" Value="@state">@state.DescriptionInfo()</MudSelectItem>
             }
         </MudSelect>
+        <MudSelect T="string"
+                   Label="Columns"
+                   MultiSelection
+                   @bind-SelectedValues="ColumnsSelected"
+                   Adornment="Adornment.Start"
+                   AdornmentIcon="@Icons.Material.Filled.Abc"
+                   IconSize="Size.Small"
+                   Clearable
+                   Dense
+                   Class="mt-0 me-1">
+            @foreach (string state in columnsExt)
+            {
+                <MudSelectItem T="string" Value="@state">@state</MudSelectItem>
+            }
+        </MudSelect>
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortLabel="Name" T="InstrumentTradeStockSharpViewModel">Name</MudTableSortLabel></MudTh>
         <MudTh>Code</MudTh>
-        <MudTh>Markers</MudTh>
-        <MudTh>Favorite</MudTh>
+        @if (_columnsSelected?.Contains(_mcs) == true)
+        {
+            <MudTh>Markers</MudTh>
+        }
+        @if (_columnsSelected?.Contains(_fvt) == true)
+        {
+            <MudTh>Favorite</MudTh>
+        }
         <MudTh>Currency</MudTh>
         <MudTh>Type</MudTh>
+        @if (_columnsSelected?.Contains(_mtp) == true)
+        {
+            <MudTh>Multiplier</MudTh>
+        }
+        @if (_columnsSelected?.Contains(_std) == true)
+        {
+            <MudTh>Settlement</MudTh>
+        }
+        @if (_columnsSelected?.Contains(_fv) == true)
+        {
+            <MudTh>FaceValue</MudTh>
+        }
+        @if (_columnsSelected?.Contains(_dc) == true)
+        {
+            <MudTh>Decimals</MudTh>
+        }
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name" title="@($"last updated: {(DateTime.UtcNow - context.LastUpdatedAtUTC).Duration().ToReadableString()}")">
@@ -90,18 +127,40 @@
                 <MudHighlighter Text="@context.IdRemote" HighlightedText="@searchString" />
             </strong>
         </MudTd>
-        <MudTd DataLabel="Markers">
-            <MarkersOfInstrumentComponent Instrument="context" />
-        </MudTd>
-        <MudTd DataLabel="Favorite">
-            <MudSwitch ValueChanged="async () => await FavoriteToggle(context)"
-                       Value="context.IsFavorite"
-                       ReadOnly="IsBusyProgress"
-                       Color="@(context.IsFavorite ? Color.Success : Color.Secondary)"
-                       T="bool" />
-        </MudTd>
+        @if (_columnsSelected?.Contains(_mcs) == true)
+        {
+            <MudTd DataLabel="Markers">
+                <MarkersOfInstrumentComponent Instrument="context" />
+            </MudTd>
+        }
+        @if (_columnsSelected?.Contains(_fvt) == true)
+        {
+            <MudTd DataLabel="Favorite">
+                <MudSwitch ValueChanged="async () => await FavoriteToggle(context)"
+                           Value="context.IsFavorite"
+                           ReadOnly="IsBusyProgress"
+                           Color="@(context.IsFavorite ? Color.Success : Color.Secondary)"
+                           T="bool" />
+            </MudTd>
+        }
         <MudTd DataLabel="Currency">@((CurrenciesTypesEnum)context.Currency)</MudTd>
         <MudTd DataLabel="Type">@((InstrumentsStockSharpTypesEnum)context.TypeInstrument)</MudTd>
+        @if (_columnsSelected?.Contains(_mtp) == true)
+        {
+            <MudTd DataLabel="Multiplier">@(context.Multiplier)</MudTd>
+        }
+        @if (_columnsSelected?.Contains(_std) == true)
+        {
+            <MudTd DataLabel="Settlement">@(context.SettlementDate)</MudTd>
+        }
+        @if (_columnsSelected?.Contains(_fv) == true)
+        {
+            <MudTd DataLabel="FaceValue">@(context.FaceValue)</MudTd>
+        }
+        @if (_columnsSelected?.Contains(_dc) == true)
+        {
+            <MudTd DataLabel="Settlement">@(context.Decimals)</MudTd>
+        }
     </RowTemplate>
     <NoRecordsContent>
         <MudText>Nothing found</MudText>
