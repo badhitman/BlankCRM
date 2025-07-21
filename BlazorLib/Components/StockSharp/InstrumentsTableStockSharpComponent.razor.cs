@@ -19,9 +19,20 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     [Inject]
     IDialogService DialogRepo { get; set; } = default!;
 
+    [Inject]
+    IParametersStorageTransmission StorageRepo { get; set; } = default!;
+
+
     InstrumentTradeStockSharpViewModel? manualOrderContext;
     bool ManualOrderCreating;
     private readonly DialogOptions _dialogOptions = new() { FullWidth = true, MaxWidth = MaxWidth.ExtraLarge };
+
+    static StorageMetadataModel setCol = new()
+    {
+        ApplicationName = nameof(InstrumentsTableStockSharpComponent),
+        PrefixPropertyName = "settings",
+        PropertyName = "columns"
+    };
 
     static string _mtp = nameof(InstrumentTradeStockSharpModel.Multiplier),
         _std = nameof(InstrumentTradeStockSharpModel.SettlementDate),
@@ -105,7 +116,11 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        await SetBusyAsync();
+        TResponseModel<string[]> readColumnsSet = await StorageRepo.ReadParameterAsync<string[]>(setCol);
+        _columnsSelected = readColumnsSet.Response;
         await ReloadBoards();
+        await SetBusyAsync(false);
     }
 
     bool _stateFilter;
@@ -125,6 +140,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     async Task ReloadBoards()
     {
         TResponseModel<List<BoardStockSharpViewModel>> boardsRes = await SsRepo.GetBoardsAsync();
+
         lock (Boards)
         {
             Boards.Clear();
@@ -164,6 +180,9 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
 
     async Task<TableData<InstrumentTradeStockSharpViewModel>> ServerReload(TableState state, CancellationToken token)
     {
+        if (ColumnsSelected is not null)
+            await StorageRepo.SaveParameterAsync(ColumnsSelected, setCol, true, token: token);
+
         InstrumentsRequestModel req = new()
         {
             BoardsFilter = [.. SelectedBoards.Select(x => x.Id)],
