@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// StockSharp - события
 /// </summary>
-public interface IEventsStockSharpService
+public interface IEventsStockSharp
 {
     /// <summary>
     /// ToastClientShow

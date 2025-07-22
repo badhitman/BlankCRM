@@ -9,9 +9,9 @@ using SharedLib;
 namespace RemoteCallLib;
 
 /// <summary>
-/// StockSharpDriverTransmission
+/// DriverStockSharpTransmission
 /// </summary>
-public partial class StockSharpDriverTransmission(IMQTTClient mqClient) : IDriverStockSharpService
+public partial class DriverStockSharpTransmission(IMQTTClient mqClient) : IDriverStockSharpService
 {
     /// <inheritdoc/>
     public async Task<AboutConnectResponseModel> AboutConnection(CancellationToken cancellationToken = default)

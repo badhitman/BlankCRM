@@ -8,7 +8,10 @@ using SharedLib;
 
 namespace BlazorLib.Components.Rubrics;
 
-public partial class RubricNodeBodyComponent
+/// <summary>
+/// RubricNodeBodyComponent
+/// </summary>
+public partial class RubricNodeBodyComponent : BlazorBusyComponentBaseModel
 {
     /// <summary>
     /// Node

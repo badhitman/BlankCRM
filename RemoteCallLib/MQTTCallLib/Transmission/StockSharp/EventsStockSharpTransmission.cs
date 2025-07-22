@@ -11,7 +11,7 @@ namespace RemoteCallLib;
 /// <summary>
 /// StockSharpEventsServiceTransmission
 /// </summary>
-public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) : IEventsStockSharpService
+public partial class EventsStockSharpTransmission(IMQTTClient mqClient) : IEventsStockSharp
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> BoardReceived(BoardStockSharpModel req, CancellationToken cancellationToken = default)
@@ -48,5 +48,4 @@ public partial class StockSharpEventsServiceTransmission(IMQTTClient mqClient) :
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ToastClientShow(ToastShowClientModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ToastClientShowStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
-
 }
