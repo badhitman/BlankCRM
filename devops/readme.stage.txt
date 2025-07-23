@@ -16,8 +16,8 @@ cp -r /srv/git/builds/KladrService /srv/services.stage/KladrService
 cp -r /srv/git/builds/LdapService /srv/services.stage/LdapService
 cp -r /srv/git/builds/BlankBlazorApp /srv/services.stage/BlankBlazorApp
 
-chown -R www-data:www-data /srv/services.stage
-chmod -R 777 /srv/services.stage
+chown -R www-data:www-data /srv/services
+chmod -R 777 /srv/services
 
 chown -R www-data:www-data /srv/git/builds
 chmod -R 777 /srv/git/builds

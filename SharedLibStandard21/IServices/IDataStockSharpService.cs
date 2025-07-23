@@ -64,6 +64,21 @@ public interface IDataStockSharpService
     #endregion
 
     /// <summary>
+    /// InstrumentRubricUpdateAsync
+    /// </summary>
+    public Task<ResponseBaseModel> InstrumentRubricUpdateAsync(InstrumentRubricUpdateModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// GetRubricsForInstrumentAsync
+    /// </summary>
+    public Task<TResponseModel<List<UniversalBaseModel>>> GetRubricsForInstrumentAsync(int idInstrument, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Получить инструменты для рубрики
+    /// </summary>
+    public Task<TResponseModel<List<InstrumentTradeStockSharpViewModel>>> GetInstrumentsForRubricAsync(int idRubric, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Получить профили по их идентификаторам
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>

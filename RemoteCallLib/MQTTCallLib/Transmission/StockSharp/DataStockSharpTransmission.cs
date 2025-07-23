@@ -2,10 +2,11 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
 using SharedLib;
+using System.Collections.Generic;
+using System.Diagnostics.Metrics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RemoteCallLib;
 
@@ -69,4 +70,16 @@ public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataSto
     /// <inheritdoc/>
     public async Task<TResponseModel<List<OrderStockSharpModel>>> GetOrdersAsync(int[]? req = null, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<TResponseModel<List<OrderStockSharpModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetOrdersStockSharpReceive, req, token: cancellationToken) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> InstrumentRubricUpdateAsync(InstrumentRubricUpdateModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentRubricUpdateStockSharpReceive, req, token: cancellationToken) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<UniversalBaseModel>>> GetRubricsForInstrumentAsync(int idInstrument, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<TResponseModel<List<UniversalBaseModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetRubricsForInstrumentStockSharpReceive, idInstrument, token: cancellationToken) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<InstrumentTradeStockSharpViewModel>>> GetInstrumentsForRubricAsync(int idRubric, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<TResponseModel<List<InstrumentTradeStockSharpViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetInstrumentsForRubricStockSharpReceive, idRubric, token: cancellationToken) ?? new();
 }

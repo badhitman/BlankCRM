@@ -1163,7 +1163,16 @@ public static partial class GlobalStaticConstantsTransmission
         /// Получить заказы по их идентификаторам
         /// </summary>
         /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
-        public readonly static string GetOrdersStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME);
+        public readonly static string GetOrdersStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.ORDERS_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string InstrumentRubricUpdateStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENT_CONTROLLER_NAME, Routes.RUBRIC_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string GetRubricsForInstrumentStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.RUBRICS_CONTROLLER_NAME}-for-{Routes.INSTRUMENT_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string GetInstrumentsForRubricStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.INSTRUMENTS_CONTROLLER_NAME}-for-{Routes.RUBRIC_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
         #endregion
     }
 }
