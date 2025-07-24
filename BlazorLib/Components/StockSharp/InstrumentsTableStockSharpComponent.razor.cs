@@ -44,9 +44,8 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         _cr = nameof(InstrumentTradeStockSharpViewModel.CouponRate),
         _lfP = nameof(InstrumentTradeStockSharpViewModel.LastFairPrice),
         _cmnt = nameof(InstrumentTradeStockSharpViewModel.Comment),
-        _mcs = "Markers",
-        _fvt = "Favorite";
-    static string[] columnsExt = [_mtp, _dc, _std, _fv, _mcs, _fvt, _isin, _issD, _mtD, _cr, _lfP, _cmnt];
+        _mcs = "Markers", _fvt = "Favorite", _rbcs = "Rubrics";
+    static string[] columnsExt = [_mtp, _dc, _std, _fv, _mcs, _fvt, _isin, _issD, _mtD, _cr, _lfP, _cmnt, _rbcs];
 
 
     IEnumerable<string>? _columnsSelected;

@@ -15,7 +15,6 @@
             <MudStack Justify="@Justify.Center"
                       Class="mud-width-full">
                 <MudChipSet T="InstrumentTradeStockSharpViewModel"
-                            CheckMark
                             SelectionMode="@SelectionMode.MultiSelection"                            >
                     @for (var i = 0; i < Instruments.Count; i++)
                     {
@@ -24,11 +23,6 @@
                     }
                 </MudChipSet>
             </MudStack>
-
-            @* foreach (var _it in Instruments)
-            {
-                <span class="badge rounded-pill text-bg-primary me-1">@_it.IdRemote</span>
-            } *@
         }        
         <MudTable @ref="_table"
                   Loading="IsBusyProgress"
@@ -45,7 +39,7 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Name">
-                    <div class="@(Instruments.Any(x => x.Id == context.Id) ? "text-info" : "")">
+                    <div class="@(Instruments?.Any(x => x.Id == context.Id) == true ? "text-info" : "")">
                         @context.Name
                         <sup @onclick="async () => await InstrumentToggle(context)" style="cursor:pointer;" class="bi bi-bookmark@(Instruments.Any(x => x.Id == context.Id) ? "-check-fill" : "")"></sup>
                     </div>

@@ -1,10 +1,8 @@
 ﻿@inherits StockSharpAboutComponent
 
 <MudTable ServerData="ServerReload"
-          Dense
-          Hover
+          Dense Hover Striped
           Loading="IsBusyProgress"
-          Striped
           @ref="_tableRef">
     <ToolBarContent>
         <MudText Typo="Typo.h6">
@@ -73,7 +71,7 @@
                    MultiSelection
                    @bind-SelectedValues="ColumnsSelected"
                    Adornment="Adornment.Start"
-                   AdornmentIcon="@Icons.Material.Filled.Abc"
+                   AdornmentIcon="@Icons.Material.Filled.ViewColumn"
                    IconSize="Size.Small"
                    Clearable
                    Dense
@@ -136,6 +134,10 @@
         @if (_columnsSelected?.Contains(_cmnt) == true)
         {
             <MudTh>Comment</MudTh>
+        }
+        @if (_columnsSelected?.Contains(_rbcs) == true)
+        {
+            <MudTh>Rubrics</MudTh>
         }
     </HeaderContent>
     <RowTemplate>
@@ -218,6 +220,10 @@
         @if (_columnsSelected?.Contains(_cmnt) == true)
         {
             <MudTd DataLabel="Comment">@(context.Comment)</MudTd>
+        }
+        @if (_columnsSelected?.Contains(_rbcs) == true)
+        {
+            <MudTd DataLabel="Rubrics">~Rubrics~</MudTd>
         }
     </RowTemplate>
     <NoRecordsContent>
