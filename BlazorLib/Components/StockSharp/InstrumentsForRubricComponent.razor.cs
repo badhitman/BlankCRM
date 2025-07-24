@@ -3,6 +3,10 @@
 ////////////////////////////////////////////////
 
 using BlazorLib.Components.Rubrics;
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using SharedLib;
+using System.Diagnostics.Metrics;
 
 namespace BlazorLib.Components.StockSharp;
 
@@ -11,12 +15,53 @@ namespace BlazorLib.Components.StockSharp;
 /// </summary>
 public partial class InstrumentsForRubricComponent : RubricNodeBodyComponent
 {
+    [Inject]
+    IDataStockSharpService SsRepo { get; set; } = default!;
+
+    [Inject]
+    IDialogService DialogService { get; set; } = default!;
+
+
+    List<InstrumentTradeStockSharpViewModel>? Instruments;
+
+    async Task OpenDialog()
+    {
+        DialogParameters<InstrumentsForRubricDialogComponent> parameters = new()
+        {
+            { x => x.Instruments, Instruments },
+            { x => x.OnRowClickHandle, OnRowClickAction }
+        };
+
+        DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
+        IDialogReference dialog = await DialogService.ShowAsync<InstrumentsForRubricDialogComponent>("Instrument`s for rubric", parameters, options);
+        DialogResult? result = await dialog.Result;
+        await InstrumentsForRubricUpdateAsync();
+    }
+
+    void OnRowClickAction()
+    {
+        InvokeAsync(InstrumentsForRubricUpdateAsync);
+    }
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await SetBusyAsync();
+        if (Node.Value is null)
+        {
+            SnackBarRepo.Error("Node.Value is null");
+            return;
+        }
+        await InstrumentsForRubricUpdateAsync();
+    }
 
+    async Task InstrumentsForRubricUpdateAsync()
+    {
+        await SetBusyAsync();
+        Instruments = null;
+        TResponseModel<List<InstrumentTradeStockSharpViewModel>> res = await SsRepo.GetInstrumentsForRubricAsync(Node.Value.Id);
+        Instruments = res.Response;
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
     }
 }

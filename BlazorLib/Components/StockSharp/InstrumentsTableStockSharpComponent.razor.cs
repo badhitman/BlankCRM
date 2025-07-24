@@ -196,7 +196,6 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         };
         await SetBusyAsync(token: token);
         TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
-
         await SetBusyAsync(false, token: token);
         return new TableData<InstrumentTradeStockSharpViewModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
