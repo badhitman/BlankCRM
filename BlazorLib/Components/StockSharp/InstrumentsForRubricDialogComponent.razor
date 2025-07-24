@@ -2,19 +2,40 @@
 
 <MudDialog>
     <DialogContent>
-        <MudText HtmlTag="span">Item: @_selectedItemText</MudText>
-        <MudText>Selected items (@selectedItems?.Count): @(selectedItems == null ? "" : string.Join(", ", selectedItems.Select(x => x.IdRemote).Order()))</MudText>
+        @if (Instruments is null)
+        {
+            <MudText>Instruments is null</MudText>
+        }
+        else if (Instruments.Count == 0)
+        {
+            <MudText>Instruments not selected</MudText>
+        }
+        else
+        {
+            <MudStack Justify="@Justify.Center"
+                      Class="mud-width-full">
+                <MudChipSet T="InstrumentTradeStockSharpViewModel"
+                            CheckMark
+                            SelectionMode="@SelectionMode.MultiSelection"                            >
+                    @for (var i = 0; i < Instruments.Count; i++)
+                    {
+                        var localIndex = i;
+                        <MudChip T="InstrumentTradeStockSharpViewModel" Value="@Instruments[localIndex]" OnClose="OnChipClosed" />
+                    }
+                </MudChipSet>
+            </MudStack>
 
+            @* foreach (var _it in Instruments)
+            {
+                <span class="badge rounded-pill text-bg-primary me-1">@_it.IdRemote</span>
+            } *@
+        }        
         <MudTable @ref="_table"
                   Loading="IsBusyProgress"
                   T="InstrumentTradeStockSharpViewModel"
                   ServerData="ServerReload"
-                  MultiSelection
-                  SelectionChangeable
-                  Hover
-                  @bind-SelectedItems="selectedItems"
-                  OnRowClick="@OnRowClick"
-                  SelectOnRowClick>
+                  Striped
+                  Hover>
             <HeaderContent>
                 <MudTh>Name</MudTh>
                 <MudTh>ID</MudTh>
@@ -23,67 +44,23 @@
                 <MudTh>Type</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Name">
+                    <div class="@(Instruments.Any(x => x.Id == context.Id) ? "text-info" : "")">
+                        @context.Name
+                        <sup @onclick="async () => await InstrumentToggle(context)" style="cursor:pointer;" class="bi bi-bookmark@(Instruments.Any(x => x.Id == context.Id) ? "-check-fill" : "")"></sup>
+                    </div>
+                </MudTd>
                 <MudTd DataLabel="ID">@context.IdRemote</MudTd>
                 <MudTd DataLabel="Board">@context.Board</MudTd>
-                <MudTd DataLabel="Currency">@context.Currency</MudTd>
-                <MudTd DataLabel="Type">@context.TypeInstrument</MudTd>
+                <MudTd DataLabel="Currency">@((CurrenciesTypesEnum)context.Currency)</MudTd>
+                <MudTd DataLabel="Type">@((InstrumentsStockSharpTypesEnum)context.TypeInstrument)</MudTd>
             </RowTemplate>
             <PagerContent>
                 <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
             </PagerContent>
-            <FooterContent>
-                <MudTd colspan="5">Select All</MudTd>
-            </FooterContent>
         </MudTable>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
     </DialogActions>
 </MudDialog>
-
-@code {
-    [Inject]
-    IDataStockSharpService SsRepo { get; set; } = default!;
-
-
-    [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
-
-    [Parameter, EditorRequired]
-    public required List<InstrumentTradeStockSharpViewModel> Instruments { get; set; }
-
-    [Parameter, EditorRequired]
-    public required Action OnRowClickHandle { get; set; }
-
-
-    private HashSet<InstrumentTradeStockSharpViewModel> selectedItems = new HashSet<InstrumentTradeStockSharpViewModel>();
-
-    private MudTable<InstrumentTradeStockSharpViewModel>? _table;
-    private string _selectedItemText = "No row clicked";
-    private async Task<TableData<InstrumentTradeStockSharpViewModel>> ServerReload(TableState state, CancellationToken token)
-    {
-        InstrumentsRequestModel req = new()
-        {
-            PageNum = state.Page,
-            PageSize = state.PageSize,
-            SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
-        };
-        await SetBusyAsync(token: token);
-        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
-        await SetBusyAsync(false, token: token);
-        return new TableData<InstrumentTradeStockSharpViewModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
-    }
-    void OnRowClick(TableRowClickEventArgs<InstrumentTradeStockSharpViewModel> args)
-    {
-        _selectedItemText = $"{args.Item?.Name} ({args.Item?.IdRemote})";
-        OnRowClickHandle();
-    }
-
-    private void Cancel() => MudDialog.Cancel();
-
-    private void DeleteServer()
-    {
-        MudDialog.Close(DialogResult.Ok(Instruments));
-    }
-}

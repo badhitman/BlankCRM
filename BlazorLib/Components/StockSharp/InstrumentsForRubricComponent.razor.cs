@@ -2,11 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Rubrics;
 using Microsoft.AspNetCore.Components;
+using BlazorLib.Components.Rubrics;
 using MudBlazor;
 using SharedLib;
-using System.Diagnostics.Metrics;
 
 namespace BlazorLib.Components.StockSharp;
 
@@ -26,13 +25,25 @@ public partial class InstrumentsForRubricComponent : RubricNodeBodyComponent
 
     async Task OpenDialog()
     {
+        if (Instruments is null)
+        {
+            SnackBarRepo.Error("Instruments is null");
+            return;
+        }
+        if (Node.Value is null)
+        {
+            SnackBarRepo.Error("Node.Value is null");
+            return;
+        }
+
         DialogParameters<InstrumentsForRubricDialogComponent> parameters = new()
         {
             { x => x.Instruments, Instruments },
-            { x => x.OnRowClickHandle, OnRowClickAction }
+            { x => x.OnRowClickHandle, OnRowClickAction },
+            { x => x.RubricId, Node.Value.Id }
         };
 
-        DialogOptions options = new() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseOnEscapeKey = true };
+        DialogOptions options = new() { MaxWidth = MaxWidth.Large, FullWidth = true, CloseOnEscapeKey = true };
         IDialogReference dialog = await DialogService.ShowAsync<InstrumentsForRubricDialogComponent>("Instrument`s for rubric", parameters, options);
         DialogResult? result = await dialog.Result;
         await InstrumentsForRubricUpdateAsync();

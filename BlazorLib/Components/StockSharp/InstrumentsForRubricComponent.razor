@@ -1,37 +1,35 @@
 ﻿@inherits RubricNodeBodyComponent
 
-<div class="hstack">
-    <span class="font-monospace me-2">@Node.Text</span>
-    @if (IsBusyProgress)
+<span class="font-monospace me-2">
+    @Node.Text
+</span>
+@if (IsBusyProgress)
+{
+    <div class="spinner-grow text-dark" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else if (Instruments is null)
+{
+    <mark>Instruments is null</mark>
+}
+else if (Instruments.Count == 0)
+{
+    <code> instruments not set </code>
+}
+else
+{
+    foreach (InstrumentTradeStockSharpViewModel _it in Instruments)
     {
-        <div class="spinner-grow text-dark" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    }
-    else if (Instruments is null)
-    {
-        <mark>Instruments is null</mark>
-    }
-    else if (Instruments.Count == 0)
-    {
-        <code> instruments not set </code>
-    }
-    else
-    {
-        <fieldset>
-            <legend>@Node.Text</legend>
-            @foreach (InstrumentTradeStockSharpViewModel _it in Instruments)
-            {
-                <span class="badge rounded-pill text-bg-primary">@_it.IdRemote</span>
-            }
-        </fieldset>
+        <text>@($"{_it.IdRemote}; ")</text>
     }
 
-    <MudIconButton OnClick="OpenDialog"
-                   Disabled="IsBusyProgress"
-                   Icon="@Icons.Material.Filled.Anchor"
-                   title="Instruments join"
-                   Color="Color.Primary"
-                   Size="Size.Small"
-                   Class="ms-2" />
-</div>
+}
+
+<MudIconButton OnClick="OpenDialog"
+               Disabled="IsBusyProgress"
+               Icon="@Icons.Material.Filled.Anchor"
+               title="Instruments join"
+               Color="Color.Primary"
+               Size="Size.Small"
+               Class="ms-2" />
