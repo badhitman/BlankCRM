@@ -68,6 +68,11 @@ public partial class InstrumentsForRubricComponent : RubricNodeBodyComponent
 
     async Task InstrumentsForRubricUpdateAsync()
     {
+        if (Node.Value is null)
+        {
+            SnackBarRepo.Error("Node.Value is null");
+            return;
+        }
         await SetBusyAsync();
         Instruments = null;
         TResponseModel<List<InstrumentTradeStockSharpViewModel>> res = await SsRepo.GetInstrumentsForRubricAsync(Node.Value.Id);

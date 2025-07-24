@@ -223,7 +223,7 @@
         }
         @if (_columnsSelected?.Contains(_rbcs) == true)
         {
-            <MudTd DataLabel="Rubrics">~Rubrics~</MudTd>
+            <MudTd DataLabel="Rubrics"><RubricsForInstrumentComponent Instrument="context" /></MudTd>
         }
     </RowTemplate>
     <NoRecordsContent>

@@ -63,6 +63,12 @@ public interface IDataStockSharpService
     public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(int instrumentId, CancellationToken cancellationToken = default);
     #endregion
 
+    #region rubrics/instruments
+    /// <summary>
+    /// RubricsInstrumentUpdateAsync
+    /// </summary>
+    public Task<ResponseBaseModel> RubricsInstrumentUpdateAsync(RubricsInstrumentUpdateModel req, CancellationToken cancellationToken = default);
+
     /// <summary>
     /// InstrumentRubricUpdateAsync
     /// </summary>
@@ -77,6 +83,7 @@ public interface IDataStockSharpService
     /// Получить инструменты для рубрики
     /// </summary>
     public Task<TResponseModel<List<InstrumentTradeStockSharpViewModel>>> GetInstrumentsForRubricAsync(int idRubric, CancellationToken cancellationToken = default);
+    #endregion
 
     /// <summary>
     /// Получить профили по их идентификаторам

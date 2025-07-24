@@ -41,7 +41,7 @@
                 <MudTd DataLabel="Name">
                     <div class="@(Instruments?.Any(x => x.Id == context.Id) == true ? "text-info" : "")">
                         @context.Name
-                        <sup @onclick="async () => await InstrumentToggle(context)" style="cursor:pointer;" class="bi bi-bookmark@(Instruments.Any(x => x.Id == context.Id) ? "-check-fill" : "")"></sup>
+                        <sup @onclick="async () => await InstrumentToggle(context)" style="cursor:pointer;" class="bi bi-bookmark@(Instruments?.Any(x => x.Id == context.Id) == true ? "-check-fill" : "")"></sup>
                     </div>
                 </MudTd>
                 <MudTd DataLabel="ID">@context.IdRemote</MudTd>

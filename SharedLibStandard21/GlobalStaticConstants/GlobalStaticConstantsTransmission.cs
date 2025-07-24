@@ -1169,6 +1169,9 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string InstrumentRubricUpdateStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENT_CONTROLLER_NAME, Routes.RUBRIC_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
+        public readonly static string RubricsInstrumentUpdateStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.RUBRICS_CONTROLLER_NAME}-for-{Routes.INSTRUMENT_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string GetRubricsForInstrumentStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.RUBRICS_CONTROLLER_NAME}-for-{Routes.INSTRUMENT_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>

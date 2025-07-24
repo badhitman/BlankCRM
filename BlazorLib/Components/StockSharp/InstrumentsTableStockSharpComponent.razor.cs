@@ -103,6 +103,12 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
 
     string StyleTradeSup(InstrumentTradeStockSharpViewModel ctx) => EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt ? "" : "cursor:pointer;";
 
+    void UpdateAction()
+    {
+        if (_tableRef is not null)
+            InvokeAsync(_tableRef.ReloadServerData);
+    }
+
     string ClassTradeSup(InstrumentTradeStockSharpViewModel ctx)
     {
         string _res = "ms-1 bi bi-coin text-";

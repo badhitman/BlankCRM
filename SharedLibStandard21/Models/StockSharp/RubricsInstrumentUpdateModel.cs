@@ -5,16 +5,13 @@
 namespace SharedLib;
 
 /// <summary>
-/// InstrumentRubricUpdateModel
+/// RubricsInstrumentUpdateModel
 /// </summary>
-public class InstrumentRubricUpdateModel
+public class RubricsInstrumentUpdateModel
 {
     /// <inheritdoc/>
-    public bool Set { get; set; }
-    
-    /// <inheritdoc/>
     public int InstrumentId { get; set; }
-    
+
     /// <inheritdoc/>
-    public int RubricId { get; set; }
+    public int[] RubricsIds { get; set; }
 }
