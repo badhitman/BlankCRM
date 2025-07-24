@@ -55,8 +55,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         set
         {
             _columnsSelected = value;
-            if (_tableRef is not null)
-                InvokeAsync(_tableRef.ReloadServerData);
+            StateHasChanged();
         }
     }
 
@@ -102,12 +101,6 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     readonly List<BoardStockSharpViewModel> Boards = [];
 
     string StyleTradeSup(InstrumentTradeStockSharpViewModel ctx) => EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt ? "" : "cursor:pointer;";
-
-    void UpdateAction()
-    {
-        if (_tableRef is not null)
-            InvokeAsync(_tableRef.ReloadServerData);
-    }
 
     string ClassTradeSup(InstrumentTradeStockSharpViewModel ctx)
     {
