@@ -43,13 +43,14 @@ public partial class InstrumentsForRubricDialogComponent : BlazorBusyComponentBa
         ResponseBaseModel res = await SsRepo.InstrumentRubricUpdateAsync(new() { InstrumentId = ctx.Id, RubricId = RubricId, Set = !_check });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
-        lock (Instruments)
-        {
-            if (_check)
-                Instruments.RemoveAll(x => x.Id == ctx.Id);
-            else
-                Instruments.Add(ctx);
-        }
+        if (res.Success())
+            lock (Instruments)
+            {
+                if (_check)
+                    Instruments.RemoveAll(x => x.Id == ctx.Id);
+                else
+                    Instruments.Add(ctx);
+            }
 
         if (_table is not null)
             await _table.ReloadServerData();

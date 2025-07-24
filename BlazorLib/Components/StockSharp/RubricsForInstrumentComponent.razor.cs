@@ -27,12 +27,25 @@ public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseMode
     bool _visible;
     readonly DialogOptions _dialogOptions = new() { FullWidth = true };
 
+    UniversalBaseModel? _selectedRubric;
+    UniversalBaseModel? SelectedRubric
+    {
+        get => _selectedRubric;
+        set
+        {
+            //_selectedRubrics = null;
+            _selectedRubric = value;
+            InvokeAsync(SetRubricsForInstrument);
+        }
+    }
+
     IReadOnlyCollection<UniversalBaseModel>? _selectedRubrics;
     IReadOnlyCollection<UniversalBaseModel>? SelectedRubrics
     {
         get => _selectedRubrics;
         set
         {
+            _selectedRubric = null;
             _selectedRubrics = value;
             InvokeAsync(SetRubricsForInstrument);
         }
@@ -40,15 +53,14 @@ public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseMode
 
     async Task SetRubricsForInstrument()
     {
-        if (SelectedRubrics is null)
-        {
-            SnackBarRepo.Error("SelectedRubrics is null");
-            return;
-        }
-
         await SetBusyAsync();
-        ResponseBaseModel res = await SsRepo.RubricsInstrumentUpdateAsync(new() { InstrumentId = Instrument.Id, RubricsIds = [.. SelectedRubrics.Select(x => x.Id)] });
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        ResponseBaseModel res = await SsRepo.RubricsInstrumentUpdateAsync(new()
+        {
+            InstrumentId = Instrument.Id,
+            RubricsIds = SelectedRubric is null ? null : [SelectedRubric.Id]
+        });
+        //SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await RubricsForInstrument();
         await SetBusyAsync(false);
     }
 
@@ -60,14 +72,20 @@ public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseMode
         _visible = false;
     }
 
+    async Task RubricsForInstrument()
+    {
+        TResponseModel<List<UniversalBaseModel>> res = await SsRepo.GetRubricsForInstrumentAsync(Instrument.Id);
+        _selectedRubrics = [.. res.Response];
+        _selectedRubric = _selectedRubrics.FirstOrDefault();
+    }
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
         RubricsAll = await RubricsRepo.RubricsListAsync(new());
-        TResponseModel<List<UniversalBaseModel>> res = await SsRepo.GetRubricsForInstrumentAsync(Instrument.Id);
-        _selectedRubrics = [.. res.Response];
+        await RubricsForInstrument();
         await SetBusyAsync(false);
     }
 

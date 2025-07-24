@@ -26,9 +26,10 @@ else if (SelectedRubrics is not null)
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudChipSet @bind-SelectedValues="SelectedRubrics"
+        <MudChipSet @bind-SelectedValue="SelectedRubric"
+                    T="UniversalBaseModel"
                     Comparer="Comparer"
-                    SelectionMode="SelectionMode.MultiSelection"
+                    SelectionMode="SelectionMode.ToggleSelection"                    
                     CheckMark
                     Variant="Variant.Text"
                     Color="Color.Info">
