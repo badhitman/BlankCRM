@@ -13,6 +13,11 @@ namespace SharedLib;
 public interface IManageStockSharpService
 {
     /// <summary>
+    /// Информация о базах данных
+    /// </summary>
+    public Task<AboutDatabasesResponseModel> AboutDatabases(CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// UpdateOrCreateAdapter
     /// </summary>
     public Task<TResponseModel<FixMessageAdapterModelDB>> UpdateOrCreateAdapterAsync(FixMessageAdapterModelDB req, CancellationToken cancellationToken = default);

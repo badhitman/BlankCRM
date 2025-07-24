@@ -89,10 +89,6 @@
         {
             <MudTh>Markers</MudTh>
         }
-        @if (_columnsSelected?.Contains(_fvt) == true)
-        {
-            <MudTh>Favorite</MudTh>
-        }
         <MudTh>Currency</MudTh>
         <MudTh>Type</MudTh>
         @if (_columnsSelected?.Contains(_mtp) == true)
@@ -157,16 +153,6 @@
         {
             <MudTd DataLabel="Markers">
                 <MarkersOfInstrumentComponent Instrument="context" />
-            </MudTd>
-        }
-        @if (_columnsSelected?.Contains(_fvt) == true)
-        {
-            <MudTd DataLabel="Favorite">
-                <MudSwitch ValueChanged="async () => await FavoriteToggle(context)"
-                           Value="context.IsFavorite"
-                           ReadOnly="IsBusyProgress"
-                           Color="@(context.IsFavorite ? Color.Success : Color.Secondary)"
-                           T="bool" />
             </MudTd>
         }
         <MudTd DataLabel="Currency">@((CurrenciesTypesEnum)context.Currency)</MudTd>

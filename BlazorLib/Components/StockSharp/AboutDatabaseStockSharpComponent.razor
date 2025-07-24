@@ -1,0 +1,9 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+<MudCard Class="mt-3" Outlined>
+    <MudCardContent>
+        <MudText>About databases (in server)</MudText>
+        <MudText Typo="Typo.body2">@(nameof(AboutDatabasesResponseModel.DriverDatabase)): @About?.DriverDatabase</MudText>
+        <MudText Typo="Typo.body2">@(nameof(AboutDatabasesResponseModel.PropertiesDatabase)): @About?.PropertiesDatabase</MudText>
+    </MudCardContent>
+</MudCard>

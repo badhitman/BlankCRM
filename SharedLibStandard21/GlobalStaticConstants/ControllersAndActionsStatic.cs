@@ -572,6 +572,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string ADAPTERS_CONTROLLER_NAME = "adapters";
 
         /// <summary>
+        /// Databases
+        /// </summary>
+        public const string DATABASES_CONTROLLER_NAME = "databases";
+
+        /// <summary>
         /// Quote
         /// </summary>
         public const string QUOTE_CONTROLLER_NAME = "quote";

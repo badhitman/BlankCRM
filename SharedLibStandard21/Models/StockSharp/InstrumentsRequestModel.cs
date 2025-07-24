@@ -12,9 +12,9 @@ namespace SharedLib;
 public class InstrumentsRequestModel : SimplePaginationRequestModel
 {
     /// <summary>
-    /// FavoriteFilter
+    /// StateFilter
     /// </summary>
-    public bool? FavoriteFilter { get; set; }
+    public ObjectStatesEnum[] StatesFilter { get; set; }
 
     /// <inheritdoc/>
     public InstrumentsStockSharpTypesEnum[] TypesFilter { get; set; }

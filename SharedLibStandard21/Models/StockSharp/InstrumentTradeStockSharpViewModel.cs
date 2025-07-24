@@ -20,10 +20,10 @@ public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSh
     public int Id { get; set; }
 
     /// <summary>
-    /// IsFavorite
+    /// StateInstrument
     /// </summary>
-    public bool IsFavorite { get; set; }
-
+    public ObjectStatesEnum StateInstrument { get; set; }
+    
     /// <inheritdoc/>
     public DateTime LastUpdatedAtUTC { get; set; }
 

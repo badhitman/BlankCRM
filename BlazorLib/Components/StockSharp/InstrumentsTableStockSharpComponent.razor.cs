@@ -44,8 +44,8 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         _cr = nameof(InstrumentTradeStockSharpViewModel.CouponRate),
         _lfP = nameof(InstrumentTradeStockSharpViewModel.LastFairPrice),
         _cmnt = nameof(InstrumentTradeStockSharpViewModel.Comment),
-        _mcs = "Markers", _fvt = "Favorite", _rbcs = "Rubrics";
-    static string[] columnsExt = [_mtp, _dc, _std, _fv, _mcs, _fvt, _isin, _issD, _mtD, _cr, _lfP, _cmnt, _rbcs];
+        _mcs = "Markers", _rbcs = "Rubrics";
+    static string[] columnsExt = [_mtp, _dc, _std, _fv, _mcs, _isin, _issD, _mtD, _cr, _lfP, _cmnt, _rbcs];
 
 
     IEnumerable<string>? _columnsSelected;
@@ -181,6 +181,21 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         if (ColumnsSelected is not null)
             await StorageRepo.SaveParameterAsync(ColumnsSelected, setCol, true, token: token);
 
+        /*
+         switch (instrumentDb.StateInstrument)
+        {
+            case ObjectStatesEnum.Default:
+                instrumentDb.StateInstrument = ObjectStatesEnum.IsFavorite;
+                break;
+            case ObjectStatesEnum.IsFavorite:
+                instrumentDb.StateInstrument = ObjectStatesEnum.IsDisabled;
+                break;
+            case ObjectStatesEnum.IsDisabled:
+                instrumentDb.StateInstrument = ObjectStatesEnum.Default;
+                break;
+        }
+         */
+
         InstrumentsRequestModel req = new()
         {
             BoardsFilter = [.. SelectedBoards.Select(x => x.Id)],
@@ -190,7 +205,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
             CurrenciesFilter = CurrenciesSelected is null || !CurrenciesSelected.Any() ? null : [.. CurrenciesSelected],
             TypesFilter = TypesSelected is null || !TypesSelected.Any() ? null : [.. TypesSelected],
-            FavoriteFilter = _stateFilter ? true : null
+            //StateFilter = _stateFilter ? true : null
         };
         await SetBusyAsync(token: token);
         TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
