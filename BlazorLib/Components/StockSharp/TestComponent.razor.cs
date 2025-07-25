@@ -103,7 +103,7 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
                 Task.Run(async () => {
                     if(SetInstrument is null)
                     {
-                        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> resInstruments = await SsMainRepo.InstrumentsSelectAsync(new() { PageSize = 100, StatesFilter = [ObjectStatesEnum.IsFavorite, ObjectStatesEnum.Default] });
+                        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> resInstruments = await SsMainRepo.InstrumentsSelectAsync(new() { PageSize = 100, StatesFilter = [ ObjectStatesEnum.IsFavorite, ObjectStatesEnum.Default ] });
                         myInstruments = resInstruments.Response;
                     }
                     else

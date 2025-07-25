@@ -121,14 +121,6 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         await SetBusyAsync(false);
     }
 
-    bool _stateFilter;
-    async Task StateFilterToggle()
-    {
-        _stateFilter = !_stateFilter;
-        if (_tableRef is not null)
-            await _tableRef.ReloadServerData();
-    }
-
     void ManualOrder(InstrumentTradeStockSharpViewModel req)
     {
         manualOrderContext = req;
@@ -153,17 +145,6 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         if (_tableRef is not null)
             await _tableRef.ReloadServerData();
     }
-
-    async Task FavoriteToggle(InstrumentTradeStockSharpViewModel sender)
-    {
-        await SetBusyAsync();
-        ResponseBaseModel res = await SsRepo.InstrumentFavoriteToggleAsync(sender.Id);
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusyAsync(false);
-        if (_tableRef is not null)
-            await _tableRef.ReloadServerData();
-    }
-
 
     async Task<IDialogReference> OpenDialogAsync(InstrumentTradeStockSharpViewModel Instrument)
     {

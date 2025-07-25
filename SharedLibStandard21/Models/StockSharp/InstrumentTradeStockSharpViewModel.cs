@@ -22,8 +22,8 @@ public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSh
     /// <summary>
     /// StateInstrument
     /// </summary>
-    public ObjectStatesEnum StateInstrument { get; set; }
-    
+    public int StateInstrument { get; set; } = (int)ObjectStatesEnum.Default;
+
     /// <inheritdoc/>
     public DateTime LastUpdatedAtUTC { get; set; }
 

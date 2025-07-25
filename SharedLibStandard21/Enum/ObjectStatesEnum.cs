@@ -15,17 +15,17 @@ public enum ObjectStatesEnum
     /// Default
     /// </summary>
     [Description("Default")]
-    Default = 10,
+    Default = 0,
 
     /// <summary>
     /// IsFavorite
     /// </summary>
     [Description("IsFavorite")]
-    IsFavorite = 20,
+    IsFavorite = 10,
 
     /// <summary>
     /// IsDisabled
     /// </summary>
     [Description("IsDisabled")]
-    IsDisabled = 30,
+    IsDisabled = 20,
 }

@@ -7,9 +7,6 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">
             <span title="Click for reload instruments" style="cursor:pointer;" @onclick="_tableRef!.ReloadServerData">Instruments</span>
-            <sup style="cursor:pointer" @onclick="StateFilterToggle">
-                <span class="link-@(_stateFilter ? "secondary" : "primary")">all</span> | <span class="link-@(_stateFilter ? "primary" : "secondary")">favorites</span>
-            </sup>
         </MudText>
         <MudSpacer />
         <MudTextField T="string"
