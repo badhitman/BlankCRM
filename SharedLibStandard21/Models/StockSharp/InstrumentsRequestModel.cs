@@ -12,7 +12,7 @@ public class InstrumentsRequestModel : SimplePaginationRequestModel
     /// <summary>
     /// StateFilter
     /// </summary>
-    public MarkersInstrumentStockSharpEnum[] MarkersFilter { get; set; }
+    public MarkersInstrumentStockSharpEnum?[] MarkersFilter { get; set; }
 
     /// <inheritdoc/>
     public InstrumentsStockSharpTypesEnum[] TypesFilter { get; set; }

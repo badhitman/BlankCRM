@@ -49,7 +49,7 @@
             }
         </MudSelect>
         <MudSelect T="InstrumentsStockSharpTypesEnum"
-                   Label="Type"
+                   Label="Type`s"
                    MultiSelection
                    @bind-SelectedValues="TypesSelected"
                    Adornment="Adornment.Start"
@@ -61,6 +61,22 @@
             @foreach (InstrumentsStockSharpTypesEnum state in Enum.GetValues<InstrumentsStockSharpTypesEnum>().OrderBy(x => x.DescriptionInfo()))
             {
                 <MudSelectItem T="InstrumentsStockSharpTypesEnum" Value="@state">@state.DescriptionInfo()</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="MarkersInstrumentStockSharpEnum?"
+                   Label="Marker`s"
+                   MultiSelection
+                   @bind-SelectedValues="MarkersSelected"
+                   Adornment="Adornment.Start"
+                   AdornmentIcon="@Icons.Material.Filled.Checklist"
+                   IconSize="Size.Small"
+                   Clearable
+                   Dense
+                   Class="mt-0 me-1">
+            <MudSelectItem T="MarkersInstrumentStockSharpEnum?" Value="null">~ not set ~</MudSelectItem>
+            @foreach (MarkersInstrumentStockSharpEnum state in Enum.GetValues<MarkersInstrumentStockSharpEnum>().OrderBy(x => x.DescriptionInfo()))
+            {
+                <MudSelectItem T="MarkersInstrumentStockSharpEnum" Value="@state">@state.DescriptionInfo()</MudSelectItem>
             }
         </MudSelect>
         <MudSelect T="string"

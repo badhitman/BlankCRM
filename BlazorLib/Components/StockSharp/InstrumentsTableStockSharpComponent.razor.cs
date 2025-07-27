@@ -27,11 +27,18 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     bool ManualOrderCreating;
     private readonly DialogOptions _dialogOptions = new() { FullWidth = true, MaxWidth = MaxWidth.ExtraLarge };
 
-    static StorageMetadataModel setCol = new()
+    static readonly StorageMetadataModel setCol = new()
     {
         ApplicationName = nameof(InstrumentsTableStockSharpComponent),
         PrefixPropertyName = "settings",
         PropertyName = "columns"
+    };
+
+    static readonly StorageMetadataModel filterMarkers = new()
+    {
+        ApplicationName = nameof(InstrumentsTableStockSharpComponent),
+        PrefixPropertyName = "settings",
+        PropertyName = "markers"
     };
 
     static string _mtp = nameof(InstrumentTradeStockSharpModel.Multiplier),
@@ -56,6 +63,18 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         {
             _columnsSelected = value;
             StateHasChanged();
+        }
+    }
+
+    IEnumerable<MarkersInstrumentStockSharpEnum?>? _markersSelected;
+    IEnumerable<MarkersInstrumentStockSharpEnum?>? MarkersSelected
+    {
+        get => _markersSelected;
+        set
+        {
+            _markersSelected = value;
+            if (_tableRef is not null)
+                InvokeAsync(_tableRef.ReloadServerData);
         }
     }
 
@@ -115,8 +134,13 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
+        
         TResponseModel<string[]> readColumnsSet = await StorageRepo.ReadParameterAsync<string[]>(setCol);
+        TResponseModel<MarkersInstrumentStockSharpEnum?[]?> markersSet = await StorageRepo.ReadParameterAsync<MarkersInstrumentStockSharpEnum?[]?>(filterMarkers);
+
         _columnsSelected = readColumnsSet.Response;
+        _markersSelected = markersSet.Response;
+
         await ReloadBoards();
         await SetBusyAsync(false);
     }
@@ -162,20 +186,8 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         if (ColumnsSelected is not null)
             await StorageRepo.SaveParameterAsync(ColumnsSelected, setCol, true, token: token);
 
-        /*
-         switch (instrumentDb.StateInstrument)
-        {
-            case ObjectStatesEnum.Default:
-                instrumentDb.StateInstrument = ObjectStatesEnum.IsFavorite;
-                break;
-            case ObjectStatesEnum.IsFavorite:
-                instrumentDb.StateInstrument = ObjectStatesEnum.IsDisabled;
-                break;
-            case ObjectStatesEnum.IsDisabled:
-                instrumentDb.StateInstrument = ObjectStatesEnum.Default;
-                break;
-        }
-         */
+        if (MarkersSelected is not null)
+            await StorageRepo.SaveParameterAsync(MarkersSelected, filterMarkers, true, token: token);
 
         InstrumentsRequestModel req = new()
         {
@@ -186,7 +198,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
             SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
             CurrenciesFilter = CurrenciesSelected is null || !CurrenciesSelected.Any() ? null : [.. CurrenciesSelected],
             TypesFilter = TypesSelected is null || !TypesSelected.Any() ? null : [.. TypesSelected],
-            //StateFilter = _stateFilter ? true : null
+            MarkersFilter = MarkersSelected is null ? null : [.. MarkersSelected]
         };
         await SetBusyAsync(token: token);
         TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
