@@ -17,7 +17,7 @@ public class MarkerInstrumentStockSharpViewModel : IEquatable<MarkerInstrumentSt
     public int Id { get; set; }
 
     /// <inheritdoc/>
-    public MarkersInstrumentStockSharpEnum MarkerDescriptor { get; set; }
+    public int MarkerDescriptor { get; set; }
 
     /// <inheritdoc/>
     public bool Equals(MarkerInstrumentStockSharpViewModel other)

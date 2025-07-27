@@ -60,7 +60,7 @@ public partial class MarkersOfInstrumentComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         TResponseModel<List<MarkerInstrumentStockSharpViewModel>> res = await SsRepo.GetMarkersForInstrumentAsync(Instrument.Id);
         originMarkers = res.Response ?? [];
-        _selectedOptions = originMarkers.Select(x => x.MarkerDescriptor).Order();
+        _selectedOptions = originMarkers.Select(x => (MarkersInstrumentStockSharpEnum)x.MarkerDescriptor).Order();
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
     }

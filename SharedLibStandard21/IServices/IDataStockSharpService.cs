@@ -56,11 +56,6 @@ public interface IDataStockSharpService
     /// InstrumentsSelectAsync
     /// </summary>
     public Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(InstrumentsRequestModel req, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// InstrumentSetFavoriteAsync
-    /// </summary>
-    public Task<ResponseBaseModel> InstrumentFavoriteToggleAsync(int instrumentId, CancellationToken cancellationToken = default);
     #endregion
 
     #region rubrics/instruments

@@ -11,18 +11,13 @@ namespace SharedLib;
 /// <summary>
 /// InstrumentTradeStockSharpViewModel
 /// </summary>
-public partial class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSharpModel
+public class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSharpModel
 {
     /// <summary>
     /// Идентификатор/Key
     /// </summary>
     [Key]
     public int Id { get; set; }
-
-    /// <summary>
-    /// StateInstrument
-    /// </summary>
-    public int State { get; set; } = (int)ObjectStatesEnum.Default;
 
     /// <inheritdoc/>
     public DateTime LastUpdatedAtUTC { get; set; }

@@ -8,6 +8,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.StockSharp;
 
+/// <summary>
+/// RubricsForInstrumentComponent
+/// </summary>
 public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseModel
 {
     [Inject]

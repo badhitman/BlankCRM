@@ -132,10 +132,6 @@
         {
             <MudTh>Rubrics</MudTh>
         }
-        @if (_columnsSelected?.Contains(_si) == true)
-        {
-            <MudTh>State</MudTh>
-        }
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name" title="@($"last updated: {(DateTime.UtcNow - context.LastUpdatedAtUTC).Duration().ToReadableString()}")">
@@ -211,10 +207,6 @@
         @if (_columnsSelected?.Contains(_rbcs) == true)
         {
             <MudTd DataLabel="Rubrics"><RubricsForInstrumentComponent Instrument="context" /></MudTd>
-        }
-        @if (_columnsSelected?.Contains(_si) == true)
-        {
-            <MudTd DataLabel="State">@(((ObjectStatesEnum)context.State).DescriptionInfo())</MudTd>
         }
     </RowTemplate>
     <NoRecordsContent>

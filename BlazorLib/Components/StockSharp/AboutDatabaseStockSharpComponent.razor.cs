@@ -7,6 +7,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.StockSharp;
 
+/// <summary>
+/// AboutDatabaseStockSharpComponent
+/// </summary>
 public partial class AboutDatabaseStockSharpComponent : BlazorBusyComponentBaseModel
 {
     [Inject]

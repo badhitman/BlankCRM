@@ -9,13 +9,25 @@ public enum MarkersInstrumentStockSharpEnum
 {
     /// <inheritdoc/>
     [Description("IsNew")]
-    IsNew,
+    IsNew = 10,
 
     /// <inheritdoc/>
     [Description("Illiquid")]
-    Illiquid,
+    Illiquid = 20,
 
     /// <inheritdoc/>
     [Description("IsMarketMaker")]
-    IsMarketMaker
+    IsMarketMaker = 30,
+
+    /// <summary>
+    /// IsFavorite
+    /// </summary>
+    [Description("IsFavorite")]
+    IsFavorite = 40,
+
+    /// <summary>
+    /// IsDisabled
+    /// </summary>
+    [Description("IsDisabled")]
+    IsDisabled = 50,
 }
