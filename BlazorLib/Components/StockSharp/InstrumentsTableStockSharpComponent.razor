@@ -65,18 +65,17 @@
         </MudSelect>
         <MudSelect T="MarkersInstrumentStockSharpEnum?"
                    Label="Marker`s"
-                   MultiSelection
+                   MultiSelectionTextFunc="@(new Func<List<string?>, string>(GetMultiSelectionText))"
+                   MultiSelection SelectAll Clearable Dense
                    @bind-SelectedValues="MarkersSelected"
                    Adornment="Adornment.Start"
                    AdornmentIcon="@Icons.Material.Filled.Checklist"
                    IconSize="Size.Small"
-                   Clearable
-                   Dense
                    Class="mt-0 me-1">
             <MudSelectItem T="MarkersInstrumentStockSharpEnum?" Value="null">~ not set ~</MudSelectItem>
             @foreach (MarkersInstrumentStockSharpEnum state in Enum.GetValues<MarkersInstrumentStockSharpEnum>().OrderBy(x => x.DescriptionInfo()))
             {
-                <MudSelectItem T="MarkersInstrumentStockSharpEnum" Value="@state">@state.DescriptionInfo()</MudSelectItem>
+                <MudSelectItem T="MarkersInstrumentStockSharpEnum?" Value="@state">@state.DescriptionInfo()</MudSelectItem>
             }
         </MudSelect>
         <MudSelect T="string"

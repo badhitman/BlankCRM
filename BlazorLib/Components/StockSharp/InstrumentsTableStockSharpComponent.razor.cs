@@ -66,8 +66,8 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         }
     }
 
-    IEnumerable<MarkersInstrumentStockSharpEnum?>? _markersSelected;
-    IEnumerable<MarkersInstrumentStockSharpEnum?>? MarkersSelected
+    IEnumerable<MarkersInstrumentStockSharpEnum?> _markersSelected = [];
+    IEnumerable<MarkersInstrumentStockSharpEnum?> MarkersSelected
     {
         get => _markersSelected;
         set
@@ -119,6 +119,13 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
 
     readonly List<BoardStockSharpViewModel> Boards = [];
 
+
+    private string GetMultiSelectionText(List<string?> selectedValues)
+    {
+        return $"{string.Join(", ", selectedValues.Select(x => x is null ? "~not set~" : x))}";//
+    }
+
+
     string StyleTradeSup(InstrumentTradeStockSharpViewModel ctx) => EachDisable || ctx.LastUpdatedAtUTC < AboutConnection!.LastConnectedAt ? "" : "cursor:pointer;";
 
     string ClassTradeSup(InstrumentTradeStockSharpViewModel ctx)
@@ -134,7 +141,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
-        
+
         TResponseModel<string[]> readColumnsSet = await StorageRepo.ReadParameterAsync<string[]>(setCol);
         TResponseModel<MarkersInstrumentStockSharpEnum?[]?> markersSet = await StorageRepo.ReadParameterAsync<MarkersInstrumentStockSharpEnum?[]?>(filterMarkers);
 
