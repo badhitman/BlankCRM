@@ -52,7 +52,7 @@ public class ExchangeStockSharpModel : IEquatable<ExchangeStockSharpModel>
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{Name} - {CountryCode}";
+        return $"{Name}{(CountryCode is null || CountryCode == 0 ? "" : $" - {(CountryCodesEnum)CountryCode}")}";
     }
 
     /// <inheritdoc/>

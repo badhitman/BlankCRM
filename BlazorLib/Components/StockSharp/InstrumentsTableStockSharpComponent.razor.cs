@@ -63,6 +63,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         {
             _columnsSelected = value;
             StateHasChanged();
+            InvokeAsync(SaveParameters);
         }
     }
 
@@ -142,11 +143,16 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         await base.OnInitializedAsync();
         await SetBusyAsync();
 
-        TResponseModel<string[]> readColumnsSet = await StorageRepo.ReadParameterAsync<string[]>(setCol);
-        TResponseModel<MarkersInstrumentStockSharpEnum?[]?> markersSet = await StorageRepo.ReadParameterAsync<MarkersInstrumentStockSharpEnum?[]?>(filterMarkers);
 
-        _columnsSelected = readColumnsSet.Response;
-        _markersSelected = markersSet.Response;
+        await Task.WhenAll([
+            Task.Run(async () => {
+                TResponseModel<string[]> readColumnsSet = await StorageRepo.ReadParameterAsync<string[]>(setCol);
+                _columnsSelected = readColumnsSet.Response;
+            }),
+            Task.Run(async () => {
+                TResponseModel<MarkersInstrumentStockSharpEnum?[]?> markersSet = await StorageRepo.ReadParameterAsync<MarkersInstrumentStockSharpEnum?[]?>(filterMarkers);
+                _markersSelected = markersSet.Response ?? [];
+            })]);
 
         await ReloadBoards();
         await SetBusyAsync(false);
@@ -188,14 +194,17 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         return res;
     }
 
-    async Task<TableData<InstrumentTradeStockSharpViewModel>> ServerReload(TableState state, CancellationToken token)
+    async Task SaveParameters()
     {
         if (ColumnsSelected is not null)
-            await StorageRepo.SaveParameterAsync(ColumnsSelected, setCol, true, token: token);
+            await StorageRepo.SaveParameterAsync(ColumnsSelected, setCol, true);
 
         if (MarkersSelected is not null)
-            await StorageRepo.SaveParameterAsync(MarkersSelected, filterMarkers, true, token: token);
+            await StorageRepo.SaveParameterAsync(MarkersSelected, filterMarkers, true);
+    }
 
+    async Task<TableData<InstrumentTradeStockSharpViewModel>> ServerReload(TableState state, CancellationToken token)
+    {
         InstrumentsRequestModel req = new()
         {
             BoardsFilter = [.. SelectedBoards.Select(x => x.Id)],
@@ -207,8 +216,13 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
             TypesFilter = TypesSelected is null || !TypesSelected.Any() ? null : [.. TypesSelected],
             MarkersFilter = MarkersSelected is null ? null : [.. MarkersSelected]
         };
+        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = default!;
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
+
+        await Task.WhenAll([
+               Task.Run(SaveParameters, token),
+               Task.Run(async () => res = await SsRepo.InstrumentsSelectAsync(req, token) , token)]);
+
         await SetBusyAsync(false, token: token);
         return new TableData<InstrumentTradeStockSharpViewModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

@@ -12,7 +12,15 @@ namespace SharedLib;
 /// </summary>
 public static partial class GlobalStaticCloudStorageMetadata
 {
-    static string STOCKSHARP_QUOTE_FORM = Path.Combine(GlobalStaticConstantsRoutes.Routes.STOCKSHARP_CONTROLLER_NAME, GlobalStaticConstantsRoutes.Routes.QUOTE_CONTROLLER_NAME, GlobalStaticConstantsRoutes.Routes.FORM_CONTROLLER_NAME);
+    static string STOCKSHARP_QUOTE_FORM = Path.Combine(Routes.STOCKSHARP_CONTROLLER_NAME, GlobalStaticConstantsRoutes.Routes.QUOTE_CONTROLLER_NAME, GlobalStaticConstantsRoutes.Routes.FORM_CONTROLLER_NAME);
+
+    /// <inheritdoc/>
+    public static readonly StorageMetadataModel MarkersDashboard = new()
+    {
+        ApplicationName = Routes.STOCKSHARP_CONTROLLER_NAME,
+        PrefixPropertyName = "markers",
+        PropertyName = "dashboard",
+    };
 
     /// <inheritdoc/>
     public static StorageMetadataModel QuoteVolume => new()
