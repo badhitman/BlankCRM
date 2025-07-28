@@ -18,8 +18,16 @@ public static partial class GlobalStaticCloudStorageMetadata
     public static readonly StorageMetadataModel MarkersDashboard = new()
     {
         ApplicationName = Routes.STOCKSHARP_CONTROLLER_NAME,
-        PrefixPropertyName = "markers",
-        PropertyName = "dashboard",
+        PrefixPropertyName = Routes.MARKERS_CONTROLLER_NAME,
+        PropertyName = Routes.DASHBOARD_CONTROLLER_NAME,
+    };
+
+    /// <inheritdoc/>
+    public static readonly StorageMetadataModel BoardsDashboard = new()
+    {
+        ApplicationName = Routes.STOCKSHARP_CONTROLLER_NAME,
+        PrefixPropertyName = Routes.BOARDS_CONTROLLER_NAME,
+        PropertyName = Routes.DASHBOARD_CONTROLLER_NAME,
     };
 
     /// <inheritdoc/>

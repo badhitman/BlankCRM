@@ -143,7 +143,6 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         await base.OnInitializedAsync();
         await SetBusyAsync();
 
-
         await Task.WhenAll([
             Task.Run(async () => {
                 TResponseModel<string[]> readColumnsSet = await StorageRepo.ReadParameterAsync<string[]>(setCol);
@@ -152,9 +151,9 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
             Task.Run(async () => {
                 TResponseModel<MarkersInstrumentStockSharpEnum?[]?> markersSet = await StorageRepo.ReadParameterAsync<MarkersInstrumentStockSharpEnum?[]?>(filterMarkers);
                 _markersSelected = markersSet.Response ?? [];
-            })]);
+            }),
+            Task.Run(ReloadBoards)]);
 
-        await ReloadBoards();
         await SetBusyAsync(false);
     }
 

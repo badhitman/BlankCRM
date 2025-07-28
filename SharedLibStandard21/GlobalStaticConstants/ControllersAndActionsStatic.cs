@@ -542,6 +542,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string MARKERS_CONTROLLER_NAME = "markers";
 
         /// <summary>
+        /// Dashboard
+        /// </summary>
+        public const string DASHBOARD_CONTROLLER_NAME = "dashboard";
+
+        /// <summary>
         /// Strategy
         /// </summary>
         public const string STRATEGY_CONTROLLER_NAME = "strategy";
