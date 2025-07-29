@@ -176,6 +176,7 @@ window.bootstrapTheme = {
 
 function DOMContentLoaded() {
     if (window.Telegram != undefined && window.Telegram != null) {
+        var tg = window.Telegram;
         if (window.Telegram.WebApp.initData == "" || window.Telegram.WebApp.initData == undefined || window.Telegram.WebApp.initData == null) {
             console.warn(JSON.stringify(tg));
             Blazor.start().then(function () { console.warn("Blazor started!") });
