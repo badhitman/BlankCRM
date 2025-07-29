@@ -17,9 +17,9 @@ dotnet publish -c Debug --output C:/Users/User/Documents/publish/HelpDeskService
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/ConstructorService C:/Users/User/source/repos/BlankCRM/micro-services/ConstructorService/ConstructorService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/TelegramBotService C:/Users/User/source/repos/BlankCRM/micro-services/TelegramBotService/TelegramBotService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/BlankBlazorApp C:/Users/User/source/repos/BlankCRM/BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj
-if (-not (Test-Path -Path $7zipPath -PathType Leaf)) {
-    throw "7 zip executable '$7zipPath' not found"
-}
-Set-Alias Start-SevenZip $7zipPath
-Start-SevenZip a -mx=9 -sdel "C:/Users/User/Documents/publish/publish.7z" "C:/Users/User/Documents/publish/*"
-Remove-Item -Recurse -Force -Exclude publish.7z 'C:/Users/User/Documents/publish/*'
+# if (-not (Test-Path -Path $7zipPath -PathType Leaf)) {
+#     throw "7 zip executable '$7zipPath' not found"
+# }
+# Set-Alias Start-SevenZip $7zipPath
+# Start-SevenZip a -mx=9 -sdel "C:/Users/User/Documents/publish/publish.7z" "C:/Users/User/Documents/publish/*"
+# Remove-Item -Recurse -Force -Exclude publish.7z 'C:/Users/User/Documents/publish/*'

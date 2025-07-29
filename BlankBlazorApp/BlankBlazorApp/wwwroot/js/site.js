@@ -173,3 +173,56 @@ window.bootstrapTheme = {
             document.documentElement.setAttribute(attrName, 'light');
     }
 }
+
+function DOMContentLoaded() {
+    if (window.Telegram != undefined && window.Telegram != null) {
+        if (window.Telegram.WebApp.initData == "" || window.Telegram.WebApp.initData == undefined || window.Telegram.WebApp.initData == null) {
+            console.warn(JSON.stringify(tg));
+            Blazor.start().then(function () { console.warn("Blazor started!") });
+            return;
+        }
+        console.warn(JSON.stringify(window.Telegram.WebApp.initData));
+        $.ajax({
+            type: 'GET',
+            url: '/authorize/ping',
+            success: function (response) {
+                console.warn(JSON.stringify(response));
+            },
+            error: function (response) {
+                console.warn(JSON.stringify(response));
+                let tg = window.Telegram.WebApp;
+                let model = {};
+                model.InitData = tg.initData;
+                if (model.InitData != undefined && model.InitData != null) {
+                    tg.BackButton.isVisible = false;
+                    tg.BackButton.hide();
+                    tg.expand();
+                    tg.disableVerticalSwipes();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/telegram/authorize',
+                        data: JSON.stringify(model),
+                        success: function (response) {
+                            // if (response.Success) {
+                            //console.warn(JSON.stringify(response));
+                            window.location.reload();
+                            // }
+                        },
+                        error: function (response) {
+                            console.warn(JSON.stringify(response));
+                        },
+                        contentType: "application/json"
+                    });
+                }
+            },
+            contentType: "application/json"
+        });
+    }
+
+    // console.warn(JSON.stringify(tg));
+    Blazor.start().then(function () { console.warn("Blazor started!") });
+
+    /*
+    Blazor.start({ssr: { }, circuit: { }, webAssembly: { }});
+    */
+}
