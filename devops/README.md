@@ -169,6 +169,8 @@ chmod -R 755 /srv/stage-builds.update.sh
 cd /srv/git/BlankCRM/devops/etc/systemd/system/
 cp docker-compose-app.service api.app.stage.service bus.app.stage.service comm.app.stage.service constructor.app.stage.service hd.app.stage.service identity.app.stage.service kladr.app.stage.service ldap.app.stage.service tg.app.stage.service web.app.stage.service /etc/systemd/system/
 
+systemctl daemon-reload
+
 systemctl enable docker-compose-app.service
 systemctl start docker-compose-app.service
 
@@ -194,6 +196,8 @@ systemctl start ldap.app.stage.service
 systemctl start tg.app.stage.service
 systemctl start web.app.stage.service
 ```
+
+`journalctl -f -u api.app.stage.service`
 
 #### Nginx
 ```
