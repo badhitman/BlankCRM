@@ -2,41 +2,52 @@
 
 <MudGrid>
     <MudItem xs="12" md="4">
-        <MudTextField @bind-Value="_datePayment"
+        <MudTextField @bind-Value="_startDate"
                       T="DateTime?"
-                      Label="Date"
+                      Label="Start"
+                      Format="yyyy-MM-dd"
+                      InputType="InputType.Date"
+                      Variant="Variant.Outlined"
+                      Margin="Margin.Dense" Disabled="IsBusyProgress" />
+        <MudTextField @bind-Value="_endDate"
+                      T="DateTime?"
+                      Label="End"
                       Format="yyyy-MM-dd"
                       InputType="InputType.Date"
                       Variant="Variant.Outlined"
                       Margin="Margin.Dense" Disabled="IsBusyProgress" />
     </MudItem>
     <MudItem xs="12" md="3">
-        <MudNumericField @bind-Value="_valuePayment"
+        <MudNumericField @bind-Value="_coupon"
                          T="decimal?"
-                         Label="Value"
+                         Label="Coupon"
+                         Format="N2"
+                         Culture="@_en"
+                         Variant="Variant.Outlined"
+                         Margin="Margin.Dense" Disabled="IsBusyProgress" />
+        <MudNumericField @bind-Value="_couponRate"
+                         T="decimal?"
+                         Label="Rate"
                          Format="N2"
                          Culture="@_en"
                          Variant="Variant.Outlined"
                          Margin="Margin.Dense" Disabled="IsBusyProgress" />
     </MudItem>
     <MudItem xs="12" md="3">
-        <MudSelect @bind-Value="_cashFlowType"
-                   T="CashFlowTypesEnum"
-                   Label="Type"
-                   Variant="Variant.Outlined"
-                   Margin="Margin.Dense" Disabled="IsBusyProgress">
-            @foreach (CashFlowTypesEnum state in Enum.GetValues(typeof(CashFlowTypesEnum)))
-            {
-                <MudSelectItem T="CashFlowTypesEnum" Value="@state">@state</MudSelectItem>
-            }
-        </MudSelect>
+        <MudNumericField @bind-Value="_notional"
+                         T="decimal?"
+                         Label="Notional"
+                         Format="N2"
+                         Culture="@_en"
+                         Variant="Variant.Outlined"
+                         Margin="Margin.Dense" Disabled="IsBusyProgress" />
     </MudItem>
     <MudItem xs="2" Class="d-flex align-content-center flex-wrap ">
         <MudIconButton Icon="@Icons.Material.Filled.AddCircle"
                        Variant="Variant.Outlined"
                        Color="Color.Primary"
                        OnClick="AddNewFlow"
-                       Disabled="@(IsBusyProgress || _valuePayment <= 0 || !_datePayment.HasValue || _datePayment < DateTime.Now)" />
+                       Disabled="@(IsBusyProgress)" />
     </MudItem>
 </MudGrid>
 
@@ -45,13 +56,14 @@
           RowEditPreview="BackupItem" RowEditCancel="ResetItemToOriginalValues"
           RowEditCommit="ItemHasBeenCommitted" IsEditRowSwitchingBlocked EditTrigger="@TableEditTrigger.EditButton">
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy="new Func<CashFlowViewModel, object>(x => x.PaymentDate)" InitialDirection="SortDirection.Ascending">Date</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<CashFlowViewModel, object>(x => x.PaymentValue)">Value</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<CashFlowViewModel, object>(x => x.CashFlowType)">Type</MudTableSortLabel></MudTh>
+        <MudTh>Period</MudTh>
+        <MudTh>Notional</MudTh>
+        <MudTh>Coupon</MudTh>
+        <MudTh>CouponRate</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Date">
-            @context!.PaymentDate.ToShortDateString()
+        <MudTd DataLabel="Period">
+            @context!.StartDate.ToShortDateString() - @context!.EndDate.ToShortDateString()
             <sup class="bi bi-x @(_initDeleteCashFlow == context.Id ? "text-danger-emphasis" : "")" title="удаление CashFlow" style="cursor:pointer;" @onclick="async () => await InitDeleteCashFlow(context.Id)">
                 @if (_initDeleteCashFlow == context.Id)
                 {
@@ -59,36 +71,49 @@
                 }
             </sup>
         </MudTd>
-        <MudTd DataLabel="Value">@context!.PaymentValue</MudTd>
-        <MudTd DataLabel="Type">@((CashFlowTypesEnum)context!.CashFlowType)</MudTd>
+        <MudTd DataLabel="Notional">@context!.Notional</MudTd>
+        <MudTd DataLabel="Coupon">@context!.Coupon</MudTd>
+        <MudTd DataLabel="CouponRate">@context!.CouponRate</MudTd>
     </RowTemplate>
     <RowEditingTemplate>
-        <MudTd DataLabel="Date">
-            <MudTextField @bind-Value="context!.PaymentDate"
+        <MudTd DataLabel="Period">
+            <MudTextField @bind-Value="context!.StartDate"
                           T="DateTime"
                           Label="Date"
                           Format="yyyy-MM-dd"
                           InputType="InputType.Date"
                           Margin="Margin.Dense" />
+            -
+            <MudTextField @bind-Value="context!.EndDate"
+                          T="DateTime"
+                          Label="EndDate"
+                          Format="yyyy-MM-dd"
+                          InputType="InputType.Date"
+                          Margin="Margin.Dense" />
         </MudTd>
-        <MudTd DataLabel="Value">
-            <MudNumericField @bind-Value="context!.PaymentValue"
+        <MudTd DataLabel="Notional">
+            <MudNumericField @bind-Value="context!.Notional"
                              T="decimal"
-                             Label="Value"
+                             Label="Notional"
                              Format="N2"
                              Culture="@_en"
                              Margin="Margin.Dense" />
         </MudTd>
-        <MudTd DataLabel="Type">
-            <MudSelect @bind-Value="context!.CashFlowType"
-                       Label="Type"
-                       Variant="Variant.Outlined"
-                       Margin="Margin.Dense">
-                @foreach (CashFlowTypesEnum state in Enum.GetValues(typeof(CashFlowTypesEnum)))
-                {
-                    <MudSelectItem Value="@((int)state)">@state</MudSelectItem>
-                }
-            </MudSelect>
+        <MudTd DataLabel="Coupon">
+            <MudNumericField @bind-Value="context!.Coupon"
+                             T="decimal"
+                             Label="Coupon"
+                             Format="N2"
+                             Culture="@_en"
+                             Margin="Margin.Dense" />
+        </MudTd>
+        <MudTd DataLabel="CouponRate">
+            <MudNumericField @bind-Value="context!.CouponRate"
+                             T="decimal"
+                             Label="CouponRate"
+                             Format="N2"
+                             Culture="@_en"
+                             Margin="Margin.Dense" />
         </MudTd>
     </RowEditingTemplate>
     <PagerContent>

@@ -20,23 +20,29 @@ public class CashFlowViewModel
     public int InstrumentId { get; set; }
 
     /// <inheritdoc/>
-    public DateTime PaymentDate { get; set; }
+    public DateTime StartDate { get; set; }
 
     /// <inheritdoc/>
-    public decimal PaymentValue { get; set; }
+    public DateTime EndDate { get; set; }
 
-    /// <summary>
-    /// <see cref="CashFlowTypesEnum"/>
-    /// </summary>
-    public int CashFlowType { get; set; }
+    /// <inheritdoc/>
+    public decimal CouponRate { get; set; }
+
+    /// <inheritdoc/>
+    public decimal Coupon { get; set; }
+
+    /// <inheritdoc/>
+    public decimal Notional { get; set; }
 
     /// <inheritdoc/>
     public void SetUpdate(CashFlowViewModel req)
     {
         Id = req.Id;
-        PaymentDate = req.PaymentDate;
         InstrumentId = req.InstrumentId;
-        PaymentValue = req.PaymentValue;
-        CashFlowType = req.CashFlowType;
+        StartDate = req.StartDate;
+        EndDate = req.EndDate;
+        CouponRate = req.CouponRate;
+        Coupon = req.Coupon;
+        Notional = req.Notional;
     }
 }

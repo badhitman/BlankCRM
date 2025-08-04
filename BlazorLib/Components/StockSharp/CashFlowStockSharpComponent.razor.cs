@@ -26,9 +26,13 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
 
     List<CashFlowViewModel> Elements = [];
     static readonly CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
-    decimal? _valuePayment = 0;
-    CashFlowTypesEnum _cashFlowType;
-    DateTime? _datePayment;
+
+    DateTime? _startDate;
+    DateTime? _endDate;
+
+    decimal? _coupon = 0;
+    decimal? _notional = 0;
+    decimal? _couponRate = 0;
 
     CashFlowViewModel? selectedItem1 = null;
     CashFlowViewModel? elementBeforeEdit;
@@ -53,20 +57,29 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
     async Task AddNewFlow()
     {
         _initDeleteCashFlow = 0;
-        if (!_datePayment.HasValue || !_valuePayment.HasValue)
+        if (!_startDate.HasValue || !_endDate.HasValue || _startDate >= _endDate || !_couponRate.HasValue)
+        {
+            SnackBarRepo.Error("Invalid row: !_startDate.HasValue || !_endDate.HasValue || _startDate >= _endDate || !_couponRate.HasValue");
             return;
+        }
 
         await SetBusyAsync();
         ResponseBaseModel resC = await StockSharpRepo.CashFlowUpdateAsync(new()
         {
-            CashFlowType = (int)_cashFlowType,
             InstrumentId = InstrumentId,
-            PaymentDate = _datePayment.Value,
-            PaymentValue = _valuePayment.Value,
+            CouponRate = _couponRate.Value,
+            Notional = _notional.HasValue ? _notional.Value : 0,
+            Coupon = _coupon.HasValue ? _coupon.Value : 0,
+            EndDate = _endDate.Value,
+            StartDate = _startDate.Value,
         });
         SnackBarRepo.ShowMessagesResponse(resC.Messages);
-        _datePayment = null;
-        _valuePayment = 0;
+
+        _startDate = null;
+        _endDate = null;
+        _couponRate = null;
+        _notional = null;
+        _coupon = null;
 
         TResponseModel<List<CashFlowViewModel>> res = await StockSharpRepo.CashFlowList(InstrumentId);
         Elements = res.Response;
@@ -120,8 +133,10 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
             return;
         }
 
-       ((CashFlowViewModel)element).PaymentDate = elementBeforeEdit.PaymentDate;
-        ((CashFlowViewModel)element).PaymentValue = elementBeforeEdit.PaymentValue;
-        ((CashFlowViewModel)element).CashFlowType = elementBeforeEdit.CashFlowType;
+       ((CashFlowViewModel)element).StartDate = elementBeforeEdit.StartDate;
+       ((CashFlowViewModel)element).EndDate = elementBeforeEdit.EndDate;
+       ((CashFlowViewModel)element).Coupon = elementBeforeEdit.Coupon;
+       ((CashFlowViewModel)element).CouponRate = elementBeforeEdit.CouponRate;
+       ((CashFlowViewModel)element).Notional = elementBeforeEdit.Notional;
     }
 }
