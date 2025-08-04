@@ -184,7 +184,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
 
     async Task<IDialogReference> OpenDialogAsync(InstrumentTradeStockSharpViewModel Instrument)
     {
-        DialogOptions options = new() { CloseOnEscapeKey = true, BackdropClick = true, FullWidth = true, };
+        DialogOptions options = new() { MaxWidth = MaxWidth.ExtraLarge, CloseOnEscapeKey = true, BackdropClick = true, FullWidth = true, };
         DialogParameters<InstrumentEditComponent> parameters = new() { { x => x.Instrument, Instrument } };
         IDialogReference res = await DialogRepo.ShowAsync<InstrumentEditComponent>($"Instrument edit: {Instrument.IdRemote}", parameters, options);
         await res.Result.WaitAsync(cancellationToken: CancellationToken.None);

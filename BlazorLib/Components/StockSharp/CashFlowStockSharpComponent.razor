@@ -1,7 +1,7 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
 <MudGrid>
-    <MudItem xs="12" md="4">
+    <MudItem xs="12" md="2">
         <MudTextField @bind-Value="_startDate"
                       T="DateTime?"
                       Label="Start"
@@ -9,6 +9,8 @@
                       InputType="InputType.Date"
                       Variant="Variant.Outlined"
                       Margin="Margin.Dense" Disabled="IsBusyProgress" />
+    </MudItem>
+    <MudItem xs="12" md="2">
         <MudTextField @bind-Value="_endDate"
                       T="DateTime?"
                       Label="End"
@@ -17,7 +19,7 @@
                       Variant="Variant.Outlined"
                       Margin="Margin.Dense" Disabled="IsBusyProgress" />
     </MudItem>
-    <MudItem xs="12" md="3">
+    <MudItem xs="12" md="1">
         <MudNumericField @bind-Value="_coupon"
                          T="decimal?"
                          Label="Coupon"
@@ -25,6 +27,8 @@
                          Culture="@_en"
                          Variant="Variant.Outlined"
                          Margin="Margin.Dense" Disabled="IsBusyProgress" />
+    </MudItem>
+    <MudItem xs="12" md="1">
         <MudNumericField @bind-Value="_couponRate"
                          T="decimal?"
                          Label="Rate"
@@ -33,7 +37,7 @@
                          Variant="Variant.Outlined"
                          Margin="Margin.Dense" Disabled="IsBusyProgress" />
     </MudItem>
-    <MudItem xs="12" md="3">
+    <MudItem xs="12" md="1">
         <MudNumericField @bind-Value="_notional"
                          T="decimal?"
                          Label="Notional"
@@ -50,7 +54,7 @@
                        Disabled="@(IsBusyProgress)" />
     </MudItem>
 </MudGrid>
-
+<hr/>
 <MudTable Items="@Elements" Dense Hover CanCancelEdit Loading="IsBusyProgress"
           @bind-SelectedItem="selectedItem1" SortLabel="Sort By" CommitEditTooltip="Commit Edit"
           RowEditPreview="BackupItem" RowEditCancel="ResetItemToOriginalValues"
