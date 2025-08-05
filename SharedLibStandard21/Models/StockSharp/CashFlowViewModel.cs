@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// CashFlowViewModel
 /// </summary>
-public class CashFlowViewModel
+public class CashFlowViewModel : IComparable<CashFlowViewModel>
 {
     /// <inheritdoc/>
     [Key]
@@ -33,6 +33,12 @@ public class CashFlowViewModel
 
     /// <inheritdoc/>
     public decimal Notional { get; set; }
+
+    /// <inheritdoc/>
+    public int CompareTo(CashFlowViewModel other)
+    {
+        return EndDate.CompareTo(other.EndDate);
+    }
 
     /// <inheritdoc/>
     public void SetUpdate(CashFlowViewModel req)
