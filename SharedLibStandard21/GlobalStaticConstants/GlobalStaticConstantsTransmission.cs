@@ -1119,6 +1119,11 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string OrdersSelectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.ORDERS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
 
         /// <summary>
+        /// Generate regular CashFlow`s
+        /// </summary>
+        public readonly static string GenerateRegularCashFlowsStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.REGULARCASHFLOWS_CONTROLLER_NAME, Routes.GENERATE_ACTION_NAME);
+
+        /// <summary>
         /// Подбор MyTrade`s
         /// </summary>
         public readonly static string MyTradesSelectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.MY_CONTROLLER_NAME}-{Routes.TRADES_CONTROLLER_NAME}", Routes.SELECT_ACTION_NAME);

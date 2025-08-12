@@ -132,6 +132,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string ORDERS_CONTROLLER_NAME = "orders";
 
         /// <summary>
+        /// REGULAR CASH FLOWS
+        /// </summary>
+        public const string REGULARCASHFLOWS_CONTROLLER_NAME = "RegularCashFlows";
+
+        /// <summary>
         /// Trades
         /// </summary>
         public const string TRADES_CONTROLLER_NAME = "trades";
