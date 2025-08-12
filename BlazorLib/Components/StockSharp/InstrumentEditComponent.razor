@@ -50,17 +50,34 @@
                 </MudForm>
             </MudCardContent>
         </MudCard>
-        <MudExpansionPanel Class="mt-1">
-            <TitleContent>
-                <div class="d-flex">
-                    <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
-                    <MudText>Cash<strong>Flow</strong>`s</MudText>
-                </div>
-            </TitleContent>
-            <ChildContent>
-                <CashFlowStockSharpComponent InstrumentId="Instrument.Id" />
-            </ChildContent>
-        </MudExpansionPanel>
+        @if (IsEdited)
+        {
+            <MudExpansionPanel Disabled Expanded="false" Class="mt-1">
+                <TitleContent>
+                    <div class="d-flex">
+                        <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
+                        <MudText>Cash<strong>Flow</strong>`s</MudText>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <CashFlowStockSharpComponent InstrumentId="Instrument.Id" />
+                </ChildContent>
+            </MudExpansionPanel>
+        }
+        else
+        {
+            <MudExpansionPanel Class="mt-1">
+                <TitleContent>
+                    <div class="d-flex">
+                        <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
+                        <MudText>Cash<strong>Flow</strong>`s</MudText>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <CashFlowStockSharpComponent InstrumentId="Instrument.Id" />
+                </ChildContent>
+            </MudExpansionPanel>
+        }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
