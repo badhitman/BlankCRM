@@ -16,22 +16,32 @@ public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseM
 
 
     /// <inheritdoc./>
-    [Parameter,EditorRequired]
+    [Parameter, EditorRequired]
     public required Action UpdateHandle { get; set; }
+
+    /// <inheritdoc./>
+    [Parameter, EditorRequired]
+    public required int InstrumentId { get; set; }
 
 
     bool _visible;
     readonly DialogOptions _dialogOptions = new() { FullWidth = true };
 
-    int fromDaysValue { get; set; } = 182;
-    decimal notionalFirstValue { get; set; } = 1000;
+    int FromDaysValue { get; set; } = 182;
+    decimal NotionalFirstValue { get; set; } = 1000;
 
     void OpenDialog() => _visible = true;
 
     async Task Submit()
     {
-        CashFlowStockSharpRequestModel _req = new() { FromDays = fromDaysValue, NotionalFirst = notionalFirstValue };
+        CashFlowStockSharpRequestModel _req = new()
+        {
+            FromDays = FromDaysValue,
+            NotionalFirst = NotionalFirstValue,
+            InstrumentId = InstrumentId
+        };
         ResponseBaseModel res = await ManageRepo.GenerateRegularCashFlowsAsync(_req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         _visible = false;
         UpdateHandle();
     }

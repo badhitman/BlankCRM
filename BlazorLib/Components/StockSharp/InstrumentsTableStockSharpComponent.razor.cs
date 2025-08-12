@@ -121,7 +121,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     readonly List<BoardStockSharpViewModel> Boards = [];
 
 
-    private string GetMultiSelectionText(List<string?> selectedValues)
+    private static string GetMultiSelectionText(List<string?> selectedValues)
     {
         return $"{string.Join(", ", selectedValues.Select(x => x is null ? "~not set~" : x))}";//
     }
