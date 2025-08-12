@@ -61,7 +61,7 @@
                        title="create new flow"
                        OnClick="AddNewFlow"
                        Disabled="@(IsBusyProgress || _startDate == default || _endDate == default || _startDate >= _endDate || _coupon == default)">Add</MudButton>
-            <RegularCashFlowGenerateComponent />
+            <RegularCashFlowGenerateComponent UpdateHandle="ActionUpdate" />
         </MudButtonGroup>
     </MudItem>
 </MudGrid>

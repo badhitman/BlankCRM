@@ -3,8 +3,8 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using SharedLib;
 using System.Globalization;
+using SharedLib;
 
 namespace BlazorLib.Components.StockSharp;
 
@@ -47,8 +47,7 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
         ResponseBaseModel res = await StockSharpRepo.CashFlowDelete(_initDeleteCashFlow);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         _initDeleteCashFlow = 0;
-        TResponseModel<List<CashFlowViewModel>> resC = await StockSharpRepo.CashFlowList(InstrumentId);
-        Elements = resC.Response;
+        await ReloadFlows();
         await SetBusyAsync(false);
     }
 
@@ -79,19 +78,19 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
         _notional = null;
         _coupon = null;
 
-        TResponseModel<List<CashFlowViewModel>> res = await StockSharpRepo.CashFlowList(InstrumentId);
-        Elements = res.Response;
+        await ReloadFlows();
 
         await SetBusyAsync(false);
     }
+
+    void ActionUpdate() => InvokeAsync(ReloadFlows);
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
-        TResponseModel<List<CashFlowViewModel>> res = await StockSharpRepo.CashFlowList(InstrumentId);
-        Elements = res.Response;
+        await ReloadFlows();
         await SetBusyAsync(false);
     }
 
@@ -115,11 +114,17 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
                 await SetBusyAsync();
                 ResponseBaseModel resC = await StockSharpRepo.CashFlowUpdateAsync(_cfm);
                 SnackBarRepo.ShowMessagesResponse(resC.Messages);
-                TResponseModel<List<CashFlowViewModel>> res = await StockSharpRepo.CashFlowList(InstrumentId);
-                Elements = res.Response;
+                await ReloadFlows();
                 await SetBusyAsync(false);
             });
         }
+    }
+
+    async Task ReloadFlows()
+    {
+        TResponseModel<List<CashFlowViewModel>> res = await StockSharpRepo.CashFlowList(InstrumentId);
+        Elements = res.Response;
+        Elements.Sort();
     }
 
     void ResetItemToOriginalValues(object element)
@@ -132,9 +137,9 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
         }
 
        ((CashFlowViewModel)element).StartDate = elementBeforeEdit.StartDate;
-       ((CashFlowViewModel)element).EndDate = elementBeforeEdit.EndDate;
-       ((CashFlowViewModel)element).Coupon = elementBeforeEdit.Coupon;
-       ((CashFlowViewModel)element).CouponRate = elementBeforeEdit.CouponRate;
-       ((CashFlowViewModel)element).Notional = elementBeforeEdit.Notional;
+        ((CashFlowViewModel)element).EndDate = elementBeforeEdit.EndDate;
+        ((CashFlowViewModel)element).Coupon = elementBeforeEdit.Coupon;
+        ((CashFlowViewModel)element).CouponRate = elementBeforeEdit.CouponRate;
+        ((CashFlowViewModel)element).Notional = elementBeforeEdit.Notional;
     }
 }

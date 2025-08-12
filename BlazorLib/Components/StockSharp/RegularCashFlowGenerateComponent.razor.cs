@@ -15,6 +15,11 @@ public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseM
     IManageStockSharpService ManageRepo { get; set; } = default!;
 
 
+    /// <inheritdoc./>
+    [Parameter,EditorRequired]
+    public required Action UpdateHandle { get; set; }
+
+
     bool _visible;
     readonly DialogOptions _dialogOptions = new() { FullWidth = true };
 
@@ -28,6 +33,7 @@ public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseM
         CashFlowStockSharpRequestModel _req = new() { FromDays = fromDaysValue, NotionalFirst = notionalFirstValue };
         ResponseBaseModel res = await ManageRepo.GenerateRegularCashFlowsAsync(_req);
         _visible = false;
+        UpdateHandle();
     }
 
     void Close()

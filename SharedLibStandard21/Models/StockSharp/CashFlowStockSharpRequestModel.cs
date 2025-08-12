@@ -14,4 +14,7 @@ public class CashFlowStockSharpRequestModel
     
     /// <inheritdoc/>
     public decimal NotionalFirst { get; set; }
+
+    /// <inheritdoc/>
+    public int InstrumentId { get; set; }
 }
