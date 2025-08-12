@@ -3,10 +3,8 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using SharedLib;
 using System.Globalization;
-using static MudBlazor.CategoryTypes;
 
 namespace BlazorLib.Components.StockSharp;
 
@@ -68,8 +66,8 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
         {
             InstrumentId = InstrumentId,
             CouponRate = _couponRate.Value,
-            Notional = _notional.HasValue ? _notional.Value : 0,
-            Coupon = _coupon.HasValue ? _coupon.Value : 0,
+            Notional = _notional ?? 0,
+            Coupon = _coupon ?? 0,
             EndDate = _endDate.Value,
             StartDate = _startDate.Value,
         });

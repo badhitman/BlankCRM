@@ -80,7 +80,7 @@ public partial class AdapterEditComponent : BlazorBusyComponentBaseModel
         }
 
         await SetBusyAsync();
-        var res = await SsRepo.DeleteAdapterAsync(editAdapter);
+        ResponseBaseModel res = await SsRepo.DeleteAdapterAsync(editAdapter.Id);
         initDelete = false;
         await SetBusyAsync(false);
         NavRepo.NavigateTo("adapters");

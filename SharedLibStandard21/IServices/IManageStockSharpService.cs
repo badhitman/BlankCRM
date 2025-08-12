@@ -40,5 +40,10 @@ public interface IManageStockSharpService
     /// <summary>
     /// DeleteAdapterAsync
     /// </summary>
-    public Task<ResponseBaseModel> DeleteAdapterAsync(FixMessageAdapterModelDB req, CancellationToken cancellationToken = default);
+    public Task<ResponseBaseModel> DeleteAdapterAsync(int adapterId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// GenerateRegularCashFlowsAsync
+    /// </summary>
+    public Task<ResponseBaseModel> GenerateRegularCashFlowsAsync(CashFlowStockSharpRequestModel req, CancellationToken cancellationToken = default);
 }

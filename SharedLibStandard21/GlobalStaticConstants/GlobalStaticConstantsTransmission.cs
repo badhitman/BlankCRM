@@ -961,9 +961,6 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string FlushTempKladrRecive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.TEMP_CONTROLLER_NAME}", Routes.FLUSH_ACTION_NAME);
         #endregion
 
-        /// <inheritdoc/>
-        public readonly static string PingStockSharpDriverReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"{Routes.STOCKSHARP_CONTROLLER_NAME}-{Routes.DRIVER_CONTROLLER_NAME}", Routes.PING_ACTION_NAME);
-
         #region events/notifies
         /// <inheritdoc/>
         public readonly static string ValuesChangedStockSharpNotifyReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, $"~{Routes.EVENT_CONTROLLER_NAME}-{Routes.NOTIFY_ACTION_NAME}", Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.VALUES_CONTROLLER_NAME}-{Routes.CHANGE_ACTION_NAME}");

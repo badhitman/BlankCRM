@@ -5,13 +5,13 @@
 namespace SharedLib;
 
 /// <summary>
-/// Установка маркеров инструменту
+/// CashFlowStockSharpRequestModel
 /// </summary>
-public class SetMarkersForInstrumentRequestModel
+public class CashFlowStockSharpRequestModel
 {
     /// <inheritdoc/>
-    public int InstrumentId { get; set; }
-
+    public int FromDays { get; set; }
+    
     /// <inheritdoc/>
-    public MarkersInstrumentStockSharpEnum[] SetMarkers {  get; set; }
+    public decimal NotionalFirst { get; set; }
 }
