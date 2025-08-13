@@ -15,15 +15,15 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
     [Inject]
     IDataStockSharpService StockSharpDataRepo { get; set; } = default!;
 
+
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
-
 
     /// <inheritdoc/>
     [Parameter]
     public required InstrumentTradeStockSharpViewModel Instrument { get; set; }
 
-    
+
     DateTime? _issueDate;
     DateTime? IssueDate
     {
@@ -31,7 +31,7 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
         set
         {
             _issueDate = value;
-            cashFlowStockSharpRef?.UpdateState(IsEdited);
+            cashFlowStockSharpRef?.UpdateState((IssueDate, MaturityDate), IsEdited);
         }
     }
 
@@ -42,7 +42,7 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
         set
         {
             _maturityDate = value;
-            cashFlowStockSharpRef?.UpdateState(IsEdited);
+            cashFlowStockSharpRef?.UpdateState((IssueDate, MaturityDate), IsEdited);
         }
     }
 
@@ -58,7 +58,7 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
         set
         {
             _couponRate = value;
-            cashFlowStockSharpRef?.UpdateState(IsEdited);
+            cashFlowStockSharpRef?.UpdateState((IssueDate, MaturityDate), IsEdited);
         }
     }
 

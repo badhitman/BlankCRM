@@ -24,7 +24,7 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc./>
     [CascadingParameter, EditorRequired]
-    public (DateTime? IssueDate, DateTime? MaturityDate)  Period { get; set; }
+    public required (DateTime? IssueDate, DateTime? MaturityDate) Period { get; set; }
 
 
     RegularCashFlowGenerateComponent? regularCashFlowGenerateRef;
@@ -43,9 +43,9 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
     int _initDeleteCashFlow;
 
     /// <inheritdoc/>
-    public void UpdateState(bool _set)
+    public void UpdateState((DateTime? IssueDate, DateTime? MaturityDate) period, bool _set)
     {
-        regularCashFlowGenerateRef?.UpdateState(_set);
+        regularCashFlowGenerateRef?.UpdateState(period, _set);
     }
 
     async Task InitDeleteCashFlow(int _cashFlowId)

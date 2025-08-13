@@ -50,7 +50,7 @@
                 </MudForm>
             </MudCardContent>
         </MudCard>
-        
+
         <MudExpansionPanel Class="mt-1">
             <TitleContent>
                 <div class="d-flex">
@@ -59,6 +59,7 @@
                 </div>
             </TitleContent>
             <ChildContent>
+                <CascadingValue Value="(IssueDate, MaturityDate)"></CascadingValue>
                 <CashFlowStockSharpComponent InstrumentId="Instrument.Id" @ref=cashFlowStockSharpRef />
             </ChildContent>
         </MudExpansionPanel>

@@ -30,6 +30,7 @@ public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseM
     [Parameter, EditorRequired]
     public DateTime? MaturityDate { get; set; }
 
+    (DateTime? IssueDate, DateTime? MaturityDate) Period;
 
     bool _visible;
     readonly DialogOptions _dialogOptions = new() { FullWidth = true };
@@ -39,10 +40,18 @@ public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseM
 
     bool _holdInstrumentGen;
     /// <inheritdoc/>
-    public void UpdateState(bool _set)
+    public void UpdateState((DateTime? IssueDate, DateTime? MaturityDate) period, bool _set)
     {
+        Period = period;
         _holdInstrumentGen = _set;
         StateHasChanged();
+    }
+
+    /// <inheritdoc/>
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Period = (IssueDate, MaturityDate);
     }
 
     void OpenDialog() => _visible = true;

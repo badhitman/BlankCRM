@@ -62,8 +62,8 @@
                        OnClick="AddNewFlow"
                        Disabled="@(IsBusyProgress || _startDate == default || _endDate == default || _startDate >= _endDate || _coupon == default)">Add</MudButton>
             <RegularCashFlowGenerateComponent @ref=regularCashFlowGenerateRef
-                                              IssueDate=IssueDate
-                                              MaturityDate=MaturityDate
+                                              IssueDate=Period.IssueDate
+                                              MaturityDate=Period.MaturityDate
                                               UpdateHandle="ActionUpdate"
                                               InstrumentId="InstrumentId" />
         </MudButtonGroup>
