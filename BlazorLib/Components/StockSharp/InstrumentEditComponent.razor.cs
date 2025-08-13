@@ -3,9 +3,9 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using System.Globalization;
 using MudBlazor;
 using SharedLib;
-using System.Globalization;
 
 namespace BlazorLib.Components.StockSharp;
 
@@ -23,20 +23,50 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public required InstrumentTradeStockSharpViewModel Instrument { get; set; }
 
+    
+    DateTime? _issueDate;
+    DateTime? IssueDate
+    {
+        get => _issueDate;
+        set
+        {
+            _issueDate = value;
+            cashFlowStockSharpRef?.UpdateState(IsEdited);
+        }
+    }
 
-    DateTime? IssueDate { get; set; }
-    DateTime? MaturityDate { get; set; }
+    DateTime? _maturityDate;
+    DateTime? MaturityDate
+    {
+        get => _maturityDate;
+        set
+        {
+            _maturityDate = value;
+            cashFlowStockSharpRef?.UpdateState(IsEdited);
+        }
+    }
+
     BondsTypesInstrumentsManualEnum BondTypeManual { get; set; }
     TypesInstrumentsManualEnum TypeInstrumentManual { get; set; }
     string? ISIN { get; set; }
     string? Name { get; set; }
-    decimal CouponRate { get; set; } = 1;
+
+    decimal _couponRate = 1;
+    decimal CouponRate
+    {
+        get => _couponRate;
+        set
+        {
+            _couponRate = value;
+            cashFlowStockSharpRef?.UpdateState(IsEdited);
+        }
+    }
+
     decimal LastFairPrice { get; set; } = 9;
     string? Comment { get; set; }
 
-    MudNumericField<decimal>? _crRef;
-    MudNumericField<decimal>? _lfpRef;
-    CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
+    readonly CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
+    CashFlowStockSharpComponent? cashFlowStockSharpRef;
 
     /// <inheritdoc/>
     protected override void OnAfterRender(bool firstRender)
@@ -88,7 +118,7 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
         Instrument.Comment = Comment;
         Instrument.Name = Name;
 
-        ResponseBaseModel res =  await StockSharpDataRepo.UpdateInstrumentAsync(Instrument);
+        ResponseBaseModel res = await StockSharpDataRepo.UpdateInstrumentAsync(Instrument);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         MudDialog.Close(DialogResult.Ok(true));

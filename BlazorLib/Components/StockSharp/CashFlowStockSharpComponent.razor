@@ -61,7 +61,11 @@
                        title="create new flow"
                        OnClick="AddNewFlow"
                        Disabled="@(IsBusyProgress || _startDate == default || _endDate == default || _startDate >= _endDate || _coupon == default)">Add</MudButton>
-            <RegularCashFlowGenerateComponent UpdateHandle="ActionUpdate" InstrumentId="InstrumentId" />
+            <RegularCashFlowGenerateComponent @ref=regularCashFlowGenerateRef
+                                              IssueDate=IssueDate
+                                              MaturityDate=MaturityDate
+                                              UpdateHandle="ActionUpdate"
+                                              InstrumentId="InstrumentId" />
         </MudButtonGroup>
     </MudItem>
 </MudGrid>
@@ -71,7 +75,8 @@
           @bind-SelectedItem="selectedItem1"
           SortLabel="Sort By"
           CommitEditTooltip="Commit Edit"
-          RowEditPreview="BackupItem" RowEditCancel="ResetItemToOriginalValues"
+          RowEditPreview="BackupItem"
+          RowEditCancel="ResetItemToOriginalValues"
           RowEditCommit="ItemHasBeenCommitted"
           IsEditRowSwitchingBlocked
           EditTrigger="@TableEditTrigger.EditButton">

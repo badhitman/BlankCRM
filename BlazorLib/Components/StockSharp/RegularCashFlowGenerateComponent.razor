@@ -4,7 +4,7 @@
            Color="Color.Primary"
            title="Generation regular flow`s"
            OnClick="OpenDialog"
-           Disabled="@(IsBusyProgress)">Regular generate</MudButton>
+           Disabled="@(IsBusyProgress || _holdInstrumentGen)">Regular</MudButton>
 
 <MudDialog @bind-Visible="_visible" Options="_dialogOptions">
     <TitleContent>
@@ -13,11 +13,13 @@
         </MudText>
     </TitleContent>
     <DialogContent>
+        <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Issue Date" InputType="InputType.Date" @bind-Value="IssueDate" />
+        <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Maturity Date" InputType="InputType.Date" @bind-Value="MaturityDate" />
         <MudNumericField @bind-Value="FromDaysValue" Label="FromDays" Variant="Variant.Text" />
         <MudNumericField @bind-Value="NotionalFirstValue" Label="NotionalFirstValue" Variant="Variant.Outlined" />
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="Submit" Class="px-10">Generate</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="Submit" Class="px-10" Disabled=_holdInstrumentGen>Generate</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Close" Class="px-10">Close</MudButton>
     </DialogActions>
 </MudDialog>

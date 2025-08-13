@@ -37,10 +37,10 @@
                             <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Maturity Date" InputType="InputType.Date" @bind-Value="MaturityDate" />
                         </MudItem>
                         <MudItem xs="6" sm="3">
-                            <MudNumericField T="decimal" @bind-Value="CouponRate" Label="Coupon Rate" Immediate @ref="_crRef" Format="N2" Culture="@_en" />
+                            <MudNumericField T="decimal" @bind-Value="CouponRate" Label="Coupon Rate" Format="N2" Culture="@_en" />
                         </MudItem>
                         <MudItem xs="6" sm="3">
-                            <MudNumericField T="decimal" @bind-Value="LastFairPrice" Label="Last Fair Price" Immediate @ref="_lfpRef" Format="N2" Culture="@_en" />
+                            <MudNumericField T="decimal" @bind-Value="LastFairPrice" Label="Last Fair Price" Immediate Format="N2" Culture="@_en" />
                         </MudItem>
 
                         <MudItem xs="12">
@@ -50,34 +50,18 @@
                 </MudForm>
             </MudCardContent>
         </MudCard>
-        @if (IsEdited)
-        {
-            <MudExpansionPanel Disabled Expanded="false" Class="mt-1">
-                <TitleContent>
-                    <div class="d-flex">
-                        <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
-                        <MudText>Cash<strong>Flow</strong>`s</MudText>
-                    </div>
-                </TitleContent>
-                <ChildContent>
-                    <CashFlowStockSharpComponent InstrumentId="Instrument.Id" />
-                </ChildContent>
-            </MudExpansionPanel>
-        }
-        else
-        {
-            <MudExpansionPanel Class="mt-1">
-                <TitleContent>
-                    <div class="d-flex">
-                        <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
-                        <MudText>Cash<strong>Flow</strong>`s</MudText>
-                    </div>
-                </TitleContent>
-                <ChildContent>
-                    <CashFlowStockSharpComponent InstrumentId="Instrument.Id" />
-                </ChildContent>
-            </MudExpansionPanel>
-        }
+        
+        <MudExpansionPanel Class="mt-1">
+            <TitleContent>
+                <div class="d-flex">
+                    <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
+                    <MudText>Cash<strong>Flow</strong>`s</MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                <CashFlowStockSharpComponent InstrumentId="Instrument.Id" @ref=cashFlowStockSharpRef />
+            </ChildContent>
+        </MudExpansionPanel>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>

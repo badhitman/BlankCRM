@@ -3,8 +3,9 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using System.Globalization;
 using SharedLib;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace BlazorLib.Components.StockSharp;
 
@@ -21,7 +22,12 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public int InstrumentId { get; set; }
 
+    /// <inheritdoc./>
+    [CascadingParameter, EditorRequired]
+    public (DateTime? IssueDate, DateTime? MaturityDate)  Period { get; set; }
 
+
+    RegularCashFlowGenerateComponent? regularCashFlowGenerateRef;
     List<CashFlowViewModel> Elements = [];
     static readonly CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
 
@@ -35,6 +41,12 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
     CashFlowViewModel? selectedItem1 = null;
     CashFlowViewModel? elementBeforeEdit;
     int _initDeleteCashFlow;
+
+    /// <inheritdoc/>
+    public void UpdateState(bool _set)
+    {
+        regularCashFlowGenerateRef?.UpdateState(_set);
+    }
 
     async Task InitDeleteCashFlow(int _cashFlowId)
     {
@@ -83,7 +95,11 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync(false);
     }
 
-    void ActionUpdate() => InvokeAsync(ReloadFlows);
+    void ActionUpdate()
+    {
+        InvokeAsync(ReloadFlows);
+        StateHasChanged();
+    }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()

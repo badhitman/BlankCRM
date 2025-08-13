@@ -5,7 +5,6 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
-using System.Threading.Tasks;
 
 namespace BlazorLib.Components.StockSharp;
 
@@ -23,12 +22,28 @@ public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseM
     [Parameter, EditorRequired]
     public required int InstrumentId { get; set; }
 
+    /// <inheritdoc./>
+    [Parameter, EditorRequired]
+    public DateTime? IssueDate { get; set; }
+
+    /// <inheritdoc./>
+    [Parameter, EditorRequired]
+    public DateTime? MaturityDate { get; set; }
+
 
     bool _visible;
     readonly DialogOptions _dialogOptions = new() { FullWidth = true };
 
     int FromDaysValue { get; set; } = 182;
     decimal NotionalFirstValue { get; set; } = 1000;
+
+    bool _holdInstrumentGen;
+    /// <inheritdoc/>
+    public void UpdateState(bool _set)
+    {
+        _holdInstrumentGen = _set;
+        StateHasChanged();
+    }
 
     void OpenDialog() => _visible = true;
 
@@ -38,7 +53,9 @@ public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseM
         {
             FromDays = FromDaysValue,
             NotionalFirst = NotionalFirstValue,
-            InstrumentId = InstrumentId
+            InstrumentId = InstrumentId,
+            IssueDate = IssueDate,
+            MaturityDate = MaturityDate,
         };
         ResponseBaseModel res = await ManageRepo.GenerateRegularCashFlowsAsync(_req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -48,7 +65,6 @@ public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseM
 
     void Close()
     {
-
         _visible = false;
     }
 }
