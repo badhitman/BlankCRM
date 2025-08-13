@@ -3,10 +3,9 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using System.Globalization;
 using MudBlazor;
 using SharedLib;
-using System.Collections.Generic;
-using System.Globalization;
 
 namespace BlazorLib.Components.StockSharp;
 
@@ -34,12 +33,14 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
 
     MudTable<CashFlowViewModel>? _tableRef;
 
-    DateTime? _startDate;
-    DateTime? _endDate;
+    DateTime?
+        _startDate,
+        _endDate;
 
-    decimal? _coupon = 0;
-    decimal? _notional = 0;
-    decimal? _couponRate = 0;
+    decimal?
+        _coupon = 0,
+        _notional = 0,
+        _couponRate = 0;
 
     CashFlowViewModel? selectedItem1 = null;
     CashFlowViewModel? elementBeforeEdit;
