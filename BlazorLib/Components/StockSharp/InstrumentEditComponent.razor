@@ -59,8 +59,9 @@
                 </div>
             </TitleContent>
             <ChildContent>
-                <CascadingValue Value="(IssueDate, MaturityDate)"></CascadingValue>
-                <CashFlowStockSharpComponent InstrumentId="Instrument.Id" @ref=cashFlowStockSharpRef />
+                <CascadingValue Value="(IssueDate, MaturityDate)">
+                    <CashFlowStockSharpComponent InstrumentId="Instrument.Id" @ref=cashFlowStockSharpRef />
+                </CascadingValue>
             </ChildContent>
         </MudExpansionPanel>
     </DialogContent>

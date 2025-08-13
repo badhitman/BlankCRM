@@ -30,7 +30,10 @@ public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseM
     [Parameter, EditorRequired]
     public DateTime? MaturityDate { get; set; }
 
-    (DateTime? IssueDate, DateTime? MaturityDate) Period;
+    /// <inheritdoc./>
+    [CascadingParameter]
+    public (DateTime? IssueDate, DateTime? MaturityDate) Period { get; set; }
+
 
     bool _visible;
     readonly DialogOptions _dialogOptions = new() { FullWidth = true };
