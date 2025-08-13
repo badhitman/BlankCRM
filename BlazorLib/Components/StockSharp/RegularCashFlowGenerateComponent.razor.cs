@@ -59,6 +59,13 @@ public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseM
 
     void OpenDialog() => _visible = true;
 
+    async Task Clear()
+    {
+        await SetBusyAsync();
+
+        await SetBusyAsync(false);
+    }
+
     async Task Submit()
     {
         CashFlowStockSharpRequestModel _req = new()

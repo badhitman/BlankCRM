@@ -1,5 +1,11 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
+<MudIconButton Icon="@Icons.Material.Filled.Clear"
+               Color="Color.Warning"
+               title="Delete all flow`s"
+               OnClick="Clear"
+               Disabled="@(IsBusyProgress || _holdInstrumentGen || !Period.IssueDate.HasValue|| !Period.MaturityDate.HasValue)" />
+
 <MudButton StartIcon="@Icons.Material.Filled.DataExploration"
            Color="Color.Primary"
            title="Generation regular flow`s"
