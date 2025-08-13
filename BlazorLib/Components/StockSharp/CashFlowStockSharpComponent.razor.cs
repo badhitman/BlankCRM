@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using SharedLib;
 using System.Collections.Generic;
 using System.Globalization;
@@ -30,6 +31,8 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
     RegularCashFlowGenerateComponent? regularCashFlowGenerateRef;
     List<CashFlowViewModel> Elements = [];
     static readonly CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
+
+    MudTable<CashFlowViewModel>? _tableRef;
 
     DateTime? _startDate;
     DateTime? _endDate;
@@ -91,13 +94,14 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
         _coupon = null;
 
         await ReloadFlows();
-
         await SetBusyAsync(false);
     }
 
     void ActionUpdate()
     {
         InvokeAsync(ReloadFlows);
+        if (_tableRef is not null)
+            InvokeAsync(_tableRef.ReloadServerData);
         StateHasChanged();
     }
 
@@ -141,6 +145,14 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
         TResponseModel<List<CashFlowViewModel>> res = await StockSharpRepo.CashFlowList(InstrumentId);
         Elements = res.Response;
         Elements.Sort();
+
+        if (_tableRef is not null)
+            await _tableRef.ReloadServerData();
+    }
+
+    Task<TableData<CashFlowViewModel?>> ServerReload(TableState state, CancellationToken token)
+    {
+        return Task.FromResult(new TableData<CashFlowViewModel?>() { TotalItems = Elements.Count, Items = Elements.Skip(state.PageSize * state.Page).Take(state.PageSize) });
     }
 
     void ResetItemToOriginalValues(object element)

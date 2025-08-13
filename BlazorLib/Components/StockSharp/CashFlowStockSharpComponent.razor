@@ -70,7 +70,8 @@
     </MudItem>
 </MudGrid>
 <hr />
-<MudTable Items="@Elements"
+<MudTable ServerData="ServerReload"
+          @ref=_tableRef
           Dense Hover CanCancelEdit Loading="IsBusyProgress"
           @bind-SelectedItem="selectedItem1"
           SortLabel="Sort By"
