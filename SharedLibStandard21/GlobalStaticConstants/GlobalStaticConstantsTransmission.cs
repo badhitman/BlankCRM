@@ -1009,6 +1009,9 @@ public static partial class GlobalStaticConstantsTransmission
         /// <inheritdoc/>
         public readonly static string AboutConnectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.ABOUT_CONTROLLER_NAME);
 
+        /// <inheritdoc/>
+        public readonly static string ClearCashFlowsStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.CASH_CONTROLLER_NAME}-{Routes.FLOW_CONTROLLER_NAME}`s", Routes.CLEAR_ACTION_NAME);
+
         /// <summary>
         /// Получить профили по их идентификаторам
         /// </summary>

@@ -46,4 +46,9 @@ public interface IManageStockSharpService
     /// GenerateRegularCashFlowsAsync
     /// </summary>
     public Task<ResponseBaseModel> GenerateRegularCashFlowsAsync(CashFlowStockSharpRequestModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// ClearCashFlowsAsync
+    /// </summary>
+    public Task<ResponseBaseModel> ClearCashFlowsAsync(int instrumentId, CancellationToken cancellationToken = default);
 }

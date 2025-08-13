@@ -26,6 +26,10 @@ public partial class ManageStockSharpTransmission(IMQTTClient mqClient) : IManag
         => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<FixMessageAdapterModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.AdaptersSelectStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ClearCashFlowsAsync(int instrumentId, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ClearCashFlowsStockSharpReceive, instrumentId, token: cancellationToken) ?? new();
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteAdapterAsync(int adapterId, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteAdapterStockSharpReceive, adapterId, token: cancellationToken) ?? new();
 

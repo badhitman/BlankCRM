@@ -8,6 +8,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.StockSharp;
 
+/// <summary>
+/// RegularCashFlowGenerateComponent
+/// </summary>
 public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
@@ -62,8 +65,10 @@ public partial class RegularCashFlowGenerateComponent : BlazorBusyComponentBaseM
     async Task Clear()
     {
         await SetBusyAsync();
-
+        ResponseBaseModel res = await ManageRepo.ClearCashFlowsAsync(InstrumentId);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
+        UpdateHandle();
     }
 
     async Task Submit()
