@@ -12,5 +12,5 @@ namespace SharedLib;
 public class InitialLoadRequestModel
 {
     /// <inheritdoc/>
-    public Dictionary<string, bool> BigPriceDifferences { get; set; }
+    public List<string> BigPriceDifferences { get; set; }
 }

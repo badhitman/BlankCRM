@@ -12,7 +12,6 @@ namespace SharedLib;
 /// </summary>
 public class BoardStockSharpViewModel : BoardStockSharpModel
 {
-
     /// <summary>
     /// Идентификатор/Key
     /// </summary>
@@ -24,5 +23,4 @@ public class BoardStockSharpViewModel : BoardStockSharpModel
 
     /// <inheritdoc/>
     public DateTime CreatedAtUTC { get; set; }
-
 }
