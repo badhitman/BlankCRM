@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using SharedLib;
-
 namespace SharedLib;
 
 /// <summary>
@@ -33,6 +31,6 @@ public class FieldFitModel : BaseRequiredFormFitModel
         TypesFieldsFormsEnum.Date => "DateOnly",
         TypesFieldsFormsEnum.Time => "TimeOnly",
         TypesFieldsFormsEnum.DateTime => "DateTime",
-        _ => throw new NotImplementedException()
+        _ => throw new NotImplementedException("Error: TypeData => TypeField switch")
     };
 }

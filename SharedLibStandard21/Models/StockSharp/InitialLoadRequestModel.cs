@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.Collections.Generic;
+
 namespace SharedLib;
 
 /// <summary>
@@ -10,11 +12,5 @@ namespace SharedLib;
 public class InitialLoadRequestModel
 {
     /// <inheritdoc/>
-    public decimal QuoteVolume { get; set; }
-
-    /// <inheritdoc/>
-    public decimal QuoteSizeVolume { get; set; }
-
-    /// <inheritdoc/>
-    public decimal SkipSizeVolume { get; set; }
+    public Dictionary<string, bool> BigPriceDifferences { get; set; }
 }
