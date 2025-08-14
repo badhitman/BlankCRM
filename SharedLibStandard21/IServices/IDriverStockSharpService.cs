@@ -41,7 +41,7 @@ public interface IDriverStockSharpService
     /// <summary>
     /// Initial Load
     /// </summary>
-    public Task<ResponseBaseModel> InitialLoad(InitialLoadRequestModel req, CancellationToken cancellationToken = default);
+    public Task<ResponseSimpleModel> InitialLoad(InitialLoadRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Strategy Start

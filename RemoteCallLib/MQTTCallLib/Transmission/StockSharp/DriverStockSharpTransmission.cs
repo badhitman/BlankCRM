@@ -59,6 +59,6 @@ public partial class DriverStockSharpTransmission(IMQTTClient mqClient) : IDrive
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.LimitsStrategiesUpdateStockSharpDriverReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> InitialLoad(InitialLoadRequestModel req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InitialLoadStockSharpDriverReceive, req, token: cancellationToken) ?? new();
+    public async Task<ResponseSimpleModel> InitialLoad(InitialLoadRequestModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<ResponseSimpleModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InitialLoadStockSharpDriverReceive, req, token: cancellationToken) ?? new();
 }
