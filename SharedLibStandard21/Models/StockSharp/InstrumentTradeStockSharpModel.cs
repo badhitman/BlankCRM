@@ -53,8 +53,73 @@ public partial class InstrumentTradeStockSharpModel
     /// </summary>
     public int Currency { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Security class.
+    /// </summary>
     public string Class { get; set; }
+
+
+    /// <summary>
+    /// ID in SEDOL format (Stock Exchange Daily Official List).
+    /// </summary>
+    public string Sedol { get; set; }
+
+    /// <summary>
+    /// ID in CUSIP format (Committee on Uniform Securities Identification Procedures).
+    /// </summary>
+    public string Cusip { get; set; }
+
+    /// <summary>
+    /// ID in ISIN format (International Securities Identification Number).
+    /// </summary>
+    public string Isin { get; set; }
+
+    /// <summary>
+    /// ID in RIC format (Reuters Instrument Code).
+    /// </summary>
+    public string Ric { get; set; }
+
+    /// <summary>
+    /// ID in Bloomberg format.
+    /// </summary>
+    public string Bloomberg { get; set; }
+
+    /// <summary>
+    /// ID in IQFeed format.
+    /// </summary>
+    public string IQFeed { get; set; }
+
+    /// <summary>
+    /// ID in Interactive Brokers format.
+    /// </summary>
+    public int? InteractiveBrokers { get; set; }
+
+    /// <summary>
+    /// ID in Plaza format.
+    /// </summary>
+    public string Plaza { get; set; }
+
+
+    /// <summary>
+    /// Minimum price step.
+    /// </summary>
+    public decimal? PriceStep { get; set; }
+
+    /// <summary>
+    /// Minimum volume step.
+    /// </summary>
+    public decimal? VolumeStep { get; set; }
+
+    /// <summary>
+    /// Minimum volume allowed in order.
+    /// </summary>
+    public decimal? MinVolume { get; set; }
+
+    /// <summary>
+    /// Maximum volume allowed in order.
+    /// </summary>
+    public decimal? MaxVolume { get; set; }
+
 
     /// <summary>
     /// Lot multiplier.
