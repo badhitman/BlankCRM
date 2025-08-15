@@ -39,6 +39,9 @@ public class AboutConnectResponseModel : ResponseBaseModel
     public string ProgramPath { get; set; }
 
     /// <inheritdoc/>
+    public CurveBaseModel Curve { get; set; }
+
+    /// <inheritdoc/>
     public void Update(UpdateConnectionHandleModel req)
     {
         CanConnect = req.CanConnect;
