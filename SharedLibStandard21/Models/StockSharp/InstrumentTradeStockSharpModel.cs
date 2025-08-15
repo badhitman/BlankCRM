@@ -58,47 +58,10 @@ public partial class InstrumentTradeStockSharpModel
     /// </summary>
     public string Class { get; set; }
 
-
-    /// <summary>
-    /// ID in SEDOL format (Stock Exchange Daily Official List).
-    /// </summary>
-    public string Sedol { get; set; }
-
-    /// <summary>
-    /// ID in CUSIP format (Committee on Uniform Securities Identification Procedures).
-    /// </summary>
-    public string Cusip { get; set; }
-
     /// <summary>
     /// ID in ISIN format (International Securities Identification Number).
     /// </summary>
     public string ISIN { get; set; }
-
-    /// <summary>
-    /// ID in RIC format (Reuters Instrument Code).
-    /// </summary>
-    public string Ric { get; set; }
-
-    /// <summary>
-    /// ID in Bloomberg format.
-    /// </summary>
-    public string Bloomberg { get; set; }
-
-    /// <summary>
-    /// ID in IQFeed format.
-    /// </summary>
-    public string IQFeed { get; set; }
-
-    /// <summary>
-    /// ID in Interactive Brokers format.
-    /// </summary>
-    public int? InteractiveBrokers { get; set; }
-
-    /// <summary>
-    /// ID in Plaza format.
-    /// </summary>
-    public string Plaza { get; set; }
-
 
     /// <summary>
     /// Minimum price step.
@@ -119,7 +82,6 @@ public partial class InstrumentTradeStockSharpModel
     /// Maximum volume allowed in order.
     /// </summary>
     public decimal? MaxVolume { get; set; }
-
 
     /// <summary>
     /// Lot multiplier.
