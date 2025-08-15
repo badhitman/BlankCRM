@@ -12,7 +12,7 @@ namespace SharedLib;
 /// Хранилище параметров приложений
 /// </summary>
 /// <remarks>
-/// Значения/данные сериализуются в JSON строку при сохранении и десерализируются при чтении
+/// Значения/данные сериализуются в JSON строку при сохранении и де-сериализируются при чтении
 /// </remarks>
 public interface IParametersStorage
 {
@@ -76,5 +76,10 @@ public interface IParametersStorage
     /// Поиск значений параметров (JSON данные)
     /// </summary>
     public Task<TResponseModel<FoundParameterModel[]>> FindRawAsync(FindStorageBaseModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// Удалить параметр из БД (если существует)
+    /// </summary>
+    public Task<ResponseBaseModel> DeleteParameter(StorageMetadataModel req, CancellationToken token = default);
     #endregion
 }

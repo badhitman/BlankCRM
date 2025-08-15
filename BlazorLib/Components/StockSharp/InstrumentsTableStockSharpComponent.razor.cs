@@ -27,24 +27,32 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
     bool ManualOrderCreating;
     private readonly DialogOptions _dialogOptions = new() { FullWidth = true, MaxWidth = MaxWidth.ExtraLarge };
 
+    static readonly StorageMetadataModel setBoards = new()
+    {
+        ApplicationName = nameof(InstrumentsTableStockSharpComponent),
+        PrefixPropertyName = "settings",
+        PropertyName = $"form-set.{nameof(SelectedBoards)}"
+    };
+
     static readonly StorageMetadataModel setCol = new()
     {
         ApplicationName = nameof(InstrumentsTableStockSharpComponent),
         PrefixPropertyName = "settings",
-        PropertyName = "columns"
+        PropertyName = $"form-set.{nameof(ColumnsSelected)}"
     };
 
     static readonly StorageMetadataModel filterMarkers = new()
     {
         ApplicationName = nameof(InstrumentsTableStockSharpComponent),
         PrefixPropertyName = "settings",
-        PropertyName = "markers"
+        PropertyName = $"form-set.{nameof(MarkersSelected)}"
     };
 
     static string _mtp = nameof(InstrumentTradeStockSharpModel.Multiplier),
         _std = nameof(InstrumentTradeStockSharpModel.SettlementDate),
         _fv = nameof(InstrumentTradeStockSharpModel.FaceValue),
         _dc = nameof(InstrumentTradeStockSharpModel.Decimals),
+        _ps = nameof(InstrumentTradeStockSharpModel.PriceStep),
         _isin = nameof(InstrumentTradeStockSharpViewModel.ISIN),
         _issD = nameof(InstrumentTradeStockSharpViewModel.IssueDate),
         _mtD = nameof(InstrumentTradeStockSharpViewModel.MaturityDate),
@@ -52,7 +60,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         _lfP = nameof(InstrumentTradeStockSharpViewModel.LastFairPrice),
         _cmnt = nameof(InstrumentTradeStockSharpViewModel.Comment),
         _mcs = "Markers", _rbcs = "Rubrics";
-    static string[] columnsExt = [_mtp, _dc, _std, _fv, _mcs, _isin, _issD, _mtD, _cr, _lfP, _cmnt, _rbcs];
+    static string[] columnsExt = [_mtp, _dc, _std, _fv, _mcs, _isin, _ps, _issD, _mtD, _cr, _lfP, _cmnt, _rbcs];
 
 
     IEnumerable<string>? _columnsSelected;
@@ -62,7 +70,6 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
         set
         {
             _columnsSelected = value;
-            StateHasChanged();
             InvokeAsync(SaveParameters);
         }
     }
@@ -112,6 +119,7 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
             _selectedBoards = value;
             if (_tableRef is not null)
                 InvokeAsync(_tableRef.ReloadServerData);
+            InvokeAsync(SaveParameters);
         }
     }
 
@@ -151,6 +159,10 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
             Task.Run(async () => {
                 TResponseModel<MarkersInstrumentStockSharpEnum?[]?> markersSet = await StorageRepo.ReadParameterAsync<MarkersInstrumentStockSharpEnum?[]?>(filterMarkers);
                 _markersSelected = markersSet.Response ?? [];
+            }),
+            Task.Run(async () => {
+                TResponseModel<BoardStockSharpViewModel[]?> boardsSet = await StorageRepo.ReadParameterAsync<BoardStockSharpViewModel[]?>(setBoards);
+                _selectedBoards = boardsSet.Response;
             }),
             Task.Run(ReloadBoards)]);
 
@@ -195,11 +207,23 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
 
     async Task SaveParameters()
     {
+        List<Task> _tasks = [];
         if (ColumnsSelected is not null)
-            await StorageRepo.SaveParameterAsync(ColumnsSelected, setCol, true);
+            _tasks.Add(Task.Run(async () => await StorageRepo.SaveParameterAsync(ColumnsSelected, setCol, true)));
+        else
+            _tasks.Add(Task.Run(async () => await StorageRepo.DeleteParameterAsync(setCol, true)));
 
         if (MarkersSelected is not null)
-            await StorageRepo.SaveParameterAsync(MarkersSelected, filterMarkers, true);
+            _tasks.Add(Task.Run(async () => await StorageRepo.SaveParameterAsync(MarkersSelected, filterMarkers, true)));
+        else
+            _tasks.Add(Task.Run(async () => await StorageRepo.DeleteParameterAsync(filterMarkers, true)));
+
+        if (SelectedBoards is not null)
+            _tasks.Add(Task.Run(async () => await StorageRepo.SaveParameterAsync(SelectedBoards, setBoards, true)));
+        else
+            _tasks.Add(Task.Run(async () => await StorageRepo.DeleteParameterAsync(setBoards, true)));
+
+        await Task.WhenAll(_tasks);
     }
 
     async Task<TableData<InstrumentTradeStockSharpViewModel>> ServerReload(TableState state, CancellationToken token)
@@ -215,13 +239,9 @@ public partial class InstrumentsTableStockSharpComponent : StockSharpAboutCompon
             TypesFilter = TypesSelected is null || !TypesSelected.Any() ? null : [.. TypesSelected],
             MarkersFilter = MarkersSelected is null ? null : [.. MarkersSelected]
         };
-        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = default!;
+        
         await SetBusyAsync(token: token);
-
-        await Task.WhenAll([
-               Task.Run(SaveParameters, token),
-               Task.Run(async () => res = await SsRepo.InstrumentsSelectAsync(req, token) , token)]);
-
+        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
         return new TableData<InstrumentTradeStockSharpViewModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

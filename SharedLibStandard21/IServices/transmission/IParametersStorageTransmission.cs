@@ -39,6 +39,11 @@ public interface IParametersStorageTransmission
     public Task<TResponseModel<int>> SaveParameterAsync<T>(T payload_query, StorageMetadataModel store, bool trim, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
+    /// Удалить параметр
+    /// </summary>
+    public Task<TResponseModel<int>> DeleteParameterAsync(StorageMetadataModel key, bool waitResponse = true, CancellationToken token = default);
+
+    /// <summary>
     /// Найти/подобрать значения параметров (со всей историей значений)
     /// </summary>
     public Task<TResponseModel<T[]>> FindParametersAsync<T>(RequestStorageBaseModel req, CancellationToken token = default);

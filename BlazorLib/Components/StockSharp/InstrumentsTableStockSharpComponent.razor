@@ -123,6 +123,10 @@
         {
             <MudTh>ISIN</MudTh>
         }
+        @if (_columnsSelected?.Contains(_ps) == true)
+        {
+            <MudTh>Price step</MudTh>
+        }
         @if (_columnsSelected?.Contains(_issD) == true)
         {
             <MudTh>Issue</MudTh>
@@ -188,6 +192,10 @@
         @if (_columnsSelected?.Contains(_isin) == true)
         {
             <MudTd DataLabel="ISIN">@(context.ISIN)</MudTd>
+        }
+        @if (_columnsSelected?.Contains(_ps) == true)
+        {
+            <MudTd DataLabel="PriceStep">@(context.PriceStep)</MudTd>
         }
         @if (_columnsSelected?.Contains(_issD) == true)
         {
