@@ -72,7 +72,7 @@ public partial class InstrumentTradeStockSharpModel
     /// <summary>
     /// ID in ISIN format (International Securities Identification Number).
     /// </summary>
-    public string Isin { get; set; }
+    public string ISIN { get; set; }
 
     /// <summary>
     /// ID in RIC format (Reuters Instrument Code).

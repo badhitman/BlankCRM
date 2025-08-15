@@ -45,9 +45,6 @@ public class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSharpModel
     public int TypeInstrumentManual { get; set; }
 
     /// <inheritdoc/>
-    public string ISIN { get; set; }
-
-    /// <inheritdoc/>
     public DateTime IssueDate { get; set; }
 
     /// <inheritdoc/>
