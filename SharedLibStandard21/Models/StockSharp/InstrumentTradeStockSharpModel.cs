@@ -59,11 +59,6 @@ public partial class InstrumentTradeStockSharpModel
     public string Class { get; set; }
 
     /// <summary>
-    /// ID in ISIN format (International Securities Identification Number).
-    /// </summary>
-    public string ISIN { get; set; }
-
-    /// <summary>
     /// Minimum price step.
     /// </summary>
     public decimal? PriceStep { get; set; }

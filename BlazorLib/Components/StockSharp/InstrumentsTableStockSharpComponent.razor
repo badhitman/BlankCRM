@@ -179,7 +179,7 @@
         }
         @if (_columnsSelected?.Contains(_std) == true)
         {
-            <MudTd DataLabel="Settlement">@(context.SettlementDate)</MudTd>
+            <MudTd DataLabel="Settlement">@(context.SettlementDate?.ToString("d"))</MudTd>
         }
         @if (_columnsSelected?.Contains(_fv) == true)
         {

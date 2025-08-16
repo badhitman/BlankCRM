@@ -33,6 +33,10 @@ public class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSharpModel
 
 
     #region manual properties
+    /// <summary>
+    /// ID in ISIN format (International Securities Identification Number).
+    /// </summary>
+    public string ISIN { get; set; }
 
     /// <summary>
     /// <see cref="BondsTypesInstrumentsManualEnum"/>
@@ -58,7 +62,6 @@ public class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSharpModel
 
     /// <inheritdoc/>
     public string Comment { get; set; }
-
     #endregion
 
 
