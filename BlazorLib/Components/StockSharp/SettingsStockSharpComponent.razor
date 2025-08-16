@@ -1,9 +1,13 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 @using BlazorLib.Components.ParametersShared
 
-<TextareaParameterStorageComponent Label="Instrument`s code-filter"
-                                   HelperText="Securities lookup criteria by code"
+<TextareaParameterStorageComponent Label="(LOOKUP) Instrument`s code-filter"
+                                   HelperText="Securities lookup criteria by security-code"
                                    KeyStorage="GlobalStaticCloudStorageMetadata.SecuritiesCriteriaCodeFilterStockSharp" />
+
+<StringParameterStorageComponent Label="(LOOKUP) Board code-filter"
+                                 HelperText="Securities lookup criteria by board-code"
+                                 KeyStorage="GlobalStaticCloudStorageMetadata.BoardCriteriaCodeFilterStockSharp" />
 
 <StringParameterStorageComponent Label="Client code"
                                  HelperText="Client code assigned by the broker."

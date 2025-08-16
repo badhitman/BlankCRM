@@ -278,6 +278,16 @@ public static partial class GlobalStaticCloudStorageMetadata
         PropertyName = $"{Routes.SECURITIES_CONTROLLER_NAME}-{Routes.CRITERIA_CONTROLLER_NAME}-{Routes.LOOKUP_ACTION_NAME}",
         PrefixPropertyName = $"{Routes.DEFAULT_CONTROLLER_NAME}-{Routes.CODE_CONTROLLER_NAME}-{Routes.FILTER_CONTROLLER_NAME}"
     };
+
+    /// <summary>
+    /// BoardCriteriaCodeFilterStockSharp
+    /// </summary>
+    public static StorageMetadataModel BoardCriteriaCodeFilterStockSharp => new()
+    {
+        ApplicationName = Routes.STOCKSHARP_CONTROLLER_NAME,
+        PropertyName = $"{Routes.BOARDS_CONTROLLER_NAME}-{Routes.CRITERIA_CONTROLLER_NAME}-{Routes.LOOKUP_ACTION_NAME}",
+        PrefixPropertyName = $"{Routes.DEFAULT_CONTROLLER_NAME}-{Routes.CODE_CONTROLLER_NAME}-{Routes.FILTER_CONTROLLER_NAME}"
+    };
     #endregion
 
     #region commerce notifications
