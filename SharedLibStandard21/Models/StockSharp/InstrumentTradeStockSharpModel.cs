@@ -165,7 +165,7 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     {
         return other is not null &&
                Name == other.Name &&
-               Board.Equals(other.Board) &&
+               ((Board is null && other.Board is null) || (Board is not null && other.Board is not null && Board.Equals(other.Board))) &&
                IdRemote == other.IdRemote &&
                Code == other.Code &&
                ShortName == other.ShortName &&
