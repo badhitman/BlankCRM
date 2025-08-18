@@ -2,12 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System;
+using System.Collections.Generic;
+
 namespace SharedLib;
 
 /// <summary>
 /// StrategyTradeStockSharpModel
 /// </summary>
-public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpModel
+public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpModel, IEquatable<StrategyTradeStockSharpModel>
 {
     /// <summary>
     /// Идентификатор/Key
@@ -126,5 +129,115 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
         IsSmall = strategyTrade.IsSmall;
         LowLimit = strategyTrade.LowLimit;
         HightLimit = strategyTrade.HightLimit;
+    }
+
+    /// <inheritdoc/>
+    public override bool Equals(object obj)
+    {
+        if(obj is InstrumentTradeStockSharpModel _other)
+        {
+            return Equals(_other);
+        }
+        
+        return base.Equals(obj);
+    }
+
+    /// <inheritdoc/>
+    public bool Equals(StrategyTradeStockSharpModel other)
+    {
+        return other is not null &&
+               Name == other.Name &&
+               Board.Equals(other.Board) &&
+               IdRemote == other.IdRemote &&
+               Code == other.Code &&
+               ShortName == other.ShortName &&
+               TypeInstrument == other.TypeInstrument &&
+               UnderlyingSecurityType == other.UnderlyingSecurityType &&
+               Currency == other.Currency &&
+               Class == other.Class &&
+               PriceStep == other.PriceStep &&
+               VolumeStep == other.VolumeStep &&
+               MinVolume == other.MinVolume &&
+               MaxVolume == other.MaxVolume &&
+               Multiplier == other.Multiplier &&
+               Decimals == other.Decimals &&
+               EqualityComparer<DateTimeOffset?>.Default.Equals(ExpiryDate, other.ExpiryDate) &&
+               EqualityComparer<DateTimeOffset?>.Default.Equals(SettlementDate, other.SettlementDate) &&
+               CfiCode == other.CfiCode &&
+               FaceValue == other.FaceValue &&
+               SettlementType == other.SettlementType &&
+               OptionStyle == other.OptionStyle &&
+               PrimaryId == other.PrimaryId &&
+               UnderlyingSecurityId == other.UnderlyingSecurityId &&
+               OptionType == other.OptionType &&
+               Shortable == other.Shortable &&
+               Id == other.Id &&
+               BasePrice == other.BasePrice &&
+               ValueOperation == other.ValueOperation &&
+               Offset == other.Offset &&
+               SmallBidVolume == other.SmallBidVolume &&
+               SmallOfferVolume == other.SmallOfferVolume &&
+               SmallOffset == other.SmallOffset &&
+               WorkingVolume == other.WorkingVolume &&
+               IsSmall == other.IsSmall &&
+               IsAlter == other.IsAlter &&
+               LowLimit == other.LowLimit &&
+               HightLimit == other.HightLimit;
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        HashCode hash = new();
+        hash.Add(Name);
+        hash.Add(Board);
+        hash.Add(IdRemote);
+        hash.Add(Code);
+        hash.Add(ShortName);
+        hash.Add(TypeInstrument);
+        hash.Add(UnderlyingSecurityType);
+        hash.Add(Currency);
+        hash.Add(Class);
+        hash.Add(PriceStep);
+        hash.Add(VolumeStep);
+        hash.Add(MinVolume);
+        hash.Add(MaxVolume);
+        hash.Add(Multiplier);
+        hash.Add(Decimals);
+        hash.Add(ExpiryDate);
+        hash.Add(SettlementDate);
+        hash.Add(CfiCode);
+        hash.Add(FaceValue);
+        hash.Add(SettlementType);
+        hash.Add(OptionStyle);
+        hash.Add(PrimaryId);
+        hash.Add(UnderlyingSecurityId);
+        hash.Add(OptionType);
+        hash.Add(Shortable);
+        hash.Add(Id);
+        hash.Add(BasePrice);
+        hash.Add(ValueOperation);
+        hash.Add(Offset);
+        hash.Add(SmallBidVolume);
+        hash.Add(SmallOfferVolume);
+        hash.Add(SmallOffset);
+        hash.Add(WorkingVolume);
+        hash.Add(IsSmall);
+        hash.Add(IsAlter);
+        hash.Add(LowLimit);
+        hash.Add(HightLimit);
+        return hash.ToHashCode();
+    }
+
+    /// <inheritdoc/>
+    public static bool operator ==(StrategyTradeStockSharpModel left, StrategyTradeStockSharpModel right)
+    {
+        return left.Equals( right);
+    }
+
+    /// <inheritdoc/>
+    public static bool operator !=(StrategyTradeStockSharpModel left, StrategyTradeStockSharpModel right)
+    {
+        return !left.Equals(right);
     }
 }

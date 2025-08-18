@@ -93,6 +93,11 @@ public interface IDataStockSharpService
     public Task<TResponseModel<List<BoardStockSharpViewModel>>> GetBoardsAsync(int[] ids = null, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Поиск Board`s, подходящие под запрос
+    /// </summary>
+    public Task<TResponseModel<List<BoardStockSharpViewModel>>> FindBoardsAsync(BoardStockSharpModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Получить биржи по их идентификаторам
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>

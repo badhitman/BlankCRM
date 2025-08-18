@@ -36,7 +36,7 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel>
         if (other is null)
             return false;
 
-        return Code == other.Code && Exchange == other.Exchange;
+        return Code == other.Code && Exchange.Equals(other.Exchange);
     }
 
     /// <inheritdoc/>

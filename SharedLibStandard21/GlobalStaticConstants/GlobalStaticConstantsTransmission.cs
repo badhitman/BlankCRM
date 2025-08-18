@@ -1037,6 +1037,11 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string GetBoardsStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.BOARDS_CONTROLLER_NAME, $"{Routes.GET_ACTION_NAME}-{Routes.LIST_ACTION_NAME}");
 
         /// <summary>
+        /// Поиск Board`s, подходящие под запрос
+        /// </summary>
+        public readonly static string FindBoardsStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.BOARDS_CONTROLLER_NAME, $"{Routes.FIND_ACTION_NAME}-{Routes.ELEMENTS_CONTROLLER_NAME}");
+
+        /// <summary>
         /// Получить биржи по их идентификаторам
         /// </summary>
         /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>

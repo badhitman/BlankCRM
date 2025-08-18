@@ -3,13 +3,14 @@
 ////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 
 namespace SharedLib;
 
 /// <summary>
 /// InstrumentTradeModel
 /// </summary>
-public partial class InstrumentTradeStockSharpModel
+public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTradeStockSharpModel>
 {
     /// <summary>
     /// Name
@@ -148,8 +149,95 @@ public partial class InstrumentTradeStockSharpModel
     public bool? Shortable { get; set; }
 
     /// <inheritdoc/>
+    public override bool Equals(object obj)
+    {
+        if (obj is null)
+            return false;
+
+        if (obj is InstrumentTradeStockSharpModel _other)
+            return _other.Equals(this);
+
+        return base.Equals(obj);
+    }
+
+    /// <inheritdoc/>
+    public bool Equals(InstrumentTradeStockSharpModel other)
+    {
+        return other is not null &&
+               Name == other.Name &&
+               Board.Equals(other.Board) &&
+               IdRemote == other.IdRemote &&
+               Code == other.Code &&
+               ShortName == other.ShortName &&
+               TypeInstrument == other.TypeInstrument &&
+               UnderlyingSecurityType == other.UnderlyingSecurityType &&
+               Currency == other.Currency &&
+               Class == other.Class &&
+               PriceStep == other.PriceStep &&
+               VolumeStep == other.VolumeStep &&
+               MinVolume == other.MinVolume &&
+               MaxVolume == other.MaxVolume &&
+               Multiplier == other.Multiplier &&
+               Decimals == other.Decimals &&
+               EqualityComparer<DateTimeOffset?>.Default.Equals(ExpiryDate, other.ExpiryDate) &&
+               EqualityComparer<DateTimeOffset?>.Default.Equals(SettlementDate, other.SettlementDate) &&
+               CfiCode == other.CfiCode &&
+               FaceValue == other.FaceValue &&
+               SettlementType == other.SettlementType &&
+               OptionStyle == other.OptionStyle &&
+               PrimaryId == other.PrimaryId &&
+               UnderlyingSecurityId == other.UnderlyingSecurityId &&
+               OptionType == other.OptionType &&
+               Shortable == other.Shortable;
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        HashCode hash = new();
+        hash.Add(Name);
+        hash.Add(Board);
+        hash.Add(IdRemote);
+        hash.Add(Code);
+        hash.Add(ShortName);
+        hash.Add(TypeInstrument);
+        hash.Add(UnderlyingSecurityType);
+        hash.Add(Currency);
+        hash.Add(Class);
+        hash.Add(PriceStep);
+        hash.Add(VolumeStep);
+        hash.Add(MinVolume);
+        hash.Add(MaxVolume);
+        hash.Add(Multiplier);
+        hash.Add(Decimals);
+        hash.Add(ExpiryDate);
+        hash.Add(SettlementDate);
+        hash.Add(CfiCode);
+        hash.Add(FaceValue);
+        hash.Add(SettlementType);
+        hash.Add(OptionStyle);
+        hash.Add(PrimaryId);
+        hash.Add(UnderlyingSecurityId);
+        hash.Add(OptionType);
+        hash.Add(Shortable);
+        return hash.ToHashCode();
+    }
+
+    /// <inheritdoc/>
     public override string ToString()
     {
         return $"{IdRemote} '{Name}' {(CurrenciesTypesEnum)Currency}";
+    }
+
+    /// <inheritdoc/>
+    public static bool operator ==(InstrumentTradeStockSharpModel left, InstrumentTradeStockSharpModel right)
+    {
+        return EqualityComparer<InstrumentTradeStockSharpModel>.Default.Equals(left, right);
+    }
+
+    /// <inheritdoc/>
+    public static bool operator !=(InstrumentTradeStockSharpModel left, InstrumentTradeStockSharpModel right)
+    {
+        return !(left == right);
     }
 }
