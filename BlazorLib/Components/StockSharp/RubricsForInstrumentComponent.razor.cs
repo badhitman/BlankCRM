@@ -62,7 +62,7 @@ public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseMode
             InstrumentId = Instrument.Id,
             RubricsIds = SelectedRubric is null ? null : [SelectedRubric.Id]
         });
-        //SnackBarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await RubricsForInstrument();
         await SetBusyAsync(false);
     }
