@@ -64,7 +64,7 @@ public static class Extensions
     }
 
     /// <inheritdoc/>
-    public static void SaveToast(this ISnackbar SnackBarRepo, ToastShowClientModel tst)
+    public static void SaveToast(this ISnackbar sB, ToastShowClientModel tst)
     {
         lock (ToastsHistory)
         {
@@ -77,7 +77,7 @@ public static class Extensions
     /// <summary>
     /// GetHistoryMessages
     /// </summary>
-    public static List<MessageViewModel> GetHistoryMessages(this ISnackbar SnackBarRepo)
+    public static List<MessageViewModel> GetHistoryMessages(this ISnackbar sB)
     {
         lock (MessagesHistory)
         {

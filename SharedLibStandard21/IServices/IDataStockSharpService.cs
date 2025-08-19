@@ -56,6 +56,11 @@ public interface IDataStockSharpService
     /// InstrumentsSelectAsync
     /// </summary>
     public Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(InstrumentsRequestModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public Task<TResponseModel<List<InstrumentTradeStockSharpViewModel>>> ReadTradeInstrumentsAsync(CancellationToken cancellationToken = default);
     #endregion
 
     #region rubrics/instruments

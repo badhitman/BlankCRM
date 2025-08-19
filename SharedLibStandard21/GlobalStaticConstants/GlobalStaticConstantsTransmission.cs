@@ -1155,6 +1155,11 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string InstrumentsSelectStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
 
         /// <summary>
+        /// InstrumentsReadTradeStockSharpReceive
+        /// </summary>
+        public readonly static string InstrumentsReadTradeStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.INSTRUMENTS_CONTROLLER_NAME, $"{Routes.READ_ACTION_NAME}-of-{Routes.TRADE_CONTROLLER_NAME}");
+
+        /// <summary>
         /// SetMarkersForInstrumentStockSharpReceive
         /// </summary>
         public readonly static string SetMarkersForInstrumentStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.MARKERS_CONTROLLER_NAME}-{Routes.INSTRUMENTS_CONTROLLER_NAME}", Routes.SET_ACTION_NAME);

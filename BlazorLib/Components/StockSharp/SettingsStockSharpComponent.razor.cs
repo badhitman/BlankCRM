@@ -64,7 +64,7 @@ public partial class SettingsStockSharpComponent : BlazorBusyComponentBaseModel
     async Task SaveParameters()
     {
         if (_markersSelected is not null)
-            await StorageRepo.SaveParameterAsync(_markersSelected, GlobalStaticCloudStorageMetadata.MarkersDashboard, true);
+            await StorageRepo.SaveParameterAsync(_markersSelected.ToArray(), GlobalStaticCloudStorageMetadata.MarkersDashboard, true);
 
         if (_selectedBoards is not null)
             await StorageRepo.SaveParameterAsync(_selectedBoards.ToArray(), GlobalStaticCloudStorageMetadata.BoardsDashboard, true);
