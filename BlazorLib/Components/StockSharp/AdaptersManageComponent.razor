@@ -3,8 +3,8 @@
 <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="tableRef">
     <ToolBarContent>
         <MudText Class="me-2" Typo="Typo.h6">Adapters</MudText>
-        <NavLink class="link-info" href="adapter/0/edit" title="добавить адаптер">
-            новый
+        <NavLink class="link-info" href="adapter/0/edit" title="add new adapter">
+            <sup>+</sup>
         </NavLink>
         <MudSpacer />
         <MudCheckBox @bind-Value="OfflineFilter" Color="@Color.Secondary" TriState="true">Offline filter</MudCheckBox>
@@ -20,7 +20,7 @@
         <MudTd DataLabel="Name">
             <a href="/adapter/@context.Id/edit">@context.Name</a>
             <sup class="text-@(context.IsOnline ? "success" : "secondary")">
-                @(context.IsOnline ? "ON" : "disabled")
+                @(context.IsOnline ? "ON" : "offline")
             </sup>
         </MudTd>
         <MudTd DataLabel="Address">@context.Address</MudTd>
