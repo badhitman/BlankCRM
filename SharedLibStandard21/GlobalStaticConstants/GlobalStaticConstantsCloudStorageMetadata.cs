@@ -259,26 +259,6 @@ public static partial class GlobalStaticCloudStorageMetadata
     };
 
     /// <summary>
-    /// QuoteStrategyVolume
-    /// </summary>
-    public static StorageMetadataModel QuoteStrategyVolume => new()
-    {
-        ApplicationName = Routes.STOCKSHARP_CONTROLLER_NAME,
-        PropertyName = $"{Routes.QUOTE_CONTROLLER_NAME}-{Routes.STRATEGY_CONTROLLER_NAME}-{Routes.MAIN_CONTROLLER_NAME}-{Routes.VOLUME_CONTROLLER_NAME}",
-        PrefixPropertyName = Routes.DEFAULT_CONTROLLER_NAME
-    };
-
-    /// <summary>
-    /// QuoteSizeStrategyVolume
-    /// </summary>
-    public static StorageMetadataModel QuoteSizeStrategyVolume => new()
-    {
-        ApplicationName = Routes.STOCKSHARP_CONTROLLER_NAME,
-        PropertyName = $"{Routes.QUOTE_CONTROLLER_NAME}-{Routes.STRATEGY_CONTROLLER_NAME}-{Routes.SIZE_CONTROLLER_NAME}-{Routes.VOLUME_CONTROLLER_NAME}",
-        PrefixPropertyName = Routes.DEFAULT_CONTROLLER_NAME
-    };
-
-    /// <summary>
     /// ProgramDataPathStockSharp
     /// </summary>
     public static StorageMetadataModel ProgramDataPathStockSharp => new()

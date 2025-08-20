@@ -42,7 +42,7 @@ public interface IParametersStorage
     /// Возвращается самое актуальное значение (последнее установленное). Хранится история значений - если значение будет часто меняться будет ротация стека накопленных значений с усечением от 150 до 100.
     /// Проверка переполнения происходит при каждой команде сохранения.
     /// </remarks>
-    public Task<T> ReadAsync<T>(StorageMetadataModel req, CancellationToken token = default);
+    public Task<T> ReadAsync<T>(StorageMetadataModel req, T defaultValue = default, CancellationToken token = default);
 
     /// <summary>
     /// Поиск значений параметров

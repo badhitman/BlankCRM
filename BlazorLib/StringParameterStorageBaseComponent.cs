@@ -63,7 +63,7 @@ public class StringParameterStorageBaseComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         TResponseModel<string?> res = await StoreRepo.ReadParameterAsync<string?>(KeyStorage);
-        SnackBarRepo.ShowMessagesResponse(res.Messages.Where(x => x.TypeMessage > MessagesTypesEnum.Info));
+        SnackBarRepo.ShowMessagesResponse(res.Messages.Where(x => x.TypeMessage > MessagesTypesEnum.Warning));
         IsBusyProgress = false;
         if (!res.Success())
             SnackBarRepo.ShowMessagesResponse(res.Messages);
