@@ -179,8 +179,8 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
                MaxVolume == other.MaxVolume &&
                Multiplier == other.Multiplier &&
                Decimals == other.Decimals &&
-               EqualityComparer<DateTimeOffset?>.Default.Equals(ExpiryDate, other.ExpiryDate) &&
-               EqualityComparer<DateTimeOffset?>.Default.Equals(SettlementDate, other.SettlementDate) &&
+               ExpiryDate.Equals(other.ExpiryDate) &&
+               SettlementDate.Equals(other.SettlementDate) &&
                CfiCode == other.CfiCode &&
                FaceValue == other.FaceValue &&
                SettlementType == other.SettlementType &&

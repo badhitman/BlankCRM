@@ -45,12 +45,4 @@ public static partial class GlobalStaticCloudStorageMetadata
         PropertyName = Path.Combine(Routes.QUOTE_CONTROLLER_NAME, Routes.SIZE_CONTROLLER_NAME, Routes.VOLUME_CONTROLLER_NAME),
         PrefixPropertyName = Routes.DUMP_ACTION_NAME,
     };
-
-    /// <inheritdoc/>
-    public static StorageMetadataModel SkipSizeVolume => new()
-    {
-        ApplicationName = STOCKSHARP_QUOTE_FORM,
-        PropertyName = Path.Combine(Routes.QUOTE_CONTROLLER_NAME, Routes.SKIP_ACTION_NAME, Routes.SIZE_CONTROLLER_NAME, Routes.VOLUME_CONTROLLER_NAME),
-        PrefixPropertyName = Routes.DUMP_ACTION_NAME,
-    };
 }

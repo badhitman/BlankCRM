@@ -63,6 +63,7 @@ public partial class BoolSimpleStorageComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         TResponseModel<bool?> showCreatingIssue = await StorageTransmissionRepo.ReadParameterAsync<bool?>(StorageMetadata);
+        SnackBarRepo.ShowMessagesResponse(showCreatingIssue.Messages.Where(x => x.TypeMessage > MessagesTypesEnum.Info));
         _storeValue = showCreatingIssue.Success() && showCreatingIssue.Response == true;
         await SetBusyAsync(false);
     }
@@ -71,6 +72,7 @@ public partial class BoolSimpleStorageComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         TResponseModel<int> res = await StorageTransmissionRepo.SaveParameterAsync<bool?>(StoreValue, StorageMetadata, true);
+        SnackBarRepo.ShowMessagesResponse(res.Messages.Where(x => x.TypeMessage > MessagesTypesEnum.Info));
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
     }

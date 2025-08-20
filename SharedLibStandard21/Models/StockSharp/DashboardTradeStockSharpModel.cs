@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// StrategyTradeStockSharpModel
 /// </summary>
-public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpModel, IEquatable<StrategyTradeStockSharpModel>
+public partial class DashboardTradeStockSharpModel : InstrumentTradeStockSharpModel, IEquatable<DashboardTradeStockSharpModel>
 {
     /// <summary>
     /// Идентификатор/Key
@@ -51,7 +51,7 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
     public decimal HightLimit { get; set; }
 
     /// <inheritdoc/>
-    public static StrategyTradeStockSharpModel Build(InstrumentTradeStockSharpViewModel instrument, decimal basePrice, decimal valueOperation, decimal shiftPosition, decimal smallBidVolume, decimal smallOfferVolume, decimal smallOffset, decimal workingVolume, bool isSmall, bool isAlter, decimal lowLimit, decimal hightLimit)
+    public static DashboardTradeStockSharpModel Build(InstrumentTradeStockSharpViewModel instrument, decimal basePrice, decimal valueOperation, decimal shiftPosition, decimal smallBidVolume, decimal smallOfferVolume, decimal smallOffset, decimal workingVolume, bool isSmall, bool isAlter, decimal lowLimit, decimal hightLimit)
     {
         return new()
         {
@@ -93,7 +93,7 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
     }
 
     /// <inheritdoc/>
-    public void Reload(StrategyTradeStockSharpModel strategyTrade, InstrumentTradeStockSharpViewModel instrument)
+    public void Reload(DashboardTradeStockSharpModel strategyTrade, InstrumentTradeStockSharpViewModel instrument)
     {
         Id = instrument.Id;
         Board = instrument.Board;
@@ -134,16 +134,16 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        if(obj is InstrumentTradeStockSharpModel _other)
+        if (obj is InstrumentTradeStockSharpModel _other)
         {
             return Equals(_other);
         }
-        
+
         return base.Equals(obj);
     }
 
     /// <inheritdoc/>
-    public bool Equals(StrategyTradeStockSharpModel other)
+    public bool Equals(DashboardTradeStockSharpModel other)
     {
         return other is not null &&
                Name == other.Name &&
@@ -230,13 +230,13 @@ public partial class StrategyTradeStockSharpModel : InstrumentTradeStockSharpMod
     }
 
     /// <inheritdoc/>
-    public static bool operator ==(StrategyTradeStockSharpModel left, StrategyTradeStockSharpModel right)
+    public static bool operator ==(DashboardTradeStockSharpModel left, DashboardTradeStockSharpModel right)
     {
-        return left.Equals( right);
+        return left.Equals(right);
     }
 
     /// <inheritdoc/>
-    public static bool operator !=(StrategyTradeStockSharpModel left, StrategyTradeStockSharpModel right)
+    public static bool operator !=(DashboardTradeStockSharpModel left, DashboardTradeStockSharpModel right)
     {
         return !left.Equals(right);
     }

@@ -53,7 +53,7 @@ public partial class DecimalParameterStorageComponent : BlazorBusyComponentBaseM
         await SetBusyAsync();
         TResponseModel<decimal?> res = await StoreRepo.ReadParameterAsync<decimal?>(KeyStorage);
         IsBusyProgress = false;
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        SnackBarRepo.ShowMessagesResponse(res.Messages.Where(x=>x.TypeMessage > MessagesTypesEnum.Info));
         _decimalValue = res.Response ?? 0;
     }
 }

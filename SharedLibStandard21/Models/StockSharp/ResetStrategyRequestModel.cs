@@ -18,7 +18,4 @@ public class ResetStrategyRequestModel
 
     /// <inheritdoc/>
     public decimal Size { get; set; }
-
-    /// <inheritdoc/>
-    public decimal Skip { get; set; }
 }
