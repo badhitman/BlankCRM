@@ -97,5 +97,9 @@ public class ParametersStorageTransmission(IRabbitClient rabbitClient) : IParame
 
         return await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveCloudParameterReceive, set_req, waitResponse, token) ?? new();
     }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> DeleteParameterAsync(StorageMetadataModel key, bool waitResponse = true, CancellationToken token = default) 
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteCloudParameterReceive, key, waitResponse, token) ?? new();
     #endregion
 }

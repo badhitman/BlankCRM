@@ -378,5 +378,30 @@ public class ParametersStorage(
 
         return res;
     }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DeleteParameter(StorageMetadataModel req, CancellationToken token = default)
+    {
+        req.Normalize();
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
+
+        string mem_key = $"{req.PropertyName}/{req.OwnerPrimaryKey}/{req.PrefixPropertyName}/{req.ApplicationName}".Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
+
+        cache.Remove(mem_key);
+        IQueryable<StorageCloudParameterModelDB> parameter_q = context
+            .CloudProperties
+            .OrderByDescending(x => x.CreatedAt)
+            .Where(x =>
+            x.OwnerPrimaryKey == req.OwnerPrimaryKey &&
+            x.PropertyName == req.PropertyName &&
+            x.ApplicationName == req.ApplicationName &&
+            x.PrefixPropertyName == req.PrefixPropertyName);
+
+        context.RemoveRange(parameter_q);
+
+        return await context.SaveChangesAsync(token) == 0
+            ? ResponseBaseModel.CreateWarning("Parameters not exist`s")
+            : ResponseBaseModel.CreateSuccess("Deleted");
+    }
     #endregion
 }
