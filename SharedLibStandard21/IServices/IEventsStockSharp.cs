@@ -56,4 +56,9 @@ public interface IEventsStockSharp
     /// Security changed.
     /// </summary>
     public Task<ResponseBaseModel> ValuesChangedEvent(ConnectorValuesChangedEventPayloadModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// DashboardTradeUpdate
+    /// </summary>
+    public Task<ResponseBaseModel> DashboardTradeUpdate(DashboardTradeStockSharpModel req, CancellationToken cancellationToken = default);
 }
