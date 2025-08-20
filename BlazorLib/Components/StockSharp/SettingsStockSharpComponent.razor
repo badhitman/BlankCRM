@@ -16,22 +16,28 @@
 <StringParameterStorageComponent Label="Path data"
                                  HelperText="Program data path"
                                  KeyStorage="GlobalStaticCloudStorageMetadata.ProgramDataPathStockSharp" />
-
-<DecimalParameterStorageComponent Label="QuoteSmallStrategyBidVolume"
-                                  HelperText="QuoteSmallStrategyBidVolume"
-                                  KeyStorage="GlobalStaticCloudStorageMetadata.QuoteSmallStrategyBidVolume" />
-
-<DecimalParameterStorageComponent Label="QuoteSmallStrategyOfferVolume"
-                                  HelperText="QuoteSmallStrategyOfferVolume"
-                                  KeyStorage="GlobalStaticCloudStorageMetadata.QuoteSmallStrategyOfferVolume" />
-
-<DecimalParameterStorageComponent Label="QuoteStrategyVolume"
-                                  HelperText="QuoteStrategyVolume"
-                                  KeyStorage="GlobalStaticCloudStorageMetadata.QuoteStrategyVolume" />
-
-<DecimalParameterStorageComponent Label="QuoteSizeStrategyVolume"
-                                  HelperText="QuoteSizeStrategyVolume"
-                                  KeyStorage="GlobalStaticCloudStorageMetadata.QuoteSizeStrategyVolume" />
+<MudGrid>
+    <MudItem xs=12 sm=3 >
+        <DecimalParameterStorageComponent Label="QuoteSmallStrategyBidVolume"
+                                          HelperText="QuoteSmallStrategyBidVolume"
+                                          KeyStorage="GlobalStaticCloudStorageMetadata.QuoteSmallStrategyBidVolume" />
+    </MudItem>
+    <MudItem xs=12 sm=3>
+        <DecimalParameterStorageComponent Label="QuoteSmallStrategyOfferVolume"
+                                          HelperText="QuoteSmallStrategyOfferVolume"
+                                          KeyStorage="GlobalStaticCloudStorageMetadata.QuoteSmallStrategyOfferVolume" />
+    </MudItem>
+    <MudItem xs=12 sm=3>
+        <DecimalParameterStorageComponent Label="QuoteStrategyVolume"
+                                          HelperText="QuoteStrategyVolume"
+                                          KeyStorage="GlobalStaticCloudStorageMetadata.QuoteStrategyVolume" />
+    </MudItem>
+    <MudItem xs=12 sm=3>
+        <DecimalParameterStorageComponent Label="QuoteSizeStrategyVolume"
+                                          HelperText="QuoteSizeStrategyVolume"
+                                          KeyStorage="GlobalStaticCloudStorageMetadata.QuoteSizeStrategyVolume" />
+    </MudItem>
+</MudGrid>
 
 <AboutDatabaseStockSharpComponent />
 <hr />
