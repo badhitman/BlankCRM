@@ -163,39 +163,6 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// <inheritdoc/>
     public bool Equals(InstrumentTradeStockSharpModel other)
     {
-#if DEBUG
-        var _v0 = other is not null &&
-               PriceStep == other.PriceStep
-               ;
-
-        var _v = other is not null &&
-               Name == other.Name &&
-               ((Board is null && other.Board is null) || (Board is not null && other.Board is not null && Board.Equals(other.Board))) &&
-               IdRemote == other.IdRemote &&
-               Code == other.Code &&
-               ShortName == other.ShortName &&
-               TypeInstrument == other.TypeInstrument &&
-               UnderlyingSecurityType == other.UnderlyingSecurityType &&
-               Currency == other.Currency &&
-               Class == other.Class &&
-               //PriceStep == other.PriceStep &&
-               VolumeStep == other.VolumeStep &&
-               MinVolume == other.MinVolume &&
-               MaxVolume == other.MaxVolume &&
-               Multiplier == other.Multiplier &&
-               Decimals == other.Decimals &&
-               ExpiryDate.Equals(other.ExpiryDate) &&
-               SettlementDate.Equals(other.SettlementDate) &&
-               CfiCode == other.CfiCode &&
-               FaceValue == other.FaceValue &&
-               SettlementType == other.SettlementType &&
-               OptionStyle == other.OptionStyle &&
-               PrimaryId == other.PrimaryId &&
-               UnderlyingSecurityId == other.UnderlyingSecurityId &&
-               OptionType == other.OptionType &&
-               Shortable == other.Shortable;
-#endif
-
         return other is not null &&
                Name == other.Name &&
                ((Board is null && other.Board is null) || (Board is not null && other.Board is not null && Board.Equals(other.Board))) &&

@@ -30,7 +30,7 @@ public class SBond(InstrumentTradeStockSharpModel sec)
     public DateTime Maturity { get; set; }
 
     /// <inheritdoc/>
-    public string MicexCode { get; set; } = sec.Code;
+    public string MicexCode { get; set; } = sec?.Code;
 
     
     /// <summary>
