@@ -94,7 +94,7 @@ public static partial class GlobalStaticCloudStorageMetadata
     {
         ApplicationName = GlobalStaticConstantsTransmission.TransmissionQueues.TradeInstrumentStrategyStockSharpReceive,
         OwnerPrimaryKey = ownerId,
-        PropertyName = $"{Routes.CLIENT_CONTROLLER_NAME}-{Routes.CODE_CONTROLLER_NAME}",
+        PropertyName = $"{Routes.TRADE_CONTROLLER_NAME}-{Routes.STRATEGY_CONTROLLER_NAME}",
         PrefixPropertyName = Routes.BROKER_CONTROLLER_NAME
     };
 
