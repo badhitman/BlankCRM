@@ -5,77 +5,89 @@
                                    HelperText="Securities lookup criteria by security-code"
                                    KeyStorage="GlobalStaticCloudStorageMetadata.SecuritiesCriteriaCodeFilterStockSharp" />
 
-<StringParameterStorageComponent Label="(LOOKUP) Board code-filter"
-                                 HelperText="Securities lookup criteria by board-code"
-                                 KeyStorage="GlobalStaticCloudStorageMetadata.BoardCriteriaCodeFilterStockSharp" />
+<MudGrid Class="mb-3">
+    <MudItem xs=12 md=4>
+        <StringParameterStorageComponent Label="(LOOKUP) Board code-filter"
+                                         HelperText="Securities lookup criteria by board-code"
+                                         KeyStorage="GlobalStaticCloudStorageMetadata.BoardCriteriaCodeFilterStockSharp" />
+    </MudItem>
+    <MudItem xs=12 md=4>
+        <StringParameterStorageComponent Label="Client code"
+                                         HelperText="Client code assigned by the broker."
+                                         KeyStorage="GlobalStaticCloudStorageMetadata.ClientCodeBrokerStockSharp" />
+    </MudItem>
+    <MudItem xs=12 md=4>
+        <StringParameterStorageComponent Label="Path data"
+                                         HelperText="Program data path"
+                                         KeyStorage="GlobalStaticCloudStorageMetadata.ProgramDataPathStockSharp" />
+    </MudItem>
+</MudGrid>
 
-<StringParameterStorageComponent Label="Client code"
-                                 HelperText="Client code assigned by the broker."
-                                 KeyStorage="GlobalStaticCloudStorageMetadata.ClientCodeBrokerStockSharp" />
-
-<StringParameterStorageComponent Label="Path data"
-                                 HelperText="Program data path"
-                                 KeyStorage="GlobalStaticCloudStorageMetadata.ProgramDataPathStockSharp" />
-<MudGrid>
-    <MudItem xs=12 sm=3>
+<MudGrid Class="mx-5">
+    <MudItem xs=12 md=3>
         <DecimalParameterStorageComponent Label="QuoteSmallStrategyBidVolume"
                                           HelperText="QuoteSmallStrategyBidVolume"
                                           KeyStorage="GlobalStaticCloudStorageMetadata.QuoteSmallStrategyBidVolume" />
     </MudItem>
-    <MudItem xs=12 sm=3>
+    <MudItem xs=12 md=3>
         <DecimalParameterStorageComponent Label="QuoteSmallStrategyOfferVolume"
                                           HelperText="QuoteSmallStrategyOfferVolume"
                                           KeyStorage="GlobalStaticCloudStorageMetadata.QuoteSmallStrategyOfferVolume" />
     </MudItem>
-    <MudItem xs=12 sm=3>
+    <MudItem xs=12 md=3>
         <DecimalParameterStorageComponent Label="QuoteStrategyVolume"
                                           HelperText="QuoteStrategyVolume"
                                           KeyStorage="GlobalStaticCloudStorageMetadata.QuoteStrategyVolume" />
     </MudItem>
-    <MudItem xs=12 sm=3>
+    <MudItem xs=12 md=3>
         <DecimalParameterStorageComponent Label="QuoteSizeStrategyVolume"
                                           HelperText="QuoteSizeStrategyVolume"
                                           KeyStorage="GlobalStaticCloudStorageMetadata.QuoteSizeStrategyVolume" />
     </MudItem>
 </MudGrid>
 
-<AboutDatabaseStockSharpComponent />
-<hr />
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Dashboard filters</h5>
-        <MudSelect T="MarkersInstrumentStockSharpEnum?"
-                   Disabled="IsBusyProgress"
-                   Label="Marker`s filter dashboard"
-                   MultiSelectionTextFunc="@(new Func<List<string?>, string>(GetMultiSelectionText))"
-                   MultiSelection SelectAll Clearable Dense
-                   @bind-SelectedValues="MarkersSelected"
-                   Adornment="Adornment.Start"
-                   AdornmentIcon="@Icons.Material.Filled.Checklist"
-                   IconSize="Size.Small"
-                   Class="mt-3">
-            <MudSelectItem T="MarkersInstrumentStockSharpEnum?" Value="null">~ not set ~</MudSelectItem>
-            @foreach (MarkersInstrumentStockSharpEnum state in Enum.GetValues<MarkersInstrumentStockSharpEnum>().OrderBy(x => x.DescriptionInfo()))
-            {
-                <MudSelectItem T="MarkersInstrumentStockSharpEnum?" Value="@state">@state.DescriptionInfo()</MudSelectItem>
-            }
-        </MudSelect>
-
-        <MudSelect T="BoardStockSharpViewModel"
-                   Disabled="IsBusyProgress"
-                   Label="Board`s filter dashboard"
-                   MultiSelection
-                   @bind-SelectedValues="SelectedBoards"
-                   Adornment="Adornment.Start"
-                   AdornmentIcon="@Icons.Custom.Uncategorized.ChessKnight"
-                   IconSize="Size.Small"
-                   Clearable
-                   Dense
-                   Class="mt-3">
-            @foreach (BoardStockSharpViewModel state in Boards)
-            {
-                <MudSelectItem T="BoardStockSharpViewModel" Value="@state">@state</MudSelectItem>
-            }
-        </MudSelect>
+        <MudGrid>
+            <MudItem xs=12 md=6>
+                <MudSelect T="MarkersInstrumentStockSharpEnum?"
+                           Disabled="IsBusyProgress"
+                           Label="Marker`s filter dashboard"
+                           MultiSelectionTextFunc="@(new Func<List<string?>, string>(GetMultiSelectionText))"
+                           MultiSelection SelectAll Clearable Dense
+                           @bind-SelectedValues="MarkersSelected"
+                           Adornment="Adornment.Start"
+                           AdornmentIcon="@Icons.Material.Filled.Checklist"
+                           IconSize="Size.Small"
+                           Class="mt-3">
+                    <MudSelectItem T="MarkersInstrumentStockSharpEnum?" Value="null">~ not set ~</MudSelectItem>
+                    @foreach (MarkersInstrumentStockSharpEnum state in Enum.GetValues<MarkersInstrumentStockSharpEnum>().OrderBy(x => x.DescriptionInfo()))
+                    {
+                        <MudSelectItem T="MarkersInstrumentStockSharpEnum?" Value="@state">@state.DescriptionInfo()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs=12 md=6>
+                <MudSelect T="BoardStockSharpViewModel"
+                           Disabled="IsBusyProgress"
+                           Label="Board`s filter dashboard"
+                           MultiSelection
+                           @bind-SelectedValues="SelectedBoards"
+                           Adornment="Adornment.Start"
+                           AdornmentIcon="@Icons.Custom.Uncategorized.ChessKnight"
+                           IconSize="Size.Small"
+                           Clearable
+                           Dense
+                           Class="mt-3">
+                    @foreach (BoardStockSharpViewModel state in Boards)
+                    {
+                        <MudSelectItem T="BoardStockSharpViewModel" Value="@state">@state</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
     </div>
 </div>
+
+<AboutDatabaseStockSharpComponent />
