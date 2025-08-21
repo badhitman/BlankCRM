@@ -62,5 +62,6 @@ public class AboutConnectResponseModel : ResponseBaseModel
         ClientCode = req.ClientCode;
         ProgramPath = req.ProgramPath;
         Messages = req.Messages;
+        Curve = req.Curve;
     }
 }
