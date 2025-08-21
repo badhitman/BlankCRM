@@ -51,5 +51,5 @@ public partial class EventsStockSharpTransmission(IMQTTClient mqClient) : IEvent
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DashboardTradeUpdate(DashboardTradeStockSharpModel req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>($"{GlobalStaticConstantsTransmission.TransmissionQueues.DashboardTradeUpdateStockSharpNotifyReceive}#{req.Id}", req, waitResponse: false, token: cancellationToken) ?? new();
+        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>($"{GlobalStaticConstantsTransmission.TransmissionQueues.DashboardTradeUpdateStockSharpNotifyReceive}:{req.Id}", req, waitResponse: false, token: cancellationToken) ?? new();
 }
