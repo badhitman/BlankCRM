@@ -105,6 +105,6 @@ public class ChatTelegramViewModel
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return $"{Id}{ChatTelegramId}{Type}{Title}{Username}{FirstName}{LastName}{IsForum}".GetHashCode();
+        return HashCode.Combine(Id, ChatTelegramId, Type, Title, Username, FirstName, LastName, IsForum);
     }
 }
