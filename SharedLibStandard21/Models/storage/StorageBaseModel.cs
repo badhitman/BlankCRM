@@ -12,7 +12,7 @@ public class StorageBaseModel : StorageMetadataModel
     /// <summary>
     /// Идентификатор/Key
     /// </summary>
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
     /// Создание
