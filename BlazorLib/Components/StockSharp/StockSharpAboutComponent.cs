@@ -20,7 +20,7 @@ public class StockSharpAboutComponent : BlazorBusyComponentBaseModel
     protected AboutConnectResponseModel? AboutConnection;
 
     /// <inheritdoc/>
-    protected bool EachDisable => AboutConnection is null || AboutConnection.ConnectionState != ConnectionStatesEnum.Connected;
+    public bool EachDisable => AboutConnection is null || AboutConnection.ConnectionState != ConnectionStatesEnum.Connected;
 
 
     /// <inheritdoc/>

@@ -19,7 +19,10 @@ public partial class EventsStockSharpTransmission(IMQTTClient mqClient) : IEvent
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> InstrumentReceived(InstrumentTradeStockSharpViewModel req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
+    {
+        await mqClient.MqRemoteCallAsync<ResponseBaseModel>($"{GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentReceivedStockSharpNotifyReceive}:{req.Id}", req, waitResponse: false, token: cancellationToken);
+        return await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InstrumentReceivedStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
+    }
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> OrderReceived(OrderStockSharpModel req, CancellationToken cancellationToken = default)
