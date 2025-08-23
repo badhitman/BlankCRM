@@ -46,7 +46,6 @@ public class AboutConnectResponseModel : ResponseBaseModel
     {
         CanConnect = req.CanConnect;
         ConnectionState = req.ConnectionState;
-        LastConnectedAt = DateTime.UtcNow;
     }
 
     /// <inheritdoc/>
