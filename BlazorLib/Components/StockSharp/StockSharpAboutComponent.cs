@@ -16,6 +16,7 @@ public class StockSharpAboutComponent : BlazorBusyComponentBaseModel
     [Inject]
     protected IDriverStockSharpService DriverRepo { get; set; } = default!;
 
+
     /// <inheritdoc/>
     protected AboutConnectResponseModel? AboutConnection;
 
