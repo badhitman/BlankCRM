@@ -52,7 +52,7 @@ public interface IParametersStorage
     /// <summary>
     /// FlushParameterAsync
     /// </summary>
-    public Task<TResponseModel<long?>> FlushParameterAsync(StorageCloudParameterViewModel storage, bool trimHistory = false, CancellationToken token = default);
+    public Task<TResponseModel<int?>> FlushParameterAsync(StorageCloudParameterViewModel storage, bool trimHistory = false, CancellationToken token = default);
 
     /// <summary>
     /// Прочитать значение параметра. null - если значения нет
