@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// OrdersSelectStockSharpRequestModel
 /// </summary>
-public class OrdersSelectStockSharpRequestModel : PaginationRequestModel
+public class OrdersSelectStockSharpRequestModel
 {
 
 }

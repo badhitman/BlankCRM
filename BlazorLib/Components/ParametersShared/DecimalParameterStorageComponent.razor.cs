@@ -42,7 +42,7 @@ public partial class DecimalParameterStorageComponent : BlazorBusyComponentBaseM
         set
         {
             _decimalValue = value;
-            InvokeAsync(async () => { await StoreRepo.SaveParameterAsync(_decimalValue, KeyStorage, false); });
+            InvokeAsync(async () => { await StoreRepo.SaveParameterAsync(_decimalValue, KeyStorage, true); });
         }
     }
 
