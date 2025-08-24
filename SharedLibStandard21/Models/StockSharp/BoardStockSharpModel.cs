@@ -21,6 +21,11 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel>
     /// </summary>
     public virtual ExchangeStockSharpModel Exchange { get; set; }
 
+    /// <summary>
+    /// Exchange
+    /// </summary>
+    public virtual ExchangeStockSharpModel GetExchange() => Exchange;
+
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
@@ -33,10 +38,10 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel>
     /// <inheritdoc/>
     public bool Equals(BoardStockSharpModel other)
     {
-        if (other is null)
+        if (other is null || Code != other.Code)
             return false;
 
-        return Code == other.Code && Exchange.Equals(other.Exchange);
+        return GetExchange().Equals(other.Exchange);
     }
 
     /// <inheritdoc/>
