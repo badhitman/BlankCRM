@@ -562,6 +562,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string STRATEGY_CONTROLLER_NAME = "strategy";
 
         /// <summary>
+        /// Strategies
+        /// </summary>
+        public const string STRATEGIES_CONTROLLER_NAME = "strategies";
+
+        /// <summary>
         /// Bid
         /// </summary>
         public const string BID_CONTROLLER_NAME = "bid";

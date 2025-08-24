@@ -30,16 +30,16 @@ public class AboutConnectResponseModel : ResponseBaseModel
     public decimal HighLimit { get; set; }
 
     /// <inheritdoc/>
-    public string SecurityCriteriaCodeFilterStockSharp { get; set; }
+    public string? SecurityCriteriaCodeFilterStockSharp { get; set; }
 
     /// <inheritdoc/>
-    public string ClientCode { get; set; }
+    public string? ClientCode { get; set; }
 
     /// <inheritdoc/>
-    public string ProgramPath { get; set; }
+    public string? ProgramPath { get; set; }
 
     /// <inheritdoc/>
-    public CurveBaseModel Curve { get; set; }
+    public CurveBaseModel? Curve { get; set; }
 
     /// <inheritdoc/>
     public void Update(UpdateConnectionHandleModel req)

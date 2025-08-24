@@ -1113,6 +1113,11 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string ResetStrategyStockSharpDriverReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.STRATEGY_CONTROLLER_NAME, Routes.RESET_ACTION_NAME);
 
         /// <summary>
+        /// ResetAllStrategiesStockSharpDriverReceive
+        /// </summary>
+        public readonly static string ResetAllStrategiesStockSharpDriverReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, $"{Routes.STRATEGIES_CONTROLLER_NAME}-ALL", Routes.RESET_ACTION_NAME);
+
+        /// <summary>
         /// Добавить/обновить адаптер
         /// </summary>
         public readonly static string UpdateOrCreateAdapterStockSharpReceive = Path.Combine(TransmissionQueueNamePrefixMQTT, Routes.STOCKSHARP_CONTROLLER_NAME, Routes.ADAPTER_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);

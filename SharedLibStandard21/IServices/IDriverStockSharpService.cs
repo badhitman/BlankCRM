@@ -54,6 +54,11 @@ public interface IDriverStockSharpService
     public Task<ResponseBaseModel> ResetStrategy(ResetStrategyRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// ResetAllStrategies
+    /// </summary>
+    public Task<ResponseBaseModel> ResetAllStrategies(ResetStrategyRequestBaseModel req, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Strategy Stop
     /// </summary>
     public Task<ResponseBaseModel> StopStrategy(StrategyStopRequestModel req, CancellationToken cancellationToken = default);

@@ -5,12 +5,13 @@
 namespace SharedLib;
 
 /// <summary>
-/// FundedParametersModel
+/// ResetStrategyRequestModel
 /// </summary>
-public class FundedParametersModel<T> : StorageBaseModel
+public class ResetStrategyRequestBaseModel
 {
-    /// <summary>
-    /// Payload
-    /// </summary>
-    public T? Payload { get; set; }
+    /// <inheritdoc/>
+    public decimal Volume { get; set; }
+
+    /// <inheritdoc/>
+    public decimal Size { get; set; }
 }

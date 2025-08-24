@@ -52,12 +52,12 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// <summary>
     /// <see cref="CurrenciesTypesEnum"/>
     /// </summary>
-    public int Currency { get; set; }
+    public int? Currency { get; set; }
 
     /// <summary>
     /// Security class.
     /// </summary>
-    public string Class { get; set; }
+    public string? Class { get; set; }
 
     /// <summary>
     /// Minimum price step.
@@ -102,7 +102,7 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// <summary>
     /// Type in ISO 10962 standard.
     /// </summary>
-    public string CfiCode { get; set; }
+    public string? CfiCode { get; set; }
 
     /// <summary>
     /// Face value.
@@ -133,7 +133,7 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// <summary>
     /// Underlying asset on which the current security is built.
     /// </summary>
-    public string UnderlyingSecurityId { get; set; }
+    public string? UnderlyingSecurityId { get; set; }
 
     /// <summary>
     /// Option type.
@@ -226,7 +226,7 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{IdRemote} '{Name}' {(CurrenciesTypesEnum)Currency}";
+        return $"{IdRemote} '{Name}' {(CurrenciesTypesEnum?)Currency}";
     }
 
     /// <inheritdoc/>
