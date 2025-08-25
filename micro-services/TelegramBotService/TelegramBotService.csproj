@@ -25,10 +25,10 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.6" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
-		<PackageReference Include="NLog" Version="6.0.1" />
-		<PackageReference Include="NLog.Database" Version="6.0.1" />
-		<PackageReference Include="NLog.Extensions.Logging" Version="6.0.1" />
-		<PackageReference Include="NLog.Web.AspNetCore" Version="6.0.1" />
+		<PackageReference Include="NLog" Version="6.0.3" />
+		<PackageReference Include="NLog.Database" Version="6.0.3" />
+		<PackageReference Include="NLog.Extensions.Logging" Version="6.0.3" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="6.0.3" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 		<PackageReference Include="Telegram.Bot" Version="22.5.1" />
 	</ItemGroup>

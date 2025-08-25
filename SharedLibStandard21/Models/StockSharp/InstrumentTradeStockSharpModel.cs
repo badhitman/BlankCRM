@@ -20,7 +20,9 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// <inheritdoc/>
     public virtual BoardStockSharpModel? Board { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Property for value <code>Security.Id</code>
+    /// </summary>
     public string? IdRemote { get; set; }
 
     /// <inheritdoc/>

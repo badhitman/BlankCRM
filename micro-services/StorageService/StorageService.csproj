@@ -20,12 +20,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.7.0" />
+		<PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.8.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.7" />
-		<PackageReference Include="NLog" Version="6.0.2" />
-		<PackageReference Include="NLog.Extensions.Logging" Version="6.0.2" />
-		<PackageReference Include="NLog.Web.AspNetCore" Version="6.0.2" />
-		<PackageReference Include="NLog.Database" Version="6.0.2" />
+		<PackageReference Include="NLog" Version="6.0.3" />
+		<PackageReference Include="NLog.Extensions.Logging" Version="6.0.3" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="6.0.3" />
+		<PackageReference Include="NLog.Database" Version="6.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.7" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.7" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
