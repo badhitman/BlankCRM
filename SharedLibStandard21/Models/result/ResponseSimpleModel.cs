@@ -8,5 +8,5 @@ namespace SharedLib;
 public partial class ResponseSimpleModel : ResponseBaseModel
 {
     /// <inheritdoc/>
-    public string Response {  get; set; }
+    public string? Response {  get; set; }
 }

@@ -10,5 +10,5 @@ namespace SharedLib;
 public class OrderRegisterRequestResponseModel : ResponseBaseModel
 {
     /// <inheritdoc/>
-    public OrderRegisterRequestModel OrderRegisterRequest { get; set; }
+    public OrderRegisterRequestModel? OrderRegisterRequest { get; set; }
 }

@@ -12,10 +12,10 @@ public class ButtonActionModel
     /// <summary>
     /// Title
     /// </summary>
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     /// <summary>
     /// Data
     /// </summary>
-    public string Data { get; set; }
+    public string? Data { get; set; }
 }

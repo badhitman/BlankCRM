@@ -13,8 +13,8 @@ public class ToastShowClientModel
     public MessagesTypesEnum TypeMessage { get; set; }
 
     /// <inheritdoc/>
-    public string HeadTitle { get; set; }
+    public string? HeadTitle { get; set; }
 
     /// <inheritdoc/>
-    public string MessageText { get; set; }
+    public string? MessageText { get; set; }
 }

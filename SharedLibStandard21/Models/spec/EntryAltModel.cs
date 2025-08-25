@@ -15,10 +15,10 @@ public class EntryAltModel
 {
     /// <inheritdoc/>
     [Key]
-    public  string Id { get; set; }
+    public  string? Id { get; set; }
 
     /// <inheritdoc/>
-    public  string Name { get; set; }
+    public  string? Name { get; set; }
 
     /// <inheritdoc/>
     public static EntryAltModel Build(string id, string name) => new() { Id = id, Name = name };

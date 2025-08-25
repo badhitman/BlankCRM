@@ -20,7 +20,7 @@ public class CreateOrderRequestModel
     /// портфель для исполнения заявки
     /// </summary>
     [Required]
-    public PortfolioStockSharpModel Portfolio {  get; set; }
+    public PortfolioStockSharpModel? Portfolio { get; set; }
 
     /// <summary>
     /// устанавливается объём заявки
@@ -36,12 +36,12 @@ public class CreateOrderRequestModel
     /// <summary>
     /// инструмент
     /// </summary>
-    public InstrumentTradeStockSharpViewModel Instrument {  get; set; }
+    public InstrumentTradeStockSharpViewModel? Instrument { get; set; }
 
     /// <summary>
     /// направление заявки
     /// </summary>
-    public SidesEnum Side {  get; set; }
+    public SidesEnum Side { get; set; }
 
     /// <summary>
     /// IsManual
@@ -61,5 +61,5 @@ public class CreateOrderRequestModel
     /// <summary>
     /// Comment
     /// </summary>
-    public string Comment { get; set; }
+    public string? Comment { get; set; }
 }

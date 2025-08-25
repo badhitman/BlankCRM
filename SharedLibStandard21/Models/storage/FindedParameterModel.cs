@@ -14,7 +14,7 @@ public class FoundParameterModel
     /// <summary>
     /// Префикс имени (опционально)
     /// </summary>
-    public string PrefixPropertyName { get; set; }
+    public string? PrefixPropertyName { get; set; }
 
     /// <summary>
     /// Связанный PK строки базы данных (опционально)
@@ -24,7 +24,7 @@ public class FoundParameterModel
     /// <summary>
     /// Данные (сериализованные)
     /// </summary>
-    public string SerializedDataJson { get; set; }
+    public string? SerializedDataJson { get; set; }
 
     /// <summary>
     /// Создание
@@ -34,5 +34,5 @@ public class FoundParameterModel
     /// <summary>
     /// Имя тип данных (тип хранимого значения)
     /// </summary>
-    public string TypeName { get; set; }
+    public string? TypeName { get; set; }
 }

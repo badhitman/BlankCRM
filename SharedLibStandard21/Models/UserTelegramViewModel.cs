@@ -21,17 +21,17 @@ public class UserTelegramViewModel : UserTelegramBaseModel
     /// User's or bot’s first name
     /// </summary>
     [JsonProperty(Required = Required.Always)]
-    public string NormalizedFirstNameUpper { get; set; }
+    public string? NormalizedFirstNameUpper { get; set; }
 
     /// <summary>
     /// Optional. User's or bot’s last name
     /// </summary>
-    public string NormalizedLastNameUpper { get; set; }
+    public string? NormalizedLastNameUpper { get; set; }
 
     /// <summary>
     /// Optional. User's or bot’s username
     /// </summary>
-    public string NormalizedUsernameUpper { get; set; }
+    public string? NormalizedUsernameUpper { get; set; }
 
 
     /// <summary>

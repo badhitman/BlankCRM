@@ -145,9 +145,19 @@ public partial class DashboardTradeStockSharpModel : InstrumentTradeStockSharpMo
     /// <inheritdoc/>
     public bool Equals(DashboardTradeStockSharpModel other)
     {
+        static bool BoardsEq(BoardStockSharpModel? r, BoardStockSharpModel? l)
+        {
+            if (r is null && l is null)
+                return true;
+            if (r is null || l is null)
+                return false;
+
+            return r.Equals(l);
+        }
+
         return other is not null &&
                Name == other.Name &&
-               Board.Equals(other.Board) &&
+               BoardsEq(Board, other.Board) &&
                IdRemote == other.IdRemote &&
                Code == other.Code &&
                ShortName == other.ShortName &&

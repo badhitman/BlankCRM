@@ -46,7 +46,7 @@ public interface IParametersStorageTransmission
     /// <summary>
     /// Найти/подобрать значения параметров (со всей историей значений)
     /// </summary>
-    public Task<TResponseModel<T[]>> FindParametersAsync<T>(RequestStorageBaseModel req, CancellationToken token = default);
+    public Task<TResponseModel<T?[]?>> FindParametersAsync<T>(RequestStorageBaseModel req, CancellationToken token = default);
 
     #region tag`s
     /// <summary>

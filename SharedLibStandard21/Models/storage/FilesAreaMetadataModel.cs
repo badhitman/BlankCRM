@@ -12,7 +12,7 @@ public class FilesAreaMetadataModel
     /// <summary>
     /// ApplicationName
     /// </summary>
-    public string ApplicationName { get; set; }
+    public string? ApplicationName { get; set; }
 
     /// <summary>
     /// Количество файлов

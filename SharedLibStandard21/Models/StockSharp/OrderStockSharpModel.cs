@@ -34,12 +34,12 @@ public class OrderStockSharpModel
     /// <summary>
     /// Order ID (as string, if electronic board does not use numeric order ID representation).
     /// </summary>
-    public string StringId { get; set; }
+    public string? StringId { get; set; }
 
     /// <summary>
     /// Board order id. Uses in case of StockSharp.BusinessEntities.Order.Id and StockSharp.BusinessEntities.Order.StringId is a brokerage system ids.
     /// </summary>
-    public string BoardId { get; set; }
+    public string? BoardId { get; set; }
 
     /// <summary>
     /// Order placing time on exchange.
@@ -54,7 +54,7 @@ public class OrderStockSharpModel
     /// <summary>
     /// Security, for which an order is being placed.
     /// </summary>
-    public virtual InstrumentTradeStockSharpModel Instrument { get; set; }
+    public virtual InstrumentTradeStockSharpModel? Instrument { get; set; }
 
     /// <summary>
     /// Order state.
@@ -64,7 +64,7 @@ public class OrderStockSharpModel
     /// <summary>
     /// Portfolio, in which the order is being traded.
     /// </summary>
-    public virtual PortfolioStockSharpModel Portfolio { get; set; }
+    public virtual PortfolioStockSharpModel? Portfolio { get; set; }
 
     /// <summary>
     /// Cancelled time.
@@ -119,7 +119,7 @@ public class OrderStockSharpModel
     /// <summary>
     /// Placed order comment.
     /// </summary>
-    public string Comment { get; set; }
+    public string? Comment { get; set; }
 
     /// <summary>
     /// Order type.
@@ -147,22 +147,22 @@ public class OrderStockSharpModel
     /// <summary>
     /// Commission currency. Can be null.
     /// </summary>
-    public string CommissionCurrency { get; set; }
+    public string? CommissionCurrency { get; set; }
 
     /// <summary>
     /// User's order ID.
     /// </summary>
-    public string UserOrderId { get; set; }
+    public string? UserOrderId { get; set; }
 
     /// <summary>
     /// Broker firm code.
     /// </summary>
-    public string BrokerCode { get; set; }
+    public string? BrokerCode { get; set; }
 
     /// <summary>
     /// Client code assigned by the broker.
     /// </summary>
-    public string ClientCode { get; set; }
+    public string? ClientCode { get; set; }
 
     /// <summary>
     /// Trading security currency.

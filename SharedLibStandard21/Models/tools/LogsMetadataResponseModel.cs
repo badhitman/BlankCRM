@@ -12,14 +12,14 @@ namespace SharedLib;
 public class LogsMetadataResponseModel : PeriodDatesTimesModel
 {
     /// <inheritdoc/>
-    public Dictionary<string, int> LevelsAvailable { get; set; }
+    public Dictionary<string, int>? LevelsAvailable { get; set; }
 
     /// <inheritdoc/>
-    public Dictionary<string, int> ApplicationsAvailable { get; set; }
+    public Dictionary<string, int>? ApplicationsAvailable { get; set; }
 
     /// <inheritdoc/>
-    public Dictionary<string, int> ContextsPrefixesAvailable { get; set; }
+    public Dictionary<string, int>? ContextsPrefixesAvailable { get; set; }
 
     /// <inheritdoc/>
-    public Dictionary<string, int> LoggersAvailable { get; set; }
+    public Dictionary<string, int>? LoggersAvailable { get; set; }
 }

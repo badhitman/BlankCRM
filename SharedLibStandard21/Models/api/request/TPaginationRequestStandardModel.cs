@@ -12,5 +12,5 @@ public class TPaginationRequestStandardModel<T> : SimplePaginationRequestModel
     /// <summary>
     /// Payload
     /// </summary>
-    public virtual T Payload { get; set; }
+    public virtual T? Payload { get; set; }
 }

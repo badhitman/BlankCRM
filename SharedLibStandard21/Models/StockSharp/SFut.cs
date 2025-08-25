@@ -28,7 +28,7 @@ public class SFut(string name, InstrumentTradeStockSharpModel sec, Dictionary<SB
     public decimal RepoRate { get; set; } = reporate;
 
     /// <inheritdoc/>
-    public string MicexCode { get; set; } = sec.Code;
+    public string? MicexCode { get; set; } = sec.Code;
 
     /// <inheritdoc/>
     public Dictionary<SBond, decimal> ConversionFactors { get; private set; } = convfactors;

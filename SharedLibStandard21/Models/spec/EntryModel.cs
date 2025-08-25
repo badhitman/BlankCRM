@@ -21,7 +21,7 @@ public class EntryModel
     /// Имя объекта
     /// </summary>
     [NameValid, Required]
-    public virtual string Name { get; set; }
+    public virtual string? Name { get; set; }
 
     /// <inheritdoc/>
     public static EntryModel Build(string name) => new() { Name = name };

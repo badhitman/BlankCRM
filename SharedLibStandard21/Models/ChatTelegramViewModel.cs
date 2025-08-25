@@ -37,25 +37,25 @@ public class ChatTelegramViewModel
     /// <summary>
     /// Optional. Title, for supergroups, channels and group chats
     /// </summary>
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
 
     /// <summary>
     /// Optional. Username, for private chats, supergroups and channels if available
     /// </summary>
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
 
     /// <summary>
     /// Optional. First name of the other party in a private chat
     /// </summary>
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
 
     /// <summary>
     /// Optional. Last name of the other party in a private chat
     /// </summary>
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
 
     /// <summary>

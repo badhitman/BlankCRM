@@ -12,12 +12,12 @@ namespace SharedLib;
 public class RubricStandardModel : UniversalLayerModel
 {
     /// <inheritdoc/>
-    public virtual List<RubricStandardModel> NestedRubrics { get; set; }
+    public virtual List<RubricStandardModel>? NestedRubrics { get; set; }
 
     /// <summary>
     /// Владелец (вышестоящая рубрика)
     /// </summary>
-    public virtual RubricStandardModel Parent { get; set; }
+    public virtual RubricStandardModel? Parent { get; set; }
 
 
     /// <inheritdoc/>

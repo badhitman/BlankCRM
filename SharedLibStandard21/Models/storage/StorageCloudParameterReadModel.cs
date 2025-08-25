@@ -10,7 +10,7 @@ public class StorageCloudParameterReadModel : StorageMetadataModel
     /// <summary>
     /// Тип сериализуемого параметра
     /// </summary>
-    public string TypeName { get; set; }
+    public string? TypeName { get; set; }
 
     /// <inheritdoc/>
     public override string ToString()

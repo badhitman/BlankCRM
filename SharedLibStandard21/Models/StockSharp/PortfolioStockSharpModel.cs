@@ -14,10 +14,10 @@ public partial class PortfolioStockSharpModel : IEquatable<PortfolioStockSharpMo
     /// <summary>
     /// Name
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <inheritdoc/>
-    public virtual BoardStockSharpModel Board { get; set; }
+    public virtual BoardStockSharpModel? Board { get; set; }
 
     /// <inheritdoc/>
     public PortfolioStatesEnum? State { get; set; }
@@ -26,10 +26,10 @@ public partial class PortfolioStockSharpModel : IEquatable<PortfolioStockSharpMo
     public CurrenciesTypesEnum? Currency { get; set; }
 
     /// <inheritdoc/>
-    public string ClientCode { get; set; }
+    public string? ClientCode { get; set; }
 
     /// <inheritdoc/>
-    public string DepoName { get; set; }
+    public string? DepoName { get; set; }
 
     /// <inheritdoc/>
     public decimal? BeginValue { get; set; }

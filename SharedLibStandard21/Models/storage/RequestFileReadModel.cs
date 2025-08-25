@@ -17,5 +17,5 @@ public class RequestFileReadModel
     /// <summary>
     /// File-read TokenAccess
     /// </summary>
-    public string TokenAccess { get; set; }
+    public string? TokenAccess { get; set; }
 }

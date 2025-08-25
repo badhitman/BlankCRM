@@ -21,12 +21,12 @@ public class UniversalUpdateRequestModel
     /// Имя объекта
     /// </summary>
     [NameValid, Required]
-    public virtual string Name { get; set; }
+    public virtual string? Name { get; set; }
 
     /// <summary>
     /// Описание/примечание для объекта
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Parent ID

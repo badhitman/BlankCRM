@@ -39,5 +39,5 @@ public class PaginationRequestModel
     /// <summary>
     /// Имя поля по которому должна происходить сортировка
     /// </summary>
-    public string SortBy { get; set; }
+    public string? SortBy { get; set; }
 }

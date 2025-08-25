@@ -10,8 +10,8 @@ namespace SharedLib;
 public class AboutDatabasesResponseModel
 {
     /// <inheritdoc/>
-    public string DriverDatabase {  get; set; }
+    public string? DriverDatabase {  get; set; }
     
     /// <inheritdoc/>
-    public string PropertiesDatabase { get; set; }
+    public string? PropertiesDatabase { get; set; }
 }
