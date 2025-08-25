@@ -316,9 +316,9 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MessageComplexIdsModel?>> SendTextMessageTelegramAsync(SendTextMessageTelegramBotModel message, CancellationToken token = default)
+    public async Task<TResponseModel<MessageComplexIdsModel>> SendTextMessageTelegramAsync(SendTextMessageTelegramBotModel message, CancellationToken token = default)
     {
-        TResponseModel<MessageComplexIdsModel?> res = new();
+        TResponseModel<MessageComplexIdsModel> res = new();
         string msg;
         if (string.IsNullOrWhiteSpace(message.Message))
         {
@@ -348,8 +348,8 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
 
         ReplyMarkup? replyKB = message.ReplyKeyboard is null
             ? null
-            : new InlineKeyboardMarkup(message.ReplyKeyboard
-            .Select(x => x.Select(y => InlineKeyboardButton.WithCallbackData(y.Title, y.Data))));
+            : new InlineKeyboardMarkup(message.ReplyKeyboard.Select(x => x.Select(y => InlineKeyboardButton.WithCallbackData(y.Title ?? "~not set~", y.Data ?? "~not set~"))));
+
         Message sender_msg;
         MessageTelegramModelDB msg_db;
         try
@@ -415,12 +415,6 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 errorCode = _are.ErrorCode;
             else if (ex is RequestException _re)
                 errorCode = (int?)_re.HttpStatusCode;
-
-            //sender_msg = new()
-            //{
-            //  Type =  MessageType.,
-            //};
-            //msg_db = await storeTgRepo.StoreMessage(sender_msg);
 
             await context.AddAsync(new ErrorSendingMessageTelegramBotModelDB()
             {

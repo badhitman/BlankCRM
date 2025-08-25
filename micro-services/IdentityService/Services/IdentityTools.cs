@@ -170,7 +170,7 @@ public class IdentityTools(
 
         ApplicationUser? user = await userManager.FindByIdAsync(userId); ;
         if (user is null)
-            return new() { Messages = [new() { TypeMessage =    MessagesTypesEnum.Error, Text = $"Пользователь #{userId} не найден" }] };
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Пользователь #{userId} не найден" }] };
 
         return new() { Response = await userManager.GetTwoFactorEnabledAsync(user) };
     }
@@ -1297,10 +1297,9 @@ public class IdentityTools(
         if (MailAddress.TryCreate(user.Email, out _))
         {
             TResponseModel<UserTelegramBaseModel> bot_username_res = await tgRemoteRepo.AboutBotAsync(token);
-            UserTelegramBaseModel? bot_username = bot_username_res.Response;
-            //
+            UserTelegramBaseModel? bot_username = bot_username_res.Response;            
             string msg = $"Создана ссылка привязки Telegram аккаунта к учётной записи сайта.<br/>";
-            msg += $"Нужно подтвердить операцию через Telegram бота. Для этого нужно в TelegramBot @{bot_username.Username} отправить токен:<br/><u><b>{act.GuidToken}</b></u><br/>Или ссылкой: <a href='https://t.me/{bot_username.Username}?start={act.GuidToken}'>https://t.me/{bot_username.Username}?start={act.GuidToken}</a><br/>";
+            msg += $"Нужно подтвердить операцию через Telegram бота. Для этого нужно в TelegramBot @{bot_username?.Username} отправить токен:<br/><u><b>{act.GuidToken}</b></u><br/>Или ссылкой: <a href='https://t.me/{bot_username.Username}?start={act.GuidToken}'>https://t.me/{bot_username.Username}?start={act.GuidToken}</a><br/>";
             await mailRepo.SendEmailAsync(user.Email, "Статус привязки Telegram к у/з", msg, token: token);
         }
 
@@ -1512,12 +1511,17 @@ public class IdentityTools(
                 TResponseModel<UserTelegramBaseModel> bot_username_res = await tgRemoteRepo.AboutBotAsync(token);
                 UserTelegramBaseModel? bot_username = bot_username_res.Response;
 
-                msg = $"Существует ссылка привязки Telegram аккаунта к учётной записи сайта действительная до {act.CreatedAt.AddMinutes(req.TelegramJoinAccountTokenLifetimeMinutes)} ({DateTime.UtcNow - lifeTime}).<br/>";
-                msg += $"Нужно подтвердить операцию через Telegram бота. Для этого нужно в TelegramBot @{bot_username.Username} отправить токен:<br/><u><b>{act.GuidToken}</b></u><br/>Или ссылкой: <a href='https://t.me/{bot_username.Username}?start={act.GuidToken}'>https://t.me/{bot_username.Username}?start={act.GuidToken}</a><br/>";
-                await mailRepo.SendEmailAsync(user.Email, "Статус привязки Telegram к у/з", msg, token: token);
+                if (bot_username is not null)
+                {
+                    msg = $"Существует ссылка привязки Telegram аккаунта к учётной записи сайта действительная до {act.CreatedAt.AddMinutes(req.TelegramJoinAccountTokenLifetimeMinutes)} ({DateTime.UtcNow - lifeTime}).<br/>";
+                    msg += $"Нужно подтвердить операцию через Telegram бота. Для этого нужно в TelegramBot @{bot_username.Username} отправить токен:<br/><u><b>{act.GuidToken}</b></u><br/>Или ссылкой: <a href='https://t.me/{bot_username.Username}?start={act.GuidToken}'>https://t.me/{bot_username.Username}?start={act.GuidToken}</a><br/>";
+                    await mailRepo.SendEmailAsync(user.Email, "Статус привязки Telegram к у/з", msg, token: token);
+                }
+                else
+                    loggerRepo.LogError("Ошибка уведомления в Telegram: TelegramBot unknow. error 3CD8CA38-10CD-4FA5-B882-84572BC8A295");
             }
             else
-                loggerRepo.LogError($"Ошибка уведомления на Email: {user.Email} - email не валидный. error {{BB9E05A4-37A3-4FBB-800B-9AED947A2B3B}}");
+                loggerRepo.LogError($"Ошибка уведомления на Email: {user.Email} - email не валидный. error BB9E05A4-37A3-4FBB-800B-9AED947A2B3B");
         }
 
         TResponseModel<TelegramJoinAccountModelDb> res = new() { Response = act };

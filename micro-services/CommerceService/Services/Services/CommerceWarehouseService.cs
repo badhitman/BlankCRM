@@ -27,8 +27,9 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         req.DeliveryDate = req.DeliveryDate.SetKindUtc();
-        req.Name = req.Name.Trim();
-        req.NormalizedUpperName = req.Name.ToUpper();
+        if (req.Name is not null)
+            req.Name = req.Name.Trim();
+        req.NormalizedUpperName = req.Name?.ToUpper() ?? "";
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         string msg;

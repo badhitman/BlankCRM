@@ -246,7 +246,7 @@ public class UpdateHandler(
         ReplyMarkup? replyKB = resp.ReplyKeyboard is null
             ? null
             : new InlineKeyboardMarkup(resp.ReplyKeyboard
-            .Select(x => x.Select(y => InlineKeyboardButton.WithCallbackData(y.Title, y.Data))));
+            .Select(x => x.Select(y => InlineKeyboardButton.WithCallbackData(y.Title ?? "~not set~", y.Data ?? "~not set~"))));
 
         ResponseBaseModel upd_main_msg_res;
         Message? messageSended = null;

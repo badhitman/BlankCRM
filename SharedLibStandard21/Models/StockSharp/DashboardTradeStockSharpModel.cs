@@ -42,16 +42,13 @@ public partial class DashboardTradeStockSharpModel : InstrumentTradeStockSharpMo
     public bool IsSmall { get; set; }
 
     /// <inheritdoc/>
-    public bool IsAlter { get; set; }
-
-    /// <inheritdoc/>
     public decimal LowLimit { get; set; }
 
     /// <inheritdoc/>
     public decimal HightLimit { get; set; }
 
     /// <inheritdoc/>
-    public static DashboardTradeStockSharpModel Build(InstrumentTradeStockSharpViewModel instrument, decimal basePrice, decimal valueOperation, decimal shiftPosition, decimal smallBidVolume, decimal smallOfferVolume, decimal smallOffset, decimal workingVolume, bool isSmall, bool isAlter, decimal lowLimit, decimal hightLimit)
+    public static DashboardTradeStockSharpModel Build(InstrumentTradeStockSharpViewModel instrument, decimal basePrice, decimal valueOperation, decimal shiftPosition, decimal smallBidVolume, decimal smallOfferVolume, decimal smallOffset, decimal workingVolume, bool isSmall, decimal lowLimit, decimal hightLimit)
     {
         return new()
         {
@@ -86,7 +83,6 @@ public partial class DashboardTradeStockSharpModel : InstrumentTradeStockSharpMo
             SmallOffset = smallOffset,
             WorkingVolume = workingVolume,
             IsSmall = isSmall,
-            IsAlter = isAlter,
             LowLimit = lowLimit,
             HightLimit = hightLimit,
         };
@@ -125,7 +121,6 @@ public partial class DashboardTradeStockSharpModel : InstrumentTradeStockSharpMo
         SmallOfferVolume = strategyTrade.SmallOfferVolume;
         SmallOffset = strategyTrade.SmallOffset;
         WorkingVolume = strategyTrade.WorkingVolume;
-        IsAlter = strategyTrade.IsAlter;
         IsSmall = strategyTrade.IsSmall;
         LowLimit = strategyTrade.LowLimit;
         HightLimit = strategyTrade.HightLimit;
@@ -190,7 +185,6 @@ public partial class DashboardTradeStockSharpModel : InstrumentTradeStockSharpMo
                SmallOffset == other.SmallOffset &&
                WorkingVolume == other.WorkingVolume &&
                IsSmall == other.IsSmall &&
-               IsAlter == other.IsAlter &&
                LowLimit == other.LowLimit &&
                HightLimit == other.HightLimit;
     }
@@ -233,7 +227,6 @@ public partial class DashboardTradeStockSharpModel : InstrumentTradeStockSharpMo
         hash.Add(SmallOffset);
         hash.Add(WorkingVolume);
         hash.Add(IsSmall);
-        hash.Add(IsAlter);
         hash.Add(LowLimit);
         hash.Add(HightLimit);
         return hash.ToHashCode();

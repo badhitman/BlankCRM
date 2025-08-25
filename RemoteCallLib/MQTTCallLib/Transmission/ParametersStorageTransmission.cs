@@ -47,7 +47,7 @@ public class ParametersStorageTransmission(IMQTTClient rabbitClient) : IParamete
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<T?>?> ReadParameterAsync<T>(StorageMetadataModel req, CancellationToken token = default)
+    public async Task<TResponseModel<T?>> ReadParameterAsync<T>(StorageMetadataModel req, CancellationToken token = default)
     {
         TResponseModel<StorageCloudParameterPayloadModel>? response_payload = await rabbitClient.MqRemoteCallAsync<TResponseModel<StorageCloudParameterPayloadModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ReadCloudParameterReceive, req, token: token);
         TResponseModel<T?> res = new() { Messages = response_payload?.Messages ?? [] };
@@ -80,7 +80,7 @@ public class ParametersStorageTransmission(IMQTTClient rabbitClient) : IParamete
 
         res.Response = [.. response_payload
             .Response
-            .Select(x => JsonConvert.DeserializeObject<T>(x.SerializedDataJson))];
+            .Select(x => x.SerializedDataJson is null ? default : JsonConvert.DeserializeObject<T>(x.SerializedDataJson))];
 
         return res;
     }
