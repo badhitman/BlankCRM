@@ -438,7 +438,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             SnackBarRepo.Error($"Записей больше: {res.TotalRowsCount}");
 
         Organizations = res.Response;
-        TResponseModel<OrderDocumentModelDB> current_cart = await StorageRepo
+        TResponseModel<OrderDocumentModelDB?> current_cart = await StorageRepo
             .ReadParameterAsync<OrderDocumentModelDB>(GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId));
 
         CurrentCart = current_cart.Response ?? new()

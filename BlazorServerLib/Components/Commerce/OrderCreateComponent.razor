@@ -90,7 +90,7 @@ else
                             @foreach (KeyValuePair<int, decimal> dd in DiscountsDetected)
                             {
                                 RowOfOrderDocumentModelDB control_obj = AllRows.First(x => x.Offer!.Id == dd.Key);
-                                string title = control_obj.Offer!.Name;
+                                string? title = control_obj.Offer!.Name;
                                 if (string.IsNullOrWhiteSpace(title))
                                 {
                                     title = control_obj.Nomenclature!.Name;

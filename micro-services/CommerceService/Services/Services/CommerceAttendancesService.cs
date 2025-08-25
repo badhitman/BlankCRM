@@ -68,6 +68,12 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> RecordsAttendanceCreateAsync(TAuthRequestModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default)
     {
+        if (workSchedules.Payload is null)
+            return ResponseBaseModel.CreateError("workSchedules.Payload is null");
+
+        if (string.IsNullOrWhiteSpace(workSchedules.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(workSchedules.SenderActionUserId)");
+
         List<WorkScheduleModel> records = workSchedules.Payload.Records;
         ResponseBaseModel res = new();
         records.ForEach(x =>
@@ -146,6 +152,8 @@ public partial class CommerceImplementService : ICommerceService
         List<WorkScheduleModel> WorksSchedulesViews = default!;
         TResponseModel<int?> res_RubricIssueForCreateOrder = default!;
         TResponseModel<string?>? CommerceNewOrderSubjectNotification = null, CommerceNewOrderBodyNotification = null, CommerceNewOrderBodyNotificationTelegram = null;
+
+
 
         List<Task> tasks = [
                 Task.Run(async () => { CommerceNewOrderSubjectNotification = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewOrderSubjectNotification); }, token),
@@ -293,6 +301,9 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> RecordAttendanceDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default)
     {
+        if (string.IsNullOrEmpty(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrEmpty(req.SenderActionUserId)");
+
         UserInfoModel actor = default!;
         RecordsAttendanceModelDB? orderAttendanceDB = null;
         ResponseBaseModel res = new();

@@ -21,7 +21,7 @@ public interface IParametersStorageTransmission
     /// Возвращается самое актуальное значение (последнее установленное). Хранится история значений - если значение будет часто меняться будет ротация стека накопленных значений с усечением от 150 до 100.
     /// Проверка переполнения происходит при каждой команде сохранения.
     /// </remarks>
-    public Task<TResponseModel<T>> ReadParameterAsync<T>(StorageMetadataModel req, CancellationToken token = default);
+    public Task<TResponseModel<T?>> ReadParameterAsync<T>(StorageMetadataModel req, CancellationToken token = default);
 
     /// <summary>
     /// Прочитать значения параметров. Данные запрашиваемых параметров, которые отсутствуют в БД - не попадут в возвращаемый ответ.
@@ -31,7 +31,7 @@ public interface IParametersStorageTransmission
     /// Возвращается самое актуальное значение (последнее установленное). Хранится история значений - если значение будет часто меняться будет ротация стека накопленных значений с усечением от 150 до 100.
     /// Проверка переполнения происходит при каждой команде сохранения.
     /// </remarks>
-    public Task<TResponseModel<List<T>>> ReadParametersAsync<T>(StorageMetadataModel[] req, CancellationToken token = default);
+    public Task<TResponseModel<List<T?>?>> ReadParametersAsync<T>(StorageMetadataModel[] req, CancellationToken token = default);
 
     /// <summary>
     /// Сохранить параметр

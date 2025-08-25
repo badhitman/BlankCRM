@@ -24,10 +24,10 @@ public class ParametersStorageTransmission(IRabbitClient rabbitClient) : IParame
 
     #region parameter`s
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<T>?>> ReadParametersAsync<T>(StorageMetadataModel[] req, CancellationToken token = default)
+    public async Task<TResponseModel<List<T?>?>> ReadParametersAsync<T>(StorageMetadataModel[] req, CancellationToken token = default)
     {
         TResponseModel<List<StorageCloudParameterPayloadModel>>? response_payload = await rabbitClient.MqRemoteCallAsync<TResponseModel<List<StorageCloudParameterPayloadModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.ReadCloudParametersReceive, req, token: token);
-        TResponseModel<List<T>?> res = new();
+        TResponseModel<List<T?>?> res = new();
         if (response_payload?.Success() != true)
         {
             res.Messages = response_payload?.Messages ?? [];
@@ -37,7 +37,7 @@ public class ParametersStorageTransmission(IRabbitClient rabbitClient) : IParame
         if (response_payload.Response is null || response_payload.Response.Count == 0)
             return res;
 
-        res.Response = response_payload.Response.Select(x => JsonConvert.DeserializeObject<T>(x.SerializedDataJson)).ToList()!;
+        res.Response = response_payload.Response.Select(x => x.SerializedDataJson is null ? default : JsonConvert.DeserializeObject<T>(x.SerializedDataJson)).ToList()!;
         return res;
     }
 
@@ -53,7 +53,7 @@ public class ParametersStorageTransmission(IRabbitClient rabbitClient) : IParame
         if (response_payload.Response is null)
             return res;
 
-        res.Response = JsonConvert.DeserializeObject<T>(response_payload.Response.SerializedDataJson);
+        res.Response = response_payload.Response.SerializedDataJson is null ? default : JsonConvert.DeserializeObject<T>(response_payload.Response.SerializedDataJson);
         return res;
     }
 
@@ -99,7 +99,7 @@ public class ParametersStorageTransmission(IRabbitClient rabbitClient) : IParame
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> DeleteParameterAsync(StorageMetadataModel key, bool waitResponse = true, CancellationToken token = default) 
+    public async Task<TResponseModel<int>> DeleteParameterAsync(StorageMetadataModel key, bool waitResponse = true, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteCloudParameterReceive, key, waitResponse, token) ?? new();
     #endregion
 }

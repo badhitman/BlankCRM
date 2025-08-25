@@ -38,7 +38,7 @@ public partial class MetaFilesComponent : BlazorBusyComponentBaseAuthModel
     /// </remarks>
     private List<bool> _included = [];
 
-    List<string>? reqNamesApps = null;
+    List<string?>? reqNamesApps = null;
 
     string? _reqKey;
     /// <inheritdoc/>

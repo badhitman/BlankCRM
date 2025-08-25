@@ -67,7 +67,7 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
         TResponseModel<bool> res = await StorageRepo.ReadParameterAsync<bool>(SizeColumnsKeyStorage);
         IsLarge = res.Response == true;
 
-        TResponseModel<string> current_filter_user_res = await StorageRepo.ReadParameterAsync<string>(GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId));
+        TResponseModel<string?> current_filter_user_res = await StorageRepo.ReadParameterAsync<string>(GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId));
         FilterUserId = current_filter_user_res.Response;
 
         IsBusyProgress = false;

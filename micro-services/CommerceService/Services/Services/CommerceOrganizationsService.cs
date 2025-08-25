@@ -33,6 +33,15 @@ public partial class CommerceImplementService : ICommerceService
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
+        if (req.Payload is null)
+        {
+            return new()
+            {
+                Messages = [new() { Text = $"{nameof(OrganizationOfferToggleModel)}: not set for payload", TypeMessage = MessagesTypesEnum.Error }],
+                Response = false,
+            };
+        }
+
         if (req.Payload.OfferId < 1)
             req.Payload.OfferId = null;
 

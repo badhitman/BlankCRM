@@ -29,10 +29,10 @@ public class ParametersStorageTransmission(IMQTTClient rabbitClient) : IParamete
 
     #region parameter`s
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<T>?>> ReadParametersAsync<T>(StorageMetadataModel[] req, CancellationToken token = default)
+    public async Task<TResponseModel<List<T?>>> ReadParametersAsync<T>(StorageMetadataModel[] req, CancellationToken token = default)
     {
         TResponseModel<List<StorageCloudParameterPayloadModel>>? response_payload = await rabbitClient.MqRemoteCallAsync<TResponseModel<List<StorageCloudParameterPayloadModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.ReadCloudParametersReceive, req, token: token);
-        TResponseModel<List<T>?> res = new();
+        TResponseModel<List<T?>> res = new();
         if (response_payload?.Success() != true)
         {
             res.Messages = response_payload?.Messages ?? [];
@@ -42,12 +42,12 @@ public class ParametersStorageTransmission(IMQTTClient rabbitClient) : IParamete
         if (response_payload.Response is null || response_payload.Response.Count == 0)
             return res;
 
-        res.Response = response_payload.Response.Select(x => JsonConvert.DeserializeObject<T>(x.SerializedDataJson)).ToList()!;
+        res.Response = response_payload.Response.Select(x => x.SerializedDataJson is null ? default : JsonConvert.DeserializeObject<T>(x.SerializedDataJson)).ToList()!;
         return res;
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<T?>> ReadParameterAsync<T>(StorageMetadataModel req, CancellationToken token = default)
+    public async Task<TResponseModel<T?>?> ReadParameterAsync<T>(StorageMetadataModel req, CancellationToken token = default)
     {
         TResponseModel<StorageCloudParameterPayloadModel>? response_payload = await rabbitClient.MqRemoteCallAsync<TResponseModel<StorageCloudParameterPayloadModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ReadCloudParameterReceive, req, token: token);
         TResponseModel<T?> res = new() { Messages = response_payload?.Messages ?? [] };
@@ -58,7 +58,9 @@ public class ParametersStorageTransmission(IMQTTClient rabbitClient) : IParamete
         if (response_payload.Response is null)
             return res;
 
-        res.Response = JsonConvert.DeserializeObject<T>(response_payload.Response.SerializedDataJson);
+        if (response_payload.Response.SerializedDataJson is not null)
+            res.Response = JsonConvert.DeserializeObject<T?>(response_payload.Response.SerializedDataJson);
+
         return res;
     }
 

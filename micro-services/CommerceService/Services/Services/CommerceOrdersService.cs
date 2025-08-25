@@ -38,7 +38,7 @@ public partial class CommerceImplementService(
     {
         TResponseModel<int> res = new() { Response = 0 };
 
-        if (req.Payload.Amount <= 0)
+        if (req.Payload is null || req.Payload.Amount <= 0)
         {
             res.AddError("Сумма платежа должна быть больше нуля");
             return res;
@@ -117,7 +117,14 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PricesRulesGetForOffersAsync(TAuthRequestModel<int[]> req, CancellationToken token = default)
     {
-        TResponseModel<PriceRuleForOfferModelDB[]?> res = new();
+        TResponseModel<List<PriceRuleForOfferModelDB>> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("Offer not set fo request");
+            return res;
+        }
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         return new()
         {
@@ -133,7 +140,15 @@ public partial class CommerceImplementService(
     {
         TResponseModel<int> res = new() { Response = 0 };
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        req.Payload.Name = req.Payload.Name.Trim();
+        if (req.Payload is null)
+        {
+            res.AddError("price update body request: is null");
+            return res;
+        }
+
+        if (req.Payload.Name is not null)
+            req.Payload.Name = req.Payload.Name.Trim();
+
         if (req.Payload.QuantityRule <= 1)
         {
             res.AddError("Количество должно быть больше одного");

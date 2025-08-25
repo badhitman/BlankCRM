@@ -84,11 +84,11 @@ public partial class SettingsStockSharpComponent : BlazorBusyComponentBaseModel
         await Task.WhenAll([
             Task.Run(ReloadBoards),
             Task.Run(async () => {
-                TResponseModel<int[]> _readBoardsFilter = await StorageRepo.ReadParameterAsync<int[]>(GlobalStaticCloudStorageMetadata.BoardsDashboard);
+                TResponseModel<int[]?> _readBoardsFilter = await StorageRepo.ReadParameterAsync<int[]>(GlobalStaticCloudStorageMetadata.BoardsDashboard);
                 _selectedBoards = _readBoardsFilter.Response;
             }),
             Task.Run(async () => {
-                TResponseModel<MarkersInstrumentStockSharpEnum?[]> _readMarkersFilter = await StorageRepo.ReadParameterAsync<MarkersInstrumentStockSharpEnum?[]>(GlobalStaticCloudStorageMetadata.MarkersDashboard);
+                TResponseModel<MarkersInstrumentStockSharpEnum?[]?> _readMarkersFilter = await StorageRepo.ReadParameterAsync<MarkersInstrumentStockSharpEnum?[]>(GlobalStaticCloudStorageMetadata.MarkersDashboard);
                 _markersSelected = _readMarkersFilter.Response is null
                     ? []
                     : [.. _readMarkersFilter.Response];

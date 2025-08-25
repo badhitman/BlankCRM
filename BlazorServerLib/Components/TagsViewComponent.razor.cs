@@ -100,12 +100,12 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         if (res.TotalRowsCount > req.PageSize)
             SnackBarRepo.Error($"Записей больше: {res.TotalRowsCount}");
 
-        List<string> res_data = res.Response?.Where(x => TagsSets?.Any(y => y.TagName.Equals(x.TagName, StringComparison.OrdinalIgnoreCase)) != true).Select(x => x.TagName).ToList() ?? [];
+        List<string?> res_data = res.Response?.Where(x => TagsSets?.Any(y => y.TagName?.Equals(x.TagName, StringComparison.OrdinalIgnoreCase) == true) != true).Select(x => x.TagName).ToList() ?? [];
 
         if (!string.IsNullOrWhiteSpace(value) && !res_data.Contains(value))
             res_data.Add(value);
 
-        return res_data.DistinctBy(x => x.ToUpper());
+        return res_data.DistinctBy(x => x?.ToUpper());
     }
 
     async Task ReloadTags()
