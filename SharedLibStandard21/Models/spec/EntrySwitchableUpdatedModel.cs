@@ -12,7 +12,7 @@ namespace SharedLib;
 public class EntrySwitchableUpdatedModel : IdSwitchableModel
 {
     /// <inheritdoc/>
-    public virtual string Name { get; set; }
+    public virtual string? Name { get; set; }
 
     /// <summary>
     /// Дата последнего обновления
@@ -27,5 +27,5 @@ public class EntrySwitchableUpdatedModel : IdSwitchableModel
     /// <summary>
     /// Описание/примечание для объекта
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 }

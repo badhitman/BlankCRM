@@ -14,10 +14,10 @@ public class ExpressProfileResponseModel
     /// <summary>
     /// Имя в системе, закреплённое за токеном доступа
     /// </summary>
-    public string UserName { get; set; }
+    public string? UserName { get; set; }
 
     /// <summary>
     /// Роли доступные токену доступа
     /// </summary>
-    public IEnumerable<string> Roles { get; set; }
+    public IEnumerable<string>? Roles { get; set; }
 }

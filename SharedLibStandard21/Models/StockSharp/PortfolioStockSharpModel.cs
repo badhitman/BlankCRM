@@ -64,11 +64,22 @@ public partial class PortfolioStockSharpModel : IEquatable<PortfolioStockSharpMo
     /// <inheritdoc/>
     public bool Equals(PortfolioStockSharpModel other)
     {
+        static bool BoardEq(BoardStockSharpModel? l, BoardStockSharpModel? r)
+        {
+            if (l is null && r is null)
+                return true;
+
+            if (l is null || r is null)
+                return false;
+
+            return l.Equals(r);
+        }
+
         return
                 other.State == State &&
                 other.ClientCode == ClientCode &&
                 other.Name == Name &&
                 other.DepoName == DepoName &&
-                ((other.Board is null && Board is null) || other.Board?.Equals(Board) == true);
+                BoardEq(other.Board, Board);
     }
 }

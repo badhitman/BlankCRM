@@ -15,7 +15,7 @@ public class SelectRequestBaseModel
     /// IdentityUserId
     /// </summary>
     [Required]
-    public string[] IdentityUsersIds { get; set; }
+    public string[]? IdentityUsersIds { get; set; }
 
     /// <summary>
     /// ProjectId
@@ -25,5 +25,5 @@ public class SelectRequestBaseModel
     /// <summary>
     /// Строка поиска
     /// </summary>
-    public string SearchQuery { get; set; }
+    public string? SearchQuery { get; set; }
 }

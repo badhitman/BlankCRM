@@ -12,5 +12,5 @@ public class TAuthRequestModel<T> : TRequestModel<T>
     /// <summary>
     /// Пользователь, который отправил запрос (id Identity)
     /// </summary>
-    public string SenderActionUserId { get; set; }
+    public string? SenderActionUserId { get; set; }
 }

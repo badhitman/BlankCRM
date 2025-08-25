@@ -15,20 +15,20 @@ public class RequestStorageBaseModel
     /// <summary>
     /// Имя приложения, которое обращается к службе облачного хранения параметров
     /// </summary>
-    public string ApplicationName { get; set; }
+    public string? ApplicationName { get; set; }
 
 
     /// <summary>
     /// Имя
     /// </summary>
-    public string PropertyName { get; set; }
+    public string? PropertyName { get; set; }
 
     /// <summary>
     /// Normalize
     /// </summary>
     public virtual void Normalize()
     {
-        ApplicationName = ApplicationName
+        ApplicationName = ApplicationName?
             .Replace('\\', Path.DirectorySeparatorChar)
             .Replace('/', Path.DirectorySeparatorChar);
     }

@@ -14,7 +14,7 @@ public class ExchangeStockSharpModel : IEquatable<ExchangeStockSharpModel>
     /// <summary>
     /// Name
     /// </summary>
-    public virtual string Name { get; set; }
+    public virtual string? Name { get; set; }
 
     /// <summary>
     /// CountryCode

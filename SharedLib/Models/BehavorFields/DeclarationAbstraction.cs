@@ -50,7 +50,7 @@ public abstract class DeclarationAbstraction
             .SelectMany(s => s.GetTypes())
             .Where(p => _current_type.IsAssignableFrom(p) && _current_type != p && !p.IsAbstract && !p.IsInterface);
 
-            CommandEntryModel[] res = types.Select(x =>
+            CommandEntryModel[] res = [.. types.Select(x =>
             {
                 if (Activator.CreateInstance(x) is not T obj)
                     throw new Exception("error 919F8FF2-B902-4112-8680-67352F369F0C");
@@ -59,7 +59,7 @@ public abstract class DeclarationAbstraction
                     throw new Exception("error EF8D4F4A-F578-44C6-B78C-BA7685662938");
 
                 return new CommandEntryModel() { Id = x.Name, Name = _set.Name, Description = _set.About, AllowCallWithoutParameters = _set.AllowCallWithoutParameters };
-            }).ToArray();
+            })];
 
             _commands_cache.Add(type_name, res);
             return res;

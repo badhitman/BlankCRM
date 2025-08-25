@@ -12,5 +12,5 @@ public class TRequestModel<T>
     /// <summary>
     /// Request
     /// </summary>
-    public T Payload { get; set; }
+    public T? Payload { get; set; }
 }

@@ -144,8 +144,16 @@ public partial class CashFlowStockSharpComponent : BlazorBusyComponentBaseModel
     async Task ReloadFlows()
     {
         TResponseModel<List<CashFlowViewModel>> res = await StockSharpRepo.CashFlowList(InstrumentId);
-        Elements = res.Response;
-        Elements.Sort();
+
+        if (res.Response is null)
+        {
+            SnackBarRepo.Error("CashFlow`s list: IsNull");
+        }
+        else
+        {
+            Elements = res.Response;
+            Elements.Sort();
+        }
 
         if (_tableRef is not null)
             await _tableRef.ReloadServerData();

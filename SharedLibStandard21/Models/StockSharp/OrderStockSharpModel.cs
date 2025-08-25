@@ -59,7 +59,7 @@ public class OrderStockSharpModel
     /// <summary>
     /// Order state.
     /// </summary>
-    public OrderStatesEnum State { get; set; }
+    public OrderStatesEnum? State { get; set; }
 
     /// <summary>
     /// Portfolio, in which the order is being traded.

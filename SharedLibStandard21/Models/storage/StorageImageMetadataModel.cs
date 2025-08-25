@@ -12,25 +12,25 @@ public class StorageImageMetadataModel : StorageMetadataModel
     /// <summary>
     /// FileName
     /// </summary>
-    public string FileName { get; set; }
+    public string? FileName { get; set; }
 
     /// <summary>
     /// ContentType
     /// </summary>
-    public string ContentType { get; set; }
+    public string? ContentType { get; set; }
 
     /// <summary>
     /// Referer
     /// </summary>
-    public string Referrer { get; set; }
+    public string? Referrer { get; set; }
 
     /// <summary>
     /// Payload
     /// </summary>
-    public byte[] Payload { get; set; }
+    public byte[]? Payload { get; set; }
 
     /// <summary>
     /// AuthorUserIdentity
     /// </summary>
-    public string AuthorUserIdentity { get; set; }
+    public string? AuthorUserIdentity { get; set; }
 }

@@ -16,5 +16,5 @@ public class EntryDictModel : EntryModel
     /// Дополнительная полезная нагрузка ответа
     /// </summary>
     [NotMapped]
-    public Dictionary<string, object> Tag { get; set; }
+    public Dictionary<string, object>? Tag { get; set; }
 }

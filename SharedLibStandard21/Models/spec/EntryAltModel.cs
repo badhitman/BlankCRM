@@ -15,7 +15,7 @@ public class EntryAltModel
 {
     /// <inheritdoc/>
     [Key]
-    public  string? Id { get; set; }
+    public string Id { get; set; } = default!;
 
     /// <inheritdoc/>
     public  string? Name { get; set; }

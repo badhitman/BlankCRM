@@ -24,7 +24,7 @@ public class TResponseModel<T> : ResponseBaseModel
     /// <summary>
     /// Полезная нагрузка ответа
     /// </summary>
-    public T Response { get; set; }
+    public T? Response { get; set; }
 
     /// <inheritdoc/>
     public static TResponseModel<T> Build(ResponseBaseModel sender)

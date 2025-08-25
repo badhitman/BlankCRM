@@ -15,5 +15,5 @@ public class FilesAreaMetadataRequestModel
     /// <summary>
     /// ApplicationsNames - filter
     /// </summary>
-    public string[] ApplicationsNamesFilter { get; set; }
+    public string[]? ApplicationsNamesFilter { get; set; }
 }

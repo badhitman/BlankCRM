@@ -8,6 +8,7 @@ public partial interface IJournalUniversalService
     public static EnumFitModel EnumConvert(DirectoryConstructorModelDB dir, List<SystemNameEntryModel> systemNamesManufacture)
     {
         ArgumentNullException.ThrowIfNull(dir.Elements);
+        ArgumentNullException.ThrowIfNull(dir.Name);
         //
         return new EnumFitModel()
         {
@@ -18,8 +19,8 @@ public partial interface IJournalUniversalService
             {
                 return new SortableFitModel()
                 {
-                    SystemName = systemNamesManufacture.GetSystemName(e.Id, e.GetType().Name, null) ?? GlobalTools.TranslitToSystemName(e.Name),
-                    Name = e.Name,
+                    SystemName = systemNamesManufacture.GetSystemName(e.Id, e.GetType().Name, null) ?? GlobalTools.TranslitToSystemName(e.Name ?? ""),
+                    Name = e.Name ?? "",
                     SortIndex = e.SortIndex,
                     Description = e.Description,
                 };

@@ -78,8 +78,8 @@ public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseMode
     async Task RubricsForInstrument()
     {
         TResponseModel<List<UniversalBaseModel>> res = await SsRepo.GetRubricsForInstrumentAsync(Instrument.Id);
-        _selectedRubrics = [.. res.Response];
-        _selectedRubric = _selectedRubrics.FirstOrDefault();
+        _selectedRubrics = res.Response is null ? null : [.. res.Response];
+        _selectedRubric = _selectedRubrics?.FirstOrDefault();
     }
 
     /// <inheritdoc/>

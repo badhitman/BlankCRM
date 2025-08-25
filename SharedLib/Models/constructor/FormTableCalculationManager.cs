@@ -104,12 +104,21 @@ public class FormTableCalculationManager
         _page_join_form = page_join_form;
         _data.Clear();
 
+        //static bool namesEq(string? l, string? r)
+        //{
+        //    if(l is null && r is null)
+        //        return true;
+        //    if (l is null || r is null)
+        //        return false;
+        //    return l.Equals(r);
+        //}
+
         foreach (IGrouping<uint, ValueDataForSessionOfDocumentModelDB> sv in session_questionnairie.RowsData(page_join_form.Id)!)
         {
-            ValueDataForSessionOfDocumentModelDB? master_sv = sv.FirstOrDefault(x => x.Name.Equals(_selected_field.FieldName))
+            ValueDataForSessionOfDocumentModelDB? master_sv = sv.FirstOrDefault(x => x.Name?.Equals(_selected_field.FieldName) == true)
                 ?? ValueDataForSessionOfDocumentModelDB.Build(SetValueFieldDocumentDataModel.Build(_selected_field.ProjectVersionStamp, "", selected_field.FieldName, "<null>", sv.Key), page_join_form, session_questionnairie);
 
-            SetData(sv.Where(x => !x.Name.Equals(_selected_field.FieldName) && Query?.Any(y => y.Name.Equals(x.Name)) == true).ToArray(), master_sv);
+            SetData([.. sv.Where(x => !x.Name?.Equals(_selected_field.FieldName) == true && Query?.Any(y => (x.Name == null && y.Name == null) || (x.Name != null && x.Name.Equals(y.Name))) == true)], master_sv);
         }
     }
 
@@ -117,15 +126,15 @@ public class FormTableCalculationManager
     {
         string _pos = master_sv.Value ?? "";
         if (!_data.ContainsKey(_pos))
-            _data.Add(_pos, new());
+            _data.Add(_pos, []);
 
-        Dictionary<string, double> row = new();
+        Dictionary<string, double> row = [];
         foreach (ValueDataForSessionOfDocumentModelDB val in values)
         {
             if (string.IsNullOrWhiteSpace(val.Value))
-                row.Add(val.Name, 0.0);
+                row.Add(val.Name!, 0.0);
             else if (double.TryParse(val.Value, out double dv))
-                row.Add(val.Name, dv);
+                row.Add(val.Name!, dv);
             else
                 throw new Exception($"Не корректное значение '{val.Value}'. error 9BBBD859-5AF4-469C-863F-D99BA6FE6E6C");
         }

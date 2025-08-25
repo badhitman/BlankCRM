@@ -30,7 +30,7 @@ namespace SharedLib
             public const string System = "system";
 
             #region HelpDesk
-            static string[] _allHelpDeskRoles = null;
+            static string[]? _allHelpDeskRoles = null;
             /// <summary>
             /// Все роли HelpDesk
             /// </summary>
@@ -38,7 +38,7 @@ namespace SharedLib
             {
                 get
                 {
-                    _allHelpDeskRoles ??= new string[] { HelpDeskTelegramBotManager, HelpDeskTelegramBotUnit, HelpDeskTelegramBotRubricsManage, HelpDeskTelegramBotChatsManage };
+                    _allHelpDeskRoles ??= [HelpDeskTelegramBotManager, HelpDeskTelegramBotUnit, HelpDeskTelegramBotRubricsManage, HelpDeskTelegramBotChatsManage];
                     return _allHelpDeskRoles;
                 }
             }

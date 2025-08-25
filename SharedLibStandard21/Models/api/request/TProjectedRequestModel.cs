@@ -17,5 +17,5 @@ public class TProjectedRequestModel<T>
     /// <summary>
     /// T - Request
     /// </summary>
-    public T Request { get; set; }
+    public T? Request { get; set; }
 }

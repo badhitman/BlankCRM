@@ -22,7 +22,7 @@ public partial class NameValidAttribute : ValidationAttribute
         MyRegexPostfixCheck = new(@"[^_]$");
 
     /// <inheritdoc/>
-    public override bool IsValid(object value)
+    public override bool IsValid(object? value)
     {
         ErrorMessage = "Некорректное имя: первым и последним символом должна идти буква";
 
