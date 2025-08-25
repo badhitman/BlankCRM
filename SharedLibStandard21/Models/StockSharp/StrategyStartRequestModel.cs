@@ -10,5 +10,5 @@ namespace SharedLib;
 public class StrategyStartRequestModel
 {
     /// <inheritdoc/>
-    public PortfolioStockSharpModel SelectedPortfolio { get; set; }
+    public PortfolioStockSharpModel? SelectedPortfolio { get; set; }
 }

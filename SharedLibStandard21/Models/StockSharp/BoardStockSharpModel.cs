@@ -14,23 +14,37 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel>
     /// <summary>
     /// Code
     /// </summary>
-    public virtual string Code { get; set; }
+    public virtual string? Code { get; set; }
 
     /// <summary>
     /// Exchange
     /// </summary>
-    public virtual ExchangeStockSharpModel Exchange { get; set; }
+    public virtual ExchangeStockSharpModel? Exchange { get; set; }
 
     /// <summary>
     /// Exchange
     /// </summary>
-    public virtual ExchangeStockSharpModel GetExchange() => Exchange;
+    public virtual ExchangeStockSharpModel? GetExchange() => Exchange;
 
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        if (obj is not null && obj is BoardStockSharpModel other)
-            return Code == other.Code && Exchange?.Equals(other.Exchange) == true;
+        if (obj is null)
+            return false;
+
+        if (obj is BoardStockSharpModel other)
+        {
+            if (Code != other.Code)
+                return false;
+
+            if (Exchange is null && other.Exchange is null)
+                return true;
+
+            if (Exchange is null || other.Exchange is null)
+                return false;
+
+            return Exchange.Equals(other.Exchange);
+        }
 
         return false;
     }
@@ -41,7 +55,15 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel>
         if (other is null || Code != other.Code)
             return false;
 
-        return GetExchange().Equals(other.Exchange);
+        ExchangeStockSharpModel? _oe = GetExchange();
+
+        if (_oe is null && other.Exchange is null)
+            return true;
+
+        if (_oe is null || other.Exchange is null)
+            return false;
+
+        return _oe.Equals(other.Exchange);
     }
 
     /// <inheritdoc/>
@@ -62,10 +84,16 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel>
         if (left is null && right is null)
             return true;
 
-        if (left is null || right is null)
+        if (left is null || right is null || left.Code != right.Code)
             return false;
 
-        return left.Code == right.Code && left.Exchange == right.Exchange;
+        if (left.Exchange is null && right.Exchange is null)
+            return true;
+
+        if (left.Exchange is null || right.Exchange is null)
+            return false;
+
+        return left.Exchange.Equals(right.Exchange);
     }
 
     /// <inheritdoc/>
@@ -74,9 +102,16 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel>
         if (left is null && right is null)
             return false;
 
-        if (left is null || right is null)
+        if (left is null || right is null || left.Code != right.Code)
             return true;
 
-        return left.Code != right.Code || left.Exchange != right.Exchange;
+
+        if (left.Exchange is null && right.Exchange is null)
+            return false;
+
+        if (left.Exchange is null || right.Exchange is null)
+            return true;
+
+        return !left.Exchange.Equals(right.Exchange);
     }
 }

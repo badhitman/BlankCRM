@@ -15,5 +15,5 @@ public class RubricsListRequestModel : TProjectedRequestModel<int>
     /// <remarks>
     /// Рубрики HelpDesk имеют значение контекста NULL. А подсистема адресов (Регионы/Города) используют этот эту же службу с указанием на имя контекста: <see cref="GlobalStaticConstantsRoutes.Routes.ADDRESS_CONTROLLER_NAME"/> 
     /// </remarks>
-    public string ContextName { get; set; }
+    public string? ContextName { get; set; }
 }

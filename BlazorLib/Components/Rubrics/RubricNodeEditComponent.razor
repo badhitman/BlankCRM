@@ -153,7 +153,8 @@
     /// <inheritdoc/>
     protected override void OnAfterRender(bool firstRender)
     {
-        bool need_refresh = ItemModel != Item.Value;
+        bool need_refresh = !((ItemModel is null && Item.Value is null) || (!(ItemModel is null || Item.Value is null)));
+
         ItemModel = Item.Value;
         if (need_refresh)
             StateHasChanged();

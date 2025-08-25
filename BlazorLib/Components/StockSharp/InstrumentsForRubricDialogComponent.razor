@@ -46,7 +46,7 @@
                 </MudTd>
                 <MudTd DataLabel="ID">@context.IdRemote</MudTd>
                 <MudTd DataLabel="Board">@context.Board</MudTd>
-                <MudTd DataLabel="Currency">@((CurrenciesTypesEnum)context.Currency)</MudTd>
+                <MudTd DataLabel="Currency">@((CurrenciesTypesEnum?)context.Currency)</MudTd>
                 <MudTd DataLabel="Type">@((InstrumentsStockSharpTypesEnum)context.TypeInstrument)</MudTd>
             </RowTemplate>
             <PagerContent>

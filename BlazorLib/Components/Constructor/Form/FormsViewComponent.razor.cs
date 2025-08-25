@@ -2,9 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -73,13 +71,6 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
         if (table is not null)
             await table.ReloadServerData();
     }
-
-    ///// <inheritdoc/>
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    await RestJson();
-    //}
-
 
     TableState? _table_state;
     async Task RestJson()

@@ -15,7 +15,7 @@ public class StorageMetadataModel : RequestStorageBaseModel
     /// <summary>
     /// Префикс имени (опционально)
     /// </summary>
-    public string PrefixPropertyName { get; set; }
+    public string? PrefixPropertyName { get; set; }
 
     /// <summary>
     /// Связанный PK строки базы данных (опционально)

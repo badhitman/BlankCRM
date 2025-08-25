@@ -15,19 +15,19 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// <summary>
     /// Name
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <inheritdoc/>
-    public virtual BoardStockSharpModel Board { get; set; }
+    public virtual BoardStockSharpModel? Board { get; set; }
 
     /// <inheritdoc/>
-    public string IdRemote { get; set; }
+    public string? IdRemote { get; set; }
 
     /// <inheritdoc/>
-    public string Code { get; set; }
+    public string? Code { get; set; }
 
     /// <inheritdoc/>
-    public string ShortName { get; set; }
+    public string? ShortName { get; set; }
 
     /// <summary>
     /// TypeInstrument
@@ -128,7 +128,7 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// <summary>
     /// Identifier on primary exchange.
     /// </summary>
-    public string PrimaryId { get; set; }
+    public string? PrimaryId { get; set; }
 
     /// <summary>
     /// Underlying asset on which the current security is built.

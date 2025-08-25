@@ -12,10 +12,10 @@ public class SimplePaginationRequestModel : PaginationRequestModel
     /// <summary>
     /// Строка запроса
     /// </summary>
-    public string FindQuery { get; set; }
+    public string? FindQuery { get; set; }
 
     /// <inheritdoc/>
-    public static SimplePaginationRequestModel Build(string searchString, int pageSize, int page)
+    public static SimplePaginationRequestModel Build(string? searchString, int pageSize, int page)
     {
         return new()
         {

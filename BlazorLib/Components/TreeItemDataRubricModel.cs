@@ -47,29 +47,65 @@ public class TreeItemDataRubricModel : TreeItemData<UniversalBaseModel?>
 
     /// <inheritdoc/>
     public static bool operator ==(TreeItemDataRubricModel? e1, TreeItemDataRubricModel? e2)
-        => (e1 is null && e2 is null) || e1?.Value == e2?.Value;
+        => (e1 is null && e2 is null) || (e1 is not null && e2 is not null && e1.Equals(e2));
 
     /// <inheritdoc/>
     public static bool operator !=(TreeItemDataRubricModel? e1, TreeItemDataRubricModel? e2)
-        => e1?.Value != e2?.Value;
+    {
+        if (e2?.Value is null && e1?.Value is null)
+            return false;
+        if (e2?.Value is null || e1?.Value is null)
+            return true;
+
+        return e1.Value.Equals(e2.Value);
+    }
 
 
     /// <inheritdoc/>
     public static bool operator ==(TreeItemDataRubricModel? e1, TreeItemData<UniversalBaseModel?> e2)
-        => (e1 is null && e2 is null) || e1?.Value == e2?.Value;
+    {
+        if (e2.Value is null && e1?.Value is null)
+            return true;
+        if (e2.Value is null || e1?.Value is null)
+            return false;
+
+        return  e1.Value.Equals(e2.Value);
+    }
 
     /// <inheritdoc/>
     public static bool operator !=(TreeItemDataRubricModel? e1, TreeItemData<UniversalBaseModel?> e2)
-        => e1?.Value != e2?.Value;
+    {
+        if (e2.Value is null && e1?.Value is null)
+            return false;
+        if (e2.Value is null || e1?.Value is null)
+            return true;
+
+        return !e1.Value.Equals(e2.Value);
+    }
 
 
     /// <inheritdoc/>
     public static bool operator ==(TreeItemData<UniversalBaseModel?> e1, TreeItemDataRubricModel? e2)
-        => (e1 is null && e2 is null) || e1?.Value == e2?.Value;
+    {
+        if (e1.Value is null && e2?.Value is null)
+            return true;
+        if (e1.Value is null || e2?.Value is null)
+            return false;
+
+        return e1.Value.Equals(e2.Value);
+    }
 
     /// <inheritdoc/>
     public static bool operator !=(TreeItemData<UniversalBaseModel?> e2, TreeItemDataRubricModel? e1)
-        => e1?.Value != e2?.Value;
+    {
+        if(e2.Value is null && e1?.Value is null)
+            return true;
+        if (e2.Value is null || e1?.Value is null)
+            return false;
+
+
+        return e1.Value != e2.Value; ;
+    }
 
 
     /// <inheritdoc/>
@@ -79,9 +115,23 @@ public class TreeItemDataRubricModel : TreeItemData<UniversalBaseModel?>
             return false;
 
         if (obj is TreeItemDataRubricModel _e)
-            return Value == _e.Value;
+        {
+            if (_e.Value is null && Value is null)
+                return true;
+            if (_e.Value is null || Value is null)
+                return false;
+
+            return Value.Equals(_e.Value);
+        }
         else if (obj is TreeItemData<UniversalBaseModel?> _v)
-            return Value == _v.Value;
+        {
+            if (_v.Value is null && Value is null)
+                return true;
+            if (_v.Value is null || Value is null)
+                return false;
+
+            return Value.Equals(_v.Value);
+        }
 
         return base.Equals(obj);
     }

@@ -59,7 +59,7 @@ else
         </div>
         <div class="col-12">
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button @onclick="SaveAdapter" class="btn btn-primary" disabled="@((editAdapter.Equals(originAdapter) && editAdapter.Id > 0) || string.IsNullOrWhiteSpace(editAdapter.Address) || !GlobalToolsStandard.IsIpAddress(editAdapter.Address))">
+                <button @onclick="SaveAdapter" class="btn btn-primary" disabled="@(((originAdapter is null || editAdapter.Equals(originAdapter)) && editAdapter.Id > 0) || string.IsNullOrWhiteSpace(editAdapter.Address) || !GlobalToolsStandard.IsIpAddress(editAdapter.Address))">
                     @if (string.IsNullOrWhiteSpace(editAdapter.Address))
                     {
                         <text>Укажите IP адрес</text>

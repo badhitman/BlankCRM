@@ -13,5 +13,5 @@ public class RubricsInstrumentUpdateModel
     public int InstrumentId { get; set; }
 
     /// <inheritdoc/>
-    public int[] RubricsIds { get; set; }
+    public int[]? RubricsIds { get; set; }
 }

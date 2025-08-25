@@ -147,7 +147,7 @@ public static class Extensions
 
                 int _ix = MessagesHistory.Count - 1;
                 if (_ix == -1 || MessagesHistory[_ix].Message.TypeMessage != MessagesTypesEnum.Error || MessagesHistory[_ix].Message.Text != x.ErrorMessage)
-                    MessagesHistory.Add(new(new() { TypeMessage = MessagesTypesEnum.Error, Text = x.ErrorMessage }, [DateTime.UtcNow]));
+                    MessagesHistory.Add(new(new() { TypeMessage = MessagesTypesEnum.Error, Text = x.ErrorMessage ?? x.ToString() }, [DateTime.UtcNow]));
                 else
                     MessagesHistory[_ix].Points.Add(DateTime.UtcNow);
             });

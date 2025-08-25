@@ -12,20 +12,20 @@ public class LogsSelectRequestModel : PeriodDatesTimesModel
     /// <summary>
     /// LevelsFilter
     /// </summary>
-    public string[] LevelsFilter { get; set; }
+    public string[]? LevelsFilter { get; set; }
 
     /// <summary>
     /// ApplicationsFilter
     /// </summary>
-    public string[] ApplicationsFilter { get; set; }
+    public string[]? ApplicationsFilter { get; set; }
 
     /// <summary>
     /// ContextsPrefixesFilter
     /// </summary>
-    public string[] ContextsPrefixesFilter { get; set; }
+    public string[]? ContextsPrefixesFilter { get; set; }
 
     /// <summary>
     /// LoggersFilter
     /// </summary>
-    public string[] LoggersFilter { get; set; }
+    public string[]? LoggersFilter { get; set; }
 }

@@ -50,7 +50,7 @@ public interface IDataStockSharpService
     /// Получить инструменты по их идентификаторам
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
-    public Task<TResponseModel<List<InstrumentTradeStockSharpViewModel>>> GetInstrumentsAsync(int[] ids = null, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<List<InstrumentTradeStockSharpViewModel>>> GetInstrumentsAsync(int[]? ids = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// InstrumentsSelectAsync
@@ -89,13 +89,13 @@ public interface IDataStockSharpService
     /// Получить профили по их идентификаторам
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
-    public Task<TResponseModel<List<PortfolioStockSharpViewModel>>> GetPortfoliosAsync(int[] ids = null, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<List<PortfolioStockSharpViewModel>>> GetPortfoliosAsync(int[]? ids = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить площадки бирж по их идентификаторам
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
-    public Task<TResponseModel<List<BoardStockSharpViewModel>>> GetBoardsAsync(int[] ids = null, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<List<BoardStockSharpViewModel>>> GetBoardsAsync(int[]? ids = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Поиск Board`s, подходящие под запрос
@@ -106,11 +106,11 @@ public interface IDataStockSharpService
     /// Получить биржи по их идентификаторам
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
-    public Task<TResponseModel<List<ExchangeStockSharpModel>>> GetExchangesAsync(int[] ids = null, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<List<ExchangeStockSharpModel>>> GetExchangesAsync(int[]? ids = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить заказы по их идентификаторам
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
-    public Task<TResponseModel<List<OrderStockSharpModel>>> GetOrdersAsync(int[] ids = null, CancellationToken cancellationToken = default);
+    public Task<TResponseModel<List<OrderStockSharpModel>>> GetOrdersAsync(int[]? ids = null, CancellationToken cancellationToken = default);
 }

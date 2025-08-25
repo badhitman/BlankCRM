@@ -27,26 +27,26 @@ public class UserTelegramBaseModel
     /// User's or bot’s first name
     /// </summary>
     [JsonProperty(Required = Required.Always)]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
 
     /// <summary>
     /// Optional. User's or bot’s last name
     /// </summary>
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
 
     /// <summary>
     /// Optional. User's or bot’s username
     /// </summary>
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
 
     /// <summary>
     /// Optional. <a href="https://en.wikipedia.org/wiki/IETF_language_tag">IETF language tag</a> of the
     /// user's language
     /// </summary>
-    public string LanguageCode { get; set; }
+    public string? LanguageCode { get; set; }
 
     /// <summary>
     /// Optional. <see langword="true"/>, if this user is a Telegram Premium user

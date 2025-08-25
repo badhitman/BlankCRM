@@ -12,10 +12,10 @@ public class UniversalLayerModel : UniversalBaseModel
     /// <summary>
     /// Имя контекста для разделения различных селекторов независимо друг от друга
     /// </summary>
-    public string ContextName { get; set; }
+    public string? ContextName { get; set; }
 
     /// <summary>
     /// ToUpper
     /// </summary>
-    public string NormalizedNameUpper { get; set; }
+    public string? NormalizedNameUpper { get; set; }
 }

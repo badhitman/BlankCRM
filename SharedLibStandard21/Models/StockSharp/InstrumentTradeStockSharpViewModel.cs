@@ -26,17 +26,17 @@ public class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSharpModel
     public DateTime CreatedAtUTC { get; set; }
 
     /// <inheritdoc/>
-    public virtual List<MarkerInstrumentStockSharpViewModel> Markers { get; set; }
+    public virtual List<MarkerInstrumentStockSharpViewModel>? Markers { get; set; }
 
     /// <inheritdoc/>
-    public new BoardStockSharpViewModel Board { get; set; }
+    public new BoardStockSharpViewModel? Board { get; set; }
 
 
     #region manual properties
     /// <summary>
     /// ID in ISIN format (International Securities Identification Number).
     /// </summary>
-    public string ISIN { get; set; }
+    public string? ISIN { get; set; }
 
     /// <summary>
     /// <see cref="BondsTypesInstrumentsManualEnum"/>
@@ -61,7 +61,7 @@ public class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSharpModel
     public decimal LastFairPrice { get; set; }
 
     /// <inheritdoc/>
-    public string Comment { get; set; }
+    public string? Comment { get; set; }
     #endregion
 
 
