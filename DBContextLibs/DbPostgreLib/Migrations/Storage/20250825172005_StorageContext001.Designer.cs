@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Storage
 {
     [DbContext(typeof(StorageContext))]
-    [Migration("20250604032719_StorageContext001")]
+    [Migration("20250825172005_StorageContext001")]
     partial class StorageContext001
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace DbPostgreLib.Migrations.Storage
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
