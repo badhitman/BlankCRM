@@ -51,24 +51,6 @@
         <h5 class="card-title">Dashboard filters</h5>
         <MudGrid>
             <MudItem xs=12 md=6>
-                <MudSelect T="MarkersInstrumentStockSharpEnum?"
-                           Disabled="IsBusyProgress"
-                           Label="Marker`s filter dashboard"
-                           MultiSelectionTextFunc="@(new Func<List<string?>, string>(GetMultiSelectionText))"
-                           MultiSelection SelectAll Clearable Dense
-                           @bind-SelectedValues="MarkersSelected"
-                           Adornment="Adornment.Start"
-                           AdornmentIcon="@Icons.Material.Filled.Checklist"
-                           IconSize="Size.Small"
-                           Class="mt-3">
-                    <MudSelectItem T="MarkersInstrumentStockSharpEnum?" Value="null">~ not set ~</MudSelectItem>
-                    @foreach (MarkersInstrumentStockSharpEnum state in Enum.GetValues<MarkersInstrumentStockSharpEnum>().OrderBy(x => x.DescriptionInfo()))
-                    {
-                        <MudSelectItem T="MarkersInstrumentStockSharpEnum?" Value="@state">@state.DescriptionInfo()</MudSelectItem>
-                    }
-                </MudSelect>
-            </MudItem>
-            <MudItem xs=12 md=6>
                 <MudSelect T="BoardStockSharpViewModel"
                            Disabled="IsBusyProgress"
                            Label="Board`s filter dashboard"
@@ -83,6 +65,24 @@
                     @foreach (BoardStockSharpViewModel state in Boards)
                     {
                         <MudSelectItem T="BoardStockSharpViewModel" Value="@state">@state</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs=12 md=6>
+                <MudSelect T="MarkersInstrumentStockSharpEnum?"
+                           Disabled="IsBusyProgress"
+                           Label="Marker`s filter dashboard"
+                           MultiSelectionTextFunc="@(new Func<List<string?>, string>(GetMultiSelectionText))"
+                           MultiSelection SelectAll Clearable Dense
+                           @bind-SelectedValues="MarkersSelected"
+                           Adornment="Adornment.Start"
+                           AdornmentIcon="@Icons.Material.Filled.Checklist"
+                           IconSize="Size.Small"
+                           Class="mt-3">
+                    <MudSelectItem T="MarkersInstrumentStockSharpEnum?" Value="null">~ not set ~</MudSelectItem>
+                    @foreach (MarkersInstrumentStockSharpEnum state in Enum.GetValues<MarkersInstrumentStockSharpEnum>().OrderBy(x => x.DescriptionInfo()))
+                    {
+                        <MudSelectItem T="MarkersInstrumentStockSharpEnum?" Value="@state">@state.DescriptionInfo()</MudSelectItem>
                     }
                 </MudSelect>
             </MudItem>
