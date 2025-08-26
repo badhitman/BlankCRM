@@ -19,10 +19,20 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Issue Date" InputType="InputType.Date" @bind-Value="IssueDate" />
-        <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Maturity Date" InputType="InputType.Date" @bind-Value="MaturityDate" />
-        <MudNumericField @bind-Value="FromDaysValue" Label="FromDays" Variant="Variant.Text" />
-        <MudNumericField @bind-Value="NotionalFirstValue" Label="NotionalFirstValue" Variant="Variant.Outlined" />
+        <MudGrid>
+            <MudItem xs="12" md="6">
+                <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Issue Date" InputType="InputType.Date" @bind-Value="IssueDate" />
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Maturity Date" InputType="InputType.Date" @bind-Value="MaturityDate" />
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudNumericField @bind-Value="FromDaysValue" Label="FromDays" Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudNumericField @bind-Value="NotionalFirstValue" Label="NotionalFirstValue" Variant="Variant.Outlined" />
+            </MudItem>
+        </MudGrid>
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="Submit" Class="px-10" Disabled=_holdInstrumentGen>Generate</MudButton>
