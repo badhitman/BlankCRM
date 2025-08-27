@@ -72,9 +72,4 @@ public interface IDriverStockSharpService
     /// LimitsStrategiesUpdate
     /// </summary>
     public Task<ResponseBaseModel> LimitsStrategiesUpdate(LimitsStrategiesUpdateRequestModel req, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// OrderRegisterRequest
-    /// </summary>
-    public Task<OrderRegisterRequestResponseModel> OrderRegisterRequestAsync(OrderRegisterRequestModel req, CancellationToken cancellationToken = default);
 }
