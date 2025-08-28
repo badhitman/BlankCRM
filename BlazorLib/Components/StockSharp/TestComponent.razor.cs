@@ -96,9 +96,7 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
                         myBoards = resBoards.Response;
                     }
                     else
-                    {
                         myBoards = [SetInstrument.Board];
-                    }
                 }),
                 Task.Run(async () => {
                     if(SetInstrument is null)
@@ -107,18 +105,14 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
                         myInstruments = resInstruments.Response;
                     }
                     else
-                    {
                         myInstruments = [SetInstrument];
-                    }
                 }),
                 Task.Run(async () => {
                     TResponseModel<List<PortfolioStockSharpViewModel>> resPortfolios = await SsMainRepo.GetPortfoliosAsync();
                     SnackBarRepo.ShowMessagesResponse(resPortfolios.Messages);
                     myPortfolios = resPortfolios.Response;
                     if(myPortfolios is not null && myPortfolios.Count != 0)
-                    {
                         SelectedPortfolioId = myPortfolios.First().Id;
-                    }
                 }),
             ]);
 
