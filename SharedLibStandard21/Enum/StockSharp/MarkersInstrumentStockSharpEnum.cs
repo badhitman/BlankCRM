@@ -26,8 +26,14 @@ public enum MarkersInstrumentStockSharpEnum
     IsFavorite = 40,
 
     /// <summary>
+    /// IsSystem
+    /// </summary>
+    [Description("IsSystem")]
+    IsSystem = 50,
+
+    /// <summary>
     /// IsDisabled
     /// </summary>
     [Description("IsDisabled")]
-    IsDisabled = 50,
+    IsDisabled = 60,
 }

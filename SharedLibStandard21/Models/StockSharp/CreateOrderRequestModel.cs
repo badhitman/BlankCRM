@@ -20,7 +20,7 @@ public class CreateOrderRequestModel
     /// портфель для исполнения заявки
     /// </summary>
     [Required]
-    public PortfolioStockSharpModel? Portfolio { get; set; }
+    public int PortfolioId { get; set; }
 
     /// <summary>
     /// устанавливается объём заявки
@@ -36,7 +36,7 @@ public class CreateOrderRequestModel
     /// <summary>
     /// инструмент
     /// </summary>
-    public InstrumentTradeStockSharpViewModel? Instrument { get; set; }
+    public int InstrumentId { get; set; }
 
     /// <summary>
     /// направление заявки
@@ -47,16 +47,6 @@ public class CreateOrderRequestModel
     /// IsManual
     /// </summary>
     public bool? IsManual { get; set; }
-
-    /// <summary>
-    /// IsMarketMaker
-    /// </summary>
-    public bool? IsMarketMaker { get; set; }
-
-    /// <summary>
-    /// IsSystem
-    /// </summary>
-    public bool? IsSystem { get; set; }
 
     /// <summary>
     /// Comment
