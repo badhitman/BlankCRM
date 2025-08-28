@@ -115,6 +115,10 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
                     TResponseModel<List<PortfolioStockSharpViewModel>> resPortfolios = await SsMainRepo.GetPortfoliosAsync();
                     SnackBarRepo.ShowMessagesResponse(resPortfolios.Messages);
                     myPortfolios = resPortfolios.Response;
+                    if(myPortfolios is not null && myPortfolios.Count != 0)
+                    {
+                        SelectedPortfolioId = myPortfolios.First().Id;
+                    }
                 }),
             ]);
 
