@@ -39,13 +39,13 @@
         }
     </MudSelect>
 
-    <MudSelect T="PortfolioStockSharpModel" @bind-Value="SelectedPortfolio" Label="Портфель" Variant="Variant.Outlined">
+    <MudSelect T="int?" @bind-Value="SelectedPortfolioId" Label="Портфель" Variant="Variant.Outlined">
         @if (myPortfolios is not null && myPortfolios.Count() != 0)
         {
-            @foreach (PortfolioStockSharpModel p in myPortfolios)
+            @foreach (PortfolioStockSharpViewModel p in myPortfolios)
             {
-                <MudSelectItem T="PortfolioStockSharpModel" Value="p">
-                    @p
+                <MudSelectItem T="int" Value="p.Id">
+                    @p.ToString()
                 </MudSelectItem>
             }
         }
@@ -69,6 +69,6 @@
         </MudSelect>
         <MudNumericField @bind-Value="PriceNewOrder" Label="Цена" Variant="Variant.Outlined" Immediate />
         <MudNumericField @bind-Value="VolumeNewOrder" Label="Объём" Variant="Variant.Outlined" Immediate />
-        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="NewOrder" Disabled="@(PriceNewOrder <= 0 || SelectedPortfolio is null)" />
+        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="NewOrder" Disabled="@(PriceNewOrder <= 0 || SelectedPortfolioId is null)" />
     </MudStack>
 }
