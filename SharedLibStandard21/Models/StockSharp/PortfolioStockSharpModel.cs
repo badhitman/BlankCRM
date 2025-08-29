@@ -40,7 +40,7 @@ public partial class PortfolioStockSharpModel : IEquatable<PortfolioStockSharpMo
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{Name} /{Currency}{(Board is null ? null : $"[{Board}]")}";
+        return $"{Name}{(Board is null ? "" : $" '{Board.Code}'")}{(Currency is null ? "" : $" [{Currency}]")}";
     }
 
     /// <inheritdoc/>
