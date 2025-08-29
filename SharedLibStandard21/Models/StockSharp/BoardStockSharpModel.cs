@@ -73,10 +73,7 @@ public class BoardStockSharpModel : IEquatable<BoardStockSharpModel>
     }
 
     /// <inheritdoc/>
-    public override string ToString()
-    {
-        return $"{Code} ({Exchange})";
-    }
+    public override string ToString() => $"{Code}{(Exchange is null ? "!" : $" ({Exchange})")}";
 
     /// <inheritdoc/>
     public static bool operator ==(BoardStockSharpModel left, BoardStockSharpModel right)
