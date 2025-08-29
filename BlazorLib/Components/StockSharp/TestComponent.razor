@@ -11,18 +11,18 @@
 }
 
 <MudStack Row="true">
-    <MudSelect Disabled="@(SelectedPortfolioId == 0)" T="int?" @bind-Value="SelectedPortfolioId" Label="Портфель" Variant="Variant.Outlined">
+    <MudSelect Disabled="@(SelectedPortfolioId == 0)" T="int" @bind-Value="SelectedPortfolioId" Label="Портфель" Variant="Variant.Outlined">
         @if (myPortfolios is not null && myPortfolios.Count() != 0)
         {
             @foreach (PortfolioStockSharpViewModel p in myPortfolios)
             {
-                <MudSelectItem T="int?" Value="p.Id">
+                <MudSelectItem T="int" Value="p.Id">
                     @p.ToString()
                 </MudSelectItem>
             }
         }
     </MudSelect>
-    <MudSelect @bind-Value="orderTypeCreate" Label="Тип" Variant="Variant.Outlined">
+    <MudSelect @bind-Value="SelectedOrderType" Label="Тип" Variant="Variant.Outlined">
         @foreach (OrderTypesEnum margin in Enum.GetValues(typeof(OrderTypesEnum)).Cast<OrderTypesEnum>())
         {
             <MudSelectItem Value="margin">@margin</MudSelectItem>

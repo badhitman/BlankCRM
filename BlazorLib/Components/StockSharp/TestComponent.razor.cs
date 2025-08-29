@@ -13,10 +13,13 @@ namespace BlazorLib.Components.StockSharp;
 public partial class TestComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IDataStockSharpService SsMainRepo { get; set; } = default!;
+    IParametersStorageTransmission StorageRepo { get; set; } = default!;
 
     [Inject]
-    IDriverStockSharpService SsDrvRepo { get; set; } = default!;
+    IDataStockSharpService DataRepo { get; set; } = default!;
+
+    [Inject]
+    IDriverStockSharpService DriverRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -24,16 +27,34 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
     public required InstrumentTradeStockSharpViewModel SetInstrument { get; set; }
 
 
-    OrderTypesEnum orderTypeCreate = OrderTypesEnum.Market;
+    //OrderTypesEnum orderTypeCreate = OrderTypesEnum.Market;
+    OrderTypesEnum _selectedOrderType;
+    OrderTypesEnum SelectedOrderType
+    {
+        get => _selectedOrderType;
+        set
+        {
+            _selectedOrderType = value;
+            InvokeAsync(async () => { await StorageRepo.SaveParameterAsync(value, GlobalStaticCloudStorageMetadata.DashboardTradeOrderType, true); });
+        }
+    }
+
     SidesEnum orderSideCreate = SidesEnum.Buy;
 
     List<PortfolioStockSharpViewModel>? myPortfolios;
-    int? SelectedPortfolioId { get; set; }
+    int _selectedPortfolioId;
+    int SelectedPortfolioId
+    {
+        get => _selectedPortfolioId;
+        set
+        {
+            _selectedPortfolioId = value;
+            InvokeAsync(async () => { await StorageRepo.SaveParameterAsync(value, GlobalStaticCloudStorageMetadata.DashboardTradePortfolio, true); });
+        }
+    }
 
     decimal? PriceNewOrder { get; set; }
     decimal? VolumeNewOrder { get; set; }
-
-    List<InstrumentTradeStockSharpViewModel>? myInstruments;
 
     bool disposedValue;
 
@@ -44,22 +65,24 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
 
         await Task.WhenAll([
                 Task.Run(async () => {
-                    if(SetInstrument is null)
-                    {
-                        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> resInstruments = await SsMainRepo.InstrumentsSelectAsync(new() { PageSize = 100 });
-                        myInstruments = resInstruments.Response;
-                    }
-                    else
-                        myInstruments = [SetInstrument];
+                TResponseModel<int> tradePortfolio = await StorageRepo.ReadParameterAsync<int>(GlobalStaticCloudStorageMetadata.DashboardTradePortfolio);
+                if(tradePortfolio.Success() && tradePortfolio.Response != 0)
+                    _selectedPortfolioId = tradePortfolio.Response;
                 }),
                 Task.Run(async () => {
-                    TResponseModel<List<PortfolioStockSharpViewModel>> resPortfolios = await SsMainRepo.GetPortfoliosAsync();
+                    TResponseModel<OrderTypesEnum?> orderType = await StorageRepo.ReadParameterAsync<OrderTypesEnum?>(GlobalStaticCloudStorageMetadata.DashboardTradeOrderType);
+                    if(orderType.Success() && orderType.Response is not null)
+                        _selectedOrderType = orderType.Response.Value;
+                }),
+                Task.Run(async () => {
+                    TResponseModel<List<PortfolioStockSharpViewModel>> resPortfolios = await DataRepo.GetPortfoliosAsync();
                     SnackBarRepo.ShowMessagesResponse(resPortfolios.Messages);
                     myPortfolios = resPortfolios.Response;
-                    if(myPortfolios is not null && myPortfolios.Count != 0)
-                        SelectedPortfolioId = myPortfolios.First().Id;
                 }),
             ]);
+
+        if (_selectedPortfolioId == 0 && myPortfolios is not null && myPortfolios.Count != 0)
+            SelectedPortfolioId = myPortfolios.First().Id;
 
         await SetBusyAsync(false);
     }
@@ -88,13 +111,13 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
         CreateOrderRequestModel req = new()
         {
             InstrumentId = SetInstrument.Id,
-            OrderType = orderTypeCreate,
-            PortfolioId = SelectedPortfolioId is null ? 0 : SelectedPortfolioId.Value,
+            OrderType = SelectedOrderType,
+            PortfolioId = SelectedPortfolioId,
             Price = PriceNewOrder.Value,
             Side = orderSideCreate,
             Volume = VolumeNewOrder.Value,
         };
-        ResponseBaseModel res = await SsDrvRepo.OrderRegisterAsync(req);
+        ResponseBaseModel res = await DriverRepo.OrderRegisterAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
     }
