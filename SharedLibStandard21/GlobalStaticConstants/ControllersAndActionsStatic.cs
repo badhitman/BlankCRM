@@ -147,6 +147,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string ORDER_CONTROLLER_NAME = "order";
 
         /// <summary>
+        /// Settings
+        /// </summary>
+        public const string SETTINGS_ACTION_NAME = "settings";
+
+        /// <summary>
+        /// type
+        /// </summary>
+        public const string TYPE_CONTROLLER_NAME = "type";
+
+        /// <summary>
         /// Simple
         /// </summary>
         public const string SIMPLE_CONTROLLER_NAME = "simple";

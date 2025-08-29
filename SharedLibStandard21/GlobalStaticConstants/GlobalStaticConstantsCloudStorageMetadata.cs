@@ -13,6 +13,22 @@ namespace SharedLib;
 /// </summary>
 public static partial class GlobalStaticCloudStorageMetadata
 {
+    /// <inheritdoc/>
+    public static StorageMetadataModel DashboardTradeOrderType => new()
+    {
+        ApplicationName = Path.Combine(Routes.DASHBOARD_CONTROLLER_NAME, Routes.TRADE_CONTROLLER_NAME),
+        PropertyName = $"{Routes.SETTINGS_ACTION_NAME}-{Routes.DUMP_ACTION_NAME}",
+        PrefixPropertyName = Path.Combine(Routes.ORDER_CONTROLLER_NAME, Routes.TYPE_CONTROLLER_NAME),
+    };
+
+    /// <inheritdoc/>
+    public static StorageMetadataModel DashboardTradePortfolio => new()
+    {
+        ApplicationName = Path.Combine(Routes.DASHBOARD_CONTROLLER_NAME, Routes.TRADE_CONTROLLER_NAME),
+        PropertyName = $"{Routes.SETTINGS_ACTION_NAME}-{Routes.DUMP_ACTION_NAME}",
+        PrefixPropertyName = Routes.PORTFOLIO_CONTROLLER_NAME,
+    };
+
     /// <summary>
     /// HomePagePublic
     /// </summary>
