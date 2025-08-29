@@ -32,6 +32,7 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
 
     List<PortfolioStockSharpViewModel>? myPortfolios;
     int? SelectedPortfolioId { get; set; }
+
     decimal? PriceNewOrder { get; set; }
     decimal? VolumeNewOrder { get; set; }
 
@@ -43,7 +44,7 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
 
     async Task NewOrder()
     {
-        if (SelectedPortfolioId is null || SelectedPortfolioId <= 0)
+        if (SelectedPortfolioId <= 0)
         {
             SnackBarRepo.Error("Не выбран портфель");
             return;
@@ -72,7 +73,7 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
         {
             InstrumentId = SelectedInstrument.Id,
             OrderType = orderTypeCreate,
-            PortfolioId = SelectedPortfolioId.Value,
+            PortfolioId = SelectedPortfolioId is null ? 0 : SelectedPortfolioId.Value,
             Price = PriceNewOrder.Value,
             Side = orderSideCreate,
             Volume = VolumeNewOrder.Value,

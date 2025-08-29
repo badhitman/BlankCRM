@@ -44,7 +44,7 @@
         {
             @foreach (PortfolioStockSharpViewModel p in myPortfolios)
             {
-                <MudSelectItem T="int" Value="p.Id">
+                <MudSelectItem T="int?" Value="p.Id">
                     @p.ToString()
                 </MudSelectItem>
             }
@@ -69,6 +69,6 @@
         </MudSelect>
         <MudNumericField @bind-Value="PriceNewOrder" Label="Цена" Variant="Variant.Outlined" Immediate />
         <MudNumericField @bind-Value="VolumeNewOrder" Label="Объём" Variant="Variant.Outlined" Immediate />
-        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="NewOrder" Disabled="@(PriceNewOrder <= 0 || SelectedPortfolioId is null)" />
+        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="NewOrder" Disabled="@(PriceNewOrder <= 0)" />
     </MudStack>
 }
