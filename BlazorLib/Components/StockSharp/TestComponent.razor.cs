@@ -20,12 +20,9 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
 
 
     /// <inheritdoc/>
-    [Parameter]
-    public InstrumentTradeStockSharpViewModel? SetInstrument { get; set; }
+    [Parameter, EditorRequired]
+    public required InstrumentTradeStockSharpViewModel SetInstrument { get; set; }
 
-
-    List<BoardStockSharpViewModel>? myBoards;
-    BoardStockSharpModel? SelectedBoard { get; set; }
 
     OrderTypesEnum orderTypeCreate = OrderTypesEnum.Market;
     SidesEnum orderSideCreate = SidesEnum.Buy;
@@ -38,50 +35,7 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
 
     List<InstrumentTradeStockSharpViewModel>? myInstruments;
 
-    InstrumentTradeStockSharpViewModel? SelectedInstrument { get; set; }
-
     bool disposedValue;
-
-    async Task NewOrder()
-    {
-        if (SelectedPortfolioId <= 0)
-        {
-            SnackBarRepo.Error("Не выбран портфель");
-            return;
-        }
-
-        if (SelectedInstrument is null)
-        {
-            SnackBarRepo.Error("Не выбран инструмент");
-            return;
-        }
-
-        if (PriceNewOrder is null || PriceNewOrder <= 0)
-        {
-            SnackBarRepo.Error("Не указана стоимость");
-            return;
-        }
-
-        if (VolumeNewOrder is null || VolumeNewOrder <= 0)
-        {
-            SnackBarRepo.Error("Не указан объём");
-            return;
-        }
-
-        await SetBusyAsync();
-        CreateOrderRequestModel req = new()
-        {
-            InstrumentId = SelectedInstrument.Id,
-            OrderType = orderTypeCreate,
-            PortfolioId = SelectedPortfolioId is null ? 0 : SelectedPortfolioId.Value,
-            Price = PriceNewOrder.Value,
-            Side = orderSideCreate,
-            Volume = VolumeNewOrder.Value,
-        };
-        ResponseBaseModel res = await SsDrvRepo.OrderRegisterAsync(req);
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusyAsync(false);
-    }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -89,16 +43,6 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
 
         await Task.WhenAll([
-                Task.Run(async () => {
-                    if(SetInstrument is null)
-                    {
-                        TResponseModel<List<BoardStockSharpViewModel>> resBoards = await SsMainRepo.GetBoardsAsync();
-                        SnackBarRepo.ShowMessagesResponse(resBoards.Messages);
-                        myBoards = resBoards.Response;
-                    }
-                    else
-                        myBoards = [SetInstrument.Board];
-                }),
                 Task.Run(async () => {
                     if(SetInstrument is null)
                     {
@@ -117,12 +61,41 @@ public partial class TestComponent : BlazorBusyComponentBaseModel
                 }),
             ]);
 
-        if (SetInstrument is not null)
+        await SetBusyAsync(false);
+    }
+
+    async Task NewOrder()
+    {
+        if (SelectedPortfolioId <= 0)
         {
-            SelectedBoard = SetInstrument.Board;
-            SelectedInstrument = SetInstrument;
+            SnackBarRepo.Error("Не выбран портфель");
+            return;
         }
 
+        if (PriceNewOrder is null || PriceNewOrder <= 0)
+        {
+            SnackBarRepo.Error("Не указана стоимость");
+            return;
+        }
+
+        if (VolumeNewOrder is null || VolumeNewOrder <= 0)
+        {
+            SnackBarRepo.Error("Не указан объём");
+            return;
+        }
+
+        await SetBusyAsync();
+        CreateOrderRequestModel req = new()
+        {
+            InstrumentId = SetInstrument.Id,
+            OrderType = orderTypeCreate,
+            PortfolioId = SelectedPortfolioId is null ? 0 : SelectedPortfolioId.Value,
+            Price = PriceNewOrder.Value,
+            Side = orderSideCreate,
+            Volume = VolumeNewOrder.Value,
+        };
+        ResponseBaseModel res = await SsDrvRepo.OrderRegisterAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
     }
 
