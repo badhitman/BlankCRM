@@ -12,5 +12,5 @@ public class FindStorageBaseModel : RequestStorageBaseModel
     /// <summary>
     /// OwnersPrimaryKeys
     /// </summary>
-    public int?[]? OwnersPrimaryKeys { get; set; }
+    public int[]? OwnersPrimaryKeys { get; set; }
 }
