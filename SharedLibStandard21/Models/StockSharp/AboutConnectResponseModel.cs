@@ -6,6 +6,14 @@ using System;
 
 namespace SharedLib;
 
+/*
+ string?
+        ProgramDataPath,
+        ClientCodeStockSharp,
+        SecurityCriteriaCodeFilter,
+        BoardCriteriaCodeFilter;
+ */
+
 /// <summary>
 /// AboutConnectResponseModel
 /// </summary>
@@ -30,7 +38,7 @@ public class AboutConnectResponseModel : ResponseBaseModel
     public decimal HighLimit { get; set; }
 
     /// <inheritdoc/>
-    public string? SecurityCriteriaCodeFilterStockSharp { get; set; }
+    public string? SecurityCriteriaCodeFilter { get; set; }
 
     /// <inheritdoc/>
     public string? ClientCode { get; set; }
@@ -57,7 +65,7 @@ public class AboutConnectResponseModel : ResponseBaseModel
         StrategyStarted = req.StrategyStarted;
         LowLimit = req.LowLimit;
         HighLimit = req.HighLimit;
-        SecurityCriteriaCodeFilterStockSharp = req.SecurityCriteriaCodeFilterStockSharp;
+        SecurityCriteriaCodeFilter = req.SecurityCriteriaCodeFilter;
         ClientCode = req.ClientCode;
         ProgramPath = req.ProgramPath;
         Messages = req.Messages;
