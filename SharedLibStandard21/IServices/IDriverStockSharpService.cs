@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SharedLib;
 
 /// <summary>
-/// Драйвер StockSharp (NET6)
+/// Driver StockSharp (NET6)
 /// </summary>
 public interface IDriverStockSharpService
 {
@@ -48,7 +48,7 @@ public interface IDriverStockSharpService
     public Task<ResponseSimpleModel> InitialLoad(InitialLoadRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Strategy Start
+    /// Start strategy
     /// </summary>
     public Task<ResponseBaseModel> StartStrategy(StrategyStartRequestModel req, CancellationToken cancellationToken = default);
 
@@ -63,7 +63,7 @@ public interface IDriverStockSharpService
     public Task<ResponseBaseModel> ResetAllStrategies(ResetStrategyRequestBaseModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Strategy Stop
+    /// Stop strategy
     /// </summary>
     public Task<ResponseBaseModel> StopStrategy(StrategyStopRequestModel req, CancellationToken cancellationToken = default);
 
