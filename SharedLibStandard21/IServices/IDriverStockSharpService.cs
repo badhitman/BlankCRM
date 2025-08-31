@@ -69,7 +69,7 @@ public interface IDriverStockSharpService
     public Task<ResponseBaseModel> ShiftCurve(ShiftCurveRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// LimitsStrategiesUpdate
+    /// Group adjustment of limits for trade strategy <code>LowLimit</code> <code>HighLimit</code>
     /// </summary>
     public Task<ResponseBaseModel> LimitsStrategiesUpdate(LimitsStrategiesUpdateRequestModel req, CancellationToken cancellationToken = default);
 }
