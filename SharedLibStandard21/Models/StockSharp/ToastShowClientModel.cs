@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <summary>
-/// ToastModel
+/// Toast notify for client`s
 /// </summary>
 public class ToastShowClientModel
 {

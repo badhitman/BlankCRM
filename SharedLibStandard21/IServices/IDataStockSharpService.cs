@@ -58,7 +58,7 @@ public interface IDataStockSharpService
     public Task<TPaginationResponseModel<InstrumentTradeStockSharpViewModel>> InstrumentsSelectAsync(InstrumentsRequestModel req, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// 
+    /// Read instruments for dashboard ready
     /// </summary>
     public Task<TResponseModel<List<InstrumentTradeStockSharpViewModel>>> ReadTradeInstrumentsAsync(CancellationToken cancellationToken = default);
     #endregion
@@ -86,7 +86,7 @@ public interface IDataStockSharpService
     #endregion
 
     /// <summary>
-    /// Получить профили по их идентификаторам
+    /// Get portfolios by id`s
     /// </summary>
     /// <returns>Если идентификаторы не установлены, тогда возвращаются все</returns>
     public Task<TResponseModel<List<PortfolioStockSharpViewModel>>> GetPortfoliosAsync(int[]? ids = null, CancellationToken cancellationToken = default);

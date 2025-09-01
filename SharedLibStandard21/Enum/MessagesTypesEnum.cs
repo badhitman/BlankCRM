@@ -7,31 +7,31 @@ using System.ComponentModel;
 namespace SharedLib;
 
 /// <summary>
-/// Типы сообщений результат выполнения запроса
+/// Types messages
 /// </summary>
 public enum MessagesTypesEnum
 {
     /// <summary>
-    /// Ошибка
+    /// Error
     /// </summary>
-    [Description("Ошибка")]
+    [Description("Error")]
     Error = -1,
 
     /// <summary>
-    /// Сообщение об успешном выполнении команды
+    /// Success
     /// </summary>
-    [Description("Успешно")]
+    [Description("Success")]
     Success = 0,
 
     /// <summary>
-    /// Информационное сообщение
+    /// Info
     /// </summary>
-    [Description("Информация")]
+    [Description("Info")]
     Info = 2,
 
     /// <summary>
-    /// Важное сообщение
+    /// Warning
     /// </summary>
-    [Description("Важно")]
+    [Description("Warning")]
     Warning = 3
 }
