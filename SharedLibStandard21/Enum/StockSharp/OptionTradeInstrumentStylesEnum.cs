@@ -11,10 +11,6 @@ namespace SharedLib;
 /// </summary>
 public enum OptionTradeInstrumentStylesEnum
 {
-    /// <inheritdoc/>
-    [Description("None")]
-    None,
-
     /// <summary>
     /// European
     /// </summary>

@@ -41,12 +41,12 @@ public class InstrumentTradeStockSharpViewModel : InstrumentTradeStockSharpModel
     /// <summary>
     /// <see cref="BondsTypesInstrumentsManualEnum"/>
     /// </summary>
-    public int BondTypeInstrumentManual { get; set; }
+    public BondsTypesInstrumentsManualEnum BondTypeInstrumentManual { get; set; }
 
     /// <summary>
     /// <see cref="TypesInstrumentsManualEnum"/>
     /// </summary>
-    public int TypeInstrumentManual { get; set; }
+    public TypesInstrumentsManualEnum TypeInstrumentManual { get; set; }
 
     /// <inheritdoc/>
     public DateTime IssueDate { get; set; }

@@ -11,10 +11,6 @@ namespace SharedLib;
 /// </summary>
 public enum OptionInstrumentTradeTypesEnum
 {
-    /// <inheritdoc/>
-    [Description("None")]
-    None,
-
     /// <summary>
     /// Call.
     /// </summary>

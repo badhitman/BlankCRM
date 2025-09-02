@@ -11,10 +11,6 @@ namespace SharedLib;
 /// </summary>
 public enum SettlementTypesEnum
 {
-    /// <inheritdoc/>
-    [Description("None")]
-    None,
-
     /// <summary>
     /// Delivery.
     /// </summary>

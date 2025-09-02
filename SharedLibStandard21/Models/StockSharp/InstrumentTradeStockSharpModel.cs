@@ -39,7 +39,7 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// Gdr, Spread, Loan, MultiLeg, Etf, CryptoCurrency, Adr, Fund, Weather, News, Cfd,
     /// Commodity, Forward, Warrant, Bond, Currency, Index, Option, Future, Stock
     /// </remarks>
-    public int TypeInstrument { get; set; }
+    public InstrumentsStockSharpTypesEnum? TypeInstrument { get; set; }
 
     /// <summary>
     /// Underlying security type .
@@ -49,12 +49,12 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// Gdr, Spread, Loan, MultiLeg, Etf, CryptoCurrency, Adr, Fund, Weather, News, Cfd,
     /// Commodity, Forward, Warrant, Bond, Currency, Index, Option, Future, Stock
     /// </remarks>
-    public int UnderlyingSecurityType { get; set; }
+    public InstrumentsStockSharpTypesEnum? UnderlyingSecurityType { get; set; }
 
     /// <summary>
     /// <see cref="CurrenciesTypesEnum"/>
     /// </summary>
-    public int? Currency { get; set; }
+    public CurrenciesTypesEnum? Currency { get; set; }
 
     /// <summary>
     /// Security class.
@@ -117,7 +117,7 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// <remarks>
     /// <see cref="SettlementTypesEnum"/>: Delivery, Cash
     /// </remarks>
-    public int SettlementType { get; set; }
+    public SettlementTypesEnum? SettlementType { get; set; }
 
     /// <summary>
     /// OptionStyle
@@ -125,7 +125,7 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// <remarks>
     /// <see cref="OptionTradeInstrumentStylesEnum"/>: European, American, Exotic
     /// </remarks>
-    public int OptionStyle { get; set; }
+    public OptionTradeInstrumentStylesEnum? OptionStyle { get; set; }
 
     /// <summary>
     /// Identifier on primary exchange.
@@ -143,7 +143,7 @@ public partial class InstrumentTradeStockSharpModel : IEquatable<InstrumentTrade
     /// <remarks>
     /// <see cref="OptionInstrumentTradeTypesEnum"/>: Call, Put
     /// </remarks>
-    public int OptionType { get; set; }
+    public OptionInstrumentTradeTypesEnum? OptionType { get; set; }
 
     /// <summary>
     /// Can have short positions.

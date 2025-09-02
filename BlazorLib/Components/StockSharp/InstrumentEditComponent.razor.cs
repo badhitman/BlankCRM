@@ -98,8 +98,8 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
         Name != Instrument.Name ||
         IssueDate != Instrument.IssueDate ||
         MaturityDate != Instrument.MaturityDate ||
-        BondTypeManual != (BondsTypesInstrumentsManualEnum)Instrument.BondTypeInstrumentManual ||
-        TypeInstrumentManual != (TypesInstrumentsManualEnum)Instrument.TypeInstrumentManual ||
+        BondTypeManual != Instrument.BondTypeInstrumentManual ||
+        TypeInstrumentManual != Instrument.TypeInstrumentManual ||
         ISIN != Instrument.ISIN ||
         CouponRate != Instrument.CouponRate ||
         LastFairPrice != Instrument.LastFairPrice ||
@@ -110,8 +110,8 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         Instrument.IssueDate = IssueDate ?? default;
         Instrument.MaturityDate = MaturityDate ?? default;
-        Instrument.BondTypeInstrumentManual = (int)BondTypeManual;
-        Instrument.TypeInstrumentManual = (int)TypeInstrumentManual;
+        Instrument.BondTypeInstrumentManual = BondTypeManual;
+        Instrument.TypeInstrumentManual = TypeInstrumentManual;
         Instrument.ISIN = ISIN;
         Instrument.CouponRate = CouponRate;
         Instrument.LastFairPrice = LastFairPrice;
