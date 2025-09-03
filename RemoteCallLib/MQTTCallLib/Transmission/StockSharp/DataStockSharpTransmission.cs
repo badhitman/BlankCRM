@@ -65,12 +65,12 @@ public partial class DataStockSharpTransmission(IMQTTClient mqClient) : IDataSto
 
     #region board`s
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<BoardStockSharpViewModel>>> GetBoardsAsync(int[]? req = null, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<List<BoardStockSharpViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetBoardsStockSharpReceive, req, token: cancellationToken) ?? new();
+    public async Task<TResponseModel<List<BoardStockSharpMetaModel>>> GetBoardsAsync(int[]? req = null, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<TResponseModel<List<BoardStockSharpMetaModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetBoardsStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<BoardStockSharpViewModel>>> FindBoardsAsync(BoardStockSharpModel req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<TResponseModel<List<BoardStockSharpViewModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.FindBoardsStockSharpReceive, req, token: cancellationToken) ?? new();
+    public async Task<TResponseModel<List<BoardStockSharpMetaModel>>> FindBoardsAsync(BoardStockSharpModel req, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<TResponseModel<List<BoardStockSharpMetaModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.FindBoardsStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<ExchangeStockSharpModel>>> GetExchangesAsync(int[]? req = null, CancellationToken cancellationToken = default)

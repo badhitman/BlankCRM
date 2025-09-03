@@ -87,12 +87,4 @@ public interface IDriverStockSharpService
     /// Group adjustment of limits for trade strategy <code>LowLimit</code> <code>HighLimit</code>
     /// </summary>
     public Task<ResponseBaseModel> LimitsStrategiesUpdate(LimitsStrategiesUpdateRequestModel req, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Read/Restore strategy data for instruments
-    /// </summary>
-    /// <remarks>
-    /// Stored settings dashboard
-    /// </remarks>
-    public Task<List<DashboardTradeStockSharpModel>> ReadDashboard(int[] instrumentsIds, CancellationToken cancellationToken = default);
 }

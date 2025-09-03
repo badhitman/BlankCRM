@@ -62,8 +62,4 @@ public partial class DriverStockSharpTransmission(IMQTTClient mqClient) : IDrive
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ResetAllStrategies(ResetStrategyRequestBaseModel req, CancellationToken cancellationToken = default)
         => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ResetAllStrategiesStockSharpDriverReceive, req, token: cancellationToken) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<List<DashboardTradeStockSharpModel>> ReadDashboard(int[] instrumentsIds, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<List<DashboardTradeStockSharpModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.ReadDashboardStrategiesStockSharpDriverReceive, instrumentsIds, token: cancellationToken) ?? new();
 }

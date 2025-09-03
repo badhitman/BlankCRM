@@ -22,10 +22,10 @@ public partial class SettingsStockSharpComponent : BlazorBusyComponentBaseModel
     IDriverStockSharpService DriverRepo { get; set; } = default!;
 
 
-    readonly List<BoardStockSharpViewModel> Boards = [];
+    readonly List<BoardStockSharpMetaModel> Boards = [];
 
     IEnumerable<int>? _selectedBoards;
-    IEnumerable<BoardStockSharpViewModel> SelectedBoards
+    IEnumerable<BoardStockSharpMetaModel> SelectedBoards
     {
         get
         {
@@ -58,7 +58,7 @@ public partial class SettingsStockSharpComponent : BlazorBusyComponentBaseModel
 
     async Task ReloadAllBoards()
     {
-        TResponseModel<List<BoardStockSharpViewModel>> boardsRes = await SsRepo.GetBoardsAsync();
+        TResponseModel<List<BoardStockSharpMetaModel>> boardsRes = await SsRepo.GetBoardsAsync();
 
         lock (Boards)
         {

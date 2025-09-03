@@ -11,7 +11,7 @@ namespace SharedLib;
 /// <summary>
 /// FIX message adapter.
 /// </summary>
-public partial class FixMessageAdapterModelDB : IBaseStockSharpModel
+public partial class FixMessageAdapterModelDB
 {
     /// <summary>
     /// Id

@@ -51,7 +51,7 @@
         <h5 class="card-title">Dashboard filters</h5>
         <MudGrid>
             <MudItem xs=12 md=6>
-                <MudSelect T="BoardStockSharpViewModel"
+                <MudSelect T="BoardStockSharpMetaModel"
                            Disabled="IsBusyProgress"
                            Label="Board`s filter dashboard"
                            MultiSelection
@@ -62,9 +62,12 @@
                            Clearable
                            Dense
                            Class="mt-3">
-                    @foreach (BoardStockSharpViewModel state in Boards)
+                    @foreach (BoardStockSharpMetaModel state in Boards)
                     {
-                        <MudSelectItem T="BoardStockSharpViewModel" Value="@state">@state</MudSelectItem>
+                        <MudSelectItem T="BoardStockSharpMetaModel" Value="@state">
+                            @state
+                            @($"[x{@state.TotalCount} /♫{@state.ActualCount}]")
+                        </MudSelectItem>
                     }
                 </MudSelect>
             </MudItem>
