@@ -37,7 +37,7 @@
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
-        Elements = SnackBarRepo.GetHistoryToasts();
+        Elements = SnackBarRepo.GetHistoryToasts().OrderByDescending(x => x.DateTimeRecord);
     }
 
     private bool FilterFunc1(ToastViewClientModel element) => FilterFunc(element, searchString1);
