@@ -15,8 +15,8 @@ namespace RemoteCallLib;
 public partial class DriverStockSharpTransmission(IMQTTClient mqClient) : IDriverStockSharpService
 {
     /// <inheritdoc/>
-    public async Task<AboutConnectResponseModel> AboutConnection(CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<AboutConnectResponseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.AboutConnectStockSharpReceive, token: cancellationToken) ?? new();
+    public async Task<AboutConnectResponseModel> AboutConnection(AboutConnectionRequestModel? req = default, CancellationToken cancellationToken = default)
+        => await mqClient.MqRemoteCallAsync<AboutConnectResponseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.AboutConnectStockSharpReceive, req, token: cancellationToken) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> Connect(ConnectRequestModel req, CancellationToken cancellationToken = default)

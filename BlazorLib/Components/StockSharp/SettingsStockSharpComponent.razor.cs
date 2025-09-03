@@ -18,6 +18,9 @@ public partial class SettingsStockSharpComponent : BlazorBusyComponentBaseModel
     [Inject]
     IDataStockSharpService SsRepo { get; set; } = default!;
 
+    [Inject]
+    IDriverStockSharpService DriverRepo { get; set; } = default!;
+
 
     readonly List<BoardStockSharpViewModel> Boards = [];
 
@@ -34,7 +37,11 @@ public partial class SettingsStockSharpComponent : BlazorBusyComponentBaseModel
         set
         {
             _selectedBoards = value.Select(x => x.Id);
-            InvokeAsync(SaveParameters);
+            InvokeAsync(async () =>
+            {
+                await StorageRepo.SaveParameterAsync(_selectedBoards.ToArray(), GlobalStaticCloudStorageMetadata.BoardsDashboard, true);
+                await DriverRepo.AboutConnection(new() { EchoStatus = true });
+            });
         }
     }
 
@@ -45,11 +52,11 @@ public partial class SettingsStockSharpComponent : BlazorBusyComponentBaseModel
         set
         {
             _markersSelected = value;
-            InvokeAsync(SaveParameters);
+            InvokeAsync(async () => await StorageRepo.SaveParameterAsync(_markersSelected.ToArray(), GlobalStaticCloudStorageMetadata.MarkersDashboard, true));
         }
     }
 
-    async Task ReloadBoards()
+    async Task ReloadAllBoards()
     {
         TResponseModel<List<BoardStockSharpViewModel>> boardsRes = await SsRepo.GetBoardsAsync();
 
@@ -59,15 +66,6 @@ public partial class SettingsStockSharpComponent : BlazorBusyComponentBaseModel
             if (boardsRes.Response is not null)
                 Boards.AddRange(boardsRes.Response);
         }
-    }
-
-    async Task SaveParameters()
-    {
-        if (_markersSelected is not null)
-            await StorageRepo.SaveParameterAsync(_markersSelected.ToArray(), GlobalStaticCloudStorageMetadata.MarkersDashboard, true);
-
-        if (_selectedBoards is not null)
-            await StorageRepo.SaveParameterAsync(_selectedBoards.ToArray(), GlobalStaticCloudStorageMetadata.BoardsDashboard, true);
     }
 
     static string GetMultiSelectionText(List<string?> selectedValues)
@@ -82,7 +80,7 @@ public partial class SettingsStockSharpComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
 
         await Task.WhenAll([
-            Task.Run(ReloadBoards),
+            Task.Run(ReloadAllBoards),
             Task.Run(async () => {
                 TResponseModel<int[]?> _readBoardsFilter = await StorageRepo.ReadParameterAsync<int[]>(GlobalStaticCloudStorageMetadata.BoardsDashboard);
                 _selectedBoards = _readBoardsFilter.Response;
