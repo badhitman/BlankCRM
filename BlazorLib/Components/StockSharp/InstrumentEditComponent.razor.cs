@@ -78,8 +78,8 @@ public partial class InstrumentEditComponent : BlazorBusyComponentBaseModel
     {
         IssueDate = Instrument.IssueDate;
         MaturityDate = Instrument.MaturityDate;
-        BondTypeManual = (BondsTypesInstrumentsManualEnum)Instrument.BondTypeInstrumentManual;
-        TypeInstrumentManual = (TypesInstrumentsManualEnum)Instrument.TypeInstrumentManual;
+        BondTypeManual = Instrument.BondTypeInstrumentManual;
+        TypeInstrumentManual = Instrument.TypeInstrumentManual;
         ISIN = Instrument.ISIN;
         CouponRate = Instrument.CouponRate;
         LastFairPrice = Instrument.LastFairPrice;
