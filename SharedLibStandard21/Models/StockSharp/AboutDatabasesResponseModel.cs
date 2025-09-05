@@ -14,4 +14,10 @@ public class AboutDatabasesResponseModel
     
     /// <inheritdoc/>
     public string? PropertiesDatabase { get; set; }
+
+    /// <inheritdoc/>
+    public string? TelegramBotDatabase { get; set; }
+
+    /// <inheritdoc/>
+    public string? NLogDatabase { get; set; }
 }

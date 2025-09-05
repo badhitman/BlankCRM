@@ -17,6 +17,15 @@ namespace SharedLib;
 public static partial class GlobalStaticConstants
 {
     /// <summary>
+    /// NullValueHandling = NullValueHandling.Ignore, ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+    /// </summary>
+    public static JsonSerializerSettings JsonSerializerSettings
+        => new() { NullValueHandling = NullValueHandling.Ignore, ReferenceLoopHandling = ReferenceLoopHandling.Ignore, Formatting = Formatting.Indented };
+
+    // public static readonly JsonSerializerOptions SerializerOptions = new() { ReferenceHandler = ReferenceHandler.IgnoreCycles, WriteIndented = true };
+
+
+    /// <summary>
     /// yyyy-MM-dd HH:mm
     /// </summary>
     public const string _DT_FORMAT = "yyyy-MM-dd HH:mm";
@@ -41,14 +50,6 @@ public static partial class GlobalStaticConstants
     /// /lib/tinymce/tinymce.min.js
     /// </summary>
     public static readonly string TinyMCEditorScriptSrc = "/lib/tinymce/tinymce.min.js";
-
-    /// <summary>
-    /// NullValueHandling = NullValueHandling.Ignore, ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-    /// </summary>
-    public static JsonSerializerSettings JsonSerializerSettings
-        => new() { NullValueHandling = NullValueHandling.Ignore, ReferenceLoopHandling = ReferenceLoopHandling.Ignore, Formatting = Formatting.Indented };
-
-    // public static readonly JsonSerializerOptions SerializerOptions = new() { ReferenceHandler = ReferenceHandler.IgnoreCycles, WriteIndented = true };
 
     /// <summary>
     /// Русская (ru-RU) CultureInfo

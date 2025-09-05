@@ -1,6 +1,11 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 @using BlazorLib.Components.ParametersShared
 
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+
 <TextareaParameterStorageComponent Label="(LOOKUP) Instrument`s code-filter"
                                    HelperText="Securities lookup criteria by security-code"
                                    KeyStorage="GlobalStaticCloudStorageMetadata.SecuritiesCriteriaCodeFilterStockSharp" />
