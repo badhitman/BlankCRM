@@ -382,7 +382,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 }
                 else
                 {
-                    Message[] senders_msgs = await _botClient.SendMediaGroup(chatId: message.UserTelegramId, media: message.Files.Select(ToolsStatic.ConvertFile).ToArray(), replyParameters: message.ReplyToMessageId, cancellationToken: token);
+                    Message[] senders_msgs = await _botClient.SendMediaGroup(chatId: message.UserTelegramId, media: [.. message.Files.Select(ToolsStatic.ConvertFile)], replyParameters: message.ReplyToMessageId, cancellationToken: token);
 
                     foreach (Message mm in senders_msgs)
                     {
