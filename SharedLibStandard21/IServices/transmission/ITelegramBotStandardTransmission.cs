@@ -12,12 +12,12 @@ namespace SharedLib;
 /// </summary>
 public interface ITelegramBotStandardTransmission : ITelegramBotStandardService
 {
-  
+  /*
      /// <summary>
     /// ChatsFindForUserTelegram
     /// </summary>
     public Task<List<ChatTelegramModelDB>> ChatsFindForUserTelegramAsync(long[] req, CancellationToken token = default);
-  /*
+  
     /// <summary>
     /// ChatsReadTelegram
     /// </summary>
