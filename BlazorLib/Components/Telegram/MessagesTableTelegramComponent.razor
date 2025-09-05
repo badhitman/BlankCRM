@@ -1,0 +1,26 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Messages</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Text</MudTh>
+        <MudTh>Caption</MudTh>
+        <MudTh>Signature</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Text">@context.Text</MudTd>
+        <MudTd DataLabel="Caption">@context.Caption</MudTd>
+        <MudTd DataLabel="Signature">@context.AuthorSignature</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
