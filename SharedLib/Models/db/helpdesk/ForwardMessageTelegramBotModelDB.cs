@@ -13,6 +13,7 @@ namespace SharedLib;
 [Index(nameof(ResultMessageTelegramId))]
 [Index(nameof(ResultMessageId))]
 [Index(nameof(CreatedAtUtc))]
+[Index(nameof(DestinationChatId), nameof(SourceChatId), nameof(SourceMessageId))]
 public class ForwardMessageTelegramBotModelDB : ForwardMessageTelegramBotModel
 {
     /// <summary>

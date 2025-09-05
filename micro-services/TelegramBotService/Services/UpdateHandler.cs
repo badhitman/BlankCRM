@@ -345,10 +345,7 @@ public class UpdateHandler(
             {
                 try
                 {
-                    await botClient.DeleteMessage(
-                                                    chatId: chatId,
-                                                    messageId: uc.MainTelegramMessageId.Value,
-                                                    cancellationToken: cancellationToken);
+                    await botClient.DeleteMessage(chatId: chatId, messageId: uc.MainTelegramMessageId.Value, cancellationToken: cancellationToken);
                     logger.LogDebug($"[Основное сообщение #{uc.MainTelegramMessageId.Value}] Telegram бота для {uc} удалено (сервис обработки входящих сообщений запросил удаление).", cancellationToken);
                     upd_main_msg_res = await identityRepo
                 .UpdateTelegramMainUserMessageAsync(new() { MessageId = 0, UserId = uc.TelegramId }, cancellationToken);

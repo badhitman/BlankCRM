@@ -2,14 +2,13 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
 /// <summary>
 /// Пересылка сообщения
 /// </summary>
-[Index(nameof(DestinationChatId), nameof(SourceChatId), nameof(SourceMessageId))]
 public class ForwardMessageTelegramBotModel
 {
     /// <summary>
@@ -18,7 +17,7 @@ public class ForwardMessageTelegramBotModel
     /// <remarks>
     /// В этот чат будет отправлено сообщение
     /// </remarks>
-    public required long DestinationChatId { get; set; }
+    public long DestinationChatId { get; set; }
 
     /// <summary>
     /// Чат источник (Telegram id)
@@ -26,7 +25,7 @@ public class ForwardMessageTelegramBotModel
     /// <remarks>
     /// Исходный чат, из которого происходит пересылка сообщения
     /// </remarks>
-    public required long SourceChatId { get; set; }
+    public long SourceChatId { get; set; }
 
     /// <summary>
     /// Пересылаемое сообщение (Telegram id)
@@ -34,5 +33,5 @@ public class ForwardMessageTelegramBotModel
     /// <remarks>
     /// Исходное сообщение, которое пересылается
     /// </remarks>
-    public required int SourceMessageId { get; set; }
+    public int SourceMessageId { get; set; }
 }
