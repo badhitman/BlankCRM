@@ -26,7 +26,7 @@ public interface ITelegramBotStandardTransmission : ITelegramBotStandardService
     /// <summary>
     /// ChatsSelectTelegram
     /// </summary>
-    public Task<TPaginationResponseModel<ChatTelegramViewModel>> ChatsSelectTelegramAsync(TPaginationRequestModel<string?> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<ChatTelegramViewModel>> ChatsSelectTelegramAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default);
 
     /// <summary>
     /// ChatTelegramRead
@@ -46,5 +46,5 @@ public interface ITelegramBotStandardTransmission : ITelegramBotStandardService
     /// <summary>
     /// MessagesSelectTelegram
     /// </summary>
-    public Task<TPaginationResponseModel<MessageTelegramViewModel>> MessagesSelectTelegramAsync(TPaginationRequestModel<SearchMessagesChatModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<MessageTelegramViewModel>> MessagesSelectTelegramAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default);
 }

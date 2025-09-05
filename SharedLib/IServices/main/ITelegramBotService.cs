@@ -22,7 +22,7 @@ public interface ITelegramBotService : ITelegramBotStandardService
     /// <summary>
     /// ChatsSelectTelegram
     /// </summary>
-    public Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectTelegramAsync(TPaginationRequestModel<string?> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectTelegramAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default);
 
     /// <summary>
     /// ChatTelegramRead
@@ -32,7 +32,7 @@ public interface ITelegramBotService : ITelegramBotStandardService
     /// <summary>
     /// ErrorsForChatsSelectTelegram
     /// </summary>
-    public Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestModel<long[]> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestStandardModel<long[]> req, CancellationToken token = default);
 
     /// <summary>
     /// ForwardMessageTelegram
@@ -47,5 +47,5 @@ public interface ITelegramBotService : ITelegramBotStandardService
     /// <summary>
     /// MessagesSelectTelegram
     /// </summary>
-    public Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesSelectTelegramAsync(TPaginationRequestModel<SearchMessagesChatModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesSelectTelegramAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default);
 }

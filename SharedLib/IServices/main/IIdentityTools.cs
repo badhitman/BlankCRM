@@ -124,7 +124,7 @@ public interface IIdentityTools
     /// <summary>
     /// SelectUsersOfIdentity
     /// </summary>
-    public Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestModel<SimpleBaseRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Получить пользователей из Identity по их идентификаторам

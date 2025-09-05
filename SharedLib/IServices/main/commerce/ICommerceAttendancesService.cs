@@ -53,7 +53,7 @@ public partial interface ICommerceService
     /// <summary>
     /// Подбор недельных расписаний
     /// </summary>
-    public Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Прочитать недельные расписания (по идентификаторам)
@@ -68,7 +68,7 @@ public partial interface ICommerceService
     /// <summary>
     /// Подбор расписаний для дат
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarSchedulesSelectAsync(TAuthRequestModel<TPaginationRequestModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarSchedulesSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// Расписания для дат прочитать по их иддентификаторам

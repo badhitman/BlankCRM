@@ -28,7 +28,7 @@ public interface IHelpDeskTransmission
     /// <summary>
     /// Подобрать статьи 
     /// </summary>
-    public Task<TPaginationResponseModel<ArticleModelDB>> ArticlesSelectAsync(TPaginationRequestModel<SelectArticlesRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<ArticleModelDB>> ArticlesSelectAsync(TPaginationRequestStandardModel<SelectArticlesRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Создать (обновить) статью
@@ -40,7 +40,7 @@ public interface IHelpDeskTransmission
     /// <summary>
     /// Получить обращения для пользователя
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// Создать обращение
@@ -80,12 +80,12 @@ public interface IHelpDeskTransmission
     /// <summary>
     /// Журнал событий в обращении
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseSelectJournalAsync(TAuthRequestModel<TPaginationRequestModel<UserIssueModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseSelectJournalAsync(TAuthRequestModel<TPaginationRequestStandardModel<UserIssueModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// Получить обращения
     /// </summary>
-    public Task<TPaginationResponseModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestModel<ConsoleIssuesRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default);
     #endregion
 
     #region message

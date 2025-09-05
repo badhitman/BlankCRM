@@ -47,12 +47,12 @@ public interface IHelpDeskService
     /// <summary>
     /// IssuesSelect
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// ConsoleIssuesSelect
     /// </summary>
-    public Task<TPaginationResponseModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestModel<ConsoleIssuesRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Subscribe update - of context user
@@ -84,7 +84,7 @@ public interface IHelpDeskService
     /// <summary>
     /// PulseJournalSelect
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseJournalSelectAsync(TAuthRequestModel<TPaginationRequestModel<UserIssueModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseJournalSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<UserIssueModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// Регистрация события из обращения (логи).

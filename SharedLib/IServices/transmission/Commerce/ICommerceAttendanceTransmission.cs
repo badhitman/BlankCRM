@@ -52,7 +52,7 @@ public partial interface ICommerceTransmission
     /// <summary>
     /// WorkSchedulesSelect select
     /// </summary>
-    public Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// WorkSchedulesRead read
@@ -67,7 +67,7 @@ public partial interface ICommerceTransmission
     /// <summary>
     /// WorkScheduleCalendarsSelect
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarsSchedulesSelectAsync(TAuthRequestModel<TPaginationRequestModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarsSchedulesSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// WorkScheduleCalendarsRead

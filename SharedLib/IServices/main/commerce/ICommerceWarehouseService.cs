@@ -27,7 +27,7 @@ public partial interface ICommerceService
     /// <summary>
     /// WarehouseDocuments select
     /// </summary>
-    public Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// WarehouseDocuments read
@@ -37,5 +37,5 @@ public partial interface ICommerceService
     /// <summary>
     /// Registers select
     /// </summary>
-    public Task<TPaginationResponseModel<OfferAvailabilityModelDB>> RegistersSelectAsync(TPaginationRequestModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<OfferAvailabilityModelDB>> RegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default);
 }

@@ -22,7 +22,7 @@ public interface IArticlesService
     /// <summary>
     /// Подбор статей
     /// </summary>
-    public Task<TPaginationResponseModel<ArticleModelDB>> ArticlesSelectAsync(TPaginationRequestModel<SelectArticlesRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<ArticleModelDB>> ArticlesSelectAsync(TPaginationRequestStandardModel<SelectArticlesRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Получить статьи

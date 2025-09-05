@@ -43,7 +43,7 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
         if (goods.Length == 0 && offers.Length == 0)
             return;
 
-        TPaginationRequestModel<RegistersSelectRequestBaseModel> reqData = new()
+        TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> reqData = new()
         {
             Payload = new()
             {

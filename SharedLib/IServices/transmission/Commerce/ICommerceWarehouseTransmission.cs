@@ -9,7 +9,7 @@ public partial interface ICommerceTransmission
     /// <summary>
     /// Получить остатки
     /// </summary>
-    public Task<TPaginationResponseModel<OfferAvailabilityModelDB>> OffersRegistersSelectAsync(TPaginationRequestModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<OfferAvailabilityModelDB>> OffersRegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Удалить строку складского документа
@@ -34,5 +34,5 @@ public partial interface ICommerceTransmission
     /// <summary>
     /// Подбор складских документов (поиск по параметрам)
     /// </summary>
-    public Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehousesSelectAsync(TPaginationRequestModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehousesSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);
 }

@@ -42,12 +42,12 @@ public interface ITelegramTransmission
     /// <summary>
     /// ChatsSelect
     /// </summary>
-    public Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectAsync(TPaginationRequestModel<string?> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default);
 
     /// <summary>
     /// Получить ошибки отправок сообщений (для чатов)
     /// </summary>
-    public Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestModel<long[]?> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestStandardModel<long[]?> req, CancellationToken token = default);
 
     /// <summary>
     /// Установить WebConfig. От web части отправляется значение при загрузке браузера
@@ -72,7 +72,7 @@ public interface ITelegramTransmission
     /// <summary>
     /// Получить сообщения чата Telegram
     /// </summary>
-    public Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesTelegramSelectAsync(TPaginationRequestModel<SearchMessagesChatModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesTelegramSelectAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Получить данные файла

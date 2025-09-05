@@ -47,7 +47,7 @@ public partial interface ICommerceService
     /// <summary>
     /// OffersSelect
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestModel<TPaginationRequestModel<OffersSelectRequestModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// OffersRead
@@ -66,7 +66,7 @@ public partial interface ICommerceService
     /// <summary>
     /// NomenclaturesSelect
     /// </summary>
-    public Task<TPaginationResponseModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// NomenclaturesRead
@@ -109,7 +109,7 @@ public partial interface ICommerceService
     /// <summary>
     /// Orders select
     /// </summary>
-    public Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestModel<OrdersSelectRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// Orders read

@@ -35,7 +35,7 @@ public interface IStorageTransmission
     /// <summary>
     /// Files select
     /// </summary>
-    public Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// ReadFile

@@ -229,7 +229,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
     /// </summary>
     private async Task<TableData<NLogRecordModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        TPaginationRequestModel<LogsSelectRequestModel> req = new()
+        TPaginationRequestStandardModel<LogsSelectRequestModel> req = new()
         {
             Payload = new()
             {

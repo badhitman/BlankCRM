@@ -57,6 +57,6 @@ public interface IParametersStorageTransmission
     /// <summary>
     /// TagsSelect
     /// </summary>
-    public Task<TPaginationResponseModel<TagViewModel>> TagsSelectAsync(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<TagViewModel>> TagsSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default);
     #endregion
 }
