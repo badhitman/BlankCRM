@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SharedLib;
@@ -12,31 +13,25 @@ namespace SharedLib;
 /// </summary>
 public interface ITelegramBotStandardTransmission : ITelegramBotStandardService
 {
-  /*
-     /// <summary>
+    /// <summary>
     /// ChatsFindForUserTelegram
     /// </summary>
-    public Task<List<ChatTelegramModelDB>> ChatsFindForUserTelegramAsync(long[] req, CancellationToken token = default);
-  
+    public Task<List<ChatTelegramViewModel>> ChatsFindForUserTelegramAsync(long[] req, CancellationToken token = default);
+
     /// <summary>
     /// ChatsReadTelegram
     /// </summary>
-    public Task<List<ChatTelegramModelDB>> ChatsReadTelegramAsync(long[] req, CancellationToken token = default);
+    public Task<List<ChatTelegramViewModel>> ChatsReadTelegramAsync(long[] req, CancellationToken token = default);
 
     /// <summary>
     /// ChatsSelectTelegram
     /// </summary>
-    public Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectTelegramAsync(TPaginationRequestModel<string?> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<ChatTelegramViewModel>> ChatsSelectTelegramAsync(TPaginationRequestModel<string?> req, CancellationToken token = default);
 
     /// <summary>
     /// ChatTelegramRead
     /// </summary>
-    public Task<ChatTelegramModelDB> ChatTelegramReadAsync(int chatId, CancellationToken token = default);
-
-    /// <summary>
-    /// ErrorsForChatsSelectTelegram
-    /// </summary>
-    public Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestModel<long[]> req, CancellationToken token = default);
+    public Task<ChatTelegramViewModel> ChatTelegramReadAsync(int chatId, CancellationToken token = default);
 
     /// <summary>
     /// ForwardMessageTelegram
@@ -51,6 +46,5 @@ public interface ITelegramBotStandardTransmission : ITelegramBotStandardService
     /// <summary>
     /// MessagesSelectTelegram
     /// </summary>
-    public Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesSelectTelegramAsync(TPaginationRequestModel<SearchMessagesChatModel> req, CancellationToken token = default);
-     */
+    public Task<TPaginationResponseModel<MessageTelegramViewModel>> MessagesSelectTelegramAsync(TPaginationRequestModel<SearchMessagesChatModel> req, CancellationToken token = default);
 }
