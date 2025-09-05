@@ -58,6 +58,7 @@ public class UserTelegramBaseModel
     /// </summary>
     public bool? AddedToAttachmentMenu { get; set; }
 
+
     /// <summary>
     /// GetName
     /// </summary>
