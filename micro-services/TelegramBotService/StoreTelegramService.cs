@@ -45,6 +45,7 @@ public class StoreTelegramService(IDbContextFactory<TelegramBotContext> tgDbFact
 
                 Username = chat.Username,
                 NormalizedUsernameUpper = chat.Username?.ToUpper(),
+                LastUpdateUtc = DateTime.UtcNow,
             };
 
             await context.AddAsync(chat_db);
@@ -103,6 +104,7 @@ public class StoreTelegramService(IDbContextFactory<TelegramBotContext> tgDbFact
 
                 AddedToAttachmentMenu = user.AddedToAttachmentMenu,
                 LanguageCode = user.LanguageCode,
+                LastUpdateUtc = DateTime.UtcNow,
             };
             await context.AddAsync(user_db);
         }
