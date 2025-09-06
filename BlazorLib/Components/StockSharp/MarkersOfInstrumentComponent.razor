@@ -10,7 +10,7 @@
 }
 else
 {
-    <MudSelect Disabled="IsBusyProgress" T="MarkersInstrumentStockSharpEnum" MultiSelection="true" @bind-SelectedValues="SelectedOptions" AdornmentColor="@(SelectedOptions is null || !SelectedOptions.Any() ? Color.Default: Color.Secondary)" AdornmentIcon="@(SelectedOptions is null || !SelectedOptions.Any() ? Icons.Material.Filled.ArrowDropDown : Icons.Material.Filled.AutoAwesome)">
+    <MudSelect Disabled="IsBusyProgress" T="MarkersInstrumentStockSharpEnum" MultiSelection @bind-SelectedValues="SelectedOptions" AdornmentColor="@(SelectedOptions is null || !SelectedOptions.Any() ? Color.Default: Color.Secondary)" AdornmentIcon="@(SelectedOptions is null || !SelectedOptions.Any() ? Icons.Material.Filled.ArrowDropDown : Icons.Material.Filled.AutoAwesome)">
         @foreach (MarkersInstrumentStockSharpEnum state in AllMarkers)
         {
             <MudSelectItem Disabled="IsBusyProgress" T="MarkersInstrumentStockSharpEnum" Value="state">@state</MudSelectItem>

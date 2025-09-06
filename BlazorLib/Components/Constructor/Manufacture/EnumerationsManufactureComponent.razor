@@ -5,7 +5,7 @@
         <h5 class="card-title">Справочники</h5>
         <h6 class="card-subtitle mb-2 text-body-secondary">перечисления/списки</h6>
 
-        <MudTreeView @ref="TreeView_ref" Items="@TreeItems" Hover="true">
+        <MudTreeView @ref="TreeView_ref" Items="@TreeItems" Hover>
             <ItemTemplate Context="item">
                 <MudTreeViewItem Items="@item.Children" Icon="@item.Icon" IconColor="@(item.Icon!.Equals(icon_directory) ? Color.Default : Color.Info)">
                     <BodyContent>

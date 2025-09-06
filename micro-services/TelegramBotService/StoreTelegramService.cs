@@ -191,6 +191,7 @@ public class StoreTelegramService(IDbContextFactory<TelegramBotContext> tgDbFact
 
                 AuthorSignature = message.AuthorSignature,
                 MediaGroupId = message.MediaGroupId,
+                CreatedAtUtc = DateTime.UtcNow,
             };
 
             if (message.Photo is not null && message.Photo.Length != 0)

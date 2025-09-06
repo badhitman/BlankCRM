@@ -7,10 +7,10 @@
 
 @if (IsBusyProgress)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
 }
 
-<MudStack Row="true">
+<MudStack Row>
     <MudSelect Disabled="@(SelectedPortfolioId == 0)" T="int" @bind-Value="SelectedPortfolioId" Label="Портфель" Variant="Variant.Outlined">
         @if (myPortfolios is not null && myPortfolios.Count() != 0)
         {

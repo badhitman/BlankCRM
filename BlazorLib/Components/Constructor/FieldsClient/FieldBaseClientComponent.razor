@@ -107,10 +107,10 @@
         }
         break;
     case TypesFieldsFormsEnum.Int:
-        <MudNumericField ReadOnly="@(SessionDocument is null)" Required="@Field.Required" @bind-Value="IntFieldValue" Placeholder="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")?.ToString())" Class="mb-3" Label="@Field.Name" HelperText="@Field.Hint" Variant="Variant.Text" Min="0" HideSpinButtons="true" />
+        <MudNumericField ReadOnly="@(SessionDocument is null)" Required="@Field.Required" @bind-Value="IntFieldValue" Placeholder="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")?.ToString())" Class="mb-3" Label="@Field.Name" HelperText="@Field.Hint" Variant="Variant.Text" Min="0" HideSpinButtons />
         break;
     case TypesFieldsFormsEnum.Double:
-        <MudNumericField ReadOnly="@(SessionDocument is null)" Required="@Field.Required" @bind-Value="DoubleFieldValue" Placeholder="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")?.ToString())" Class="mb-3" Label="@Field.Name" HelperText="@Field.Hint" Variant="Variant.Filled" Min="0.0" HideSpinButtons="true" />
+        <MudNumericField ReadOnly="@(SessionDocument is null)" Required="@Field.Required" @bind-Value="DoubleFieldValue" Placeholder="@(Field.GetMetadataValue(MetadataExtensionsFormFieldsEnum.Placeholder, "")?.ToString())" Class="mb-3" Label="@Field.Name" HelperText="@Field.Hint" Variant="Variant.Filled" Min="0.0" HideSpinButtons />
         break;
     case TypesFieldsFormsEnum.Bool:
         <MudCheckBox ReadOnly="@(SessionDocument is null)" Required="@Field.Required" Class="mb-3" @bind-Value="@BoolFieldValue" Label="@Field.Name"></MudCheckBox>

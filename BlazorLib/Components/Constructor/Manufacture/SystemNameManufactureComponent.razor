@@ -1,7 +1,7 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
 <div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%" class="@(ItemModel.IsDisabled ? "text-decoration-line-through opacity-25": "")">
-    <MudStack Row="true">
+    <MudStack Row>
         @if (string.IsNullOrWhiteSpace(ItemModel.Tooltip))
         {
             <span class="font-monospace">@Item.Text</span>

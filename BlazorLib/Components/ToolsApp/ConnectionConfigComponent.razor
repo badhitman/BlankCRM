@@ -7,11 +7,11 @@
 
 @if (IsBusyProgress)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
     <span @onclick="() => cancelTokenSource.Cancel()">Отменить</span>
 }
 
-<MudExpansionPanel Class="mb-2" @ref="ExpFormRef" Text="@($"{Name} {AddressBaseUri}".Trim())" Expanded="true">
+<MudExpansionPanel Class="mb-2" @ref="ExpFormRef" Text="@($"{Name} {AddressBaseUri}".Trim())" Expanded>
     <TitleContent>
         <div class="d-flex">
             @{

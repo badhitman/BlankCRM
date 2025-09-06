@@ -36,7 +36,7 @@
 
 @if (IsBusyProgress)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
 }
 else if (MainProject is null)
 {
@@ -47,7 +47,7 @@ else if (MainProject is null)
     </div>
 }
 
-<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="true" ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-4">
+<MudTabs Outlined Position="Position.Left" Rounded Border ApplyEffectsToContainer Class="mt-8" PanelClass="pa-4">
     <CascadingValue Value="this">
         <MudTabPanel Disabled="IsBusyProgress" Text="Проекты">
             <ProjectsListComponent />

@@ -17,7 +17,7 @@
 
         @if (IsBusyProgress && CurrentRegion is null)
         {
-            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="mb-2" />
+            <MudProgressLinear Color="Color.Primary" Indeterminate Class="mb-2" />
         }
         @if (SelectionProgressSteps.Count != 0)
         {
@@ -59,7 +59,7 @@
             }
             else if (!hideTable)
             {
-                <MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress">
+                <MudTable ServerData="ServerReload" Dense Hover Loading="IsBusyProgress">
                     <ToolBarContent>
                         <span class="font-monospace">@(IsBusyProgress ? "Запрос обрабатывается" : (partData is null || partData.Count == 0 ? "ни чего не найдено" : "Выберете из перечня, пожалуйста"))</span>
                     </ToolBarContent>

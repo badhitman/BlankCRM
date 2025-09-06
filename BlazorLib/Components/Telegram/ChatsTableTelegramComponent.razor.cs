@@ -16,6 +16,14 @@ public partial class ChatsTableTelegramComponent : BlazorBusyComponentBaseModel
     [Inject]
     ITelegramBotStandardTransmission TelegramRepo { get; set; } = default!;
 
+    MudTable<ChatTelegramViewModel>? tableRef;
+
+    async Task ReloadTableData()
+    {
+        if(tableRef is not null)
+            await tableRef.ReloadServerData();
+    }
+
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server, with a token for canceling this request
     /// </summary>

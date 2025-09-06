@@ -113,7 +113,7 @@
     {
         <div class="card mb-2">
             <div class="card-body">
-                <MudTable Items="@forDelete.OrderBy(x => x.ScopeName)" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<ToolsFilesResponseModel,bool>(FilterFunc1)">
+                <MudTable Items="@forDelete.OrderBy(x => x.ScopeName)" Dense Hover Bordered Striped Filter="new Func<ToolsFilesResponseModel,bool>(FilterFunc1)">
                     <ToolBarContent>
                         <MudText Typo="Typo.h6">Удаление файлов (@forDelete.Length шт. @GlobalToolsStandard.SizeDataAsString(forDelete.Sum(x => x.Size))):</MudText>
                         <MudSpacer />
@@ -146,7 +146,7 @@
     {
         <div class="card mb-2">
             <div class="card-body">
-                <MudTable Items="@forUpdateOrAdd.OrderBy(x => x.ScopeName)" Dense="true" Hover="true" Bordered="true" Striped="true" Filter="new Func<ToolsFilesResponseModel,bool>(FilterFunc1)">
+                <MudTable Items="@forUpdateOrAdd.OrderBy(x => x.ScopeName)" Dense Hover Bordered Striped Filter="new Func<ToolsFilesResponseModel,bool>(FilterFunc1)">
                     <ToolBarContent>
                         <MudText Typo="Typo.h6">
                             Изменения файлов

@@ -1,8 +1,11 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
-<MudTable ServerData="ServerReload" Dense="true" Hover="true">
+<MudTable ServerData="ServerReload" Dense Hover @ref=tableRef>
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Chats</MudText>
+        <MudText Typo="Typo.h6">
+            Chats
+            <sup @onclick=ReloadTableData title="click for reload/update" class="bi bi-arrow-clockwise text-primary-emphasis" style="cursor:pointer;"></sup>
+        </MudText>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Title</MudTh>

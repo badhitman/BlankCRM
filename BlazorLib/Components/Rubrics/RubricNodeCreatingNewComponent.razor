@@ -5,7 +5,7 @@
 @inherits BlazorBusyComponentBaseModel
 
 <div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%" class="@(ItemModel?.IsDisabled == true ? "text-decoration-line-through opacity-25" : "")">
-    <MudStack Row="true">
+    <MudStack Row>
         <span class="font-monospace visually-hidden">Создать новый элемент</span>
     </MudStack>
     <div style="justify-self: end;">

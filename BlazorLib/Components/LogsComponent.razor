@@ -6,7 +6,7 @@
 
 @if (!HidePanels && _metaData is not null)
 {
-    <MudStack Row="true" Class="mb-4">
+    <MudStack Row Class="mb-4">
         @if (_metaData.ContextsPrefixesAvailable?.Any() == true)
         {
             <FiltersUniversalComponent FiltersAvailable="_metaData.ContextsPrefixesAvailable" Title="Prefix/Contour Name" @ref="ContextsPrefixesAvailable" CheckedChangedHandle="CheckedChangedAction" />

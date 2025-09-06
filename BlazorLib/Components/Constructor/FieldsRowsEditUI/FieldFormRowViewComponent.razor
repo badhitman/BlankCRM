@@ -84,7 +84,7 @@
                 @if (_elements?.Any() == true)
                 {
                     <hr />
-                    <MudAlert ShowCloseIcon="true" CloseIconClicked="(() => _elements = null)" Class="d-flex flex-column flex-grow-1">
+                    <MudAlert ShowCloseIcon CloseIconClicked="(() => _elements = null)" Class="d-flex flex-column flex-grow-1">
                         <MudSimpleTable Style="overflow-x: auto;" Class="d-flex flex-column flex-grow-1">
                             <thead>
                                 <tr>
@@ -146,7 +146,7 @@
             @TypeNameMS
         </td>
         <td>
-            <MudStack Row="true">
+            <MudStack Row>
                 <span>
                     @if (!string.IsNullOrWhiteSpace(_field_master.Css))
                     {
