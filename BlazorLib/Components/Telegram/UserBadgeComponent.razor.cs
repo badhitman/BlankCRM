@@ -19,6 +19,7 @@ public partial class UserBadgeComponent
     public string? BadgeColor { get; set; }
 
 
+    private IReadOnlyCollection<TelegramUsersRolesEnum> _selected = [];
     private bool _visible;
     private readonly DialogOptions _dialogOptions = new() { FullWidth = true };
 

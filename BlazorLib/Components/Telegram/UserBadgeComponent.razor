@@ -5,12 +5,21 @@
 <MudDialog @bind-Visible="_visible" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Edit rating
+            <MudIcon Icon="@Icons.Material.Filled.AdminPanelSettings" Class="mr-3" /> Edit permission for user
         </MudText>
     </TitleContent>
     <DialogContent>
-        <p>How awesome are inline dialogs?</p>
-
+        <p>@JoinUserChat.User.GetName()</p>
+        <hr />
+        <MudChipSet @bind-SelectedValues="_selected" CheckMark
+                    T="TelegramUsersRolesEnum"
+                    Color="Color.Info"
+                    SelectionMode="SelectionMode.MultiSelection">
+            @foreach (TelegramUsersRolesEnum tur in Enum.GetValues(typeof(TelegramUsersRolesEnum)))
+            {
+                <MudChip Value="@tur" />
+            }
+        </MudChipSet>
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-10">Close</MudButton>
