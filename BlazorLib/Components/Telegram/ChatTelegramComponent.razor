@@ -10,7 +10,12 @@
         {
             <h5 class="card-title">@currentChat.FirstName</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">@currentChat.ToString()</h6>
-            @* @foreach (var v in currentChat.) *@
+            @foreach (JoinUserChatViewModel uj in currentChat.UsersJoins!)
+            {
+                <span class="badge text-bg-primary">@uj.User!.GetName()</span>
+            }
+            <hr/>
+            <MessagesTableTelegramComponent ChatId=ChatId />
         }
     </div>
 </div>

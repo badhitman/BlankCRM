@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
+using static MudBlazor.CategoryTypes;
 
 namespace BlazorLib.Components.Telegram;
 
@@ -15,6 +16,13 @@ public partial class MessagesTableTelegramComponent : BlazorBusyComponentBaseMod
 {
     [Inject]
     ITelegramBotStandardTransmission TelegramRepo { get; set; } = default!;
+
+    /// <summary>
+    /// ChatId
+    /// </summary>
+    [Parameter]
+    public int ChatId { get; set; }
+
 
     MudTable<MessageTelegramViewModel>? tableRef;
 
@@ -33,7 +41,10 @@ public partial class MessagesTableTelegramComponent : BlazorBusyComponentBaseMod
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
-
+            Payload = new()
+            {
+                ChatId = ChatId
+            }
         };
         TPaginationResponseModel<MessageTelegramViewModel> data = await TelegramRepo.MessagesSelectTelegramAsync(req, token);
 
