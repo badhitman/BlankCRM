@@ -31,7 +31,7 @@
             {
                 foreach (JoinUserChatViewModel ju in context.UsersJoins)
                 {
-                    <span class="badge text-bg-secondary me-1">@ju.User!.GetName()</span>
+                    <UserBadgeComponent JoinUserChat=ju />
                 }
             }
         </MudTd>

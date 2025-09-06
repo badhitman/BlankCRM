@@ -1,0 +1,18 @@
+﻿<span title="Click for open manage permissions" @onclick=OpenDialog class="badge text-bg-@(BadgeColor ?? "secondary") me-1" style="cursor:pointer;">
+    @JoinUserChat.User!.GetName()
+</span>
+
+<MudDialog @bind-Visible="_visible" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Edit rating
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <p>How awesome are inline dialogs?</p>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-10">Close</MudButton>
+    </DialogActions>
+</MudDialog>

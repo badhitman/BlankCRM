@@ -11,7 +11,7 @@
             <h5 class="card-title">@currentChat.ToString()</h5>
             @foreach (JoinUserChatViewModel uj in currentChat.UsersJoins!)
             {
-                <span class="badge text-bg-@(uj.UserId == ChatId ? "light" : "primary") me-1">@uj.User!.GetName()</span>
+                <UserBadgeComponent BadgeColor="@(uj.UserId == ChatId ? "light" : "primary")" JoinUserChat=uj />
             }
             <hr />
             <MessagesTableTelegramComponent ChatId=ChatId />
