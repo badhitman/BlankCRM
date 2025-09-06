@@ -5,7 +5,6 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
-using static MudBlazor.CategoryTypes;
 
 namespace BlazorLib.Components.Telegram;
 

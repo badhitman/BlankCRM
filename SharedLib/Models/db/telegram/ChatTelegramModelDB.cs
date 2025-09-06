@@ -54,7 +54,7 @@ public class ChatTelegramModelDB : ChatTelegramViewModel
     /// <summary>
     /// ChatsJoins
     /// </summary>
-    public List<JoinUserChatModelDB>? UsersJoins { get; set; }
+    public new List<JoinUserChatModelDB>? UsersJoins { get; set; }
 
     /// <inheritdoc/>
     public override string ToString()

@@ -17,6 +17,7 @@ public partial class ChatTelegramComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public int ChatId { get; set; }
 
+
     ChatTelegramViewModel? currentChat;
 
     /// <inheritdoc/>

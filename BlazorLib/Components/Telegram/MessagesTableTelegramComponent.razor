@@ -9,13 +9,24 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>DateTime</MudTh>
-        <MudTh>Text</MudTh>
-        <MudTh>Caption</MudTh>
+        <MudTh>Text/Caption</MudTh>
+        <MudTh>From</MudTh>
+        <MudTh>Type</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="DateTime">@context.CreatedAtUtc.GetHumanDateTime()</MudTd>
-        <MudTd DataLabel="Text">@context.Text</MudTd>
-        <MudTd DataLabel="Caption">@context.Caption</MudTd>
+        <MudTd DataLabel="Text">
+            @if (string.IsNullOrWhiteSpace(context.Caption))
+            {
+                <span>@context.Text</span>
+            }
+            else
+            {
+                <span>@context.Text <sup class="ms-1">@context.Caption</sup></span>
+            }
+        </MudTd>
+        <MudTd DataLabel="From"><span class="badge text-bg-@(context.From?.Id == ChatId ? "light" : "primary")">@context.From!.GetName()</span></MudTd>
+        <MudTd DataLabel="Type">@context.TypeMessage.DescriptionInfo()</MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>

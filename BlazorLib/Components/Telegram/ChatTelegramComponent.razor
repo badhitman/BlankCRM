@@ -8,13 +8,12 @@
     <div class="card-body">
         @if (currentChat is not null)
         {
-            <h5 class="card-title">@currentChat.FirstName</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">@currentChat.ToString()</h6>
+            <h5 class="card-title">@currentChat.ToString()</h5>
             @foreach (JoinUserChatViewModel uj in currentChat.UsersJoins!)
             {
-                <span class="badge text-bg-primary">@uj.User!.GetName()</span>
+                <span class="badge text-bg-@(uj.UserId == ChatId ? "light" : "primary") me-1">@uj.User!.GetName()</span>
             }
-            <hr/>
+            <hr />
             <MessagesTableTelegramComponent ChatId=ChatId />
         }
     </div>

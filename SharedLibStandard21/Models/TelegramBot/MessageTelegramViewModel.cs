@@ -16,6 +16,9 @@ public class MessageTelegramViewModel
     [Key]
     public int Id { get; set; }
 
+    /// <inheritdoc/>
+    public TelegramMessagesTypesEnum TypeMessage { get; set; }
+
     /// <summary>
     /// Message id (Telegram id)
     /// </summary>
@@ -31,6 +34,11 @@ public class MessageTelegramViewModel
     /// <summary>
     /// Optional. Sender, empty for messages sent to channels
     /// </summary>
+    public virtual UserTelegramViewModel? From { get; set; }
+
+    /// <summary>
+    /// Optional. Sender, empty for messages sent to channels
+    /// </summary>
     public int? FromId { get; set; }
 
     /// <summary>
@@ -38,8 +46,14 @@ public class MessageTelegramViewModel
     /// The supergroup itself for messages from anonymous group administrators. The linked channel for messages
     /// automatically forwarded to the discussion group
     /// </summary>
-    public int ChatId { get; set; }
+    public virtual ChatTelegramViewModel? Chat { get; set; }
 
+    /// <summary>
+    /// Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages.
+    /// The supergroup itself for messages from anonymous group administrators. The linked channel for messages
+    /// automatically forwarded to the discussion group
+    /// </summary>
+    public int ChatId { get; set; }
 
     /// <summary>
     /// Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages.
