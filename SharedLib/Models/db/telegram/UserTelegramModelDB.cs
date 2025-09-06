@@ -22,5 +22,5 @@ public class UserTelegramModelDB : UserTelegramViewModel
     /// <summary>
     /// ChatsJoins
     /// </summary>
-    public List<JoinUserChatModelDB>? ChatsJoins { get; set; }
+    public new List<JoinUserChatModelDB>? ChatsJoins { get; set; }
 }

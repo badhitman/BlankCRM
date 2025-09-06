@@ -4,6 +4,7 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace SharedLib;
 
@@ -68,6 +69,15 @@ public class ChatTelegramViewModel
     /// </summary>
     public DateTime LastUpdateUtc { get; set; }
 
+    /// <summary>
+    /// Messages
+    /// </summary>
+    public virtual List<MessageTelegramViewModel>? Messages { get; set; }
+
+    /// <summary>
+    /// ChatsJoins
+    /// </summary>
+    public virtual List<JoinUserChatViewModel>? UsersJoins { get; set; }
 
     /// <inheritdoc/>
     public override string ToString()

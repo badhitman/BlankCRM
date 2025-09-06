@@ -4,6 +4,7 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace SharedLib;
 
@@ -16,6 +17,11 @@ public class UserTelegramViewModel : UserTelegramBaseModel
     /// Идентификатор/Key
     /// </summary>
     public int Id { get; set; }
+
+    /// <summary>
+    /// ChatsJoins
+    /// </summary>
+    public virtual List<JoinUserChatViewModel>? ChatsJoins { get; set; }
 
     /// <summary>
     /// User's or bot’s first name

@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
@@ -11,29 +10,15 @@ namespace SharedLib;
 /// JoinUserChatModelDB
 /// </summary>
 [Index(nameof(UserId), nameof(ChatId), IsUnique = true)]
-public class JoinUserChatModelDB
+public class JoinUserChatModelDB : JoinUserChatViewModel
 {
     /// <summary>
-    /// Идентификатор/Key
-    /// </summary>
-    [Key]
-    public int Id { get; set; }
-
-    /// <summary>
     /// User
     /// </summary>
-    public UserTelegramModelDB? User { get; set; }
-    /// <summary>
-    /// User
-    /// </summary>
-    public int UserId { get; set; }
+    public new UserTelegramModelDB? User { get; set; }
 
     /// <summary>
     /// Chat
     /// </summary>
-    public ChatTelegramModelDB? Chat { get; set; }
-    /// <summary>
-    /// Chat
-    /// </summary>
-    public int ChatId { get; set; }
+    public new ChatTelegramModelDB? Chat { get; set; }
 }

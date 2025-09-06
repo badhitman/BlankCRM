@@ -49,7 +49,7 @@ public class ChatTelegramModelDB : ChatTelegramViewModel
     /// <summary>
     /// Messages
     /// </summary>
-    public List<MessageTelegramModelDB>? Messages { get; set; }
+    public new List<MessageTelegramModelDB>? Messages { get; set; }
 
     /// <summary>
     /// ChatsJoins

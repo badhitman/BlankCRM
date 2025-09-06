@@ -16,12 +16,12 @@
         <MudTh>Updated</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Title">@context.Title</MudTd>
-        <MudTd DataLabel="FirstName">@context.FirstName</MudTd>
-        <MudTd DataLabel="LastName">@context.LastName</MudTd>
-        <MudTd DataLabel="Username">@context.Username</MudTd>
-        <MudTd DataLabel="Type">@context.Type</MudTd>
-        <MudTd DataLabel="Updated">@context.LastUpdateUtc</MudTd>
+        <MudTd DataLabel="Title"><a href="/telegram-chat/@context.Id">@context.Title</a></MudTd>
+        <MudTd DataLabel="FirstName"><a href="/telegram-chat/@context.Id">@context.FirstName</a></MudTd>
+        <MudTd DataLabel="LastName"><a href="/telegram-chat/@context.Id">@context.LastName</a></MudTd>
+        <MudTd DataLabel="Username"><a href="/telegram-chat/@context.Id">@context.Username</a></MudTd>
+        <MudTd DataLabel="Type"><a href="/telegram-chat/@context.Id">@context.Type</a></MudTd>
+        <MudTd DataLabel="Updated"><a href="/telegram-chat/@context.Id">@context.LastUpdateUtc</a></MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>
