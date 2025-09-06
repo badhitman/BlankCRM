@@ -8,19 +8,33 @@
         </MudText>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Title</MudTh>
-        <MudTh>FirstName</MudTh>
-        <MudTh>LastName</MudTh>
+        <MudTh>Name</MudTh>
         <MudTh>Username</MudTh>
         <MudTh>Type</MudTh>
+        <MudTh>Users</MudTh>
         <MudTh>Updated</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Title"><a href="/telegram-chat/@context.Id">@context.Title</a></MudTd>
-        <MudTd DataLabel="FirstName"><a href="/telegram-chat/@context.Id">@context.FirstName</a></MudTd>
-        <MudTd DataLabel="LastName"><a href="/telegram-chat/@context.Id">@context.LastName</a></MudTd>
+        <MudTd DataLabel="Name">
+            <a href="/telegram-chat/@context.Id">
+                @context.FirstName @context.LastName
+            </a>
+            @if (!string.IsNullOrWhiteSpace(context.Title))
+            {
+                <sup class="ms-2">@context.Title</sup>
+            }
+        </MudTd>
         <MudTd DataLabel="Username"><a href="/telegram-chat/@context.Id">@context.Username</a></MudTd>
         <MudTd DataLabel="Type"><a href="/telegram-chat/@context.Id">@context.Type</a></MudTd>
+        <MudTd DataLabel="Users">
+            @if (context.UsersJoins is not null)
+            {
+                foreach (JoinUserChatViewModel ju in context.UsersJoins)
+                {
+                    <span class="badge text-bg-secondary me-1">@ju.User!.GetName()</span>
+                }
+            }
+        </MudTd>
         <MudTd DataLabel="Updated"><a href="/telegram-chat/@context.Id">@context.LastUpdateUtc</a></MudTd>
     </RowTemplate>
     <NoRecordsContent>
