@@ -16,11 +16,12 @@ public partial class ChatsTableTelegramComponent : BlazorBusyComponentBaseModel
     [Inject]
     ITelegramBotStandardTransmission TelegramRepo { get; set; } = default!;
 
+
     MudTable<ChatTelegramViewModel>? tableRef;
 
     async Task ReloadTableData()
     {
-        if(tableRef is not null)
+        if (tableRef is not null)
             await tableRef.ReloadServerData();
     }
 
@@ -33,7 +34,7 @@ public partial class ChatsTableTelegramComponent : BlazorBusyComponentBaseModel
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
-
+            SortingDirection = DirectionsEnum.Down,
         };
         TPaginationResponseModel<ChatTelegramViewModel> data = await TelegramRepo.ChatsSelectTelegramAsync(req, token);
 

@@ -40,6 +40,7 @@ public partial class MessagesTableTelegramComponent : BlazorBusyComponentBaseMod
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
+            SortingDirection = DirectionsEnum.Down,
             Payload = new()
             {
                 ChatId = ChatId
