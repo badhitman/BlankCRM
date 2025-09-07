@@ -8,8 +8,12 @@ using SharedLib;
 
 namespace BlazorLib.Components.Telegram;
 
-public partial class UserBadgeComponent
+public partial class UserBadgeComponent : BlazorBusyComponentBaseModel
 {
+    [Inject]
+    ITelegramBotStandardTransmission TelegramRepo { get; set; } = default!;
+
+
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required JoinUserChatViewModel JoinUserChat { get; set; }
@@ -19,11 +23,44 @@ public partial class UserBadgeComponent
     public string? BadgeColor { get; set; }
 
 
-    private IReadOnlyCollection<TelegramUsersRolesEnum> _selected = [];
-    private bool _visible;
-    private readonly DialogOptions _dialogOptions = new() { FullWidth = true };
+    bool _visible;
+    readonly DialogOptions _dialogOptions = new() { FullWidth = true };
 
-    private void OpenDialog() => _visible = true;
+    IReadOnlyCollection<TelegramUsersRolesEnum> _selected = [];
+    IReadOnlyCollection<TelegramUsersRolesEnum> Selected
+    {
+        get => _selected;
+        set
+        {
+            _selected = value;
+            InvokeAsync(SavePermissions);
+        }
+    }
 
-    private void Submit() => _visible = false;
+
+    async Task SavePermissions()
+    {
+        await SetBusyAsync();
+        ResponseBaseModel res = await TelegramRepo.UserTelegramPermissionUpdateAsync(new UserTelegramPermissionSetModel()
+        {
+            Roles = [.. Selected],
+            UserId = JoinUserChat.UserId,
+        });
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await SetBusyAsync();
+        //var res = TelegramRepo.
+        await SetBusyAsync(false);
+        //_selected = (IReadOnlyCollection<TelegramUsersRolesEnum>)JoinUserChat.User!.UserRoles!.Select(x => x.Role);
+    }
+
+    void OpenDialog() => _visible = true;
+
+    void Submit() => _visible = false;
 }

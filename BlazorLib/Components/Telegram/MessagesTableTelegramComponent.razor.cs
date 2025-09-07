@@ -16,6 +16,7 @@ public partial class MessagesTableTelegramComponent : BlazorBusyComponentBaseMod
     [Inject]
     ITelegramBotStandardTransmission TelegramRepo { get; set; } = default!;
 
+
     /// <summary>
     /// ChatId
     /// </summary>

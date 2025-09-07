@@ -937,6 +937,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string USER_CONTROLLER_NAME = "user";
 
         /// <summary>
+        /// Permission
+        /// </summary>
+        public const string PERMISSION_CONTROLLER_NAME = "permission";
+
+        /// <summary>
+        /// Permissions
+        /// </summary>
+        public const string PERMISSIONS_CONTROLLER_NAME = "permissions";
+
+        /// <summary>
         /// TwoFactor
         /// </summary>
         public const string TWOFACTOR_CONTROLLER_NAME = "twoFactor";

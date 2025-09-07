@@ -1,4 +1,6 @@
-﻿<span title="Click for open manage permissions" @onclick=OpenDialog class="badge text-bg-@(BadgeColor ?? "secondary") me-1" style="cursor:pointer;">
+﻿@inherits BlazorBusyComponentBaseModel
+
+<span title="Click for open manage permissions" @onclick=OpenDialog class="badge text-bg-@(BadgeColor ?? "secondary") me-1" style="cursor:pointer;">
     @JoinUserChat.User!.GetName()
 </span>
 
@@ -11,7 +13,7 @@
     <DialogContent>
         <p>@JoinUserChat.User.GetName()</p>
         <hr />
-        <MudChipSet @bind-SelectedValues="_selected" CheckMark
+        <MudChipSet @bind-SelectedValues="Selected" CheckMark
                     T="TelegramUsersRolesEnum"
                     Color="Color.Info"
                     SelectionMode="SelectionMode.MultiSelection">

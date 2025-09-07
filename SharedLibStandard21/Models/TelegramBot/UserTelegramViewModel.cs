@@ -13,40 +13,28 @@ namespace SharedLib;
 /// </summary>
 public class UserTelegramViewModel : UserTelegramBaseModel
 {
-    /// <summary>
-    /// Идентификатор/Key
-    /// </summary>
+    /// <inheritdoc/>
     public int Id { get; set; }
 
-    /// <summary>
-    /// ChatsJoins
-    /// </summary>
+    /// <inheritdoc/>
     public virtual List<JoinUserChatViewModel>? ChatsJoins { get; set; }
 
-    /// <summary>
-    /// User's or bot’s first name
-    /// </summary>
+    /// <inheritdoc/>
     [JsonProperty(Required = Required.Always)]
     public string? NormalizedFirstNameUpper { get; set; }
 
-    /// <summary>
-    /// Optional. User's or bot’s last name
-    /// </summary>
+    /// <inheritdoc/>
     public string? NormalizedLastNameUpper { get; set; }
 
-    /// <summary>
-    /// Optional. User's or bot’s username
-    /// </summary>
+    /// <inheritdoc/>
     public string? NormalizedUsernameUpper { get; set; }
 
-
-    /// <summary>
-    /// LastMessageUtc
-    /// </summary>
+    /// <inheritdoc/>
     public DateTime LastUpdateUtc { get; set; }
 
-    /// <summary>
-    /// LastMessageId
-    /// </summary>
+    /// <inheritdoc/>
     public int LastMessageId { get; set; }
+
+    /// <inheritdoc/>
+    public virtual List<RoleUserTelegramViewModel>? UserRoles { get; set; }
 }

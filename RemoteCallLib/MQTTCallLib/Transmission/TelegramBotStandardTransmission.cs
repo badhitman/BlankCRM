@@ -49,4 +49,8 @@ public partial class TelegramBotStandardTransmission(IMQTTClient mqClient) : ITe
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<MessageTelegramViewModel>> MessagesSelectTelegramAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default)
        => await mqClient.MqRemoteCallAsync<TPaginationResponseModel<MessageTelegramViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.MessagesChatsSelectTelegramReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UserTelegramPermissionUpdateAsync(UserTelegramPermissionSetModel req, CancellationToken token = default)
+       => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.UserTelegramPermissionUpdateReceive, req, token: token) ?? new();
 }

@@ -7,6 +7,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.Telegram;
 
+/// <summary>
+/// ChatTelegramComponent
+/// </summary>
 public partial class ChatTelegramComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
