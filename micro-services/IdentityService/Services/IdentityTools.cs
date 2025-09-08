@@ -409,7 +409,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestModel<SimpleBaseRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;

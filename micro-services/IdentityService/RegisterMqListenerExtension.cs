@@ -74,7 +74,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<CreateNewUserWithPasswordReceive, RegisterNewUserPasswordModel, RegistrationNewUserResponseModel>()
             .RegisterMqListener<ConfirmUserEmailCodeIdentityReceive, UserCodeModel, ResponseBaseModel>()
             .RegisterMqListener<SetRoleForUserReceive, SetRoleForUserRequestModel, TResponseModel<string[]>>()
-            .RegisterMqListener<SelectUsersOfIdentityReceive, TPaginationRequestModel<SimpleBaseRequestModel>, TPaginationResponseModel<UserInfoModel>>()
+            .RegisterMqListener<SelectUsersOfIdentityReceive, TPaginationRequestStandardModel<SimpleBaseRequestModel>, TPaginationResponseModel<UserInfoModel>>()
             ;
     }
 }

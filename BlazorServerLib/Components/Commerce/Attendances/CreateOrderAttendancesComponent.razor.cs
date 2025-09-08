@@ -164,7 +164,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
         if (page_num == 0)
             AllOffers.Clear();
 
-        TPaginationRequestModel<OffersSelectRequestModel> req = new()
+        TPaginationRequestStandardModel<OffersSelectRequestModel> req = new()
         {
             PageNum = page_num,
             PageSize = 10,

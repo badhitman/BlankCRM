@@ -69,7 +69,7 @@ public class StorageFilesImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default)
     {
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
 

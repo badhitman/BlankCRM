@@ -35,7 +35,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
     /// </summary>
     private async Task<TableData<NomenclatureModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        TPaginationRequestModel<NomenclaturesSelectRequestModel> req = new()
+        TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req = new()
         {
             Payload = new() { ContextName = Routes.ATTENDANCES_CONTROLLER_NAME },
             PageNum = state.Page,

@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 public partial class CommerceTransmission
 {
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>> OffersRegistersSelectAsync(TPaginationRequestModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>> OffersRegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<OfferAvailabilityModelDB>>(TransmissionQueues.OffersRegistersSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -33,6 +33,6 @@ public partial class CommerceTransmission
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehousesSelectAsync(TPaginationRequestModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehousesSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<WarehouseDocumentModelDB>>(TransmissionQueues.WarehousesSelectCommerceReceive, req, token: token) ?? new();
 }

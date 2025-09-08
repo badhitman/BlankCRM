@@ -70,7 +70,7 @@ public abstract class OffersTableBaseComponent : BlazorRegistersComponent
         if (page_num == 0)
             allOffers = [];
 
-        TPaginationRequestModel<OffersSelectRequestModel> req = new()
+        TPaginationRequestStandardModel<OffersSelectRequestModel> req = new()
         {
             PageNum = page_num,
             PageSize = 10,

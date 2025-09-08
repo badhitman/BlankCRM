@@ -59,7 +59,7 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
     /// </summary>
     private async Task<TableData<NomenclatureModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        TPaginationRequestModel<NomenclaturesSelectRequestModel> req = new()
+        TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req = new()
         {
             Payload = new() { ContextName = ContextName },
             PageNum = state.Page,

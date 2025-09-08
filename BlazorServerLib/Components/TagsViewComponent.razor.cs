@@ -79,7 +79,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
 
     private async Task<IEnumerable<string?>> Search(string value, CancellationToken token)
     {
-        TPaginationRequestModel<SelectMetadataRequestModel> req = new()
+        TPaginationRequestStandardModel<SelectMetadataRequestModel> req = new()
         {
             Payload = new()
             {
@@ -111,7 +111,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
     async Task ReloadTags()
     {
         await SetBusyAsync();
-        TPaginationRequestModel<SelectMetadataRequestModel> req = new()
+        TPaginationRequestStandardModel<SelectMetadataRequestModel> req = new()
         {
             Payload = new()
             {

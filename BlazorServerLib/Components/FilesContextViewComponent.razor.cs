@@ -149,7 +149,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
     private async Task<TableData<StorageFileModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         IsBusyProgress = true;
-        TPaginationRequestModel<SelectMetadataRequestModel> req = new()
+        TPaginationRequestStandardModel<SelectMetadataRequestModel> req = new()
         {
             Payload = new()
             {

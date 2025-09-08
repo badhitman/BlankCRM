@@ -29,7 +29,7 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
         await SetBusyAsync(token: token);
         TResponseModel<TPaginationResponseModel<PulseViewModel>> tp = await HelpDeskRepo.PulseSelectJournalAsync(new()
         {
-            Payload = new TPaginationRequestModel<UserIssueModel>()
+            Payload = new TPaginationRequestStandardModel<UserIssueModel>()
             {
                 PageNum = state.Page,
                 PageSize = state.PageSize,

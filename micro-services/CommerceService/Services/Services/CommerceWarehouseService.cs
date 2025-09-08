@@ -459,7 +459,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -514,7 +514,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>> RegistersSelectAsync(TPaginationRequestModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>> RegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;

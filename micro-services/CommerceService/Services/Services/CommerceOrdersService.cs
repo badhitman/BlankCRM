@@ -266,7 +266,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestModel<TPaginationRequestModel<OffersSelectRequestModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default)
     {
         if (req.Payload.PageSize < 10)
             req.Payload.PageSize = 10;
@@ -426,7 +426,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -516,7 +516,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestModel<OrdersSelectRequestModel>> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;

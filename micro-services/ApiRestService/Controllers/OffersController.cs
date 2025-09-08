@@ -26,7 +26,7 @@ public class OffersController(ICommerceTransmission commRepo) : ControllerBase
 #if !DEBUG
     [LoggerNolog]
 #endif
-    public async Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelect(TPaginationRequestModel<OffersSelectRequestModel> req)
+    public async Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelect(TPaginationRequestStandardModel<OffersSelectRequestModel> req)
         => await commRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
 
     /// <summary>

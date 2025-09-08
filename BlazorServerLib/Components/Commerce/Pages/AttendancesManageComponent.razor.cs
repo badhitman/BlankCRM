@@ -64,7 +64,7 @@ public partial class AttendancesManageComponent : BlazorBusyComponentBaseAuthMod
         if (page_num == 0)
             AllOffers = [new() { Name = "Глобально", Nomenclature = new() { Name = "Стандарт" } }];
 
-        TPaginationRequestModel<OffersSelectRequestModel> req = new()
+        TPaginationRequestStandardModel<OffersSelectRequestModel> req = new()
         {
             PageNum = page_num,
             PageSize = 10,

@@ -84,7 +84,7 @@ public partial class WorkCalendarComponent : BlazorBusyComponentBaseAuthModel
             return;
 
         OfferCurrent = selectedOffer;
-        TPaginationRequestModel<WorkScheduleCalendarsSelectRequestModel> req = new()
+        TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel> req = new()
         {
             Payload = new()
             {

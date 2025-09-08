@@ -149,7 +149,7 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SendEmailReceive, req, waitResponse, token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestModel<SimpleBaseRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<UserInfoModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.SelectUsersOfIdentityReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

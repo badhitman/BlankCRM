@@ -74,7 +74,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
 
     async Task<TableData<OrderDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>> req = new()
+        TPaginationRequestStandardModel<TAuthRequestModel<OrdersSelectRequestModel>> req = new()
         {
             PageNum = state.Page,
             PageSize = state.PageSize,

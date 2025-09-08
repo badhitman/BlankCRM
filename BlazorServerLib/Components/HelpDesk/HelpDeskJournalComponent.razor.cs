@@ -80,7 +80,7 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
     {
         await SetBusyAsync(token: token);
         await Task.Delay(1, token);
-        TPaginationRequestModel<SelectIssuesRequestModel> req = new()
+        TPaginationRequestStandardModel<SelectIssuesRequestModel> req = new()
         {
             Payload = new()
             {

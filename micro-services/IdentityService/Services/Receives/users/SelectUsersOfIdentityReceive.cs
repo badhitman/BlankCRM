@@ -11,13 +11,13 @@ namespace IdentityService.Services.Receives.users;
 /// SelectUsersOfIdentityReceive
 /// </summary>
 public class SelectUsersOfIdentityReceive(IIdentityTools identityRepo)
-    : IResponseReceive<TPaginationRequestModel<SimpleBaseRequestModel>?, TPaginationResponseModel<UserInfoModel>?>
+    : IResponseReceive<TPaginationRequestStandardModel<SimpleBaseRequestModel>?, TPaginationResponseModel<UserInfoModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SelectUsersOfIdentityReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<UserInfoModel>?> ResponseHandleActionAsync(TPaginationRequestModel<SimpleBaseRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<UserInfoModel>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await identityRepo.SelectUsersOfIdentityAsync(req, token);

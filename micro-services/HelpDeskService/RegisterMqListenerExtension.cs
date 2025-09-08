@@ -24,8 +24,8 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<RubricReadReceive, int, TResponseModel<List<RubricStandardModel>?>>()
             .RegisterMqListener<RubricsGetReceive, int[], TResponseModel<List<RubricStandardModel>>>()
 
-            .RegisterMqListener<IssuesSelectReceive, TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>>, TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>>()
-            .RegisterMqListener<ArticlesSelectReceive, TPaginationRequestModel<SelectArticlesRequestModel>, TPaginationResponseModel<ArticleModelDB>>()
+            .RegisterMqListener<IssuesSelectReceive, TAuthRequestModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>>, TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>>()
+            .RegisterMqListener<ArticlesSelectReceive, TPaginationRequestStandardModel<SelectArticlesRequestModel>, TPaginationResponseModel<ArticleModelDB>>()
             .RegisterMqListener<IssueCreateOrUpdateReceive, TAuthRequestModel<UniversalUpdateRequestModel>, TResponseModel<int>>()
             .RegisterMqListener<MessageVoteReceive, TAuthRequestModel<VoteIssueRequestModel>, TResponseModel<bool?>>()
             .RegisterMqListener<MessageUpdateOrCreateReceive, TAuthRequestModel<IssueMessageHelpDeskBaseModel>, TResponseModel<int?>>()
@@ -40,9 +40,9 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<MessagesListReceive, TAuthRequestModel<int>, TResponseModel<IssueMessageHelpDeskModelDB[]>>()
             .RegisterMqListener<StatusChangeReceive, TAuthRequestModel<StatusChangeRequestModel>, TResponseModel<bool>>()
             .RegisterMqListener<PulseIssueReceive, PulseRequestModel, TResponseModel<bool>>()
-            .RegisterMqListener<PulseJournalSelectReceive, TAuthRequestModel<TPaginationRequestModel<UserIssueModel>>, TResponseModel<TPaginationResponseModel<PulseViewModel>>>()
+            .RegisterMqListener<PulseJournalSelectReceive, TAuthRequestModel<TPaginationRequestStandardModel<UserIssueModel>>, TResponseModel<TPaginationResponseModel<PulseViewModel>>>()
             .RegisterMqListener<TelegramMessageIncomingReceive, TelegramIncomingMessageModel, ResponseBaseModel>()
-            .RegisterMqListener<ConsoleIssuesSelectReceive, TPaginationRequestModel<ConsoleIssuesRequestModel>, TPaginationResponseModel<IssueHelpDeskModel>>()
+            .RegisterMqListener<ConsoleIssuesSelectReceive, TPaginationRequestStandardModel<ConsoleIssuesRequestModel>, TPaginationResponseModel<IssueHelpDeskModel>>()
             ;
     }
 }

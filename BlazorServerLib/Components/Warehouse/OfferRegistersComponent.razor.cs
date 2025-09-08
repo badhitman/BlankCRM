@@ -32,7 +32,7 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
     private async Task<TableData<OfferAvailabilityModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
-        TPaginationRequestModel<RegistersSelectRequestBaseModel> req = new()
+        TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req = new()
         {
             Payload = new()
             {

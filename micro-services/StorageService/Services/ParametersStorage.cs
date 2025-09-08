@@ -76,7 +76,7 @@ public class ParametersStorage(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TagViewModel>> TagsSelectAsync(TPaginationRequestModel<SelectMetadataRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<TagViewModel>> TagsSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;

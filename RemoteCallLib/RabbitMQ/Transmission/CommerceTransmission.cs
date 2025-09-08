@@ -32,7 +32,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<WorksFindResponseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.WorksSchedulesFindCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<NomenclatureModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.NomenclaturesSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -52,7 +52,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.OfferDeleteCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestModel<TPaginationRequestModel<OffersSelectRequestModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<TPaginationResponseModel<OfferModelDB>>>(GlobalStaticConstantsTransmission.TransmissionQueues.OfferSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -108,7 +108,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<PriceRuleForOfferModelDB>>>(GlobalStaticConstantsTransmission.TransmissionQueues.PricesRulesGetForOfferCommerceReceive, ids, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestModel<OrdersSelectRequestModel>> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<OrderDocumentModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrdersSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -148,7 +148,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.WeeklyScheduleUpdateCommerceReceive, work, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<WeeklyScheduleModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.WeeklySchedulesSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -160,7 +160,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.CalendarScheduleUpdateCommerceReceive, work, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarsSchedulesSelectAsync(TAuthRequestModel<TPaginationRequestModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarsSchedulesSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>>(GlobalStaticConstantsTransmission.TransmissionQueues.CalendarsSchedulesSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

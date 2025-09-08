@@ -11,13 +11,13 @@ namespace Transmission.Receives.telegram;
 /// Получить ошибки отправок сообщений (для чатов)
 /// </summary>
 public class ErrorsForChatsSelectTelegramReceive(ITelegramBotService tgRepo)
-    : IResponseReceive<TPaginationRequestModel<long[]>?, TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>?>
+    : IResponseReceive<TPaginationRequestStandardModel<long[]>?, TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ErrorsForChatsSelectTelegramReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<long[]>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<long[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await tgRepo.ErrorsForChatsSelectTelegramAsync(req, token);

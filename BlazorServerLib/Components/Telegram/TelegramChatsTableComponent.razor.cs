@@ -35,7 +35,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
     async Task<TableData<ChatTelegramModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
-        TPaginationRequestModel<string?> req = new()
+        TPaginationRequestStandardModel<string?> req = new()
         {
             Payload = searchString,
             PageNum = state.Page,
@@ -76,7 +76,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
         UsersCache.AddRange(users_res.Response);
 
         string[] users_ids_identity = [.. users_res.Response.Select(x => x.UserId)];
-        TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req = new()
+        TAuthRequestModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req = new()
         {
             Payload = new()
             {

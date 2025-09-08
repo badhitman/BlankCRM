@@ -52,7 +52,7 @@ public partial class WorkSchedulesOfWeekdayComponent : BlazorBusyComponentBaseMo
 
         await SetBusyAsync();
 
-        TPaginationRequestModel<WorkSchedulesSelectRequestModel> req = new()
+        TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> req = new()
         {
             Payload = new WorkSchedulesSelectRequestModel()
             {

@@ -77,7 +77,7 @@ public class ArticlesService(IDbContextFactory<HelpDeskContext> helpdeskDbFactor
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ArticleModelDB>> ArticlesSelectAsync(TPaginationRequestModel<SelectArticlesRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<ArticleModelDB>> ArticlesSelectAsync(TPaginationRequestStandardModel<SelectArticlesRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;

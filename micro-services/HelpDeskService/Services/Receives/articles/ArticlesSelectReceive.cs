@@ -11,13 +11,13 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// ArticlesSelectReceive
 /// </summary>
-public class ArticlesSelectReceive(IArticlesService artRepo, ILogger<ArticlesSelectReceive> loggerRepo) : IResponseReceive<TPaginationRequestModel<SelectArticlesRequestModel>?, TPaginationResponseModel<ArticleModelDB>?>
+public class ArticlesSelectReceive(IArticlesService artRepo, ILogger<ArticlesSelectReceive> loggerRepo) : IResponseReceive<TPaginationRequestStandardModel<SelectArticlesRequestModel>?, TPaginationResponseModel<ArticleModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ArticlesSelectHelpDeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ArticleModelDB>?> ResponseHandleActionAsync(TPaginationRequestModel<SelectArticlesRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<ArticleModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectArticlesRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");

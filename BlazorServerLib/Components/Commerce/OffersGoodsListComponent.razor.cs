@@ -68,7 +68,7 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
     /// </summary>
     private async Task<TableData<OfferModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        TPaginationRequestModel<OffersSelectRequestModel> req = new()
+        TPaginationRequestStandardModel<OffersSelectRequestModel> req = new()
         {
             Payload = new()
             {

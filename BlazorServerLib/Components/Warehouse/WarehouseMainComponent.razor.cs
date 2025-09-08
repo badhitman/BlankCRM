@@ -24,7 +24,7 @@ public partial class WarehouseMainComponent : BlazorBusyComponentRubricsCachedMo
     private async Task<TableData<WarehouseDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
-        TPaginationRequestModel<WarehouseDocumentsSelectRequestModel> req = new()
+        TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req = new()
         {
             Payload = new()
             {

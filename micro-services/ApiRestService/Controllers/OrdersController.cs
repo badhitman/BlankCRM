@@ -27,8 +27,8 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
 #if !DEBUG
     [LoggerNolog]
 #endif
-    public async Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelect(TPaginationRequestModel<OrdersSelectRequestModel> req)
-        => await commRepo.OrdersSelectAsync(new TPaginationRequestModel<TAuthRequestModel<OrdersSelectRequestModel>>() { Payload = new TAuthRequestModel<OrdersSelectRequestModel>() { Payload = req.Payload, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System } });
+    public async Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelect(TPaginationRequestStandardModel<OrdersSelectRequestModel> req)
+        => await commRepo.OrdersSelectAsync(new TPaginationRequestStandardModel<TAuthRequestModel<OrdersSelectRequestModel>>() { Payload = new TAuthRequestModel<OrdersSelectRequestModel>() { Payload = req.Payload, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System } });
 
     /// <summary>
     /// Прикрепить файл к заказу (счёт, акт и т.п.). Имя файла должно быть уникальным в контексте заказа. Если файл с таким именем существует, тогда он будет перезаписан новым

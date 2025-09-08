@@ -24,7 +24,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<FindParametersReceive, FindStorageBaseModel, TResponseModel<FoundParameterModel[]?>>()
 
             .RegisterMqListener<TagSetReceive, TagSetModel, ResponseBaseModel>()
-            .RegisterMqListener<TagsSelectReceive, TPaginationRequestModel<SelectMetadataRequestModel>, TPaginationResponseModel<TagViewModel>>()
+            .RegisterMqListener<TagsSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseModel<TagViewModel>>()
 
             .RegisterMqListener<GoToPageForRowReceive, TPaginationRequestStandardModel<int>, TPaginationResponseModel<NLogRecordModelDB>>()
             .RegisterMqListener<MetadataLogsReceive, PeriodDatesTimesModel, TResponseModel<LogsMetadataResponseModel>>()
@@ -34,7 +34,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<SaveFileReceive, TAuthRequestModel<StorageImageMetadataModel>, TResponseModel<StorageFileModelDB>>()
             .RegisterMqListener<ReadFileReceive, TAuthRequestModel<RequestFileReadModel>, TResponseModel<FileContentModel>>()
             .RegisterMqListener<FilesAreaGetMetadataReceive, FilesAreaMetadataRequestModel, TResponseModel<FilesAreaMetadataModel[]>>()
-            .RegisterMqListener<FilesSelectReceive, TPaginationRequestModel<SelectMetadataRequestModel>, TPaginationResponseModel<StorageFileModelDB>>()
+            .RegisterMqListener<FilesSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseModel<StorageFileModelDB>>()
 
 
             ;

@@ -507,7 +507,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
     {
         if (req.Payload.PageSize < 5)
             req.Payload.PageSize = 5;
@@ -591,7 +591,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -1566,7 +1566,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseJournalSelectAsync(TAuthRequestModel<TPaginationRequestModel<UserIssueModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseJournalSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<UserIssueModel>> req, CancellationToken token = default)
     {
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.Payload.Payload.UserId], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length == 0)

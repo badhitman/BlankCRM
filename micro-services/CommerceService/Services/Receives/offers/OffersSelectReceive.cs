@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// OffersSelectReceive
 /// </summary>
 public class OffersSelectReceive(ICommerceService commerceRepo)
-    : IResponseReceive<TAuthRequestModel<TPaginationRequestModel<OffersSelectRequestModel>>?, TResponseModel<TPaginationResponseModel<OfferModelDB>>?>
+    : IResponseReceive<TAuthRequestModel<TPaginationRequestStandardModel<OffersSelectRequestModel>>?, TResponseModel<TPaginationResponseModel<OfferModelDB>>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OfferSelectCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>?> ResponseHandleActionAsync(TAuthRequestModel<TPaginationRequestModel<OffersSelectRequestModel>>? req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>?> ResponseHandleActionAsync(TAuthRequestModel<TPaginationRequestStandardModel<OffersSelectRequestModel>>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commerceRepo.OffersSelectAsync(req, token);

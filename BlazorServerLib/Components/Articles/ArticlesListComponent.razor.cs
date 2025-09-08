@@ -32,7 +32,7 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
     private async Task<TableData<ArticleModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
-        TPaginationRequestModel<SelectArticlesRequestModel> req = new()
+        TPaginationRequestStandardModel<SelectArticlesRequestModel> req = new()
         {
             Payload = new()
             {

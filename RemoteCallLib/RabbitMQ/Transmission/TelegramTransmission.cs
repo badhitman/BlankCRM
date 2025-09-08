@@ -20,7 +20,7 @@ public class TelegramTransmission(IRabbitClient rabbitClient) : ITelegramTransmi
         => await rabbitClient.MqRemoteCallAsync<List<ChatTelegramModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.ChatsReadTelegramReceive, chats_ids, token: token) ?? [];
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectAsync(TPaginationRequestModel<string?> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<ChatTelegramModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.ChatsSelectTelegramReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -28,7 +28,7 @@ public class TelegramTransmission(IRabbitClient rabbitClient) : ITelegramTransmi
         => await rabbitClient.MqRemoteCallAsync<ChatTelegramModelDB>(GlobalStaticConstantsTransmission.TransmissionQueues.ChatReadTelegramReceive, chatIdDb, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestModel<long[]?> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestStandardModel<long[]?> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.ErrorsForChatsSelectTelegramReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -48,7 +48,7 @@ public class TelegramTransmission(IRabbitClient rabbitClient) : ITelegramTransmi
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<string>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetBotTokenTelegramReceive, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesTelegramSelectAsync(TPaginationRequestModel<SearchMessagesChatModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesTelegramSelectAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<MessageTelegramModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.MessagesChatsSelectTelegramReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
