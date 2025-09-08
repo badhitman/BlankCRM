@@ -55,9 +55,12 @@ public partial class UserBadgeComponent : BlazorBusyComponentBaseModel
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
-        //var res = TelegramRepo.
+        List<UserTelegramViewModel> res = await TelegramRepo.UsersReadTelegramAsync([JoinUserChat.UserId]);
         await SetBusyAsync(false);
-        //_selected = (IReadOnlyCollection<TelegramUsersRolesEnum>)JoinUserChat.User!.UserRoles!.Select(x => x.Role);
+        if (res.Count == 1)
+        {
+            _selected = [.. res[0]!.UserRoles!.Select(x => x.Role)];
+        }
     }
 
     void OpenDialog() => _visible = true;

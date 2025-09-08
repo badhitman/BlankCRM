@@ -326,6 +326,9 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string UserTelegramPermissionUpdateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TELEGRAM_CONTROLLER_NAME, $"{Routes.USER_CONTROLLER_NAME}-{Routes.PERMISSIONS_CONTROLLER_NAME}", Routes.SET_ACTION_NAME);
 
         /// <inheritdoc/>
+        public readonly static string UsersReadTelegramReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TELEGRAM_CONTROLLER_NAME, Routes.USERS_CONTROLLER_NAME, Routes.READ_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string ChatsSelectTelegramReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.TELEGRAM_CONTROLLER_NAME, Routes.CHATS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
 
         /// <inheritdoc/>
