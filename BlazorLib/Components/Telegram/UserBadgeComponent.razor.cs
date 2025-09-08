@@ -8,6 +8,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.Telegram;
 
+/// <summary>
+/// UserBadgeComponent
+/// </summary>
 public partial class UserBadgeComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
