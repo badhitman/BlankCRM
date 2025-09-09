@@ -367,6 +367,13 @@ public partial class CommerceImplementService : ICommerceService
     public async Task<TResponseModel<bool>> RecordsAttendancesStatusesChangeByHelpDeskIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<bool> res = new();
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId) || req.Payload is null)
+        {
+            res.AddError($"`{nameof(req.SenderActionUserId)}` not set (or `{nameof(req.Payload)}`) is null");
+            return res;
+        }
+
         TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
         if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length == 0)
         {
@@ -522,35 +529,41 @@ public partial class CommerceImplementService : ICommerceService
     #endregion
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> paginationWorkSchedulesRequest, CancellationToken token = default)
     {
-        if (req.PageSize < 10)
-            req.PageSize = 10;
+        if (paginationWorkSchedulesRequest.Payload is null)
+        {
+            loggerRepo.LogError($"{nameof(paginationWorkSchedulesRequest)}.{nameof(paginationWorkSchedulesRequest.Payload)} is null");
+            return new();
+        }
+
+        if (paginationWorkSchedulesRequest.PageSize < 10)
+            paginationWorkSchedulesRequest.PageSize = 10;
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<WeeklyScheduleModelDB> q = context
-            .WeeklySchedules.Where(x => x.ContextName == req.Payload.ContextName);
+            .WeeklySchedules.Where(x => x.ContextName == paginationWorkSchedulesRequest.Payload.ContextName);
 
-        if (req.Payload.OfferFilter is not null && req.Payload.OfferFilter.Length != 0)
-            q = q.Where(x => req.Payload.OfferFilter.Any(i => i == x.OfferId));
+        if (paginationWorkSchedulesRequest.Payload.OfferFilter is not null && paginationWorkSchedulesRequest.Payload.OfferFilter.Length != 0)
+            q = q.Where(x => paginationWorkSchedulesRequest.Payload.OfferFilter.Any(i => i == x.OfferId));
 
-        if (req.Payload.NomenclatureFilter is not null && req.Payload.NomenclatureFilter.Length != 0)
-            q = q.Where(x => req.Payload.NomenclatureFilter.Any(i => i == x.NomenclatureId));
+        if (paginationWorkSchedulesRequest.Payload.NomenclatureFilter is not null && paginationWorkSchedulesRequest.Payload.NomenclatureFilter.Length != 0)
+            q = q.Where(x => paginationWorkSchedulesRequest.Payload.NomenclatureFilter.Any(i => i == x.NomenclatureId));
 
-        if (req.Payload.Weekdays is not null && req.Payload.Weekdays.Length != 0)
-            q = q.Where(x => req.Payload.Weekdays.Any(y => y == x.Weekday));
+        if (paginationWorkSchedulesRequest.Payload.Weekdays is not null && paginationWorkSchedulesRequest.Payload.Weekdays.Length != 0)
+            q = q.Where(x => paginationWorkSchedulesRequest.Payload.Weekdays.Any(y => y == x.Weekday));
 
-        if (req.Payload.AfterDateUpdate is not null)
-            q = q.Where(x => x.LastUpdatedAtUTC >= req.Payload.AfterDateUpdate || (x.LastUpdatedAtUTC == DateTime.MinValue && x.CreatedAtUTC >= req.Payload.AfterDateUpdate));
+        if (paginationWorkSchedulesRequest.Payload.AfterDateUpdate is not null)
+            q = q.Where(x => x.LastUpdatedAtUTC >= paginationWorkSchedulesRequest.Payload.AfterDateUpdate || (x.LastUpdatedAtUTC == DateTime.MinValue && x.CreatedAtUTC >= paginationWorkSchedulesRequest.Payload.AfterDateUpdate));
 
-        IOrderedQueryable<WeeklyScheduleModelDB> oq = req.SortingDirection == DirectionsEnum.Up
+        IOrderedQueryable<WeeklyScheduleModelDB> oq = paginationWorkSchedulesRequest.SortingDirection == DirectionsEnum.Up
            ? q.OrderBy(x => x.StartPart).ThenByDescending(x => x.LastUpdatedAtUTC)
            : q.OrderByDescending(x => x.StartPart).ThenByDescending(x => x.LastUpdatedAtUTC);
 
         IQueryable<WeeklyScheduleModelDB> pq = oq
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize);
+            .Skip(paginationWorkSchedulesRequest.PageNum * paginationWorkSchedulesRequest.PageSize)
+            .Take(paginationWorkSchedulesRequest.PageSize);
 
         Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<WeeklyScheduleModelDB, NomenclatureModelDB?> inc_query = pq
             .Include(x => x.Offer)
@@ -558,12 +571,12 @@ public partial class CommerceImplementService : ICommerceService
 
         return new()
         {
-            PageNum = req.PageNum,
-            PageSize = req.PageSize,
-            SortingDirection = req.SortingDirection,
-            SortBy = req.SortBy,
+            PageNum = paginationWorkSchedulesRequest.PageNum,
+            PageSize = paginationWorkSchedulesRequest.PageSize,
+            SortingDirection = paginationWorkSchedulesRequest.SortingDirection,
+            SortBy = paginationWorkSchedulesRequest.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = req.Payload.IncludeExternalData ? [.. await inc_query.ToArrayAsync(cancellationToken: token)] : [.. await pq.ToArrayAsync(cancellationToken: token)]
+            Response = paginationWorkSchedulesRequest.Payload.IncludeExternalData ? [.. await inc_query.ToArrayAsync(cancellationToken: token)] : [.. await pq.ToArrayAsync(cancellationToken: token)]
         };
     }
 
@@ -697,6 +710,13 @@ public partial class CommerceImplementService : ICommerceService
     public async Task<TResponseModel<int>> CalendarScheduleUpdateAsync(TAuthRequestModel<CalendarScheduleModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new() { Response = 0 };
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
         if (!ck.IsValid)
         {
@@ -741,6 +761,14 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarSchedulesSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default)
     {
+        if (req.Payload?.Payload is null)
+        {
+            return new()
+            {
+                Messages = [new() { Text = "req.Payload?.Payload is null", TypeMessage = MessagesTypesEnum.Error }]
+            };
+        }
+
         if (req.Payload.PageSize < 10)
             req.Payload.PageSize = 10;
 

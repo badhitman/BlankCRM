@@ -24,10 +24,10 @@ public class ParametersStorageTransmission(IRabbitClient rabbitClient) : IParame
 
     #region parameter`s
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<T?>?>> ReadParametersAsync<T>(StorageMetadataModel[] req, CancellationToken token = default)
+    public async Task<TResponseModel<List<T?>>> ReadParametersAsync<T>(StorageMetadataModel[] req, CancellationToken token = default)
     {
         TResponseModel<List<StorageCloudParameterPayloadModel>>? response_payload = await rabbitClient.MqRemoteCallAsync<TResponseModel<List<StorageCloudParameterPayloadModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.ReadCloudParametersReceive, req, token: token);
-        TResponseModel<List<T?>?> res = new();
+        TResponseModel<List<T?>> res = new();
         if (response_payload?.Success() != true)
         {
             res.Messages = response_payload?.Messages ?? [];
@@ -73,7 +73,7 @@ public class ParametersStorageTransmission(IRabbitClient rabbitClient) : IParame
 
         res.Response = [.. response_payload
             .Response
-            .Select(x => JsonConvert.DeserializeObject<T>(x.SerializedDataJson))];
+            .Select(x => string.IsNullOrWhiteSpace(x.SerializedDataJson)? default: JsonConvert.DeserializeObject<T>(x.SerializedDataJson))];
 
         return res;
     }

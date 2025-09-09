@@ -209,6 +209,12 @@ public partial class CommerceImplementService(
     {
         TResponseModel<int> res = new() { Response = 0 };
 
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
         if (!string.IsNullOrWhiteSpace(req.Payload.QuantitiesTemplate))
         {
             System.Collections.Immutable.ImmutableList<decimal> idss = req.Payload.QuantitiesTemplate.SplitToDecimalList();
@@ -268,6 +274,14 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default)
     {
+        if (req.Payload?.Payload is null)
+        {
+            return new()
+            {
+                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload?.Payload is null" }]
+            };
+        }
+
         if (req.Payload.PageSize < 10)
             req.Payload.PageSize = 10;
 
@@ -305,6 +319,12 @@ public partial class CommerceImplementService(
     public async Task<TResponseModel<OfferModelDB[]>> OffersReadAsync(TAuthRequestModel<int[]> req, CancellationToken token = default)
     {
         TResponseModel<OfferModelDB[]> res = new();
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
         if (!req.Payload.Any(x => x > 0))
         {
             res.AddError("Пустой запрос");
@@ -358,9 +378,15 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> NomenclatureUpdateAsync(NomenclatureModelDB nom, CancellationToken token = default)
     {
+        TResponseModel<int> res = new() { Response = 0 };
+        if (string.IsNullOrWhiteSpace(nom.Name))
+        {
+            res.AddError("Nomenclature required Name");
+            return res;
+        }
         nom.Name = nom.Name.Trim();
         // loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(nom, GlobalStaticConstants.JsonSerializerSettings)}");
-        TResponseModel<int> res = new() { Response = 0 };
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         string msg, about = $"'{nom.Name}' /{nom.BaseUnit}";
         NomenclatureModelDB? nomenclature_db = await context.Nomenclatures.FirstOrDefaultAsync(x => x.Name == nom.Name && x.BaseUnit == nom.BaseUnit && x.Id != nom.Id, cancellationToken: token);
@@ -414,6 +440,12 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesReadAsync(TAuthRequestModel<int[]> req, CancellationToken token = default)
     {
+        if (req.Payload is null || req.Payload.Length == 0)
+            return new()
+            {
+                Messages = [new() { Text = "req.Payload is null || req.Payload.Length == 0", TypeMessage = MessagesTypesEnum.Error }]
+            };
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         return new()
         {
@@ -428,6 +460,12 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+        {
+            loggerRepo.LogError($"req.Payload is null");
+            return new();
+        }
+
         if (req.PageSize < 10)
             req.PageSize = 10;
 
@@ -496,6 +534,11 @@ public partial class CommerceImplementService(
     public async Task<TResponseModel<OrderDocumentModelDB[]>> OrdersReadAsync(TAuthRequestModel<int[]> req, CancellationToken token = default)
     {
         TResponseModel<OrderDocumentModelDB[]> res = new();
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -518,6 +561,12 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestModel<OrdersSelectRequestModel>> req, CancellationToken token = default)
     {
+        if (req.Payload?.Payload is null)
+        {
+            loggerRepo.LogError("req.Payload?.Payload is null");
+            return new();
+        }
+
         if (req.PageSize < 10)
             req.PageSize = 10;
 
@@ -1152,6 +1201,16 @@ public partial class CommerceImplementService(
     public async Task<TResponseModel<bool>> StatusesOrdersChangeByHelpDeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         string msg;
+        TResponseModel<bool> res = new();
+
+        if (req.Payload is null)
+        {
+            msg = "req.Payload is null";
+            loggerRepo.LogError(msg);
+            res.AddError(msg);
+            return res;
+        }
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         OrderDocumentModelDB[] ordersDb = await context
             .Orders
@@ -1159,8 +1218,6 @@ public partial class CommerceImplementService(
             .Include(x => x.OfficesTabs!)
             .ThenInclude(x => x.Rows)
             .ToArrayAsync(cancellationToken: token);
-
-        TResponseModel<bool> res = new();
 
         if (ordersDb.Length == 0)
         {
@@ -1183,15 +1240,14 @@ public partial class CommerceImplementService(
             return res;
         }
 
-        LockTransactionModelDB[] offersLocked = _allOffersOfDocuments
+        LockTransactionModelDB[] offersLocked = [.. _allOffersOfDocuments
             .DistinctBy(x => new { x.WarehouseId, x.Row.OfferId })
             .Select(x => new LockTransactionModelDB()
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.Row.OfferId,
                 RubricId = x.WarehouseId
-            })
-            .ToArray();
+            })];
 
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
         try
@@ -1278,6 +1334,9 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<FileAttachModel>> GetOrderReportFileAsync(TAuthRequestModel<int> req, CancellationToken token = default)
     {
+        if (string.IsNullOrEmpty(req.SenderActionUserId))
+            return new() { Messages = [new() { Text = "string.IsNullOrEmpty(req.SenderActionUserId)", TypeMessage = MessagesTypesEnum.Error }] };
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         TResponseModel<UserInfoModel[]> rest = default!;
