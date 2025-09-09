@@ -36,7 +36,7 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> PaymentDocumentUpdateAsync(TAuthRequestModel<PaymentDocumentBaseModel> req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
 
         if (req.Payload is null || req.Payload.Amount <= 0)
         {
@@ -138,7 +138,7 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestModel<PriceRuleForOfferModelDB> req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         if (req.Payload is null)
         {
@@ -207,7 +207,7 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestModel<OfferModelDB> req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
 
         if (req.Payload is null)
         {
@@ -378,7 +378,7 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> NomenclatureUpdateAsync(NomenclatureModelDB nom, CancellationToken token = default)
     {
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
         if (string.IsNullOrWhiteSpace(nom.Name))
         {
             res.AddError("Nomenclature required Name");
@@ -628,7 +628,7 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> RowForOrderUpdateAsync(RowOfOrderDocumentModelDB req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
         if (req.Quantity == 0)
         {
             res.AddError($"Количество не может быть нулевым");
@@ -926,7 +926,7 @@ public partial class CommerceImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> OrderUpdateAsync(OrderDocumentModelDB req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
         if (!ck.IsValid)
         {

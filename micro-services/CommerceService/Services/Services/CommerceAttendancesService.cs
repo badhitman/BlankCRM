@@ -650,7 +650,7 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> WeeklyScheduleUpdateAsync(WeeklyScheduleModelDB req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
         if (!ck.IsValid)
         {
@@ -709,7 +709,7 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CalendarScheduleUpdateAsync(TAuthRequestModel<CalendarScheduleModelDB> req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
 
         if (req.Payload is null)
         {
@@ -822,8 +822,12 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarSchedulesReadAsync(TAuthRequestModel<int[]> req, CancellationToken token = default)
     {
-        TResponseModel<CalendarScheduleModelDB[]> res = new();
-
+        TResponseModel<List<CalendarScheduleModelDB>> res = new();
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<CalendarScheduleModelDB> q = context

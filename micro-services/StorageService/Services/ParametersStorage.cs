@@ -78,6 +78,12 @@ public class ParametersStorage(
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<TagViewModel>> TagsSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+        {
+            loggerRepo.LogError("req.Payload is null");
+            return new();
+        }
+
         if (req.PageSize < 5)
             req.PageSize = 5;
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
@@ -147,7 +153,7 @@ public class ParametersStorage(
              Id = x.Id,
              OwnerPrimaryKey = x.OwnerPrimaryKey,
              PrefixPropertyName = x.PrefixPropertyName,
-             Payload = JsonConvert.DeserializeObject<T>(x.SerializedDataJson)
+             Payload = string.IsNullOrWhiteSpace(x.SerializedDataJson) ? default : JsonConvert.DeserializeObject<T>(x.SerializedDataJson)
         })];
     }
 
@@ -173,7 +179,7 @@ public class ParametersStorage(
 
         try
         {
-            T? rawData = JsonConvert.DeserializeObject<T>(pdb.SerializedDataJson);
+            T? rawData = string.IsNullOrWhiteSpace(pdb.SerializedDataJson) ? default : JsonConvert.DeserializeObject<T>(pdb.SerializedDataJson);
             cache.Set(mem_key, rawData, new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
             return rawData;
         }
@@ -281,11 +287,11 @@ public class ParametersStorage(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageCloudParameterPayloadModel?>> ReadParameterAsync(StorageMetadataModel req, CancellationToken token = default)
+    public async Task<TResponseModel<StorageCloudParameterPayloadModel>> ReadParameterAsync(StorageMetadataModel req, CancellationToken token = default)
     {
         req.Normalize();
         string mem_key = $"{req.PropertyName}/{req.OwnerPrimaryKey}/{req.PrefixPropertyName}/{req.ApplicationName}".Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
-        TResponseModel<StorageCloudParameterPayloadModel?> res = new();
+        TResponseModel<StorageCloudParameterPayloadModel> res = new();
         if (cache.TryGetValue(mem_key, out StorageCloudParameterPayloadModel? sd))
         {
             res.Response = sd;
@@ -335,7 +341,7 @@ public class ParametersStorage(
         await Task.WhenAll(req.Select(x => Task.Run(async () =>
         {
             x.Normalize();
-            TResponseModel<StorageCloudParameterPayloadModel?> _subResult = await ReadParameterAsync(x);
+            TResponseModel<StorageCloudParameterPayloadModel> _subResult = await ReadParameterAsync(x);
             if (_subResult.Success() && _subResult.Response is not null)
                 res.Add(_subResult.Response);
             if (_subResult.Messages.Count != 0)
@@ -350,10 +356,10 @@ public class ParametersStorage(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FoundParameterModel[]?>> FindRawAsync(FindStorageBaseModel req, CancellationToken token = default)
+    public async Task<TResponseModel<FoundParameterModel[]>> FindRawAsync(FindStorageBaseModel req, CancellationToken token = default)
     {
         req.Normalize();
-        TResponseModel<FoundParameterModel[]?> res = new();
+        TResponseModel<FoundParameterModel[]> res = new();
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         IQueryable<StorageCloudParameterModelDB> q = context
             .CloudProperties.AsQueryable();

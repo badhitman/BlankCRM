@@ -21,7 +21,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<RubricsListReceive, RubricsListRequestModel, List<UniversalBaseModel>>()
             .RegisterMqListener<RubricCreateOrUpdateReceive, RubricStandardModel, TResponseModel<int>>()
             .RegisterMqListener<RubricMoveReceive, TAuthRequestModel<RowMoveModel>, ResponseBaseModel>()
-            .RegisterMqListener<RubricReadReceive, int, TResponseModel<List<RubricStandardModel>?>>()
+            .RegisterMqListener<RubricReadReceive, int, TResponseModel<List<RubricStandardModel>>>()
             .RegisterMqListener<RubricsGetReceive, int[], TResponseModel<List<RubricStandardModel>>>()
 
             .RegisterMqListener<IssuesSelectReceive, TAuthRequestModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>>, TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>>()

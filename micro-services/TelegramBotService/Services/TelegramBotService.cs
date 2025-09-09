@@ -182,9 +182,9 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserTelegramBaseModel?>> AboutBotAsync(CancellationToken token = default)
+    public async Task<TResponseModel<UserTelegramBaseModel>> AboutBotAsync(CancellationToken token = default)
     {
-        TResponseModel<UserTelegramBaseModel?> res = new();
+        TResponseModel<UserTelegramBaseModel> res = new();
         User me;
         string msg;
         try
@@ -240,6 +240,12 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesSelectTelegramAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+        {
+            _logger.LogError("req.Payload is null");
+            return new();
+        }
+
         if (req.PageSize < 5)
             req.PageSize = 5;
 

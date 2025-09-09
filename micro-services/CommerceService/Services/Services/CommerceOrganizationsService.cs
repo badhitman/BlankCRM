@@ -287,7 +287,18 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> OrganizationUpdateAsync(TAuthRequestModel<OrganizationModelDB> req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
+
         (bool IsValid, List<System.ComponentModel.DataAnnotations.ValidationResult> ValidationResults) = GlobalTools.ValidateObject(req.Payload);
         if (!IsValid)
         {
@@ -423,7 +434,14 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> UserOrganizationUpdateAsync(TAuthRequestModel<UserOrganizationModelDB> req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         if (req.Payload.Id < 1)
@@ -523,8 +541,20 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> BankDetailsUpdateAsync(TAuthRequestModel<BankDetailsModelDB> req, CancellationToken token = default)
     {
+        TResponseModel<int> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
+
         req.Payload.Organization = null;
-        TResponseModel<int> res = new() { Response = 0 };
         (bool IsValid, List<System.ComponentModel.DataAnnotations.ValidationResult> ValidationResults) = GlobalTools.ValidateObject(req.Payload);
         if (!IsValid)
         {
@@ -586,6 +616,9 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> BankDetailsDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         BankDetailsModelDB? bankDb = default;
         UserInfoModel? actor = default;

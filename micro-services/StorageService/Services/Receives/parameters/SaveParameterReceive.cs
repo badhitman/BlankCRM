@@ -26,7 +26,7 @@ public class SaveParameterReceive(IParametersStorage serializeStorageRepo, ILogg
         Regex rx = new(@"\s+", RegexOptions.Compiled);
         StorageCloudParameterModelDB store_db = new()
         {
-            ApplicationName = rx.Replace(req.ApplicationName.Trim(), " "),
+            ApplicationName = req.ApplicationName is null? null : rx.Replace(req.ApplicationName.Trim(), " "),
             PropertyName = req.PropertyName,
             SerializedDataJson = req.SerializedDataJson,
             PrefixPropertyName = req.PrefixPropertyName is null ? null : rx.Replace(req.PrefixPropertyName.Trim(), " "),

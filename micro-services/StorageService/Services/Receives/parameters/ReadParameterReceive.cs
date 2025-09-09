@@ -12,13 +12,13 @@ namespace Transmission.Receives.storage;
 /// Read parameter
 /// </summary>
 public class ReadParameterReceive(IParametersStorage serializeStorageRepo, ILogger<ReadParameterReceive> LoggerRepo) 
-    : IResponseReceive<StorageMetadataModel?, TResponseModel<StorageCloudParameterPayloadModel?>?>
+    : IResponseReceive<StorageMetadataModel?, TResponseModel<StorageCloudParameterPayloadModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ReadCloudParameterReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageCloudParameterPayloadModel?>?> ResponseHandleActionAsync(StorageMetadataModel? request, CancellationToken token = default)
+    public async Task<TResponseModel<StorageCloudParameterPayloadModel>?> ResponseHandleActionAsync(StorageMetadataModel? request, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(request);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(request)}");

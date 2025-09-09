@@ -39,6 +39,12 @@ public class HelpDeskImplementService(
     {
         TResponseModel<IssueMessageHelpDeskModelDB[]> res = new();
 
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            loggerRepo.LogError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length != 1)
             return new() { Messages = rest.Messages };
@@ -78,7 +84,20 @@ public class HelpDeskImplementService(
     public async Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+
         TResponseModel<int?> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
 
         if (string.IsNullOrWhiteSpace(req.Payload.MessageText))
         {
@@ -371,6 +390,19 @@ public class HelpDeskImplementService(
     public async Task<TResponseModel<bool?>> MessageVoteAsync(TAuthRequestModel<VoteIssueRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<bool?> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
+
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<UserInfoModel[]> rest = req.SenderActionUserId == GlobalStaticConstantsRoles.Roles.System
             ? new() { Response = [UserInfoModel.BuildSystem()] }
@@ -488,6 +520,12 @@ public class HelpDeskImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<List<SubscriberIssueHelpDeskModelDB>>> SubscribesListAsync(TAuthRequestModel<int> req, CancellationToken token = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return new()
+            {
+                Messages = [new() { Text = "string.IsNullOrWhiteSpace(req.SenderActionUserId)", TypeMessage = MessagesTypesEnum.Error }]
+            };
+
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length != 1)
             return new() { Messages = rest.Messages };
@@ -509,6 +547,12 @@ public class HelpDeskImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
     {
+        if (req.Payload?.Payload?.IdentityUsersIds is null)
+            return new()
+            {
+                Messages = [new() { Text = "req.Payload?.Payload?.IdentityUsersIds is null", TypeMessage = MessagesTypesEnum.Error }]
+            };
+
         if (req.Payload.PageSize < 5)
             req.Payload.PageSize = 5;
 
@@ -593,6 +637,12 @@ public class HelpDeskImplementService(
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+        {
+            loggerRepo.LogError("req.Payload is null");
+            return new();
+        }
+
         if (req.PageSize < 10)
             req.PageSize = 10;
 
@@ -676,6 +726,18 @@ public class HelpDeskImplementService(
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<bool> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
 
         TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
@@ -838,7 +900,26 @@ public class HelpDeskImplementService(
     public async Task<TResponseModel<int>> IssueCreateOrUpdateAsync(TAuthRequestModel<UniversalUpdateRequestModel> issue_upd, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(issue_upd)}");
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
+
+        if (string.IsNullOrWhiteSpace(issue_upd.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(issue_upd.SenderActionUserId)");
+            return res;
+        }
+
+        if (issue_upd.Payload is null)
+        {
+            res.AddError("issue_upd.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(issue_upd.Payload.Name))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(issue_upd.Payload.Name)");
+            return res;
+        }
+
         TResponseModel<ModesSelectRubricsEnum?> res_ModeSelectingRubrics = default!;
         TResponseModel<UserInfoModel[]> users_rest = default!;
 
@@ -871,7 +952,7 @@ public class HelpDeskImplementService(
         ModesSelectRubricsEnum _current_mode_rubric = res_ModeSelectingRubrics.Response ?? ModesSelectRubricsEnum.AllowWithoutRubric;
         if (_current_mode_rubric != ModesSelectRubricsEnum.AllowWithoutRubric)
         {
-            string[] sub_rubrics = await context
+            string?[] sub_rubrics = await context
                         .Rubrics
                         .Where(x => x.ParentId == issue_upd.Payload.ParentId)
                         .Select(x => x.Name)
@@ -1048,6 +1129,19 @@ public class HelpDeskImplementService(
     public async Task<TResponseModel<IssueHelpDeskModelDB[]>> IssuesReadAsync(TAuthRequestModel<IssuesReadRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<IssueHelpDeskModelDB[]> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
+
         string mem_key = $"{TransmissionQueues.IssuesGetHelpDeskReceive}-{string.Join(";", req.Payload.IssuesIds)}/{req.Payload.IncludeSubscribersOnly}({req.SenderActionUserId})";
         if (cache.TryGetValue(mem_key, out IssueHelpDeskModelDB[]? hd))
         {
@@ -1107,6 +1201,18 @@ public class HelpDeskImplementService(
         {
             Response = false,
         };
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
 
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
         if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && (!rest.Success() || rest.Response is null || rest.Response.Length != 1))
@@ -1336,6 +1442,18 @@ public class HelpDeskImplementService(
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<bool?> res = new() { Response = false };
 
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
+
         string[] users_ids = [req.SenderActionUserId, req.Payload.UserId];
         users_ids = [.. users_ids.Distinct()];
 
@@ -1490,6 +1608,18 @@ public class HelpDeskImplementService(
             Response = false,
         };
 
+        if (req.Payload.Payload is null)
+        {
+            res.AddError("req.Payload.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.Payload.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.Payload.SenderActionUserId)");
+            return res;
+        }
+
         TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
@@ -1568,6 +1698,12 @@ public class HelpDeskImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseJournalSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<UserIssueModel>> req, CancellationToken token = default)
     {
+        if (req.Payload?.Payload is null)
+            return new()
+            {
+                Messages = [new() { Text = "req.Payload?.Payload is null", TypeMessage = MessagesTypesEnum.Error }]
+            };
+
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.Payload.Payload.UserId], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length == 0)
             return new() { Messages = rest.Messages };

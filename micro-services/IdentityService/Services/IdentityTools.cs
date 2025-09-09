@@ -411,6 +411,12 @@ public class IdentityTools(
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+        {
+            loggerRepo.LogError("req.Payload is null");
+            return new();
+        }
+
         if (req.PageSize < 10)
             req.PageSize = 10;
 
@@ -1297,9 +1303,9 @@ public class IdentityTools(
         if (MailAddress.TryCreate(user.Email, out _))
         {
             TResponseModel<UserTelegramBaseModel> bot_username_res = await tgRemoteRepo.AboutBotAsync(token);
-            UserTelegramBaseModel? bot_username = bot_username_res.Response;            
+            UserTelegramBaseModel? bot_username = bot_username_res.Response;
             string msg = $"Создана ссылка привязки Telegram аккаунта к учётной записи сайта.<br/>";
-            msg += $"Нужно подтвердить операцию через Telegram бота. Для этого нужно в TelegramBot @{bot_username?.Username} отправить токен:<br/><u><b>{act.GuidToken}</b></u><br/>Или ссылкой: <a href='https://t.me/{bot_username?.Username}?start={act.GuidToken}'>https://t.me/{bot_username.Username}?start={act.GuidToken}</a><br/>";
+            msg += $"Нужно подтвердить операцию через Telegram бота. Для этого нужно в TelegramBot @{bot_username?.Username} отправить токен:<br/><u><b>{act.GuidToken}</b></u><br/>Или ссылкой: <a href='https://t.me/{bot_username?.Username}?start={act.GuidToken}'>https://t.me/{bot_username?.Username}?start={act.GuidToken}</a><br/>";
             await mailRepo.SendEmailAsync(user.Email, "Статус привязки Telegram к у/з", msg, token: token);
         }
 

@@ -189,8 +189,8 @@ public partial class FormsConstructorService(
     {
         TResponseModel<SessionOfDocumentDataModelDB?> get_s = await GetSessionDocumentAsync(new() { SessionId = req.SessionId }, cancellationToken);
         if (!get_s.Success())
-            return new TResponseModel<int>() { Messages = get_s.Messages, Response = 0 };
-        TResponseModel<int> res = new() { Response = 0 };
+            return new TResponseModel<int>() { Messages = get_s.Messages };
+        TResponseModel<int> res = new();
         SessionOfDocumentDataModelDB? session = get_s.Response;
 
         if (session?.Owner?.Tabs is null || session.DataSessionValues is null)
@@ -924,8 +924,20 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> UpdateOrCreateDirectoryAsync(TAuthRequestModel<EntryConstructedModel> req, CancellationToken cancellationToken = default)
     {
+        if (req.Payload is null)
+            return new()
+            {
+                Messages = [new() { Text = "req.Payload is null", TypeMessage = MessagesTypesEnum.Error }]
+            };
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return new()
+            {
+                Messages = [new() { Text = "string.IsNullOrWhiteSpace(req.SenderActionUserId)", TypeMessage = MessagesTypesEnum.Error }]
+            };
+
         req.Payload.Name = MyRegexSpices().Replace(req.Payload.Name.Trim(), " ");
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
         (bool IsValid, List<ValidationResult> ValidationResults) = GlobalTools.ValidateObject(req.Payload);
         if (!IsValid)
         {
@@ -1011,6 +1023,9 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteDirectoryAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DirectoryConstructorModelDB? directory_db = await context_forms
             .Directories
@@ -1075,8 +1090,20 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateElementForDirectoryAsync(TAuthRequestModel<OwnedNameModel> req, CancellationToken cancellationToken = default)
     {
+        TResponseModel<int> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
         req.Payload.Name = MyRegexSpices().Replace(req.Payload.Name, " ").Trim();
-        TResponseModel<int> res = new() { Response = 0 };
 
         (bool IsValid, List<ValidationResult> ValidationResults) = GlobalTools.ValidateObject(req.Payload);
         if (!IsValid)
@@ -1148,6 +1175,12 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateElementOfDirectoryAsync(TAuthRequestModel<EntryDescriptionModel> req, CancellationToken cancellationToken = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         req.Payload.Name = MyRegexSpices().Replace(req.Payload.Name, " ").Trim();
         (bool IsValid, List<ValidationResult> ValidationResults) = GlobalTools.ValidateObject(req.Payload);
         if (!IsValid)
@@ -1206,6 +1239,9 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteElementFromDirectoryAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         ElementOfDirectoryConstructorModelDB? element_db = await context_forms
             .ElementsOfDirectories
@@ -1233,6 +1269,9 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpMoveElementOfDirectoryAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         ElementOfDirectoryConstructorModelDB? element_db = await context_forms
             .ElementsOfDirectories
@@ -1270,6 +1309,9 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DownMoveElementOfDirectoryAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         ElementOfDirectoryConstructorModelDB? element_db = await context_forms
             .ElementsOfDirectories
@@ -1440,6 +1482,18 @@ public partial class FormsConstructorService(
     {
         TResponseModel<FormConstructorModelDB> res = new();
 
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
+
         req.Payload.Name = MyRegexSpices().Replace(req.Payload.Name.Trim(), " ");
         (bool IsValid, List<ValidationResult> ValidationResults) = GlobalTools.ValidateObject(req.Payload);
         if (!IsValid)
@@ -1531,6 +1585,9 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> FormDeleteAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
         FormConstructorModelDB? form_db = await context_forms
@@ -1557,6 +1614,18 @@ public partial class FormsConstructorService(
     public async Task<TResponseModel<FormConstructorModelDB>> FieldFormMoveAsync(TAuthRequestModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<FormConstructorModelDB> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FieldFormConstructorModelDB? field_db = await context_forms
@@ -1634,6 +1703,18 @@ public partial class FormsConstructorService(
     {
         TResponseModel<FormConstructorModelDB> res = new();
 
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
+
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FieldFormAkaDirectoryConstructorModelDB? field_db = await context_forms
             .LinksDirectoriesToForms
@@ -1708,6 +1789,12 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> FormFieldUpdateOrCreateAsync(TAuthRequestModel<FieldFormConstructorModelDB> req, CancellationToken cancellationToken = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         req.Payload.Name = MyRegexSpices().Replace(req.Payload.Name.Trim(), " ");
         req.Payload.MetadataValueType = req.Payload.MetadataValueType?.Trim();
 
@@ -1880,6 +1967,12 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> FormFieldDirectoryUpdateOrCreateAsync(TAuthRequestModel<FieldFormAkaDirectoryConstructorModelDB> req, CancellationToken cancellationToken = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         req.Payload.Name = MyRegexSpices().Replace(req.Payload.Name.Trim(), " ");
 
         (bool IsValid, List<ValidationResult> ValidationResults) = GlobalTools.ValidateObject(req.Payload);
@@ -2059,6 +2152,9 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> FormFieldDeleteAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FieldFormConstructorModelDB? field_db = await context_forms
             .Fields
@@ -2094,6 +2190,9 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> FormFieldDirectoryDeleteAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FieldFormAkaDirectoryConstructorModelDB? field_db = await context_forms
             .LinksDirectoriesToForms
@@ -2257,8 +2356,21 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<TResponseModel<DocumentSchemeConstructorModelDB?>> UpdateOrCreateDocumentSchemeAsync(TAuthRequestModel<EntryConstructedModel> req, CancellationToken cancellationToken = default)
     {
-        req.Payload.Name = MyRegexSpices().Replace(req.Payload.Name, " ").Trim();
         TResponseModel<DocumentSchemeConstructorModelDB?> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
+
+        req.Payload.Name = MyRegexSpices().Replace(req.Payload.Name, " ").Trim();
 
         (bool IsValid, List<ValidationResult> ValidationResults) = GlobalTools.ValidateObject(req.Payload);
         if (!IsValid)
@@ -2346,6 +2458,9 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteDocumentSchemeAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         DocumentSchemeConstructorModelDB? document_scheme_db = await context_forms
             .DocumentSchemes
@@ -2403,6 +2518,18 @@ public partial class FormsConstructorService(
     public async Task<TResponseModel<DocumentSchemeConstructorModelDB>> MoveTabOfDocumentSchemeAsync(TAuthRequestModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<DocumentSchemeConstructorModelDB> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TabOfDocumentSchemeConstructorModelDB? tab_of_document_scheme_db = await context_forms
@@ -2490,6 +2617,18 @@ public partial class FormsConstructorService(
     public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> CreateOrUpdateTabOfDocumentSchemeAsync(TAuthRequestModel<EntryDescriptionOwnedModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
 
         req.Payload.Name = MyRegexSpices().Replace(req.Payload.Name.Trim(), " ");
 
@@ -2591,6 +2730,9 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteTabOfDocumentSchemeAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         TabOfDocumentSchemeConstructorModelDB? tab_of_document_scheme_db = await context_forms
             .TabsOfDocumentsSchemes
@@ -2648,6 +2790,18 @@ public partial class FormsConstructorService(
     public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> MoveTabDocumentSchemeJoinFormAsync(TAuthRequestModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> res = new();
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return res;
+        }
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FormToTabJoinConstructorModelDB? questionnaire_page_join_db = await context_forms
@@ -2738,6 +2892,11 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> CreateOrUpdateTabDocumentSchemeJoinFormAsync(TAuthRequestModel<FormToTabJoinConstructorModelDB> req, CancellationToken cancellationToken = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         req.Payload.Name = req.Payload.Name is null
             ? null
             : MyRegexSpices().Replace(req.Payload.Name, " ").Trim();
@@ -2846,6 +3005,9 @@ public partial class FormsConstructorService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteTabDocumentSchemeJoinFormAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
         FormToTabJoinConstructorModelDB? questionnaire_page_db = await context_forms
             .TabsJoinsForms

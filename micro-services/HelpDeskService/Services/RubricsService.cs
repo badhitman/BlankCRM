@@ -51,7 +51,8 @@ public class RubricsService(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> RubricMoveAsync(TRequestModel<RowMoveModel> req, CancellationToken token = default)
     {
-        ResponseBaseModel res = new();
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
 
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
@@ -71,8 +72,7 @@ public class RubricsService(
         catch (Exception ex)
         {
             await transaction.RollbackAsync(token);
-            res.AddError($"Не удалось выполнить команду: {ex.Message}");
-            return res;
+            return ResponseBaseModel.CreateError($"Не удалось выполнить команду: {ex.Message}");
         }
 
         List<RubricModelDB> all = await context
@@ -80,6 +80,8 @@ public class RubricsService(
             .Where(x => x.ContextName == req.Payload.ContextName && x.ParentId == data.ParentId)
             .OrderBy(x => x.SortIndex)
             .ToListAsync(cancellationToken: token);
+
+        ResponseBaseModel res = new();
 
         int i = all.FindIndex(x => x.Id == data.Id);
         if (req.Payload.Direction == DirectionsEnum.Up)
@@ -154,6 +156,13 @@ public class RubricsService(
     public async Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricStandardModel rubric, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
+
+        if (string.IsNullOrWhiteSpace(rubric.Name))
+        {
+            res.AddError("[rubric.Name] is empty");
+            return res;
+        }
+
         Regex rx = new(@"\s+", RegexOptions.Compiled);
         rubric.Name = rx.Replace(rubric.Name.Trim(), " ");
         if (string.IsNullOrWhiteSpace(rubric.Name))
@@ -202,9 +211,9 @@ public class RubricsService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricStandardModel>?>> RubricReadAsync(int rubricId, CancellationToken token = default)
+    public async Task<TResponseModel<List<RubricStandardModel>>> RubricReadAsync(int rubricId, CancellationToken token = default)
     {
-        TResponseModel<List<RubricStandardModel>?> res = new();
+        TResponseModel<List<RubricStandardModel>> res = new();
 
         if (rubricId < 1)
             return res;

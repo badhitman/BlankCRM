@@ -18,7 +18,7 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> WarehouseDocumentUpdateAsync(WarehouseDocumentModelDB req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
         if (!ck.IsValid)
         {
@@ -286,7 +286,7 @@ public partial class CommerceImplementService : ICommerceService
     public async Task<TResponseModel<int>> RowForWarehouseDocumentUpdateAsync(RowOfWarehouseDocumentModelDB req, CancellationToken token = default)
     {
         string msg;
-        TResponseModel<int> res = new() { Response = 0 };
+        TResponseModel<int> res = new();
         if (req.Quantity == 0)
         {
             res.AddError($"Количество не может быть нулевым");
@@ -461,6 +461,12 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
     {
+        if(req.Payload is null)
+        {
+            loggerRepo.LogError("req.Payload is null");
+            return new();
+        }
+
         if (req.PageSize < 10)
             req.PageSize = 10;
 
@@ -516,6 +522,12 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>> RegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+        {
+            loggerRepo.LogError("req.Payload is null");
+            return new();
+        }
+
         if (req.PageSize < 10)
             req.PageSize = 10;
 

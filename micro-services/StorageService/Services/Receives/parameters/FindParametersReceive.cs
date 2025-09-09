@@ -12,13 +12,13 @@ namespace Transmission.Receives.storage;
 /// Find parameters
 /// </summary>
 public class FindParametersReceive(IParametersStorage serializeStorageRepo, ILogger<FindParametersReceive> LoggerRepo)
-    : IResponseReceive<FindStorageBaseModel?, TResponseModel<FoundParameterModel[]?>?>
+    : IResponseReceive<FindStorageBaseModel?, TResponseModel<FoundParameterModel[]>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindCloudParameterReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FoundParameterModel[]?>?> ResponseHandleActionAsync(FindStorageBaseModel? request, CancellationToken token = default)
+    public async Task<TResponseModel<FoundParameterModel[]>?> ResponseHandleActionAsync(FindStorageBaseModel? request, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(request);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(request)}");

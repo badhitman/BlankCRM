@@ -27,7 +27,7 @@ public class StorageFilesImpl(
     WebConfigModel webConfig,
     ILogger<ParametersStorage> loggerRepo) : IFilesStorage
 {
-    
+
 #if DEBUG
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(2);
 #else
@@ -71,6 +71,12 @@ public class StorageFilesImpl(
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+        {
+            loggerRepo.LogError("req.Payload is null");
+            return new();
+        }
+
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
 
         if (req.PageSize < 5)
@@ -116,6 +122,13 @@ public class StorageFilesImpl(
     public async Task<TResponseModel<FileContentModel>> ReadFileAsync(TAuthRequestModel<RequestFileReadModel> req, CancellationToken token = default)
     {
         TResponseModel<FileContentModel> res = new();
+
+        if(req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
         using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
         StorageFileModelDB? file_db = await context
             .CloudFiles
@@ -187,7 +200,7 @@ public class StorageFilesImpl(
             res.AddError($"Файл #{req.Payload} не прочитан");
             return res;
         }
-        
+
         using MemoryStream stream = new();
         GridFSBucket gridFS = new(mongoFs);
         await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);
@@ -214,6 +227,20 @@ public class StorageFilesImpl(
     public async Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageImageMetadataModel> req, CancellationToken token = default)
     {
         TResponseModel<StorageFileModelDB> res = new();
+
+        if(req.Payload?.Payload is null)
+        {
+            res.AddError("req.Payload?.Payload is null");
+            return res;
+        }
+        if(string.IsNullOrWhiteSpace(req.Payload.AuthorUserIdentity))
+        {
+            res.AddError("string.IsNullOrWhiteSpace(req.Payload.AuthorUserIdentity)");
+            return res;
+        }
+
+        req.Payload.FileName ??= "";
+
         GridFSBucket gridFS = new(mongoFs);
         Regex rx = new(@"\s+", RegexOptions.Compiled);
         string _file_name = rx.Replace(req.Payload.FileName.Trim(), " ");

@@ -12,13 +12,13 @@ namespace Transmission.Receives.telegram;
 /// Отправить сообщение пользователю через TelegramBot SendTextMessageTelegramBotModel
 /// </summary>
 public class SendTextMessageTelegramReceive(ITelegramBotService tgRepo, ILogger<SendTextMessageTelegramReceive> _logger)
-    : IResponseReceive<SendTextMessageTelegramBotModel?, TResponseModel<MessageComplexIdsModel?>?>
+    : IResponseReceive<SendTextMessageTelegramBotModel?, TResponseModel<MessageComplexIdsModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SendTextMessageTelegramReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<MessageComplexIdsModel?>?> ResponseHandleActionAsync(SendTextMessageTelegramBotModel? message, CancellationToken token = default)
+    public async Task<TResponseModel<MessageComplexIdsModel>?> ResponseHandleActionAsync(SendTextMessageTelegramBotModel? message, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(message);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(message)}");
