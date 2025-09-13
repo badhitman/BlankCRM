@@ -520,6 +520,16 @@ public static partial class GlobalStaticConstantsRoutes
         /// Position
         /// </summary>
         public const string POSITION_CONTROLLER_NAME = "position";
+        
+        /// <summary>
+        /// Out
+        /// </summary>
+        public const string OUT_CONTROLLER_NAME = "out";
+
+        /// <summary>
+        /// Range
+        /// </summary>
+        public const string RANGE_CONTROLLER_NAME = "range";
 
         /// <summary>
         /// OWN-TRADE
@@ -615,6 +625,21 @@ public static partial class GlobalStaticConstantsRoutes
         /// Quote
         /// </summary>
         public const string QUOTE_CONTROLLER_NAME = "quote";
+
+        /// <summary>
+        /// Bond
+        /// </summary>
+        public const string BOND_CONTROLLER_NAME = "bond";
+
+        /// <summary>
+        /// Limit
+        /// </summary>
+        public const string LIMIT_CONTROLLER_NAME = "limit";
+
+        /// <summary>
+        /// Traded
+        /// </summary>
+        public const string TRADED_CONTROLLER_NAME = "traded";
 
         /// <summary>
         /// Volume

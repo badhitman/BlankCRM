@@ -46,6 +46,23 @@ public static partial class GlobalStaticCloudStorageMetadata
         PrefixPropertyName = Routes.DUMP_ACTION_NAME,
     };
 
+    // bondOutOfRangePositionTraded
+
+    /// <inheritdoc/>
+    public static StorageMetadataModel BondPositionLimitTraded => new()
+    {
+        ApplicationName = STOCKSHARP_QUOTE_FORM,
+        PropertyName = Path.Combine(Routes.BOND_CONTROLLER_NAME, Routes.POSITION_CONTROLLER_NAME, $"{Routes.LIMIT_CONTROLLER_NAME}-{Routes.TRADED_CONTROLLER_NAME}"),
+        PrefixPropertyName = Routes.DUMP_ACTION_NAME,
+    };
+
+    /// <inheritdoc/>
+    public static StorageMetadataModel BondOutOfRangePositionLimitTraded => new()
+    {
+        ApplicationName = STOCKSHARP_QUOTE_FORM,
+        PropertyName = Path.Combine(Routes.BOND_CONTROLLER_NAME, $"{Routes.OUT_CONTROLLER_NAME}-of-{Routes.RANGE_CONTROLLER_NAME}", Routes.POSITION_CONTROLLER_NAME, $"{Routes.LIMIT_CONTROLLER_NAME}-{Routes.TRADED_CONTROLLER_NAME}"),
+        PrefixPropertyName = Routes.DUMP_ACTION_NAME,
+    };
 
     /// <summary>
     /// QuoteSmallStrategyBidVolume
