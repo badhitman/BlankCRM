@@ -16,21 +16,19 @@ public partial class DecimalParameterStorageComponent : BlazorBusyComponentBaseM
     IParametersStorageTransmission StoreRepo { get; set; } = default!;
 
 
-    /// <summary>
-    /// Label
-    /// </summary>
+    /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required string Label { get; set; }
 
-    /// <summary>
-    /// KeyStorage
-    /// </summary>
+    /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required StorageMetadataModel KeyStorage { get; set; }
 
-    /// <summary>
-    /// HelperText
-    /// </summary>
+    /// <inheritdoc/>
+    [Parameter]
+    public decimal? InitValueIfNotExist { get; set; }
+
+    /// <inheritdoc/>
     [Parameter]
     public string? HelperText { get; set; }
 
@@ -54,6 +52,13 @@ public partial class DecimalParameterStorageComponent : BlazorBusyComponentBaseM
         TResponseModel<decimal?> res = await StoreRepo.ReadParameterAsync<decimal?>(KeyStorage);
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(res.Messages.Where(x => x.TypeMessage > MessagesTypesEnum.Warning));
+
+        if (InitValueIfNotExist.HasValue && res.Response is null)
+        {
+            res.Response = InitValueIfNotExist.Value;
+            await StoreRepo.SaveParameterAsync(res.Response, KeyStorage, false);
+        }
+
         _decimalValue = res.Response ?? 0;
     }
 }
