@@ -26,6 +26,7 @@ public partial class UserBadgeComponent : BlazorBusyComponentBaseModel
     public string? BadgeColor { get; set; }
 
 
+    UserTelegramViewModel? currentUser;
     bool _visible;
     readonly DialogOptions _dialogOptions = new() { FullWidth = true };
 
@@ -62,11 +63,18 @@ public partial class UserBadgeComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync(false);
         if (res.Count == 1)
         {
-            _selected = [.. res[0]!.UserRoles!.Select(x => x.Role)];
+            currentUser = res[0];
+            _selected = [.. currentUser!.UserRoles!.Select(x => x.Role)];
         }
     }
 
-    void OpenDialog() => _visible = true;
+    void OpenDialog()
+    {
+        if (currentUser?.IsBot == true)
+            return;
+
+        _visible = true;
+    }
 
     void Submit() => _visible = false;
 }

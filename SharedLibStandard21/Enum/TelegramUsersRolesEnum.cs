@@ -16,18 +16,18 @@ public enum TelegramUsersRolesEnum
     Manage = 100,
 
     /// <inheritdoc/>
-    [Description("Success notifies/toast`s")]
+    [Description("Success toast`s")]
     NotifyToastSuccess = 210,
 
     /// <inheritdoc/>
-    [Description("Info notifies/toast`s")]
+    [Description("Info toast`s")]
     NotifyToastInfo = 220,
 
     /// <inheritdoc/>
-    [Description("Warning notifies/toast`s")]
+    [Description("Warning toast`s")]
     NotifyToastWarning = 230,
 
     /// <inheritdoc/>
-    [Description("Error notifies/toast`s")]
+    [Description("Error toast`s")]
     NotifyToastError = 240,
 }
