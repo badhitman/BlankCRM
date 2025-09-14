@@ -5,7 +5,7 @@
     @if (Selected.Count != 0)
     {
         <sup class="ms-2">
-            @($"[{string.Join(", ", Selected.Select(x => x.ToString()))}]")
+            @($"[{string.Join(", ", Selected.Select(x => { string di = x.DescriptionInfo(); int si = di.IndexOf(" "); return si < 0 ? di : di.Substring(0, si); }))}]")
         </sup>
     }
 </span>
@@ -25,7 +25,7 @@
                     SelectionMode="SelectionMode.MultiSelection">
             @foreach (TelegramUsersRolesEnum tur in Enum.GetValues(typeof(TelegramUsersRolesEnum)))
             {
-                <MudChip Value="@tur" />
+                <MudChip Value="@tur" Text="@tur.DescriptionInfo()" />
             }
         </MudChipSet>
     </DialogContent>

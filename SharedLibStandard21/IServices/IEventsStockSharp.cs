@@ -10,13 +10,8 @@ namespace SharedLib;
 /// <summary>
 /// StockSharp - events initiator
 /// </summary>
-public interface IEventsStockSharp
+public interface IEventsStockSharp : IEventsNotify
 {
-    /// <summary>
-    /// Toast - notify for client`s
-    /// </summary>
-    public Task<ResponseBaseModel> ToastClientShow(ToastShowClientModel req, CancellationToken cancellationToken = default);
-
     /// <summary>
     /// Update Connection - notify for client`s
     /// </summary>

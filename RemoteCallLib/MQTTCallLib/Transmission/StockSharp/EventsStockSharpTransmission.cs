@@ -5,13 +5,14 @@
 using System.Threading.Tasks;
 using System.Threading;
 using SharedLib;
+using System.Collections.Generic;
 
 namespace RemoteCallLib;
 
 /// <summary>
 /// StockSharpEventsServiceTransmission
 /// </summary>
-public partial class EventsStockSharpTransmission(IMQTTClient mqClient) : IEventsStockSharp
+public partial class EventsStockSharpTransmission(IMQTTClient mqClient, IEventsNotify notifyTgRepo) : IEventsStockSharp
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> BoardReceived(BoardStockSharpModel req, CancellationToken cancellationToken = default)
@@ -50,7 +51,13 @@ public partial class EventsStockSharpTransmission(IMQTTClient mqClient) : IEvent
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ToastClientShow(ToastShowClientModel req, CancellationToken cancellationToken = default)
-        => await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ToastClientShowStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken) ?? new();
+    {
+        await Task.WhenAll([
+                Task.Run(async ()=> { await notifyTgRepo.ToastClientShow(req); }),
+                Task.Run(async ()=> { await mqClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ToastClientShowStockSharpNotifyReceive, req, waitResponse: false, token: cancellationToken); }),
+            ]);
+        return ResponseBaseModel.CreateInfo("Ok");
+    }
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DashboardTradeUpdate(DashboardTradeStockSharpModel req, CancellationToken cancellationToken = default)
