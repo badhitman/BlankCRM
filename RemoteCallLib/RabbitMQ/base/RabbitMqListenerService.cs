@@ -61,7 +61,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
 
         using IServiceScope scope = servicesProvider.CreateScope();
         receiveService = scope.ServiceProvider.GetServices<IResponseReceive<TRequest?, TResponse>>().First(o => o.GetType() == QueueType);
-        LoggerRepo.LogWarning($"factory: host:{rabbitConf.Value.HostName}; username:{rabbitConf.Value.UserName};");
+        LoggerRepo.LogTrace($"factory: host:{rabbitConf.Value.HostName}; username:{rabbitConf.Value.UserName};");
         factory = new()
         {
             ClientProvidedName = rabbitConf.Value.ClientProvidedName,
@@ -150,7 +150,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 _channel.BasicAck(ea.DeliveryTag, false);
 #endif
         };
-        LoggerRepo.LogWarning($"BasicConsume QueueName:{QueueName};");
+        LoggerRepo.LogTrace($"BasicConsume QueueName:{QueueName};");
         _channel.BasicConsume(QueueName, false, consumer);
         return Task.CompletedTask;
     }
