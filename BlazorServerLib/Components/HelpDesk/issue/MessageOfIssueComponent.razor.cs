@@ -145,6 +145,7 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
     /// <inheritdoc/>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await JS.InvokeAsync<int>("FrameHeightUpdate.Reload", _guid);
+        if (!IsEditMode)
+            await JS.InvokeAsync<int>("FrameHeightUpdate.Reload", _guid);
     }
 }

@@ -140,6 +140,12 @@ namespace DbPostgreLib.Migrations.TelegramBot
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AudioId = table.Column<int>(type: "integer", nullable: true),
+                    VideoId = table.Column<int>(type: "integer", nullable: true),
+                    DocumentId = table.Column<int>(type: "integer", nullable: true),
+                    VoiceId = table.Column<int>(type: "integer", nullable: true),
+                    ContactId = table.Column<int>(type: "integer", nullable: true),
+                    TypeMessage = table.Column<int>(type: "integer", nullable: false),
                     MessageTelegramId = table.Column<int>(type: "integer", nullable: false),
                     MessageThreadId = table.Column<int>(type: "integer", nullable: true),
                     FromId = table.Column<int>(type: "integer", nullable: true),
@@ -161,11 +167,6 @@ namespace DbPostgreLib.Migrations.TelegramBot
                     Text = table.Column<string>(type: "text", nullable: true),
                     NormalizedTextUpper = table.Column<string>(type: "text", nullable: true),
                     CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    AudioId = table.Column<int>(type: "integer", nullable: true),
-                    VideoId = table.Column<int>(type: "integer", nullable: true),
-                    DocumentId = table.Column<int>(type: "integer", nullable: true),
-                    VoiceId = table.Column<int>(type: "integer", nullable: true),
-                    ContactId = table.Column<int>(type: "integer", nullable: true),
                     Caption = table.Column<string>(type: "text", nullable: true),
                     NormalizedCaptionUpper = table.Column<string>(type: "text", nullable: true)
                 },

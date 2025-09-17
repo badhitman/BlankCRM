@@ -11,7 +11,6 @@ namespace SharedLib;
 /// </summary>
 [Index(nameof(UserTelegramId), IsUnique = true)]
 [Index(nameof(Username)), Index(nameof(FirstName)), Index(nameof(LastName)), Index(nameof(IsBot))]
-[PrimaryKey(nameof(Id))]
 public class UserTelegramModelDB : UserTelegramViewModel
 {
     /// <summary>

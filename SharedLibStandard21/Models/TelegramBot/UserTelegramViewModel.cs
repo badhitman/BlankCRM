@@ -5,6 +5,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharedLib;
 
@@ -36,5 +37,6 @@ public class UserTelegramViewModel : UserTelegramBaseModel
     public int LastMessageId { get; set; }
 
     /// <inheritdoc/>
+    [NotMapped]
     public virtual List<RoleUserTelegramViewModel>? UserRoles { get; set; }
 }
