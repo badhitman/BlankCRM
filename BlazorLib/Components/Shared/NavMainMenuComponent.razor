@@ -16,7 +16,8 @@
             <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link px-3" href="@(nav_item.HrefNav)" Match="@(nav_item.IsNavLinkMatchAll? NavLinkMatch.All: NavLinkMatch.Prefix)">
-                        <span aria-hidden="true"></span> @localizer[nav_item.Title]
+                        <span aria-hidden="true"></span>
+                        @localizer.GetTranslate(nav_item.Title, StringLocalizeAreaEnum.LeftMainMenu)
                     </NavLink>
                 </div>
             </Authorized>

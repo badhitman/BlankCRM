@@ -117,8 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Board" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="Booking.LeftMainMenu" xml:space="preserve">
+    <value>Booking</value>
+  </data>
+  <data name="Cart.LeftMainMenu" xml:space="preserve">
+    <value>Cart</value>
+  </data>
+  <data name="Constructor.LeftMainMenu" xml:space="preserve">
+    <value>Constructor</value>
+  </data>
+  <data name="Files.LeftMainMenu" xml:space="preserve">
+    <value>Files</value>
+  </data>
   <data name="Forgot your password?" xml:space="preserve">
     <value>Forgot your password?</value>
+  </data>
+  <data name="Goods.LeftMainMenu" xml:space="preserve">
+    <value>Goods</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Home</value>
@@ -129,6 +147,9 @@
   <data name="HomeTitle" xml:space="preserve">
     <value>Hello, world!</value>
   </data>
+  <data name="Issues.LeftMainMenu" xml:space="preserve">
+    <value>Issues</value>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>Login</value>
   </data>
@@ -137,6 +158,9 @@
   </data>
   <data name="Navigation" xml:space="preserve">
     <value>Navigation</value>
+  </data>
+  <data name="Organizations.LeftMainMenu" xml:space="preserve">
+    <value>Organizations</value>
   </data>
   <data name="Register as a new user" xml:space="preserve">
     <value>Register as a new user</value>
@@ -150,7 +174,16 @@
   <data name="Resend confirmation email" xml:space="preserve">
     <value>Resend confirmation email</value>
   </data>
+  <data name="Services.LeftMainMenu" xml:space="preserve">
+    <value>Services</value>
+  </data>
   <data name="SignIn" xml:space="preserve">
     <value>SignIn</value>
+  </data>
+  <data name="Tools.LeftMainMenu" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="Users.LeftMainMenu" xml:space="preserve">
+    <value>Users</value>
   </data>
 </root>

@@ -2,12 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.WebUtilities;
+using BlazorLib.Locales;
 using Microsoft.AspNetCore.Components;
-using System.Security.Claims;
-using SharedLib;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
+using SharedLib;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace BlazorLib;
 
@@ -217,6 +219,17 @@ public static class Extensions
             SortDirection.Ascending => DirectionsEnum.Up,
             _ => DirectionsEnum.Up
         };
+    }
+
+    /// <inheritdoc/>
+    public static string GetTranslate(this IStringLocalizer<Resources> loc, string src, StringLocalizeAreaEnum? area = null)
+    {
+        src = loc[src];
+        
+        if (area is not null && src.EndsWith($".{area}"))
+            src = src[..src.IndexOf($".{area}")];
+
+        return src.Trim();
     }
 
     /// <summary>

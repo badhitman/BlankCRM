@@ -317,10 +317,12 @@ public class UsersAuthenticateService(
             return res;
         }
 
-        await identityRepo.ClaimsUserFlushAsync(currentAppUser.Id, token);
+        _ = await identityRepo.ClaimsUserFlushAsync(currentAppUser.Id, token);
         FlushUserRolesModel? user_flush = userManageConfig.Value.UpdatesUsersRoles?.FirstOrDefault(x => x.EmailUser.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
         if (user_flush is not null)
-            await identityRepo.TryAddRolesToUserAsync(new() { RolesNames = user_flush.SetRoles, UserId = currentAppUser.Id }, token);
+        {
+            _ = await identityRepo.TryAddRolesToUserAsync(new() { RolesNames = user_flush.SetRoles, UserId = currentAppUser.Id }, token);
+        }
 
         SignInResult sr = await signInManager.PasswordSignInAsync(userEmail, password, isPersistent, lockoutOnFailure: true);
 
