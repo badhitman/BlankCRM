@@ -1,7 +1,8 @@
-﻿@using BlazorWebLib.Components.Commerce
+﻿@using static SharedLib.GlobalStaticConstantsRoutes
+@using BlazorWebLib.Components.Commerce
 @using BlazorWebLib.Components.HelpDesk
 @using MudBlazor
-@using static SharedLib.GlobalStaticConstantsRoutes
+
 @inherits OffersTableBaseComponent
 
 @if (IsBusyProgress)
@@ -20,19 +21,44 @@ else
             <MudTextField @bind-Value="editDocument.DeliveryDate" Format="yyyy-MM-dd" Label="Дата поставки" InputType="InputType.Date" />
         </div>
         <div class="mb-3">
-            <CascadingValue Value="IncomingRubricSelectAction">
-                <CascadingValue Value="IncomingRubricMetadataShadow">
-                    <RubricSelectorComponent @ref="ref_rubricIncoming"
-                                             Title="Склад поступления"
-                                             ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
-                                             ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny" ShowDisabledRubrics StartRubric="editDocument.WarehouseId" />
-                </CascadingValue>
-            </CascadingValue>
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <CascadingValue Value="IncomingRubricSelectAction">
+                        <CascadingValue Value="IncomingRubricMetadataShadow">
+                            <RubricSelectorComponent @ref="ref_rubricIncoming"
+                                                     Title="Склад поступления"
+                                                     ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
+                                                     ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny"
+                                                     ShowDisabledRubrics
+                                                     StartRubric="editDocument.WarehouseId" />
+                        </CascadingValue>
+                    </CascadingValue>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <CascadingValue Value="WriteOffRubricSelectAction">
+                        <CascadingValue Value="WriteOffRubricMetadataShadow">
+                            <RubricSelectorComponent @ref="ref_rubricIncomingWriteOff"
+                                                     Title="Склад списания"
+                                                     ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
+                                                     ShowDisabledRubrics=false
+                                                     ModeSelectingRubrics="ModesSelectRubricsEnum.AllowWithoutRubric"
+                                                     StartRubric="editDocument.WritingOffWarehouseId" />
+                        </CascadingValue>
+                    </CascadingValue>
+                </MudItem>
+            </MudGrid>
         </div>
-        <div class="mb-3 form-check">
-            <input @bind="editDocument.IsDisabled" type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">@(editDocument.IsDisabled ? "Выключено (включить?)" : "Включено (выключить?)")</label>
-        </div>
+
+        @if (editDocument.Id > 0)
+        {
+            <div class="mb-3 form-check">
+                <input @bind="editDocument.IsDisabled" type="checkbox" class="form-check-input" id="enableWarehouse">
+                <label class="form-check-label" for="enableWarehouse">
+                    @(editDocument.IsDisabled ? "Выключено (включить?)" : "Включено (выключить?)")
+                </label>
+            </div>
+        }
+
         <div class="d-grid gap-2 my-2">
             <button @onclick="SaveDocument" disabled="@(!CanSave)" class="btn btn-primary" type="button">@(Id < 1 ? "Создать документ" : "Сохранить")</button>
         </div>

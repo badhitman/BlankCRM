@@ -2,12 +2,12 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
 using BlazorWebLib.Components.Commerce;
 using Microsoft.AspNetCore.Components;
+using BlazorLib.Components.Rubrics;
 using BlazorLib;
 using SharedLib;
-using static SharedLib.GlobalStaticConstantsRoutes;
-using BlazorLib.Components.Rubrics;
 
 namespace BlazorWebLib.Components.Warehouse;
 
@@ -37,16 +37,27 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
     WarehouseDocumentModelDB CurrentDocument = new() { DeliveryDate = DateTime.Now, Name = "Новый", NormalizedUpperName = "НОВЫЙ", Rows = [] };
     WarehouseDocumentModelDB editDocument = new() { DeliveryDate = DateTime.Now, Name = "Новый", NormalizedUpperName = "НОВЫЙ", Rows = [] };
+
     RubricSelectorComponent? ref_rubricIncoming;
+    RubricSelectorComponent? ref_rubricIncomingWriteOff;
+
     AddRowToOrderDocumentComponent? addingDomRef;
     RowOfWarehouseDocumentModelDB? elementBeforeEdit;
+
     List<RubricStandardModel>? IncomingRubricMetadataShadow;
+    List<RubricStandardModel>? WriteOffRubricMetadataShadow;
 
     bool CanSave => Id < 1 || !CurrentDocument.Equals(editDocument);
 
     void IncomingRubricSelectAction(UniversalBaseModel? selectedRubric)
     {
         editDocument.WarehouseId = selectedRubric?.Id ?? 0;
+        StateHasChanged();
+    }
+
+    void WriteOffRubricSelectAction(UniversalBaseModel? selectedRubric)
+    {
+        editDocument.WritingOffWarehouseId = selectedRubric?.Id ?? 0;
         StateHasChanged();
     }
 
@@ -94,17 +105,13 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         {
             TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(0);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
+
             IncomingRubricMetadataShadow = res.Response;
-            if (IncomingRubricMetadataShadow is not null && IncomingRubricMetadataShadow.Count != 0)
-            {
-                RubricStandardModel current_element = IncomingRubricMetadataShadow.Last();
-                if (ref_rubricIncoming is not null)
-                {
-                    await ref_rubricIncoming.OwnerRubricSet(current_element.ParentId ?? 0);
-                    await ref_rubricIncoming.SetRubric(current_element.Id, IncomingRubricMetadataShadow);
-                    ref_rubricIncoming.StateHasChangedCall();
-                }
-            }
+            await SetRubricCtx(IncomingRubricMetadataShadow, ref_rubricIncoming);
+
+            WriteOffRubricMetadataShadow = res.Response;
+            // await SetRubricCtx(WriteOffRubricMetadataShadow, ref_rubricIncomingWriteOff);
+
             _shouldRender = true;
             await SetBusyAsync(false);
             return;
@@ -113,6 +120,22 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         await ReadDocument();
         _shouldRender = true;
         await SetBusyAsync(false);
+    }
+
+    async Task SetRubricCtx(List<RubricStandardModel>? shadow, RubricSelectorComponent? ref_rubric)
+    {
+
+        if (shadow is not null && shadow.Count != 0)
+        {
+            RubricStandardModel current_element = shadow.Last();
+            if (ref_rubric is not null)
+            {
+                await ref_rubric.OwnerRubricSet(current_element.ParentId ?? 0);
+                await ref_rubric.SetRubric(current_element.Id, shadow);
+                ref_rubric.StateHasChangedCall();
+            }
+        }
+
     }
 
     async Task ReadDocument()

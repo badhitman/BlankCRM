@@ -115,7 +115,7 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
         await OwnerRubricSet(ParentRubric);
         if (ParentRubric == 0 && StartRubric.HasValue)
             await SetRubric(StartRubric.Value, RubricMetadataShadow);
-        else if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
+        else if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0 && StartRubric.HasValue && StartRubric.Value > 0)
             _selectedRubricId = RubricMetadataShadow?.LastOrDefault()?.Id ?? 0;
 
         if (ParentRubric == 0 && ParentRubric == StartRubric && ModeSelectingRubrics == ModesSelectRubricsEnum.SelectAny && CurrentRubrics is not null && CurrentRubrics.Count != 0)
