@@ -9,6 +9,7 @@ $7zipPath = "$env:ProgramFiles\7-Zip\7z.exe"
 
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/IdentityService C:/Users/User/source/repos/BlankCRM/micro-services/IdentityService/IdentityService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/CommerceService C:/Users/User/source/repos/BlankCRM/micro-services/CommerceService/CommerceService.csproj
+dotnet publish -c Debug --output C:/Users/User/Documents/publish/BankService C:/Users/User/source/repos/BlankCRM/micro-services/BankService/BankService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/StorageService C:/Users/User/source/repos/BlankCRM/micro-services/StorageService/StorageService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/KladrService C:/Users/User/source/repos/BlankCRM/micro-services/KladrService/KladrService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/LdapService C:/Users/User/source/repos/BlankCRM/micro-services/LdapService/LdapService.csproj

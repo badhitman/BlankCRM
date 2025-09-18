@@ -187,6 +187,12 @@ public class Program
             .WithReference(redisConnectionStr)
             ;
 
+        IResourceBuilder<ProjectResource> bankService = builder.AddProject<Projects.BankService>("bankservice")
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithReference(builder.AddConnectionString($"BankConnection{_modePrefix}"))
+            .WithReference(redisConnectionStr)
+            ;
+
         IResourceBuilder<ProjectResource> constructorService = builder.AddProject<Projects.ConstructorService>("constructorservice")
             .WithReference(builder.AddConnectionString($"ConstructorConnection{_modePrefix}"))
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
@@ -228,6 +234,8 @@ public class Program
             .WaitFor(apiRestService)
             .WithReference(commerceService)
             .WaitFor(commerceService)
+            .WithReference(bankService)
+            .WaitFor(bankService)
             .WithReference(constructorService)
             .WaitFor(constructorService)
             .WithReference(kladrService)

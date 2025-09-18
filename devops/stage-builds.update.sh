@@ -5,6 +5,7 @@ cp -r /srv/git/builds/KladrService /srv/services.stage/KladrService
 cp -r /srv/git/builds/LdapService /srv/services.stage/LdapService
 cp -r /srv/git/builds/StorageService /srv/services.stage/StorageService
 cp -r /srv/git/builds/CommerceService /srv/services.stage/CommerceService
+cp -r /srv/git/builds/BankService /srv/services.stage/BankService
 cp -r /srv/git/builds/HelpDeskService /srv/services.stage/HelpDeskService
 cp -r /srv/git/builds/ConstructorService /srv/services.stage/ConstructorService
 cp -r /srv/git/builds/TelegramBotService /srv/services.stage/TelegramBotService

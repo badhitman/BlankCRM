@@ -41,7 +41,7 @@ public partial class CommerceImplementService : ICommerceService
             req.Version = Guid.NewGuid();
             req.CreatedAtUTC = dtu;
             req.LastUpdatedAtUTC = dtu;
-            req.IsDisabled = false;
+            req.IsDisabled = true;
             await context.AddAsync(req, token);
             await context.SaveChangesAsync(token);
             res.Response = req.Id;
@@ -62,16 +62,23 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        LockTransactionModelDB[] offersLocked = warehouseDocumentDb.Rows!.Count == 0
-            ? []
-            : warehouseDocumentDb.Rows.Select(x => new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = x.OfferId, RubricId = req.WarehouseId }).ToArray();
+        List<LockTransactionModelDB> offersLocked = [];
+        if (warehouseDocumentDb.Rows!.Count != 0)
+            warehouseDocumentDb.Rows.ForEach(x =>
+            {
+                offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = x.OfferId, RubricId = req.WarehouseId });
+                if (req.WritingOffWarehouseId > 0 && req.WritingOffWarehouseId != req.WarehouseId)
+                    offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = x.OfferId, RubricId = req.WritingOffWarehouseId });
+            });
+
+        offersLocked = [.. offersLocked.DistinctBy(x => x.RubricId)];
 
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
-        if (offersLocked.Length != 0)
+        if (offersLocked.Count != 0)
         {
             try
             {
-                await context.AddRangeAsync(offersLocked);
+                await context.AddRangeAsync(offersLocked, token);
                 await context.SaveChangesAsync(token);
             }
             catch (Exception ex)
@@ -179,7 +186,7 @@ public partial class CommerceImplementService : ICommerceService
                 .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
-        if (offersLocked.Length != 0)
+        if (offersLocked.Count != 0)
             context.RemoveRange(offersLocked);
 
         res.AddSuccess("Складской документ обновлён");

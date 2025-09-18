@@ -1,0 +1,16 @@
+[Unit]
+Description=bank.app.service
+
+[Service]
+WorkingDirectory=/srv/services/BankService
+ExecStart=/usr/bin/dotnet /srv/services/BankService/BankService.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=dotnet-bank-app
+User=www-data
+Environment=DOTNET_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target

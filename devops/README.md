@@ -143,6 +143,7 @@ libman restore
 dotnet publish -c Debug --output /srv/git/builds/ApiRestService /srv/git/BlankCRM/micro-services/ApiRestService/ApiRestService.csproj
 dotnet publish -c Debug --output /srv/git/builds/StorageService /srv/git/BlankCRM/micro-services/StorageService/StorageService.csproj
 dotnet publish -c Debug --output /srv/git/builds/CommerceService /srv/git/BlankCRM/micro-services/CommerceService/CommerceService.csproj
+dotnet publish -c Debug --output /srv/git/builds/BankService /srv/git/BlankCRM/micro-services/BankService/BankService.csproj
 dotnet publish -c Debug --output /srv/git/builds/HelpDeskService /srv/git/BlankCRM/micro-services/HelpDeskService/HelpDeskService.csproj
 dotnet publish -c Debug --output /srv/git/builds/ConstructorService /srv/git/BlankCRM/micro-services/ConstructorService/ConstructorService.csproj
 dotnet publish -c Debug --output /srv/git/builds/TelegramBotService /srv/git/BlankCRM/micro-services/TelegramBotService/TelegramBotService.csproj
@@ -167,7 +168,7 @@ chmod -R 755 /srv/stage-builds.update.sh
 #### Systemd
 ```
 cd /srv/git/BlankCRM/devops/etc/systemd/system/
-cp docker-compose-app.service api.app.stage.service bus.app.stage.service comm.app.stage.service constructor.app.stage.service hd.app.stage.service identity.app.stage.service kladr.app.stage.service ldap.app.stage.service tg.app.stage.service web.app.stage.service /etc/systemd/system/
+cp docker-compose-app.service api.app.stage.service bus.app.stage.service comm.app.stage.service bank.app.stage.service constructor.app.stage.service hd.app.stage.service identity.app.stage.service kladr.app.stage.service ldap.app.stage.service tg.app.stage.service web.app.stage.service /etc/systemd/system/
 
 systemctl daemon-reload
 
@@ -177,6 +178,7 @@ systemctl start docker-compose-app.service
 systemctl enable api.app.stage.service
 systemctl enable web.app.stage.service
 systemctl enable comm.app.stage.service
+systemctl enable bank.app.stage.service
 systemctl enable tg.app.stage.service
 systemctl enable bus.app.stage.service
 systemctl enable constructor.app.stage.service
@@ -188,6 +190,7 @@ systemctl enable kladr.app.stage.service
 systemctl start api.app.stage.service
 systemctl start bus.app.stage.service
 systemctl start comm.app.stage.service
+systemctl start bank.app.stage.service
 systemctl start constructor.app.stage.service
 systemctl start hd.app.stage.service
 systemctl start identity.app.stage.service

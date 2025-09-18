@@ -3,6 +3,7 @@ docker exec -t srv-postgres-1 pg_dump -c -U dev NLogsContext --format=p --encodi
 docker exec -t srv-postgres-1 pg_dump -c -U dev KladrContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_Kladr_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev MainAppContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_MainApp_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev CommerceContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_Commerce_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
+docker exec -t srv-postgres-1 pg_dump -c -U dev BankContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_Bank_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev HelpDeskContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_HelpDesk_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev StorageContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_Storage_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz
 docker exec -t srv-postgres-1 pg_dump -c -U dev TelegramBotContext --format=p --encoding=UTF-8 --inserts | gzip > /srv/tmp/dumps/dump_TelegramBot_`date +%Y-%m-%d"_"%H_%M_%S`.sql.gz

@@ -7,6 +7,7 @@ cp -r /srv/git/builds/KladrService /srv/services/KladrService
 cp -r /srv/git/builds/LdapService /srv/services/LdapService
 cp -r /srv/git/builds/StorageService /srv/services/StorageService
 cp -r /srv/git/builds/CommerceService /srv/services/CommerceService
+cp -r /srv/git/builds/BankService /srv/services/BankService
 cp -r /srv/git/builds/HelpDeskService /srv/services/HelpDeskService
 cp -r /srv/git/builds/ConstructorService /srv/services/ConstructorService
 cp -r /srv/git/builds/TelegramBotService /srv/services/TelegramBotService

@@ -32,6 +32,7 @@
 		<ProjectReference Include="..\BlankBlazorApp\BlankBlazorApp\BlankBlazorApp.csproj" />
 		<ProjectReference Include="..\micro-services\ApiRestService\ApiRestService.csproj" />
 		<ProjectReference Include="..\micro-services\CommerceService\CommerceService.csproj" />
+		<ProjectReference Include="..\micro-services\BankService\BankService.csproj" />
 		<ProjectReference Include="..\micro-services\ConstructorService\ConstructorService.csproj" />
 		<ProjectReference Include="..\micro-services\HelpDeskService\HelpDeskService.csproj" />
 		<ProjectReference Include="..\micro-services\IdentityService\IdentityService.csproj" />
