@@ -22,7 +22,10 @@ else
         <div class="mb-3">
             <CascadingValue Value="RubricSelectAction">
                 <CascadingValue Value="RubricMetadataShadow">
-                    <RubricSelectorComponent @ref="ref_rubric" Title="Склад поступления" ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME" ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny" ShowDisabledRubrics="true" StartRubric="editDocument.WarehouseId" />
+                    <RubricSelectorComponent @ref="ref_rubric"
+                                             Title="Склад поступления"
+                                             ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
+                                             ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny" ShowDisabledRubrics StartRubric="editDocument.WarehouseId" />
                 </CascadingValue>
             </CascadingValue>
         </div>
@@ -36,11 +39,11 @@ else
     </div>
     @if (Id > 0)
     {
-        <MudTable Hover="true"
+        <MudTable Hover
                   Loading="IsBusyProgress"
                   ReadOnly="ReadOnly"
                   SortLabel="@(nameof(RowOfOrderDocumentModelDB.Nomenclature.Name))"
-                  CanCancelEdit="true"
+                  CanCancelEdit
                   Items="@CurrentDocument.Rows"
                   RowEditPreview="RowEditPreviewHandler"
                   RowEditCommit="RowEditCommitHandler"
@@ -58,7 +61,12 @@ else
                 @if (!ReadOnly)
                 {
                     <div class="ms-3">
-                        <AddRowToOrderDocumentComponent ShowRegistersOffersQuantity="true" ForceAdding="true" @ref="addingDomRef" WarehouseId="editDocument.WarehouseId" AllOffers="allOffers" CurrentRows="CurrentDocument.Rows!.Select(x => x.OfferId).ToList()" AddingOfferHandler="AddingOfferAction" />
+                        <AddRowToOrderDocumentComponent @ref="addingDomRef"
+                                                        ShowRegistersOffersQuantity ForceAdding
+                                                        WarehouseId="editDocument.WarehouseId"
+                                                        AllOffers="allOffers"
+                                                        CurrentRows="CurrentDocument.Rows!.Select(x => x.OfferId).ToList()"
+                                                        AddingOfferHandler="AddingOfferAction" />
                     </div>
                 }
             </ToolBarContent>
@@ -83,7 +91,9 @@ else
                 <MudTd DataLabel="Quantity">
                     @context!.Quantity
                 </MudTd>
-                <MudTd><MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" /></MudTd>
+                <MudTd>
+                    <MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+                </MudTd>
             </RowTemplate>
             <RowEditingTemplate>
                 <MudTd DataLabel="Name">

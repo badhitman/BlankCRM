@@ -41,6 +41,7 @@ public partial class CommerceImplementService : ICommerceService
             req.Version = Guid.NewGuid();
             req.CreatedAtUTC = dtu;
             req.LastUpdatedAtUTC = dtu;
+            req.IsDisabled = false;
             await context.AddAsync(req, token);
             await context.SaveChangesAsync(token);
             res.Response = req.Id;
@@ -55,7 +56,7 @@ public partial class CommerceImplementService : ICommerceService
 
         if (warehouseDocumentDb.Version != req.Version)
         {
-            msg = $"Документ #{warehouseDocumentDb.Id} был кем-то изменён (version concurent)";
+            msg = $"Документ #{warehouseDocumentDb.Id} был кем-то изменён (version concurrent)";
             loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError($"{msg}. Перед редактированием обновите страницу (F5), что бы загрузить актуальную версию объекта");
             return res;
@@ -461,7 +462,7 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
     {
-        if(req.Payload is null)
+        if (req.Payload is null)
         {
             loggerRepo.LogError("req.Payload is null");
             return new();

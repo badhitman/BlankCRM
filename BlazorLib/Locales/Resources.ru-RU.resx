@@ -175,7 +175,7 @@
     <value>Повторно отправить письмо с подтверждением</value>
   </data>
   <data name="Services.LeftMainMenu" xml:space="preserve">
-    <value>Службы</value>
+    <value>Услуги</value>
   </data>
   <data name="SignIn" xml:space="preserve">
     <value>Авторизация</value>
