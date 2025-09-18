@@ -859,9 +859,14 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<int>("WarehouseId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("WritingOffWarehouseId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DeliveryDate");
+
+                    b.HasIndex("ExternalDocumentId");
 
                     b.HasIndex("IsDisabled");
 
@@ -870,6 +875,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("NormalizedUpperName");
 
                     b.HasIndex("WarehouseId");
+
+                    b.HasIndex("WritingOffWarehouseId");
 
                     b.ToTable("WarehouseDocuments");
                 });

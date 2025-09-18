@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20250917172750_CommerceContext001")]
+    [Migration("20250918090034_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -862,9 +862,14 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<int>("WarehouseId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("WritingOffWarehouseId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DeliveryDate");
+
+                    b.HasIndex("ExternalDocumentId");
 
                     b.HasIndex("IsDisabled");
 
@@ -873,6 +878,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("NormalizedUpperName");
 
                     b.HasIndex("WarehouseId");
+
+                    b.HasIndex("WritingOffWarehouseId");
 
                     b.ToTable("WarehouseDocuments");
                 });

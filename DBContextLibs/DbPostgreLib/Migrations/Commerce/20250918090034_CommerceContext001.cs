@@ -89,6 +89,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     DeliveryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ExternalDocumentId = table.Column<string>(type: "text", nullable: true),
                     WarehouseId = table.Column<int>(type: "integer", nullable: false),
+                    WritingOffWarehouseId = table.Column<int>(type: "integer", nullable: false),
                     Version = table.Column<Guid>(type: "uuid", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
@@ -878,6 +879,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "DeliveryDate");
 
             migrationBuilder.CreateIndex(
+                name: "IX_WarehouseDocuments_ExternalDocumentId",
+                table: "WarehouseDocuments",
+                column: "ExternalDocumentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WarehouseDocuments_IsDisabled",
                 table: "WarehouseDocuments",
                 column: "IsDisabled");
@@ -896,6 +902,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_WarehouseDocuments_WarehouseId",
                 table: "WarehouseDocuments",
                 column: "WarehouseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarehouseDocuments_WritingOffWarehouseId",
+                table: "WarehouseDocuments",
+                column: "WritingOffWarehouseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WeeklySchedules_ContextName",

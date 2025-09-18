@@ -131,10 +131,10 @@ public class Program
 
 
         builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-}).AddIdentityCookies();
+        {
+            options.DefaultScheme = IdentityConstants.ApplicationScheme;
+            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+        }).AddIdentityCookies();
 
         //    builder.Services.AddAuthorization(options =>
         //options.AddPolicy("TwoFactorEnabled", x => x.RequireClaim("amr", "mfa")));

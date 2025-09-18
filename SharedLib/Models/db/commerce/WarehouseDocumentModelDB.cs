@@ -11,7 +11,7 @@ namespace SharedLib;
 /// WarehouseDocumentModelDB
 /// </summary>
 [Index(nameof(DeliveryDate)), Index(nameof(NormalizedUpperName)), Index(nameof(WarehouseId))]
-[Index(nameof(Name)), Index(nameof(IsDisabled))]
+[Index(nameof(Name)), Index(nameof(IsDisabled)), Index(nameof(ExternalDocumentId)), Index(nameof(WritingOffWarehouseId))]
 public class WarehouseDocumentModelDB : EntrySwitchableUpdatedModel
 {
     /// <summary>
@@ -41,6 +41,11 @@ public class WarehouseDocumentModelDB : EntrySwitchableUpdatedModel
     [Required]
     [Range(1, int.MaxValue, ErrorMessage = "Требуется указать склад.")]
     public int WarehouseId { get; set; }
+
+    /// <summary>
+    /// warehouse for writing off balances (if <c>warehouse movement</c>)
+    /// </summary>
+    public int WritingOffWarehouseId { get; set; }
 
     /// <summary>
     /// Version

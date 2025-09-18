@@ -1,0 +1,10 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+namespace BlazorWebLib.Components.Warehouse;
+
+public partial class WarehouseMovementsComponent
+{
+
+}
