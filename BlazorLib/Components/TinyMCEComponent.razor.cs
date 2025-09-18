@@ -15,9 +15,6 @@ public partial class TinyMCEComponent : BlazorBusyComponentBaseModel
     [Inject]
     IParametersStorageTransmission StoreRepo { get; set; } = default!;
 
-    [Inject]
-    NavigationManager NavRepo { get; set; } = default!;
-
 
     /// <summary>
     /// ReadOnly

@@ -122,9 +122,8 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         await SetBusyAsync(false);
     }
 
-    async Task SetRubricCtx(List<RubricStandardModel>? shadow, RubricSelectorComponent? ref_rubric)
+    static async Task SetRubricCtx(List<RubricStandardModel>? shadow, RubricSelectorComponent? ref_rubric)
     {
-
         if (shadow is not null && shadow.Count != 0)
         {
             RubricStandardModel current_element = shadow.Last();
@@ -135,7 +134,6 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
                 ref_rubric.StateHasChangedCall();
             }
         }
-
     }
 
     async Task ReadDocument()

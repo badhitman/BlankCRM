@@ -136,6 +136,9 @@ else
                 <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
             </EditButtonContent>
         </MudTable>
+        <hr />
+        <span>Описание:</span>
+        <TinyMCE.Blazor.Editor @bind-Value="editDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" />
     }
     else
     {
@@ -147,8 +150,8 @@ else
                 Для добавления строк <cite title="сохраните документ">запишите документ</cite>
             </figcaption>
         </figure>
+        <hr />
+        <span>Описание:</span>
+        <InputRichTextComponent @bind-Value="editDocument.Description" />
     }
-    <hr />
-    <span>Описание:</span>
-    <TinyMCE.Blazor.Editor @bind-Value="editDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" />
 }
