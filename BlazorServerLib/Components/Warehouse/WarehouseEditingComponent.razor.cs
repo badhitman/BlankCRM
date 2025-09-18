@@ -37,14 +37,14 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
     WarehouseDocumentModelDB CurrentDocument = new() { DeliveryDate = DateTime.Now, Name = "Новый", NormalizedUpperName = "НОВЫЙ", Rows = [] };
     WarehouseDocumentModelDB editDocument = new() { DeliveryDate = DateTime.Now, Name = "Новый", NormalizedUpperName = "НОВЫЙ", Rows = [] };
-    RubricSelectorComponent? ref_rubric;
+    RubricSelectorComponent? ref_rubricIncoming;
     AddRowToOrderDocumentComponent? addingDomRef;
     RowOfWarehouseDocumentModelDB? elementBeforeEdit;
-    List<RubricStandardModel>? RubricMetadataShadow;
+    List<RubricStandardModel>? IncomingRubricMetadataShadow;
 
     bool CanSave => Id < 1 || !CurrentDocument.Equals(editDocument);
 
-    void RubricSelectAction(UniversalBaseModel? selectedRubric)
+    void IncomingRubricSelectAction(UniversalBaseModel? selectedRubric)
     {
         editDocument.WarehouseId = selectedRubric?.Id ?? 0;
         StateHasChanged();
@@ -94,15 +94,15 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         {
             TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(0);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
-            RubricMetadataShadow = res.Response;
-            if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
+            IncomingRubricMetadataShadow = res.Response;
+            if (IncomingRubricMetadataShadow is not null && IncomingRubricMetadataShadow.Count != 0)
             {
-                RubricStandardModel current_element = RubricMetadataShadow.Last();
-                if (ref_rubric is not null)
+                RubricStandardModel current_element = IncomingRubricMetadataShadow.Last();
+                if (ref_rubricIncoming is not null)
                 {
-                    await ref_rubric.OwnerRubricSet(current_element.ParentId ?? 0);
-                    await ref_rubric.SetRubric(current_element.Id, RubricMetadataShadow);
-                    ref_rubric.StateHasChangedCall();
+                    await ref_rubricIncoming.OwnerRubricSet(current_element.ParentId ?? 0);
+                    await ref_rubricIncoming.SetRubric(current_element.Id, IncomingRubricMetadataShadow);
+                    ref_rubricIncoming.StateHasChangedCall();
                 }
             }
             _shouldRender = true;
@@ -131,15 +131,15 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         TResponseModel<List<RubricStandardModel>> resShadow = await HelpDeskRepo.RubricReadAsync(editDocument.WarehouseId);
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(resShadow.Messages);
-        RubricMetadataShadow = resShadow.Response;
-        if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
+        IncomingRubricMetadataShadow = resShadow.Response;
+        if (IncomingRubricMetadataShadow is not null && IncomingRubricMetadataShadow.Count != 0)
         {
-            RubricStandardModel current_element = RubricMetadataShadow.Last();
-            if (ref_rubric is not null)
+            RubricStandardModel current_element = IncomingRubricMetadataShadow.Last();
+            if (ref_rubricIncoming is not null)
             {
-                await ref_rubric.OwnerRubricSet(current_element.ParentId ?? 0);
-                await ref_rubric.SetRubric(current_element.Id, RubricMetadataShadow);
-                ref_rubric.StateHasChangedCall();
+                await ref_rubricIncoming.OwnerRubricSet(current_element.ParentId ?? 0);
+                await ref_rubricIncoming.SetRubric(current_element.Id, IncomingRubricMetadataShadow);
+                ref_rubricIncoming.StateHasChangedCall();
             }
         }
     }

@@ -22,9 +22,6 @@ public partial class App
     [Inject]
     NavigationManager NavigatorRepo { get; set; } = default!;
 
-    [Inject]
-    ISnackbar SnackbarRepo { get; set; } = default!;
-
 
     static bool _isLoaded = false;
     static bool _includeTelegramBotWeAppScript = false;

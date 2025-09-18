@@ -20,9 +20,9 @@ else
             <MudTextField @bind-Value="editDocument.DeliveryDate" Format="yyyy-MM-dd" Label="Дата поставки" InputType="InputType.Date" />
         </div>
         <div class="mb-3">
-            <CascadingValue Value="RubricSelectAction">
-                <CascadingValue Value="RubricMetadataShadow">
-                    <RubricSelectorComponent @ref="ref_rubric"
+            <CascadingValue Value="IncomingRubricSelectAction">
+                <CascadingValue Value="IncomingRubricMetadataShadow">
+                    <RubricSelectorComponent @ref="ref_rubricIncoming"
                                              Title="Склад поступления"
                                              ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
                                              ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny" ShowDisabledRubrics StartRubric="editDocument.WarehouseId" />
