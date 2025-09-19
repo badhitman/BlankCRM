@@ -9,6 +9,11 @@ Update-Database -Context CommerceContext -Project DbPostgreLib -StartupProject C
 ```
 
 ```
+Add-Migration BankContext001 -Context BankContext -Project DbPostgreLib -StartupProject BankService
+Update-Database -Context BankContext -Project DbPostgreLib -StartupProject BankService
+```
+
+```
 Add-Migration ConstructorContext001 -Context ConstructorContext -Project DbPostgreLib -StartupProject ConstructorService
 Update-Database -Context ConstructorContext -Project DbPostgreLib -StartupProject ConstructorService
 ```

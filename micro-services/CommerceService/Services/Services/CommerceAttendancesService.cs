@@ -843,3 +843,11 @@ public partial class CommerceImplementService : ICommerceService
         };
     }
 }
+
+/// <summary>
+/// BankImplementService
+/// </summary>
+public partial class BankImplementService : IBankService
+{
+
+}

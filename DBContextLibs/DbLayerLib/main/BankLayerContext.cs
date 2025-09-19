@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using SharedLib;
 
 namespace DbcLib;
 
@@ -32,4 +33,25 @@ public partial class BankLayerContext : DbContext
         options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
 #endif
     }
+
+    /// <summary>
+    /// Bank`s connection`s
+    /// </summary>
+    public DbSet<BankConnectionModelDB> ConnectionsBanks { get; set; } = default!;
+
+    /// <summary>
+    /// TBank account`s
+    /// </summary>
+    public DbSet<TBankAccountModelDB> AccountsTBank { get; set; } = default!;
+
+    /// <summary>
+    /// Customer`s banks Id`s
+    /// </summary>
+    public DbSet<CustomerBankIdModelDB> CustomersBanksIds { get; set; } = default!;
+
+    /// <summary>
+    /// Transfer`s bank`s
+    /// </summary>
+    public DbSet<BankTransferModelDB> TransfersBanks { get; set; } = default!;
+
 }

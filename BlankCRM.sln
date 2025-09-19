@@ -93,9 +93,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stage", "stage", "{CEF1BB59-528D-4BE0-AF5D-08FBB8C347A8}"
 	ProjectSection(SolutionItems) = preProject
 		devops\etc\systemd\system\api.app.stage.service = devops\etc\systemd\system\api.app.stage.service
+		devops\etc\systemd\system\bank.app.stage.service = devops\etc\systemd\system\bank.app.stage.service
 		devops\etc\systemd\system\bus.app.stage.service = devops\etc\systemd\system\bus.app.stage.service
 		devops\etc\systemd\system\comm.app.stage.service = devops\etc\systemd\system\comm.app.stage.service
-		devops\etc\systemd\system\bank.app.stage.service = devops\etc\systemd\system\bank.app.stage.service
 		devops\etc\systemd\system\constructor.app.stage.service = devops\etc\systemd\system\constructor.app.stage.service
 		devops\etc\systemd\system\hd.app.stage.service = devops\etc\systemd\system\hd.app.stage.service
 		devops\etc\systemd\system\identity.app.stage.service = devops\etc\systemd\system\identity.app.stage.service
@@ -120,9 +120,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prod", "prod", "{1B873580-3AB0-498C-B6DC-A7F9ABFE7670}"
 	ProjectSection(SolutionItems) = preProject
 		devops\etc\systemd\system\api.app.service = devops\etc\systemd\system\api.app.service
+		devops\etc\systemd\system\bank.app.service = devops\etc\systemd\system\bank.app.service
 		devops\etc\systemd\system\bus.app.service = devops\etc\systemd\system\bus.app.service
 		devops\etc\systemd\system\comm.app.service = devops\etc\systemd\system\comm.app.service
-		devops\etc\systemd\system\bank.app.service = devops\etc\systemd\system\bank.app.service
 		devops\etc\systemd\system\constructor.app.service = devops\etc\systemd\system\constructor.app.service
 		devops\etc\systemd\system\hd.app.service = devops\etc\systemd\system\hd.app.service
 		devops\etc\systemd\system\identity.app.service = devops\etc\systemd\system\identity.app.service
@@ -186,6 +186,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTCallLib", "RemoteCallLib\MQTTCallLib\MQTTCallLib.csproj", "{C54AC068-A3FD-4A81-FBE8-F1CDBA11AD6A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankService", "micro-services\BankService\BankService.csproj", "{997A2959-67F5-6471-4830-9CC18590DF3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinkoffPaymentClientApi", "..\TinkofClientApi\TinkoffPaymentClientApi\TinkoffPaymentClientApi.csproj", "{8DEDD594-4806-7567-0D2D-CCD4FF1B41A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -319,6 +321,10 @@ Global
 		{997A2959-67F5-6471-4830-9CC18590DF3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{997A2959-67F5-6471-4830-9CC18590DF3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{997A2959-67F5-6471-4830-9CC18590DF3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DEDD594-4806-7567-0D2D-CCD4FF1B41A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DEDD594-4806-7567-0D2D-CCD4FF1B41A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DEDD594-4806-7567-0D2D-CCD4FF1B41A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DEDD594-4806-7567-0D2D-CCD4FF1B41A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -368,6 +374,7 @@ Global
 		{EF4FD4EC-A88C-4188-8560-8CDBA3D5480B} = {A742CC61-7E6F-472B-AAA9-0F34B1375CF2}
 		{C54AC068-A3FD-4A81-FBE8-F1CDBA11AD6A} = {EF4FD4EC-A88C-4188-8560-8CDBA3D5480B}
 		{997A2959-67F5-6471-4830-9CC18590DF3C} = {90E71949-5CC1-4E9F-A5F2-DC59078B3849}
+		{8DEDD594-4806-7567-0D2D-CCD4FF1B41A7} = {13C283FD-FD28-4E44-9F5F-4B3CC1FEF8EB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DBB18C2F-86F0-40C9-B9ED-1CA9D03EDDE3}

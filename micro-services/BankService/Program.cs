@@ -4,19 +4,20 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Options;
+using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+using FluentScheduler;
+using OpenTelemetry;
 using RemoteCallLib;
+using BankService;
+using System.Text;
 using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
-using OpenTelemetry;
-using System.Diagnostics.Metrics;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Trace;
-using Microsoft.Extensions.Options;
-using System.Text;
-using BankService;
 
 Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
@@ -94,7 +95,7 @@ builder.Services
 .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
 ;
 
-// builder.Services.AddScoped<ICommerceService, CommerceImplementService>();
+builder.Services.AddScoped<IBankService, BankImplementService>();
 
 builder.Services.AddSingleton<WebConfigModel>();
 builder.Services.AddOptions();
@@ -116,13 +117,10 @@ string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
 builder.Services.AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 //
 builder.Services.AddScoped<IWebTransmission, WebTransmission>()
-    //.AddScoped<ITelegramTransmission, TelegramTransmission>()
-    //.AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
-    //.AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
-    //.AddScoped<IStorageTransmission, StorageTransmission>()
-    //.AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
-    //.AddScoped<IIdentityTransmission, IdentityTransmission>()
-    //.AddScoped<IRubricsTransmission, RubricsTransmission>()
+    .AddScoped<ITelegramTransmission, TelegramTransmission>()
+    .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
+    .AddScoped<IStorageTransmission, StorageTransmission>()
+    .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
     ;
 //
 builder.Services.BankRegisterMqListeners();
@@ -151,5 +149,31 @@ otel.WithTracing(tracing =>
     tracing.AddSource($"OTel.{appName}");
 });
 IHost host = builder.Build();
+
+JobManager.Initialize();
+JobManager.JobException += JobManager_JobException;
+JobManager.JobStart += JobManager_JobStart;
+
+void JobManager_JobStart(JobStartInfo info)
+{
+    logger.Info($"{info.Name}: started");
+}
+
+JobManager.JobEnd += JobManager_JobEnd;
+
+void JobManager_JobEnd(JobEndInfo info)
+{
+    logger.Info($"{info.Name}: ended ({info.Duration})");
+}
+
+void JobManager_JobException(JobExceptionInfo info)
+{
+    logger.Error("An error just happened with a scheduled job: " + info.Exception);
+}
+
+JobManager.AddJob(
+    () => Console.WriteLine("5 minutes just passed."),
+    s => s.ToRunEvery(5).Seconds()
+);
 
 host.Run();
