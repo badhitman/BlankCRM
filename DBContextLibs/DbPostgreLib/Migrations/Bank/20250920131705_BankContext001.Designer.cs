@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Bank
 {
     [DbContext(typeof(BankContext))]
-    [Migration("20250920130226_BankContext001")]
+    [Migration("20250920131705_BankContext001")]
     partial class BankContext001
     {
         /// <inheritdoc />
@@ -96,9 +96,21 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Amount");
+
                     b.HasIndex("BankConnectionId");
 
+                    b.HasIndex("Currency");
+
                     b.HasIndex("CustomerBankId1");
+
+                    b.HasIndex("Receiver");
+
+                    b.HasIndex("Sender");
+
+                    b.HasIndex("Timestamp");
+
+                    b.HasIndex("TransactionId");
 
                     b.ToTable("TransfersBanks");
                 });

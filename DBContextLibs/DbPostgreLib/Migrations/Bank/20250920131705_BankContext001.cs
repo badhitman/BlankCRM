@@ -192,14 +192,44 @@ namespace DbPostgreLib.Migrations.Bank
                 column: "Name");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TransfersBanks_Amount",
+                table: "TransfersBanks",
+                column: "Amount");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TransfersBanks_BankConnectionId",
                 table: "TransfersBanks",
                 column: "BankConnectionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TransfersBanks_Currency",
+                table: "TransfersBanks",
+                column: "Currency");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TransfersBanks_CustomerBankId1",
                 table: "TransfersBanks",
                 column: "CustomerBankId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransfersBanks_Receiver",
+                table: "TransfersBanks",
+                column: "Receiver");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransfersBanks_Sender",
+                table: "TransfersBanks",
+                column: "Sender");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransfersBanks_Timestamp",
+                table: "TransfersBanks",
+                column: "Timestamp");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransfersBanks_TransactionId",
+                table: "TransfersBanks",
+                column: "TransactionId");
         }
 
         /// <inheritdoc />

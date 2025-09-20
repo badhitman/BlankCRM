@@ -2,11 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// BankTransferStorage
 /// </summary>
+[Index(nameof(TransactionId)), Index(nameof(Timestamp)), Index(nameof(Amount)), Index(nameof(Currency)), Index(nameof(Sender)), Index(nameof(Receiver))]
 public class BankTransferModelDB : BankTransfer
 {
     /// <inheritdoc/>
@@ -14,7 +17,7 @@ public class BankTransferModelDB : BankTransfer
 
 
     /// <inheritdoc/>
-    public  int? CustomerBankId { get; set; }
+    public int? CustomerBankId { get; set; }
 
     /// <inheritdoc/>
     public CustomerBankIdModelDB? CustomerBank { get; set; }
