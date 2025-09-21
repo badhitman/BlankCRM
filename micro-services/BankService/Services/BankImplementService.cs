@@ -12,49 +12,49 @@ namespace BankService;
 public partial class BankImplementService : IBankService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> BankCreateOrUpdateAsync(BankConnectionModelDB bank, CancellationToken token = default)
+    public async Task<TResponseModel<int>> BankConnectionCreateOrUpdateAsync(BankConnectionModelDB bank, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> BankCreateOrUpdateAsync(TBankAccountModelDB acc, CancellationToken token = default)
+    public async Task<TResponseModel<int>> AccountTBankCreateOrUpdateAsync(TBankAccountModelDB acc, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> BankCreateOrUpdateAsync(CustomerBankIdModelDB acc, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CustomerBankCreateOrUpdateAsync(CustomerBankIdModelDB acc, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> BankCreateOrUpdateAsync(BankTransferModelDB acc, CancellationToken token = default)
+    public async Task<TResponseModel<int>> BankTransferCreateOrUpdateAsync(BankTransferModelDB acc, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<BankConnectionModelDB>> BanksSelectAsync(TPaginationRequestStandardModel<SelectBanksRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<BankConnectionModelDB>> ConnectionsBanksSelectAsync(TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel> req, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TBankAccountModelDB>> BanksSelectAsync(TPaginationRequestStandardModel<SelectAccountsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<TBankAccountModelDB>> AccountsTBankSelectAsync(TPaginationRequestStandardModel<SelectAccountsRequestModel> req, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<CustomerBankIdModelDB>> BanksSelectAsync(TPaginationRequestStandardModel<SelectCustomersBanksIdsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<CustomerBankIdModelDB>> CustomersBanksSelectAsync(TPaginationRequestStandardModel<SelectCustomersBanksIdsRequestModel> req, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<BankTransferModelDB>> BanksSelectAsync(TPaginationRequestStandardModel<SelectTransfersBanksRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<BankTransferModelDB>> BanksTransfersSelectAsync(TPaginationRequestStandardModel<SelectTransfersBanksRequestModel> req, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }

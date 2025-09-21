@@ -42,6 +42,26 @@ public static partial class GlobalStaticConstantsRoutes
         public const string BANK_CONTROLLER_NAME = "bank";
 
         /// <summary>
+        /// Customer
+        /// </summary>
+        public const string CUSTOMER_CONTROLLER_NAME = "customer";
+
+        /// <summary>
+        /// Customers
+        /// </summary>
+        public const string CUSTOMERS_CONTROLLER_NAME = "customers";
+
+        /// <summary>
+        /// Transfer
+        /// </summary>
+        public const string TRANSFER_CONTROLLER_NAME = "transfer";
+
+        /// <summary>
+        /// Transfers
+        /// </summary>
+        public const string TRANSFERS_CONTROLLER_NAME = "transfers";
+
+        /// <summary>
         /// Реквизиты
         /// </summary>
         public const string DETAILS_CONTROLLER_NAME = "details";
@@ -520,7 +540,7 @@ public static partial class GlobalStaticConstantsRoutes
         /// Position
         /// </summary>
         public const string POSITION_CONTROLLER_NAME = "position";
-        
+
         /// <summary>
         /// Out
         /// </summary>
@@ -540,6 +560,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Connection
         /// </summary>
         public const string CONNECTION_CONTROLLER_NAME = "connection";
+
+        /// <summary>
+        /// Connections
+        /// </summary>
+        public const string CONNECTIONS_CONTROLLER_NAME = "connections";
 
         /// <summary>
         /// Toast
@@ -925,6 +950,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Account
         /// </summary>
         public const string ACCOUNT_CONTROLLER_NAME = "account";
+
+        /// <summary>
+        /// Accounts
+        /// </summary>
+        public const string ACCOUNTS_CONTROLLER_NAME = "accounts";
 
         /// <summary>
         /// Flow

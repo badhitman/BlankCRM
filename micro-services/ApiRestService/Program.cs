@@ -3,23 +3,23 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Converters;
+using System.Diagnostics.Metrics;
 using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using System.Reflection;
 using ApiRestService;
+using OpenTelemetry;
 using RemoteCallLib;
+using System.Text;
 using SharedLib;
 using NLog.Web;
 using NLog;
-using OpenTelemetry;
-using System.Diagnostics.Metrics;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Trace;
-using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
 using DbcLib;
-using System.Text;
 
 Console.OutputEncoding = Encoding.UTF8;
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -137,7 +137,8 @@ builder.Services
     .AddScoped<IKladrNavigationService, KladrNavigationServiceTransmission>()
     .AddScoped<IStorageTransmission, StorageTransmission>()
     .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
-    .AddScoped<IKladrService, KladrServiceTransmission>()//
+    .AddScoped<IKladrService, KladrServiceTransmission>()
+    .AddScoped<IBankService, BankTransmission>()
     ;
 #endregion
 

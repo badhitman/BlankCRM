@@ -715,7 +715,32 @@ public static partial class GlobalStaticConstantsTransmission
 
         /// <inheritdoc/>
         public readonly static string PriceRuleDeleteCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.PRICE_CONTROLLER_NAME, Routes.OFFER_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
+        #endregion
 
+        #region Bank`s
+        /// <inheritdoc/>
+        public readonly static string BankConnectionCreateOrUpdateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string AccountTBankCreateOrUpdateReceive = Path.Combine(TransmissionQueueNamePrefix, $"T-{Routes.BANK_CONTROLLER_NAME}", Routes.ACCOUNT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string CustomerBankCreateOrUpdateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.CUSTOMER_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string BankTransferCreateOrUpdateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.TRANSFER_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string ConnectionsBanksSelectReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.CONNECTIONS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string AccountsTBankSelectReceive = Path.Combine(TransmissionQueueNamePrefix, $"T-{Routes.BANK_CONTROLLER_NAME}", Routes.ACCOUNTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string CustomersBanksSelectReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.CUSTOMERS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string BanksTransfersSelectReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.TRANSFERS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
         #endregion
 
         #region HelpDesk
