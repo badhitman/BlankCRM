@@ -1,0 +1,37 @@
+﻿@using MudBlazor
+
+<MudTable ServerData="ServerReload" @ref=table Dense Hover>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Transfers</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Timestamp</MudTh>
+        <MudTh>Amount</MudTh>
+        <MudTh>Currency</MudTh>
+        <MudTh>CustomerBank</MudTh>
+        <MudTh>Sender</MudTh>
+        <MudTh>Receiver</MudTh>
+        <MudTh>TransactionId</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Timestamp">@context.Timestamp</MudTd>
+        <MudTd DataLabel="Amount">@context.Amount</MudTd>
+        <MudTd DataLabel="Currency">@context.Currency</MudTd>
+        <MudTd DataLabel="CustomerBank">@context.CustomerBank?.ToString()</MudTd>
+        <MudTd DataLabel="Sender">@context.Sender</MudTd>
+        <MudTd DataLabel="Receiver">@context.Receiver</MudTd>
+        <MudTd DataLabel="TransactionId">@context.TransactionId</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

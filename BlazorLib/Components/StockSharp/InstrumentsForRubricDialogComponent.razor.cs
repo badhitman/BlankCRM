@@ -65,7 +65,7 @@ public partial class InstrumentsForRubricDialogComponent : BlazorBusyComponentBa
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
-            SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
+            SortingDirection = state.SortDirection.Convert(),
         };
         await SetBusyAsync(token: token);
         TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);

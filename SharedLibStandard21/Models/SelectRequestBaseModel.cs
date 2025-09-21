@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
-
 namespace SharedLib;
 
 /// <summary>
@@ -11,12 +9,6 @@ namespace SharedLib;
 /// </summary>
 public class SelectRequestBaseModel
 {
-    /// <summary>
-    /// IdentityUserId
-    /// </summary>
-    [Required]
-    public string[]? IdentityUsersIds { get; set; }
-
     /// <summary>
     /// ProjectId
     /// </summary>

@@ -47,6 +47,10 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
     {
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         IQueryable<BankConnectionModelDB> q = ctx.ConnectionsBanks.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => (x.Token != null && x.Token.Contains(req.FindQuery)) || x.Name.Contains(req.FindQuery));
+
         if (req.PageSize < 10)
             req.PageSize = 10;
 
@@ -106,6 +110,10 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
     {
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         IQueryable<TBankAccountModelDB> q = ctx.AccountsTBank.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.AccountNumber.Contains(req.FindQuery) || x.Name.Contains(req.FindQuery));
+
         if (req.PageSize < 10)
             req.PageSize = 10;
 
@@ -154,6 +162,10 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
     {
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         IQueryable<CustomerBankIdModelDB> q = ctx.CustomersBanksIds.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => (x.Inn != null && x.Inn.Contains(req.FindQuery)) || (x.Name != null && x.Name.Contains(req.FindQuery)));
+
         if (req.PageSize < 10)
             req.PageSize = 10;
 
@@ -203,6 +215,10 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
     {
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         IQueryable<BankTransferModelDB> q = ctx.TransfersBanks.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.TransactionId.Contains(req.FindQuery) || x.Sender.Contains(req.FindQuery) || x.Receiver.Contains(req.FindQuery));
+
         if (req.PageSize < 10)
             req.PageSize = 10;
 

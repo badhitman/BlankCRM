@@ -2,6 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using SharedLib;
+using Transmission.Receives.bank;
+
 namespace BankService;
 
 /// <summary>
@@ -15,7 +18,14 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection BankRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            // .RegisterMqListener<OrganizationSetLegalReceive, OrganizationLegalModel, TResponseModel<bool>>()            
+            .RegisterMqListener<BankConnectionCreateOrUpdateReceive, BankConnectionModelDB, TResponseModel<int>>()
+            .RegisterMqListener<ConnectionsBanksSelectReceive, TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel>, TPaginationResponseModel<BankConnectionModelDB>>()
+            .RegisterMqListener<CustomerBankCreateOrUpdateReceive, CustomerBankIdModelDB, TResponseModel<int>>()
+            .RegisterMqListener<CustomersBanksSelectReceive, TPaginationRequestStandardModel<SelectCustomersBanksIdsRequestModel>, TPaginationResponseModel<CustomerBankIdModelDB>>()
+            .RegisterMqListener<BanksTransfersSelectReceive, TPaginationRequestStandardModel<SelectTransfersBanksRequestModel>, TPaginationResponseModel<BankTransferModelDB>>()
+            .RegisterMqListener<BankTransferCreateOrUpdateReceive, BankTransferModelDB, TResponseModel<int>>()
+            .RegisterMqListener<AccountsTBankSelectReceive, TPaginationRequestStandardModel<SelectAccountsRequestModel>, TPaginationResponseModel<TBankAccountModelDB>>()
+            .RegisterMqListener<AccountTBankCreateOrUpdateReceive, TBankAccountModelDB, TResponseModel<int>>()
             ;
     }
 }

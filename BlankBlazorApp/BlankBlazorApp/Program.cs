@@ -216,8 +216,9 @@ builder.Services.AddSingleton<IRabbitClient>(x =>
     new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(),
                 x.GetRequiredService<ILogger<RabbitClient>>(),
                 appName));
-//
+
 builder.Services
+    .AddScoped<IBankService, BankTransmission>()
     .AddScoped<ICommerceTransmission, CommerceTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()
     .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()

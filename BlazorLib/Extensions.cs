@@ -18,6 +18,20 @@ namespace BlazorLib;
 /// </summary>
 public static class Extensions
 {
+    /// <summary>
+    /// Convert
+    /// </summary>
+    public static DirectionsEnum Convert(this SortDirection mudSort)
+    {
+        return mudSort switch
+        {
+            SortDirection.Ascending => DirectionsEnum.Up,
+            SortDirection.Descending => DirectionsEnum.Down,
+            SortDirection.None => DirectionsEnum.Up,
+            _ => DirectionsEnum.Up,
+        };
+    }
+
     static List<MessageViewModel> MessagesHistory { get; set; } = [];
     static List<ToastViewClientModel> ToastsHistory { get; set; } = [];
 

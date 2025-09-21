@@ -172,7 +172,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortBy = state.SortLabel,
-            SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
+            SortingDirection = state.SortDirection.Convert(),
         };
 
         if (Organization is not null && Organization.Id > 0)

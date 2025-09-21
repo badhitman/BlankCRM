@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// SelectIssuesRequestModel
 /// </summary>
-public class SelectIssuesRequestModel : SelectRequestBaseModel
+public class SelectIssuesRequestModel : SelectRequestAuthBaseModel
 {
     /// <summary>
     /// Автор, Исполнитель, Подписчик или Main (= Исполнитель||Подписчик)

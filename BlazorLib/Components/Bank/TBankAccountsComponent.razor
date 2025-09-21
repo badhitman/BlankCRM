@@ -1,0 +1,49 @@
+﻿@using MudBlazor
+
+<MudTable ServerData="ServerReload" @ref=table Dense Hover>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">TBank Accounts</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>AccountNumber</MudTh>
+        <MudTh>AccountType</MudTh>
+        <MudTh>ActivationDate</MudTh>
+        <MudTh>Balance</MudTh>
+        <MudTh>BankBik</MudTh>
+        <MudTh>CreatedOn</MudTh>
+        <MudTh>Currency</MudTh>
+        <MudTh>IsActive</MudTh>
+        <MudTh>MainFlag</MudTh>
+        <MudTh>TariffCode</MudTh>
+        <MudTh>TariffName</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Status">@context.Status</MudTd>
+        <MudTd DataLabel="AccountNumber">@context.AccountNumber</MudTd>
+        <MudTd DataLabel="AccountType">@context.AccountType</MudTd>
+        <MudTd DataLabel="ActivationDate">@context.ActivationDate</MudTd>
+        <MudTd DataLabel="Balance">@context.Balance?.ToString()</MudTd>
+        <MudTd DataLabel="BankBik">@context.BankBik</MudTd>
+        <MudTd DataLabel="CreatedOn">@context.CreatedOn</MudTd>
+        <MudTd DataLabel="Currency">@context.Currency</MudTd>
+        <MudTd DataLabel="IsActive">@context.IsActive</MudTd>
+        <MudTd DataLabel="MainFlag">@context.MainFlag</MudTd>
+        <MudTd DataLabel="TariffCode">@context.TariffCode</MudTd>
+        <MudTd DataLabel="TariffName">@context.TariffName</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

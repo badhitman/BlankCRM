@@ -1,0 +1,28 @@
+﻿@using MudBlazor
+
+<MudTable ServerData="ServerReload" @ref=table Dense Hover>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Connections for banks</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="nr_field" T="BankConnectionModelDB">Nr</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Token">@context.Token</MudTd>
+        <MudTd DataLabel="LastChecked">@context.LastChecked</MudTd>
+        <MudTd DataLabel="Nr">@context.BankInterface.DescriptionInfo()</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

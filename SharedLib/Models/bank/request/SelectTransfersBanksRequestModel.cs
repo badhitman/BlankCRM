@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// SelectTransfersBanksRequestModel
 /// </summary>
-public class SelectTransfersBanksRequestModel : SelectRequestBaseModel
+public class SelectTransfersBanksRequestModel
 {
 
 }

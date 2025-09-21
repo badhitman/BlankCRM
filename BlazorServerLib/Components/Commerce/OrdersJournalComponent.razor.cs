@@ -79,7 +79,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortBy = state.SortLabel,
-            SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
+            SortingDirection = state.SortDirection.Convert(),
             Payload = new()
             {
                 SenderActionUserId = CurrentUserSession!.UserId,

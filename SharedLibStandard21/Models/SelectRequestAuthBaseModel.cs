@@ -2,15 +2,18 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.ComponentModel.DataAnnotations;
+
 namespace SharedLib;
 
 /// <summary>
-/// SelectArticlesRequestModel
+/// SelectRequestAuthBaseModel
 /// </summary>
-public class SelectArticlesRequestModel : SelectRequestAuthBaseModel
+public class SelectRequestAuthBaseModel : SelectRequestBaseModel
 {
     /// <summary>
-    /// Загрузить данные по тэгам и рубрикам
+    /// IdentityUserId
     /// </summary>
-    public bool IncludeExternal { get; set; }
+    [Required]
+    public string[]? IdentityUsersIds { get; set; }
 }

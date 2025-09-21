@@ -64,7 +64,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortBy = state.SortLabel,
-            SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
+            SortingDirection = state.SortDirection.Convert(),
         };
         await SetBusyAsync(token: token);
         TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId }, token);
@@ -84,7 +84,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
                 SenderActionUserId = CurrentUserSession!.UserId,
                 PageNum = 0,
                 PageSize = 100,
-                SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
+                SortingDirection = state.SortDirection.Convert(),
             };
 
             TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq, token);

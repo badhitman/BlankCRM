@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// SelectMetadataRequestModel
 /// </summary>
-public class SelectMetadataRequestModel : SelectRequestBaseModel
+public class SelectMetadataRequestModel : SelectRequestAuthBaseModel
 {
     /// <summary>
     /// Приложение

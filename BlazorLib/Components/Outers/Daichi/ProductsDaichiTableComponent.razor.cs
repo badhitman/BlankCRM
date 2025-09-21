@@ -26,7 +26,7 @@ public partial class ProductsDaichiTableComponent : BlazorBusyComponentBaseModel
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
-            SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
+            SortingDirection = state.SortDirection.Convert(),
             FindQuery = searchString
         };
 

@@ -163,7 +163,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortBy = state.SortLabel,
-            SortingDirection = state.SortDirection == SortDirection.Ascending ? DirectionsEnum.Up : DirectionsEnum.Down,
+            SortingDirection = state.SortDirection.Convert(),
         };
 
         TPaginationResponseModel<StorageFileModelDB> rest = await FilesRepo

@@ -1,0 +1,29 @@
+﻿@using MudBlazor
+
+<MudTable ServerData="ServerReload" @ref=table Dense Hover>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Customers banks</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(async s => await OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Inn</MudTh>
+        <MudTh>IdentifyType</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Inn">@context.Inn</MudTd>
+        <MudTd DataLabel="IdentifyType">@context.BankIdentifyType.DescriptionInfo()</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
