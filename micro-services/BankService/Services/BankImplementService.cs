@@ -2,60 +2,218 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
 using SharedLib;
+using DbcLib;
 
 namespace BankService;
 
 /// <summary>
 /// BankService
 /// </summary>
-public partial class BankImplementService : IBankService
+public partial class BankImplementService(IDbContextFactory<BankContext> bankDbFactory) : IBankService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> BankConnectionCreateOrUpdateAsync(BankConnectionModelDB bank, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        TResponseModel<int> res = new();
+        ValidateReportModel ck = GlobalTools.ValidateObject(bank);
+        if (!ck.IsValid)
+        {
+            res.Messages.InjectException(ck.ValidationResults);
+            return res;
+        }
+
+        if (bank.Id == 0)
+        {
+            await ctx.ConnectionsBanks.AddAsync(bank, token);
+            res.Response = bank.Id;
+            return res;
+        }
+        res.Response = bank.Id;
+
+        await ctx.ConnectionsBanks
+            .Where(x => x.Id == bank.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Token, bank.Token)
+                .SetProperty(p => p.BankInterface, bank.BankInterface)
+                .SetProperty(p => p.Name, bank.Name), cancellationToken: token);
+
+        return res;
     }
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<BankConnectionModelDB>> ConnectionsBanksSelectAsync(TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel> req, CancellationToken token = default)
+    {
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        IQueryable<BankConnectionModelDB> q = ctx.ConnectionsBanks.AsQueryable();
+        if (req.PageSize < 10)
+            req.PageSize = 10;
+
+        return new()
+        {
+            PageSize = req.PageSize,
+            PageNum = req.PageNum,
+            SortBy = req.SortBy,
+            SortingDirection = req.SortingDirection,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.Skip(req.PageSize * req.PageNum).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
+    }
+
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> AccountTBankCreateOrUpdateAsync(TBankAccountModelDB acc, CancellationToken token = default)
     {
-        throw new NotImplementedException();
-    }
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        TResponseModel<int> res = new();
+        ValidateReportModel ck = GlobalTools.ValidateObject(acc);
+        if (!ck.IsValid)
+        {
+            res.Messages.InjectException(ck.ValidationResults);
+            return res;
+        }
 
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CustomerBankCreateOrUpdateAsync(CustomerBankIdModelDB acc, CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
+        if (acc.Id == 0)
+        {
+            await ctx.AccountsTBank.AddAsync(acc, token);
+            res.Response = acc.Id;
+            return res;
+        }
+        res.Response = acc.Id;
 
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> BankTransferCreateOrUpdateAsync(BankTransferModelDB acc, CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
+        await ctx.AccountsTBank
+            .Where(x => x.Id == acc.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.IsActive, acc.IsActive)
+                .SetProperty(p => p.Status, acc.Status)
+                .SetProperty(p => p.AccountType, acc.AccountType)
+                .SetProperty(p => p.AccountNumber, acc.AccountNumber)
+                .SetProperty(p => p.TariffName, acc.TariffName)
+                .SetProperty(p => p.TariffCode, acc.TariffCode)
+                .SetProperty(p => p.MainFlag, acc.MainFlag)
+                .SetProperty(p => p.Currency, acc.Currency)
+                .SetProperty(p => p.CreatedOn, acc.CreatedOn)
+                .SetProperty(p => p.BankBik, acc.BankBik)
+                .SetProperty(p => p.Balance, acc.Balance)
+                .SetProperty(p => p.ActivationDate, acc.ActivationDate)
+                .SetProperty(p => p.Name, acc.Name), cancellationToken: token);
 
-    /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<BankConnectionModelDB>> ConnectionsBanksSelectAsync(TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel> req, CancellationToken token = default)
-    {
-        throw new NotImplementedException();
+        return res;
     }
-
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<TBankAccountModelDB>> AccountsTBankSelectAsync(TPaginationRequestStandardModel<SelectAccountsRequestModel> req, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        IQueryable<TBankAccountModelDB> q = ctx.AccountsTBank.AsQueryable();
+        if (req.PageSize < 10)
+            req.PageSize = 10;
+
+        return new()
+        {
+            PageSize = req.PageSize,
+            PageNum = req.PageNum,
+            SortBy = req.SortBy,
+            SortingDirection = req.SortingDirection,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.Skip(req.PageSize * req.PageNum).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
     }
 
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> CustomerBankCreateOrUpdateAsync(CustomerBankIdModelDB cust, CancellationToken token = default)
+    {
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        TResponseModel<int> res = new();
+        ValidateReportModel ck = GlobalTools.ValidateObject(cust);
+        if (!ck.IsValid)
+        {
+            res.Messages.InjectException(ck.ValidationResults);
+            return res;
+        }
+
+        if (cust.Id == 0)
+        {
+            await ctx.CustomersBanksIds.AddAsync(cust, token);
+            res.Response = cust.Id;
+            return res;
+        }
+        res.Response = cust.Id;
+
+        await ctx.CustomersBanksIds
+            .Where(x => x.Id == cust.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Inn, cust.Inn)
+                .SetProperty(p => p.Name, cust.Name), cancellationToken: token);
+
+        return res;
+    }
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<CustomerBankIdModelDB>> CustomersBanksSelectAsync(TPaginationRequestStandardModel<SelectCustomersBanksIdsRequestModel> req, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        IQueryable<CustomerBankIdModelDB> q = ctx.CustomersBanksIds.AsQueryable();
+        if (req.PageSize < 10)
+            req.PageSize = 10;
+
+        return new()
+        {
+            PageSize = req.PageSize,
+            PageNum = req.PageNum,
+            SortBy = req.SortBy,
+            SortingDirection = req.SortingDirection,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.Skip(req.PageSize * req.PageNum).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
     }
 
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> BankTransferCreateOrUpdateAsync(BankTransferModelDB trans, CancellationToken token = default)
+    {
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        TResponseModel<int> res = new();
+        ValidateReportModel ck = GlobalTools.ValidateObject(trans);
+        if (!ck.IsValid)
+        {
+            res.Messages.InjectException(ck.ValidationResults);
+            return res;
+        }
+
+        if (trans.Id == 0)
+        {
+            await ctx.TransfersBanks.AddAsync(trans, token);
+            res.Response = trans.Id;
+            return res;
+        }
+        res.Response = trans.Id;
+
+        await ctx.TransfersBanks
+            .Where(x => x.Id == trans.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Receiver, trans.Receiver)
+                .SetProperty(p => p.Amount, trans.Amount)
+                .SetProperty(p => p.Sender, trans.Sender), cancellationToken: token);
+
+        return res;
+    }
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<BankTransferModelDB>> BanksTransfersSelectAsync(TPaginationRequestStandardModel<SelectTransfersBanksRequestModel> req, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        IQueryable<BankTransferModelDB> q = ctx.TransfersBanks.AsQueryable();
+        if (req.PageSize < 10)
+            req.PageSize = 10;
+
+        return new()
+        {
+            PageSize = req.PageSize,
+            PageNum = req.PageNum,
+            SortBy = req.SortBy,
+            SortingDirection = req.SortingDirection,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.Skip(req.PageSize * req.PageNum).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
     }
 }

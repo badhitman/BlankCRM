@@ -13,5 +13,5 @@ namespace SharedLib;
 public class CustomerBankIdModelDB : CustomerBankIdBaseModel
 {
     /// <inheritdoc/>
-    public long Id { get; set; }
+    public int Id { get; set; }
 }

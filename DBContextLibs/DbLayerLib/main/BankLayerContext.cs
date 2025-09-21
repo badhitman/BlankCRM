@@ -53,5 +53,4 @@ public partial class BankLayerContext : DbContext
     /// Transfer`s bank`s
     /// </summary>
     public DbSet<BankTransferModelDB> TransfersBanks { get; set; } = default!;
-
 }

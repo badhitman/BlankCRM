@@ -1,0 +1,7 @@
+﻿@page "/banks/manage"
+@using BlazorWebLib.Components.Bank
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<BankManageComponent />
