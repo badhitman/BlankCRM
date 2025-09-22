@@ -11,7 +11,7 @@ namespace BlazorLib.Components.Bank;
 /// <summary>
 /// ConnectionsBanksTableComponent
 /// </summary>
-public partial class ConnectionsBanksTableComponent
+public partial class ConnectionsBanksTableComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IBankService BankRepo { get; set; } = default!;
@@ -20,14 +20,62 @@ public partial class ConnectionsBanksTableComponent
     MudTable<BankConnectionModelDB>? table;
     string? searchString;
 
+    BankInterfacesEnum bankInt;
+    string? bankName;
+    string? bankToken;
+    BankConnectionModelDB? elementBeforeEdit;
 
-    async Task OnSearch(string text)
+    void BackupItem(object element)
     {
-        searchString = text;
-        if (table is not null)
-            await table.ReloadServerData();
+        if (element is BankConnectionModelDB _re)
+            elementBeforeEdit = GlobalTools.CreateDeepCopy(_re);
     }
 
+    async void ItemHasBeenCommitted(object element)
+    {
+        if (element is BankConnectionModelDB _re)
+        {
+            await SetBusyAsync();
+
+            TResponseModel<int> res = await BankRepo.BankConnectionCreateOrUpdateAsync(_re);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+            if (table is not null)
+                await table.ReloadServerData();
+
+            elementBeforeEdit = null;
+            await SetBusyAsync(false);
+        }
+    }
+
+    void ResetItemToOriginalValues(object element)
+    {
+        ((BankConnectionModelDB)element).Token = elementBeforeEdit!.Token;
+        ((BankConnectionModelDB)element).Name = elementBeforeEdit.Name;
+        ((BankConnectionModelDB)element).BankInterface = elementBeforeEdit.BankInterface;
+    }
+
+    async Task AddConnection()
+    {
+        if (string.IsNullOrWhiteSpace(bankName) || string.IsNullOrWhiteSpace(bankToken))
+        {
+            SnackBarRepo.Error("set name and token for create connection");
+            return;
+        }
+
+        await SetBusyAsync();
+
+        TResponseModel<int> res = await BankRepo.BankConnectionCreateOrUpdateAsync(new BankConnectionModelDB() { Name = bankName, BankInterface = bankInt, Token = bankToken });
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+        if (table is not null)
+            await table.ReloadServerData();
+
+        bankName = null;
+        bankToken = null;
+
+        await SetBusyAsync(false);
+    }
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server, with a token for canceling this request
@@ -44,5 +92,12 @@ public partial class ConnectionsBanksTableComponent
         };
         TPaginationResponseModel<BankConnectionModelDB> res = await BankRepo.ConnectionsBanksSelectAsync(req, token);
         return new TableData<BankConnectionModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+    }
+
+    async Task OnSearch(string text)
+    {
+        searchString = text;
+        if (table is not null)
+            await table.ReloadServerData();
     }
 }

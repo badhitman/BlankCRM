@@ -1,21 +1,82 @@
 ﻿@using MudBlazor
 
-<MudTable ServerData="ServerReload" @ref=table Dense Hover>
+@inherits BlazorBusyComponentBaseModel
+
+<MudGrid>
+    <MudItem xs="4">
+        <MudSelect @bind-Value="bankInt" Label="Bank interface" Variant="Variant.Text" ShrinkLabel>
+            @foreach (BankInterfacesEnum state in Enum.GetValues(typeof(BankInterfacesEnum)))
+            {
+                <MudSelectItem Value="@state">@state.DescriptionInfo()</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="3">
+        <MudTextField @bind-Value="bankName" Label="Name" Immediate></MudTextField>
+    </MudItem>
+    <MudItem xs="4">
+        <MudTextField @bind-Value="bankToken" Label="Token" Immediate></MudTextField>
+    </MudItem>
+    <MudItem xs="1">
+        <MudFab Disabled=@(string.IsNullOrWhiteSpace(bankName) || string.IsNullOrWhiteSpace(bankToken))
+                StartIcon="@Icons.Material.Filled.Add"
+                Label="Add"
+                OnClick=AddConnection />
+    </MudItem>
+</MudGrid>
+<hr />
+<MudTable CanCancelEdit Dense Hover IsEditRowSwitchingBlocked Loading=IsBusyProgress
+          ServerData=ServerReload @ref=table
+          ApplyButtonPosition=TableApplyButtonPosition.End
+          EditButtonPosition=TableEditButtonPosition.End
+          EditTrigger=TableEditTrigger.EditButton
+          RowEditPreview=BackupItem
+          RowEditCommit="ItemHasBeenCommitted"
+          RowEditCancel=ResetItemToOriginalValues>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Connections for banks</MudText>
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
+    <ColGroup>
+        <col />
+        <col />
+        <col style="width:80px;" />
+        <col style="width:80px;" />
+        <col style="width:50px;" />
+    </ColGroup>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="nr_field" T="BankConnectionModelDB">Nr</MudTableSortLabel></MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Token</MudTh>
+        <MudTh>LastChecked</MudTh>
+        <MudTh>BankInterface</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Token">@context.Token</MudTd>
+        <MudTd Style="filter: blur(5px)" DataLabel="Token">@context.Token</MudTd>
         <MudTd DataLabel="LastChecked">@context.LastChecked</MudTd>
-        <MudTd DataLabel="Nr">@context.BankInterface.DescriptionInfo()</MudTd>
+        <MudTd DataLabel="BankInterface">@context.BankInterface.DescriptionInfo()</MudTd>
     </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Name">
+            <MudTextField @bind-Value="context.Name" Required Label="Name" Immediate />
+        </MudTd>
+        <MudTd DataLabel="Token">
+            <MudTextField @bind-Value="context.Token" Required Label="Token" Immediate />
+        </MudTd>
+        <MudTd DataLabel="LastChecked">
+            @context.LastChecked
+        </MudTd>
+        <MudTd DataLabel="BankInterface">
+            <MudSelect @bind-Value="context.BankInterface" Label="Bank interface" Variant="Variant.Text" ShrinkLabel>
+                @foreach (BankInterfacesEnum state in Enum.GetValues(typeof(BankInterfacesEnum)))
+                {
+                    <MudSelectItem Value="@state">@state.DescriptionInfo()</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+    </RowEditingTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>
     </NoRecordsContent>

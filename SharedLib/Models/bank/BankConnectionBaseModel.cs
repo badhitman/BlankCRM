@@ -10,7 +10,7 @@ namespace SharedLib;
 public class BankConnectionBaseModel
 {
     /// <inheritdoc/>
-    public string? Token { get; set; }
+    public required string Token { get; set; }
 
     /// <inheritdoc/>
     public required string Name { get; set; }

@@ -28,6 +28,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         if (bank.Id == 0)
         {
             await ctx.ConnectionsBanks.AddAsync(bank, token);
+            await ctx.SaveChangesAsync(token);
             res.Response = bank.Id;
             return res;
         }
@@ -81,6 +82,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         if (acc.Id == 0)
         {
             await ctx.AccountsTBank.AddAsync(acc, token);
+            await ctx.SaveChangesAsync(token);
             res.Response = acc.Id;
             return res;
         }
@@ -144,6 +146,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         if (cust.Id == 0)
         {
             await ctx.CustomersBanksIds.AddAsync(cust, token);
+            await ctx.SaveChangesAsync(token);
             res.Response = cust.Id;
             return res;
         }
@@ -196,6 +199,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         if (trans.Id == 0)
         {
             await ctx.TransfersBanks.AddAsync(trans, token);
+            await ctx.SaveChangesAsync(token);
             res.Response = trans.Id;
             return res;
         }
