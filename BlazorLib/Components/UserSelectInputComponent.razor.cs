@@ -35,7 +35,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
                 PageSize = page_size,
             });
         IsBusyProgress = false;
-        
+
         if (rest.Response is not null)
         {
             TotalRowsCount = rest.TotalRowsCount;
@@ -50,15 +50,19 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
     }
 
     /// <inheritdoc/>
+    public void ClearInput()
+    {
+        SelectedObject = UserInfoModel.BuildEmpty();
+        SelectHandleAction(SelectedObject);
+        StateHasChanged();
+    }
+
+    /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
         if (string.IsNullOrWhiteSpace(SelectedUser))
         {
-            SelectedObject = new()
-            {
-                UserId = "",
-                UserName = "Not select",
-            };
+            SelectedObject = UserInfoModel.BuildEmpty();
             SelectHandleAction(SelectedObject);
             return;
         }

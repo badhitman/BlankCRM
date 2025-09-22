@@ -18,7 +18,7 @@
         <MudTextField @bind-Value="customerInn" Label="Inn" Immediate></MudTextField>
     </MudItem>
     <MudItem xs="3" Class="mt-1">
-        <UserSelectInputComponent SelectHandleAction="SelectUserHandler" SelectedUser="@userIdentityId" />
+        <UserSelectInputComponent SelectHandleAction="SelectUserHandler" @ref=_usRef />
     </MudItem>
     <MudItem xs="1">
         <MudFab Disabled=@(string.IsNullOrWhiteSpace(customerName) && string.IsNullOrWhiteSpace(customerInn))
@@ -41,18 +41,21 @@
     <ColGroup>
         <col />
         <col />
+        <col />
         <col style="width:180px;" />
         <col style="width:50px;" />
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
-        <MudTh>Inn</MudTh>
-        <MudTh>IdentifyType</MudTh>
+        <MudTh>INN</MudTh>
+        <MudTh>User</MudTh>
+        <MudTh>Match</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="INN">@context.Inn</MudTd>
-        <MudTd DataLabel="IdentifyType">@context.BankIdentifyType.DescriptionInfo()</MudTd>
+        <MudTd DataLabel="User">@(UsersCache.FirstOrDefault(x => x.UserId.Equals(context.UserIdentityId))?.ToString() ?? context.UserIdentityId)</MudTd>
+        <MudTd DataLabel="Match">@context.BankIdentifyType.DescriptionInfo()</MudTd>
     </RowTemplate>
     <RowEditingTemplate>
         <MudTd DataLabel="Name">
@@ -60,6 +63,9 @@
         </MudTd>
         <MudTd DataLabel="Token">
             <MudTextField @bind-Value="context.Inn" Required Label="INN" Immediate />
+        </MudTd>
+        <MudTd DataLabel="User">
+            <UserSelectInputComponent SelectHandleAction="SelectUserHandler" SelectedUser="@context.UserIdentityId" @ref=_usRef />
         </MudTd>
         <MudTd DataLabel="BankInterface">
             <MudSelect @bind-Value="context.BankIdentifyType" Label="Identify type" Variant="Variant.Text" ShrinkLabel>

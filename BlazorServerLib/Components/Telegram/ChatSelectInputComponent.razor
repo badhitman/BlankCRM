@@ -20,5 +20,13 @@
             <li @onclick="LoadPartData"><span class="dropdown-item">Загрузить ещё</span></li>
         }
     </ul>
-    <input disabled="@(IsBusyProgress)" title="@(IsEditing ? "Введите текст запроса для поиска чата" : "")" @bind-value="SelectedValueText" @bind-value:event="oninput" readonly="@(!IsEditing)" type="text" class="form-control" placeholder="@(IsEditing ? "Поиск по чатам" : "")" aria-label="Text input with dropdown button">
+    <input disabled="@(IsBusyProgress)"
+           @bind-value="SelectedValueText"
+           @bind-value:event="oninput"
+           title="@(IsEditing ? "Введите текст запроса для поиска чата" : "")"
+           readonly="@(!IsEditing)"
+           type="text"
+           class="form-control"
+           placeholder="@(IsEditing ? "Поиск по чатам" : "")"
+           aria-label="Text input with dropdown button">
 </div>

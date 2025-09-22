@@ -36,7 +36,12 @@ public record UserInfoModel : UserInfoMainModel
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{UserName} {GivenName} {Surname} {Email}";
+        string _res = $"{UserName} {GivenName} {Surname}";
+
+        if (UserName is not null && !UserName.Equals(Email))
+            _res += $" {Email}";
+
+        return _res;
     }
 
     /// <inheritdoc/>
@@ -68,6 +73,16 @@ public record UserInfoModel : UserInfoMainModel
             EmailConfirmed = true,
             Roles = [GlobalStaticConstantsRoles.Roles.System],
             UserName = "Система",
+        };
+    }
+
+    /// <inheritdoc/>
+    public static UserInfoModel BuildEmpty()
+    {
+        return new UserInfoModel()
+        {
+            UserId = "",
+            UserName = "Not select",
         };
     }
 }

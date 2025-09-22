@@ -2,10 +2,25 @@
 
 <div style="max-width: 450px;">
     <div id="@toggleBtnId" class="input-group mb-3">
-        <button @onclick="EditToggle" title="Установить" class="btn btn-outline-secondary bi bi-pencil" type="button"></button>
-        <input disabled="@(IsBusyProgress)" title="@(IsEditing ? "Введите текст запроса для поиска пользователя" : "")" @bind-value="SelectedValueText" @bind-value:event="oninput" readonly="@(!IsEditing)" type="text" class="form-control" placeholder="@(IsEditing ? "Поиск пользователя" : "")" aria-label="Text input with dropdown button">
+        <button @onclick="EditToggle" title="Установить" disabled="@IsBusyProgress" class="btn btn-outline-secondary bi bi-pencil" type="button">
+            @if(IsBusyProgress)
+            {
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                <span class="visually-hidden" role="status">Loading...</span>
+            }
+        </button>
+        <input type="text"
+               @bind-value="SelectedValueText"
+               @bind-value:event="oninput"
+               disabled="@(IsBusyProgress)"
+               readonly="@(!IsEditing)"
+               class="form-control"
+               title="@(IsEditing ? "Введите текст запроса для поиска пользователя" : "")"
+               placeholder="@(IsEditing ? "Поиск пользователя" : "")"
+               aria-label="Text input with dropdown button">
+
         <ul class="chat-selector-input dropdown-menu @ShowIfEditing" id="@dropdownId" style="@StyleIfEditing" data-meta="@HeightDropdown">
-            <i title="Отмена (закрыть меню выбора)" @onclick="EditToggle" class="bi bi-x-lg position-absolute top-0 end-0" style="cursor:pointer;"></i>
+            <i title="Отмена (закрыть меню выбора)" @onclick="EditToggle" class="bi bi-x-lg position-absolute top-0 end-0" style="cursor:pointer; padding-right:3px;"></i>
             @foreach (UserInfoModel uinf in LoadedData)
             {
                 <li @onclick="() => SelectElementEvent(uinf)"><span class="dropdown-item">@uinf.ToString()</span></li>

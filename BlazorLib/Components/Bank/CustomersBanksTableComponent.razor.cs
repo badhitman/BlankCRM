@@ -29,8 +29,34 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
     string? customerInn;
     string? userIdentityId;
     CustomerBankIdModelDB? elementBeforeEdit;
+    UserSelectInputComponent? _usRef;
+
+    /// <summary>
+    /// UsersCache
+    /// </summary>
+    protected List<UserInfoModel> UsersCache = [];
 
 
+    /// <summary>
+    /// CacheUsersUpdate
+    /// </summary>
+    protected async Task CacheUsersUpdate(IEnumerable<string> usersIds)
+    {
+        usersIds = usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct();
+        if (!usersIds.Any())
+            return;
+
+        await SetBusyAsync();
+        TResponseModel<UserInfoModel[]> users = await identityRepo.GetUsersIdentityAsync(usersIds);
+        SnackBarRepo.ShowMessagesResponse(users.Messages);
+        if (users.Success() && users.Response is not null && users.Response.Length != 0)
+            lock (UsersCache)
+            {
+                UsersCache.AddRange(users.Response.Where(x => !UsersCache.Any(y => y.UserId == x.UserId)));
+            }
+
+        await SetBusyAsync(false);
+    }
     void BackupItem(object element)
     {
         if (element is CustomerBankIdModelDB _re)
@@ -52,6 +78,10 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
             elementBeforeEdit = null;
             await SetBusyAsync(false);
         }
+        else
+            SnackBarRepo.Error($"can`t detect type: {element.GetType().Name}");
+
+        _usRef?.ClearInput();
     }
 
     void ResetItemToOriginalValues(object element)
@@ -92,6 +122,9 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
 
         customerName = null;
         customerInn = null;
+        userIdentityId = null;
+
+        _usRef?.ClearInput();
 
         await SetBusyAsync(false);
     }
@@ -110,6 +143,7 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
             SortingDirection = state.SortDirection.Convert()
         };
         TPaginationResponseModel<CustomerBankIdModelDB> res = await BankRepo.CustomersBanksSelectAsync(req, token);
+        await CacheUsersUpdate(res.Response!.Select(x => x.UserIdentityId).Distinct());
         return new TableData<CustomerBankIdModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 
