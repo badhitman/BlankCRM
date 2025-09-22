@@ -11,7 +11,7 @@ namespace BankService;
 /// <summary>
 /// BankService
 /// </summary>
-public partial class BankImplementService(IDbContextFactory<BankContext> bankDbFactory) : IBankService
+public partial class BankImplementService(IDbContextFactory<BankContext> bankDbFactory, IIdentityTransmission identityRepo) : IBankService
 {
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> BankConnectionCreateOrUpdateAsync(BankConnectionModelDB bank, CancellationToken token = default)
@@ -134,12 +134,23 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CustomerBankCreateOrUpdateAsync(CustomerBankIdModelDB cust, CancellationToken token = default)
     {
-        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         TResponseModel<int> res = new();
         ValidateReportModel ck = GlobalTools.ValidateObject(cust);
         if (!ck.IsValid)
         {
             res.Messages.InjectException(ck.ValidationResults);
+            return res;
+        }
+        UserInfoModel? _userCustomer = null;
+        BankContext ctx = default!;
+        await Task.WhenAll([
+            Task.Run(async () => { ctx = await bankDbFactory.CreateDbContextAsync(token); }, token),
+            Task.Run(async () => { TResponseModel<UserInfoModel[]> userGet = await identityRepo.GetUsersIdentityAsync([cust.UserIdentityId], token); _userCustomer = userGet.Response?.FirstOrDefault(); }, token)
+        ]);
+
+        if (_userCustomer is null)
+        {
+            res.AddError($"User `{cust.UserIdentityId}` not found");
             return res;
         }
 
@@ -156,6 +167,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
             .Where(x => x.Id == cust.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Inn, cust.Inn)
+                .SetProperty(p => p.UserIdentityId, cust.UserIdentityId)
                 .SetProperty(p => p.Name, cust.Name), cancellationToken: token);
 
         return res;

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
@@ -18,5 +19,6 @@ public class CustomerBankIdModelDB : CustomerBankIdBaseModel
     /// <summary>
     /// UserIdentityId
     /// </summary>
+    [Required]
     public required string UserIdentityId { get; set; }
 }

@@ -65,10 +65,16 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
 
     async void ItemHasBeenCommitted(object element)
     {
+        if(string.IsNullOrWhiteSpace(userIdentityId))
+        {
+            SnackBarRepo.Error($"User not set");
+            return;
+        }
+
         if (element is CustomerBankIdModelDB _re)
         {
             await SetBusyAsync();
-
+            _re.UserIdentityId = userIdentityId;
             TResponseModel<int> res = await BankRepo.CustomerBankCreateOrUpdateAsync(_re);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
@@ -76,6 +82,7 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
                 await table.ReloadServerData();
 
             elementBeforeEdit = null;
+            userIdentityId = null;
             await SetBusyAsync(false);
         }
         else

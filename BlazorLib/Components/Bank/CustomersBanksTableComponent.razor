@@ -54,7 +54,7 @@
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="INN">@context.Inn</MudTd>
-        <MudTd DataLabel="User">@(UsersCache.FirstOrDefault(x => x.UserId.Equals(context.UserIdentityId))?.ToString() ?? context.UserIdentityId)</MudTd>
+        <MudTd title="@context.UserIdentityId" DataLabel="User">@(UsersCache.FirstOrDefault(x => x.UserId.Equals(context.UserIdentityId))?.ToString() ?? context.UserIdentityId)</MudTd>
         <MudTd DataLabel="Match">@context.BankIdentifyType.DescriptionInfo()</MudTd>
     </RowTemplate>
     <RowEditingTemplate>

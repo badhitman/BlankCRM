@@ -120,6 +120,7 @@ builder.Services.AddScoped<IWebTransmission, WebTransmission>()
     .AddScoped<ITelegramTransmission, TelegramTransmission>()
     .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
     .AddScoped<IStorageTransmission, StorageTransmission>()
+    .AddScoped<IIdentityTransmission, IdentityTransmission>()
     .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
     ;
 //
@@ -156,14 +157,14 @@ JobManager.JobStart += JobManager_JobStart;
 
 void JobManager_JobStart(JobStartInfo info)
 {
-    logger.Info($"{info.Name}: started");
+    logger.Info($"FluentJob `{info.Name}`: started");
 }
 
 JobManager.JobEnd += JobManager_JobEnd;
 
 void JobManager_JobEnd(JobEndInfo info)
 {
-    logger.Info($"{info.Name}: ended ({info.Duration})");
+    logger.Info($"FluentJob `{info.Name}`: ended ({info.Duration})");
 }
 
 void JobManager_JobException(JobExceptionInfo info)
@@ -173,7 +174,7 @@ void JobManager_JobException(JobExceptionInfo info)
 
 JobManager.AddJob(
     () => Console.WriteLine("5 minutes just passed."),
-    s => s.ToRunEvery(5).Seconds()
+    s => s.WithName("simpe tet job").ToRunEvery(5).Minutes()
 );
 
 host.Run();
