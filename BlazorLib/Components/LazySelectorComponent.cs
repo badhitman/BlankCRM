@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using BlazorLib;
 
-namespace BlazorWebLib.Components;
+namespace BlazorLib.Components;
 
 /// <summary>
 /// LazySelectorComponent

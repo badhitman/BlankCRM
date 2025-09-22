@@ -27,8 +27,6 @@
 <hr />
 <MudTable CanCancelEdit Dense Hover IsEditRowSwitchingBlocked Loading=IsBusyProgress
           ServerData=ServerReload @ref=table
-          ApplyButtonPosition=TableApplyButtonPosition.End
-          EditButtonPosition=TableEditButtonPosition.End
           EditTrigger=TableEditTrigger.EditButton
           RowEditPreview=BackupItem
           RowEditCommit="ItemHasBeenCommitted"
@@ -43,7 +41,7 @@
         <col />
         <col />
         <col style="width:80px;" />
-        <col style="width:80px;" />
+        <col style="width:180px;" />
         <col style="width:50px;" />
     </ColGroup>
     <HeaderContent>

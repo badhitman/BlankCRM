@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using SharedLib;
 using BlazorLib;
 
-namespace BlazorWebLib.Components;
+namespace BlazorLib.Components;
 
 /// <summary>
 /// UserSelectInputComponent

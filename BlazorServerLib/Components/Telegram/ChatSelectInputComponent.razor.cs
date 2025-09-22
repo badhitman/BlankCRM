@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using BlazorLib.Components;
 
 namespace BlazorWebLib.Components.Telegram;
 

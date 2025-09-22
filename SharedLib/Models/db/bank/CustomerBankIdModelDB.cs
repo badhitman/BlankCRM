@@ -14,4 +14,9 @@ public class CustomerBankIdModelDB : CustomerBankIdBaseModel
 {
     /// <inheritdoc/>
     public int Id { get; set; }
+
+    /// <summary>
+    /// UserIdentityId
+    /// </summary>
+    public required string UserIdentityId { get; set; }
 }

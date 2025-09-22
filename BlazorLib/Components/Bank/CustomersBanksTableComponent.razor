@@ -1,12 +1,49 @@
 ﻿@using MudBlazor
 
-<MudTable ServerData="ServerReload" @ref=table Dense Hover>
+@inherits BlazorBusyComponentBaseModel
+
+<MudGrid>
+    <MudItem xs="3">
+        <MudSelect @bind-Value="bankInt" Label="Identity type" Variant="Variant.Text" ShrinkLabel>
+            @foreach (BankIdentifyType state in Enum.GetValues(typeof(BankIdentifyType)))
+            {
+                <MudSelectItem Value="@state">@state.DescriptionInfo()</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="3">
+        <MudTextField @bind-Value="customerName" Label="Name" Immediate></MudTextField>
+    </MudItem>
+    <MudItem xs="2">
+        <MudTextField @bind-Value="customerInn" Label="Inn" Immediate></MudTextField>
+    </MudItem>
+    <MudItem xs="3" Class="mt-1">
+        <UserSelectInputComponent SelectHandleAction="SelectUserHandler" SelectedUser="@userIdentityId" />
+    </MudItem>
+    <MudItem xs="1">
+        <MudFab Disabled=@(string.IsNullOrWhiteSpace(customerName) && string.IsNullOrWhiteSpace(customerInn))
+                StartIcon="@Icons.Material.Filled.Add"
+                Label="Add"
+                OnClick=AddCustomer />
+    </MudItem>
+</MudGrid>
+<hr />
+<MudTable ServerData="ServerReload" @ref=table CanCancelEdit Dense Hover IsEditRowSwitchingBlocked EditTrigger=TableEditTrigger.EditButton
+          RowEditPreview=BackupItem
+          RowEditCommit="ItemHasBeenCommitted"
+          RowEditCancel=ResetItemToOriginalValues>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Customers banks</MudText>
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(async s => await OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
+    <ColGroup>
+        <col />
+        <col />
+        <col style="width:180px;" />
+        <col style="width:50px;" />
+    </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
         <MudTh>Inn</MudTh>
@@ -14,9 +51,25 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Inn">@context.Inn</MudTd>
+        <MudTd DataLabel="INN">@context.Inn</MudTd>
         <MudTd DataLabel="IdentifyType">@context.BankIdentifyType.DescriptionInfo()</MudTd>
     </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Name">
+            <MudTextField @bind-Value="context.Name" Required Label="Name" Immediate />
+        </MudTd>
+        <MudTd DataLabel="Token">
+            <MudTextField @bind-Value="context.Inn" Required Label="INN" Immediate />
+        </MudTd>
+        <MudTd DataLabel="BankInterface">
+            <MudSelect @bind-Value="context.BankIdentifyType" Label="Identify type" Variant="Variant.Text" ShrinkLabel>
+                @foreach (BankIdentifyType state in Enum.GetValues(typeof(BankIdentifyType)))
+                {
+                    <MudSelectItem Value="@state">@state.DescriptionInfo()</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+    </RowEditingTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>
     </NoRecordsContent>

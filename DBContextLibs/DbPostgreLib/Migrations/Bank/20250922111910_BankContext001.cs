@@ -18,7 +18,7 @@ namespace DbPostgreLib.Migrations.Bank
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Token = table.Column<string>(type: "text", nullable: true),
+                    Token = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     BankInterface = table.Column<int>(type: "integer", nullable: false),
                     LastChecked = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
@@ -32,8 +32,9 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "CustomersBanksIds",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserIdentityId = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Inn = table.Column<string>(type: "text", nullable: true),
                     BankIdentifyType = table.Column<int>(type: "integer", nullable: false)
@@ -81,7 +82,6 @@ namespace DbPostgreLib.Migrations.Bank
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CustomerBankId = table.Column<int>(type: "integer", nullable: true),
-                    CustomerBankId1 = table.Column<long>(type: "bigint", nullable: true),
                     BankConnectionId = table.Column<int>(type: "integer", nullable: false),
                     TransactionId = table.Column<string>(type: "text", nullable: false),
                     Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -100,8 +100,8 @@ namespace DbPostgreLib.Migrations.Bank
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TransfersBanks_CustomersBanksIds_CustomerBankId1",
-                        column: x => x.CustomerBankId1,
+                        name: "FK_TransfersBanks_CustomersBanksIds_CustomerBankId",
+                        column: x => x.CustomerBankId,
                         principalTable: "CustomersBanksIds",
                         principalColumn: "Id");
                 });
@@ -207,9 +207,9 @@ namespace DbPostgreLib.Migrations.Bank
                 column: "Currency");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TransfersBanks_CustomerBankId1",
+                name: "IX_TransfersBanks_CustomerBankId",
                 table: "TransfersBanks",
-                column: "CustomerBankId1");
+                column: "CustomerBankId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TransfersBanks_Receiver",

@@ -41,6 +41,7 @@ namespace DbPostgreLib.Migrations.Bank
                         .HasColumnType("text");
 
                     b.Property<string>("Token")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -73,9 +74,6 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<int?>("CustomerBankId")
                         .HasColumnType("integer");
 
-                    b.Property<long?>("CustomerBankId1")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Receiver")
                         .IsRequired()
                         .HasColumnType("text");
@@ -99,7 +97,7 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasIndex("Currency");
 
-                    b.HasIndex("CustomerBankId1");
+                    b.HasIndex("CustomerBankId");
 
                     b.HasIndex("Receiver");
 
@@ -114,11 +112,11 @@ namespace DbPostgreLib.Migrations.Bank
 
             modelBuilder.Entity("SharedLib.CustomerBankIdModelDB", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BankIdentifyType")
                         .HasColumnType("integer");
@@ -127,6 +125,10 @@ namespace DbPostgreLib.Migrations.Bank
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserIdentityId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -235,7 +237,7 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasOne("SharedLib.CustomerBankIdModelDB", "CustomerBank")
                         .WithMany()
-                        .HasForeignKey("CustomerBankId1");
+                        .HasForeignKey("CustomerBankId");
 
                     b.Navigation("BankConnection");
 

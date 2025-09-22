@@ -18,7 +18,7 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
     IParametersStorageTransmission StorageRepo { get; set; } = default!;
 
 
-    readonly List<StatusesDocumentsEnum> Steps = [.. Enum.GetValues(typeof(StatusesDocumentsEnum)).Cast<StatusesDocumentsEnum>()];
+    readonly List<StatusesDocumentsEnum> Steps = [.. Enum.GetValues<StatusesDocumentsEnum>()];
     byte stepNum;
     bool IsLarge;
     string? FilterUserId;
