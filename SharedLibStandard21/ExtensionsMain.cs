@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace SharedLib;
 
 /// <inheritdoc/>
-public static class Extensions
+public static class ExtensionsMain
 {
     /// <inheritdoc/>
     public static readonly Dictionary<int, CurrencyItem> CurrenciesCodes = new()

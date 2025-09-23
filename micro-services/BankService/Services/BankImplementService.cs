@@ -2,12 +2,12 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
-using Microsoft.EntityFrameworkCore;
-using SharedLib;
-using System.Collections.Generic;
 using System.Collections.Specialized;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Net.Http.Json;
+using SharedLib;
+using DbcLib;
 
 namespace BankService;
 
@@ -299,7 +299,143 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         res.Response = await ctx.AccountsTBank.Where(x => x.BankConnectionId == req.BankConnectionId).ToListAsync(cancellationToken: token);
         return res;
     }
-    async Task<TResponseModel<T>> GetData<T>(string baseUrl, string getRequest, string? token, Dictionary<string, object>? queryParams = null)
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<BankTransferModelDB>>> BankAccountCheckAsync(BankAccountCheckRequestModel req, CancellationToken token = default)
+    {
+        TResponseModel<List<BankTransferModelDB>> res = new();
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+
+        BankConnectionModelDB bankConnectionDb = await ctx.ConnectionsBanks.FirstAsync(x => x.Id == req.BankConnectionId, cancellationToken: token);
+
+        var conMd = bankConnectionDb.BankInterface.ConnectionMetadata();
+        if (conMd is null || string.IsNullOrWhiteSpace(conMd.Value.GetStatementRequest) || string.IsNullOrWhiteSpace(conMd.Value.BaseUrl))
+        {
+            res.AddError("Bank connection metadata not set.");
+            return res;
+        }
+
+
+        Dictionary<string, object>? queryParams = [];
+        queryParams.Add("accountNumber", req.AccountNumber);
+        queryParams.Add("from", req.FromDate.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz", CultureInfo.InvariantCulture));
+
+        #region download operations
+        TResponseModel<TBankOperationsResponseModel> operationsData = await GetData<TBankOperationsResponseModel>(conMd.Value.BaseUrl, conMd.Value.GetStatementRequest, bankConnectionDb.Token, queryParams);
+        if (operationsData.Messages.Count != 0)
+            res.AddRangeMessages(operationsData.Messages);
+
+        if (!res.Success())
+            return res;
+
+        List<TBankOperationModel> operations = [];
+        int _step = 1;
+        if (operationsData.Response?.Operations is null)
+            res.AddError($"operations data res -> is null.".Trim());
+        else
+        {
+            operations = operationsData.Response.Operations;
+            while (!string.IsNullOrWhiteSpace(operationsData.Response?.NextCursor))
+            {
+                if (queryParams.ContainsKey("cursor"))
+                    queryParams["cursor"] = operationsData.Response.NextCursor;
+                else
+                    queryParams.Add("cursor", operationsData.Response.NextCursor);
+
+                operationsData = await GetData<TBankOperationsResponseModel>(conMd.Value.BaseUrl, conMd.Value.GetStatementRequest, bankConnectionDb.Token, queryParams);
+                if (operationsData.Messages.Count != 0)
+                    res.AddRangeMessages(operationsData.Messages);
+
+                if (!res.Success())
+                    return res;
+
+                _step++;
+            }
+        }
+
+        if (operations.Count == 0)
+        {
+            res.AddInfo("operations not yet");
+            return res;
+        }
+
+        res.AddInfo($"operations loaded {operations.Count} items (with {_step} steps)");
+        #endregion
+
+        string[] operationsIds = [.. operations.Select(x => x.OperationId)];
+
+        List<BankTransferModelDB>? operationsDB = await ctx.TransfersBanks.Where(x => operationsIds.Contains(x.TransactionId)).ToListAsync(cancellationToken: token);
+
+        if (operationsDB.Count != 0)
+            res.AddInfo($"db`exist operations: {operationsDB.Count}");
+
+        CustomerBankIdModelDB? customerBankIdDb;
+
+        TBankOperationModel[] _newOperations = [.. operations.Where(x => !operationsDB.Any(y => y.TransactionId == x.OperationId))];
+        if (_newOperations.Length == 0)
+            res.AddInfo($"without new operations");
+        else
+        {
+            string[] counterPartyInn = _newOperations
+                .Select(x => x.CounterParty?.Inn)
+                .Distinct()
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToArray()!;
+
+            string[] counterPartyName = _newOperations
+                .Select(x => x.CounterParty?.Name)
+                .Distinct()
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToArray()!;
+
+            CustomerBankIdModelDB[] customersBanksIds = await ctx.CustomersBanksIds.Where(x => counterPartyInn.Contains(x.Inn) || counterPartyName.Contains(x.Name)).ToArrayAsync(cancellationToken: token);
+            customersBanksIds = [.. customersBanksIds.Where(x => _newOperations.Any(y => y.CounterParty is not null && ((y.CounterParty.Inn == x.Inn && x.BankIdentifyType == BankIdentifyType.ByInn) || y.CounterParty.Name == x.Name && x.BankIdentifyType == BankIdentifyType.ByName)))];
+            res.Response ??= [];
+            if (customersBanksIds.Length == 0)
+                res.AddInfo($"not a single operation matched. all operations ignored.");
+            else
+            {
+                foreach (TBankOperationModel _op in _newOperations)
+                {
+                    customerBankIdDb = customersBanksIds.FirstOrDefault(x => (x.BankIdentifyType == BankIdentifyType.ByInn && x.Inn == _op.CounterParty?.Inn) || (x.BankIdentifyType == BankIdentifyType.ByName && x.Name == _op.CounterParty?.Name));
+                    if (customerBankIdDb is null)
+                        continue;
+
+                    BankTransferModelDB newOper;
+                    KeyValuePair<int, ExtensionsMain.CurrencyItem>? _currency = ExtensionsMain
+                        .CurrenciesCodes
+                        .FirstOrDefault(x => x.Key.ToString().Equals(_op.OperationCurrencyDigitalCode));
+
+                    newOper = new()
+                    {
+                        BankConnectionId = bankConnectionDb.Id,
+                        CustomerBankId = customerBankIdDb.Id,
+
+                        Currency = _currency?.Value is null ? $"!!!{nameof(_op.OperationCurrencyDigitalCode)}: {_op.OperationCurrencyDigitalCode}" : $"{_currency.Value.Value.Name} ({_currency.Value.Value.SymbolCode})",
+                        Timestamp = _op.OperationDate.DateTime,
+                        Receiver = $"'{_op.Receiver?.Name}' [inn: {_op.Receiver?.Inn}]",
+                        Sender = $"'{_op.CounterParty?.Name}' [inn: {_op.CounterParty?.Inn}]",
+                        TransactionId = _op.OperationId,
+                        Amount = _op.OperationAmount,
+                    };
+                    await ctx.TransfersBanks.AddAsync(newOper, token);
+                    await ctx.SaveChangesAsync(token);
+
+                    res.Response.Add(newOper);
+                }
+                res.AddInfo($"adding new operations {res.Response.Count}.");
+            }
+        }
+
+        await ctx.ConnectionsBanks
+            .Where(x => x.Id == req.BankConnectionId)
+            .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastChecked, DateTime.UtcNow), cancellationToken: token);
+
+        return res;
+    }
+
+
+    static async Task<TResponseModel<T>> GetData<T>(string baseUrl, string getRequest, string? token, Dictionary<string, object>? queryParams = null)
     {
         string url = $"{baseUrl}{getRequest}";
 

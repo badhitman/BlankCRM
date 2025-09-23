@@ -179,6 +179,9 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 #### [LdapService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/LdapService)
 - Интеграция AD через LDAP
 
+#### [BankService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/BankService)
+- Банк
+
 #### [OuterApi's](https://github.com/badhitman/BlankCRM/blob/main/micro-services/outer/README.md)
 - Набор микро-сервисов для подключения внешних источников данных
 

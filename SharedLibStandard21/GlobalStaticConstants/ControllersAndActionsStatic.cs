@@ -1565,6 +1565,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string GET_ACTION_NAME = "get";
 
         /// <summary>
+        /// Route
+        /// </summary>
+        public const string ROUTE_ACTION_NAME = "route";
+
+        /// <summary>
         /// Toggle
         /// </summary>
         public const string TOGGLE_ACTION_NAME = "toggle";

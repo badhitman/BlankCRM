@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace SharedLib;
 
 /// <summary>
-/// BankTransferStorage
+/// BankTransferModelDB
 /// </summary>
 [Index(nameof(TransactionId)), Index(nameof(Timestamp)), Index(nameof(Amount)), Index(nameof(Currency)), Index(nameof(Sender)), Index(nameof(Receiver))]
 public class BankTransferModelDB : BankTransfer

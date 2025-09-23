@@ -10,6 +10,11 @@ namespace SharedLib;
 public partial interface IBankService
 {
     /// <summary>
+    /// BankAccountCheck
+    /// </summary>
+    public Task<TResponseModel<List<BankTransferModelDB>>> BankAccountCheckAsync(BankAccountCheckRequestModel req, CancellationToken token = default);
+
+    /// <summary>
     /// GetTBankAccounts
     /// </summary>
     public Task<TResponseModel<List<TBankAccountModelDB>>> GetTBankAccountsAsync(GetTBankAccountsRequestModel req, CancellationToken token = default);
