@@ -25,6 +25,19 @@ public partial class ConnectionsBanksTableComponent : BlazorBusyComponentBaseMod
     string? bankToken;
     BankConnectionModelDB? elementBeforeEdit;
 
+    async Task LoadAccounts(BankConnectionModelDB sender)
+    {
+        GetTBankAccountsRequestModel req = new() { BankConnectionId = sender.Id };
+        await SetBusyAsync();
+        TResponseModel<List<TBankAccountModelDB>> res = await BankRepo.GetTBankAccountsAsync(req);
+        await SetBusyAsync(false);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        if (res.Response is null)
+            SnackBarRepo.Error("Response is null");
+        else if (res.Response.Count == 0)
+            SnackBarRepo.Info("Response.Count == 0");
+    }
+
     void BackupItem(object element)
     {
         if (element is BankConnectionModelDB _re)

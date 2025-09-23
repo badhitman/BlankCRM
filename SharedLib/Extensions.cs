@@ -2,14 +2,31 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace SharedLib;
 
 /// <inheritdoc/>
 public static class Extensions
 {
+
+    /// <summary>
+    /// Получить значение атрибута ConnectionMetadata
+    /// </summary>
+    public static (string BaseUrl, string GetStatementRequest, string? AccListRequest)? ConnectionMetadata(this Enum enumValue)
+    {
+        foreach (FieldInfo field in enumValue.GetType().GetFields())
+        {
+            ConnectionMetadataAttribute? descriptionAttribute = field.GetCustomAttributes<ConnectionMetadataAttribute>().FirstOrDefault();
+            if (descriptionAttribute != null && field.Name.Equals(enumValue.ToString()))
+                return (descriptionAttribute.BaseUrl, descriptionAttribute.GetStatementRequest, descriptionAttribute.AccListRequest);
+        }
+
+        return null;
+    }
+
     /// <summary>
     /// Получить маршрут OU
     /// </summary>

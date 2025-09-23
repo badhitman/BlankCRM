@@ -41,4 +41,8 @@ public partial class BankTransmission(IRabbitClient rabbitClient) : IBankService
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<BankTransferModelDB>> BanksTransfersSelectAsync(TPaginationRequestStandardModel<SelectTransfersBanksRequestModel> req, CancellationToken token = default)
       => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<BankTransferModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.BanksTransfersSelectReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<TBankAccountModelDB>>> GetTBankAccountsAsync(GetTBankAccountsRequestModel req, CancellationToken token = default)
+      => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<TBankAccountModelDB>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetTBankConnectionAccountsReceive, req, token: token) ?? new();
 }

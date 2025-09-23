@@ -2,9 +2,12 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using DbcLib;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Net.Http.Json;
 
 namespace BankService;
 
@@ -48,6 +51,9 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
     {
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         IQueryable<BankConnectionModelDB> q = ctx.ConnectionsBanks.AsQueryable();
+
+        if (req.Payload is not null && req.Payload.FilterOfEnabled.HasValue)
+            q = q.Where(x => ctx.AccountsTBank.Any(y => y.BankConnectionId == x.Id && y.IsActive == req.Payload.FilterOfEnabled.Value));
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => (x.Token != null && x.Token.Contains(req.FindQuery)) || x.Name.Contains(req.FindQuery));
@@ -247,5 +253,77 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await q.Skip(req.PageSize * req.PageNum).Take(req.PageSize).ToListAsync(cancellationToken: token)
         };
+    }
+
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<TBankAccountModelDB>>> GetTBankAccountsAsync(GetTBankAccountsRequestModel req, CancellationToken token = default)
+    {
+        TResponseModel<List<TBankAccountModelDB>> res = new();
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+
+        BankConnectionModelDB? bankConnectionDb = ctx.ConnectionsBanks.FirstOrDefault(x => x.Id == req.BankConnectionId);
+        if (bankConnectionDb is null)
+        {
+            res.AddError("Not found any bank connection.");
+            return res;
+        }
+
+        var conMd = bankConnectionDb.BankInterface.ConnectionMetadata();
+        if (conMd is null || string.IsNullOrWhiteSpace(conMd.Value.AccListRequest) || string.IsNullOrWhiteSpace(conMd.Value.BaseUrl))
+        {
+            res.AddError("Not found any bank connection metadata.");
+            return res;
+        }
+
+        #region download operations
+        TResponseModel<List<TBankAccountModel>> accountsData = await GetData<List<TBankAccountModel>>(conMd.Value.BaseUrl, conMd.Value.AccListRequest, bankConnectionDb.Token);
+        if (!accountsData.Success() || accountsData.Response is null)
+        {
+            res.AddRangeMessages(accountsData.Messages);
+            return res;
+        }
+        #endregion
+
+        string[] accs = [.. accountsData.Response.Select(x => x.AccountNumber)];
+        TBankAccountModelDB[] accsDb = [.. ctx.AccountsTBank.Where(x => x.BankConnectionId == req.BankConnectionId && accs.Contains(x.AccountNumber))];
+
+        TBankAccountModel[] newAcc = [.. accountsData.Response.Where(x => !accsDb.Any(y => y.AccountNumber == x.AccountNumber))];
+
+        if (newAcc.Length != 0)
+        {
+            await ctx.AccountsTBank.AddRangeAsync(newAcc.Select(x => TBankAccountModelDB.Build(x, bankConnectionDb.Id)), token);
+            await ctx.SaveChangesAsync(token);
+        }
+
+        res.Response = await ctx.AccountsTBank.Where(x => x.BankConnectionId == req.BankConnectionId).ToListAsync(cancellationToken: token);
+        return res;
+    }
+    async Task<TResponseModel<T>> GetData<T>(string baseUrl, string getRequest, string? token, Dictionary<string, object>? queryParams = null)
+    {
+        string url = $"{baseUrl}{getRequest}";
+
+        NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+        if (queryParams is not null && queryParams.Count != 0)
+        {
+            foreach (KeyValuePair<string, object> p in queryParams)
+                queryString.Add(p.Key, p.Value.ToString());
+
+            url += $"?{queryString}";
+        }
+
+        TResponseModel<T> res = new();
+        using HttpClient client = new();
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+        try
+        {
+            res.Response = await client.GetFromJsonAsync<T>(url);
+        }
+        catch (Exception ex)
+        {
+            res.Messages.InjectException(ex);
+        }
+        return res;
     }
 }

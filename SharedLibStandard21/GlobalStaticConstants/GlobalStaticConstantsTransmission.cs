@@ -741,6 +741,9 @@ public static partial class GlobalStaticConstantsTransmission
 
         /// <inheritdoc/>
         public readonly static string BanksTransfersSelectReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.TRANSFERS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string GetTBankConnectionAccountsReceive = Path.Combine(TransmissionQueueNamePrefix, $"T-{Routes.BANK_CONTROLLER_NAME}", Routes.CONNECTION_CONTROLLER_NAME, Routes.ACCOUNTS_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
         #endregion
 
         #region HelpDesk
