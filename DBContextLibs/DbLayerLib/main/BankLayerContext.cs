@@ -59,6 +59,7 @@ public partial class BankLayerContext : DbContext
     /// </summary>
     public DbSet<IncomingMerchantPaymentTBankModelDB> IncomingMerchantsPaymentsTBank { get; set; } = default!;
 
+    #region TBank
     #region Init payment TBank
     /// <inheritdoc/>
     public DbSet<ReceiptTBankModelDB> ReceiptsTBank { get; set; } = default!;
@@ -78,5 +79,6 @@ public partial class BankLayerContext : DbContext
 
     /// <inheritdoc/>
     public DbSet<PaymentInitTBankResultModelDB> PaymentInitResultsTBank { get; set; } = default!;
+    #endregion
     #endregion
 }
