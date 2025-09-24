@@ -40,11 +40,6 @@ public partial class BankLayerContext : DbContext
     public DbSet<BankConnectionModelDB> ConnectionsBanks { get; set; } = default!;
 
     /// <summary>
-    /// TBank account`s
-    /// </summary>
-    public DbSet<TBankAccountModelDB> AccountsTBank { get; set; } = default!;
-
-    /// <summary>
     /// Customer`s banks Id`s
     /// </summary>
     public DbSet<CustomerBankIdModelDB> CustomersBanksIds { get; set; } = default!;
@@ -54,12 +49,18 @@ public partial class BankLayerContext : DbContext
     /// </summary>
     public DbSet<BankTransferModelDB> TransfersBanks { get; set; } = default!;
 
+    #region TBank    
+    /// <summary>
+    /// TBank account`s
+    /// </summary>
+    public DbSet<TBankAccountModelDB> AccountsTBank { get; set; } = default!;
+
+    #region Merchant
     /// <summary>
     /// Incoming merchants-payments
     /// </summary>
     public DbSet<IncomingMerchantPaymentTBankModelDB> IncomingMerchantsPaymentsTBank { get; set; } = default!;
 
-    #region TBank
     #region Init payment TBank
     /// <inheritdoc/>
     public DbSet<ReceiptTBankModelDB> ReceiptsTBank { get; set; } = default!;
@@ -79,6 +80,7 @@ public partial class BankLayerContext : DbContext
 
     /// <inheritdoc/>
     public DbSet<PaymentInitTBankResultModelDB> PaymentInitResultsTBank { get; set; } = default!;
+    #endregion
     #endregion
     #endregion
 }
