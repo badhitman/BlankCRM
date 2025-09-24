@@ -92,4 +92,10 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(ReceiptTBankModel req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
 }

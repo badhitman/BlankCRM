@@ -12,7 +12,7 @@ namespace SharedLib;
 public partial interface IMerchantService
 {
     /// <summary>
-    /// IncomingTBankMerchantPayment
+    /// IncomingTBankMerchantPaymentAsync
     /// </summary>
     public Task<ResponseBaseModel> IncomingTBankMerchantPaymentAsync(JObject req, CancellationToken token = default);
 
@@ -20,4 +20,9 @@ public partial interface IMerchantService
     /// BindCustomerTBankAsync
     /// </summary>
     public Task<TResponseModel<UserInfoModel>> BindCustomerTBankAsync(BindCustomerTBankRequestModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// InitTBankMerchantPaymentAsync
+    /// </summary>
+    public Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(ReceiptTBankModel req, CancellationToken token = default);
 }

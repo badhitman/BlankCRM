@@ -58,4 +58,25 @@ public partial class BankLayerContext : DbContext
     /// Incoming merchants-payments
     /// </summary>
     public DbSet<IncomingMerchantPaymentModelDB> IncomingMerchantsPayments { get; set; } = default!;
+
+    #region Init payment TBank
+    /// <inheritdoc/>
+    public DbSet<ReceiptTBankModelDB> ReceiptsTBank { get; set; } = default!;
+
+    /// <inheritdoc/>
+    public DbSet<SupplierInfoModelDB> SuppliersForReceiptItemTBanks { get; set; } = default!;
+
+    /// <inheritdoc/>
+    public DbSet<AgentDataModelDB> AgentsForReceiptItemsTBank { get; set; } = default!;
+
+    /// <inheritdoc/>
+    public DbSet<ReceiptItemModelDB> ReceiptsItemsTBank { get; set; } = default!;
+
+    /// <inheritdoc/>
+    public DbSet<PaymentsForReceiptTBankModelDB> PaymentsForReceiptsTBank { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    public DbSet<PaymentInitTBankResultModelDB> PaymentInitTBankResults { get; set; } = default!;
+    #endregion
 }

@@ -1430,6 +1430,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string INITIAL_ACTION_NAME = "initial";
 
         /// <summary>
+        /// Init
+        /// </summary>
+        public const string INIT_ACTION_NAME = "init";
+
+        /// <summary>
         /// Load
         /// </summary>
         public const string LOAD_ACTION_NAME = "load";
