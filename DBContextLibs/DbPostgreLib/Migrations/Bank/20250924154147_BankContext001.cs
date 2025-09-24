@@ -46,7 +46,7 @@ namespace DbPostgreLib.Migrations.Bank
                 });
 
             migrationBuilder.CreateTable(
-                name: "IncomingMerchantsPayments",
+                name: "IncomingMerchantsPaymentsTBank",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -62,7 +62,7 @@ namespace DbPostgreLib.Migrations.Bank
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IncomingMerchantsPayments", x => x.Id);
+                    table.PrimaryKey("PK_IncomingMerchantsPaymentsTBank", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -351,38 +351,38 @@ namespace DbPostgreLib.Migrations.Bank
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IncomingMerchantsPayments_Amount",
-                table: "IncomingMerchantsPayments",
+                name: "IX_IncomingMerchantsPaymentsTBank_Amount",
+                table: "IncomingMerchantsPaymentsTBank",
                 column: "Amount");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IncomingMerchantsPayments_CardId",
-                table: "IncomingMerchantsPayments",
+                name: "IX_IncomingMerchantsPaymentsTBank_CardId",
+                table: "IncomingMerchantsPaymentsTBank",
                 column: "CardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IncomingMerchantsPayments_ExpDate",
-                table: "IncomingMerchantsPayments",
+                name: "IX_IncomingMerchantsPaymentsTBank_ExpDate",
+                table: "IncomingMerchantsPaymentsTBank",
                 column: "ExpDate");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IncomingMerchantsPayments_OrderId",
-                table: "IncomingMerchantsPayments",
+                name: "IX_IncomingMerchantsPaymentsTBank_OrderId",
+                table: "IncomingMerchantsPaymentsTBank",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IncomingMerchantsPayments_PaymentId",
-                table: "IncomingMerchantsPayments",
+                name: "IX_IncomingMerchantsPaymentsTBank_PaymentId",
+                table: "IncomingMerchantsPaymentsTBank",
                 column: "PaymentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IncomingMerchantsPayments_RebillId",
-                table: "IncomingMerchantsPayments",
+                name: "IX_IncomingMerchantsPaymentsTBank_RebillId",
+                table: "IncomingMerchantsPaymentsTBank",
                 column: "RebillId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IncomingMerchantsPayments_Status",
-                table: "IncomingMerchantsPayments",
+                name: "IX_IncomingMerchantsPaymentsTBank_Status",
+                table: "IncomingMerchantsPaymentsTBank",
                 column: "Status");
 
             migrationBuilder.CreateIndex(
@@ -473,7 +473,7 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "AgentsForReceiptItemsTBank");
 
             migrationBuilder.DropTable(
-                name: "IncomingMerchantsPayments");
+                name: "IncomingMerchantsPaymentsTBank");
 
             migrationBuilder.DropTable(
                 name: "PaymentInitTBankResults");

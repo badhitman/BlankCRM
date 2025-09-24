@@ -186,7 +186,7 @@ namespace DbPostgreLib.Migrations.Bank
                     b.ToTable("CustomersBanksIds");
                 });
 
-            modelBuilder.Entity("SharedLib.IncomingMerchantPaymentModelDB", b =>
+            modelBuilder.Entity("SharedLib.IncomingMerchantPaymentTBankModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -234,7 +234,7 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasIndex("Status");
 
-                    b.ToTable("IncomingMerchantsPayments");
+                    b.ToTable("IncomingMerchantsPaymentsTBank");
                 });
 
             modelBuilder.Entity("SharedLib.PaymentInitTBankResultModelDB", b =>

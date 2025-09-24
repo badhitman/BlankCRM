@@ -10,7 +10,7 @@ namespace SharedLib;
 /// IncomingMerchantPaymentModelDB
 /// </summary>
 [Index(nameof(Status)), Index(nameof(OrderId)), Index(nameof(PaymentId)), Index(nameof(Amount)), Index(nameof(RebillId)), Index(nameof(CardId)), Index(nameof(ExpDate))]
-public class IncomingMerchantPaymentModelDB
+public class IncomingMerchantPaymentTBankModelDB
 {
     /// <inheritdoc/>
     public int Id { get; set; }

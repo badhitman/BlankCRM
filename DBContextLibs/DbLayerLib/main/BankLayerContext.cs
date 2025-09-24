@@ -57,7 +57,7 @@ public partial class BankLayerContext : DbContext
     /// <summary>
     /// Incoming merchants-payments
     /// </summary>
-    public DbSet<IncomingMerchantPaymentModelDB> IncomingMerchantsPayments { get; set; } = default!;
+    public DbSet<IncomingMerchantPaymentTBankModelDB> IncomingMerchantsPaymentsTBank { get; set; } = default!;
 
     #region Init payment TBank
     /// <inheritdoc/>
