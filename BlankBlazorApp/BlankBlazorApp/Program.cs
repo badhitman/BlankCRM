@@ -229,7 +229,7 @@ builder.Services
     .AddScoped<IConstructorTransmission, ConstructorTransmission>()
     .AddScoped<IIdentityTransmission, IdentityTransmission>()
     .AddScoped<IWebTransmission, WebTransmission>()
-
+    .AddScoped<IMerchantService, MerchantTransmission>()
     .AddScoped<IDaichiBusinessApiTransmission, DaichiBusinessTransmission>()
     .AddScoped<IRusklimatComApiTransmission, RusklimatComTransmission>()
     .AddScoped<IFeedsHaierProffRuService, HaierProffRuTransmission>()

@@ -53,4 +53,9 @@ public partial class BankLayerContext : DbContext
     /// Transfer`s bank`s
     /// </summary>
     public DbSet<BankTransferModelDB> TransfersBanks { get; set; } = default!;
+
+    /// <summary>
+    /// Incoming merchants-payments
+    /// </summary>
+    public DbSet<IncomingMerchantPaymentModelDB> IncomingMerchantsPayments { get; set; } = default!;
 }

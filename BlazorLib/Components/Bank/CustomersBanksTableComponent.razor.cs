@@ -24,7 +24,7 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
     MudTable<CustomerBankIdModelDB>? table;
     string? searchString;
 
-    BankIdentifyType bankInt;
+    BanksIdentifyTypesEnum bankInt;
     string? customerName;
     string? customerInn;
     string? userIdentityId;

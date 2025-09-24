@@ -389,7 +389,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
                 .ToArray()!;
 
             CustomerBankIdModelDB[] customersBanksIds = await ctx.CustomersBanksIds.Where(x => counterPartyInn.Contains(x.Inn) || counterPartyName.Contains(x.Name)).ToArrayAsync(cancellationToken: token);
-            customersBanksIds = [.. customersBanksIds.Where(x => _newOperations.Any(y => y.CounterParty is not null && ((y.CounterParty.Inn == x.Inn && x.BankIdentifyType == BankIdentifyType.ByInn) || y.CounterParty.Name == x.Name && x.BankIdentifyType == BankIdentifyType.ByName)))];
+            customersBanksIds = [.. customersBanksIds.Where(x => _newOperations.Any(y => y.CounterParty is not null && ((y.CounterParty.Inn == x.Inn && x.BankIdentifyType == BanksIdentifyTypesEnum.ByInn) || y.CounterParty.Name == x.Name && x.BankIdentifyType == BanksIdentifyTypesEnum.ByName)))];
             res.Response ??= [];
             if (customersBanksIds.Length == 0)
                 res.AddInfo($"not a single operation matched. all operations ignored.");
@@ -397,7 +397,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
             {
                 foreach (TBankOperationModel _op in _newOperations)
                 {
-                    customerBankIdDb = customersBanksIds.FirstOrDefault(x => (x.BankIdentifyType == BankIdentifyType.ByInn && x.Inn == _op.CounterParty?.Inn) || (x.BankIdentifyType == BankIdentifyType.ByName && x.Name == _op.CounterParty?.Name));
+                    customerBankIdDb = customersBanksIds.FirstOrDefault(x => (x.BankIdentifyType == BanksIdentifyTypesEnum.ByInn && x.Inn == _op.CounterParty?.Inn) || (x.BankIdentifyType == BanksIdentifyTypesEnum.ByName && x.Name == _op.CounterParty?.Name));
                     if (customerBankIdDb is null)
                         continue;
 

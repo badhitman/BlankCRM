@@ -746,7 +746,10 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string GetTBankConnectionAccountsReceive = Path.Combine(TransmissionQueueNamePrefix, $"T-{Routes.BANK_CONTROLLER_NAME}", Routes.CONNECTION_CONTROLLER_NAME, Routes.ACCOUNTS_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string BankAccountCheckReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.ACCOUNT_CONTROLLER_NAME,  Routes.CHECK_ACTION_NAME, Routes.ROUTE_ACTION_NAME);
+        public readonly static string BankAccountCheckReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.ACCOUNT_CONTROLLER_NAME, Routes.CHECK_ACTION_NAME, Routes.ROUTE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string IncomingTBankMerchantPaymentReceive = Path.Combine(TransmissionQueueNamePrefix, nameof(MerchantsBanksEnum.TBankCash), Routes.MERCHANT_CONTROLLER_NAME, $"{Routes.INCOMING_CONTROLLER_NAME}-{Routes.PAYMENT_CONTROLLER_NAME}");
         #endregion
 
         #region HelpDesk
@@ -998,7 +1001,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string UploadPartTempKladrReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.KLADR_CONTROLLER_NAME, Routes.TEMP_CONTROLLER_NAME, $"{Routes.UPLOAD_ACTION_NAME}-{Routes.PART_CONTROLLER_NAME}");
 
         /// <inheritdoc/>
-        public readonly static string FlushTempKladrRecive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.TEMP_CONTROLLER_NAME}", Routes.FLUSH_ACTION_NAME);
+        public readonly static string FlushTempKladrReceive = Path.Combine(TransmissionQueueNamePrefix, $"{Routes.KLADR_CONTROLLER_NAME}-{Routes.TEMP_CONTROLLER_NAME}", Routes.FLUSH_ACTION_NAME);
         #endregion
 
         #region events/notifies

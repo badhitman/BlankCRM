@@ -48,6 +48,12 @@ public enum ExpressApiRolesEnum
     OrdersWriteCommerce = 60,
 
     /// <summary>
+    /// Входящие платежи от банка (сервис: Commerce)
+    /// </summary>
+    [Description("Входящие платежи от банка (сервис: Commerce)")]
+    MerchantIncomingCommerce = 70,
+
+    /// <summary>
     /// Системные права
     /// </summary>
     [Description("Системные права")]

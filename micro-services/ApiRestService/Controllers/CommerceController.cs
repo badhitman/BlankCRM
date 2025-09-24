@@ -20,9 +20,6 @@ public class CommerceController(ICommerceTransmission commRepo) : ControllerBase
     /// Подбор номенклатуры (поиск по параметрам)
     /// </summary>
     [HttpPut($"/api/{Routes.COMMERCE_CONTROLLER_NAME}/{Routes.NOMENCLATURES_CONTROLLER_NAME}-{Routes.SELECT_ACTION_NAME}")]
-#if !DEBUG
-    [LoggerNolog]
-#endif
     public async Task<TPaginationResponseModel<NomenclatureModelDB>> NomenclaturesSelect(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req)
         => await commRepo.NomenclaturesSelectAsync(req);
 
@@ -30,9 +27,6 @@ public class CommerceController(ICommerceTransmission commRepo) : ControllerBase
     /// Чтение номенклатуры (по идентификаторам)
     /// </summary>
     [HttpPut($"/api/{Routes.COMMERCE_CONTROLLER_NAME}/{Routes.NOMENCLATURES_CONTROLLER_NAME}-{Routes.READ_ACTION_NAME}")]
-#if !DEBUG
-    [LoggerNolog]
-#endif
     public async Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesRead(int[] req)
         => await commRepo.NomenclaturesReadAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
 }

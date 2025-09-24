@@ -142,6 +142,57 @@ namespace DbPostgreLib.Migrations.Bank
                     b.ToTable("CustomersBanksIds");
                 });
 
+            modelBuilder.Entity("SharedLib.IncomingMerchantPaymentModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("CardId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExpDate")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrderId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Pan")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RebillId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Amount");
+
+                    b.HasIndex("CardId");
+
+                    b.HasIndex("ExpDate");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("PaymentId");
+
+                    b.HasIndex("RebillId");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("IncomingMerchantsPayments");
+                });
+
             modelBuilder.Entity("SharedLib.TBankAccountModelDB", b =>
                 {
                     b.Property<int>("Id")

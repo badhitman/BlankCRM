@@ -139,6 +139,7 @@ builder.Services
     .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
     .AddScoped<IKladrService, KladrServiceTransmission>()
     .AddScoped<IBankService, BankTransmission>()
+    .AddScoped<IMerchantService, MerchantTransmission>()
     ;
 #endregion
 

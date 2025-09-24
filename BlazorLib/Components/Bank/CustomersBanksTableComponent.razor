@@ -5,7 +5,7 @@
 <MudGrid>
     <MudItem xs="3">
         <MudSelect @bind-Value="bankInt" Label="Identity type" Variant="Variant.Text" ShrinkLabel>
-            @foreach (BankIdentifyType state in Enum.GetValues(typeof(BankIdentifyType)))
+            @foreach (BanksIdentifyTypesEnum state in Enum.GetValues(typeof(BanksIdentifyTypesEnum)))
             {
                 <MudSelectItem Value="@state">@state.DescriptionInfo()</MudSelectItem>
             }
@@ -69,7 +69,7 @@
         </MudTd>
         <MudTd DataLabel="BankInterface">
             <MudSelect @bind-Value="context.BankIdentifyType" Label="Identify type" Variant="Variant.Text" ShrinkLabel>
-                @foreach (BankIdentifyType state in Enum.GetValues(typeof(BankIdentifyType)))
+                @foreach (BanksIdentifyTypesEnum state in Enum.GetValues(typeof(BanksIdentifyTypesEnum)))
                 {
                     <MudSelectItem Value="@state">@state.DescriptionInfo()</MudSelectItem>
                 }

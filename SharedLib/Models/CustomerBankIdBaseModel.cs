@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json.Linq;
+
 namespace SharedLib;
 
 /// <summary>
@@ -18,5 +20,5 @@ public class CustomerBankIdBaseModel
     /// <summary>
     /// IdentifyType
     /// </summary>
-    public BankIdentifyType BankIdentifyType { get; set; }
+    public BanksIdentifyTypesEnum BankIdentifyType { get; set; }
 }

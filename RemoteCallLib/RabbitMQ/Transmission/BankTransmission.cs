@@ -39,14 +39,14 @@ public partial class BankTransmission(IRabbitClient rabbitClient) : IBankService
     public async Task<TResponseModel<int>> BankTransferCreateOrUpdateAsync(BankTransferModelDB trans, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.BankTransferCreateOrUpdateReceive, trans, token: token) ?? new();
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<BankTransferModelDB>> BanksTransfersSelectAsync(TPaginationRequestStandardModel<SelectTransfersBanksRequestModel> req, CancellationToken token = default) 
+    public async Task<TPaginationResponseModel<BankTransferModelDB>> BanksTransfersSelectAsync(TPaginationRequestStandardModel<SelectTransfersBanksRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<BankTransferModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.BanksTransfersSelectReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<TBankAccountModelDB>>> GetTBankAccountsAsync(GetTBankAccountsRequestModel req, CancellationToken token = default) 
+    public async Task<TResponseModel<List<TBankAccountModelDB>>> GetTBankAccountsAsync(GetTBankAccountsRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<TBankAccountModelDB>>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetTBankConnectionAccountsReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<BankTransferModelDB>>> BankAccountCheckAsync(BankAccountCheckRequestModel req, CancellationToken token = default) 
+    public async Task<TResponseModel<List<BankTransferModelDB>>> BankAccountCheckAsync(BankAccountCheckRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<BankTransferModelDB>>>(GlobalStaticConstantsTransmission.TransmissionQueues.BankAccountCheckReceive, req, token: token) ?? new();
 }

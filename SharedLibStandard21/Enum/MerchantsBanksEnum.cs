@@ -2,16 +2,16 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.ComponentModel;
+
 namespace SharedLib;
 
 /// <summary>
-/// BankIdentifyType
+/// MerchantsBanksEnum
 /// </summary>
-public enum BankIdentifyType
+public enum MerchantsBanksEnum
 {
     /// <inheritdoc/>
-    ByInn,
-    
-    /// <inheritdoc/>
-    ByName
+    [Description("T-Bank касса")]
+    TBankCash,
 }

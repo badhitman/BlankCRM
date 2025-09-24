@@ -17,7 +17,7 @@ public class KladrServiceTransmission(IRabbitClient rabbitClient) : IKladrServic
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> FlushTempKladrAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.FlushTempKladrRecive, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.FlushTempKladrReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<MetadataKladrModel> GetMetadataKladrAsync(GetMetadataKladrRequestModel req, CancellationToken token = default)

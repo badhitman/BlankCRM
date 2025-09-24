@@ -522,6 +522,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string KLADR_CONTROLLER_NAME = "kladr";
 
         /// <summary>
+        /// Merchant
+        /// </summary>
+        public const string MERCHANT_CONTROLLER_NAME = "merchant";
+
+        /// <summary>
         /// Portfolios
         /// </summary>
         public const string PORTFOLIOS_CONTROLLER_NAME = "portfolios";

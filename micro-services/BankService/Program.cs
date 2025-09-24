@@ -93,9 +93,13 @@ builder.Configuration.AddCommandLine(args);
 
 builder.Services
 .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+.Configure<TBankSettings>(builder.Configuration.GetSection(nameof(TBankSettings)))
 ;
 
-builder.Services.AddScoped<IBankService, BankImplementService>();
+builder.Services
+    .AddScoped<IBankService, BankImplementService>()
+    .AddScoped<IMerchantService, MerchantImplementService>()
+    ;
 
 builder.Services.AddSingleton<WebConfigModel>();
 builder.Services.AddOptions();
