@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Bank
 {
     [DbContext(typeof(BankContext))]
-    [Migration("20250924154147_BankContext001")]
+    [Migration("20250924160326_BankContext001")]
     partial class BankContext001
     {
         /// <inheritdoc />
@@ -281,7 +281,7 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasIndex("Status");
 
-                    b.ToTable("PaymentInitTBankResults");
+                    b.ToTable("PaymentInitResultsTBank");
                 });
 
             modelBuilder.Entity("SharedLib.PaymentsForReceiptTBankModelDB", b =>
@@ -401,7 +401,7 @@ namespace DbPostgreLib.Migrations.Bank
                     b.HasIndex("ReceiptItemId")
                         .IsUnique();
 
-                    b.ToTable("SuppliersForReceiptItemTBanks");
+                    b.ToTable("SuppliersForReceiptItemsTBank");
                 });
 
             modelBuilder.Entity("SharedLib.TBankAccountModelDB", b =>

@@ -161,7 +161,7 @@ namespace DbPostgreLib.Migrations.Bank
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentInitTBankResults",
+                name: "PaymentInitResultsTBank",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -175,9 +175,9 @@ namespace DbPostgreLib.Migrations.Bank
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentInitTBankResults", x => x.Id);
+                    table.PrimaryKey("PK_PaymentInitResultsTBank", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaymentInitTBankResults_ReceiptsTBank_ReceiptId",
+                        name: "FK_PaymentInitResultsTBank_ReceiptsTBank_ReceiptId",
                         column: x => x.ReceiptId,
                         principalTable: "ReceiptsTBank",
                         principalColumn: "Id",
@@ -238,7 +238,7 @@ namespace DbPostgreLib.Migrations.Bank
                 });
 
             migrationBuilder.CreateTable(
-                name: "SuppliersForReceiptItemTBanks",
+                name: "SuppliersForReceiptItemsTBank",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -250,9 +250,9 @@ namespace DbPostgreLib.Migrations.Bank
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SuppliersForReceiptItemTBanks", x => x.Id);
+                    table.PrimaryKey("PK_SuppliersForReceiptItemsTBank", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SuppliersForReceiptItemTBanks_ReceiptsItemsTBank_ReceiptIte~",
+                        name: "FK_SuppliersForReceiptItemsTBank_ReceiptsItemsTBank_ReceiptIte~",
                         column: x => x.ReceiptItemId,
                         principalTable: "ReceiptsItemsTBank",
                         principalColumn: "Id",
@@ -386,29 +386,29 @@ namespace DbPostgreLib.Migrations.Bank
                 column: "Status");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitTBankResults_Amount",
-                table: "PaymentInitTBankResults",
+                name: "IX_PaymentInitResultsTBank_Amount",
+                table: "PaymentInitResultsTBank",
                 column: "Amount");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitTBankResults_OrderId",
-                table: "PaymentInitTBankResults",
+                name: "IX_PaymentInitResultsTBank_OrderId",
+                table: "PaymentInitResultsTBank",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitTBankResults_PaymentId",
-                table: "PaymentInitTBankResults",
+                name: "IX_PaymentInitResultsTBank_PaymentId",
+                table: "PaymentInitResultsTBank",
                 column: "PaymentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitTBankResults_ReceiptId",
-                table: "PaymentInitTBankResults",
+                name: "IX_PaymentInitResultsTBank_ReceiptId",
+                table: "PaymentInitResultsTBank",
                 column: "ReceiptId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitTBankResults_Status",
-                table: "PaymentInitTBankResults",
+                name: "IX_PaymentInitResultsTBank_Status",
+                table: "PaymentInitResultsTBank",
                 column: "Status");
 
             migrationBuilder.CreateIndex(
@@ -417,8 +417,8 @@ namespace DbPostgreLib.Migrations.Bank
                 column: "ReceiptId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SuppliersForReceiptItemTBanks_ReceiptItemId",
-                table: "SuppliersForReceiptItemTBanks",
+                name: "IX_SuppliersForReceiptItemsTBank_ReceiptItemId",
+                table: "SuppliersForReceiptItemsTBank",
                 column: "ReceiptItemId",
                 unique: true);
 
@@ -476,13 +476,13 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "IncomingMerchantsPaymentsTBank");
 
             migrationBuilder.DropTable(
-                name: "PaymentInitTBankResults");
+                name: "PaymentInitResultsTBank");
 
             migrationBuilder.DropTable(
                 name: "PaymentsForReceiptsTBank");
 
             migrationBuilder.DropTable(
-                name: "SuppliersForReceiptItemTBanks");
+                name: "SuppliersForReceiptItemsTBank");
 
             migrationBuilder.DropTable(
                 name: "TransfersBanks");

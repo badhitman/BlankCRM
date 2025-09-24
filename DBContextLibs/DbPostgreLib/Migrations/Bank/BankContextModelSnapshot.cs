@@ -278,7 +278,7 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasIndex("Status");
 
-                    b.ToTable("PaymentInitTBankResults");
+                    b.ToTable("PaymentInitResultsTBank");
                 });
 
             modelBuilder.Entity("SharedLib.PaymentsForReceiptTBankModelDB", b =>
@@ -398,7 +398,7 @@ namespace DbPostgreLib.Migrations.Bank
                     b.HasIndex("ReceiptItemId")
                         .IsUnique();
 
-                    b.ToTable("SuppliersForReceiptItemTBanks");
+                    b.ToTable("SuppliersForReceiptItemsTBank");
                 });
 
             modelBuilder.Entity("SharedLib.TBankAccountModelDB", b =>
