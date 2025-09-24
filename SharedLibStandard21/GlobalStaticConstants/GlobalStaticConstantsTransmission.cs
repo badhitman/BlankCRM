@@ -750,6 +750,9 @@ public static partial class GlobalStaticConstantsTransmission
 
         /// <inheritdoc/>
         public readonly static string IncomingTBankMerchantPaymentReceive = Path.Combine(TransmissionQueueNamePrefix, nameof(MerchantsBanksEnum.TBankCash), Routes.MERCHANT_CONTROLLER_NAME, $"{Routes.INCOMING_CONTROLLER_NAME}-{Routes.PAYMENT_CONTROLLER_NAME}");
+
+        /// <inheritdoc/>
+        public readonly static string BindCustomerTBankReceive = Path.Combine(TransmissionQueueNamePrefix, nameof(MerchantsBanksEnum.TBankCash), Routes.MERCHANT_CONTROLLER_NAME, $"{Routes.CUSTOMER_CONTROLLER_NAME}-{Routes.BIND_ACTION_NAME}");
         #endregion
 
         #region HelpDesk

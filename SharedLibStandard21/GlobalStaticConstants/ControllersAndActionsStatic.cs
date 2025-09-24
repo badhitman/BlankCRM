@@ -1570,6 +1570,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string GET_ACTION_NAME = "get";
 
         /// <summary>
+        /// Bind
+        /// </summary>
+        public const string BIND_ACTION_NAME = "bind";
+
+        /// <summary>
         /// Route
         /// </summary>
         public const string ROUTE_ACTION_NAME = "route";
