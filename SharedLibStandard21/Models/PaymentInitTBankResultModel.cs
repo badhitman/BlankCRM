@@ -27,7 +27,7 @@ public class PaymentInitTBankResultModel
     /// <summary>
     /// Статус платежа
     /// </summary>
-    public EStatusResponsesEnum? Status { get; set; }
+    public StatusResponsesTBankEnum? Status { get; set; }
 
     /// <summary>
     /// Ссылка на платежную форму

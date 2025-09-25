@@ -15,7 +15,7 @@ public class ReceiptItemTBankModel
     /// Наименование товара
     /// </summary>
     [JsonProperty(PropertyName = "Name", Required = Required.Always)]
-    public string? Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Количество или вес товара
@@ -33,7 +33,7 @@ public class ReceiptItemTBankModel
     /// Ставка НДС
     /// </summary>
     [JsonProperty(PropertyName = "Tax", Required = Required.Always)]
-    public ETaxesEnum Tax { get; set; }
+    public TaxesTBankEnum Tax { get; set; }
 
     /// <summary>
     /// Стоимость товара в копейках, произведение <see cref="Quantity"/> и <see cref="Price"/>
@@ -54,12 +54,12 @@ public class ReceiptItemTBankModel
     /// <summary>
     /// Признак способа расчета
     /// </summary>
-    public EPaymentMethodsEnum? PaymentMethod { get; set; }
+    public PaymentMethodsTBankEnum? PaymentMethod { get; set; }
 
     /// <summary>
     /// Признак предмета расчета
     /// </summary>
-    public EPaymentObjectsEnum? PaymentObject { get; set; }
+    public PaymentObjectsTBankEnum? PaymentObject { get; set; }
 
     /// <summary>
     /// Данные агента. Используется при работе по агентской схеме.

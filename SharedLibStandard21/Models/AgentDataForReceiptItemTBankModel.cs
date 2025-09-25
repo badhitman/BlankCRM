@@ -14,13 +14,13 @@ public class AgentDataForReceiptItemTBankModel
     /// <summary>
     /// Признак агента
     /// </summary>
-    public EAgentSignsEnum? AgentSign { get; set; }
+    public AgentSignsTBankEnum? AgentSign { get; set; }
 
     /// <summary>
     /// Наименование операции. Обязателен в случае если <see cref="AgentSign"/> принимает одно из значений:
     /// <list type="bullet">
-    /// <item><see cref="EAgentSignsEnum.BankPayingAgent"/></item>
-    /// <item><see cref="EAgentSignsEnum.BankPayingSubagent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingAgent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingSubagent"/></item>
     /// </list>
     /// </summary>
     public string? OperationName { get; set; }
@@ -28,10 +28,10 @@ public class AgentDataForReceiptItemTBankModel
     /// <summary>
     /// Телефоны платежного агента. Обязателен в случае если <see cref="AgentSign"/> принимает одно из значений:
     /// <list type="bullet">
-    /// <item><see cref="EAgentSignsEnum.BankPayingAgent"/></item>
-    /// <item><see cref="EAgentSignsEnum.BankPayingSubagent"/></item>
-    /// <item><see cref="EAgentSignsEnum.PayingAgent"/></item>
-    /// <item><see cref="EAgentSignsEnum.PayingSubagent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingAgent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingSubagent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.PayingAgent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.PayingSubagent"/></item>
     /// </list>
     /// </summary>
     public IEnumerable<string>? Phones { get; set; }
@@ -39,8 +39,8 @@ public class AgentDataForReceiptItemTBankModel
     /// <summary>
     /// Телефоны оператора по приему платежей. Обязателен в случае если <see cref="AgentSign"/> принимает одно из значений:
     /// <list type="bullet">
-    /// <item><see cref="EAgentSignsEnum.PayingAgent"/></item>
-    /// <item><see cref="EAgentSignsEnum.PayingSubagent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.PayingAgent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.PayingSubagent"/></item>
     /// </list>
     /// </summary>
     public IEnumerable<string>? ReceiverPhones { get; set; }
@@ -48,8 +48,8 @@ public class AgentDataForReceiptItemTBankModel
     /// <summary>
     /// Телефоны оператора перевода. Обязателен в случае если <see cref="AgentSign"/> принимает одно из значений:
     /// <list type="bullet">
-    /// <item><see cref="EAgentSignsEnum.BankPayingAgent"/></item>
-    /// <item><see cref="EAgentSignsEnum.BankPayingSubagent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingAgent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingSubagent"/></item>
     /// </list>
     /// </summary>
     public List<string>? TransferPhones { get; set; }
@@ -57,8 +57,8 @@ public class AgentDataForReceiptItemTBankModel
     /// <summary>
     /// Наименование оператора перевода. Обязателен в случае если <see cref="AgentSign"/> принимает одно из значений:
     /// <list type="bullet">
-    /// <item><see cref="EAgentSignsEnum.BankPayingAgent"/></item>
-    /// <item><see cref="EAgentSignsEnum.BankPayingSubagent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingAgent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingSubagent"/></item>
     /// </list>
     /// </summary>
     public string? OperatorName { get; set; }
@@ -66,8 +66,8 @@ public class AgentDataForReceiptItemTBankModel
     /// <summary>
     /// Адрес оператора перевода. Обязателен в случае если <see cref="AgentSign"/> принимает одно из значений:
     /// <list type="bullet">
-    /// <item><see cref="EAgentSignsEnum.BankPayingAgent"/></item>
-    /// <item><see cref="EAgentSignsEnum.BankPayingSubagent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingAgent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingSubagent"/></item>
     /// </list>
     /// </summary>
     public string? OperatorAddress { get; set; }
@@ -75,8 +75,8 @@ public class AgentDataForReceiptItemTBankModel
     /// <summary>
     /// ИНН оператора перевода. Обязателен в случае если <see cref="AgentSign"/> принимает одно из значений:
     /// <list type="bullet">
-    /// <item><see cref="EAgentSignsEnum.BankPayingAgent"/></item>
-    /// <item><see cref="EAgentSignsEnum.BankPayingSubagent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingAgent"/></item>
+    /// <item><see cref="AgentSignsTBankEnum.BankPayingSubagent"/></item>
     /// </list>
     /// </summary>
     public string? OperatorInn { get; set; }

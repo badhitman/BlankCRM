@@ -12,7 +12,7 @@ namespace SharedLib;
 /// EStatusResponsesEnum
 /// </summary>
 [JsonConverter(typeof(StringEnumConverter))]
-public enum EStatusResponsesEnum
+public enum StatusResponsesTBankEnum
 {
     /// <summary>
     /// Создан

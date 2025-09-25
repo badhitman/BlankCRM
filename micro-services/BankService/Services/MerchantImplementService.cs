@@ -4,6 +4,7 @@
 
 using TinkoffPaymentClientApi.ResponseEntity;
 using TinkoffPaymentClientApi.Commands;
+using TinkoffPaymentClientApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using TinkoffPaymentClientApi;
@@ -58,6 +59,31 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
     public async Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(InitMerchantTBankRequestModel req, CancellationToken token = default)
     {
         TResponseModel<PaymentInitTBankResultModelDB> res = new() { Response = req.GetDB() };
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        await ctx.PaymentInitResultsTBank.AddAsync(res.Response, token);
+        await ctx.SaveChangesAsync(token);
+
+        TinkoffPaymentClient clientApi = new(settings.Value.TerminalKey, settings.Value.Password);
+        Receipt rec = req.Receipt.GetTBankReceipt();
+
+        Init _iReq = new(req.OrderId, req.Amount, req.IsRecurrent, req.UserId)
+        {
+            Receipt = req.Receipt.GetTBankReceipt(),
+
+            Language = req.Language?.Convert(),
+            PayType = req.PayType?.Convert(),
+
+            Description = req.Description,
+            FailURL = req.FailURL,
+            Data = req.Data,
+            IP = req.IP,
+            NotificationURL = req.NotificationURL,
+            SuccessURL = req.SuccessURL,
+            RedirectDueDate = req.RedirectDueDate,
+        };
+        PaymentResponse resultPayment = await clientApi.InitAsync(_iReq, token);
+
+
         throw new NotImplementedException();
     }
 

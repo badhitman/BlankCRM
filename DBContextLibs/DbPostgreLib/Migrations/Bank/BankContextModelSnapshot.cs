@@ -260,6 +260,15 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<string>("ApiException")
                         .HasColumnType("text");
 
+                    b.Property<string>("Details")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ErrorCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("text");
+
                     b.Property<string>("OrderId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -277,9 +286,20 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<int?>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<string>("StatusName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("TerminalKey")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Amount");
+
+                    b.HasIndex("ErrorCode");
 
                     b.HasIndex("OrderId");
 
@@ -288,6 +308,12 @@ namespace DbPostgreLib.Migrations.Bank
                     b.HasIndex("ReceiptId");
 
                     b.HasIndex("Status");
+
+                    b.HasIndex("StatusName");
+
+                    b.HasIndex("Success");
+
+                    b.HasIndex("TerminalKey");
 
                     b.ToTable("PaymentInitResultsTBank");
                 });

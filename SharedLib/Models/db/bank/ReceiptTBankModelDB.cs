@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-
 namespace SharedLib;
 
 /// <summary>
@@ -14,8 +13,8 @@ public class ReceiptTBankModelDB : ReceiptTBankModel
     public int Id { get; set; }
 
     /// <inheritdoc/>
-    public new List<ReceiptItemModelDB>? Items { get ; set ; }
+    public new List<ReceiptItemModelDB>? Items { get; set; }
 
     /// <inheritdoc/>
-    public new PaymentsForReceiptTBankModelDB? Payments { get ; set; }
+    public new PaymentsForReceiptTBankModelDB? Payments { get; set; }
 }

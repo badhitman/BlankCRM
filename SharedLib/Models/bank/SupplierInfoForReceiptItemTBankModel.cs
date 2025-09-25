@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharedLib;
@@ -16,15 +15,15 @@ public class SupplierInfoForReceiptItemTBankModel
     /// Телефон поставщика
     /// </summary>
     [NotMapped]
-    public IEnumerable<string>? Phones { get; set; }
+    public required IEnumerable<string> Phones { get; set; }
 
     /// <summary>
     /// Наименование поставщика
     /// </summary>
-    public string? Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// ИНН поставщика
     /// </summary>
-    public string? Inn { get; set; }
+    public required string Inn { get; set; }
 }

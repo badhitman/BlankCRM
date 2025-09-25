@@ -173,6 +173,12 @@ namespace DbPostgreLib.Migrations.Bank
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ReceiptId = table.Column<int>(type: "integer", nullable: false),
+                    TerminalKey = table.Column<string>(type: "text", nullable: true),
+                    Success = table.Column<bool>(type: "boolean", nullable: false),
+                    StatusName = table.Column<string>(type: "text", nullable: true),
+                    ErrorCode = table.Column<string>(type: "text", nullable: true),
+                    Message = table.Column<string>(type: "text", nullable: true),
+                    Details = table.Column<string>(type: "text", nullable: true),
                     ApiException = table.Column<string>(type: "text", nullable: true),
                     Amount = table.Column<long>(type: "bigint", nullable: false),
                     OrderId = table.Column<string>(type: "text", nullable: false),
@@ -401,6 +407,11 @@ namespace DbPostgreLib.Migrations.Bank
                 column: "Amount");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PaymentInitResultsTBank_ErrorCode",
+                table: "PaymentInitResultsTBank",
+                column: "ErrorCode");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PaymentInitResultsTBank_OrderId",
                 table: "PaymentInitResultsTBank",
                 column: "OrderId");
@@ -419,6 +430,21 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "IX_PaymentInitResultsTBank_Status",
                 table: "PaymentInitResultsTBank",
                 column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentInitResultsTBank_StatusName",
+                table: "PaymentInitResultsTBank",
+                column: "StatusName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentInitResultsTBank_Success",
+                table: "PaymentInitResultsTBank",
+                column: "Success");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentInitResultsTBank_TerminalKey",
+                table: "PaymentInitResultsTBank",
+                column: "TerminalKey");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReceiptsItemsTBank_ReceiptId",

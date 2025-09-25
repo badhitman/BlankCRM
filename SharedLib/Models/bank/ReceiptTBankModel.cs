@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @fakegov 
 ////////////////////////////////////////////////
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace SharedLib;
@@ -15,18 +14,18 @@ public class ReceiptTBankModel
     /// <summary>
     /// Электронная почта покупателя. Обязательна если не задан <see cref="Phone"/>
     /// </summary>
-    public string? Email { get; set; }
+    public required string Email { get; set; }
 
     /// <summary>
     /// Телефон покупателя. Обязателен если не задан <see cref="Email"/>
     /// </summary>
-    public string? Phone { get; set; }
+    public required string Phone { get; set; }
 
     /// <summary>
     /// Система налогообложения.
     /// </summary>
     [JsonProperty(PropertyName = "Taxation", Required = Required.Always)]
-    public ETaxationsEnum Taxation { get; set; }
+    public TaxationsTBankEnum Taxation { get; set; }
 
     /// <summary>
     /// Электронная почта продавца
@@ -36,7 +35,7 @@ public class ReceiptTBankModel
     /// <summary>
     /// Позиции чека с информацией о товарах.
     /// </summary>
-    public virtual List<ReceiptItemTBankModel>? Items { get; set; }
+    public virtual List<ReceiptItemTBankModel> Items { get; set; } = [];
 
     /// <summary>
     /// Объект c информацией о видами суммы платежа.

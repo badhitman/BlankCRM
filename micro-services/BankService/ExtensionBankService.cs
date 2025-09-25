@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////
 
 using TinkoffPaymentClientApi.ResponseEntity;
+using TinkoffPaymentClientApi.Models;
+using TinkoffPaymentClientApi.Enums;
 using Newtonsoft.Json;
 using SharedLib;
 
@@ -13,6 +15,7 @@ namespace BankService;
 /// </summary>
 public static class ExtensionBankService
 {
+    #region GetDB
     /// <inheritdoc/>
     public static IncomingMerchantPaymentTBankModelDB GetDB(this TinkoffNotification span)
     {
@@ -131,4 +134,111 @@ public static class ExtensionBankService
 
         return res;
     }
+    #endregion
+
+    #region TBank
+    /// <inheritdoc/>
+    public static Receipt GetTBankReceipt(this ReceiptTBankModel sender)
+    {
+        return new Receipt(sender.Phone, sender.Email, sender.Taxation.Convert(), sender.Items.Select(x => x.GetTBankReceiptItem()))
+        {
+            EmailCompany = sender.EmailCompany,
+            Payments = sender.Payments?.GetTBankPayments(),
+        };
+    }
+
+    /// <inheritdoc/>
+    public static Payments GetTBankPayments(this PaymentsForReceiptTBankModel sender)
+    {
+        return new Payments(sender.Electronic)
+        {
+            AdvancePayment = sender.AdvancePayment,
+            Cash = sender.Cash,
+            Credit = sender.Credit,
+            Provision = sender.Provision,
+        };
+    }
+
+    /// <inheritdoc/>
+    public static ReceiptItem GetTBankReceiptItem(this ReceiptItemTBankModel sender)
+    {
+        return new ReceiptItem(sender.Name, sender.Quantity, sender.Price, sender.Tax.Convert())
+        {
+            AgentData = sender.AgentData?.GetTBankAgentData(),
+            SupplierInfo = sender.SupplierInfo?.GetTBankSupplierInfo(),
+
+            PaymentMethod = sender.PaymentMethod?.Convert(),
+            PaymentObject = sender.PaymentObject?.Convert(),
+
+            Ean13 = sender.Ean13,
+        };
+    }
+
+    /// <inheritdoc/>
+    public static SupplierInfo GetTBankSupplierInfo(this SupplierInfoForReceiptItemTBankModel sender)
+    {
+        return new SupplierInfo(sender.Phones, sender.Name, sender.Inn);
+    }
+
+    /// <inheritdoc/>
+    public static AgentData GetTBankAgentData(this AgentDataForReceiptItemTBankModel sender)
+    {
+        return new AgentData()
+        {
+            Phones = sender.Phones,
+
+            OperatorInn = sender.OperatorInn,
+            OperatorName = sender.OperatorName,
+            OperationName = sender.OperationName,
+            ReceiverPhones = sender.ReceiverPhones,
+            TransferPhones = sender.TransferPhones,
+            OperatorAddress = sender.OperatorAddress,
+
+            AgentSign = sender.AgentSign?.Convert(),
+        };
+    }
+
+    //  // 
+    /// <inheritdoc/>
+    public static EPaymentObject Convert(this PaymentObjectsTBankEnum sender)
+    {
+        return EPaymentObject.Payment;
+    }
+
+    /// <inheritdoc/>
+    public static EAgentSign Convert(this AgentSignsTBankEnum sender)
+    {
+        return EAgentSign.PayingAgent;
+    }
+
+    /// <inheritdoc/>
+    public static EPaymentMethod Convert(this PaymentMethodsTBankEnum sender)
+    {
+        return EPaymentMethod.PartialPayment;
+    }
+
+    /// <inheritdoc/>
+    public static ETax Convert(this TaxesTBankEnum sender)
+    {
+        return ETax.None;
+    }
+
+    /// <inheritdoc/>
+    public static ETaxation Convert(this TaxationsTBankEnum sender)
+    {
+        return ETaxation.Esn;
+    }
+
+    /// <inheritdoc/>
+    public static ELanguageForm Convert(this LanguageFormTBankEnum sender)
+    {
+        return ELanguageForm.Ru;
+    }
+
+    /// <inheritdoc/>
+    public static EPayType Convert(this PayTypesTBankEnum sender)
+    {
+        return EPayType.OneStagePayment;
+    }
+    #endregion
 }

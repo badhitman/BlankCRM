@@ -12,7 +12,7 @@ namespace SharedLib;
 /// Предмет расчета
 /// </summary>
 [JsonConverter(typeof(StringEnumConverter))]
-public enum EPaymentObjectsEnum
+public enum PaymentObjectsTBankEnum
 {
     /// <summary>
     /// Товар

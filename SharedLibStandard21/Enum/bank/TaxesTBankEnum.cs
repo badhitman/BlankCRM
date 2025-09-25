@@ -12,7 +12,7 @@ namespace SharedLib;
 /// Ставка НДС
 /// </summary>
 [JsonConverter(typeof(StringEnumConverter))]
-public enum ETaxesEnum
+public enum TaxesTBankEnum
 {
     /// <summary>
     /// Без НДС

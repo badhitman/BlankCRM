@@ -12,7 +12,7 @@ namespace SharedLib;
 /// Признак агента
 /// </summary>
 [JsonConverter(typeof(StringEnumConverter))]
-public enum EAgentSignsEnum
+public enum AgentSignsTBankEnum
 {
     /// <summary>
     /// Банковский платежный агент

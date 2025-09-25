@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Bank
 {
     [DbContext(typeof(BankContext))]
-    [Migration("20250925152644_BankContext001")]
+    [Migration("20250925155212_BankContext001")]
     partial class BankContext001
     {
         /// <inheritdoc />
@@ -263,6 +263,15 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<string>("ApiException")
                         .HasColumnType("text");
 
+                    b.Property<string>("Details")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ErrorCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("text");
+
                     b.Property<string>("OrderId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -280,9 +289,20 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<int?>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<string>("StatusName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("TerminalKey")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Amount");
+
+                    b.HasIndex("ErrorCode");
 
                     b.HasIndex("OrderId");
 
@@ -291,6 +311,12 @@ namespace DbPostgreLib.Migrations.Bank
                     b.HasIndex("ReceiptId");
 
                     b.HasIndex("Status");
+
+                    b.HasIndex("StatusName");
+
+                    b.HasIndex("Success");
+
+                    b.HasIndex("TerminalKey");
 
                     b.ToTable("PaymentInitResultsTBank");
                 });
