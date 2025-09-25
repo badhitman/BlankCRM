@@ -66,13 +66,13 @@ public partial class BankLayerContext : DbContext
     public DbSet<ReceiptTBankModelDB> ReceiptsTBank { get; set; } = default!;
 
     /// <inheritdoc/>
+    public DbSet<ReceiptItemModelDB> ReceiptsItemsTBank { get; set; } = default!;
+
+    /// <inheritdoc/>
     public DbSet<SupplierInfoModelDB> SuppliersForReceiptItemsTBank { get; set; } = default!;
 
     /// <inheritdoc/>
     public DbSet<AgentDataModelDB> AgentsForReceiptItemsTBank { get; set; } = default!;
-
-    /// <inheritdoc/>
-    public DbSet<ReceiptItemModelDB> ReceiptsItemsTBank { get; set; } = default!;
 
     /// <inheritdoc/>
     public DbSet<PaymentsForReceiptTBankModelDB> PaymentsForReceiptsTBank { get; set; } = default!;

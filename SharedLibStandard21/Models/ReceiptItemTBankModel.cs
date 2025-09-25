@@ -15,25 +15,25 @@ public class ReceiptItemTBankModel
     /// Наименование товара
     /// </summary>
     [JsonProperty(PropertyName = "Name", Required = Required.Always)]
-    public string? Name { get; private set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Количество или вес товара
     /// </summary>
     [JsonProperty(PropertyName = "Quantity", Required = Required.Always)]
-    public uint Quantity { get; private set; }
+    public uint Quantity { get; set; }
 
     /// <summary>
     /// Цена за единицу товара в копейках
     /// </summary>
     [JsonProperty(PropertyName = "Price", Required = Required.Always)]
-    public uint Price { get; private set; }
+    public uint Price { get; set; }
 
     /// <summary>
     /// Ставка НДС
     /// </summary>
     [JsonProperty(PropertyName = "Tax", Required = Required.Always)]
-    public ETaxesEnum Tax { get; private set; }
+    public ETaxesEnum Tax { get; set; }
 
     /// <summary>
     /// Стоимость товара в копейках, произведение <see cref="Quantity"/> и <see cref="Price"/>

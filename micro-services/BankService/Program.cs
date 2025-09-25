@@ -18,6 +18,8 @@ using SharedLib;
 using NLog.Web;
 using DbcLib;
 using NLog;
+using TinkoffPaymentClientApi.ResponseEntity;
+using Newtonsoft.Json;
 
 Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built

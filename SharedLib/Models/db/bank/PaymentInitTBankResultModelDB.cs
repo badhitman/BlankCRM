@@ -16,8 +16,11 @@ public class PaymentInitTBankResultModelDB : PaymentInitTBankResultModel
     public int Id { get; set; }
 
     /// <inheritdoc/>
-    public ReceiptTBankModelDB? Receipt {  get; set; }
+    public ReceiptTBankModelDB? Receipt { get; set; }
 
     /// <inheritdoc/>
     public int ReceiptId { get; set; }
+
+    /// <inheritdoc/>
+    public string? ApiException { get; set; }
 }

@@ -17,7 +17,7 @@ public class PaymentsForReceiptTBankModel
     /// <summary>
     /// Вид оплаты "Безналичный". Сумма к оплате в копейках не более 14 знаков.
     /// </summary>
-    public ulong Electronic { get; private set; }
+    public ulong Electronic { get; set; }
 
     /// <summary>
     /// Вид оплаты "Предварительная оплата (Аванс)". Сумма к оплате в копейках не более 14 знаков.

@@ -17,4 +17,14 @@ public class AgentDataModelDB : AgentDataForReceiptItemTBankModel
 
     /// <inheritdoc/>
     public int ReceiptItemId { get; set; }
+
+
+    /// <inheritdoc/>
+    public string? PhonesJsonSource { get; set; }
+
+    /// <inheritdoc/>
+    public string? ReceiverPhonesJsonSource { get; set; }
+
+    /// <inheritdoc/>
+    public string? TransferPhonesJsonSource { get; set; }
 }

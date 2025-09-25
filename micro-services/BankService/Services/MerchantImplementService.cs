@@ -55,6 +55,13 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
     }
 
     /// <inheritdoc/>
+    public async Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(InitMerchantTBankRequestModel req, CancellationToken token = default)
+    {
+        TResponseModel<PaymentInitTBankResultModelDB> res = new() { Response = req.GetDB() };
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> IncomingTBankMerchantPaymentAsync(JObject req, CancellationToken token = default)
     {
         TinkoffNotification? tbankNotify = req.ToObject<TinkoffNotification>();
@@ -71,9 +78,14 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             return ResponseBaseModel.CreateError("подпись не корректна");
         }
 
-        if (string.IsNullOrEmpty(tbankNotify.OrderId))
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        IncomingMerchantPaymentTBankModelDB payDB = tbankNotify.GetDB();
+        await ctx.IncomingMerchantsPaymentsTBank.AddAsync(payDB, token);
+        await ctx.SaveChangesAsync(token);
+
+        if (string.IsNullOrEmpty(tbankNotify.OrderId) || !int.TryParse(tbankNotify.OrderId, out int orderId))
         {
-            loggerRepo.LogError($"не указан orderId > {req}");
+            loggerRepo.LogError($"не указан orderId (или имеет не верный формат `{tbankNotify.OrderId}`) > {req}");
             return ResponseBaseModel.CreateError("не указан orderId");
         }
 
@@ -83,19 +95,6 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             return ResponseBaseModel.CreateError("нет суммы");
         }
 
-        if (!int.TryParse(tbankNotify.OrderId, out int orderId))
-        {
-            loggerRepo.LogError($"не удалось преобразовать `{nameof(orderId)}` = '{orderId}' > {req}");
-            return ResponseBaseModel.CreateError($"не удалось преобразовать `{nameof(orderId)}` = '{orderId}'");
-        }
-
-        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
-    }
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(ReceiptTBankModel req, CancellationToken token = default)
-    {
-        throw new NotImplementedException();
     }
 }

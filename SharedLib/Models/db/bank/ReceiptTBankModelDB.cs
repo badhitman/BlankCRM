@@ -17,5 +17,5 @@ public class ReceiptTBankModelDB : ReceiptTBankModel
     public new List<ReceiptItemModelDB>? Items { get ; set ; }
 
     /// <inheritdoc/>
-    public new PaymentInitTBankResultModelDB? Payments { get ; set; }
+    public new PaymentsForReceiptTBankModelDB? Payments { get ; set; }
 }

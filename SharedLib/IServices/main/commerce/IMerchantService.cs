@@ -24,5 +24,5 @@ public partial interface IMerchantService
     /// <summary>
     /// InitTBankMerchantPaymentAsync
     /// </summary>
-    public Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(ReceiptTBankModel req, CancellationToken token = default);
+    public Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(InitMerchantTBankRequestModel req, CancellationToken token = default);
 }

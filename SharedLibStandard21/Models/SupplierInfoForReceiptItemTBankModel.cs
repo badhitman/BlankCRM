@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SharedLib;
 
@@ -14,6 +15,7 @@ public class SupplierInfoForReceiptItemTBankModel
     /// <summary>
     /// Телефон поставщика
     /// </summary>
+    [NotMapped]
     public IEnumerable<string>? Phones { get; set; }
 
     /// <summary>

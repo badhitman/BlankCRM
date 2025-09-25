@@ -30,6 +30,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<GetTBankAccountsReceive, GetTBankAccountsRequestModel, TResponseModel<List<TBankAccountModelDB>>>()
             .RegisterMqListener<BankAccountCheckReceive, BankAccountCheckRequestModel, TResponseModel<List<BankTransferModelDB>>>()
             .RegisterMqListener<IncomingTBankMerchantPaymentReceive, JObject, ResponseBaseModel>()
+            .RegisterMqListener<InitPaymentMerchantTBankReceive, InitMerchantTBankRequestModel, TResponseModel<PaymentInitTBankResultModelDB>>()
             ;
     }
 }

@@ -83,22 +83,6 @@ namespace DbPostgreLib.Migrations.Bank
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReceiptsTBank",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Email = table.Column<string>(type: "text", nullable: true),
-                    Phone = table.Column<string>(type: "text", nullable: true),
-                    Taxation = table.Column<int>(type: "integer", nullable: false),
-                    EmailCompany = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ReceiptsTBank", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AccountsTBank",
                 columns: table => new
                 {
@@ -161,12 +145,35 @@ namespace DbPostgreLib.Migrations.Bank
                 });
 
             migrationBuilder.CreateTable(
+                name: "ReceiptsTBank",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PaymentsId = table.Column<int>(type: "integer", nullable: true),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    Phone = table.Column<string>(type: "text", nullable: true),
+                    Taxation = table.Column<int>(type: "integer", nullable: false),
+                    EmailCompany = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReceiptsTBank", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReceiptsTBank_PaymentsForReceiptsTBank_PaymentsId",
+                        column: x => x.PaymentsId,
+                        principalTable: "PaymentsForReceiptsTBank",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PaymentInitResultsTBank",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ReceiptId = table.Column<int>(type: "integer", nullable: false),
+                    ApiException = table.Column<string>(type: "text", nullable: true),
                     Amount = table.Column<long>(type: "bigint", nullable: false),
                     OrderId = table.Column<string>(type: "text", nullable: false),
                     PaymentId = table.Column<string>(type: "text", nullable: false),
@@ -217,6 +224,9 @@ namespace DbPostgreLib.Migrations.Bank
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ReceiptItemId = table.Column<int>(type: "integer", nullable: false),
+                    PhonesJsonSource = table.Column<string>(type: "text", nullable: true),
+                    ReceiverPhonesJsonSource = table.Column<string>(type: "text", nullable: true),
+                    TransferPhonesJsonSource = table.Column<string>(type: "text", nullable: true),
                     AgentSign = table.Column<int>(type: "integer", nullable: true),
                     OperationName = table.Column<string>(type: "text", nullable: true),
                     Phones = table.Column<string[]>(type: "text[]", nullable: true),
@@ -244,7 +254,7 @@ namespace DbPostgreLib.Migrations.Bank
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ReceiptItemId = table.Column<int>(type: "integer", nullable: false),
-                    Phones = table.Column<string[]>(type: "text[]", nullable: true),
+                    PhonesJsonSource = table.Column<string>(type: "text", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Inn = table.Column<string>(type: "text", nullable: true)
                 },
@@ -403,8 +413,7 @@ namespace DbPostgreLib.Migrations.Bank
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentInitResultsTBank_ReceiptId",
                 table: "PaymentInitResultsTBank",
-                column: "ReceiptId",
-                unique: true);
+                column: "ReceiptId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentInitResultsTBank_Status",
@@ -415,6 +424,11 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "IX_ReceiptsItemsTBank_ReceiptId",
                 table: "ReceiptsItemsTBank",
                 column: "ReceiptId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReceiptsTBank_PaymentsId",
+                table: "ReceiptsTBank",
+                column: "PaymentsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SuppliersForReceiptItemsTBank_ReceiptItemId",
@@ -479,9 +493,6 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "PaymentInitResultsTBank");
 
             migrationBuilder.DropTable(
-                name: "PaymentsForReceiptsTBank");
-
-            migrationBuilder.DropTable(
                 name: "SuppliersForReceiptItemsTBank");
 
             migrationBuilder.DropTable(
@@ -498,6 +509,9 @@ namespace DbPostgreLib.Migrations.Bank
 
             migrationBuilder.DropTable(
                 name: "ReceiptsTBank");
+
+            migrationBuilder.DropTable(
+                name: "PaymentsForReceiptsTBank");
         }
     }
 }

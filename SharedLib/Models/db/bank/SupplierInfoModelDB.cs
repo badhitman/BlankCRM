@@ -17,4 +17,7 @@ public class SupplierInfoModelDB : SupplierInfoForReceiptItemTBankModel
 
     /// <inheritdoc/>
     public int ReceiptItemId { get; set; }
+
+    /// <inheritdoc/>
+    public string? PhonesJsonSource { get; set; }
 }

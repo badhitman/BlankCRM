@@ -49,14 +49,23 @@ namespace DbPostgreLib.Migrations.Bank
                     b.PrimitiveCollection<string[]>("Phones")
                         .HasColumnType("text[]");
 
+                    b.Property<string>("PhonesJsonSource")
+                        .HasColumnType("text");
+
                     b.Property<int>("ReceiptItemId")
                         .HasColumnType("integer");
 
                     b.PrimitiveCollection<string[]>("ReceiverPhones")
                         .HasColumnType("text[]");
 
+                    b.Property<string>("ReceiverPhonesJsonSource")
+                        .HasColumnType("text");
+
                     b.PrimitiveCollection<List<string>>("TransferPhones")
                         .HasColumnType("text[]");
+
+                    b.Property<string>("TransferPhonesJsonSource")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -248,6 +257,9 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<long>("Amount")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("ApiException")
+                        .HasColumnType("text");
+
                     b.Property<string>("OrderId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -273,8 +285,7 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasIndex("PaymentId");
 
-                    b.HasIndex("ReceiptId")
-                        .IsUnique();
+                    b.HasIndex("ReceiptId");
 
                     b.HasIndex("Status");
 
@@ -362,6 +373,9 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<string>("EmailCompany")
                         .HasColumnType("text");
 
+                    b.Property<int?>("PaymentsId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Phone")
                         .HasColumnType("text");
 
@@ -369,6 +383,8 @@ namespace DbPostgreLib.Migrations.Bank
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PaymentsId");
 
                     b.ToTable("ReceiptsTBank");
                 });
@@ -387,8 +403,8 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.PrimitiveCollection<string[]>("Phones")
-                        .HasColumnType("text[]");
+                    b.Property<string>("PhonesJsonSource")
+                        .HasColumnType("text");
 
                     b.Property<int>("ReceiptItemId")
                         .HasColumnType("integer");
@@ -517,8 +533,8 @@ namespace DbPostgreLib.Migrations.Bank
             modelBuilder.Entity("SharedLib.PaymentInitTBankResultModelDB", b =>
                 {
                     b.HasOne("SharedLib.ReceiptTBankModelDB", "Receipt")
-                        .WithOne("Payments")
-                        .HasForeignKey("SharedLib.PaymentInitTBankResultModelDB", "ReceiptId")
+                        .WithMany()
+                        .HasForeignKey("ReceiptId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -534,6 +550,15 @@ namespace DbPostgreLib.Migrations.Bank
                         .IsRequired();
 
                     b.Navigation("Receipt");
+                });
+
+            modelBuilder.Entity("SharedLib.ReceiptTBankModelDB", b =>
+                {
+                    b.HasOne("SharedLib.PaymentsForReceiptTBankModelDB", "Payments")
+                        .WithMany()
+                        .HasForeignKey("PaymentsId");
+
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("SharedLib.SupplierInfoModelDB", b =>
@@ -568,8 +593,6 @@ namespace DbPostgreLib.Migrations.Bank
             modelBuilder.Entity("SharedLib.ReceiptTBankModelDB", b =>
                 {
                     b.Navigation("Items");
-
-                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }
