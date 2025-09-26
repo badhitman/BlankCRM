@@ -121,9 +121,12 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
 
         if (req.GenerateQR is not null)
         {
-            GetQr _gq = new(resultPayment.PaymentId);
+            GetQr _gq = new(resultPayment.PaymentId)
+            {
+                DataType = req.GenerateQR?.Convert() ?? TinkoffPaymentClientApi.Enums.EDataTypeQR.PAYLOAD
+            };
             QRResponse qrRest = await clientApi.GetQrAsync(_gq, token);
-
+            
         }
 
         return res;

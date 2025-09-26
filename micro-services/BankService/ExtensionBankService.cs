@@ -201,6 +201,10 @@ public static class ExtensionBankService
 
     #region Enum`s
     /// <inheritdoc/>
+    public static EDataTypeQR Convert(this DataTypeQREnum sender)
+        => Enum.Parse<EDataTypeQR>(sender.ToString());
+
+    /// <inheritdoc/>
     public static EPaymentObject Convert(this PaymentObjectsTBankEnum sender)
         => Enum.Parse<EPaymentObject>(sender.ToString());
 
