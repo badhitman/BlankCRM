@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Bank
 {
     [DbContext(typeof(BankContext))]
-    [Migration("20250926085256_BankContext001")]
+    [Migration("20250926132016_BankContext001")]
     partial class BankContext001
     {
         /// <inheritdoc />
@@ -212,6 +212,9 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<string>("CardId")
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("ExpDate")
                         .HasColumnType("text");
 
@@ -261,10 +264,35 @@ namespace DbPostgreLib.Migrations.Bank
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Details")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ErrorCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("TerminalKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int?>("TypeQR")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ErrorCode");
+
+                    b.HasIndex("Success");
+
+                    b.HasIndex("TerminalKey");
+
+                    b.HasIndex("TypeQR");
 
                     b.ToTable("PaymentsInitQRTBank");
                 });

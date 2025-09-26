@@ -38,4 +38,7 @@ public class IncomingMerchantPaymentTBankModelDB
 
     /// <inheritdoc/>
     public string? Status { get; set; }
+
+    /// <inheritdoc/>
+    public required DateTime CreatedDateTime { get; set; }
 }

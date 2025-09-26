@@ -29,6 +29,7 @@ public static class ExtensionBankService
             Pan = span.Pan,
             RebillId = span.RebillId,
             Status = span.Status,
+            CreatedDateTime = DateTime.UtcNow,
         };
     }
 
@@ -178,9 +179,7 @@ public static class ExtensionBankService
 
     /// <inheritdoc/>
     public static SupplierInfo GetTBankSupplierInfo(this SupplierInfoForReceiptItemTBankModel sender)
-    {
-        return new SupplierInfo(sender.Phones, sender.Name, sender.Inn);
-    }
+        => new(sender.Phones, sender.Name, sender.Inn);
 
     /// <inheritdoc/>
     public static AgentData GetTBankAgentData(this AgentDataForReceiptItemTBankModel sender)
@@ -200,7 +199,7 @@ public static class ExtensionBankService
         };
     }
 
-    //  // 
+    #region Enum`s
     /// <inheritdoc/>
     public static EPaymentObject Convert(this PaymentObjectsTBankEnum sender)
         => Enum.Parse<EPaymentObject>(sender.ToString());
@@ -228,5 +227,6 @@ public static class ExtensionBankService
     /// <inheritdoc/>
     public static EPayType Convert(this PayTypesTBankEnum sender)
         => Enum.Parse<EPayType>(sender.ToString());
+    #endregion    
     #endregion
 }

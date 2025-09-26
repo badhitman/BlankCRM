@@ -58,7 +58,8 @@ namespace DbPostgreLib.Migrations.Bank
                     Amount = table.Column<decimal>(type: "numeric", nullable: true),
                     PaymentId = table.Column<string>(type: "text", nullable: true),
                     OrderId = table.Column<string>(type: "text", nullable: true),
-                    Status = table.Column<string>(type: "text", nullable: true)
+                    Status = table.Column<string>(type: "text", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -89,7 +90,12 @@ namespace DbPostgreLib.Migrations.Bank
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TypeQR = table.Column<int>(type: "integer", nullable: true),
-                    DataQR = table.Column<string>(type: "text", nullable: false)
+                    DataQR = table.Column<string>(type: "text", nullable: false),
+                    TerminalKey = table.Column<string>(type: "text", nullable: false),
+                    Success = table.Column<bool>(type: "boolean", nullable: false),
+                    ErrorCode = table.Column<string>(type: "text", nullable: false),
+                    Message = table.Column<string>(type: "text", nullable: true),
+                    Details = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -421,6 +427,26 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "IX_IncomingMerchantsPaymentsTBank_Status",
                 table: "IncomingMerchantsPaymentsTBank",
                 column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsInitQRTBank_ErrorCode",
+                table: "PaymentsInitQRTBank",
+                column: "ErrorCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsInitQRTBank_Success",
+                table: "PaymentsInitQRTBank",
+                column: "Success");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsInitQRTBank_TerminalKey",
+                table: "PaymentsInitQRTBank",
+                column: "TerminalKey");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsInitQRTBank_TypeQR",
+                table: "PaymentsInitQRTBank",
+                column: "TypeQR");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentsInitResultsTBank_Amount",

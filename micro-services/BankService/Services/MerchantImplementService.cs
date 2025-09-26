@@ -63,6 +63,20 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
         await ctx.PaymentsInitResultsTBank.AddAsync(res.Response, token);
         await ctx.SaveChangesAsync(token);
 
+        TResponseModel<UserInfoModel[]> userCreator = await identityRepo.GetUsersIdentityAsync([req.UserId], token);
+        if (!userCreator.Success())
+        {
+            res.AddRangeMessages(userCreator.Messages);
+            return res;
+        }
+
+        if (userCreator.Response is null || userCreator.Response.Length == 0)
+        {
+            res.AddError($"user #{req.UserId} not found");
+            loggerRepo.LogError($"user #{req.UserId} not found");
+            return res;
+        }
+
         TinkoffPaymentClient clientApi = new(settings.Value.TerminalKey, settings.Value.Password);
         Receipt rec = req.Receipt.GetTBankReceipt();
 
@@ -94,7 +108,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
                    .SetProperty(p => p.PaymentURL, resultPayment.PaymentURL)
                    .SetProperty(p => p.ErrorCode, resultPayment.ErrorCode)
                    .SetProperty(p => p.Status, Enum.Parse<StatusResponsesTBankEnum>(resultPayment.Status.ToString()!))
-                   .SetProperty(p => p.TerminalKey, resultPayment.TerminalKey), cancellationToken: token);            
+                   .SetProperty(p => p.TerminalKey, resultPayment.TerminalKey), cancellationToken: token);
         }
         catch (Exception ex)
         {
@@ -103,6 +117,13 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
                 .ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.ApiException, ex.Message), cancellationToken: token);
             return res;
+        }
+
+        if (req.GenerateQR is not null)
+        {
+            GetQr _gq = new(resultPayment.PaymentId);
+            QRResponse qrRest = await clientApi.GetQrAsync(_gq, token);
+
         }
 
         return res;
@@ -130,17 +151,19 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
         await ctx.IncomingMerchantsPaymentsTBank.AddAsync(payDB, token);
         await ctx.SaveChangesAsync(token);
 
+        if (!tbankNotify.Amount.HasValue)
+        {
+            loggerRepo.LogError($"нет суммы > {req}");
+            return ResponseBaseModel.CreateError("нет суммы");
+        }
+
         if (string.IsNullOrEmpty(tbankNotify.OrderId) || !int.TryParse(tbankNotify.OrderId, out int orderId))
         {
             loggerRepo.LogError($"не указан orderId (или имеет не верный формат `{tbankNotify.OrderId}`) > {req}");
             return ResponseBaseModel.CreateError("не указан orderId");
         }
 
-        if (!tbankNotify.Amount.HasValue)
-        {
-            loggerRepo.LogError($"нет суммы > {req}");
-            return ResponseBaseModel.CreateError("нет суммы");
-        }
+
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
