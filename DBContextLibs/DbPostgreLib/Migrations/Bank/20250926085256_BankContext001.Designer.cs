@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Bank
 {
     [DbContext(typeof(BankContext))]
-    [Migration("20250925155212_BankContext001")]
+    [Migration("20250926085256_BankContext001")]
     partial class BankContext001
     {
         /// <inheritdoc />
@@ -249,6 +249,26 @@ namespace DbPostgreLib.Migrations.Bank
                     b.ToTable("IncomingMerchantsPaymentsTBank");
                 });
 
+            modelBuilder.Entity("SharedLib.PaymentInitTBankQRModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DataQR")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("TypeQR")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentsInitQRTBank");
+                });
+
             modelBuilder.Entity("SharedLib.PaymentInitTBankResultModelDB", b =>
                 {
                     b.Property<int>("Id")
@@ -262,6 +282,13 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.Property<string>("ApiException")
                         .HasColumnType("text");
+
+                    b.Property<string>("AuthorUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDateTimeUTC")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Details")
                         .HasColumnType("text");
@@ -280,6 +307,9 @@ namespace DbPostgreLib.Migrations.Bank
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("PaymentQRId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PaymentURL")
                         .HasColumnType("text");
 
@@ -288,9 +318,6 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.Property<int?>("Status")
                         .HasColumnType("integer");
-
-                    b.Property<string>("StatusName")
-                        .HasColumnType("text");
 
                     b.Property<bool>("Success")
                         .HasColumnType("boolean");
@@ -302,23 +329,27 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasIndex("Amount");
 
+                    b.HasIndex("AuthorUserId");
+
+                    b.HasIndex("CreatedDateTimeUTC");
+
                     b.HasIndex("ErrorCode");
 
                     b.HasIndex("OrderId");
 
                     b.HasIndex("PaymentId");
 
+                    b.HasIndex("PaymentQRId");
+
                     b.HasIndex("ReceiptId");
 
                     b.HasIndex("Status");
-
-                    b.HasIndex("StatusName");
 
                     b.HasIndex("Success");
 
                     b.HasIndex("TerminalKey");
 
-                    b.ToTable("PaymentInitResultsTBank");
+                    b.ToTable("PaymentsInitResultsTBank");
                 });
 
             modelBuilder.Entity("SharedLib.PaymentsForReceiptTBankModelDB", b =>
@@ -361,6 +392,7 @@ namespace DbPostgreLib.Migrations.Bank
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("PaymentMethod")
@@ -397,6 +429,7 @@ namespace DbPostgreLib.Migrations.Bank
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("EmailCompany")
@@ -406,6 +439,7 @@ namespace DbPostgreLib.Migrations.Bank
                         .HasColumnType("integer");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("Taxation")
@@ -427,9 +461,11 @@ namespace DbPostgreLib.Migrations.Bank
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Inn")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PhonesJsonSource")
@@ -561,11 +597,17 @@ namespace DbPostgreLib.Migrations.Bank
 
             modelBuilder.Entity("SharedLib.PaymentInitTBankResultModelDB", b =>
                 {
+                    b.HasOne("SharedLib.PaymentInitTBankQRModelDB", "PaymentQR")
+                        .WithMany()
+                        .HasForeignKey("PaymentQRId");
+
                     b.HasOne("SharedLib.ReceiptTBankModelDB", "Receipt")
                         .WithMany()
                         .HasForeignKey("ReceiptId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("PaymentQR");
 
                     b.Navigation("Receipt");
                 });

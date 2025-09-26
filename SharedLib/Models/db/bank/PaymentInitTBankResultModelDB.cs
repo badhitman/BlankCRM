@@ -7,10 +7,29 @@ using Microsoft.EntityFrameworkCore;
 namespace SharedLib;
 
 /// <summary>
+/// QR СБП/НСПК
+/// </summary>
+public class PaymentInitTBankQRModelDB
+{
+    /// <inheritdoc/>
+    public int Id { get; set; }
+
+    /// <summary>
+    /// Тип данных QR СБП/НСПК
+    /// </summary>
+    public DataTypeQREnum? TypeQR { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public required string DataQR { get; set; }
+}
+
+/// <summary>
 /// PaymentInitTBankResultModelDB
 /// </summary>
-[Index(nameof(TerminalKey)), Index(nameof(Success)), Index(nameof(StatusName)), Index(nameof(Status))]
-[Index(nameof(PaymentId)), Index(nameof(OrderId)), Index(nameof(Amount)), Index(nameof(ErrorCode))]
+[Index(nameof(TerminalKey)), Index(nameof(Success)), Index(nameof(Status))]
+[Index(nameof(AuthorUserId)), Index(nameof(CreatedDateTimeUTC)), Index(nameof(PaymentId)), Index(nameof(OrderId)), Index(nameof(Amount)), Index(nameof(ErrorCode))]
 public class PaymentInitTBankResultModelDB : PaymentInitTBankResultModel
 {
     /// <inheritdoc/>
@@ -22,6 +41,8 @@ public class PaymentInitTBankResultModelDB : PaymentInitTBankResultModel
     /// <inheritdoc/>
     public int ReceiptId { get; set; }
 
+    /// <inheritdoc/>
+    public PaymentInitTBankQRModelDB? PaymentQR { get; set; }
 
     /// <summary>
     /// Идентификатор терминала. Выдается мерчанту в Т‑Бизнес при заведении терминала.
@@ -32,14 +53,6 @@ public class PaymentInitTBankResultModelDB : PaymentInitTBankResultModel
     /// Успешность прохождения запроса — true/false.
     /// </summary>
     public bool Success { get; set; }
-
-    /// <summary>
-    /// Статус транзакции.
-    /// </summary>
-    /// <remarks>
-    /// max-characters: 20
-    /// </remarks>
-    public string? StatusName { get; set; }
 
     /// <summary>
     /// Код ошибки.
@@ -59,7 +72,14 @@ public class PaymentInitTBankResultModelDB : PaymentInitTBankResultModel
     /// </summary>
     public string? Details { get; set; }
 
+    /// <summary>
+    /// Creator (initiator)
+    /// </summary>
+    public required string AuthorUserId { get; set; }
 
     /// <inheritdoc/>
     public string? ApiException { get; set; }
+
+    /// <inheritdoc/>
+    public required DateTime CreatedDateTimeUTC { get; set; }
 }

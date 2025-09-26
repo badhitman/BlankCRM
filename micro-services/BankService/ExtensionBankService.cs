@@ -46,7 +46,9 @@ public static class ExtensionBankService
                 Taxation = span.Receipt.Taxation,
                 Phone = span.Receipt.Phone,
                 Payments = span.Receipt.Payments?.GetDB(),
-            }
+            },
+            AuthorUserId = span.AuthorUserId,
+            CreatedDateTimeUTC = DateTime.UtcNow,
         };
 
         if (span.Receipt.Items is not null && span.Receipt.Items.Count != 0)
@@ -201,44 +203,30 @@ public static class ExtensionBankService
     //  // 
     /// <inheritdoc/>
     public static EPaymentObject Convert(this PaymentObjectsTBankEnum sender)
-    {
-        return EPaymentObject.Payment;
-    }
+        => Enum.Parse<EPaymentObject>(sender.ToString());
 
     /// <inheritdoc/>
     public static EAgentSign Convert(this AgentSignsTBankEnum sender)
-    {
-        return EAgentSign.PayingAgent;
-    }
+        => Enum.Parse<EAgentSign>(sender.ToString());
 
     /// <inheritdoc/>
     public static EPaymentMethod Convert(this PaymentMethodsTBankEnum sender)
-    {
-        return EPaymentMethod.PartialPayment;
-    }
+        => Enum.Parse<EPaymentMethod>(sender.ToString());
 
     /// <inheritdoc/>
     public static ETax Convert(this TaxesTBankEnum sender)
-    {
-        return ETax.None;
-    }
+        => Enum.Parse<ETax>(sender.ToString());
 
     /// <inheritdoc/>
     public static ETaxation Convert(this TaxationsTBankEnum sender)
-    {
-        return ETaxation.Esn;
-    }
+        => Enum.Parse<ETaxation>(sender.ToString());
 
     /// <inheritdoc/>
     public static ELanguageForm Convert(this LanguageFormTBankEnum sender)
-    {
-        return ELanguageForm.Ru;
-    }
+        => Enum.Parse<ELanguageForm>(sender.ToString());
 
     /// <inheritdoc/>
     public static EPayType Convert(this PayTypesTBankEnum sender)
-    {
-        return EPayType.OneStagePayment;
-    }
+        => Enum.Parse<EPayType>(sender.ToString());
     #endregion
 }

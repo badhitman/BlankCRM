@@ -83,6 +83,20 @@ namespace DbPostgreLib.Migrations.Bank
                 });
 
             migrationBuilder.CreateTable(
+                name: "PaymentsInitQRTBank",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TypeQR = table.Column<int>(type: "integer", nullable: true),
+                    DataQR = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PaymentsInitQRTBank", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AccountsTBank",
                 columns: table => new
                 {
@@ -151,8 +165,8 @@ namespace DbPostgreLib.Migrations.Bank
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     PaymentsId = table.Column<int>(type: "integer", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: true),
-                    Phone = table.Column<string>(type: "text", nullable: true),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    Phone = table.Column<string>(type: "text", nullable: false),
                     Taxation = table.Column<int>(type: "integer", nullable: false),
                     EmailCompany = table.Column<string>(type: "text", nullable: true)
                 },
@@ -167,19 +181,21 @@ namespace DbPostgreLib.Migrations.Bank
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentInitResultsTBank",
+                name: "PaymentsInitResultsTBank",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ReceiptId = table.Column<int>(type: "integer", nullable: false),
+                    PaymentQRId = table.Column<int>(type: "integer", nullable: true),
                     TerminalKey = table.Column<string>(type: "text", nullable: true),
                     Success = table.Column<bool>(type: "boolean", nullable: false),
-                    StatusName = table.Column<string>(type: "text", nullable: true),
                     ErrorCode = table.Column<string>(type: "text", nullable: true),
                     Message = table.Column<string>(type: "text", nullable: true),
                     Details = table.Column<string>(type: "text", nullable: true),
+                    AuthorUserId = table.Column<string>(type: "text", nullable: false),
                     ApiException = table.Column<string>(type: "text", nullable: true),
+                    CreatedDateTimeUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Amount = table.Column<long>(type: "bigint", nullable: false),
                     OrderId = table.Column<string>(type: "text", nullable: false),
                     PaymentId = table.Column<string>(type: "text", nullable: false),
@@ -188,9 +204,14 @@ namespace DbPostgreLib.Migrations.Bank
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentInitResultsTBank", x => x.Id);
+                    table.PrimaryKey("PK_PaymentsInitResultsTBank", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaymentInitResultsTBank_ReceiptsTBank_ReceiptId",
+                        name: "FK_PaymentsInitResultsTBank_PaymentsInitQRTBank_PaymentQRId",
+                        column: x => x.PaymentQRId,
+                        principalTable: "PaymentsInitQRTBank",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_PaymentsInitResultsTBank_ReceiptsTBank_ReceiptId",
                         column: x => x.ReceiptId,
                         principalTable: "ReceiptsTBank",
                         principalColumn: "Id",
@@ -204,7 +225,7 @@ namespace DbPostgreLib.Migrations.Bank
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ReceiptId = table.Column<int>(type: "integer", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: false),
                     Quantity = table.Column<long>(type: "bigint", nullable: false),
                     Price = table.Column<long>(type: "bigint", nullable: false),
                     Tax = table.Column<int>(type: "integer", nullable: false),
@@ -261,8 +282,8 @@ namespace DbPostgreLib.Migrations.Bank
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ReceiptItemId = table.Column<int>(type: "integer", nullable: false),
                     PhonesJsonSource = table.Column<string>(type: "text", nullable: true),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Inn = table.Column<string>(type: "text", nullable: true)
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Inn = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -402,48 +423,58 @@ namespace DbPostgreLib.Migrations.Bank
                 column: "Status");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitResultsTBank_Amount",
-                table: "PaymentInitResultsTBank",
+                name: "IX_PaymentsInitResultsTBank_Amount",
+                table: "PaymentsInitResultsTBank",
                 column: "Amount");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitResultsTBank_ErrorCode",
-                table: "PaymentInitResultsTBank",
+                name: "IX_PaymentsInitResultsTBank_AuthorUserId",
+                table: "PaymentsInitResultsTBank",
+                column: "AuthorUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsInitResultsTBank_CreatedDateTimeUTC",
+                table: "PaymentsInitResultsTBank",
+                column: "CreatedDateTimeUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsInitResultsTBank_ErrorCode",
+                table: "PaymentsInitResultsTBank",
                 column: "ErrorCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitResultsTBank_OrderId",
-                table: "PaymentInitResultsTBank",
+                name: "IX_PaymentsInitResultsTBank_OrderId",
+                table: "PaymentsInitResultsTBank",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitResultsTBank_PaymentId",
-                table: "PaymentInitResultsTBank",
+                name: "IX_PaymentsInitResultsTBank_PaymentId",
+                table: "PaymentsInitResultsTBank",
                 column: "PaymentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitResultsTBank_ReceiptId",
-                table: "PaymentInitResultsTBank",
+                name: "IX_PaymentsInitResultsTBank_PaymentQRId",
+                table: "PaymentsInitResultsTBank",
+                column: "PaymentQRId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsInitResultsTBank_ReceiptId",
+                table: "PaymentsInitResultsTBank",
                 column: "ReceiptId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitResultsTBank_Status",
-                table: "PaymentInitResultsTBank",
+                name: "IX_PaymentsInitResultsTBank_Status",
+                table: "PaymentsInitResultsTBank",
                 column: "Status");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitResultsTBank_StatusName",
-                table: "PaymentInitResultsTBank",
-                column: "StatusName");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitResultsTBank_Success",
-                table: "PaymentInitResultsTBank",
+                name: "IX_PaymentsInitResultsTBank_Success",
+                table: "PaymentsInitResultsTBank",
                 column: "Success");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentInitResultsTBank_TerminalKey",
-                table: "PaymentInitResultsTBank",
+                name: "IX_PaymentsInitResultsTBank_TerminalKey",
+                table: "PaymentsInitResultsTBank",
                 column: "TerminalKey");
 
             migrationBuilder.CreateIndex(
@@ -516,13 +547,16 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "IncomingMerchantsPaymentsTBank");
 
             migrationBuilder.DropTable(
-                name: "PaymentInitResultsTBank");
+                name: "PaymentsInitResultsTBank");
 
             migrationBuilder.DropTable(
                 name: "SuppliersForReceiptItemsTBank");
 
             migrationBuilder.DropTable(
                 name: "TransfersBanks");
+
+            migrationBuilder.DropTable(
+                name: "PaymentsInitQRTBank");
 
             migrationBuilder.DropTable(
                 name: "ReceiptsItemsTBank");

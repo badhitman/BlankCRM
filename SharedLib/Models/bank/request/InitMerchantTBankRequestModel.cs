@@ -86,4 +86,17 @@ public class InitMerchantTBankRequestModel
     /// Тип оплаты, одно или дву стадийная
     /// </summary>
     public PayTypesTBankEnum? PayType { get; set; }
+
+    /// <summary>
+    /// Если указать тип QR кода (СБП/НСПК), тогда он будет запрошен вместе с инициацией платежа
+    /// </summary>
+    /// <remarks>
+    /// если не установлено, тогда QR код (СБП/НСПК) не будет сформирован
+    /// </remarks>
+    public DataTypeQREnum? GenerateQR {  get; set; }
+
+    /// <summary>
+    /// Creator/Initiator (user id)
+    /// </summary>
+    public required string AuthorUserId { get; set; }
 }
