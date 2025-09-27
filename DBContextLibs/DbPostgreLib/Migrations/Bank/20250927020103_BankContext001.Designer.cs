@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Bank
 {
     [DbContext(typeof(BankContext))]
-    [Migration("20250927014535_BankContext001")]
+    [Migration("20250927020103_BankContext001")]
     partial class BankContext001
     {
         /// <inheritdoc />
@@ -259,6 +259,9 @@ namespace DbPostgreLib.Migrations.Bank
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApiException")
+                        .HasColumnType("text");
 
                     b.Property<string>("DataQR")
                         .HasColumnType("text");

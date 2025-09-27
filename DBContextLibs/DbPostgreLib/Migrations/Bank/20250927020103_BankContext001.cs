@@ -95,7 +95,8 @@ namespace DbPostgreLib.Migrations.Bank
                     Success = table.Column<bool>(type: "boolean", nullable: false),
                     ErrorCode = table.Column<string>(type: "text", nullable: false),
                     Message = table.Column<string>(type: "text", nullable: true),
-                    Details = table.Column<string>(type: "text", nullable: true)
+                    Details = table.Column<string>(type: "text", nullable: true),
+                    ApiException = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

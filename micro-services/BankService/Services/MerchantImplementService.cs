@@ -103,10 +103,12 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             resultPayment = await clientApi.InitAsync(_iReq, token);
             await q
                .ExecuteUpdateAsync(set => set
+                   .SetProperty(p => p.Message, resultPayment.Message)
                    .SetProperty(p => p.Success, resultPayment.Success)
+                   .SetProperty(p => p.Details, resultPayment.Details)
                    .SetProperty(p => p.PaymentId, resultPayment.PaymentId)
-                   .SetProperty(p => p.PaymentURL, resultPayment.PaymentURL)
                    .SetProperty(p => p.ErrorCode, resultPayment.ErrorCode)
+                   .SetProperty(p => p.PaymentURL, resultPayment.PaymentURL)
                    .SetProperty(p => p.Status, Enum.Parse<StatusResponsesTBankEnum>(resultPayment.Status.ToString()!))
                    .SetProperty(p => p.TerminalKey, resultPayment.TerminalKey), cancellationToken: token);
         }
@@ -135,11 +137,23 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             try
             {
                 qrRest = await clientApi.GetQrAsync(_gq, token);
-
+                await ctx.PaymentsInitQRTBank.ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Success, qrRest.Success)
+                    .SetProperty(p => p.DataQR, qrRest.Data)
+                    .SetProperty(p => p.Message, qrRest.Message)
+                    .SetProperty(p => p.Details, qrRest.Details)
+                    .SetProperty(p => p.ErrorCode, qrRest.ErrorCode)
+                    .SetProperty(p => p.TerminalKey, qrRest.TerminalKey), cancellationToken: token);
             }
             catch (Exception ex)
             {
-
+                
+                 res.Messages.InjectException(ex);
+                    await ctx.PaymentsInitQRTBank
+                        .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.ApiException, ex.Message), cancellationToken: token);
+                    return res;
+                 
             }
 
 

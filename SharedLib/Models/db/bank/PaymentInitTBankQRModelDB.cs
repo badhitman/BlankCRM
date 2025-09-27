@@ -46,4 +46,7 @@ public class PaymentInitTBankQRModelDB
     /// Подробное описание ошибки	
     /// </summary>
     public string? Details { get; set; }
+
+    /// <inheritdoc/>
+    public string? ApiException { get; set; }
 }

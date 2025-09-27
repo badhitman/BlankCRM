@@ -257,6 +257,9 @@ namespace DbPostgreLib.Migrations.Bank
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApiException")
+                        .HasColumnType("text");
+
                     b.Property<string>("DataQR")
                         .HasColumnType("text");
 
