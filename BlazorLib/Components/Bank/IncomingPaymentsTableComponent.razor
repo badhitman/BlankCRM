@@ -1,5 +1,79 @@
-<h1>IncomingPaymentsTableComponent</h1>
+@inherits BlazorBusyComponentBaseAuthModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Incoming payments</MudText>
+        <MudSpacer />
+        <MudTextField T="string"
+                      ValueChanged="@(async s => await OnSearch(s))"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>DateTime</MudTh>
+        <MudTh>Amount</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>PaymentId</MudTh>
+        <MudTh>RebillId</MudTh>
+        <MudTh>Pan</MudTh>
+        <MudTh>CardId</MudTh>
+        <MudTh>OrderId</MudTh>
+        <MudTh>ExpDate</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="DateTime">@context.CreatedDateTime</MudTd>
+        <MudTd DataLabel="Amount">@context.Amount</MudTd>
+        <MudTd DataLabel="Status">@context.Status</MudTd>
+        <MudTd DataLabel="PaymentId">@context.PaymentId</MudTd>
+        <MudTd DataLabel="RebillId">@context.RebillId</MudTd>
+        <MudTd DataLabel="Pan">@context.Pan</MudTd>
+        <MudTd DataLabel="CardId">@context.CardId</MudTd>
+        <MudTd DataLabel="OrderId">@context.OrderId</MudTd>
+        <MudTd DataLabel="ExpDate">@context.ExpDate</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
 @code {
+    [Inject]
+    IMerchantService MerchRepo { get; set; } = default!;
 
+
+    MudTable<IncomingMerchantPaymentTBankModelDB>? table;
+    string? searchString = null;
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+    async Task<TableData<IncomingMerchantPaymentTBankModelDB>> ServerReload(TableState state, CancellationToken token)
+    {
+        TPaginationRequestStandardModel<SelectIncomingMerchantPaymentsTBankRequestModel> req = new()
+        {
+            FindQuery = searchString,
+            PageNum = state.Page,
+            PageSize = state.PageSize,
+            SortBy = state.SortLabel,
+            SortingDirection = state.SortDirection.Convert(),
+        };
+        TPaginationResponseModel<IncomingMerchantPaymentTBankModelDB> res = await MerchRepo.IncomingMerchantPaymentsSelectTBankAsync(req, token);
+        return new TableData<IncomingMerchantPaymentTBankModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+    }
+
+    async Task OnSearch(string text)
+    {
+        searchString = text;
+        if (table is not null)
+            await table.ReloadServerData();
+    }
 }
