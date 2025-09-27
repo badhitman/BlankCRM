@@ -124,7 +124,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
         if (req.GenerateQR is not null)
         {
             PaymentInitTBankQRModelDB qrDb = new() { TypeQR = req.GenerateQR.Value };
-            await ctx.PaymentsInitQRTBank.AddAsync(qrDb, token);
+            await ctx.QrForInitPaymentTBank.AddAsync(qrDb, token);
             await ctx.SaveChangesAsync(token);
             await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.PaymentQRId, qrDb.Id), cancellationToken: token);
 
@@ -137,7 +137,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             try
             {
                 qrRest = await clientApi.GetQrAsync(_gq, token);
-                await ctx.PaymentsInitQRTBank.ExecuteUpdateAsync(set => set
+                await ctx.QrForInitPaymentTBank.ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.Success, qrRest.Success)
                     .SetProperty(p => p.DataQR, qrRest.Data)
                     .SetProperty(p => p.Message, qrRest.Message)
@@ -148,7 +148,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             catch (Exception ex)
             {
                 res.Messages.InjectException(ex);
-                await ctx.PaymentsInitQRTBank
+                await ctx.QrForInitPaymentTBank
                     .ExecuteUpdateAsync(set => set
                         .SetProperty(p => p.ApiException, ex.Message), cancellationToken: token);
 
@@ -201,5 +201,45 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
 
 
         return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<PaymentInitTBankResultModelDB>> PaymentsInitSelectTBankAsync(TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel> req, CancellationToken token = default)
+    {
+        if (req.PageSize < 10)
+            req.PageSize = 10;
+
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        IQueryable<PaymentInitTBankResultModelDB> q = ctx.PaymentsInitResultsTBank.AsQueryable();
+
+        return new()
+        {
+            PageSize = req.PageSize,
+            PageNum = req.PageNum,
+            SortBy = req.SortBy,
+            SortingDirection = req.SortingDirection,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.Skip(req.PageNum * req.PageSize).Take(req.PageSize).Include(x => x.PaymentQR).Include(x => x.Receipt).ToListAsync(cancellationToken: token)
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<IncomingMerchantPaymentTBankModelDB>> IncomingMerchantPaymentsSelectTBankAsync(TPaginationRequestStandardModel<SelectIncomingMerchantPaymentsTBankRequestModel> req, CancellationToken token = default)
+    {
+        if (req.PageSize < 10)
+            req.PageSize = 10;
+
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
+        IQueryable<IncomingMerchantPaymentTBankModelDB> q = ctx.IncomingMerchantsPaymentsTBank.AsQueryable();
+
+        return new()
+        {
+            PageSize = req.PageSize,
+            PageNum = req.PageNum,
+            SortBy = req.SortBy,
+            SortingDirection = req.SortingDirection,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await q.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token)
+        };
     }
 }

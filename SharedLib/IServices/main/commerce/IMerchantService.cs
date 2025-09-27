@@ -28,4 +28,14 @@ public partial interface IMerchantService
     /// TBank: Обработка входящего платежа (merchant web-hook)
     /// </summary>
     public Task<ResponseBaseModel> IncomingTBankMerchantPaymentAsync(JObject req, CancellationToken token = default);
+
+    /// <summary>
+    /// TBank: Подбор
+    /// </summary>
+    public Task<TPaginationResponseModel<PaymentInitTBankResultModelDB>> PaymentsInitSelectTBankAsync(TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel> req, CancellationToken token = default);
+
+    /// <summary>
+    /// TBank: Подбор
+    /// </summary>
+    public Task<TPaginationResponseModel<IncomingMerchantPaymentTBankModelDB>> IncomingMerchantPaymentsSelectTBankAsync(TPaginationRequestStandardModel<SelectIncomingMerchantPaymentsTBankRequestModel> req, CancellationToken token = default);
 }

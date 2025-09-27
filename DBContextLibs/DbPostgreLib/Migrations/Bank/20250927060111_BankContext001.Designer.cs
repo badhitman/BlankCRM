@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Bank
 {
     [DbContext(typeof(BankContext))]
-    [Migration("20250927020103_BankContext001")]
+    [Migration("20250927060111_BankContext001")]
     partial class BankContext001
     {
         /// <inheritdoc />
@@ -296,7 +296,7 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasIndex("TypeQR");
 
-                    b.ToTable("PaymentsInitQRTBank");
+                    b.ToTable("QrForInitPaymentTBank");
                 });
 
             modelBuilder.Entity("SharedLib.PaymentInitTBankResultModelDB", b =>

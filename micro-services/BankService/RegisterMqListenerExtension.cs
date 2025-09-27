@@ -2,9 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Transmission.Receives.bank;
 using Newtonsoft.Json.Linq;
 using SharedLib;
-using Transmission.Receives.bank;
 
 namespace BankService;
 
@@ -31,6 +31,8 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<BankAccountCheckReceive, BankAccountCheckRequestModel, TResponseModel<List<BankTransferModelDB>>>()
             .RegisterMqListener<IncomingTBankMerchantPaymentReceive, JObject, ResponseBaseModel>()
             .RegisterMqListener<InitPaymentMerchantTBankReceive, InitMerchantTBankRequestModel, TResponseModel<PaymentInitTBankResultModelDB>>()
+            .RegisterMqListener<IncomingMerchantPaymentsSelectTBankReceive, TPaginationRequestStandardModel<SelectIncomingMerchantPaymentsTBankRequestModel>, TPaginationResponseModel<IncomingMerchantPaymentTBankModelDB>>()
+            .RegisterMqListener<PaymentsInitSelectTBankReceive, TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel>, TPaginationResponseModel<PaymentInitTBankResultModelDB>>()
             ;
     }
 }

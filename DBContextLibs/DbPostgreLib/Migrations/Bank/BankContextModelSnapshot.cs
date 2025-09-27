@@ -293,7 +293,7 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasIndex("TypeQR");
 
-                    b.ToTable("PaymentsInitQRTBank");
+                    b.ToTable("QrForInitPaymentTBank");
                 });
 
             modelBuilder.Entity("SharedLib.PaymentInitTBankResultModelDB", b =>

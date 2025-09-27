@@ -84,7 +84,7 @@ namespace DbPostgreLib.Migrations.Bank
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentsInitQRTBank",
+                name: "QrForInitPaymentTBank",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -100,7 +100,7 @@ namespace DbPostgreLib.Migrations.Bank
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentsInitQRTBank", x => x.Id);
+                    table.PrimaryKey("PK_QrForInitPaymentTBank", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -213,9 +213,9 @@ namespace DbPostgreLib.Migrations.Bank
                 {
                     table.PrimaryKey("PK_PaymentsInitResultsTBank", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaymentsInitResultsTBank_PaymentsInitQRTBank_PaymentQRId",
+                        name: "FK_PaymentsInitResultsTBank_QrForInitPaymentTBank_PaymentQRId",
                         column: x => x.PaymentQRId,
-                        principalTable: "PaymentsInitQRTBank",
+                        principalTable: "QrForInitPaymentTBank",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PaymentsInitResultsTBank_ReceiptsTBank_ReceiptId",
@@ -430,26 +430,6 @@ namespace DbPostgreLib.Migrations.Bank
                 column: "Status");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentsInitQRTBank_ErrorCode",
-                table: "PaymentsInitQRTBank",
-                column: "ErrorCode");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PaymentsInitQRTBank_Success",
-                table: "PaymentsInitQRTBank",
-                column: "Success");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PaymentsInitQRTBank_TerminalKey",
-                table: "PaymentsInitQRTBank",
-                column: "TerminalKey");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PaymentsInitQRTBank_TypeQR",
-                table: "PaymentsInitQRTBank",
-                column: "TypeQR");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PaymentsInitResultsTBank_Amount",
                 table: "PaymentsInitResultsTBank",
                 column: "Amount");
@@ -503,6 +483,26 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "IX_PaymentsInitResultsTBank_TerminalKey",
                 table: "PaymentsInitResultsTBank",
                 column: "TerminalKey");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QrForInitPaymentTBank_ErrorCode",
+                table: "QrForInitPaymentTBank",
+                column: "ErrorCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QrForInitPaymentTBank_Success",
+                table: "QrForInitPaymentTBank",
+                column: "Success");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QrForInitPaymentTBank_TerminalKey",
+                table: "QrForInitPaymentTBank",
+                column: "TerminalKey");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QrForInitPaymentTBank_TypeQR",
+                table: "QrForInitPaymentTBank",
+                column: "TypeQR");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReceiptsItemsTBank_ReceiptId",
@@ -583,7 +583,7 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "TransfersBanks");
 
             migrationBuilder.DropTable(
-                name: "PaymentsInitQRTBank");
+                name: "QrForInitPaymentTBank");
 
             migrationBuilder.DropTable(
                 name: "ReceiptsItemsTBank");

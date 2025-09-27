@@ -63,6 +63,9 @@ public partial class BankLayerContext : DbContext
 
     #region Init payment TBank
     /// <inheritdoc/>
+    public DbSet<PaymentInitTBankResultModelDB> PaymentsInitResultsTBank { get; set; } = default!;
+
+    /// <inheritdoc/>
     public DbSet<ReceiptTBankModelDB> ReceiptsTBank { get; set; } = default!;
 
     /// <inheritdoc/>
@@ -79,10 +82,7 @@ public partial class BankLayerContext : DbContext
 
 
     /// <inheritdoc/>
-    public DbSet<PaymentInitTBankResultModelDB> PaymentsInitResultsTBank { get; set; } = default!;
-
-    /// <inheritdoc/>
-    public DbSet<PaymentInitTBankQRModelDB> PaymentsInitQRTBank { get; set; } = default!;
+    public DbSet<PaymentInitTBankQRModelDB> QrForInitPaymentTBank { get; set; } = default!;
     #endregion
     #endregion
     #endregion
