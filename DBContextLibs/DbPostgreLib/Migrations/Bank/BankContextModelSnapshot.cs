@@ -218,6 +218,9 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<string>("OrderId")
                         .HasColumnType("text");
 
+                    b.Property<int?>("OrderJoinId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Pan")
                         .HasColumnType("text");
 
@@ -239,6 +242,8 @@ namespace DbPostgreLib.Migrations.Bank
                     b.HasIndex("ExpDate");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("OrderJoinId");
 
                     b.HasIndex("PaymentId");
 
@@ -330,6 +335,9 @@ namespace DbPostgreLib.Migrations.Bank
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("OrderJoinId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PayerUserId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -338,11 +346,11 @@ namespace DbPostgreLib.Migrations.Bank
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("PaymentQRId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("PaymentURL")
                         .HasColumnType("text");
+
+                    b.Property<int?>("QRPaymentId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("ReceiptId")
                         .HasColumnType("integer");
@@ -368,9 +376,11 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasIndex("OrderId");
 
+                    b.HasIndex("OrderJoinId");
+
                     b.HasIndex("PaymentId");
 
-                    b.HasIndex("PaymentQRId");
+                    b.HasIndex("QRPaymentId");
 
                     b.HasIndex("ReceiptId");
 
@@ -628,9 +638,9 @@ namespace DbPostgreLib.Migrations.Bank
 
             modelBuilder.Entity("SharedLib.PaymentInitTBankResultModelDB", b =>
                 {
-                    b.HasOne("SharedLib.PaymentInitTBankQRModelDB", "PaymentQR")
+                    b.HasOne("SharedLib.PaymentInitTBankQRModelDB", "QRPayment")
                         .WithMany()
-                        .HasForeignKey("PaymentQRId");
+                        .HasForeignKey("QRPaymentId");
 
                     b.HasOne("SharedLib.ReceiptTBankModelDB", "Receipt")
                         .WithMany()
@@ -638,7 +648,7 @@ namespace DbPostgreLib.Migrations.Bank
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PaymentQR");
+                    b.Navigation("QRPayment");
 
                     b.Navigation("Receipt");
                 });

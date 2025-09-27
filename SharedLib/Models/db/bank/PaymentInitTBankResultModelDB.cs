@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// PaymentInitTBankResultModelDB
 /// </summary>
-[Index(nameof(TerminalKey)), Index(nameof(Success)), Index(nameof(Status))]
+[Index(nameof(TerminalKey)), Index(nameof(Success)), Index(nameof(Status)), Index(nameof(OrderJoinId))]
 [Index(nameof(InitiatorUserId)), Index(nameof(CreatedDateTimeUTC)), Index(nameof(PaymentId)), Index(nameof(OrderId)), Index(nameof(Amount)), Index(nameof(ErrorCode))]
 public class PaymentInitTBankResultModelDB : PaymentInitTBankResultModel
 {
@@ -22,10 +22,27 @@ public class PaymentInitTBankResultModelDB : PaymentInitTBankResultModel
     /// <inheritdoc/>
     public int ReceiptId { get; set; }
 
+
     /// <inheritdoc/>
-    public PaymentInitTBankQRModelDB? PaymentQR { get; set; }
+    public PaymentInitTBankQRModelDB? QRPayment { get; set; }
     /// <inheritdoc/>
-    public int? PaymentQRId { get; set; }
+    public int? QRPaymentId { get; set; }
+
+
+    /// <inheritdoc/>
+    public int? OrderJoinId { get; set; }
+
+
+    /// <summary>
+    /// Creator (initiator)
+    /// </summary>
+    public required string InitiatorUserId { get; set; }
+
+    /// <summary>
+    /// Payer
+    /// </summary>
+    public required string PayerUserId { get; set; }
+
 
 
     /// <summary>
@@ -55,16 +72,6 @@ public class PaymentInitTBankResultModelDB : PaymentInitTBankResultModel
     /// Подробное описание ошибки.
     /// </summary>
     public string? Details { get; set; }
-
-    /// <summary>
-    /// Creator (initiator)
-    /// </summary>
-    public required string InitiatorUserId { get; set; }
-
-    /// <summary>
-    /// Creator (initiator)
-    /// </summary>
-    public required string PayerUserId { get; set; }
 
     /// <inheritdoc/>
     public string? ApiException { get; set; }

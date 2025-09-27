@@ -126,7 +126,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             PaymentInitTBankQRModelDB qrDb = new() { TypeQR = req.GenerateQR.Value };
             await ctx.QrForInitPaymentTBank.AddAsync(qrDb, token);
             await ctx.SaveChangesAsync(token);
-            await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.PaymentQRId, qrDb.Id), cancellationToken: token);
+            await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.QRPaymentId, qrDb.Id), cancellationToken: token);
 
             GetQr _gq = new(resultPayment.PaymentId)
             {
@@ -157,7 +157,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
         }
 
         res.Response = await q
-            .Include(x => x.PaymentQR)
+            .Include(x => x.QRPayment)
             .Include(x => x.Receipt)
             .FirstAsync(cancellationToken: token);
 
@@ -219,7 +219,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q.Skip(req.PageNum * req.PageSize).Take(req.PageSize).Include(x => x.PaymentQR).Include(x => x.Receipt).ToListAsync(cancellationToken: token)
+            Response = await q.Skip(req.PageNum * req.PageSize).Take(req.PageSize).Include(x => x.QRPayment).Include(x => x.Receipt).ToListAsync(cancellationToken: token)
         };
     }
 
