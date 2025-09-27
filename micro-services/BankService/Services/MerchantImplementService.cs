@@ -2,15 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
-using SharedLib;
-using TinkoffPaymentClientApi;
+using TinkoffPaymentClientApi.ResponseEntity;
 using TinkoffPaymentClientApi.Commands;
 using TinkoffPaymentClientApi.Models;
-using TinkoffPaymentClientApi.ResponseEntity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using TinkoffPaymentClientApi;
+using Newtonsoft.Json.Linq;
+using SharedLib;
+using DbcLib;
 
 namespace BankService;
 
@@ -147,17 +147,19 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             }
             catch (Exception ex)
             {
-                
-                 res.Messages.InjectException(ex);
-                    await ctx.PaymentsInitQRTBank
-                        .ExecuteUpdateAsync(set => set
-                            .SetProperty(p => p.ApiException, ex.Message), cancellationToken: token);
-                    return res;
-                 
+                res.Messages.InjectException(ex);
+                await ctx.PaymentsInitQRTBank
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.ApiException, ex.Message), cancellationToken: token);
+
+                return res;
             }
-
-
         }
+
+        res.Response = await q
+            .Include(x => x.PaymentQR)
+            .Include(x => x.Receipt)
+            .FirstAsync(cancellationToken: token);
 
         return res;
     }

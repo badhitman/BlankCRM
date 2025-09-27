@@ -12,17 +12,20 @@ namespace SharedLib;
 public partial interface IMerchantService
 {
     /// <summary>
-    /// IncomingTBankMerchantPaymentAsync
+    /// TBank: зарегистрировать клиента
     /// </summary>
-    public Task<ResponseBaseModel> IncomingTBankMerchantPaymentAsync(JObject req, CancellationToken token = default);
-
-    /// <summary>
-    /// BindCustomerTBankAsync
-    /// </summary>
+    /// <remarks>
+    /// Метод регистрирует клиента в связке с терминалом.
+    /// </remarks>
     public Task<TResponseModel<UserInfoModel>> BindCustomerTBankAsync(BindCustomerTBankRequestModel req, CancellationToken token = default);
 
     /// <summary>
-    /// InitTBankMerchantPaymentAsync
+    /// TBank: Инициировать платеж
     /// </summary>
     public Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(InitMerchantTBankRequestModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// TBank: Обработка входящего платежа (merchant web-hook)
+    /// </summary>
+    public Task<ResponseBaseModel> IncomingTBankMerchantPaymentAsync(JObject req, CancellationToken token = default);
 }
