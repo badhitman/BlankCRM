@@ -2,15 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using TinkoffPaymentClientApi.ResponseEntity;
-using TinkoffPaymentClientApi.Commands;
-using TinkoffPaymentClientApi.Models;
+using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using TinkoffPaymentClientApi;
 using Newtonsoft.Json.Linq;
 using SharedLib;
-using DbcLib;
+using TinkoffPaymentClientApi;
+using TinkoffPaymentClientApi.Commands;
+using TinkoffPaymentClientApi.Models;
+using TinkoffPaymentClientApi.ResponseEntity;
 
 namespace BankService;
 
@@ -121,12 +121,28 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
 
         if (req.GenerateQR is not null)
         {
+            PaymentInitTBankQRModelDB qrDb = new() { TypeQR = req.GenerateQR.Value };
+            await ctx.PaymentsInitQRTBank.AddAsync(qrDb, token);
+            await ctx.SaveChangesAsync(token);
+            await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.PaymentQRId, qrDb.Id), cancellationToken: token);
+
             GetQr _gq = new(resultPayment.PaymentId)
             {
-                DataType = req.GenerateQR?.Convert() ?? TinkoffPaymentClientApi.Enums.EDataTypeQR.PAYLOAD
+                DataType = req.GenerateQR?.Convert() ?? TinkoffPaymentClientApi.Enums.EDataTypeQR.PAYLOAD,
+                PaymentId = resultPayment.PaymentId,
             };
-            QRResponse qrRest = await clientApi.GetQrAsync(_gq, token);
-            
+            QRResponse qrRest;
+            try
+            {
+                qrRest = await clientApi.GetQrAsync(_gq, token);
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
         }
 
         return res;

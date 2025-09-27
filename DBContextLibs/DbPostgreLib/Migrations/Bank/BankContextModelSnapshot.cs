@@ -258,7 +258,6 @@ namespace DbPostgreLib.Migrations.Bank
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("DataQR")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Details")
@@ -278,7 +277,7 @@ namespace DbPostgreLib.Migrations.Bank
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("TypeQR")
+                    b.Property<int>("TypeQR")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

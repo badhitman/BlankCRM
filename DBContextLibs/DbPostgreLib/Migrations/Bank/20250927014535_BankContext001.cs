@@ -89,8 +89,8 @@ namespace DbPostgreLib.Migrations.Bank
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TypeQR = table.Column<int>(type: "integer", nullable: true),
-                    DataQR = table.Column<string>(type: "text", nullable: false),
+                    TypeQR = table.Column<int>(type: "integer", nullable: false),
+                    DataQR = table.Column<string>(type: "text", nullable: true),
                     TerminalKey = table.Column<string>(type: "text", nullable: false),
                     Success = table.Column<bool>(type: "boolean", nullable: false),
                     ErrorCode = table.Column<string>(type: "text", nullable: false),
