@@ -128,7 +128,6 @@ builder.Services.AddScoped<IWebTransmission, WebTransmission>()
     .AddScoped<IStorageTransmission, StorageTransmission>()
     .AddScoped<IIdentityTransmission, IdentityTransmission>()
     .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
-    .AddScoped<IMerchantService, MerchantTransmission>()
     ;
 //
 builder.Services.BankRegisterMqListeners();

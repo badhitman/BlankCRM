@@ -10,7 +10,7 @@ namespace SharedLib;
 /// PaymentInitTBankResultModelDB
 /// </summary>
 [Index(nameof(TerminalKey)), Index(nameof(Success)), Index(nameof(Status))]
-[Index(nameof(AuthorUserId)), Index(nameof(CreatedDateTimeUTC)), Index(nameof(PaymentId)), Index(nameof(OrderId)), Index(nameof(Amount)), Index(nameof(ErrorCode))]
+[Index(nameof(InitiatorUserId)), Index(nameof(CreatedDateTimeUTC)), Index(nameof(PaymentId)), Index(nameof(OrderId)), Index(nameof(Amount)), Index(nameof(ErrorCode))]
 public class PaymentInitTBankResultModelDB : PaymentInitTBankResultModel
 {
     /// <inheritdoc/>
@@ -59,7 +59,12 @@ public class PaymentInitTBankResultModelDB : PaymentInitTBankResultModel
     /// <summary>
     /// Creator (initiator)
     /// </summary>
-    public required string AuthorUserId { get; set; }
+    public required string InitiatorUserId { get; set; }
+
+    /// <summary>
+    /// Creator (initiator)
+    /// </summary>
+    public required string PayerUserId { get; set; }
 
     /// <inheritdoc/>
     public string? ApiException { get; set; }

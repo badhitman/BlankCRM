@@ -48,7 +48,8 @@ public static class ExtensionBankService
                 Phone = span.Receipt.Phone,
                 Payments = span.Receipt.Payments?.GetDB(),
             },
-            AuthorUserId = span.AuthorUserId,
+            InitiatorUserId = span.InitiatorUserId,
+            PayerUserId = span.PayerUserId,
             CreatedDateTimeUTC = DateTime.UtcNow,
         };
 

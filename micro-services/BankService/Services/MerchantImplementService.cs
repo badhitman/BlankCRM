@@ -63,7 +63,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
         await ctx.PaymentsInitResultsTBank.AddAsync(res.Response, token);
         await ctx.SaveChangesAsync(token);
 
-        TResponseModel<UserInfoModel[]> userCreator = await identityRepo.GetUsersIdentityAsync([req.UserId], token);
+        TResponseModel<UserInfoModel[]> userCreator = await identityRepo.GetUsersIdentityAsync([req.PayerUserId], token);
         if (!userCreator.Success())
         {
             res.AddRangeMessages(userCreator.Messages);
@@ -72,15 +72,15 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
 
         if (userCreator.Response is null || userCreator.Response.Length == 0)
         {
-            res.AddError($"user #{req.UserId} not found");
-            loggerRepo.LogError($"user #{req.UserId} not found");
+            res.AddError($"user #{req.PayerUserId} not found");
+            loggerRepo.LogError($"user #{req.PayerUserId} not found");
             return res;
         }
 
         TinkoffPaymentClient clientApi = new(settings.Value.TerminalKey, settings.Value.Password);
         Receipt rec = req.Receipt.GetTBankReceipt();
 
-        Init _iReq = new(req.OrderId, req.Amount, req.IsRecurrent, req.UserId)
+        Init _iReq = new(req.OrderId, req.Amount, req.IsRecurrent, req.PayerUserId)
         {
             Receipt = req.Receipt.GetTBankReceipt(),
 
@@ -210,7 +210,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             req.PageSize = 10;
 
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
-        IQueryable<PaymentInitTBankResultModelDB> q = ctx.PaymentsInitResultsTBank.AsQueryable();
+        IOrderedQueryable<PaymentInitTBankResultModelDB> q = ctx.PaymentsInitResultsTBank.OrderBy(x => x.CreatedDateTimeUTC);
 
         return new()
         {
@@ -230,7 +230,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             req.PageSize = 10;
 
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
-        IQueryable<IncomingMerchantPaymentTBankModelDB> q = ctx.IncomingMerchantsPaymentsTBank.AsQueryable();
+        IOrderedQueryable<IncomingMerchantPaymentTBankModelDB> q = ctx.IncomingMerchantsPaymentsTBank.OrderBy(x => x.CreatedDateTime);
 
         return new()
         {

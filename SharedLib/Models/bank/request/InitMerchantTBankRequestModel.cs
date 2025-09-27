@@ -12,7 +12,7 @@ namespace SharedLib;
 public class InitMerchantTBankRequestModel
 {
     /// <inheritdoc/>
-    public required string UserId { get; set; }
+    public required string PayerUserId { get; set; }
 
     /// <inheritdoc/>
     public bool IsRecurrent { get; set; }
@@ -98,5 +98,5 @@ public class InitMerchantTBankRequestModel
     /// <summary>
     /// Creator/Initiator (user id)
     /// </summary>
-    public required string AuthorUserId { get; set; }
+    public required string InitiatorUserId { get; set; }
 }

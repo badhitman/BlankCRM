@@ -1,0 +1,54 @@
+@inherits BlazorBusyComponentBaseAuthModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Init`s Payments</MudText>
+        <MudSpacer />
+        <MudTextField T="string"
+                      ValueChanged="@(async s => await OnSearch(s))"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>DateTime</MudTh>
+        <MudTh>Amount</MudTh>
+        <MudTh>PaymentURL</MudTh>
+        <MudTh>User</MudTh>
+        <MudTh>Terminal</MudTh>
+        <MudTh>Success</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>Receipt</MudTh>
+        <MudTh>QR</MudTh>
+        <MudTh>Message</MudTh>
+        <MudTh>ErrorCode</MudTh>
+        <MudTh>Details</MudTh>
+        <MudTh>ApiException</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="DateTime">@context.CreatedDateTimeUTC</MudTd>
+        <MudTd DataLabel="Amount">@context.Amount</MudTd>
+        <MudTd DataLabel="PaymentURL">@context.PaymentURL</MudTd>
+        <MudTd DataLabel="User">@context.InitiatorUserId</MudTd>
+        <MudTd DataLabel="Terminal">@context.TerminalKey</MudTd>
+        <MudTd DataLabel="Success">@context.Success</MudTd>
+        <MudTd DataLabel="Status">@context.Status</MudTd>
+        <MudTd DataLabel="Receipt">@context.Receipt</MudTd>
+        <MudTd DataLabel="QR">@context.PaymentQR</MudTd>
+        <MudTd DataLabel="Message">@context.Message</MudTd>
+        <MudTd DataLabel="ErrorCode">@context.ErrorCode</MudTd>
+        <MudTd DataLabel="Details">@context.Details</MudTd>
+        <MudTd DataLabel="ApiException">@context.ApiException</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

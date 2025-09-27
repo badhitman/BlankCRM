@@ -200,7 +200,8 @@ namespace DbPostgreLib.Migrations.Bank
                     ErrorCode = table.Column<string>(type: "text", nullable: true),
                     Message = table.Column<string>(type: "text", nullable: true),
                     Details = table.Column<string>(type: "text", nullable: true),
-                    AuthorUserId = table.Column<string>(type: "text", nullable: false),
+                    InitiatorUserId = table.Column<string>(type: "text", nullable: false),
+                    PayerUserId = table.Column<string>(type: "text", nullable: false),
                     ApiException = table.Column<string>(type: "text", nullable: true),
                     CreatedDateTimeUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Amount = table.Column<long>(type: "bigint", nullable: false),
@@ -435,11 +436,6 @@ namespace DbPostgreLib.Migrations.Bank
                 column: "Amount");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentsInitResultsTBank_AuthorUserId",
-                table: "PaymentsInitResultsTBank",
-                column: "AuthorUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PaymentsInitResultsTBank_CreatedDateTimeUTC",
                 table: "PaymentsInitResultsTBank",
                 column: "CreatedDateTimeUTC");
@@ -448,6 +444,11 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "IX_PaymentsInitResultsTBank_ErrorCode",
                 table: "PaymentsInitResultsTBank",
                 column: "ErrorCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsInitResultsTBank_InitiatorUserId",
+                table: "PaymentsInitResultsTBank",
+                column: "InitiatorUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentsInitResultsTBank_OrderId",

@@ -30,5 +30,5 @@ public partial class MerchantTransmission(IRabbitClient rabbitClient) : IMerchan
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<PaymentInitTBankResultModelDB>> PaymentsInitSelectTBankAsync(TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel> req, CancellationToken token = default)
-   => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<PaymentInitTBankResultModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.PaymentsInitSelectTBankReceive, req, token: token) ?? new();
+       => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<PaymentInitTBankResultModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.PaymentsInitSelectTBankReceive, req, token: token) ?? new();
 }

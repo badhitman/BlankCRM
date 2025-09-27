@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Bank
 {
     [DbContext(typeof(BankContext))]
-    [Migration("20250927060111_BankContext001")]
+    [Migration("20250927115938_BankContext001")]
     partial class BankContext001
     {
         /// <inheritdoc />
@@ -313,10 +313,6 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<string>("ApiException")
                         .HasColumnType("text");
 
-                    b.Property<string>("AuthorUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedDateTimeUTC")
                         .HasColumnType("timestamp with time zone");
 
@@ -326,10 +322,18 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<string>("ErrorCode")
                         .HasColumnType("text");
 
+                    b.Property<string>("InitiatorUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Message")
                         .HasColumnType("text");
 
                     b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PayerUserId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -359,11 +363,11 @@ namespace DbPostgreLib.Migrations.Bank
 
                     b.HasIndex("Amount");
 
-                    b.HasIndex("AuthorUserId");
-
                     b.HasIndex("CreatedDateTimeUTC");
 
                     b.HasIndex("ErrorCode");
+
+                    b.HasIndex("InitiatorUserId");
 
                     b.HasIndex("OrderId");
 
