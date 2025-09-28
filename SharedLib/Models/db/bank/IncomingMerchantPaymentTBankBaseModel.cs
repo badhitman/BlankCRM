@@ -26,7 +26,4 @@ public class IncomingMerchantPaymentTBankBaseModel
 
     /// <inheritdoc/>
     public int? OrderJoinId { get; set; }
-
-    /// <inheritdoc/>
-    public required DateTime CreatedDateTime { get; set; }
 }

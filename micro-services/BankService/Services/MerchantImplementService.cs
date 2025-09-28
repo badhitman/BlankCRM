@@ -225,13 +225,15 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
             return ResponseBaseModel.CreateError(msg);
         }
 
-        TAuthRequestModel<int[]> findOrderReq = new() { SenderActionUserId = Roles.System, Payload = [orderId] };
-        TResponseModel<OrderDocumentModelDB[]> findOrder = await commerceRepo.OrdersReadAsync(findOrderReq, token);
-        if (!findOrder.Success())
-            return ResponseBaseModel.Create(findOrder.Messages);
-
-        if (findOrder.Response is null || findOrder.Response.Length == 0)
-            return ResponseBaseModel.CreateError($"Order #{orderId} not found");
+        await commerceRepo.IncomingMerchantPaymentTBankAsync(new IncomingMerchantPaymentTBankBaseModel()
+        {
+            Id = payDB.Id,
+            RebillId = payDB.RebillId,
+            PaymentId = payDB.PaymentId,
+            Status = tbankNotify.Status,
+            OrderJoinId = payDB.OrderJoinId,
+            Amount = tbankNotify.Amount.Value,
+        }, token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }

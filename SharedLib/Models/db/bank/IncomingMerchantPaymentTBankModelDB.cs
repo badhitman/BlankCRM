@@ -24,4 +24,7 @@ public class IncomingMerchantPaymentTBankModelDB : IncomingMerchantPaymentTBankB
 
     /// <inheritdoc/>
     public string? OrderId { get; set; }
+
+    /// <inheritdoc/>
+    public required DateTime CreatedDateTime { get; set; }
 }
