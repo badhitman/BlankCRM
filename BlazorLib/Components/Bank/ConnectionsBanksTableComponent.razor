@@ -58,11 +58,13 @@
     <RowTemplate>
         <MudTd DataLabel="Name">
             @context.Name
-            <sup @onclick="async () => await LoadAccounts(context)" title="read accounts" class="bi bi-cast ms-2" style="cursor: pointer;"></sup>
         </MudTd>
         <MudTd Style="filter: blur(5px)" DataLabel="Token">@context.Token</MudTd>
         <MudTd DataLabel="LastChecked">@context.LastChecked</MudTd>
-        <MudTd DataLabel="BankInterface">@context.BankInterface.DescriptionInfo()</MudTd>
+        <MudTd DataLabel="BankInterface">
+            @context.BankInterface.DescriptionInfo()
+            <sup @onclick="async () => await LoadAccounts(context)" title="read accounts" class="bi bi-cast ms-2" style="cursor: pointer;"></sup>
+        </MudTd>
     </RowTemplate>
     <RowEditingTemplate>
         <MudTd DataLabel="Name">

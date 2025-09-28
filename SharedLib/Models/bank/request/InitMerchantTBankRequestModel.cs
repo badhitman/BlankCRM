@@ -26,7 +26,7 @@ public class InitMerchantTBankRequestModel
     public string? IP { get; set; }
 
     /// <inheritdoc/>
-    public required string OrderId { get; set; }
+    public required int OrderId { get; set; }
 
     /// <summary>
     /// Описание заказа

@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoles;
 using TinkoffPaymentClientApi.ResponseEntity;
 using TinkoffPaymentClientApi.Commands;
 using TinkoffPaymentClientApi.Models;
@@ -17,7 +18,11 @@ namespace BankService;
 /// <summary>
 /// MerchantImplementService
 /// </summary>
-public partial class MerchantImplementService(IOptions<TBankSettings> settings, IIdentityTransmission identityRepo, ILogger<MerchantImplementService> loggerRepo, IDbContextFactory<BankContext> bankDbFactory)
+public partial class MerchantImplementService(IOptions<TBankSettings> settings,
+                                              IIdentityTransmission identityRepo,
+                                              ILogger<MerchantImplementService> loggerRepo,
+                                              ICommerceTransmission commerceRepo,
+                                              IDbContextFactory<BankContext> bankDbFactory)
     : IMerchantService
 {
     /// <inheritdoc/>
@@ -80,7 +85,25 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
         TinkoffPaymentClient clientApi = new(settings.Value.TerminalKey, settings.Value.Password);
         Receipt rec = req.Receipt.GetTBankReceipt();
 
-        Init _iReq = new(req.OrderId, req.Amount, req.IsRecurrent, req.PayerUserId)
+        TAuthRequestModel<int[]> _findUser = new()
+        {
+            SenderActionUserId = Roles.System,
+            Payload = [req.OrderId]
+        };
+
+        TResponseModel<OrderDocumentModelDB[]> findOrder = await commerceRepo.OrdersReadAsync(_findUser, token);
+        if (!findOrder.Success())
+        {
+            res.AddRangeMessages(findOrder.Messages);
+            return res;
+        }
+        if (findOrder.Response is null || findOrder.Response.Length == 0)
+        {
+            res.AddError($"Order not found #{req.OrderId}");
+            return res;
+        }
+
+        Init _iReq = new(req.OrderId.ToString(), req.Amount, req.IsRecurrent, req.PayerUserId)
         {
             Receipt = req.Receipt.GetTBankReceipt(),
 
@@ -168,17 +191,19 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
     public async Task<ResponseBaseModel> IncomingTBankMerchantPaymentAsync(JObject req, CancellationToken token = default)
     {
         TinkoffNotification? tbankNotify = req.ToObject<TinkoffNotification>();
-
+        string msg;
         if (tbankNotify is null)
         {
-            loggerRepo.LogError($"TBank payload is null > {req}");
-            return ResponseBaseModel.CreateError("TBank payload is null");
+            msg = $"TBank payload is null > {req}";
+            loggerRepo.LogError(msg);
+            return ResponseBaseModel.CreateError(msg);
         }
 
         if (!tbankNotify.CheckToken(settings.Value.Password))
         {
-            loggerRepo.LogError($"подпись не корректна > {req}");
-            return ResponseBaseModel.CreateError("подпись не корректна");
+            msg = $"подпись не корректна > {req}";
+            loggerRepo.LogError(msg);
+            return ResponseBaseModel.CreateError(msg);
         }
 
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
@@ -188,20 +213,29 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
 
         if (!tbankNotify.Amount.HasValue)
         {
-            loggerRepo.LogError($"нет суммы > {req}");
-            return ResponseBaseModel.CreateError("нет суммы");
+            msg = $"нет суммы > {req}";
+            loggerRepo.LogError(msg);
+            return ResponseBaseModel.CreateError(msg);
         }
 
         if (string.IsNullOrEmpty(tbankNotify.OrderId) || !int.TryParse(tbankNotify.OrderId, out int orderId))
         {
-            loggerRepo.LogError($"не указан orderId (или имеет не верный формат `{tbankNotify.OrderId}`) > {req}");
-            return ResponseBaseModel.CreateError("не указан orderId");
+            msg = $"не указан orderId (или имеет не верный формат `{tbankNotify.OrderId}`) > {req}";
+            loggerRepo.LogError(msg);
+            return ResponseBaseModel.CreateError(msg);
         }
 
+        TAuthRequestModel<int[]> findOrderReq = new() { SenderActionUserId = Roles.System, Payload = [orderId] };
+        TResponseModel<OrderDocumentModelDB[]> findOrder = await commerceRepo.OrdersReadAsync(findOrderReq, token);
+        if (!findOrder.Success())
+            return ResponseBaseModel.Create(findOrder.Messages);
 
+        if (findOrder.Response is null || findOrder.Response.Length == 0)
+            return ResponseBaseModel.CreateError($"Order #{orderId} not found");
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
+
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<PaymentInitTBankResultModelDB>> PaymentsInitSelectTBankAsync(TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel> req, CancellationToken token = default)
@@ -219,7 +253,12 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q.Skip(req.PageNum * req.PageSize).Take(req.PageSize).Include(x => x.QRPayment).Include(x => x.Receipt).ToListAsync(cancellationToken: token)
+            Response = await q
+                .Skip(req.PageNum * req.PageSize)
+                .Take(req.PageSize)
+                .Include(x => x.QRPayment)
+                .Include(x => x.Receipt)
+                .ToListAsync(cancellationToken: token)
         };
     }
 
@@ -239,7 +278,10 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings, 
             SortBy = req.SortBy,
             SortingDirection = req.SortingDirection,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await q.Skip(req.PageNum * req.PageSize).Take(req.PageSize).ToListAsync(cancellationToken: token)
+            Response = await q
+                .Skip(req.PageNum * req.PageSize)
+                .Take(req.PageSize)
+                .ToListAsync(cancellationToken: token)
         };
     }
 }

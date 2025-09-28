@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// IncomingMerchantPaymentModelDB
 /// </summary>
-[ Index(nameof(PaymentId)), Index(nameof(Amount)), Index(nameof(RebillId)), Index(nameof(CardId)), Index(nameof(ExpDate))]
+[Index(nameof(PaymentId)), Index(nameof(Amount)), Index(nameof(RebillId)), Index(nameof(CardId)), Index(nameof(ExpDate))]
 [Index(nameof(Status)), Index(nameof(OrderId)), Index(nameof(OrderJoinId))]
 public class IncomingMerchantPaymentTBankModelDB
 {
@@ -35,13 +35,13 @@ public class IncomingMerchantPaymentTBankModelDB
     public string? PaymentId { get; set; }
 
     /// <inheritdoc/>
+    public string? Status { get; set; }
+
+    /// <inheritdoc/>
     public string? OrderId { get; set; }
 
     /// <inheritdoc/>
     public int? OrderJoinId { get; set; }
-
-    /// <inheritdoc/>
-    public string? Status { get; set; }
 
     /// <inheritdoc/>
     public required DateTime CreatedDateTime { get; set; }

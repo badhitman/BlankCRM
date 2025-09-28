@@ -49,7 +49,7 @@ public partial class BankLayerContext : DbContext
     /// </summary>
     public DbSet<BankTransferModelDB> TransfersBanks { get; set; } = default!;
 
-    #region TBank    
+    #region TBank
     /// <summary>
     /// TBank account`s
     /// </summary>

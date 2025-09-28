@@ -9,8 +9,8 @@ namespace SharedLib;
 /// <summary>
 /// PaymentInitTBankResultModelDB
 /// </summary>
-[Index(nameof(TerminalKey)), Index(nameof(Success)), Index(nameof(Status)), Index(nameof(OrderJoinId))]
-[Index(nameof(InitiatorUserId)), Index(nameof(CreatedDateTimeUTC)), Index(nameof(PaymentId)), Index(nameof(OrderId)), Index(nameof(Amount)), Index(nameof(ErrorCode))]
+[Index(nameof(TerminalKey)), Index(nameof(Success)), Index(nameof(Status)), Index(nameof(OrderJoinId)), Index(nameof(OrderId)), Index(nameof(Amount))]
+[Index(nameof(InitiatorUserId)), Index(nameof(CreatedDateTimeUTC)), Index(nameof(PaymentId)), Index(nameof(ErrorCode))]
 public class PaymentInitTBankResultModelDB : PaymentInitTBankResultModel
 {
     /// <inheritdoc/>
