@@ -69,6 +69,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<OffersSelectReceive, TAuthRequestModel<TPaginationRequestStandardModel<OffersSelectRequestModel>>, TResponseModel<TPaginationResponseModel<OfferModelDB>>>()
             .RegisterMqListener<NomenclaturesSelectReceive, TPaginationRequestStandardModel<NomenclaturesSelectRequestModel>, TPaginationResponseModel<NomenclatureModelDB>>()
             .RegisterMqListener<OrganizationsReadReceive, int[], TResponseModel<OrganizationModelDB[]>>()
-            ;
+            .RegisterMqListener<IncomingMerchantPaymentTBankReceive, IncomingMerchantPaymentTBankBaseModel, ResponseBaseModel>()
+        ;
     }
 }

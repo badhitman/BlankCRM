@@ -1331,7 +1331,6 @@ public partial class CommerceImplementService(
         res.AddSuccess("Запрос смены статуса заказа выполнен успешно");
         return res;
     }
-
     #endregion
 
     /// <inheritdoc/>

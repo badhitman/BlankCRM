@@ -58,11 +58,9 @@ public partial interface ICommerceService
     /// OfferDelete
     /// </summary>
     public Task<ResponseBaseModel> OfferDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default);
-
     #endregion
 
     #region nomenclatures
-
     /// <summary>
     /// NomenclaturesSelect
     /// </summary>
@@ -77,11 +75,9 @@ public partial interface ICommerceService
     /// NomenclatureUpdate
     /// </summary>
     public Task<TResponseModel<int>> NomenclatureUpdateAsync(NomenclatureModelDB nom, CancellationToken token = default);
-
     #endregion
 
     #region orders
-
     /// <summary>
     /// Смена статуса заказу по идентификатору HelpDesk документа
     /// </summary>
@@ -120,7 +116,6 @@ public partial interface ICommerceService
     /// Orders by issues get
     /// </summary>
     public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
-
     #endregion
 
 

@@ -10,6 +10,11 @@ namespace SharedLib;
 public partial interface ICommerceTransmission : ICommerceServiceBase
 {
     /// <summary>
+    /// IncomingMerchantPaymentTBankAsync
+    /// </summary>
+    public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankBaseModel req, CancellationToken token = default);
+
+    /// <summary>
     /// Price Full - file get
     /// </summary>
     public Task<FileAttachModel> PriceFullFileGetAsync(CancellationToken token = default);
