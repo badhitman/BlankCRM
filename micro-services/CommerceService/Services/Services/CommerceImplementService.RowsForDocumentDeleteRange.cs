@@ -53,7 +53,7 @@ public partial class CommerceImplementService : ICommerceService
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.OfferId,
-                RubricId = x.WarehouseId
+                LockerAreaId = x.WarehouseId
             })];
 
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);

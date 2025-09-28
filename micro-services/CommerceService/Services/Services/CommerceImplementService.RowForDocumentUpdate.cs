@@ -62,7 +62,7 @@ public partial class CommerceImplementService : ICommerceService
         {
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = req.OfferId,
-            RubricId = whDoc.WarehouseId,
+            LockerAreaId = whDoc.WarehouseId,
         }];
 
         if (rowDb is not null && rowDb.OfferId != req.OfferId)
@@ -71,7 +71,7 @@ public partial class CommerceImplementService : ICommerceService
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = rowDb.OfferId,
-                RubricId = whDoc.WarehouseId,
+                LockerAreaId = whDoc.WarehouseId,
             });
         }
 

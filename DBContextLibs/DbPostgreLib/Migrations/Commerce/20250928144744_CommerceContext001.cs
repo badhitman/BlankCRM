@@ -20,7 +20,7 @@ namespace DbPostgreLib.Migrations.Commerce
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     LockerName = table.Column<string>(type: "text", nullable: false),
                     LockerId = table.Column<int>(type: "integer", nullable: false),
-                    RubricId = table.Column<int>(type: "integer", nullable: false)
+                    LockerAreaId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -660,9 +660,9 @@ namespace DbPostgreLib.Migrations.Commerce
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_LockTransactions_LockerId_LockerName_RubricId",
+                name: "IX_LockTransactions_LockerId_LockerName_LockerAreaId",
                 table: "LockTransactions",
-                columns: new[] { "LockerId", "LockerName", "RubricId" },
+                columns: new[] { "LockerId", "LockerName", "LockerAreaId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

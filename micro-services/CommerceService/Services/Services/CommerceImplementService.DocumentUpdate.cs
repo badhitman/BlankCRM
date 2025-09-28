@@ -66,12 +66,12 @@ public partial class CommerceImplementService : ICommerceService
         if (warehouseDocumentDb.Rows!.Count != 0)
             warehouseDocumentDb.Rows.ForEach(x =>
             {
-                offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = x.OfferId, RubricId = req.WarehouseId });
+                offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = x.OfferId, LockerAreaId = req.WarehouseId });
                 if (req.WritingOffWarehouseId > 0 && req.WritingOffWarehouseId != req.WarehouseId)
-                    offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = x.OfferId, RubricId = req.WritingOffWarehouseId });
+                    offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = x.OfferId, LockerAreaId = req.WritingOffWarehouseId });
             });
 
-        offersLocked = [.. offersLocked.DistinctBy(x => x.RubricId)];
+        offersLocked = [.. offersLocked.DistinctBy(x => x.LockerAreaId)];
 
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
         if (offersLocked.Count != 0)

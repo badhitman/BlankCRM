@@ -163,6 +163,9 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("LockerAreaId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("LockerId")
                         .HasColumnType("integer");
 
@@ -170,12 +173,9 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("RubricId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("LockerId", "LockerName", "RubricId")
+                    b.HasIndex("LockerId", "LockerName", "LockerAreaId")
                         .IsUnique();
 
                     b.ToTable("LockTransactions");

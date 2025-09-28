@@ -678,7 +678,7 @@ public partial class CommerceImplementService(
         {
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = req.OfferId,
-            RubricId = commDataDb.WarehouseId,
+            LockerAreaId = commDataDb.WarehouseId,
         }];
 
         if (rowDb is not null && rowDb.OfferId != req.OfferId)
@@ -687,7 +687,7 @@ public partial class CommerceImplementService(
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = rowDb.OfferId,
-                RubricId = commDataDb.WarehouseId,
+                LockerAreaId = commDataDb.WarehouseId,
             });
         }
 
@@ -865,7 +865,7 @@ public partial class CommerceImplementService(
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.OfferId,
-                RubricId = x.WarehouseId
+                LockerAreaId = x.WarehouseId
             })];
 
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken: token);
@@ -1012,7 +1012,7 @@ public partial class CommerceImplementService(
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.Row.OfferId,
-                RubricId = x.WarehouseId
+                LockerAreaId = x.WarehouseId
             })];
 
             try
@@ -1249,7 +1249,7 @@ public partial class CommerceImplementService(
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.Row.OfferId,
-                RubricId = x.WarehouseId
+                LockerAreaId = x.WarehouseId
             })];
 
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);

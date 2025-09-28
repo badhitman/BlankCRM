@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20250918090034_CommerceContext001")]
+    [Migration("20250928144744_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -166,6 +166,9 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("LockerAreaId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("LockerId")
                         .HasColumnType("integer");
 
@@ -173,12 +176,9 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("RubricId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("LockerId", "LockerName", "RubricId")
+                    b.HasIndex("LockerId", "LockerName", "LockerAreaId")
                         .IsUnique();
 
                     b.ToTable("LockTransactions");

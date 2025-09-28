@@ -123,7 +123,7 @@ public partial class CommerceImplementService : ICommerceService
             {
                 LockerName = $"{nameof(RecordsAttendanceModelDB)} /{x.DateExecute}: {x.StartPart}-{x.EndPart}",
                 LockerId = x.OfferId,
-                RubricId = x.OrganizationId
+                LockerAreaId = x.OrganizationId
             })];
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
 
@@ -401,7 +401,7 @@ public partial class CommerceImplementService : ICommerceService
            {
                LockerName = $"{nameof(RecordsAttendanceModelDB)} /{x.DateExecute}: {x.StartPart}-{x.EndPart}",
                LockerId = x.OfferId,
-               RubricId = x.OrganizationId
+               LockerAreaId = x.OrganizationId
            })];
 
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
