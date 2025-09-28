@@ -39,7 +39,7 @@ public static class ExtensionBankService
         PaymentInitTBankResultModelDB res = new()
         {
             Amount = span.Amount,
-            OrderId = span.OrderId,
+            OrderId = span.OrderId.ToString(),
             Receipt = new ReceiptTBankModelDB()
             {
                 Email = span.Receipt.Email,

@@ -203,7 +203,6 @@ public partial class CommerceImplementService(
     #endregion
 
     #region offers
-
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestModel<OfferModelDB> req, CancellationToken token = default)
     {
@@ -371,7 +370,6 @@ public partial class CommerceImplementService(
 
         return res;
     }
-
     #endregion
 
     #region nomenclatures
@@ -495,6 +493,11 @@ public partial class CommerceImplementService(
     #endregion
 
     #region orders
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankBaseModel req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
 
     /// <inheritdoc/>
     public async Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default)

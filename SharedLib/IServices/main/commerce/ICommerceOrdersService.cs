@@ -123,6 +123,12 @@ public partial interface ICommerceService
 
     #endregion
 
+
+    /// <summary>
+    /// IncomingMerchantPaymentTBankAsync
+    /// </summary>
+    public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankBaseModel req, CancellationToken token = default);
+
     /// <summary>
     /// Get full price file Excel (*.xlsx)
     /// </summary>
