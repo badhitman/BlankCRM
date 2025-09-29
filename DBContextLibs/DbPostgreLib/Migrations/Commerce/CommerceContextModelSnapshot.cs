@@ -411,9 +411,13 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAtUTC");
+
                     b.HasIndex("LastUpdatedAtUTC");
 
                     b.HasIndex("OrganizationId");
+
+                    b.HasIndex("ExternalDocumentId", "HelpDeskId", "AuthorIdentityUserId", "StatusDocument");
 
                     b.ToTable("Orders");
                 });
@@ -658,6 +662,8 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedAtUTC");
 
                     b.HasIndex("LastUpdatedAtUTC");
 

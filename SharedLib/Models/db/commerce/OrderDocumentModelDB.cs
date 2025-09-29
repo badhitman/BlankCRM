@@ -2,12 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// Заказ (документ)
 /// </summary>
-public class OrderDocumentModelDB : OrderDocumentBaseModelDB
+[Index(nameof(ExternalDocumentId), nameof(HelpDeskId), nameof(AuthorIdentityUserId), nameof(StatusDocument))]
+public class OrderDocumentModelDB : OrderDocumentBaseDBModel
 {
     /// <summary>
     /// Адреса доставки

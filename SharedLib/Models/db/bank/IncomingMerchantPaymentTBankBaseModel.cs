@@ -23,7 +23,4 @@ public class IncomingMerchantPaymentTBankBaseModel
 
     /// <inheritdoc/>
     public string? Status { get; set; }
-
-    /// <inheritdoc/>
-    public int? OrderJoinId { get; set; }
 }

@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Bank
 {
     [DbContext(typeof(BankContext))]
-    [Migration("20250927194738_BankContext001")]
+    [Migration("20250929074209_BankContext001")]
     partial class BankContext001
     {
         /// <inheritdoc />
@@ -221,9 +221,6 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<string>("OrderId")
                         .HasColumnType("text");
 
-                    b.Property<int?>("OrderJoinId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Pan")
                         .HasColumnType("text");
 
@@ -245,8 +242,6 @@ namespace DbPostgreLib.Migrations.Bank
                     b.HasIndex("ExpDate");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("OrderJoinId");
 
                     b.HasIndex("PaymentId");
 

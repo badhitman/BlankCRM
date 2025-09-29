@@ -54,13 +54,12 @@ namespace DbPostgreLib.Migrations.Bank
                     ExpDate = table.Column<string>(type: "text", nullable: true),
                     Pan = table.Column<string>(type: "text", nullable: true),
                     CardId = table.Column<string>(type: "text", nullable: true),
+                    OrderId = table.Column<string>(type: "text", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     RebillId = table.Column<string>(type: "text", nullable: true),
                     Amount = table.Column<decimal>(type: "numeric", nullable: true),
                     PaymentId = table.Column<string>(type: "text", nullable: true),
-                    OrderId = table.Column<string>(type: "text", nullable: true),
-                    OrderJoinId = table.Column<int>(type: "integer", nullable: true),
-                    Status = table.Column<string>(type: "text", nullable: true),
-                    CreatedDateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    Status = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -416,11 +415,6 @@ namespace DbPostgreLib.Migrations.Bank
                 name: "IX_IncomingMerchantsPaymentsTBank_OrderId",
                 table: "IncomingMerchantsPaymentsTBank",
                 column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_IncomingMerchantsPaymentsTBank_OrderJoinId",
-                table: "IncomingMerchantsPaymentsTBank",
-                column: "OrderJoinId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IncomingMerchantsPaymentsTBank_PaymentId",

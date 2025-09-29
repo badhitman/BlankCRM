@@ -231,7 +231,6 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
             RebillId = payDB.RebillId,
             PaymentId = payDB.PaymentId,
             Status = tbankNotify.Status,
-            OrderJoinId = payDB.OrderJoinId,
             Amount = tbankNotify.Amount.Value,
         }, token);
 

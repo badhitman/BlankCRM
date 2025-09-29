@@ -218,9 +218,6 @@ namespace DbPostgreLib.Migrations.Bank
                     b.Property<string>("OrderId")
                         .HasColumnType("text");
 
-                    b.Property<int?>("OrderJoinId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Pan")
                         .HasColumnType("text");
 
@@ -242,8 +239,6 @@ namespace DbPostgreLib.Migrations.Bank
                     b.HasIndex("ExpDate");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("OrderJoinId");
 
                     b.HasIndex("PaymentId");
 

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Storage
 {
     [DbContext(typeof(StorageContext))]
-    [Migration("20250917172924_StorageContext001")]
+    [Migration("20250929074354_StorageContext001")]
     partial class StorageContext001
     {
         /// <inheritdoc />

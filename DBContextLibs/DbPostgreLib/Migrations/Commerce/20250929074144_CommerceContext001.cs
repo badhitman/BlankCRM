@@ -562,6 +562,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AttendancesReg_CreatedAtUTC",
+                table: "AttendancesReg",
+                column: "CreatedAtUTC");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AttendancesReg_LastUpdatedAtUTC",
                 table: "AttendancesReg",
                 column: "LastUpdatedAtUTC");
@@ -746,6 +751,16 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_OfficesOrders_WarehouseId",
                 table: "OfficesOrders",
                 column: "WarehouseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_CreatedAtUTC",
+                table: "Orders",
+                column: "CreatedAtUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_ExternalDocumentId_HelpDeskId_AuthorIdentityUserId_S~",
+                table: "Orders",
+                columns: new[] { "ExternalDocumentId", "HelpDeskId", "AuthorIdentityUserId", "StatusDocument" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_LastUpdatedAtUTC",

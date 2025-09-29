@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// OrderDocumentBaseModelDB
+/// OrderDocumentBaseDBModel
 /// </summary>
-public class OrderDocumentBaseModelDB : EntryUpdatedModel
+public class OrderDocumentBaseDBModel : EntryUpdatedModel
 {
     /// <summary>
     /// Шаг/статус обращения: "Создан", "В работе", "На проверке" и "Готово"

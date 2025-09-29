@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.HelpDesk
 {
     [DbContext(typeof(HelpDeskContext))]
-    [Migration("20250917172836_HelpDeskPostgreContext001")]
+    [Migration("20250929074257_HelpDeskPostgreContext001")]
     partial class HelpDeskPostgreContext001
     {
         /// <inheritdoc />
