@@ -12,7 +12,7 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     /// <summary>
     /// IncomingMerchantPaymentTBankAsync
     /// </summary>
-    public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankBaseModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default);
 
     /// <summary>
     /// Price Full - file get

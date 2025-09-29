@@ -122,7 +122,7 @@ public partial interface ICommerceService
     /// <summary>
     /// IncomingMerchantPaymentTBankAsync
     /// </summary>
-    public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankBaseModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default);
 
     /// <summary>
     /// Get full price file Excel (*.xlsx)

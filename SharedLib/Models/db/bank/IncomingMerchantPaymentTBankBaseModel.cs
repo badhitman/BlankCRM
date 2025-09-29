@@ -10,9 +10,6 @@ namespace SharedLib;
 public class IncomingMerchantPaymentTBankBaseModel
 {
     /// <inheritdoc/>
-    public int Id { get; set; }
-
-    /// <inheritdoc/>
     public string? RebillId { get; set; }
 
     /// <inheritdoc/>

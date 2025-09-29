@@ -14,6 +14,9 @@ namespace SharedLib;
 public class IncomingMerchantPaymentTBankModelDB : IncomingMerchantPaymentTBankBaseModel
 {
     /// <inheritdoc/>
+    public int Id { get; set; }
+
+    /// <inheritdoc/>
     public string? ExpDate { get; set; }
 
     /// <inheritdoc/>

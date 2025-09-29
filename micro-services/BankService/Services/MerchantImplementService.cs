@@ -218,20 +218,24 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
             return ResponseBaseModel.CreateError(msg);
         }
 
-        if (string.IsNullOrEmpty(tbankNotify.OrderId) || !int.TryParse(tbankNotify.OrderId, out int orderId))
+        if (string.IsNullOrEmpty(tbankNotify.OrderId) || !int.TryParse(tbankNotify.OrderId, out _))
         {
             msg = $"не указан orderId (или имеет не верный формат `{tbankNotify.OrderId}`) > {req}";
             loggerRepo.LogError(msg);
             return ResponseBaseModel.CreateError(msg);
         }
 
-        await commerceRepo.IncomingMerchantPaymentTBankAsync(new IncomingMerchantPaymentTBankBaseModel()
+        IQueryable<string> _pq = ctx.PaymentsInitResultsTBank
+            .Where(x => x.PaymentId == payDB.PaymentId)
+            .Select(x => x.PayerUserId);
+
+        await commerceRepo.IncomingMerchantPaymentTBankAsync(new IncomingMerchantPaymentTBankNotifyModel()
         {
-            Id = payDB.Id,
             RebillId = payDB.RebillId,
             PaymentId = payDB.PaymentId,
             Status = tbankNotify.Status,
             Amount = tbankNotify.Amount.Value,
+            PayerUserId = await _pq.FirstAsync(cancellationToken: token)
         }, token);
 
         return ResponseBaseModel.CreateSuccess("Ok");

@@ -494,8 +494,9 @@ public partial class CommerceImplementService(
 
     #region orders
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankBaseModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default)
     {
+
         throw new NotImplementedException();
     }
 
