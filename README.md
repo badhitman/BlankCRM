@@ -8,6 +8,7 @@
 - Кроссплатформенный .NET MAUI (Win, Android и т.д.) [клиент доступа к Rest/Api](https://github.com/badhitman/BlankCRM?tab=readme-ov-file#tools-maui-app)
 - Связь между службами через RabbitMQ[^1] в режиме `запрос-ответ`: при отправке сообщения в очередь, отправитель дожидается ответ (в границах таймаута) и возвращает результат вызывающему. При использовании вызова такой команды удалённого сервиса проходит так, как если бы это был обычный `await` запрос к базе данных или rest/api. Вместе с тем есть возможность отправить команду в режиме "отправил и забыл".
 - .NET Aspire: [набор инструментов для оркестрации](https://github.com/badhitman/BlankCRM/tree/main/BlankCRM.AppHost): мониторинг сервисов (телеметрия, трассировка). ![aspire main](img/aspire-main.png)
+- T-Bank
 - LDAP (ActiveDirectory) коннектор. предварительная версия
 - Внешние [источники данных](https://github.com/badhitman/BlankCRM/blob/main/micro-services/outer/README.md): Rusklimat (Русклимат), DaichiBusiness, HaierProff, Breez.ru
 
