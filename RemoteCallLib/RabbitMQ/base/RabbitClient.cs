@@ -56,7 +56,7 @@ public class RabbitClient : IRabbitClient
     }
 
     /// <inheritdoc/>
-    public Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default)
+    public async Task<T?> MqRemoteCallAsync<T>(string queue, object? request = null, bool waitResponse = true, CancellationToken tokenOuter = default)
     {
         // Custom ActivitySource for the application
         ActivitySource greeterActivitySource = new($"OTel.{AppName}");
@@ -71,28 +71,28 @@ public class RabbitClient : IRabbitClient
         string response_topic = waitResponse ? $"{RabbitConfigRepo.QueueMqNamePrefixForResponse}{queue}_{Guid.NewGuid()}" : "";
         activity?.SetTag(nameof(response_topic), response_topic);
 
-        using IConnection _connection = factory.CreateConnection();
-        using IModel _channel = _connection.CreateModel();
+        using IConnection _connection = await factory.CreateConnectionAsync(tokenOuter);
+        using IChannel _channel = await _connection.CreateChannelAsync(cancellationToken: tokenOuter);
 
-        IBasicProperties? properties = _channel.CreateBasicProperties();
+        BasicProperties? properties = new();
         if (waitResponse)
         {
             properties.ReplyTo = response_topic;
-            _channel.QueueDeclare(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: ResponseQueueArguments);
+          await  _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
         }
 
         Stopwatch stopwatch = new();
-        EventingBasicConsumer consumer = new(_channel);
+        AsyncEventingBasicConsumer consumer = new(_channel);
 
         CancellationTokenSource cts = new();
         CancellationToken token = cts.Token;
         ManualResetEventSlim mres = new(false);
         string _msg;
         TResponseMQModel<T?>? res_io = null;
-        void MessageReceivedEvent(object? sender, BasicDeliverEventArgs e)
+       async Task MessageReceivedEvent(object? sender, BasicDeliverEventArgs e)
         {
             string msg;
-            consumer.Received -= MessageReceivedEvent;
+            consumer.ReceivedAsync -= MessageReceivedEvent;
             string content = Encoding.UTF8.GetString(e.Body.ToArray());
 
             if (!content.Contains(GlobalStaticConstantsRoutes.Routes.PASSWORD_CONTROLLER_NAME, StringComparison.OrdinalIgnoreCase))
@@ -118,7 +118,7 @@ public class RabbitClient : IRabbitClient
 
             try
             {
-                _channel.BasicAck(e.DeliveryTag, false);
+               await _channel.BasicAckAsync(e.DeliveryTag, false, tokenOuter);
             }
             catch (Exception ex)
             {
@@ -131,13 +131,13 @@ public class RabbitClient : IRabbitClient
             cts.Dispose();
         }
 
-        consumer.Received += MessageReceivedEvent;
+        consumer.ReceivedAsync += MessageReceivedEvent;
 
         if (waitResponse)
         {
             try
             {
-                _channel.BasicConsume(response_topic, false, consumer);
+              await  _channel.BasicConsumeAsync(response_topic, false, consumer, cancellationToken: tokenOuter);
             }
             catch (Exception ex)
             {
@@ -145,11 +145,7 @@ public class RabbitClient : IRabbitClient
             }
         }
 
-        _channel!.QueueDeclare(queue: queue,
-                      durable: true,
-                      exclusive: false,
-                      autoDelete: false,
-                      arguments: null);
+       await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: tokenOuter);
 
 #if DEBUG
         string request_payload_json = "";
@@ -167,10 +163,12 @@ public class RabbitClient : IRabbitClient
         byte[] body = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(request, SerializerOptions);
 #endif
 
-        _channel!.BasicPublish(exchange: "",
+       await _channel!.BasicPublishAsync(exchange: "",
                        routingKey: queue,
+                       mandatory: true,
                        basicProperties: properties,
-                       body: body);
+                       body: body,
+                       cancellationToken: tokenOuter);
 
         if (waitResponse)
         {
@@ -205,7 +203,7 @@ public class RabbitClient : IRabbitClient
                 loggerRepo.LogDebug($"Elapsed [{queue}] -> [{response_topic}]: {stopwatch.Elapsed} > {TimeSpan.FromMilliseconds(RabbitConfigRepo.RemoteCallTimeoutMs)}");
         }
         else
-            return Task.FromResult(default(T));
+            return default;
 
         activity?.Stop();
 
@@ -213,11 +211,11 @@ public class RabbitClient : IRabbitClient
         {
             _msg = $"Response MQ/IO is null [{queue}] -> [{response_topic}]: {stopwatch.Elapsed} > {TimeSpan.FromMilliseconds(RabbitConfigRepo.RemoteCallTimeoutMs)}";
             loggerRepo.LogError(_msg);
-            return Task.FromResult(default(T));
+            return default;
         }
         else if (res_io is null)
-            return Task.FromResult(default(T));
+            return default;
 
-        return Task.FromResult(res_io.Response);
+        return res_io.Response;
     }
 }

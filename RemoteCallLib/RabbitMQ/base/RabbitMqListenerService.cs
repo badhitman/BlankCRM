@@ -30,8 +30,8 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
     where TResponse : new()
 {
     readonly ILogger<RabbitMqListenerService<TQueue, TRequest, TResponse>> LoggerRepo;
-    readonly IConnection _connection;
-    readonly IModel _channel;
+    IConnection _connection = default!;
+    IChannel _channel = default!;
     readonly IResponseReceive<TRequest?, TResponse> receiveService;
     readonly ConnectionFactory factory;
 
@@ -69,22 +69,22 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
             UserName = rabbitConf.Value.UserName,
             Password = rabbitConf.Value.Password
         };
-
-        _connection = factory.CreateConnection();
-        _channel = _connection.CreateModel();
-        _channel.QueueDeclare(queue: QueueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
     }
 
     /// <inheritdoc/>
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _connection = await factory.CreateConnectionAsync(stoppingToken);
+        _channel = await _connection.CreateChannelAsync(cancellationToken: stoppingToken);
+        await _channel.QueueDeclareAsync(queue: QueueName, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: stoppingToken);
+
         stoppingToken.ThrowIfCancellationRequested();
         TResponseMQModel<TResponse> answer = new()
         {
             StartedServer = DateTime.UtcNow,
         };
-        EventingBasicConsumer consumer = new(_channel);
-        consumer.Received += async (ch, ea) =>
+        AsyncEventingBasicConsumer consumer = new(_channel);
+        consumer.ReceivedAsync += async (ch, ea) =>
         {
             TRequest? sr;
 
@@ -96,7 +96,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 ? default
                 : JsonConvert.DeserializeObject<TRequest?>(content);
 
-                answer.Response = await receiveService.ResponseHandleActionAsync(sr);
+                answer.Response = await receiveService.ResponseHandleActionAsync(sr, stoppingToken);
             }
             catch (Exception ex)
             {
@@ -110,7 +110,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
             {
                 try
                 {
-                    _channel.BasicPublish(exchange: "", routingKey: ea.BasicProperties.ReplyTo, basicProperties: null, body: Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)));
+                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, body: Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)), cancellationToken: stoppingToken);
                 }
                 catch (Exception ex)
                 {
@@ -118,11 +118,11 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
                 }
                 finally
                 {
-                    _channel.BasicAck(ea.DeliveryTag, false);
+                    await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
                 }
             }
             else
-                _channel.BasicAck(ea.DeliveryTag, false);
+                await _channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
 #else
             try
             {
@@ -151,15 +151,14 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
 #endif
         };
         LoggerRepo.LogTrace($"BasicConsume QueueName:{QueueName};");
-        _channel.BasicConsume(QueueName, false, consumer);
-        return Task.CompletedTask;
+        await _channel.BasicConsumeAsync(QueueName, false, consumer, cancellationToken: stoppingToken);
     }
 
     /// <inheritdoc/>
     public override void Dispose()
     {
-        _channel.Close();
-        _connection.Close();
+        //_channel.Close();
+        //_connection.Close();
         base.Dispose();
         GC.SuppressFinalize(this);
     }
