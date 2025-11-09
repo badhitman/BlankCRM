@@ -110,7 +110,7 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
             {
                 try
                 {
-                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, body: Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)), cancellationToken: stoppingToken);
+                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, body: Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)), cancellationToken: stoppingToken);
                 }
                 catch (Exception ex)
                 {
@@ -139,15 +139,15 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
             {
                 try
                 {
-                    _channel.BasicPublish(exchange: "", routingKey: ea.BasicProperties.ReplyTo, basicProperties: null, body: System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(answer));
+                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, body: System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(answer), cancellationToken: stoppingToken);
                 }
                 finally
                 {
-                    _channel.BasicAck(ea.DeliveryTag, false);
+                    await _channel.BasicAckAsync(ea.DeliveryTag, false);
                 }
             }
             else
-                _channel.BasicAck(ea.DeliveryTag, false);
+                await _channel.BasicAckAsync(ea.DeliveryTag, false);
 #endif
         };
         LoggerRepo.LogTrace($"BasicConsume QueueName:{QueueName};");

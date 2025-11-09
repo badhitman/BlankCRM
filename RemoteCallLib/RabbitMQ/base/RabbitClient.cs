@@ -78,7 +78,7 @@ public class RabbitClient : IRabbitClient
         if (waitResponse)
         {
             properties.ReplyTo = response_topic;
-          await  _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
+            await _channel.QueueDeclareAsync(queue: response_topic, durable: false, exclusive: false, autoDelete: true, arguments: ResponseQueueArguments!, cancellationToken: tokenOuter);
         }
 
         Stopwatch stopwatch = new();
@@ -89,7 +89,7 @@ public class RabbitClient : IRabbitClient
         ManualResetEventSlim mres = new(false);
         string _msg;
         TResponseMQModel<T?>? res_io = null;
-       async Task MessageReceivedEvent(object? sender, BasicDeliverEventArgs e)
+        async Task MessageReceivedEvent(object? sender, BasicDeliverEventArgs e)
         {
             string msg;
             consumer.ReceivedAsync -= MessageReceivedEvent;
@@ -118,7 +118,7 @@ public class RabbitClient : IRabbitClient
 
             try
             {
-               await _channel.BasicAckAsync(e.DeliveryTag, false, tokenOuter);
+                await _channel.BasicAckAsync(e.DeliveryTag, false, tokenOuter);
             }
             catch (Exception ex)
             {
@@ -137,7 +137,7 @@ public class RabbitClient : IRabbitClient
         {
             try
             {
-              await  _channel.BasicConsumeAsync(response_topic, false, consumer, cancellationToken: tokenOuter);
+                await _channel.BasicConsumeAsync(response_topic, false, consumer, cancellationToken: tokenOuter);
             }
             catch (Exception ex)
             {
@@ -145,7 +145,7 @@ public class RabbitClient : IRabbitClient
             }
         }
 
-       await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: tokenOuter);
+        await _channel!.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null, cancellationToken: tokenOuter);
 
 #if DEBUG
         string request_payload_json = "";
@@ -163,12 +163,12 @@ public class RabbitClient : IRabbitClient
         byte[] body = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(request, SerializerOptions);
 #endif
 
-       await _channel!.BasicPublishAsync(exchange: "",
-                       routingKey: queue,
-                       mandatory: true,
-                       basicProperties: properties,
-                       body: body,
-                       cancellationToken: tokenOuter);
+        await _channel!.BasicPublishAsync(exchange: "",
+                        routingKey: queue,
+                        mandatory: true,
+                        basicProperties: properties,
+                        body: body,
+                        cancellationToken: tokenOuter);
 
         if (waitResponse)
         {
