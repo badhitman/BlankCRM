@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// StorageImageMetadataModel
 /// </summary>
-public class StorageImageMetadataModel : StorageMetadataModel
+public class StorageFileMetadataModel : StorageMetadataModel
 {
     /// <summary>
     /// FileName
@@ -28,9 +28,4 @@ public class StorageImageMetadataModel : StorageMetadataModel
     /// Payload
     /// </summary>
     public byte[]? Payload { get; set; }
-
-    /// <summary>
-    /// AuthorUserIdentity
-    /// </summary>
-    public string? AuthorUserIdentity { get; set; }
 }

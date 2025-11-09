@@ -56,7 +56,7 @@ public class TinyMCEditorController(IStorageTransmission storeRepo) : Controller
             return StatusCode(500, new { location = "/img/unauthorizedimage.png" });
 
 
-        StorageImageMetadataModel req = new()
+        StorageFileMetadataModel req = new()
         {
             Referrer = HttpContext.Request.Headers["Referer"].FirstOrDefault(),
             PrefixPropertyName = PrefixPropertyName,
@@ -64,12 +64,11 @@ public class TinyMCEditorController(IStorageTransmission storeRepo) : Controller
             OwnerPrimaryKey = OwnerPrimaryKey,
             Payload = payload,
             PropertyName = NameStorage,
-            AuthorUserIdentity = un,
             FileName = file_name,
             ContentType = file.ContentType,
         };
 
-        TResponseModel<StorageFileModelDB> rest = await storeRepo.SaveFileAsync(new() { Payload = req, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
+        TResponseModel<StorageFileModelDB> rest = await storeRepo.SaveFileAsync(new() { Payload = req, SenderActionUserId = un });
         if (!rest.Success() || rest.Response is null || rest.Response.Id < 1)
             return StatusCode(500, new { location = "/img/noimage-simple.png" });
 

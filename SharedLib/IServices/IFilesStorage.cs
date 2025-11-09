@@ -25,7 +25,7 @@ public interface IFilesStorage
     public Task<TResponseModel<FileContentModel>> ReadFileAsync(TAuthRequestModel<RequestFileReadModel> req, CancellationToken token = default);
 
     /// <summary>
-    /// SaveFile
+    /// Save file into storage
     /// </summary>
-    public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageImageMetadataModel> req, CancellationToken token = default);
+    public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageFileMetadataModel> req, CancellationToken token = default);
 }

@@ -45,5 +45,5 @@ public interface IStorageTransmission
     /// <summary>
     /// Сохранить файл
     /// </summary>
-    public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageImageMetadataModel> req, CancellationToken token = default);
+    public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageFileMetadataModel> req, CancellationToken token = default);
 }

@@ -66,12 +66,11 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
 
         using MemoryStream stream = new();
         uploadedFile.OpenReadStream().CopyTo(stream);
-        StorageImageMetadataModel reqSave = new()
+        StorageFileMetadataModel reqSave = new()
         {
             ApplicationName = Routes.ORDER_CONTROLLER_NAME,
             PropertyName = Routes.ATTACHMENT_CONTROLLER_NAME,
             PrefixPropertyName = Routes.REST_CONTROLLER_NAME,
-            AuthorUserIdentity = GlobalStaticConstantsRoles.Roles.System,
             FileName = _file_name,
             ContentType = uploadedFile.ContentType,
             OwnerPrimaryKey = OrderId,

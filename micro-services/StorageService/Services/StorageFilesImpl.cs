@@ -224,7 +224,7 @@ public class StorageFilesImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageImageMetadataModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageFileMetadataModel> req, CancellationToken token = default)
     {
         TResponseModel<StorageFileModelDB> res = new();
 
@@ -233,7 +233,7 @@ public class StorageFilesImpl(
             res.AddError("req.Payload?.Payload is null");
             return res;
         }
-        if(string.IsNullOrWhiteSpace(req.Payload.AuthorUserIdentity))
+        if(string.IsNullOrWhiteSpace(req.SenderActionUserId))
         {
             res.AddError("string.IsNullOrWhiteSpace(req.Payload.AuthorUserIdentity)");
             return res;
@@ -253,7 +253,7 @@ public class StorageFilesImpl(
         res.Response = new StorageFileModelDB()
         {
             ApplicationName = req.Payload.ApplicationName,
-            AuthorIdentityId = req.Payload.AuthorUserIdentity,
+            AuthorIdentityId = req.SenderActionUserId,
             FileName = _file_name,
             NormalizedFileNameUpper = _file_name.ToUpper(),
             ContentType = req.Payload.ContentType,

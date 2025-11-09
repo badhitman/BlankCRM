@@ -80,9 +80,8 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
         if (loadedFiles.Count == 0)
             throw new Exception();
         string appName = ApplicationsNames.Single();
-        StorageImageMetadataModel req = new()
+        StorageFileMetadataModel req = new()
         {
-            AuthorUserIdentity = CurrentUserSession!.UserId,
             PrefixPropertyName = PrefixPropertyName,
             ApplicationName = appName,
             OwnerPrimaryKey = OwnerPrimaryKey,
