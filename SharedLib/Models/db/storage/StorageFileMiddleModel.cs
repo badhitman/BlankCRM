@@ -21,7 +21,7 @@ public class StorageFileMiddleModel : StorageBaseModel
     public required string AuthorIdentityId { get; set; }
 
     /// <summary>
-    /// PointId
+    /// PointId (grid-fs)
     /// </summary>
     public required string PointId { get; set; }
 

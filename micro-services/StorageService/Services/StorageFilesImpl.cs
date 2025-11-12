@@ -2,14 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Text.RegularExpressions;
-using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver.GridFS;
-using MongoDB.Driver;
-using MongoDB.Bson;
-using ImageMagick;
-using SharedLib;
 using DbcLib;
+using DocumentFormat.OpenXml.Packaging;
+using ImageMagick;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
+using SharedLib;
+using System.Text.RegularExpressions;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace StorageService;
@@ -119,11 +120,93 @@ public class StorageFilesImpl(
     }
 
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> IndexingFileAsync(IndexingFileModel req, CancellationToken token = default)
+    {
+        using StorageContext context = await cloudParametersDbFactory.CreateDbContextAsync(token);
+        StorageFileModelDB file_db = await context
+            .CloudFiles
+            .Include(x => x.AccessRules)
+            .FirstAsync(x => x.Id == req.FileId, cancellationToken: token);
+
+        return Path.GetExtension(file_db.FileName) switch
+        {
+            ".xlsx" => await SpreadsheetDocumentHandle(file_db, token),
+            ".docx" => await WordprocessingDocumentHandle(file_db, token),
+            _ => ResponseBaseModel.CreateInfo("file format not support"),
+        };
+    }
+
+    async Task<ResponseBaseModel> SpreadsheetDocumentHandle(StorageFileModelDB file_db, CancellationToken token = default)
+    {
+        using MemoryStream stream = new();
+        GridFSBucket gridFS = new(mongoFs);
+        await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);
+        using SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(stream, false);
+        if (spreadsheetDocument.WorkbookPart is null)
+            return ResponseBaseModel.CreateError("spreadsheetDocument.WorkbookPart is null");
+
+        WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+
+        DocumentFormat.OpenXml.Spreadsheet.Sheets? sheets = workbookPart.Workbook.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.Sheets>();
+
+        if (sheets is null)
+            return ResponseBaseModel.CreateError("Workbook.Sheets is null");
+
+        foreach (WorksheetPart worksheetPart in workbookPart.WorksheetParts)
+        {
+            string partRelationshipId = workbookPart.GetIdOfPart(worksheetPart);
+
+            DocumentFormat.OpenXml.Spreadsheet.Sheet? correspondingSheet = sheets.Cast<DocumentFormat.OpenXml.Spreadsheet.Sheet>().FirstOrDefault(s => s.Id == partRelationshipId);
+
+            foreach (DocumentFormat.OpenXml.Spreadsheet.SheetData sheetData in worksheetPart.Worksheet.Elements<DocumentFormat.OpenXml.Spreadsheet.SheetData>())
+            {
+                foreach (DocumentFormat.OpenXml.Spreadsheet.Row _row in sheetData.Elements<DocumentFormat.OpenXml.Spreadsheet.Row>())
+                {
+                    foreach (DocumentFormat.OpenXml.Spreadsheet.Cell _cell in _row.Elements<DocumentFormat.OpenXml.Spreadsheet.Cell>())
+                    {
+                        Console.Write(_cell.CellValue?.Text);
+                    }
+                }
+            }
+        }
+
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    async Task<ResponseBaseModel> WordprocessingDocumentHandle(StorageFileModelDB file_db, CancellationToken token = default)
+    {
+        using MemoryStream stream = new();
+        GridFSBucket gridFS = new(mongoFs);
+        await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);
+
+        using WordprocessingDocument wordprocessingDocument = WordprocessingDocument.Open(stream, false);
+        if (wordprocessingDocument.MainDocumentPart?.Document.Body is null)
+            return ResponseBaseModel.CreateError("word-processing document [MainDocumentPart?.Document.Body] is null");
+
+        // Get document element of the Package.  
+        DocumentFormat.OpenXml.Wordprocessing.Document document = wordprocessingDocument.MainDocumentPart.Document;
+
+        foreach (DocumentFormat.OpenXml.OpenXmlElement element in document.Body.Elements())
+        {
+            if (element is DocumentFormat.OpenXml.Wordprocessing.Paragraph _paragraph)
+            {
+
+            }
+            else if (element is DocumentFormat.OpenXml.Wordprocessing.Table _table)
+            {
+
+            }
+        }
+
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<FileContentModel>> ReadFileAsync(TAuthRequestModel<RequestFileReadModel> req, CancellationToken token = default)
     {
         TResponseModel<FileContentModel> res = new();
 
-        if(req.Payload is null)
+        if (req.Payload is null)
         {
             res.AddError("req.Payload is null");
             return res;
@@ -228,12 +311,12 @@ public class StorageFilesImpl(
     {
         TResponseModel<StorageFileModelDB> res = new();
 
-        if(req.Payload?.Payload is null)
+        if (req.Payload?.Payload is null)
         {
             res.AddError("req.Payload?.Payload is null");
             return res;
         }
-        if(string.IsNullOrWhiteSpace(req.SenderActionUserId))
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
         {
             res.AddError("string.IsNullOrWhiteSpace(req.Payload.AuthorUserIdentity)");
             return res;

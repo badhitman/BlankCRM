@@ -31,6 +31,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<LogsSelectReceive, TPaginationRequestStandardModel<LogsSelectRequestModel>, TPaginationResponseModel<NLogRecordModelDB>>()
             .RegisterMqListener<SetWebConfigReceive, WebConfigModel, ResponseBaseModel>()
 
+            .RegisterMqListener<IndexingFileReceive, IndexingFileModel, ResponseBaseModel>()
             .RegisterMqListener<SaveFileReceive, TAuthRequestModel<StorageFileMetadataModel>, TResponseModel<StorageFileModelDB>>()
             .RegisterMqListener<ReadFileReceive, TAuthRequestModel<RequestFileReadModel>, TResponseModel<FileContentModel>>()
             .RegisterMqListener<FilesAreaGetMetadataReceive, FilesAreaMetadataRequestModel, TResponseModel<FilesAreaMetadataModel[]>>()

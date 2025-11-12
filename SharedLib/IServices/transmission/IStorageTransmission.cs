@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Serialize Remote Transmission Service
 /// </summary>
-public interface IStorageTransmission
+public interface IStorageTransmission : IFilesStorage
 {
     /// <summary>
     /// GoToPageForRow
@@ -23,27 +23,4 @@ public interface IStorageTransmission
     /// Чтение логов
     /// </summary>
     public Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить сводку (метаданные) по пространствам хранилища
-    /// </summary>
-    /// <remarks>
-    /// Общий размер и количество группируется по AppName
-    /// </remarks>
-    public Task<TResponseModel<FilesAreaMetadataModel[]>> FilesAreaGetMetadataAsync(FilesAreaMetadataRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Files select
-    /// </summary>
-    public Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// ReadFile
-    /// </summary>
-    public Task<TResponseModel<FileContentModel>> ReadFileAsync(TAuthRequestModel<RequestFileReadModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Сохранить файл
-    /// </summary>
-    public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageFileMetadataModel> req, CancellationToken token = default);
 }

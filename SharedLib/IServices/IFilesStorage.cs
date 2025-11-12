@@ -10,8 +10,11 @@ namespace SharedLib;
 public interface IFilesStorage
 {
     /// <summary>
-    /// FilesAreaGetMetadata
+    /// Получить сводку (метаданные) по пространствам хранилища
     /// </summary>
+    /// <remarks>
+    /// Общий размер и количество группируется по AppName
+    /// </remarks>
     public Task<TResponseModel<FilesAreaMetadataModel[]>> FilesAreaGetMetadataAsync(FilesAreaMetadataRequestModel req, CancellationToken token = default);
 
     /// <summary>
@@ -28,4 +31,9 @@ public interface IFilesStorage
     /// Save file into storage
     /// </summary>
     public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageFileMetadataModel> req, CancellationToken token = default);
+
+    /// <summary>
+    /// IndexingFileAsync
+    /// </summary>
+    public Task<ResponseBaseModel> IndexingFileAsync(IndexingFileModel req, CancellationToken token = default);
 }

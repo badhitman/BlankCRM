@@ -1425,6 +1425,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string UPDATE_ACTION_NAME = "update";
 
         /// <summary>
+        /// Indexing
+        /// </summary>
+        public const string INDEXING_ACTION_NAME = "indexing";
+
+        /// <summary>
         /// Initial
         /// </summary>
         public const string INITIAL_ACTION_NAME = "initial";
