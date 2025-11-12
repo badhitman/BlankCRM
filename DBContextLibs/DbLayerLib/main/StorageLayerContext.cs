@@ -46,8 +46,26 @@ public partial class StorageLayerContext : DbContext
     /// </summary>
     public DbSet<StorageFileModelDB> CloudFiles { get; set; } = default!;
 
-    /// <summary>
-    /// RulesFilesAccess
-    /// </summary>
+    /// <inheritdoc/>
     public DbSet<AccessFileRuleModelDB> RulesFilesAccess { get; set; } = default!;
+
+    #region Word
+    /// <inheritdoc/>
+    public DbSet<ParagraphWordIndexFileModel> ParagraphsWordIndexesFiles { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    public DbSet<TableWordIndexFileModel> TablesWordIndexesFiles { get; set; } = default!;
+
+    /// <inheritdoc/>
+    public DbSet<CellTableWordIndexFileModel> DataTablesWordIndexesFiles { get; set; } = default!;
+    #endregion
+
+    #region Excel
+    /// <inheritdoc/>
+    public DbSet<SheetExcelIndexFileModel> SheetsExcelIndexesFiles { get; set; } = default!;
+
+    /// <inheritdoc/>
+    public DbSet<CellTableExcelIndexFileModel> DataTablesExcelIndexesFiles { get; set; } = default!;
+    #endregion
 }
