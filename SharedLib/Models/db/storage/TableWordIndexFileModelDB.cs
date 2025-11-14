@@ -7,7 +7,8 @@ namespace SharedLib;
 /// <summary>
 /// TableWordIndexFileModel
 /// </summary>
-public class TableWordIndexFileModel : IndexFileSortedModel
+public class TableWordIndexFileModelDB : IndexFileSortedModel
 {
-
+    /// <inheritdoc/>
+    public List<CellTableWordIndexFileModelDB>? Data { get; set; }
 }

@@ -51,21 +51,21 @@ public partial class StorageLayerContext : DbContext
 
     #region Word
     /// <inheritdoc/>
-    public DbSet<ParagraphWordIndexFileModel> ParagraphsWordIndexesFiles { get; set; } = default!;
+    public DbSet<ParagraphWordIndexFileModelDB> ParagraphsWordIndexesFiles { get; set; } = default!;
 
 
     /// <inheritdoc/>
-    public DbSet<TableWordIndexFileModel> TablesWordIndexesFiles { get; set; } = default!;
+    public DbSet<TableWordIndexFileModelDB> TablesWordIndexesFiles { get; set; } = default!;
 
     /// <inheritdoc/>
-    public DbSet<CellTableWordIndexFileModel> DataTablesWordIndexesFiles { get; set; } = default!;
+    public DbSet<CellTableWordIndexFileModelDB> DataTablesWordIndexesFiles { get; set; } = default!;
     #endregion
 
     #region Excel
     /// <inheritdoc/>
-    public DbSet<SheetExcelIndexFileModel> SheetsExcelIndexesFiles { get; set; } = default!;
+    public DbSet<SheetExcelIndexFileModelDB> SheetsExcelIndexesFiles { get; set; } = default!;
 
     /// <inheritdoc/>
-    public DbSet<CellTableExcelIndexFileModel> DataTablesExcelIndexesFiles { get; set; } = default!;
+    public DbSet<CellTableExcelIndexFileModelDB> DataTablesExcelIndexesFiles { get; set; } = default!;
     #endregion
 }

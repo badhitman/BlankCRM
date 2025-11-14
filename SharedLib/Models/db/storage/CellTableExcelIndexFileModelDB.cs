@@ -5,17 +5,17 @@
 namespace SharedLib;
 
 /// <summary>
-/// CellTableWordIndexFileModel
+/// CellTableExcelIndexFileModel
 /// </summary>
-public class CellTableWordIndexFileModel : CellTableAbstractIndexFileModel
+public class CellTableExcelIndexFileModelDB : CellTableAbstractIndexFileModel
 {
     /// <summary>
-    /// TableWordFile
+    /// SheetExcelFile
     /// </summary>
-    public TableWordIndexFileModel? TableWordFile { get; set; }
+    public SheetExcelIndexFileModelDB? SheetExcelFile { get; set; }
 
     /// <summary>
-    /// TableWordFile
+    /// SheetExcelFile
     /// </summary>
-    public int TableWordFileId { get; set; }
+    public int SheetExcelFileId { get; set; }
 }

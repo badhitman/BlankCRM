@@ -10,8 +10,17 @@ namespace SharedLib;
 /// SheetExcelIndexFileModel
 /// </summary>
 [Index(nameof(Title))]
-public class SheetExcelIndexFileModel : IndexFileSortedModel
+public class SheetExcelIndexFileModelDB : IndexFileSortedModel
 {
     /// <inheritdoc/>
     public required string Title { get; set; }
+
+    /// <inheritdoc/>
+    public List<CellTableExcelIndexFileModelDB>? Cells { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"[{Title}]";
+    }
 }

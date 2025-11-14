@@ -81,6 +81,7 @@ namespace DbPostgreLib.Migrations.Storage
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Data = table.Column<string>(type: "text", nullable: true),
+                    ParagraphId = table.Column<string>(type: "text", nullable: true),
                     StoreFileId = table.Column<int>(type: "integer", nullable: false),
                     SortIndex = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -167,7 +168,7 @@ namespace DbPostgreLib.Migrations.Storage
                     StoreFileId = table.Column<int>(type: "integer", nullable: false),
                     RowNum = table.Column<long>(type: "bigint", nullable: false),
                     ColNum = table.Column<long>(type: "bigint", nullable: false),
-                    Data = table.Column<string>(type: "text", nullable: true)
+                    Data = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -193,10 +194,11 @@ namespace DbPostgreLib.Migrations.Storage
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TableWordFileId = table.Column<int>(type: "integer", nullable: false),
+                    ParagraphId = table.Column<string>(type: "text", nullable: true),
                     StoreFileId = table.Column<int>(type: "integer", nullable: false),
                     RowNum = table.Column<long>(type: "bigint", nullable: false),
                     ColNum = table.Column<long>(type: "bigint", nullable: false),
-                    Data = table.Column<string>(type: "text", nullable: true)
+                    Data = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

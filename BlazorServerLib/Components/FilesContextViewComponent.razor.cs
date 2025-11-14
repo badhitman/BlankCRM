@@ -77,6 +77,9 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
 
     async Task SendFile()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (loadedFiles.Count == 0)
             throw new Exception();
         string appName = ApplicationsNames.Single();

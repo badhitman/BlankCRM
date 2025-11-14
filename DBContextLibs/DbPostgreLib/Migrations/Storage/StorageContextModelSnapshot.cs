@@ -47,7 +47,7 @@ namespace DbPostgreLib.Migrations.Storage
                     b.ToTable("RulesFilesAccess");
                 });
 
-            modelBuilder.Entity("SharedLib.CellTableExcelIndexFileModel", b =>
+            modelBuilder.Entity("SharedLib.CellTableExcelIndexFileModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,6 +59,7 @@ namespace DbPostgreLib.Migrations.Storage
                         .HasColumnType("bigint");
 
                     b.Property<string>("Data")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long>("RowNum")
@@ -81,7 +82,7 @@ namespace DbPostgreLib.Migrations.Storage
                     b.ToTable("DataTablesExcelIndexesFiles");
                 });
 
-            modelBuilder.Entity("SharedLib.CellTableWordIndexFileModel", b =>
+            modelBuilder.Entity("SharedLib.CellTableWordIndexFileModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,6 +94,10 @@ namespace DbPostgreLib.Migrations.Storage
                         .HasColumnType("bigint");
 
                     b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ParagraphId")
                         .HasColumnType("text");
 
                     b.Property<long>("RowNum")
@@ -115,7 +120,7 @@ namespace DbPostgreLib.Migrations.Storage
                     b.ToTable("DataTablesWordIndexesFiles");
                 });
 
-            modelBuilder.Entity("SharedLib.ParagraphWordIndexFileModel", b =>
+            modelBuilder.Entity("SharedLib.ParagraphWordIndexFileModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -124,6 +129,9 @@ namespace DbPostgreLib.Migrations.Storage
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Data")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ParagraphId")
                         .HasColumnType("text");
 
                     b.Property<int>("SortIndex")
@@ -143,7 +151,7 @@ namespace DbPostgreLib.Migrations.Storage
                     b.ToTable("ParagraphsWordIndexesFiles");
                 });
 
-            modelBuilder.Entity("SharedLib.SheetExcelIndexFileModel", b =>
+            modelBuilder.Entity("SharedLib.SheetExcelIndexFileModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -282,7 +290,7 @@ namespace DbPostgreLib.Migrations.Storage
                     b.ToTable("CloudFiles");
                 });
 
-            modelBuilder.Entity("SharedLib.TableWordIndexFileModel", b =>
+            modelBuilder.Entity("SharedLib.TableWordIndexFileModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -361,10 +369,10 @@ namespace DbPostgreLib.Migrations.Storage
                     b.Navigation("StoreFile");
                 });
 
-            modelBuilder.Entity("SharedLib.CellTableExcelIndexFileModel", b =>
+            modelBuilder.Entity("SharedLib.CellTableExcelIndexFileModelDB", b =>
                 {
-                    b.HasOne("SharedLib.SheetExcelIndexFileModel", "SheetExcelFile")
-                        .WithMany()
+                    b.HasOne("SharedLib.SheetExcelIndexFileModelDB", "SheetExcelFile")
+                        .WithMany("Cells")
                         .HasForeignKey("SheetExcelFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -380,7 +388,7 @@ namespace DbPostgreLib.Migrations.Storage
                     b.Navigation("StoreFile");
                 });
 
-            modelBuilder.Entity("SharedLib.CellTableWordIndexFileModel", b =>
+            modelBuilder.Entity("SharedLib.CellTableWordIndexFileModelDB", b =>
                 {
                     b.HasOne("SharedLib.StorageFileModelDB", "StoreFile")
                         .WithMany()
@@ -388,8 +396,8 @@ namespace DbPostgreLib.Migrations.Storage
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SharedLib.TableWordIndexFileModel", "TableWordFile")
-                        .WithMany()
+                    b.HasOne("SharedLib.TableWordIndexFileModelDB", "TableWordFile")
+                        .WithMany("Data")
                         .HasForeignKey("TableWordFileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -399,7 +407,7 @@ namespace DbPostgreLib.Migrations.Storage
                     b.Navigation("TableWordFile");
                 });
 
-            modelBuilder.Entity("SharedLib.ParagraphWordIndexFileModel", b =>
+            modelBuilder.Entity("SharedLib.ParagraphWordIndexFileModelDB", b =>
                 {
                     b.HasOne("SharedLib.StorageFileModelDB", "StoreFile")
                         .WithMany()
@@ -410,7 +418,7 @@ namespace DbPostgreLib.Migrations.Storage
                     b.Navigation("StoreFile");
                 });
 
-            modelBuilder.Entity("SharedLib.SheetExcelIndexFileModel", b =>
+            modelBuilder.Entity("SharedLib.SheetExcelIndexFileModelDB", b =>
                 {
                     b.HasOne("SharedLib.StorageFileModelDB", "StoreFile")
                         .WithMany()
@@ -421,7 +429,7 @@ namespace DbPostgreLib.Migrations.Storage
                     b.Navigation("StoreFile");
                 });
 
-            modelBuilder.Entity("SharedLib.TableWordIndexFileModel", b =>
+            modelBuilder.Entity("SharedLib.TableWordIndexFileModelDB", b =>
                 {
                     b.HasOne("SharedLib.StorageFileModelDB", "StoreFile")
                         .WithMany()
@@ -430,11 +438,21 @@ namespace DbPostgreLib.Migrations.Storage
                         .IsRequired();
 
                     b.Navigation("StoreFile");
+                });
+
+            modelBuilder.Entity("SharedLib.SheetExcelIndexFileModelDB", b =>
+                {
+                    b.Navigation("Cells");
                 });
 
             modelBuilder.Entity("SharedLib.StorageFileModelDB", b =>
                 {
                     b.Navigation("AccessRules");
+                });
+
+            modelBuilder.Entity("SharedLib.TableWordIndexFileModelDB", b =>
+                {
+                    b.Navigation("Data");
                 });
 #pragma warning restore 612, 618
         }

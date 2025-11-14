@@ -19,5 +19,11 @@ public abstract class CellTableAbstractIndexFileModel : IndexFileBaseModel
     public uint ColNum { get; set; }
 
     /// <inheritdoc/>
-    public string? Data { get; set; }
+    public required string Data { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"[r:{RowNum};c:{ColNum};] {Data}";
+    }
 }

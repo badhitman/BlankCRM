@@ -170,6 +170,12 @@ public class Program
 
         using (IServiceScope ss = app.Services.CreateScope())
         {
+#if DEBUG
+            IFilesStorage _fs = ss.ServiceProvider.GetRequiredService<IFilesStorage>();
+            ResponseBaseModel? v = _fs.IndexingFileAsync(new IndexingFileModel() { FileId = 1 }).Result;
+            v = _fs.IndexingFileAsync(new IndexingFileModel() { FileId = 2 }).Result;
+#endif
+
             IDbContextFactory<NLogsContext> logsDbFactory = ss.ServiceProvider.GetRequiredService<IDbContextFactory<NLogsContext>>();
             NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
             await ctx.Logs.AnyAsync();
