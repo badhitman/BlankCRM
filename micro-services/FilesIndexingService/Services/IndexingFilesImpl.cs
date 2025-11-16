@@ -21,28 +21,22 @@ namespace FileIndexingService;
 /// </summary>
 public class IndexingFilesImpl(
     IDbContextFactory<FilesIndexingContext> fileIndexingDbFactory,
-    IMongoDatabase mongoFs,
-    ILogger<IndexingFilesImpl> loggerRepo) : IFilesIndexing
+    IMongoDatabase mongoFs) : IFilesIndexing
 {
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> IndexingFileAsync(StorageFileMiddleModel req, CancellationToken token = default)
     {
-        //using FileIndexingContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
-        //StorageFileModelDB file_db = await context
-        //    .CloudFiles
-        //    .FirstAsync(x => x.Id == req.FileId, cancellationToken: token);
-
-        //return Path.GetExtension(file_db.FileName) switch
-        //{
-        //    ".xlsx" => await SpreadsheetDocumentHandle(file_db, context, token),
-        //    ".docx" => await WordprocessingDocumentHandle(file_db, context, token),
-        //    _ => ResponseBaseModel.CreateInfo("file format not support"),
-        //};
+        return Path.GetExtension(req.FileName) switch
+        {
+            ".xlsx" => await SpreadsheetDocumentHandle(req,  token),
+            ".docx" => await WordprocessingDocumentHandle(req,  token),
+            _ => ResponseBaseModel.CreateInfo("file format not support"),
+        };
 
         throw new NotImplementedException();
     }
 
-    async Task<ResponseBaseModel> SpreadsheetDocumentHandle(StorageFileModelDB file_db, CancellationToken token = default)
+    async Task<ResponseBaseModel> SpreadsheetDocumentHandle(StorageFileMiddleModel file_db, CancellationToken token = default)
     {
         FilesIndexingContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
 
@@ -129,7 +123,7 @@ public class IndexingFilesImpl(
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
-    async Task<ResponseBaseModel> WordprocessingDocumentHandle(StorageFileModelDB file_db, CancellationToken token = default)
+    async Task<ResponseBaseModel> WordprocessingDocumentHandle(StorageFileMiddleModel file_db, CancellationToken token = default)
     {
         FilesIndexingContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
 

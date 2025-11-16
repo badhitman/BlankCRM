@@ -152,20 +152,6 @@ public class Program
 
 
         IHost app = builder.Build();
-
-        using (IServiceScope ss = app.Services.CreateScope())
-        {
-            IDbContextFactory<NLogsContext> logsDbFactory = ss.ServiceProvider.GetRequiredService<IDbContextFactory<NLogsContext>>();
-            NLogsContext ctx = await logsDbFactory.CreateDbContextAsync();
-            await ctx.Logs.AnyAsync();
-
-            WebConfigModel wc_main = ss.ServiceProvider.GetRequiredService<WebConfigModel>();
-            IWebTransmission webRemoteCall = ss.ServiceProvider.GetRequiredService<IWebTransmission>();
-            TelegramBotConfigModel wc_remote = await webRemoteCall.GetWebConfigAsync();
-            if (Uri.TryCreate(wc_remote.BaseUri, UriKind.Absolute, out _))
-                wc_main.Update(wc_remote.BaseUri);
-        }
-
         await app.RunAsync();
     }
 }
