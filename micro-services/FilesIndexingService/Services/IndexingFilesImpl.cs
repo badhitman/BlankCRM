@@ -28,12 +28,10 @@ public class IndexingFilesImpl(
     {
         return Path.GetExtension(req.FileName) switch
         {
-            ".xlsx" => await SpreadsheetDocumentHandle(req,  token),
-            ".docx" => await WordprocessingDocumentHandle(req,  token),
+            ".xlsx" => await SpreadsheetDocumentHandle(req, token),
+            ".docx" => await WordprocessingDocumentHandle(req, token),
             _ => ResponseBaseModel.CreateInfo("file format not support"),
         };
-
-        throw new NotImplementedException();
     }
 
     async Task<ResponseBaseModel> SpreadsheetDocumentHandle(StorageFileMiddleModel file_db, CancellationToken token = default)
@@ -182,6 +180,10 @@ public class IndexingFilesImpl(
                             StoreFileId = file_db.Id,
                             TableWordFile = _tableDb,
                         };
+                        DocumentFormat.OpenXml.Wordprocessing.Paragraph[] paragraphs = [.. _cell.Elements<DocumentFormat.OpenXml.Wordprocessing.Paragraph>()];
+                        if (paragraphs.Length == 1)
+                            _colDataDb.ParagraphId = paragraphs[0].ParagraphId;
+
                         _cellTablesDb.Add(_colDataDb);
                         _colsSort++;
                     }
@@ -200,7 +202,10 @@ public class IndexingFilesImpl(
             await context.AddRangeAsync(_paragraphs, token);
 
         if (_tablesDb.Count != 0 || _paragraphs.Count != 0)
+        {
+            await context.SaveChangesAsync(token);
             await transaction.CommitAsync(token);
+        }
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }

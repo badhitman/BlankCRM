@@ -218,11 +218,11 @@ public class Program
             ;
 
         builder.AddProject<Projects.BlankBlazorApp>("blankblazorapp")
-            .WithReference(storageService)
-            .WaitFor(storageService)
-
             .WithReference(filesIndexingService)
             .WaitFor(filesIndexingService)
+
+            .WithReference(storageService)
+            .WaitFor(storageService)
 
             .WithReference(helpdeskService)
             .WaitFor(helpdeskService)

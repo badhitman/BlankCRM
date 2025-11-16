@@ -517,6 +517,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string CLOUD_CONTROLLER_NAME = "cloud";
 
         /// <summary>
+        /// Indexing
+        /// </summary>
+        public const string INDEXING_CONTROLLER_NAME = "indexing";
+
+        /// <summary>
         /// КЛАДР 4.0
         /// </summary>
         public const string KLADR_CONTROLLER_NAME = "kladr";

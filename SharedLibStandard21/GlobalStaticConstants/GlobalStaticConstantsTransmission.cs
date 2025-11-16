@@ -880,7 +880,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string SaveFileReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CLOUD_CONTROLLER_NAME, Routes.FILE_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string IndexingFileReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CLOUD_CONTROLLER_NAME, Routes.FILE_CONTROLLER_NAME, Routes.INDEXING_ACTION_NAME);
+        public readonly static string IndexingFileReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.INDEXING_CONTROLLER_NAME, Routes.FILE_CONTROLLER_NAME, Routes.INDEXING_ACTION_NAME);
         // IndexesFileReceive
 
         /// <inheritdoc/>
