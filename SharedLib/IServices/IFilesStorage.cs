@@ -31,9 +31,4 @@ public interface IFilesStorage
     /// Save file into storage
     /// </summary>
     public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageFileMetadataModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// IndexingFileAsync
-    /// </summary>
-    public Task<ResponseBaseModel> IndexingFileAsync(IndexingFileModel req, CancellationToken token = default);
 }

@@ -48,24 +48,4 @@ public partial class StorageLayerContext : DbContext
 
     /// <inheritdoc/>
     public DbSet<AccessFileRuleModelDB> RulesFilesAccess { get; set; } = default!;
-
-    #region Word
-    /// <inheritdoc/>
-    public DbSet<ParagraphWordIndexFileModelDB> ParagraphsWordIndexesFiles { get; set; } = default!;
-
-
-    /// <inheritdoc/>
-    public DbSet<TableWordIndexFileModelDB> TablesWordIndexesFiles { get; set; } = default!;
-
-    /// <inheritdoc/>
-    public DbSet<CellTableWordIndexFileModelDB> DataTablesWordIndexesFiles { get; set; } = default!;
-    #endregion
-
-    #region Excel
-    /// <inheritdoc/>
-    public DbSet<SheetExcelIndexFileModelDB> SheetsExcelIndexesFiles { get; set; } = default!;
-
-    /// <inheritdoc/>
-    public DbSet<CellTableExcelIndexFileModelDB> DataTablesExcelIndexesFiles { get; set; } = default!;
-    #endregion
 }

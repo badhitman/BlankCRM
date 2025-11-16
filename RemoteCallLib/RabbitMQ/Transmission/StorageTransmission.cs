@@ -38,8 +38,4 @@ public class StorageTransmission(IRabbitClient rabbitClient) : IStorageTransmiss
     /// <inheritdoc/>
     public async Task<TResponseModel<FilesAreaMetadataModel[]>> FilesAreaGetMetadataAsync(FilesAreaMetadataRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<FilesAreaMetadataModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.FilesAreaGetMetadataReceive, req, token: token) ?? new();
-
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> IndexingFileAsync(IndexingFileModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.IndexingFileReceive, req, token: token) ?? new();
 }

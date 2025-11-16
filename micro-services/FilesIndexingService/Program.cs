@@ -14,7 +14,7 @@ using SharedLib;
 using System.Diagnostics.Metrics;
 using System.Text;
 
-namespace StorageService;
+namespace FileIndexingService;
 
 /// <summary>
 /// Program
@@ -92,10 +92,7 @@ public class Program
 
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
-            .Configure<WebConfigModel>(builder.Configuration.GetSection(WebConfigModel.Configuration))
             ;
-
-        builder.Services.AddSingleton<WebConfigModel>();
 
         MongoConfigModel _jo = builder.Configuration.GetSection(MongoConfigModel.Configuration).Get<MongoConfigModel>()!;
         string _mcs = _jo.ToString();
@@ -106,41 +103,28 @@ public class Program
 
         builder.Services.AddOptions();
 
-        string connectionStorage = builder.Configuration.GetConnectionString($"CloudParametersConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'CloudParametersConnection{_modePrefix}' not found.");
-        builder.Services.AddDbContextFactory<StorageContext>(opt =>
+        string connectionStorage = builder.Configuration.GetConnectionString($"FilesIndexingConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'FilesIndexingConnection{_modePrefix}' not found.");
+        builder.Services.AddDbContextFactory<FilesIndexingContext>(opt =>
             opt.UseNpgsql(connectionStorage));
-
-        string connectionNlog = builder.Configuration.GetConnectionString($"NLogsConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'NLogsConnection{_modePrefix}' not found.");
-        builder.Services.AddDbContextFactory<NLogsContext>(opt =>
-            {
-                opt.UseNpgsql(connectionNlog);
-#if DEBUG
-                opt.EnableSensitiveDataLogging(true);
-                opt.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
-#endif
-            });
 
         string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
         #region MQ Transmission (remote methods call)
         builder.Services
             .AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 
-        builder.Services
-            .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
-            .AddScoped<ITelegramTransmission, TelegramTransmission>()
-            .AddScoped<IIdentityTransmission, IdentityTransmission>()
-            .AddScoped<ICommerceTransmission, CommerceTransmission>()
-            .AddScoped<IWebTransmission, WebTransmission>()
-            .AddScoped<IFilesIndexing, FileIndexingTransmission>()
-            ;
+        //builder.Services
+        //    .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
+        //    .AddScoped<ITelegramTransmission, TelegramTransmission>()
+        //    .AddScoped<IIdentityTransmission, IdentityTransmission>()
+        //    .AddScoped<ICommerceTransmission, CommerceTransmission>()
+        //    .AddScoped<IWebTransmission, WebTransmission>()
+        //    ;
         //
-        builder.Services.StorageRegisterMqListeners();
+        builder.Services.FileIndexingRegisterMqListeners();
         #endregion
 
         builder.Services
-            .AddScoped<IParametersStorage, ParametersStorage>()
-            .AddScoped<IFilesStorage, StorageFilesImpl>()
-            .AddScoped<ILogsService, LogsNavigationImpl>()
+            .AddScoped<IFilesIndexing, IndexingFilesImpl>()
             ;
 
         // Custom metrics for the application

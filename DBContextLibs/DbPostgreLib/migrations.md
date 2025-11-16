@@ -34,6 +34,11 @@ Update-Database -Context StorageContext -Project DbPostgreLib -StartupProject St
 ```
 
 ```
+Add-Migration FilesIndexingContext001 -Context FilesIndexingContext -Project DbPostgreLib -StartupProject FilesIndexingService
+Update-Database -Context FilesIndexingContext -Project DbPostgreLib -StartupProject FilesIndexingService
+```
+
+```
 Add-Migration TelegramBotContext001 -Context TelegramBotContext -Project DbPostgreLib -StartupProject TelegramBotService
 Update-Database -Context TelegramBotContext -Project DbPostgreLib -StartupProject TelegramBotService
 ```

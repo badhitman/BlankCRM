@@ -5,12 +5,12 @@
 namespace SharedLib;
 
 /// <summary>
-/// IndexesFileModel
+/// Индексирование файлов
 /// </summary>
-public class IndexingFileModel
+public interface IFilesIndexing
 {
     /// <summary>
-    /// FileId
+    /// IndexingFileAsync
     /// </summary>
-    public int FileId { get; set; }
+    public Task<ResponseBaseModel> IndexingFileAsync(StorageFileMiddleModel req, CancellationToken token = default);
 }

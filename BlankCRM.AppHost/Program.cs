@@ -163,6 +163,12 @@ public class Program
             ;
 #endif
 
+        IResourceBuilder<ProjectResource> filesIndexingService = builder.AddProject<Projects.FilesIndexingService>("filesindexingservice")
+            .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
+            .WithReference(builder.AddConnectionString($"FilesIndexingConnection{_modePrefix}"))
+            ;
+
         IResourceBuilder<ProjectResource> kladrService = builder.AddProject<Projects.KladrService>("kladreservice")
             .WithEnvironment(act => rabbitConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
             .WithEnvironment(act => mongoConfig.ForEach(x => act.EnvironmentVariables.Add(x.Key, x.Value ?? "")))
@@ -214,6 +220,9 @@ public class Program
         builder.AddProject<Projects.BlankBlazorApp>("blankblazorapp")
             .WithReference(storageService)
             .WaitFor(storageService)
+
+            .WithReference(filesIndexingService)
+            .WaitFor(filesIndexingService)
 
             .WithReference(helpdeskService)
             .WaitFor(helpdeskService)

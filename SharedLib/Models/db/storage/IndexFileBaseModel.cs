@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
@@ -9,6 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// IndexFileBaseModel
 /// </summary>
+[Index(nameof(StoreFileId))]
 public class IndexFileBaseModel
 {
     /// <summary>
@@ -16,11 +18,6 @@ public class IndexFileBaseModel
     /// </summary>
     [Key]
     public int Id { get; set; }
-
-    /// <summary>
-    /// StoreFile
-    /// </summary>
-    public StorageFileModelDB? StoreFile { get; set; }
 
     /// <summary>
     /// StoreFile
