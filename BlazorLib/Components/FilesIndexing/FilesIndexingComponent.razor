@@ -1,0 +1,9 @@
+﻿@switch (Path.GetExtension(FileObject.FileName))
+{
+    case ".xlsx":
+        <FilesIndexingXLSX FileId="FileObject.Id" />
+        break;
+    case ".docx":
+        <FilesIndexingDOCX FileId="FileObject.Id" />
+        break;
+}

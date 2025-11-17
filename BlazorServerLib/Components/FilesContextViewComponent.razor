@@ -1,4 +1,5 @@
-﻿@using MudBlazor
+﻿@using BlazorLib.Components.FilesIndexing
+@using MudBlazor
 @using System.Globalization
 @using static SharedLib.GlobalStaticConstantsRoutes
 @inherits MetaPropertyBaseComponent
@@ -37,7 +38,7 @@
             <MudTd DataLabel="ContentType">@context.ApplicationName</MudTd>
         }
         <MudTd DataLabel="FileName">
-            <a target="_blank" href="/cloud-fs/read/@context.Id/@context.FileName">@context.FileName</a> <sup title="скачать" style="cursor:pointer;" @onclick="() => FileManage(context)" class="bi bi-cloud-download-fill"></sup>
+            <a target="_blank" href="/cloud-fs/read/@context.Id/@context.FileName">@context.FileName</a> <sup style="cursor:pointer;" @onclick="() => FileManage(context)" class="bi bi-server"></sup>
         </MudTd>
         <MudTd DataLabel="FileLength">@(GlobalToolsStandard.SizeDataAsString(context.FileLength))</MudTd>
         <MudTd DataLabel="ContentType">@context.ContentType</MudTd>
@@ -76,7 +77,9 @@
                                        PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
                                        PropertyName="@Routes.METADATA_CONTROLLER_NAME"
                                        Title="Теги"
-                                       OwnerPrimaryKey="@_selectedFile.Id" />
+                                       OwnerPrimaryKey="_selectedFile.Id" />
+                    <br />
+                    <FilesIndexingComponent FileObject="_selectedFile" />
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group" role="group" aria-label="Basic example">

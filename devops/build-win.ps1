@@ -11,6 +11,7 @@ dotnet publish -c Debug --output C:/Users/User/Documents/publish/IdentityService
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/CommerceService C:/Users/User/source/repos/BlankCRM/micro-services/CommerceService/CommerceService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/BankService C:/Users/User/source/repos/BlankCRM/micro-services/BankService/BankService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/StorageService C:/Users/User/source/repos/BlankCRM/micro-services/StorageService/StorageService.csproj
+dotnet publish -c Debug --output C:/Users/User/Documents/publish/FilesIndexingService C:/Users/User/source/repos/BlankCRM/micro-services/FilesIndexingService/FilesIndexingService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/KladrService C:/Users/User/source/repos/BlankCRM/micro-services/KladrService/KladrService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/LdapService C:/Users/User/source/repos/BlankCRM/micro-services/LdapService/LdapService.csproj
 dotnet publish -c Debug --output C:/Users/User/Documents/publish/ApiRestService C:/Users/User/source/repos/BlankCRM/micro-services/ApiRestService/ApiRestService.csproj

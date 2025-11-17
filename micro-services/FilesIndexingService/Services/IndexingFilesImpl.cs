@@ -2,17 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
-using DocumentFormat.OpenXml.Packaging;
-using ImageMagick;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using MongoDB.Bson;
-using MongoDB.Driver;
+using DocumentFormat.OpenXml.Packaging;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver.GridFS;
+using MongoDB.Driver;
+using MongoDB.Bson;
 using SharedLib;
-using System.Text.RegularExpressions;
-using static SharedLib.GlobalStaticConstantsRoutes;
+using DbcLib;
 
 namespace FileIndexingService;
 
