@@ -18,6 +18,16 @@ else if (wordFile is null)
 else
 {
     <div class="alert alert-primary" role="alert">
-        A simple primary alert—check it out!
+        @foreach (object _nodeElement in NodesList)
+        {
+            if (_nodeElement is TableWordIndexFileModelDB _tableNode)
+            {
+                <TableWordViewComponent TableData="@_tableNode.Data"/>
+            }
+            else if (_nodeElement is ParagraphWordIndexFileModelDB _parNode)
+            {
+                <p>@_parNode.Data</p>
+            }
+        }
     </div>
 }

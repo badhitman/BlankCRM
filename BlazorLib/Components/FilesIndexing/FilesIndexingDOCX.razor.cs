@@ -13,6 +13,8 @@ public partial class FilesIndexingDOCX : FilesIndexingViewBase
 {
     WordprocessingDocumentIndexingFileResponseModel? wordFile;
 
+    List<object> NodesList = [];
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
@@ -30,5 +32,17 @@ public partial class FilesIndexingDOCX : FilesIndexingViewBase
         wordFile = _file.Response;
         SnackBarRepo.ShowMessagesResponse(_file.Messages);
         await SetBusyAsync(false);
+
+        if (wordFile?.Tables is null || wordFile.Paragraphs is null)
+            return;
+
+        for (int i = 0; i < wordFile.Tables.Count + wordFile.Paragraphs.Count; i++)
+        {
+            TableWordIndexFileModelDB? _findTable = wordFile.Tables.FirstOrDefault(x => x.SortIndex == i);
+            if (_findTable is not null)
+                NodesList.Add(_findTable);
+            else
+                NodesList.Add(wordFile.Paragraphs.First(x => x.SortIndex == i));
+        }
     }
 }

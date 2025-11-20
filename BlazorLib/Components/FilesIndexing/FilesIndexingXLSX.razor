@@ -18,7 +18,7 @@ else if (excelFile?.Sheets is null)
 else
 {
     <div class="alert alert-primary" role="alert">
-        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer>
             @foreach (SheetExcelIndexFileModelDB _sheet in excelFile.Sheets)
             {
                 <MudTabPanel Text="@_sheet.Title">
