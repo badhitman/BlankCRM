@@ -1,9 +1,22 @@
-﻿@switch (Path.GetExtension(FileObject.FileName))
+﻿<style>
+    .mud-tab-panel {
+        overflow: auto;
+    }
+</style>
+@switch (Path.GetExtension(FileObject.FileName))
 {
     case ".xlsx":
-        <FilesIndexingXLSX FileId="FileObject.Id" />
+        <MudExpansionPanels>
+            <MudExpansionPanel Text="View">
+                <FilesIndexingXLSX FileId="FileObject.Id" />
+            </MudExpansionPanel>
+        </MudExpansionPanels>
         break;
     case ".docx":
-        <FilesIndexingDOCX FileId="FileObject.Id" />
+        <MudExpansionPanels>
+            <MudExpansionPanel Text="View">
+                <FilesIndexingDOCX FileId="FileObject.Id" />
+            </MudExpansionPanel>
+        </MudExpansionPanels>
         break;
 }

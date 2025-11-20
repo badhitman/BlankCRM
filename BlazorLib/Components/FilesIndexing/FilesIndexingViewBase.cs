@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using SharedLib;
 
 namespace BlazorLib.Components.FilesIndexing;
 
@@ -12,13 +13,11 @@ namespace BlazorLib.Components.FilesIndexing;
 public class FilesIndexingViewBase : BlazorBusyComponentBaseAuthModel
 {
     /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public required int FileId { get; set; }
+    [Inject]
+    protected IFilesIndexing FilesIndexingRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-
-    }
+    [Parameter, EditorRequired]
+    public required int FileId { get; set; }
 }

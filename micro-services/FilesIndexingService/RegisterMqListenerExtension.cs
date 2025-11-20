@@ -18,8 +18,9 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection FileIndexingRegisterMqListeners(this IServiceCollection services)
     {
         return services
-
             .RegisterMqListener<IndexingFileReceive, StorageFileMiddleModel, ResponseBaseModel>()
+            .RegisterMqListener<SpreadsheetDocumentGetIndexReceive, TAuthRequestModel<int>, TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>>()
+            .RegisterMqListener<WordprocessingDocumentGetIndexReceive, TAuthRequestModel<int>, TResponseModel<WordprocessingDocumentIndexingFileResponseModel>>()
             ;
     }
 }

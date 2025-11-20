@@ -801,6 +801,12 @@ public static partial class GlobalStaticConstantsRoutes
         /// </summary>
         public const string PROPERTY_CONTROLLER_NAME = "property";
 
+        /// <inheritdoc/>
+        public const string SPREADSHEET_CONTROLLER_NAME = "spreadsheet";
+
+        /// <inheritdoc/>
+        public const string WORDPROCESSING_CONTROLLER_NAME = "wordprocessing";
+
         /// <summary>
         /// Properties
         /// </summary>
@@ -1428,11 +1434,6 @@ public static partial class GlobalStaticConstantsRoutes
         /// Update
         /// </summary>
         public const string UPDATE_ACTION_NAME = "update";
-
-        /// <summary>
-        /// Indexing
-        /// </summary>
-        public const string INDEXING_ACTION_NAME = "indexing";
 
         /// <summary>
         /// Initial

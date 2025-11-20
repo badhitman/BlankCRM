@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore.Storage;
 using DocumentFormat.OpenXml.Packaging;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver.GridFS;
@@ -14,10 +13,11 @@ using DbcLib;
 namespace FileIndexingService;
 
 /// <summary>
-/// Индексирование файлов приложений IMongoDatabase mongoFs = mongoCli.GetDatabase("");
+/// Индексирование файлов приложений
 /// </summary>
 public class IndexingFilesImpl(
     IDbContextFactory<FilesIndexingContext> fileIndexingDbFactory,
+    IStorageTransmission storagrRepo,
     IMongoDatabase mongoFs) : IFilesIndexing
 {
     /// <inheritdoc/>
@@ -29,6 +29,70 @@ public class IndexingFilesImpl(
             ".docx" => await WordprocessingDocumentHandle(req, token),
             _ => ResponseBaseModel.CreateInfo("file format not support"),
         };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>> SpreadsheetDocumentGetIndexAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    {
+        TAuthRequestModel<RequestFileReadModel> fileReq = new()
+        {
+            SenderActionUserId = req.SenderActionUserId,
+            Payload = new()
+            {
+                FileId = req.Payload
+            }
+        };
+        TResponseModel<FileContentModel>? fileData = await storagrRepo.ReadFileAsync(fileReq, token);
+        TResponseModel<SpreadsheetDocumentIndexingFileResponseModel> res = new()
+        {
+            Messages = fileData.Messages
+        };
+
+        if (!res.Success())
+            return res;
+
+        FilesIndexingContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
+        res.Response = new()
+        {
+            Sheets = await context.SheetsExcelIndexesFiles
+            .Where(x => x.StoreFileId == req.Payload)
+            .Include(x => x.Cells)
+            .ToListAsync(cancellationToken: token)
+        };
+
+        return res;
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>> WordprocessingDocumentGetIndexAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    {
+        TAuthRequestModel<RequestFileReadModel> fileReq = new()
+        {
+            SenderActionUserId = req.SenderActionUserId,
+            Payload = new()
+            {
+                FileId = req.Payload
+            }
+        };
+        TResponseModel<FileContentModel>? fileData = await storagrRepo.ReadFileAsync(fileReq, token);
+
+
+        TResponseModel<WordprocessingDocumentIndexingFileResponseModel> res = new()
+        {
+            Messages = fileData.Messages
+        };
+
+        if (!res.Success())
+            return res;
+
+        FilesIndexingContext context = await fileIndexingDbFactory.CreateDbContextAsync(token);
+        res.Response = new()
+        {
+            Paragraphs = await context.ParagraphsWordIndexesFiles.Where(x => x.StoreFileId == req.Payload).ToListAsync(cancellationToken: token),
+            Tables = await context.TablesWordIndexesFiles.Where(x => x.StoreFileId == req.Payload).ToListAsync(cancellationToken: token)
+        };
+
+        return res;
     }
 
     async Task<ResponseBaseModel> SpreadsheetDocumentHandle(StorageFileMiddleModel file_db, CancellationToken token = default)
@@ -52,6 +116,19 @@ public class IndexingFilesImpl(
         if (sheets is null)
             return ResponseBaseModel.CreateError("Workbook.Sheets is null");
 
+        List<SheetExcelIndexFileModelDB> sheetsDb = ExcelRead(file_db.Id, workbookPart, sheets);
+
+        if (sheetsDb.Count != 0)
+        {
+            await context.AddRangeAsync(sheetsDb, token);
+            await context.SaveChangesAsync(token);
+        }
+
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    static List<SheetExcelIndexFileModelDB> ExcelRead(int fileId, WorkbookPart workbookPart, DocumentFormat.OpenXml.Spreadsheet.Sheets sheets)
+    {
         List<string> sharedStrings = [];
         SharedStringTablePart? sharedStringTablePart = workbookPart.SharedStringTablePart;
 
@@ -61,7 +138,6 @@ public class IndexingFilesImpl(
                 sharedStrings.Add(item.InnerText);
         }
 
-        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         List<SheetExcelIndexFileModelDB> sheetsDb = [];
         foreach (WorksheetPart worksheetPart in workbookPart.WorksheetParts)
         {
@@ -71,7 +147,7 @@ public class IndexingFilesImpl(
             {
                 Title = correspondingSheet.Name?.Value ?? "-no name-",
                 Cells = [],
-                StoreFileId = file_db.Id,
+                StoreFileId = fileId,
                 SortIndex = sheetsDb.Count,
             };
 
@@ -94,7 +170,7 @@ public class IndexingFilesImpl(
                             _newSheetDb.Cells.Add(new CellTableExcelIndexFileModelDB()
                             {
                                 SheetExcelFile = _newSheetDb,
-                                StoreFileId = file_db.Id,
+                                StoreFileId = fileId,
                                 RowNum = _rowNum,
                                 ColNum = _colNum,
                                 Data = _cellVal,
@@ -107,15 +183,7 @@ public class IndexingFilesImpl(
             }
             sheetsDb.Add(_newSheetDb);
         }
-
-        if (sheetsDb.Count != 0)
-        {
-            await context.AddRangeAsync(sheetsDb, token);
-            await context.SaveChangesAsync(token);
-            await transaction.CommitAsync(token);
-        }
-
-        return ResponseBaseModel.CreateSuccess("Ok");
+        return sheetsDb;
     }
 
     async Task<ResponseBaseModel> WordprocessingDocumentHandle(StorageFileMiddleModel file_db, CancellationToken token = default)
@@ -133,20 +201,33 @@ public class IndexingFilesImpl(
         if (wordprocessingDocument.MainDocumentPart?.Document.Body is null)
             return ResponseBaseModel.CreateError("word-processing document [MainDocumentPart?.Document.Body] is null");
 
-        DocumentFormat.OpenXml.Wordprocessing.Document document = wordprocessingDocument.MainDocumentPart.Document;
-        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+        (List<ParagraphWordIndexFileModelDB> _paragraphs, List<TableWordIndexFileModelDB> _tablesDb) = WordRead(file_db.Id, wordprocessingDocument.MainDocumentPart.Document.Body);
 
+        if (_tablesDb.Count != 0)
+            await context.AddRangeAsync(_tablesDb, token);
+
+        if (_paragraphs.Count != 0)
+            await context.AddRangeAsync(_paragraphs, token);
+
+        if (_tablesDb.Count != 0 || _paragraphs.Count != 0)
+            await context.SaveChangesAsync(token);
+
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    static (List<ParagraphWordIndexFileModelDB> paragraphs, List<TableWordIndexFileModelDB> tables) WordRead(int fileId, DocumentFormat.OpenXml.Wordprocessing.Body bodyDocument)
+    {
         List<ParagraphWordIndexFileModelDB> _paragraphs = [];
         List<TableWordIndexFileModelDB> _tablesDb = [];
         int _sortIndex = 0;
-        foreach (DocumentFormat.OpenXml.OpenXmlElement element in document.Body.Elements())
+        foreach (DocumentFormat.OpenXml.OpenXmlElement element in bodyDocument.Elements())
         {
             if (element is DocumentFormat.OpenXml.Wordprocessing.Paragraph _paragraph)
             {
                 DocumentFormat.OpenXml.HexBinaryValue? _paragraphId = _paragraph.ParagraphId;
                 ParagraphWordIndexFileModelDB _par = new()
                 {
-                    StoreFileId = file_db.Id,
+                    StoreFileId = fileId,
                     SortIndex = _sortIndex,
                     Data = _paragraph.InnerText,
                     ParagraphId = _paragraphId?.Value,
@@ -159,7 +240,7 @@ public class IndexingFilesImpl(
 
                 TableWordIndexFileModelDB _tableDb = new()
                 {
-                    StoreFileId = file_db.Id,
+                    StoreFileId = fileId,
                     SortIndex = _sortIndex,
                     Data = [],
                 };
@@ -174,7 +255,7 @@ public class IndexingFilesImpl(
                             ColNum = _colsSort,
                             RowNum = _rowsSort,
                             Data = _cell.InnerText,
-                            StoreFileId = file_db.Id,
+                            StoreFileId = fileId,
                             TableWordFile = _tableDb,
                         };
                         DocumentFormat.OpenXml.Wordprocessing.Paragraph[] paragraphs = [.. _cell.Elements<DocumentFormat.OpenXml.Wordprocessing.Paragraph>()];
@@ -191,19 +272,6 @@ public class IndexingFilesImpl(
             }
             _sortIndex++;
         }
-
-        if (_tablesDb.Count != 0)
-            await context.AddRangeAsync(_tablesDb, token);
-
-        if (_paragraphs.Count != 0)
-            await context.AddRangeAsync(_paragraphs, token);
-
-        if (_tablesDb.Count != 0 || _paragraphs.Count != 0)
-        {
-            await context.SaveChangesAsync(token);
-            await transaction.CommitAsync(token);
-        }
-
-        return ResponseBaseModel.CreateSuccess("Ok");
+        return (_paragraphs, _tablesDb);
     }
 }

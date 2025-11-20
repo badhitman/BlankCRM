@@ -1,3 +1,23 @@
 @inherits FilesIndexingViewBase
 
-FilesIndexingDOCX
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
+}
+else if (wordFile is null)
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>file not found.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            файл <cite title="файл не найден или нет доступа">отсутствует</cite>
+        </figcaption>
+    </figure>
+}
+else
+{
+    <div class="alert alert-primary" role="alert">
+        A simple primary alertЧcheck it out!
+    </div>
+}

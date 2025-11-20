@@ -112,13 +112,13 @@ public class Program
         builder.Services
             .AddSingleton<IRabbitClient>(x => new RabbitClient(x.GetRequiredService<IOptions<RabbitMQConfigModel>>(), x.GetRequiredService<ILogger<RabbitClient>>(), appName));
 
-        //builder.Services
+        builder.Services
         //    .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
         //    .AddScoped<ITelegramTransmission, TelegramTransmission>()
         //    .AddScoped<IIdentityTransmission, IdentityTransmission>()
         //    .AddScoped<ICommerceTransmission, CommerceTransmission>()
-        //    .AddScoped<IWebTransmission, WebTransmission>()
-        //    ;
+            .AddScoped<IStorageTransmission, StorageTransmission>()
+            ;
         //
         builder.Services.FileIndexingRegisterMqListeners();
         #endregion

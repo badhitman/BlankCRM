@@ -9,8 +9,12 @@ namespace SharedLib;
 /// </summary>
 public interface IFilesIndexing
 {
-    /// <summary>
-    /// IndexingFileAsync
-    /// </summary>
+    /// <inheritdoc/>
     public Task<ResponseBaseModel> IndexingFileAsync(StorageFileMiddleModel req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>> SpreadsheetDocumentGetIndexAsync(TAuthRequestModel<int> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>> WordprocessingDocumentGetIndexAsync(TAuthRequestModel<int> req, CancellationToken token = default);
 }

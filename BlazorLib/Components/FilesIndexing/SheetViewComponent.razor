@@ -1,0 +1,13 @@
+<table class="table table-hover table-striped table-bordered">
+    <tbody>
+        @for (uint _r = 0; _r < maxRowIndex; _r++)
+        {
+            <tr>
+                @for (uint _c = 0; _c < maxColIndex; _c++)
+                {
+                    <td>@GetData(_c, _r)</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

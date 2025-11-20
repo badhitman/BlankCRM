@@ -5,12 +5,14 @@
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
-namespace BlazorLib.Components.FilesIndexing
+namespace BlazorLib.Components.FilesIndexing;
+
+/// <summary>
+/// FilesIndexingComponent
+/// </summary>
+public partial class FilesIndexingComponent
 {
-    public partial class FilesIndexingComponent
-    {
-        /// <inheritdoc/>
-        [Parameter, EditorRequired]
-        public required StorageFileMiddleModel FileObject { get; set; }
-    }
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required StorageFileMiddleModel FileObject { get; set; }
 }

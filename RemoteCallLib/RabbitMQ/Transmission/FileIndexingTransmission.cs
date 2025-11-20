@@ -12,4 +12,13 @@ public class FileIndexingTransmission(IRabbitClient rabbitClient) : IFilesIndexi
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> IndexingFileAsync(StorageFileMiddleModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.IndexingFileReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>> SpreadsheetDocumentGetIndexAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.SpreadsheetDocumentGetIndexFileReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>> WordprocessingDocumentGetIndexAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+     => await rabbitClient.MqRemoteCallAsync<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.WordprocessingDocumentGetIndexFileReceive, req, token: token) ?? new();
+
 }
