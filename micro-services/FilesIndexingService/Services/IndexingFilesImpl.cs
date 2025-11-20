@@ -92,18 +92,6 @@ public class IndexingFilesImpl(
             Paragraphs = await context.ParagraphsWordIndexesFiles.Where(x => x.StoreFileId == req.Payload).ToListAsync(cancellationToken: token),
             Tables = await context.TablesWordIndexesFiles.Where(x => x.StoreFileId == req.Payload).Include(x => x.Data).ToListAsync(cancellationToken: token)
         };
-
-#if DEBUG
-        if (fileData.Response is not null)
-        {
-            using MemoryStream ms = new(fileData.Response.Payload);
-
-            using WordprocessingDocument wordprocessingDocument = WordprocessingDocument.Open(ms, false);
-            if (wordprocessingDocument.MainDocumentPart?.Document.Body is not null)
-                (List<ParagraphWordIndexFileModelDB> _paragraphs, List<TableWordIndexFileModelDB> _tablesDb) = WordRead(fileData.Response.Id, wordprocessingDocument.MainDocumentPart.Document.Body);
-        }
-#endif
-
         return res;
     }
 

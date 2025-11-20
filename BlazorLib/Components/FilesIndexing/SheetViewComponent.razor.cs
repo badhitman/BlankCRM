@@ -7,6 +7,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.FilesIndexing;
 
+/// <summary>
+/// SheetViewComponent
+/// </summary>
 public partial class SheetViewComponent
 {
     /// <inheritdoc/>

@@ -7,6 +7,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.FilesIndexing;
 
+/// <summary>
+/// TableWordViewComponent
+/// </summary>
 public partial class TableWordViewComponent
 {
     /// <inheritdoc/>

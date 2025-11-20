@@ -34,6 +34,7 @@ public partial class ConstructorMainManageComponent : BlazorBusyComponentBaseAut
         await SetBusyAsync();
         await ReadCurrentUser();
         await ReadCurrentMainProject();
+        StateHasChangedCall();
     }
 
     /// <summary>
