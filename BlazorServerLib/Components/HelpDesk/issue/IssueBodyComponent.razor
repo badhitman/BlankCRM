@@ -18,7 +18,7 @@
         <CardHeaderActions>
             @if (IsEditMode)
             {
-                <MudIconButton title="Save" Disabled="@(!IsEdited || !CanSave)" OnClick="SaveIssue" Size="Size.Small" Icon="@Icons.Material.Filled.Save" Color="@(IsEdited ? Color.Primary : Color.Default)" />
+                <MudIconButton title="Save" Disabled="@(!IsEdited || !CanSave)" OnClick="SaveIssue" Size="Size.Small" Icon="@Icons.Material.Filled.Save" Color="@(IsEdited? Color.Primary: Color.Default)" />
                 <MudIconButton title="Cancel" OnClick="CancelEdit" Size="Size.Small" Icon="@Icons.Material.Filled.Cancel" />
             }
             else
@@ -32,7 +32,10 @@
         {
             <CascadingValue Value="RubricMetadataShadow">
                 <CascadingValue Value="RubricSelectAction">
-                    <RubricSelectorComponent @ref="rubricSelector_ref" ModeSelectingRubrics="ModeSelectingRubrics" ShowDisabledRubrics="ShowDisabledRubrics" StartRubric="IssueSource?.RubricIssueId" />
+                    <RubricSelectorComponent ModeSelectingRubrics="ModeSelectingRubrics"
+                                             ShowDisabledRubrics="ShowDisabledRubrics"
+                                             StartRubric="IssueSource?.RubricIssueId"
+                                             @ref="rubricSelector_ref" />
                 </CascadingValue>
             </CascadingValue>
             <hr />

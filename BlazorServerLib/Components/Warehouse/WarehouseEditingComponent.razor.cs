@@ -129,7 +129,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             RubricStandardModel current_element = shadow.Last();
             if (ref_rubric is not null)
             {
-                await ref_rubric.OwnerRubricSet(current_element.ParentId ?? 0);
+                await ref_rubric.ParentRubricSet(current_element.ParentId ?? 0);
                 await ref_rubric.SetRubric(current_element.Id, shadow);
                 ref_rubric.StateHasChangedCall();
             }
@@ -158,7 +158,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             RubricStandardModel current_element = IncomingRubricMetadataShadow.Last();
             if (ref_rubricIncoming is not null)
             {
-                await ref_rubricIncoming.OwnerRubricSet(current_element.ParentId ?? 0);
+                await ref_rubricIncoming.ParentRubricSet(current_element.ParentId ?? 0);
                 await ref_rubricIncoming.SetRubric(current_element.Id, IncomingRubricMetadataShadow);
                 ref_rubricIncoming.StateHasChangedCall();
             }

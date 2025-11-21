@@ -112,7 +112,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
             {
                 RubricStandardModel current_element = RubricMetadataShadow.Last();
 
-                await rubricSelector_ref.OwnerRubricSet(current_element.ParentId ?? 0);
+                await rubricSelector_ref.ParentRubricSet(current_element.ParentId ?? 0);
                 await rubricSelector_ref.SetRubric(current_element.Id, RubricMetadataShadow);
                 rubricSelector_ref.StateHasChangedCall();
             }

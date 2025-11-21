@@ -69,25 +69,24 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
         {
             _selectedRubricId = value;
             if (childSelector is not null)
-                InvokeAsync(async () => await childSelector.OwnerRubricSet(_selectedRubricId));
+                InvokeAsync(async () => await childSelector.ParentRubricSet(_selectedRubricId));
             SelectRubricsHandle(_selectedRubricId > 0 ? CurrentRubrics?.FirstOrDefault(x => x.Id == _selectedRubricId) : null);
         }
     }
 
     /// <summary>
-    /// Сброс состояния селектора.
+    /// Установка подчинения селектора.
     /// </summary>
-    public async Task OwnerRubricSet(int ownerRubricId)
+    public async Task ParentRubricSet(int parentRubricId)
     {
-        if (ParentRubric != ownerRubricId)
+        if (ParentRubric != parentRubricId)
         {
-            ParentRubric = ownerRubricId;
+            ParentRubric = parentRubricId;
             _selectedRubricId = 0;
         }
 
         await SetBusyAsync();
-        CurrentRubrics = await RubricsRepo.RubricsListAsync(new() { Request = ownerRubricId, ContextName = ContextName });
-
+        CurrentRubrics = await RubricsRepo.RubricsListAsync(new() { Request = parentRubricId, ContextName = ContextName });
         await SetBusyAsync(false);
     }
 
@@ -105,14 +104,14 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
             TResponseModel<List<RubricStandardModel>> dump_rubric = await RubricsRepo.RubricReadAsync(rubric_id);
             RubricMetadataShadow = dump_rubric.Response;
             SnackBarRepo.ShowMessagesResponse(dump_rubric.Messages);
-            IsBusyProgress = false;
+            await SetBusyAsync(false);
         }
     }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await OwnerRubricSet(ParentRubric);
+        await ParentRubricSet(ParentRubric);
         if (ParentRubric == 0 && StartRubric.HasValue)
             await SetRubric(StartRubric.Value, RubricMetadataShadow);
         else if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0 && StartRubric.HasValue && StartRubric.Value > 0)
