@@ -37,6 +37,7 @@
 
 
     List<UniversalBaseModel>? CurrentRubrics;
+    List<RubricStandardModel>? RubricMetadataShadow { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -47,13 +48,10 @@
         if (RubricInitial != 0)
         {
             TResponseModel<List<RubricStandardModel>> dump_rubric = await RubricsRepo.RubricReadWithParentsHierarchyAsync(RubricInitial);
+            SnackBarRepo.ShowMessagesResponse(dump_rubric.Messages);
+            RubricMetadataShadow = dump_rubric.Response;
         }
 
-        /*
-
-         RubricMetadataShadow = dump_rubric.Response;
-         SnackBarRepo.ShowMessagesResponse(dump_rubric.Messages);
-         */
         //CurrentRubrics = await RubricsRepo.RubricsListAsync(new() { Request = parentRubricId, ContextName = ContextName });
         await SetBusyAsync(false);
     }

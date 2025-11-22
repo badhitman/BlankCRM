@@ -87,7 +87,7 @@ public partial class RubricsForInstrumentComponent : BlazorBusyComponentBaseMode
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
-        RubricsAll = await RubricsRepo.RubricsListAsync(new());
+        RubricsAll = await RubricsRepo.RubricsChildListAsync(new());
         await RubricsForInstrument();
         await SetBusyAsync(false);
     }

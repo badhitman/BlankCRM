@@ -14,7 +14,7 @@ public class RubricsListReceive(IRubricsService hdRepo)
     : IResponseReceive<RubricsListRequestModel?, List<UniversalBaseModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricsForIssuesListHelpDeskReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricsChildListHelpDeskReceive;
 
     /// <summary>
     /// Получить рубрики, вложенные в рубрику <paramref name="req"/>.OwnerId (если не указано, то root перечень)
@@ -22,6 +22,6 @@ public class RubricsListReceive(IRubricsService hdRepo)
     public async Task<List<UniversalBaseModel>?> ResponseHandleActionAsync(RubricsListRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await hdRepo.RubricsListAsync(req, token);
+        return await hdRepo.RubricsChildListAsync(req, token);
     }
 }

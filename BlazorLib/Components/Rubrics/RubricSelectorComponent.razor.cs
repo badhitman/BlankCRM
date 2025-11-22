@@ -86,7 +86,7 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
         //}
 
         await SetBusyAsync();
-        CurrentRubrics = await RubricsRepo.RubricsListAsync(new() { Request = parentRubricId, ContextName = ContextName });
+        CurrentRubrics = await RubricsRepo.RubricsChildListAsync(new() { Request = parentRubricId, ContextName = ContextName });
         await SetBusyAsync(false);
     }
 

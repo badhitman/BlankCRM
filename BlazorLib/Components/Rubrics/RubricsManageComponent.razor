@@ -183,7 +183,7 @@
     async Task<List<UniversalBaseModel>> RequestRubrics(int? parent_id = null)
     {
         await SetBusyAsync();
-        List<UniversalBaseModel> rest = await RubricsRepo.RubricsListAsync(new() { Request = parent_id ?? 0, ContextName = ContextName });
+        List<UniversalBaseModel> rest = await RubricsRepo.RubricsChildListAsync(new() { Request = parent_id ?? 0, ContextName = ContextName });
 
         rest = [.. rest.OrderBy(x => x.SortIndex)];
 

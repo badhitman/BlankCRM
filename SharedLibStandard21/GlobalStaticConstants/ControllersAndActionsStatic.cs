@@ -905,6 +905,9 @@ public static partial class GlobalStaticConstantsRoutes
         /// </summary>
         public const string RUBRICS_CONTROLLER_NAME = "rubrics";
 
+        /// <inheritdoc/>
+        public const string CHILD_CONTROLLER_NAME = "child";
+
         /// <summary>
         /// Web
         /// </summary>

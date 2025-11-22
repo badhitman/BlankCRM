@@ -778,7 +778,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string RubricsForArticleSetReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.HELPDESK_CONTROLLER_NAME, $"{Routes.RUBRICS_CONTROLLER_NAME}-for-{Routes.ARTICLES_CONTROLLER_NAME}", Routes.SET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string RubricsForIssuesListHelpDeskReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.HELPDESK_CONTROLLER_NAME, $"{Routes.RUBRIC_CONTROLLER_NAME}-for-{Routes.ISSUE_CONTROLLER_NAME}", Routes.LIST_ACTION_NAME);
+        public readonly static string RubricsChildListHelpDeskReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.HELPDESK_CONTROLLER_NAME, $"{Routes.CHILD_CONTROLLER_NAME}-{Routes.RUBRICS_CONTROLLER_NAME}", Routes.LIST_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string RubricForIssuesMoveHelpDeskReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.HELPDESK_CONTROLLER_NAME, $"{Routes.RUBRIC_CONTROLLER_NAME}-for-{Routes.ISSUE_CONTROLLER_NAME}", Routes.MOVE_ACTION_NAME);

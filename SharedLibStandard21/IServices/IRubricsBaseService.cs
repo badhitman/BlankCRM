@@ -14,9 +14,9 @@ namespace SharedLib;
 public interface IRubricsBaseService
 {
     /// <summary>
-    /// Получить рубрики, вложенные в рубрику (если не указано, то root перечень)
+    /// Получить под-рубрики (вложенные в рубрику). Если не указано, то root перечень
     /// </summary>
-    public Task<List<UniversalBaseModel>> RubricsListAsync(RubricsListRequestModel req, CancellationToken token = default);
+    public Task<List<UniversalBaseModel>> RubricsChildListAsync(RubricsListRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// Rubric read with parents hierarchy
