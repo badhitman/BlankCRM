@@ -79,11 +79,11 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
     /// </summary>
     public async Task ParentRubricSet(int parentRubricId)
     {
-        if (ParentRubric != parentRubricId)
-        {
-            ParentRubric = parentRubricId;
-            _selectedRubricId = 0;
-        }
+        //if (ParentRubric != parentRubricId)
+        //{
+        //    ParentRubric = parentRubricId;
+        //    _selectedRubricId = 0;
+        //}
 
         await SetBusyAsync();
         CurrentRubrics = await RubricsRepo.RubricsListAsync(new() { Request = parentRubricId, ContextName = ContextName });
@@ -101,7 +101,7 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
         {
             await SetBusyAsync();
 
-            TResponseModel<List<RubricStandardModel>> dump_rubric = await RubricsRepo.RubricReadAsync(rubric_id);
+            TResponseModel<List<RubricStandardModel>> dump_rubric = await RubricsRepo.RubricReadWithParentsHierarchyAsync(rubric_id);
             RubricMetadataShadow = dump_rubric.Response;
             SnackBarRepo.ShowMessagesResponse(dump_rubric.Messages);
             await SetBusyAsync(false);
@@ -112,12 +112,12 @@ public partial class RubricSelectorComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await ParentRubricSet(ParentRubric);
-        if (ParentRubric == 0 && StartRubric.HasValue)
+        if (StartRubric.HasValue)
             await SetRubric(StartRubric.Value, RubricMetadataShadow);
-        else if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0 && StartRubric.HasValue && StartRubric.Value > 0)
-            _selectedRubricId = RubricMetadataShadow?.LastOrDefault()?.Id ?? 0;
+        //else if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0 && StartRubric.HasValue && StartRubric.Value > 0)
+        //    _selectedRubricId = RubricMetadataShadow?.LastOrDefault()?.Id ?? 0;
 
-        if (ParentRubric == 0 && ParentRubric == StartRubric && ModeSelectingRubrics == ModesSelectRubricsEnum.SelectAny && CurrentRubrics is not null && CurrentRubrics.Count != 0)
-            SelectedRubricId = CurrentRubrics.First().Id;
+        //if (ParentRubric == 0 && ParentRubric == StartRubric && ModeSelectingRubrics == ModesSelectRubricsEnum.SelectAny && CurrentRubrics is not null && CurrentRubrics.Count != 0)
+        //    SelectedRubricId = CurrentRubrics.First().Id;
     }
 }

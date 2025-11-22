@@ -71,7 +71,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         OfficeCurrent = res_address.Response!.Single();
         OfficeEdit = GlobalTools.CreateDeepCopy(OfficeCurrent) ?? throw new Exception();
 
-        TResponseModel<List<RubricStandardModel>> res_rubric = await HelpDeskRepo.RubricReadAsync(OfficeCurrent.ParentId);
+        TResponseModel<List<RubricStandardModel>> res_rubric = await HelpDeskRepo.RubricReadWithParentsHierarchyAsync(OfficeCurrent.ParentId);
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res_rubric.Messages);
         if (res_rubric.Success() && res_rubric.Response is not null && res_rubric.Response.Count != 0)

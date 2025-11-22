@@ -852,6 +852,9 @@ public static partial class GlobalStaticConstantsRoutes
         /// </summary>
         public const string ISSUE_CONTROLLER_NAME = "issue";
 
+        /// <inheritdoc/>
+        public const string HIERARCHY_CONTROLLER_NAME = "hierarchy";
+
         /// <summary>
         /// Issues
         /// </summary>

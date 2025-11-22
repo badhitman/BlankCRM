@@ -1,0 +1,60 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+<MudText>@Title</MudText>
+
+@code {
+    [Inject]
+    IRubricsTransmission RubricsRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [Parameter]
+    public int RubricInitial { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required bool ShowDisabledRubrics { get; set; }
+
+    /// <summary>
+    /// Title
+    /// </summary>
+    [Parameter]
+    public string Title { get; set; } = "Рубрика/категория";
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required ModesSelectRubricsEnum ModeSelectingRubrics { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required Action<UniversalBaseModel?> SelectRubricsHandle { get; set; }
+
+    /// <summary>
+    /// ContextName
+    /// </summary>
+    [Parameter]
+    public string? ContextName { get; set; }
+
+
+    List<UniversalBaseModel>? CurrentRubrics;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await SetBusyAsync();
+        if (RubricInitial != 0)
+        {
+            TResponseModel<List<RubricStandardModel>> dump_rubric = await RubricsRepo.RubricReadWithParentsHierarchyAsync(RubricInitial);
+        }
+
+        /*
+
+         RubricMetadataShadow = dump_rubric.Response;
+         SnackBarRepo.ShowMessagesResponse(dump_rubric.Messages);
+         */
+        //CurrentRubrics = await RubricsRepo.RubricsListAsync(new() { Request = parentRubricId, ContextName = ContextName });
+        await SetBusyAsync(false);
+    }
+}

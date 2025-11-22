@@ -77,7 +77,7 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
         _rubricSelected = res_RubricIssueForCreateOrder.Response;
         if (ref_rubric is not null && _rubricSelected.HasValue)
         {
-            TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(_rubricSelected.Value);
+            TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadWithParentsHierarchyAsync(_rubricSelected.Value);
             await SetBusyAsync(false);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;

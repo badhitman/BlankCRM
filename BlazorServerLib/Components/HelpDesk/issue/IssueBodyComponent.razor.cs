@@ -104,7 +104,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
         {
             await SetBusyAsync();
 
-            TResponseModel<List<RubricStandardModel>> res = await RubricsRepo.RubricReadAsync(Issue.RubricIssueId.Value);
+            TResponseModel<List<RubricStandardModel>> res = await RubricsRepo.RubricReadWithParentsHierarchyAsync(Issue.RubricIssueId.Value);
             IsBusyProgress = false;
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             RubricMetadataShadow = res.Response;

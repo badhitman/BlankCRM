@@ -11,13 +11,8 @@ namespace SharedLib;
 /// <summary>
 /// HelpDesk (service)
 /// </summary>
-public interface IRubricsService
+public interface IRubricsService : IRubricsBaseService
 {
-    /// <summary>
-    /// Получить рубрики, вложенные в рубрику (если не указано, то root перечень)
-    /// </summary>
-    public Task<List<UniversalBaseModel>> RubricsListAsync(RubricsListRequestModel req, CancellationToken token = default);
-
     /// <summary>
     /// RubricMove
     /// </summary>
@@ -27,11 +22,6 @@ public interface IRubricsService
     /// Rubric create (or update)
     /// </summary>
     public Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricStandardModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Rubric read
-    /// </summary>
-    public Task<TResponseModel<List<RubricStandardModel>>> RubricReadAsync(int rubricId, CancellationToken token = default);
 
     /// <summary>
     /// Rubrics get

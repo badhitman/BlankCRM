@@ -20,6 +20,6 @@ public class RubricReadReceive(IRubricsService hdRepo) : IResponseReceive<int, T
     /// </summary>
     public async Task<TResponseModel<List<RubricStandardModel>>?> ResponseHandleActionAsync(int rubricId, CancellationToken token = default)
     {
-        return await hdRepo.RubricReadAsync(rubricId, token);
+        return await hdRepo.RubricReadWithParentsHierarchyAsync(rubricId, token);
     }
 }

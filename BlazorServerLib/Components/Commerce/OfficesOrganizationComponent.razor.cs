@@ -126,7 +126,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 
             foreach (int i in added_rubrics)
             {
-                TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(i);
+                TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadWithParentsHierarchyAsync(i);
                 if (res.Success() && res.Response is not null)
                     RubriciesCached.Add(i, res.Response);
 

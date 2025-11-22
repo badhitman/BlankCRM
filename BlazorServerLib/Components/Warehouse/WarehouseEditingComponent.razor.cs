@@ -103,7 +103,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         await base.OnInitializedAsync();
         if (Id < 1)
         {
-            TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadAsync(0);
+            TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadWithParentsHierarchyAsync(0);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
             IncomingRubricMetadataShadow = res.Response;
@@ -149,7 +149,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
         editDocument = GlobalTools.CreateDeepCopy(CurrentDocument)!;
 
-        TResponseModel<List<RubricStandardModel>> resShadow = await HelpDeskRepo.RubricReadAsync(editDocument.WarehouseId);
+        TResponseModel<List<RubricStandardModel>> resShadow = await HelpDeskRepo.RubricReadWithParentsHierarchyAsync(editDocument.WarehouseId);
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(resShadow.Messages);
         IncomingRubricMetadataShadow = resShadow.Response;

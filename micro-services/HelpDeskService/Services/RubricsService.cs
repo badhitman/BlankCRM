@@ -211,7 +211,7 @@ public class RubricsService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricStandardModel>>> RubricReadAsync(int rubricId, CancellationToken token = default)
+    public async Task<TResponseModel<List<RubricStandardModel>>> RubricReadWithParentsHierarchyAsync(int rubricId, CancellationToken token = default)
     {
         TResponseModel<List<RubricStandardModel>> res = new();
 
@@ -227,27 +227,21 @@ public class RubricsService(
 
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
 
-        RubricStandardModel? lpi = await context
-            .Rubrics
-            .Include(x => x.Parent)
+        RubricStandardModel? lpi = await context.Rubrics
             .FirstOrDefaultAsync(x => x.Id == rubricId, cancellationToken: token);
 
         if (lpi is null)
         {
-            res.AddWarning($"Рубрика #{rubricId} не найдена в БД (вероятно была удалена)");
+            res.AddWarning($"Рубрика #{rubricId} не найдена в БД");
             return res;
         }
 
         List<RubricStandardModel> ctrl = [lpi];
 
-        while (lpi.Parent is not null)
+        while (lpi.ParentId != 0)
         {
-            ctrl.Add(await context
-            .Rubrics
-            .Include(x => x.Parent)
-            .ThenInclude(x => x!.NestedRubrics)
-            .FirstAsync(x => x.Id == lpi.Parent.Id, cancellationToken: token));
-            lpi = ctrl.Last();
+            lpi = await context.Rubrics.FirstAsync(x => x.Id == lpi.ParentId, cancellationToken: token);
+            ctrl.Add(lpi);
         }
 
         res.Response = ctrl;
