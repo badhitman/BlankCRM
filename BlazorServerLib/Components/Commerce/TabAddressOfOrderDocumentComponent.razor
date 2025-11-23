@@ -4,11 +4,11 @@
 @inherits OffersTableBaseComponent
 
 <div class="mb-3">
-    <CascadingValue Value="RubricSelectAction">
-        <CascadingValue Value="RubricMetadataShadow">
-            <RubricSelectorComponent @ref="ref_rubric" Title="Склад" ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME" ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny" ShowDisabledRubrics="true" StartRubric="CurrentTab.WarehouseId" />
-        </CascadingValue>
-    </CascadingValue>
+    <RubricInputComponent ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny" RubricInitial="CurrentTab.WarehouseId"
+                          ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
+                          SelectRubricsHandle="RubricSelectAction"
+                          ShowDisabledRubrics
+                          Title="Склад" />
 </div>
 <MudTable Hover="true"
           ReadOnly="ReadOnly"
@@ -32,14 +32,16 @@
             @if (sum_of_tab > 0)
             {
                 <text>: </text>
-                <span class="text-primary-emphasis">@sum_of_tab</span> <text>руб.</text>
+                <span class="text-primary-emphasis">@sum_of_tab</span>
+
+                <text>руб.</text>
             }
         </MudText>
         <MudSpacer />
         @if (!ReadOnly)
         {
             <div class="ms-3">
-                <AddRowToOrderDocumentComponent ForceAdding="ForceAdding" ShowPriceOffers="_showingPriceSelectorOrder" SelectOfferHandler="SelectOfferAction" ShowRegistersOffersQuantity="true" @ref="addingDomRef" WarehouseId="CurrentTab.WarehouseId" AllOffers="allOffers" CurrentRows="CurrentTab.Rows!.Select(x=>x.OfferId).ToList()" AddingOfferHandler="AddingOfferAction" />
+                <AddRowToOrderDocumentComponent ForceAdding="ForceAdding" ShowPriceOffers="_showingPriceSelectorOrder" SelectOfferHandler="SelectOfferAction" ShowRegistersOffersQuantity="true" @ref="addingDomRef" WarehouseId="CurrentTab.WarehouseId" AllOffers="allOffers" CurrentRows="CurrentTab.Rows!.Select(x => x.OfferId).ToList()" AddingOfferHandler="AddingOfferAction" />
             </div>
         }
     </ToolBarContent>

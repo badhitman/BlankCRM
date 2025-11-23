@@ -27,7 +27,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public required int AddressForOrganization { get; set; }
 
-
+    RubricInputComponent? rubricSelector_ref;
     OfficeOrganizationModelDB? OfficeCurrent { get; set; }
     OfficeOrganizationModelDB? OfficeEdit { get; set; }
 
@@ -90,16 +90,11 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         }
     }
 
-    RubricSelectorComponent rubricSelector_ref = default!;
-
-    void ResetEdit()
+    async void ResetEdit()
     {
         OfficeEdit = GlobalTools.CreateDeepCopy(OfficeCurrent) ?? throw new Exception();
-        if (rubricSelector_ref.SelectedRubricId != OfficeEdit.ParentId)
-        {
-            rubricSelector_ref.SelectedRubricId = OfficeEdit.ParentId;
-            rubricSelector_ref.StateHasChangedCall();
-        }
+        if (rubricSelector_ref is not null)
+            await rubricSelector_ref.SetRubric(OfficeEdit.ParentId);
     }
 
     async Task SaveOffice()

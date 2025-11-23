@@ -23,28 +23,20 @@ else
         <div class="mb-3">
             <MudGrid>
                 <MudItem xs="12" md="6">
-                    <CascadingValue Value="IncomingRubricSelectAction">
-                        <CascadingValue Value="IncomingRubricMetadataShadow">
-                            <RubricSelectorComponent @ref="ref_rubricIncoming"
-                                                     Title="Склад поступления"
-                                                     ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
-                                                     ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny"
-                                                     ShowDisabledRubrics
-                                                     StartRubric="editDocument.WarehouseId" />
-                        </CascadingValue>
-                    </CascadingValue>
+                    <RubricInputComponent ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny"
+                                          SelectRubricsHandle="IncomingRubricSelectAction"
+                                          ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
+                                          RubricInitial="editDocument.WarehouseId"
+                                          Title="Склад поступления"
+                                          ShowDisabledRubrics />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <CascadingValue Value="WriteOffRubricSelectAction">
-                        <CascadingValue Value="WriteOffRubricMetadataShadow">
-                            <RubricSelectorComponent @ref="ref_rubricIncomingWriteOff"
-                                                     Title="Склад списания"
-                                                     ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
-                                                     ShowDisabledRubrics=false
-                                                     ModeSelectingRubrics="ModesSelectRubricsEnum.AllowWithoutRubric"
-                                                     StartRubric="editDocument.WritingOffWarehouseId" />
-                        </CascadingValue>
-                    </CascadingValue>
+                    <RubricInputComponent ModeSelectingRubrics="ModesSelectRubricsEnum.AllowWithoutRubric"
+                                          RubricInitial="editDocument.WritingOffWarehouseId"
+                                          SelectRubricsHandle="WriteOffRubricSelectAction"
+                                          ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
+                                          ShowDisabledRubrics=false
+                                          Title="Склад списания" />
                 </MudItem>
             </MudGrid>
         </div>

@@ -1,58 +1,27 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
-<MudText>@Title</MudText>
-
-@code {
-    [Inject]
-    IRubricsTransmission RubricsRepo { get; set; } = default!;
-
-
-    /// <inheritdoc/>
-    [Parameter]
-    public int RubricInitial { get; set; }
-
-    /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public required bool ShowDisabledRubrics { get; set; }
-
-    /// <summary>
-    /// Title
-    /// </summary>
-    [Parameter]
-    public string Title { get; set; } = "Рубрика/категория";
-
-    /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public required ModesSelectRubricsEnum ModeSelectingRubrics { get; set; }
-
-    /// <inheritdoc/>
-    [Parameter, EditorRequired]
-    public required Action<UniversalBaseModel?> SelectRubricsHandle { get; set; }
-
-    /// <summary>
-    /// ContextName
-    /// </summary>
-    [Parameter]
-    public string? ContextName { get; set; }
-
-
-    List<UniversalBaseModel>? CurrentRubrics;
-    List<RubricStandardModel>? RubricMetadataShadow { get; set; }
-
-
-    protected override async Task OnInitializedAsync()
+<MudText>
+    @Title
+    @if (IsBusyProgress)
     {
-        await base.OnInitializedAsync();
-
-        await SetBusyAsync();
-        if (RubricInitial != 0)
-        {
-            TResponseModel<List<RubricStandardModel>> dump_rubric = await RubricsRepo.RubricReadWithParentsHierarchyAsync(RubricInitial);
-            SnackBarRepo.ShowMessagesResponse(dump_rubric.Messages);
-            RubricMetadataShadow = dump_rubric.Response;
-        }
-
-        //CurrentRubrics = await RubricsRepo.RubricsListAsync(new() { Request = parentRubricId, ContextName = ContextName });
-        await SetBusyAsync(false);
+        <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate Class="ms-1" />
     }
+</MudText>
+
+@foreach ((int parentId, List<UniversalBaseModel> nestedElements) _kvp in SelectSource)
+{
+    <select @onchange="(ce) => HandleSelectionChange(ce, _kvp)" class="form-select" disabled="@IsBusyProgress">
+        <option class="text-secondary" value="0" selected disabled>Выбор элемента</option>
+        @foreach (UniversalBaseModel rubricNode in _kvp.nestedElements)
+        {
+            if (IsSelected(_kvp, rubricNode))
+            {
+                <option class="text-primary-emphasis" disabled="@rubricNode.IsDisabled" value="@rubricNode.Id" selected>@rubricNode.Name</option>
+            }
+            else
+            {
+                <option class="text-primary-emphasis" disabled="@rubricNode.IsDisabled" value="@rubricNode.Id">@rubricNode.Name</option>
+            }
+        }
+    </select>
 }

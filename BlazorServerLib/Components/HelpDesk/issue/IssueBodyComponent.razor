@@ -30,14 +30,10 @@
     <MudCardContent>
         @if (IsEditMode)
         {
-            <CascadingValue Value="RubricMetadataShadow">
-                <CascadingValue Value="RubricSelectAction">
-                    <RubricSelectorComponent ModeSelectingRubrics="ModeSelectingRubrics"
-                                             ShowDisabledRubrics="ShowDisabledRubrics"
-                                             StartRubric="IssueSource?.RubricIssueId"
-                                             @ref="rubricSelector_ref" />
-                </CascadingValue>
-            </CascadingValue>
+            <RubricInputComponent ModeSelectingRubrics="ModeSelectingRubrics"
+                                  ShowDisabledRubrics="ShowDisabledRubrics"
+                                  SelectRubricsHandle="RubricSelectAction"
+                                  RubricInitial="(IssueSource?.RubricIssueId ?? 0)" />
             <hr />
             <InputRichTextComponent @bind-Value="DescriptionIssueEdit" ReadOnly="IsBusyProgress" />
         }

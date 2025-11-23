@@ -25,9 +25,11 @@
                         }
                         else
                         {
-                            @* <CascadingValue Value="RubricSelectAction">
-                                <RubricSelectorComponent ContextName="@GlobalStaticConstantsTransmission.Routes.ADDRESS_CONTROLLER_NAME" Title="Тип офиса" ModeSelectingRubrics="ModesSelectRubricsEnum.AllowWithoutRubric" ShowDisabledRubrics="false" />
-                            </CascadingValue>  *@
+                            <RubricInputComponent ContextName="@GlobalStaticConstantsRoutes.Routes.ADDRESS_CONTROLLER_NAME"
+                                                  ModeSelectingRubrics="ModesSelectRubricsEnum.AllowWithoutRubric"
+                                                  SelectRubricsHandle="RubricSelectAction"
+                                                  ShowDisabledRubrics="false"
+                                                  Title="Тип офиса" />
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="nameFormControlInput1" class="form-label">Название</label>

@@ -4,7 +4,6 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
-using BlazorLib.Components.Rubrics;
 
 namespace BlazorLib.Components.ParametersShared;
 
@@ -51,9 +50,7 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
     public bool ShowDisabledRubrics { get; set; } = true;
 
 
-    RubricSelectorComponent? ref_rubric;
     int? _rubricSelected;
-    List<RubricStandardModel>? RubricMetadataShadow;
     void RubricSelectAction(UniversalBaseModel? selectedRubric)
     {
         _rubricSelected = selectedRubric?.Id;
@@ -75,22 +72,22 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
         await SetBusyAsync();
         TResponseModel<int?> res_RubricIssueForCreateOrder = await StoreRepo.ReadParameterAsync<int?>(KeyStorage);
         _rubricSelected = res_RubricIssueForCreateOrder.Response;
-        if (ref_rubric is not null && _rubricSelected.HasValue)
-        {
-            TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadWithParentsHierarchyAsync(_rubricSelected.Value);
-            await SetBusyAsync(false);
-            SnackBarRepo.ShowMessagesResponse(res.Messages);
-            RubricMetadataShadow = res.Response;
-            if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
-            {
-                RubricStandardModel current_element = RubricMetadataShadow.Last();
+        //if (ref_rubric is not null && _rubricSelected.HasValue)
+        //{
+        //    TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadWithParentsHierarchyAsync(_rubricSelected.Value);
+        //    await SetBusyAsync(false);
+        //    SnackBarRepo.ShowMessagesResponse(res.Messages);
+        //    RubricMetadataShadow = res.Response;
+        //    if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
+        //    {
+        //        RubricStandardModel current_element = RubricMetadataShadow.Last();
 
-                await ref_rubric.ParentRubricSet(current_element.ParentId ?? 0);
-                await ref_rubric.SetRubric(current_element.Id, RubricMetadataShadow);
-                ref_rubric.StateHasChangedCall();
-            }
-        }
-        else
-            await SetBusyAsync(false);
+        //        await ref_rubric.ParentRubricSet(current_element.ParentId ?? 0);
+        //        await ref_rubric.SetRubric(current_element.Id, RubricMetadataShadow);
+        //        ref_rubric.StateHasChangedCall();
+        //    }
+        //}
+        //else
+        await SetBusyAsync(false);
     }
 }

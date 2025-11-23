@@ -47,8 +47,6 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
     bool ShowDisabledRubrics;
     bool IsEditMode { get; set; }
     UniversalBaseModel? SelectedRubric;
-    RubricSelectorComponent? rubricSelector_ref;
-    List<RubricStandardModel>? RubricMetadataShadow;
 
     void RubricSelectAction(UniversalBaseModel? selectedRubric)
     {
@@ -96,27 +94,9 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
         IsEditMode = false;
     }
 
-    async Task EditToggle()
+    void EditToggle()
     {
         IsEditMode = !IsEditMode;
-
-        if (rubricSelector_ref is not null && Issue.RubricIssueId is not null)
-        {
-            await SetBusyAsync();
-
-            TResponseModel<List<RubricStandardModel>> res = await RubricsRepo.RubricReadWithParentsHierarchyAsync(Issue.RubricIssueId.Value);
-            IsBusyProgress = false;
-            SnackBarRepo.ShowMessagesResponse(res.Messages);
-            RubricMetadataShadow = res.Response;
-            if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
-            {
-                RubricStandardModel current_element = RubricMetadataShadow.Last();
-
-                await rubricSelector_ref.ParentRubricSet(current_element.ParentId ?? 0);
-                await rubricSelector_ref.SetRubric(current_element.Id, RubricMetadataShadow);
-                rubricSelector_ref.StateHasChangedCall();
-            }
-        }
     }
 
     /// <inheritdoc/>

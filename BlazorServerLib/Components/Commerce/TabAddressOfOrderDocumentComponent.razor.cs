@@ -37,8 +37,6 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
 
     AddRowToOrderDocumentComponent? addingDomRef;
     RowOfOrderDocumentModelDB? elementBeforeEdit;
-    RubricSelectorComponent? ref_rubric;
-    List<RubricStandardModel>? RubricMetadataShadow;
     bool _showingPriceSelectorOrder;
 
     /// <inheritdoc/>
@@ -48,24 +46,12 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
         await SetBusyAsync();
 
         List<Task> tasks = [
-            Task.Run(async () => { TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadWithParentsHierarchyAsync(0); SnackBarRepo.ShowMessagesResponse(res.Messages); RubricMetadataShadow = res.Response; }),
             CacheRegistersUpdate(offers: [.. CurrentTab.Rows!.Select(x => x.OfferId)],goods: [],CurrentTab.WarehouseId, true),
             Task.Run(async () => { TResponseModel<bool?> showingPriceSelectorOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ShowingPriceSelectorOrder); _showingPriceSelectorOrder = showingPriceSelectorOrder.Response == true; if (!showingPriceSelectorOrder.Success()) SnackBarRepo.ShowMessagesResponse(showingPriceSelectorOrder.Messages); }) ];
 
         await Task.WhenAll(tasks);
 
         await SetBusyAsync(false);
-
-        if (RubricMetadataShadow is not null && RubricMetadataShadow.Count != 0)
-        {
-            RubricStandardModel current_element = RubricMetadataShadow.Last();
-            if (ref_rubric is not null)
-            {
-                await ref_rubric.ParentRubricSet(current_element.ParentId ?? 0);
-                await ref_rubric.SetRubric(current_element.Id, RubricMetadataShadow);
-                ref_rubric.StateHasChangedCall();
-            }
-        }
     }
 
     async void SelectOfferAction(OfferModelDB? offer)

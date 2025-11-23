@@ -49,6 +49,60 @@ public class RubricsService(
     }
 
     /// <inheritdoc/>
+    public async Task<TResponseModel<List<RubricStandardModel>>> RubricReadWithParentsHierarchyAsync(int rubricId, CancellationToken token = default)
+    {
+        TResponseModel<List<RubricStandardModel>> res = new();
+
+        if (rubricId < 1)
+            return res;
+
+        string mem_key = $"{TransmissionQueues.RubricForIssuesReadHelpDeskReceive}-{rubricId}";
+        if (cache.TryGetValue(mem_key, out List<RubricStandardModel>? rubric))
+        {
+            res.Response = rubric;
+            return res;
+        }
+
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+
+        RubricStandardModel? lpi = await context.Rubrics.FirstOrDefaultAsync(x => x.Id == rubricId, cancellationToken: token);
+
+        if (lpi is null)
+        {
+            res.AddWarning($"Рубрика #{rubricId} не найдена в БД");
+            return res;
+        }
+
+        List<RubricStandardModel> ctrl = [lpi];
+        int? _pr = lpi.ParentId;
+        while (_pr.HasValue && _pr != 0)
+        {
+            ctrl.Insert(0, await context.Rubrics.FirstAsync(x => x.Id == _pr.Value, cancellationToken: token));
+            _pr = ctrl[0].ParentId;
+        }
+
+        res.Response = ctrl;
+        cache.Set(mem_key, res.Response, new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
+        return res;
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default)
+    {
+        TResponseModel<List<RubricStandardModel>> res = new();
+        rubricsIds = [.. rubricsIds.Where(x => x > 0)];
+        if (rubricsIds.Length == 0)
+        {
+            res.AddError("Пустой запрос");
+            return res;
+        }
+        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
+        List<RubricModelDB> resDb = await context.Rubrics.Where(x => rubricsIds.Any(y => y == x.Id)).Include(x => x.NestedRubrics).ToListAsync(cancellationToken: token);
+        res.Response = [.. resDb];
+        return res;
+    }
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> RubricMoveAsync(TRequestModel<RowMoveModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
@@ -207,61 +261,6 @@ public class RubricsService(
             res.AddSuccess("Объект успешно обновлён");
         }
 
-        return res;
-    }
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricStandardModel>>> RubricReadWithParentsHierarchyAsync(int rubricId, CancellationToken token = default)
-    {
-        TResponseModel<List<RubricStandardModel>> res = new();
-
-        if (rubricId < 1)
-            return res;
-
-        string mem_key = $"{TransmissionQueues.RubricForIssuesReadHelpDeskReceive}-{rubricId}";
-        if (cache.TryGetValue(mem_key, out List<RubricStandardModel>? rubric))
-        {
-            res.Response = rubric;
-            return res;
-        }
-
-        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
-
-        RubricStandardModel? lpi = await context.Rubrics
-            .FirstOrDefaultAsync(x => x.Id == rubricId, cancellationToken: token);
-
-        if (lpi is null)
-        {
-            res.AddWarning($"Рубрика #{rubricId} не найдена в БД");
-            return res;
-        }
-
-        List<RubricStandardModel> ctrl = [lpi];
-
-        while (lpi.ParentId != 0)
-        {
-            lpi = await context.Rubrics.FirstAsync(x => x.Id == lpi.ParentId, cancellationToken: token);
-            ctrl.Add(lpi);
-        }
-
-        res.Response = ctrl;
-        cache.Set(mem_key, res.Response, new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
-        return res;
-    }
-
-    /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default)
-    {
-        TResponseModel<List<RubricStandardModel>> res = new();
-        rubricsIds = [.. rubricsIds.Where(x => x > 0)];
-        if (rubricsIds.Length == 0)
-        {
-            res.AddError("Пустой запрос");
-            return res;
-        }
-        using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
-        List<RubricModelDB> resDb = await context.Rubrics.Where(x => rubricsIds.Any(y => y == x.Id)).ToListAsync(cancellationToken: token);
-        res.Response = [.. resDb.Select(x => x)];
         return res;
     }
 }
