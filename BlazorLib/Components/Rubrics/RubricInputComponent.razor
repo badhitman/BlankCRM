@@ -1,6 +1,6 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
-<p title="@SelectedElement" class="mb-0">
+<p class="mb-0">
     @Title
     @if (IsBusyProgress)
     {
@@ -14,9 +14,15 @@
 
 @foreach ((int parentId, List<UniversalBaseModel> nestedElements) _kvp in SelectSource)
 {
-    UniversalBaseModel? _currentSelected = _kvp.nestedElements.FirstOrDefault(x => RubricHierarchy.Any(y => y.Id == x.Id));
+    UniversalBaseModel? _currentSelected = SelectedRubricId is null
+        ? null
+        : _kvp.nestedElements.FirstOrDefault(x => SelectedRubricId == x.Id);
+
     <select @onchange="(ce) => HandleSelectionChange(ce, _kvp)" class="form-select" disabled="@IsBusyProgress">
-        <option class="text-secondary" value="0" selected disabled>Выбор элемента</option>
+        @if (ShowNullElement(_kvp, _currentSelected))
+        {
+            <option class="text-secondary" value="0" selected="@SelectedNullElement(_kvp, _currentSelected)" disabled="@DisablesNullElement(_kvp, _currentSelected)">Выбор элемента</option>
+        }
         @foreach (UniversalBaseModel rubricNode in _kvp.nestedElements)
         {
             <option class="text-primary-emphasis" disabled="@rubricNode.IsDisabled" value="@rubricNode.Id" selected="@(_currentSelected?.Id == rubricNode.Id)">@rubricNode.Name</option>

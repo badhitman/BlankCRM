@@ -39,22 +39,50 @@ namespace BlazorLib.Components.Rubrics
 
 
         readonly List<(int parentId, List<UniversalBaseModel> nestedElements)> SelectSource = [];
-        List<RubricStandardModel> RubricHierarchy { get; set; } = [];
-        (RubricStandardModel rubric, int indexHierarchy)? SelectedElement;
+        List<RubricStandardModel> RubricHierarchy = [];
+
+        /// <summary>
+        /// Выбранная рубрика
+        /// </summary>
+        /// <remarks>
+        /// null - если не выбрано
+        /// </remarks>
+        int? SelectedRubricId;
 
         bool IsEdited
         {
             get
             {
-                if (SelectedElement is null && RubricInitial == 0)
+                if (SelectedRubricId is null && RubricInitial == 0)
                     return false;
-                else if (SelectedElement is null || RubricInitial == 0)
+                else if (SelectedRubricId is null || RubricInitial == 0)
                     return true;
 
-                return SelectedElement.Value.rubric.Id != RubricInitial;
+                return SelectedRubricId != RubricInitial;
             }
         }
 
+
+        bool ShowNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
+        {
+            if (ModeSelectingRubrics == ModesSelectRubricsEnum.AllowWithoutRubric)
+                return true;
+
+            return true;
+        }
+
+        bool DisablesNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
+        {
+            if (ModeSelectingRubrics == ModesSelectRubricsEnum.AllowWithoutRubric)
+                return false;
+
+            return true;
+        }
+
+        bool SelectedNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
+        {
+            return true;
+        }
 
         async void HandleSelectionChange(ChangeEventArgs e, (int parentId, List<UniversalBaseModel> nestedElements) _kvp)
         {
@@ -78,7 +106,7 @@ namespace BlazorLib.Components.Rubrics
                 SelectSource.Add((_valId, [.. _rubricGet.NestedRubrics.Select(x => x)]));
 
             await HierarchyUpdateAsync(_valId);
-            SelectedElement = (_rubricGet, srcIndex);
+            SelectedRubricId = _rubricGet.Id;
             await SetBusyAsync(false);
             SelectRubricsHandle(_rubricGet);
         }
@@ -88,7 +116,7 @@ namespace BlazorLib.Components.Rubrics
         {
             SelectSource.Clear();
             SelectSource.Add((0, await RubricsRepo.RubricsChildListAsync(new RubricsListRequestModel() { ContextName = ContextName, Request = 0 })));
-            SelectedElement = null;
+            SelectedRubricId = null;
             if (rubricId < 1)
             {
                 StateHasChanged();
@@ -97,13 +125,13 @@ namespace BlazorLib.Components.Rubrics
 
             await SetBusyAsync();
             await Actualize(rubricId);
-            SelectedElement = (RubricHierarchy.Last(), SelectSource.Count - 1);
+            SelectedRubricId = RubricHierarchy.Last().Id;
             await SetBusyAsync(false);
         }
 
         async Task HierarchyUpdateAsync(int _id)
         {
-            SelectedElement = null;
+            SelectedRubricId = null;
             TResponseModel<List<RubricStandardModel>> dump_rubric = await RubricsRepo.RubricReadWithParentsHierarchyAsync(_id);
             SnackBarRepo.ShowMessagesResponse(dump_rubric.Messages);
             if (dump_rubric.Response is null)
@@ -113,7 +141,7 @@ namespace BlazorLib.Components.Rubrics
             }
             RubricHierarchy = dump_rubric.Response;
             if (_id > 0)
-                SelectedElement = (RubricHierarchy.Last(), RubricHierarchy.Count - 1);
+                SelectedRubricId = RubricHierarchy.Last().Id;
         }
 
         /// <inheritdoc/>
@@ -131,7 +159,6 @@ namespace BlazorLib.Components.Rubrics
 
         async Task Actualize(int rubricId)
         {
-
             await HierarchyUpdateAsync(rubricId);
             IEnumerable<RubricStandardModel> _q = RubricHierarchy
                 .Where(x => x.ParentId.HasValue && x.ParentId.Value > 0);
