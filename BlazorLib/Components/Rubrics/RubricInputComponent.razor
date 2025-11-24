@@ -14,18 +14,12 @@
 
 @foreach ((int parentId, List<UniversalBaseModel> nestedElements) _kvp in SelectSource)
 {
+    UniversalBaseModel? _currentSelected = _kvp.nestedElements.FirstOrDefault(x => RubricHierarchy.Any(y => y.Id == x.Id));
     <select @onchange="(ce) => HandleSelectionChange(ce, _kvp)" class="form-select" disabled="@IsBusyProgress">
         <option class="text-secondary" value="0" selected disabled>Выбор элемента</option>
         @foreach (UniversalBaseModel rubricNode in _kvp.nestedElements)
         {
-            if (IsSelectedElement(_kvp, rubricNode))
-            {
-                <option class="text-primary-emphasis" disabled="@rubricNode.IsDisabled" value="@rubricNode.Id" selected>@rubricNode.Name</option>
-            }
-            else
-            {
-                <option class="text-primary-emphasis" disabled="@rubricNode.IsDisabled" value="@rubricNode.Id">@rubricNode.Name</option>
-            }
+            <option class="text-primary-emphasis" disabled="@rubricNode.IsDisabled" value="@rubricNode.Id" selected="@(_currentSelected?.Id == rubricNode.Id)">@rubricNode.Name</option>
         }
     </select>
 }

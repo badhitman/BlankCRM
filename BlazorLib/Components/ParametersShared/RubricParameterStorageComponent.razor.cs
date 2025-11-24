@@ -15,9 +15,6 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
     [Inject]
     IParametersStorageTransmission StoreRepo { get; set; } = default!;
 
-    [Inject]
-    IRubricsTransmission HelpDeskRepo { get; set; } = default!;
-
 
     /// <summary>
     /// Label

@@ -58,7 +58,6 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
     void HandleOnChange(ChangeEventArgs args)
     {
         addingDescr = args.Value?.ToString();
-
         //await ChildDataChanged.InvokeAsync(data);
     }
 

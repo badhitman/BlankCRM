@@ -4,7 +4,8 @@
 @inherits OffersTableBaseComponent
 
 <div class="mb-3">
-    <RubricInputComponent ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
+    <RubricInputComponent ModeSelectingRubrics=ModesSelectRubricsEnum.AllowWithoutRubric
+                          ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
                           SelectRubricsHandle="RubricSelectAction"
                           RubricInitial="CurrentTab.WarehouseId"
                           ShowDisabledRubrics

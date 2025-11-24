@@ -31,6 +31,7 @@
         @if (IsEditMode)
         {
             <RubricInputComponent RubricInitial="(IssueSource?.RubricIssueId ?? 0)"
+                                  ModeSelectingRubrics=ModeSelectingRubrics
                                   ShowDisabledRubrics="ShowDisabledRubrics"
                                   SelectRubricsHandle="RubricSelectAction" />
             <hr />

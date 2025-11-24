@@ -33,21 +33,26 @@ namespace BlazorLib.Components.Rubrics
         [Parameter, EditorRequired]
         public required Action<UniversalBaseModel?> SelectRubricsHandle { get; set; }
 
+        /// <inheritdoc/>
+        [Parameter, EditorRequired]
+        public ModesSelectRubricsEnum ModeSelectingRubrics { get; set; }
+
 
         readonly List<(int parentId, List<UniversalBaseModel> nestedElements)> SelectSource = [];
         List<RubricStandardModel> RubricHierarchy { get; set; } = [];
         (RubricStandardModel rubric, int indexHierarchy)? SelectedElement;
-        bool IsEdited 
-        { 
-            get 
+
+        bool IsEdited
+        {
+            get
             {
-                if(SelectedElement is null && RubricInitial == 0)
+                if (SelectedElement is null && RubricInitial == 0)
                     return false;
-                else if(SelectedElement is null || RubricInitial == 0)
+                else if (SelectedElement is null || RubricInitial == 0)
                     return true;
 
-                return SelectedElement.Value.rubric.Id == RubricInitial;
-            } 
+                return SelectedElement.Value.rubric.Id != RubricInitial;
+            }
         }
 
 
@@ -78,23 +83,6 @@ namespace BlazorLib.Components.Rubrics
             SelectRubricsHandle(_rubricGet);
         }
 
-        bool IsSelectedElement((int parentId, List<UniversalBaseModel> nestedElements) _kvp, UniversalBaseModel rubricNode)
-        {
-            return RubricHierarchy.FirstOrDefault(x => x.ParentId == _kvp.parentId)?.Id == rubricNode.Id;
-        }
-
-        async Task HierarchyUpdateAsync(int _id)
-        {
-            TResponseModel<List<RubricStandardModel>> dump_rubric = await RubricsRepo.RubricReadWithParentsHierarchyAsync(_id);
-            SnackBarRepo.ShowMessagesResponse(dump_rubric.Messages);
-            if (dump_rubric.Response is null)
-            {
-                SnackBarRepo.Error("dump_rubric.Response is null");
-                throw new Exception();
-            }
-            RubricHierarchy = dump_rubric.Response;
-        }
-
         /// <inheritdoc/>
         public async Task SetRubric(int rubricId)
         {
@@ -108,28 +96,24 @@ namespace BlazorLib.Components.Rubrics
             }
 
             await SetBusyAsync();
-            await HierarchyUpdateAsync(rubricId);
-            IEnumerable<RubricStandardModel> _q = RubricHierarchy
-                .Where(x => x.ParentId.HasValue && x.ParentId.Value > 0);
-
-            IEnumerable<int> _ids = _q
-                .Select(x => x.ParentId!.Value);
-
-            if (_ids.Any())
-            {
-                TResponseModel<List<RubricStandardModel>> res = await RubricsRepo.RubricsGetAsync(_ids);
-                SnackBarRepo.ShowMessagesResponse(res.Messages);
-                if (res.Response is null)
-                {
-                    SnackBarRepo.Error("result [Response]: is null");
-                    throw new Exception();
-                }
-                foreach (RubricStandardModel _r in _q)
-                    SelectSource.Add((_r.ParentId!.Value, [.. res.Response.Where(x => x.ParentId == _r.ParentId)]));
-            }
-
-            await SetBusyAsync(false);
+            await Actualize(rubricId);
             SelectedElement = (RubricHierarchy.Last(), SelectSource.Count - 1);
+            await SetBusyAsync(false);
+        }
+
+        async Task HierarchyUpdateAsync(int _id)
+        {
+            SelectedElement = null;
+            TResponseModel<List<RubricStandardModel>> dump_rubric = await RubricsRepo.RubricReadWithParentsHierarchyAsync(_id);
+            SnackBarRepo.ShowMessagesResponse(dump_rubric.Messages);
+            if (dump_rubric.Response is null)
+            {
+                SnackBarRepo.Error("dump_rubric.Response is null");
+                throw new Exception();
+            }
+            RubricHierarchy = dump_rubric.Response;
+            if (_id > 0)
+                SelectedElement = (RubricHierarchy.Last(), RubricHierarchy.Count - 1);
         }
 
         /// <inheritdoc/>
@@ -140,29 +124,34 @@ namespace BlazorLib.Components.Rubrics
             SelectSource.Add((0, await RubricsRepo.RubricsChildListAsync(new RubricsListRequestModel() { ContextName = ContextName, Request = 0 })));
 
             if (RubricInitial != 0)
-            {
-                await HierarchyUpdateAsync(RubricInitial);
-                IEnumerable<RubricStandardModel> _q = RubricHierarchy
-                    .Where(x => x.ParentId.HasValue && x.ParentId.Value > 0);
-
-                IEnumerable<int> _ids = _q
-                    .Select(x => x.ParentId!.Value);
-
-                if (_ids.Any())
-                {
-                    TResponseModel<List<RubricStandardModel>> res = await RubricsRepo.RubricsGetAsync(_ids);
-                    SnackBarRepo.ShowMessagesResponse(res.Messages);
-                    if (res.Response is null)
-                    {
-                        SnackBarRepo.Error("result [Response]: is null");
-                        throw new Exception();
-                    }
-                    foreach (RubricStandardModel _r in _q)
-                        SelectSource.Add((_r.ParentId!.Value, [.. res.Response.Where(x => x.ParentId == _r.ParentId)]));
-                }
-            }
+                await Actualize(RubricInitial);
 
             await SetBusyAsync(false);
+        }
+
+        async Task Actualize(int rubricId)
+        {
+
+            await HierarchyUpdateAsync(rubricId);
+            IEnumerable<RubricStandardModel> _q = RubricHierarchy
+                .Where(x => x.ParentId.HasValue && x.ParentId.Value > 0);
+
+            IEnumerable<int> _idsParents = _q
+                .Select(x => x.ParentId!.Value);
+
+            if (_idsParents.Any())
+            {
+                TResponseModel<List<RubricStandardModel>> res = await RubricsRepo.RubricsGetAsync(_idsParents);
+                SnackBarRepo.ShowMessagesResponse(res.Messages);
+                if (res.Response is null)
+                {
+                    SnackBarRepo.Error("result [Response]: is null");
+                    throw new Exception();
+                }
+                foreach (RubricStandardModel _r in _q)
+                    SelectSource.Add((_r.ParentId!.Value, [.. res.Response.First(x => x.Id == _r.ParentId).NestedRubrics!]));
+            }
+
         }
     }
 }
