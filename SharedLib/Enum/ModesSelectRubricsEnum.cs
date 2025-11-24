@@ -26,6 +26,6 @@ public enum ModesSelectRubricsEnum
     /// <summary>
     /// Строго заполнить всю иерархию
     /// </summary>
-    [Description("Строго выбрать всю иерархию")]
+    [Description("Требуется выбрать всю иерархию (до конца)")]
     Strict = 30
 }

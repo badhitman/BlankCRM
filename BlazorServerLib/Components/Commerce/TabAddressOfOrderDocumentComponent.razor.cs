@@ -60,7 +60,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
             return;
 
         await SetBusyAsync();
-        await CacheRegistersUpdate(offers: CurrentTab.Rows.Select(x => x.OfferId).ToArray(), goods: [], CurrentTab.WarehouseId, true);
+        await CacheRegistersUpdate(offers: [.. CurrentTab.Rows.Select(x => x.OfferId)], goods: [], CurrentTab.WarehouseId, true);
         await SetBusyAsync(false);
     }
 

@@ -31,15 +31,25 @@ namespace BlazorLib.Components.Rubrics
 
         /// <inheritdoc/>
         [Parameter, EditorRequired]
-        public required ModesSelectRubricsEnum ModeSelectingRubrics { get; set; }
-
-        /// <inheritdoc/>
-        [Parameter, EditorRequired]
         public required Action<UniversalBaseModel?> SelectRubricsHandle { get; set; }
 
 
+        readonly List<(int parentId, List<UniversalBaseModel> nestedElements)> SelectSource = [];
         List<RubricStandardModel> RubricHierarchy { get; set; } = [];
-        List<(int parentId, List<UniversalBaseModel> nestedElements)> SelectSource = [];
+        (RubricStandardModel rubric, int indexHierarchy)? SelectedElement;
+        bool IsEdited 
+        { 
+            get 
+            {
+                if(SelectedElement is null && RubricInitial == 0)
+                    return false;
+                else if(SelectedElement is null || RubricInitial == 0)
+                    return true;
+
+                return SelectedElement.Value.rubric.Id == RubricInitial;
+            } 
+        }
+
 
         async void HandleSelectionChange(ChangeEventArgs e, (int parentId, List<UniversalBaseModel> nestedElements) _kvp)
         {
@@ -62,17 +72,18 @@ namespace BlazorLib.Components.Rubrics
             if (_rubricGet.NestedRubrics is not null && _rubricGet.NestedRubrics.Count != 0)
                 SelectSource.Add((_valId, [.. _rubricGet.NestedRubrics.Select(x => x)]));
 
-            await UpdHierarchyAsync(_valId);
+            await HierarchyUpdateAsync(_valId);
+            SelectedElement = (_rubricGet, srcIndex);
             await SetBusyAsync(false);
             SelectRubricsHandle(_rubricGet);
         }
 
-        bool IsSelected((int parentId, List<UniversalBaseModel> nestedElements) _kvp, UniversalBaseModel rubricNode)
+        bool IsSelectedElement((int parentId, List<UniversalBaseModel> nestedElements) _kvp, UniversalBaseModel rubricNode)
         {
             return RubricHierarchy.FirstOrDefault(x => x.ParentId == _kvp.parentId)?.Id == rubricNode.Id;
         }
 
-        async Task UpdHierarchyAsync(int _id)
+        async Task HierarchyUpdateAsync(int _id)
         {
             TResponseModel<List<RubricStandardModel>> dump_rubric = await RubricsRepo.RubricReadWithParentsHierarchyAsync(_id);
             SnackBarRepo.ShowMessagesResponse(dump_rubric.Messages);
@@ -87,11 +98,17 @@ namespace BlazorLib.Components.Rubrics
         /// <inheritdoc/>
         public async Task SetRubric(int rubricId)
         {
-            await SetBusyAsync();
             SelectSource.Clear();
             SelectSource.Add((0, await RubricsRepo.RubricsChildListAsync(new RubricsListRequestModel() { ContextName = ContextName, Request = 0 })));
+            SelectedElement = null;
+            if (rubricId < 1)
+            {
+                StateHasChanged();
+                return;
+            }
 
-            await UpdHierarchyAsync(rubricId);
+            await SetBusyAsync();
+            await HierarchyUpdateAsync(rubricId);
             IEnumerable<RubricStandardModel> _q = RubricHierarchy
                 .Where(x => x.ParentId.HasValue && x.ParentId.Value > 0);
 
@@ -112,6 +129,7 @@ namespace BlazorLib.Components.Rubrics
             }
 
             await SetBusyAsync(false);
+            SelectedElement = (RubricHierarchy.Last(), SelectSource.Count - 1);
         }
 
         /// <inheritdoc/>
@@ -123,7 +141,7 @@ namespace BlazorLib.Components.Rubrics
 
             if (RubricInitial != 0)
             {
-                await UpdHierarchyAsync(RubricInitial);
+                await HierarchyUpdateAsync(RubricInitial);
                 IEnumerable<RubricStandardModel> _q = RubricHierarchy
                     .Where(x => x.ParentId.HasValue && x.ParentId.Value > 0);
 

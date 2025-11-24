@@ -23,16 +23,14 @@ else
         <div class="mb-3">
             <MudGrid>
                 <MudItem xs="12" md="6">
-                    <RubricInputComponent ModeSelectingRubrics="ModesSelectRubricsEnum.SelectAny"
-                                          SelectRubricsHandle="IncomingRubricSelectAction"
+                    <RubricInputComponent SelectRubricsHandle="IncomingRubricSelectAction"
                                           ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
                                           RubricInitial="editDocument.WarehouseId"
                                           Title="Склад поступления"
                                           ShowDisabledRubrics />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <RubricInputComponent ModeSelectingRubrics="ModesSelectRubricsEnum.AllowWithoutRubric"
-                                          RubricInitial="editDocument.WritingOffWarehouseId"
+                    <RubricInputComponent RubricInitial="editDocument.WritingOffWarehouseId"
                                           SelectRubricsHandle="WriteOffRubricSelectAction"
                                           ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
                                           ShowDisabledRubrics=false

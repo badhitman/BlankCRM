@@ -30,10 +30,9 @@
     <MudCardContent>
         @if (IsEditMode)
         {
-            <RubricInputComponent ModeSelectingRubrics="ModeSelectingRubrics"
+            <RubricInputComponent RubricInitial="(IssueSource?.RubricIssueId ?? 0)"
                                   ShowDisabledRubrics="ShowDisabledRubrics"
-                                  SelectRubricsHandle="RubricSelectAction"
-                                  RubricInitial="(IssueSource?.RubricIssueId ?? 0)" />
+                                  SelectRubricsHandle="RubricSelectAction" />
             <hr />
             <InputRichTextComponent @bind-Value="DescriptionIssueEdit" ReadOnly="IsBusyProgress" />
         }

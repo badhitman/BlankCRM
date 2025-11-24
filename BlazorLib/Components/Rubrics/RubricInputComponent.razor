@@ -1,12 +1,16 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
-<MudText>
+<p title="@SelectedElement" class="mb-0">
     @Title
     @if (IsBusyProgress)
     {
         <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate Class="ms-1" />
     }
-</MudText>
+    else if (IsEdited)
+    {
+        <sup style="cursor:pointer;" title="отменить изменения" class="ms-1 link-warning" @onclick="async () => await SetRubric(RubricInitial)">сброс</sup>
+    }
+</p>
 
 @foreach ((int parentId, List<UniversalBaseModel> nestedElements) _kvp in SelectSource)
 {
@@ -14,7 +18,7 @@
         <option class="text-secondary" value="0" selected disabled>Выбор элемента</option>
         @foreach (UniversalBaseModel rubricNode in _kvp.nestedElements)
         {
-            if (IsSelected(_kvp, rubricNode))
+            if (IsSelectedElement(_kvp, rubricNode))
             {
                 <option class="text-primary-emphasis" disabled="@rubricNode.IsDisabled" value="@rubricNode.Id" selected>@rubricNode.Name</option>
             }
