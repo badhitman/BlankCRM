@@ -16,12 +16,14 @@
 {
     UniversalBaseModel? _currentSelected = SelectedRubricId is null
         ? null
-        : _kvp.nestedElements.FirstOrDefault(x => SelectedRubricId == x.Id);
+        : _kvp.nestedElements.FirstOrDefault(x => RubricHierarchy.Any(y => y.Id == x.Id));
 
     <select @onchange="(ce) => HandleSelectionChange(ce, _kvp)" class="form-select" disabled="@IsBusyProgress">
         @if (ShowNullElement(_kvp, _currentSelected))
         {
-            <option class="text-secondary" value="0" selected="@SelectedNullElement(_kvp, _currentSelected)" disabled="@DisablesNullElement(_kvp, _currentSelected)">Выбор элемента</option>
+            <option class="text-secondary" value="0" selected="@SelectedNullElement(_kvp, _currentSelected)" disabled="@DisablesNullElement(_kvp, _currentSelected)">
+                @TitleNullElement(_kvp, _currentSelected)
+            </option>
         }
         @foreach (UniversalBaseModel rubricNode in _kvp.nestedElements)
         {

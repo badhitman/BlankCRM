@@ -62,14 +62,16 @@ namespace BlazorLib.Components.Rubrics
             }
         }
 
+        #region NullElement
+        string TitleNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
+        {
+            return currentSelected is null
+                ? "Выбор элемента"
+                : "";
+        }
 
         bool ShowNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
-        {
-            if (ModeSelectingRubrics == ModesSelectRubricsEnum.AllowWithoutRubric)
-                return true;
-
-            return true;
-        }
+                    => ModeSelectingRubrics == ModesSelectRubricsEnum.AllowWithoutRubric || (kvp.parentId == 0 && SelectedRubricId is null);
 
         bool DisablesNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
         {
@@ -81,8 +83,10 @@ namespace BlazorLib.Components.Rubrics
 
         bool SelectedNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
         {
-            return true;
+            return currentSelected is null;
         }
+        #endregion
+
 
         async void HandleSelectionChange(ChangeEventArgs e, (int parentId, List<UniversalBaseModel> nestedElements) _kvp)
         {
@@ -92,6 +96,13 @@ namespace BlazorLib.Components.Rubrics
 
             if (srcIndex + 1 < SelectSource.Count)
                 SelectSource.RemoveRange(srcIndex + 1, SelectSource.Count - (srcIndex + 1));
+
+            if (_valId == 0)
+            {
+                SelectedRubricId = null;
+                return;
+            }
+
 
             await SetBusyAsync();
             TResponseModel<List<RubricStandardModel>> res = await RubricsRepo.RubricsGetAsync([_valId]);
@@ -106,7 +117,7 @@ namespace BlazorLib.Components.Rubrics
                 SelectSource.Add((_valId, [.. _rubricGet.NestedRubrics.Select(x => x)]));
 
             await HierarchyUpdateAsync(_valId);
-            SelectedRubricId = _rubricGet.Id;
+            SelectedRubricId = _valId;
             await SetBusyAsync(false);
             SelectRubricsHandle(_rubricGet);
         }
