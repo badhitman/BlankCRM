@@ -1,9 +1,21 @@
-@typeparam TEntity where TEntity : RubricNodeBodyComponent
+﻿@typeparam TEntity where TEntity : RubricNodeBodyComponent
 
 @using BlazorLib.Components.StockSharp
 @using MudBlazor
 
 @inherits BlazorBusyComponentBaseModel
+
+@if (InitialTreeItems.Count == 0)
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Отсутствуют категории для выбора.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Добавьте <cite title="категории статей">категории</cite> для возможности их выбора
+        </figcaption>
+    </figure>
+}
 
 <MudTreeView Style="width: 100%" ServerData="@LoadServerData" Items="@InitialTreeItems" SelectionMode="@(SelectedValuesChanged is null ? SelectionMode.ToggleSelection : SelectionMode.MultiSelection)" T="UniversalBaseModel" SelectedValuesChanged="SelectedValuesChangeHandler">
     <ItemTemplate Context="item">
@@ -38,7 +50,7 @@
 
 
     /// <summary>
-    /// ��� ���������
+    /// Имя контекста
     /// </summary>
     [Parameter]
     public string? ContextName { get; set; }
@@ -50,7 +62,7 @@
     public TreeViewOptionsHandler? SelectedValuesChanged { get; set; }
 
     /// <summary>
-    /// ��� ��������� �����
+    /// Без вложенных узлов
     /// </summary>
     [Parameter]
     public bool SingleLevelMode { get; set; }

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// В© https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
@@ -15,7 +15,7 @@ namespace BlazorLib.Components.Rubrics
 
         /// <inheritdoc/>
         [Parameter]
-        public string Title { get; set; } = "Рубрика/категория";
+        public string Title { get; set; } = "Р СѓР±СЂРёРєР°/РєР°С‚РµРіРѕСЂРёСЏ";
 
         /// <inheritdoc/>
         [Parameter]
@@ -42,10 +42,10 @@ namespace BlazorLib.Components.Rubrics
         List<RubricStandardModel> RubricHierarchy = [];
 
         /// <summary>
-        /// Выбранная рубрика
+        /// Р’С‹Р±СЂР°РЅРЅР°СЏ СЂСѓР±СЂРёРєР°
         /// </summary>
         /// <remarks>
-        /// null - если не выбрано
+        /// null - РµСЃР»Рё РЅРµ РІС‹Р±СЂР°РЅРѕ
         /// </remarks>
         int? SelectedRubricId;
 
@@ -66,7 +66,7 @@ namespace BlazorLib.Components.Rubrics
         string TitleNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
         {
             return currentSelected is null
-                ? "Выбор элемента"
+                ? "Р’С‹Р±РѕСЂ СЌР»РµРјРµРЅС‚Р°"
                 : "";
         }
 
