@@ -282,7 +282,6 @@ public abstract partial class KladrLayerContext : DbContext
 
         while (_count > _offset)
         {
-
             logger.LogInformation($"insert [part] streets: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<StreetKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()} ORDER BY \"Id\" OFFSET {_offset} LIMIT {_partSize}", cancellationToken: token)}");
             _offset += _partSize;
         }
