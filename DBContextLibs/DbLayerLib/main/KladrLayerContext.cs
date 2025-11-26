@@ -282,14 +282,8 @@ public abstract partial class KladrLayerContext : DbContext
 
         while (_count > _offset)
         {
-            try
-            {
-                logger.LogInformation($"insert [part] streets: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<StreetKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()} ORDER BY \"Id\" OFFSET {_offset} LIMIT {_partSize}", cancellationToken: token)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+
+            logger.LogInformation($"insert [part] streets: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<StreetKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()} ORDER BY \"Id\" OFFSET {_offset} LIMIT {_partSize}", cancellationToken: token)}");
             _offset += _partSize;
         }
 
@@ -298,14 +292,7 @@ public abstract partial class KladrLayerContext : DbContext
         _count = await TempHousesKLADR.CountAsync(cancellationToken: token);
         while (_count > _offset)
         {
-            try
-            {
-                logger.LogInformation($"insert [part] houses: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<HouseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()} ORDER BY \"Id\" OFFSET {_offset} LIMIT {_partSize}", cancellationToken: token)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+            logger.LogInformation($"insert [part] houses: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<HouseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()} ORDER BY \"Id\" OFFSET {_offset} LIMIT {_partSize}", cancellationToken: token)}");
             _offset += _partSize;
         }
 
