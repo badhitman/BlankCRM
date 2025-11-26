@@ -443,6 +443,86 @@ namespace DbPostgreLib.Migrations.Kladr
                 schema: "public",
                 table: "StreetsKLADR",
                 column: "UNO");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempHousesKLADR_CODE",
+                schema: "public",
+                table: "TempHousesKLADR",
+                column: "CODE",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempHousesKLADR_GNINMB",
+                schema: "public",
+                table: "TempHousesKLADR",
+                column: "GNINMB");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempHousesKLADR_INDEX",
+                schema: "public",
+                table: "TempHousesKLADR",
+                column: "INDEX");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempHousesKLADR_OCATD",
+                schema: "public",
+                table: "TempHousesKLADR",
+                column: "OCATD");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempHousesKLADR_SOCR",
+                schema: "public",
+                table: "TempHousesKLADR",
+                column: "SOCR");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempHousesKLADR_UNO",
+                schema: "public",
+                table: "TempHousesKLADR",
+                column: "UNO");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempStreetsKLADR_CODE",
+                schema: "public",
+                table: "TempStreetsKLADR",
+                column: "CODE",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempStreetsKLADR_GNINMB",
+                schema: "public",
+                table: "TempStreetsKLADR",
+                column: "GNINMB");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempStreetsKLADR_INDEX",
+                schema: "public",
+                table: "TempStreetsKLADR",
+                column: "INDEX");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempStreetsKLADR_NAME",
+                schema: "public",
+                table: "TempStreetsKLADR",
+                column: "NAME");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempStreetsKLADR_OCATD",
+                schema: "public",
+                table: "TempStreetsKLADR",
+                column: "OCATD");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempStreetsKLADR_SOCR",
+                schema: "public",
+                table: "TempStreetsKLADR",
+                column: "SOCR");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempStreetsKLADR_UNO",
+                schema: "public",
+                table: "TempStreetsKLADR",
+                column: "UNO");
         }
 
         /// <inheritdoc />

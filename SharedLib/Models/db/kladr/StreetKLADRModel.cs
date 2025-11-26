@@ -8,6 +8,8 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <inheritdoc/>
+[Index(nameof(SOCR)), Index(nameof(INDEX)), Index(nameof(GNINMB)), Index(nameof(UNO)), Index(nameof(OCATD))]
+[Index(nameof(NAME)), Index(nameof(CODE), IsUnique = true)]
 public class StreetKLADRModelDTO : RootKLADRModelDB
 {
     /// <inheritdoc/>
@@ -31,8 +33,6 @@ public class StreetKLADRModelDTO : RootKLADRModelDB
 }
 
 /// <inheritdoc/>
-[Index(nameof(SOCR)), Index(nameof(INDEX)), Index(nameof(GNINMB)), Index(nameof(UNO)), Index(nameof(OCATD))]
-[Index(nameof(NAME)), Index(nameof(CODE), IsUnique = true)]
 public class StreetKLADRModelDB : StreetKLADRModelDTO
 {
 
@@ -42,10 +42,4 @@ public class StreetKLADRModelDB : StreetKLADRModelDTO
 public class StreetTempKLADRModelDB : StreetKLADRModelDTO
 {
 
-}
-
-/// <inheritdoc/>
-public class StreetMetaKLADRModel : StreetKLADRModelDTO
-{
-    
 }

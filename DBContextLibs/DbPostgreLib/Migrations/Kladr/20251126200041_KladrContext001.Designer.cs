@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Kladr
 {
     [DbContext(typeof(KladrContext))]
-    [Migration("20250929074329_KladrContext001")]
+    [Migration("20251126200041_KladrContext001")]
     partial class KladrContext001
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace DbPostgreLib.Migrations.Kladr
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -211,6 +211,19 @@ namespace DbPostgreLib.Migrations.Kladr
                         .HasColumnType("character varying(4)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CODE")
+                        .IsUnique();
+
+                    b.HasIndex("GNINMB");
+
+                    b.HasIndex("INDEX");
+
+                    b.HasIndex("OCATD");
+
+                    b.HasIndex("SOCR");
+
+                    b.HasIndex("UNO");
 
                     b.ToTable("TempHousesKLADR", "public");
                 });
@@ -593,6 +606,21 @@ namespace DbPostgreLib.Migrations.Kladr
                         .HasColumnType("character varying(4)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CODE")
+                        .IsUnique();
+
+                    b.HasIndex("GNINMB");
+
+                    b.HasIndex("INDEX");
+
+                    b.HasIndex("NAME");
+
+                    b.HasIndex("OCATD");
+
+                    b.HasIndex("SOCR");
+
+                    b.HasIndex("UNO");
 
                     b.ToTable("TempStreetsKLADR", "public");
                 });

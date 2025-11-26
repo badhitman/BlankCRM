@@ -84,7 +84,7 @@ public static class Extensions
                 switch (node.Key)
                 {
                     case KladrChainTypesEnum.StreetsInPopPoint or KladrChainTypesEnum.StreetsInCity or KladrChainTypesEnum.StreetsInRegion:
-                        res.Add(subNode.ToObject<StreetMetaKLADRModel>()!);
+                        res.Add(subNode.ToObject<StreetKLADRModelDTO>()!);
                         break;
                     case KladrChainTypesEnum.HousesInStreet:
                         res.Add(subNode.ToObject<HouseKLADRModelDTO>()!);

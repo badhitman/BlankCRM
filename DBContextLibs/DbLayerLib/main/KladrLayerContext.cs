@@ -269,13 +269,45 @@ public abstract partial class KladrLayerContext : DbContext
         logger.LogInformation($"socrbases delete: {await SocrbasesKLADR.ExecuteDeleteAsync(cancellationToken: token)}");
         logger.LogInformation($"streets delete: {await StreetsKLADR.ExecuteDeleteAsync(cancellationToken: token)}");
         logger.LogInformation($"houses delete: {await HousesKLADR.ExecuteDeleteAsync(cancellationToken: token)}");
-        
-        logger.LogInformation($"insert streets: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<StreetKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()}", cancellationToken: token)}");
+
         logger.LogInformation($"insert altnames: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<AltnameKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<AltnameTempKLADRModelDB>()}", cancellationToken: token)}");
         logger.LogInformation($"insert names: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<NameMapKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<NameMapTempKLADRModelDB>()}", cancellationToken: token)}");
         logger.LogInformation($"insert objects: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<ObjectKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<ObjectTempKLADRModelDB>()}", cancellationToken: token)}");
         logger.LogInformation($"insert socrbases: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<SocrbaseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<SocrbaseTempKLADRModelDB>()}", cancellationToken: token)}");
-        logger.LogInformation($"insert houses: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<HouseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()}", cancellationToken: token)}");
+
+        int
+            _partSize = 100000,
+            _offset = 0,
+            _count = await TempStreetsKLADR.CountAsync(cancellationToken: token);
+
+        while (_count > _offset)
+        {
+            try
+            {
+                logger.LogInformation($"insert [part] streets: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<StreetKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()} ORDER BY \"Id\" OFFSET {_offset} LIMIT {_partSize}", cancellationToken: token)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            _offset += _partSize;
+        }
+
+
+        _offset = 0;
+        _count = await TempHousesKLADR.CountAsync(cancellationToken: token);
+        while (_count > _offset)
+        {
+            try
+            {
+                logger.LogInformation($"insert [part] houses: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<HouseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()} ORDER BY \"Id\" OFFSET {_offset} LIMIT {_partSize}", cancellationToken: token)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            _offset += _partSize;
+        }
 
         await transaction.CommitAsync(token);
     }

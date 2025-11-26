@@ -181,7 +181,7 @@ void JobManager_JobException(JobExceptionInfo info)
 
 JobManager.AddJob(
     () => Console.WriteLine("5 minutes just passed."),
-    s => s.WithName("simpe tet job").ToRunEvery(5).Minutes()
+    s => s.WithName("simple test job").ToRunEvery(5).Minutes()
 );
 
 host.Run();

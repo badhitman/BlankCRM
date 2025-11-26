@@ -9,36 +9,44 @@
 }
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Рубрики/категории обращений</h5>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                Режим выбора рубрик/категорий обращений
-                <MudRadioGroup @bind-Value="SelectedOption">
-                    @foreach (ModesSelectRubricsEnum mode in Enum.GetValues(typeof(ModesSelectRubricsEnum)).Cast<ModesSelectRubricsEnum>())
-                    {
-                        <MudRadio Value="@mode">@mode.DescriptionInfo()</MudRadio>
-                    }
-                </MudRadioGroup>
-                @switch (SelectedOption)
-                {
-                    case ModesSelectRubricsEnum.Strict:
-                        <div class="form-text">Строгий режим: требуется выбор всех подрубрик (если они существуют) до конца.</div>
-                        break;
-                    case ModesSelectRubricsEnum.SelectAny:
-                        <div class="form-text">Разрешён выбор любой рубрики, но выбрать нужно обязательно.</div>
-                        break;
-                    case ModesSelectRubricsEnum.AllowWithoutRubric:
-                        <div class="form-text">В этом режиме выбор рубрики не обязателен.</div>
-                        break;
-                }
-            </li>
-            <li class="list-group-item">
-                <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ParameterShowDisabledRubrics" Title="Отображение деактивированных рубрик клиенту" Label="При создании обращения в процессе выбора рубрики неактивные категории/темы/рубрики можно скрыть, а можно отобразить без возможности их выбирать." HintTrue="Элементы будут отображаться, но не доступны (disable) для выбора" HintFalse="Элементы будут скрыты" />
-            </li>
-        </ul>
-        <hr />
-        <MudPaper Class="ma-2" Elevation="3">
-            <RubricsManageComponent TEntity="RubricNodeBodyComponent" />
-        </MudPaper>
+        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+            <MudTabPanel Text="Issues/Обращения">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Режим выбора рубрик/категорий обращений
+                        <MudRadioGroup @bind-Value="SelectedOption">
+                            @foreach (ModesSelectRubricsEnum mode in Enum.GetValues(typeof(ModesSelectRubricsEnum)).Cast<ModesSelectRubricsEnum>())
+                            {
+                                <MudRadio Value="@mode">@mode.DescriptionInfo()</MudRadio>
+                            }
+                        </MudRadioGroup>
+                        @switch (SelectedOption)
+                        {
+                            case ModesSelectRubricsEnum.Strict:
+                                <div class="form-text">Строгий режим: требуется выбор всех подрубрик (если они существуют) до конца.</div>
+                                break;
+                            case ModesSelectRubricsEnum.SelectAny:
+                                <div class="form-text">Разрешён выбор любой рубрики, но выбрать нужно обязательно.</div>
+                                break;
+                            case ModesSelectRubricsEnum.AllowWithoutRubric:
+                                <div class="form-text">В этом режиме выбор рубрики не обязателен.</div>
+                                break;
+                        }
+                    </li>
+                    <li class="list-group-item">
+                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ParameterShowDisabledRubrics" Title="Отображение деактивированных рубрик клиенту" Label="При создании обращения в процессе выбора рубрики неактивные категории/темы/рубрики можно скрыть, а можно отобразить без возможности их выбирать." HintTrue="Элементы будут отображаться, но не доступны (disable) для выбора" HintFalse="Элементы будут скрыты" />
+                    </li>
+                </ul>
+                <hr />
+                <MudPaper Class="ma-2" Elevation="3">
+                    <RubricsManageComponent TEntity="RubricNodeBodyComponent" />
+                </MudPaper>
+            </MudTabPanel>
+            <MudTabPanel Text="Офисы">
+                <RubricsManageComponent TEntity="RubricNodeBodyComponent" ContextName="@GlobalStaticConstantsRoutes.Routes.OFFICES_CONTROLLER_NAME" />
+            </MudTabPanel>
+        </MudTabs>
+
+
     </div>
 </div>
