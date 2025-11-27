@@ -40,7 +40,12 @@ public partial class NomenclatureEditComponent : BlazorBusyComponentBaseAuthMode
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
 
-    bool CanSave => CurrentNomenclature is not null && (CurrentNomenclature.Name != editNomenclature?.Name || CurrentNomenclature.Description != editNomenclature?.Description || CurrentNomenclature.BaseUnit != editNomenclature?.BaseUnit);
+    bool CanSave => 
+        CurrentNomenclature is not null &&
+        (CurrentNomenclature.IsDisabled != editNomenclature?.IsDisabled ||
+        CurrentNomenclature.Name != editNomenclature?.Name || 
+        CurrentNomenclature.Description != editNomenclature?.Description || 
+        CurrentNomenclature.BaseUnit != editNomenclature?.BaseUnit);
 
     static Type? GetType(string strFullyQualifiedName)
     {

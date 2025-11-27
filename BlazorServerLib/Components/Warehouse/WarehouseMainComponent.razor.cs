@@ -13,14 +13,14 @@ namespace BlazorWebLib.Components.Warehouse;
 /// </summary>
 public partial class WarehouseMainComponent : BlazorBusyComponentRubricsCachedModel
 {
-    private MudTable<WarehouseDocumentModelDB>? table;
+    MudTable<WarehouseDocumentModelDB>? table;
 
-    private string? searchString = null;
+    string? searchString = null;
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
-    private async Task<TableData<WarehouseDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
+    async Task<TableData<WarehouseDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
         TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req = new()
@@ -35,12 +35,12 @@ public partial class WarehouseMainComponent : BlazorBusyComponentRubricsCachedMo
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert(),
         };
-        TPaginationResponseModel<WarehouseDocumentModelDB> rest = await CommerceRepo.WarehousesSelectAsync(req, token);
+        TPaginationResponseModel<WarehouseDocumentModelDB> rest = await CommerceRepo.WarehouseDocumentsSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
 
         if (rest.Response is not null)
         {
-            await CacheRubricsUpdate(rest.Response.Select(x => x.WarehouseId));
+            await CacheRubricsUpdate(rest.Response.Select(x => x.WarehouseId).Union(rest.Response.Select(x => x.WritingOffWarehouseId)));
             return new TableData<WarehouseDocumentModelDB>() { TotalItems = rest.TotalRowsCount, Items = rest.Response };
         }
 
@@ -48,7 +48,17 @@ public partial class WarehouseMainComponent : BlazorBusyComponentRubricsCachedMo
         return new TableData<WarehouseDocumentModelDB>() { TotalItems = 0, Items = [] };
     }
 
-    private void OnSearch(string text)
+    string WarehouseTitle(WarehouseDocumentModelDB context)
+    {
+        string res = RubricsCache.FirstOrDefault(x => x.Id == context.WarehouseId)?.Name ?? context.WarehouseId.ToString();
+
+        if (context.WritingOffWarehouseId > 0)
+            res = $"{RubricsCache.FirstOrDefault(x => x.Id == context.WritingOffWarehouseId)?.Name ?? context.WritingOffWarehouseId.ToString()} -> {res}";
+       
+        return res;
+    }
+
+    void OnSearch(string text)
     {
         searchString = text;
         table?.ReloadServerData();

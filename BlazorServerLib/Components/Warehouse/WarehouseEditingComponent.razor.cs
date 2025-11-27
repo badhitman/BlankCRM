@@ -5,9 +5,9 @@
 using static SharedLib.GlobalStaticConstantsRoutes;
 using BlazorWebLib.Components.Commerce;
 using Microsoft.AspNetCore.Components;
-using BlazorLib.Components.Rubrics;
 using BlazorLib;
 using SharedLib;
+using MudBlazor;
 
 namespace BlazorWebLib.Components.Warehouse;
 
@@ -32,6 +32,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     [Parameter, EditorRequired]
     public required int Id { get; set; }
 
+
     Dictionary<string, object> editorConf = default!;
     string images_upload_url = default!;
 
@@ -40,6 +41,20 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
     AddRowToOrderDocumentComponent? addingDomRef;
     RowOfWarehouseDocumentModelDB? elementBeforeEdit;
+
+    MudNumericField<decimal>? _mudQuantityRef;
+    MudNumericField<decimal>? mudQuantityRef
+    {
+        get => _mudQuantityRef;
+        set
+        {
+            _mudQuantityRef = value;
+            //if (value is not null)
+            //    InvokeAsync(async () => await value.FocusAsync());
+            //if (_mudQuantityRef is not null)
+            //    _mudQuantityRef.ForceUpdate();
+        }
+    }
 
     bool CanSave => Id < 1 || !CurrentDocument.Equals(editDocument);
 
@@ -65,12 +80,13 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         }
         await ReadDocument();
         base.RowEditCommitHandler(element);
+        _mudQuantityRef = null;
     }
 
     async Task SaveDocument()
     {
         await SetBusyAsync();
-        TResponseModel<int> res = await CommRepo.WarehouseUpdateAsync(editDocument);
+        TResponseModel<int> res = await CommRepo.WarehouseDocumentUpdateAsync(editDocument);
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (editDocument.Id < 1 && res.Response > 0)
@@ -100,12 +116,6 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             TResponseModel<List<RubricStandardModel>> res = await HelpDeskRepo.RubricReadWithParentsHierarchyAsync(0);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
-            //IncomingRubricMetadataShadow = res.Response;
-            //await SetRubricCtx(IncomingRubricMetadataShadow, ref_rubricIncoming);
-
-            //WriteOffRubricMetadataShadow = res.Response;
-            // await SetRubricCtx(WriteOffRubricMetadataShadow, ref_rubricIncomingWriteOff);
-
             _shouldRender = true;
             await SetBusyAsync(false);
             return;
@@ -115,20 +125,6 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         _shouldRender = true;
         await SetBusyAsync(false);
     }
-
-    //static async Task SetRubricCtx(List<RubricStandardModel>? shadow, RubricSelectorComponent? ref_rubric)
-    //{
-    //    if (shadow is not null && shadow.Count != 0)
-    //    {
-    //        RubricStandardModel current_element = shadow.Last();
-    //        if (ref_rubric is not null)
-    //        {
-    //            await ref_rubric.ParentRubricSet(current_element.ParentId ?? 0);
-    //            await ref_rubric.SetRubric(current_element.Id, shadow);
-    //            ref_rubric.StateHasChangedCall();
-    //        }
-    //    }
-    //}
 
     async Task ReadDocument()
     {
@@ -146,17 +142,6 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         TResponseModel<List<RubricStandardModel>> resShadow = await HelpDeskRepo.RubricReadWithParentsHierarchyAsync(editDocument.WarehouseId);
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(resShadow.Messages);
-        //IncomingRubricMetadataShadow = resShadow.Response;
-        //if (IncomingRubricMetadataShadow is not null && IncomingRubricMetadataShadow.Count != 0)
-        //{
-        //    RubricStandardModel current_element = IncomingRubricMetadataShadow.Last();
-        //    if (ref_rubricIncoming is not null)
-        //    {
-        //        await ref_rubricIncoming.ParentRubricSet(current_element.ParentId ?? 0);
-        //        await ref_rubricIncoming.SetRubric(current_element.Id, IncomingRubricMetadataShadow);
-        //        ref_rubricIncoming.StateHasChangedCall();
-        //    }
-        //}
     }
 
     /// <inheritdoc/>
@@ -205,13 +190,16 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
     /// <inheritdoc/>
     protected override void RowEditPreviewHandler(object element)
-        => elementBeforeEdit = GlobalTools.CreateDeepCopy((RowOfWarehouseDocumentModelDB)element);
+    {
+        elementBeforeEdit = GlobalTools.CreateDeepCopy((RowOfWarehouseDocumentModelDB)element);
+    }
 
     /// <inheritdoc/>
     protected override void RowEditCancelHandler(object element)
     {
         ((RowOfWarehouseDocumentModelDB)element).Quantity = elementBeforeEdit!.Quantity;
         elementBeforeEdit = null;
+        _mudQuantityRef = null;
     }
 
     /// <inheritdoc/>

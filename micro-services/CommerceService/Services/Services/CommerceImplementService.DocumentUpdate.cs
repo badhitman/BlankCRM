@@ -26,13 +26,21 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
+        string msg;
+        if (req.WarehouseId == req.WritingOffWarehouseId)
+        {
+            msg = $"Склад списания и склад поступления не может быть одни и тем же";
+            loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            res.AddError($"{msg}. Измените или удалите склад списания");
+            return res;
+        }
+
         req.DeliveryDate = req.DeliveryDate.SetKindUtc();
         if (req.Name is not null)
             req.Name = req.Name.Trim();
         req.NormalizedUpperName = req.Name?.ToUpper() ?? "";
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        string msg;
         DateTime dtu = DateTime.UtcNow;
         if (req.Id < 1)
         {
@@ -57,19 +65,19 @@ public partial class CommerceImplementService : ICommerceService
         if (warehouseDocumentDb.Version != req.Version)
         {
             msg = $"Документ #{warehouseDocumentDb.Id} был кем-то изменён (version concurrent)";
-            loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-            res.AddError($"{msg}. Перед редактированием обновите страницу (F5), что бы загрузить актуальную версию объекта");
+            loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            res.AddError($"{msg}. Перед редактированием обновите страницу (F5), что бы загрузить актуальную версию документа");
             return res;
         }
 
         List<LockTransactionModelDB> offersLocked = [];
         if (warehouseDocumentDb.Rows!.Count != 0)
-            warehouseDocumentDb.Rows.ForEach(x =>
+            foreach (RowOfWarehouseDocumentModelDB rowDoc in warehouseDocumentDb.Rows)
             {
-                offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = x.OfferId, LockerAreaId = req.WarehouseId });
-                if (req.WritingOffWarehouseId > 0 && req.WritingOffWarehouseId != req.WarehouseId)
-                    offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = x.OfferId, LockerAreaId = req.WritingOffWarehouseId });
-            });
+                offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = rowDoc.OfferId, LockerAreaId = req.WarehouseId });
+                if (req.WritingOffWarehouseId > 0)
+                    offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = rowDoc.OfferId, LockerAreaId = req.WritingOffWarehouseId });
+            }
 
         offersLocked = [.. offersLocked.DistinctBy(x => x.LockerAreaId)];
 
@@ -84,7 +92,7 @@ public partial class CommerceImplementService : ICommerceService
             catch (Exception ex)
             {
                 await transaction.RollbackAsync(token);
-                msg = $"Не удалось выполнить команду блокировки БД {nameof(WarehouseDocumentUpdateAsync)}: ";
+                msg = $"Не удалось выполнить команду блокировки регистров остатков {nameof(WarehouseDocumentUpdateAsync)}: ";
                 loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError($"{msg}{ex.Message}");
                 return res;
@@ -100,78 +108,254 @@ public partial class CommerceImplementService : ICommerceService
         {
             if (req.IsDisabled)
             {
-                warehouseDocumentDb.Rows.ForEach(async rowOfDocument =>
+                foreach (RowOfWarehouseDocumentModelDB rowOfDocument in warehouseDocumentDb.Rows)
                 {
-                    OfferAvailabilityModelDB? registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == warehouseDocumentDb.WarehouseId);
+                    OfferAvailabilityModelDB?
+                                            registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId),
+                                            registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WritingOffWarehouseId);
+
+                    if (registerOfferWriteOff is not null)
+                    {
+                        await context.OffersAvailability.Where(y => y.Id == registerOfferWriteOff.Id)
+                         .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.Quantity, p => p.Quantity + rowOfDocument.Quantity), cancellationToken: token);
+
+                        registerOfferWriteOff.Quantity += rowOfDocument.Quantity;
+                    }
+                    else if (req.WritingOffWarehouseId > 0)
+                    {
+                        registerOfferWriteOff = new OfferAvailabilityModelDB()
+                        {
+                            WarehouseId = req.WritingOffWarehouseId,
+                            Quantity = rowOfDocument.Quantity,
+                            NomenclatureId = rowOfDocument.NomenclatureId,
+                            OfferId = rowOfDocument.OfferId,
+                        };
+                        await context.OffersAvailability.AddAsync(registerOfferWriteOff, token);
+                    }
+
                     if (registerOffer is not null)
                     {
                         if (registerOffer.Quantity < rowOfDocument.Quantity)
                         {
-                            msg = $"Количество сторно [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] больше баланса в БД: ";
-                            loggerRepo.LogError($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                            msg = $"Количество сторно [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] больше баланса в БД";
+                            loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                             res.AddError($"{msg}. Баланс не может быть отрицательным");
-                            return;
+                            break;
                         }
 
                         await context.OffersAvailability.Where(y => y.Id == registerOffer.Id)
                          .ExecuteUpdateAsync(set => set
-                         .SetProperty(p => p.Quantity, registerOffer.Quantity - rowOfDocument.Quantity));
+                            .SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocument.Quantity), cancellationToken: token);
+
+                        registerOffer.Quantity -= rowOfDocument.Quantity;
                     }
                     else
                     {
-                        msg = $"Количество сторно [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток 0): ";
-                        loggerRepo.LogError($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        msg = $"Количество сторно [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток отсутствует)";
+                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                         res.AddError($"{msg}. Баланс не может быть отрицательным");
-                        return;
+                        break;
                     }
-                });
+                }
+
                 if (!res.Success())
                 {
                     await transaction.RollbackAsync(token);
-                    msg = $"Не удалось выполнить обновить складской документ: ";
-                    loggerRepo.LogError($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                    msg = $"Не удалось обновить складской документ: ";
+                    loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                     res.AddError(msg);
                     return res;
                 }
             }
             else
             {
-                List<OfferAvailabilityModelDB> offAvAdding = [];
-                warehouseDocumentDb.Rows.ForEach(async rowOfDocument =>
+                foreach (RowOfWarehouseDocumentModelDB rowOfDocument in warehouseDocumentDb.Rows)
                 {
                     OfferAvailabilityModelDB? registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId);
+                    OfferAvailabilityModelDB? registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WritingOffWarehouseId);
+
+                    if (registerOfferWriteOff is not null)
+                    {
+                        if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity)
+                        {
+                            msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
+                            loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                            res.AddError($"{msg}. Баланс не может быть отрицательным");
+                            break;
+                        }
+
+                        await context.OffersAvailability
+                                                     .Where(y => y.Id == registerOfferWriteOff.Id)
+                                                     .ExecuteUpdateAsync(set =>
+                                                        set.SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocument.Quantity), cancellationToken: token);
+
+                        registerOfferWriteOff.Quantity -= rowOfDocument.Quantity;
+                    }
+                    else if (req.WritingOffWarehouseId > 0)
+                    {
+                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток отсутствует)";
+                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        res.AddError($"{msg}. Баланс не может быть отрицательным");
+                        break;
+                    }
 
                     if (registerOffer is not null)
+                    {
                         await context.OffersAvailability
                              .Where(y => y.Id == registerOffer.Id)
-                             .ExecuteUpdateAsync(set => set.SetProperty(p => p.Quantity, registerOffer.Quantity + rowOfDocument.Quantity));
+                             .ExecuteUpdateAsync(set => set
+                                .SetProperty(p => p.Quantity, p => p.Quantity + rowOfDocument.Quantity), cancellationToken: token);
+
+                        registerOffer.Quantity += rowOfDocument.Quantity;
+                    }
                     else
-                        offAvAdding.Add(new OfferAvailabilityModelDB()
+                    {
+                        registerOffer = new OfferAvailabilityModelDB()
                         {
-                            WarehouseId = warehouseDocumentDb.WarehouseId,
+                            WarehouseId = req.WarehouseId,
                             NomenclatureId = rowOfDocument.NomenclatureId,
                             OfferId = rowOfDocument.OfferId,
                             Quantity = rowOfDocument.Quantity,
-                        });
-
-                    if (warehouseDocumentDb.WarehouseId != req.WarehouseId)
-                    {
-                        registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == warehouseDocumentDb.WarehouseId);
-
-                        if (registerOffer is not null)
-                            await context.OffersAvailability.Where(y => y.Id == registerOffer.Id).ExecuteUpdateAsync(set => set.SetProperty(p => p.Quantity, registerOffer.Quantity - rowOfDocument.Quantity));
-                        else
-                            offAvAdding.Add(new()
-                            {
-                                WarehouseId = warehouseDocumentDb.WarehouseId,
-                                NomenclatureId = rowOfDocument.NomenclatureId,
-                                OfferId = rowOfDocument.OfferId,
-                                Quantity = -rowOfDocument.Quantity,
-                            });
+                        };
+                        await context.OffersAvailability.AddAsync(registerOffer, cancellationToken: token);
                     }
-                });
-                if (offAvAdding.Count != 0)
-                    await context.AddRangeAsync(offAvAdding, token);
+                }
+
+                if (!res.Success())
+                {
+                    await transaction.RollbackAsync(token);
+                    msg = $"Не удалось обновить складской документ: ";
+                    loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                    res.AddError(msg);
+                    return res;
+                }
+            }
+        }
+        else if (!warehouseDocumentDb.IsDisabled)
+        {
+            if (warehouseDocumentDb.WritingOffWarehouseId != req.WritingOffWarehouseId)
+            {
+                foreach (RowOfWarehouseDocumentModelDB rowOfDocument in warehouseDocumentDb.Rows)
+                {
+                    OfferAvailabilityModelDB?
+                                            registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WritingOffWarehouseId),
+                                            registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == warehouseDocumentDb.WritingOffWarehouseId);
+
+                    if (registerOfferWriteOff is not null)
+                    {
+                        if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity)
+                        {
+                            msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
+                            loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                            res.AddError($"{msg}. Баланс не может быть отрицательным");
+                            break;
+                        }
+
+                        await context.OffersAvailability
+                             .Where(y => y.Id == registerOfferWriteOff.Id)
+                             .ExecuteUpdateAsync(set => set
+                                .SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocument.Quantity), cancellationToken: token);
+
+                        registerOfferWriteOff.Quantity -= rowOfDocument.Quantity;
+                    }
+                    else if (req.WritingOffWarehouseId > 0)
+                    {
+                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток отсутствует)";
+                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        res.AddError($"{msg}. Баланс не может быть отрицательным");
+                        break;
+                    }
+
+                    if (registerOffer is not null)
+                    {
+                        await context.OffersAvailability
+                            .Where(y => y.Id == registerOffer.Id)
+                            .ExecuteUpdateAsync(set =>
+                                set.SetProperty(p => p.Quantity, registerOffer.Quantity + rowOfDocument.Quantity), cancellationToken: token);
+
+                        registerOffer.Quantity += rowOfDocument.Quantity;
+                    }
+                    else
+                        await context.OffersAvailability.AddAsync(new()
+                        {
+                            WarehouseId = req.WritingOffWarehouseId,
+                            NomenclatureId = rowOfDocument.NomenclatureId,
+                            OfferId = rowOfDocument.OfferId,
+                            Quantity = rowOfDocument.Quantity,
+                        }, token);
+                }
+
+                if (!res.Success())
+                {
+                    await transaction.RollbackAsync(token);
+                    msg = $"Не удалось обновить складской документ: ";
+                    loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                    res.AddError(msg);
+                    return res;
+                }
+            }
+
+            if (warehouseDocumentDb.WarehouseId != req.WarehouseId)
+            {
+                foreach (RowOfWarehouseDocumentModelDB rowOfDocument in warehouseDocumentDb.Rows)
+                {
+                    OfferAvailabilityModelDB?
+                                           registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId),
+                                           registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == warehouseDocumentDb.WarehouseId);
+
+                    if (registerOfferWriteOff is not null)
+                    {
+                        if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity)
+                        {
+                            msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
+                            loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                            res.AddError($"{msg}. Баланс не может быть отрицательным");
+                            break;
+                        }
+
+                        await context.OffersAvailability
+                             .Where(y => y.Id == registerOfferWriteOff.Id)
+                             .ExecuteUpdateAsync(set => set
+                                .SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocument.Quantity), cancellationToken: token);
+
+                        registerOfferWriteOff.Quantity -= rowOfDocument.Quantity;
+                    }
+                    else if (req.WritingOffWarehouseId > 0)
+                    {
+                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток отсутствует)";
+                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        res.AddError($"{msg}. Баланс не может быть отрицательным");
+                        break;
+                    }
+
+                    if (registerOffer is not null)
+                    {
+                        await context.OffersAvailability
+                            .Where(y => y.Id == registerOffer.Id)
+                            .ExecuteUpdateAsync(set =>
+                                set.SetProperty(p => p.Quantity, registerOffer.Quantity + rowOfDocument.Quantity), cancellationToken: token);
+
+                        registerOffer.Quantity += rowOfDocument.Quantity;
+                    }
+                    else
+                        await context.OffersAvailability.AddAsync(new()
+                        {
+                            WarehouseId = req.WritingOffWarehouseId,
+                            NomenclatureId = rowOfDocument.NomenclatureId,
+                            OfferId = rowOfDocument.OfferId,
+                            Quantity = rowOfDocument.Quantity,
+                        }, token);
+                }
+
+                if (!res.Success())
+                {
+                    await transaction.RollbackAsync(token);
+                    msg = $"Не удалось обновить складской документ: ";
+                    loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                    res.AddError(msg);
+                    return res;
+                }
             }
         }
 
@@ -183,6 +367,7 @@ public partial class CommerceImplementService : ICommerceService
                 .SetProperty(p => p.DeliveryDate, req.DeliveryDate)
                 .SetProperty(p => p.IsDisabled, req.IsDisabled)
                 .SetProperty(p => p.WarehouseId, req.WarehouseId)
+                .SetProperty(p => p.WritingOffWarehouseId, req.WritingOffWarehouseId)
                 .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 

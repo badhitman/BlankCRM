@@ -4,7 +4,7 @@
 
 namespace SharedLib;
 
-public partial interface ICommerceTransmission
+public partial interface ICommerceTransmission : ICommerceServiceBase
 {
     /// <summary>
     /// Получить остатки
@@ -29,10 +29,10 @@ public partial interface ICommerceTransmission
     /// <summary>
     /// WarehouseUpdate
     /// </summary>
-    public Task<TResponseModel<int>> WarehouseUpdateAsync(WarehouseDocumentModelDB document, CancellationToken token = default);
+    public Task<TResponseModel<int>> WarehouseDocumentUpdateAsync(WarehouseDocumentModelDB document, CancellationToken token = default);
 
     /// <summary>
     /// Подбор складских документов (поиск по параметрам)
     /// </summary>
-    public Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehousesSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);
 }

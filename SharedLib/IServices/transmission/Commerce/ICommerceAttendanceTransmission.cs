@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// ICommerceTransmission
 /// </summary>
-public partial interface ICommerceTransmission
+public partial interface ICommerceTransmission : ICommerceServiceBase
 {
     /// <summary>
     /// Подбор записей (актуальных)

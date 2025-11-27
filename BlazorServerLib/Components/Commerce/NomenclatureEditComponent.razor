@@ -19,6 +19,12 @@ else
             <div class="input-group mb-2">
                 <span class="input-group-text">Конфигурация номенклатуры</span>
                 <input @bind-value="editNomenclature.Name" disabled="@(!CurrentUserSession!.IsAdmin)" @bind-value:event="oninput" type="text" aria-label="First name" class="form-control">
+                <div class="input-group-text">
+                    <input @bind="editNomenclature.IsDisabled" class="form-check-input mt-0" id="checkDefault" type="checkbox" value="" aria-label="Checkbox for following text input">
+                    <label class="form-check-label ms-2" for="checkDefault">
+                        @(editNomenclature.IsDisabled ? "disabled (enable?)" : "enabled (disable?)")
+                    </label>
+                </div>
                 <select disabled="@(!CurrentUserSession.IsAdmin)" @bind="editNomenclature.BaseUnit" class="form-select">
                     @foreach (UnitsOfMeasurementEnum uom in Enum.GetValues(typeof(UnitsOfMeasurementEnum)).Cast<UnitsOfMeasurementEnum>())
                     {

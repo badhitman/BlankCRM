@@ -36,7 +36,7 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
         {
             Payload = new()
             {
-
+                 MinQuantity = 1,
             },
             PageNum = state.Page,
             PageSize = state.PageSize,

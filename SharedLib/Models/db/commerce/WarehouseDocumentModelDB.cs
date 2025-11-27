@@ -36,14 +36,14 @@ public class WarehouseDocumentModelDB : EntrySwitchableUpdatedModel
     public List<RowOfWarehouseDocumentModelDB>? Rows { get; set; }
 
     /// <summary>
-    /// Warehouse
+    /// Склад поступления
     /// </summary>
     [Required]
     [Range(1, int.MaxValue, ErrorMessage = "Требуется указать склад.")]
     public int WarehouseId { get; set; }
 
     /// <summary>
-    /// warehouse for writing off balances (if <c>warehouse movement</c>)
+    /// склад списания
     /// </summary>
     public int WritingOffWarehouseId { get; set; }
 
@@ -65,6 +65,7 @@ public class WarehouseDocumentModelDB : EntrySwitchableUpdatedModel
                 Id == _wd.Id &&
                 Name == _wd.Name &&
                 WarehouseId == _wd.WarehouseId &&
+                WritingOffWarehouseId == _wd.WritingOffWarehouseId &&
                 IsDisabled == _wd.IsDisabled &&
                 DeliveryDate == _wd.DeliveryDate &&
                 ExternalDocumentId == _wd.ExternalDocumentId &&

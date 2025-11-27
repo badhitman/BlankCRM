@@ -5,14 +5,14 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">Поступления</MudText>
         <MudSpacer />
-        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Поиск по примечанию" Adornment="Adornment.Start"
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Поиск по примечанию" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortDirection="SortDirection.Ascending" SortLabel="Name" T="WarehouseDocumentModelDB">Примечание</MudTableSortLabel></MudTh>
         <MudTh>Доставка</MudTh>
         <MudTh>Склад</MudTh>
-        <MudTh></MudTh>
+        <MudTh>Создан/Изменён</MudTh>
     </HeaderContent>
     <RowTemplate>
         @{
@@ -20,15 +20,27 @@
             DateTime udt = context.LastUpdatedAtUTC.GetCustomTime();
             DateTime ddt = context.DeliveryDate.GetCustomTime();
         }
-        <MudTd DataLabel="Примечание"><a href="/nomenclature/warehouse/editing/@(context.Id)">@context.Name</a></MudTd>
-        <MudTd DataLabel="Доставка">
-            <span>@ddt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@ddt.ToString("t", GlobalStaticConstants.RU)</sup></span>
+        <MudTd DataLabel="Примечание">
+            <a href="/nomenclature/warehouse/editing/@(context.Id)" class="@(context.IsDisabled ? "text-decoration-line-through" : "")">@context.Name</a>
         </MudTd>
-        <MudTd DataLabel="Склад">@(RubricsCache.FirstOrDefault(x => x.Id == context.WarehouseId)?.Name ?? context.WarehouseId.ToString())</MudTd>
+        <MudTd DataLabel="Доставка">
+            <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">
+                @ddt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary @(context.IsDisabled ? "text-decoration-line-through" : "")">@ddt.ToString("t", GlobalStaticConstants.RU)</sup>
+            </span>
+        </MudTd>
+        <MudTd DataLabel="Склад">
+            <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">
+                @WarehouseTitle(context)
+            </span>
+        </MudTd>
         <MudTd DataLabel="">
-            <span>@cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup></span>
+            <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">
+                @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+            </span>
             /
-            <span>@udt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.ToString("t", GlobalStaticConstants.RU)</sup></span>
+            <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">
+                @udt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.ToString("t", GlobalStaticConstants.RU)</sup>
+            </span>
         </MudTd>
     </RowTemplate>
     <NoRecordsContent>

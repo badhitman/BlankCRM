@@ -24,19 +24,19 @@ else
             <MudGrid>
                 <MudItem xs="12" md="6">
                     <RubricInputComponent ModeSelectingRubrics=ModesSelectRubricsEnum.AllowWithoutRubric
-                                          SelectRubricsHandle="IncomingRubricSelectAction"
-                                          ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
-                                          RubricInitial="editDocument.WarehouseId"
-                                          Title="Склад поступления"
-                                          ShowDisabledRubrics />
-                </MudItem>
-                <MudItem xs="12" md="6">
-                    <RubricInputComponent ModeSelectingRubrics=ModesSelectRubricsEnum.AllowWithoutRubric
                                           RubricInitial="editDocument.WritingOffWarehouseId"
                                           SelectRubricsHandle="WriteOffRubricSelectAction"
                                           ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
                                           ShowDisabledRubrics=false
                                           Title="Склад списания" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <RubricInputComponent ModeSelectingRubrics=ModesSelectRubricsEnum.AllowWithoutRubric
+                                          SelectRubricsHandle="IncomingRubricSelectAction"
+                                          ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
+                                          RubricInitial="editDocument.WarehouseId"
+                                          Title="Склад поступления"
+                                          ShowDisabledRubrics />
                 </MudItem>
             </MudGrid>
         </div>
@@ -115,10 +115,11 @@ else
             </RowTemplate>
             <RowEditingTemplate>
                 <MudTd DataLabel="Name">
-                    @context?.Offer?.GetName() // @(context?.Quantity * context?.Offer?.Price) руб.
+                    @context.Offer?.GetName() // @(context.Quantity * context.Offer?.Price) руб.
                 </MudTd>
-                <MudTd DataLabel="Quantity">
-                    <MudNumericField @bind-Value="context!.Quantity" Required Min="1" />
+                <MudTd DataLabel="Quantity" UserAttributes="@(new() { { "colspan", 2 } })">
+                    @* <MudNumericField @bind-Value="context.Quantity" Required Min="1" /> *@
+                    <input type="number" @bind="context.Quantity" class="form-control" />
                 </MudTd>
             </RowEditingTemplate>
             <PagerContent>
