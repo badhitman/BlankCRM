@@ -5,16 +5,22 @@
 namespace SharedLib;
 
 /// <summary>
-/// OrderDocumentBaseDBModel
+/// Методы доставки
 /// </summary>
-public class OrderDocumentBaseDBModel : OrderDocumentBaseModel
+public enum DeliveryTypesEnum
 {
     /// <summary>
-    /// Organization
+    /// Почта
     /// </summary>
-    public OrganizationModelDB? Organization { get; set; }
+    StandardPost = 10,
+
     /// <summary>
-    /// Organization
+    /// Курьерская служба
     /// </summary>
-    public int OrganizationId { get; set; }
+    CourierService = 20,
+
+    /// <summary>
+    /// Самовывоз
+    /// </summary>
+    Pickup = 30,
 }

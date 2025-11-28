@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20250929074144_CommerceContext001")]
+    [Migration("20251128190451_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace DbPostgreLib.Migrations.Commerce
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -156,6 +156,88 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsUnique();
 
                     b.ToTable("CalendarsSchedules");
+                });
+
+            modelBuilder.Entity("SharedLib.DeliveryDocumentModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DeliveryCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryCode");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("DeliveryDocuments");
+                });
+
+            modelBuilder.Entity("SharedLib.DeliveryServiceModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeliveryServices");
+                });
+
+            modelBuilder.Entity("SharedLib.DeliveryStatusDocumentModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DeliveryDocumentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DeliveryPayment")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DeliveryStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("ShippingCost")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("WeightShipping")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Created");
+
+                    b.HasIndex("DeliveryDocumentId");
+
+                    b.HasIndex("DeliveryPayment");
+
+                    b.HasIndex("DeliveryStatus");
+
+                    b.ToTable("DeliveryStatusesDocuments");
                 });
 
             modelBuilder.Entity("SharedLib.LockTransactionModelDB", b =>
@@ -679,6 +761,77 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("AttendancesReg");
                 });
 
+            modelBuilder.Entity("SharedLib.RetailDocumentModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AuthorIdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("BuyerIdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DeliveryType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExternalDocumentId")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("HelpDeskId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Information")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("LastUpdatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PayerIdentityUserId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("StatusDocument")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BuyerIdentityUserId");
+
+                    b.HasIndex("CreatedAtUTC");
+
+                    b.HasIndex("DeliveryType");
+
+                    b.HasIndex("LastUpdatedAtUTC");
+
+                    b.HasIndex("PayerIdentityUserId");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("RetailOrders");
+                });
+
             modelBuilder.Entity("SharedLib.RowOfOrderDocumentModelDB", b =>
                 {
                     b.Property<int>("Id")
@@ -725,6 +878,52 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsUnique();
 
                     b.ToTable("RowsOrders");
+                });
+
+            modelBuilder.Entity("SharedLib.RowOfRetailOrderDocumentModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("NomenclatureId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OfferId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NomenclatureId");
+
+                    b.HasIndex("OfferId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("Quantity");
+
+                    b.ToTable("RowsRetailsOrders");
                 });
 
             modelBuilder.Entity("SharedLib.RowOfWarehouseDocumentModelDB", b =>
@@ -997,6 +1196,26 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Offer");
                 });
 
+            modelBuilder.Entity("SharedLib.DeliveryDocumentModelDB", b =>
+                {
+                    b.HasOne("SharedLib.RetailDocumentModelDB", "Order")
+                        .WithMany("DeliveryDocument")
+                        .HasForeignKey("OrderId");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("SharedLib.DeliveryStatusDocumentModelDB", b =>
+                {
+                    b.HasOne("SharedLib.DeliveryDocumentModelDB", "DeliveryDocument")
+                        .WithMany("DeliveryStatusesLog")
+                        .HasForeignKey("DeliveryDocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeliveryDocument");
+                });
+
             modelBuilder.Entity("SharedLib.OfferAvailabilityModelDB", b =>
                 {
                     b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
@@ -1148,6 +1367,31 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("SharedLib.RowOfRetailOrderDocumentModelDB", b =>
+                {
+                    b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
+                        .WithMany()
+                        .HasForeignKey("NomenclatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedLib.OfferModelDB", "Offer")
+                        .WithMany()
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedLib.RetailDocumentModelDB", "Order")
+                        .WithMany("Rows")
+                        .HasForeignKey("OrderId");
+
+                    b.Navigation("Nomenclature");
+
+                    b.Navigation("Offer");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("SharedLib.RowOfWarehouseDocumentModelDB", b =>
                 {
                     b.HasOne("SharedLib.NomenclatureModelDB", "Nomenclature")
@@ -1220,6 +1464,11 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Offer");
                 });
 
+            modelBuilder.Entity("SharedLib.DeliveryDocumentModelDB", b =>
+                {
+                    b.Navigation("DeliveryStatusesLog");
+                });
+
             modelBuilder.Entity("SharedLib.NomenclatureModelDB", b =>
                 {
                     b.Navigation("Offers");
@@ -1248,6 +1497,13 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Offices");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("SharedLib.RetailDocumentModelDB", b =>
+                {
+                    b.Navigation("DeliveryDocument");
+
+                    b.Navigation("Rows");
                 });
 
             modelBuilder.Entity("SharedLib.TabOfficeForOrderModelDb", b =>

@@ -5,16 +5,17 @@
 namespace SharedLib;
 
 /// <summary>
-/// OrderDocumentBaseDBModel
+/// DeliveryPaymentMethodsEnum
 /// </summary>
-public class OrderDocumentBaseDBModel : OrderDocumentBaseModel
+public enum DeliveryPaymentMethodsEnum
 {
     /// <summary>
-    /// Organization
+    /// Предоплата
     /// </summary>
-    public OrganizationModelDB? Organization { get; set; }
+    PrePayment,
+
     /// <summary>
-    /// Organization
+    /// При получении
     /// </summary>
-    public int OrganizationId { get; set; }
+    UponReceipt,
 }

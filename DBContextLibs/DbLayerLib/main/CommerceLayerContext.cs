@@ -153,6 +153,7 @@ public partial class CommerceLayerContext : DbContext
     public DbSet<RecordsAttendanceModelDB> AttendancesReg { get; set; } = default!;
 
 
+
     /// <summary>
     /// Заказы товаров со складов
     /// </summary>
@@ -169,6 +170,31 @@ public partial class CommerceLayerContext : DbContext
     public DbSet<RowOfOrderDocumentModelDB> RowsOrders { get; set; } = default!;
 
 
+
+    /// <summary>
+    /// RetailOrders
+    /// </summary>
+    public DbSet<RetailDocumentModelDB> RetailOrders { get; set; } = default!;
+
+    /// <summary>
+    /// RowsRetailsOrders
+    /// </summary>
+    public DbSet<RowOfRetailOrderDocumentModelDB> RowsRetailsOrders { get; set; } = default!;
+
+    /// <summary>
+    /// Службы доставки
+    /// </summary>
+    public DbSet<DeliveryServiceModelDB> DeliveryServices { get; set; } = default!;
+
+    /// <summary>
+    /// DeliveryDocuments
+    /// </summary>
+    public DbSet<DeliveryDocumentModelDB> DeliveryDocuments { get; set; } = default!;
+
+    /// <summary>
+    /// DeliveryStatusesDocuments
+    /// </summary>
+    public DbSet<DeliveryStatusDocumentModelDB> DeliveryStatusesDocuments { get; set; } = default!;
 
     /// <summary>
     /// Payments documents

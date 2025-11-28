@@ -494,13 +494,6 @@ public partial class CommerceImplementService(
 
     #region orders
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default)
-    {
-
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc/>
     public async Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default)
     {
         if (req.IssueIds.Length == 0)
@@ -630,6 +623,274 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
+    public async Task<TResponseModel<int>> OrderUpdateAsync(OrderDocumentModelDB req, CancellationToken token = default)
+    {
+        TResponseModel<int> res = new();
+        ValidateReportModel ck = GlobalTools.ValidateObject(req);
+        if (!ck.IsValid)
+        {
+            res.Messages.InjectException(ck.ValidationResults);
+            return res;
+        }
+
+        req.Name = req.Name.Trim();
+
+        TResponseModel<UserInfoModel[]> actor = await identityRepo.GetUsersIdentityAsync([req.AuthorIdentityUserId], token);
+        if (!actor.Success() || actor.Response is null || actor.Response.Length == 0)
+        {
+            res.AddRangeMessages(actor.Messages);
+            return res;
+        }
+
+        string msg, waMsg;
+        DateTime dtu = DateTime.UtcNow;
+        req.LastUpdatedAtUTC = dtu;
+
+        OfferModelDB?[] allOffersReq = [.. req.OfficesTabs!
+            .SelectMany(x => x.Rows!)
+            .Select(x => x.Offer)
+            .DistinctBy(x => x!.Id)];
+
+        allOffersReq = GlobalTools.CreateDeepCopy(allOffersReq)!;
+
+        List<Task> tasks;
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken: token);
+
+        if (req.Id < 1)
+        {
+            if (req.OfficesTabs is null || req.OfficesTabs.Count == 0)
+            {
+                res.AddError($"В заказе отсутствуют адреса доставки");
+                return res;
+            }
+
+            req.OfficesTabs.ForEach(x =>
+            {
+                if (x.Rows is null || x.Rows.Count == 0)
+                    res.AddError($"Для адреса доставки '{x.Office?.Name}' не указана номенклатура");
+                else if (x.Rows.Any(x => x.Quantity < 1))
+                    res.AddError($"В адресе доставки '{x.Office?.Name}' есть номенклатура без количества");
+                else if (x.Rows.Count != x.Rows.GroupBy(x => x.OfferId).Count())
+                    res.AddError($"В адресе доставки '{x.Office?.Name}' ошибка в таблице товаров: оффер встречается более одного раза");
+
+                if (x.WarehouseId < 1)
+                    res.AddError($"В адресе доставки '{x.Office?.Name}' не корректный склад #{x.WarehouseId}");
+            });
+            if (!res.Success())
+                return res;
+
+            int[] rubricsIds = [.. req.OfficesTabs.Select(x => x.WarehouseId).Distinct()];
+            TResponseModel<List<RubricStandardModel>> getRubrics = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
+            if (!getRubrics.Success())
+            {
+                res.AddRangeMessages(getRubrics.Messages);
+                return res;
+            }
+
+            if (getRubrics.Response is null || getRubrics.Response.Count != rubricsIds.Length)
+            {
+                res.AddError($"Некоторые склады (rubric`s) не найдены");
+                return res;
+            }
+
+            req.Id = 0;
+            req.CreatedAtUTC = dtu;
+            req.LastUpdatedAtUTC = dtu;
+            req.Version = Guid.NewGuid();
+            req.StatusDocument = StatusesDocumentsEnum.Created;
+
+            var _offersOfDocument = req.OfficesTabs
+                           .SelectMany(x => x.Rows!.Select(y => new { x.WarehouseId, Row = y }))
+                           .ToArray();
+
+            LockTransactionModelDB[] offersLocked = [.. _offersOfDocument.Select(x => new LockTransactionModelDB()
+            {
+                LockerName = nameof(OfferAvailabilityModelDB),
+                LockerId = x.Row.OfferId,
+                LockerAreaId = x.WarehouseId
+            })];
+
+            try
+            {
+                await context.AddRangeAsync(offersLocked);
+                await context.SaveChangesAsync(token);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(token);
+                msg = $"Не удалось выполнить команду блокировки БД {nameof(OrderUpdateAsync)}: ";
+                loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                res.AddError($"{msg}{ex.Message}");
+                return res;
+            }
+
+            int[] _offersIds = [.. allOffersReq.Select(x => x!.Id)];
+            List<OfferAvailabilityModelDB> registersOffersDb = default!;
+            TResponseModel<int?> res_RubricIssueForCreateOrder = default!;
+            TResponseModel<string?>
+                CommerceNewOrderSubjectNotification = default!,
+                CommerceNewOrderBodyNotification = default!,
+                CommerceNewOrderBodyNotificationTelegram = default!;
+
+            tasks = [
+                Task.Run(async () => { CommerceNewOrderSubjectNotification = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewOrderSubjectNotification); }, token),
+                Task.Run(async () => { CommerceNewOrderBodyNotification = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotification); }, token),
+                Task.Run(async () => { CommerceNewOrderBodyNotificationTelegram = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotificationTelegram); }, token),
+                Task.Run(async () => { res_RubricIssueForCreateOrder = await StorageTransmissionRepo.ReadParameterAsync<int?>(GlobalStaticCloudStorageMetadata.RubricIssueForCreateOrder);}, token),
+                Task.Run(async () => { registersOffersDb = await context.OffersAvailability.Where(x => _offersIds.Any(y => y == x.OfferId)).ToListAsync();}, token)];
+
+            if (string.IsNullOrWhiteSpace(_webConf.ClearBaseUri))
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    if (string.IsNullOrWhiteSpace(_webConf.ClearBaseUri))
+                    {
+                        TelegramBotConfigModel wc = await webTransmissionRepo.GetWebConfigAsync();
+                        _webConf.BaseUri = wc.ClearBaseUri;
+                    }
+                }, token));
+            }
+
+            await Task.WhenAll(tasks);
+            tasks.Clear();
+
+            req.OfficesTabs.ForEach(tabAddr =>
+            {
+                tabAddr.Rows!.ForEach(rowDoc =>
+                {
+                    OfferAvailabilityModelDB? rowReg = registersOffersDb.FirstOrDefault(x => x.OfferId == rowDoc.OfferId && x.WarehouseId == tabAddr.WarehouseId);
+                    OfferModelDB offerInfo = allOffersReq.First(x => x?.Id == rowDoc.OfferId)!;
+
+                    if (rowReg is null)
+                        res.AddError($"'{offerInfo.Name}' (склад: `{getRubrics.Response.First(x => x.Id == tabAddr.WarehouseId).Name}`) нет в наличии");
+                    else if (rowReg.Quantity < rowDoc.Quantity)
+                        res.AddError($"'{offerInfo.Name}' (склад: `{getRubrics.Response.First(x => x.Id == tabAddr.WarehouseId).Name}`) не достаточно. Текущий остаток: {rowReg.Quantity}");
+                });
+            });
+            if (!res.Success())
+            {
+                await transaction.RollbackAsync(token);
+                return res;
+            }
+
+            req.PrepareForSave();
+            req.CreatedAtUTC = dtu;
+
+            await context.AddAsync(req, token);
+            await context.SaveChangesAsync(token);
+            res.Response = req.Id;
+
+            foreach (TabOfficeForOrderModelDb tabAddr in req.OfficesTabs)
+            {
+                foreach (RowOfOrderDocumentModelDB rowDoc in tabAddr.Rows!)
+                {
+                    OfferAvailabilityModelDB rowReg = registersOffersDb.First(x => x.OfferId == rowDoc.OfferId && x.WarehouseId == tabAddr.WarehouseId);
+                    //OfferModelDB offerInfo = allOffersReq.First(x => x?.Id == rowDoc.OfferId)!;
+                    rowReg.Quantity -= rowDoc.Quantity;
+                    context.Update(rowReg);
+                }
+            }
+
+            TAuthRequestModel<UniversalUpdateRequestModel> issue_new = new()
+            {
+                SenderActionUserId = req.AuthorIdentityUserId,
+                Payload = new()
+                {
+                    Name = req.Name,
+                    ParentId = res_RubricIssueForCreateOrder.Response,
+                    Description = $"Новый заказ.\n{req.Information}".Trim(),
+                },
+            };
+
+            TResponseModel<int> issue = await HelpDeskRepo.IssueCreateOrUpdateAsync(issue_new, token);
+            if (!issue.Success())
+            {
+                await transaction.RollbackAsync(token);
+                res.Messages.AddRange(issue.Messages);
+                return res;
+            }
+
+            req.HelpDeskId = issue.Response;
+            context.Update(req);
+
+            string subject_email = "Создан новый заказ";
+            DateTime _dt = DateTime.UtcNow.GetCustomTime();
+            string _dtAsString = $"{_dt.ToString("d", GlobalStaticConstants.RU)} {_dt.ToString("t", GlobalStaticConstants.RU)}";
+            string _about_order = $"'{req.Name}' {_dtAsString}";
+
+            if (CommerceNewOrderSubjectNotification?.Success() == true && !string.IsNullOrWhiteSpace(CommerceNewOrderSubjectNotification.Response))
+                subject_email = CommerceNewOrderSubjectNotification.Response;
+
+            subject_email = IHelpDeskService.ReplaceTags(subject_email, _dt, issue.Response, StatusesDocumentsEnum.Created, subject_email, _webConf.ClearBaseUri, _about_order);
+            res.AddSuccess(subject_email);
+            msg = $"<p>Заказ <b>'{issue_new.Payload.Name}' от [{_dtAsString}]</b> успешно создан.</p>" +
+                    $"<p>/<a href='{_webConf.ClearBaseUri}'>{_webConf.ClearBaseUri}</a>/</p>";
+            string msg_for_tg = msg.Replace("<p>", "").Replace("</p>", "");
+
+            waMsg = $"Заказ '{issue_new.Payload.Name}' от [{_dtAsString}] успешно создан.\n{_webConf.ClearBaseUri}";
+
+            if (CommerceNewOrderBodyNotification?.Success() == true && !string.IsNullOrWhiteSpace(CommerceNewOrderBodyNotification.Response))
+                msg = CommerceNewOrderBodyNotification.Response;
+            msg = IHelpDeskService.ReplaceTags(msg, _dt, issue.Response, StatusesDocumentsEnum.Created, msg, _webConf.ClearBaseUri, _about_order);
+
+            if (CommerceNewOrderBodyNotificationTelegram?.Success() == true && !string.IsNullOrWhiteSpace(CommerceNewOrderBodyNotificationTelegram.Response))
+                msg_for_tg = CommerceNewOrderBodyNotificationTelegram.Response;
+            msg_for_tg = IHelpDeskService.ReplaceTags(msg_for_tg, _dt, issue.Response, StatusesDocumentsEnum.Created, msg_for_tg, _webConf.ClearBaseUri, _about_order);
+
+            tasks = [identityRepo.SendEmailAsync(new() { Email = actor.Response[0].Email!, Subject = subject_email, TextMessage = msg }, false, token)];
+
+            if (actor.Response[0].TelegramId.HasValue)
+                tasks.Add(tgRepo.SendTextMessageTelegramAsync(new() { Message = msg_for_tg, UserTelegramId = actor.Response[0].TelegramId!.Value }, false, token));
+
+            if (!string.IsNullOrWhiteSpace(actor.Response[0].PhoneNumber) && GlobalTools.IsPhoneNumber(actor.Response[0].PhoneNumber!))
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    TResponseModel<string?> CommerceNewOrderBodyNotificationWhatsapp = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotificationWhatsapp);
+                    if (CommerceNewOrderBodyNotificationWhatsapp.Success() && !string.IsNullOrWhiteSpace(CommerceNewOrderBodyNotificationWhatsapp.Response))
+                        waMsg = CommerceNewOrderBodyNotificationWhatsapp.Response;
+
+                    await tgRepo.SendWappiMessageAsync(new() { Number = actor.Response[0].PhoneNumber!, Text = IHelpDeskService.ReplaceTags(waMsg, _dt, issue.Response, StatusesDocumentsEnum.Created, waMsg, _webConf.ClearBaseUri, _about_order, true) }, false);
+                }, token));
+            }
+
+            loggerRepo.LogInformation(msg_for_tg);
+            context.RemoveRange(offersLocked);
+            tasks.Add(context.SaveChangesAsync(token));
+            await Task.WhenAll(tasks);
+            await transaction.CommitAsync(token);
+            return res;
+        }
+
+        OrderDocumentModelDB order_document = await context.Orders.FirstAsync(x => x.Id == req.Id, cancellationToken: token);
+        if (order_document.Version != req.Version)
+        {
+            msg = "Документ был кем-то изменён пока был открытым";
+            loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            res.AddError($"{msg}. Обновите сначала документ (F5)");
+            return res;
+        }
+
+        if (order_document.Name == req.Name && order_document.Description == req.Description)
+        {
+            res.AddInfo($"Документ #{req.Id} не требует обновления");
+            return res;
+        }
+
+        res.Response = await context.Orders
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+            .SetProperty(p => p.Name, req.Name)
+            .SetProperty(p => p.Description, req.Description)
+            .SetProperty(p => p.Version, Guid.NewGuid())
+            .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
+
+        res.AddSuccess($"Обновление `документа-заказа` выполнено");
+        return res;
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<int>> RowForOrderUpdateAsync(RowOfOrderDocumentModelDB req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
@@ -641,7 +902,7 @@ public partial class CommerceImplementService(
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<OrderRowsQueryRecord> queryDocumentDb = from r in context.RowsOrders
-                                                           join d in context.Orders on r.OrderId equals d.Id
+                                                           join d in context.Orders.Where(x => x.Id == req.OrderId) on r.OrderId equals d.Id
                                                            join t in context.OfficesOrders.Where(x => x.Id == req.OfficeOrderTabId) on r.OfficeOrderTabId equals t.Id
                                                            join o in context.Offers on r.OfferId equals o.Id
                                                            join g in context.Nomenclatures on r.NomenclatureId equals g.Id
@@ -706,14 +967,16 @@ public partial class CommerceImplementService(
             res.AddError($"{msg}{ex.Message}");
             return res;
         }
-        int[] _offersIds = [.. lockers.Select(x => x.LockerId)];
+        int[] _offersIds = [.. lockers.Select(x => x.LockerId).Distinct()];
         OfferAvailabilityModelDB[] regsOfferAv = await context
             .OffersAvailability
             .Where(x => _offersIds.Any(y => y == x.OfferId))
             .Include(x => x.Offer)
             .ToArrayAsync(cancellationToken: token);
 
-        OfferAvailabilityModelDB? regOfferAv = regsOfferAv.FirstOrDefault(x => x.OfferId == req.OfferId && x.WarehouseId == commDataDb.WarehouseId);
+        OfferAvailabilityModelDB? regOfferAv = regsOfferAv
+            .FirstOrDefault(x => x.OfferId == req.OfferId && x.WarehouseId == commDataDb.WarehouseId);
+
         if (regOfferAv is null && commDataDb.StatusDocument != StatusesDocumentsEnum.Canceled)
         {
             regOfferAv = new()
@@ -928,280 +1191,6 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> OrderUpdateAsync(OrderDocumentModelDB req, CancellationToken token = default)
-    {
-        TResponseModel<int> res = new();
-        ValidateReportModel ck = GlobalTools.ValidateObject(req);
-        if (!ck.IsValid)
-        {
-            res.Messages.InjectException(ck.ValidationResults);
-            return res;
-        }
-
-        req.Name = req.Name.Trim();
-
-        TResponseModel<UserInfoModel[]> actor = await identityRepo.GetUsersIdentityAsync([req.AuthorIdentityUserId], token);
-        if (!actor.Success() || actor.Response is null || actor.Response.Length == 0)
-        {
-            res.AddRangeMessages(actor.Messages);
-            return res;
-        }
-
-        string msg, waMsg;
-        DateTime dtu = DateTime.UtcNow;
-        req.LastUpdatedAtUTC = dtu;
-
-        OfferModelDB?[] allOffersReq = [.. req.OfficesTabs!
-            .SelectMany(x => x.Rows!)
-            .Select(x => x.Offer)
-            .DistinctBy(x => x!.Id)];
-
-        allOffersReq = GlobalTools.CreateDeepCopy(allOffersReq)!;
-
-        List<Task> tasks;
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        if (req.Id < 1)
-        {
-            if (req.OfficesTabs is null || req.OfficesTabs.Count == 0)
-            {
-                res.AddError($"В заказе отсутствуют адреса доставки");
-                return res;
-            }
-
-            req.OfficesTabs.ForEach(x =>
-            {
-                if (x.Rows is null || x.Rows.Count == 0)
-                    res.AddError($"Для адреса доставки '{x.Office?.Name}' не указана номенклатура");
-                else if (x.Rows.Any(x => x.Quantity < 1))
-                    res.AddError($"В адресе доставки '{x.Office?.Name}' есть номенклатура без количества");
-                else if (x.Rows.Count != x.Rows.GroupBy(x => x.OfferId).Count())
-                    res.AddError($"В адресе доставки '{x.Office?.Name}' ошибка в таблице товаров: оффер встречается более одного раза");
-
-                if (x.WarehouseId < 1)
-                    res.AddError($"В адресе доставки '{x.Office?.Name}' не корректный склад #{x.WarehouseId}");
-            });
-            if (!res.Success())
-                return res;
-
-            int[] rubricsIds = [.. req.OfficesTabs.Select(x => x.WarehouseId).Distinct()];
-            TResponseModel<List<RubricStandardModel>> getRubrics = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
-            if (!getRubrics.Success())
-            {
-                res.AddRangeMessages(getRubrics.Messages);
-                return res;
-            }
-
-            if (getRubrics.Response is null || getRubrics.Response.Count != rubricsIds.Length)
-            {
-                res.AddError($"Некоторые склады (rubric`s) не найдены");
-                return res;
-            }
-
-            req.Id = 0;
-            req.CreatedAtUTC = dtu;
-            req.LastUpdatedAtUTC = dtu;
-            req.Version = Guid.NewGuid();
-            req.StatusDocument = StatusesDocumentsEnum.Created;
-
-            var _offersOfDocument = req.OfficesTabs
-                           .SelectMany(x => x.Rows!.Select(y => new { x.WarehouseId, Row = y }))
-                           .ToArray();
-
-            using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
-
-            LockTransactionModelDB[] offersLocked = [.. _offersOfDocument.Select(x => new LockTransactionModelDB()
-            {
-                LockerName = nameof(OfferAvailabilityModelDB),
-                LockerId = x.Row.OfferId,
-                LockerAreaId = x.WarehouseId
-            })];
-
-            try
-            {
-                await context.AddRangeAsync(offersLocked);
-                await context.SaveChangesAsync(token);
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync(token);
-                msg = $"Не удалось выполнить команду блокировки БД {nameof(OrderUpdateAsync)}: ";
-                loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-                res.AddError($"{msg}{ex.Message}");
-                return res;
-            }
-
-            int[] _offersIds = [.. allOffersReq.Select(x => x!.Id)];
-            List<OfferAvailabilityModelDB> registersOffersDb = default!;
-            TResponseModel<int?> res_RubricIssueForCreateOrder = default!;
-            TResponseModel<string?>? CommerceNewOrderSubjectNotification = null, CommerceNewOrderBodyNotification = null, CommerceNewOrderBodyNotificationTelegram = null;
-
-            tasks = [
-                Task.Run(async () => { CommerceNewOrderSubjectNotification = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewOrderSubjectNotification); }, token),
-                Task.Run(async () => { CommerceNewOrderBodyNotification = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotification); }, token),
-                Task.Run(async () => { CommerceNewOrderBodyNotificationTelegram = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotificationTelegram); }, token),
-                Task.Run(async () => { res_RubricIssueForCreateOrder = await StorageTransmissionRepo.ReadParameterAsync<int?>(GlobalStaticCloudStorageMetadata.RubricIssueForCreateOrder);}, token),
-                Task.Run(async () => { registersOffersDb = await context.OffersAvailability.Where(x => _offersIds.Any(y => y == x.OfferId)).ToListAsync();}, token)];
-
-            if (string.IsNullOrWhiteSpace(_webConf.ClearBaseUri))
-            {
-                tasks.Add(Task.Run(async () =>
-                {
-                    if (string.IsNullOrWhiteSpace(_webConf.ClearBaseUri))
-                    {
-                        TelegramBotConfigModel wc = await webTransmissionRepo.GetWebConfigAsync();
-                        _webConf.BaseUri = wc.ClearBaseUri;
-                    }
-                }, token));
-            }
-
-            await Task.WhenAll(tasks);
-            tasks.Clear();
-
-            req.OfficesTabs.ForEach(tabAddr =>
-            {
-                tabAddr.Rows!.ForEach(rowDoc =>
-                {
-                    OfferAvailabilityModelDB? rowReg = registersOffersDb.FirstOrDefault(x => x.OfferId == rowDoc.OfferId && x.WarehouseId == tabAddr.WarehouseId);
-                    OfferModelDB offerInfo = allOffersReq.First(x => x?.Id == rowDoc.OfferId)!;
-
-                    if (rowReg is null)
-                        res.AddError($"'{offerInfo.Name}' (склад: `{getRubrics.Response.First(x => x.Id == tabAddr.WarehouseId).Name}`) нет в наличии");
-                    else if (rowReg.Quantity < rowDoc.Quantity)
-                        res.AddError($"'{offerInfo.Name}' (склад: `{getRubrics.Response.First(x => x.Id == tabAddr.WarehouseId).Name}`) не достаточно. Текущий остаток: {rowReg.Quantity}");
-                });
-            });
-            if (!res.Success())
-            {
-                await transaction.RollbackAsync(token);
-                return res;
-            }
-
-            req.PrepareForSave();
-            req.CreatedAtUTC = dtu;
-            try
-            {
-                await context.AddAsync(req, token);
-                await context.SaveChangesAsync(token);
-                res.Response = req.Id;
-
-                foreach (TabOfficeForOrderModelDb tabAddr in req.OfficesTabs)
-                {
-                    foreach (RowOfOrderDocumentModelDB rowDoc in tabAddr.Rows!)
-                    {
-                        OfferAvailabilityModelDB rowReg = registersOffersDb.First(x => x.OfferId == rowDoc.OfferId && x.WarehouseId == tabAddr.WarehouseId);
-                        OfferModelDB offerInfo = allOffersReq.First(x => x?.Id == rowDoc.OfferId)!;
-                        rowReg.Quantity -= rowDoc.Quantity;
-                        context.Update(rowReg);
-                    }
-                }
-
-                TAuthRequestModel<UniversalUpdateRequestModel> issue_new = new()
-                {
-                    SenderActionUserId = req.AuthorIdentityUserId,
-                    Payload = new()
-                    {
-                        Name = req.Name,
-                        ParentId = res_RubricIssueForCreateOrder.Response,
-                        Description = $"Новый заказ.\n{req.Information}".Trim(),
-                    },
-                };
-
-                TResponseModel<int> issue = await HelpDeskRepo.IssueCreateOrUpdateAsync(issue_new, token);
-                if (!issue.Success())
-                {
-                    await transaction.RollbackAsync(token);
-                    res.Messages.AddRange(issue.Messages);
-                    return res;
-                }
-
-                req.HelpDeskId = issue.Response;
-                context.Update(req);
-
-                string subject_email = "Создан новый заказ";
-                DateTime _dt = DateTime.UtcNow.GetCustomTime();
-                string _dtAsString = $"{_dt.ToString("d", GlobalStaticConstants.RU)} {_dt.ToString("t", GlobalStaticConstants.RU)}";
-                string _about_order = $"'{req.Name}' {_dtAsString}";
-
-                if (CommerceNewOrderSubjectNotification?.Success() == true && !string.IsNullOrWhiteSpace(CommerceNewOrderSubjectNotification.Response))
-                    subject_email = CommerceNewOrderSubjectNotification.Response;
-
-                subject_email = IHelpDeskService.ReplaceTags(subject_email, _dt, issue.Response, StatusesDocumentsEnum.Created, subject_email, _webConf.ClearBaseUri, _about_order);
-                res.AddSuccess(subject_email);
-                msg = $"<p>Заказ <b>'{issue_new.Payload.Name}' от [{_dtAsString}]</b> успешно создан.</p>" +
-                        $"<p>/<a href='{_webConf.ClearBaseUri}'>{_webConf.ClearBaseUri}</a>/</p>";
-                string msg_for_tg = msg.Replace("<p>", "").Replace("</p>", "");
-
-                waMsg = $"Заказ '{issue_new.Payload.Name}' от [{_dtAsString}] успешно создан.\n{_webConf.ClearBaseUri}";
-
-                if (CommerceNewOrderBodyNotification?.Success() == true && !string.IsNullOrWhiteSpace(CommerceNewOrderBodyNotification.Response))
-                    msg = CommerceNewOrderBodyNotification.Response;
-                msg = IHelpDeskService.ReplaceTags(msg, _dt, issue.Response, StatusesDocumentsEnum.Created, msg, _webConf.ClearBaseUri, _about_order);
-
-                if (CommerceNewOrderBodyNotificationTelegram?.Success() == true && !string.IsNullOrWhiteSpace(CommerceNewOrderBodyNotificationTelegram.Response))
-                    msg_for_tg = CommerceNewOrderBodyNotificationTelegram.Response;
-                msg_for_tg = IHelpDeskService.ReplaceTags(msg_for_tg, _dt, issue.Response, StatusesDocumentsEnum.Created, msg_for_tg, _webConf.ClearBaseUri, _about_order);
-
-                tasks = [identityRepo.SendEmailAsync(new() { Email = actor.Response[0].Email!, Subject = subject_email, TextMessage = msg }, false, token)];
-
-                if (actor.Response[0].TelegramId.HasValue)
-                    tasks.Add(tgRepo.SendTextMessageTelegramAsync(new() { Message = msg_for_tg, UserTelegramId = actor.Response[0].TelegramId!.Value }, false, token));
-
-                if (!string.IsNullOrWhiteSpace(actor.Response[0].PhoneNumber) && GlobalTools.IsPhoneNumber(actor.Response[0].PhoneNumber!))
-                {
-                    tasks.Add(Task.Run(async () =>
-                    {
-                        TResponseModel<string?> CommerceNewOrderBodyNotificationWhatsapp = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotificationWhatsapp);
-                        if (CommerceNewOrderBodyNotificationWhatsapp.Success() && !string.IsNullOrWhiteSpace(CommerceNewOrderBodyNotificationWhatsapp.Response))
-                            waMsg = CommerceNewOrderBodyNotificationWhatsapp.Response;
-
-                        await tgRepo.SendWappiMessageAsync(new() { Number = actor.Response[0].PhoneNumber!, Text = IHelpDeskService.ReplaceTags(waMsg, _dt, issue.Response, StatusesDocumentsEnum.Created, waMsg, _webConf.ClearBaseUri, _about_order, true) }, false);
-                    }, token));
-                }
-
-                loggerRepo.LogInformation(msg_for_tg);
-                context.RemoveRange(offersLocked);
-                tasks.Add(context.SaveChangesAsync(token));
-                await Task.WhenAll(tasks);
-                await transaction.CommitAsync(token);
-                return res;
-            }
-            catch (Exception ex)
-            {
-                loggerRepo.LogError(ex, $"Не удалось создать заявку-заказ: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
-                res.Messages.InjectException(ex);
-                await transaction.RollbackAsync(token);
-                return res;
-            }
-        }
-
-        OrderDocumentModelDB order_document = await context.Orders.FirstAsync(x => x.Id == req.Id, cancellationToken: token);
-        if (order_document.Version != req.Version)
-        {
-            msg = "Документ был кем-то изменён пока был открытым";
-            loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-            res.AddError($"{msg}. Обновите сначала документ (F5)");
-            return res;
-        }
-
-        if (order_document.Name == req.Name && order_document.Description == req.Description)
-        {
-            res.AddInfo($"Документ #{req.Id} не требует обновления");
-            return res;
-        }
-
-        res.Response = await context.Orders
-            .Where(x => x.Id == req.Id)
-            .ExecuteUpdateAsync(set => set
-            .SetProperty(p => p.Name, req.Name)
-            .SetProperty(p => p.Description, req.Description)
-            .SetProperty(p => p.Version, Guid.NewGuid())
-            .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
-
-        res.AddSuccess($"Обновление `документа-заказа` выполнено");
-        return res;
-    }
-
-    /// <inheritdoc/>
     public async Task<TResponseModel<bool>> StatusesOrdersChangeByHelpDeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         string msg;
@@ -1333,6 +1322,13 @@ public partial class CommerceImplementService(
         return res;
     }
     #endregion
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default)
+    {
+
+        throw new NotImplementedException();
+    }
 
     /// <inheritdoc/>
     public async Task<TResponseModel<FileAttachModel>> GetOrderReportFileAsync(TAuthRequestModel<int> req, CancellationToken token = default)
