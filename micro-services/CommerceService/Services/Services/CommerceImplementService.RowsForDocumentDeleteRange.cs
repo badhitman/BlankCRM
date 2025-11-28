@@ -113,8 +113,8 @@ public partial class CommerceImplementService : ICommerceService
             else
             {
                 await context.OffersAvailability.Where(y => y.Id == offerRegisterWritingOff.Id)
-                                              .ExecuteUpdateAsync(set => set
-                                                 .SetProperty(p => p.Quantity, p => p.Quantity + rowEl.Quantity), cancellationToken: token);
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.Quantity, p => p.Quantity + rowEl.Quantity), cancellationToken: token);
             }
 
             if (offerRegister is null || offerRegister.Quantity < rowEl.Quantity)
@@ -128,8 +128,8 @@ public partial class CommerceImplementService : ICommerceService
             else
             {
                 await context.OffersAvailability.Where(y => y.Id == offerRegister.Id)
-                                              .ExecuteUpdateAsync(set => set
-                                                 .SetProperty(p => p.Quantity, p => p.Quantity - rowEl.Quantity), cancellationToken: token);
+                    .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Quantity, p => p.Quantity - rowEl.Quantity), cancellationToken: token);
             }
         }
 
