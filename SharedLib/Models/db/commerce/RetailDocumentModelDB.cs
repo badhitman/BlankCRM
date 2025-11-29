@@ -25,7 +25,7 @@ public class RetailDocumentModelDB : OrderDocumentBaseModel
     /// <summary>
     /// DeliveryDocument
     /// </summary>
-    public List<DeliveryDocumentModelDB>? DeliveryDocuments { get; set; }
+    public List<DeliveryDocumentRetailModelDB>? DeliveryDocuments { get; set; }
 
     /// <summary>
     /// Rows
@@ -35,5 +35,5 @@ public class RetailDocumentModelDB : OrderDocumentBaseModel
     /// <summary>
     /// PaymentsLinks
     /// </summary>
-    public List<PaymentOrderLinkModelDB>? PaymentsLinks { get; set; }
+    public List<PaymentRetailOrderLinkModelDB>? PaymentsLinks { get; set; }
 }

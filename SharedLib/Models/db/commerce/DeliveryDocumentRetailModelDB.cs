@@ -12,7 +12,7 @@ namespace SharedLib;
 /// </summary>
 [Index(nameof(DeliveryCode)), Index(nameof(DeliveryType)), Index(nameof(RecipientIdentityUserId))]
 [Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment))]
-public class DeliveryDocumentModelDB
+public class DeliveryDocumentRetailModelDB
 {
     /// <summary>
     /// Идентификатор/Key
@@ -79,5 +79,5 @@ public class DeliveryDocumentModelDB
     /// <summary>
     /// StatusesLog
     /// </summary>
-    public List<DeliveryStatusDocumentModelDB>? DeliveryStatusesLog { get; set; }
+    public List<DeliveryStatusRetailDocumentModelDB>? DeliveryStatusesLog { get; set; }
 }

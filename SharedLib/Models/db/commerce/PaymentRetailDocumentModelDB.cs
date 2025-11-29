@@ -50,7 +50,7 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     /// <summary>
     /// PaymentOrderLink
     /// </summary>
-    public List<PaymentOrderLinkModelDB>? PaymentOrdersLinks { get; set; }
+    public List<PaymentRetailOrderLinkModelDB>? PaymentOrdersLinks { get; set; }
 
     /// <summary>
     /// Version

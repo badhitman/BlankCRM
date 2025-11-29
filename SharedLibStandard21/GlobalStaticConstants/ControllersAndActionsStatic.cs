@@ -177,6 +177,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string TYPE_CONTROLLER_NAME = "type";
 
         /// <summary>
+        /// types
+        /// </summary>
+        public const string TYPES_CONTROLLER_NAME = "types";
+
+        /// <summary>
         /// Simple
         /// </summary>
         public const string SIMPLE_CONTROLLER_NAME = "simple";
@@ -285,6 +290,16 @@ public static partial class GlobalStaticConstantsRoutes
         /// Документы
         /// </summary>
         public const string DOCUMENTS_CONTROLLER_NAME = "documents";
+
+        /// <summary>
+        /// Statuses
+        /// </summary>
+        public const string STATUSES_CONTROLLER_NAME = "statuses";
+
+        /// <summary>
+        /// Services
+        /// </summary>
+        public const string SERVICES_CONTROLLER_NAME = "services";
 
         /// <summary>
         /// Документ
@@ -462,6 +477,31 @@ public static partial class GlobalStaticConstantsRoutes
         public const string COMMERCE_CONTROLLER_NAME = "commerce";
 
         /// <summary>
+        /// Retail
+        /// </summary>
+        public const string RETAIL_CONTROLLER_NAME = "retail";
+
+        /// <summary>
+        /// Wallet
+        /// </summary>
+        public const string WALLET_CONTROLLER_NAME = "wallet";
+
+        /// <summary>
+        /// Wallets
+        /// </summary>
+        public const string WALLETS_CONTROLLER_NAME = "wallets";
+
+        /// <summary>
+        /// Conversion
+        /// </summary>
+        public const string CONVERSION_CONTROLLER_NAME = "conversion";
+
+        /// <summary>
+        /// Conversions
+        /// </summary>
+        public const string CONVERSIONS_CONTROLLER_NAME = "conversions";
+
+        /// <summary>
         /// Report
         /// </summary>
         public const string REPORT_CONTROLLER_NAME = "report";
@@ -500,6 +540,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Delivery
         /// </summary>
         public const string DELIVERY_CONTROLLER_NAME = "delivery";
+
+        /// <summary>
+        /// Service
+        /// </summary>
+        public const string SERVICE_CONTROLLER_NAME = "service";
 
         /// <summary>
         /// Legal

@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Документ конвертации/перевода с кошелька на кошелёк
 /// </summary>
-public class WalletConversionDocumentModelDB : EntryUpdatedModel
+public class WalletConversionRetailDocumentModelDB : EntryUpdatedModel
 {
     /// <summary>
     /// Кошелёк списания

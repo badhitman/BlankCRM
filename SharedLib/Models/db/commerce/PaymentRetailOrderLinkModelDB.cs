@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// PaymentOrderLinkModelDB
 /// </summary>
-public class PaymentOrderLinkModelDB : EntryModel
+public class PaymentRetailOrderLinkModelDB : EntryModel
 {
     /// <summary>
     /// BuyerIdentityUserId

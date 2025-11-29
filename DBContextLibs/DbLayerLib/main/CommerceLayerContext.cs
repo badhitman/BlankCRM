@@ -186,22 +186,22 @@ public partial class CommerceLayerContext : DbContext
     /// <summary>
     /// Службы доставки
     /// </summary>
-    public DbSet<DeliveryServiceModelDB> DeliveryRetailServices { get; set; } = default!;
+    public DbSet<DeliveryServiceRetailModelDB> DeliveryRetailServices { get; set; } = default!;
 
     /// <summary>
     /// DeliveryDocuments
     /// </summary>
-    public DbSet<DeliveryDocumentModelDB> DeliveryRetailDocuments { get; set; } = default!;
+    public DbSet<DeliveryDocumentRetailModelDB> DeliveryRetailDocuments { get; set; } = default!;
 
     /// <summary>
-    /// RowsDeliveryDocuments
+    /// RowsDeliveryRetailDocuments
     /// </summary>
-    public DbSet<RowOfDeliveryRetailOrderDocumentModelDB> RowsDeliveryRetailDocuments { get; set; } = default!;
+    public DbSet<RowOfDeliveryRetailDocumentModelDB> RowsDeliveryRetailDocuments { get; set; } = default!;
 
     /// <summary>
     /// Хроника статусов доставки
     /// </summary>
-    public DbSet<DeliveryStatusDocumentModelDB> DeliveryStatusesRetailDocuments { get; set; } = default!;
+    public DbSet<DeliveryStatusRetailDocumentModelDB> DeliveryStatusesRetailDocuments { get; set; } = default!;
 
 
 
@@ -213,7 +213,7 @@ public partial class CommerceLayerContext : DbContext
     /// <summary>
     /// связи платежей с заказами
     /// </summary>
-    public DbSet<PaymentOrderLinkModelDB> PaymentsOrdersRetailLinks { get; set; } = default!;
+    public DbSet<PaymentRetailOrderLinkModelDB> PaymentsOrdersRetailLinks { get; set; } = default!;
 
 
 
@@ -230,7 +230,7 @@ public partial class CommerceLayerContext : DbContext
     /// <summary>
     /// Операции конвертации/перевода между кошельками
     /// </summary>
-    public DbSet<WalletConversionDocumentModelDB> ConversionsDocumentsWalletsRetail { get; set; } = default!;
+    public DbSet<WalletConversionRetailDocumentModelDB> ConversionsDocumentsWalletsRetail { get; set; } = default!;
 
 
 

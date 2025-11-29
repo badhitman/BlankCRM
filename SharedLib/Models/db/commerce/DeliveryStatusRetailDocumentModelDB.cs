@@ -11,7 +11,7 @@ namespace SharedLib;
 /// DeliveryStatusDocument
 /// </summary>
 [Index(nameof(DeliveryStatus)), Index(nameof(DeliveryPayment)), Index(nameof(Created)), Index(nameof(Paid))]
-public class DeliveryStatusDocumentModelDB
+public class DeliveryStatusRetailDocumentModelDB
 {
     /// <summary>
     /// Идентификатор/Key
@@ -42,7 +42,7 @@ public class DeliveryStatusDocumentModelDB
     /// <summary>
     /// DeliveryDocument
     /// </summary>
-    public DeliveryDocumentModelDB? DeliveryDocument { get; set; }
+    public DeliveryDocumentRetailModelDB? DeliveryDocument { get; set; }
     /// <summary>
     /// DeliveryDocument
     /// </summary>

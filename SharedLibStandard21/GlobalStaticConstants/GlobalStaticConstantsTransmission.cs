@@ -720,6 +720,89 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string PriceRuleDeleteCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.PRICE_CONTROLLER_NAME, Routes.OFFER_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
         #endregion
 
+        #region Retail
+        /// <inheritdoc/>
+        public readonly static string CreateConversionDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.CONVERSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string CreateDeliveryDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string CreateDeliveryServiceRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.SERVICE_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string CreateDeliveryStatusDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, $"{Routes.STATUS_CONTROLLER_NAME}-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string CreatePaymentDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.PAYMENT_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string CreatePaymentOrderLinkRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.PAYMENT_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.LINK_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string CreateRowOfDeliveryDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, $"{Routes.ROW_CONTROLLER_NAME}-of-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string CreateWalletRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.WALLET_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string CreateWalletTypeRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.WALLET_CONTROLLER_NAME, Routes.TYPE_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SelectConversionsDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.CONVERSIONS_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SelectDeliveryDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SelectDeliveryServicesRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.SERVICES_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SelectDeliveryStatusesDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.STATUSES_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SelectPaymentsDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.PAYMENTS_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SelectPaymentsOrdersLinksRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.PAYMENTS_CONTROLLER_NAME, Routes.ORDERS_CONTROLLER_NAME, Routes.LINKS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SelectRowsOfDeliveryDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, $"{Routes.ROWS_CONTROLLER_NAME}-of-{Routes.DOCUMENTS_CONTROLLER_NAME}", Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SelectWalletsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.WALLETS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SelectWalletsTypesRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.WALLETS_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpdateConversionDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.CONVERSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpdateDeliveryDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpdateDeliveryServiceRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.SERVICE_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpdateDeliveryStatusDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.STATUS_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpdatePaymentDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.PAYMENT_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpdatePaymentOrderLinkRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.PAYMENT_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.LINK_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpdateRowOfDeliveryDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, $"{Routes.ROW_CONTROLLER_NAME}-of-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpdateWalletRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.WALLET_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpdateWalletTypeRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.WALLET_CONTROLLER_NAME, Routes.TYPE_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+        #endregion
+
         #region Bank`s
         /// <inheritdoc/>
         public readonly static string BankConnectionCreateOrUpdateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);

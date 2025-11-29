@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// Служба доставки
+/// SelectRowsOfDeliveriesRetailDocumentsRequestModel
 /// </summary>
-public class DeliveryServiceModelDB : EntryModel
+public class SelectRowsOfDeliveriesRetailDocumentsRequestModel
 {
 
 }
