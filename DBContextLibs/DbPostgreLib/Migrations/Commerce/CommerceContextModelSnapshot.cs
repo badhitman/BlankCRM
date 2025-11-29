@@ -155,7 +155,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("CalendarsSchedules");
                 });
 
-            modelBuilder.Entity("SharedLib.DeliveryDocumentModelDB", b =>
+            modelBuilder.Entity("SharedLib.DeliveryDocumentRetailModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -167,8 +167,14 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("DeliveryCode")
                         .HasColumnType("text");
+
+                    b.Property<int>("DeliveryPayment")
+                        .HasColumnType("integer");
 
                     b.Property<int>("DeliveryType")
                         .HasColumnType("integer");
@@ -184,10 +190,21 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("LastUpdatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int?>("OrderId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("Paid")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("RecipientIdentityUserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<decimal>("ShippingCost")
@@ -200,7 +217,11 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("AddressUserComment");
 
+                    b.HasIndex("CreatedAtUTC");
+
                     b.HasIndex("DeliveryCode");
+
+                    b.HasIndex("DeliveryPayment");
 
                     b.HasIndex("DeliveryType");
 
@@ -208,14 +229,18 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("KladrTitle");
 
+                    b.HasIndex("LastUpdatedAtUTC");
+
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("Paid");
 
                     b.HasIndex("RecipientIdentityUserId");
 
                     b.ToTable("DeliveryRetailDocuments");
                 });
 
-            modelBuilder.Entity("SharedLib.DeliveryServiceModelDB", b =>
+            modelBuilder.Entity("SharedLib.DeliveryServiceRetailModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -232,7 +257,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("DeliveryRetailServices");
                 });
 
-            modelBuilder.Entity("SharedLib.DeliveryStatusDocumentModelDB", b =>
+            modelBuilder.Entity("SharedLib.DeliveryStatusRetailDocumentModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -240,32 +265,34 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("DeliveryDocumentId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("DeliveryPayment")
-                        .HasColumnType("integer");
-
                     b.Property<int>("DeliveryStatus")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("Paid")
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Created");
+                    b.HasIndex("CreatedAtUTC");
 
                     b.HasIndex("DeliveryDocumentId");
 
-                    b.HasIndex("DeliveryPayment");
-
                     b.HasIndex("DeliveryStatus");
 
-                    b.HasIndex("Paid");
+                    b.HasIndex("LastUpdatedAtUTC");
 
                     b.ToTable("DeliveryStatusesRetailDocuments");
                 });
@@ -670,45 +697,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("SharedLib.PaymentOrderLinkModelDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("PayerIdentityUserId")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("PaymentRetailDocumentModelDBId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("PaymentRetailDocumentModelDBId");
-
-                    b.ToTable("PaymentsOrdersRetailLinks");
-                });
-
             modelBuilder.Entity("SharedLib.PaymentRetailDocumentModelDB", b =>
                 {
                     b.Property<int>("Id")
@@ -734,6 +722,7 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("text");
 
                     b.Property<string>("PayerIdentityUserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PaymentSource")
@@ -769,6 +758,42 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("WalletId");
 
                     b.ToTable("PaymentsRetailDocuments");
+                });
+
+            modelBuilder.Entity("SharedLib.PaymentRetailOrderLinkModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PaymentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("PaymentId");
+
+                    b.ToTable("PaymentsOrdersRetailLinks");
                 });
 
             modelBuilder.Entity("SharedLib.PriceRuleForOfferModelDB", b =>
@@ -957,7 +982,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("RetailOrders");
                 });
 
-            modelBuilder.Entity("SharedLib.RowOfDeliveryRetailOrderDocumentModelDB", b =>
+            modelBuilder.Entity("SharedLib.RowOfDeliveryRetailDocumentModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1198,7 +1223,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("Units");
                 });
 
-            modelBuilder.Entity("SharedLib.WalletConversionDocumentModelDB", b =>
+            modelBuilder.Entity("SharedLib.WalletConversionRetailDocumentModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1269,7 +1294,12 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("text");
 
                     b.Property<string>("UserIdentityId")
+                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Guid>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid");
 
                     b.Property<int>("WalletTypeId")
                         .HasColumnType("integer");
@@ -1486,7 +1516,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Offer");
                 });
 
-            modelBuilder.Entity("SharedLib.DeliveryDocumentModelDB", b =>
+            modelBuilder.Entity("SharedLib.DeliveryDocumentRetailModelDB", b =>
                 {
                     b.HasOne("SharedLib.RetailDocumentModelDB", "Order")
                         .WithMany("DeliveryDocuments")
@@ -1495,9 +1525,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("SharedLib.DeliveryStatusDocumentModelDB", b =>
+            modelBuilder.Entity("SharedLib.DeliveryStatusRetailDocumentModelDB", b =>
                 {
-                    b.HasOne("SharedLib.DeliveryDocumentModelDB", "DeliveryDocument")
+                    b.HasOne("SharedLib.DeliveryDocumentRetailModelDB", "DeliveryDocument")
                         .WithMany("DeliveryStatusesLog")
                         .HasForeignKey("DeliveryDocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1586,19 +1616,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("SharedLib.PaymentOrderLinkModelDB", b =>
-                {
-                    b.HasOne("SharedLib.RetailDocumentModelDB", "Order")
-                        .WithMany("PaymentsLinks")
-                        .HasForeignKey("OrderId");
-
-                    b.HasOne("SharedLib.PaymentRetailDocumentModelDB", null)
-                        .WithMany("PaymentOrdersLinks")
-                        .HasForeignKey("PaymentRetailDocumentModelDBId");
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("SharedLib.PaymentRetailDocumentModelDB", b =>
                 {
                     b.HasOne("SharedLib.WalletRetailModelDB", "Wallet")
@@ -1608,6 +1625,25 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired();
 
                     b.Navigation("Wallet");
+                });
+
+            modelBuilder.Entity("SharedLib.PaymentRetailOrderLinkModelDB", b =>
+                {
+                    b.HasOne("SharedLib.RetailDocumentModelDB", "Order")
+                        .WithMany("PaymentsLinks")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedLib.PaymentRetailDocumentModelDB", "Payment")
+                        .WithMany("PaymentOrdersLinks")
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("SharedLib.PriceRuleForOfferModelDB", b =>
@@ -1648,9 +1684,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("SharedLib.RowOfDeliveryRetailOrderDocumentModelDB", b =>
+            modelBuilder.Entity("SharedLib.RowOfDeliveryRetailDocumentModelDB", b =>
                 {
-                    b.HasOne("SharedLib.DeliveryDocumentModelDB", "Document")
+                    b.HasOne("SharedLib.DeliveryDocumentRetailModelDB", "Document")
                         .WithMany()
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1792,7 +1828,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("SharedLib.WalletConversionDocumentModelDB", b =>
+            modelBuilder.Entity("SharedLib.WalletConversionRetailDocumentModelDB", b =>
                 {
                     b.HasOne("SharedLib.WalletRetailModelDB", "FromWallet")
                         .WithMany()
@@ -1837,7 +1873,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Offer");
                 });
 
-            modelBuilder.Entity("SharedLib.DeliveryDocumentModelDB", b =>
+            modelBuilder.Entity("SharedLib.DeliveryDocumentRetailModelDB", b =>
                 {
                     b.Navigation("DeliveryStatusesLog");
                 });

@@ -125,13 +125,6 @@ public partial class CommerceImplementService : ICommerceService
         if (count != 0)
             res.AddError($"Адрес используется в заказах: {count} шт.");
 
-        //count = await context
-        //    .OrdersDocuments
-        //    .CountAsync(x => context.TabsAddressesForOrders.Any(y => y.OrderDocumentId == x.Id && y.DeliveryAddressId == req));
-
-        //if (count != 0)
-        //    res.AddError($"Адрес указан в доставке: {count} шт.");
-
         if (!res.Success())
             return res;
 

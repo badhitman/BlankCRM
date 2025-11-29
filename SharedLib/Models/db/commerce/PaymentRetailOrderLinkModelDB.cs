@@ -10,14 +10,24 @@ namespace SharedLib;
 public class PaymentRetailOrderLinkModelDB : EntryModel
 {
     /// <summary>
-    /// BuyerIdentityUserId
-    /// </summary>
-    public required string? PayerIdentityUserId { get; set; }
-
-    /// <summary>
     /// Заказ (документ)
     /// </summary>
     public RetailDocumentModelDB? Order { get; set; }
+    
+    /// <summary>
+    /// Заказ (документ)
+    /// </summary>
+    public int OrderId { get; set; }
+
+    /// <summary>
+    /// Payment
+    /// </summary>
+    public PaymentRetailDocumentModelDB? Payment {  get; set; }
+
+    /// <summary>
+    /// Payment
+    /// </summary>
+    public int PaymentId { get; set; }
 
     /// <summary>
     /// Сумма

@@ -537,7 +537,7 @@ public class IdentityTools(
 
         find_users_ids = [.. find_users_ids.Where(x => !res.Response.Any(y => y.UserId == x))];
         if (find_users_ids.Length != 0)
-            res.AddWarning($"Некоторые пользователи (Identity) не найдены: {string.Join(",", find_users_ids)}");
+            res.AddError($"Некоторые пользователи (Identity) не найдены: {string.Join(",", find_users_ids)}");
 
         return res;
     }

@@ -74,9 +74,35 @@ public partial class CommerceImplementService : ICommerceService
         if (warehouseDocumentDb.Rows!.Count != 0)
             foreach (RowOfWarehouseDocumentModelDB rowDoc in warehouseDocumentDb.Rows)
             {
-                offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = rowDoc.OfferId, LockerAreaId = req.WarehouseId });
+                offersLocked.Add(new LockTransactionModelDB()
+                {
+                    LockerName = nameof(OfferAvailabilityModelDB),
+                    LockerAreaId = req.WarehouseId,
+                    LockerId = rowDoc.OfferId,
+                });
                 if (req.WritingOffWarehouseId > 0)
-                    offersLocked.Add(new LockTransactionModelDB() { LockerName = nameof(OfferAvailabilityModelDB), LockerId = rowDoc.OfferId, LockerAreaId = req.WritingOffWarehouseId });
+                    offersLocked.Add(new LockTransactionModelDB()
+                    {
+                        LockerName = nameof(OfferAvailabilityModelDB),
+                        LockerAreaId = req.WritingOffWarehouseId,
+                        LockerId = rowDoc.OfferId,
+                    });
+
+                if (warehouseDocumentDb.WritingOffWarehouseId != req.WritingOffWarehouseId && warehouseDocumentDb.WritingOffWarehouseId > 0)
+                    offersLocked.Add(new LockTransactionModelDB()
+                    {
+                        LockerName = nameof(OfferAvailabilityModelDB),
+                        LockerAreaId = warehouseDocumentDb.WritingOffWarehouseId,
+                        LockerId = rowDoc.OfferId,
+                    });
+
+                if (warehouseDocumentDb.WarehouseId != req.WarehouseId)
+                    offersLocked.Add(new LockTransactionModelDB()
+                    {
+                        LockerName = nameof(OfferAvailabilityModelDB),
+                        LockerAreaId = warehouseDocumentDb.WarehouseId,
+                        LockerId = rowDoc.OfferId,
+                    });
             }
 
         offersLocked = [.. offersLocked.DistinctBy(x => x.LockerAreaId)];

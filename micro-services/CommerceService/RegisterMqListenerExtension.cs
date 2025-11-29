@@ -45,6 +45,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<CreateDeliveryServiceReceive, DeliveryServiceRetailModelDB, TResponseModel<int>>()
             .RegisterMqListener<CreateDeliveryDocumentReceive, DeliveryDocumentRetailModelDB, TResponseModel<int>>()
             .RegisterMqListener<CreateConversionDocumentReceive, WalletConversionRetailDocumentModelDB, TResponseModel<int>>()
+            .RegisterMqListener<WalletBalanceUpdateReceive, WalletBalanceCommitRequestModel, ResponseBaseModel>()
 
             .RegisterMqListener<OrganizationSetLegalReceive, OrganizationLegalModel, TResponseModel<bool>>()
             .RegisterMqListener<OrganizationUpdateReceive, TAuthRequestModel<OrganizationModelDB>, TResponseModel<int>>()

@@ -26,7 +26,7 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     /// <summary>
     /// Плательщик
     /// </summary>
-    public required string? PayerIdentityUserId { get; set; }
+    public required string PayerIdentityUserId { get; set; }
 
     /// <summary>
     /// Ссылка для оплаты

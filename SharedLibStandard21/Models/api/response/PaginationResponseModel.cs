@@ -12,6 +12,11 @@ namespace SharedLib;
 public class PaginationResponseModel : PaginationRequestModel
 {
     /// <summary>
+    /// 
+    /// </summary>
+    public ResponseBaseModel Status { get; set; } = new();
+
+    /// <summary>
     /// Общее/всего количество элементов
     /// </summary>
     public int TotalRowsCount { get; set; }
@@ -23,7 +28,7 @@ public class PaginationResponseModel : PaginationRequestModel
     /// <param name="total_rows_count"></param>
     /// <param name="default_page_size"></param>
     /// <returns></returns>
-    public static uint CalcTotalPagesCount(int page_size,int total_rows_count, uint default_page_size = 10)
+    public static uint CalcTotalPagesCount(int page_size, int total_rows_count, uint default_page_size = 10)
     {
         if (page_size == 0)
             return (uint)Math.Ceiling((double)total_rows_count / (double)default_page_size);

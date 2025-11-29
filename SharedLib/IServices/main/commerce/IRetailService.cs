@@ -18,6 +18,8 @@ public interface IRetailService
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<WalletRetailTypeModelDB>> SelectWalletsTypesAsync(TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel> req, CancellationToken token = default);
 
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> WalletBalanceUpdateAsync(WalletBalanceCommitRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateWalletAsync(WalletRetailModelDB req, CancellationToken token = default);

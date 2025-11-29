@@ -120,4 +120,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
     public async Task<ResponseBaseModel> UpdateWalletTypeAsync(WalletRetailTypeModelDB req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.UpdateWalletTypeRetailReceive, req, token: token) ?? new();
 
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> WalletBalanceUpdateAsync(WalletBalanceCommitRequestModel req, CancellationToken token = default)
+          => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.WalletBalanceUpdateRetailReceive, req, token: token) ?? new();
 }

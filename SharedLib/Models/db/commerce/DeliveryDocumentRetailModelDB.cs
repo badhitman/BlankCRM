@@ -10,25 +10,29 @@ namespace SharedLib;
 /// <summary>
 /// DeliveryDocumentModelDB
 /// </summary>
-[Index(nameof(DeliveryCode)), Index(nameof(DeliveryType)), Index(nameof(RecipientIdentityUserId))]
-[Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment))]
-public class DeliveryDocumentRetailModelDB
+[Index(nameof(DeliveryCode)), Index(nameof(DeliveryType)), Index(nameof(RecipientIdentityUserId)), Index(nameof(DeliveryPayment))]
+[Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment)), Index(nameof(Paid))]
+public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
 {
-    /// <summary>
-    /// Идентификатор/Key
-    /// </summary>
-    [Key]
-    public int Id { get; set; }
-
     /// <summary>
     /// DeliveryType
     /// </summary>
     public DeliveryTypesEnum DeliveryType { get; set; }
 
     /// <summary>
+    /// Способ оплаты доставки
+    /// </summary>
+    public DeliveryPaymentMethodsEnum DeliveryPayment { get; set; }
+
+    /// <summary>
+    /// Дата оплаты
+    /// </summary>
+    public DateTime? Paid { get; set; }
+
+    /// <summary>
     /// Получатель
     /// </summary>
-    public string? RecipientIdentityUserId { get; set; }
+    public required string RecipientIdentityUserId { get; set; }
 
     /// <summary>
     /// Код доставки
@@ -70,11 +74,6 @@ public class DeliveryDocumentRetailModelDB
     /// Заказ (документ)
     /// </summary>
     public int? OrderId { get; set; }
-
-    /// <summary>
-    /// Description
-    /// </summary>
-    public string? Description { get; set; }
 
     /// <summary>
     /// StatusesLog

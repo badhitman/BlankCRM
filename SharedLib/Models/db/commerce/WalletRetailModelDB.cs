@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
@@ -15,7 +16,7 @@ public class WalletRetailModelDB : EntryUpdatedModel
     /// <summary>
     /// UserIdentityId
     /// </summary>
-    public required string? UserIdentityId { get; set; }
+    public required string UserIdentityId { get; set; }
 
     /// <summary>
     /// Баланс
@@ -30,4 +31,10 @@ public class WalletRetailModelDB : EntryUpdatedModel
     /// Тип кошелька
     /// </summary>
     public int WalletTypeId { get; set; }
+
+    /// <summary>
+    /// Version
+    /// </summary>
+    [ConcurrencyCheck]
+    public Guid Version { get; set; }
 }

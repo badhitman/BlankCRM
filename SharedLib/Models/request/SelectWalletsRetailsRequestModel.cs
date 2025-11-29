@@ -5,9 +5,12 @@
 namespace SharedLib;
 
 /// <summary>
-/// SelectPaymentsRetailOrdersDocumentsRequestModel
+/// SelectWalletsRetailsRequestModel
 /// </summary>
-public class SelectPaymentsRetailOrdersDocumentsRequestModel
+public class SelectWalletsRetailsRequestModel
 {
-
+    /// <summary>
+    /// UserIdentityId
+    /// </summary>
+    public string[]? UsersFilterIdentityId { get; set; }
 }

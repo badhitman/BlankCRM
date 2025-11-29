@@ -177,6 +177,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string TYPE_CONTROLLER_NAME = "type";
 
         /// <summary>
+        /// Balance
+        /// </summary>
+        public const string BALANCE_CONTROLLER_NAME = "balance";
+
+        /// <summary>
         /// types
         /// </summary>
         public const string TYPES_CONTROLLER_NAME = "types";
