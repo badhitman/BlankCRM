@@ -1,7 +1,7 @@
 ﻿@using MudBlazor
 @inherits BlazorBusyComponentBaseAuthModel
 
-<MudStack Row="true" Class="mb-3">
+<MudStack Row Class="mb-3">
     <MudTextField Disabled="IsBusyProgress" @bind-Value="nameOffer" Label="Название" Variant="Variant.Outlined" Immediate ShrinkLabel></MudTextField>
     <MudSelect Disabled="IsBusyProgress" @bind-Value="UnitOffer" Label="Единица измерения" Placeholder="Выбор ед.изм." Variant="Variant.Outlined">
         @foreach (UnitsOfMeasurementEnum u in Enum.GetValues(typeof(UnitsOfMeasurementEnum)).Cast<UnitsOfMeasurementEnum>())

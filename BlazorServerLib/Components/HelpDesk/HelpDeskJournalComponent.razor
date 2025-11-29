@@ -3,11 +3,11 @@
 @using MudBlazor
 @using System.Globalization
 
-<MudTable @ref="TableRef" ServerData="ServerReload" Dense="true" Hover="true" Loading="IsBusyProgress">
+<MudTable @ref="TableRef" ServerData="ServerReload" Dense Hover Loading="IsBusyProgress">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Issues</MudText>
         <MudSpacer />
-        <MudTextField T="string" Clearable="true" ValueChanged="@(s => OnSearch(s))" title="Case insensitive" Placeholder="Search by topic of appeal and section name" Adornment="Adornment.Start"
+        <MudTextField T="string" Clearable ValueChanged="@(s => OnSearch(s))" title="Case insensitive" Placeholder="Search by topic of appeal and section name" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>

@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-body">
-        <MudTabs AlwaysShowScrollButtons="true" Elevation="4" Rounded="true" Color="@Color.Primary">
+        <MudTabs AlwaysShowScrollButtons Elevation="4" Rounded Color="@Color.Primary">
             <MudTabPanel Text="@GlobalStaticConstants.RU.DateTimeFormat.GetDayName(DayOfWeek.Monday)">
                 <WorkSchedulesOfWeekdayComponent Weekday="DayOfWeek.Monday" @ref="WorkSchedulesOfWeekday_ref" />
             </MudTabPanel>

@@ -29,6 +29,13 @@ namespace SharedLib
             /// </summary>
             public const string System = "system";
 
+            #region retail
+            /// <summary>
+            /// RetailManage
+            /// </summary>
+            public const string RetailManage = "RetailManage";
+            #endregion
+
             #region HelpDesk
             static string[]? _allHelpDeskRoles = null;
             /// <summary>

@@ -6,14 +6,14 @@
     <div class="card-header">
         @if (IsBusyProgress)
         {
-            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+            <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
         }
         else
         {
-            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
                 <MudTabPanel Text="Основное">
                     <MudTextField Disabled="(IsBusyProgress || !CurrentUserSession!.IsAdmin)" @bind-Value="editOffer.Name" Label="Полное наименование" Variant="Variant.Outlined" Immediate ShrinkLabel></MudTextField>
-                    <MudStack Row="true" Class="mb-3">
+                    <MudStack Row Class="mb-3">
                         <MudTextField Disabled="(IsBusyProgress || !CurrentUserSession!.IsAdmin)" @bind-Value="editOffer.ShortName" Label="Название (краткое)" Variant="Variant.Outlined" Immediate ShrinkLabel></MudTextField>
                         <MudSelect Disabled="(IsBusyProgress || !CurrentUserSession!.IsAdmin)" @bind-Value="editOffer.OfferUnit" Label="Единица измерения" Placeholder="Выбор ед.изм." Variant="Variant.Outlined">
                             @foreach (UnitsOfMeasurementEnum u in Enum.GetValues(typeof(UnitsOfMeasurementEnum)).Cast<UnitsOfMeasurementEnum>())
@@ -62,10 +62,10 @@
                                                                OwnerPrimaryKey="OfferId"
                                                                @ref="filesViewRef"
                                                                Title="Файлы"
-                                                               ManageMode="true" />
+                                                               ManageMode />
                                     <hr />
                                     <TagsViewComponent ApplicationsNames="@([Routes.OFFER_CONTROLLER_NAME])"
-                                                       ManageMode="true"
+                                                       ManageMode
                                                        PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
                                                        PropertyName="@Routes.METADATA_CONTROLLER_NAME"
                                                        Title="Теги"

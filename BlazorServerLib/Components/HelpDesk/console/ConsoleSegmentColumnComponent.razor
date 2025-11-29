@@ -4,7 +4,7 @@
 
 @if (IsBusyProgress)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-7" />
 }
 
 <div class="hstack">
@@ -48,7 +48,7 @@ else
                 {
                     <span>Юр.лицо: <u>@current_order.Organization!.Name</u></span>
                 }
-                <MudStack Row="true">
+                <MudStack Row>
                     <a title="open an issue" href="/issue-card/@issue_element.Id" class="card-link">Goto</a>
                     <MudSpacer />
                     <code title="Date of last update">

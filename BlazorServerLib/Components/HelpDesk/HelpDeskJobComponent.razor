@@ -17,7 +17,7 @@
 <div class="card">
     <div class="card-body">
         <CascadingValue Value="SetTab">
-            <TabSetComponent IsSilent="true" AsPills="true">
+            <TabSetComponent IsSilent AsPills>
                 <TabComponent IsDisabled="IsBusyProgress" SystemName="@(nameof(HelpDeskJournalModesEnum.ActualOnly))" Title="Opened">
                     <HelpDeskJournalComponent UserArea="SelectedOption" JournalMode="HelpDeskJournalModesEnum.ActualOnly" />
                 </TabComponent>

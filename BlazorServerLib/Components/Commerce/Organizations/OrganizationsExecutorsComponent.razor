@@ -3,7 +3,7 @@
 
 @inherits BlazorBusyComponentUsersCachedModel
 
-<MudSelect T="string" Label="Разрешения" MultiSelection="true" HelperText="Права пользователя" @bind-SelectedValues="Options">
+<MudSelect T="string" Label="Разрешения" MultiSelection HelperText="Права пользователя" @bind-SelectedValues="Options">
     @foreach (var element in UsersOrganizationsStatuses)
     {
         <MudSelectItem T="string" Value="@element.Key">@element.Key</MudSelectItem>
@@ -26,7 +26,7 @@
             {
                 <MudSpacer />
                 <div class="hstack gap-3">
-                    <MudTextField @bind-Value="AddingUserEmail" Label="Новый сотрудник" Variant="Variant.Text" Immediate="true"></MudTextField>
+                    <MudTextField @bind-Value="AddingUserEmail" Label="Новый сотрудник" Variant="Variant.Text" Immediate></MudTextField>
                     <MudFab OnClick="AddNewExecutor" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Disabled="@(string.IsNullOrWhiteSpace(AddingUserEmail) || !MailAddress.TryCreate(AddingUserEmail, out _))" />
                 </div>
             }
@@ -84,7 +84,7 @@
 }
 else
 {
-    <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="tableRef" Loading="IsBusyProgress" AllowUnsorted="false">
+    <MudTable ServerData="ServerReload" Dense Hover @ref="tableRef" Loading="IsBusyProgress" AllowUnsorted="false">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Сотрудники @(Organization is null ? "(все)" : $": {Organization}")</MudText>
         </ToolBarContent>

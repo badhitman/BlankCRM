@@ -12,7 +12,7 @@
 
 <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
     <Authorized>
-        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
             <MudTabPanel Text="Справочник">
                 <OrganizationsTableComponent UserId="@UserId" />
                 <div class="d-grid gap-2 mt-2">

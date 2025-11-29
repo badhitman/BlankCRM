@@ -34,7 +34,7 @@ else
         else
         {
             bool overLimit = false;
-            <MudSelect T="decimal" Required="true" @bind-Value="QuantityValue">
+            <MudSelect T="decimal" Required @bind-Value="QuantityValue">
                 @foreach (decimal ql in _alowedValues)
                 {
                     overLimit = overLimit || ql > GetMaxValue();
@@ -45,7 +45,7 @@ else
 
         @if (IsBusyProgress)
         {
-            <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+            <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate />
         }
         else
         {

@@ -13,7 +13,7 @@
 }
 else
 {
-    <TabSetComponent IsSilent="true">
+    <TabSetComponent IsSilent>
         @foreach (OrderDocumentModelDB doc in Orders)
         {
             <TabComponent Tooltip="@($"#{doc.Organization!.Id}: {doc.Organization!.Name}")" Title="@doc.Organization!.Name" SystemName="@doc.Organization!.Id.ToString()">

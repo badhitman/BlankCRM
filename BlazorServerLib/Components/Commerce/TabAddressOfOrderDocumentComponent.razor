@@ -11,10 +11,10 @@
                           ShowDisabledRubrics
                           Title="Склад" />
 </div>
-<MudTable Hover="true"
+<MudTable Hover
           ReadOnly="ReadOnly"
           SortLabel="@(nameof(RowOfOrderDocumentModelDB.Nomenclature.Name))"
-          CanCancelEdit="true"
+          CanCancelEdit
           Items="@CurrentTab.Rows"
           RowEditPreview="RowEditPreviewHandler"
           RowEditCommit="RowEditCommitHandler"
@@ -42,7 +42,15 @@
         @if (!ReadOnly)
         {
             <div class="ms-3">
-                <AddRowToOrderDocumentComponent ForceAdding="ForceAdding" ShowPriceOffers="_showingPriceSelectorOrder" SelectOfferHandler="SelectOfferAction" ShowRegistersOffersQuantity="true" @ref="addingDomRef" WarehouseId="CurrentTab.WarehouseId" AllOffers="allOffers" CurrentRows="CurrentTab.Rows!.Select(x => x.OfferId).ToList()" AddingOfferHandler="AddingOfferAction" />
+                <AddRowToOrderDocumentComponent ForceAdding="ForceAdding"
+                                                ShowPriceOffers="_showingPriceSelectorOrder"
+                                                SelectOfferHandler="SelectOfferAction"
+                                                ShowRegistersOffersQuantity
+                                                @ref="addingDomRef"
+                                                WarehouseId="CurrentTab.WarehouseId"
+                                                AllOffers="allOffers"
+                                                CurrentRows="CurrentTab.Rows!.Select(x => x.OfferId).ToList()"
+                                                AddingOfferHandler="AddingOfferAction" />
             </div>
         }
     </ToolBarContent>
@@ -114,7 +122,7 @@
             else
             {
                 bool overLimit = false;
-                <MudSelect T="decimal" Label="Количество" Required="true" @bind-Value="context!.Quantity">
+                <MudSelect T="decimal" Label="Количество" Required @bind-Value="context!.Quantity">
                     @foreach (decimal ql in _alowedValues)
                     {
                         overLimit = overLimit || ql > GetMaxValue(context);

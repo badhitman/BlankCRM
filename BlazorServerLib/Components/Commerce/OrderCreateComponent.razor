@@ -4,7 +4,7 @@
 
 @if (IsBusyProgress)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-7" />
 }
 else if (CurrentCart is null || Organizations.Count == 0)
 {
@@ -37,7 +37,7 @@ else
             </MudSelect>
         </div>
         <div class="col-md-6">
-            <MudSelect T="OfficeOrganizationModelDB" Label="Филиалы" MultiSelection="true" Disabled="@(CurrentOrganization is null || CurrentOrganization.Id == 0)" @bind-SelectedValues="SelectedAddresses" ToStringFunc="@converter">
+            <MudSelect T="OfficeOrganizationModelDB" Label="Филиалы" MultiSelection Disabled="@(CurrentOrganization is null || CurrentOrganization.Id == 0)" @bind-SelectedValues="SelectedAddresses" ToStringFunc="@converter">
                 @if (CurrentOrganization?.Offices is not null)
                 {
                     foreach (OfficeOrganizationModelDB add in CurrentOrganization.Offices)
@@ -65,7 +65,7 @@ else
     {
         <div class="card mt-3">
             <div class="card-body">
-                <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
+                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
                     @foreach (OfficeOrganizationModelDB add in SelectedAddresses)
                     {
                         TabOfficeForOrderModelDb current_tab = CurrentCart.OfficesTabs!.First(x => x.OfficeId == add.Id);

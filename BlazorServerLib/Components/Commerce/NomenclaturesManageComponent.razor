@@ -12,7 +12,7 @@
             </MudCollapse>
         </MudStack>
     }
-    <MudTable Loading="IsBusyProgress" ServerData="ServerReload" @ref="tableRef" Dense="true" Hover="true">
+    <MudTable Loading="IsBusyProgress" ServerData="ServerReload" @ref="tableRef" Dense Hover>
         <ToolBarContent>
             <MudText Typo="Typo.h6">Номенклатура</MudText>
             <MudSpacer />
@@ -43,4 +43,4 @@
     </MudTable>
 </MudPaper>
 
-<MudButton Class="mt-3" OnClick="DownloadFullPrice" Variant="Variant.Filled" Color="Color.Default" FullWidth="true">Скачать прайс</MudButton>
+<MudButton Class="mt-3" OnClick="DownloadFullPrice" Variant="Variant.Filled" Color="Color.Default" FullWidth>Скачать прайс</MudButton>

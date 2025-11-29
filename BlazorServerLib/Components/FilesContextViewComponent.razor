@@ -4,7 +4,7 @@
 @using static SharedLib.GlobalStaticConstantsRoutes
 @inherits MetaPropertyBaseComponent
 
-<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="TableRef" Loading="IsBusyProgress">
+<MudTable ServerData="ServerReload" Dense Hover @ref="TableRef" Loading="IsBusyProgress">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Title</MudText>
         <MudSpacer />
@@ -73,7 +73,7 @@
                     }
                     <br />
                     <TagsViewComponent ApplicationsNames="@([Routes.FILE_CONTROLLER_NAME])"
-                                       ManageMode="true"
+                                       ManageMode
                                        PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
                                        PropertyName="@Routes.METADATA_CONTROLLER_NAME"
                                        Title="Теги"

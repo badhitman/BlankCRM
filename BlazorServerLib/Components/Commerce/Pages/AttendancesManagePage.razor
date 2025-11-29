@@ -12,10 +12,10 @@
 
 @if (IsBusyProgress)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
 }
 
-<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
     <MudTabPanel Text="Справочник">
         <AttendancesCatalogComponent />
     </MudTabPanel>
@@ -25,7 +25,7 @@
                 <AttendancesManageComponent />
             </MudTabPanel>            
             <MudTabPanel Text="Права">
-                <UsersTableComponent HideClaimsColumn="true" HideRolesColumn="true" RolesMarkers="@showMarkersRoles" RolesManageKit="@showMarkersRoles.Select(x => x.Id).Union([GlobalStaticConstantsRoles.Roles.CommerceManager, GlobalStaticConstantsRoles.Roles.CommerceClient, GlobalStaticConstantsRoles.Roles.Debug])" />
+                <UsersTableComponent HideClaimsColumn HideRolesColumn RolesMarkers="@showMarkersRoles" RolesManageKit="@showMarkersRoles.Select(x => x.Id).Union([GlobalStaticConstantsRoles.Roles.CommerceManager, GlobalStaticConstantsRoles.Roles.CommerceClient, GlobalStaticConstantsRoles.Roles.Debug])" />
             </MudTabPanel>
         </Authorized>
     </AuthorizeView>

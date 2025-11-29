@@ -1,0 +1,25 @@
+﻿@page "/retail"
+
+@using BlazorLib.Components.Retail
+@using MudBlazor
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug},{GlobalStaticConstantsRoles.Roles.RetailManage}")]
+
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+    <MudTabPanel Text="Заказы">
+        <OrdersRetailWrapperComponent />
+    </MudTabPanel>
+    <MudTabPanel Text="Клиенты">
+        <ClientsRetailWrapperComponent />
+    </MudTabPanel>
+    <MudTabPanel Text="Платежи">
+        <PaymentsRetailWrapperComponent />
+    </MudTabPanel>
+    <MudTabPanel Text="Доставка">
+        <DeliveriesRetailWrapperComponent />
+    </MudTabPanel>
+    <MudTabPanel Text="Кошельки">
+        <WalletsRetailWrapperComponent />
+    </MudTabPanel>
+</MudTabs>

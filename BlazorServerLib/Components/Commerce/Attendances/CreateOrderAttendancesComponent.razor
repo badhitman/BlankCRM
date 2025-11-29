@@ -44,7 +44,7 @@
         <MudDateRangePicker Label="Период"
                             @bind-DateRange="SelectedDateRange"
                             Orientation="Orientation.Landscape"
-                            Editable="true"
+                            Editable
                             PickerVariant="PickerVariant.Static"
                             IsDateDisabledFunc="IsDateDisabledHandler"
                             AdditionalDateClassesFunc="AdditionalDateClassesHandler" />
@@ -76,15 +76,15 @@
 
         <MudTable Breakpoint="Breakpoint.Sm"
                   Loading="IsBusyProgress"
-                  Hover="true"
+                  Hover
                   Height="500px"
-                  FixedHeader="true"
+                  FixedHeader
                   Items="Elements"
-                  Virtualize="true"
+                  Virtualize
                   GroupBy="@_groupDefinition"
                   GroupHeaderStyle="background-color:var(--mud-palette-background-gray)"
                   GroupFooterClass="mb-4"
-                  Dense="true">
+                  Dense>
             <ColGroup>
                 <col />
                 <col />

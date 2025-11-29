@@ -15,10 +15,10 @@ else
 {
     if (!IsEditMode)
     {
-        <MudButton Href="/create-order" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="mb-2">New order</MudButton>
+        <MudButton Href="/create-order" Variant="Variant.Filled" Color="Color.Primary" FullWidth Class="mb-2">New order</MudButton>
         @if (_showCreateIssue)
         {
-            <MudButton OnClick="ToggleMode" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">New issue</MudButton>
+            <MudButton OnClick="ToggleMode" Variant="Variant.Filled" Color="Color.Primary" FullWidth>New issue</MudButton>
         }
     }
     else
