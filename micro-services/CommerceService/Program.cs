@@ -16,7 +16,6 @@ using OpenTelemetry;
 using System.Diagnostics.Metrics;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.Extensions.Options;
 using System.Text;
 
@@ -96,7 +95,9 @@ builder.Services
 .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
 ;
 
-builder.Services.AddScoped<ICommerceService, CommerceImplementService>();
+builder.Services
+    .AddScoped<ICommerceService, CommerceImplementService>()
+    .AddScoped<IRetailService, RetailService>();
 
 builder.Services.AddSingleton<WebConfigModel>();
 builder.Services.AddOptions();

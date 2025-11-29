@@ -145,6 +145,7 @@ public class Program
             .AddScoped<IWebTransmission, WebTransmission>()
             .AddScoped<IHelpDeskTransmission, HelpDeskTransmission>()
             .AddScoped<IStorageTransmission, StorageTransmission>()
+            .AddScoped<IRetailService, RetailTransmission>()
             .AddScoped<IParametersStorageTransmission, ParametersStorageTransmission>()
             .AddScoped<IIdentityTransmission, IdentityTransmission>()
             ;

@@ -181,6 +181,8 @@ public partial class CommerceLayerContext : DbContext
     /// </summary>
     public DbSet<RowOfRetailOrderDocumentModelDB> RowsRetailsOrders { get; set; } = default!;
 
+
+
     /// <summary>
     /// Службы доставки
     /// </summary>
@@ -200,6 +202,8 @@ public partial class CommerceLayerContext : DbContext
     /// Хроника статусов доставки
     /// </summary>
     public DbSet<DeliveryStatusDocumentModelDB> DeliveryStatusesRetailDocuments { get; set; } = default!;
+
+
 
     /// <summary>
     /// Оплаты
