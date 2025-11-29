@@ -184,17 +184,51 @@ public partial class CommerceLayerContext : DbContext
     /// <summary>
     /// Службы доставки
     /// </summary>
-    public DbSet<DeliveryServiceModelDB> DeliveryServices { get; set; } = default!;
+    public DbSet<DeliveryServiceModelDB> DeliveryRetailServices { get; set; } = default!;
 
     /// <summary>
     /// DeliveryDocuments
     /// </summary>
-    public DbSet<DeliveryDocumentModelDB> DeliveryDocuments { get; set; } = default!;
+    public DbSet<DeliveryDocumentModelDB> DeliveryRetailDocuments { get; set; } = default!;
 
     /// <summary>
-    /// DeliveryStatusesDocuments
+    /// RowsDeliveryDocuments
     /// </summary>
-    public DbSet<DeliveryStatusDocumentModelDB> DeliveryStatusesDocuments { get; set; } = default!;
+    public DbSet<RowOfDeliveryRetailOrderDocumentModelDB> RowsDeliveryRetailDocuments { get; set; } = default!;
+
+    /// <summary>
+    /// Хроника статусов доставки
+    /// </summary>
+    public DbSet<DeliveryStatusDocumentModelDB> DeliveryStatusesRetailDocuments { get; set; } = default!;
+
+    /// <summary>
+    /// Оплаты
+    /// </summary>
+    public DbSet<PaymentRetailDocumentModelDB> PaymentsRetailDocuments { get; set; } = default!;
+
+    /// <summary>
+    /// связи платежей с заказами
+    /// </summary>
+    public DbSet<PaymentOrderLinkModelDB> PaymentsOrdersRetailLinks { get; set; } = default!;
+
+
+
+    /// <summary>
+    /// Типы кошельков
+    /// </summary>
+    public DbSet<WalletRetailTypeModelDB> WalletsRetailTypes { get; set; } = default!;
+
+    /// <summary>
+    /// Кошельки
+    /// </summary>
+    public DbSet<WalletRetailModelDB> WalletsRetail { get; set; } = default!;
+
+    /// <summary>
+    /// Операции конвертации/перевода между кошельками
+    /// </summary>
+    public DbSet<WalletConversionDocumentModelDB> ConversionsDocumentsWalletsRetail { get; set; } = default!;
+
+
 
     /// <summary>
     /// Payments documents

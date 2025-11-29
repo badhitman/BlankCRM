@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
@@ -9,6 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// OrderDocumentBaseModel
 /// </summary>
+[Index(nameof(ExternalDocumentId), nameof(HelpDeskId), nameof(AuthorIdentityUserId), nameof(StatusDocument))]
 public class OrderDocumentBaseModel : EntryUpdatedModel
 {
     /// <summary>

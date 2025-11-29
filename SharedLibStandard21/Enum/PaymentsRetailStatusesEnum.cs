@@ -5,17 +5,22 @@
 namespace SharedLib;
 
 /// <summary>
-/// DeliveryPaymentMethodsEnum
+/// Статусы платежей
 /// </summary>
-public enum DeliveryPaymentMethodsEnum
+public enum PaymentsRetailStatusesEnum
 {
     /// <summary>
-    /// Предоплата
+    /// Ожидает оплаты
     /// </summary>
-    PrePayment = 10,
+    Awaiting =10,
 
     /// <summary>
-    /// При получении
+    /// Оплачено
     /// </summary>
-    UponReceipt = 20,
+    Paid  = 20,
+
+    /// <summary>
+    /// Отменено
+    /// </summary>
+    Canceled = 1000
 }

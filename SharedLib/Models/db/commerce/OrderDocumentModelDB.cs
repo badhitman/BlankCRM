@@ -9,7 +9,6 @@ namespace SharedLib;
 /// <summary>
 /// Заказ (документ)
 /// </summary>
-[Index(nameof(ExternalDocumentId), nameof(HelpDeskId), nameof(AuthorIdentityUserId), nameof(StatusDocument))]
 public class OrderDocumentModelDB : OrderDocumentBaseDBModel
 {
     /// <summary>

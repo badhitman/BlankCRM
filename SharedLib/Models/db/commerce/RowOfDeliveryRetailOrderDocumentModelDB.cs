@@ -7,15 +7,15 @@ namespace SharedLib;
 /// <summary>
 /// Строка заказа (документа)
 /// </summary>
-public class RowOfRetailOrderDocumentModelDB : RowOfRetailOrderDocumentBaseModelDB
+public class RowOfDeliveryRetailOrderDocumentModelDB : RowOfRetailOrderDocumentBaseModelDB
 {
     /// <summary>
     /// Заказ (документ)
     /// </summary>
-    public RetailDocumentModelDB? Order { get; set; }
+    public DeliveryDocumentModelDB? Document { get; set; }
 
     /// <summary>
     /// Заказ (документ)
     /// </summary>
-    public int OrderId { get; set; }
+    public int DocumentId { get; set; }
 }

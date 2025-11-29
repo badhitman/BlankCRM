@@ -2,15 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharedLib;
 
 /// <summary>
 /// DeliveryStatusDocument
 /// </summary>
-[Index(nameof(DeliveryStatus)), Index(nameof(Created)), Index(nameof(DeliveryPayment))]
+[Index(nameof(DeliveryStatus)), Index(nameof(DeliveryPayment)), Index(nameof(Created)), Index(nameof(Paid))]
 public class DeliveryStatusDocumentModelDB
 {
     /// <summary>
@@ -30,14 +30,14 @@ public class DeliveryStatusDocumentModelDB
     public DeliveryPaymentMethodsEnum DeliveryPayment { get; set; }
 
     /// <summary>
-    /// Created
+    /// Дата создания
     /// </summary>
-    public DateTime Created { get; set; }
+    public required DateTime Created { get; set; }
 
     /// <summary>
-    /// Стоимость доставки
+    /// Дата оплаты
     /// </summary>
-    public decimal ShippingCost { get; set; }
+    public DateTime? Paid { get; set; }
 
     /// <summary>
     /// DeliveryDocument
@@ -47,9 +47,4 @@ public class DeliveryStatusDocumentModelDB
     /// DeliveryDocument
     /// </summary>
     public int DeliveryDocumentId { get; set; }
-
-    /// <summary>
-    /// Вес отправления
-    /// </summary>
-    public decimal WeightShipping { get; set; }
 }

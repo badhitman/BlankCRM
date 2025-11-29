@@ -5,17 +5,12 @@
 namespace SharedLib;
 
 /// <summary>
-/// DeliveryPaymentMethodsEnum
+/// Тип кошелька
 /// </summary>
-public enum DeliveryPaymentMethodsEnum
+public class WalletRetailTypeModelDB : EntryUpdatedModel
 {
     /// <summary>
-    /// Предоплата
+    /// Кошельки
     /// </summary>
-    PrePayment = 10,
-
-    /// <summary>
-    /// При получении
-    /// </summary>
-    UponReceipt = 20,
+    public List<WalletRetailModelDB>? Wallets { get; set; }
 }
