@@ -28,7 +28,7 @@ public class GetUserIdentityByTelegramReceive(IIdentityTools IdentityRepo, IMemo
         TResponseModel<UserInfoModel[]> response = new();
         if (tg_ids.Length == 0)
         {
-            response.AddError("Пустой запрос");
+            response.AddError($"Пустой запрос > {nameof(ResponseHandleActionAsync)}");
             return new() { Response = response.Response, Messages = response.Messages };
         }
 

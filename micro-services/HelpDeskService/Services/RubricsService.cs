@@ -93,7 +93,7 @@ public class RubricsService(
         rubricsIds = [.. rubricsIds.Where(x => x > 0)];
         if (rubricsIds.Length == 0)
         {
-            res.AddError("Пустой запрос");
+            res.AddError($"Пустой запрос > {nameof(RubricsGetAsync)}");
             return res;
         }
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);

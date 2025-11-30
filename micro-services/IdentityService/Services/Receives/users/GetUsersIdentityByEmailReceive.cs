@@ -29,7 +29,7 @@ public class GetUsersIdentityByEmailReceive(IIdentityTools IdentityRepo, IMemory
         TResponseModel<UserInfoModel[]> res = new() { Response = [] };
         if (users_emails.Length == 0)
         {
-            res.AddError("Пустой запрос");
+            res.AddError($"Пустой запрос > {nameof(ResponseHandleActionAsync)}");
             return new() { Response = res.Response, Messages = res.Messages };
         }
 

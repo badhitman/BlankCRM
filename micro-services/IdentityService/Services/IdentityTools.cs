@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using IdentityLib;
 using System.Text;
 using SharedLib;
+using System.Text.RegularExpressions;
 
 namespace IdentityService;
 
@@ -36,18 +37,18 @@ public class IdentityTools(
     public async Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestModel<string> req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
-
+        ApplicationUser? user_db;
         if (!string.IsNullOrWhiteSpace(req.Payload))
         {
-            //    bool _plus = req.Payload.StartsWith("+");
-            //    req.Payload = Regex.Replace(req.Payload, @"[^\d]", "");
+            bool _plus = req.Payload.StartsWith("+");
+            req.Payload = Regex.Replace(req.Payload, @"[^\d]", "");
 
-            //    user_db = await identityContext.Users.FirstOrDefaultAsync(x => x.Id != req.UserId && (x.PhoneNumber == req.Payload || x.PhoneNumber == $"+{req.Payload}"), cancellationToken: token);
-            //    if (user_db is not null)
-            //        return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
+            user_db = await identityContext.Users.FirstOrDefaultAsync(x => x.Id != req.SenderActionUserId && (x.PhoneNumber == req.Payload || x.PhoneNumber == $"+{req.Payload}"), cancellationToken: token);
+            if (user_db is not null)
+                return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
 
-            //    if (_plus)
-            //        req.Payload = $"+{req.Payload}";
+            if (_plus)
+                req.Payload = $"+{req.Payload}";
         }
 
         throw new NotImplementedException();
@@ -57,18 +58,18 @@ public class IdentityTools(
     public async Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<InitChangePhoneUserRequestModel> req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
-
+        ApplicationUser? user_db;
         if (!string.IsNullOrWhiteSpace(req.Payload?.PhoneNum))
         {
-            //    bool _plus = req.Payload.PhoneNum.StartsWith("+");
-            //    req.Payload.PhoneNum = Regex.Replace(req.Payload.PhoneNum, @"[^\d]", "");
+            bool _plus = req.Payload.PhoneNum.StartsWith("+");
+            req.Payload.PhoneNum = Regex.Replace(req.Payload.PhoneNum, @"[^\d]", "");
 
-            //    user_db = await identityContext.Users.FirstOrDefaultAsync(x => x.Id != req.UserId && (x.PhoneNumber == req.Payload.PhoneNum || x.PhoneNumber == $"+{req.Payload.PhoneNum}"), cancellationToken: token);
-            //    if (user_db is not null)
-            //        return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
+            user_db = await identityContext.Users.FirstOrDefaultAsync(x => x.Id != req.SenderActionUserId && (x.PhoneNumber == req.Payload.PhoneNum || x.PhoneNumber == $"+{req.Payload.PhoneNum}"), cancellationToken: token);
+            if (user_db is not null)
+                return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
 
-            //    if (_plus)
-            //        req.Payload.PhoneNum = $"+{req.Payload.PhoneNum}";
+            if (_plus)
+                req.Payload.PhoneNum = $"+{req.Payload.PhoneNum}";
         }
 
         throw new NotImplementedException();
@@ -512,7 +513,7 @@ public class IdentityTools(
         TResponseModel<UserInfoModel[]> res = new() { Response = [] };
         if (users_ids.Length == 0)
         {
-            res.AddError("Пустой запрос");
+            res.AddError($"Пустой запрос > {nameof(GetUsersOfIdentityAsync)}");
             return res;
         }
         string[] find_users_ids = [.. users_ids.Where(x => x != GlobalStaticConstantsRoles.Roles.System)];
@@ -599,7 +600,7 @@ public class IdentityTools(
         TResponseModel<UserInfoModel[]> res = new() { Response = [] };
         if (users_emails.Length == 0)
         {
-            res.AddError("Пустой запрос");
+            res.AddError($"Пустой запрос > {nameof(GetUsersIdentityByEmailsAsync)}");
             return res;
         }
 
@@ -1290,7 +1291,7 @@ public class IdentityTools(
         TResponseModel<UserInfoModel[]> response = new() { Response = [] };
         if (tg_ids.Length == 0)
         {
-            response.AddError("Пустой запрос");
+            response.AddError($"Пустой запрос > {nameof(GetUsersIdentityByTelegramAsync)}");
             return response;
         }
 

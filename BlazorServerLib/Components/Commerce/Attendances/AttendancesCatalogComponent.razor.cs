@@ -36,7 +36,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
     private async Task<TableData<NomenclatureModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         if (CurrentUserSession is null)
-            throw new Exception("CurrentUserSession is null");
+            return new TableData<NomenclatureModelDB>() { TotalItems = 0, Items = [] };
 
         TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req = new()
         {

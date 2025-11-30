@@ -32,10 +32,12 @@ public abstract class BlazorBusyComponentBaseAuthModel : BlazorBusyComponentBase
     {
         AuthenticationState state = await AuthRepo.GetAuthenticationStateAsync();
         UserInfoMainModel? _usr = state.User.ReadCurrentUserInfo();
-        CurrentUserSession = null;
 
         if (_usr is null)
+        {
+            CurrentUserSession = null;
             return;
+        }
 
         TResponseModel<UserInfoModel[]> getDataUser = await IdentityRepo.GetUsersOfIdentityAsync([_usr.UserId]);
         if (getDataUser.Response is null || getDataUser.Response.Length != 1)

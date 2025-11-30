@@ -28,7 +28,7 @@ public class GetUsersOfIdentityReceive(IIdentityTools identityRepo, IMemoryCache
         TResponseModel<UserInfoModel[]> res = new();
         if (users_ids.Length == 0)
         {
-            res.AddError("Пустой запрос");
+            res.AddError($"Пустой запрос > {nameof(ResponseHandleActionAsync)}");
             return new() { Response = res.Response, Messages = res.Messages };
         }
         string[] find_users_ids = [.. users_ids.Where(x => x != GlobalStaticConstantsRoles.Roles.System).Order()];

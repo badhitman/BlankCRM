@@ -326,7 +326,7 @@ public partial class CommerceImplementService(
 
         if (!req.Payload.Any(x => x > 0))
         {
-            res.AddError("Пустой запрос");
+            res.AddError($"Пустой запрос > {nameof(OffersReadAsync)}");
             return res;
         }
         req.Payload = [.. req.Payload.Where(x => x > 0)];
@@ -1096,7 +1096,7 @@ public partial class CommerceImplementService(
         TResponseModel<bool> res = new() { Response = req.Any(x => x > 0) };
         if (!res.Response)
         {
-            res.AddError("Пустой запрос");
+            res.AddError($"Пустой запрос > {nameof(RowsForOrderDeleteAsync)}");
             return res;
         }
 

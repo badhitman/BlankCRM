@@ -53,7 +53,8 @@ public partial class AttendancesManageComponent : BlazorBusyComponentBaseAuthMod
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await Task.WhenAll([LoadOffers(0), ReadCurrentUser()]);
+        await base.OnInitializedAsync();
+        await LoadOffers(0);
     }
 
     /// <summary>

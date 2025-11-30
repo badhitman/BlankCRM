@@ -22,7 +22,7 @@ public partial class CommerceImplementService : ICommerceService
         TResponseModel<bool> res = new() { Response = req.Any(x => x > 0) };
         if (!res.Response)
         {
-            res.AddError("Пустой запрос");
+            res.AddError($"Пустой запрос > {nameof(RowsForWarehouseDocumentDeleteAsync)}");
             return res;
         }
         req = [.. req.Distinct()];
