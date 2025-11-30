@@ -28,12 +28,12 @@ public partial class ProjectsListComponent : BlazorBusyComponentBaseAuthModel
     /// <summary>
     /// Проекты пользователя
     /// </summary>
-    public ProjectViewModel[] ProjectsOfUser { get; private set; } = default!;
+    public ProjectViewModel[]? ProjectsOfUser { get; private set; }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await ReadCurrentUser();
+        await base.OnInitializedAsync();
         await ReloadListProjects();
     }
 

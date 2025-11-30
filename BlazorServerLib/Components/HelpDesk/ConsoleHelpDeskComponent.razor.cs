@@ -2,8 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
 using BlazorLib;
+using BlazorLib.Components;
+using Microsoft.AspNetCore.Components;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
@@ -22,24 +23,25 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
     byte stepNum;
     bool IsLarge;
     string? FilterUserId;
+    UserSelectInputComponent? selectorInputRef;
 
 
     async void SelectUserHandler(UserInfoModel? selected)
     {
-        if (CurrentUserSession is null)
-            throw new Exception("CurrentUserSession is null");
-
         if (string.IsNullOrWhiteSpace(FilterUserId) && string.IsNullOrWhiteSpace(selected?.UserId) || FilterUserId == selected?.UserId)
             return;
 
         FilterUserId = selected?.UserId;
         stepNum = 0;
 
-        await SetBusyAsync();
-        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(FilterUserId, GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession.UserId), false);
-        await SetBusyAsync(false);
-        if (!res.Success())
-            SnackBarRepo.ShowMessagesResponse(res.Messages);
+        if (CurrentUserSession is not null)
+        {
+            await SetBusyAsync();
+            TResponseModel<int> res = await StorageRepo.SaveParameterAsync(FilterUserId, GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession.UserId), false);
+            await SetBusyAsync(false);
+            if (!res.Success())
+                SnackBarRepo.ShowMessagesResponse(res.Messages);
+        }
     }
 
     StorageMetadataModel SizeColumnsKeyStorage => new()
@@ -65,10 +67,13 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         await SetBusyAsync();
-        await ReadCurrentUser();
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
+
+        if (selectorInputRef is not null)
+            selectorInputRef.StateHasChangedCall();
 
         TResponseModel<bool> res = await StorageRepo.ReadParameterAsync<bool>(SizeColumnsKeyStorage);
         IsLarge = res.Response == true;

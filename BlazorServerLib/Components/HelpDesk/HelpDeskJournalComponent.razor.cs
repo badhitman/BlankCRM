@@ -61,9 +61,9 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         SetTab(this);
         await SetBusyAsync();
-        await ReadCurrentUser();
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
@@ -79,7 +79,7 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
     private async Task<TableData<IssueHelpDeskModel>> ServerReload(TableState state, CancellationToken token)
     {
         if (CurrentUserSession is null)
-            throw new Exception("CurrentUserSession is null");
+            return new() { TotalItems = 0, Items = [] };
 
         await SetBusyAsync(token: token);
         await Task.Delay(1, token);

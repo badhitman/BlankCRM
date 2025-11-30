@@ -10,7 +10,7 @@
             </MudTooltip>
         </div>
     </div>
-    @if (IsBusyProgress)
+    @if (IsBusyProgress || ProjectsOfUser is null)
     {
         <div class="text-center">
             <div class="spinner-border" role="status">
