@@ -1,0 +1,46 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+<h3>Типы кошельков</h3>
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
+}
+else if (WalletsTypesList is null)
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Ошибка выполнения запроса.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Response is null
+        </figcaption>
+    </figure>
+}
+else
+{
+    <div class="list-group">
+        @foreach (WalletRetailTypeViewModel wt in WalletsTypesList)
+        {
+            <WalletRetailTypeElementComponent WalletTypeElement="wt" />
+        }
+    </div>
+    <hr />
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">Создать новый тип кошелька</h5>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Название</label>
+                <input @bind-value="creatingNewWallet.Name" @bind-value:event="oninput" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Name">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Описание</label>
+                <textarea @bind-value="creatingNewWallet.Description" @bind-value:event="oninput" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-outline-primary" type="button" @onclick="CreateNew" disabled="@(string.IsNullOrWhiteSpace(creatingNewWallet.Name))">Create</button>
+            </div>
+        </div>
+    </div>
+
+}

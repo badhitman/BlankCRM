@@ -18,7 +18,12 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
+                    SortIndex = table.Column<int>(type: "integer", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -122,6 +127,8 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
+                    SortIndex = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -1045,6 +1052,21 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_DeliveryRetailDocuments_RecipientIdentityUserId",
                 table: "DeliveryRetailDocuments",
                 column: "RecipientIdentityUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeliveryRetailServices_CreatedAtUTC",
+                table: "DeliveryRetailServices",
+                column: "CreatedAtUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeliveryRetailServices_IsDisabled",
+                table: "DeliveryRetailServices",
+                column: "IsDisabled");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeliveryRetailServices_LastUpdatedAtUTC",
+                table: "DeliveryRetailServices",
+                column: "LastUpdatedAtUTC");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeliveryStatusesRetailDocuments_CreatedAtUTC",

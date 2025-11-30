@@ -27,7 +27,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<UpdateDeliveryServiceReceive, DeliveryServiceRetailModelDB, ResponseBaseModel>()
             .RegisterMqListener<UpdateDeliveryDocumentReceive, DeliveryDocumentRetailModelDB, ResponseBaseModel>()
             .RegisterMqListener<UpdateConversionDocumentReceive, WalletConversionRetailDocumentModelDB, ResponseBaseModel>()
-            .RegisterMqListener<SelectWalletsTypesReceive, TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>, TPaginationResponseModel<WalletRetailTypeModelDB>>()
+            .RegisterMqListener<SelectWalletsTypesReceive, TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>, TPaginationResponseModel<WalletRetailTypeViewModel>>()
             .RegisterMqListener<SelectWalletsReceive, TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel>, TPaginationResponseModel<WalletRetailModelDB>>()
             .RegisterMqListener<SelectRowOfDeliveryDocumentsReceive, TPaginationRequestStandardModel<SelectRowsOfDeliveriesRetailDocumentsRequestModel>, TPaginationResponseModel<RowOfDeliveryRetailDocumentModelDB>>()
             .RegisterMqListener<SelectPaymentsOrdersLinksReceive, TPaginationRequestStandardModel<SelectPaymentsRetailOrdersLinksRequestModel>, TPaginationResponseModel<PaymentRetailOrderLinkModelDB>>()
@@ -46,6 +46,8 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<CreateDeliveryDocumentReceive, DeliveryDocumentRetailModelDB, TResponseModel<int>>()
             .RegisterMqListener<CreateConversionDocumentReceive, WalletConversionRetailDocumentModelDB, TResponseModel<int>>()
             .RegisterMqListener<WalletBalanceUpdateReceive, WalletBalanceCommitRequestModel, ResponseBaseModel>()
+            .RegisterMqListener<WalletsTypesGetReceive, int[], TResponseModel<WalletRetailTypeViewModel[]>>()
+            .RegisterMqListener<DeliveryServicesGetReceive, int[], TResponseModel<DeliveryServiceRetailModelDB[]>>()
 
             .RegisterMqListener<OrganizationSetLegalReceive, OrganizationLegalModel, TResponseModel<bool>>()
             .RegisterMqListener<OrganizationUpdateReceive, TAuthRequestModel<OrganizationModelDB>, TResponseModel<int>>()

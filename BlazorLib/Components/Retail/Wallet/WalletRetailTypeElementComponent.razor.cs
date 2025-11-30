@@ -1,0 +1,70 @@
+////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using Microsoft.AspNetCore.Components;
+using SharedLib;
+
+namespace BlazorLib.Components.Retail.Wallet;
+
+/// <summary>
+/// WalletRetailTypeElementComponent
+/// </summary>
+public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseModel
+{
+    [Inject]
+    IRetailService retailRepo { get; set; } = default!;
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required WalletRetailTypeViewModel WalletTypeElement { get; set; }
+
+    WalletRetailTypeViewModel? _walletCopy;
+
+    bool IsEdited => _walletCopy is not null && !WalletTypeElement.Equals(_walletCopy);
+
+    void InitEdit()
+    {
+        _walletCopy = GlobalTools.CreateDeepCopy(WalletTypeElement)!;
+    }
+
+    void CancelEdit()
+    {
+        _walletCopy = null;
+    }
+
+    async Task Save()
+    {
+        if (_walletCopy is null)
+        {
+            SnackBarRepo.Error("_walletCopy is null");
+            return;
+        }
+
+        await SetBusyAsync();
+        ResponseBaseModel resUpd = await retailRepo.UpdateWalletTypeAsync(_walletCopy);
+        if (!resUpd.Success())
+        {
+            await SetBusyAsync(false);
+            SnackBarRepo.ShowMessagesResponse(resUpd.Messages);
+            return;
+        }
+
+        TResponseModel<WalletRetailTypeViewModel[]>? resGet = await retailRepo.WalletsTypesGetAsync([_walletCopy.Id]);
+        if (!resGet.Success() || resGet.Response is null || resGet.Response.Length != 1)
+        {
+            await SetBusyAsync(false);
+            SnackBarRepo.ShowMessagesResponse(resUpd.Messages);
+            return;
+        }
+
+        WalletTypeElement.Name = resGet.Response[0].Name;
+        WalletTypeElement.Description = resGet.Response[0].Description;
+        WalletTypeElement.IsDisabled = resGet.Response[0].IsDisabled;
+        WalletTypeElement.LastUpdatedAtUTC = resGet.Response[0].LastUpdatedAtUTC;
+
+        _walletCopy = null;
+
+        await SetBusyAsync(false);
+    }
+}

@@ -9,6 +9,30 @@ namespace SharedLib;
 /// </summary>
 public class WalletRetailTypeModelDB : EntryUpdatedModel
 {
+    /// <inheritdoc/>
+    public bool IsDisabled { get; set; }
+
+    /// <inheritdoc/>
+    public int SortIndex { get; set; }
+
+    /// <inheritdoc/>
+    public override bool Equals(object obj)
+    {
+        if (obj is WalletRetailTypeViewModel walletOther2)
+            return walletOther2.IsDisabled == IsDisabled && walletOther2.Name == Name && walletOther2.Description == Description;
+
+        if (obj is WalletRetailTypeModelDB walletOther)
+            return walletOther.IsDisabled == IsDisabled && walletOther.Name == Name && walletOther.Description == Description;
+
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(IsDisabled, Id, Name, Description);
+    }
+
     /// <summary>
     /// Кошельки
     /// </summary>

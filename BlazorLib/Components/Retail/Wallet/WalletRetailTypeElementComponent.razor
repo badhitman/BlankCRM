@@ -1,0 +1,80 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
+}
+
+<div class="list-group-item list-group-item-action" aria-current="true">
+    @if (_walletCopy is null)
+    {
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">
+                <span class="@(WalletTypeElement.IsDisabled ? "text-decoration-line-through" : "")">@WalletTypeElement.Name</span>
+                <sup class="ms-4 text-@(WalletTypeElement.IsDisabled ? "danger" : "success")">
+                    @(WalletTypeElement.IsDisabled ? "выключено" : "активно")
+                </sup>
+            </h5>
+            <small>@WalletTypeElement.SumBalances</small>
+        </div>
+        <p class="mb-1 @(WalletTypeElement.IsDisabled ? "text-decoration-line-through" : "")">@WalletTypeElement.Description</p>
+        <small>
+            created: @WalletTypeElement.CreatedAtUTC
+            @if (WalletTypeElement.LastUpdatedAtUTC != default)
+            {
+                <strong class="ms-3">updated: @WalletTypeElement.LastUpdatedAtUTC</strong>
+            }
+        </small>
+    }
+    else
+    {
+        <div class="card mt-3">
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput-@_walletCopy.Id" class="form-label">Название</label>
+                    <input @bind-value="_walletCopy.Name"
+                           @bind-value:event="oninput"
+                           disabled="@IsBusyProgress"
+                           type="text"
+                           class="form-control"
+                           id="exampleFormControlInput-@_walletCopy.Id"
+                           placeholder="Name">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea-@_walletCopy.Id" class="form-label">Описание</label>
+                    <textarea @bind-value="_walletCopy.Description"
+                              @bind-value:event="oninput"
+                              disabled="@IsBusyProgress"
+                              class="form-control"
+                              id="exampleFormControlTextarea-@_walletCopy.Id"
+                              rows="3"></textarea>
+                </div>
+                <div class="form-check form-switch">
+                    <input @bind="_walletCopy.IsDisabled"
+                           class="form-check-input"
+                           disabled="@IsBusyProgress"
+                           type="checkbox"
+                           role="switch"
+                           id="switchCheckDefault-@_walletCopy.Id">
+                    <label class="form-check-label" for="switchCheckDefault-@_walletCopy.Id">@(_walletCopy.IsDisabled ? "Выключено (включить?)" : "Включено (выключить?)")</label>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+        @if (_walletCopy is null)
+        {
+            <button class="btn btn-primary" type="button" @onclick="InitEdit" disabled="@IsBusyProgress">Edit</button>
+        }
+        else
+        {
+            <button class="btn btn-outline-primary" type="button" @onclick="CancelEdit" disabled="@IsBusyProgress">Cancel</button>
+            <button class="btn btn-outline-success" type="button" @onclick="Save" disabled="@(!IsEdited || IsBusyProgress)">Save</button>
+            @if (IsEdited)
+            {
+                <button class="btn btn-outline-info" type="button" @onclick="InitEdit" disabled="@IsBusyProgress">Reset</button>
+            }
+        }
+    </div>
+</div>

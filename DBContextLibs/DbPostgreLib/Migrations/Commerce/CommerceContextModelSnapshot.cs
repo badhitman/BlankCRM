@@ -248,11 +248,32 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastUpdatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("SortIndex")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedAtUTC");
+
+                    b.HasIndex("IsDisabled");
+
+                    b.HasIndex("LastUpdatedAtUTC");
 
                     b.ToTable("DeliveryRetailServices");
                 });
@@ -1331,12 +1352,18 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("SortIndex")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

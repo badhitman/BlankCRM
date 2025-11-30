@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// SelectWalletsTypes
 /// </summary>
 public class SelectWalletsTypesReceive(IRetailService commRepo)
-    : IResponseReceive<TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>?, TPaginationResponseModel<WalletRetailTypeModelDB>?>
+    : IResponseReceive<TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>?, TPaginationResponseModel<WalletRetailTypeViewModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SelectWalletsTypesRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WalletRetailTypeModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<WalletRetailTypeViewModel>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commRepo.SelectWalletsTypesAsync(req, token);

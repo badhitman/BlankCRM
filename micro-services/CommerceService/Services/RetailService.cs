@@ -2,10 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
-using HtmlGenerator.html5.textual;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
+using DbcLib;
 
 namespace CommerceService;
 
@@ -54,8 +53,31 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateDeliveryServiceAsync(DeliveryServiceRetailModelDB req, CancellationToken token = default)
     {
+        TResponseModel<int> res = new();
+        if (string.IsNullOrWhiteSpace(req.Name))
+        {
+            res.AddError("Укажите имя");
+            return res;
+        }
+
+        req.Name = req.Name.Trim();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        if (await context.DeliveryRetailServices.AnyAsync(x => x.Name == req.Name, cancellationToken: token))
+        {
+            res.AddError("Служба доставки с таким именем уже существует");
+            return res;
+        }
+
+        req.Description = req.Description?.Trim();
+        req.CreatedAtUTC = DateTime.UtcNow;
+        
+        req.SortIndex = await context.DeliveryRetailServices.MaxAsync(x =>x.SortIndex, cancellationToken: token);
+        req.SortIndex++;
+
         await context.DeliveryRetailServices.AddAsync(req, token);
+        await context.SaveChangesAsync(token);
+
         return new() { Response = req.Id };
     }
 
@@ -130,7 +152,28 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateWalletTypeAsync(WalletRetailTypeModelDB req, CancellationToken token = default)
     {
+        TResponseModel<int> res = new();
+        if (string.IsNullOrWhiteSpace(req.Name))
+        {
+            res.AddError("Укажите имя");
+            return res;
+        }
+
+        req.Name = req.Name.Trim();
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        if (await context.WalletsRetailTypes.AnyAsync(x => x.Name == req.Name, cancellationToken: token))
+        {
+            res.AddError("Тип кошелька с таким именем уже существует");
+            return res;
+        }
+
+        req.Description = req.Description?.Trim();
+        req.CreatedAtUTC = DateTime.UtcNow;
+
+        req.SortIndex = await context.WalletsRetailTypes.MaxAsync(x => x.SortIndex, cancellationToken: token);
+        req.SortIndex++;
+
         await context.WalletsRetailTypes.AddAsync(req, token);
         await context.SaveChangesAsync(token);
         return new() { Response = req.Id };
@@ -356,7 +399,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WalletRetailTypeModelDB>> SelectWalletsTypesAsync(TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<WalletRetailTypeViewModel>> SelectWalletsTypesAsync(TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<WalletRetailTypeModelDB>? q = context.WalletsRetailTypes.AsQueryable();
@@ -365,6 +408,17 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
+        List<WalletRetailTypeViewModel> res = await pq.OrderBy(x => x.Id).Select(x => new WalletRetailTypeViewModel()
+        {
+            Id = x.Id,
+            CreatedAtUTC = x.CreatedAtUTC,
+            Description = x.Description,
+            LastUpdatedAtUTC = x.LastUpdatedAtUTC,
+            Name = x.Name,
+            IsDisabled = x.IsDisabled,
+            SumBalances = context.WalletsRetail.Where(y => y.WalletTypeId == x.Id).Sum(y => y.Balance)
+        }).ToListAsync(cancellationToken: token);
+
         return new()
         {
             PageNum = req.PageNum,
@@ -372,7 +426,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.ToListAsync(cancellationToken: token)
+            Response = res,
         };
     }
 
@@ -534,6 +588,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Name, req.Name)
                 .SetProperty(p => p.Description, req.Description)
+                .SetProperty(p => p.IsDisabled, req.IsDisabled)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
@@ -552,5 +607,36 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/> 
+    public async Task<TResponseModel<WalletRetailTypeViewModel[]>> WalletsTypesGetAsync(int[] reqIds, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        return new()
+        {
+            Response = await context.WalletsRetailTypes.Where(x => reqIds.Contains(x.Id)).Select(x => new WalletRetailTypeViewModel()
+            {
+                Id = x.Id,
+                CreatedAtUTC = x.CreatedAtUTC,
+                Description = x.Description,
+                IsDisabled = x.IsDisabled,
+                LastUpdatedAtUTC = x.LastUpdatedAtUTC,
+                Name = x.Name,
+                SumBalances = context.WalletsRetail.Where(y => y.WalletTypeId == x.Id).Sum(y => y.Balance)
+            }).ToArrayAsync(cancellationToken: token)
+        };
+    }
+
+    /// <inheritdoc/> 
+    public async Task<TResponseModel<DeliveryServiceRetailModelDB[]>> DeliveryServicesGetAsync(int[] reqIds, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        return new()
+        {
+            Response = await context.DeliveryRetailServices.Where(x => reqIds.Contains(x.Id)).ToArrayAsync(cancellationToken: token)
+        };
     }
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20251130035701_CommerceContext001")]
+    [Migration("20251130081930_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -251,11 +251,32 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastUpdatedAtUTC")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("SortIndex")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedAtUTC");
+
+                    b.HasIndex("IsDisabled");
+
+                    b.HasIndex("LastUpdatedAtUTC");
 
                     b.ToTable("DeliveryRetailServices");
                 });
@@ -1334,12 +1355,18 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("SortIndex")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
