@@ -33,6 +33,48 @@ public class IdentityTools(
     IDbContextFactory<IdentityAppDbContext> identityDbFactory) : IIdentityTools
 {
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestModel<string> req, CancellationToken token = default)
+    {
+        using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
+
+        if (!string.IsNullOrWhiteSpace(req.Payload))
+        {
+            //    bool _plus = req.Payload.StartsWith("+");
+            //    req.Payload = Regex.Replace(req.Payload, @"[^\d]", "");
+
+            //    user_db = await identityContext.Users.FirstOrDefaultAsync(x => x.Id != req.UserId && (x.PhoneNumber == req.Payload || x.PhoneNumber == $"+{req.Payload}"), cancellationToken: token);
+            //    if (user_db is not null)
+            //        return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
+
+            //    if (_plus)
+            //        req.Payload = $"+{req.Payload}";
+        }
+
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<InitChangePhoneUserRequestModel> req, CancellationToken token = default)
+    {
+        using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
+
+        if (!string.IsNullOrWhiteSpace(req.Payload?.PhoneNum))
+        {
+            //    bool _plus = req.Payload.PhoneNum.StartsWith("+");
+            //    req.Payload.PhoneNum = Regex.Replace(req.Payload.PhoneNum, @"[^\d]", "");
+
+            //    user_db = await identityContext.Users.FirstOrDefaultAsync(x => x.Id != req.UserId && (x.PhoneNumber == req.Payload.PhoneNum || x.PhoneNumber == $"+{req.Payload.PhoneNum}"), cancellationToken: token);
+            //    if (user_db is not null)
+            //        return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
+
+            //    if (_plus)
+            //        req.Payload.PhoneNum = $"+{req.Payload.PhoneNum}";
+        }
+
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<string>> CheckToken2FAAsync(CheckToken2FARequestModel req, CancellationToken tokenCan = default)
     {
         MemCachePrefixModel pref = new(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.ALIAS_CONTROLLER_NAME);
@@ -665,19 +707,6 @@ public class IdentityTools(
 
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         ApplicationUser? user_db;
-
-        //if (!string.IsNullOrWhiteSpace(req.PhoneNum))
-        //{
-        //    bool _plus = req.PhoneNum.StartsWith("+");
-        //    req.PhoneNum = Regex.Replace(req.PhoneNum, @"[^\d]", "");
-
-        //    user_db = await identityContext.Users.FirstOrDefaultAsync(x => x.Id != req.UserId && (x.PhoneNumber == req.PhoneNum || x.PhoneNumber == $"+{req.PhoneNum}"), cancellationToken: token);
-        //    if (user_db is not null)
-        //        return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
-
-        //    if (_plus)
-        //        req.PhoneNum = $"+{req.PhoneNum}";
-        //}
 
         user_db = await identityContext
             .Users

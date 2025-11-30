@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Удалить Identity данные пользователя
 /// </summary>
-public class DeleteUserDataReceive(IIdentityTools idRepo, ILogger<AddPasswordForUserReceive> loggerRepo)
+public class DeleteUserDataReceive(IIdentityTools idRepo, ILogger<DeleteUserDataReceive> loggerRepo)
     : IResponseReceive<DeleteUserDataRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

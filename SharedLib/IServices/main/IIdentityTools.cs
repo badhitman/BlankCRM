@@ -313,4 +313,14 @@ public interface IIdentityTools
     /// Установить пользователю Claim`s[TelegramId, FirstName, LastName, PhoneNum]
     /// </summary>
     public Task<TResponseModel<bool>> ClaimsUserFlushAsync(string user_id, CancellationToken token = default);
+
+    /// <summary>
+    /// InitChangePhoneUserAsync
+    /// </summary>
+    public Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestModel<string> req, CancellationToken token = default);
+
+    /// <summary>
+    /// InitChangePhoneUserAsync
+    /// </summary>
+    public Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<InitChangePhoneUserRequestModel> req, CancellationToken token = default);
 }

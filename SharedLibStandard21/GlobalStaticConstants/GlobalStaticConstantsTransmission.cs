@@ -63,6 +63,13 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string CheckToken2FAReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, $"{Routes.TWOFACTOR_CONTROLLER_NAME}-{Routes.TOKEN_CONTROLLER_NAME}", Routes.CHECK_ACTION_NAME);
 
         /// <summary>
+        /// Подтвердить изменение телефона пользовантеля
+        /// </summary>
+        public readonly static string ConfirmChangePhoneUserReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, Routes.USER_CONTROLLER_NAME, $"{Routes.CHANGE_ACTION_NAME}-{Routes.PHONE_CONTROLLER_NAME}", Routes.CONFIRM_ACTION_NAME);
+
+        public readonly static string InitChangePhoneUserReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, Routes.USER_CONTROLLER_NAME, $"{Routes.CHANGE_ACTION_NAME}-{Routes.PHONE_CONTROLLER_NAME}", Routes.INITIAL_ACTION_NAME);
+
+        /// <summary>
         /// Чтение 2fa токена (из кеша)
         /// </summary>
         public readonly static string ReadToken2FAReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, Routes.TWOFACTOR_CONTROLLER_NAME, $"{Routes.TOKEN_CONTROLLER_NAME}-{Routes.GET_ACTION_NAME}");

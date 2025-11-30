@@ -12,6 +12,14 @@ namespace RemoteCallLib;
 public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmission
 {
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestModel<string> req, CancellationToken token = default)
+       => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InitChangePhoneUserReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<InitChangePhoneUserRequestModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ConfirmChangePhoneUserReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<string>> CheckToken2FAAsync(CheckToken2FARequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<string>>(GlobalStaticConstantsTransmission.TransmissionQueues.CheckToken2FAReceive, req, token: token) ?? new();
 
@@ -245,5 +253,5 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
     /// <inheritdoc/>
     public async Task<TResponseModel<string[]>> SetRoleForUserAsync(SetRoleForUserRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<string[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.SetRoleForUserOfIdentityReceive, req, token: token) ?? new();
-    #endregion
+#endregion
 }

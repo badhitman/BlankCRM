@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Генерация (и отправка на Email++) 2fa токена
 /// </summary>
-public class GenerateOTPFor2StepVerificationReceive(IIdentityTools idRepo, ILogger<AddPasswordForUserReceive> loggerRepo)
+public class GenerateOTPFor2StepVerificationReceive(IIdentityTools idRepo, ILogger<GenerateOTPFor2StepVerificationReceive> loggerRepo)
     : IResponseReceive<string?, TResponseModel<string>?>
 {
     /// <inheritdoc/>

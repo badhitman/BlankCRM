@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Извлекает связанные логины для указанного <param ref="userId"/>
 /// </summary>
-public class GetUserLoginsReceive(IIdentityTools idRepo, ILogger<AddPasswordForUserReceive> loggerRepo)
+public class GetUserLoginsReceive(IIdentityTools idRepo, ILogger<GetUserLoginsReceive> loggerRepo)
     : IResponseReceive<string?, TResponseModel<IEnumerable<UserLoginInfoModel>>?>
 {
     /// <inheritdoc/>
