@@ -14,6 +14,7 @@ using System.Text;
 using SharedLib;
 using Newtonsoft.Json;
 using static SharedLib.GlobalStaticConstantsRoutes;
+using System.Text.RegularExpressions;
 
 namespace IdentityService;
 
@@ -453,7 +454,7 @@ public class IdentityTools(
                 PhoneNumber = x.PhoneNumber,
                 Surname = x.LastName,
                 TelegramId = x.ChatTelegramId,
-                UserName = x.UserName,
+                UserName = x.UserName ?? "",
             })
             .ToListAsync(cancellationToken: token)]
         };
@@ -523,7 +524,7 @@ public class IdentityTools(
                 LockoutEnabled = app_user.LockoutEnabled,
                 LockoutEnd = app_user.LockoutEnd,
                 PhoneNumber = app_user.PhoneNumber,
-                UserName = app_user.UserName,
+                UserName = app_user.UserName ?? "",
                 TelegramId = app_user.ChatTelegramId,
                 Roles = roles_for_user(app_user.Id)?.ToList(),
                 Claims = [.. claims.Where(x => x.Id == app_user.Id).Select(x => new EntryAltModel() { Id = x.Id, Name = x.Name })]
@@ -601,7 +602,7 @@ public class IdentityTools(
                 LockoutEnabled = app_user.LockoutEnabled,
                 LockoutEnd = app_user.LockoutEnd,
                 PhoneNumber = app_user.PhoneNumber,
-                UserName = app_user.UserName,
+                UserName = app_user.UserName ?? "",
                 TelegramId = app_user.ChatTelegramId,
                 Roles = roles_for_user(app_user.Id)?.ToList(),
                 Claims = [.. claims.Where(x => x.Id == app_user.Id).Select(x => new EntryAltModel() { Id = x.Id, Name = x.Name })]
@@ -649,6 +650,17 @@ public class IdentityTools(
         req.FirstName ??= "";
         req.LastName ??= "";
 
+        req.AddressUserComment = req.AddressUserComment?.Trim();
+        req.PhoneNum = req.PhoneNum?.Trim();
+
+        if (!string.IsNullOrWhiteSpace(req.PhoneNum))
+        {
+            bool _plus = req.PhoneNum.StartsWith("+");
+            req.PhoneNum = Regex.Replace(req.PhoneNum, @"^\d", "");
+            if (_plus)
+                req.PhoneNum = $"+{req.PhoneNum}";
+        }
+
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         ApplicationUser? user_db = await identityContext
             .Users
@@ -657,15 +669,28 @@ public class IdentityTools(
         if (user_db is null)
             return ResponseBaseModel.CreateInfo("Без изменений");
 
-        await identityContext
+        IQueryable<ApplicationUser>? q = identityContext
             .Users
-            .Where(x => x.Id == req.UserId)
+            .Where(x => x.Id == req.UserId);
+
+        await q
             .ExecuteUpdateAsync(set => set
-            .SetProperty(p => p.PhoneNumber, req.PhoneNum)
-            .SetProperty(p => p.FirstName, req.FirstName)
-            .SetProperty(p => p.NormalizedFirstNameUpper, req.FirstName.ToUpper())
-            .SetProperty(p => p.LastName, req.LastName)
-            .SetProperty(p => p.NormalizedLastNameUpper, req.LastName.ToUpper()), cancellationToken: token);
+                .SetProperty(p => p.PhoneNumber, req.PhoneNum)
+                .SetProperty(p => p.FirstName, req.FirstName)
+                .SetProperty(p => p.NormalizedFirstNameUpper, req.FirstName.ToUpper())
+                .SetProperty(p => p.LastName, req.LastName)
+                .SetProperty(p => p.NormalizedLastNameUpper, req.LastName.ToUpper())
+                .SetProperty(p => p.Patronymic, req.Patronymic)
+                .SetProperty(p => p.KladrTitle, req.KladrTitle)
+                .SetProperty(p => p.KladrCode, req.KladrCode)
+                .SetProperty(p => p.AddressUserComment, req.AddressUserComment), cancellationToken: token);
+
+        if (!string.IsNullOrWhiteSpace(req.Patronymic))
+        {
+            await q
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.NormalizedPatronymicUpper, req.Patronymic.ToUpper()), cancellationToken: token);
+        }
 
         user_db.PhoneNumber = req.PhoneNum;
         user_db.FirstName = req.FirstName;
@@ -811,7 +836,13 @@ public class IdentityTools(
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
         {
             string upp_query = req.FindQuery.ToUpper();
-            q = q.Where(x => EF.Functions.Like(x.NormalizedEmail, $"%{userManager.KeyNormalizer.NormalizeEmail(req.FindQuery)}%") || EF.Functions.Like(x.NormalizedFirstNameUpper, $"%{upp_query}%") || EF.Functions.Like(x.NormalizedLastNameUpper, $"%{upp_query}%") || x.Id == req.FindQuery);
+            q = q.Where(x =>
+                EF.Functions.Like(x.NormalizedEmail, $"%{userManager.KeyNormalizer.NormalizeEmail(req.FindQuery)}%") ||
+                EF.Functions.Like(x.NormalizedFirstNameUpper, $"%{upp_query}%") ||
+                EF.Functions.Like(x.NormalizedLastNameUpper, $"%{upp_query}%") ||
+                EF.Functions.Like(x.NormalizedPatronymicUpper, $"%{upp_query}%") ||
+                EF.Functions.Like(x.PhoneNumber, $"%{upp_query}%") ||
+                x.Id == req.FindQuery);
         }
         int total = await q.CountAsync(cancellationToken: token);
         q = q.OrderBy(x => x.UserName).Skip(req.PageNum * req.PageSize).Take(req.PageSize);
@@ -843,7 +874,7 @@ public class IdentityTools(
 
         return new()
         {
-            Response = users.Select(x => UserInfoModel.Build(userId: x.Id, userName: x.UserName, email: x.Email, phoneNumber: x.PhoneNumber, telegramId: x.ChatTelegramId, emailConfirmed: x.EmailConfirmed, lockoutEnd: x.LockoutEnd, lockoutEnabled: x.LockoutEnabled, accessFailedCount: x.AccessFailedCount, firstName: x.FirstName, lastName: x.LastName, roles: roles.Where(y => y.UserId == x.Id).Select(z => z.RoleName).ToArray(), claims: claims.Where(o => o.UserId == x.Id).Select(q => new EntryAltModel() { Id = q.ClaimType, Name = q.ClaimValue }).ToArray())).ToList(),
+            Response = users.Select(x => UserInfoModel.Build(userId: x.Id, userName: x.UserName ?? "", email: x.Email, phoneNumber: x.PhoneNumber, telegramId: x.ChatTelegramId, emailConfirmed: x.EmailConfirmed, lockoutEnd: x.LockoutEnd, lockoutEnabled: x.LockoutEnabled, accessFailedCount: x.AccessFailedCount, firstName: x.FirstName, lastName: x.LastName, roles: roles.Where(y => y.UserId == x.Id).Select(z => z.RoleName).ToArray(), claims: claims.Where(o => o.UserId == x.Id).Select(q => new EntryAltModel() { Id = q.ClaimType, Name = q.ClaimValue }).ToArray())).ToList(),
             TotalRowsCount = total,
             PageNum = req.PageNum,
             PageSize = req.PageSize,
@@ -898,7 +929,7 @@ public class IdentityTools(
         {
             UserId = user.Id,
             Email = user.Email,
-            UserName = user.UserName,
+            UserName = user.UserName ?? "",
             AccessFailedCount = user.AccessFailedCount,
             EmailConfirmed = user.EmailConfirmed,
             LockoutEnabled = user.LockoutEnabled,
@@ -1149,12 +1180,19 @@ public class IdentityTools(
 
         using IUserEmailStore<ApplicationUser> emailStore = (IUserEmailStore<ApplicationUser>)userStore;
 
-        await emailStore.SetEmailAsync(user, req.Email, CancellationToken.None);
+        try
+        {
+            await emailStore.SetEmailAsync(user, req.Email, CancellationToken.None);
 
-        IdentityResult result = await userManager.CreateAsync(user, req.Password);
+            IdentityResult result = await userManager.CreateAsync(user, req.Password);
 
-        if (!result.Succeeded)
-            return new() { Messages = result.Errors.Select(x => new ResultMessage() { Text = $"[{x.Code}: {x.Description}]", TypeMessage = MessagesTypesEnum.Error }).ToList() };
+            if (!result.Succeeded)
+                return new() { Messages = result.Errors.Select(x => new ResultMessage() { Text = $"[{x.Code}: {x.Description}]", TypeMessage = MessagesTypesEnum.Error }).ToList() };
+        }
+        catch (Exception ex)
+        {
+            loggerRepo.LogError(ex, "");
+        }
 
         string userId = await userManager.GetUserIdAsync(user);
         loggerRepo.LogInformation($"User #{userId} [{req.Email}] created a new account with password.");

@@ -44,11 +44,14 @@ public static class Extensions
         if (userId is null)
             return null;
 
-        string? phoneNum = principal.FindFirst(ClaimTypes.MobilePhone)?.Value;
-        string? givenName = principal.FindFirst(ClaimTypes.GivenName)?.Value;
-        string? surName = principal.FindFirst(ClaimTypes.Surname)?.Value;
-        string? userName = principal.FindFirst(ClaimTypes.Name)?.Value;
-        string? email = principal.FindFirst(ClaimTypes.Email)?.Value;
+        string?
+            phoneNum = principal.FindFirst(ClaimTypes.MobilePhone)?.Value,
+            givenName = principal.FindFirst(ClaimTypes.GivenName)?.Value,
+            surName = principal.FindFirst(ClaimTypes.Surname)?.Value,
+            patronymic = principal.FindFirst(nameof(IdentityDetailsModel.Patronymic))?.Value,
+            userName = principal.FindFirst(ClaimTypes.Name)?.Value ?? "",
+            email = principal.FindFirst(ClaimTypes.Email)?.Value;
+
         string[] roles = principal.FindAll(ClaimTypes.Role).Select(x => x.Value).ToArray();
 
         long? telegram_id = null;
@@ -63,6 +66,7 @@ public static class Extensions
             Email = email,
             TelegramId = telegram_id,
             Surname = surName,
+            Patronymic = patronymic,
             UserName = userName,
             Roles = [.. roles],
             GivenName = givenName,
@@ -239,7 +243,7 @@ public static class Extensions
     public static string GetTranslate(this IStringLocalizer<Resources> loc, string src, StringLocalizeAreaEnum? area = null)
     {
         src = loc[src];
-        
+
         if (area is not null && src.EndsWith($".{area}"))
             src = src[..src.IndexOf($".{area}")];
 

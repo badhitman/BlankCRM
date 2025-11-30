@@ -33,8 +33,7 @@ public class AddressOrganizationBaseModel : EntryModel
     /// <summary>
     /// Адрес 
     /// </summary>
-    [Required]
-    public required string AddressUserComment { get; set; }
+    public string? AddressUserComment { get; set; }
     #endregion
 
     /// <summary>

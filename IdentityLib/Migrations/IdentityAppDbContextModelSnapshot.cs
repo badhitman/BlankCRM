@@ -17,7 +17,7 @@ namespace IdentityLib.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -59,6 +59,9 @@ namespace IdentityLib.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
+                    b.Property<string>("AddressUserComment")
+                        .HasColumnType("text");
+
                     b.Property<long?>("ChatTelegramId")
                         .HasColumnType("bigint");
 
@@ -74,6 +77,12 @@ namespace IdentityLib.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("KladrCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("KladrTitle")
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
@@ -95,11 +104,17 @@ namespace IdentityLib.Migrations
                     b.Property<string>("NormalizedLastNameUpper")
                         .HasColumnType("text");
 
+                    b.Property<string>("NormalizedPatronymicUpper")
+                        .HasColumnType("text");
+
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
                     b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Patronymic")
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
@@ -122,12 +137,16 @@ namespace IdentityLib.Migrations
 
                     b.HasIndex("ChatTelegramId");
 
+                    b.HasIndex("KladrCode");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedFirstNameUpper");
 
                     b.HasIndex("NormalizedLastNameUpper");
+
+                    b.HasIndex("NormalizedPatronymicUpper");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()

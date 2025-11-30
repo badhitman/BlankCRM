@@ -20,6 +20,7 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
     string? username;
     string? firstName;
     string? lastName;
+    string? patronymic;
     string? phoneNum;
 
     List<ResultMessage> Messages = [];
@@ -38,6 +39,7 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
         lastName = CurrentUserSession.Surname;
         phoneNum = CurrentUserSession.PhoneNumber;
         username = CurrentUserSession.UserName;
+        patronymic = CurrentUserSession.Patronymic;
     }
 
     private async Task SaveAsync()
@@ -47,7 +49,7 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
 
         if (!string.IsNullOrWhiteSpace(phoneNum) && !GlobalTools.IsPhoneNumber(phoneNum))
         {
-            SnackBarRepo.Error("Телефон должен быть в формате: +79994440011");
+            SnackBarRepo.Error("Телефон должен быть в формате: +79994440011 (можно без +)");
             return;
         }
 

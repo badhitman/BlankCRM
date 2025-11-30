@@ -1,14 +1,14 @@
-using IdentityLib;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Components.Server;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SharedLib;
-using System.Diagnostics;
 using System.Security.Claims;
+using System.Diagnostics;
+using IdentityLib;
+using SharedLib;
 
 namespace ServerLib;
 
@@ -78,8 +78,9 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider(ILoggerFac
         {
             string? givenName = principal.FindFirst(ClaimTypes.GivenName)?.Value;
             string? surName = principal.FindFirst(ClaimTypes.Surname)?.Value;
+            string? patronymic = principal.FindFirst(nameof(IdentityDetailsModel.Patronymic))?.Value;
             string? userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            string? userName = principal.FindFirst(ClaimTypes.Name)?.Value;
+            string userName = principal.FindFirst(ClaimTypes.Name)?.Value ?? "";
             string? email = principal.FindFirst(ClaimTypes.Email)?.Value;
             string[] roles = principal.FindAll(ClaimTypes.Role).Select(x => x.Value).ToArray();
 
@@ -96,10 +97,11 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider(ILoggerFac
                 {
                     GivenName = givenName,
                     Surname = surName,
+                    Patronymic = patronymic,
                     UserId = userId,
                     UserName = userName,
                     Email = email,
-                    Roles = [..roles],
+                    Roles = [.. roles],
                     Claims = claims,
                     TelegramId = telegram_id,
                 });

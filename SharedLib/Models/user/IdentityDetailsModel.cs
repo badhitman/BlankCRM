@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.ComponentModel.DataAnnotations;
+
 namespace SharedLib;
 
 /// <summary>
@@ -24,8 +26,31 @@ public class IdentityDetailsModel
     /// </summary>
     public string? LastName { get; set; }
 
+    /// <inheritdoc/>
+    public string? Patronymic { get; set; }
+
+    /// <inheritdoc/>
+    public string? NormalizedPatronymicUpper { get; set; }
+
     /// <summary>
     /// PhoneNum
     /// </summary>
     public string? PhoneNum { get; set; }
+
+    #region address
+    /// <inheritdoc/>
+    [Required]
+    public string? KladrCode { get; set; }
+
+    /// <inheritdoc/>
+    [Required]
+    public string? KladrTitle { get; set; }
+
+    /// <summary>
+    /// Адрес 
+    /// </summary>
+    [Required]
+    public string? AddressUserComment { get; set; }
+    #endregion
+
 }

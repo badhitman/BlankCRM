@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using SharedLib;
+using Microsoft.AspNetCore.Components;
 using System.Security.Claims;
+using SharedLib;
 
 namespace BlazorClientLib;
 
@@ -39,10 +39,11 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
         List<Claim> claims = [
             new Claim(ClaimTypes.NameIdentifier, userInfo.UserId),
             new Claim(ClaimTypes.MobilePhone, userInfo.PhoneNumber ?? ""),
-            new Claim(ClaimTypes.Name, userInfo.UserName ?? ""),
+            new Claim(ClaimTypes.Name, userInfo.UserName),
             new Claim(ClaimTypes.Email, userInfo.Email ?? ""),
             new Claim(ClaimTypes.GivenName, userInfo.GivenName ?? ""),
             new Claim(ClaimTypes.Surname, userInfo.Surname ?? ""),
+            new Claim(nameof(IdentityDetailsModel.Patronymic), userInfo.Patronymic ?? ""),
             new Claim(GlobalStaticConstants.TelegramIdClaimName, userInfo.TelegramId.ToString() ?? ""),
             ];
 

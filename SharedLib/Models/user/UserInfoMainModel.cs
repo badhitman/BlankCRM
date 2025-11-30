@@ -23,11 +23,16 @@ public record UserInfoMainModel
     /// </summary>
     public string? Surname { get; set; }
 
+    /// <summary>
+    /// Patronymic
+    /// </summary>
+    public string? Patronymic {  get; set; }
+
     /// <inheritdoc/>
     public required string UserId { get; init; }
 
     /// <inheritdoc/>
-    public string? UserName { get; init; }
+    public required string UserName { get; init; }
 
     /// <inheritdoc/>
     public string? Email { get; init; }

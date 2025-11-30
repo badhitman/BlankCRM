@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
@@ -11,8 +12,8 @@ namespace IdentityLib;
 /// <summary>
 /// Пользователь [Identity]
 /// </summary>
-[Index(nameof(ChatTelegramId))]
-[Index(nameof(NormalizedFirstNameUpper)), Index(nameof(NormalizedLastNameUpper))]
+[Index(nameof(ChatTelegramId)), Index(nameof(KladrCode))]
+[Index(nameof(NormalizedFirstNameUpper)), Index(nameof(NormalizedLastNameUpper)), Index(nameof(NormalizedPatronymicUpper))]
 public class ApplicationUser : IdentityUser
 {
     /// <summary>
@@ -40,6 +41,24 @@ public class ApplicationUser : IdentityUser
     /// </summary>
     public string? NormalizedLastNameUpper { get; set; }
 
+    /// <inheritdoc/>
+    public string? Patronymic { get; set; }
+
+    /// <inheritdoc/>
+    public string? NormalizedPatronymicUpper { get; set; }
+
+    #region address
+    /// <inheritdoc/>
+    public string? KladrCode { get; set; }
+
+    /// <inheritdoc/>
+    public string? KladrTitle { get; set; }
+
+    /// <summary>
+    /// Адрес 
+    /// </summary>
+    public string? AddressUserComment { get; set; }
+    #endregion
 
     /// <inheritdoc/>
     public static explicit operator UserInfoModel(ApplicationUser app_user)

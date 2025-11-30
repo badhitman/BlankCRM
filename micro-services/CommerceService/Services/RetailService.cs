@@ -71,9 +71,14 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         req.Description = req.Description?.Trim();
         req.CreatedAtUTC = DateTime.UtcNow;
-        
-        req.SortIndex = await context.DeliveryRetailServices.MaxAsync(x =>x.SortIndex, cancellationToken: token);
-        req.SortIndex++;
+
+        if (await context.DeliveryRetailServices.AnyAsync(cancellationToken: token))
+        {
+            req.SortIndex = await context.DeliveryRetailServices.MaxAsync(x => x.SortIndex, cancellationToken: token);
+            req.SortIndex++;
+        }
+        else
+            req.SortIndex = 1;
 
         await context.DeliveryRetailServices.AddAsync(req, token);
         await context.SaveChangesAsync(token);
@@ -171,8 +176,13 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Description = req.Description?.Trim();
         req.CreatedAtUTC = DateTime.UtcNow;
 
-        req.SortIndex = await context.WalletsRetailTypes.MaxAsync(x => x.SortIndex, cancellationToken: token);
-        req.SortIndex++;
+        if (await context.WalletsRetailTypes.AnyAsync(cancellationToken: token))
+        {
+            req.SortIndex = await context.WalletsRetailTypes.MaxAsync(x => x.SortIndex, cancellationToken: token);
+            req.SortIndex++;
+        }
+        else
+            req.SortIndex = 1;
 
         await context.WalletsRetailTypes.AddAsync(req, token);
         await context.SaveChangesAsync(token);
@@ -255,7 +265,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.ToListAsync(cancellationToken: token)
+            Response = await pq.OrderBy(x => x.SortIndex).ToListAsync(cancellationToken: token)
         };
     }
 
@@ -408,7 +418,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
-        List<WalletRetailTypeViewModel> res = await pq.OrderBy(x => x.Id).Select(x => new WalletRetailTypeViewModel()
+        List<WalletRetailTypeViewModel> res = await pq.OrderBy(x => x.SortIndex).Select(x => new WalletRetailTypeViewModel()
         {
             Id = x.Id,
             CreatedAtUTC = x.CreatedAtUTC,
