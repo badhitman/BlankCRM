@@ -21,12 +21,6 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
     [Inject]
     protected ICommerceTransmission CommerceRepo { get; set; } = default!;
 
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
-    [Inject]
-    IWebTransmission WebRepo { get; set; } = default!;
-
 
     /// <summary>
     /// CanAdding
@@ -185,7 +179,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
         if (!res.Success() || res.Response?.Response is null)
             return new TableData<UserOrganizationModelDB>() { TotalItems = 0, Items = [] };
 
-        await CacheUsersUpdate(res.Response.Response.Select(x => x.UserPersonIdentityId));
+        await CacheUsersUpdate([..res.Response.Response.Select(x => x.UserPersonIdentityId)]);
 
         // Return the data
         return new TableData<UserOrganizationModelDB>() { TotalItems = res.Response.TotalRowsCount, Items = res.Response.Response };

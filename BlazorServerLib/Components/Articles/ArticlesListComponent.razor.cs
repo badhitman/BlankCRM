@@ -17,9 +17,6 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
     [Inject]
     IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
 
     private MudTable<ArticleModelDB> table = default!;
 
@@ -31,12 +28,15 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
     /// </summary>
     private async Task<TableData<ArticleModelDB>> ServerReload(TableState state, CancellationToken token)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync(token: token);
         TPaginationRequestStandardModel<SelectArticlesRequestModel> req = new()
         {
             Payload = new()
             {
-                IdentityUsersIds = [CurrentUserSession!.UserId],
+                IdentityUsersIds = [CurrentUserSession.UserId],
                 SearchQuery = searchString,
                 IncludeExternal = true,
             },
@@ -66,7 +66,7 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusyAsync();
 
-        TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersIdentityAsync(_ids);
+        TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersOfIdentityAsync(_ids);
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is null)

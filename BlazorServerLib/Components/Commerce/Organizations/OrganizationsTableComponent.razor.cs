@@ -17,9 +17,6 @@ public partial class OrganizationsTableComponent : BlazorBusyComponentBaseAuthMo
     [Inject]
     ICommerceTransmission CommerceRepo { get; set; } = default!;
 
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
 
     /// <summary>
     /// Пользователь, для которого отобразить организации
@@ -38,30 +35,34 @@ public partial class OrganizationsTableComponent : BlazorBusyComponentBaseAuthMo
     protected override async Task OnInitializedAsync()
     {
         await ReadCurrentUser();
+
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (string.IsNullOrWhiteSpace(UserId))
         {
-            if (CurrentUserSession!.IsAdmin)
+            if (CurrentUserSession.IsAdmin == true)
                 _filterUser = UserId;
             else
             {
-                _filterUser = CurrentUserSession!.UserId;
-                CurrentViewUser = CurrentUserSession!;
+                _filterUser = CurrentUserSession.UserId;
+                CurrentViewUser = CurrentUserSession;
             }
         }
         else
         {
-            if (CurrentUserSession!.IsAdmin || CurrentUserSession!.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) == true)
+            if (CurrentUserSession.IsAdmin || CurrentUserSession.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) == true)
                 _filterUser = UserId;
             else
-                _filterUser = CurrentUserSession!.UserId;
+                _filterUser = CurrentUserSession.UserId;
         }
 
-        if (UserId == CurrentUserSession!.UserId)
-            CurrentViewUser = CurrentUserSession!;
+        if (UserId == CurrentUserSession.UserId)
+            CurrentViewUser = CurrentUserSession;
         else if (!string.IsNullOrWhiteSpace(UserId))
         {
             await SetBusyAsync();
-            TResponseModel<UserInfoModel[]> user_res = await IdentityRepo.GetUsersIdentityAsync([UserId]);
+            TResponseModel<UserInfoModel[]> user_res = await IdentityRepo.GetUsersOfIdentityAsync([UserId]);
             SnackBarRepo.ShowMessagesResponse(user_res.Messages);
             CurrentViewUser = user_res.Response?.FirstOrDefault();
             await SetBusyAsync(false);

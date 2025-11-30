@@ -29,9 +29,6 @@ public class IdentityDetailsModel
     /// <inheritdoc/>
     public string? Patronymic { get; set; }
 
-    /// <inheritdoc/>
-    public string? NormalizedPatronymicUpper { get; set; }
-
     /// <summary>
     /// PhoneNum
     /// </summary>
@@ -53,4 +50,7 @@ public class IdentityDetailsModel
     public string? AddressUserComment { get; set; }
     #endregion
 
+
+    /// <inheritdoc/>
+    public bool UpdateAddress { get; set; }
 }

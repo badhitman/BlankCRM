@@ -85,6 +85,9 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
 
     async Task SaveMessage()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (string.IsNullOrWhiteSpace(TextMessage))
             throw new ArgumentNullException(nameof(TextMessage));
 
@@ -92,7 +95,7 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
         TResponseModel<int> rest = await HelpDeskRepo
             .MessageCreateOrUpdateAsync(new()
             {
-                SenderActionUserId = CurrentUserSession!.UserId,
+                SenderActionUserId = CurrentUserSession.UserId,
                 Payload = new()
                 {
                     MessageText = TextMessage,
@@ -126,6 +129,9 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
     {
         await base.OnInitializedAsync();
 
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{Routes.ISSUE_CONTROLLER_NAME}/{Routes.MESSAGE_CONTROLLER_NAME}-{Routes.IMAGE_ACTION_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={Message?.Id}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={Issue.Id}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
@@ -136,7 +142,7 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
 
         if (Message?.AuthorUserId == GlobalStaticConstantsRoles.Roles.System)
             _currentType = AuthorsTypesEnum.System;
-        else if (Message?.AuthorUserId == CurrentUserSession!.UserId)
+        else if (Message?.AuthorUserId == CurrentUserSession.UserId)
             _currentType = AuthorsTypesEnum.My;
         else if (Message?.AuthorUserId == Issue.ExecutorIdentityUserId)
             _currentType = AuthorsTypesEnum.Executor;

@@ -63,10 +63,10 @@ public class UpdateHandler(
             if (messageText.StartsWith("/start ") && Guid.TryParse(messageText[7..], out _))
             {
                 messageText = messageText[7..];
-                check_token = await identityRepo.TelegramJoinAccountConfirmTokenAsync(new() { TelegramId = message.From.Id, Token = messageText.Trim(), ClearBaseUri = tgConf.ClearBaseUri ?? "https://", TelegramJoinAccountTokenLifetimeMinutes = tgConf.TelegramJoinAccountTokenLifetimeMinutes }, token: cancellationToken);
+                check_token = await identityRepo.TelegramJoinAccountConfirmTokenFromTelegramAsync(new() { TelegramId = message.From.Id, Token = messageText.Trim(), ClearBaseUri = tgConf.ClearBaseUri ?? "https://", TelegramJoinAccountTokenLifetimeMinutes = tgConf.TelegramJoinAccountTokenLifetimeMinutes }, token: cancellationToken);
             }
             else if (Guid.TryParse(messageText.Trim(), out _))
-                check_token = await identityRepo.TelegramJoinAccountConfirmTokenAsync(new() { TelegramId = message.From.Id, Token = messageText.Trim(), ClearBaseUri = tgConf.ClearBaseUri ?? "https://", TelegramJoinAccountTokenLifetimeMinutes = tgConf.TelegramJoinAccountTokenLifetimeMinutes }, token: cancellationToken);
+                check_token = await identityRepo.TelegramJoinAccountConfirmTokenFromTelegramAsync(new() { TelegramId = message.From.Id, Token = messageText.Trim(), ClearBaseUri = tgConf.ClearBaseUri ?? "https://", TelegramJoinAccountTokenLifetimeMinutes = tgConf.TelegramJoinAccountTokenLifetimeMinutes }, token: cancellationToken);
 
             if (check_token is not null)
             {

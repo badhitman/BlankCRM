@@ -39,7 +39,7 @@ public partial class ProjectTableRowComponent : BlazorBusyComponentBaseAuthModel
     public required ConstructorMainManageComponent ParentFormsPage { get; set; }
 
 
-    bool IsMyProject => CurrentUserSession!.UserId.Equals(ProjectRow.OwnerUserId);
+    bool IsMyProject => CurrentUserSession?.UserId.Equals(ProjectRow.OwnerUserId) == true;
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -50,12 +50,15 @@ public partial class ProjectTableRowComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async Task EditProject()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         DialogParameters<ProjectEditDialogComponent> parameters = new()
         {
              { x => x.ProjectForEdit, ProjectRow },
              { x => x.ParentFormsPage, ParentFormsPage },
              { x => x.ParentListProjects, ParentProjectsList },
-             { x => x.CurrentUser, CurrentUserSession ! },
+             { x => x.CurrentUser, CurrentUserSession },
         };
         DialogOptions options = new() { CloseButton = true, MaxWidth = MaxWidth.ExtraExtraLarge };
         IDialogReference res = await DialogService.ShowAsync<ProjectEditDialogComponent>("Редактирование проекта", parameters, options);
@@ -76,9 +79,12 @@ public partial class ProjectTableRowComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async Task SetMainProjectHandle()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
 
-        ResponseBaseModel res = await ConstructorRepo.SetProjectAsMainAsync(new() { ProjectId = ProjectRow.Id, UserId = CurrentUserSession!.UserId });
+        ResponseBaseModel res = await ConstructorRepo.SetProjectAsMainAsync(new() { ProjectId = ProjectRow.Id, UserId = CurrentUserSession.UserId });
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success())

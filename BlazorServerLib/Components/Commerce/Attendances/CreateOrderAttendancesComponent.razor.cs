@@ -176,7 +176,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
             }
         };
         await SetBusyAsync();
-        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession?.UserId });
         await SetBusyAsync(false);
         if (res.Response?.Response is not null && res.Response.Response.Count != 0)
         {

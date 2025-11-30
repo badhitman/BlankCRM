@@ -49,7 +49,7 @@ else
                                                     <OrdersAttendancesListComponent HelpDeskIssueId="Id" OrdersAttendances="OrdersAttendancesJournal" UpdateRecords="ReloadRecords" />
                                                 </MudTabPanel>
                                             }
-                                            @if (CurrentUserSession!.IsAdmin)
+                                            @if (CurrentUserSession?.IsAdmin == true)
                                             {
                                                 <MudTabPanel Text="Request">
                                                     <IssueBodyComponent />

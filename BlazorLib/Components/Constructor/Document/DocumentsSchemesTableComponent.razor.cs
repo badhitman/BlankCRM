@@ -45,9 +45,12 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
     /// <inheritdoc/>
     protected async Task DeleteDocument(int questionnaire_id)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
 
-        ResponseBaseModel rest = await ConstructorRepo.DeleteDocumentSchemeAsync(new() { Payload = questionnaire_id, SenderActionUserId = CurrentUserSession!.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.DeleteDocumentSchemeAsync(new() { Payload = questionnaire_id, SenderActionUserId = CurrentUserSession.UserId });
         IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);

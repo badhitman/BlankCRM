@@ -11,7 +11,7 @@
                     <dt>Author</dt>
                     <dd>
                         <span>
-                            @if (Author?.UserId == CurrentUserSession!.UserId)
+                            @if (Author?.UserId == CurrentUserSession?.UserId)
                             {
                                 <b title="You are the author of the appeal">Вы</b>
                             }

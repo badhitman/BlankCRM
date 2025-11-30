@@ -151,7 +151,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         BankContext ctx = default!;
         await Task.WhenAll([
             Task.Run(async () => { ctx = await bankDbFactory.CreateDbContextAsync(token); }, token),
-            Task.Run(async () => { TResponseModel<UserInfoModel[]> userGet = await identityRepo.GetUsersIdentityAsync([cust.UserIdentityId], token); _userCustomer = userGet.Response?.FirstOrDefault(); }, token)
+            Task.Run(async () => { TResponseModel<UserInfoModel[]> userGet = await identityRepo.GetUsersOfIdentityAsync([cust.UserIdentityId], token); _userCustomer = userGet.Response?.FirstOrDefault(); }, token)
         ]);
 
         if (_userCustomer is null)

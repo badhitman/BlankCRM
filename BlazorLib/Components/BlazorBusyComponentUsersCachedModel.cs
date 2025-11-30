@@ -2,7 +2,6 @@
 // © https://github.com/badhitman 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
@@ -13,9 +12,6 @@ namespace BlazorLib;
 /// </summary>
 public abstract class BlazorBusyComponentUsersCachedModel : BlazorBusyComponentBaseAuthModel
 {
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
     /// <summary>
     /// UsersCache
     /// </summary>
@@ -25,14 +21,14 @@ public abstract class BlazorBusyComponentUsersCachedModel : BlazorBusyComponentB
     /// <summary>
     /// CacheUsersUpdate
     /// </summary>
-    protected async Task CacheUsersUpdate(IEnumerable<string> usersIds)
+    protected async Task CacheUsersUpdate(string[] usersIds)
     {
-        usersIds = usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct();
-        if (!usersIds.Any())
+        usersIds = [..usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct()];
+        if (usersIds.Length == 0)
             return;
 
         await SetBusyAsync();
-        TResponseModel<UserInfoModel[]> users = await IdentityRepo.GetUsersIdentityAsync(usersIds);
+        TResponseModel<UserInfoModel[]> users = await IdentityRepo.GetUsersOfIdentityAsync(usersIds);
         SnackBarRepo.ShowMessagesResponse(users.Messages);
         if (users.Success() && users.Response is not null && users.Response.Length != 0)
             lock (UsersCache)

@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DocumentFormat.OpenXml.Spreadsheet;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -53,7 +52,7 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ResetAuthenticatorKeyReceive, userId, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RemoveLoginAsync(RemoveLoginRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RemoveLoginForUserAsync(RemoveLoginRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.RemoveLoginForUserReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -133,7 +132,7 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.GenerateEmailConfirmationIdentityReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<RegistrationNewUserResponseModel> CreateNewUserAsync(string userEmail, CancellationToken token = default)
+    public async Task<RegistrationNewUserResponseModel> CreateNewUserEmailAsync(string userEmail, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<RegistrationNewUserResponseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.RegistrationNewUserReceive, userEmail, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -153,7 +152,7 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<UserInfoModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.SelectUsersOfIdentityReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityAsync(IEnumerable<string> ids_users, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentityAsync(string[] ids_users, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<UserInfoModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityReceive, ids_users, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -161,12 +160,12 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<bool>>(GlobalStaticConstantsTransmission.TransmissionQueues.ClaimsForUserFlushReceive, userIdIdentity, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByEmailsAsync(IEnumerable<string> ids_emails, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByEmailsAsync(string[] ids_emails, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<UserInfoModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityByEmailReceive, ids_emails, token: token) ?? new();
 
     #region tg
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]>> GetUserIdentityByTelegramAsync(long[] ids_users, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByTelegramAsync(long[] ids_users, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<UserInfoModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityByTelegramIdsReceive, ids_users, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -190,11 +189,11 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<TelegramUserViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.FindUsersTelegramReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TelegramJoinAccountConfirmTokenAsync(TelegramJoinAccountConfirmModel req, bool waitResponse = true, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TelegramJoinAccountConfirmTokenFromTelegramAsync(TelegramJoinAccountConfirmModel req, bool waitResponse = true, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountConfirmReceive, req, waitResponse, token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TelegramJoinAccountDeleteAsync(TelegramAccountRemoveJoinRequestTelegramModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TelegramAccountRemoveTelegramJoinAsync(TelegramAccountRemoveJoinRequestTelegramModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountDeleteReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -202,7 +201,7 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.UpdateTelegramMainUserMessageReceive, setMainMessage, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TelegramUserBaseModel>> GetTelegramUserAsync(long telegramUserId, CancellationToken token = default)
+    public async Task<TResponseModel<TelegramUserBaseModel>> GetTelegramUserCachedInfoAsync(long telegramUserId, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<TelegramUserBaseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetTelegramUserReceive, telegramUserId, token: token) ?? new();
 
     /// <inheritdoc/>

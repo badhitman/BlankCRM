@@ -91,7 +91,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentityAsync([workSchedules.SenderActionUserId], token);
+        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersOfIdentityAsync([workSchedules.SenderActionUserId], token);
         if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length == 0)
         {
             res.AddRangeMessages(actorRes.Messages);
@@ -311,7 +311,7 @@ public partial class CommerceImplementService : ICommerceService
         await Task.WhenAll([
             Task.Run(async () => { orderAttendanceDB = await context.AttendancesReg.FirstOrDefaultAsync(x => x.Id == req.Payload); }, token),
             Task.Run(async () => {
-                TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId]);
+                TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId]);
                 if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length != 1)
                 {
                     res.AddRangeMessages(actorRes.Messages);
@@ -374,7 +374,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
+        TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
         if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length == 0)
         {
             res.AddRangeMessages(actorRes.Messages);

@@ -35,7 +35,7 @@ public partial class ConfirmEmailPage : ComponentBase
             RedirectManager.RedirectTo("");
         }
 
-        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentityAsync([UserId]);
+        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersOfIdentityAsync([UserId]);
         Messages = findUsers.Messages;
         if (findUsers.Response is null)
         {

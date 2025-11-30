@@ -110,9 +110,12 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async Task DeleteSelectedDirectory()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
 
-        ResponseBaseModel rest = await ConstructorRepo.DeleteDirectoryAsync(new() { Payload = SelectedDirectoryId, SenderActionUserId = CurrentUserSession!.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.DeleteDirectoryAsync(new() { Payload = SelectedDirectoryId, SenderActionUserId = CurrentUserSession.UserId });
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
@@ -129,12 +132,15 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async Task CreateDirectory()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (ParentFormsPage.MainProject is null)
             throw new Exception("Не выбран текущий/основной проект");
 
         await SetBusyAsync();
 
-        TResponseModel<int> rest = await ConstructorRepo.UpdateOrCreateDirectoryAsync(new() { Payload = new() { Name = directoryObject.Name, ProjectId = ParentFormsPage.MainProject.Id, Description = Description }, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<int> rest = await ConstructorRepo.UpdateOrCreateDirectoryAsync(new() { Payload = new() { Name = directoryObject.Name, ProjectId = ParentFormsPage.MainProject.Id, Description = Description }, SenderActionUserId = CurrentUserSession.UserId });
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Success())
         {
@@ -170,12 +176,15 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
         if (selectedDirectory is null || ParentFormsPage.MainProject is null)
             throw new Exception("Не выбран текущий/основной проект");
 
+        if(CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
 
         TResponseModel<int> rest = await ConstructorRepo.UpdateOrCreateDirectoryAsync(new()
         {
             Payload = EntryConstructedModel.Build(directoryObject, ParentFormsPage.MainProject.Id, Description),
-            SenderActionUserId = CurrentUserSession!.UserId
+            SenderActionUserId = CurrentUserSession.UserId
         });
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(rest.Messages);

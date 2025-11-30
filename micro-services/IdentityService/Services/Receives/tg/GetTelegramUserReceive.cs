@@ -11,7 +11,7 @@ namespace Transmission.Receives.web;
 /// Получить информацию по пользователю (из БД).
 /// Данные возвращаются из кэша: каждое сообщение в TelegramBot кеширует информацию о пользователе в БД
 /// </summary>
-public class GetTelegramUserReceive(IIdentityTools identityRepo, ILogger<GetTelegramUserReceive> _logger) 
+public class GetTelegramUserReceive(IIdentityTools identityRepo, ILogger<GetTelegramUserReceive> _logger)
     : IResponseReceive<long, TResponseModel<TelegramUserBaseModel?>?>
 {
     /// <inheritdoc/>
@@ -20,16 +20,16 @@ public class GetTelegramUserReceive(IIdentityTools identityRepo, ILogger<GetTele
     /// <inheritdoc/>
     public async Task<TResponseModel<TelegramUserBaseModel?>?> ResponseHandleActionAsync(long payload, CancellationToken token = default)
     {
-        TResponseModel<TelegramUserBaseModel?> res = new();
+        TResponseModel<TelegramUserBaseModel> res = new();
         string msg;
         if (payload == 0)
         {
             msg = "remote call [payload] == default: error 76FC1696-0849-42F9-BFEA-57622031EB8F";
             _logger.LogError(msg);
             res.AddError(msg);
-            return res;
+            return new() { Response = res.Response, Messages = res.Messages };
         }
-
-        return await identityRepo.GetTelegramUserCachedInfoAsync(payload, token);
+        res = await identityRepo.GetTelegramUserCachedInfoAsync(payload, token);
+        return new() { Response = res.Response, Messages = res.Messages };
     }
 }

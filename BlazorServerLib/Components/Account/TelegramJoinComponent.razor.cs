@@ -107,7 +107,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
             UserInfoMainModel user = state.User.ReadCurrentUserInfo() ?? throw new Exception();
             UserId = user.UserId;
         }
-        TResponseModel<UserInfoModel[]> findUser = await IdentityRepo.GetUsersIdentityAsync([UserId]);
+        TResponseModel<UserInfoModel[]> findUser = await IdentityRepo.GetUsersOfIdentityAsync([UserId]);
         Messages = findUser.Messages;
         if (!findUser.Success() || findUser.Response is null)
             throw new Exception("can`t get user data. error {590D6CFB-21E2-4976-AEC9-34192D34D2A0}");
@@ -129,7 +129,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
         {
             await SetBusyAsync();
 
-            TResponseModel<TelegramUserBaseModel> rest = await IdentityRepo.GetTelegramUserAsync(User.TelegramId.Value);
+            TResponseModel<TelegramUserBaseModel> rest = await IdentityRepo.GetTelegramUserCachedInfoAsync(User.TelegramId.Value);
             IsBusyProgress = false;
             Messages.AddRange(rest.Messages);
             TelegramUser = rest.Response;

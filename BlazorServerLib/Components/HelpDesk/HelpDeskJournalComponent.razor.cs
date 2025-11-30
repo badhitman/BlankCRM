@@ -17,9 +17,6 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
     [Inject]
     IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
 
     /// <summary>
     ///Journal mode
@@ -67,8 +64,11 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
         SetTab(this);
         await SetBusyAsync();
         await ReadCurrentUser();
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (string.IsNullOrWhiteSpace(UserIdentityId))
-            UserIdentityId = CurrentUserSession!.UserId;
+            UserIdentityId = CurrentUserSession.UserId;
 
         IsBusyProgress = false;
     }
@@ -78,13 +78,16 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
     /// </summary>
     private async Task<TableData<IssueHelpDeskModel>> ServerReload(TableState state, CancellationToken token)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync(token: token);
         await Task.Delay(1, token);
         TPaginationRequestStandardModel<SelectIssuesRequestModel> req = new()
         {
             Payload = new()
             {
-                IdentityUsersIds = [CurrentUserSession!.UserId],
+                IdentityUsersIds = [CurrentUserSession.UserId],
                 JournalMode = JournalMode,
                 SearchQuery = searchString,
                 UserArea = UserArea,
@@ -117,7 +120,7 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusyAsync();
 
-        TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersIdentityAsync(_ids);
+        TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersOfIdentityAsync(_ids);
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is null)

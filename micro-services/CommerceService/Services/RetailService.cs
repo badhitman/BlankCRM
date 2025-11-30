@@ -37,7 +37,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             return res;
         }
 
-        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersIdentityAsync([req.RecipientIdentityUserId], token);
+        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync([req.RecipientIdentityUserId], token);
         if (!user.Success())
         {
             res.AddRangeMessages(user.Messages);
@@ -102,7 +102,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         TResponseModel<int> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersIdentityAsync([req.PayerIdentityUserId], token);
+        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync([req.PayerIdentityUserId], token);
         if (!user.Success())
         {
             res.AddRangeMessages(user.Messages);
@@ -141,7 +141,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         TResponseModel<int> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersIdentityAsync([req.UserIdentityId], token);
+        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync([req.UserIdentityId], token);
         if (!user.Success())
         {
             res.AddRangeMessages(user.Messages);
@@ -218,7 +218,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.Payload?.RecipientsFilterIdentityId is not null && req.Payload.RecipientsFilterIdentityId.Length != 0)
         {
-            TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersIdentityAsync(req.Payload.RecipientsFilterIdentityId, token);
+            TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync(req.Payload.RecipientsFilterIdentityId, token);
             if (!user.Success())
             {
                 return new()
@@ -298,7 +298,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (!string.IsNullOrWhiteSpace(req.Payload?.PayerFilterIdentityId))
         {
-            TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersIdentityAsync([req.Payload.PayerFilterIdentityId], token);
+            TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync([req.Payload.PayerFilterIdentityId], token);
             if (!user.Success())
             {
                 return new()
@@ -378,7 +378,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.Payload?.UsersFilterIdentityId is not null && req.Payload.UsersFilterIdentityId.Length != 0)
         {
-            TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersIdentityAsync(req.Payload.UsersFilterIdentityId, token);
+            TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync(req.Payload.UsersFilterIdentityId, token);
             if (!user.Success())
             {
                 return new()

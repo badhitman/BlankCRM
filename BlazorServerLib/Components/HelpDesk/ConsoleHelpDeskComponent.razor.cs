@@ -26,6 +26,9 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
 
     async void SelectUserHandler(UserInfoModel? selected)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (string.IsNullOrWhiteSpace(FilterUserId) && string.IsNullOrWhiteSpace(selected?.UserId) || FilterUserId == selected?.UserId)
             return;
 
@@ -33,7 +36,7 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
         stepNum = 0;
 
         await SetBusyAsync();
-        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(FilterUserId, GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId), false);
+        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(FilterUserId, GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession.UserId), false);
         await SetBusyAsync(false);
         if (!res.Success())
             SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -43,7 +46,7 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
     {
         ApplicationName = Path.Combine(Routes.CONSOLE_CONTROLLER_NAME, Routes.HELPDESK_CONTROLLER_NAME),
         PropertyName = Routes.SIZE_CONTROLLER_NAME,
-        PrefixPropertyName = CurrentUserSession!.UserId,
+        PrefixPropertyName = CurrentUserSession?.UserId,
     };
 
     async Task ToggleSize()
@@ -64,10 +67,13 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
     {
         await SetBusyAsync();
         await ReadCurrentUser();
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         TResponseModel<bool> res = await StorageRepo.ReadParameterAsync<bool>(SizeColumnsKeyStorage);
         IsLarge = res.Response == true;
 
-        TResponseModel<string?> current_filter_user_res = await StorageRepo.ReadParameterAsync<string>(GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession!.UserId));
+        TResponseModel<string?> current_filter_user_res = await StorageRepo.ReadParameterAsync<string>(GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession.UserId));
         FilterUserId = current_filter_user_res.Response;
 
         IsBusyProgress = false;

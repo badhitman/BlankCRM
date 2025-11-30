@@ -88,6 +88,9 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async Task CreateField()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (_field_master is null)
         {
             SnackBarRepo.Error("child_field_form is null. error FEF46EC6-F26F-4FE2-B569-FFA5D8470171");
@@ -111,13 +114,13 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
                     Id = directory_field.Id,
                     IsMultiSelect = directory_field.IsMultiSelect,
                 },
-                SenderActionUserId = CurrentUserSession!.UserId
+                SenderActionUserId = CurrentUserSession.UserId
             });
         }
         else if (_field_master is FieldFormConstructorModelDB standard_field)
         {
             standard_field.OwnerId = Form.Id;
-            rest = await ConstructorRepo.FormFieldUpdateOrCreateAsync(new() { Payload = standard_field, SenderActionUserId = CurrentUserSession!.UserId });
+            rest = await ConstructorRepo.FormFieldUpdateOrCreateAsync(new() { Payload = standard_field, SenderActionUserId = CurrentUserSession.UserId });
         }
         else
         {

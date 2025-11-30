@@ -61,6 +61,9 @@ public partial class AttendancesManageComponent : BlazorBusyComponentBaseAuthMod
     /// </summary>
     protected async Task LoadOffers(int page_num)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (page_num == 0)
             AllOffers = [new() { Name = "Глобально", Nomenclature = new() { Name = "Стандарт" } }];
 
@@ -77,7 +80,7 @@ public partial class AttendancesManageComponent : BlazorBusyComponentBaseAuthMod
         };
         await SetBusyAsync();
 
-        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
         await SetBusyAsync(false);
         if (res.Response?.Response is not null && res.Response.Response.Count != 0)
         {

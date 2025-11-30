@@ -239,7 +239,7 @@ public partial class JournalConstructorService(
             return res;
         }
 
-        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentityAsync([user_id], token);
+        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersOfIdentityAsync([user_id], token);
         UserInfoModel current_user = users_find.Response![0];
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
@@ -282,7 +282,7 @@ public partial class JournalConstructorService(
         if (user_id is null)
             return [];
 
-        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentityAsync([user_id], token);
+        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersOfIdentityAsync([user_id], token);
         UserInfoModel current_user = users_find.Response![0];
 
 

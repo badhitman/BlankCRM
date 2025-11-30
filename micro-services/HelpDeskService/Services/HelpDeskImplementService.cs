@@ -45,7 +45,7 @@ public class HelpDeskImplementService(
             res.AddError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
             return res;
         }
-        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
+        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length != 1)
             return new() { Messages = rest.Messages };
 
@@ -117,7 +117,7 @@ public class HelpDeskImplementService(
 
         TResponseModel<UserInfoModel[]> rest = req.SenderActionUserId == GlobalStaticConstantsRoles.Roles.System
             ? new() { Response = [UserInfoModel.BuildSystem()] }
-            : await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
+            : await IdentityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
 
         if (!rest.Success() || rest.Response is null || rest.Response.Length != 1)
             return new() { Messages = rest.Messages };
@@ -304,7 +304,7 @@ public class HelpDeskImplementService(
                 }
                 wpMessage = $"{wpMessage}\n\n> {safeTextMessage}".Trim().TrimEnd('>').Trim();
 
-                TResponseModel<UserInfoModel[]> users_notify = await IdentityRepo.GetUsersIdentityAsync(users_ids, token);
+                TResponseModel<UserInfoModel[]> users_notify = await IdentityRepo.GetUsersOfIdentityAsync(users_ids, token);
                 if (users_notify.Success() && users_notify.Response is not null && users_notify.Response.Length != 0)
                 {
                     foreach (UserInfoModel u in users_notify.Response)
@@ -406,7 +406,7 @@ public class HelpDeskImplementService(
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<UserInfoModel[]> rest = req.SenderActionUserId == GlobalStaticConstantsRoles.Roles.System
             ? new() { Response = [UserInfoModel.BuildSystem()] }
-            : await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
+            : await IdentityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
 
         if (!rest.Success() || rest.Response is null || rest.Response.Length != 1)
             return new() { Messages = rest.Messages };
@@ -526,7 +526,7 @@ public class HelpDeskImplementService(
                 Messages = [new() { Text = "string.IsNullOrWhiteSpace(req.SenderActionUserId)", TypeMessage = MessagesTypesEnum.Error }]
             };
 
-        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
+        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length != 1)
             return new() { Messages = rest.Messages };
 
@@ -757,7 +757,7 @@ public class HelpDeskImplementService(
         string[] users_ids = [req.SenderActionUserId, req.Payload.UserId, issue_data.ExecutorIdentityUserId ?? ""];
         users_ids = [.. users_ids.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct()];
 
-        TResponseModel<UserInfoModel[]> users_rest = await IdentityRepo.GetUsersIdentityAsync(users_ids, token);
+        TResponseModel<UserInfoModel[]> users_rest = await IdentityRepo.GetUsersOfIdentityAsync(users_ids, token);
         if (!users_rest.Success() || users_rest.Response is null || users_rest.Response.Length != users_ids.Length)
             return new() { Messages = users_rest.Messages };
 
@@ -924,7 +924,7 @@ public class HelpDeskImplementService(
         TResponseModel<UserInfoModel[]> users_rest = default!;
 
         List<Task> tasks = [
-            Task.Run(async () => { users_rest = await IdentityRepo.GetUsersIdentityAsync([issue_upd.SenderActionUserId]); }, token),
+            Task.Run(async () => { users_rest = await IdentityRepo.GetUsersOfIdentityAsync([issue_upd.SenderActionUserId]); }, token),
             Task.Run(async () => { res_ModeSelectingRubrics = await StorageRepo.ReadParameterAsync<ModesSelectRubricsEnum?>(GlobalStaticCloudStorageMetadata.ModeSelectingRubrics); }, token) ];
 
         await Task.WhenAll(tasks);
@@ -1173,7 +1173,7 @@ public class HelpDeskImplementService(
         if (req.SenderActionUserId == GlobalStaticConstantsRoles.Roles.System || issues_db.All(x => x.ExecutorIdentityUserId == req.SenderActionUserId) || issues_db.All(x => x.AuthorIdentityUserId == req.SenderActionUserId) || issues_db.All(x => x.Subscribers!.Any(x => x.UserId == req.SenderActionUserId)))
             return new() { Response = issues_db };
 
-        TResponseModel<UserInfoModel[]> rest_user_date = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
+        TResponseModel<UserInfoModel[]> rest_user_date = await IdentityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
         if (!rest_user_date.Success() || rest_user_date.Response is null || rest_user_date.Response.Length != 1)
         {
             loggerRepo.LogError($"Пользователь не найден: {req.SenderActionUserId}");
@@ -1214,7 +1214,7 @@ public class HelpDeskImplementService(
             return res;
         }
 
-        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
+        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
         if (req.SenderActionUserId != GlobalStaticConstantsRoles.Roles.System && (!rest.Success() || rest.Response is null || rest.Response.Length != 1))
             return new() { Messages = rest.Messages };
 
@@ -1404,7 +1404,7 @@ public class HelpDeskImplementService(
                 tg_message = IHelpDeskService.ReplaceTags(_docName, cdd, _hdDocId, nextStatus, CommerceStatusChangeOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
         }
 
-        TResponseModel<UserInfoModel[]> users_notify = await IdentityRepo.GetUsersIdentityAsync(users_ids, token);
+        TResponseModel<UserInfoModel[]> users_notify = await IdentityRepo.GetUsersOfIdentityAsync([..users_ids], token);
         if (users_notify?.Success() == true && users_notify.Response is not null && users_notify.Response.Length != 0)
         {
             foreach (UserInfoModel u in users_notify.Response)
@@ -1457,7 +1457,7 @@ public class HelpDeskImplementService(
         string[] users_ids = [req.SenderActionUserId, req.Payload.UserId];
         users_ids = [.. users_ids.Distinct()];
 
-        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync(users_ids, token);
+        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersOfIdentityAsync(users_ids, token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length != users_ids.Length)
             return new() { Messages = rest.Messages };
 
@@ -1658,7 +1658,7 @@ public class HelpDeskImplementService(
             users_ids.AddRange(issue_data.Subscribers.Where(x => !x.IsSilent).Select(x => x.UserId));
 
         users_ids = [.. users_ids.Distinct()];
-        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([.. users_ids], token);
+        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersOfIdentityAsync([.. users_ids], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length != users_ids.Count)
             return new() { Messages = rest.Messages };
 
@@ -1704,7 +1704,7 @@ public class HelpDeskImplementService(
                 Messages = [new() { Text = "req.Payload?.Payload is null", TypeMessage = MessagesTypesEnum.Error }]
             };
 
-        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersIdentityAsync([req.Payload.Payload.UserId], token);
+        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersOfIdentityAsync([req.Payload.Payload.UserId], token);
         if (!rest.Success() || rest.Response is null || rest.Response.Length == 0)
             return new() { Messages = rest.Messages };
 

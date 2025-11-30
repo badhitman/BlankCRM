@@ -332,7 +332,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             return res;
         }
 
-        TResponseModel<TelegramUserBaseModel> tgUser = await IdentityRepo.GetTelegramUserAsync(message.UserTelegramId, token);
+        TResponseModel<TelegramUserBaseModel> tgUser = await IdentityRepo.GetTelegramUserCachedInfoAsync(message.UserTelegramId, token);
         if (tgUser.Response is null || !tgUser.Success())
         {
             if (tgUser.Success())

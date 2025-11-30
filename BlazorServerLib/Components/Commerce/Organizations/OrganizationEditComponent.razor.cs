@@ -52,6 +52,9 @@ public partial class OrganizationEditComponent : BlazorBusyComponentBaseAuthMode
 
     async Task ReadOrganization()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (OrganizationId < 1)
             return;
 
@@ -60,7 +63,7 @@ public partial class OrganizationEditComponent : BlazorBusyComponentBaseAuthMode
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         currentOrg = res.Response!.Single();
-        if (currentOrg is not null && (currentOrg.Users?.Any(x => x.UserPersonIdentityId == CurrentUserSession!.UserId) != true && !CurrentUserSession!.IsAdmin && CurrentUserSession!.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true))
+        if (currentOrg is not null && (currentOrg.Users?.Any(x => x.UserPersonIdentityId == CurrentUserSession.UserId) != true && !CurrentUserSession.IsAdmin && CurrentUserSession.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true))
         {
             currentOrg = null;
             return;

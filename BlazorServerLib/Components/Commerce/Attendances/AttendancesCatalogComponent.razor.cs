@@ -35,6 +35,9 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
     /// </summary>
     private async Task<TableData<NomenclatureModelDB>> ServerReload(TableState state, CancellationToken token)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req = new()
         {
             Payload = new() { ContextName = Routes.ATTENDANCES_CONTROLLER_NAME },
@@ -60,7 +63,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
                 ContextName = Routes.ATTENDANCES_CONTROLLER_NAME,
                 IncludeExternalData = true,
             },
-            SenderActionUserId = CurrentUserSession!.UserId,
+            SenderActionUserId = CurrentUserSession.UserId,
             PageNum = 0,
             PageSize = 100,
             SortingDirection = state.SortDirection.Convert(),

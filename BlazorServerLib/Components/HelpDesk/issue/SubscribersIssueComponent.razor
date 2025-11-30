@@ -37,7 +37,7 @@
                     {
                         <li class="list-group-item p-1 m-0">
                             @(UsersIdentityDump?.FirstOrDefault(x => x.UserId == p.UserId)?.UserName ?? p.UserId)
-                            @if (p.UserId == CurrentUserSession!.UserId)
+                            @if (p.UserId == CurrentUserSession?.UserId)
                             {
                                 <sup title="@(p.IsSilent ? "Enable" : "disable") notifications. Now notifications @(p.IsSilent ? "disabled" : "enabled")" @onclick="async () => await NotifyBellToggle(p)" style="cursor:pointer;" class="ms-2 bi bi-bell-@(p.IsSilent ? "slash text-secondary" : "fill text-primary-emphasis")"> You</sup>
                             }
@@ -49,7 +49,7 @@
                     }
                 }
             </ul>
-            @if (Issue.Subscribers?.Any(x => x.UserId == CurrentUserSession!.UserId) != true && (Issue.AuthorIdentityUserId == CurrentUserSession!.UserId || Issue.ExecutorIdentityUserId == CurrentUserSession!.UserId))
+            @if (Issue.Subscribers?.Any(x => x.UserId == CurrentUserSession?.UserId) != true && (Issue.AuthorIdentityUserId == CurrentUserSession?.UserId || Issue.ExecutorIdentityUserId == CurrentUserSession?.UserId))
             {
                 <div title="You do not have an explicit subscription, but you are a direct participant" class="card-footer">
                     Are you a member

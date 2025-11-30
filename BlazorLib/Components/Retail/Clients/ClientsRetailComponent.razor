@@ -1,0 +1,29 @@
+﻿@inherits BlazorBusyComponentBaseAuthModel
+
+<MudTable ServerData="ServerReload" Dense Hover @ref="table" Loading="IsBusyProgress">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Clients</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>ФИО</MudTh>
+        <MudTh>Username</MudTh>
+        <MudTh>Contacts</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.GivenName @context.Surname @context.Patronymic</MudTd>
+        <MudTd DataLabel="Sign">@context.UserName</MudTd>
+        <MudTd DataLabel="Name">@context.PhoneNumber @context.KladrTitle @context.AddressUserComment</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

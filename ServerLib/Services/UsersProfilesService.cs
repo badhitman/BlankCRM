@@ -137,7 +137,7 @@ public class UsersProfilesService(
         if (!user.Success() || user.ApplicationUser is null)
             return new() { Messages = user.Messages };
 
-        ResponseBaseModel res = await IdentityRepo.RemoveLoginAsync(new() { LoginProvider = loginProvider, ProviderKey = providerKey, UserId = user.ApplicationUser.Id }, token);
+        ResponseBaseModel res = await IdentityRepo.RemoveLoginForUserAsync(new() { LoginProvider = loginProvider, ProviderKey = providerKey, UserId = user.ApplicationUser.Id }, token);
         if (!res.Success())
             return res;
 

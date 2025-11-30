@@ -24,6 +24,6 @@ public class ConfirmUserEmailCodeIdentityReceive(IIdentityTools IdentityRepo, IL
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await IdentityRepo.ConfirmEmailAsync(req, token);
+        return await IdentityRepo.ConfirmUserEmailCodeAsync(req, token);
     }
 }

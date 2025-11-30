@@ -54,6 +54,9 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
     /// </summary>
     private async Task<TableData<OfferModelDB>> ServerReload(TableState state, CancellationToken token)
     {
+        if(CurrentUserSession is null)
+            throw new ArgumentNullException(nameof(CurrentUserSession));
+
         TPaginationRequestStandardModel<OffersSelectRequestModel> req = new()
         {
             Payload = new()
@@ -67,7 +70,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
             SortingDirection = state.SortDirection.Convert(),
         };
         await SetBusyAsync(token: token);
-        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId }, token);
+        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId }, token);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (res.Response?.Response is not null)
@@ -81,7 +84,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
                     ContextName = CurrentNomenclature.ContextName,
                     IncludeExternalData = true,
                 },
-                SenderActionUserId = CurrentUserSession!.UserId,
+                SenderActionUserId = CurrentUserSession.UserId,
                 PageNum = 0,
                 PageSize = 100,
                 SortingDirection = state.SortDirection.Convert(),

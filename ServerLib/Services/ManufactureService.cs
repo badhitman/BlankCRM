@@ -24,7 +24,7 @@ public class ManufactureService(
     {
         string user_id = httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new Exception();
 
-        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersIdentityAsync([user_id], token);
+        TResponseModel<UserInfoModel[]> users_find = await IdentityRepo.GetUsersOfIdentityAsync([user_id], token);
         UserInfoModel current_user = users_find.Response![0];
 
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(token);
@@ -169,7 +169,7 @@ public class ManufactureService(
     public async Task<TResponseModel<ManageManufactureModelDB?>> ReadManufactureConfigAsync(int projectId, string userId, CancellationToken token = default)
     {
         TResponseModel<ManageManufactureModelDB?> res = new();
-        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentityAsync([userId], token);
+        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersOfIdentityAsync([userId], token);
         if (!findUsers.Success() || findUsers.Response is null)
         {
             res.AddRangeMessages(findUsers.Messages);

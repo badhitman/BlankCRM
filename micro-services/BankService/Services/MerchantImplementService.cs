@@ -30,7 +30,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
     {
         TinkoffPaymentClient clientApi = new(settings.Value.TerminalKey, settings.Value.Password);
         TResponseModel<UserInfoModel> res = new();
-        TResponseModel<UserInfoModel[]> userDb = await identityRepo.GetUsersIdentityAsync([req.UserId], token);
+        TResponseModel<UserInfoModel[]> userDb = await identityRepo.GetUsersOfIdentityAsync([req.UserId], token);
 
         if (!userDb.Success())
         {
@@ -68,7 +68,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
         await ctx.PaymentsInitResultsTBank.AddAsync(res.Response, token);
         await ctx.SaveChangesAsync(token);
 
-        TResponseModel<UserInfoModel[]> userCreator = await identityRepo.GetUsersIdentityAsync([req.PayerUserId], token);
+        TResponseModel<UserInfoModel[]> userCreator = await identityRepo.GetUsersOfIdentityAsync([req.PayerUserId], token);
         if (!userCreator.Success())
         {
             res.AddRangeMessages(userCreator.Messages);

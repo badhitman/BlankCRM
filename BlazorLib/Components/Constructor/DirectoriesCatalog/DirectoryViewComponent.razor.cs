@@ -34,6 +34,9 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async void AddElementIntoDirectory()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (createNewElementForDict.OwnerId < 1)
             throw new Exception("No directory/list selected");
 
@@ -46,7 +49,7 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusyAsync();
 
-        TResponseModel<int> rest = await ConstructorRepo.CreateElementForDirectoryAsync(new() { Payload = createNewElementForDict, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<int> rest = await ConstructorRepo.CreateElementForDirectoryAsync(new() { Payload = createNewElementForDict, SenderActionUserId = CurrentUserSession.UserId });
         createNewElementForDict = OwnedNameModel.BuildEmpty(createNewElementForDict.OwnerId);
         IsBusyProgress = false;
         StateHasChanged();

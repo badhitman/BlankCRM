@@ -13,23 +13,28 @@ namespace BlazorWebLib.Components.Account.Pages.Manage;
 /// </summary>
 public partial class IndexPage : BlazorBusyComponentBaseAuthModel
 {
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
 
 
-    string? username;
-    string? firstName;
-    string? lastName;
-    string? patronymic;
-    string? phoneNum;
+
+    string?
+        username,
+        firstName,
+        lastName,
+        patronymic,
+        phoneNum,
+        kladrTitle,
+        addressUserComment;
 
     List<ResultMessage> Messages = [];
 
-    bool IsEdited => CurrentUserSession is not null && (firstName != CurrentUserSession.GivenName || lastName != CurrentUserSession.Surname || phoneNum != CurrentUserSession.PhoneNumber);
+    bool IsEdited =>
+        CurrentUserSession is not null &&
+        (firstName != CurrentUserSession.GivenName || lastName != CurrentUserSession.Surname || patronymic != CurrentUserSession.Patronymic || phoneNum != CurrentUserSession.PhoneNumber);
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await SetBusyAsync();
         await ReadCurrentUser();
 
         if (CurrentUserSession is null)
@@ -40,6 +45,11 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
         phoneNum = CurrentUserSession.PhoneNumber;
         username = CurrentUserSession.UserName;
         patronymic = CurrentUserSession.Patronymic;
+
+
+        kladrTitle = CurrentUserSession.KladrTitle;
+        addressUserComment = CurrentUserSession.AddressUserComment;
+        await SetBusyAsync(false);
     }
 
     private async Task SaveAsync()
@@ -56,9 +66,15 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
         Messages = [];
         await SetBusyAsync();
 
-        ResponseBaseModel rest = await IdentityRepo.UpdateUserDetailsAsync(new() { UserId = CurrentUserSession.UserId, FirstName = firstName, LastName = lastName, PhoneNum = phoneNum });
-        //AuthenticationState ar = await AuthRepo.GetAuthenticationStateAsync();
-        // ar.User.Claims.ToList().ForEach(x => { x. });
+        ResponseBaseModel rest = await IdentityRepo.UpdateUserDetailsAsync(new IdentityDetailsModel()
+        {
+            UserId = CurrentUserSession.UserId,
+            FirstName = firstName,
+            LastName = lastName,
+            PhoneNum = phoneNum,
+            Patronymic = patronymic,
+        });
+
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Success())

@@ -2,10 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib;
-using Microsoft.AspNetCore.Components;
-using SharedLib;
 using System.Net.Mail;
+using BlazorLib;
+using SharedLib;
 
 namespace BlazorWebLib.Components.HelpDesk.issue;
 
@@ -14,16 +13,16 @@ namespace BlazorWebLib.Components.HelpDesk.issue;
 /// </summary>
 public partial class ExecutorIssueComponent : IssueWrapBaseModel
 {
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
     UserInfoModel? Executor;
     string? editExecutorEmail;
     bool IsEditMode;
 
     async Task SetMeAsExecutor()
     {
-        await SetExecutor(CurrentUserSession!.UserId);
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
+        await SetExecutor(CurrentUserSession.UserId);
     }
 
     async Task SetNewExecutor()
@@ -56,8 +55,11 @@ public partial class ExecutorIssueComponent : IssueWrapBaseModel
 
     async Task SetExecutor(string user_id)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
-        TResponseModel<bool> rest = await HelpDeskRepo.ExecuterUpdateAsync(new() { SenderActionUserId = CurrentUserSession!.UserId, Payload = new() { IssueId = Issue.Id, UserId = user_id } });
+        TResponseModel<bool> rest = await HelpDeskRepo.ExecuterUpdateAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { IssueId = Issue.Id, UserId = user_id } });
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
@@ -75,7 +77,7 @@ public partial class ExecutorIssueComponent : IssueWrapBaseModel
         if (UsersIdentityDump.Any(x => x.UserId == user_id) != true)
         {
             await SetBusyAsync();
-            TResponseModel<UserInfoModel[]> res_user = await IdentityRepo.GetUsersIdentityAsync([user_id]);
+            TResponseModel<UserInfoModel[]> res_user = await IdentityRepo.GetUsersOfIdentityAsync([user_id]);
             IsBusyProgress = false;
 
             SnackBarRepo.ShowMessagesResponse(res_user.Messages);

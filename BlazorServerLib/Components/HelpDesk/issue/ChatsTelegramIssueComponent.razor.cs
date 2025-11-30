@@ -22,6 +22,9 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
 
     async void SendMessageTelegramAction(SendTextMessageTelegramBotModel msg)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         PulseRequestModel req_pulse = new()
         {
             Payload = new()
@@ -33,7 +36,7 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
                     PulseType = PulseIssuesTypesEnum.Messages,
                     Tag = Routes.TELEGRAM_CONTROLLER_NAME,
                 },
-                SenderActionUserId = CurrentUserSession!.UserId
+                SenderActionUserId = CurrentUserSession.UserId
             }
         };
         await SetBusyAsync();
@@ -41,7 +44,7 @@ public partial class ChatsTelegramIssueComponent : IssueWrapBaseModel
         TResponseModel<int> add_msg_system = await HelpDeskRepo.MessageCreateOrUpdateAsync(new()
         {
             SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
-            Payload = new() { MessageText = $"<b>User {CurrentUserSession!.UserName} sent a Telegram message to user user-tg#{msg.UserTelegramId}</b>: {msg.Message}", IssueId = Issue.Id }
+            Payload = new() { MessageText = $"<b>User {CurrentUserSession.UserName} sent a Telegram message to user user-tg#{msg.UserTelegramId}</b>: {msg.Message}", IssueId = Issue.Id }
         });
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(add_msg_system.Messages);

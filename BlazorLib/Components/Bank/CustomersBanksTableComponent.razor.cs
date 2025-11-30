@@ -40,14 +40,14 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
     /// <summary>
     /// CacheUsersUpdate
     /// </summary>
-    protected async Task CacheUsersUpdate(IEnumerable<string> usersIds)
+    protected async Task CacheUsersUpdate(string[] usersIds)
     {
-        usersIds = usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct();
-        if (!usersIds.Any())
+        usersIds = [..usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct()];
+        if (usersIds.Length == 0)
             return;
 
         await SetBusyAsync();
-        TResponseModel<UserInfoModel[]> users = await identityRepo.GetUsersIdentityAsync(usersIds);
+        TResponseModel<UserInfoModel[]> users = await identityRepo.GetUsersOfIdentityAsync(usersIds);
         SnackBarRepo.ShowMessagesResponse(users.Messages);
         if (users.Success() && users.Response is not null && users.Response.Length != 0)
             lock (UsersCache)
@@ -150,7 +150,7 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
             SortingDirection = state.SortDirection.Convert()
         };
         TPaginationResponseModel<CustomerBankIdModelDB> res = await BankRepo.CustomersBanksSelectAsync(req, token);
-        await CacheUsersUpdate(res.Response!.Select(x => x.UserIdentityId).Distinct());
+        await CacheUsersUpdate([..res.Response!.Select(x => x.UserIdentityId).Distinct()]);
         return new TableData<CustomerBankIdModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 

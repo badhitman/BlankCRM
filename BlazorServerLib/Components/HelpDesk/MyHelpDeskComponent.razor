@@ -17,8 +17,10 @@
     </TabSetComponent>
 </CascadingValue>
 
-<CreateIssueComponent Update="Update" UserIdentityId="@CurrentUserSession!.UserId" />
-
+@if (CurrentUserSession is not null)
+{
+    <CreateIssueComponent Update="Update" UserIdentityId="@CurrentUserSession.UserId" />
+}
 @code {
     [Inject]
     AuthenticationStateProvider authRepo { get; set; } = default!;

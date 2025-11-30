@@ -42,7 +42,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<GetAuthenticatorKeyReceive, string, TResponseModel<string?>>()
             .RegisterMqListener<GeneratePasswordResetTokenReceive, string, TResponseModel<string?>>()
             .RegisterMqListener<CheckTelegramUserReceive, CheckTelegramUserHandleModel, TResponseModel<CheckTelegramUserAuthModel>>()
-            .RegisterMqListener<GetUsersIdentityByTelegramReceive, List<long>, TResponseModel<UserInfoModel[]?>>()
+            .RegisterMqListener<GetUsersIdentityByTelegramReceive, long[], TResponseModel<UserInfoModel[]>>()
             .RegisterMqListener<TelegramAccountRemoveIdentityJoinReceive, TelegramAccountRemoveJoinRequestIdentityModel, ResponseBaseModel>()
             .RegisterMqListener<TelegramJoinAccountCreateReceive, string, TResponseModel<TelegramJoinAccountModelDb>>()
             .RegisterMqListener<FindUsersTelegramReceive, SimplePaginationRequestModel, TPaginationResponseModel<TelegramUserViewModel>>()

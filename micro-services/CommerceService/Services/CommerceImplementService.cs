@@ -635,7 +635,7 @@ public partial class CommerceImplementService(
 
         req.Name = req.Name.Trim();
 
-        TResponseModel<UserInfoModel[]> actor = await identityRepo.GetUsersIdentityAsync([req.AuthorIdentityUserId], token);
+        TResponseModel<UserInfoModel[]> actor = await identityRepo.GetUsersOfIdentityAsync([req.AuthorIdentityUserId], token);
         if (!actor.Success() || actor.Response is null || actor.Response.Length == 0)
         {
             res.AddRangeMessages(actor.Messages);
@@ -1341,7 +1341,7 @@ public partial class CommerceImplementService(
         TResponseModel<UserInfoModel[]> rest = default!;
         TResponseModel<OrderDocumentModelDB[]> orderData = default!;
         List<Task> _taskList = [
-            Task.Run(async () => { rest = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId]); }, token),
+            Task.Run(async () => { rest = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId]); }, token),
             Task.Run(async () => { orderData = await OrdersReadAsync(new(){ Payload = [req.Payload], SenderActionUserId = req.SenderActionUserId }); }, token)];
 
         await Task.WhenAll(_taskList);

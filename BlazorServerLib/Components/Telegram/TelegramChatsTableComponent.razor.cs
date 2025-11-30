@@ -18,9 +18,6 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
     ITelegramTransmission TgRepo { get; set; } = default!;
 
     [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
-    [Inject]
     IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
@@ -67,7 +64,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
             return;
 
         await SetBusyAsync();
-        TResponseModel<UserInfoModel[]> users_res = await IdentityRepo.GetUserIdentityByTelegramAsync(users_ids_for_load);
+        TResponseModel<UserInfoModel[]> users_res = await IdentityRepo.GetUsersIdentityByTelegramAsync(users_ids_for_load);
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(users_res.Messages);
         if (!users_res.Success() || users_res.Response is null || users_res.Response.Length == 0)

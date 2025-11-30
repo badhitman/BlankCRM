@@ -64,7 +64,10 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
 
     protected private async Task<TableData<SessionOfDocumentDataModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        if (string.IsNullOrWhiteSpace(CurrentUserSession!.UserId))
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
+        if (string.IsNullOrWhiteSpace(CurrentUserSession.UserId))
             throw new Exception("Не определён текущий пользователь");
 
         if (ParentFormsPage.MainProject is null)
@@ -76,7 +79,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
             PageSize = state.PageSize,
             FindQuery = searchString,
             DocumentSchemeId = SelectedDocumentSchemeId,
-            FilterUserId = CurrentUserSession!.UserId,
+            FilterUserId = CurrentUserSession.UserId,
             ProjectId = ParentFormsPage.MainProject.Id
         };
         await SetBusyAsync(token: token);
@@ -155,6 +158,9 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async Task CreateNewSession()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (string.IsNullOrWhiteSpace(NameSessionForCreate))
         {
             SnackBarRepo.Error("Укажите имя ссылки");
@@ -169,7 +175,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
             Name = NameSessionForCreate,
             NormalizedUpperName = NameSessionForCreate.Trim().ToUpper(),
             OwnerId = SelectedDocumentSchemeId,
-            AuthorUser = CurrentUserSession!.UserId,
+            AuthorUser = CurrentUserSession.UserId,
             ProjectId = ParentFormsPage.MainProject.Id
         };
         await SetBusyAsync();

@@ -25,18 +25,18 @@ public class GetUserIdentityByTelegramReceive(IIdentityTools IdentityRepo, IMemo
     {
         ArgumentNullException.ThrowIfNull(tg_ids);
         tg_ids = [.. tg_ids.Where(x => x != 0)];
-        TResponseModel<UserInfoModel[]?> response = new();
+        TResponseModel<UserInfoModel[]> response = new();
         if (tg_ids.Length == 0)
         {
             response.AddError("Пустой запрос");
-            return response;
+            return new() { Response = response.Response, Messages = response.Messages };
         }
 
         string mem_token = $"{QueueName}-tg/{string.Join(",", tg_ids)}";
         if (cache.TryGetValue(mem_token, out UserInfoModel[]? users_cache))
         {
             response.Response = users_cache;
-            return response;
+            return new() { Response = response.Response, Messages = response.Messages };
         }
 
         response = await IdentityRepo.GetUsersIdentityByTelegramAsync([.. tg_ids], token);
@@ -45,11 +45,11 @@ public class GetUserIdentityByTelegramReceive(IIdentityTools IdentityRepo, IMemo
         {
             cache.Set(mem_token, Array.Empty<ApplicationUser>(), new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
             response.AddWarning("Не найдено ни одного пользователя");
-            return response;
+            return new() { Response = response.Response, Messages = response.Messages };
         }
 
         cache.Set(mem_token, response.Response, new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
 
-        return response;
+        return new() { Response = response.Response, Messages = response.Messages };
     }
 }

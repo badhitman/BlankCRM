@@ -74,12 +74,15 @@ public partial class EditDocumentSchemeDialogComponent : BlazorBusyComponentBase
     /// <inheritdoc/>
     protected async Task SaveDocument()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (ParentFormsPage.MainProject is null)
             throw new Exception("No main/used project selected");
 
         await SetBusyAsync();
         
-        TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.UpdateOrCreateDocumentSchemeAsync(new() { Payload = new EntryConstructedModel() { Id = DocumentScheme.Id, Name = DocumentNameOrigin, Description = DocumentDescriptionOrigin, ProjectId = ParentFormsPage.MainProject.Id }, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.UpdateOrCreateDocumentSchemeAsync(new() { Payload = new EntryConstructedModel() { Id = DocumentScheme.Id, Name = DocumentNameOrigin, Description = DocumentDescriptionOrigin, ProjectId = ParentFormsPage.MainProject.Id }, SenderActionUserId = CurrentUserSession.UserId });
         IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);

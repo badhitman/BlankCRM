@@ -4,7 +4,7 @@
 @inherits BlazorBusyComponentBaseAuthModel
 
 <MudPaper Class="pa-4 mt-3">
-    @if (CurrentUserSession!.IsAdmin)
+    @if (CurrentUserSession?.IsAdmin == true)
     {
         <MudStack Spacing="2" Class="pb-2">
             <MudButton OnClick="OnExpandCollapseClick" Variant="Variant.Outlined">@(_expanded ? "Отмена" : "Создать")</MudButton>

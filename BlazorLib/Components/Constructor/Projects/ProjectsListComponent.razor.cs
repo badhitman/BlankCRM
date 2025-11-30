@@ -42,9 +42,12 @@ public partial class ProjectsListComponent : BlazorBusyComponentBaseAuthModel
     /// </summary>
     public async Task ReloadListProjects()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
 
-        TResponseModel<ProjectViewModel[]> res_pr = await ConstructorRepo.GetProjectsForUserAsync(new() { UserId = CurrentUserSession!.UserId });
+        TResponseModel<ProjectViewModel[]> res_pr = await ConstructorRepo.GetProjectsForUserAsync(new() { UserId = CurrentUserSession.UserId });
         ProjectsOfUser = res_pr.Response ?? throw new Exception();
         await SetBusyAsync(false);
     }
@@ -54,6 +57,9 @@ public partial class ProjectsListComponent : BlazorBusyComponentBaseAuthModel
     /// </summary>
     protected async Task CreateProject()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         int i = 1;
         string name_new_project = $"Новый проект {i}";
         while (ProjectsOfUser.Any(x => x.Name.Equals(name_new_project, StringComparison.OrdinalIgnoreCase)))
@@ -64,10 +70,10 @@ public partial class ProjectsListComponent : BlazorBusyComponentBaseAuthModel
 
         DialogParameters<ProjectEditDialogComponent> parameters = new()
         {
-             { x => x.ProjectForEdit, new ProjectViewModel() { Name = name_new_project, OwnerUserId = CurrentUserSession!.UserId } },
+             { x => x.ProjectForEdit, new ProjectViewModel() { Name = name_new_project, OwnerUserId = CurrentUserSession.UserId } },
              { x => x.ParentFormsPage, ParentFormsPage },
              { x => x.ParentListProjects, this },
-             { x => x.CurrentUser, CurrentUserSession! },
+             { x => x.CurrentUser, CurrentUserSession },
         };
         DialogOptions options = new() { CloseButton = true, MaxWidth = MaxWidth.ExtraExtraLarge };
         IDialogReference res = await DialogService.ShowAsync<ProjectEditDialogComponent>("Создание проекта", parameters, options);

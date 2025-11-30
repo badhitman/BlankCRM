@@ -68,6 +68,9 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
     /// </summary>
     private async Task<TableData<OfferModelDB>> ServerReload(TableState state, CancellationToken token)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         TPaginationRequestStandardModel<OffersSelectRequestModel> req = new()
         {
             Payload = new()
@@ -81,7 +84,7 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
             SortingDirection = state.SortDirection.Convert(),
         };
         await SetBusyAsync(token: token);
-        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId }, token);
+        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId }, token);
 
         if (res.Response?.Response is not null)
         {

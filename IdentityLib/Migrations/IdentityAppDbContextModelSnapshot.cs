@@ -123,6 +123,9 @@ namespace IdentityLib.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("RequestChangePhone")
+                        .HasColumnType("text");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -151,6 +154,10 @@ namespace IdentityLib.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("PhoneNumber");
+
+                    b.HasIndex("RequestChangePhone");
 
                     b.ToTable("ApplicationUsers", (string)null);
                 });

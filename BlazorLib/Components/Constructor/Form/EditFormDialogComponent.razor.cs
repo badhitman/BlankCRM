@@ -60,8 +60,11 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected async Task SaveForm()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
-        TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.FormUpdateOrCreateAsync(new() { Payload = FormEditObject, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.FormUpdateOrCreateAsync(new() { Payload = FormEditObject, SenderActionUserId = CurrentUserSession.UserId });
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())

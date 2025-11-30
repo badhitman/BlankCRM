@@ -73,6 +73,9 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
 
     async Task OrderToCart()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         OrderDocumentModelDB doc = GlobalTools.CreateDeepCopy(Document)!;
 
         doc.Id = 0;
@@ -102,7 +105,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
 
         await SetBusyAsync();
 
-        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(doc, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
+        TResponseModel<int> res = await StorageRepo.SaveParameterAsync(doc, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession.UserId), true);
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         SnackBarRepo.Add("Содержимое документа отправлено в корзину для формирования нового заказа", Severity.Info, c => c.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow);
@@ -116,9 +119,12 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
 
     async Task OrderNull()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         TAuthRequestModel<StatusChangeRequestModel> req = new()
         {
-            SenderActionUserId = CurrentUserSession!.UserId,
+            SenderActionUserId = CurrentUserSession.UserId,
             Payload = new()
             {
                 DocumentId = Issue.Id,

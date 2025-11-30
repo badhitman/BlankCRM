@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib;
 using Microsoft.AspNetCore.Components;
+using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -14,11 +14,6 @@ namespace BlazorWebLib.Components.HelpDesk.issue;
 /// </summary>
 public partial class PulseJournalComponent : IssueWrapBaseModel
 {
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
-    private MudTable<PulseViewModel> table = default!;
-
     static MarkupString ms(string raw_html) => (MarkupString)raw_html;
 
     /// <summary>
@@ -26,6 +21,9 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
     /// </summary>
     private async Task<TableData<PulseViewModel>> ServerReload(TableState state, CancellationToken token)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync(token: token);
         TResponseModel<TPaginationResponseModel<PulseViewModel>> tp = await HelpDeskRepo.PulseSelectJournalAsync(new()
         {
@@ -37,7 +35,7 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
                 SortBy = state.SortLabel,
                 Payload = new()
                 {
-                    UserId = CurrentUserSession!.UserId,
+                    UserId = CurrentUserSession.UserId,
                     IssueId = Issue.Id,
                 }
             },
@@ -57,7 +55,7 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
         if (users_ids.Length != 0)
         {
             await SetBusyAsync(token: token);
-            TResponseModel<UserInfoModel[]> users_add = await IdentityRepo.GetUsersIdentityAsync(users_ids, token);
+            TResponseModel<UserInfoModel[]> users_add = await IdentityRepo.GetUsersOfIdentityAsync(users_ids, token);
             IsBusyProgress = false;
             SnackBarRepo.ShowMessagesResponse(users_add.Messages);
             if (users_add.Response is not null)

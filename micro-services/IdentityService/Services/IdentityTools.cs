@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.AspNetCore.Identity;
@@ -9,12 +10,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Encodings.Web;
 using System.Security.Claims;
 using System.Net.Mail;
+using Newtonsoft.Json;
 using IdentityLib;
 using System.Text;
 using SharedLib;
-using Newtonsoft.Json;
-using static SharedLib.GlobalStaticConstantsRoutes;
-using System.Text.RegularExpressions;
 
 namespace IdentityService;
 
@@ -55,7 +54,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string?>> ReadToken2FAAsync(string userId, CancellationToken token = default)
+    public async Task<TResponseModel<string>> ReadToken2FAAsync(string userId, CancellationToken token = default)
     {
         return new() { Response = await memCache.GetStringValueAsync(new MemCachePrefixModel(Routes.TWOFACTOR_CONTROLLER_NAME, Routes.TOKEN_CONTROLLER_NAME), userId, token) };
     }
@@ -455,16 +454,20 @@ public class IdentityTools(
                 Surname = x.LastName,
                 TelegramId = x.ChatTelegramId,
                 UserName = x.UserName ?? "",
+                Patronymic = x.Patronymic,
+                KladrCode = x.KladrCode,
+                AddressUserComment = x.AddressUserComment,
+                KladrTitle = x.KladrTitle,
             })
             .ToListAsync(cancellationToken: token)]
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]?>> GetUsersOfIdentityAsync(string[] users_ids, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentityAsync(string[] users_ids, CancellationToken token = default)
     {
         users_ids = [.. users_ids.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct()];
-        TResponseModel<UserInfoModel[]?> res = new() { Response = [] };
+        TResponseModel<UserInfoModel[]> res = new() { Response = [] };
         if (users_ids.Length == 0)
         {
             res.AddError("Пустой запрос");
@@ -518,6 +521,10 @@ public class IdentityTools(
                 GivenName = app_user.FirstName,
                 Surname = app_user.LastName,
                 UserId = app_user.Id,
+                Patronymic = app_user.Patronymic,
+                KladrCode = app_user.KladrCode,
+                KladrTitle = app_user.KladrTitle,
+                AddressUserComment = app_user.AddressUserComment,
                 AccessFailedCount = app_user.AccessFailedCount,
                 Email = app_user.Email,
                 EmailConfirmed = app_user.EmailConfirmed,
@@ -544,10 +551,10 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]?>> GetUsersIdentityByEmailAsync(string[] users_emails, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByEmailsAsync(string[] users_emails, CancellationToken token = default)
     {
         users_emails = [.. users_emails.Where(x => MailAddress.TryCreate(x, out _)).Select(x => x.ToUpper())];
-        TResponseModel<UserInfoModel[]?> res = new() { Response = [] };
+        TResponseModel<UserInfoModel[]> res = new() { Response = [] };
         if (users_emails.Length == 0)
         {
             res.AddError("Пустой запрос");
@@ -651,20 +658,30 @@ public class IdentityTools(
         req.LastName ??= "";
 
         req.AddressUserComment = req.AddressUserComment?.Trim();
-        req.PhoneNum = req.PhoneNum?.Trim();
+        req.Patronymic = req.Patronymic?.Trim();
 
-        if (!string.IsNullOrWhiteSpace(req.PhoneNum))
-        {
-            bool _plus = req.PhoneNum.StartsWith("+");
-            req.PhoneNum = Regex.Replace(req.PhoneNum, @"^\d", "");
-            if (_plus)
-                req.PhoneNum = $"+{req.PhoneNum}";
-        }
+        if (!string.IsNullOrWhiteSpace(req.PhoneNum) && !GlobalTools.IsPhoneNumber(req.PhoneNum))
+            return ResponseBaseModel.CreateError("Телефон должен быть в формате: +79994440011 (можно без +)");
 
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
-        ApplicationUser? user_db = await identityContext
+        ApplicationUser? user_db;
+
+        //if (!string.IsNullOrWhiteSpace(req.PhoneNum))
+        //{
+        //    bool _plus = req.PhoneNum.StartsWith("+");
+        //    req.PhoneNum = Regex.Replace(req.PhoneNum, @"[^\d]", "");
+
+        //    user_db = await identityContext.Users.FirstOrDefaultAsync(x => x.Id != req.UserId && (x.PhoneNumber == req.PhoneNum || x.PhoneNumber == $"+{req.PhoneNum}"), cancellationToken: token);
+        //    if (user_db is not null)
+        //        return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
+
+        //    if (_plus)
+        //        req.PhoneNum = $"+{req.PhoneNum}";
+        //}
+
+        user_db = await identityContext
             .Users
-            .FirstOrDefaultAsync(x => x.Id == req.UserId && (x.FirstName != req.FirstName || x.LastName != req.LastName || x.PhoneNumber != req.PhoneNum), cancellationToken: token);
+            .FirstOrDefaultAsync(x => x.Id == req.UserId && (x.FirstName != req.FirstName || x.LastName != req.LastName || x.Patronymic != req.Patronymic), cancellationToken: token);
 
         if (user_db is null)
             return ResponseBaseModel.CreateInfo("Без изменений");
@@ -675,21 +692,34 @@ public class IdentityTools(
 
         await q
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.PhoneNumber, req.PhoneNum)
+                //.SetProperty(p => p.RequestChangePhone, req.PhoneNum)
                 .SetProperty(p => p.FirstName, req.FirstName)
                 .SetProperty(p => p.NormalizedFirstNameUpper, req.FirstName.ToUpper())
                 .SetProperty(p => p.LastName, req.LastName)
                 .SetProperty(p => p.NormalizedLastNameUpper, req.LastName.ToUpper())
-                .SetProperty(p => p.Patronymic, req.Patronymic)
-                .SetProperty(p => p.KladrTitle, req.KladrTitle)
-                .SetProperty(p => p.KladrCode, req.KladrCode)
-                .SetProperty(p => p.AddressUserComment, req.AddressUserComment), cancellationToken: token);
+                .SetProperty(p => p.Patronymic, req.Patronymic), cancellationToken: token);
 
         if (!string.IsNullOrWhiteSpace(req.Patronymic))
         {
             await q
                 .ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.NormalizedPatronymicUpper, req.Patronymic.ToUpper()), cancellationToken: token);
+        }
+
+        //if (string.IsNullOrWhiteSpace(req.PhoneNum) && req.PhoneNum != user_db.PhoneNumber)
+        //{
+        //    await q
+        //        .ExecuteUpdateAsync(set => set
+        //            .SetProperty(p => p.PhoneNumber, req.PhoneNum), cancellationToken: token);
+        //}
+
+        if (req.UpdateAddress)
+        {
+            await q
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.KladrTitle, req.KladrTitle)
+                .SetProperty(p => p.KladrCode, req.KladrCode)
+                .SetProperty(p => p.AddressUserComment, req.AddressUserComment), cancellationToken: token);
         }
 
         user_db.PhoneNumber = req.PhoneNum;
@@ -911,7 +941,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel>> FindByEmailAsync(string email, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel>> FindUserByEmailAsync(string email, CancellationToken token = default)
     {
         TResponseModel<UserInfoModel> res = new();
         using IServiceScope scope = serviceScopeFactory.CreateScope();
@@ -962,7 +992,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ConfirmEmailAsync(UserCodeModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ConfirmUserEmailCodeAsync(UserCodeModel req, CancellationToken token = default)
     {
         if (req.UserId is null || req.Code is null)
             return ResponseBaseModel.CreateError("UserId is null || Code is null. error {715DE145-87B0-48B0-9341-0A21962045BF}");
@@ -1225,11 +1255,11 @@ public class IdentityTools(
 
     #region telegram
     /// <inheritdoc/>
-    public async Task<TResponseModel<UserInfoModel[]?>> GetUsersIdentityByTelegramAsync(List<long> tg_ids, CancellationToken token = default)
+    public async Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByTelegramAsync(long[] tg_ids, CancellationToken token = default)
     {
         tg_ids = [.. tg_ids.Where(x => x != 0)];
-        TResponseModel<UserInfoModel[]?> response = new() { Response = [] };
-        if (tg_ids.Count == 0)
+        TResponseModel<UserInfoModel[]> response = new() { Response = [] };
+        if (tg_ids.Length == 0)
         {
             response.AddError("Пустой запрос");
             return response;
@@ -1243,7 +1273,7 @@ public class IdentityTools(
 
         string[] users_ids = [.. users.Select(x => x.Id)];
 
-        TResponseModel<UserInfoModel[]?> res_find_users_identity = await GetUsersOfIdentityAsync(users_ids, token);
+        TResponseModel<UserInfoModel[]> res_find_users_identity = await GetUsersOfIdentityAsync(users_ids, token);
         if (!res_find_users_identity.Success())
         {
             response.AddRangeMessages(res_find_users_identity.Messages);
@@ -1258,7 +1288,7 @@ public class IdentityTools(
         response.Response = res_find_users_identity.Response;
 
         tg_ids = [.. tg_ids.Where(x => !response.Response.Any(y => y.TelegramId == x))];
-        if (tg_ids.Count != 0)
+        if (tg_ids.Length != 0)
             response.AddInfo($"Некоторые пользователи (Telegram) не найдены: {string.Join(",", tg_ids)}");
 
         return response;
@@ -1351,7 +1381,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TelegramJoinAccountConfirmTokenFromTelegramAsync(TelegramJoinAccountConfirmModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TelegramJoinAccountConfirmTokenFromTelegramAsync(TelegramJoinAccountConfirmModel req, bool waitResponse = true, CancellationToken token = default)
     {
         DateTime lifeTime = DateTime.UtcNow.AddMinutes(-req.TelegramJoinAccountTokenLifetimeMinutes);
 
@@ -1478,7 +1508,7 @@ public class IdentityTools(
 
         if (MailAddress.TryCreate(userIdentityDb.Email, out _))
         {
-            TResponseModel<TelegramUserBaseModel?> tg_user_dump = await GetTelegramUserCachedInfoAsync(req.TelegramId, token);
+            TResponseModel<TelegramUserBaseModel> tg_user_dump = await GetTelegramUserCachedInfoAsync(req.TelegramId, token);
             await mailRepo.SendEmailAsync(userIdentityDb.Email, "Удаление привязки Telegram к учётной записи", $"Telegram аккаунт {tg_user_dump.Response} отключён от вашей учётной записи на сайте.", token: token);
         }
 
@@ -1502,10 +1532,10 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TelegramUserBaseModel?>> GetTelegramUserCachedInfoAsync(long telegramId, CancellationToken token = default)
+    public async Task<TResponseModel<TelegramUserBaseModel>> GetTelegramUserCachedInfoAsync(long telegramId, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
-        TResponseModel<TelegramUserBaseModel?> res = new() { Response = TelegramUserBaseModel.Build(await identityContext.TelegramUsers.FirstOrDefaultAsync(x => x.TelegramId == telegramId, cancellationToken: token)) };
+        TResponseModel<TelegramUserBaseModel> res = new() { Response = TelegramUserBaseModel.Build(await identityContext.TelegramUsers.FirstOrDefaultAsync(x => x.TelegramId == telegramId, cancellationToken: token)) };
         if (res.Response is null)
             res.AddInfo($"Пользователь Telegram #{telegramId} не найден в кешэ БД");
 

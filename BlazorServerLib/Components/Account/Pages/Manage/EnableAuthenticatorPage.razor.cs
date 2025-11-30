@@ -78,8 +78,11 @@ public partial class EnableAuthenticatorPage : BlazorBusyComponentBaseAuthModel
 
     private async ValueTask LoadSharedKeyAndQrCodeUriAsync()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         string msg;
-        if (!MailAddress.TryCreate(CurrentUserSession!.Email, out _))
+        if (!MailAddress.TryCreate(CurrentUserSession.Email, out _))
         {
             msg = "email имеет не корректный формат. error {F0A2EF98-5C04-46D2-8A93-711BC9827EF9}";
             Messages.Add(new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = msg });

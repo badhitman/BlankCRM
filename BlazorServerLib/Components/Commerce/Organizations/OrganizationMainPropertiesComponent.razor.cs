@@ -46,6 +46,9 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
     async Task ReadOrganization()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (CurrentOrganization is null)
             return;
 
@@ -54,18 +57,21 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         CurrentOrganization = res.Response!.Single();
-        if (CurrentOrganization is not null && (CurrentOrganization.Users?.Any(x => x.UserPersonIdentityId == CurrentUserSession!.UserId) != true && !CurrentUserSession!.IsAdmin && CurrentUserSession!.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true))
+        if (CurrentOrganization is not null && (CurrentOrganization.Users?.Any(x => x.UserPersonIdentityId == CurrentUserSession.UserId) != true && CurrentUserSession.IsAdmin && CurrentUserSession.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true))
             return;
     }
 
     async Task CancelEditRequestOrganization()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (editOrg is null || editOrg.Equals(CurrentOrganization))
             return;
 
         editOrg = GlobalTools.CreateDeepCopy(CurrentOrganization);
 
-        TAuthRequestModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession!.UserId };
+        TAuthRequestModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession.UserId };
         await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
@@ -106,10 +112,13 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
     async Task SaveOrganization()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (editOrg is null || editOrg.Equals(CurrentOrganization))
             throw new ArgumentNullException(nameof(editOrg));
 
-        TAuthRequestModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession!.UserId };
+        TAuthRequestModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession.UserId };
         await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);

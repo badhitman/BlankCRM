@@ -233,7 +233,7 @@ public partial class CommerceImplementService : ICommerceService
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<OrganizationModelDB>> OrganizationsSelectAsync(TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req, CancellationToken token = default)
     {
-        TResponseModel<UserInfoModel[]> res = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
+        TResponseModel<UserInfoModel[]> res = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
         if (!res.Success() || res.Response?.Length != 1)
             return new();
 
@@ -304,7 +304,7 @@ public partial class CommerceImplementService : ICommerceService
         await Task.WhenAll([
             Task.Run(async () =>
             {
-                TResponseModel<UserInfoModel[]> userFind = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId]);
+                TResponseModel<UserInfoModel[]> userFind = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId]);
                 actor = userFind.Response!.First();
                 }, token),
             Task.Run(async () => { duple = await context.Organizations.FirstOrDefaultAsync(x => x.INN == req.Payload.INN || x.OGRN == req.Payload.OGRN ); }, token)
@@ -561,7 +561,7 @@ public partial class CommerceImplementService : ICommerceService
         await Task.WhenAll([
             Task.Run(async () =>
             {
-                TResponseModel<UserInfoModel[]> userFind = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId]);
+                TResponseModel<UserInfoModel[]> userFind = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId]);
                 actor = userFind.Response?.Single();
                 }, token),
             Task.Run(async () => { duple = await context.BanksDetails.Include(x => x.Organization).FirstOrDefaultAsync(x => x.Id != req.Payload.Id && x.BankBIC == req.Payload.BankBIC && x.CurrentAccount == req.Payload.CurrentAccount ); }, token)
@@ -619,7 +619,7 @@ public partial class CommerceImplementService : ICommerceService
         await Task.WhenAll([
             Task.Run(async () =>
             {
-                TResponseModel<UserInfoModel[]> userFind = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId]);
+                TResponseModel<UserInfoModel[]> userFind = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId]);
                 actor = userFind.Response?.Single();
                 }, token),
             Task.Run(async () =>

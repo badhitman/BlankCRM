@@ -63,8 +63,11 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
     /// <inheritdoc/>
     protected async Task DeleteJoinForm()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
-        ResponseBaseModel rest = await ConstructorRepo.DeleteTabDocumentSchemeJoinFormAsync(new() { Payload = PageJoinForm.Id, SenderActionUserId = CurrentUserSession!.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.DeleteTabDocumentSchemeJoinFormAsync(new() { Payload = PageJoinForm.Id, SenderActionUserId = CurrentUserSession.UserId });
         IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
@@ -119,8 +122,11 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
     /// <inheritdoc/>
     protected async Task DocumentPageJoinFormMove(DirectionsEnum direct)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
-        TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.MoveTabDocumentSchemeJoinFormAsync(new() { Payload = new() { Id = PageJoinForm.Id, Direct = direct }, SenderActionUserId = CurrentUserSession!.UserId });
+        TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.MoveTabDocumentSchemeJoinFormAsync(new() { Payload = new() { Id = PageJoinForm.Id, Direct = direct }, SenderActionUserId = CurrentUserSession.UserId });
         IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
@@ -136,6 +142,9 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
     /// <inheritdoc/>
     protected async Task SaveJoinForm()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         FormToTabJoinConstructorModelDB req = new()
         {
             Description = PageJoinForm.Description,
@@ -150,7 +159,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
 
         await SetBusyAsync();
 
-        ResponseBaseModel rest = await ConstructorRepo.CreateOrUpdateTabDocumentSchemeJoinFormAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession!.UserId });
+        ResponseBaseModel rest = await ConstructorRepo.CreateOrUpdateTabDocumentSchemeJoinFormAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
         IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);

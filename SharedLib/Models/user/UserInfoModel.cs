@@ -32,7 +32,20 @@ public record UserInfoModel : UserInfoMainModel
     /// Получает или задает количество неудачных попыток входа в систему для текущего пользователя.
     /// </summary>
     public int AccessFailedCount { get; set; }
+    
+    #region address
+    /// <inheritdoc/>
+    public string? KladrCode { get; set; }
 
+    /// <inheritdoc/>
+    public string? KladrTitle { get; set; }
+
+    /// <summary>
+    /// Адрес 
+    /// </summary>
+    public string? AddressUserComment { get; set; }
+    #endregion
+    
     /// <inheritdoc/>
     public override string ToString()
     {

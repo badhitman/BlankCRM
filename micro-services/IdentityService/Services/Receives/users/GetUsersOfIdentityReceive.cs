@@ -18,18 +18,18 @@ public class GetUsersOfIdentityReceive(IIdentityTools identityRepo, IMemoryCache
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetUsersOfIdentityReceive;
 
-    static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);
+    static readonly TimeSpan _ts = TimeSpan.FromSeconds(2);
 
     /// <inheritdoc/>
     public async Task<TResponseModel<UserInfoModel[]?>?> ResponseHandleActionAsync(string[]? users_ids = null, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(users_ids);
         users_ids = [.. users_ids.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct()];
-        TResponseModel<UserInfoModel[]?> res = new();
+        TResponseModel<UserInfoModel[]> res = new();
         if (users_ids.Length == 0)
         {
             res.AddError("Пустой запрос");
-            return res;
+            return new() { Response = res.Response, Messages = res.Messages };
         }
         string[] find_users_ids = [.. users_ids.Where(x => x != GlobalStaticConstantsRoles.Roles.System).Order()];
 
@@ -37,7 +37,7 @@ public class GetUsersOfIdentityReceive(IIdentityTools identityRepo, IMemoryCache
         if (cache.TryGetValue(mem_token, out UserInfoModel[]? users_cache))
         {
             res.Response = users_cache;
-            return res;
+            return new() { Response = res.Response, Messages = res.Messages };
         }
         res = await identityRepo.GetUsersOfIdentityAsync(users_ids, token);
 
@@ -45,11 +45,11 @@ public class GetUsersOfIdentityReceive(IIdentityTools identityRepo, IMemoryCache
         {
             cache.Set(mem_token, Array.Empty<ApplicationUser>(), new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
             res.AddWarning("Не найдено ни одного пользователя");
-            return res;
+            return new() { Response = res.Response, Messages = res.Messages };
         }
 
         cache.Set(mem_token, res.Response, new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
 
-        return res;
+        return new() { Response = res.Response, Messages = res.Messages };
     }
 }

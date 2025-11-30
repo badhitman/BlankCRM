@@ -16,18 +16,32 @@ public abstract class BlazorBusyComponentBaseAuthModel : BlazorBusyComponentBase
     [Inject]
     AuthenticationStateProvider AuthRepo { get; set; } = default!;
 
+    /// <inheritdoc/>
+    [Inject]
+    protected IIdentityTransmission IdentityRepo { get; set; } = default!;
+
 
     /// <summary>
     /// Текущий пользователь (сессия)
     /// </summary>
-    public UserInfoMainModel? CurrentUserSession { get; private set; }
+    public UserInfoModel? CurrentUserSession { get; private set; }
 
 
     /// <inheritdoc/>
     public async Task ReadCurrentUser()
     {
         AuthenticationState state = await AuthRepo.GetAuthenticationStateAsync();
-        CurrentUserSession = state.User.ReadCurrentUserInfo();
+        UserInfoMainModel? _usr = state.User.ReadCurrentUserInfo();
+        CurrentUserSession = null;
+
+        if (_usr is null)
+            return;
+
+        TResponseModel<UserInfoModel[]> getDataUser = await IdentityRepo.GetUsersOfIdentityAsync([_usr.UserId]);
+        if (getDataUser.Response is null || getDataUser.Response.Length != 1)
+            throw new Exception();
+
+        CurrentUserSession = getDataUser.Response[0];
     }
 
     /// <inheritdoc/>

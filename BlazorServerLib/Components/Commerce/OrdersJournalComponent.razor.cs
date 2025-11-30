@@ -52,6 +52,9 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
 
     async Task UpdateCacheIssues()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         IEnumerable<int> q = documentsPartData
             .Where(x => x.HelpDeskId.HasValue && x.HelpDeskId.Value > 0)
             .Select(x => x.HelpDeskId!.Value);
@@ -61,7 +64,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
 
         TResponseModel<IssueHelpDeskModelDB[]> res = await HelpDeskRepo.IssuesReadAsync(new()
         {
-            SenderActionUserId = CurrentUserSession!.UserId,
+            SenderActionUserId = CurrentUserSession.UserId,
             Payload = new()
             {
                 IssuesIds = [.. q],
@@ -74,6 +77,9 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
 
     async Task<TableData<OrderDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         TPaginationRequestStandardModel<TAuthRequestModel<OrdersSelectRequestModel>> req = new()
         {
             PageNum = state.Page,
@@ -82,7 +88,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
             SortingDirection = state.SortDirection.Convert(),
             Payload = new()
             {
-                SenderActionUserId = CurrentUserSession!.UserId,
+                SenderActionUserId = CurrentUserSession.UserId,
                 Payload = new()
                 {
                     IncludeExternalData = true,

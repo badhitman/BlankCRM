@@ -23,9 +23,6 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
     [Inject]
     IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
 
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
 
     /// <summary>
     /// Id
@@ -34,10 +31,10 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
     public int Id { get; set; }
 
     bool CanEdit =>
-        CurrentUserSession!.IsAdmin ||
-        CurrentUserSession!.Roles?.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager) == true ||
-        CurrentUserSession!.UserId == IssueSource?.ExecutorIdentityUserId ||
-        CurrentUserSession!.UserId == IssueSource?.AuthorIdentityUserId;
+        CurrentUserSession?.IsAdmin == true ||
+        CurrentUserSession?.Roles?.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager) == true ||
+        CurrentUserSession?.UserId == IssueSource?.ExecutorIdentityUserId ||
+        CurrentUserSession?.UserId == IssueSource?.AuthorIdentityUserId;
 
     IssueHelpDeskModelDB? IssueSource { get; set; }
 
@@ -109,10 +106,13 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
 
     async Task ReadIssue()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         TAuthRequestModel<IssuesReadRequestModel> req = new()
         {
             Payload = new() { IssuesIds = [Id] },
-            SenderActionUserId = CurrentUserSession!.UserId
+            SenderActionUserId = CurrentUserSession.UserId
         };
 
         await SetBusyAsync();
@@ -141,7 +141,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
         if (users_ids.Count != 0)
             users_ids = users_ids.Distinct().ToList();
 
-        TResponseModel<UserInfoModel[]> users_data_identity = await IdentityRepo.GetUsersIdentityAsync([.. users_ids]);
+        TResponseModel<UserInfoModel[]> users_data_identity = await IdentityRepo.GetUsersOfIdentityAsync([.. users_ids]);
         SnackBarRepo.ShowMessagesResponse(users_data_identity.Messages);
         if (users_data_identity.Response is not null && users_data_identity.Response.Length != 0)
             UsersIdentityDump.AddRange(users_data_identity.Response);

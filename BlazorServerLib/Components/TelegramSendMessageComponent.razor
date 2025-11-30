@@ -1,9 +1,9 @@
 ﻿@using Microsoft.Extensions.Options
+
 @attribute [Authorize]
 @inherits BlazorBusyComponentBaseAuthModel
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-@inject IIdentityTransmission IdentityRepo
 @inject ITelegramTransmission tgRepo
 @inject IUsersProfilesService UsersManageRepo
 @inject IOptions<TelegramBotConfigModel> conf
@@ -61,7 +61,7 @@ else
     {
         errorMessage = null;
         await SetBusyAsync();
-        TResponseModel<TelegramUserBaseModel> tg_user_info = await IdentityRepo.GetTelegramUserAsync(TelegramId);
+        TResponseModel<TelegramUserBaseModel> tg_user_info = await IdentityRepo.GetTelegramUserCachedInfoAsync(TelegramId);
 
         if (!tg_user_info.Success())
             errorMessage += $"\n{tg_user_info.Message()}";

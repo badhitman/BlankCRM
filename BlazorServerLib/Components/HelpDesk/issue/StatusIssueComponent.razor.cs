@@ -16,9 +16,12 @@ public partial class StatusIssueComponent : IssueWrapBaseModel
 
     List<StatusesDocumentsEnum> Steps()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         List<StatusesDocumentsEnum> res = [];
 
-        if (CurrentUserSession!.IsAdmin || CurrentUserSession!.UserId == Issue.ExecutorIdentityUserId || CurrentUserSession!.Roles?.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager) == true)
+        if (CurrentUserSession.IsAdmin || CurrentUserSession.UserId == Issue.ExecutorIdentityUserId || CurrentUserSession.Roles?.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager) == true)
             res.AddRange(Enum.GetValues<StatusesDocumentsEnum>());
         else
         {
@@ -41,12 +44,15 @@ public partial class StatusIssueComponent : IssueWrapBaseModel
 
     async Task SaveChange()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
 
         TResponseModel<bool> res = await HelpDeskRepo
             .StatusChangeAsync(new()
             {
-                SenderActionUserId = CurrentUserSession!.UserId,
+                SenderActionUserId = CurrentUserSession.UserId,
                 Payload = new()
                 {
                     DocumentId = Issue.Id,

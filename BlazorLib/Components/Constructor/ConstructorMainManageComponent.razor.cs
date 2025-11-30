@@ -43,15 +43,19 @@ public partial class ConstructorMainManageComponent : BlazorBusyComponentBaseAut
     public async Task ReadCurrentMainProject()
     {
         CanEditProject = false;
+
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
 
-        TResponseModel<MainProjectViewModel> currentMainProject = await ConstructorRepo.GetCurrentMainProjectAsync(CurrentUserSession!.UserId);
+        TResponseModel<MainProjectViewModel> currentMainProject = await ConstructorRepo.GetCurrentMainProjectAsync(CurrentUserSession.UserId);
 
         if (!currentMainProject.Success())
             SnackBarRepo.ShowMessagesResponse(currentMainProject.Messages);
 
         MainProject = currentMainProject.Response;
-        CanEditProject = MainProject is not null && (!MainProject.IsDisabled || MainProject.OwnerUserId.Equals(CurrentUserSession!.UserId) || CurrentUserSession!.IsAdmin);
+        CanEditProject = MainProject is not null && (!MainProject.IsDisabled || MainProject.OwnerUserId.Equals(CurrentUserSession.UserId) || CurrentUserSession.IsAdmin);
         IsBusyProgress = false;
     }
 }

@@ -2,7 +2,7 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-@if (CurrentUserSession!.IsAdmin)
+@if (CurrentUserSession?.IsAdmin == true)
 {
     <sup @onclick="() => IsExpandPanel = !IsExpandPanel" title="правила ценообразования" class="bi bi-calculator text-primary"></sup>
 }

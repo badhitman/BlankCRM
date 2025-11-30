@@ -67,6 +67,9 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
         get => _selectedAddresses ?? [];
         set
         {
+            if (CurrentUserSession is null)
+                throw new Exception("CurrentUserSession is null");
+
             if (_prevSelectedAddresses is not null || CurrentCart is null)
                 return;
 
@@ -96,7 +99,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
                     }
                 }));
                 _selectedAddresses = [.. CurrentCart.OfficesTabs.Select(Convert)];
-                InvokeAsync(async () => await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), false));
+                InvokeAsync(async () => await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession.UserId), false));
             }
             static OfficeOrganizationModelDB Convert(TabOfficeForOrderModelDb x) => new()
             {
@@ -125,7 +128,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             {
                 CurrentCart.OfficesTabs!.RemoveAll(x => _prev.Any(y => y.Id == x.OfficeId));
                 _selectedAddresses = [.. CurrentCart.OfficesTabs.Select(Convert)];
-                InvokeAsync(async () => { await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true); });
+                InvokeAsync(async () => { await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession.UserId), true); });
             }
 
             // адреса/вкладки, которые имеют строки: требуют подтверждения у пользователя
@@ -249,6 +252,9 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
 
     async Task SubmitChangeAddresses()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (CurrentCart is null)
             throw new ArgumentNullException(nameof(CurrentCart), GetType().FullName);
 
@@ -263,7 +269,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
         _visibleChangeAddresses = false;
         await SetBusyAsync();
 
-        await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
+        await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession.UserId), true);
         await SetBusyAsync(false);
     }
 
@@ -288,21 +294,27 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
 
     async Task ClearOrder()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (CurrentCart?.OfficesTabs is null)
             return;
         CurrentCart.OfficesTabs.ForEach(x => x.Rows?.Clear());
-        await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
+        await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession.UserId), true);
         NavRepo.Refresh(true);
     }
 
     async void DocumentUpdateAction()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (CurrentCart is null)
             throw new ArgumentNullException(nameof(CurrentCart), GetType().FullName);
 
         await SetBusyAsync();
         CurrentCart.OfficesTabs?.RemoveAll(x => !CurrentOrganization!.Offices!.Any(y => y.Id == x.OfficeId));
-        await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
+        await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession.UserId), true);
         await SetBusyAsync(false);
     }
 
@@ -314,12 +326,18 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
 
     void ResetAddresses()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         _selectedAddresses?.Clear();
-        InvokeAsync(async () => { await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true); });
+        InvokeAsync(async () => { await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession.UserId), true); });
     }
 
     async Task OrderDocumentSendAsync()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (CurrentCart is null)
             throw new ArgumentNullException(nameof(CurrentCart), GetType().FullName);
 
@@ -343,10 +361,10 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
         {
             TResponseModel<OrderDocumentModelDB[]> doc = await CommerceRepo.OrdersReadAsync(new() { Payload = [rest.Response], SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
             CurrentCart.Information = CurrentCart.Information?.Trim();
-            CurrentCart = OrderDocumentModelDB.NewEmpty(CurrentUserSession!.UserId);
+            CurrentCart = OrderDocumentModelDB.NewEmpty(CurrentUserSession.UserId);
 
             await StorageRepo
-            .SaveParameterAsync<OrderDocumentModelDB?>(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
+            .SaveParameterAsync<OrderDocumentModelDB?>(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession.UserId), true);
 
             NavRepo.NavigateTo($"/issue-card/{doc.Response!.First().HelpDeskId}");
         }
@@ -361,7 +379,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
         if (CurrentUserSession is null)
             return;
 
-        CurrentCart ??= OrderDocumentModelDB.NewEmpty(CurrentUserSession!.UserId);
+        CurrentCart ??= OrderDocumentModelDB.NewEmpty(CurrentUserSession.UserId);
 
         if (CurrentCart.OfficesTabs is null)
         {
@@ -415,11 +433,14 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
 
     async Task OrganizationReset()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req = new()
         {
             Payload = new()
             {
-                ForUserIdentityId = CurrentUserSession!.IsAdmin ? null : CurrentUserSession!.UserId,
+                ForUserIdentityId = CurrentUserSession.IsAdmin ? null : CurrentUserSession.UserId,
                 IncludeExternalData = true,
             },
             SenderActionUserId = CurrentUserSession.UserId,
@@ -439,11 +460,11 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
 
         Organizations = res.Response;
         TResponseModel<OrderDocumentModelDB?> current_cart = await StorageRepo
-            .ReadParameterAsync<OrderDocumentModelDB>(GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId));
+            .ReadParameterAsync<OrderDocumentModelDB>(GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession.UserId));
 
         CurrentCart = current_cart.Response ?? new()
         {
-            AuthorIdentityUserId = CurrentUserSession!.UserId,
+            AuthorIdentityUserId = CurrentUserSession.UserId,
             Name = "Новый заказ",
         };
 
@@ -453,7 +474,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             if (CurrentCart.Organization is null)
                 CurrentCart.OrganizationId = 0;
 
-            await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession!.UserId), true);
+            await StorageRepo.SaveParameterAsync(CurrentCart, GlobalStaticCloudStorageMetadata.OrderCartForUser(CurrentUserSession.UserId), true);
         }
 
         CurrentCart.OfficesTabs ??= [];

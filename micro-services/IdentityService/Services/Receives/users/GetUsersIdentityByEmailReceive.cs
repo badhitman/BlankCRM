@@ -26,30 +26,30 @@ public class GetUsersIdentityByEmailReceive(IIdentityTools IdentityRepo, IMemory
     {
         ArgumentNullException.ThrowIfNull(users_emails);
         users_emails = [.. users_emails.Where(x => MailAddress.TryCreate(x, out _)).Select(x => x.ToUpper())];
-        TResponseModel<UserInfoModel[]?> res = new() { Response = [] };
+        TResponseModel<UserInfoModel[]> res = new() { Response = [] };
         if (users_emails.Length == 0)
         {
             res.AddError("Пустой запрос");
-            return res;
+            return new() { Response = res.Response, Messages = res.Messages };
         }
 
         string mem_token = $"{QueueName}-identity-e/{string.Join(",", users_emails)}";
         if (cache.TryGetValue(mem_token, out UserInfoModel[]? users_cache))
         {
             res.Response = users_cache;
-            return res;
+            return new() { Response = res.Response, Messages = res.Messages };
         }
-        res = await IdentityRepo.GetUsersIdentityByEmailAsync(users_emails, token);
+        res = await IdentityRepo.GetUsersIdentityByEmailsAsync(users_emails, token);
 
         if (res.Response is null || res.Response.Length == 0)
         {
             cache.Set(mem_token, Array.Empty<ApplicationUser>(), new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
             res.AddWarning("Не найдено ни одного пользователя");
-            return res;
+            return new() { Response = res.Response, Messages = res.Messages };
         }
 
         cache.Set(mem_token, res.Response, new MemoryCacheEntryOptions().SetAbsoluteExpiration(_ts));
 
-        return res;
+        return new() { Response = res.Response, Messages = res.Messages };
     }
 }

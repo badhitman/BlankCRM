@@ -39,7 +39,7 @@ public partial class RolesPage
     {
         if (!string.IsNullOrWhiteSpace(OwnerUserId))
         {
-            TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentityAsync([OwnerUserId]);
+            TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersOfIdentityAsync([OwnerUserId]);
             Messages = findUsers.Messages;
             if (!findUsers.Success() || findUsers.Response is null)
                 return;

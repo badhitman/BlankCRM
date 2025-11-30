@@ -45,7 +45,7 @@ public partial class ConfirmEmailChangePage : ComponentBase
             return;
         }
 
-        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersIdentityAsync([UserId]);
+        TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersOfIdentityAsync([UserId]);
         Messages = findUsers.Messages;
         if (findUsers.Response is null)
         {

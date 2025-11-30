@@ -52,7 +52,7 @@ public partial class ChatTelegramComponent : BlazorBusyComponentBaseModel
         Chat = await TelegramRepo.ChatTelegramReadAsync(ChatId.Value);
         IsBusyProgress = false;
         await SetBusyAsync();
-        TResponseModel<TelegramUserBaseModel> get_user = await IdentityRepo.GetTelegramUserAsync(Chat.ChatTelegramId);
+        TResponseModel<TelegramUserBaseModel> get_user = await IdentityRepo.GetTelegramUserCachedInfoAsync(Chat.ChatTelegramId);
         IsBusyProgress = false;
         //SnackbarRepo.ShowMessagesResponse(get_user.Messages);
         CurrentUser = get_user.Response;

@@ -17,7 +17,7 @@ public interface IIdentityTools
     /// <summary>
     /// Чтение 2fa токена (из кеша)
     /// </summary>
-    public Task<TResponseModel<string?>> ReadToken2FAAsync(string userId, CancellationToken token = default);
+    public Task<TResponseModel<string>> ReadToken2FAAsync(string userId, CancellationToken token = default);
 
     /// <summary>
     /// Генерация 2fa токена (и отправка на Email++)
@@ -127,16 +127,6 @@ public interface IIdentityTools
     public Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel> req, CancellationToken token = default);
 
     /// <summary>
-    /// Получить пользователей из Identity по их идентификаторам
-    /// </summary>
-    public Task<TResponseModel<UserInfoModel[]?>> GetUsersOfIdentityAsync(string[] req, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить пользователей из Identity по их Email
-    /// </summary>
-    public Task<TResponseModel<UserInfoModel[]?>> GetUsersIdentityByEmailAsync(string[] req, CancellationToken token = default);
-
-    /// <summary>
     /// Обновляет адрес Email, если токен действительный для пользователя.
     /// </summary>
     /// <param name="req">Пользователь, адрес электронной почты которого необходимо обновить.Новый адрес электронной почты.Измененный токен электронной почты, который необходимо подтвердить.</param>
@@ -165,23 +155,23 @@ public interface IIdentityTools
     public Task<ResponseBaseModel> ResetPasswordAsync(IdentityPasswordTokenModel req, CancellationToken token = default);
 
     /// <summary>
-    /// FindByEmail
+    /// Поиск пользователя по Email
     /// </summary>
-    public Task<TResponseModel<UserInfoModel>> FindByEmailAsync(string email, CancellationToken token = default);
+    public Task<TResponseModel<UserInfoModel>> FindUserByEmailAsync(string email, CancellationToken token = default);
 
     /// <summary>
     /// Создает и отправляет токен подтверждения электронной почты для указанного пользователя.
     /// </summary>
     /// <remarks>
     /// Этот API поддерживает инфраструктуру ASP.NET Core Identity и не предназначен для использования в качестве абстракции электронной почты общего назначения.
-    /// Он должен быть реализован в приложении, чтобы  Identityинфраструктура могла отправлять электронные письма с подтверждением.
+    /// Он должен быть реализован в приложении, чтобы  Identity инфраструктура могла отправлять электронные письма с подтверждением.
     /// </remarks>
     public Task<ResponseBaseModel> GenerateEmailConfirmationAsync(SimpleUserIdentityModel req, CancellationToken token = default);
 
     /// <summary>
     /// Создать пользователя (без пароля)
     /// </summary>
-    public Task<RegistrationNewUserResponseModel> CreateNewUserEmailAsync(string req, CancellationToken token = default);
+    public Task<RegistrationNewUserResponseModel> CreateNewUserEmailAsync(string userEmail, CancellationToken token = default);
 
     /// <summary>
     /// Создать пользователя с паролем
@@ -193,9 +183,18 @@ public interface IIdentityTools
     /// </summary>
     /// <param name="req">Пользователь, для которого необходимо проверить токен подтверждения электронной почты.</param>
     /// <param name="token"></param>
-    public Task<ResponseBaseModel> ConfirmEmailAsync(UserCodeModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> ConfirmUserEmailCodeAsync(UserCodeModel req, CancellationToken token = default);
 
-    #region claims
+    /// <summary>
+    /// Получить пользователей из Identity по их идентификаторам
+    /// </summary>
+    public Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentityAsync(string[] req, CancellationToken token = default);
+
+    /// <summary>
+    /// Получить пользователей из Identity по их Email
+    /// </summary>
+    public Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByEmailsAsync(string[] req, CancellationToken token = default);
+
     /// <summary>
     /// Claim: Remove
     /// </summary>
@@ -212,74 +211,6 @@ public interface IIdentityTools
     public Task<List<ClaimBaseModel>> GetClaimsAsync(ClaimAreaOwnerModel req, CancellationToken token = default);
 
     /// <summary>
-    /// Установить пользователю Claim`s[TelegramId, FirstName, LastName, PhoneNum]
-    /// </summary>
-    public Task<TResponseModel<bool>> ClaimsUserFlushAsync(string user_id, CancellationToken token = default);
-    #endregion
-
-    #region telegram
-    /// <summary>
-    /// Find user identity by telegram - receive
-    /// </summary>
-    public Task<TResponseModel<UserInfoModel[]?>> GetUsersIdentityByTelegramAsync(List<long> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Инициировать новую процедуру привязки Telegram аккаунта к учётной записи сайта
-    /// </summary>
-    public Task<TResponseModel<TelegramJoinAccountModelDb>> TelegramJoinAccountCreateAsync(string userId, CancellationToken token = default);
-
-    /// <summary>
-    /// Удалить связь Telegram аккаунта с учётной записью сайта
-    /// </summary>
-    public Task<ResponseBaseModel> TelegramAccountRemoveIdentityJoinAsync(TelegramAccountRemoveJoinRequestIdentityModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Удалить текущую процедуру привязки Telegram аккаунта к учётной записи сайта
-    /// </summary>
-    public Task<ResponseBaseModel> TelegramJoinAccountDeleteActionAsync(string userId, CancellationToken token = default);
-
-    /// <summary>
-    /// Telegram пользователи (сохранённые).
-    /// Все пользователи, которые когда либо писали что либо в бота - сохраняются/кэшируются в БД.
-    /// </summary>
-    public Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(SimplePaginationRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Telegram: Подтверждение токена
-    /// </summary>
-    public Task<ResponseBaseModel> TelegramJoinAccountConfirmTokenFromTelegramAsync(TelegramJoinAccountConfirmModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить информацию по пользователю (из БД).
-    /// Данные возвращаются из кэша: каждое сообщение в TelegramBot кеширует информацию о пользователе в БД
-    /// </summary>
-    public Task<TResponseModel<TelegramUserBaseModel?>> GetTelegramUserCachedInfoAsync(long telegramId, CancellationToken token = default);
-
-    /// <summary>
-    /// Удалить связь Telegram аккаунта с учётной записью сайта
-    /// </summary>
-    public Task<ResponseBaseModel> TelegramAccountRemoveTelegramJoinAsync(TelegramAccountRemoveJoinRequestTelegramModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Установить/обновить основное сообщение в чате в котором Bot ведёт диалог с пользователем.
-    /// Бот может отвечать новым сообщением или редактировать своё ранее отправленное в зависимости от ситуации.
-    /// </summary>
-    public Task<ResponseBaseModel> UpdateTelegramMainUserMessageAsync(MainUserMessageModel setMainUserMessage, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить состояние процедуры привязки аккаунта Telegram к учётной записи сайта (если есть).
-    /// Если userId не указан, то команда выполняется для текущего пользователя (запрос/сессия)
-    /// </summary>
-    public Task<TResponseModel<TelegramJoinAccountModelDb>> TelegramJoinAccountStateAsync(TelegramJoinAccountStateRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Проверка пользователя (сообщение из службы TelegramBot серверной части сайта)
-    /// </summary>
-    public Task<TResponseModel<CheckTelegramUserAuthModel>> CheckTelegramUserAsync(CheckTelegramUserHandleModel user, CancellationToken token = default);
-    #endregion
-
-    #region roles
-    /// <summary>
     /// Попытка добавить роли пользователю. Если роли такой нет, то она будет создана.
     /// </summary>
     public Task<ResponseBaseModel> TryAddRolesToUserAsync(UserRolesModel req, CancellationToken token = default);
@@ -292,7 +223,7 @@ public interface IIdentityTools
     /// <summary>
     /// Get Role (by id)
     /// </summary>
-    public Task<TResponseModel<RoleInfoModel>> GetRoleAsync(string role_id, CancellationToken token = default);
+    public Task<TResponseModel<RoleInfoModel>> GetRoleAsync(string roleName, CancellationToken token = default);
 
     /// <summary>
     /// Роли. Если указан 'OwnerId', то поиск ограничивается ролями данного пользователя
@@ -318,5 +249,68 @@ public interface IIdentityTools
     /// Добавить роль пользователю (включить пользователя в роль)
     /// </summary>
     public Task<ResponseBaseModel> AddRoleToUserAsync(RoleEmailModel req, CancellationToken token = default);
-    #endregion
+
+    /// <summary>
+    /// Find user identity by telegram - receive
+    /// </summary>
+    public Task<TResponseModel<UserInfoModel[]>> GetUsersIdentityByTelegramAsync(long[] req, CancellationToken token = default);
+
+    /// <summary>
+    /// Инициировать новую процедуру привязки Telegram аккаунта к учётной записи сайта
+    /// </summary>
+    public Task<TResponseModel<TelegramJoinAccountModelDb>> TelegramJoinAccountCreateAsync(string userId, CancellationToken token = default);
+
+    /// <summary>
+    /// Удалить связь Telegram аккаунта с учётной записью сайта
+    /// </summary>
+    public Task<ResponseBaseModel> TelegramAccountRemoveIdentityJoinAsync(TelegramAccountRemoveJoinRequestIdentityModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// Удалить текущую процедуру привязки Telegram аккаунта к учётной записи сайта
+    /// </summary>
+    public Task<ResponseBaseModel> TelegramJoinAccountDeleteActionAsync(string userId, CancellationToken token = default);
+
+    /// <summary>
+    /// Telegram пользователи (сохранённые).
+    /// Все пользователи, которые когда либо писали что либо в бота - сохраняются/кэшируются в БД.
+    /// </summary>
+    public Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(SimplePaginationRequestModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// Telegram: Подтверждение токена
+    /// </summary>
+    public Task<ResponseBaseModel> TelegramJoinAccountConfirmTokenFromTelegramAsync(TelegramJoinAccountConfirmModel req, bool waitResponse = true, CancellationToken token = default);
+
+    /// <summary>
+    /// Получить информацию по пользователю (из БД).
+    /// Данные возвращаются из кэша: каждое сообщение в TelegramBot кеширует информацию о пользователе в БД
+    /// </summary>
+    public Task<TResponseModel<TelegramUserBaseModel>> GetTelegramUserCachedInfoAsync(long telegramId, CancellationToken token = default);
+
+    /// <summary>
+    /// Удалить связь Telegram аккаунта с учётной записью сайта
+    /// </summary>
+    public Task<ResponseBaseModel> TelegramAccountRemoveTelegramJoinAsync(TelegramAccountRemoveJoinRequestTelegramModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// Установить/обновить основное сообщение в чате в котором Bot ведёт диалог с пользователем.
+    /// Бот может отвечать новым сообщением или редактировать своё ранее отправленное в зависимости от ситуации.
+    /// </summary>
+    public Task<ResponseBaseModel> UpdateTelegramMainUserMessageAsync(MainUserMessageModel setMainUserMessage, CancellationToken token = default);
+
+    /// <summary>
+    /// Получить состояние процедуры привязки аккаунта Telegram к учётной записи сайта (если есть).
+    /// Если userId не указан, то команда выполняется для текущего пользователя (запрос/сессия)
+    /// </summary>
+    public Task<TResponseModel<TelegramJoinAccountModelDb>> TelegramJoinAccountStateAsync(TelegramJoinAccountStateRequestModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// Проверка пользователя (сообщение из службы TelegramBot серверной части сайта)
+    /// </summary>
+    public Task<TResponseModel<CheckTelegramUserAuthModel>> CheckTelegramUserAsync(CheckTelegramUserHandleModel user, CancellationToken token = default);
+
+    /// <summary>
+    /// Установить пользователю Claim`s[TelegramId, FirstName, LastName, PhoneNum]
+    /// </summary>
+    public Task<TResponseModel<bool>> ClaimsUserFlushAsync(string user_id, CancellationToken token = default);
 }

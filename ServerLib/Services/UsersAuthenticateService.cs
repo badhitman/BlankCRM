@@ -106,7 +106,7 @@ public class UsersAuthenticateService(
         {
             Response = UserInfoModel.Build(
             userId: au.Id,
-            userName: au.UserName,
+            userName: au.UserName ?? "",
             email: au.Email,
             phoneNumber: au.PhoneNumber,
             telegramId: au.ChatTelegramId,
@@ -244,7 +244,7 @@ public class UsersAuthenticateService(
         if (externalLoginInfo == null)
             return (RegistrationNewUserResponseModel)ResponseBaseModel.CreateError("externalLoginInfo == null. error {D991FA4A-9566-4DD4-B23A-DEB497931FF5}");
 
-        RegistrationNewUserResponseModel regUserRes = await identityRepo.CreateNewUserAsync(userEmail, token);
+        RegistrationNewUserResponseModel regUserRes = await identityRepo.CreateNewUserEmailAsync(userEmail, token);
         if (!regUserRes.Success() || string.IsNullOrWhiteSpace(regUserRes.Response))
             return regUserRes;
 

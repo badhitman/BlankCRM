@@ -155,7 +155,7 @@ public class StorageFilesImpl(
         UserInfoModel? currentUser = null;
         if (!allowed && !string.IsNullOrWhiteSpace(req.SenderActionUserId))
         {
-            TResponseModel<UserInfoModel[]> findUserRes = await identityRepo.GetUsersIdentityAsync([req.SenderActionUserId], token);
+            TResponseModel<UserInfoModel[]> findUserRes = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
             currentUser = findUserRes.Response?.Single();
             if (currentUser is null)
             {

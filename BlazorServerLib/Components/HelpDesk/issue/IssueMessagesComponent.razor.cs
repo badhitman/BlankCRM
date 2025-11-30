@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using BlazorLib;
-using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
@@ -14,10 +13,6 @@ namespace BlazorWebLib.Components.HelpDesk.issue;
 /// </summary>
 public partial class IssueMessagesComponent : IssueWrapBaseModel
 {
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
-
     MudTable<IssueMessageHelpDeskModelDB>? tableRef;
 
     /// <summary>
@@ -59,11 +54,14 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
     /// </summary>
     public async Task ReloadMessages()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         await SetBusyAsync();
         TResponseModel<IssueMessageHelpDeskModelDB[]> messages_rest = await HelpDeskRepo.MessagesListAsync(new()
         {
             Payload = Issue.Id,
-            SenderActionUserId = CurrentUserSession!.UserId,
+            SenderActionUserId = CurrentUserSession.UserId,
         });
         IsBusyProgress = false;
         messages = messages_rest.Response;
@@ -81,7 +79,7 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
 
         if (users_for_adding.Length != 0)
         {
-            TResponseModel<UserInfoModel[]> users_data_identity = await IdentityRepo.GetUsersIdentityAsync([.. users_for_adding.Distinct()]);
+            TResponseModel<UserInfoModel[]> users_data_identity = await IdentityRepo.GetUsersOfIdentityAsync([.. users_for_adding.Distinct()]);
             SnackBarRepo.ShowMessagesResponse(users_data_identity.Messages);
             if (users_data_identity.Response is not null && users_data_identity.Response.Length != 0)
                 UsersIdentityDump.AddRange(users_data_identity.Response);

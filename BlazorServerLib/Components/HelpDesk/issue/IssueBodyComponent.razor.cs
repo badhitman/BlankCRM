@@ -66,6 +66,9 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
 
     async Task SaveIssue()
     {
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
         if (string.IsNullOrWhiteSpace(NameIssueEdit))
             throw new ArgumentNullException(nameof(NameIssueEdit));
 
@@ -73,7 +76,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
 
         TResponseModel<int> res = await HelpDeskRepo.IssueCreateOrUpdateAsync(new()
         {
-            SenderActionUserId = CurrentUserSession!.UserId,
+            SenderActionUserId = CurrentUserSession.UserId,
             Payload = new()
             {
                 Name = NameIssueEdit,

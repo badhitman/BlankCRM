@@ -18,7 +18,7 @@
         </Authorized>
     </AuthorizeView>
     <MudStack Spacing="2" Class="pb-2">
-        @if (CurrentUserSession!.IsAdmin)
+        @if (CurrentUserSession?.IsAdmin == true)
         {
             <MudButton OnClick="OnExpandCollapseClick" Variant="Variant.Outlined">@(_expanded ? "Отмена" : "Создать")</MudButton>
             <MudCollapse Expanded="_expanded">
@@ -56,7 +56,7 @@
             </MudTd>
             <MudTd DataLabel="Цена">
                 @($"{context.Price}{(_hideWorth ? "" : $"/{Math.Round(context.Price / context.Multiplicity, 2)}")}")
-                @if (CurrentUserSession!.IsAdmin)
+                @if (CurrentUserSession?.IsAdmin == true)
                 {
                     <PricesRulesForOfferComponent Offer="context" />
                 }
