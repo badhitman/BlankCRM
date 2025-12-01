@@ -56,6 +56,6 @@ public partial class ConstructorMainManageComponent : BlazorBusyComponentBaseAut
 
         MainProject = currentMainProject.Response;
         CanEditProject = MainProject is not null && (!MainProject.IsDisabled || MainProject.OwnerUserId.Equals(CurrentUserSession.UserId) || CurrentUserSession.IsAdmin);
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 }

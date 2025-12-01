@@ -51,7 +51,7 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
 
         TResponseModel<int> rest = await ConstructorRepo.CreateElementForDirectoryAsync(new() { Payload = createNewElementForDict, SenderActionUserId = CurrentUserSession.UserId });
         createNewElementForDict = OwnedNameModel.BuildEmpty(createNewElementForDict.OwnerId);
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
         StateHasChanged();
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 

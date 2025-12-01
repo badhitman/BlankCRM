@@ -12,14 +12,14 @@ public partial interface IJournalUniversalService
         //
         return new EnumFitModel()
         {
-            SystemName = systemNamesManufacture.GetSystemName(dir.Id, dir.GetType().Name) ?? GlobalTools.TranslitToSystemName(dir.Name),
+            SystemName = systemNamesManufacture.GetSystemName(dir.Id, dir.GetType().Name) ?? GlobalTools.TranslateToSystemName(dir.Name),
             Name = dir.Name,
             Description = dir.Description,
             EnumItems = dir.Elements.Count < 1 ? [] : [.. dir.Elements.Select(e =>
             {
                 return new SortableFitModel()
                 {
-                    SystemName = systemNamesManufacture.GetSystemName(e.Id, e.GetType().Name, null) ?? GlobalTools.TranslitToSystemName(e.Name ?? ""),
+                    SystemName = systemNamesManufacture.GetSystemName(e.Id, e.GetType().Name, null) ?? GlobalTools.TranslateToSystemName(e.Name ?? ""),
                     Name = e.Name ?? "",
                     SortIndex = e.SortIndex,
                     Description = e.Description,
@@ -53,7 +53,7 @@ public partial interface IJournalUniversalService
                         MetadataValueType = field.MetadataValueType,
                         Required = field.Required,
                         TypeField = field.TypeField,
-                        SystemName = systemNamesManufacture.GetSystemName(field.Id, $"{doc.GetType().Name}#{doc.Id} {tab.GetType().Name}#{tab.Id} {joinForm.Form.GetType().Name}#{joinForm.Form.Id} {nameof(FieldFormBaseLowConstructorModel)}", field.GetType().Name) ?? GlobalTools.TranslitToSystemName(field.Name),
+                        SystemName = systemNamesManufacture.GetSystemName(field.Id, $"{doc.GetType().Name}#{doc.Id} {tab.GetType().Name}#{tab.Id} {joinForm.Form.GetType().Name}#{joinForm.Form.Id} {nameof(FieldFormBaseLowConstructorModel)}", field.GetType().Name) ?? GlobalTools.TranslateToSystemName(field.Name),
                     };
                 }
 
@@ -62,11 +62,11 @@ public partial interface IJournalUniversalService
                     ArgumentNullException.ThrowIfNull(field.Directory?.Elements);
                     return new FieldAkaDirectoryFitModel()
                     {
-                        DirectorySystemName = systemNamesManufacture.GetSystemName(field.Directory.Id, $"", field.GetType().Name) ?? GlobalTools.TranslitToSystemName(field.Directory!.Name),
+                        DirectorySystemName = systemNamesManufacture.GetSystemName(field.Directory.Id, $"", field.GetType().Name) ?? GlobalTools.TranslateToSystemName(field.Directory!.Name),
                         Items = [.. field.Directory.Elements.Cast<EntryModel>()],
                         Name = field.Name,
                         SortIndex = field.SortIndex,
-                        SystemName = systemNamesManufacture.GetSystemName(field.Id, $"{doc.GetType().Name}#{doc.Id} {tab.GetType().Name}#{tab.Id} {joinForm.Form.GetType().Name}#{joinForm.Form.Id} {nameof(FieldFormBaseLowConstructorModel)}", field.GetType().Name) ?? GlobalTools.TranslitToSystemName(field.Name),
+                        SystemName = systemNamesManufacture.GetSystemName(field.Id, $"{doc.GetType().Name}#{doc.Id} {tab.GetType().Name}#{tab.Id} {joinForm.Form.GetType().Name}#{joinForm.Form.Id} {nameof(FieldFormBaseLowConstructorModel)}", field.GetType().Name) ?? GlobalTools.TranslateToSystemName(field.Name),
                         Css = field.Css,
                         Description = field.Description,
                         Hint = field.Hint,
@@ -81,7 +81,7 @@ public partial interface IJournalUniversalService
                     Css = joinForm.Form.Css,
                     Description = joinForm.Form.Description,
                     SortIndex = joinForm.SortIndex,
-                    SystemName = systemNamesManufacture.GetSystemName(joinForm.Form.Id, $"{doc.GetType().Name}#{doc.Id} {tab.GetType().Name}#{tab.Id} {joinForm.Form.GetType().Name}") ?? GlobalTools.TranslitToSystemName(joinForm.Form.Name), // form_tree_item.SystemName,
+                    SystemName = systemNamesManufacture.GetSystemName(joinForm.Form.Id, $"{doc.GetType().Name}#{doc.Id} {tab.GetType().Name}#{tab.Id} {joinForm.Form.GetType().Name}") ?? GlobalTools.TranslateToSystemName(joinForm.Form.Name), // form_tree_item.SystemName,
                     IsTable = joinForm.IsTable,
                     Title = !joinForm.ShowTitle ? null : string.IsNullOrWhiteSpace(joinForm.Name) ? joinForm.Form.Name : joinForm.Name,
                     SimpleFields = joinForm.Form.Fields is null ? null : [.. joinForm.Form.Fields.Select(FieldConvert)],
@@ -96,14 +96,14 @@ public partial interface IJournalUniversalService
                 Name = tab.Name,
                 Description = tab.Description,
                 SortIndex = tab.SortIndex,
-                SystemName = systemNamesManufacture.GetSystemName(tab.Id, $"{doc.GetType().Name}#{doc.Id} {tab.GetType().Name}") ?? GlobalTools.TranslitToSystemName(tab.Name), // tab_tree_item.SystemName,
+                SystemName = systemNamesManufacture.GetSystemName(tab.Id, $"{doc.GetType().Name}#{doc.Id} {tab.GetType().Name}") ?? GlobalTools.TranslateToSystemName(tab.Name), // tab_tree_item.SystemName,
                 Forms = [.. tab.JoinsForms.Select(FormConvert)],
             };
         }
 
         return new DocumentFitModel()
         {
-            SystemName = systemNamesManufacture.GetSystemName(doc.Id, doc.GetType().Name) ?? GlobalTools.TranslitToSystemName(doc.Name),
+            SystemName = systemNamesManufacture.GetSystemName(doc.Id, doc.GetType().Name) ?? GlobalTools.TranslateToSystemName(doc.Name),
             Name = doc.Name,
             Description = doc.Description,
             Tabs = [.. doc.Tabs!.Select(TabConvert)]

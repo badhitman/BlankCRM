@@ -191,7 +191,7 @@ public class ManufactureService(
                         .Select(x => new { x.Id, x.Name })
                         .FirstAsync(cancellationToken: token);
 
-            res.Response = new ManageManufactureModelDB() { UserId = user.UserId, Namespace = GlobalTools.TranslitToSystemName(project_db.Name), ProjectId = project_db.Id };
+            res.Response = new ManageManufactureModelDB() { UserId = user.UserId, Namespace = GlobalTools.TranslateToSystemName(project_db.Name), ProjectId = project_db.Id };
             await context_forms.AddAsync(res.Response, token);
             await context_forms.SaveChangesAsync(token);
         }

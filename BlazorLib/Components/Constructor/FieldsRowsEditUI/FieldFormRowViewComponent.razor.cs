@@ -221,15 +221,18 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     {
         await SetBusyAsync();
         ResponseBaseModel rest = await ConstructorRepo.ClearValuesForFieldNameAsync(new() { FormId = Form.Id, FieldName = Field.Name, SessionId = session_id });
-        IsBusyProgress = false;
-
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
+        {
+            await SetBusyAsync(false);
             return;
-
+        }
         _elements = null;
         if (_sessionsValuesOfFieldViewComponent_Ref is not null)
             await _sessionsValuesOfFieldViewComponent_Ref.FindFields();
+
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -271,7 +274,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
                     case PropsTypesMDFieldsEnum.TextMask:
                         if (string.IsNullOrWhiteSpace(parameter))
                         {
-                            IsBusyProgress = false;
+                            await SetBusyAsync(false);
                             SnackBarRepo.Error("Укажите маску. Выбран режим [Маска], но сама маска не установлена.");
                             return;
                         }
@@ -323,16 +326,16 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         else
         {
             SnackBarRepo.Error("Ошибка 9ACCA3B7-52ED-4687-BEC2-C16AC6A2C3C0");
-            IsBusyProgress = false;
+            await SetBusyAsync(false);
             return;
         }
-        IsBusyProgress = false;
-
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
+            await SetBusyAsync(false);
             return;
         }
         act();
@@ -343,24 +346,26 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         _information_field = null;
 
         await ReloadForm();
+        await SetBusyAsync(false);
     }
 
     async Task ReloadForm()
     {
         await SetBusyAsync();
         TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(Field.OwnerId);
-        IsBusyProgress = false;
-
+       
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             SnackBarRepo.Error($"Ошибка CD1DAE53-0199-40BE-9EF2-4A3347BAF5E9 Action: {rest.Message()}");
+            await SetBusyAsync(false);
             return;
         }
 
         if (rest.Response?.Fields is null || rest.Response?.FieldsDirectoriesLinks is null)
         {
             SnackBarRepo.Error($"Ошибка DA9D4B08-EBB7-47C3-BA72-F3BB81E1A7E3 rest.Content.Form?.Fields is null || rest.Content.Form?.FormsDirectoriesLinks is null");
+            await SetBusyAsync(false);
             return;
         }
 
@@ -409,9 +414,10 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         else
         {
             SnackBarRepo.Error($"{_field_master.GetType().FullName}. ошибка C5CB2F55-D973-405F-B92E-144C1ABE2591");
-            IsBusyProgress = false;
+            await SetBusyAsync(false);
             return;
         }
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -447,21 +453,22 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         else
         {
             SnackBarRepo.Error($"{_field_master.GetType().FullName}. ошибка 1BCDEFB4-55F5-4A5A-BA61-3EAD2E9063D2");
-            IsBusyProgress = false;
+            await SetBusyAsync(false);
             return;
         }
-        IsBusyProgress = false;
-
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
+            await SetBusyAsync(false);
             return;
         }
-     ;
+     
         await ReloadForm();
+        await SetBusyAsync(false);
     }
 
     void SetFieldAction(FieldFormBaseLowConstructorModel field)

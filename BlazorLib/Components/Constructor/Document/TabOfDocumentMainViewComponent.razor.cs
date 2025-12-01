@@ -68,8 +68,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
 
         await SetBusyAsync();
         ResponseBaseModel rest = await ConstructorRepo.DeleteTabDocumentSchemeJoinFormAsync(new() { Payload = PageJoinForm.Id, SenderActionUserId = CurrentUserSession.UserId });
-        IsBusyProgress = false;
-
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
@@ -77,6 +76,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
             ParentFormsPage.StateHasChangedCall();
         }
         UpdatePageActionHandle(null);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -127,16 +127,17 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
 
         await SetBusyAsync();
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.MoveTabDocumentSchemeJoinFormAsync(new() { Payload = new() { Id = PageJoinForm.Id, Direct = direct }, SenderActionUserId = CurrentUserSession.UserId });
-        IsBusyProgress = false;
-
+       
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
+            await SetBusyAsync(false);
             return;
         }
         UpdatePageActionHandle(null);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -160,13 +161,13 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
         await SetBusyAsync();
 
         ResponseBaseModel rest = await ConstructorRepo.CreateOrUpdateTabDocumentSchemeJoinFormAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
-        IsBusyProgress = false;
-
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
+            await SetBusyAsync(false);
             return;
         }
 
@@ -175,6 +176,7 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
         _is_table_origin = PageJoinForm.IsTable;
         JoinFormHoldHandle(IsEdited ? PageJoinForm.Id : 0);
         UpdatePageActionHandle(null);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -200,10 +202,10 @@ public partial class TabOfDocumentMainViewComponent : BlazorBusyComponentBaseAut
             LoggerRepo.LogWarning("Дозагрузка [Form] для [PageJoinForm]...");
             await SetBusyAsync();
             TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(PageJoinForm.FormId);
-            IsBusyProgress = false;
-
+            
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
             PageJoinForm.Form = rest.Response;
+            await SetBusyAsync(false);
         }
     }
 }

@@ -42,10 +42,10 @@ public abstract class BlazorBusyComponentBaseAuthModel : BlazorBusyComponentBase
 
         TResponseModel<UserInfoModel[]> getDataUser = await IdentityRepo.GetUsersOfIdentityAsync([_usr.UserId]);
         SnackBarRepo.ShowMessagesResponse(getDataUser.Messages);
-        if (getDataUser.Response is null || getDataUser.Response.Length != 1)
+        if (getDataUser.Response is null || !getDataUser.Response.Any(x => x.UserId == _usr.UserId))
             throw new Exception(JsonConvert.SerializeObject(getDataUser));
 
-        CurrentUserSession = getDataUser.Response[0];
+        CurrentUserSession = getDataUser.Response.First(x => x.UserId == _usr.UserId);
     }
 
     /// <inheritdoc/>

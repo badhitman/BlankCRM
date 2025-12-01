@@ -64,7 +64,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
         if (OrderId > 0)
         {
             await SetBusyAsync();
-            TResponseModel<RetailDocumentModelDB[]> res = await RetailRepo.RetailDocumentsGetAsync([OrderId]);
+            TResponseModel<RetailDocumentModelDB[]> res = await RetailRepo.RetailDocumentsGetAsync(new() { Ids = [OrderId] });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
             if (res.Response is not null && res.Response.Length == 1)

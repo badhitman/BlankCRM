@@ -102,15 +102,16 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
             StateHasChanged();
             ValueFieldSessionDocumentDataBaseModel req = new() { GroupByRowNum = row_num, JoinFormId = PageJoinForm.Id, SessionId = SessionDocument.Id };
             ResponseBaseModel rest = await ConstructorRepo.DeleteValuesFieldsByGroupSessionDocumentDataByRowNumAsync(req);
-            IsBusyProgress = false;
-
+            
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
             if (!rest.Success())
             {
                 SnackBarRepo.Error($"Ошибка E7BD5ADD-8CAF-434B-8AB8-94167CCB3337 Action: {rest.Message()}");
+                await SetBusyAsync(false);
                 return;
             }
             await ReloadSession();
+            await SetBusyAsync(false);
         });
     }
 
@@ -131,12 +132,12 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
 
         TResponseModel<int> rest = await ConstructorRepo.AddRowToTableAsync(row_obj);
-        IsBusyProgress = false;
-
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             SnackBarRepo.Error($"Ошибка B4812CDF-E4F0-46D5-981B-422DC3F966D7 Action: {rest.Message()}");
+            await SetBusyAsync(false);
             return;
         }
         uint row_num = (uint)rest.Response;
@@ -159,6 +160,7 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         };
         _ = await ConstructorRepo.DeleteValuesFieldsByGroupSessionDocumentDataByRowNumAsync(req);
         await ReloadSession();
+        await SetBusyAsync(false);
     }
 
     async Task ReloadSession()
@@ -172,12 +174,12 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
         TResponseModel<SessionOfDocumentDataModelDB> rest = string.IsNullOrWhiteSpace(SessionDocument.SessionToken)
         ? await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = SessionDocument.Id, IncludeExtra = false })
         : await ConstructorRepo.GetSessionDocumentDataAsync(SessionDocument.SessionToken);
-        IsBusyProgress = false;
-
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             SnackBarRepo.Error($"Ошибка 3755827F-4811-4927-8ABC-66896D12803B Action: {rest.Message()}");
+            await SetBusyAsync(false);
             return;
         }
 
@@ -185,7 +187,6 @@ public partial class ClientTableViewFormComponent : BlazorBusyComponentBaseModel
             SessionDocument.Reload(rest.Response);
 
         _table_kit_ref?.Update();
-
-        StateHasChanged();
+        await SetBusyAsync(false);
     }
 }

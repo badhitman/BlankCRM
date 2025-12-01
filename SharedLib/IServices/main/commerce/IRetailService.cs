@@ -19,7 +19,7 @@ public interface IRetailService
     public Task<TPaginationResponseModel<RetailDocumentModelDB>> SelectRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req, CancellationToken token = default);
     
     /// <inheritdoc/>
-    public Task<TResponseModel<RetailDocumentModelDB[]>> RetailDocumentsGetAsync(int[] reqIds, CancellationToken token = default);
+    public Task<TResponseModel<RetailDocumentModelDB[]>> RetailDocumentsGetAsync(RetailDocumentsGetRequestModel req, CancellationToken token = default);
 
 
 

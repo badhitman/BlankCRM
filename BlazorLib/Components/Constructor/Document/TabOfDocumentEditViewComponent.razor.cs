@@ -148,22 +148,24 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         await SetBusyAsync();
 
         TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.MoveTabOfDocumentSchemeAsync(new() { Payload = new() { Id = DocumentPage.Id, Direct = direct }, SenderActionUserId = CurrentUserSession.UserId });
-        IsBusyProgress = false;
-
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
+            await SetBusyAsync(false);
             return;
         }
         if (rest.Response is null)
         {
             SnackBarRepo.Error($"Ошибка 671CB343-ADD5-46AE-91F8-24175FBF2592 Content [rest.DocumentScheme is null]");
+            await SetBusyAsync(false);
             return;
         }
 
         UpdateDocumentHandle(rest.Response, DocumentPage);
+        await SetBusyAsync(false);
     }
 
     /// <summary>
@@ -182,16 +184,17 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         await SetBusyAsync();
 
         ResponseBaseModel rest = await ConstructorRepo.DeleteTabOfDocumentSchemeAsync(new() { Payload = DocumentPage.Id, SenderActionUserId = CurrentUserSession.UserId });
-        IsBusyProgress = false;
-
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
+            await SetBusyAsync(false);
             return;
         }
         DocumentReloadHandle();
+        await SetBusyAsync(false);
     }
 
     /// <summary>
@@ -228,18 +231,19 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
             },
             SenderActionUserId = CurrentUserSession.UserId
         });
-        IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
+            await SetBusyAsync(false);
             return;
         }
 
         SelectedFormForAdding = 0;
         await ReloadPage();
+        await SetBusyAsync(false);
     }
 
     /// <summary>
@@ -253,18 +257,19 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         await SetBusyAsync();
 
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.CreateOrUpdateTabOfDocumentSchemeAsync(new() { Payload = new EntryDescriptionOwnedModel() { Id = DocumentPage.Id, OwnerId = DocumentPage.OwnerId, Name = DocumentPage.Name, Description = DocumentPage.Description }, SenderActionUserId = CurrentUserSession.UserId });
-        IsBusyProgress = false;
-
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
+            await SetBusyAsync(false);
             return;
         }
         if (rest.Response is null)
         {
             SnackBarRepo.Error($"Ошибка 07653445-0B30-46CB-9B79-3B068BAB9AEB rest.Content.DocumentPage is null");
+            await SetBusyAsync(false);
             return;
         }
         int i = DocumentPage.Id;
@@ -276,6 +281,7 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
         IsInitDelete = false;
 
         SetHoldHandle(IsEdited);
+        await SetBusyAsync(false);
     }
 
     async Task ReloadPage()
@@ -285,24 +291,25 @@ public partial class TabOfDocumentEditViewComponent : BlazorBusyComponentBaseAut
 
         await SetBusyAsync();
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetTabOfDocumentSchemeAsync(DocumentPage.Id);
-        IsBusyProgress = false;
-
+       
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             SnackBarRepo.Error($"Ошибка 815BCE17-9180-4C27-8016-BEB5244A3454 Action: {rest.Message()}");
+            await SetBusyAsync(false);
             return;
         }
         if (rest.Response is null)
         {
             SnackBarRepo.Error($"Ошибка 5B879025-EC6E-4989-9A75-5844BD20DF0B Content [rest.Content.DocumentPage is null]");
+            await SetBusyAsync(false);
             return;
         }
 
         DocumentPage.JoinsForms = rest.Response?.JoinsForms;
         DocumentPage.Owner = rest.Response?.Owner;
         SetIdForPageHandle(DocumentPage.Id, DocumentPage);
-        StateHasChanged();
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

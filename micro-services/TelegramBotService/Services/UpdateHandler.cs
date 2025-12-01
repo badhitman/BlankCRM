@@ -57,6 +57,9 @@ public class UpdateHandler(
         if (message.From is null || (string.IsNullOrWhiteSpace(messageText) && string.IsNullOrEmpty(message.Caption) && message.Audio is null && message.Contact is null && message.Document is null && message.Photo is null && message.Video is null && message.Voice is null))
             return;
         string msg;
+
+        TResponseModel<CheckTelegramUserAuthModel> uc = await identityRepo.CheckTelegramUserAsync(CheckTelegramUserHandleModel.Build(message.From.Id, message.From.FirstName, message.From.LastName, message.From.Username, message.From.IsBot), cancellationToken);
+
         if (message.Chat.Type == ChatType.Private)
         {
             ResponseBaseModel? check_token = null;
@@ -118,8 +121,6 @@ public class UpdateHandler(
                 return;
             }
         }
-
-        TResponseModel<CheckTelegramUserAuthModel> uc = await identityRepo.CheckTelegramUserAsync(CheckTelegramUserHandleModel.Build(message.From.Id, message.From.FirstName, message.From.LastName, message.From.Username, message.From.IsBot), cancellationToken);
 
         if (uc.Response is not null)
         {

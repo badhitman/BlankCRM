@@ -18,7 +18,7 @@
         <MudTextField @bind-Value="customerInn" Label="Inn" Immediate></MudTextField>
     </MudItem>
     <MudItem xs="3" Class="mt-1">
-        <UserSelectInputComponent SelectHandleAction="SelectUserHandler" @ref=_usRef />
+        <UserSelectInputComponent SelectHandleAction="SelectUserHandler" @ref=_usRef StyleElement="max-width: 450px;" />
     </MudItem>
     <MudItem xs="1">
         <MudFab Disabled=@(string.IsNullOrWhiteSpace(customerName) && string.IsNullOrWhiteSpace(customerInn))
@@ -65,7 +65,7 @@
             <MudTextField @bind-Value="context.Inn" Required Label="INN" Immediate />
         </MudTd>
         <MudTd DataLabel="User">
-            <UserSelectInputComponent SelectHandleAction="SelectUserHandler" SelectedUser="@context.UserIdentityId" @ref=_usRef />
+            <UserSelectInputComponent SelectHandleAction="SelectUserHandler" SelectedUser="@context.UserIdentityId" @ref=_usRef StyleElement="max-width: 450px;" />
         </MudTd>
         <MudTd DataLabel="BankInterface">
             <MudSelect @bind-Value="context.BankIdentifyType" Label="Identify type" Variant="Variant.Text" ShrinkLabel>

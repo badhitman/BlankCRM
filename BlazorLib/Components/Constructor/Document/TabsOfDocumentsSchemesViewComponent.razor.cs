@@ -64,8 +64,7 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
         };
         await SetBusyAsync();
         TPaginationResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.SelectFormsAsync(reqForms);
-        IsBusyProgress = false;
-
+        
         if (rest.TotalRowsCount > rest.PageSize)
             SnackBarRepo.Error($"Записей больше: {rest.TotalRowsCount}");
 
@@ -73,6 +72,7 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
             throw new Exception($"Ошибка 973D18EE-ED49-442D-B12B-CDC5A32C8A51 rest.Content.Elements is null");
 
         AllForms = rest.Response;
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -83,20 +83,22 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
             await SetBusyAsync();
             StateHasChanged();
             TResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetDocumentSchemeAsync(DocumentScheme.Id);
-            IsBusyProgress = false;
+            
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
             if (rest.Response is null)
             {
                 SnackBarRepo.Error($"Ошибка A3D19BFC-38BB-4932-85DD-54C306D8C83E rest.Content.DocumentScheme");
+                await SetBusyAsync(false);
                 return;
             }
             if (!rest.Success())
             {
                 SnackBarRepo.Error($"Ошибка 55685D9E-E9D0-4937-A727-5BCC9FAD4381 Action: {rest.Message()}");
+                await SetBusyAsync(false);
                 return;
             }
             DocumentScheme = rest.Response;
-            StateHasChanged();
+            await SetBusyAsync(false);
         });
     }
 

@@ -57,20 +57,24 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
 
     /// <inheritdoc/>
     public MudTable<IssueHelpDeskModel> TableRef = default!;
+    bool doneLoadTable;
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-        SetTab(this);
         await SetBusyAsync();
+        await base.OnInitializedAsync();
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
+        SetTab(this);
         if (string.IsNullOrWhiteSpace(UserIdentityId))
             UserIdentityId = CurrentUserSession.UserId;
 
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
+        doneLoadTable = true;
+        if (TableRef is not null)
+            await TableRef.ReloadServerData();
     }
 
     /// <summary>
@@ -78,16 +82,15 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
     /// </summary>
     private async Task<TableData<IssueHelpDeskModel>> ServerReload(TableState state, CancellationToken token)
     {
-        if (CurrentUserSession is null)
+        if (!doneLoadTable || CurrentUserSession is null)
             return new() { TotalItems = 0, Items = [] };
 
         await SetBusyAsync(token: token);
-        await Task.Delay(1, token);
         TPaginationRequestStandardModel<SelectIssuesRequestModel> req = new()
         {
             Payload = new()
             {
-                IdentityUsersIds = [CurrentUserSession.UserId],
+                IdentityUsersIds = [UserIdentityId!],
                 JournalMode = JournalMode,
                 SearchQuery = searchString,
                 UserArea = UserArea,
@@ -101,7 +104,7 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
         TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>> rest = await HelpDeskRepo
              .IssuesSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId }, token);
 
-        IsBusyProgress = false;
+        await SetBusyAsync(false, token);
         if (rest.Response?.Response is null)
             return new() { TotalItems = 0, Items = [] }; ;
 
@@ -121,7 +124,7 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync();
 
         TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersOfIdentityAsync(_ids);
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is null)
             return;

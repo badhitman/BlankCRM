@@ -1,6 +1,6 @@
 @inherits LazySelectorComponent<UserInfoModel>
 
-<div style="max-width: 450px;">
+<div style="@StyleElement">
     <div id="@toggleBtnId" class="input-group mb-3">
         <button @onclick="EditToggle" title="Установить" disabled="@IsBusyProgress" class="btn btn-outline-secondary bi bi-pencil" type="button">
             @if(IsBusyProgress)

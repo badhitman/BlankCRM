@@ -15,7 +15,7 @@ public class EntryUpdatedModel : EntryModel
     /// <summary>
     /// Дата последнего обновления
     /// </summary>
-    public DateTime LastUpdatedAtUTC { get; set; }
+    public DateTime? LastUpdatedAtUTC { get; set; }
 
     /// <summary>
     /// Дата создания

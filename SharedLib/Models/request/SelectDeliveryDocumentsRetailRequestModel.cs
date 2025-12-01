@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <summary>
-/// SelectDeliveryDocumentsRequestModel
+/// SelectDeliveryDocumentsRetailRequestModel
 /// </summary>
 public class SelectDeliveryDocumentsRetailRequestModel
 {
@@ -13,4 +13,7 @@ public class SelectDeliveryDocumentsRetailRequestModel
     /// UserIdentityId
     /// </summary>
     public string[]? RecipientsFilterIdentityId { get; set; }
+
+    /// <inheritdoc/>
+    public int? FilterOrderId { get; set; }
 }

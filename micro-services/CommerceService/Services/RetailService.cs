@@ -16,20 +16,23 @@ public class RetailService(IIdentityTransmission identityRepo,
     IDbContextFactory<CommerceContext> commerceDbFactory) : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<RetailDocumentModelDB[]>> RetailDocumentsGetAsync(int[] reqIds, CancellationToken token = default)
+    public async Task<TResponseModel<RetailDocumentModelDB[]>> RetailDocumentsGetAsync(RetailDocumentsGetRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<RetailDocumentModelDB>? q = context.RetailOrders
+            .Where(x => req.Ids.Contains(x.Id));
+
         TResponseModel<RetailDocumentModelDB[]> res = new()
         {
-            Response = await context.RetailOrders
-            .Where(x => reqIds.Contains(x.Id))
-            .Include(x => x.Rows)
-            .Include(x => x.DeliveryDocuments)
-            .Include(x => x.PaymentsLinks)
-            .ToArrayAsync(cancellationToken: token)
+            Response = !req.IncludeDataExternal
+                ? await q.ToArrayAsync(cancellationToken: token)
+                : await q.Include(x => x.Rows)
+                         .Include(x => x.DeliveryDocuments)
+                         .Include(x => x.PaymentsLinks)
+                         .ToArrayAsync(cancellationToken: token)
         };
 
-        if (res.Response.Length != reqIds.Length)
+        if (res.Response.Length != req.Ids.Length)
             res.AddError("Некоторые документы не найдены");
 
         return res;
@@ -324,21 +327,10 @@ public class RetailService(IIdentityTransmission identityRepo,
         IQueryable<DeliveryDocumentRetailModelDB>? q = context.DeliveryRetailDocuments.AsQueryable();
 
         if (req.Payload?.RecipientsFilterIdentityId is not null && req.Payload.RecipientsFilterIdentityId.Length != 0)
-        {
-            TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync(req.Payload.RecipientsFilterIdentityId, token);
-            if (!user.Success())
-            {
-                return new()
-                {
-                    Status = new()
-                    {
-                        Messages = user.Messages
-                    }
-                };
-            }
+            q = q.Where(x => req.Payload.RecipientsFilterIdentityId.Contains(x.RecipientIdentityUserId));
 
-            q = q.Where(x => req.Payload.RecipientsFilterIdentityId.Any(y => y == x.RecipientIdentityUserId));
-        }
+        if (req.Payload?.FilterOrderId is not null && req.Payload.FilterOrderId > 0)
+            q = q.Where(x => req.Payload.FilterOrderId == x.OrderId);
 
         IQueryable<DeliveryDocumentRetailModelDB>? pq = q
             .Skip(req.PageNum * req.PageSize)

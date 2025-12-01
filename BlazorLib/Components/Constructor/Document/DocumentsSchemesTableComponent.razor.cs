@@ -51,7 +51,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
         await SetBusyAsync();
 
         ResponseBaseModel rest = await ConstructorRepo.DeleteDocumentSchemeAsync(new() { Payload = questionnaire_id, SenderActionUserId = CurrentUserSession.UserId });
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
@@ -76,7 +76,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
         await SetBusyAsync(token: token);
 
         data = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = req, ProjectId = ParentFormsPage.MainProject.Id }, token);
-        IsBusyProgress = false;
+        await SetBusyAsync(false, token);
 
         if (data.Response is null)
         {

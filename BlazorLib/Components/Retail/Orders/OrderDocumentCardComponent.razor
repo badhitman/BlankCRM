@@ -1,12 +1,10 @@
 ﻿@using static SharedLib.GlobalStaticConstantsRoutes
+
 @inherits BlazorBusyComponentBaseAuthModel
-
-<h3>OrderDocumentCardComponent</h3>
-
 
 @if (IsBusyProgress)
 {
-
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
 }
 else if (currentDocument is null)
 {
@@ -23,7 +21,7 @@ else
 {
     <div class="card">
         <div class="card-body">
-            <div class="vstack gap-3">
+            <div class="row g-3">
                 <RubricInputComponent SelectRubricsHandle="WarehouseSelectAction"
                                       ModeSelectingRubrics=ModesSelectRubricsEnum.SelectAny
                                       RubricInitial="@currentDocument.WarehouseId"
@@ -44,27 +42,46 @@ else
 
                 <TinyMCE.Blazor.Editor @bind-Value="currentDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />
                 <hr />
-
+                <div class="col-md-6">
+                    <label for="inputName4" class="form-label">Name</label>
+                    <input type="text"
+                           class="form-control"
+                           id="inputName4"
+                           @bind-value="currentDocument.Name"
+                           @bind-value:event="oninput">
+                </div>
+                <div class="col-md-6">
+                    <label for="inputExternalDocumentId" class="form-label">Внешний код</label>
+                    <input type="text"
+                           class="form-control"
+                           id="inputExternalDocumentId"
+                           @bind-value="currentDocument.ExternalDocumentId"
+                           @bind-value:event="oninput">
+                </div>
             </div>
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+                <MudTabPanel Text="Заказ">
+                    @currentDocument.Rows
+                </MudTabPanel>
+                <MudTabPanel Text="Отгрузка">
+                    @currentDocument.DeliveryDocuments
+                </MudTabPanel>
+                <MudTabPanel Text="Оплата">
+                    @currentDocument.PaymentsLinks
+                </MudTabPanel>
+            </MudTabs>
 
-            @* 
-            <p>@currentDocument.LastUpdatedAtUTC</p>
-
-            <p>@currentDocument.Name</p>
-            <p>@currentDocument.HelpDeskId</p>
-            <p>@currentDocument.ExternalDocumentId</p>
-            <p>@currentDocument.Description</p>
-
-            <p>@currentDocument.Rows</p>
-            <p>@currentDocument.DeliveryDocuments</p>
-            <p>@currentDocument.PaymentsLinks</p> *@
-
-            <p>Создан: @currentDocument.CreatedAtUTC</p>
-
-            @if (authorUser is not null)
-            {
-                <p title="Автор документа">Создал: @authorUser.ToString()</p>
-            }
+            <p class="card-text">
+                @if (authorUser is not null)
+                {
+                    <small title="Автор документа" class="text-body-secondary">Автор: @authorUser.ToString()</small>
+                    <small title="Дата создания документа" class="text-body-secondary">Дата создания: @currentDocument.CreatedAtUTC.GetCustomTime()</small>
+                    @if (currentDocument.LastUpdatedAtUTC is not null && currentDocument.LastUpdatedAtUTC != default)
+                    {
+                        <small title="Автор документа" class="text-body-secondary">Автор: @currentDocument.LastUpdatedAtUTC.Value.GetCustomTime()</small>
+                    }
+                }
+            </p>
         </div>
     </div>
 

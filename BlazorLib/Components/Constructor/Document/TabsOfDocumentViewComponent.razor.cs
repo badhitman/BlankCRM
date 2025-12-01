@@ -50,24 +50,24 @@ public partial class TabsOfDocumentViewComponent : BlazorBusyComponentBaseModel
         _ = InvokeAsync(async () =>
         {
             await SetBusyAsync();
-            StateHasChanged();
             TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetTabOfDocumentSchemeAsync(TabOfDocumentScheme.Id);
-            IsBusyProgress = false;
-
+           
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
             if (!rest.Success())
             {
                 SnackBarRepo.Error($"Ошибка 16188CA3-EC20-4743-A31C-DA497CABDEB5 Action: {rest.Message()}");
+                await SetBusyAsync(false);
                 return;
             }
             if (rest.Response is null)
             {
                 SnackBarRepo.Error($"Ошибка E7427B3A-68CB-4560-B2E0-4AF69F2EDA72 [rest.Content.DocumentPage is null]");
+                await SetBusyAsync(false);
                 return;
             }
             TabOfDocumentScheme = rest.Response;
             TabOfDocumentScheme.JoinsForms = TabOfDocumentScheme.JoinsForms?.OrderBy(x => x.SortIndex).ToList();
-            StateHasChanged();
+            await SetBusyAsync(false);
         });
     }
 
@@ -101,10 +101,10 @@ public partial class TabsOfDocumentViewComponent : BlazorBusyComponentBaseModel
             SnackBarRepo.Info($"Дозагрузка `{nameof(TabOfDocumentScheme.JoinsForms)}` в `{nameof(TabOfDocumentScheme)} ['{TabOfDocumentScheme.Name}' #{TabOfDocumentScheme.Id}]`");
             await SetBusyAsync();
             TResponseModel<TabOfDocumentSchemeConstructorModelDB> rest = await ConstructorRepo.GetTabOfDocumentSchemeAsync(TabOfDocumentScheme.Id);
-            IsBusyProgress = false;
-
+            
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
             TabOfDocumentScheme.JoinsForms = rest.Response?.JoinsForms;
+            await SetBusyAsync(false);
         }
     }
 }

@@ -127,16 +127,13 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
     /// <inheritdoc/>
     protected override async void OnInitialized()
     {
+        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{Routes.ISSUE_CONTROLLER_NAME}/{Routes.MESSAGE_CONTROLLER_NAME}-{Routes.IMAGE_ACTION_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={Message?.Id}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={Issue.Id}";
+        editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
+
         await base.OnInitializedAsync();
 
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
-
-        images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{Routes.ISSUE_CONTROLLER_NAME}/{Routes.MESSAGE_CONTROLLER_NAME}-{Routes.IMAGE_ACTION_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={Message?.Id}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={Issue.Id}";
-        editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
-
-        if (Message is null || Message.Id < 1)
-            IsEditMode = true;
 
         TextMessage = Message?.MessageText;
 
@@ -151,6 +148,9 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
     /// <inheritdoc/>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (Message is null || Message.Id < 1)
+            IsEditMode = true;
+
         if (!IsEditMode)
             await JS.InvokeAsync<int>("FrameHeightUpdate.Reload", _guid);
     }

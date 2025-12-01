@@ -103,11 +103,11 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
         await SetBusyAsync();
         
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.SetValueFieldSessionDocumentDataAsync(req);
-        IsBusyProgress = false;
-
+        
         if (!rest.Success())
         {
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
+            await SetBusyAsync(false);
             return;
         }
         if (rest.Response is null)
@@ -119,5 +119,6 @@ public abstract class FieldComponentBaseModel : BlazorBusyComponentBaseModel, ID
             .Where(x => x?.DomID.Equals(DomID, StringComparison.Ordinal) != true)
             .ToList()
             .ForEach(x => x?.StateHasChanged());
+        await SetBusyAsync(false);
     }
 }

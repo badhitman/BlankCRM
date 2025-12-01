@@ -47,10 +47,10 @@ public partial class DoneClientViewComponent : BlazorBusyComponentBaseModel
 
         await SetBusyAsync();
         ResponseBaseModel rest = await ConstructorRepo.SetDoneSessionDocumentDataAsync(SessionDocument.SessionToken);
-        IsBusyProgress = false;
-
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Success())
             SessionDocument.SessionStatus = SessionsStatusesEnum.Sended;
+        await SetBusyAsync(false);
     }
 }

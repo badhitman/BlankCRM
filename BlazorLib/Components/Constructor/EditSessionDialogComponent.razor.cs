@@ -107,22 +107,25 @@ public partial class EditSessionDialogComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.UpdateOrCreateSessionDocumentAsync(session_origin);
-        IsBusyProgress = false;
+        
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             SnackBarRepo.Error($"Ошибка 0D394723-0AEC-4CF0-9005-32CB3C39F17C Action: {rest.Message()}");
+            await SetBusyAsync(false);
             return;
         }
 
         if (rest.Response is null)
         {
             SnackBarRepo.Error($"Ошибка C4F58BEC-547A-4F61-9D40-D9B6F8FC051D rest.Content.Form is null");
+            await SetBusyAsync(false);
             return;
         }
 
         Session = rest.Response;
         ResetForm();
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

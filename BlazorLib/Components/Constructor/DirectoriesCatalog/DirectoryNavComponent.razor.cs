@@ -59,7 +59,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
                     await SetBusyAsync();
 
                     TResponseModel<EntryDescriptionModel> rest = await ConstructorRepo.GetDirectoryAsync(value);
-                    IsBusyProgress = false;
+                    await SetBusyAsync(false);
 
                     if (rest.Response is null)
                         throw new Exception();
@@ -116,7 +116,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync();
 
         ResponseBaseModel rest = await ConstructorRepo.DeleteDirectoryAsync(new() { Payload = SelectedDirectoryId, SenderActionUserId = CurrentUserSession.UserId });
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         if (!rest.Success())
@@ -161,7 +161,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync();
 
         TResponseModel<EntryDescriptionModel> res = await ConstructorRepo.GetDirectoryAsync(_selected_dir_id);
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
 
         if (res.Response is null)
             throw new Exception();
@@ -186,7 +186,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
             Payload = EntryConstructedModel.Build(directoryObject, ParentFormsPage.MainProject.Id, Description),
             SenderActionUserId = CurrentUserSession.UserId
         });
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         selectedDirectory.Description = Description;
         if (!rest.Success())

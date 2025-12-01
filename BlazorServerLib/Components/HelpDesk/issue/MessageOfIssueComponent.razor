@@ -31,24 +31,33 @@
             {
                 <span @onclick="Cancel" title="Cancel" class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-warning bi bi-x-circle-fill p-1" style="font-size: large;cursor:pointer;"><span class="visually-hidden">unread messages</span></span>
             }
-            <TinyMCE.Blazor.Editor @bind-Value="TextMessage" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(IsBusyProgress)" />
+            <TinyMCE.Blazor.Editor @bind-Value="TextMessage"
+                                   ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc"
+                                   Conf="@editorConf"
+                                   Disable="@(IsBusyProgress)" />
+
             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
-                <button @onclick="SaveMessage" disabled="@(!CanSave || IsBusyProgress)" class="btn btn-@(!CanSave ? "outline-secondary" : "success") me-md-2 btn-sm" type="button">@(IsCreatingNewMessage ? "Send" : "Save")</button>
+                <button @onclick="SaveMessage"
+                        disabled="@(!CanSave || IsBusyProgress)"
+                        class="btn btn-@(!CanSave ? "outline-secondary" : "success") me-md-2 btn-sm"
+                        type="button">
+                    @(IsCreatingNewMessage ? "Send" : "Save")
+                </button>
                 <button @onclick="Cancel" disabled="@IsBusyProgress" class="btn btn-primary btn-sm" type="button">Cancel</button>
             </div>
         }
         else
         {
             <iframe id="@($"frame:{_guid}")" srcdoc="@($"<html lang=\"ru\" data-bs-theme=\"dark\"><head>" +
-                "<meta charset=\"utf-8\">" +
-                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
-                "<link href=\"_content/MudBlazor/MudBlazor.min.css\" rel=\"stylesheet\">" +
-                $"<link rel=\"stylesheet\" href=\"/lib/bootstrap-icons/font/bootstrap-icons.min.css?version={GlobalStaticConstants.InitSalt}\">" +
-                $"<link rel=\"stylesheet\" href=\"/lib/jqueryui/jquery-ui.min.css?version={GlobalStaticConstants.InitSalt}\">" +
-                $"<link rel='stylesheet' href='/lib/bootstrap/css/bootstrap.min.css?version={GlobalStaticConstants.InitSalt}'>" +
-                $"</head><body id='{_guid}'><div id='body-wrap-area'>{DescriptionHtml}</div>" +
-                @* $"<script src=\"/lib/jquery/jquery.min.js?version={GlobalStaticConstants.InitSalt}\"></script>" + *@
-                "</body></html>")" />
-        }
+                                                                                                          "<meta charset=\"utf-8\">" +
+                                                                                                          "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                                                                                                          "<link href=\"_content/MudBlazor/MudBlazor.min.css\" rel=\"stylesheet\">" +
+                                                                                                          $"<link rel=\"stylesheet\" href=\"/lib/bootstrap-icons/font/bootstrap-icons.min.css?version={GlobalStaticConstants.InitSalt}\">" +
+                                                                                                          $"<link rel=\"stylesheet\" href=\"/lib/jqueryui/jquery-ui.min.css?version={GlobalStaticConstants.InitSalt}\">" +
+                                                                                                          $"<link rel='stylesheet' href='/lib/bootstrap/css/bootstrap.min.css?version={GlobalStaticConstants.InitSalt}'>" +
+                                                                                                          $"</head><body id='{_guid}'><div id='body-wrap-area'>{DescriptionHtml}</div>" +
+                                                                                                                                                                                                                                                                     @* $"<script src=\"/lib/jquery/jquery.min.js?version={GlobalStaticConstants.InitSalt}\"></script>" + *@
+                                                                                                          "</body></html>")" />
+                }
     </div>
 </div>

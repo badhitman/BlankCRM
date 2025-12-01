@@ -355,7 +355,7 @@ public static partial class GlobalTools
     /// <summary>
     /// Транслит названия в латиницу CamelCase
     /// </summary>
-    public static string TranslitToSystemName(string str)
+    public static string TranslateToSystemName(string str)
     {
         str = Regex.Replace(str, @"[^\w\d_]+", " ").Trim();
 

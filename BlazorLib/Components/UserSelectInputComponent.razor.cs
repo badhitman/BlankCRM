@@ -4,7 +4,6 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
-using BlazorLib;
 
 namespace BlazorLib.Components;
 
@@ -22,6 +21,9 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
     [Parameter]
     public string? SelectedUser { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public string? StyleElement { get; set; }
 
     /// <inheritdoc/>
     public override async Task LoadPartData()

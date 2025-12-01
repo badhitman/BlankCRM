@@ -57,9 +57,7 @@ public partial class ClientStandardViewFormComponent : BlazorBusyComponentBaseMo
             await SetBusyAsync();
 
             Directories = await ConstructorRepo.ReadDirectoriesAsync([.. Form.FieldsDirectoriesLinks.Select(x => x.DirectoryId).Distinct()]);
-            IsBusyProgress = false;
+            await SetBusyAsync(false);
         }
-
-        StateHasChanged();
     }
 }
