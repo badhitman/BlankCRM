@@ -67,6 +67,7 @@ public static partial class GlobalStaticConstantsTransmission
         /// </summary>
         public readonly static string ConfirmChangePhoneUserReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, Routes.USER_CONTROLLER_NAME, $"{Routes.CHANGE_ACTION_NAME}-{Routes.PHONE_CONTROLLER_NAME}", Routes.CONFIRM_ACTION_NAME);
 
+        /// <inheritdoc/>
         public readonly static string InitChangePhoneUserReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, Routes.USER_CONTROLLER_NAME, $"{Routes.CHANGE_ACTION_NAME}-{Routes.PHONE_CONTROLLER_NAME}", Routes.INITIAL_ACTION_NAME);
 
         /// <summary>

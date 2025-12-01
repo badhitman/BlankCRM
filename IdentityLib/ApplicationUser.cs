@@ -70,6 +70,7 @@ public class ApplicationUser : IdentityUser
             userName: app_user.UserName ?? "",
             email: app_user.Email,
             phoneNumber: app_user.PhoneNumber,
+            phoneNumberRequestChange: app_user.RequestChangePhone,
             telegramId: app_user.ChatTelegramId,
             emailConfirmed: app_user.EmailConfirmed,
             lockoutEnd: app_user.LockoutEnd,

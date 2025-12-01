@@ -13,6 +13,9 @@ public record UserInfoMainModel
     /// <inheritdoc/>
     public string? PhoneNumber { get; set; }
 
+    /// <inheritdoc/>
+    public string? RequestChangePhone { get; set; }
+
     /// <summary>
     /// FirstName
     /// </summary>

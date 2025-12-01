@@ -53,7 +53,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<SendPasswordResetLinkReceive, SendPasswordResetLinkRequestModel, ResponseBaseModel>()
             .RegisterMqListener<TryAddRolesToUserReceive, UserRolesModel, ResponseBaseModel>()
             .RegisterMqListener<ChangePasswordForUserReceive, IdentityChangePasswordModel, ResponseBaseModel>()
-            .RegisterMqListener<ConfirmChangePhoneUserReceive, TAuthRequestModel<InitChangePhoneUserRequestModel>, ResponseBaseModel>()
+            .RegisterMqListener<ConfirmChangePhoneUserReceive, TAuthRequestModel<ChangePhoneUserRequestModel>, ResponseBaseModel>()
             .RegisterMqListener<InitChangePhoneUserReceive, TAuthRequestModel<string>, ResponseBaseModel>()
 
             .RegisterMqListener<ChangeEmailForUserReceive, IdentityEmailTokenModel, ResponseBaseModel>()

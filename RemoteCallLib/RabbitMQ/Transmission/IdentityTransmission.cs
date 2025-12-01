@@ -16,7 +16,7 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InitChangePhoneUserReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<InitChangePhoneUserRequestModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<ChangePhoneUserRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ConfirmChangePhoneUserReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

@@ -37,42 +37,93 @@ public class IdentityTools(
     public async Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestModel<string> req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
-        ApplicationUser? user_db;
-        if (!string.IsNullOrWhiteSpace(req.Payload))
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId) || !await identityContext.Users.AnyAsync(x => x.Id == req.SenderActionUserId, cancellationToken: token))
+            return ResponseBaseModel.CreateError("Авторство запроса не определено или пользователь не найден в БД");
+
+        if (string.IsNullOrWhiteSpace(req.Payload))
         {
-            bool _plus = req.Payload.StartsWith("+");
-            req.Payload = Regex.Replace(req.Payload, @"[^\d]", "");
+            await identityContext.Users
+                .Where(x => x.Id == req.SenderActionUserId)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.PhoneNumber, "")
+                    .SetProperty(p => p.RequestChangePhone, "")
+                    .SetProperty(p => p.PhoneNumberConfirmed, false), cancellationToken: token);
 
-            user_db = await identityContext.Users.FirstOrDefaultAsync(x => x.Id != req.SenderActionUserId && (x.PhoneNumber == req.Payload || x.PhoneNumber == $"+{req.Payload}"), cancellationToken: token);
-            if (user_db is not null)
-                return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
-
-            if (_plus)
-                req.Payload = $"+{req.Payload}";
+            return ResponseBaseModel.CreateSuccess("Номер телефона успешно удалён");
         }
 
-        throw new NotImplementedException();
+        if (!GlobalTools.IsPhoneNumber(req.Payload))
+            return ResponseBaseModel.CreateError("Телефон должен быть в формате: +79994440011 (можно без +)");
+
+        bool _plus = req.Payload.StartsWith('+');
+        req.Payload = Regex.Replace(req.Payload, @"[^\d]", "");
+        if (_plus)
+            req.Payload = $"+{req.Payload}";
+
+        if (await identityContext.Users.AnyAsync(x => x.Id != req.SenderActionUserId && (x.PhoneNumber == req.Payload || x.PhoneNumber == $"+{req.Payload}"), cancellationToken: token))
+            return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
+
+        await identityContext.Users
+            .Where(x => x.Id == req.SenderActionUserId)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.RequestChangePhone, req.Payload), cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Запрос на изменение номера сформирован");
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<InitChangePhoneUserRequestModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<ChangePhoneUserRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("Ошибка запроса: Payload is null");
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return ResponseBaseModel.CreateError("Авторство запроса не определено");
+
+        TResponseModel<UserInfoModel[]> getAdminUser = await GetUsersOfIdentityAsync([req.SenderActionUserId], token);
+        if (!getAdminUser.Success())
+            return new() { Messages = getAdminUser.Messages };
+
+        if (getAdminUser.Response is null || getAdminUser.Response.Length != 1)
+            return ResponseBaseModel.CreateError("Пользователь (автор запроса) не найден в БД");
+
+        if (!getAdminUser.Response[0].IsAdmin && getAdminUser.Response[0].Roles?.Contains(GlobalStaticConstantsRoles.Roles.RetailManage) != true && getAdminUser.Response[0].Roles?.Contains(GlobalStaticConstantsRoles.Roles.CommerceManager) != true)
+            return ResponseBaseModel.CreateError("Недостаточно прав для операции");
+
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
-        ApplicationUser? user_db;
-        if (!string.IsNullOrWhiteSpace(req.Payload?.PhoneNum))
+
+        if (string.IsNullOrWhiteSpace(req.Payload.PhoneNum))
         {
-            bool _plus = req.Payload.PhoneNum.StartsWith("+");
-            req.Payload.PhoneNum = Regex.Replace(req.Payload.PhoneNum, @"[^\d]", "");
+            await identityContext.Users
+                .Where(x => x.Id == req.Payload.UserId)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.PhoneNumber, "")
+                    .SetProperty(p => p.RequestChangePhone, "")
+                    .SetProperty(p => p.PhoneNumberConfirmed, false), cancellationToken: token);
 
-            user_db = await identityContext.Users.FirstOrDefaultAsync(x => x.Id != req.SenderActionUserId && (x.PhoneNumber == req.Payload.PhoneNum || x.PhoneNumber == $"+{req.Payload.PhoneNum}"), cancellationToken: token);
-            if (user_db is not null)
-                return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
-
-            if (_plus)
-                req.Payload.PhoneNum = $"+{req.Payload.PhoneNum}";
+            return ResponseBaseModel.CreateSuccess("Номер телефона удалён");
         }
 
-        throw new NotImplementedException();
+        if (!GlobalTools.IsPhoneNumber(req.Payload.PhoneNum))
+            return ResponseBaseModel.CreateError("Телефон должен быть в формате: +79994440011 (можно без +)");
+
+        bool _plus = req.Payload.PhoneNum.StartsWith('+');
+        req.Payload.PhoneNum = Regex.Replace(req.Payload.PhoneNum, @"[^\d]", "");
+        if (_plus)
+            req.Payload.PhoneNum = $"+{req.Payload.PhoneNum}";
+
+        if (await identityContext.Users.AnyAsync(x => x.Id != req.Payload.UserId && (x.PhoneNumber == req.Payload.PhoneNum || x.PhoneNumber == $"+{req.Payload.PhoneNum}"), cancellationToken: token))
+            return ResponseBaseModel.CreateError("Пользователь с таким телефоном уже существует");
+
+        await identityContext.Users
+            .Where(x => x.Id == req.Payload.UserId)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.PhoneNumber, req.Payload.PhoneNum)
+                .SetProperty(p => p.RequestChangePhone, req.Payload.PhoneNum)
+                .SetProperty(p => p.PhoneNumberConfirmed, true), cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Номер успешно установлен");
     }
 
     /// <inheritdoc/>
@@ -494,6 +545,7 @@ public class IdentityTools(
                 LockoutEnabled = x.LockoutEnabled,
                 LockoutEnd = x.LockoutEnd,
                 PhoneNumber = x.PhoneNumber,
+                RequestChangePhone = x.RequestChangePhone,
                 Surname = x.LastName,
                 TelegramId = x.ChatTelegramId,
                 UserName = x.UserName ?? "",
@@ -574,6 +626,7 @@ public class IdentityTools(
                 LockoutEnabled = app_user.LockoutEnabled,
                 LockoutEnd = app_user.LockoutEnd,
                 PhoneNumber = app_user.PhoneNumber,
+                RequestChangePhone = app_user.RequestChangePhone,
                 UserName = app_user.UserName ?? "",
                 TelegramId = app_user.ChatTelegramId,
                 Roles = roles_for_user(app_user.Id)?.ToList(),
@@ -652,6 +705,7 @@ public class IdentityTools(
                 LockoutEnabled = app_user.LockoutEnabled,
                 LockoutEnd = app_user.LockoutEnd,
                 PhoneNumber = app_user.PhoneNumber,
+                RequestChangePhone = app_user.RequestChangePhone,
                 UserName = app_user.UserName ?? "",
                 TelegramId = app_user.ChatTelegramId,
                 Roles = roles_for_user(app_user.Id)?.ToList(),
@@ -735,13 +789,6 @@ public class IdentityTools(
                 .ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.NormalizedPatronymicUpper, req.Patronymic.ToUpper()), cancellationToken: token);
         }
-
-        //if (string.IsNullOrWhiteSpace(req.PhoneNum) && req.PhoneNum != user_db.PhoneNumber)
-        //{
-        //    await q
-        //        .ExecuteUpdateAsync(set => set
-        //            .SetProperty(p => p.PhoneNumber, req.PhoneNum), cancellationToken: token);
-        //}
 
         if (req.UpdateAddress)
         {
@@ -913,6 +960,7 @@ public class IdentityTools(
                 x.UserName,
                 x.Email,
                 x.PhoneNumber,
+                x.RequestChangePhone,
                 x.ChatTelegramId,
                 x.EmailConfirmed,
                 x.LockoutEnd,
@@ -934,7 +982,7 @@ public class IdentityTools(
 
         return new()
         {
-            Response = users.Select(x => UserInfoModel.Build(userId: x.Id, userName: x.UserName ?? "", email: x.Email, phoneNumber: x.PhoneNumber, telegramId: x.ChatTelegramId, emailConfirmed: x.EmailConfirmed, lockoutEnd: x.LockoutEnd, lockoutEnabled: x.LockoutEnabled, accessFailedCount: x.AccessFailedCount, firstName: x.FirstName, lastName: x.LastName, roles: roles.Where(y => y.UserId == x.Id).Select(z => z.RoleName).ToArray(), claims: claims.Where(o => o.UserId == x.Id).Select(q => new EntryAltModel() { Id = q.ClaimType, Name = q.ClaimValue }).ToArray())).ToList(),
+            Response = users.Select(x => UserInfoModel.Build(userId: x.Id, userName: x.UserName ?? "", email: x.Email, phoneNumber: x.PhoneNumber, phoneNumberRequestChange: x.RequestChangePhone, telegramId: x.ChatTelegramId, emailConfirmed: x.EmailConfirmed, lockoutEnd: x.LockoutEnd, lockoutEnabled: x.LockoutEnabled, accessFailedCount: x.AccessFailedCount, firstName: x.FirstName, lastName: x.LastName, roles: roles.Where(y => y.UserId == x.Id).Select(z => z.RoleName).ToArray(), claims: claims.Where(o => o.UserId == x.Id).Select(q => new EntryAltModel() { Id = q.ClaimType, Name = q.ClaimValue }).ToArray())).ToList(),
             TotalRowsCount = total,
             PageNum = req.PageNum,
             PageSize = req.PageSize,
@@ -995,6 +1043,7 @@ public class IdentityTools(
             LockoutEnabled = user.LockoutEnabled,
             LockoutEnd = user.LockoutEnd,
             PhoneNumber = user.PhoneNumber,
+            RequestChangePhone = user.RequestChangePhone,
             TelegramId = user.ChatTelegramId,
             Roles = [.. (await userManager.GetRolesAsync(user))],
             Claims = claims.Select(x => new EntryAltModel() { Id = x.Type, Name = x.Value }).ToArray(),

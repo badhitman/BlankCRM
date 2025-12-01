@@ -60,6 +60,9 @@ public partial class ProjectsListComponent : BlazorBusyComponentBaseAuthModel
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
+        if (ProjectsOfUser is null)
+            throw new Exception("ProjectsOfUser is null");
+
         int i = 1;
         string name_new_project = $"Новый проект {i}";
         while (ProjectsOfUser.Any(x => x.Name.Equals(name_new_project, StringComparison.OrdinalIgnoreCase)))

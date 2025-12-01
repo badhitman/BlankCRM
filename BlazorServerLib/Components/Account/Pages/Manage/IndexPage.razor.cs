@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
 using BlazorLib;
+using MudBlazor;
 using SharedLib;
 
 namespace BlazorWebLib.Components.Account.Pages.Manage;
@@ -13,19 +13,68 @@ namespace BlazorWebLib.Components.Account.Pages.Manage;
 /// </summary>
 public partial class IndexPage : BlazorBusyComponentBaseAuthModel
 {
-
-
-
     string?
         username,
         firstName,
         lastName,
         patronymic,
         phoneNum,
+        phoneNumChangeRequest,
         kladrTitle,
         addressUserComment;
 
     List<ResultMessage> Messages = [];
+
+    bool _visible;
+    string? _editPhone;
+    readonly DialogOptions _dialogOptions = new() { FullWidth = true };
+
+    string GetTitleChangePhone()
+    {
+        if (_editPhone != phoneNum && string.IsNullOrWhiteSpace(_editPhone))
+            return "Удалить номер";
+
+        return "Отправить";
+    }
+
+    void OpenDialog()
+    {
+        _editPhone = phoneNum;
+        _visible = true;
+    }
+
+    async Task DeletePhone()
+    {
+        _editPhone = null;
+        await Submit();
+    }
+
+    async Task Submit()
+    {
+        if (!string.IsNullOrWhiteSpace(_editPhone) && !GlobalTools.IsPhoneNumber(_editPhone))
+        {
+            SnackBarRepo.Error("Телефон должен быть в формате: +79994440011 (можно без +)");
+            return;
+        }
+
+        if (CurrentUserSession is null)
+            throw new Exception("CurrentUserSession is null");
+
+        await SetBusyAsync();
+        ResponseBaseModel res = await IdentityRepo.InitChangePhoneUserAsync(new TAuthRequestModel<string>() { SenderActionUserId = CurrentUserSession.UserId, Payload = _editPhone });
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+        if (!res.Success())
+        {
+            await SetBusyAsync(false);
+            return;
+        }
+
+        _visible = false;
+        _editPhone = null;
+        await ReloadUserData(true);
+    }
+
 
     bool IsEdited =>
         CurrentUserSession is not null &&
@@ -34,9 +83,16 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await SetBusyAsync();
-        await ReadCurrentUser();
+        await base.OnInitializedAsync();
+        await ReloadUserData();
+    }
 
+    async Task ReloadUserData(bool readActualData = false)
+    {
+        if (readActualData)
+            await ReadCurrentUser();
+
+        await SetBusyAsync();
         if (CurrentUserSession is null)
             throw new Exception();
 
@@ -45,7 +101,7 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
         phoneNum = CurrentUserSession.PhoneNumber;
         username = CurrentUserSession.UserName;
         patronymic = CurrentUserSession.Patronymic;
-
+        phoneNumChangeRequest = CurrentUserSession.RequestChangePhone;
 
         kladrTitle = CurrentUserSession.KladrTitle;
         addressUserComment = CurrentUserSession.AddressUserComment;

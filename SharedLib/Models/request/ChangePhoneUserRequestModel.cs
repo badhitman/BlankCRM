@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// InitChangePhoneUserRequestModel
 /// </summary>
-public class InitChangePhoneUserRequestModel
+public class ChangePhoneUserRequestModel
 {
     /// <summary>
     /// UserId

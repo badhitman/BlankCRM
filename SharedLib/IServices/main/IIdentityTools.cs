@@ -322,5 +322,5 @@ public interface IIdentityTools
     /// <summary>
     /// InitChangePhoneUserAsync
     /// </summary>
-    public Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<InitChangePhoneUserRequestModel> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<ChangePhoneUserRequestModel> req, CancellationToken token = default);
 }

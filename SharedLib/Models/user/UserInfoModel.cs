@@ -58,7 +58,7 @@ public record UserInfoModel : UserInfoMainModel
     }
 
     /// <inheritdoc/>
-    public static UserInfoModel Build(string userId, string userName, string? email, string? phoneNumber, long? telegramId, bool emailConfirmed, DateTimeOffset? lockoutEnd, bool lockoutEnabled, int accessFailedCount, string? firstName, string? lastName, string[]? roles = null, EntryAltModel[]? claims = null)
+    public static UserInfoModel Build(string userId, string userName, string? email, string? phoneNumber,string? phoneNumberRequestChange, long? telegramId, bool emailConfirmed, DateTimeOffset? lockoutEnd, bool lockoutEnabled, int accessFailedCount, string? firstName, string? lastName, string[]? roles = null, EntryAltModel[]? claims = null)
         => new()
         {
             GivenName = firstName,
@@ -67,6 +67,7 @@ public record UserInfoModel : UserInfoMainModel
             Email = email,
             UserName = userName,
             PhoneNumber = phoneNumber,
+             RequestChangePhone = phoneNumberRequestChange,
             TelegramId = telegramId,
             EmailConfirmed = emailConfirmed,
             LockoutEnd = lockoutEnd,

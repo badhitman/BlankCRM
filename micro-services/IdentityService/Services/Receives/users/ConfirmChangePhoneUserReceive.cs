@@ -12,13 +12,13 @@ namespace Transmission.Receives.Identity;
 /// ConfirmChangePhoneUser
 /// </summary>
 public class ConfirmChangePhoneUserReceive(IIdentityTools idRepo, ILogger<ConfirmChangePhoneUserReceive> loggerRepo)
-    : IResponseReceive<TAuthRequestModel<InitChangePhoneUserRequestModel>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestModel<ChangePhoneUserRequestModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ConfirmChangePhoneUserReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<InitChangePhoneUserRequestModel>? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<ChangePhoneUserRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

@@ -38,10 +38,16 @@ else
                     <input type="text" @bind-value="patronymic" @bind-value:event="oninput" id="patronymic" class="form-control" placeholder="Patronymic" />
                     <label for="patronymic" class="form-label">Patronymic</label>
                 </div>
-                <div class="form-floating mb-3">
-                    <input type="text" value="@phoneNum" disabled id="phone-num" class="form-control" placeholder="Phone number" />
-                    <label for="phone-num" class="form-label">Phone</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Телефон</span>
+                    <input type="text" value="@phoneNum" class="form-control" placeholder="Phone" aria-label="Phone" aria-describedby="button-addon2">
+                    <button @onclick=OpenDialog class="btn btn-outline-secondary" type="button" id="button-addon2">Edit</button>
                 </div>
+                @if (phoneNumChangeRequest != phoneNum)
+                {
+                    <MudAlert Severity="Severity.Info">Открыт запрос на изменение номера телефона: @phoneNumChangeRequest</MudAlert>
+                    <br />
+                }
                 @if (!string.IsNullOrWhiteSpace(kladrTitle))
                 {
                     <div class="form-floating mb-3">
@@ -54,3 +60,34 @@ else
         </div>
     </div>
 }
+<MudDialog @bind-Visible="_visible" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Изменение номера телефона
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField Label="Phone Number"
+                      @bind-Value="_editPhone"
+                      Variant="@Variant.Text"
+                      Clearable Immediate />
+        @if (phoneNumChangeRequest != phoneNum)
+        {
+            <br />
+            <MudAlert Severity="Severity.Info">Открыт запрос на изменение номера телефона: @phoneNumChangeRequest</MudAlert>
+
+        }
+        @if (!string.IsNullOrWhiteSpace(_editPhone) && !GlobalTools.IsPhoneNumber(_editPhone))
+        {
+            <br />
+            <MudAlert Severity="Severity.Warning">Телефон должен быть в формате: +79994440011 (можно без +)</MudAlert>
+        }
+    </DialogContent>
+    <DialogActions>
+        @if (!string.IsNullOrWhiteSpace(phoneNum) || !string.IsNullOrWhiteSpace(phoneNumChangeRequest))
+        {
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="DeletePhone" Class="px-10">Удалить номер телефона</MudButton>
+        }
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-10" Disabled="@(_editPhone == phoneNum || !GlobalTools.IsPhoneNumber(_editPhone))">@GetTitleChangePhone()</MudButton>
+    </DialogActions>
+</MudDialog>

@@ -109,6 +109,7 @@ public class UsersAuthenticateService(
             userName: au.UserName ?? "",
             email: au.Email,
             phoneNumber: au.PhoneNumber,
+            phoneNumberRequestChange: au.RequestChangePhone,
             telegramId: au.ChatTelegramId,
             emailConfirmed: au.EmailConfirmed,
             lockoutEnd: au.LockoutEnd,
