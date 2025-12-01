@@ -13,4 +13,9 @@ public class SelectWalletsRetailsRequestModel
     /// UserIdentityId
     /// </summary>
     public string[]? UsersFilterIdentityId { get; set; }
+
+    /// <summary>
+    /// Автоматически создавать недостающие кошельки
+    /// </summary>
+    public bool AutoGenerationWallets { get; set; }
 }

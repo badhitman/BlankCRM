@@ -116,7 +116,11 @@ public class UsersAuthenticateService(
             lockoutEnabled: au.LockoutEnabled,
             accessFailedCount: au.AccessFailedCount,
             firstName: au.FirstName,
-            lastName: au.LastName)
+            lastName: au.LastName,
+            patronymic: au.Patronymic,
+            kladrTitle: au.KladrTitle,
+            kladrCode: au.KladrCode,
+            addressUserComment:au.AddressUserComment)
         };
     }
 

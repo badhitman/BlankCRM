@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using DbcLib;
+using System.Collections.Generic;
 
 namespace CommerceService;
 
@@ -401,6 +402,42 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
+        List<WalletRetailModelDB> res = await pq.Include(x => x.WalletType).ToListAsync(cancellationToken: token);
+
+        if (req.Payload?.AutoGenerationWallets == true)
+        {
+            WalletRetailTypeModelDB[] walletsTypesDb = await context.WalletsRetailTypes
+                .Where(x => !x.IsDisabled)
+                .ToArrayAsync(cancellationToken: token);
+
+            List<WalletRetailModelDB> createWallets = [];
+
+            res.GroupBy(x => x.UserIdentityId).ToList()
+                .ForEach(gNode =>
+                {
+                    WalletRetailTypeModelDB[] subList = [.. walletsTypesDb.Where(w => !gNode.Any(y => y.WalletTypeId == w.Id))];
+                    if (subList.Length != 0)
+                    {
+                        createWallets.AddRange(subList.Select(x => new WalletRetailModelDB()
+                        {
+                            UserIdentityId = gNode.Key,
+                            CreatedAtUTC = DateTime.UtcNow,
+                            Description = "",
+                            Name = "auto generation",
+                            Version = Guid.NewGuid(),
+                            WalletTypeId = x.Id,
+                        }));
+                    }
+                });
+
+            if (createWallets.Count != 0)
+            {
+                await context.WalletsRetail.AddRangeAsync(createWallets, token);
+                await context.SaveChangesAsync(cancellationToken: token);
+                res = await pq.Include(x => x.WalletType).ToListAsync(cancellationToken: token);
+            }
+        }
+
         return new()
         {
             PageNum = req.PageNum,
@@ -408,7 +445,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.ToListAsync(cancellationToken: token)
+            Response = res,
         };
     }
 

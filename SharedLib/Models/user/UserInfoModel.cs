@@ -58,23 +58,27 @@ public record UserInfoModel : UserInfoMainModel
     }
 
     /// <inheritdoc/>
-    public static UserInfoModel Build(string userId, string userName, string? email, string? phoneNumber,string? phoneNumberRequestChange, long? telegramId, bool emailConfirmed, DateTimeOffset? lockoutEnd, bool lockoutEnabled, int accessFailedCount, string? firstName, string? lastName, string[]? roles = null, EntryAltModel[]? claims = null)
+    public static UserInfoModel Build(string userId, string userName, string? email, string? phoneNumber,string? phoneNumberRequestChange, long? telegramId, bool emailConfirmed, DateTimeOffset? lockoutEnd, bool lockoutEnabled, int accessFailedCount, string? firstName, string? lastName, string? patronymic, string? kladrTitle, string? kladrCode, string? addressUserComment, string[]? roles = null, EntryAltModel[]? claims = null)
         => new()
         {
             GivenName = firstName,
             Surname = lastName,
+            Patronymic = patronymic,
             UserId = userId,
             Email = email,
             UserName = userName,
             PhoneNumber = phoneNumber,
-             RequestChangePhone = phoneNumberRequestChange,
+            RequestChangePhone = phoneNumberRequestChange,
             TelegramId = telegramId,
             EmailConfirmed = emailConfirmed,
             LockoutEnd = lockoutEnd,
             LockoutEnabled = lockoutEnabled,
             AccessFailedCount = accessFailedCount,
             Roles = roles?.ToList(),
-            Claims = claims
+            Claims = claims,
+            KladrTitle = kladrTitle,
+            KladrCode = kladrCode,
+            AddressUserComment = addressUserComment,
         };
 
     /// <inheritdoc/>

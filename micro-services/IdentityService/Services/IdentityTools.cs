@@ -968,6 +968,10 @@ public class IdentityTools(
                 x.AccessFailedCount,
                 x.FirstName,
                 x.LastName,
+                x.Patronymic,
+                x.KladrTitle,
+                x.KladrCode,
+                x.AddressUserComment,
             })
             .ToArrayAsync(cancellationToken: token);
         string[] users_ids = users.Select(x => x.Id).ToArray();
@@ -980,9 +984,30 @@ public class IdentityTools(
            await (from claim in identityContext.UserClaims.Where(x => users_ids.Contains(x.UserId))
                   select new { claim.ClaimValue, claim.ClaimType, claim.UserId }).ToArrayAsync(cancellationToken: token);
 
+        IEnumerable<UserInfoModel> _res = users.Select(x => UserInfoModel
+            .Build(userId: x.Id,
+                   userName: x.UserName ?? "",
+                   kladrTitle: x.KladrTitle,
+                   kladrCode: x.KladrCode,
+                   addressUserComment: x.AddressUserComment,
+                   email: x.Email,
+                   phoneNumber: x.PhoneNumber,
+                   phoneNumberRequestChange: x.RequestChangePhone,
+                   telegramId: x.ChatTelegramId,
+                   emailConfirmed: x.EmailConfirmed,
+                   lockoutEnd: x.LockoutEnd,
+                   lockoutEnabled: x.LockoutEnabled,
+                   accessFailedCount: x.AccessFailedCount,
+                   firstName: x.FirstName,
+                   lastName: x.LastName,
+                   patronymic: x.Patronymic,
+                   roles: [.. roles.Where(y => y.UserId == x.Id).Select(z => z.RoleName)],
+                   claims: [.. claims.Where(o => o.UserId == x.Id).Select(q => new EntryAltModel() { Id = q.ClaimType, Name = q.ClaimValue })]));
+
         return new()
         {
-            Response = users.Select(x => UserInfoModel.Build(userId: x.Id, userName: x.UserName ?? "", email: x.Email, phoneNumber: x.PhoneNumber, phoneNumberRequestChange: x.RequestChangePhone, telegramId: x.ChatTelegramId, emailConfirmed: x.EmailConfirmed, lockoutEnd: x.LockoutEnd, lockoutEnabled: x.LockoutEnabled, accessFailedCount: x.AccessFailedCount, firstName: x.FirstName, lastName: x.LastName, roles: roles.Where(y => y.UserId == x.Id).Select(z => z.RoleName).ToArray(), claims: claims.Where(o => o.UserId == x.Id).Select(q => new EntryAltModel() { Id = q.ClaimType, Name = q.ClaimValue }).ToArray())).ToList(),
+            Response = [.. _res],
+
             TotalRowsCount = total,
             PageNum = req.PageNum,
             PageSize = req.PageSize,

@@ -15,6 +15,9 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseModel
     [Inject]
     IIdentityTransmission IdentityRepo { get; set; } = default!;
 
+    [Inject]
+    IRetailService RetailRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
@@ -22,6 +25,7 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseModel
 
 
     UserInfoModel? currentUser;
+    List<WalletRetailModelDB>? WalletsForUser;
 
     /// <inheritdoc/>
     protected async override Task OnInitializedAsync()
@@ -31,6 +35,20 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseModel
         TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([ClientId]);
         SnackBarRepo.ShowMessagesResponse(getUser.Messages);
         currentUser = getUser.Response?.FirstOrDefault();
+
+        TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> reqWallets = new()
+        {
+            PageNum = 0,
+            PageSize = int.MaxValue,
+            Payload = new()
+            {
+                UsersFilterIdentityId = [ClientId],
+                AutoGenerationWallets = true,
+            }
+        };
+        TPaginationResponseModel<WalletRetailModelDB>? resWallets = await RetailRepo.SelectWalletsAsync(reqWallets);
+        WalletsForUser = resWallets.Response;
+
         await SetBusyAsync(false);
     }
 }

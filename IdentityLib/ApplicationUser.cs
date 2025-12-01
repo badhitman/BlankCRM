@@ -77,6 +77,10 @@ public class ApplicationUser : IdentityUser
             lockoutEnabled: app_user.LockoutEnabled,
             accessFailedCount: app_user.AccessFailedCount,
             firstName: app_user.FirstName,
-            lastName: app_user.LastName);
+            lastName: app_user.LastName,
+            patronymic: app_user.Patronymic,
+            kladrTitle: app_user.KladrTitle,
+            kladrCode: app_user.KladrCode,
+            addressUserComment: app_user.AddressUserComment);
     }
 }

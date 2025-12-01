@@ -33,12 +33,21 @@
                 </figcaption>
             </figure>
         }
-        else
+        else if (WalletsForUser is not null)
         {
-
+            <div class="list-group">
+                @foreach (WalletRetailModelDB wallet in WalletsForUser)
+                {
+                    <div class="list-group-item list-group-item-action" aria-current="true">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">@wallet.Name</h5>
+                            <small>@wallet.Balance</small>
+                        </div>
+                        <p class="mb-1">@wallet.Description</p>
+                        <small>[@wallet.WalletType?.Name]</small>
+                    </div>
+                }
+            </div>
         }
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
     </div>
 </div>
