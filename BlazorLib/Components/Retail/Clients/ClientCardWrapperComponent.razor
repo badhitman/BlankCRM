@@ -1,0 +1,17 @@
+﻿@using BlazorLib.Components.Retail.Delivery
+@using BlazorLib.Components.Retail.Payments
+
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+    <MudTabPanel Text="Клиент">
+        <ClientAboutComponent ClientId="@ClientId" />
+    </MudTabPanel>
+    <MudTabPanel Text="Заказы">
+        <OrdersListComponent FilterClientId="@ClientId" />
+    </MudTabPanel>
+    <MudTabPanel Text="Доставка">
+        <DeliveryManageComponent FilterClientId="@ClientId" />
+    </MudTabPanel>
+    <MudTabPanel Text="Платежи">
+        <PaymentsManageComponent FilterClientId="@ClientId" />
+    </MudTabPanel>
+</MudTabs>

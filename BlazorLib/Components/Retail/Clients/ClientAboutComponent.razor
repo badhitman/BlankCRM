@@ -1,0 +1,44 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">
+            @if (currentUser is not null)
+            {
+                @currentUser.UserName
+                @currentUser.PhoneNumber
+                @if (currentUser.PhoneNumber != currentUser.RequestChangePhone)
+                {
+                    <sup class="ms-2">запрос изменения телефона: @currentUser.RequestChangePhone</sup>
+                }
+            }
+            else
+            {
+                <text>...</text>
+            }
+        </h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">@currentUser?.GivenName @currentUser?.Surname @currentUser?.Patronymic</h6>
+        @if (IsBusyProgress)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
+        }
+        else if (currentUser is null)
+        {
+            <figure class="text-center">
+                <blockquote class="blockquote">
+                    <p>Ошибка выполнения запроса.</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    Не удалось получть <cite title="объект не найден или нет доступа">данные</cite>
+                </figcaption>
+            </figure>
+        }
+        else
+        {
+
+        }
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+        <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a>
+    </div>
+</div>

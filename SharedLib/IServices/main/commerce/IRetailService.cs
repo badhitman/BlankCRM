@@ -21,6 +21,8 @@ public interface IRetailService
     /// <inheritdoc/>
     public Task<TResponseModel<WalletRetailTypeViewModel[]>> WalletsTypesGetAsync(int[] reqIds, CancellationToken token = default);
 
+
+
     /// <inheritdoc/>
     public Task<ResponseBaseModel> WalletBalanceUpdateAsync(WalletBalanceCommitRequestModel req, CancellationToken token = default);
 
@@ -34,6 +36,7 @@ public interface IRetailService
     public Task<TPaginationResponseModel<WalletRetailModelDB>> SelectWalletsAsync(TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> req, CancellationToken token = default);
 
 
+
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default);
 
@@ -42,6 +45,7 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<WalletConversionRetailDocumentModelDB>> SelectConversionsDocumentsAsync(TPaginationRequestStandardModel<SelectWalletsRetailsConversionDocumentsRequestModel> req, CancellationToken token = default);
+
 
 
     /// <inheritdoc/>
@@ -54,6 +58,7 @@ public interface IRetailService
     public Task<TPaginationResponseModel<PaymentRetailOrderLinkModelDB>> SelectPaymentsOrdersLinksAsync(TPaginationRequestStandardModel<SelectPaymentsRetailOrdersLinksRequestModel> req, CancellationToken token = default);
 
 
+
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default);
 
@@ -62,6 +67,7 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<PaymentRetailDocumentModelDB>> SelectPaymentsDocumentsAsync(TPaginationRequestStandardModel<SelectPaymentsRetailOrdersDocumentsRequestModel> req, CancellationToken token = default);
+
 
 
     /// <inheritdoc/>
@@ -74,6 +80,7 @@ public interface IRetailService
     public Task<TPaginationResponseModel<DeliveryStatusRetailDocumentModelDB>> SelectDeliveryStatusesDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryStatusesRetailDocumentsRequestModel> req, CancellationToken token = default);
 
 
+
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateRowOfDeliveryDocumentAsync(RowOfDeliveryRetailDocumentModelDB req, CancellationToken token = default);
 
@@ -84,6 +91,7 @@ public interface IRetailService
     public Task<TPaginationResponseModel<RowOfDeliveryRetailDocumentModelDB>> SelectRowOfDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectRowsOfDeliveriesRetailDocumentsRequestModel> req, CancellationToken token = default);
 
 
+
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default);
 
@@ -92,6 +100,7 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<DeliveryDocumentRetailModelDB>> SelectDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req, CancellationToken token = default);
+
 
 
     /// <inheritdoc/>

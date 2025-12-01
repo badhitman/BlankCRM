@@ -13,9 +13,18 @@
         <MudTh>Contacts</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Nr">@context.GivenName @context.Surname @context.Patronymic</MudTd>
-        <MudTd DataLabel="Sign">@context.UserName</MudTd>
-        <MudTd DataLabel="Name">@context.PhoneNumber @context.KladrTitle @context.AddressUserComment</MudTd>
+        <MudTd DataLabel="Nr"><a href="/retail/client-card/@context.UserId">@context.GivenName @context.Surname @context.Patronymic</a></MudTd>
+        <MudTd DataLabel="Sign"><a href="/retail/client-card/@context.UserId">@context.UserName</a></MudTd>
+        <MudTd DataLabel="Name">
+            <span class="me-2">
+                @context.PhoneNumber
+                @if (context.RequestChangePhone != context.PhoneNumber)
+                {
+                    <strong class="ms-2">запрос на изменение телефона: @context.RequestChangePhone</strong>
+                }
+            </span>
+            <span class="me-2">@context.KladrTitle @context.AddressUserComment</span>
+        </MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>

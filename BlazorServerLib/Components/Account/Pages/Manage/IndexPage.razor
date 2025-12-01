@@ -40,7 +40,7 @@ else
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">Телефон</span>
-                    <input type="text" value="@phoneNum" class="form-control" placeholder="Phone" aria-label="Phone" aria-describedby="button-addon2">
+                    <input type="text" readonly value="@phoneNum" class="form-control" placeholder="Phone" aria-label="Phone" aria-describedby="button-addon2">
                     <button @onclick=OpenDialog class="btn btn-outline-secondary" type="button" id="button-addon2">Edit</button>
                 </div>
                 @if (phoneNumChangeRequest != phoneNum)

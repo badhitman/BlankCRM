@@ -324,7 +324,11 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.ToListAsync(cancellationToken: token)
+            Response = await pq
+                .Include(x => x.Wallet)
+                .Include(x => x.PaymentOrdersLinks)!
+                .ThenInclude(x => x.Order)
+                .ToListAsync(cancellationToken: token)
         };
     }
 

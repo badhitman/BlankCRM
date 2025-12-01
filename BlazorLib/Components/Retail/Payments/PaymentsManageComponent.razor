@@ -1,0 +1,55 @@
+﻿@inherits BlazorBusyComponentUsersCachedModel
+
+<MudTable ServerData="ServerReload" Dense Hover Loading="IsBusyProgress">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Платежи</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Тип</MudTh>
+        @if (!string.IsNullOrWhiteSpace(FilterClientId))
+        {
+            <MudTh>Плательщик</MudTh>
+        }
+        <MudTh>Статус</MudTh>
+        <MudTh>Direct</MudTh>
+        <MudTh>Создан/Изменён</MudTh>
+        <MudTh>Кошелёк</MudTh>
+        <MudTh>Сумма</MudTh>
+        <MudTh>Расшифровка</MudTh>
+        <MudTh>Описание</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Тип">@context.TypePayment.DescriptionInfo()</MudTd>
+        @if (!string.IsNullOrWhiteSpace(FilterClientId))
+        {
+            <MudTd DataLabel="Тип">@(UsersCache.FirstOrDefault(x => x.UserId == context.PayerIdentityUserId)?.ToString() ?? context.PayerIdentityUserId)</MudTd>
+        }
+        <MudTd DataLabel="Статус">@context.StatusPayment.DescriptionInfo()</MudTd>
+        <MudTd DataLabel="Direct">@context.PaymentSource</MudTd>
+        <MudTd DataLabel="Создан/Изменён">@context.CreatedAtUTC/@context.LastUpdatedAtUTC</MudTd>
+        <MudTd DataLabel="Кошелёк">[@context.Wallet!.WalletType] '@context.Wallet.Name'</MudTd>
+        <MudTd DataLabel="Сумма">@context.Amount</MudTd>
+        <MudTd DataLabel="Расшифровка">
+            @if (context.PaymentOrdersLinks is null)
+            {
+                <span class="badge text-bg-secondary">не загружено</span>
+            }
+            else
+            {
+                <PaymentsLinksAboutComponent PaymentOrdersLinks="context.PaymentOrdersLinks" />
+            }
+        </MudTd>
+        <MudTd DataLabel="Описание">@context.Description</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
