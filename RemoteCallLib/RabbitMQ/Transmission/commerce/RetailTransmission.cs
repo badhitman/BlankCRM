@@ -13,6 +13,18 @@ namespace RemoteCallLib;
 public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 {
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.UpdateDocumentRetailReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> CreateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateDocumentRetailReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<RetailDocumentModelDB>> SelectRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<RetailDocumentModelDB>>(TransmissionQueues.SelectDocumentsRetailReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateConversionDocumentRetailReceive, req, token: token) ?? new();
 
@@ -132,4 +144,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
     public async Task<TResponseModel<WalletRetailTypeViewModel[]>> WalletsTypesGetAsync(int[] reqIds, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<WalletRetailTypeViewModel[]>>(TransmissionQueues.WalletsTypesGetRetailReceive, reqIds, token: token) ?? new();
 
+    /// <inheritdoc/>
+    public async Task<TResponseModel<RetailDocumentModelDB[]>> RetailDocumentsGetAsync(int[] reqIds, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<RetailDocumentModelDB[]>>(TransmissionQueues.DocumentsGetRetailReceive, reqIds, token: token) ?? new();
 }

@@ -1,0 +1,71 @@
+﻿@using static SharedLib.GlobalStaticConstantsRoutes
+@inherits BlazorBusyComponentBaseAuthModel
+
+<h3>OrderDocumentCardComponent</h3>
+
+
+@if (IsBusyProgress)
+{
+
+}
+else if (currentDocument is null)
+{
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            <p>Ошибка.</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Не удалось загрузить данные <cite title="не найден в БД или нет прав доступа">документа</cite>
+        </figcaption>
+    </figure>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <div class="vstack gap-3">
+                <RubricInputComponent SelectRubricsHandle="WarehouseSelectAction"
+                                      ModeSelectingRubrics=ModesSelectRubricsEnum.SelectAny
+                                      RubricInitial="@currentDocument.WarehouseId"
+                                      Title="Склад списания"
+                                      ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
+                                      ShowDisabledRubrics />
+
+                <UserSelectInputComponent SelectHandleAction="SelectUserHandler" SelectedUser="@currentDocument.BuyerIdentityUserId" />
+
+                <MudSelect ReadOnly="@IsBusyProgress" @bind-Value="currentDocument.StatusDocument" T="StatusesDocumentsEnum" Label="Статус" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (StatusesDocumentsEnum step in Enum.GetValues<StatusesDocumentsEnum>())
+                    {
+                        <MudSelectItem Class="@(step == currentDocument.StatusDocument ? "text-primary fw-bold" : "")" T="StatusesDocumentsEnum" Value="@step">
+                            @step.DescriptionInfo()
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+
+                <TinyMCE.Blazor.Editor @bind-Value="currentDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />
+                <hr />
+
+            </div>
+
+            @* 
+            <p>@currentDocument.LastUpdatedAtUTC</p>
+
+            <p>@currentDocument.Name</p>
+            <p>@currentDocument.HelpDeskId</p>
+            <p>@currentDocument.ExternalDocumentId</p>
+            <p>@currentDocument.Description</p>
+
+            <p>@currentDocument.Rows</p>
+            <p>@currentDocument.DeliveryDocuments</p>
+            <p>@currentDocument.PaymentsLinks</p> *@
+
+            <p>Создан: @currentDocument.CreatedAtUTC</p>
+
+            @if (authorUser is not null)
+            {
+                <p title="Автор документа">Создал: @authorUser.ToString()</p>
+            }
+        </div>
+    </div>
+
+}

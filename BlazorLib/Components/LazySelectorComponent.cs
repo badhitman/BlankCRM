@@ -83,7 +83,7 @@ public abstract class LazySelectorComponent<TRow> : BlazorBusyComponentBaseModel
     /// </summary>
     protected string? SelectedValueText
     {
-        get => IsEditing ? _selectedValueText : SelectedObject?.ToString();
+        get => IsEditing ? _selectedValueText?.Trim() : SelectedObject?.ToString()?.Trim();
         set
         {
             _selectedValueText = value;

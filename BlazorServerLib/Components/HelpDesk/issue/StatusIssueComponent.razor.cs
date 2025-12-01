@@ -16,12 +16,9 @@ public partial class StatusIssueComponent : IssueWrapBaseModel
 
     List<StatusesDocumentsEnum> Steps()
     {
-        if (CurrentUserSession is null)
-            throw new Exception("CurrentUserSession is null");
-
         List<StatusesDocumentsEnum> res = [];
 
-        if (CurrentUserSession.IsAdmin || CurrentUserSession.UserId == Issue.ExecutorIdentityUserId || CurrentUserSession.Roles?.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager) == true)
+        if (CurrentUserSession?.IsAdmin == true || CurrentUserSession?.UserId == Issue.ExecutorIdentityUserId || CurrentUserSession?.Roles?.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager) == true)
             res.AddRange(Enum.GetValues<StatusesDocumentsEnum>());
         else
         {

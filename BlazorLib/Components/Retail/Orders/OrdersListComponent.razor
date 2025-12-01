@@ -1,0 +1,53 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Заказы (розница)</MudText>
+        <MudSpacer />
+        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="CreateNewOrderOpenDialog">Новый заказ</MudButton>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Номер</MudTh>
+        <MudTh>Статус</MudTh>
+        <MudTh>Заказчик</MudTh>
+        <MudTh>Создан/Изменён</MudTh>
+        <MudTh>Склад</MudTh>
+        <MudTh>Номенклатура</MudTh>
+        <MudTh>Отгрузка</MudTh>
+        <MudTh>Платежи</MudTh>
+        <MudTh>Информация</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Номер"><a href="/retail/order/@context.Id">@context.ExternalDocumentId</a></MudTd>
+        <MudTd DataLabel="Статус"><a href="/retail/order/@context.Id">@context.StatusDocument.DescriptionInfo()</a></MudTd>
+        <MudTd DataLabel="Заказчик"><a href="/retail/client-card/@context.BuyerIdentityUserId">@(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")</a></MudTd>
+        <MudTd DataLabel="Создан/Изменён"><a href="/retail/order/@context.Id">@context.CreatedAtUTC/@context.LastUpdatedAtUTC</a></MudTd>
+        <MudTd DataLabel="Склад">@(RubricsCache.FirstOrDefault(x => x.Id == context.WarehouseId)?.ToString() ?? $"#{context.WarehouseId}")</MudTd>
+        <MudTd DataLabel="Номенклатура"><OrderRowsAboutComponent Rows="@context.Rows" /></MudTd>
+        <MudTd DataLabel="Отгрузка"><OrderDeliveryAboutComponent DeliveryDocuments="@context.DeliveryDocuments" /></MudTd>
+        <MudTd DataLabel="Платежи"><OrderPaymentsAboutComponent PaymentsLinks="@context.PaymentsLinks" /></MudTd>
+        <MudTd DataLabel="Информация">@context.Name @context.Description</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+<MudDialog @bind-Visible="_visible" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новый заказ
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <OrderDocumentCardComponent />
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-10">Close</MudButton>
+    </DialogActions>
+</MudDialog>

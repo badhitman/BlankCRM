@@ -29,25 +29,42 @@
                     <p>Ошибка выполнения запроса.</p>
                 </blockquote>
                 <figcaption class="blockquote-footer">
-                    Не удалось получть <cite title="объект не найден или нет доступа">данные</cite>
+                    Не удалось получить <cite title="объект не найден или нет доступа">данные</cite>
                 </figcaption>
             </figure>
         }
-        else if (WalletsForUser is not null)
+        else
         {
-            <div class="list-group">
-                @foreach (WalletRetailModelDB wallet in WalletsForUser)
-                {
-                    <div class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">@wallet.Name</h5>
-                            <small>@wallet.Balance</small>
+            if (WalletsForUser is not null)
+            {
+                <div class="list-group">
+                    @foreach (WalletRetailModelDB wallet in WalletsForUser)
+                    {
+                        <div class="list-group-item list-group-item-action" aria-current="true">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">@wallet.Name</h5>
+                                <small>@wallet.Balance</small>
+                            </div>
+                            <p class="mb-1">@wallet.Description</p>
+                            <small>[@wallet.WalletType?.Name]</small>
                         </div>
-                        <p class="mb-1">@wallet.Description</p>
-                        <small>[@wallet.WalletType?.Name]</small>
-                    </div>
+                    }
+                </div>
+            }
+            @* if (currentUser.Roles is not null && currentUser.Roles.Count != 0)
+            {
+                foreach (string _role in currentUser.Roles)
+                {
+                    <span class="badge text-bg-light me-1">@_role</span>
                 }
-            </div>
+            }
+            if (currentUser.Claims is not null && currentUser.Claims.Length != 0)
+            {
+                foreach (EntryAltModel _claim in currentUser.Claims)
+                {
+                    <span class="badge text-bg-info me-1">@_claim.Name</span>
+                }
+            } *@
         }
     </div>
 </div>

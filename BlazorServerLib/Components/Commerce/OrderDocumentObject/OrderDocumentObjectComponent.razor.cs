@@ -84,7 +84,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         doc.LastUpdatedAtUTC = DateTime.UtcNow;
         doc.HelpDeskId = null;
         doc.Name = "Новый";
-        doc.Information = null;
+        doc.Description = null;
 
         doc.Organization = null;
         doc.OfficesTabs!.ForEach(x =>

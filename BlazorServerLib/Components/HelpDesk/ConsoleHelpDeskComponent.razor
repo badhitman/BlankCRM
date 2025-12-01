@@ -33,7 +33,7 @@
             <div class="row">
                 <div class="d-flex justify-content-between my-2">
                     <MudFab Disabled="@(stepNum == 0)" OnClick="() => { stepNum--; }" Color="Color.Primary" StartIcon="@Icons.Material.Filled.KeyboardArrowLeft" Size="Size.Small" />
-                    <UserSelectInputComponent SelectHandleAction="SelectUserHandler" SelectedUser="@FilterUserId" @ref=selectorInputRef />
+                    <UserSelectInputComponent SelectHandleAction="SelectUserHandler" SelectedUser="@FilterUserId" />
                     <MudFab Disabled="@(stepNum >= Steps.Count - (IsLarge ? 4 : 6))" OnClick="() => { stepNum++; }" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.KeyboardArrowRight" Size="Size.Small" />
                 </div>
 

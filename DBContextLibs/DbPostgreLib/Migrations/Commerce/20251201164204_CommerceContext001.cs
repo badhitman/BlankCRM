@@ -112,7 +112,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     StatusDocument = table.Column<int>(type: "integer", nullable: false),
                     AuthorIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     ExternalDocumentId = table.Column<string>(type: "text", nullable: true),
-                    Information = table.Column<string>(type: "text", nullable: true),
                     HelpDeskId = table.Column<int>(type: "integer", nullable: true),
                     Version = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -227,7 +226,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     ParentId = table.Column<int>(type: "integer", nullable: false),
                     KladrCode = table.Column<string>(type: "text", nullable: false),
                     KladrTitle = table.Column<string>(type: "text", nullable: false),
-                    AddressUserComment = table.Column<string>(type: "text", nullable: false),
+                    AddressUserComment = table.Column<string>(type: "text", nullable: true),
                     Contacts = table.Column<string>(type: "text", nullable: false),
                     OrganizationId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -255,7 +254,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     StatusDocument = table.Column<int>(type: "integer", nullable: false),
                     AuthorIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     ExternalDocumentId = table.Column<string>(type: "text", nullable: true),
-                    Information = table.Column<string>(type: "text", nullable: true),
                     HelpDeskId = table.Column<int>(type: "integer", nullable: true),
                     Version = table.Column<Guid>(type: "uuid", nullable: false),
                     OrganizationId = table.Column<int>(type: "integer", nullable: false)
@@ -370,7 +368,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     StatusDocument = table.Column<int>(type: "integer", nullable: false),
                     AuthorIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     ExternalDocumentId = table.Column<string>(type: "text", nullable: true),
-                    Information = table.Column<string>(type: "text", nullable: true),
                     HelpDeskId = table.Column<int>(type: "integer", nullable: true),
                     Version = table.Column<Guid>(type: "uuid", nullable: false),
                     OrganizationId = table.Column<int>(type: "integer", nullable: false)

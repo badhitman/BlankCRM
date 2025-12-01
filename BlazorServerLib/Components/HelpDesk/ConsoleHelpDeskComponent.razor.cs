@@ -23,7 +23,6 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
     byte stepNum;
     bool IsLarge;
     string? FilterUserId;
-    UserSelectInputComponent? selectorInputRef;
 
 
     async void SelectUserHandler(UserInfoModel? selected)
@@ -71,9 +70,6 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync();
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
-
-        if (selectorInputRef is not null)
-            selectorInputRef.StateHasChangedCall();
 
         TResponseModel<bool> res = await StorageRepo.ReadParameterAsync<bool>(SizeColumnsKeyStorage);
         IsLarge = res.Response == true;

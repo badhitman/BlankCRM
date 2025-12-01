@@ -799,7 +799,7 @@ public partial class CommerceImplementService(
                 {
                     Name = req.Name,
                     ParentId = res_RubricIssueForCreateOrder.Response,
-                    Description = $"Новый заказ.\n{req.Information}".Trim(),
+                    Description = $"Новый заказ.\n{req.Description}".Trim(),
                 },
             };
 

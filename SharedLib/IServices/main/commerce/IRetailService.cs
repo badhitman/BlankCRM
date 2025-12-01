@@ -10,6 +10,20 @@ namespace SharedLib;
 public interface IRetailService
 {
     /// <inheritdoc/>
+    public Task<TResponseModel<int>> CreateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> UpdateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TPaginationResponseModel<RetailDocumentModelDB>> SelectRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req, CancellationToken token = default);
+    
+    /// <inheritdoc/>
+    public Task<TResponseModel<RetailDocumentModelDB[]>> RetailDocumentsGetAsync(int[] reqIds, CancellationToken token = default);
+
+
+
+    /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateWalletTypeAsync(WalletRetailTypeModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>

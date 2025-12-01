@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
+using Newtonsoft.Json;
 
 namespace BlazorLib;
 
@@ -40,8 +41,9 @@ public abstract class BlazorBusyComponentBaseAuthModel : BlazorBusyComponentBase
         }
 
         TResponseModel<UserInfoModel[]> getDataUser = await IdentityRepo.GetUsersOfIdentityAsync([_usr.UserId]);
+        SnackBarRepo.ShowMessagesResponse(getDataUser.Messages);
         if (getDataUser.Response is null || getDataUser.Response.Length != 1)
-            throw new Exception();
+            throw new Exception(JsonConvert.SerializeObject(getDataUser));
 
         CurrentUserSession = getDataUser.Response[0];
     }

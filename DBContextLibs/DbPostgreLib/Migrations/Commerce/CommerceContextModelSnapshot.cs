@@ -496,7 +496,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AddressUserComment")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Contacts")
@@ -551,9 +550,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.Property<int?>("HelpDeskId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Information")
-                        .HasColumnType("text");
 
                     b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
@@ -894,9 +890,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<int?>("HelpDeskId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Information")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
@@ -967,9 +960,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.Property<int?>("HelpDeskId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Information")
-                        .HasColumnType("text");
 
                     b.Property<DateTime>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");

@@ -48,6 +48,10 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<WalletBalanceUpdateReceive, WalletBalanceCommitRequestModel, ResponseBaseModel>()
             .RegisterMqListener<WalletsTypesGetReceive, int[], TResponseModel<WalletRetailTypeViewModel[]>>()
             .RegisterMqListener<DeliveryServicesGetReceive, int[], TResponseModel<DeliveryServiceRetailModelDB[]>>()
+            .RegisterMqListener<SelectRetailDocumentsReceive, TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel>, TPaginationResponseModel<RetailDocumentModelDB>>()
+            .RegisterMqListener<CreateRetailDocumentReceive, RetailDocumentModelDB, TResponseModel<int>>()
+            .RegisterMqListener<UpdateRetailDocumentReceive, RetailDocumentModelDB, ResponseBaseModel>()
+            .RegisterMqListener<RetailDocumentsGetReceive, int[], TResponseModel<RetailDocumentModelDB[]>>()
 
             .RegisterMqListener<OrganizationSetLegalReceive, OrganizationLegalModel, TResponseModel<bool>>()
             .RegisterMqListener<OrganizationUpdateReceive, TAuthRequestModel<OrganizationModelDB>, TResponseModel<int>>()

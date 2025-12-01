@@ -29,11 +29,6 @@ public class OrderDocumentBaseModel : EntryUpdatedModel
     public string? ExternalDocumentId { get; set; }
 
     /// <summary>
-    /// Дополнительная информация
-    /// </summary>
-    public string? Information { get; set; }
-
-    /// <summary>
     /// Заявка, связанная с заказом.
     /// </summary>
     /// <remarks>

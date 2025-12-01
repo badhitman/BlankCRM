@@ -2,10 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using System.Collections.Generic;
+using DbcLib;
 
 namespace CommerceService;
 
@@ -16,6 +15,113 @@ public class RetailService(IIdentityTransmission identityRepo,
     IKladrNavigationService kladrRepo,
     IDbContextFactory<CommerceContext> commerceDbFactory) : IRetailService
 {
+    /// <inheritdoc/>
+    public async Task<TResponseModel<RetailDocumentModelDB[]>> RetailDocumentsGetAsync(int[] reqIds, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        TResponseModel<RetailDocumentModelDB[]> res = new()
+        {
+            Response = await context.RetailOrders
+            .Where(x => reqIds.Contains(x.Id))
+            .Include(x => x.Rows)
+            .Include(x => x.DeliveryDocuments)
+            .Include(x => x.PaymentsLinks)
+            .ToArrayAsync(cancellationToken: token)
+        };
+
+        if (res.Response.Length != reqIds.Length)
+            res.AddError("Некоторые документы не найдены");
+
+        return res;
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> CreateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default)
+    {
+        TResponseModel<int> res = new();
+        if (string.IsNullOrWhiteSpace(req.AuthorIdentityUserId))
+        {
+            res.AddError("Не указан автор/создатель документа");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.BuyerIdentityUserId))
+        {
+            res.AddError("Не указан покупатель");
+            return res;
+        }
+
+        TResponseModel<UserInfoModel[]> getUsers = await identityRepo.GetUsersOfIdentityAsync([req.AuthorIdentityUserId, req.BuyerIdentityUserId], token);
+        if (!getUsers.Success())
+        {
+            res.AddRangeMessages(getUsers.Messages);
+            return res;
+        }
+
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        req.Version = Guid.NewGuid();
+        req.Name = req.Name.Trim();
+        req.Description = req.Description?.Trim();
+        req.CreatedAtUTC = DateTime.UtcNow;
+
+        await context.RetailOrders.AddAsync(req, token);
+        await context.SaveChangesAsync(token);
+        return new TResponseModel<int>() { Response = req.Id };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        await context.RetailOrders
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Name, req.Name)
+                .SetProperty(p => p.StatusDocument, req.StatusDocument)
+                .SetProperty(p => p.BuyerIdentityUserId, req.BuyerIdentityUserId)
+                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.Description, req.Description)
+                .SetProperty(p => p.WarehouseId, req.WarehouseId)
+                //.SetProperty(p => p.HelpDeskId, req.HelpDeskId)
+                .SetProperty(p => p.ExternalDocumentId, req.ExternalDocumentId)
+                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<RetailDocumentModelDB>> SelectRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<RetailDocumentModelDB> q = context.RetailOrders.AsQueryable();
+
+        if (req.Payload?.BuyersFilterIdentityId is not null && req.Payload.BuyersFilterIdentityId.Length != 0)
+            q = q.Where(x => req.Payload.BuyersFilterIdentityId.Contains(x.BuyerIdentityUserId));
+
+        if (req.Payload?.CreatorsFilterIdentityId is not null && req.Payload.CreatorsFilterIdentityId.Length != 0)
+            q = q.Where(x => req.Payload.CreatorsFilterIdentityId.Contains(x.AuthorIdentityUserId));
+
+        IQueryable<RetailDocumentModelDB> pq = q
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await pq
+                .OrderBy(x => x.CreatedAtUTC)
+                .Include(x => x.Rows)
+                .Include(x => x.PaymentsLinks)
+                .ToListAsync(cancellationToken: token)
+        };
+    }
+
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default)
     {
