@@ -29,12 +29,14 @@ public partial class OrganizationsTableComponent : BlazorBusyComponentBaseAuthMo
 
     UserInfoMainModel? CurrentViewUser;
 
-    private MudTable<OrganizationModelDB> table = default!;
+    MudTable<OrganizationModelDB> table = default!;
+    bool LoadTableReady;
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await ReadCurrentUser();
+        await SetBusyAsync();
+        await base.OnInitializedAsync();
 
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
@@ -61,12 +63,14 @@ public partial class OrganizationsTableComponent : BlazorBusyComponentBaseAuthMo
             CurrentViewUser = CurrentUserSession;
         else if (!string.IsNullOrWhiteSpace(UserId))
         {
-            await SetBusyAsync();
             TResponseModel<UserInfoModel[]> user_res = await IdentityRepo.GetUsersOfIdentityAsync([UserId]);
             SnackBarRepo.ShowMessagesResponse(user_res.Messages);
             CurrentViewUser = user_res.Response?.FirstOrDefault();
-            await SetBusyAsync(false);
         }
+        await SetBusyAsync(false);
+        LoadTableReady = true;
+        if (table is not null)
+            await table.ReloadServerData();
     }
 
     /// <summary>
@@ -74,7 +78,7 @@ public partial class OrganizationsTableComponent : BlazorBusyComponentBaseAuthMo
     /// </summary>
     private async Task<TableData<OrganizationModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        if (CurrentUserSession is null)
+        if (!LoadTableReady || CurrentUserSession is null)
             return new TableData<OrganizationModelDB>() { TotalItems = 0, Items = [] };
 
         TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req = new()

@@ -1,0 +1,11 @@
+﻿<h3>OrderPaymentsTableComponent</h3>
+
+@code {
+    [Inject]
+    IRetailService RetailRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public required int OrderId { get; set; }
+}

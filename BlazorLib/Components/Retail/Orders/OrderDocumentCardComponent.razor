@@ -1,4 +1,5 @@
-﻿@using MudBlazor
+﻿@using BlazorLib.Components.Retail.Payments
+@using MudBlazor
 @using static SharedLib.GlobalStaticConstantsRoutes
 
 @inherits BlazorBusyComponentBaseAuthModel
@@ -41,8 +42,6 @@ else
                     }
                 </MudSelect>
 
-                <TinyMCE.Blazor.Editor @bind-Value="currentDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />
-                <hr />
                 <div class="col-md-6">
                     <label for="inputName4" class="form-label">Name</label>
                     <input type="text"
@@ -59,18 +58,21 @@ else
                            @bind-value="currentDocument.ExternalDocumentId"
                            @bind-value:event="oninput">
                 </div>
+                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+                    <MudTabPanel Text="Заказ">
+                        <OrderTableRowsComponent OrderId="OrderId" />
+                    </MudTabPanel>
+                    <MudTabPanel Text="Оплата" Disabled="@(OrderId < 1)">
+                        <PaymentsTableComponent OrderId="OrderId" />
+                    </MudTabPanel>
+                    <MudTabPanel Text="Отгрузка/Доставка" Disabled="@(OrderId < 1)">
+                        <OrderDeliveryTableComponent OrderId="OrderId" />
+                    </MudTabPanel>
+                    <MudTabPanel Text="Заметки/Описание" Disabled="@(OrderId < 1)">
+                        <TinyMCE.Blazor.Editor @bind-Value="currentDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />
+                    </MudTabPanel>
+                </MudTabs>
             </div>
-            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
-                <MudTabPanel Text="Заказ">
-                    @currentDocument.Rows
-                </MudTabPanel>
-                <MudTabPanel Text="Отгрузка">
-                    @currentDocument.DeliveryDocuments
-                </MudTabPanel>
-                <MudTabPanel Text="Оплата">
-                    @currentDocument.PaymentsLinks
-                </MudTabPanel>
-            </MudTabs>
 
             <p class="card-text">
                 @if (authorUser is not null)
@@ -85,5 +87,4 @@ else
             </p>
         </div>
     </div>
-
 }

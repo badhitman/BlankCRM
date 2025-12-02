@@ -4,9 +4,22 @@
 
 <MudDialog>
     <TitleContent>
-        <MudStack>@MudDialog.Title</MudStack>
+        <MudStack>
+            @MudDialog.Title
+        </MudStack>
     </TitleContent>
     <DialogContent>
+        @if (CurrentRegion is null)
+        {
+            <figure class="text-center">
+                <blockquote class="blockquote">
+                    <p>Укажите регион.</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    Для выбора <cite title="доступен поиск региона по части нахзвания">региона</cite> введите его название
+                </figcaption>
+            </figure>
+        }
         <MudAutocomplete @bind-Value="SelectedRegionName"
                          SearchFunc="SearchRegion"
                          Disabled="IsBusyProgress"
@@ -14,6 +27,7 @@
                          HelperText="Регион"
                          HelperTextOnFocus
                          Label="Регион"
+                         Immediate
                          Dense />
 
         @if (IsBusyProgress && CurrentRegion is null)
@@ -43,7 +57,7 @@
                         </button>
                     }
                     <input @bind="FindName" type="text" class="form-control" placeholder="Поиск адреса" disabled="@IsBusyProgress">
-                    <button @onclick="async () => { if(!IsBusyProgress){ await RebuildTable(); }}" class="btn btn-outline-secondary" type="button" disabled="@IsBusyProgress">Найти</button>
+                    <button @onclick="async () => { if (!IsBusyProgress) { await RebuildTable(); } }" class="btn btn-outline-secondary" type="button" disabled="@IsBusyProgress">Найти</button>
                 </div>
             }
 

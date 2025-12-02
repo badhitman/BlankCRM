@@ -9,7 +9,7 @@
     <HeaderContent>
         <MudTh>Name</MudTh>
         <MudTh>Тип</MudTh>
-        @if (!string.IsNullOrWhiteSpace(FilterClientId))
+        @if (string.IsNullOrWhiteSpace(FilterClientId))
         {
             <MudTh>Плательщик</MudTh>
         }
@@ -24,7 +24,7 @@
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Тип">@context.TypePayment.DescriptionInfo()</MudTd>
-        @if (!string.IsNullOrWhiteSpace(FilterClientId))
+        @if (string.IsNullOrWhiteSpace(FilterClientId))
         {
             <MudTd DataLabel="Тип">@(UsersCache.FirstOrDefault(x => x.UserId == context.PayerIdentityUserId)?.ToString() ?? context.PayerIdentityUserId)</MudTd>
         }

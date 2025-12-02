@@ -266,16 +266,16 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
             var dbData = await
                 (from msg in query
 
-                 join joinDoc in context.Documents on msg.DocumentId equals joinDoc.MessageId into getDoc
+                 join joinDoc in context.Documents on msg.Id equals joinDoc.MessageId into getDoc
                  from document in getDoc.DefaultIfEmpty()
 
-                 join joinAudio in context.Audios on msg.DocumentId equals joinAudio.MessageId into getAudio
+                 join joinAudio in context.Audios on msg.Id equals joinAudio.MessageId into getAudio
                  from audio in getAudio.DefaultIfEmpty()
 
-                 join joinVoice in context.Voices on msg.DocumentId equals joinVoice.MessageId into getVoice
+                 join joinVoice in context.Voices on msg.Id equals joinVoice.MessageId into getVoice
                  from voice in getVoice.DefaultIfEmpty()
 
-                 join joinVideo in context.Videos on msg.DocumentId equals joinVideo.MessageId into getVideo
+                 join joinVideo in context.Videos on msg.Id equals joinVideo.MessageId into getVideo
                  from video in getVideo.DefaultIfEmpty()
 
                  join joinSender in context.Users on msg.FromId equals joinSender.Id into getSender

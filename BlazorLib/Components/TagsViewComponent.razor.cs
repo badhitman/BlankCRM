@@ -73,6 +73,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
                 Set = false
             });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
+            await SetBusyAsync(false);
             await ReloadTags();
         }
     }
@@ -131,9 +132,10 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         if (res.TotalRowsCount > req.PageSize)
             SnackBarRepo.Error($"Записей больше: {res.TotalRowsCount}");
 
-        await SetBusyAsync(false);
         if (res.Response is not null)
             TagsSets = res.Response;
+
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

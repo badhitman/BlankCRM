@@ -18,18 +18,30 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
     IHelpDeskTransmission HelpDeskRepo { get; set; } = default!;
 
 
-    private MudTable<ArticleModelDB> table = default!;
+    MudTable<ArticleModelDB> table = default!;
+    bool readyTableLoad;
 
-    private string? searchString = null;
+    string? searchString = null;
     readonly List<UserInfoModel> usersDump = [];
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        await base.OnInitializedAsync();
+        readyTableLoad = true;
+        if (table is not null)
+            await table.ReloadServerData();
+        await SetBusyAsync(false);
+    }
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
-    private async Task<TableData<ArticleModelDB>> ServerReload(TableState state, CancellationToken token)
+    async Task<TableData<ArticleModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        if (CurrentUserSession is null)
-            throw new Exception("CurrentUserSession is null");
+        if (!readyTableLoad || CurrentUserSession is null)
+            return new() { TotalItems = 0, Items = [] };
 
         await SetBusyAsync(token: token);
         TPaginationRequestStandardModel<SelectArticlesRequestModel> req = new()
@@ -53,7 +65,7 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
 
         // Forward the provided token to methods which support it
         List<ArticleModelDB> data = rest.Response!;
-        await UpdateUsersData(rest.Response!.Select(x => x.AuthorIdentityId).ToArray());
+        await UpdateUsersData([.. rest.Response!.Select(x => x.AuthorIdentityId)]);
         // Return the data
         return new() { TotalItems = rest.TotalRowsCount, Items = data };
     }
@@ -74,7 +86,7 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
         usersDump.AddRange(res.Response);
     }
 
-    private void OnSearch(string text)
+    void OnSearch(string text)
     {
         searchString = text;
         table.ReloadServerData();

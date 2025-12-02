@@ -25,8 +25,10 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
     public required NomenclatureModelDB CurrentNomenclature { get; set; }
 
 
-    bool _hideMultiplicity;
-    bool _hideWorth;
+    bool 
+        _hideMultiplicity,
+        _hideWorth,
+        loadTableReady;
 
     private MudTable<OfferModelDB> table = default!;
     bool _visibleChangeConfig;
@@ -47,8 +49,11 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
             Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.HideMultiplicityOffers); if (!res.Success()) SnackBarRepo.ShowMessagesResponse(res.Messages); else _hideMultiplicity = res.Response == true;})];
 
         await Task.WhenAll(tasks);
-
+        loadTableReady = true;
         await SetBusyAsync(false);
+        
+        if (table is not null)
+            await table.ReloadServerData();
     }
 
     void CancelChangeConfig()
@@ -68,8 +73,8 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
     /// </summary>
     private async Task<TableData<OfferModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        if (CurrentUserSession is null)
-            throw new Exception("CurrentUserSession is null");
+        if (!loadTableReady || CurrentUserSession is null)
+            return new TableData<OfferModelDB>() { TotalItems = 0, Items = [] };
 
         TPaginationRequestStandardModel<OffersSelectRequestModel> req = new()
         {

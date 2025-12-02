@@ -69,7 +69,7 @@ public class ParametersStorage(
             if (!q.Any())
                 res.AddSuccess("Тег отсутствует");
             else
-                res.AddInfo($"Тег удалён: {q.ExecuteDeleteAsync(cancellationToken: token)}");
+                res.AddInfo($"Тег удалён: {await q.ExecuteDeleteAsync(cancellationToken: token)}");
         }
 
         return res;

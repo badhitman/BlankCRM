@@ -1,5 +1,6 @@
 ﻿@using BlazorLib.Components.ParametersShared
 @using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
 @inherits BlazorBusyComponentBaseModel
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
@@ -43,10 +44,19 @@
                 </MudPaper>
             </MudTabPanel>
             <MudTabPanel Text="Офисы">
-                <RubricsManageComponent TEntity="RubricNodeBodyComponent" ContextName="@GlobalStaticConstantsRoutes.Routes.OFFICES_CONTROLLER_NAME" />
+                <RubricsManageComponent TEntity="RubricNodeBodyComponent" ContextName="@Routes.OFFICES_CONTROLLER_NAME" />
+            </MudTabPanel>
+            <MudTabPanel ToolTip="Категории статей" Text="CMS" Icon="@Icons.Material.Filled.Folder">
+                <MudPaper Class="ma-2" Elevation="3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Категории</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">Категории статей</h6>
+                            <RubricsManageComponent TEntity="RubricNodeBodyComponent" ContextName="@Routes.ARTICLES_CONTROLLER_NAME" />
+                        </div>
+                    </div>
+                </MudPaper>
             </MudTabPanel>
         </MudTabs>
-
-
     </div>
 </div>

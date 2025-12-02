@@ -28,7 +28,12 @@ public partial class OrdersListComponent : BlazorBusyComponentBaseModel
     public string? FilterClientId { get; set; }
 
     private bool _visible;
-    private readonly DialogOptions _dialogOptions = new() { FullWidth = true };
+    private readonly DialogOptions _dialogOptions = new()
+    {
+        FullWidth = true,
+        CloseOnEscapeKey = true,
+        MaxWidth = MaxWidth.ExtraLarge,
+    };
 
 
     private void Submit() => _visible = false;
@@ -96,7 +101,7 @@ public partial class OrdersListComponent : BlazorBusyComponentBaseModel
                 .Union(res.Response.Select(x => x.BuyerIdentityUserId))
                 .Distinct();
 
-            IEnumerable<int> _rubricsIds = res.Response.Select(x=>x.WarehouseId).Distinct();
+            IEnumerable<int> _rubricsIds = res.Response.Select(x => x.WarehouseId).Distinct();
 
             List<Task> tasks = [
                 Task.Run(async () => { await CacheUsersUpdate([.._usersIds],token); }, token),
