@@ -1,4 +1,5 @@
-﻿<MudSelect T="string" Label="@Title" MultiSelection @bind-Value="_value" @bind-SelectedValues="_options">
+﻿@using MudBlazor
+<MudSelect T="string" Label="@Title" MultiSelection @bind-Value="_value" @bind-SelectedValues="_options">
     @foreach (var state in States)
     {
         <MudSelectItem T="string" Value="@state">@state</MudSelectItem>

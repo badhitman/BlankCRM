@@ -1,0 +1,93 @@
+﻿@inherits BlazorBusyComponentBaseAuthModel
+
+@using BlazorLib.Components.HelpDesk.issue
+@using MudBlazor
+@using System.Globalization
+
+<style>
+    .issues-for-chat-info {
+        cursor: pointer;
+    }
+</style>
+
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table" Loading="IsBusyProgress">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Чаты TelegramBot`а</MudText>
+        <MudSpacer />
+        <MudTextField 
+            title="без учёта регистра = регистро-независимый поиск" 
+            T="string" 
+            ValueChanged="@(s => OnSearch(s))" 
+            Placeholder="Поиск по: Title, Username, FirstName, LastName" 
+            Adornment="Adornment.Start" 
+            Immediate="true"
+            AdornmentIcon="@Icons.Material.Filled.Search" 
+            IconSize="Size.Medium" 
+            Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(ChatTelegramModelDB.LastUpdateUtc))" T="ChatTelegramModelDB">Updated</MudTableSortLabel></MudTh>
+        <MudTh>Title</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Username</MudTh>
+        <MudTh>FirstName</MudTh>
+        <MudTh>LastName</MudTh>
+        <MudTh>About</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="@(nameof(ChatTelegramModelDB.LastUpdateUtc))">
+            <a href="@($"/telegram-bot/chat-page/{context.Id}")">@context.LastUpdateUtc.GetCustomTime().ToString("d", GlobalStaticConstants.RU)<sup>@context.LastUpdateUtc.GetCustomTime().ToString("t", GlobalStaticConstants.RU)</sup></a>
+        </MudTd>
+        <MudTd DataLabel="Title">@context.Title</MudTd>
+        <MudTd DataLabel="Type">@context.Type.DescriptionInfo()</MudTd>
+        <MudTd DataLabel="Username">@(string.IsNullOrWhiteSpace(context.Username) ? "" : $"@{context.Username}")</MudTd>
+        <MudTd DataLabel="FirstName">@context.FirstName</MudTd>
+        <MudTd DataLabel="LastName">@context.LastName</MudTd>
+        <MudTd DataLabel="About">
+            @if (context.Type == ChatsTypesTelegramEnum.Private)
+            {
+                UserInfoModel? user = UsersCache.FirstOrDefault(x => x.TelegramId == context.ChatTelegramId);
+                IssueHelpDeskModel[]? issues = user is null || !IssuesCache.TryGetValue(user.UserId, out IssueHelpDeskModel[]? issues_cached)
+                ? null
+                : issues_cached;
+
+                if (user is null)
+                {
+                    <b title="нет связанного пользователя системы">не связан</b>
+                }
+                else
+                {
+                    if (user.IsAdmin)
+                    {
+                        <span class="badge text-bg-warning m-1">Admin</span>
+                    }
+                    if (user.Roles!.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)))
+                    {
+                        <span title="@user.RolesAsString("; ").TrimEnd()" class="badge text-bg-success m-1 position-relative">
+                            HD
+                            @if (user.Roles!.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager))
+                            {
+                                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                                    <span class="visually-hidden">New alerts</span>
+                                </span>
+                            }
+                        </span>
+                    }
+                }
+                @if (issues is not null && issues.Length != 0)
+                {
+                    <IssuesForChatComponent Issues="issues" />
+                }
+            }
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Ни чего не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

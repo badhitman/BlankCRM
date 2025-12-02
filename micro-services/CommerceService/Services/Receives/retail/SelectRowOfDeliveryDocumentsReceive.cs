@@ -20,6 +20,6 @@ public class SelectRowOfDeliveryDocumentsReceive(IRetailService commRepo)
     public async Task<TPaginationResponseModel<RowOfDeliveryRetailDocumentModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectRowsOfDeliveriesRetailDocumentsRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.SelectRowOfDeliveryDocumentsAsync(req, token);
+        return await commRepo.SelectRowsOfDeliveryDocumentsAsync(req, token);
     }
 }

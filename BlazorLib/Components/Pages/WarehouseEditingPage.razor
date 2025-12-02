@@ -1,0 +1,14 @@
+﻿@page "/nomenclature/warehouse/editing/{Id:int?}"
+@page "/nomenclature/warehouse/editing"
+
+@using BlazorLib.Components.Warehouse
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug},{GlobalStaticConstantsRoles.Roles.CommerceManager}")]
+
+<WarehouseEditingComponent Id="@(Id.HasValue ? Id.Value : 0)" ContextName="@null" />
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+}

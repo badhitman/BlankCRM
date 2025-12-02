@@ -1,0 +1,56 @@
+﻿@page "/Users/TelegramUsers"
+
+@using System.Net.Mail
+@using BlazorLib.Components.Telegram
+@using Microsoft.AspNetCore.Components.QuickGrid
+@attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+
+<PageTitle>Telegram пользователи</PageTitle>
+<StatusMessage Messages="@Messages" />
+<h3>Telegram пользователи</h3>
+
+<div class="row">
+    <div class="grid">
+        <form @onsubmit="UsersFilter">
+            <div class="input-group input-group-sm mb-3">
+                <span class="input-group-text">Фильтр</span>
+                <InputText @bind-Value="nameFilter" class="form-control" aria-required="true" placeholder="поиск пользователей" />
+                <button type="submit" class="btn btn-outline-secondary">Найти</button>
+            </div>
+        </form>
+
+        <QuickGrid ItemsProvider="@foodRecallProvider" Pagination="@pagination" @ref="myGrid">
+            <TemplateColumn Title="Имя">
+                <span>@context.ToString()</span>
+            </TemplateColumn>
+            <TemplateColumn Align="Align.Right">
+                <div class="hstack">
+                    @if (context.IsBot)
+                    {
+                        <span class="bi bi-robot text-danger-emphasis"> TelegramBot</span>
+                    }
+                    else if (context.TelegramId != default)
+                    {
+                        <TelegramSendMessageComponent TelegramId="@context.TelegramId" />
+                    }
+                    @if (!string.IsNullOrEmpty(context.Email))
+                    {
+                        if (!MailAddress.TryCreate(context.Email, out MailAddress? resMail) || resMail.Host.Equals(GlobalStaticConstants.FakeHost) == true)
+                        {
+                            <span class="font-monospace" title="@GlobalStaticConstants.FakeHost">no-email</span>
+                        }
+                        else
+                        {
+                            <a href="mailto:@context.Email" class="ms-2">@context.Email</a>
+                        }
+                        <RemoveTelegramJoinComponent TelegramUserId="context.TelegramId" />
+                    }
+                </div>
+            </TemplateColumn>
+        </QuickGrid>
+        <Paginator State="@pagination" />
+    </div>
+</div>

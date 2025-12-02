@@ -1,0 +1,8 @@
+@page "/help-desk/tools"
+
+@using BlazorLib.Components.HelpDesk
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = GlobalStaticConstantsRoles.Roles.Admin)]
+
+<ToolsHelpDeskComponent />

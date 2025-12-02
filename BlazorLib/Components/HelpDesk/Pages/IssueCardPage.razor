@@ -1,0 +1,98 @@
+﻿@page "/issue-card/{Id:int}"
+
+@using BlazorLib.Components.Commerce
+@using BlazorLib.Components.HelpDesk.issue
+@using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+@inherits BlazorBusyComponentBaseAuthModel
+
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    <div class="container-fluid">
+        <div class="row">
+            @if (IssueSource is null)
+            {
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>Issue not found</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        Or you do not have sufficient rights to view this document.
+                    </figcaption>
+                </figure>
+            }
+            else
+            {
+                <CascadingValue Value="CanEdit">
+                    <CascadingValue Value="IssueSource">
+                        <CascadingValue Value="UsersIdentityDump">
+                            <div class="col-sm-9">
+                                <div class="vstack gap-3">
+                                    <div>
+                                        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
+                                            @if (OrdersJournal is not null && OrdersJournal.Length != 0)
+                                            {
+                                                <MudTabPanel Text="@($"Order{(OrdersJournal.Length == 1 ? "" : "s")}")">
+                                                    <OrdersListComponent Orders="OrdersJournal" />
+                                                </MudTabPanel>
+                                            }
+                                            @if (OrdersAttendancesJournal is not null && OrdersAttendancesJournal.Length != 0)
+                                            {
+                                                <MudTabPanel Text="@($"Service{(OrdersAttendancesJournal.Length == 1 ? "" : "s")}")">
+                                                    <OrdersAttendancesListComponent HelpDeskIssueId="Id" OrdersAttendances="OrdersAttendancesJournal" UpdateRecords="ReloadRecords" />
+                                                </MudTabPanel>
+                                            }
+                                            @if (CurrentUserSession?.IsAdmin == true)
+                                            {
+                                                <MudTabPanel Text="Request">
+                                                    <IssueBodyComponent />
+                                                </MudTabPanel>
+                                            }
+                                            <MudTabPanel Text="Messages">
+                                                <IssueMessagesComponent />
+                                            </MudTabPanel>
+                                            <MudTabPanel Text="History">
+                                                <PulseJournalComponent />
+                                            </MudTabPanel>
+                                            @if (ShowingAttachmentsIssueArea)
+                                            {
+                                                <MudTabPanel Text="Files">
+                                                    <FilesContextViewComponent ApplicationsNames="@([Routes.ISSUE_CONTROLLER_NAME])"
+                                                                               PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
+                                                                               PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
+                                                                               OwnerPrimaryKey="Id"
+                                                                               Title="Files"
+                                                                               ManageMode="true" />
+                                                </MudTabPanel>
+                                            }
+                                        </MudTabs>
+                                    </div>
+                                    <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
+                                        <Authorized>
+                                            @if (ShowingWappiArea && UsersIdentityDump.Any(x => !string.IsNullOrWhiteSpace(x.PhoneNumber) && GlobalTools.IsPhoneNumber(x.PhoneNumber)))
+                                            {
+                                                <ChatsWappiIssueComponent />
+                                            }
+                                            @if (ShowingTelegramArea && UsersIdentityDump.Any(x => x.TelegramId.HasValue))
+                                            {
+                                                <ChatsTelegramIssueComponent />
+                                            }
+                                        </Authorized>
+                                    </AuthorizeView>
+                                </div>
+                            </div>
+                            <div class="col-sm-3"><IssuePanelComponent /></div>
+                        </CascadingValue>
+                    </CascadingValue>
+                </CascadingValue>
+            }
+        </div>
+    </div>
+}

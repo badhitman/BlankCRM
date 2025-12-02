@@ -1,0 +1,7 @@
+﻿@page "/help-desk/console"
+@using BlazorLib.Components.HelpDesk
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotRubricsManage},{GlobalStaticConstantsRoles.Roles.Admin}")]
+
+<ConsoleHelpDeskComponent />

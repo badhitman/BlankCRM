@@ -1,0 +1,31 @@
+﻿@page "/goods"
+@using BlazorLib.Components.HelpDesk
+
+@using BlazorLib.Components.Warehouse
+@using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+<PageTitle>Товары</PageTitle>
+
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
+    <MudTabPanel Text="Справочник">
+        <NomenclaturesManageComponent />
+    </MudTabPanel>
+    <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.CommerceManager},{GlobalStaticConstantsRoles.Roles.Debug}")">
+        <Authorized>
+            <MudTabPanel Text="Склады">
+                <MudPaper Class="ma-2" Elevation="3">
+                    <RubricsManageComponent TEntity="RubricNodeBodyComponent" SingleLevelMode ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME" />
+                </MudPaper>
+            </MudTabPanel>
+            <MudTabPanel Text="Движения">
+                <WarehouseMainComponent />
+            </MudTabPanel>
+            <MudTabPanel Text="Регистры">
+                <OfferRegistersComponent />
+            </MudTabPanel>
+        </Authorized>
+    </AuthorizeView>
+</MudTabs>

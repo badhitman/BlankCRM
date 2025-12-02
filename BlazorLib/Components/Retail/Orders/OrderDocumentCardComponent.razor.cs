@@ -8,6 +8,9 @@ using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Retail.Orders;
 
+/// <summary>
+/// OrderDocumentCardComponent
+/// </summary>
 public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]

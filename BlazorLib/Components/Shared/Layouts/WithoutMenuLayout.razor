@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using MudBlazor
+@inherits LayoutComponentBase
 
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @rendermode="new InteractiveServerRenderMode(prerender: false)" />
 <MudDialogProvider @rendermode="new InteractiveServerRenderMode(prerender: false)" />

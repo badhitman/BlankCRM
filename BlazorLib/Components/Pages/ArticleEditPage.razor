@@ -1,0 +1,14 @@
+﻿@page "/articles/edit-card/{ArticleId:int}"
+@page "/articles/edit-card/"
+
+@using BlazorLib.Components.Articles
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<ArticleEditComponent ArticleId="ArticleId ?? 0" />
+
+@code {
+    [Parameter]
+    public int? ArticleId { get; set; }
+}

@@ -9,5 +9,6 @@ namespace SharedLib;
 /// </summary>
 public class SelectRowsOfDeliveriesRetailDocumentsRequestModel
 {
-
+    /// <inheritdoc/>
+    public int DeliveryDocumentId { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿@inherits BlazorBusyComponentBaseModel
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
 
 <span title="Click for open manage permissions" @onclick=OpenDialog class="badge text-bg-@(BadgeColor ?? "secondary") me-1" style="cursor:pointer;">
     @JoinUserChat.User!.GetName()

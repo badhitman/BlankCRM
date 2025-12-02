@@ -1,4 +1,6 @@
-﻿@inherits BlazorBusyComponentBaseModel
+﻿@using BlazorLib.Components.Telegram
+@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
 
 <div class="card">
     <div class="card-body">
@@ -50,6 +52,10 @@
                         </div>
                     }
                 </div>
+            }
+            @if (currentChatTelegram is not null)
+            {
+                <TelegramChatWrapComponent Chat="currentChatTelegram" />
             }
             @* if (currentUser.Roles is not null && currentUser.Roles.Count != 0)
             {

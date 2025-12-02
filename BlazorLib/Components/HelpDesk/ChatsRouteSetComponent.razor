@@ -1,0 +1,13 @@
+﻿@using BlazorLib.Components.Telegram
+<div class="row row-cols-1 row-cols-md-2 g-1">
+    <div class="col">
+        <ChatSelectComponent Title="Переадресация Telegram сообщений (глобально)"
+                             Subtitle="Для клиентов, на которых ни кто не подписан"
+                             KeyStorage="GlobalStaticCloudStorageMetadata.HelpDeskNotificationTelegramGlobalForIncomingMessage" />
+    </div>
+    <div class="col">
+        <ChatSelectComponent Title="Новые заявки"
+                             Subtitle="Уведомления TelegramBot при создании новых заявок"
+                             KeyStorage="GlobalStaticCloudStorageMetadata.HelpDeskNotificationTelegramForCreateIssue" />
+    </div>
+</div>

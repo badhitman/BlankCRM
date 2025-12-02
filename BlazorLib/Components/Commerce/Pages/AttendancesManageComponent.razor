@@ -1,0 +1,34 @@
+﻿@using BlazorLib.Components.Commerce.Attendances
+@using BlazorLib.Components.Users
+@using MudBlazor
+
+@inherits BlazorBusyComponentBaseAuthModel
+
+<div class="input-group mb-1 mt-2">
+    <label class="input-group-text" for="select-offer">Offer</label>
+    <select @bind="SelectedOfferId" class="form-select" aria-label="Выбор услуги" id="select-offer">
+        @foreach (IGrouping<NomenclatureModelDB?, OfferModelDB> opt_g in OffersNodes)
+        {
+            <optgroup label="@opt_g.Key!.Name">
+                @foreach (OfferModelDB opt in opt_g)
+                {
+                    <option value="@opt.Id">@opt.GetName()</option>
+                }
+            </optgroup>
+        }
+    </select>
+</div>
+
+<MudTabs Elevation="2" ApplyEffectsToContainer PanelClass="pa-2" Color="@Color.Success">
+    <CascadingValue Value="SelectedOffer">
+        <MudTabPanel Text="Расписание">
+            <WorkScheduleComponent @ref="_workSchedule" />
+        </MudTabPanel>
+        <MudTabPanel Text="Календарь">
+            <WorkCalendarComponent @ref="_workCalendar" />
+        </MudTabPanel>
+        <MudTabPanel Text="Подрядчики">
+            <WorksSchedulersOrganizationsComponent @ref="workOrganizations" />
+        </MudTabPanel>
+    </CascadingValue>
+</MudTabs>
