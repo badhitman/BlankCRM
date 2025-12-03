@@ -2,7 +2,7 @@
 
 <div style="@StyleElement">
     <div id="@toggleBtnId" class="input-group mb-3">
-        <button @onclick="EditToggle" title="Установить" disabled="@IsBusyProgress" class="btn btn-outline-secondary bi bi-pencil" type="button">
+        <button @onclick="EditToggle" title="Установить" disabled="@(IsBusyProgress || IsReadOnly)" class="btn btn-outline-secondary bi bi-pencil" type="button">
             @if(IsBusyProgress)
             {
                 <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>

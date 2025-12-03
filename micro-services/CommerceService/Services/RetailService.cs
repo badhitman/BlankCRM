@@ -68,7 +68,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             return new() { Status = new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }] } };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
         IQueryable<RowOfRetailOrderDocumentModelDB>? q = context.RowsRetailsOrders.Where(x => x.OrderId == req.Payload.OrderId).AsQueryable();
 
         IQueryable<RowOfRetailOrderDocumentModelDB>? pq = q
@@ -171,6 +170,9 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<RetailDocumentModelDB> q = context.RetailOrders.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
 
         if (req.Payload?.BuyersFilterIdentityId is not null && req.Payload.BuyersFilterIdentityId.Length != 0)
             q = q.Where(x => req.Payload.BuyersFilterIdentityId.Contains(x.BuyerIdentityUserId));
@@ -377,6 +379,9 @@ public class RetailService(IIdentityTransmission identityRepo,
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<WalletConversionRetailDocumentModelDB> q = context.ConversionsDocumentsWalletsRetail.AsQueryable();
 
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
+
         IQueryable<WalletConversionRetailDocumentModelDB> pq = q
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
@@ -397,6 +402,9 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<DeliveryDocumentRetailModelDB>? q = context.DeliveryRetailDocuments.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
 
         if (req.Payload?.RecipientsFilterIdentityId is not null && req.Payload.RecipientsFilterIdentityId.Length != 0)
             q = q.Where(x => req.Payload.RecipientsFilterIdentityId.Contains(x.RecipientIdentityUserId));
@@ -428,6 +436,9 @@ public class RetailService(IIdentityTransmission identityRepo,
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<DeliveryServiceRetailModelDB>? q = context.DeliveryRetailServices.AsQueryable();
 
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
+
         IQueryable<DeliveryServiceRetailModelDB>? pq = q
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
@@ -449,6 +460,9 @@ public class RetailService(IIdentityTransmission identityRepo,
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<DeliveryStatusRetailDocumentModelDB>? q = context.DeliveryStatusesRetailDocuments.AsQueryable();
 
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
+
         IQueryable<DeliveryStatusRetailDocumentModelDB>? pq = q
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
@@ -469,6 +483,9 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<PaymentRetailDocumentModelDB>? q = context.PaymentsRetailDocuments.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
 
         if (!string.IsNullOrWhiteSpace(req.Payload?.PayerFilterIdentityId))
         {
@@ -500,7 +517,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq
                 .Include(x => x.Wallet)
-                .Include(x => x.PaymentOrdersLinks)!
+                .Include(x => x.OrdersLinks)!
                 .ThenInclude(x => x.Order)
                 .ToListAsync(cancellationToken: token)
         };
@@ -511,6 +528,9 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<PaymentRetailOrderLinkModelDB>? q = context.PaymentsOrdersRetailLinks.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.Name.Contains(req.FindQuery));
 
         IQueryable<PaymentRetailOrderLinkModelDB>? pq = q
             .Skip(req.PageNum * req.PageSize)
@@ -556,6 +576,9 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<WalletRetailModelDB>? q = context.WalletsRetail.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
 
         if (req.Payload?.UsersFilterIdentityId is not null && req.Payload.UsersFilterIdentityId.Length != 0)
         {
@@ -630,6 +653,9 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<WalletRetailTypeModelDB>? q = context.WalletsRetailTypes.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
 
         IQueryable<WalletRetailTypeModelDB>? pq = q
             .Skip(req.PageNum * req.PageSize)
@@ -861,6 +887,74 @@ public class RetailService(IIdentityTransmission identityRepo,
         return new()
         {
             Response = await context.DeliveryRetailServices.Where(x => reqIds.Contains(x.Id)).ToArrayAsync(cancellationToken: token)
+        };
+    }
+
+    /// <inheritdoc/> 
+    public async Task<TResponseModel<int>> CreatePaymentRetailDeliveryLinkAsync(PaymentRetailDeliveryLinkModelDB req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        req.Name = req.Name.Trim();
+        await context.PaymentsDeliveriesDocumentsRetailLinks.AddAsync(req, token);
+        await context.SaveChangesAsync(token);
+        return new() { Response = req.Id };
+    }
+
+    /// <inheritdoc/> 
+    public async Task<ResponseBaseModel> UpdatePaymentRetailDeliveryLinkAsync(PaymentRetailDeliveryLinkModelDB req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        req.Name = req.Name.Trim();
+
+        await context.PaymentsDeliveriesDocumentsRetailLinks.Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Amount, req.Amount)
+                .SetProperty(p => p.DeliveryDocumentId, req.DeliveryDocumentId)
+                .SetProperty(p => p.PaymentId, req.PaymentId)
+                .SetProperty(p => p.Name, req.Name), cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/> 
+    public async Task<TPaginationResponseModel<PaymentRetailDeliveryLinkModelDB>> SelectPaymentsRetailDeliveriesLinksAsync(TPaginationRequestStandardModel<SelectPaymentsRetailDeliveriesLinksRequestModel> req, CancellationToken token = default)
+    {
+        if (req.Payload is null)
+            return new()
+            {
+                Status = new()
+                {
+                    Messages = [new()
+                    {
+                        TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null"
+                    }]
+                }
+            };
+
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<PaymentRetailDeliveryLinkModelDB>? q = context.PaymentsDeliveriesDocumentsRetailLinks.AsQueryable();
+
+        if (req.Payload.PaymentId.HasValue && req.Payload.PaymentId > 0)
+            q = q.Where(x => x.PaymentId == req.Payload.PaymentId);
+
+        if (req.Payload.DeliveryDocumentId.HasValue && req.Payload.DeliveryDocumentId > 0)
+            q = q.Where(x => x.DeliveryDocumentId == req.Payload.DeliveryDocumentId);
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.Name.Contains(req.FindQuery));
+
+        IQueryable<PaymentRetailDeliveryLinkModelDB>? pq = q
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await pq.Include(x => x.DeliveryDocument).Include(x => x.Payment).ToListAsync(cancellationToken: token)
         };
     }
 }

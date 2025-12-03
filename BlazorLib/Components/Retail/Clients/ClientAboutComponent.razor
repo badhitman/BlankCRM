@@ -53,24 +53,31 @@
                     }
                 </div>
             }
-            @if (currentChatTelegram is not null)
-            {
-                <TelegramChatWrapComponent Chat="currentChatTelegram" />
-            }
-            @* if (currentUser.Roles is not null && currentUser.Roles.Count != 0)
-            {
-                foreach (string _role in currentUser.Roles)
+            <MudExpansionPanels>
+                @if (currentChatTelegram is not null)
                 {
-                    <span class="badge text-bg-light me-1">@_role</span>
+                    <MudExpansionPanel Text="Telegram">
+                        <TelegramChatWrapComponent Chat="currentChatTelegram" />
+                    </MudExpansionPanel>
                 }
-            }
-            if (currentUser.Claims is not null && currentUser.Claims.Length != 0)
+                @* @if (currentUser.Roles is not null && currentUser.Roles.Count != 0)
+                {
+                    <MudExpansionPanel Text="Роли" MaxHeight="500">
+                        Panel Two Content
+                        @foreach (string _role in currentUser.Roles)
+                        {
+                            <span class="badge text-bg-light me-1">@_role</span>
+                        }
+                    </MudExpansionPanel>
+                }
+                if (currentUser.Claims is not null && currentUser.Claims.Length != 0)
             {
                 foreach (EntryAltModel _claim in currentUser.Claims)
                 {
                     <span class="badge text-bg-info me-1">@_claim.Name</span>
                 }
             } *@
+            </MudExpansionPanels>
         }
     </div>
 </div>

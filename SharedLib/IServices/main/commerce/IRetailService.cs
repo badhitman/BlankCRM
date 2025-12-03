@@ -85,6 +85,17 @@ public interface IRetailService
 
 
     /// <inheritdoc/>
+    public Task<TResponseModel<int>> CreatePaymentRetailDeliveryLinkAsync(PaymentRetailDeliveryLinkModelDB req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> UpdatePaymentRetailDeliveryLinkAsync(PaymentRetailDeliveryLinkModelDB req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TPaginationResponseModel<PaymentRetailDeliveryLinkModelDB>> SelectPaymentsRetailDeliveriesLinksAsync(TPaginationRequestStandardModel<SelectPaymentsRetailDeliveriesLinksRequestModel> req, CancellationToken token = default);
+
+
+
+    /// <inheritdoc/>
     public Task<TResponseModel<int>> CreatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>

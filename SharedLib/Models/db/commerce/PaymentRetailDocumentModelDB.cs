@@ -47,14 +47,13 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     /// </summary>
     public int WalletId { get; set; }
 
-    /// <summary>
-    /// PaymentOrderLink
-    /// </summary>
-    public List<PaymentRetailOrderLinkModelDB>? PaymentOrdersLinks { get; set; }
+    /// <inheritdoc/>
+    public List<PaymentRetailOrderLinkModelDB>? OrdersLinks { get; set; }
 
-    /// <summary>
-    /// Version
-    /// </summary>
+    /// <inheritdoc/>
+    public List<PaymentRetailDeliveryLinkModelDB>? DeliveriesLinks { get; set; }
+
+    /// <inheritdoc/>
     [ConcurrencyCheck]
     public Guid Version { get; set; }
 }

@@ -24,6 +24,10 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
     [Parameter]
     public int OrderId { get; set; }
 
+    /// <inheritdoc/>
+    [CascadingParameter(Name = "ClientId")]
+    public string? ClientId { get; set; }
+
 
     RetailDocumentModelDB? currentDocument;
     UserInfoModel? authorUser, buyerUser;
@@ -43,16 +47,13 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
         StateHasChanged();
     }
 
-
-    
-     void SelectUserHandler(UserInfoModel? selected)
+    void SelectUserHandler(UserInfoModel? selected)
     {
         if (currentDocument is null)
             return;
 
         currentDocument.BuyerIdentityUserId = selected?.UserId ?? "";
     }
-
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -105,10 +106,23 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             await SetBusyAsync(false);
         }
         else
+        {
+            if (!string.IsNullOrWhiteSpace(ClientId))
+            {
+
+                TResponseModel<UserInfoModel[]> getUsers = await IdentityRepo.GetUsersOfIdentityAsync([ClientId]);
+                SnackBarRepo.ShowMessagesResponse(getUsers.Messages);
+                if (getUsers.Success() && getUsers.Response is not null && getUsers.Response.Any(x => x.UserId == ClientId))
+                {
+                    buyerUser = getUsers.Response.First(x => x.UserId == ClientId);
+                }
+            }
+
             currentDocument = new()
             {
                 AuthorIdentityUserId = CurrentUserSession.UserId,
-                BuyerIdentityUserId = CurrentUserSession.UserId,
+                BuyerIdentityUserId = ClientId ?? CurrentUserSession.UserId,
             };
+        }
     }
 }

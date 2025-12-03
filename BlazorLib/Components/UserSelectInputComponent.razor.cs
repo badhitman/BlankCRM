@@ -36,8 +36,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
                 PageNum = PageNum,
                 PageSize = page_size,
             });
-        IsBusyProgress = false;
-
+        
         if (rest.Response is not null)
         {
             TotalRowsCount = rest.TotalRowsCount;
@@ -48,7 +47,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
 
             PageNum++;
         }
-        StateHasChanged();
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

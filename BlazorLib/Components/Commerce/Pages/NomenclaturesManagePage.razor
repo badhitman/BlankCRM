@@ -15,11 +15,6 @@
     </MudTabPanel>
     <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.CommerceManager},{GlobalStaticConstantsRoles.Roles.Debug}")">
         <Authorized>
-            <MudTabPanel Text="Склады">
-                <MudPaper Class="ma-2" Elevation="3">
-                    <RubricsManageComponent TEntity="RubricNodeBodyComponent" SingleLevelMode ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME" />
-                </MudPaper>
-            </MudTabPanel>
             <MudTabPanel Text="Движения">
                 <WarehouseMainComponent />
             </MudTabPanel>

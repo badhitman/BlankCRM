@@ -18,8 +18,8 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
 
 
     /// <inheritdoc/>
-    [Parameter]
-    public string? FilterClientId { get; set; }
+    [CascadingParameter(Name = "ClientId")]
+    public string? ClientId { get; set; }
 
 
     async Task<TableData<PaymentRetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
@@ -31,7 +31,7 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
             PageSize = state.PageSize,
             Payload = new()
             {
-                PayerFilterIdentityId = FilterClientId
+                PayerFilterIdentityId = ClientId
             }
         };
         TPaginationResponseModel<PaymentRetailDocumentModelDB>? res = await RetailRepo.SelectPaymentsDocumentsAsync(req, token);

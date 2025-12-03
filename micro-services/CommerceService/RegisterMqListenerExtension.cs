@@ -55,7 +55,9 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<CreateRowRetailDocumentReceive, RowOfRetailOrderDocumentModelDB, TResponseModel<int>>()
             .RegisterMqListener<SelectRowsRetailDocumentsReceive, TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel>, TPaginationResponseModel<RowOfRetailOrderDocumentModelDB>>()
             .RegisterMqListener<UpdateRowRetailDocumentReceive, RowOfRetailOrderDocumentModelDB, ResponseBaseModel>()
-
+            .RegisterMqListener<SelectPaymentsRetailDeliveriesLinksReceive, TPaginationRequestStandardModel<SelectPaymentsRetailDeliveriesLinksRequestModel>, TPaginationResponseModel<PaymentRetailDeliveryLinkModelDB>>()
+            .RegisterMqListener<UpdatePaymentRetailDeliveryLinkReceive, PaymentRetailDeliveryLinkModelDB, ResponseBaseModel>()
+            .RegisterMqListener<CreatePaymentRetailDeliveryLinkReceive, PaymentRetailDeliveryLinkModelDB, TResponseModel<int>>()
 
             .RegisterMqListener<OrganizationSetLegalReceive, OrganizationLegalModel, TResponseModel<bool>>()
             .RegisterMqListener<OrganizationUpdateReceive, TAuthRequestModel<OrganizationModelDB>, TResponseModel<int>>()

@@ -1,12 +1,28 @@
 ﻿@using MudBlazor
-@inherits BlazorBusyComponentBaseModel
+@inherits BlazorBusyComponentUsersCachedModel
 
 <MudTable ServerData="ServerReload" Dense="true" Hover="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Доставка (документы отгрузки)</MudText>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>ffffff</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Тип</MudTh>
+        <MudTh>Вес</MudTh>
+        @if (string.IsNullOrWhiteSpace(ClientId))
+        {
+            <MudTh>Получатель</MudTh>
+        }
+        <MudTh>Стоимость доставки</MudTh>
+        @if (!FilterOrderId.HasValue || FilterOrderId.Value < 1)
+        {
+            <MudTh>Заказ</MudTh>
+        }
+        <MudTh>Создан/Изменён</MudTh>
+        <MudTh>Адрес</MudTh>
+        <MudTh>Трэк/Код</MudTh>
+        <MudTh>Статус</MudTh>
+        <MudTh>Оплата</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">
@@ -18,11 +34,16 @@
         </MudTd>
         <MudTd DataLabel="Тип">@context.DeliveryType</MudTd>
         <MudTd DataLabel="Вес">@context.WeightShipping</MudTd>
-        <MudTd DataLabel="Стоимость доставка">@context.ShippingCost</MudTd>
-        <MudTd DataLabel="Получатель">@context.RecipientIdentityUserId</MudTd>
+        @if (string.IsNullOrWhiteSpace(ClientId))
+        {
+            <MudTd DataLabel="Получатель">
+                @(UsersCache.FirstOrDefault(x => x.UserId == context.RecipientIdentityUserId)?.ToString() ?? context.RecipientIdentityUserId)
+            </MudTd>
+        }
+        <MudTd DataLabel="Стоимость доставки">@context.ShippingCost</MudTd>
         @if (!FilterOrderId.HasValue || FilterOrderId.Value < 1)
         {
-            <MudTd DataLabel="Nr">@context.Order</MudTd>
+            <MudTd DataLabel="Заказ">@context.Order</MudTd>
         }
 
         <MudTd DataLabel="Создан/Изменён">
@@ -31,7 +52,7 @@
         <MudTd DataLabel="Адрес">@context.KladrTitle @context.AddressUserComment</MudTd>
         <MudTd DataLabel="Трэк/Код">@context.DeliveryCode</MudTd>
 
-        <MudTd DataLabel="Хроника">
+        <MudTd DataLabel="Статус">
             @if (context.DeliveryStatusesLog is null)
             {
                 <span class="badge text-bg-danger">error</span>

@@ -32,7 +32,7 @@ public record UserInfoModel : UserInfoMainModel
     /// Получает или задает количество неудачных попыток входа в систему для текущего пользователя.
     /// </summary>
     public int AccessFailedCount { get; set; }
-    
+
     #region address
     /// <inheritdoc/>
     public string? KladrCode { get; set; }
@@ -45,20 +45,23 @@ public record UserInfoModel : UserInfoMainModel
     /// </summary>
     public string? AddressUserComment { get; set; }
     #endregion
-    
+
     /// <inheritdoc/>
     public override string ToString()
     {
         string _res = $"{UserName} {GivenName} {Surname}";
 
-        if (UserName is not null && !UserName.Equals(Email))
+        if (!UserName.Equals(Email))
             _res += $" {Email}";
+
+        if (!string.IsNullOrWhiteSpace(PhoneNumber))
+            _res += $" ({PhoneNumber})";
 
         return _res;
     }
 
     /// <inheritdoc/>
-    public static UserInfoModel Build(string userId, string userName, string? email, string? phoneNumber,string? phoneNumberRequestChange, long? telegramId, bool emailConfirmed, DateTimeOffset? lockoutEnd, bool lockoutEnabled, int accessFailedCount, string? firstName, string? lastName, string? patronymic, string? kladrTitle, string? kladrCode, string? addressUserComment, string[]? roles = null, EntryAltModel[]? claims = null)
+    public static UserInfoModel Build(string userId, string userName, string? email, string? phoneNumber, string? phoneNumberRequestChange, long? telegramId, bool emailConfirmed, DateTimeOffset? lockoutEnd, bool lockoutEnabled, int accessFailedCount, string? firstName, string? lastName, string? patronymic, string? kladrTitle, string? kladrCode, string? addressUserComment, string[]? roles = null, EntryAltModel[]? claims = null)
         => new()
         {
             GivenName = firstName,

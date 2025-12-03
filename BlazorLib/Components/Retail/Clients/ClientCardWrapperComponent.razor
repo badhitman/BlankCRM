@@ -7,13 +7,15 @@
     <MudTabPanel Text="Клиент">
         <ClientAboutComponent ClientId="@ClientId" />
     </MudTabPanel>
-    <MudTabPanel Text="Заказы">
-        <OrdersListComponent FilterClientId="@ClientId" />
-    </MudTabPanel>
-    <MudTabPanel Text="Доставка">
-        <DeliveryManageComponent FilterClientId="@ClientId" />
-    </MudTabPanel>
-    <MudTabPanel Text="Платежи">
-        <PaymentsManageComponent FilterClientId="@ClientId" />
-    </MudTabPanel>
+    <CascadingValue Value="ClientId" Name="ClientId">
+        <MudTabPanel Text="Заказы">
+            <RetailOrdersListComponent />
+        </MudTabPanel>
+        <MudTabPanel Text="Доставка">
+            <DeliveryManageComponent />
+        </MudTabPanel>
+        <MudTabPanel Text="Платежи">
+            <PaymentsManageComponent />
+        </MudTabPanel>
+    </CascadingValue>
 </MudTabs>

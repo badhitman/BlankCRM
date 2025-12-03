@@ -5,23 +5,21 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
-using System.Net.Http;
-using static MudBlazor.CategoryTypes;
 
 namespace BlazorLib.Components.Retail.Delivery;
 
 /// <summary>
 /// DeliveryManageComponent
 /// </summary>
-public partial class DeliveryManageComponent : BlazorBusyComponentBaseModel
+public partial class DeliveryManageComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
-    [Parameter]
-    public string? FilterClientId { get; set; }
+    [CascadingParameter(Name = "ClientId")]
+    public string? ClientId { get; set; }
 
     /// <inheritdoc/>
     [Parameter]
@@ -35,13 +33,17 @@ public partial class DeliveryManageComponent : BlazorBusyComponentBaseModel
             Payload = new()
         };
 
-        if (!string.IsNullOrWhiteSpace(FilterClientId))
-            req.Payload.RecipientsFilterIdentityId = [FilterClientId];
+        if (!string.IsNullOrWhiteSpace(ClientId))
+            req.Payload.RecipientsFilterIdentityId = [ClientId];
 
         if (FilterOrderId.HasValue && FilterOrderId > 0)
             req.Payload.FilterOrderId = FilterOrderId.Value;
 
         TPaginationResponseModel<DeliveryDocumentRetailModelDB>? res = await RetailRepo.SelectDeliveryDocumentsAsync(req, token);
+        SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
+        if (res.Response is not null)
+            await CacheUsersUpdate([.. res.Response.Select(x => x.RecipientIdentityUserId)]);
+
         await SetBusyAsync(false, token);
         return new TableData<DeliveryDocumentRetailModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

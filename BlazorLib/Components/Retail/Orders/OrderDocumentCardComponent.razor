@@ -24,15 +24,49 @@ else
     <div class="card">
         <div class="card-body">
             <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="inputName4" class="form-label">Примечание</label>
+                    <input type="text"
+                           class="form-control"
+                           id="inputName4"
+                           @bind-value="currentDocument.Name"
+                           @bind-value:event="oninput">
+                </div>
+                <div class="col-md-6">
+                    <label for="inputExternalDocumentId" class="form-label">Номер (внешний)</label>
+                    <input type="text"
+                           class="form-control"
+                           id="inputExternalDocumentId"
+                           @bind-value="currentDocument.ExternalDocumentId"
+                           @bind-value:event="oninput">
+                </div>
                 <RubricInputComponent SelectRubricsHandle="WarehouseSelectAction"
                                       ModeSelectingRubrics=ModesSelectRubricsEnum.SelectAny
                                       RubricInitial="@currentDocument.WarehouseId"
                                       Title="Склад списания"
                                       ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
                                       ShowDisabledRubrics />
+                @if (string.IsNullOrWhiteSpace(ClientId))
+                {
+                    <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
+                                              SelectedUser="@currentDocument.BuyerIdentityUserId"
+                                              IsReadOnly="!string.IsNullOrWhiteSpace(ClientId)" />
+                }
+                else
+                {
+                    <div class="mb-3">
+                        <label for="formControlInputBuyer" class="form-label">Покупатель</label>
+                        <input class="form-control"
+                               type="text"
+                               value="@buyerUser?.ToString()"
+                               aria-label="readonly input example"
+                               readonly
+                               id="formControlInputBuyer"
+                               aria-describedby="buyerHelp">
+                        <div id="buyerHelp" class="form-text">Контекст заказчика.</div>
+                    </div>
 
-                <UserSelectInputComponent SelectHandleAction="SelectUserHandler" SelectedUser="@currentDocument.BuyerIdentityUserId" />
-
+                }
                 <MudSelect ReadOnly="@IsBusyProgress" @bind-Value="currentDocument.StatusDocument" T="StatusesDocumentsEnum" Label="Статус" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
                     @foreach (StatusesDocumentsEnum step in Enum.GetValues<StatusesDocumentsEnum>())
                     {
@@ -42,22 +76,6 @@ else
                     }
                 </MudSelect>
 
-                <div class="col-md-6">
-                    <label for="inputName4" class="form-label">Name</label>
-                    <input type="text"
-                           class="form-control"
-                           id="inputName4"
-                           @bind-value="currentDocument.Name"
-                           @bind-value:event="oninput">
-                </div>
-                <div class="col-md-6">
-                    <label for="inputExternalDocumentId" class="form-label">Внешний код</label>
-                    <input type="text"
-                           class="form-control"
-                           id="inputExternalDocumentId"
-                           @bind-value="currentDocument.ExternalDocumentId"
-                           @bind-value:event="oninput">
-                </div>
                 <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
                     <MudTabPanel Text="Заказ">
                         <OrderTableRowsComponent OrderId="OrderId" />

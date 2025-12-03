@@ -9,9 +9,9 @@ using SharedLib;
 namespace BlazorLib.Components.Retail.Orders;
 
 /// <summary>
-/// OrdersListComponent
+/// RetailOrdersListComponent
 /// </summary>
-public partial class OrdersListComponent : BlazorBusyComponentBaseModel
+public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
@@ -24,8 +24,9 @@ public partial class OrdersListComponent : BlazorBusyComponentBaseModel
 
 
     /// <inheritdoc/>
-    [Parameter]
-    public string? FilterClientId { get; set; }
+    [CascadingParameter(Name = "ClientId")]
+    public string? ClientId { get; set; }
+
 
     private bool _visible;
     private readonly DialogOptions _dialogOptions = new()
