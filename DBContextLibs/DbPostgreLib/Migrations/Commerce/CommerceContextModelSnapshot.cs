@@ -173,8 +173,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<string>("DeliveryCode")
                         .HasColumnType("text");
 
-                    b.Property<int>("DeliveryPayment")
-                        .HasColumnType("integer");
+                    b.Property<bool>("DeliveryPaymentUponReceipt")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("DeliveryType")
                         .HasColumnType("integer");
@@ -190,7 +190,7 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -199,9 +199,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.Property<int?>("OrderId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime?>("Paid")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("RecipientIdentityUserId")
                         .IsRequired()
@@ -221,7 +218,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("DeliveryCode");
 
-                    b.HasIndex("DeliveryPayment");
+                    b.HasIndex("DeliveryPaymentUponReceipt");
 
                     b.HasIndex("DeliveryType");
 
@@ -232,8 +229,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("LastUpdatedAtUTC");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("Paid");
 
                     b.HasIndex("RecipientIdentityUserId");
 
@@ -257,7 +252,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -298,7 +293,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -551,7 +546,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<int?>("HelpDeskId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -714,6 +709,36 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("SharedLib.PaymentRetailDeliveryLinkModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("DeliveryDocumentId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("PaymentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryDocumentId");
+
+                    b.HasIndex("PaymentId");
+
+                    b.ToTable("PaymentsDeliveriesDocumentsRetailLinks");
+                });
+
             modelBuilder.Entity("SharedLib.PaymentRetailDocumentModelDB", b =>
                 {
                     b.Property<int>("Id")
@@ -731,7 +756,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -787,12 +812,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -890,7 +909,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<int?>("HelpDeskId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -961,7 +980,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<int?>("HelpDeskId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -1254,7 +1273,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<decimal>("FromWalletSum")
                         .HasColumnType("numeric");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -1297,7 +1316,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -1345,7 +1364,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -1633,6 +1652,25 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("SharedLib.PaymentRetailDeliveryLinkModelDB", b =>
+                {
+                    b.HasOne("SharedLib.DeliveryDocumentRetailModelDB", "DeliveryDocument")
+                        .WithMany("Payments")
+                        .HasForeignKey("DeliveryDocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedLib.PaymentRetailDocumentModelDB", "Payment")
+                        .WithMany()
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeliveryDocument");
+
+                    b.Navigation("Payment");
+                });
+
             modelBuilder.Entity("SharedLib.PaymentRetailDocumentModelDB", b =>
                 {
                     b.HasOne("SharedLib.WalletRetailModelDB", "Wallet")
@@ -1893,6 +1931,8 @@ namespace DbPostgreLib.Migrations.Commerce
             modelBuilder.Entity("SharedLib.DeliveryDocumentRetailModelDB", b =>
                 {
                     b.Navigation("DeliveryStatusesLog");
+
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("SharedLib.NomenclatureModelDB", b =>

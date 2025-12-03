@@ -415,7 +415,10 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.ToListAsync(cancellationToken: token)
+            Response = await pq
+                .Include(x => x.DeliveryStatusesLog)
+                .Include(x => x.Payments)
+                .ToListAsync(cancellationToken: token)
         };
     }
 
@@ -686,11 +689,10 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .SetProperty(p => p.WeightShipping, req.WeightShipping)
                 .SetProperty(p => p.ShippingCost, req.ShippingCost)
                 .SetProperty(p => p.RecipientIdentityUserId, req.RecipientIdentityUserId)
-                .SetProperty(p => p.Paid, req.Paid)
                 .SetProperty(p => p.KladrTitle, req.KladrTitle)
                 .SetProperty(p => p.KladrCode, req.KladrCode)
                 .SetProperty(p => p.DeliveryType, req.DeliveryType)
-                .SetProperty(p => p.DeliveryPayment, req.DeliveryPayment)
+                .SetProperty(p => p.DeliveryPaymentUponReceipt, req.DeliveryPaymentUponReceipt)
                 .SetProperty(p => p.DeliveryCode, req.DeliveryCode)
                 .SetProperty(p => p.AddressUserComment, req.AddressUserComment)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
@@ -758,9 +760,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Where(x => x.Id == req.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.Amount, req.Amount)
-                .SetProperty(p => p.Comment, req.Comment)
-                .SetProperty(p => p.IsDisabled, req.IsDisabled), cancellationToken: token);
+                .SetProperty(p => p.Amount, req.Amount), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }

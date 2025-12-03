@@ -1,5 +1,67 @@
-﻿@inherits BlazorBusyComponentBaseModel
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
 
-<h3>DeliveryManageComponent</h3>
+<MudTable ServerData="ServerReload" Dense="true" Hover="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Доставка (документы отгрузки)</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>ffffff</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">
+            <span>@context.Name</span>
+            @if (context.DeliveryPaymentUponReceipt)
+            {
+                <sup class="ms-2">[оплата при получении]</sup>
+            }
+        </MudTd>
+        <MudTd DataLabel="Тип">@context.DeliveryType</MudTd>
+        <MudTd DataLabel="Вес">@context.WeightShipping</MudTd>
+        <MudTd DataLabel="Стоимость доставка">@context.ShippingCost</MudTd>
+        <MudTd DataLabel="Получатель">@context.RecipientIdentityUserId</MudTd>
+        @if (!FilterOrderId.HasValue || FilterOrderId.Value < 1)
+        {
+            <MudTd DataLabel="Nr">@context.Order</MudTd>
+        }
+
+        <MudTd DataLabel="Создан/Изменён">
+            @context.CreatedAtUTC/@context.LastUpdatedAtUTC
+        </MudTd>
+        <MudTd DataLabel="Адрес">@context.KladrTitle @context.AddressUserComment</MudTd>
+        <MudTd DataLabel="Трэк/Код">@context.DeliveryCode</MudTd>
+
+        <MudTd DataLabel="Хроника">
+            @if (context.DeliveryStatusesLog is null)
+            {
+                <span class="badge text-bg-danger">error</span>
+            }
+            else
+            {
+                <StatusesRowsAboutComponent DeliveryStatusesLog="@context.DeliveryStatusesLog" />
+            }
+        </MudTd>
+        <MudTd DataLabel="Оплата">
+            @context.Payments
+            @if (context.Payments is null)
+            {
+                <span class="badge text-bg-danger">error</span>
+            }
+            else
+            {
+                <PaymentsRowsAboutComponent Payments="@context.Payments" />
+            }
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
 

@@ -7,15 +7,15 @@ namespace SharedLib;
 /// <summary>
 /// PaymentOrderLinkModelDB
 /// </summary>
-public class PaymentRetailOrderLinkModelDB : PaymentRetailLinkBaseModel
+public class PaymentRetailDeliveryLinkModelDB : PaymentRetailLinkBaseModel
 {
     /// <summary>
-    /// Заказ (документ)
+    /// Доставка (документ)
     /// </summary>
-    public RetailDocumentModelDB? Order { get; set; }
-    
+    public DeliveryDocumentRetailModelDB? DeliveryDocument { get; set; }
+
     /// <summary>
-    /// Заказ (документ)
+    /// Доставка (документ)
     /// </summary>
-    public int OrderId { get; set; }
+    public int DeliveryDocumentId { get; set; }
 }

@@ -10,8 +10,8 @@ namespace SharedLib;
 /// <summary>
 /// DeliveryDocumentModelDB
 /// </summary>
-[Index(nameof(DeliveryCode)), Index(nameof(DeliveryType)), Index(nameof(RecipientIdentityUserId)), Index(nameof(DeliveryPayment))]
-[Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment)), Index(nameof(Paid))]
+[Index(nameof(DeliveryCode)), Index(nameof(DeliveryType)), Index(nameof(RecipientIdentityUserId)), Index(nameof(DeliveryPaymentUponReceipt))]
+[Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment))]
 public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
 {
     /// <summary>
@@ -20,14 +20,9 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     public DeliveryTypesEnum DeliveryType { get; set; }
 
     /// <summary>
-    /// Способ оплаты доставки
+    /// Оплата при получении
     /// </summary>
-    public DeliveryPaymentMethodsEnum DeliveryPayment { get; set; }
-
-    /// <summary>
-    /// Дата оплаты
-    /// </summary>
-    public DateTime? Paid { get; set; }
+    public bool DeliveryPaymentUponReceipt { get; set; }
 
     /// <summary>
     /// Получатель
@@ -79,4 +74,9 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     /// StatusesLog
     /// </summary>
     public List<DeliveryStatusRetailDocumentModelDB>? DeliveryStatusesLog { get; set; }
+
+    /// <summary>
+    /// Дата оплаты
+    /// </summary>
+    public List<PaymentRetailDeliveryLinkModelDB>? Payments { get; set; }
 }

@@ -215,6 +215,10 @@ public partial class CommerceLayerContext : DbContext
     /// </summary>
     public DbSet<PaymentRetailOrderLinkModelDB> PaymentsOrdersRetailLinks { get; set; } = default!;
 
+    /// <summary>
+    /// связи платежей с доставкой
+    /// </summary>
+    public DbSet<PaymentRetailDeliveryLinkModelDB> PaymentsDeliveriesDocumentsRetailLinks { get; set; } = default!;
 
 
     /// <summary>

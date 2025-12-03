@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Retail.Delivery;
 public partial class DeliveryRetailTypeElementComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IRetailService retailRepo { get; set; } = default!;
+    IRetailService RetailRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -44,7 +44,7 @@ public partial class DeliveryRetailTypeElementComponent : BlazorBusyComponentBas
         }
 
         await SetBusyAsync();
-        ResponseBaseModel resUpd = await retailRepo.UpdateDeliveryServiceAsync(_deliveryCopy);
+        ResponseBaseModel resUpd = await RetailRepo.UpdateDeliveryServiceAsync(_deliveryCopy);
         if (!resUpd.Success())
         {
             await SetBusyAsync(false);
@@ -52,7 +52,7 @@ public partial class DeliveryRetailTypeElementComponent : BlazorBusyComponentBas
             return;
         }
 
-        TResponseModel<DeliveryServiceRetailModelDB[]>? resGet = await retailRepo.DeliveryServicesGetAsync([_deliveryCopy.Id]);
+        TResponseModel<DeliveryServiceRetailModelDB[]>? resGet = await RetailRepo.DeliveryServicesGetAsync([_deliveryCopy.Id]);
         if (!resGet.Success() || resGet.Response is null || resGet.Response.Length != 1)
         {
             await SetBusyAsync(false);
