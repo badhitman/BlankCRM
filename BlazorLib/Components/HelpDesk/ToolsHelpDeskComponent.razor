@@ -40,7 +40,13 @@
         <TelegramConfigComponent />
     </MudTabPanel>
     <MudTabPanel ToolTip="User rights" Text="Access">
-        <UsersTableComponent HideClaimsColumn="true" HideRolesColumn="true" RolesMarkers="@showMarkersRoles" RolesManageKit="@GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Union([GlobalStaticConstantsRoles.Roles.CommerceManager, GlobalStaticConstantsRoles.Roles.CommerceClient, GlobalStaticConstantsRoles.Roles.Debug])" />
+        <UsersTableComponent HideClaimsColumn HideRolesColumn
+                             RolesMarkers="@showMarkersRoles"
+                             RolesManageKit="@GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Union(
+                                             [GlobalStaticConstantsRoles.Roles.CommerceManager,
+                                              GlobalStaticConstantsRoles.Roles.CommerceClient,
+                                              GlobalStaticConstantsRoles.Roles.Debug,
+                                              GlobalStaticConstantsRoles.Roles.RetailManage])" />
     </MudTabPanel>
     <MudTabPanel Text="Notification templates">
         <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">

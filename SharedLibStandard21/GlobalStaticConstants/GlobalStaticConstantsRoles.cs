@@ -45,30 +45,30 @@ namespace SharedLib
             {
                 get
                 {
-                    _allHelpDeskRoles ??= [HelpDeskTelegramBotManager, HelpDeskTelegramBotUnit, HelpDeskTelegramBotRubricsManage, HelpDeskTelegramBotChatsManage];
+                    _allHelpDeskRoles ??= [HelpDeskManager, HelpDeskUnit, HelpDeskRubricsManage, HelpDeskChatsManage];
                     return _allHelpDeskRoles;
                 }
             }
 
             /// <summary>
-            /// Рубрики + <see cref="HelpDeskTelegramBotUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
+            /// Рубрики + <see cref="HelpDeskUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
             /// </summary>
-            public const string HelpDeskTelegramBotRubricsManage = "HelpDeskTelegramBotRubricsManage";
+            public const string HelpDeskRubricsManage = "HelpDeskRubricsManage";
 
             /// <summary>
-            /// Чаты + <see cref="HelpDeskTelegramBotUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
+            /// Чаты + <see cref="HelpDeskUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
             /// </summary>
-            public const string HelpDeskTelegramBotChatsManage = "HelpDeskTelegramBotChatsManage";
+            public const string HelpDeskChatsManage = "HelpDeskChatsManage";
 
             /// <summary>
-            /// Консоль + <see cref="HelpDeskTelegramBotUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
+            /// Консоль + <see cref="HelpDeskUnit"/> (таблица заявок клиентов связанных с текущим сотрудником)
             /// </summary>
-            public const string HelpDeskTelegramBotManager = "HelpDeskTelegramBotManager";
+            public const string HelpDeskManager = "HelpDeskManager";
 
             /// <summary>
             /// Таблица заявок клиентов связанных с текущим сотрудником
             /// </summary>
-            public const string HelpDeskTelegramBotUnit = "HelpDeskTelegramBotUnit";
+            public const string HelpDeskUnit = "HelpDeskUnit";
 
             /// <summary>
             /// CommerceManager

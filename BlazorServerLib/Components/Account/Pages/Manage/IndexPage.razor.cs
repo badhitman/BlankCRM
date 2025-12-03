@@ -27,7 +27,12 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
 
     bool _visible;
     string? _editPhone;
-    readonly DialogOptions _dialogOptions = new() { FullWidth = true };
+    readonly DialogOptions _dialogOptions = new()
+    {
+        FullWidth = true,
+        CloseButton = true,
+        CloseOnEscapeKey = true
+    };
 
     string GetTitleChangePhone()
     {

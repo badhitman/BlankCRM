@@ -17,6 +17,9 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
     [Inject]
     IDialogService DialogService { get; set; } = default!;
 
+    [Inject]
+    IKladrNavigationService KladrRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter]
@@ -33,6 +36,8 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public bool ReadOnly { get; set; }
 
+
+    KladrResponseModel? CurrentKladrObject;
 
     async void ChangeSelectAction(KladrResponseModel sender)
     {
@@ -60,5 +65,24 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
         DialogOptions options = new() { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Large };
         IDialogReference res = await DialogService.ShowAsync<KladrSelectDialogComponent>("Выбор адреса:", parameters, options);
         return res;
+    }
+
+    /// <inheritdoc/>
+    public async Task Actualize()
+    {
+        if (!string.IsNullOrWhiteSpace(KladrObject?.Id))
+        {
+            await SetBusyAsync();
+            TResponseModel<KladrResponseModel> res = await KladrRepo.ObjectGetAsync(new() { Code = KladrObject.Id });
+            CurrentKladrObject = res.Response;
+            await SetBusyAsync(false);
+        }
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await Actualize();
     }
 }

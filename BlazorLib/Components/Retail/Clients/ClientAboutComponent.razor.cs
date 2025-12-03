@@ -10,11 +10,8 @@ namespace BlazorLib.Components.Retail.Clients;
 /// <summary>
 /// ClientAboutComponent
 /// </summary>
-public partial class ClientAboutComponent : BlazorBusyComponentBaseModel
+public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
 {
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
@@ -27,9 +24,125 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseModel
     public required string ClientId { get; set; }
 
 
-    UserInfoModel? currentUser;
+    UserInfoModel? currentUser, editClientCopy;
     ChatTelegramModelDB? currentChatTelegram;
     List<WalletRetailModelDB>? WalletsForUser;
+
+    EntryAltModel? SelectedKladrObject
+    {
+        get => EntryAltModel.Build(editClientCopy?.KladrCode ?? "", editClientCopy?.KladrTitle ?? "");
+        set
+        {
+            if (editClientCopy is null)
+                return;
+
+            editClientCopy.KladrCode = value?.Id;
+            editClientCopy.KladrTitle = value?.Name;
+        }
+    }
+
+    bool CannotSaveUserDetails
+    {
+        get
+        {
+            if (currentUser is null || editClientCopy is null)
+                return true;
+
+            return
+                currentUser.GivenName == editClientCopy.GivenName &&
+                currentUser.Surname == editClientCopy.Surname &&
+                currentUser.Patronymic == editClientCopy.Patronymic &&
+                currentUser.KladrTitle == editClientCopy.KladrTitle &&
+                currentUser.KladrCode == editClientCopy.KladrCode &&
+                currentUser.AddressUserComment == editClientCopy.AddressUserComment;
+        }
+    }
+
+    bool CannotSaveUserPhone
+        => currentUser is null ||
+           editClientCopy is null ||
+           currentUser.PhoneNumber == editClientCopy.PhoneNumber ||
+           !GlobalTools.IsPhoneNumber(editClientCopy.PhoneNumber);
+
+
+    void HandleOnChange(ChangeEventArgs args)
+    {
+        if (editClientCopy is null || editClientCopy is null)
+        {
+            SnackBarRepo.Error("editClientCopy is null || editClientCopy is null");
+            return;
+        }
+
+        editClientCopy.AddressUserComment = args.Value?.ToString();
+    }
+
+    async Task SetPhone(string? phoneNum)
+    {
+        if (CurrentUserSession is null)
+            return;
+
+        if (!string.IsNullOrWhiteSpace(phoneNum) && !GlobalTools.IsPhoneNumber(phoneNum))
+        {
+            SnackBarRepo.Error("Телефон должен быть в формате: +79994440011 (можно без +)");
+            return;
+        }
+
+        TAuthRequestModel<ChangePhoneUserRequestModel> req = new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                UserId = ClientId,
+                PhoneNum = phoneNum
+            }
+        };
+
+        await SetBusyAsync();
+        ResponseBaseModel res = await IdentityRepo.ConfirmChangePhoneUserAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+        if (res.Success())
+        {
+            TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([ClientId]);
+            SnackBarRepo.ShowMessagesResponse(getUser.Messages);
+            currentUser = getUser.Response?.FirstOrDefault(x => x.UserId == ClientId);
+            editClientCopy = GlobalTools.CreateDeepCopy(currentUser);
+        }
+
+        await SetBusyAsync(false);
+    }
+
+    async Task SaveUserDetails()
+    {
+        if (editClientCopy is null)
+            return;
+
+        IdentityDetailsModel req = new()
+        {
+            UserId = ClientId,
+            AddressUserComment = editClientCopy.AddressUserComment,
+            KladrCode = editClientCopy.KladrCode,
+            KladrTitle = editClientCopy.KladrTitle,
+            Patronymic = editClientCopy.Patronymic,
+            FirstName = editClientCopy.GivenName,
+            LastName = editClientCopy.Surname,
+            UpdateAddress = true,
+        };
+
+        await SetBusyAsync();
+        ResponseBaseModel res = await IdentityRepo.UpdateUserDetailsAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+        if (res.Success())
+        {
+            TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([ClientId]);
+            SnackBarRepo.ShowMessagesResponse(getUser.Messages);
+            currentUser = getUser.Response?.FirstOrDefault(x => x.UserId == ClientId);
+            editClientCopy = GlobalTools.CreateDeepCopy(currentUser);
+        }
+
+        await SetBusyAsync(false);
+    }
 
     /// <inheritdoc/>
     protected async override Task OnInitializedAsync()
@@ -38,12 +151,15 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([ClientId]);
         SnackBarRepo.ShowMessagesResponse(getUser.Messages);
-        currentUser = getUser.Response?.FirstOrDefault();
-
-        if(currentUser is not null && currentUser.TelegramId.HasValue)
+        currentUser = getUser.Response?.FirstOrDefault(x => x.UserId == ClientId);
+        if (currentUser is not null)
         {
-            List<ChatTelegramModelDB> chats = await TelegramRepo.ChatsReadTelegramAsync([currentUser.TelegramId.Value]);
-            currentChatTelegram = chats.FirstOrDefault();
+            editClientCopy = GlobalTools.CreateDeepCopy(currentUser);
+            if (currentUser.TelegramId.HasValue)
+            {
+                List<ChatTelegramModelDB> chats = await TelegramRepo.ChatsReadTelegramAsync([currentUser.TelegramId.Value]);
+                currentChatTelegram = chats.FirstOrDefault();
+            }
         }
 
         TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> reqWallets = new()

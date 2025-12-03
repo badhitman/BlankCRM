@@ -37,9 +37,46 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
-<MudExpansionPanels Class="mb-6">
+<MudExpansionPanels Class="mt-2">
     <MudExpansionPanel Text="Добавить нового клиента" Gutters>
-        <MudText>Both header and content have 24px horizontal padding (gutters).</MudText>
-        <MudText>This is the default behavior when Gutters is not specified.</MudText>
+        <div class="card">
+            <div class="card-body">
+                <MudGrid>
+                    <MudItem xs="6">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email (Username)</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" @bind-value="newUser.UserName" @bind-value:event="oninput">
+                        </div>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <div class="mb-3">
+                            <label for="exampleInputPhone1" class="form-label">Телефон</label>
+                            <input type="tel" class="form-control" id="exampleInputPhone1" @bind-value="newUser.PhoneNumber" @bind-value:event="oninput">
+                        </div>
+                    </MudItem>
+                    <MudItem xs="4">
+                        <div class="mb-3">
+                            <label for="exampleInputSurname1" class="form-label">Фамилия</label>
+                            <input type="text" class="form-control" id="exampleInputSurname1" @bind-value="newUser.GivenName" @bind-value:event="oninput">
+                        </div>
+                    </MudItem>
+                    <MudItem xs="4">
+                        <div class="mb-3">
+                            <label for="exampleInputLastName1" class="form-label">Имя</label>
+                            <input type="text" class="form-control" id="exampleInputLastName1" @bind-value="newUser.Surname" @bind-value:event="oninput">
+                        </div>
+                    </MudItem>
+                    <MudItem xs="4">
+                        <div class="mb-3">
+                            <label for="exampleInputPatronymic1" class="form-label">Отчество</label>
+                            <input type="text" class="form-control" id="exampleInputPatronymic1" @bind-value="newUser.Patronymic" @bind-value:event="oninput">
+                        </div>
+                    </MudItem>
+                </MudGrid>
+                <div class="d-grid gap-2">
+                    <button @onclick="CreateNewUser" class="btn btn-primary" disabled="@DisableCreatingUser">Создать</button>
+                </div>
+            </div>
+        </div>
     </MudExpansionPanel>
 </MudExpansionPanels>

@@ -25,7 +25,7 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
     public required NomenclatureModelDB CurrentNomenclature { get; set; }
 
 
-    bool 
+    bool
         _hideMultiplicity,
         _hideWorth,
         loadTableReady;
@@ -35,7 +35,8 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
     readonly DialogOptions _dialogOptions = new()
     {
         FullWidth = true,
-        CloseButton = true
+        CloseButton = true,
+        CloseOnEscapeKey = true,
     };
 
     /// <inheritdoc/>
@@ -51,7 +52,7 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
         await Task.WhenAll(tasks);
         loadTableReady = true;
         await SetBusyAsync(false);
-        
+
         if (table is not null)
             await table.ReloadServerData();
     }

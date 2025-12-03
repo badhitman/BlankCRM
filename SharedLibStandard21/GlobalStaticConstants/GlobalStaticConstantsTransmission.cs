@@ -70,6 +70,9 @@ public static partial class GlobalStaticConstantsTransmission
         /// <inheritdoc/>
         public readonly static string InitChangePhoneUserReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, Routes.USER_CONTROLLER_NAME, $"{Routes.CHANGE_ACTION_NAME}-{Routes.PHONE_CONTROLLER_NAME}", Routes.INITIAL_ACTION_NAME);
 
+        /// <inheritdoc/>
+        public readonly static string CreateManualUserReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, Routes.USER_CONTROLLER_NAME, Routes.MANUAL_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+
         /// <summary>
         /// Чтение 2fa токена (из кеша)
         /// </summary>

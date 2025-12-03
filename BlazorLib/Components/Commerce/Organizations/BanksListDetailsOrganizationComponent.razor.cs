@@ -91,7 +91,11 @@ public partial class BanksListDetailsOrganizationComponent : BlazorBusyComponent
             { x => x.BankDetails, BankDetailsModelDB.BuildEmpty(CurrentOrganization) },
             { x => x.StateHasChangedHandler, StateHasChangedCall }
         };
-        DialogOptions options = new() { CloseOnEscapeKey = true };
+        DialogOptions options = new()
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+        };
 
         return DialogService.ShowAsync<BankDetailsEditComponent>("Банковские реквизиты", parameters, options);
     }

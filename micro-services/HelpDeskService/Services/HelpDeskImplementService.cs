@@ -1264,7 +1264,7 @@ public class HelpDeskImplementService(
             issue_data.AuthorIdentityUserId != actor.UserId &&
             issue_data.ExecutorIdentityUserId != actor.UserId &&
             actor.UserId != GlobalStaticConstantsRoles.Roles.System &&
-            actor.UserId != GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager)
+            actor.UserId != GlobalStaticConstantsRoles.Roles.HelpDeskManager)
         {
             res.AddError("Не достаточно прав для смены статуса");
             return res;

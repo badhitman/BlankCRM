@@ -65,7 +65,7 @@
                     {
                         <span title="@user.RolesAsString("; ").TrimEnd()" class="badge text-bg-success m-1 position-relative">
                             HD
-                            @if (user.Roles!.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager))
+                            @if (user.Roles!.Contains(GlobalStaticConstantsRoles.Roles.HelpDeskManager))
                             {
                                 <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                                     <span class="visually-hidden">New alerts</span>

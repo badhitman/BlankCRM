@@ -26,6 +26,11 @@ public class KladrResponseModel : KladrBaseElementModel
     /// </summary>
     public required string GNINMB { get; set; }
 
+    /// <summary>
+    /// Почтовый индекс
+    /// </summary>
+    public required string PostIndex { get; set; }
+
 
     /// <summary>
     /// Payload

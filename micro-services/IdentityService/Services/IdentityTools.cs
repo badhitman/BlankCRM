@@ -56,7 +56,7 @@ public class IdentityTools(
         if (!GlobalTools.IsPhoneNumber(req.Payload))
             return ResponseBaseModel.CreateError("Телефон должен быть в формате: +79994440011 (можно без +)");
 
-        bool _plus = req.Payload.StartsWith('+');
+        bool _plus = req.Payload.Trim().StartsWith('+');
         req.Payload = Regex.Replace(req.Payload, @"[^\d]", "");
         if (_plus)
             req.Payload = $"+{req.Payload}";
@@ -108,7 +108,7 @@ public class IdentityTools(
         if (!GlobalTools.IsPhoneNumber(req.Payload.PhoneNum))
             return ResponseBaseModel.CreateError("Телефон должен быть в формате: +79994440011 (можно без +)");
 
-        bool _plus = req.Payload.PhoneNum.StartsWith('+');
+        bool _plus = req.Payload.PhoneNum.Trim().StartsWith('+');
         req.Payload.PhoneNum = Regex.Replace(req.Payload.PhoneNum, @"[^\d]", "");
         if (_plus)
             req.Payload.PhoneNum = $"+{req.Payload.PhoneNum}";
@@ -753,9 +753,13 @@ public class IdentityTools(
     {
         req.FirstName ??= "";
         req.LastName ??= "";
+        req.Patronymic ??= "";
+
+        req.FirstName = req.FirstName.Trim();
+        req.LastName = req.LastName.Trim();
+        req.Patronymic = req.Patronymic.Trim();
 
         req.AddressUserComment = req.AddressUserComment?.Trim();
-        req.Patronymic = req.Patronymic?.Trim();
 
         if (!string.IsNullOrWhiteSpace(req.PhoneNum) && !GlobalTools.IsPhoneNumber(req.PhoneNum))
             return ResponseBaseModel.CreateError("Телефон должен быть в формате: +79994440011 (можно без +)");
@@ -763,9 +767,14 @@ public class IdentityTools(
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         ApplicationUser? user_db;
 
-        user_db = await identityContext
+        IQueryable<ApplicationUser> _findUserQuery = identityContext
             .Users
-            .FirstOrDefaultAsync(x => x.Id == req.UserId && (x.FirstName != req.FirstName || x.LastName != req.LastName || x.Patronymic != req.Patronymic), cancellationToken: token);
+            .Where(x => x.Id == req.UserId &&
+                (x.FirstName != req.FirstName || x.LastName != req.LastName || x.Patronymic != req.Patronymic ||
+                x.KladrCode != req.KladrCode || x.KladrTitle != req.KladrTitle || x.AddressUserComment != req.AddressUserComment));
+
+        user_db = await _findUserQuery
+            .FirstOrDefaultAsync(cancellationToken: token);
 
         if (user_db is null)
             return ResponseBaseModel.CreateInfo("Без изменений");
@@ -776,19 +785,11 @@ public class IdentityTools(
 
         await q
             .ExecuteUpdateAsync(set => set
-                //.SetProperty(p => p.RequestChangePhone, req.PhoneNum)
                 .SetProperty(p => p.FirstName, req.FirstName)
                 .SetProperty(p => p.NormalizedFirstNameUpper, req.FirstName.ToUpper())
                 .SetProperty(p => p.LastName, req.LastName)
                 .SetProperty(p => p.NormalizedLastNameUpper, req.LastName.ToUpper())
-                .SetProperty(p => p.Patronymic, req.Patronymic), cancellationToken: token);
-
-        if (!string.IsNullOrWhiteSpace(req.Patronymic))
-        {
-            await q
-                .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.NormalizedPatronymicUpper, req.Patronymic.ToUpper()), cancellationToken: token);
-        }
+                .SetProperty(p => p.Patronymic, req.Patronymic.ToUpper()), cancellationToken: token);
 
         if (req.UpdateAddress)
         {
@@ -798,12 +799,6 @@ public class IdentityTools(
                 .SetProperty(p => p.KladrCode, req.KladrCode)
                 .SetProperty(p => p.AddressUserComment, req.AddressUserComment), cancellationToken: token);
         }
-
-        user_db.PhoneNumber = req.PhoneNum;
-        user_db.FirstName = req.FirstName;
-        user_db.NormalizedFirstNameUpper = req.FirstName.ToUpper();
-        user_db.LastName = req.LastName;
-        user_db.NormalizedLastNameUpper = req.LastName.ToUpper();
 
         await ClaimsUserFlushAsync(user_db.Id, token);
 
@@ -1299,6 +1294,100 @@ public class IdentityTools(
             RequireConfirmedEmail = userManager.Options.SignIn.RequireConfirmedEmail,
             RequireConfirmedPhoneNumber = userManager.Options.SignIn.RequireConfirmedPhoneNumber,
             Response = user.Id,
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestModel<UserInfoBaseModel> req, CancellationToken token = default)
+    {
+        if (req.Payload is null)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }] };
+
+        req.Payload.UserName = req.Payload.UserName.Trim();
+        if (!MailAddress.TryCreate(req.Payload.UserName, out _))
+            return new() { Messages = [new() { Text = "Email (Username) не корректный", TypeMessage = MessagesTypesEnum.Error }] };
+
+        if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Автор запроса не определён" }] };
+
+        TResponseModel<UserInfoModel[]> getAuthorUser = await GetUsersOfIdentityAsync([req.SenderActionUserId], token);
+        if (!getAuthorUser.Success())
+            return new() { Messages = getAuthorUser.Messages };
+
+        if (getAuthorUser.Response is null || !getAuthorUser.Response.Any(x => x.UserId == req.SenderActionUserId))
+            return new() { Messages = [new() { Text = "Автор запроса не найден в БД", TypeMessage = MessagesTypesEnum.Error }] };
+
+        UserInfoModel author = getAuthorUser.Response.First(x => x.UserId == req.SenderActionUserId);
+
+        if (!author.IsAdmin && author.Roles?.Contains(GlobalStaticConstantsRoles.Roles.RetailManage) != true && author.Roles?.Contains(GlobalStaticConstantsRoles.Roles.CommerceManager) != true)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Недостаточно прав для операции" }] };
+
+        using IdentityAppDbContext ctx = await identityDbFactory.CreateDbContextAsync(token);
+
+        if (await ctx.Users.AnyAsync(x => x.UserName == req.Payload.UserName, cancellationToken: token))
+            return new() { Messages = [new() { Text = "Пользователь с таким Email (Username) уже существует", TypeMessage = MessagesTypesEnum.Error }] };
+
+        if (!string.IsNullOrWhiteSpace(req.Payload.PhoneNumber))
+        {
+            bool _plus = req.Payload.PhoneNumber.Trim().StartsWith('+');
+            req.Payload.PhoneNumber = Regex.Replace(req.Payload.PhoneNumber, @"[^\d]", "");
+            if (_plus)
+                req.Payload.PhoneNumber = $"+{req.Payload.PhoneNumber}";
+
+            if (!GlobalTools.IsPhoneNumber(req.Payload.PhoneNumber))
+                return new() { Messages = [new() { Text = "Телефон должен быть в формате: +79994440011 (можно без +)", TypeMessage = MessagesTypesEnum.Error }] };
+
+            if (await ctx.Users.AnyAsync(x => x.PhoneNumber == req.Payload.PhoneNumber || x.PhoneNumber == $"+{req.Payload.PhoneNumber}", cancellationToken: token))
+                return new() { Messages = [new() { Text = "Пользователь с таким телефоном уже существует", TypeMessage = MessagesTypesEnum.Error }] };
+        }
+
+        using IServiceScope scope = serviceScopeFactory.CreateScope();
+        using IUserStore<ApplicationUser> userStore = scope.ServiceProvider.GetRequiredService<IUserStore<ApplicationUser>>();
+
+        using IUserEmailStore<ApplicationUser> emailStore = (IUserEmailStore<ApplicationUser>)userStore;
+        ApplicationUser user = IdentityStatic.CreateInstanceUser();
+        await userStore.SetUserNameAsync(user, req.Payload.UserName, CancellationToken.None);
+        await emailStore.SetEmailAsync(user, req.Payload.UserName, CancellationToken.None);
+
+        using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        IdentityResult result = await userManager.CreateAsync(user);
+        if (!result.Succeeded)
+            return new() { Messages = result.Errors.Select(x => new ResultMessage() { Text = $"[{x.Code}: {x.Description}]", TypeMessage = MessagesTypesEnum.Error }).ToList() };
+
+        if (req.Payload.GivenName != null)
+            await ctx.Users.Where(x => x.Id == user.Id)
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.FirstName, req.Payload.GivenName.ToUpper()), cancellationToken: token);
+
+        if (req.Payload.Surname != null)
+            await ctx.Users.Where(x => x.Id == user.Id)
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.LastName, req.Payload.Surname.ToUpper()), cancellationToken: token);
+
+        if (req.Payload.Patronymic != null)
+            await ctx.Users.Where(x => x.Id == user.Id)
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.Patronymic, req.Payload.Patronymic.ToUpper()), cancellationToken: token);
+
+        if (!string.IsNullOrWhiteSpace(req.Payload.PhoneNumber))
+        {
+            await ctx.Users.Where(x => x.Id == user.Id)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.PhoneNumber, req.Payload.PhoneNumber)
+                    .SetProperty(p => p.RequestChangePhone, req.Payload.PhoneNumber)
+                    .SetProperty(p => p.PhoneNumberConfirmed, true), cancellationToken: token);
+        }
+
+        await ctx.Users.Where(x => x.Id == user.Id)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.FirstName, req.Payload.GivenName)
+                    .SetProperty(p => p.LastName, req.Payload.Surname)
+                    .SetProperty(p => p.Patronymic, req.Payload.Patronymic), cancellationToken: token);
+
+        return new()
+        {
+            Response = user.Id,
+            Messages = [new() { TypeMessage = MessagesTypesEnum.Success, Text = "Пользователь успешно создан" }]
         };
     }
 

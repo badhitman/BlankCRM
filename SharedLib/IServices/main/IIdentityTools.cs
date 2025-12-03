@@ -320,7 +320,12 @@ public interface IIdentityTools
     public Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestModel<string> req, CancellationToken token = default);
 
     /// <summary>
-    /// InitChangePhoneUserAsync
+    /// Подтвердить номер телефона
     /// </summary>
     public Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<ChangePhoneUserRequestModel> req, CancellationToken token = default);
+
+    /// <summary>
+    /// Создать пользователя вручную
+    /// </summary>
+    public Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestModel<UserInfoBaseModel> user, CancellationToken token = default);
 }

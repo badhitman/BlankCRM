@@ -8,37 +8,16 @@ namespace SharedLib;
 /// ƒобавьте свойства в этот класс и обновите AuthenticationStateProviders сервера и клиента, 
 /// чтобы предоставить клиенту дополнительную информацию о прошедшем проверку подлинности пользователе.
 /// </summary>
-public record UserInfoMainModel
+public record UserInfoMainModel : UserInfoBaseModel
 {
-    /// <inheritdoc/>
-    public string? PhoneNumber { get; set; }
-
     /// <inheritdoc/>
     public string? RequestChangePhone { get; set; }
 
-    /// <summary>
-    /// FirstName
-    /// </summary>
-    public string? GivenName { get; set; }
-
-    /// <summary>
-    /// LastName
-    /// </summary>
-    public string? Surname { get; set; }
-
-    /// <summary>
-    /// Patronymic
-    /// </summary>
-    public string? Patronymic {  get; set; }
+    /// <inheritdoc/>
+    public string? Email { get; init; }
 
     /// <inheritdoc/>
     public required string UserId { get; init; }
-
-    /// <inheritdoc/>
-    public required string UserName { get; init; }
-
-    /// <inheritdoc/>
-    public string? Email { get; init; }
 
     /// <summary>
     /// ѕользователь прив€зал Telegram к учЄтной записи

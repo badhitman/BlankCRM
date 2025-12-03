@@ -574,13 +574,22 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<WalletRetailModelDB>> SelectWalletsAsync(TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return new()
+            {
+                Status = new()
+                {
+                    Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }]
+                }
+            };
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<WalletRetailModelDB>? q = context.WalletsRetail.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
 
-        if (req.Payload?.UsersFilterIdentityId is not null && req.Payload.UsersFilterIdentityId.Length != 0)
+        if (req.Payload.UsersFilterIdentityId is not null && req.Payload.UsersFilterIdentityId.Length != 0)
         {
             TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync(req.Payload.UsersFilterIdentityId, token);
             if (!user.Success())
@@ -598,36 +607,36 @@ public class RetailService(IIdentityTransmission identityRepo,
         }
 
         IQueryable<WalletRetailModelDB>? pq = q
+            .OrderBy(x => x.Id)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
         List<WalletRetailModelDB> res = await pq.Include(x => x.WalletType).ToListAsync(cancellationToken: token);
 
-        if (req.Payload?.AutoGenerationWallets == true)
+        if (req.Payload.AutoGenerationWallets == true && req.Payload.UsersFilterIdentityId is not null && req.Payload.UsersFilterIdentityId.Length != 0)
         {
-            WalletRetailTypeModelDB[] walletsTypesDb = await context.WalletsRetailTypes
+            List<WalletRetailTypeModelDB> walletsTypesDb = await context.WalletsRetailTypes
                 .Where(x => !x.IsDisabled)
-                .ToArrayAsync(cancellationToken: token);
+                .ToListAsync(cancellationToken: token);
 
             List<WalletRetailModelDB> createWallets = [];
-
-            res.GroupBy(x => x.UserIdentityId).ToList()
-                .ForEach(gNode =>
+            foreach (string userId in req.Payload.UsersFilterIdentityId)
+            {
+                walletsTypesDb.ForEach(w =>
                 {
-                    WalletRetailTypeModelDB[] subList = [.. walletsTypesDb.Where(w => !gNode.Any(y => y.WalletTypeId == w.Id))];
-                    if (subList.Length != 0)
+                    if (!res.Any(x => x.WalletTypeId == w.Id && x.UserIdentityId == userId))
                     {
-                        createWallets.AddRange(subList.Select(x => new WalletRetailModelDB()
+                        createWallets.Add(new()
                         {
-                            UserIdentityId = gNode.Key,
+                            UserIdentityId = userId,
                             CreatedAtUTC = DateTime.UtcNow,
-                            Description = "",
                             Name = "auto generation",
                             Version = Guid.NewGuid(),
-                            WalletTypeId = x.Id,
-                        }));
+                            WalletTypeId = w.Id,
+                        });
                     }
                 });
+            }
 
             if (createWallets.Count != 0)
             {

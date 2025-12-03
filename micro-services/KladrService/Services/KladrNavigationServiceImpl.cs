@@ -164,6 +164,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 GNINMB = mainElement.GNINMB,
                 OCATD = mainElement.OCATD,
                 UNO = mainElement.UNO,
+                PostIndex = mainElement.INDEX,
             }
         };
     }
@@ -318,6 +319,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
                 GNINMB = x.GNINMB,
                 OCATD = x.OCATD,
                 UNO = x.UNO,
+                PostIndex = x.INDEX,
             }));
             return response;
         }

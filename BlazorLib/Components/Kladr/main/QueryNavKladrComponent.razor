@@ -11,6 +11,9 @@
     <HeaderContent>
         <MudTh></MudTh>
     </HeaderContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
     <RowTemplate>
         <MudTd>
             <CascadingValue Value="context">
@@ -38,7 +41,8 @@
     <LoadingContent>
         <MudText>Downloading...</MudText>
     </LoadingContent>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
 </MudTable>
+@if (IsBusyProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
+}

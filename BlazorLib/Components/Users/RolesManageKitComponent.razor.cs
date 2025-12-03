@@ -36,12 +36,13 @@ public partial class RolesManageKitComponent : BlazorBusyComponentBaseModel
     {
         return name switch
         {
-            GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotUnit => "Исполнитель",
-            GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotManager => "Управляющий",
-            GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotChatsManage => "Чаты",
-            GlobalStaticConstantsRoles.Roles.HelpDeskTelegramBotRubricsManage => "Рубрики",
-            GlobalStaticConstantsRoles.Roles.CommerceManager => "Менеджер",
-            GlobalStaticConstantsRoles.Roles.CommerceClient => "Покупатель",
+            GlobalStaticConstantsRoles.Roles.HelpDeskUnit => "Исполнитель (hd)",
+            GlobalStaticConstantsRoles.Roles.HelpDeskManager => "Manger (hd)",
+            GlobalStaticConstantsRoles.Roles.HelpDeskChatsManage => "Чаты (hd)",
+            GlobalStaticConstantsRoles.Roles.HelpDeskRubricsManage => "Рубрики (hd)",
+            GlobalStaticConstantsRoles.Roles.CommerceManager => "Manger (com)",
+            GlobalStaticConstantsRoles.Roles.CommerceClient => "Покупатель (b2b)",
+            GlobalStaticConstantsRoles.Roles.RetailManage => "Manger (retail)",
             _ => name
         };
     }

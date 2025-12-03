@@ -1,25 +1,21 @@
-﻿@using BlazorLib.Components.Telegram
+﻿@using BlazorLib.Components.Kladr.control.input
+@using BlazorLib.Components.Telegram
 @using MudBlazor
-@inherits BlazorBusyComponentBaseModel
+
+@inherits BlazorBusyComponentBaseAuthModel
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">
-            @if (currentUser is not null)
-            {
-                @currentUser.UserName
-                @currentUser.PhoneNumber
-                @if (currentUser.PhoneNumber != currentUser.RequestChangePhone)
-                {
-                    <sup class="ms-2">запрос изменения телефона: @currentUser.RequestChangePhone</sup>
-                }
-            }
-            else
-            {
-                <text>...</text>
-            }
-        </h5>
-        <h6 class="card-subtitle mb-2 text-body-secondary">@currentUser?.GivenName @currentUser?.Surname @currentUser?.Patronymic</h6>
+        <h5 class="card-title">Каточка клиента: @currentUser?.UserName</h5>
+        @if (currentUser is not null && currentUser.PhoneNumber != currentUser.RequestChangePhone && !string.IsNullOrWhiteSpace(currentUser.RequestChangePhone))
+        {
+            <h6 class="card-subtitle mb-6 text-body-secondary">
+                Запрос на @(string.IsNullOrWhiteSpace(currentUser.PhoneNumber) ? "установку" : "изменение") номера телефона: @currentUser.RequestChangePhone
+                <span @onclick="() => SetPhone(currentUser.RequestChangePhone)" title="кликните для подтверждения" style="cursor:pointer" class="badge rounded-pill text-bg-success ms-2">подтвердить?</span>
+                <span @onclick="() => SetPhone(currentUser.PhoneNumber)" title="кликните для того что бы аннулировать запрос" style="cursor:pointer" class="badge rounded-pill text-bg-secondary ms-2">отклонить?</span>
+            </h6>
+        }
+        <hr />
         @if (IsBusyProgress)
         {
             <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
@@ -37,23 +33,91 @@
         }
         else
         {
-            if (WalletsForUser is not null)
+            if (editClientCopy is not null)
             {
-                <div class="list-group">
-                    @foreach (WalletRetailModelDB wallet in WalletsForUser)
-                    {
-                        <div class="list-group-item list-group-item-action" aria-current="true">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">@wallet.Name</h5>
-                                <small>@wallet.Balance</small>
-                            </div>
-                            <p class="mb-1">@wallet.Description</p>
-                            <small>[@wallet.WalletType?.Name]</small>
+                <MudGrid>
+                    <MudItem xs="12" md="4">
+                        <div class="mb-3">
+                            <label for="exampleInputSurname1" class="form-label">Фамилия</label>
+                            <input type="text" class="form-control" id="exampleInputSurname1" @bind-value="editClientCopy.GivenName" @bind-value:event="oninput">
                         </div>
-                    }
+                    </MudItem>
+                    <MudItem xs="12" md="4">
+                        <div class="mb-3">
+                            <label for="exampleInputLastName1" class="form-label">Имя</label>
+                            <input type="text" class="form-control" id="exampleInputLastName1" @bind-value="editClientCopy.Surname" @bind-value:event="oninput">
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" md="4">
+                        <div class="mb-3">
+                            <label for="exampleInputPatronymic1" class="form-label">Отчество</label>
+                            <input type="text" class="form-control" id="exampleInputPatronymic1" @bind-value="editClientCopy.Patronymic" @bind-value:event="oninput">
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <KladrInputComponent @bind-KladrObject="SelectedKladrObject" />
+                        <div class="mb-3">
+                            <label for="detailsAddressControlTextarea" class="form-label">уточнение адреса (если требуется)</label>
+                            <textarea class="form-control" id="detailsAddressControlTextarea" rows="3" @oninput="HandleOnChange">@editClientCopy.AddressUserComment</textarea>
+                        </div>
+                    </MudItem>
+                </MudGrid>
+                <div class="d-grid gap-2 mb-2">
+                    <button @onclick="SaveUserDetails" class="btn btn-primary" disabled="@CannotSaveUserDetails">Save</button>
+                </div>
+                <div class="mb-3">
+                    <label for="phone-num" class="form-label">Изменение телефона</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon3">Phone num</span>
+                        <input @bind-value="editClientCopy.PhoneNumber"
+                               @bind-value:event="oninput"
+                               id="phone-num"
+                               type="tel"
+                               class="form-control"
+                               placeholder="Phone"
+                               aria-label="Phone" />
+                        <button @onclick="() => SetPhone(editClientCopy.PhoneNumber)"
+                                class="btn btn-outline-secondary"
+                                type="button"
+                                disabled="@CannotSaveUserPhone">
+                            Save phone
+                        </button>
+                        @if (!string.IsNullOrWhiteSpace(currentUser.PhoneNumber) && CannotSaveUserPhone)
+                        {
+                            <button @onclick="() => SetPhone(null)"
+                                    class="btn btn-outline-secondary"
+                                    type="button">
+                                Удалить номер
+                            </button>
+                        }
+                    </div>
                 </div>
             }
-            <MudExpansionPanels>
+
+            if (WalletsForUser is not null)
+            {
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Кошельки</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                        <div class="list-group">
+                            @foreach (WalletRetailModelDB wallet in WalletsForUser)
+                            {
+                                <div class="list-group-item list-group-item-action" aria-current="true">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">@wallet.Name</h5>
+                                        <small>@wallet.Balance</small>
+                                    </div>
+                                    <p class="mb-1">@wallet.Description</p>
+                                    <small>[@wallet.WalletType?.Name]</small>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <MudExpansionPanels Class="mt-2">
                 @if (currentChatTelegram is not null)
                 {
                     <MudExpansionPanel Text="Telegram">

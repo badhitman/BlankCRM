@@ -31,6 +31,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<GetUserLoginsReceive, string, TResponseModel<IEnumerable<UserLoginInfoModel>>>()
             .RegisterMqListener<CheckUserPasswordReceive, IdentityPasswordModel, ResponseBaseModel>()
             .RegisterMqListener<AddPasswordForUserReceive, IdentityPasswordModel, ResponseBaseModel>()
+            .RegisterMqListener<CreateUserManualReceive, TAuthRequestModel<UserInfoBaseModel>, TResponseModel<string>>()
             .RegisterMqListener<UserHasPasswordReceive, string, TResponseModel<bool?>>()
             .RegisterMqListener<GetTwoFactorEnabledReceive, string, TResponseModel<bool?>>()
             .RegisterMqListener<SetTwoFactorEnabledReceive, SetTwoFactorEnabledRequestModel, ResponseBaseModel>()

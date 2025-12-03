@@ -27,7 +27,12 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
 
     bool _visibleChangeAddresses;
     bool _visibleChangeOrganization;
-    readonly DialogOptions _dialogOptions = new() { FullWidth = true };
+    readonly DialogOptions _dialogOptions = new()
+    {
+        FullWidth = true,
+        CloseButton = true,
+        CloseOnEscapeKey = true,
+    };
 
     OrderDocumentModelDB? CurrentCart;
     readonly Func<OfficeOrganizationModelDB, string> converter = p => p.Name;

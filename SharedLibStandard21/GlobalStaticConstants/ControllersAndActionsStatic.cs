@@ -1154,6 +1154,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string PHONE_CONTROLLER_NAME = "phone";
 
         /// <summary>
+        /// Manual
+        /// </summary>
+        public const string MANUAL_CONTROLLER_NAME = "manual";
+
+        /// <summary>
         /// E-Mail
         /// </summary>
         public const string EMAIL_CONTROLLER_NAME = "email";

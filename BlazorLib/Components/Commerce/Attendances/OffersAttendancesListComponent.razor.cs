@@ -34,7 +34,8 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
     readonly DialogOptions _dialogOptions = new()
     {
         FullWidth = true,
-        CloseButton = true
+        CloseButton = true,
+        CloseOnEscapeKey = true,
     };
 
     void CancelChangeConfig()
@@ -54,7 +55,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
     /// </summary>
     private async Task<TableData<OfferModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        if(CurrentUserSession is null)
+        if (CurrentUserSession is null)
             throw new ArgumentNullException(nameof(CurrentUserSession));
 
         TPaginationRequestStandardModel<OffersSelectRequestModel> req = new()

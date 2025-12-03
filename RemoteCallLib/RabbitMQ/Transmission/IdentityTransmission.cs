@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DocumentFormat.OpenXml.Drawing;
 using SharedLib;
 
 namespace RemoteCallLib;
@@ -11,6 +12,10 @@ namespace RemoteCallLib;
 /// </summary>
 public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmission
 {
+    /// <inheritdoc/>
+    public async Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestModel<UserInfoBaseModel> user, CancellationToken token = default)
+       => await rabbitClient.MqRemoteCallAsync<TResponseModel<string>>(GlobalStaticConstantsTransmission.TransmissionQueues.CreateManualUserReceive, user, token: token) ?? new();
+
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestModel<string> req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InitChangePhoneUserReceive, req, token: token) ?? new();
@@ -253,5 +258,5 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
     /// <inheritdoc/>
     public async Task<TResponseModel<string[]>> SetRoleForUserAsync(SetRoleForUserRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<string[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.SetRoleForUserOfIdentityReceive, req, token: token) ?? new();
-#endregion
+    #endregion
 }

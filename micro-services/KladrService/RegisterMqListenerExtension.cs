@@ -21,12 +21,13 @@ public static class RegisterMqListenerExtension
         return services
             .RegisterMqListener<KladrNavigationListReceive, KladrsRequestBaseModel, Dictionary<KladrChainTypesEnum, JObject[]>>()
             .RegisterMqListener<UploadPartTempKladrReceive, UploadPartTableDataModel, ResponseBaseModel>()
-            .RegisterMqListener<GetMetadataKladrReceive,    GetMetadataKladrRequestModel, MetadataKladrModel>()
-            .RegisterMqListener<ClearTempKladrReceive,      object, ResponseBaseModel>()
-            .RegisterMqListener<FlushTempKladrReceive,      object, ResponseBaseModel>()
-            .RegisterMqListener<ChildsContainsReceive,      string, ResponseBaseModel>()
-            .RegisterMqListener<KladrSelectReceive,         KladrSelectRequestModel, TPaginationResponseModel<KladrResponseModel>>()
-            .RegisterMqListener<KladrFindReceive,           KladrFindRequestModel, TPaginationResponseModel<KladrResponseModel>>()
+            .RegisterMqListener<GetMetadataKladrReceive, GetMetadataKladrRequestModel, MetadataKladrModel>()
+            .RegisterMqListener<ClearTempKladrReceive, object, ResponseBaseModel>()
+            .RegisterMqListener<FlushTempKladrReceive, object, ResponseBaseModel>()
+            .RegisterMqListener<ChildsContainsReceive, string, ResponseBaseModel>()
+            .RegisterMqListener<ObjectGetReceive, KladrsRequestBaseModel, TResponseModel<KladrResponseModel>>()
+            .RegisterMqListener<KladrSelectReceive, KladrSelectRequestModel, TPaginationResponseModel<KladrResponseModel>>()
+            .RegisterMqListener<KladrFindReceive, KladrFindRequestModel, TPaginationResponseModel<KladrResponseModel>>()
             ;
     }
 }
