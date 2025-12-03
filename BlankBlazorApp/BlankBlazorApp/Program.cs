@@ -26,6 +26,7 @@ using System.Text;
 using System.Reflection;
 #endif
 
+Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 Console.OutputEncoding = Encoding.UTF8;
 // Early init of NLog to allow startup and exception logging, before host is built
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -236,6 +237,8 @@ builder.Services
     .AddScoped<IFeedsHaierProffRuService, HaierProffRuTransmission>()
     .AddScoped<IBreezRuApiTransmission, BreezRuTransmission>()
     .AddScoped<IFilesIndexing, FileIndexingTransmission>()
+    .AddScoped<IKladrService, KladrServiceTransmission>()
+    .AddScoped<IKladrParseService, ParseImplementDBF>()
     ;
 
 builder.Services.WebAppRegisterMqListeners();

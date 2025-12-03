@@ -2,10 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using static SharedLib.GlobalStaticConstants;
+using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.AspNetCore.Mvc;
 using SharedLib;
-using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace ApiRestService.Controllers;
 

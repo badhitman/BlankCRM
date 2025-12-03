@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using BlazorLib.Components.Kladr;
 using BlazorLib;
 using SharedLib;
 
@@ -11,15 +12,14 @@ namespace ToolsMauiApp.Components;
 /// <summary>
 /// KladrAboutComponent
 /// </summary>
-public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
+public partial class KladrAboutComponent : KladrAboutAbstractComponent
 {
     [Inject]
     IClientRestToolsService RemoteClient { get; set; } = default!;
 
 
-    MetadataKladrModel? tmp, prod;
-
-    async Task TransitData()
+    /// <inheritdoc/>
+    protected override async Task TransitData()
     {
         await SetBusyAsync();
         ResponseBaseModel res = await RemoteClient.FlushTempKladrAsync();
@@ -28,7 +28,8 @@ public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
         await ReloadData();
     }
 
-    async Task ClearTempTables()
+    /// <inheritdoc/>
+    protected override async Task ClearTempTables()
     {
         await SetBusyAsync();
         ResponseBaseModel res = await RemoteClient.ClearTempKladrAsync();
@@ -37,18 +38,12 @@ public partial class KladrAboutComponent : BlazorBusyComponentBaseModel
         await ReloadData();
     }
 
-    async Task ReloadData()
+    /// <inheritdoc/>
+    protected override async Task ReloadData()
     {
         await SetBusyAsync();
         await Task.WhenAll([Task.Run(async () => tmp = await RemoteClient.GetMetadataKladrAsync(new() { ForTemporary = true })),
             Task.Run(async () => prod = await RemoteClient.GetMetadataKladrAsync(new() { ForTemporary = false }))]);
         await SetBusyAsync(false);
-    }
-
-    /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        await ReloadData();
     }
 }

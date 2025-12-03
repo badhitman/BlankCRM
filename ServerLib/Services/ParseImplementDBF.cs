@@ -4,19 +4,24 @@
 
 using SharedLib;
 
-namespace ToolsMauiLib;
+namespace ServerLib;
 
-public class ParseDBF(IClientRestToolsService RemoteClient) : ParserAbstractDBF
+/// <summary>
+/// ParseImplementDBF
+/// </summary>
+public class ParseImplementDBF(IKladrService RemoteClient) : ParserAbstractDBF
 {
     /// <inheritdoc/>
     public override event PartUploadHandler? PartUploadNotify;
 
+    /// <inheritdoc/>
     protected override void NotifyUploadAction(int position)
     {
         if (PartUploadNotify is not null)
             PartUploadNotify(position);
     }
 
+    /// <inheritdoc/>
     public override async Task<ResponseBaseModel> UploadPartTempKladrAsync(UploadPartTableDataModel req, CancellationToken token = default)
     {
         return await RemoteClient.UploadPartTempKladrAsync(new()

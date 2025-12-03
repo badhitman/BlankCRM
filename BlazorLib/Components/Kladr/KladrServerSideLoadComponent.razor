@@ -1,0 +1,67 @@
+﻿<div class="mt-2">
+    <div class="mb-3">
+        <label for="basic-url" class="form-label">Путь к папке с файлами</label>
+        <div class="input-group">
+            <input @bind-value="dirData" @bind-value:event="oninput" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
+            <button @onclick=ScanDirectory class="btn btn-outline-secondary" type="button" id="button-addon2" disabled="@(IsValidList || string.IsNullOrWhiteSpace(dirData) || !Directory.Exists(dirData))">Scan</button>
+        </div>
+    </div>
+</div>
+
+@if (allFiles is not null)
+{
+    <ol>
+        @foreach (string _ol in allFiles)
+        {
+            <li>@_ol</li>
+        }
+    </ol>
+    @if (IsValidList)
+    {
+        <div class="d-grid gap-2">
+            <button disabled="@_isLoading" @onclick=Load class="btn btn-primary" type="button">Load</button>
+        </div>
+    }
+}
+
+@code {
+    [Inject]
+    IKladrService KladrRepo { get; set; } = default!;
+
+    [Inject]
+    IKladrParseService Parser { get; set; } = default!;
+
+    string[] _validateList = ["ALTNAMES.DBF", "DOMA.DBF", "FLAT.DBF", "KLADR.DBF", "NAMEMAP.DBF", "SOCRBASE.DBF", "STREET.DBF"];
+    bool IsValidList => allFiles is not null && allCropFiles is not null && allFiles.All(x => _validateList.Contains(Path.GetFileName(x))) && _validateList.All(x => allCropFiles.Contains(x));
+    string? dirData;
+    string[]? allFiles, allCropFiles;
+    bool _isLoading;
+    // string currentEncoding = "cp866";
+
+    void ScanDirectory()
+    {
+        if (string.IsNullOrWhiteSpace(dirData) || !Directory.Exists(dirData))
+            return;
+
+        allFiles = Directory.GetFiles(dirData);
+        allCropFiles = [.. allFiles.Select(x => Path.GetFileName(x))];
+    }
+
+    async Task Load()
+    {
+        _isLoading = true;
+
+        // Parser.CurrentEncoding = Encoding.GetEncoding(currentEncoding);
+        StateHasChanged();
+
+        foreach (string _fn in allFiles!)
+        {
+            using MemoryStream ms = new MemoryStream(File.ReadAllBytes(_fn));
+            await Parser.Open(ms, Path.GetFileName(_fn));
+            await Parser.UploadData(true);
+        }
+
+        _isLoading = false;
+        StateHasChanged();
+    }
+}

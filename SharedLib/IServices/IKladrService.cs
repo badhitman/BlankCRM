@@ -10,7 +10,7 @@ namespace SharedLib;
 public interface IKladrService
 {
     /// <summary>
-    /// Очистить таблицу временных даннык КЛАДР
+    /// Очистить таблицу временных данных КЛАДР
     /// </summary>
     public Task<ResponseBaseModel> ClearTempKladrAsync(CancellationToken token = default);
 

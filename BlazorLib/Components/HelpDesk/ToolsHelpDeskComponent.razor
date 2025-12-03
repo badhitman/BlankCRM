@@ -19,6 +19,11 @@
                 </div>
             </div>
         </MudPaper>
+        <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+            <Authorized>
+                <KladrServerSideLoadComponent />
+            </Authorized>
+        </AuthorizeView>
     </MudTabPanel>
     <MudTabPanel Text="Rubrics">
         <RubricsParametersComponent />
@@ -43,10 +48,10 @@
         <UsersTableComponent HideClaimsColumn HideRolesColumn
                              RolesMarkers="@showMarkersRoles"
                              RolesManageKit="@GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Union(
-                                             [GlobalStaticConstantsRoles.Roles.CommerceManager,
-                                              GlobalStaticConstantsRoles.Roles.CommerceClient,
-                                              GlobalStaticConstantsRoles.Roles.Debug,
-                                              GlobalStaticConstantsRoles.Roles.RetailManage])" />
+                                                                          [GlobalStaticConstantsRoles.Roles.CommerceManager,
+                                                                           GlobalStaticConstantsRoles.Roles.CommerceClient,
+                                                                           GlobalStaticConstantsRoles.Roles.Debug,
+                                                                           GlobalStaticConstantsRoles.Roles.RetailManage])" />
     </MudTabPanel>
     <MudTabPanel Text="Notification templates">
         <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">

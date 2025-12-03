@@ -11,7 +11,6 @@ namespace SharedLib;
 /// <inheritdoc/>
 public static class Extensions
 {
-
     /// <summary>
     /// Получить значение атрибута ConnectionMetadata
     /// </summary>
