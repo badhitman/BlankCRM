@@ -23,10 +23,16 @@
         <MudTd DataLabel="Статус"><a href="/retail/order-card/@context.Id">@context.StatusDocument.DescriptionInfo()</a></MudTd>
         <MudTd DataLabel="Заказчик"><a href="/retail/client-card/@context.BuyerIdentityUserId">@(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")</a></MudTd>
         <MudTd DataLabel="Создан/Изменён"><a href="/retail/order-card/@context.Id">@context.CreatedAtUTC/@context.LastUpdatedAtUTC</a></MudTd>
-        <MudTd DataLabel="Склад">@(RubricsCache.FirstOrDefault(x => x.Id == context.WarehouseId)?.ToString() ?? $"#{context.WarehouseId}")</MudTd>
-        <MudTd DataLabel="Номенклатура"><OrderRowsAboutComponent Rows="@context.Rows" /></MudTd>
-        <MudTd DataLabel="Отгрузка"><OrderDeliveryAboutComponent DeliveryDocuments="@context.DeliveryDocuments" /></MudTd>
-        <MudTd DataLabel="Платежи"><OrderPaymentsAboutComponent PaymentsLinks="@context.PaymentsLinks" /></MudTd>
+        <MudTd DataLabel="Склад">@(RubricsCache.FirstOrDefault(x => x.Id == context.WarehouseId)?.Name ?? $"#{context.WarehouseId}")</MudTd>
+        <MudTd DataLabel="Номенклатура">
+            <OrderRowsAboutComponent Rows="@context.Rows" />
+        </MudTd>
+        <MudTd DataLabel="Отгрузка">
+            <OrderDeliveryAboutComponent DeliveryDocuments="@context.DeliveryDocuments" />
+        </MudTd>
+        <MudTd DataLabel="Платежи">
+            <OrderPaymentsAboutComponent PaymentsLinks="@context.PaymentsLinks" />
+        </MudTd>
         <MudTd DataLabel="Информация">@context.Name @context.Description</MudTd>
     </RowTemplate>
     <NoRecordsContent>

@@ -208,6 +208,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .OrderBy(x => x.CreatedAtUTC)
                 .Include(x => x.Rows)
                 .Include(x => x.PaymentsLinks)
+                .Include(x => x.DeliveryDocuments)
                 .ToListAsync(cancellationToken: token)
         };
     }
