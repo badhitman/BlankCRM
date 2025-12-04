@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.ComponentModel;
+
 namespace SharedLib;
 
 /// <summary>
@@ -12,15 +14,18 @@ public enum PaymentsRetailStatusesEnum
     /// <summary>
     /// Ожидает оплаты
     /// </summary>
-    Awaiting =10,
+    [Description("Ожидает оплаты")]
+    Awaiting = 10,
 
     /// <summary>
     /// Оплачено
     /// </summary>
-    Paid  = 20,
+    [Description("Оплачено")]
+    Paid = 20,
 
     /// <summary>
     /// Отменено
     /// </summary>
+    [Description("Отменена")]
     Canceled = 1000
 }

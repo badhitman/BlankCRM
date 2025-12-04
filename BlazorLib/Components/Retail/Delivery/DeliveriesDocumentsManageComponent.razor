@@ -25,6 +25,10 @@
         <MudTh>Оплата</MudTh>
     </HeaderContent>
     <RowTemplate>
+        @{
+            DateTime cdt = context.CreatedAtUTC.GetCustomTime();
+            DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
+        }
         <MudTd DataLabel="Name">
             <span>@context.Name</span>
             @if (context.DeliveryPaymentUponReceipt)
@@ -47,7 +51,16 @@
         }
 
         <MudTd DataLabel="Создан/Изменён">
-            @context.CreatedAtUTC/@context.LastUpdatedAtUTC
+            <span>
+                @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+            </span>
+            @if (udt.HasValue && udt != default)
+            {
+                <text>/</text>
+                <span>
+                    @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
+                </span>
+            }
         </MudTd>
         <MudTd DataLabel="Адрес">@context.KladrTitle @context.AddressUserComment</MudTd>
         <MudTd DataLabel="Трэк/Код">@context.DeliveryCode</MudTd>

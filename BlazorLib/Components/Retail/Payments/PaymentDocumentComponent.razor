@@ -1,0 +1,16 @@
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
+
+<h3>PaymentDocumentComponent</h3>
+
+@if (PaymentId > 0)
+{
+    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+        <MudTabPanel Text="Заказы">
+            <PaymentOrdersLinksRowsComponent />
+        </MudTabPanel>
+        <MudTabPanel Text="Доставка">
+            <PaymentDeliveriesLinksRowsComponent />
+        </MudTabPanel>
+    </MudTabs>
+}

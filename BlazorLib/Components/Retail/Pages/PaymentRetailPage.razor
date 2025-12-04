@@ -1,0 +1,14 @@
+﻿@page "/retail/payment-document/{PaymentId:int}"
+
+@using BlazorLib.Components.Retail.Orders
+@using BlazorLib.Components.Retail.Payments
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<PaymentDocumentComponent PaymentId="PaymentId" />
+
+@code {
+    [Parameter]
+    public int PaymentId { get; set; }
+}

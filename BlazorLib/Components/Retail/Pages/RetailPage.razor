@@ -1,5 +1,6 @@
 ﻿@page "/retail"
 
+@using BlazorLib.Components.Retail.Conversions
 @using BlazorLib.Components.Retail.Delivery
 @using BlazorLib.Components.Retail.Payments
 @using BlazorLib.Components.Retail.Clients
@@ -19,6 +20,9 @@
         <ClientsRetailWrapperComponent />
     </MudTabPanel>
     <MudTabPanel Text="Платежи">
-        <PaymentsRetailWrapperComponent />
+        <PaymentsManageComponent />
+    </MudTabPanel>
+    <MudTabPanel Text="Переводы">
+        <ConversionsTableManageComponent />
     </MudTabPanel>
 </MudTabs>

@@ -14,7 +14,11 @@ public partial class PaymentsLinksAboutComponent : BlazorBusyComponentBaseModel
 {
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public List<PaymentRetailOrderLinkModelDB> PaymentOrdersLinks { get; set; }
+    public List<PaymentRetailOrderLinkModelDB> OrdersLinks { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter, EditorRequired]
+    public List<PaymentRetailDeliveryLinkModelDB> DeliveriesLinks { get; set; }
 
     /// <summary>
     /// Сумма документа

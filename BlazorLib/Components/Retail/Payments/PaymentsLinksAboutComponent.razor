@@ -1,12 +1,12 @@
 ﻿@inherits BlazorBusyComponentBaseModel
 
-@if (PaymentOrdersLinks.Count == 0)
+@if (OrdersLinks.Count == 0)
 {
     <span class="badge text-bg-light">не использован</span>
 }
 else if (Amount is not null)
 {
-    decimal _supRelease = PaymentOrdersLinks.Sum(x => x.Amount);
+    decimal _supRelease = OrdersLinks.Sum(x => x.Amount);
     if (_supRelease == Amount)
     {
         <span class="badge text-bg-success">истрачен</span>

@@ -28,8 +28,8 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     public string? ClientId { get; set; }
 
 
-    private bool _visible;
-    private readonly DialogOptions _dialogOptions = new()
+    bool _visible;
+    readonly DialogOptions _dialogOptions = new()
     {
         FullWidth = true,
         MaxWidth = MaxWidth.ExtraLarge,

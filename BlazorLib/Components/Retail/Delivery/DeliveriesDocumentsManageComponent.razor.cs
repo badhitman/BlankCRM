@@ -9,9 +9,9 @@ using SharedLib;
 namespace BlazorLib.Components.Retail.Delivery;
 
 /// <summary>
-/// DeliveryManageComponent
+/// DeliveriesDocumentsManageComponent
 /// </summary>
-public partial class DeliveryManageComponent : BlazorBusyComponentUsersCachedModel
+public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;

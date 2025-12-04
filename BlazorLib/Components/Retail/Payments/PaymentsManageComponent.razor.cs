@@ -22,6 +22,20 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
     public string? ClientId { get; set; }
 
 
+    bool _visible;
+    readonly DialogOptions _dialogOptions = new()
+    {
+        FullWidth = true,
+        MaxWidth = MaxWidth.ExtraLarge,
+        CloseButton = true
+    };
+
+
+    void CreateNewOrderOpenDialog()
+    {
+        _visible = true;
+    }
+
     async Task<TableData<PaymentRetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
@@ -35,6 +49,7 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
             }
         };
         TPaginationResponseModel<PaymentRetailDocumentModelDB>? res = await RetailRepo.SelectPaymentsDocumentsAsync(req, token);
+        await SetBusyAsync(false, token: token);
 
         if (res.Response is not null)
             await CacheUsersUpdate([.. res.Response.Select(x => x.PayerIdentityUserId)]);

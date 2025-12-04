@@ -1304,6 +1304,10 @@ public class IdentityTools(
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }] };
 
         req.Payload.UserName = req.Payload.UserName.Trim();
+        req.Payload.GivenName = req.Payload.GivenName?.Trim();
+        req.Payload.Surname = req.Payload.Surname?.Trim();
+        req.Payload.Patronymic = req.Payload.Patronymic?.Trim();
+
         if (!MailAddress.TryCreate(req.Payload.UserName, out _))
             return new() { Messages = [new() { Text = "Email (Username) не корректный", TypeMessage = MessagesTypesEnum.Error }] };
 
@@ -1367,7 +1371,7 @@ public class IdentityTools(
         if (req.Payload.Patronymic != null)
             await ctx.Users.Where(x => x.Id == user.Id)
                     .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.Patronymic, req.Payload.Patronymic.ToUpper()), cancellationToken: token);
+                        .SetProperty(p => p.NormalizedPatronymicUpper, req.Payload.Patronymic.ToUpper()), cancellationToken: token);
 
         if (!string.IsNullOrWhiteSpace(req.Payload.PhoneNumber))
         {

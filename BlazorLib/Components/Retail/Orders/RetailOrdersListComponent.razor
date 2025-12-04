@@ -22,9 +22,24 @@
         <MudTh>Информация</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Номер"><a href="/retail/order-card/@context.Id">@context.ExternalDocumentId</a></MudTd>
-        <MudTd DataLabel="Статус"><a href="/retail/order-card/@context.Id">@context.StatusDocument.DescriptionInfo()</a></MudTd>
-        <MudTd DataLabel="Создан/Изменён"><a href="/retail/order-card/@context.Id">@context.CreatedAtUTC.GetCustomTime()/@(context.LastUpdatedAtUTC.HasValue && context.LastUpdatedAtUTC != default ? context.LastUpdatedAtUTC.Value.GetCustomTime() : "")</a></MudTd>
+        @{
+            DateTime cdt = context.CreatedAtUTC.GetCustomTime();
+            DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
+        }
+        <MudTd DataLabel="Номер"><a href="/retail/order-document/@context.Id">@context.ExternalDocumentId</a></MudTd>
+        <MudTd DataLabel="Статус"><a href="/retail/order-document/@context.Id">@context.StatusDocument.DescriptionInfo()</a></MudTd>
+        <MudTd DataLabel="Создан/Изменён">
+            <span>
+                @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+            </span>
+            @if (udt.HasValue && udt != default)
+            {
+                <text>/</text>
+                <span>
+                    @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
+                </span>
+            }
+        </MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
             <MudTd DataLabel="Заказчик"><MudLink Class="text-success-emphasis" title="Переход в карточку клиента" Href="@($"/retail/client-card/{context.BuyerIdentityUserId}")">@(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")</MudLink></MudTd>

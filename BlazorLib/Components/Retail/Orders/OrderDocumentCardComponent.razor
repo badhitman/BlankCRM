@@ -8,7 +8,7 @@
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
 }
-else if (currentDocument is null)
+else if (editDocument is null)
 {
     <figure class="text-center">
         <blockquote class="blockquote">
@@ -29,7 +29,7 @@ else
                     <input type="text"
                            class="form-control"
                            id="inputExternalDocumentId"
-                           @bind-value="currentDocument.ExternalDocumentId"
+                           @bind-value="editDocument.ExternalDocumentId"
                            @bind-value:event="oninput">
                 </div>
                 <div class="col-md-6">
@@ -37,19 +37,19 @@ else
                     <input type="text"
                            class="form-control"
                            id="inputName4"
-                           @bind-value="currentDocument.Name"
+                           @bind-value="editDocument.Name"
                            @bind-value:event="oninput">
                 </div>
                 <RubricInputComponent SelectRubricsHandle="WarehouseSelectAction"
                                       ModeSelectingRubrics=ModesSelectRubricsEnum.SelectAny
-                                      RubricInitial="@currentDocument.WarehouseId"
+                                      RubricInitial="@editDocument.WarehouseId"
                                       Title="Склад списания"
                                       ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
                                       ShowDisabledRubrics />
                 @if (string.IsNullOrWhiteSpace(ClientId))
                 {
                     <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
-                                              SelectedUser="@currentDocument.BuyerIdentityUserId"
+                                              SelectedUser="@editDocument.BuyerIdentityUserId"
                                               IsReadOnly="SelectUserHandlerIsProgress" />
                 }
                 else
@@ -67,10 +67,10 @@ else
                     </div>
 
                 }
-                <MudSelect ReadOnly="@IsBusyProgress" @bind-Value="currentDocument.StatusDocument" T="StatusesDocumentsEnum" Label="Статус" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                <MudSelect ReadOnly="@IsBusyProgress" @bind-Value="editDocument.StatusDocument" T="StatusesDocumentsEnum" Label="Статус" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
                     @foreach (StatusesDocumentsEnum step in Enum.GetValues<StatusesDocumentsEnum>())
                     {
-                        <MudSelectItem Class="@(step == currentDocument.StatusDocument ? "text-primary fw-bold" : "")" T="StatusesDocumentsEnum" Value="@step">
+                        <MudSelectItem Class="@(step == editDocument.StatusDocument ? "text-primary fw-bold" : "")" T="StatusesDocumentsEnum" Value="@step">
                             @step.DescriptionInfo()
                         </MudSelectItem>
                     }
@@ -97,7 +97,7 @@ else
                         <OrderDeliveryTableComponent OrderId="OrderId" />
                     </MudTabPanel>
                     <MudTabPanel Text="Заметки" Disabled="@(OrderId < 1)">
-                        <TinyMCE.Blazor.Editor @bind-Value="currentDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />
+                        <TinyMCE.Blazor.Editor @bind-Value="editDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />
                     </MudTabPanel>
                     <MudTabPanel Text="Файлы" Disabled="@(OrderId < 1)">
                         <FilesContextViewComponent ApplicationsNames="@([Routes.RETAIL_CONTROLLER_NAME])"
@@ -114,10 +114,10 @@ else
                 @if (authorUser is not null)
                 {
                     <small title="Автор документа" class="text-body-secondary">Автор: @authorUser.ToString()</small>
-                    <small title="Дата создания документа" class="text-body-secondary">Дата создания: @currentDocument.CreatedAtUTC.GetCustomTime()</small>
-                    @if (currentDocument.LastUpdatedAtUTC is not null && currentDocument.LastUpdatedAtUTC != default)
+                    <small title="Дата создания документа" class="text-body-secondary">Дата создания: @editDocument.CreatedAtUTC.GetCustomTime()</small>
+                    @if (editDocument.LastUpdatedAtUTC is not null && editDocument.LastUpdatedAtUTC != default)
                     {
-                        <small title="Автор документа" class="text-body-secondary">Автор: @currentDocument.LastUpdatedAtUTC.Value.GetCustomTime()</small>
+                        <small title="Автор документа" class="text-body-secondary">Автор: @editDocument.LastUpdatedAtUTC.Value.GetCustomTime()</small>
                     }
                 }
             </p>

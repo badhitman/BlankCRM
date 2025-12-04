@@ -1,0 +1,29 @@
+﻿@using MudBlazor
+@inherits BlazorBusyComponentUsersCachedModel
+
+<MudTable ServerData="ServerReload" Dense Hover>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Переводы</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Создан/Изменён</MudTh>
+        <MudTh>Примечание</MudTh>
+        <MudTh>Списание</MudTh>
+        <MudTh>Зачисление</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Создан/Изменён"> @context.CreatedAtUTC / @context.LastUpdatedAtUTC</MudTd>
+        <MudTd DataLabel="Примечание">@context.Name</MudTd>
+        <MudTd DataLabel="Списание">@context.ToWallet @context.ToWalletSum</MudTd>
+        <MudTd DataLabel="Зачисление">@context.FromWallet @context.FromWalletSum</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

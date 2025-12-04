@@ -79,7 +79,10 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
                     currentDocument.BuyerIdentityUserId == editDocument.BuyerIdentityUserId &&
                     currentDocument.WarehouseId == editDocument.WarehouseId &&
                     currentDocument.Name == editDocument.Name &&
-                    currentDocument.ExternalDocumentId == editDocument.ExternalDocumentId;
+                    currentDocument.StatusDocument == editDocument.StatusDocument &&
+                    currentDocument.ExternalDocumentId == editDocument.ExternalDocumentId &&
+                    currentDocument.Description == editDocument.Description &&
+                    currentDocument.HelpDeskId == editDocument.HelpDeskId;
 
             return false;
         }
@@ -96,14 +99,14 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             TResponseModel<int> res = await RetailRepo.CreateRetailDocumentAsync(editDocument);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success() && res.Response > 0)
-                NavRepo.NavigateTo($"/retail/order-card/{res.Response}");
+                NavRepo.NavigateTo($"/retail/order-document/{res.Response}");
         }
         else
         {
             ResponseBaseModel res = await RetailRepo.UpdateRetailDocumentAsync(editDocument);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
-                NavRepo.NavigateTo($"/retail/order-card/{OrderId}", true);
+                NavRepo.NavigateTo($"/retail/order-document/{OrderId}", true);
         }
         await SetBusyAsync(false);
     }

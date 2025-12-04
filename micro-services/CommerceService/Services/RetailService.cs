@@ -216,6 +216,36 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default)
     {
+        if (req.ToWalletId < 1 || req.ToWalletId < 1)
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "Укажите кошельки списания и зачисления!"
+                }]
+            };
+
+        if (req.ToWalletSum <= 0 || req.FromWalletSum <= 0)
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "Укажите сумму списания и зачисления!"
+                }]
+            };
+
+        if (req.ToWalletId == req.FromWalletId)
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "Счёт списания не может совпадать со счётом зачисления"
+                }]
+            };
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         await context.ConversionsDocumentsWalletsRetail.AddAsync(req, token);
         await context.SaveChangesAsync(token);
@@ -391,10 +421,24 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<WalletConversionRetailDocumentModelDB>> SelectConversionsDocumentsAsync(TPaginationRequestStandardModel<SelectWalletsRetailsConversionDocumentsRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
         IQueryable<WalletConversionRetailDocumentModelDB> q = context.ConversionsDocumentsWalletsRetail.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
+
+        string[]
+            sendersUserFilter = req.Payload?.SendersUserFilter ?? [],
+            recipientsUserFilter = req.Payload?.RecipientsUserFilter ?? [];
+
+        q = from doc in q
+            join sender in context.WalletsRetail on doc.FromWalletId equals sender.Id
+            join recipient in context.WalletsRetail on doc.ToWalletId equals recipient.Id
+
+            where sendersUserFilter.Length == 0 || sendersUserFilter.Contains(sender.UserIdentityId)
+            where recipientsUserFilter.Length == 0 || recipientsUserFilter.Contains(recipient.UserIdentityId)
+
+            select doc;
 
         IQueryable<WalletConversionRetailDocumentModelDB> pq = q
             .Skip(req.PageNum * req.PageSize)
@@ -407,7 +451,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.ToListAsync(cancellationToken: token)
+            Response = await pq.Include(x => x.FromWallet).Include(x => x.ToWallet).ToListAsync(cancellationToken: token)
         };
     }
 
@@ -709,6 +753,36 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default)
     {
+        if (req.ToWalletId < 1 || req.ToWalletId < 1)
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "Укажите кошельки списания и зачисления!"
+                }]
+            };
+
+        if (req.ToWalletSum <= 0 || req.FromWalletSum <= 0)
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "Укажите сумму списания и зачисления!"
+                }]
+            };
+
+        if (req.ToWalletId == req.FromWalletId)
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "Счёт списания не может совпадать со счётом зачисления"
+                }]
+            };
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         await context.ConversionsDocumentsWalletsRetail
