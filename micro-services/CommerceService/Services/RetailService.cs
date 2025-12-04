@@ -47,7 +47,6 @@ public class RetailService(IIdentityTransmission identityRepo,
         await context.RowsRetailsOrders
           .Where(x => x.Id == req.Id)
           .ExecuteUpdateAsync(set => set
-              .SetProperty(p => p.IsDisabled, req.IsDisabled)
               .SetProperty(p => p.Comment, req.Comment)
               .SetProperty(p => p.Quantity, req.Quantity)
               .SetProperty(p => p.Version, Guid.NewGuid())
@@ -81,7 +80,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.ToListAsync(cancellationToken: token)
+            Response = await pq.Include(x => x.Offer).ToListAsync(cancellationToken: token)
         };
     }
 
@@ -139,6 +138,20 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Name = req.Name.Trim();
         req.Description = req.Description?.Trim();
         req.CreatedAtUTC = DateTime.UtcNow;
+
+        if (req.Rows is not null && req.Rows.Count != 0)
+        {
+            //int[] _offersIds = [.. req.Rows.Select(x => x.OfferId)];
+            //OfferModelDB[] offersDb = await context.Offers.Where(x => _offersIds.Contains(x.Id)).ToArrayAsync(cancellationToken: token);
+
+            req.Rows.ForEach(r =>
+            {
+                r.Order = req;
+                r.Offer = null;
+                r.Nomenclature = null;
+                //r.NomenclatureId = offersDb.First(x => x.Id == r.OfferId).NomenclatureId;
+            });
+        }
 
         await context.RetailOrders.AddAsync(req, token);
         await context.SaveChangesAsync(token);
@@ -813,8 +826,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .SetProperty(p => p.Amount, req.Amount)
                 .SetProperty(p => p.Comment, req.Comment)
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.NomenclatureId, req.NomenclatureId)
-                .SetProperty(p => p.IsDisabled, req.IsDisabled), cancellationToken: token);
+                .SetProperty(p => p.NomenclatureId, req.NomenclatureId), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }

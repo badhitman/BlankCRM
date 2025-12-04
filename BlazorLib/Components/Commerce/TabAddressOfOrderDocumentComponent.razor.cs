@@ -4,8 +4,6 @@
 
 using Microsoft.AspNetCore.Components;
 using SharedLib;
-using BlazorLib;
-using BlazorLib.Components.Rubrics;
 
 namespace BlazorLib.Components.Commerce;
 
@@ -81,7 +79,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
         if (CurrentTab.Rows is not null)
             InvokeAsync(async () =>
             {
-                await CacheRegistersUpdate(offers: CurrentTab.Rows.Select(x => x.OfferId).ToArray(), goods: [], CurrentTab.WarehouseId, true);
+                await CacheRegistersUpdate(offers: [.. CurrentTab.Rows.Select(x => x.OfferId)], goods: [], CurrentTab.WarehouseId, true);
                 StateHasChanged();
             });
         else

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20251203070214_CommerceContext001")]
+    [Migration("20251204110419_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -1032,9 +1032,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<int>("DocumentId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("NomenclatureId")
                         .HasColumnType("integer");
 
@@ -1122,9 +1119,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.Property<string>("Comment")
                         .HasColumnType("text");
-
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("boolean");
 
                     b.Property<int>("NomenclatureId")
                         .HasColumnType("integer");
@@ -1664,7 +1658,7 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired();
 
                     b.HasOne("SharedLib.PaymentRetailDocumentModelDB", "Payment")
-                        .WithMany()
+                        .WithMany("DeliveriesLinks")
                         .HasForeignKey("PaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1694,7 +1688,7 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired();
 
                     b.HasOne("SharedLib.PaymentRetailDocumentModelDB", "Payment")
-                        .WithMany("PaymentOrdersLinks")
+                        .WithMany("OrdersLinks")
                         .HasForeignKey("PaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1970,7 +1964,9 @@ namespace DbPostgreLib.Migrations.Commerce
 
             modelBuilder.Entity("SharedLib.PaymentRetailDocumentModelDB", b =>
                 {
-                    b.Navigation("PaymentOrdersLinks");
+                    b.Navigation("DeliveriesLinks");
+
+                    b.Navigation("OrdersLinks");
                 });
 
             modelBuilder.Entity("SharedLib.RetailDocumentModelDB", b =>

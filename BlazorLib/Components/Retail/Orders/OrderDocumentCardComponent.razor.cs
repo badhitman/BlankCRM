@@ -19,6 +19,9 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
     [Inject]
     IRubricsTransmission RubricsRepo { get; set; } = default!;
 
+    [Inject]
+    NavigationManager NavRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter]
@@ -29,30 +32,112 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
     public string? ClientId { get; set; }
 
 
-    RetailDocumentModelDB? currentDocument;
+    RetailDocumentModelDB? currentDocument, editDocument;
     UserInfoModel? authorUser, buyerUser;
     RubricStandardModel? currentWarehouse;
+    OrderTableRowsComponent? tableRowsRef;
 
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
 
+    bool SelectUserHandlerIsProgress;
+    async Task SelectUserHandlerBusy(bool is_busy = true, CancellationToken token = default)
+    {
+        SelectUserHandlerIsProgress = is_busy;
+        try
+        {
+            await Task.Delay(1, token);
+        }
+        catch
+        {
+
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    /// <summary>
+    /// Деактивация/отключение кнопки сохранения документа
+    /// </summary>
+    bool CannotSave
+    {
+        get
+        {
+            if (currentDocument is null || editDocument is null)
+                return true;
+
+            if (string.IsNullOrWhiteSpace(editDocument.BuyerIdentityUserId) || IsBusyProgress)
+                return true;
+
+            if (editDocument.WarehouseId < 1)
+                return true;
+
+            if (OrderId > 0)
+                return
+                    currentDocument.BuyerIdentityUserId == editDocument.BuyerIdentityUserId &&
+                    currentDocument.WarehouseId == editDocument.WarehouseId &&
+                    currentDocument.Name == editDocument.Name &&
+                    currentDocument.ExternalDocumentId == editDocument.ExternalDocumentId;
+
+            return false;
+        }
+    }
+
+    async Task SaveDocument()
+    {
+        if (editDocument is null)
+            throw new ArgumentNullException(nameof(editDocument));
+
+        await SetBusyAsync();
+        if (OrderId < 1)
+        {
+            TResponseModel<int> res = await RetailRepo.CreateRetailDocumentAsync(editDocument);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+            if (res.Success() && res.Response > 0)
+                NavRepo.NavigateTo($"/retail/order-card/{res.Response}");
+        }
+        else
+        {
+            ResponseBaseModel res = await RetailRepo.UpdateRetailDocumentAsync(editDocument);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+            if (res.Success())
+                NavRepo.NavigateTo($"/retail/order-card/{OrderId}", true);
+        }
+        await SetBusyAsync(false);
+    }
 
     void WarehouseSelectAction(UniversalBaseModel? selectedWarehouse)
     {
-        if (currentDocument is null)
-            throw new ArgumentNullException(nameof(currentDocument));
+        if (editDocument is null)
+            throw new ArgumentNullException(nameof(editDocument));
 
-        currentDocument.WarehouseId = selectedWarehouse?.Id ?? 0;
+        editDocument.WarehouseId = selectedWarehouse?.Id ?? 0;
 
         StateHasChanged();
+        tableRowsRef?.UpdateData();
     }
 
-    void SelectUserHandler(UserInfoModel? selected)
+    async void SelectUserHandler(UserInfoModel? selected)
     {
-        if (currentDocument is null)
+        if (editDocument is null || selected?.UserId == buyerUser?.UserId)
             return;
 
-        currentDocument.BuyerIdentityUserId = selected?.UserId ?? "";
+        editDocument.BuyerIdentityUserId = selected?.UserId ?? "";
+        if (string.IsNullOrWhiteSpace(editDocument.BuyerIdentityUserId))
+            buyerUser = null;
+        else
+        {
+            await SelectUserHandlerBusy();
+            TResponseModel<UserInfoModel[]> getUsers = await IdentityRepo.GetUsersOfIdentityAsync([editDocument.BuyerIdentityUserId]);
+            SnackBarRepo.ShowMessagesResponse(getUsers.Messages);
+            if (getUsers.Success() && getUsers.Response is not null && getUsers.Response.Any(x => x.UserId == editDocument.BuyerIdentityUserId))
+            {
+                buyerUser = getUsers.Response.First(x => x.UserId == editDocument.BuyerIdentityUserId);
+            }
+            await SelectUserHandlerBusy(false);
+        }
     }
 
     /// <inheritdoc/>
@@ -120,9 +205,11 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
 
             currentDocument = new()
             {
+                Rows = [],
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 BuyerIdentityUserId = ClientId ?? CurrentUserSession.UserId,
             };
         }
+        editDocument = GlobalTools.CreateDeepCopy(currentDocument);
     }
 }

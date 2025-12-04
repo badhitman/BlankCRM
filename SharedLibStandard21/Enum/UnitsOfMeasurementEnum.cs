@@ -18,26 +18,50 @@ public enum UnitsOfMeasurementEnum
     Thing = 0,
 
     /// <summary>
-    /// Кипа
+    /// Комплект
     /// </summary>
-    [Description("Кипа")]
-    Stack = 20,
+    [Description("Комплект")]
+    Set = 20,
 
     /// <summary>
-    /// Связка
+    /// Литр
     /// </summary>
-    [Description("Связка")]
-    Bunch = 30,
+    [Description("Литр")]
+    Liter = 40,
 
     /// <summary>
     /// Коробка
     /// </summary>
     [Description("Коробка")]
-    Box = 40,
+    Box = 60,
+
+    /// <summary>
+    /// Кг
+    /// </summary>
+    [Description("Кг")]
+    Kilogram = 80,
+
+    /// <summary>
+    /// Бутылка
+    /// </summary>
+    [Description("Бутылка")]
+    Bottle = 100,
+
+    /// <summary>
+    /// Кипа
+    /// </summary>
+    [Description("Кипа")]
+    Stack = 120,
+
+    /// <summary>
+    /// Связка
+    /// </summary>
+    [Description("Связка")]
+    Bunch = 140,
 
     /// <summary>
     /// None
     /// </summary>
     [Description("-нет-")]
-    None = int.MaxValue,
+    None = 10000,
 }

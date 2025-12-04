@@ -46,8 +46,6 @@ public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
     public async Task SetBusyAsync(bool is_busy = true, CancellationToken token = default)
     {
         _isBusyProgress = is_busy;
-        await InvokeAsync(StateHasChanged);
-
         try
         {
             await Task.Delay(1, token);

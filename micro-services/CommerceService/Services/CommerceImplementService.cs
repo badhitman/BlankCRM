@@ -287,7 +287,7 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<OfferModelDB> q = from o in context.Offers
-                                     join n in context.Nomenclatures.Where(x => x.ContextName == req.Payload.Payload.ContextName) on o.NomenclatureId equals n.Id
+                                     join n in context.Nomenclatures.Where(x => x.ContextName == req.Payload.Payload.ContextName || ((req.Payload.Payload.ContextName == null || req.Payload.Payload.ContextName == "") && (x.ContextName == null || x.ContextName == ""))) on o.NomenclatureId equals n.Id
                                      select o;
 
         if (req.Payload.Payload.NomenclatureFilter is not null && req.Payload.Payload.NomenclatureFilter.Length != 0)

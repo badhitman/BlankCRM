@@ -32,12 +32,10 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     private readonly DialogOptions _dialogOptions = new()
     {
         FullWidth = true,
-        CloseOnEscapeKey = true,
         MaxWidth = MaxWidth.ExtraLarge,
+        CloseButton = true
     };
 
-
-    private void Submit() => _visible = false;
 
     void CreateNewOrderOpenDialog()
     {

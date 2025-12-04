@@ -25,19 +25,19 @@ else
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label for="inputName4" class="form-label">Примечание</label>
-                    <input type="text"
-                           class="form-control"
-                           id="inputName4"
-                           @bind-value="currentDocument.Name"
-                           @bind-value:event="oninput">
-                </div>
-                <div class="col-md-6">
                     <label for="inputExternalDocumentId" class="form-label">Номер (внешний)</label>
                     <input type="text"
                            class="form-control"
                            id="inputExternalDocumentId"
                            @bind-value="currentDocument.ExternalDocumentId"
+                           @bind-value:event="oninput">
+                </div>
+                <div class="col-md-6">
+                    <label for="inputName4" class="form-label">Примечание</label>
+                    <input type="text"
+                           class="form-control"
+                           id="inputName4"
+                           @bind-value="currentDocument.Name"
                            @bind-value:event="oninput">
                 </div>
                 <RubricInputComponent SelectRubricsHandle="WarehouseSelectAction"
@@ -50,7 +50,7 @@ else
                 {
                     <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
                                               SelectedUser="@currentDocument.BuyerIdentityUserId"
-                                              IsReadOnly="!string.IsNullOrWhiteSpace(ClientId)" />
+                                              IsReadOnly="SelectUserHandlerIsProgress" />
                 }
                 else
                 {
@@ -75,10 +75,20 @@ else
                         </MudSelectItem>
                     }
                 </MudSelect>
-
                 <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
                     <MudTabPanel Text="Заказ">
-                        <OrderTableRowsComponent OrderId="OrderId" />
+                        @if (editDocument is null)
+                        {
+                            <div class="text-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <OrderTableRowsComponent Document="editDocument" @ref=tableRowsRef />
+                        }
                     </MudTabPanel>
                     <MudTabPanel Text="Оплата" Disabled="@(OrderId < 1)">
                         <PaymentsTableComponent OrderId="OrderId" />
@@ -86,8 +96,16 @@ else
                     <MudTabPanel Text="Отгрузка/Доставка" Disabled="@(OrderId < 1)">
                         <OrderDeliveryTableComponent OrderId="OrderId" />
                     </MudTabPanel>
-                    <MudTabPanel Text="Заметки/Описание" Disabled="@(OrderId < 1)">
+                    <MudTabPanel Text="Заметки" Disabled="@(OrderId < 1)">
                         <TinyMCE.Blazor.Editor @bind-Value="currentDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />
+                    </MudTabPanel>
+                    <MudTabPanel Text="Файлы" Disabled="@(OrderId < 1)">
+                        <FilesContextViewComponent ApplicationsNames="@([Routes.RETAIL_CONTROLLER_NAME])"
+                                                   PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
+                                                   PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
+                                                   OwnerPrimaryKey="OrderId"
+                                                   Title="Вложения"
+                                                   ManageMode />
                     </MudTabPanel>
                 </MudTabs>
             </div>
@@ -103,6 +121,9 @@ else
                     }
                 }
             </p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button @onclick=SaveDocument class="btn btn-primary me-md-2" type="button" disabled="@CannotSave">Save</button>
+            </div>
         </div>
     </div>
 }

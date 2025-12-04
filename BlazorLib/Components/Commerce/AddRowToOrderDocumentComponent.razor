@@ -18,7 +18,7 @@ else
                     {
                         List<OfferAvailabilityModelDB> snap = RegistersCache.Where(x => x.OfferId == opt.Id).ToList();
                         decimal _sum = snap.Sum(x => x.Quantity);
-                        <option disabled="@(!ForceAdding && _sum == 0)" value="@opt.Id">@($"{opt.GetName()}{(ShowPriceOffers ? $" ({(opt.Price / opt.Multiplicity).ToString(GlobalStaticConstants.RU)} руб.за {opt.Nomenclature?.BaseUnit.DescriptionInfo()})" : "")}{(ShowRegistersOffersQuantity ? $"   /   {GetOfferQuantity(opt)} {opt.OfferUnit.DescriptionInfo()}" : "")}")</option>
+                        <option disabled="@(!ForceAdding && _sum == 0)" value="@opt.Id">@($"{opt.GetName()}{(ShowPriceOffers ? $" ({(Math.Round((opt.Price / opt.Multiplicity), 2)).ToString(GlobalStaticConstants.RU)} руб.за {opt.Nomenclature?.BaseUnit.DescriptionInfo()})" : "")}{(ShowRegistersOffersQuantity ? $"   /   {GetOfferQuantity(opt)} {opt.OfferUnit.DescriptionInfo()}" : "")}")</option>
                     }
                 </optgroup>
             }

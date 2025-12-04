@@ -522,7 +522,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     NomenclatureId = table.Column<int>(type: "integer", nullable: false),
                     Quantity = table.Column<decimal>(type: "numeric", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Comment = table.Column<string>(type: "text", nullable: true),
                     Version = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -706,7 +705,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     NomenclatureId = table.Column<int>(type: "integer", nullable: false),
                     Quantity = table.Column<decimal>(type: "numeric", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Comment = table.Column<string>(type: "text", nullable: true),
                     Version = table.Column<Guid>(type: "uuid", nullable: false)
                 },

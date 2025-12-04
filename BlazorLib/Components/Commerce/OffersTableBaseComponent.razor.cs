@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 using MudBlazor;
 
@@ -29,14 +28,14 @@ public abstract class OffersTableBaseComponent : BlazorRegistersComponent
     /// <summary>
     /// ContextName
     /// </summary>
-    [Parameter, EditorRequired]
+    [Parameter]
     public required string? ContextName { get; set; }
 
 
     /// <summary>
     /// allOffers
     /// </summary>    
-    protected List<OfferModelDB>? allOffers;
+    protected List<OfferModelDB> allOffers = [];
 
     /// <summary>
     /// editTrigger
@@ -87,13 +86,14 @@ public abstract class OffersTableBaseComponent : BlazorRegistersComponent
         await SetBusyAsync();
 
         TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
-        await SetBusyAsync(false);
+
         if (res.Response?.Response is not null && res.Response.Response.Count != 0)
         {
-            allOffers!.AddRange(res.Response.Response);
+            allOffers.AddRange(res.Response.Response);
             if (allOffers.Count < res.Response.TotalRowsCount)
                 await LoadOffers(page_num + 1);
         }
+        await SetBusyAsync(false);
     }
 
     /// <summary>

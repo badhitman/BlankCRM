@@ -1,0 +1,12 @@
+﻿@page "/retail/order-card/{OrderId:int}"
+@using BlazorLib.Components.Retail.Orders
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<OrderDocumentCardComponent OrderId="OrderId" />
+
+@code {
+    [Parameter]
+    public int OrderId { get; set; }
+}

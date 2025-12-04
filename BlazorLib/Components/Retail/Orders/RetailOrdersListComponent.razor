@@ -19,10 +19,10 @@
         <MudTh>Информация</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Номер"><a href="/retail/order/@context.Id">@context.ExternalDocumentId</a></MudTd>
-        <MudTd DataLabel="Статус"><a href="/retail/order/@context.Id">@context.StatusDocument.DescriptionInfo()</a></MudTd>
+        <MudTd DataLabel="Номер"><a href="/retail/order-card/@context.Id">@context.ExternalDocumentId</a></MudTd>
+        <MudTd DataLabel="Статус"><a href="/retail/order-card/@context.Id">@context.StatusDocument.DescriptionInfo()</a></MudTd>
         <MudTd DataLabel="Заказчик"><a href="/retail/client-card/@context.BuyerIdentityUserId">@(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")</a></MudTd>
-        <MudTd DataLabel="Создан/Изменён"><a href="/retail/order/@context.Id">@context.CreatedAtUTC/@context.LastUpdatedAtUTC</a></MudTd>
+        <MudTd DataLabel="Создан/Изменён"><a href="/retail/order-card/@context.Id">@context.CreatedAtUTC/@context.LastUpdatedAtUTC</a></MudTd>
         <MudTd DataLabel="Склад">@(RubricsCache.FirstOrDefault(x => x.Id == context.WarehouseId)?.ToString() ?? $"#{context.WarehouseId}")</MudTd>
         <MudTd DataLabel="Номенклатура"><OrderRowsAboutComponent Rows="@context.Rows" /></MudTd>
         <MudTd DataLabel="Отгрузка"><OrderDeliveryAboutComponent DeliveryDocuments="@context.DeliveryDocuments" /></MudTd>
@@ -50,7 +50,4 @@
             <OrderDocumentCardComponent />
         </CascadingValue>
     </DialogContent>
-    <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-10">Close</MudButton>
-    </DialogActions>
 </MudDialog>

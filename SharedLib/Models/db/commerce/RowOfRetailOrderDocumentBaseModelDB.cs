@@ -16,9 +16,6 @@ public class RowOfRetailOrderDocumentBaseModelDB : RowOfMiddleDocumentModel
     /// </summary>
     public decimal Amount { get; set; }
 
-    /// <inheritdoc/>
-    public bool IsDisabled { get; set; }
-
     /// <summary>
     /// Comment
     /// </summary>

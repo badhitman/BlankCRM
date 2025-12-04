@@ -1,11 +1,137 @@
-﻿<h3>OrderTableRowsComponent</h3>
+﻿@using BlazorLib.Components.Commerce
+@using MudBlazor
 
-@code {
-    [Inject]
-    IRetailService RetailRepo { get; set; } = default!;
+@inherits OffersTableBaseComponent
 
-
-    /// <inheritdoc/>
-    [Parameter]
-    public int OrderId { get; set; }
-}
+<MudTable Dense Hover ReadOnly="ReadOnly"
+          SortLabel="@(nameof(RowOfOrderDocumentModelDB.Nomenclature.Name))"
+          CanCancelEdit
+          Items="@Document?.Rows"
+          RowEditPreview="RowEditPreviewHandler"
+          RowEditCommit="RowEditCommitHandler"
+          CancelEditIcon="@Icons.Material.Filled.Cancel"
+          CancelEditTooltip="Отменить изменение"
+          CommitEditTooltip="Сохранить изменения"
+          RowEditCancel="RowEditCancelHandler"
+          EditTrigger="@EditTrigger">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Номенклатура заказа (розница)</MudText>
+        <MudSpacer />
+        @if (!ReadOnly && Document is not null)
+        {
+            <div class="ms-3">
+                <AddRowToOrderDocumentComponent ForceAdding="ForceAdding"
+                                                ShowPriceOffers
+                                                SelectOfferHandler="SelectOfferAction"
+                                                ShowRegistersOffersQuantity
+                                                @ref="addingDomRef"
+                                                WarehouseId="Document.WarehouseId"
+                                                AllOffers="allOffers"
+                                                CurrentRows="pagedData.Select(x => x.OfferId).ToList()"
+                                                AddingOfferHandler="AddingOfferAction" />
+            </div>
+        }
+    </ToolBarContent>
+    <ColGroup>
+        <col />
+        <col />
+        <col />
+        <col />
+        <col />
+        <col style="width:50px;" />
+        @if (EditTrigger == TableEditTrigger.EditButton)
+        {
+            <col style="width:50px;" />
+        }
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>Название</MudTh>
+        <MudTh>Остаток</MudTh>
+        <MudTh>Цена</MudTh>
+        <MudTh>Количество</MudTh>
+        <MudTh>Сумма</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">
+            <a href="/nomenclature/offer-card/@context!.Offer!.Id">
+                @context.Offer.GetName()
+            </a>
+        </MudTd>
+        @{
+            IQueryable<OfferAvailabilityModelDB> _q = RegistersCache.Where(x => x.OfferId == context.OfferId && x.WarehouseId == Document?.WarehouseId).AsQueryable();
+            decimal _sum = !_q.Any()
+            ? 0
+            : _q.Sum(x => x.Quantity);
+            bool warningRow = _sum < context!.Quantity;
+        }
+        <MudTd DataLabel="Остаток">
+            @_sum @(context.Offer?.OfferUnit.DescriptionInfo())
+        </MudTd>
+        <MudTd DataLabel="Цена">
+            @($"{context!.Offer!.Price} р/{context.Offer!.OfferUnit.DescriptionInfo().ToLower()}")
+        </MudTd>
+        <MudTd title="@(warningRow ? "Остатки меньше требуемого" : "")" Class="@(warningRow ? "mud-theme-warning" : "")" DataLabel="Количество">
+            @context!.Quantity
+        </MudTd>
+        <MudTd DataLabel="Сумма">
+            @(context!.Quantity * context.Offer!.Price)
+        </MudTd>
+        <MudTd><MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" /></MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Name">
+            @context?.Offer?.GetName()
+        </MudTd>
+        <MudTd DataLabel="Остаток">
+            @(this.RegistersCache.Where(x => x.OfferId == context.OfferId && x.WarehouseId == Document?.WarehouseId).Sum(x => x.Quantity))
+        </MudTd>
+        <MudTd DataLabel="Price">
+            @(context.Offer!.Price)
+        </MudTd>
+        <MudTd DataLabel="Quantity">
+            @{
+                var _alowedValues = context.Offer?.QuantitiesValues;
+            }
+            @if (_alowedValues is null || _alowedValues.Count == 0 || ForceAdding)
+            {
+                <MudNumericField @bind-Value="context!.Quantity" Required Min="1" Max="GetMaxValue(context)" />
+            }
+            else
+            {
+                bool overLimit = false;
+                <MudSelect T="decimal" Label="Количество" Required @bind-Value="context!.Quantity">
+                    @foreach (decimal ql in _alowedValues)
+                    {
+                        overLimit = overLimit || ql > GetMaxValue(context);
+                        <MudSelectItem Disabled="@overLimit" Value="@ql" />
+                    }
+                </MudSelect>
+            }
+        </MudTd>
+        <MudTd colspan="2">
+            @(context!.Quantity * context.Offer!.Price)
+        </MudTd>
+    </RowEditingTemplate>
+    @* <HeaderContent>
+        <MudTh>Товар</MudTh>
+        <MudTh>Количество</MudTh>
+        <MudTh>Сумма</MudTh>
+        <MudTh>Примечание</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Товар">@context.Offer!.GetName() @context.Nomenclature!.ToString()</MudTd>
+        <MudTd DataLabel="Количество">@context.Quantity</MudTd>
+        <MudTd DataLabel="Сумма">@context.Amount</MudTd>
+        <MudTd DataLabel="Примечание">@context.Comment</MudTd>
+    </RowTemplate> *@
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

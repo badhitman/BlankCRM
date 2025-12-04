@@ -71,7 +71,7 @@ else
                         TabOfficeForOrderModelDb current_tab = CurrentCart.OfficesTabs!.First(x => x.OfficeId == add.Id);
                         current_tab.Order = CurrentCart;
                         <MudTabPanel @key="@(add.Id)" Text="@add.Name">
-                            <TabAddressOfOrderDocumentComponent CurrentTab="current_tab" DocumentUpdateHandler="DocumentUpdateAction" ContextName="@null" />
+                            <TabAddressOfOrderDocumentComponent CurrentTab="current_tab" DocumentUpdateHandler="DocumentUpdateAction" />
                         </MudTabPanel>
                     }
                 </MudTabs>
