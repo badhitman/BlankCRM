@@ -20,10 +20,10 @@
         </div>
         <p class="mb-1 @(DeliveryTypeElement.IsDisabled ? "text-decoration-line-through" : "")">@DeliveryTypeElement.Description</p>
         <small>
-            created: @DeliveryTypeElement.CreatedAtUTC
-            @if (DeliveryTypeElement.LastUpdatedAtUTC != default)
+            Создан: @DeliveryTypeElement.CreatedAtUTC.GetCustomTime()
+            @if (DeliveryTypeElement.LastUpdatedAtUTC.HasValue && DeliveryTypeElement.LastUpdatedAtUTC != default)
             {
-                <strong class="ms-3">updated: @DeliveryTypeElement.LastUpdatedAtUTC</strong>
+                <strong class="ms-3">updated: @DeliveryTypeElement.LastUpdatedAtUTC.Value.GetCustomTime()</strong>
             }
         </small>
     }

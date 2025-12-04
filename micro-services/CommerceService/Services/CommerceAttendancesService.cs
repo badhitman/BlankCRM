@@ -745,7 +745,6 @@ public partial class CommerceImplementService : ICommerceService
         req.Payload.NormalizedNameUpper = req.Payload.Name.ToUpper();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
         CalendarScheduleModelDB? doubleCalendarSchedule = await context
             .CalendarsSchedules
             .Where(x => x.Id != req.Payload.Id && x.OfferId == req.Payload.OfferId && x.DateScheduleCalendar == req.Payload.DateScheduleCalendar)

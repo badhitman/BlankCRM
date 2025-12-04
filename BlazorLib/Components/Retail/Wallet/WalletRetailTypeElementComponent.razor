@@ -20,10 +20,10 @@
         </div>
         <p class="mb-1 @(WalletTypeElement.IsDisabled ? "text-decoration-line-through" : "")">@WalletTypeElement.Description</p>
         <small>
-            created: @WalletTypeElement.CreatedAtUTC
-            @if (WalletTypeElement.LastUpdatedAtUTC != default)
+            Создан: @WalletTypeElement.CreatedAtUTC.GetCustomTime()
+            @if (WalletTypeElement.LastUpdatedAtUTC.HasValue && WalletTypeElement.LastUpdatedAtUTC != default)
             {
-                <strong class="ms-3">updated: @WalletTypeElement.LastUpdatedAtUTC</strong>
+                <strong class="ms-3">updated: @WalletTypeElement.LastUpdatedAtUTC.Value.GetCustomTime()</strong>
             }
         </small>
     }

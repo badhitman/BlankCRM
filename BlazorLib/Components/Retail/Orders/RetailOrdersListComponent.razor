@@ -10,8 +10,11 @@
     <HeaderContent>
         <MudTh>Номер</MudTh>
         <MudTh>Статус</MudTh>
-        <MudTh>Заказчик</MudTh>
         <MudTh>Создан/Изменён</MudTh>
+        @if (string.IsNullOrWhiteSpace(ClientId))
+        {
+            <MudTh>Заказчик</MudTh>
+        }
         <MudTh>Склад</MudTh>
         <MudTh>Номенклатура</MudTh>
         <MudTh>Отгрузка</MudTh>
@@ -21,8 +24,11 @@
     <RowTemplate>
         <MudTd DataLabel="Номер"><a href="/retail/order-card/@context.Id">@context.ExternalDocumentId</a></MudTd>
         <MudTd DataLabel="Статус"><a href="/retail/order-card/@context.Id">@context.StatusDocument.DescriptionInfo()</a></MudTd>
-        <MudTd DataLabel="Заказчик"><a href="/retail/client-card/@context.BuyerIdentityUserId">@(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")</a></MudTd>
-        <MudTd DataLabel="Создан/Изменён"><a href="/retail/order-card/@context.Id">@context.CreatedAtUTC/@context.LastUpdatedAtUTC</a></MudTd>
+        <MudTd DataLabel="Создан/Изменён"><a href="/retail/order-card/@context.Id">@context.CreatedAtUTC.GetCustomTime()/@(context.LastUpdatedAtUTC.HasValue && context.LastUpdatedAtUTC != default ? context.LastUpdatedAtUTC.Value.GetCustomTime() : "")</a></MudTd>
+        @if (string.IsNullOrWhiteSpace(ClientId))
+        {
+            <MudTd DataLabel="Заказчик"><MudLink Class="text-success-emphasis" title="Переход в карточку клиента" Href="@($"/retail/client-card/{context.BuyerIdentityUserId}")">@(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")</MudLink></MudTd>
+        }
         <MudTd DataLabel="Склад">@(RubricsCache.FirstOrDefault(x => x.Id == context.WarehouseId)?.Name ?? $"#{context.WarehouseId}")</MudTd>
         <MudTd DataLabel="Номенклатура">
             <OrderRowsAboutComponent Rows="@context.Rows" />
