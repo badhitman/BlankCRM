@@ -547,6 +547,8 @@ public partial class CommerceImplementService : ICommerceService
 
         if (paginationWorkSchedulesRequest.Payload.OfferFilter is not null && paginationWorkSchedulesRequest.Payload.OfferFilter.Length != 0)
             q = q.Where(x => paginationWorkSchedulesRequest.Payload.OfferFilter.Any(i => i == x.OfferId));
+        else
+            q = q.Where(x => x.OfferId == null || x.OfferId == 0);
 
         if (paginationWorkSchedulesRequest.Payload.NomenclatureFilter is not null && paginationWorkSchedulesRequest.Payload.NomenclatureFilter.Length != 0)
             q = q.Where(x => paginationWorkSchedulesRequest.Payload.NomenclatureFilter.Any(i => i == x.NomenclatureId));
@@ -664,12 +666,26 @@ public partial class CommerceImplementService : ICommerceService
         req.LastUpdatedAtUTC = DateTime.UtcNow;
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        WeeklyScheduleModelDB? doubleWeeklySchedule = await context
+            .WeeklySchedules
+            .Where(x => x.Id != req.Id && x.OfferId == req.OfferId && x.Weekday == req.Weekday)
+            .Where(x => (req.StartPart > x.StartPart && req.StartPart < x.EndPart) || (req.EndPart > x.StartPart && req.EndPart < x.EndPart) ||
+                                         (x.StartPart > req.StartPart && x.StartPart < req.EndPart) || (x.EndPart > req.StartPart && x.EndPart < req.EndPart))
+            .FirstOrDefaultAsync(cancellationToken: token);
+
+        if (doubleWeeklySchedule is not null)
+        {
+            res.AddError($"Конфликт с существующей записью: {doubleWeeklySchedule.Name} [{doubleWeeklySchedule.StartPart} - {doubleWeeklySchedule.EndPart}]");
+            return res;
+        }
+
         if (req.Id < 1)
         {
             req.IsDisabled = true;
             req.Id = 0;
             req.CreatedAtUTC = req.LastUpdatedAtUTC;
-            context.Add(req);
+            await context.WeeklySchedules.AddAsync(req, token);
             await context.SaveChangesAsync(token);
             res.Response = req.Id;
         }
@@ -729,13 +745,27 @@ public partial class CommerceImplementService : ICommerceService
         req.Payload.NormalizedNameUpper = req.Payload.Name.ToUpper();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        CalendarScheduleModelDB? doubleCalendarSchedule = await context
+            .CalendarsSchedules
+            .Where(x => x.Id != req.Payload.Id && x.OfferId == req.Payload.OfferId && x.DateScheduleCalendar == req.Payload.DateScheduleCalendar)
+            .Where(x => (req.Payload.StartPart > x.StartPart && req.Payload.StartPart < x.EndPart) || (req.Payload.EndPart > x.StartPart && req.Payload.EndPart < x.EndPart) ||
+                                         (x.StartPart > req.Payload.StartPart && x.StartPart < req.Payload.EndPart) || (x.EndPart > req.Payload.StartPart && x.EndPart < req.Payload.EndPart))
+            .FirstOrDefaultAsync(cancellationToken: token);
+
+        if (doubleCalendarSchedule is not null)
+        {
+            res.AddError($"Конфликт с существующей записью: {doubleCalendarSchedule.Name} [{doubleCalendarSchedule.StartPart} - {doubleCalendarSchedule.EndPart}]");
+            return res;
+        }
+
         if (req.Payload.Id < 1)
         {
             req.Payload.IsDisabled = true;
             req.Payload.Id = 0;
             req.Payload.CreatedAtUTC = DateTime.UtcNow;
             req.Payload.LastUpdatedAtUTC = DateTime.UtcNow;
-            context.Add(req.Payload);
+            await context.CalendarsSchedules.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
             res.Response = req.Payload.Id;
         }

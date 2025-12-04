@@ -60,6 +60,30 @@ public enum UnitsOfMeasurementEnum
     Bunch = 140,
 
     /// <summary>
+    /// Час
+    /// </summary>
+    [Description("Час")]
+    Hour = 160,
+
+    /// <summary>
+    /// День
+    /// </summary>
+    [Description("День")]
+    Day = 180,
+
+    /// <summary>
+    /// Неделя
+    /// </summary>
+    [Description("Неделя")]
+    Week = 200,
+
+    /// <summary>
+    /// Месяц
+    /// </summary>
+    [Description("Месяц")]
+    Month = 220,
+
+    /// <summary>
     /// None
     /// </summary>
     [Description("-нет-")]

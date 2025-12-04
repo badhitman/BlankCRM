@@ -28,6 +28,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
     public required NomenclatureModelDB CurrentNomenclature { get; set; }
 
 
+    bool readyLoadTable = false;
     List<RecordsAttendanceModelDB> currentRecords = [];
     private MudTable<OfferModelDB> table = default!;
     bool _visibleChangeConfig;
@@ -37,6 +38,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
         CloseButton = true,
         CloseOnEscapeKey = true,
     };
+
 
     void CancelChangeConfig()
     {
@@ -55,6 +57,9 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
     /// </summary>
     private async Task<TableData<OfferModelDB>> ServerReload(TableState state, CancellationToken token)
     {
+        if (!readyLoadTable)
+            return new TableData<OfferModelDB>() { TotalItems = 0, Items = [] };
+
         if (CurrentUserSession is null)
             throw new ArgumentNullException(nameof(CurrentUserSession));
 
@@ -101,7 +106,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
             return new TableData<OfferModelDB>() { TotalItems = res.Response.TotalRowsCount, Items = res.Response.Response };
         }
 
-        IsBusyProgress = false;
+        await SetBusyAsync(false, token: token);
         return new TableData<OfferModelDB>() { TotalItems = 0, Items = [] };
     }
 
@@ -109,5 +114,14 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
     private void OnExpandCollapseClick()
     {
         _expanded = !_expanded;
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        readyLoadTable = true;
+        if (table is not null)
+            await table.ReloadServerData();
     }
 }

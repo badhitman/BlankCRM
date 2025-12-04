@@ -2,10 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
-using BlazorLib;
-using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
+using Microsoft.AspNetCore.Components;
+using SharedLib;
 
 namespace BlazorLib.Components.Commerce.Attendances;
 
@@ -29,6 +28,14 @@ public partial class WorkScheduleWeekdayAddingComponent : BlazorBusyComponentBas
     /// </summary>
     [Parameter]
     public required Action<WeeklyScheduleModelDB>? AddingWorkScheduleHandle { get; set; }
+
+    /// <summary>
+    /// Offer
+    /// </summary>
+    [CascadingParameter, EditorRequired]
+    public required OfferModelDB? Offer { get; set; }
+
+
 
     bool CantSave => EndPart is null || StartPart is null || EndPart < StartPart;
 
@@ -59,7 +66,8 @@ public partial class WorkScheduleWeekdayAddingComponent : BlazorBusyComponentBas
             Weekday = Weekday,
             QueueCapacity = QueueCapacity,
             ContextName = Routes.ATTENDANCES_CONTROLLER_NAME,
-            IsDisabled = true,
+            IsDisabled = true, 
+            OfferId = Offer?.Id
         };
 
         await SetBusyAsync();

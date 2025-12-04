@@ -22,6 +22,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
     bool _expanded;
     MudTable<NomenclatureModelDB> tableRef = default!;
     List<RecordsAttendanceModelDB> currentRecords = [];
+    bool readyLoadTable = false;
 
     async void CreateNomenclatureAction(NomenclatureModelDB nom)
     {
@@ -35,7 +36,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
     /// </summary>
     private async Task<TableData<NomenclatureModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        if (CurrentUserSession is null)
+        if (!readyLoadTable || CurrentUserSession is null)
             return new TableData<NomenclatureModelDB>() { TotalItems = 0, Items = [] };
 
         TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req = new()
@@ -83,5 +84,14 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
     private void OnExpandCollapseClick()
     {
         _expanded = !_expanded;
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        readyLoadTable = true;
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
     }
 }

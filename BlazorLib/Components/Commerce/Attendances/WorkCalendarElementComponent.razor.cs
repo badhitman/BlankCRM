@@ -67,7 +67,7 @@ public partial class WorkCalendarElementComponent : BlazorBusyComponentBaseAuthM
     /// <inheritdoc/>
     protected async override Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
         editWorkScheduleCalendar = GlobalTools.CreateDeepCopy(WorkScheduleCalendar)!;
+        await base.OnInitializedAsync();
     }
 }

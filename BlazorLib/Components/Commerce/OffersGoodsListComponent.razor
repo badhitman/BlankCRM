@@ -32,8 +32,8 @@
             <MudSpacer />
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Номенклатура</MudTh>
             <MudTh>Название</MudTh>
+            <MudTh>Номенклатура</MudTh>
             <MudTh>Цена@(_hideWorth ? "" : "/Стоимость")</MudTh>
             @if (!_hideMultiplicity)
             {
@@ -43,9 +43,6 @@
             <MudTh>Баланс</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Номенклатура">
-                <span>@($"`{context.Nomenclature?.Name}` ({context.Nomenclature?.BaseUnit.DescriptionInfo()})")</span>
-            </MudTd>
             <MudTd DataLabel="Название">
                 <a href="/nomenclature/offer-card/@context.Id">@context.Name</a>
                 <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
@@ -53,6 +50,9 @@
                         <sup class="text-secondary-emphasis">@context.QuantitiesTemplate</sup>
                     </Authorized>
                 </AuthorizeView>
+            </MudTd>
+            <MudTd DataLabel="Номенклатура">
+                <span>@($"`{context.Nomenclature?.Name}` ({context.Nomenclature?.BaseUnit.DescriptionInfo()})")</span>
             </MudTd>
             <MudTd DataLabel="Цена">
                 @($"{context.Price}{(_hideWorth ? "" : $"/{Math.Round(context.Price / context.Multiplicity, 2)}")}")
