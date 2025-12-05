@@ -780,6 +780,10 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.Payload.AutoGenerationWallets == true && req.Payload.UsersFilterIdentityId is not null && req.Payload.UsersFilterIdentityId.Length != 0)
         {
+            TResponseModel<UserInfoModel[]> getUsers = await identityRepo.GetUsersOfIdentityAsync(req.Payload.UsersFilterIdentityId, token);
+            if (!getUsers.Success() || getUsers.Response is null)
+                return new() { Status = new() { Messages = getUsers.Messages } };
+
             List<WalletRetailTypeModelDB> walletsTypesDb = await context.WalletsRetailTypes
                 .Where(x => !x.IsDisabled)
                 .ToListAsync(cancellationToken: token);
@@ -789,7 +793,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             {
                 walletsTypesDb.ForEach(w =>
                 {
-                    if (!res.Any(x => x.WalletTypeId == w.Id && x.UserIdentityId == userId))
+                    if (!res.Any(x => x.WalletTypeId == w.Id && x.UserIdentityId == userId) && (!w.IsSystem || getUsers.Response.First(u => u.UserId == userId).IsAdmin))
                     {
                         createWallets.Add(new()
                         {
@@ -843,6 +847,8 @@ public class RetailService(IIdentityTransmission identityRepo,
             LastUpdatedAtUTC = x.LastUpdatedAtUTC,
             Name = x.Name,
             IsDisabled = x.IsDisabled,
+            SortIndex = x.SortIndex,
+            IsSystem = x.IsSystem,
             SumBalances = context.WalletsRetail.Where(y => y.WalletTypeId == x.Id).Sum(y => y.Balance)
         }).ToListAsync(cancellationToken: token);
 
@@ -993,6 +999,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .SetProperty(p => p.Name, req.Name)
                 .SetProperty(p => p.Description, req.Description)
                 .SetProperty(p => p.IsDisabled, req.IsDisabled)
+                .SetProperty(p => p.IsSystem, req.IsSystem)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
@@ -1026,6 +1033,8 @@ public class RetailService(IIdentityTransmission identityRepo,
                 CreatedAtUTC = x.CreatedAtUTC,
                 Description = x.Description,
                 IsDisabled = x.IsDisabled,
+                IsSystem = x.IsSystem,
+                SortIndex = x.SortIndex,
                 LastUpdatedAtUTC = x.LastUpdatedAtUTC,
                 Name = x.Name,
                 SumBalances = context.WalletsRetail.Where(y => y.WalletTypeId == x.Id).Sum(y => y.Balance)

@@ -19,10 +19,10 @@ public class WalletRetailTypeModelDB : EntryUpdatedModel
     public override bool Equals(object obj)
     {
         if (obj is WalletRetailTypeViewModel walletOther2)
-            return walletOther2.IsDisabled == IsDisabled && walletOther2.Name == Name && walletOther2.Description == Description;
+            return walletOther2.IsSystem == IsSystem && walletOther2.IsDisabled == IsDisabled && walletOther2.Name == Name && walletOther2.Description == Description;
 
         if (obj is WalletRetailTypeModelDB walletOther)
-            return walletOther.IsDisabled == IsDisabled && walletOther.Name == Name && walletOther.Description == Description;
+            return walletOther.IsSystem == IsSystem && walletOther.IsDisabled == IsDisabled && walletOther.Name == Name && walletOther.Description == Description;
 
         return false;
     }
@@ -37,4 +37,9 @@ public class WalletRetailTypeModelDB : EntryUpdatedModel
     /// Кошельки
     /// </summary>
     public List<WalletRetailModelDB>? Wallets { get; set; }
+
+    /// <summary>
+    /// Системный
+    /// </summary>
+    public bool IsSystem { get; set; }
 }

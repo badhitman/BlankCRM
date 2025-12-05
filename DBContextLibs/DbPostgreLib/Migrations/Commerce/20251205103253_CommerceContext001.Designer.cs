@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20251204110419_CommerceContext001")]
+    [Migration("20251205103253_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -1359,6 +1359,9 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("text");
 
                     b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsSystem")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastUpdatedAtUTC")

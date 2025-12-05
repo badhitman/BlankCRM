@@ -102,6 +102,19 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
 
     async Task ReloadWallets(string userId)
     {
+        walletsForSelect.Clear();
+        if (string.IsNullOrWhiteSpace(userId))
+            return;
+
+        await SetBusyAsync();
+
+        TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([userId]);
+        SnackBarRepo.ShowMessagesResponse(getUser.Messages);
+        if (getUser.Response is not null && getUser.Response.Any(x => x.UserId == userId))
+            currentUser = getUser.Response.First(x => x.UserId == userId);
+        else
+            throw new Exception("ѕользователь не найден");
+
         TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> reqW = new()
         {
             Payload = new()
@@ -113,15 +126,16 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
         TPaginationResponseModel<WalletRetailModelDB> getWallets = await RetailRepo.SelectWalletsAsync(reqW);
         SnackBarRepo.ShowMessagesResponse(getWallets.Status.Messages);
         if (getWallets.Response is null || getWallets.Response.Count == 0)
-            walletsForSelect.Clear();
+            throw new Exception("Ќе удалось получить перечень кошельков пользовател€");
         else
         {
-            walletsForSelect = getWallets.Response;
+            walletsForSelect = [..getWallets.Response.Where(x=> currentUser.IsAdmin || x.WalletType?.IsSystem == true)];
         }
     }
 
-    internal async Task SetWallet(WalletRetailModelDB? fromWallet)
+    internal async Task SetWallet(WalletRetailModelDB? wallet)
     {
-        throw new NotImplementedException();
+        currentWallet = wallet;
+
     }
 }
