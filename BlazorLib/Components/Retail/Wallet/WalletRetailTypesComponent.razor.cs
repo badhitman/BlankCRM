@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Retail.Wallet;
 public partial class WalletRetailTypesComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IRetailService retailRepo { get; set; } = default!;
+    IRetailService RetailRepo { get; set; } = default!;
 
 
     List<WalletRetailTypeViewModel>? WalletsTypesList;
@@ -23,7 +23,7 @@ public partial class WalletRetailTypesComponent : BlazorBusyComponentBaseModel
     async Task CreateNew()
     {
         await SetBusyAsync();
-        TResponseModel<int>? resCreate = await retailRepo.CreateWalletTypeAsync(creatingNewWallet);
+        TResponseModel<int>? resCreate = await RetailRepo.CreateWalletTypeAsync(creatingNewWallet);
         if(!resCreate.Success())
         {
             SnackBarRepo.ShowMessagesResponse(resCreate.Messages);
@@ -32,7 +32,7 @@ public partial class WalletRetailTypesComponent : BlazorBusyComponentBaseModel
         }
 
         creatingNewWallet = new();
-        TPaginationResponseModel<WalletRetailTypeViewModel>? res = await retailRepo.SelectWalletsTypesAsync(new TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>() { PageSize = int.MaxValue });
+        TPaginationResponseModel<WalletRetailTypeViewModel>? res = await RetailRepo.SelectWalletsTypesAsync(new TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>() { PageSize = int.MaxValue });
         WalletsTypesList = res.Response;
         await SetBusyAsync(false);
     }
@@ -42,7 +42,7 @@ public partial class WalletRetailTypesComponent : BlazorBusyComponentBaseModel
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
-        TPaginationResponseModel<WalletRetailTypeViewModel>? res = await retailRepo.SelectWalletsTypesAsync(new TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>() { PageSize = int.MaxValue });
+        TPaginationResponseModel<WalletRetailTypeViewModel>? res = await RetailRepo.SelectWalletsTypesAsync(new TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>() { PageSize = int.MaxValue });
         WalletsTypesList = res.Response;
         await SetBusyAsync(false);
     }

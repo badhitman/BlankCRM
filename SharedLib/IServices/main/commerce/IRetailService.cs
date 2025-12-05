@@ -9,6 +9,7 @@ namespace SharedLib;
 /// </summary>
 public interface IRetailService
 {
+    #region Order-Document
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default);
 
@@ -20,9 +21,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TResponseModel<RetailDocumentModelDB[]>> RetailDocumentsGetAsync(RetailDocumentsGetRequestModel req, CancellationToken token = default);
+    #endregion
 
-
-
+    #region Rows for Order-Document
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default);
 
@@ -31,9 +32,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<RowOfRetailOrderDocumentModelDB>> SelectRowsRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel> req, CancellationToken token = default);
+    #endregion
 
-
-
+    #region Wallet Type
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateWalletTypeAsync(WalletRetailTypeModelDB req, CancellationToken token = default);
 
@@ -45,9 +46,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TResponseModel<WalletRetailTypeViewModel[]>> WalletsTypesGetAsync(int[] reqIds, CancellationToken token = default);
+    #endregion
 
-
-
+    #region Wallet
     /// <inheritdoc/>
     public Task<ResponseBaseModel> WalletBalanceUpdateAsync(WalletBalanceCommitRequestModel req, CancellationToken token = default);
 
@@ -59,9 +60,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<WalletRetailModelDB>> SelectWalletsAsync(TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> req, CancellationToken token = default);
+    #endregion
 
-
-
+    #region Conversion Document
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default);
 
@@ -71,8 +72,11 @@ public interface IRetailService
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<WalletConversionRetailDocumentModelDB>> SelectConversionsDocumentsAsync(TPaginationRequestStandardModel<SelectWalletsRetailsConversionDocumentsRequestModel> req, CancellationToken token = default);
 
+    /// <inheritdoc/>
+    public Task<TResponseModel<WalletConversionRetailDocumentModelDB[]>> GetConversionsDocumentsAsync(ReadWalletsRetailsConversionDocumentsRequestModel req, CancellationToken token = default);
+    #endregion
 
-
+    #region Payment Link -> to Order
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreatePaymentOrderLinkAsync(PaymentRetailOrderLinkModelDB req, CancellationToken token = default);
 
@@ -81,9 +85,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<PaymentRetailOrderLinkModelDB>> SelectPaymentsOrdersLinksAsync(TPaginationRequestStandardModel<SelectPaymentsRetailOrdersLinksRequestModel> req, CancellationToken token = default);
+    #endregion
 
-
-
+    #region Payment Link -> to Delivery
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreatePaymentRetailDeliveryLinkAsync(PaymentRetailDeliveryLinkModelDB req, CancellationToken token = default);
 
@@ -92,9 +96,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<PaymentRetailDeliveryLinkModelDB>> SelectPaymentsRetailDeliveriesLinksAsync(TPaginationRequestStandardModel<SelectPaymentsRetailDeliveriesLinksRequestModel> req, CancellationToken token = default);
+    #endregion
 
-
-
+    #region Payment Document
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default);
 
@@ -103,9 +107,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<PaymentRetailDocumentModelDB>> SelectPaymentsDocumentsAsync(TPaginationRequestStandardModel<SelectPaymentsRetailOrdersDocumentsRequestModel> req, CancellationToken token = default);
+    #endregion
 
-
-
+    #region Status Delivery Document
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateDeliveryStatusDocumentAsync(DeliveryStatusRetailDocumentModelDB req, CancellationToken token = default);
 
@@ -114,9 +118,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<DeliveryStatusRetailDocumentModelDB>> SelectDeliveryStatusesDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryStatusesRetailDocumentsRequestModel> req, CancellationToken token = default);
+    #endregion
 
-
-
+    #region Row Of Delivery Document
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateRowOfDeliveryDocumentAsync(RowOfDeliveryRetailDocumentModelDB req, CancellationToken token = default);
 
@@ -125,9 +129,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<RowOfDeliveryRetailDocumentModelDB>> SelectRowsOfDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectRowsOfDeliveriesRetailDocumentsRequestModel> req, CancellationToken token = default);
+    #endregion
 
-
-
+    #region Delivery Document
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default);
 
@@ -136,9 +140,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<DeliveryDocumentRetailModelDB>> SelectDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req, CancellationToken token = default);
+    #endregion
 
-
-
+    #region Delivery Service
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateDeliveryServiceAsync(DeliveryServiceRetailModelDB req, CancellationToken token = default);
 
@@ -150,4 +154,5 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TResponseModel<DeliveryServiceRetailModelDB[]>> DeliveryServicesGetAsync(int[] reqIds, CancellationToken token = default);
+    #endregion
 }

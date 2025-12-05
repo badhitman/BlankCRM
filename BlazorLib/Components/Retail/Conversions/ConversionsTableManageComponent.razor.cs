@@ -8,11 +8,32 @@ using SharedLib;
 
 namespace BlazorLib.Components.Retail.Conversions;
 
+/// <summary>
+/// ConversionsTableManageComponent
+/// </summary>
 public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
+
+    bool _visible;
+    readonly DialogOptions _dialogOptions = new()
+    {
+        FullWidth = true,
+        MaxWidth = MaxWidth.ExtraLarge,
+        CloseButton = true,         
+    };
+
+
+    void CreateNewConversionOpenDialog()
+    {
+        _visible = true;
+    }
+
+    /// <inheritdoc/>
+    [CascadingParameter(Name = "ClientId")]
+    public string? ClientId { get; set; }
 
     async Task<TableData<WalletConversionRetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {

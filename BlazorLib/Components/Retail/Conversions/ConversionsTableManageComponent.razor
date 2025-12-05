@@ -3,7 +3,13 @@
 
 <MudTable ServerData="ServerReload" Dense Hover>
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Переводы</MudText>
+        <MudText Typo="Typo.h6">Переводы (розница)</MudText>
+        <MudSpacer />
+        <MudButton OnClick=CreateNewConversionOpenDialog
+                   Variant="Variant.Outlined"
+                   EndIcon="@Icons.Material.Filled.AddCircle"
+                   IconColor="Color.Secondary"
+                   Size="Size.Large">Создать новый</MudButton>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Создан/Изменён</MudTh>
@@ -27,3 +33,13 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
+<MudDialog @bind-Visible="_visible" Options="_dialogOptions" >
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новый перевод (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <ConversionDocumentComponent ClientId="@ClientId" />
+    </DialogContent>
+</MudDialog>

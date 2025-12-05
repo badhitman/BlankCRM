@@ -16,7 +16,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
     IIdentityTransmission IdentityRepo { get; set; } = default!;
 
     /// <summary>
-    /// Selected chat
+    /// Selected user
     /// </summary>
     [Parameter]
     public string? SelectedUser { get; set; }

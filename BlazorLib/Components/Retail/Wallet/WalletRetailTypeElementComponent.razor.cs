@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Retail.Wallet;
 public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IRetailService retailRepo { get; set; } = default!;
+    IRetailService RetailRepo { get; set; } = default!;
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
@@ -42,7 +42,7 @@ public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseM
         }
 
         await SetBusyAsync();
-        ResponseBaseModel resUpd = await retailRepo.UpdateWalletTypeAsync(_walletCopy);
+        ResponseBaseModel resUpd = await RetailRepo.UpdateWalletTypeAsync(_walletCopy);
         if (!resUpd.Success())
         {
             await SetBusyAsync(false);
@@ -50,7 +50,7 @@ public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseM
             return;
         }
 
-        TResponseModel<WalletRetailTypeViewModel[]>? resGet = await retailRepo.WalletsTypesGetAsync([_walletCopy.Id]);
+        TResponseModel<WalletRetailTypeViewModel[]>? resGet = await RetailRepo.WalletsTypesGetAsync([_walletCopy.Id]);
         if (!resGet.Success() || resGet.Response is null || resGet.Response.Length != 1)
         {
             await SetBusyAsync(false);

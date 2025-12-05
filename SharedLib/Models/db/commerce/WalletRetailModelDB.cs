@@ -37,4 +37,19 @@ public class WalletRetailModelDB : EntryUpdatedModel
     /// </summary>
     [ConcurrencyCheck]
     public Guid Version { get; set; }
+
+    /// <inheritdoc/>
+    public override bool Equals(object obj)
+    {
+        if (obj is WalletRetailModelDB other)
+            return other.Id == Id && other.Name == Name && other.WalletTypeId == WalletTypeId && other.UserIdentityId == UserIdentityId;
+
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, Name, WalletTypeId, UserIdentityId);
+    }
 }

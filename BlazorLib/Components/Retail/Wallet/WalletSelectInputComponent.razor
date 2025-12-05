@@ -1,0 +1,60 @@
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
+
+<div class="card">
+    <div class="card-body">
+        @if (string.IsNullOrWhiteSpace(Title))
+        {
+            <h5 class="card-title">@Title</h5>
+        }
+
+        @if (string.IsNullOrWhiteSpace(PresetClientId))
+        {
+            <UserSelectInputComponent SelectHandleAction="SelectUserAction"
+                                      SelectedUser="@currentUser?.UserId"
+                                      IsReadOnly="IsBusyProgress" />
+        }
+        else
+        {
+            <div class="mb-3">
+                <label for="formControlInputBuyer" class="form-label">Пользователь</label>
+                <input class="form-control"
+                       type="text"
+                       value="@currentUser?.ToString()"
+                       aria-label="readonly input example"
+                       readonly
+                       id="formControlInputBuyer"
+                       aria-describedby="buyerHelp">
+                <div id="buyerHelp" class="form-text">Контекст заказчика.</div>
+            </div>
+        }
+        @if (string.IsNullOrWhiteSpace(currentUser?.UserId))
+        {
+            <figure class="text-center">
+                <blockquote class="blockquote">
+                    <p>Укажите пользователя.</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    Для выбора кошелька - укажите пользователя
+                </figcaption>
+            </figure>
+        }
+        else
+        {
+            <MudSelect T="WalletRetailModelDB"
+                       @bind-Value="CurrentWallet"
+                       Label="Select fast-food"
+                       HelperText="Кошелёк"
+                       Placeholder="Please Select"
+                       AdornmentIcon="@Icons.Material.Filled.Wallet"
+                       AdornmentColor="Color.Primary">
+                <MudSelectItem T="WalletRetailModelDB" Value="@(null as WalletRetailModelDB)"></MudSelectItem>
+                @foreach (WalletRetailModelDB wallet in walletsForSelect)
+                {
+                    <MudSelectItem Value="@wallet">@wallet.Name `@wallet.WalletType?.Name` [@wallet.Balance]</MudSelectItem>
+                }
+            </MudSelect>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,56 @@
+﻿@inherits BlazorBusyComponentUsersCachedModel
+
+@using BlazorLib.Components.Retail.Wallet
+@using MudBlazor
+
+@if (IsBusyProgress)
+{
+    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate />
+}
+
+@if (editDoc is null)
+{
+    <MudSkeleton />
+    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="110px" />
+}
+else
+{
+    @if (userSender is not null && userRecipient is not null && !string.IsNullOrWhiteSpace(userSender.UserId) && userSender.UserId == userRecipient.UserId)
+    {
+        <MudAlert Severity="Severity.Info">Конвертация/перевод между счетами одного клиента</MudAlert>
+    }
+    <MudTextField @bind-Value="editDoc.Name" Label="Примечание" Variant="Variant.Text" Class="mb-3"></MudTextField>
+    <MudGrid Class="mb-3">
+        <MudItem xs="12" lg="6" Class="mb-2">
+            <WalletSelectInputComponent SelectWalletHandler="SelectWalletSenderAction" SelectUserHandler="SelectUserSenderAction" />
+            <MudNumericField @bind-Value="editDoc.FromWalletSum"
+                             Label="Сумма списания"
+                             Variant="Variant.Outlined"
+                             Class="mt-3"
+                             Immediate />
+        </MudItem>
+        <MudItem xs="12" lg="6">
+            <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction" SelectUserHandler="SelectUserRecipientAction" />
+            <MudNumericField @bind-Value="editDoc.ToWalletSum"
+                             Label="Сумма списания"
+                             Variant="Variant.Outlined" Class="mt-3"
+                             Immediate />
+        </MudItem>
+    </MudGrid>
+    @if (editDoc.FromWalletId > 0 && editDoc.FromWalletId == editDoc.ToWalletId)
+    {
+        <MudAlert Severity="Severity.Error">Счёт-отправитель не может быть счётом-получателем</MudAlert>
+    }
+    <MudTextField T="string" Label="Заметки" Variant="Variant.Outlined" Text="@editDoc.Description" Lines="5" Class="mt-3" />
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+        <button disabled="@CannotSave" class="btn btn-primary" type="button" @onclick=SaveDoc>
+            @(editDoc.Id <= 0 ? "Создать" : "Сохранить")
+        </button>
+        @if (!CannotSave)
+        {
+            <button disabled="@CannotSave" class="btn btn-secondary" type="button" @onclick=ResetEdit>
+                Сброс
+            </button>
+        }
+    </div>
+}
