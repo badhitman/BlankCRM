@@ -60,22 +60,27 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await SetBusyAsync();
         await base.OnInitializedAsync();
         if (ConversionDocumentId <= 0)
-            currentDoc = new() { };
+        {
+            currentDoc = new();
+            editDoc = new();
+        }
         else
         {
-            await SetBusyAsync();
             TResponseModel<WalletConversionRetailDocumentModelDB[]> getDocument = await RetailRepo.GetConversionsDocumentsAsync(new() { Ids = [ConversionDocumentId] });
             SnackBarRepo.ShowMessagesResponse(getDocument.Messages);
             if (getDocument.Success() && getDocument.Response is not null)
                 currentDoc = getDocument.Response.First();
 
+            if (currentDoc?.FromWallet is null || currentDoc.ToWallet is null)
+                SnackBarRepo.Error("currentDoc?.FromWallet is null || currentDoc.ToWallet is null");
 
-            await SetBusyAsync(false);
+            editDoc = GlobalTools.CreateDeepCopy(currentDoc);
         }
 
-        editDoc = GlobalTools.CreateDeepCopy(currentDoc);
+        await SetBusyAsync(false);
         await UpdateUsers();
     }
 

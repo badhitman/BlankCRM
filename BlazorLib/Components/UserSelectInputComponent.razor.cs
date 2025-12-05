@@ -19,7 +19,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
     /// Selected user
     /// </summary>
     [Parameter]
-    public string? SelectedUser { get; set; }
+    public string? SelectedUserInit { get; set; }
 
     /// <inheritdoc/>
     [Parameter]
@@ -61,7 +61,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        if (string.IsNullOrWhiteSpace(SelectedUser))
+        if (string.IsNullOrWhiteSpace(SelectedUserInit))
         {
             SelectedObject = UserInfoModel.BuildEmpty();
             SelectHandleAction(SelectedObject);
@@ -69,12 +69,12 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
         }
 
         await SetBusyAsync();
-        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersOfIdentityAsync([SelectedUser]);
+        TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersOfIdentityAsync([SelectedUserInit]);
         IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Response is null || rest.Response.Length == 0)
         {
-            SnackBarRepo.Error($"Не найден запрашиваемый пользователь #{SelectedUser}");
+            SnackBarRepo.Error($"Не найден запрашиваемый пользователь #{SelectedUserInit}");
             return;
         }
         SelectedObject = rest.Response.Single();

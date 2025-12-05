@@ -49,7 +49,7 @@ else
                 @if (string.IsNullOrWhiteSpace(ClientId))
                 {
                     <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
-                                              SelectedUser="@editDocument.BuyerIdentityUserId"
+                                              SelectedUserInit="@editDocument.BuyerIdentityUserId"
                                               IsReadOnly="SelectUserHandlerIsProgress" />
                 }
                 else

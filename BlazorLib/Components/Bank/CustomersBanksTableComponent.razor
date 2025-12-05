@@ -65,7 +65,7 @@
             <MudTextField @bind-Value="context.Inn" Required Label="INN" Immediate />
         </MudTd>
         <MudTd DataLabel="User">
-            <UserSelectInputComponent SelectHandleAction="SelectUserHandler" SelectedUser="@context.UserIdentityId" @ref=_usRef StyleElement="max-width: 450px;" />
+            <UserSelectInputComponent SelectHandleAction="SelectUserHandler" SelectedUserInit="@context.UserIdentityId" @ref=_usRef StyleElement="max-width: 450px;" />
         </MudTd>
         <MudTd DataLabel="BankInterface">
             <MudSelect @bind-Value="context.BankIdentifyType" Label="Identify type" Variant="Variant.Text" ShrinkLabel>

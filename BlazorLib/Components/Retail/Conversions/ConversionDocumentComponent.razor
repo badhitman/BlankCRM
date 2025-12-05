@@ -3,12 +3,7 @@
 @using BlazorLib.Components.Retail.Wallet
 @using MudBlazor
 
-@if (IsBusyProgress)
-{
-    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate />
-}
-
-@if (editDoc is null)
+@if (editDoc is null || IsBusyProgress)
 {
     <MudSkeleton />
     <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="110px" />
@@ -19,28 +14,39 @@ else
     {
         <MudAlert Severity="Severity.Info">Конвертация/перевод между счетами одного клиента</MudAlert>
     }
-    <MudTextField @bind-Value="editDoc.Name" Label="Примечание" Variant="Variant.Text" Class="mb-3"></MudTextField>
+    <MudTextField @bind-Value="editDoc.Name" Label="Примечание" Variant="Variant.Text" Class="mb-3" Immediate></MudTextField>
     <MudGrid Class="mb-3">
         <MudItem xs="12" lg="6" Class="mb-2">
             <WalletSelectInputComponent SelectWalletHandler="SelectWalletSenderAction"
                                         SelectUserHandler="SelectUserSenderAction"
                                         WalletInit="editDoc.FromWallet"
                                         @ref=senderWalletRef />
-            <MudNumericField @bind-Value="editDoc.FromWalletSum"
-                             Label="Сумма списания"
-                             Variant="Variant.Outlined"
-                             Class="mt-3"
-                             Immediate />
+            <div class="mt-3">
+                <label for="exampleFormControlInputFromWalletSum" class="form-label">Сумма списания</label>
+                <input @bind-value="editDoc.FromWalletSum"
+                       @bind-value:event="oninput"
+                       disabled="@IsBusyProgress"
+                       type="number"
+                       class="form-control"
+                       id="exampleFormControlInputFromWalletSum"
+                       placeholder="Сумма списания">
+            </div>
         </MudItem>
         <MudItem xs="12" lg="6">
             <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction"
                                         SelectUserHandler="SelectUserRecipientAction"
                                         WalletInit="editDoc.ToWallet"
                                         @ref=recipientWalletRef />
-            <MudNumericField @bind-Value="editDoc.ToWalletSum"
-                             Label="Сумма списания"
-                             Variant="Variant.Outlined" Class="mt-3"
-                             Immediate />
+            <div class="mt-3">
+                <label for="exampleFormControlInputToWalletSum" class="form-label">Сумма списания</label>
+                <input @bind-value="editDoc.ToWalletSum"
+                       @bind-value:event="oninput"
+                       disabled="@IsBusyProgress"
+                       type="number"
+                       class="form-control"
+                       id="exampleFormControlInputToWalletSum"
+                       placeholder="Сумма списания">
+            </div>
         </MudItem>
     </MudGrid>
     @if (editDoc.FromWalletId > 0 && editDoc.FromWalletId == editDoc.ToWalletId)

@@ -67,24 +67,36 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
     {
         await base.OnInitializedAsync();
         currentWallet = WalletInit;
+
         await SetBusyAsync();
+        TResponseModel<UserInfoModel[]> getUser;
         if (!string.IsNullOrWhiteSpace(PresetClientId))
         {
-            TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([PresetClientId]);
+            getUser = await IdentityRepo.GetUsersOfIdentityAsync([PresetClientId]);
             SnackBarRepo.ShowMessagesResponse(getUser.Messages);
             if (getUser.Response is not null && getUser.Response.Any(x => x.UserId == PresetClientId))
                 currentUser = getUser.Response.First(x => x.UserId == PresetClientId);
 
-            await ReloadWallets(PresetClientId);
+            await ReloadWallets();
         }
         else if (WalletInit is not null)
-            await ReloadWallets(WalletInit.UserIdentityId);
+        {
+            getUser = await IdentityRepo.GetUsersOfIdentityAsync([WalletInit.UserIdentityId]);
+            SnackBarRepo.ShowMessagesResponse(getUser.Messages);
+            if (getUser.Response is not null && getUser.Response.Any(x => x.UserId == WalletInit.UserIdentityId))
+                currentUser = getUser.Response.First(x => x.UserId == WalletInit.UserIdentityId);
+
+            await ReloadWallets();
+        }
 
         await SetBusyAsync(false);
     }
 
     async void SelectUserAction(UserInfoModel? selected)
     {
+        if (currentUser?.UserId == selected?.UserId)
+            return;
+
         await SetBusyAsync();
         currentUser = selected;
         CurrentWallet = null;
@@ -92,7 +104,7 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
         if (selected is null || string.IsNullOrWhiteSpace(selected.UserId))
             walletsForSelect.Clear();
         else
-            await ReloadWallets(selected.UserId);
+            await ReloadWallets();
 
         await SetBusyAsync(false);
 
@@ -100,27 +112,21 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
             SelectUserHandler(selected);
     }
 
-    async Task ReloadWallets(string userId)
+    async Task ReloadWallets()
     {
         walletsForSelect.Clear();
-        if (string.IsNullOrWhiteSpace(userId))
+        if (currentUser is null)
+        {
+            StateHasChanged();
             return;
-
+        }
         await SetBusyAsync();
-
-        TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([userId]);
-        SnackBarRepo.ShowMessagesResponse(getUser.Messages);
-        if (getUser.Response is not null && getUser.Response.Any(x => x.UserId == userId))
-            currentUser = getUser.Response.First(x => x.UserId == userId);
-        else
-            throw new Exception("ѕользователь не найден");
-
         TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> reqW = new()
         {
             PageSize = 100,
             Payload = new()
             {
-                UsersFilterIdentityId = [userId],
+                UsersFilterIdentityId = [currentUser.UserId],
                 AutoGenerationWallets = true,
             }
         };
@@ -130,13 +136,27 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
             throw new Exception("Ќе удалось получить перечень кошельков пользовател€");
         else
         {
-            walletsForSelect = [.. getWallets.Response.Where(x => currentUser.IsAdmin || x.WalletType?.IsSystem != true)];
+            walletsForSelect = [.. getWallets.Response];
         }
+        await SetBusyAsync(false);
     }
 
+    /// <inheritdoc/>
     public async Task SetWallet(WalletRetailModelDB? wallet)
     {
+        if (currentWallet?.Id == wallet?.Id)
+            return;
+
         currentWallet = wallet;
-        await ReloadWallets(wallet?.UserIdentityId ?? "");
+
+        if (wallet is not null)
+        {
+            TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([wallet.UserIdentityId]);
+            SnackBarRepo.ShowMessagesResponse(getUser.Messages);
+            if (getUser.Response is not null && getUser.Response.Any(x => x.UserId == PresetClientId))
+                currentUser = getUser.Response.First(x => x.UserId == PresetClientId);
+        }
+
+        await ReloadWallets();
     }
 }

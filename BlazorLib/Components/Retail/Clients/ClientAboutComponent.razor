@@ -108,7 +108,7 @@
                                         <small>@wallet.Balance</small>
                                     </div>
                                     <p class="mb-1">@wallet.Description</p>
-                                    <small>[@wallet.WalletType?.Name]</small>
+                                    <small class="@(wallet.WalletType?.IsSystem == true ? "text-warning" : "")">[@wallet.WalletType?.Name]</small>
                                 </div>
                             }
                         </div>
