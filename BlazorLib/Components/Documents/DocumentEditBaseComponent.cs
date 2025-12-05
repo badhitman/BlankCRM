@@ -64,13 +64,14 @@ public abstract class DocumentEditBaseComponent : DocumenBodyBaseComponent
     {
         await SetBusyAsync();
         DocumentMetadata = await JournalRepo.GetDocumentMetadataAsync(DocumentNameOrId);
-        IsBusyProgress = false;
 
         if (DocumentMetadata.Tabs.Count == 0)
         {
             IsCancel = true;
+            await SetBusyAsync(false);
             return;
         }
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

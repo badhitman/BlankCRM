@@ -76,7 +76,7 @@ public partial class SystemNameManufactureComponent : BlazorBusyComponentBaseMod
         //        Qualification = ItemModel.Qualification,
         //        ManufactureId = ManufactureParentView.Manufacture.Id,
         //    });
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
         //SnackbarRepo.ShowMessagesResponse(res.Messages);
 
         /*if (res.Success())
@@ -95,7 +95,6 @@ public partial class SystemNameManufactureComponent : BlazorBusyComponentBaseMod
 
             //ManufactureParentView.StateHasChangedCall();
         }*/
-
     }
 
     /// <inheritdoc/>

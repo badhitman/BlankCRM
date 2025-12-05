@@ -52,7 +52,7 @@ public partial class NomenclatureCreatingFormComponent : BlazorBusyComponentBase
         await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.NomenclatureUpdateAsync(new_obj);
-        IsBusyProgress = false;
+        
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success() && res.Response > 0)
         {
@@ -62,5 +62,6 @@ public partial class NomenclatureCreatingFormComponent : BlazorBusyComponentBase
             CreatingNomenclatureName = null;
             UMeas = UnitsOfMeasurementEnum.Thing;
         }
+        await SetBusyAsync(false);
     }
 }

@@ -73,11 +73,11 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
         if (res.Response is not null)
         {
             await CacheRegistersUpdate(offers: [], goods: res.Response.Select(x => x.Id).ToArray());
-            IsBusyProgress = false;
+            await SetBusyAsync(false, token);
             return new TableData<NomenclatureModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
         }
 
-        IsBusyProgress = false;
+        await SetBusyAsync(false, token);
 
         if (res.Response is null)
             return new TableData<NomenclatureModelDB>() { TotalItems = 0, Items = [] };

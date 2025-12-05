@@ -114,12 +114,15 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
             Contacts = OfficeEdit.Contacts,
             Id = AddressForOrganization,
         });
-        IsBusyProgress = false;
+        
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success())
+        {
+            await SetBusyAsync(false);
             return;
-
+        }
         OfficeCurrent = GlobalTools.CreateDeepCopy(OfficeEdit) ?? throw new Exception();
+        await SetBusyAsync(false);
     }
 
     void RubricSelectAction(UniversalBaseModel? selectedRubric)

@@ -103,13 +103,15 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync(token: token);
 
         TPaginationResponseModel<OrderDocumentModelDB> res = await CommerceRepo.OrdersSelectAsync(req, token);
-        IsBusyProgress = false;
 
         if (res.Response is null)
+        {
+            await SetBusyAsync(false, token);
             return new TableData<OrderDocumentModelDB>() { TotalItems = 0, Items = [] };
-
+        }
         documentsPartData = res.Response;
         await UpdateCacheIssues();
+        await SetBusyAsync(false, token);
         return new TableData<OrderDocumentModelDB>()
         {
             TotalItems = res.TotalRowsCount,

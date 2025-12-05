@@ -41,12 +41,12 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
             SortingDirection = state.SortDirection.Convert(),
         };
         TPaginationResponseModel<ChatTelegramModelDB> rest = await TgRepo.ChatsSelectAsync(req, token);
-        IsBusyProgress = false;
 
         if (rest.Response is null)
             return new TableData<ChatTelegramModelDB>() { TotalItems = 0, Items = pagedData };
         pagedData = rest.Response;
         await LoadUsersData();
+        await SetBusyAsync(false, token);
         return new TableData<ChatTelegramModelDB>() { TotalItems = rest.TotalRowsCount, Items = pagedData };
     }
 
@@ -65,10 +65,13 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
 
         await SetBusyAsync();
         TResponseModel<UserInfoModel[]> users_res = await IdentityRepo.GetUsersIdentityByTelegramAsync(users_ids_for_load);
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(users_res.Messages);
         if (!users_res.Success() || users_res.Response is null || users_res.Response.Length == 0)
+        {
+            await SetBusyAsync(false);
             return;
+        }
 
         UsersCache.AddRange(users_res.Response);
 
@@ -93,10 +96,12 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
         await SetBusyAsync();
         TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>> issues_users_res = await HelpDeskRepo
                      .IssuesSelectAsync(req);
-        IsBusyProgress = false;
 
         if (issues_users_res.Response?.Response is null || issues_users_res.Response.Response.Count == 0)
+        {
+            await SetBusyAsync(false);
             return;
+        }
 
         if (issues_users_res.Response.TotalRowsCount > req.Payload.PageSize)
             SnackBarRepo.Error($"Записей больше: {issues_users_res.Response.TotalRowsCount}");
@@ -112,6 +117,8 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
             if (issues_for_user.Length != 0)
                 IssuesCache.Add(us.UserId, issues_for_user);
         }
+
+        await SetBusyAsync(false);
     }
 
     private void OnSearch(string text)

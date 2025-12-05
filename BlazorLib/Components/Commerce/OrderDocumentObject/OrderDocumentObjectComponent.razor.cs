@@ -113,7 +113,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         if (res.Success())
             NavRepo.NavigateTo("/create-order");
         else
-            IsBusyProgress = false;
+            await SetBusyAsync(false);
 
     }
 

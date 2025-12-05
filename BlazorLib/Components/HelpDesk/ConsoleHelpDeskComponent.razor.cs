@@ -58,9 +58,11 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync();
 
         TResponseModel<int> res = await StorageRepo.SaveParameterAsync(IsLarge, SizeColumnsKeyStorage, true);
-        IsBusyProgress = false;
+
         if (!res.Success())
             SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -77,10 +79,11 @@ public partial class ConsoleHelpDeskComponent : BlazorBusyComponentBaseAuthModel
         TResponseModel<string?> current_filter_user_res = await StorageRepo.ReadParameterAsync<string>(GlobalStaticCloudStorageMetadata.ConsoleFilterForUser(CurrentUserSession.UserId));
         FilterUserId = current_filter_user_res.Response;
 
-        IsBusyProgress = false;
         if (!res.Success())
             SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!current_filter_user_res.Success())
             SnackBarRepo.ShowMessagesResponse(current_filter_user_res.Messages);
+
+        await SetBusyAsync(false);
     }
 }

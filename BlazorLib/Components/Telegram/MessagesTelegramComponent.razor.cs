@@ -64,7 +64,7 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
                 SortBy = state.SortLabel,
             }, token);
 
-        IsBusyProgress = false;
+        await SetBusyAsync(false, token);
 
         if (rest_message.Response is null)
             return new TableData<MessageTelegramModelDB>() { TotalItems = 0, Items = [] };

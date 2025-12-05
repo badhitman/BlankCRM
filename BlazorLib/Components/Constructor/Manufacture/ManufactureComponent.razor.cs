@@ -103,7 +103,7 @@ public partial class ManufactureComponent : BlazorBusyComponentBaseAuthModel
         //if (!rest_manufacture.Success())
         //    SnackbarRepo.ShowMessagesResponse(rest_manufacture.Messages);
         //Manufacture = rest_manufacture.Response ?? throw new Exception();
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 
     async Task Download()

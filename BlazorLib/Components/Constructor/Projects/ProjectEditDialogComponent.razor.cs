@@ -78,7 +78,7 @@ public partial class ProjectEditDialogComponent : BlazorBusyComponentBaseModel
         if (projectObject.Id < 1)
         {
             TResponseModel<int> res = await ConstructorRepo.CreateProjectAsync(new() { Project = projectObject, UserId = CurrentUser.UserId });
-            IsBusyProgress = false;
+
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
             {
@@ -91,7 +91,7 @@ public partial class ProjectEditDialogComponent : BlazorBusyComponentBaseModel
         else
         {
             ResponseBaseModel res = await ConstructorRepo.UpdateProjectAsync(projectObject);
-            IsBusyProgress = false;
+
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
             {
@@ -100,7 +100,7 @@ public partial class ProjectEditDialogComponent : BlazorBusyComponentBaseModel
                 ParentListProjects.StateHasChangedCall();
             }
         }
-        // MudDialog.Close(DialogResult.Ok(true));
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

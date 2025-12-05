@@ -52,10 +52,8 @@ public class StringParameterStorageBaseComponent : BlazorBusyComponentBaseModel
     async Task StoreData()
     {
         await SetBusyAsync();
-
         await StoreRepo.SaveParameterAsync(_textValue, KeyStorage, true);
-        IsBusyProgress = false;
-        StateHasChanged();
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -64,10 +62,12 @@ public class StringParameterStorageBaseComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         TResponseModel<string?> res = await StoreRepo.ReadParameterAsync<string?>(KeyStorage);
         SnackBarRepo.ShowMessagesResponse(res.Messages.Where(x => x.TypeMessage > MessagesTypesEnum.Warning));
-        IsBusyProgress = false;
+
         if (!res.Success())
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         _textValue = res.Response;
+
+        await SetBusyAsync(false);
     }
 }

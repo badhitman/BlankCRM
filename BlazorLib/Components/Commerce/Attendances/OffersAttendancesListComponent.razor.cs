@@ -102,7 +102,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
                 SnackBarRepo.Error($"Записей больше: {recordsSelect.TotalRowsCount}");
 
             currentRecords = recordsSelect.Response ?? [];
-            IsBusyProgress = false;
+            await SetBusyAsync(false, token);
             return new TableData<OfferModelDB>() { TotalItems = res.Response.TotalRowsCount, Items = res.Response.Response };
         }
 

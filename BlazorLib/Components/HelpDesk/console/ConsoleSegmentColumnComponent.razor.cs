@@ -64,7 +64,6 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
     async Task LoadData()
     {
         await SetBusyAsync();
-
         TPaginationResponseModel<IssueHelpDeskModel> res = await HelpDeskRepo.ConsoleIssuesSelectAsync(new TPaginationRequestStandardModel<ConsoleIssuesRequestModel>
         {
             PageNum = pageNum,
@@ -78,7 +77,6 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
                 ProjectId = 0,
             }
         });
-        IsBusyProgress = false;
 
         if (res.Response is not null && res.Response.Count != 0)
         {
@@ -87,6 +85,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
             pageNum++;
         }
         await UpdateOrdersCache();
+        await SetBusyAsync(false);
     }
 
     //
@@ -148,7 +147,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
             })
         ]);
 
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 
     string? _luf;

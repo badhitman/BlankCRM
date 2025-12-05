@@ -77,6 +77,6 @@ public partial class TinyMCEComponent : BlazorBusyComponentBaseModel
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         _textValue = res.Response;
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 }

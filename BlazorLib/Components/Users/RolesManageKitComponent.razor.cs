@@ -73,7 +73,8 @@ public partial class RolesManageKitComponent : BlazorBusyComponentBaseModel
 
             User.Roles.Clear();
             User.Roles.AddRange(res.Response);
-        };
+        }
+        ;
 
         await SetBusyAsync();
         if (value_bool && !User.Roles.Contains(roleName))
@@ -83,6 +84,7 @@ public partial class RolesManageKitComponent : BlazorBusyComponentBaseModel
             req.Command = false;
             await Act();
         }
-        IsBusyProgress = false;
+
+        await SetBusyAsync(false);
     }
 }

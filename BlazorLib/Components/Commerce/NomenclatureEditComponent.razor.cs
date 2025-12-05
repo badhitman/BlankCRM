@@ -72,13 +72,15 @@ public partial class NomenclatureEditComponent : BlazorBusyComponentBaseAuthMode
         await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.NomenclatureUpdateAsync(editNomenclature);
-        IsBusyProgress = false;
+        
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success())
             CurrentNomenclature = GlobalTools.CreateDeepCopy(editNomenclature);
 
         if (filesViewRef is not null)
             await filesViewRef.ReloadServerData();
+
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -94,12 +96,12 @@ public partial class NomenclatureEditComponent : BlazorBusyComponentBaseAuthMode
 
         TResponseModel<List<NomenclatureModelDB>> res = await CommerceRepo.NomenclaturesReadAsync(new() { Payload = [NomenclatureId], SenderActionUserId = CurrentUserSession.UserId });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
-        IsBusyProgress = false;
 
         if (res.Response is not null && res.Response.Count != 0)
         {
             CurrentNomenclature = res.Response.Single();
             editNomenclature = GlobalTools.CreateDeepCopy(CurrentNomenclature);
         }
+        await SetBusyAsync(false);
     }
 }

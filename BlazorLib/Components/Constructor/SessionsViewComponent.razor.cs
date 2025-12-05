@@ -86,16 +86,16 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         await Task.Delay(1, token);
         TPaginationResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.RequestSessionsDocumentsAsync(req, token);
 
-        IsBusyProgress = false;
-
         if (rest.Response is null)
         {
             SnackBarRepo.Error($"rest.Content.Sessions is null. error B1F8BCC4-952B-4C5E-B573-6FA5AD7F3A8A");
+            await SetBusyAsync(false, token);
             return new TableData<SessionOfDocumentDataModelDB>() { TotalItems = totalItems, Items = sessions };
         }
 
         totalItems = rest.TotalRowsCount;
-        sessions = new(rest.Response);
+        sessions = [.. rest.Response];
+        await SetBusyAsync(false, token);
 
         return new TableData<SessionOfDocumentDataModelDB>() { TotalItems = totalItems, Items = sessions };
     }
@@ -105,15 +105,14 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     {
         await SetBusyAsync();
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = session.Id, IncludeExtra = false });
-        IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             SnackBarRepo.Error($"Ошибка E42D6754-5044-4D2E-BB8B-549CA385CCC2 Action: {rest.Message()}");
+            await SetBusyAsync(false);
             return;
         }
-        StateHasChanged();
 
         DialogParameters<EditSessionDialogComponent> parameters = new()
         {
@@ -123,6 +122,8 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         IDialogReference result = await DialogServiceRepo.ShowAsync<EditSessionDialogComponent>($"Редактирование сессии. Опрос/анкета: '{rest.Response?.Owner?.Name}'", parameters, options);
         if (table is not null)
             await table.ReloadServerData();
+
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -130,7 +131,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     {
         await SetBusyAsync();
         ResponseBaseModel rest = await ConstructorRepo.DeleteSessionDocumentAsync(session_id);
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
@@ -180,15 +181,18 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         };
         await SetBusyAsync();
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.UpdateOrCreateSessionDocumentAsync(req);
-        IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
+        {
+            await SetBusyAsync(false);
             return;
+        }
 
         if (rest.Response is null)
         {
             SnackBarRepo.Error($"rest.Content.SessionDocument is null. error 9B2E03C0-0434-4F1A-B4E9-7020575DBDDF");
+            await SetBusyAsync(false);
             return;
         }
 
@@ -202,6 +206,8 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
 
         if (table is not null)
             await table.ReloadServerData();
+
+        await SetBusyAsync(false);
     }
 
     async Task RestUpdate()
@@ -213,23 +219,24 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
 
         TPaginationResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = new() { PageNum = 0, PageSize = 1000 }, ProjectId = ParentFormsPage.MainProject.Id });
 
-        IsBusyProgress = false;
-
         if (rest.Response is null)
         {
             SnackBarRepo.Error($"rest.Content.Documents is null. error 0A875193-08AA-4678-824D-213BCE33080F");
+            await SetBusyAsync(false);
             return;
         }
 
         DocumentsAll = rest.Response;
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await SetBusyAsync();
         await ReadCurrentUser();
         await SetBusyAsync();
         await RestUpdate();
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 }

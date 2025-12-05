@@ -53,14 +53,13 @@ else
         await SetBusyAsync();
 
         TResponseModel<UserTelegramBaseModel> telegram_rest = await TelegramRemoteRepo.AboutBotAsync();
-        await InvokeAsync(() =>
+        await InvokeAsync(async () =>
         {
             if (!telegram_rest.Success())
                 Messages.AddRange(telegram_rest.Messages);
 
             telegram_username = telegram_rest.Response;
-            IsBusyProgress = false;
-            StateHasChanged();
+            await SetBusyAsync(false);
         });
     }
 }

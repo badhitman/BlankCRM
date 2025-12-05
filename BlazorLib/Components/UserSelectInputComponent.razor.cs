@@ -36,7 +36,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
                 PageNum = PageNum,
                 PageSize = page_size,
             });
-        
+
         if (rest.Response is not null)
         {
             TotalRowsCount = rest.TotalRowsCount;
@@ -64,21 +64,24 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
         if (string.IsNullOrWhiteSpace(SelectedUserInit))
         {
             SelectedObject = UserInfoModel.BuildEmpty();
-            SelectHandleAction(SelectedObject);
+            //SelectHandleAction(SelectedObject);
             return;
         }
 
         await SetBusyAsync();
         TResponseModel<UserInfoModel[]> rest = await IdentityRepo.GetUsersOfIdentityAsync([SelectedUserInit]);
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Response is null || rest.Response.Length == 0)
         {
             SnackBarRepo.Error($"Не найден запрашиваемый пользователь #{SelectedUserInit}");
+            await SetBusyAsync(false);
             return;
         }
         SelectedObject = rest.Response.Single();
         _selectedValueText = SelectedObject.ToString();
         SelectHandleAction(SelectedObject);
+
+        await SetBusyAsync(false);
     }
 }

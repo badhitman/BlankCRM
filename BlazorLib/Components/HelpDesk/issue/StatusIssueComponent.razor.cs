@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using BlazorLib;
+using Newtonsoft.Json.Linq;
 using SharedLib;
 
 namespace BlazorLib.Components.HelpDesk.issue;
@@ -56,7 +57,7 @@ public partial class StatusIssueComponent : IssueWrapBaseModel
                     Step = IssueStep
                 }
             });
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success())
             return;

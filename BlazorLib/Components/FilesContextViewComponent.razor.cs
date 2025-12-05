@@ -150,7 +150,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
 
     private async Task<TableData<StorageFileModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        IsBusyProgress = true;
+        await SetBusyAsync(token: token);
         TPaginationRequestStandardModel<SelectMetadataRequestModel> req = new()
         {
             Payload = new()
@@ -172,7 +172,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
             .FilesSelectAsync(req, token);
 
         List<StorageFileModelDB>? data = rest.Response;
-        IsBusyProgress = false;
+        await SetBusyAsync(false, token);
         return new() { TotalItems = rest.TotalRowsCount, Items = data };
     }
 
@@ -187,6 +187,5 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
     protected override async Task OnInitializedAsync()
     {
         await ReadCurrentUser();
-        await SetBusyAsync(false);
     }
 }

@@ -29,9 +29,8 @@ public partial class DocumentClientViewPage : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
-        
+
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.GetSessionDocumentDataAsync(DocumentGuid.ToString());
-        IsBusyProgress = false;
 
         if (rest.Response is null)
             throw new Exception("rest.SessionDocument is null. error 5E20961A-3F1A-4409-9481-FA623F818918");
@@ -39,5 +38,7 @@ public partial class DocumentClientViewPage : BlazorBusyComponentBaseModel
         SessionDocument = rest.Response;
         if (SessionDocument.DataSessionValues is not null && SessionDocument.DataSessionValues.Count != 0)
             SessionDocument.DataSessionValues.ForEach(x => { x.Owner ??= SessionDocument; x.OwnerId = SessionDocument.Id; });
+
+        await SetBusyAsync(false);
     }
 }

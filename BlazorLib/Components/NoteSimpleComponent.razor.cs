@@ -78,8 +78,8 @@ public partial class NoteSimpleComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         TResponseModel<int> rest = await StorageRepo.SaveParameterAsync(editValue, KeyStorage, false);
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
-        IsBusyProgress = false;
         initValue = editValue;
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -88,8 +88,10 @@ public partial class NoteSimpleComponent : BlazorBusyComponentBaseModel
         domId = $"{OwnerPrimaryKey}/{nameof(NoteSimpleComponent)}{ApplicationName}{PropertyName}{PrefixPropertyName}";
         await SetBusyAsync();
         TResponseModel<string?> rest = await StorageRepo.ReadParameterAsync<string?>(KeyStorage);
-        IsBusyProgress = false;
+
         initValue = rest.Response;
         editValue = initValue;
+
+        await SetBusyAsync(false);
     }
 }

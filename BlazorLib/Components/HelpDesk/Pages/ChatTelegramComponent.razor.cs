@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using BlazorLib;
 using SharedLib;
+using MudBlazor;
 
 namespace BlazorLib.Components.HelpDesk.Pages;
 
@@ -50,11 +51,11 @@ public partial class ChatTelegramComponent : BlazorBusyComponentBaseModel
 
         await SetBusyAsync();
         Chat = await TelegramRepo.ChatTelegramReadAsync(ChatId.Value);
-        IsBusyProgress = false;
-        await SetBusyAsync();
+
         TResponseModel<TelegramUserBaseModel> get_user = await IdentityRepo.GetTelegramUserCachedInfoAsync(Chat.ChatTelegramId);
-        IsBusyProgress = false;
-        //SnackbarRepo.ShowMessagesResponse(get_user.Messages);
+
+        SnackBarRepo.ShowMessagesResponse(get_user.Messages);
         CurrentUser = get_user.Response;
+        await SetBusyAsync(false);
     }
 }

@@ -103,11 +103,13 @@ public partial class MessageOfIssueComponent : IssueWrapBaseModel
                     Id = Message?.Id ?? 0
                 }
             });
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         ParentListIssues.AddingNewMessage = false;
         IsEditMode = false;
         await ParentListIssues.ReloadMessages();
+
+        await SetBusyAsync(false);
     }
 
     void Cancel()

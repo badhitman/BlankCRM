@@ -27,9 +27,8 @@ public partial class DocumentClientViewIntPage : BlazorBusyComponentBaseAuthMode
     {
         await SetBusyAsync();
         await ReadCurrentUser();
-        
+
         TResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.GetSessionDocumentAsync(new() { SessionId = DocumentId, IncludeExtra = true });
-        IsBusyProgress = false;
 
         if (rest.Response is null)
             throw new Exception("rest.Content.SessionDocument is null. error 09DFC142-55DA-4616-AA14-EA1B810E9A7E");
@@ -37,5 +36,7 @@ public partial class DocumentClientViewIntPage : BlazorBusyComponentBaseAuthMode
         SessionDocument = rest.Response;
         if (SessionDocument.DataSessionValues is not null && SessionDocument.DataSessionValues.Count != 0)
             SessionDocument.DataSessionValues.ForEach(x => { x.Owner ??= SessionDocument; x.OwnerId = SessionDocument.Id; });
+
+        await SetBusyAsync(false);
     }
 }

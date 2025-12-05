@@ -35,13 +35,15 @@ public partial class FileItemForMessageComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         TResponseModel<byte[]> rest = await telegramRepo.GetFileAsync(FileElement.FileId);
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (rest.Response is not null)
         {
             MemoryStream ms = new(rest.Response);
-            using var streamRef = new DotNetStreamReference(stream: ms);
+            using DotNetStreamReference? streamRef = new DotNetStreamReference(stream: ms);
             await JSRepo.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
         }
+
+        await SetBusyAsync(false);
     }
 }

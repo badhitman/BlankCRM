@@ -63,7 +63,7 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
             Payload = Issue.Id,
             SenderActionUserId = CurrentUserSession.UserId,
         });
-        IsBusyProgress = false;
+
         messages = messages_rest.Response;
         SnackBarRepo.ShowMessagesResponse(messages_rest.Messages);
         if (!messages_rest.Success() || messages_rest.Response is null)
@@ -71,11 +71,10 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
 
         Issue.Messages = [.. messages_rest.Response];
 
-        string[] users_for_adding = Issue
+        string[] users_for_adding = [.. Issue
             .Messages
             .Where(x => x.AuthorUserId != GlobalStaticConstantsRoles.Roles.System && !UsersIdentityDump.Any(y => y.UserId == x.AuthorUserId))
-            .Select(x => x.AuthorUserId)
-            .ToArray();
+            .Select(x => x.AuthorUserId)];
 
         if (users_for_adding.Length != 0)
         {
@@ -86,7 +85,8 @@ public partial class IssueMessagesComponent : IssueWrapBaseModel
         }
         if (tableRef is not null)
             await tableRef.ReloadServerData();
-        StateHasChanged();
+
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

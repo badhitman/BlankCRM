@@ -221,7 +221,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     {
         await SetBusyAsync();
         ResponseBaseModel rest = await ConstructorRepo.ClearValuesForFieldNameAsync(new() { FormId = Form.Id, FieldName = Field.Name, SessionId = session_id });
-        
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
@@ -329,7 +329,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             await SetBusyAsync(false);
             return;
         }
-        
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
@@ -353,7 +353,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     {
         await SetBusyAsync();
         TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(Field.OwnerId);
-       
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
@@ -456,7 +456,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             await SetBusyAsync(false);
             return;
         }
-        
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         if (!rest.Success())
@@ -466,7 +466,7 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
             await SetBusyAsync(false);
             return;
         }
-     
+
         await ReloadForm();
         await SetBusyAsync(false);
     }
@@ -530,10 +530,9 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         else
         {
             SnackBarRepo.Error("ошибка 591195A4-959D-4CDD-9410-F8984F790CBE");
-            IsBusyProgress = false;
+            await SetBusyAsync(false);
             return;
         }
-        IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
@@ -541,16 +540,19 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         {
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
+            await SetBusyAsync(false);
             return;
         }
 
         if (rest.Response is null)
         {
             SnackBarRepo.Error($"Ошибка AA01EFE2-DF81-4CDC-8CAB-D2CAC6B34912 rest.Content.Form is null");
+            await SetBusyAsync(false);
             return;
         }
         Form.Reload(rest.Response);
         ReloadFieldsHandler(Form);
+        await SetBusyAsync(false);
     }
 
     /// <summary>
@@ -570,10 +572,9 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         else
         {
             SnackBarRepo.Error("ошибка 8768E090-BE63-4FE4-A693-7E24ED1A1876");
-            IsBusyProgress = false;
+            await SetBusyAsync(false);
             return;
         }
-        IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
@@ -581,15 +582,18 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
         {
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
+            await SetBusyAsync(false);
             return;
         }
 
         if (rest.Response is null)
         {
             SnackBarRepo.Error($"Ошибка 04BD92F1-0B55-46C5-93B3-4DACB7374565 rest.Content.Form is null");
+            await SetBusyAsync(false);
             return;
         }
         Form.Reload(rest.Response);
         ReloadFieldsHandler(Form);
+        await SetBusyAsync(false);
     }
 }

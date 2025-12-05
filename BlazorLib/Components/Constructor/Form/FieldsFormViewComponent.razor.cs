@@ -51,7 +51,7 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
                 await SetBusyAsync();
                 StateHasChanged();
                 rest = await ConstructorRepo.GetFormAsync(Form.Id);
-                IsBusyProgress = false;
+
                 SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
                 if (rest.Response is null)
@@ -60,16 +60,20 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
                 if (!rest.Success())
                 {
                     SnackBarRepo.Error($"Ошибка 32E7BE10-7C10-4FC0-80A0-23CF9D176278 Action: {rest.Message()}");
+                    await SetBusyAsync(false);
                     return;
                 }
 
                 if (rest.Response is null)
+                {
+                    await SetBusyAsync(false);
                     return;
+                }
 
                 Form.Reload(rest.Response);
                 if (client_standard_ref is not null)
                     await client_standard_ref.Update(Form);
-                StateHasChanged();
+                await SetBusyAsync(false);
             });
         }
         else
@@ -125,17 +129,16 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
         else
         {
             SnackBarRepo.Error("Тип поля не определён 050A59F3-028D-41C8-81AC-34F66EBF3840");
-            IsBusyProgress = false;
+            await SetBusyAsync(false);
             return;
         }
-
-        IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
+            await SetBusyAsync(false);
             return;
         }
 
@@ -143,6 +146,8 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
         field_creating_field_ref?.SetTypeField();
         if (client_standard_ref is not null)
             await client_standard_ref.Update(Form);
+
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

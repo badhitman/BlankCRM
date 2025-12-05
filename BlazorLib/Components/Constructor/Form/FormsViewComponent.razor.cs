@@ -51,15 +51,15 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         TResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.GetFormAsync(form.Id);
-        IsBusyProgress = false;
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
             SnackBarRepo.Error($"Ошибка BDED4783-A604-4347-A344-1B66064CDDE8 Action: {rest.Message()}");
+            await SetBusyAsync(false);
             return;
         }
-        StateHasChanged();
+
         DialogParameters<EditFormDialogComponent> parameters = new()
         {
             { x => x.Form, rest.Response },
@@ -70,6 +70,8 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
 
         if (table is not null)
             await table.ReloadServerData();
+
+        await SetBusyAsync(false);
     }
 
     TableState? _table_state;
@@ -81,7 +83,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
 
         rest_data = await ConstructorRepo.SelectFormsAsync(new() { Request = SimplePaginationRequestModel.Build(searchString, _table_state?.PageSize ?? 10, _table_state?.Page ?? 0), ProjectId = ParentFormsPage.MainProject.Id });
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 
     /// <summary>

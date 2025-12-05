@@ -68,12 +68,13 @@ public partial class TelegramChatWrapComponent : BlazorBusyComponentBaseModel
         if (_messagesTelegramComponent.TableRef is not null)
             await _messagesTelegramComponent.TableRef.ReloadServerData();
 
-        IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         loadedFiles.Clear();
         _inputFileId = Guid.NewGuid().ToString();
         if (SendMessageHandle is not null)
             SendMessageHandle(req);
+
+        await SetBusyAsync(false);
     }
 
     void SelectFilesChange(InputFileChangeEventArgs e)

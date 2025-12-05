@@ -61,6 +61,7 @@ public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseM
         WalletTypeElement.Name = resGet.Response[0].Name;
         WalletTypeElement.Description = resGet.Response[0].Description;
         WalletTypeElement.IsDisabled = resGet.Response[0].IsDisabled;
+        WalletTypeElement.IsSystem = resGet.Response[0].IsSystem;
         WalletTypeElement.LastUpdatedAtUTC = resGet.Response[0].LastUpdatedAtUTC;
 
         _walletCopy = null;

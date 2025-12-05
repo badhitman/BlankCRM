@@ -42,9 +42,9 @@ public partial class RubricsParametersComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         TResponseModel<int> res = await SerializeStorageRepo.SaveParameterAsync<ModesSelectRubricsEnum?>(SelectedOption, GlobalStaticCloudStorageMetadata.ModeSelectingRubrics, true);
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
-        StateHasChanged();
+        await SetBusyAsync(false);
     }
 
     async Task ToggleShowingDisabledRubrics()

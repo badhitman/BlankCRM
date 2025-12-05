@@ -99,7 +99,7 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
 
         await SetBusyAsync();
         currentUser = selected;
-        CurrentWallet = null;
+        currentWallet = null;
 
         if (selected is null || string.IsNullOrWhiteSpace(selected.UserId))
             walletsForSelect.Clear();

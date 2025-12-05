@@ -60,13 +60,15 @@ public partial class OrganizationEditComponent : BlazorBusyComponentBaseAuthMode
 
         await SetBusyAsync();
         TResponseModel<OrganizationModelDB[]> res = await CommerceRepo.OrganizationsReadAsync([OrganizationId]);
-        IsBusyProgress = false;
+        
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         currentOrg = res.Response!.Single();
         if (currentOrg is not null && (currentOrg.Users?.Any(x => x.UserPersonIdentityId == CurrentUserSession.UserId) != true && !CurrentUserSession.IsAdmin && CurrentUserSession.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true))
         {
             currentOrg = null;
+            await SetBusyAsync(false);
             return;
         }
+        await SetBusyAsync(false);
     }
 }

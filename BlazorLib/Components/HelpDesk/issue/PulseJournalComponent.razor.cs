@@ -42,26 +42,27 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
             SenderActionUserId = CurrentUserSession.UserId,
         }, token);
         SnackBarRepo.ShowMessagesResponse(tp.Messages);
-        IsBusyProgress = false;
 
         if (!tp.Success() || tp.Response?.Response is null)
+        {
+            await SetBusyAsync(false, token);
             return new TableData<PulseViewModel>() { TotalItems = 0, Items = [] };
+        }
 
-        string[] users_ids = tp.Response.Response
+        string[] users_ids = [.. tp.Response.Response
             .Select(x => x.AuthorUserIdentityId)
-            .Where(x => !UsersIdentityDump.Any(y => y.UserId == x))
-            .ToArray();
+            .Where(x => !UsersIdentityDump.Any(y => y.UserId == x))];
 
         if (users_ids.Length != 0)
         {
-            await SetBusyAsync(token: token);
             TResponseModel<UserInfoModel[]> users_add = await IdentityRepo.GetUsersOfIdentityAsync(users_ids, token);
-            IsBusyProgress = false;
+
             SnackBarRepo.ShowMessagesResponse(users_add.Messages);
             if (users_add.Response is not null)
                 UsersIdentityDump.AddRange(users_add.Response);
         }
 
+        await SetBusyAsync(false, token);
         return new TableData<PulseViewModel>() { TotalItems = tp.Response.TotalRowsCount, Items = tp.Response.Response };
     }
 

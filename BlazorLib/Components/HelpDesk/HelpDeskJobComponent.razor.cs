@@ -33,9 +33,10 @@ public partial class HelpDeskJobComponent : BlazorBusyComponentBaseModel
     {
         await SetBusyAsync();
         await _tab.TableRef.ReloadServerData();
-        IsBusyProgress = false;
+
         _tab.StateHasChangedCall();
-        StateHasChanged();
+
+        await SetBusyAsync(false);
     }
 
     void SetTab(HelpDeskJournalComponent page)

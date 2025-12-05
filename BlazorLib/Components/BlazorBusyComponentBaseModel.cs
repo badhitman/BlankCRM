@@ -28,36 +28,22 @@ public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
     /// <summary>
     /// Компонент занят отправкой REST запроса и обработки ответа
     /// </summary>
-    public virtual bool IsBusyProgress
-    {
-        get => _isBusyProgress;
-        set
-        {
-            //#if DEBUG
-            //            Logger.LogDebug($"{nameof(IsBusyProgress)}:{value}");
-            //#endif
-            _isBusyProgress = value;
-        }
-    }
+    public bool IsBusyProgress => _isBusyProgress;
 
+    int _deepBusyCount = 0;
     /// <summary>
     /// SetBusy
     /// </summary>
     public async Task SetBusyAsync(bool is_busy = true, CancellationToken token = default)
     {
-        _isBusyProgress = is_busy;
-        try
-        {
-            await Task.Delay(1, token);
-        }
-        catch
-        {
+        if (is_busy)
+            Interlocked.Increment(ref _deepBusyCount);
+        else
+            Interlocked.Decrement(ref _deepBusyCount);
 
-        }
-        finally
-        {
-            await InvokeAsync(StateHasChanged);
-        }
+        _isBusyProgress = _deepBusyCount > 0;
+        await Task.Delay(1, token);
+        await InvokeAsync(StateHasChanged);
     }
 
     /// <summary>

@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
@@ -46,7 +45,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync();
 
         TResponseModel<int> res = await ArticlesRepo.ArticleCreateOrUpdateAsync(editArticle);
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (editArticle.Id < 1 && res.Response > 0)
             NavRepo.NavigateTo($"/articles/edit-card/{res.Response}");
@@ -55,6 +54,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
             await LoadArticleData();
             editArticle = GlobalTools.CreateDeepCopy(orignArticle) ?? throw new Exception();
         }
+        await SetBusyAsync(false);
     }
 
     async Task LoadArticleData()
@@ -68,6 +68,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
             throw new Exception();
 
         orignArticle = res.Response.Single();
+        await SetBusyAsync(false);
     }
 
     async void SelectedRubricsChange(IReadOnlyCollection<UniversalBaseModel?> req)
@@ -80,6 +81,7 @@ public partial class ArticleEditComponent : BlazorBusyComponentBaseAuthModel
         await LoadArticleData();
         // await SetBusy(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

@@ -52,7 +52,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
 
         if (resNomenclatures.Response is null)
         {
-            IsBusyProgress = false;
+            await SetBusyAsync(false, token);
             return new TableData<NomenclatureModelDB>() { TotalItems = 0, Items = [] };
         }
 
@@ -71,13 +71,13 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
         };
 
         TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq, token);
-        await SetBusyAsync(false, token: token);
+
 
         if (recordsSelect.TotalRowsCount > recReq.PageSize)
             SnackBarRepo.Error($"Записей больше: {recordsSelect.TotalRowsCount}");
 
-        List<RecordsAttendanceModelDB> currentRecords = recordsSelect.Response ?? [];
-
+        //List<RecordsAttendanceModelDB> currentRecords = recordsSelect.Response ?? [];
+        await SetBusyAsync(false, token: token);
         return new TableData<NomenclatureModelDB>() { TotalItems = resNomenclatures.TotalRowsCount, Items = resNomenclatures.Response };
     }
 

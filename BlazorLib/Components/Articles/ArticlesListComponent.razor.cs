@@ -77,13 +77,13 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
             return;
 
         await SetBusyAsync();
-
         TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersOfIdentityAsync(_ids);
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is null)
             return;
         usersDump.AddRange(res.Response);
+
     }
 
     void OnSearch(string text)

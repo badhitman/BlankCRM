@@ -54,11 +54,10 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
         await SetBusyAsync();
         TResponseModel<OrganizationModelDB[]> res = await CommerceRepo.OrganizationsReadAsync([CurrentOrganization.Id]);
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         CurrentOrganization = res.Response!.Single();
-        if (CurrentOrganization is not null && (CurrentOrganization.Users?.Any(x => x.UserPersonIdentityId == CurrentUserSession.UserId) != true && CurrentUserSession.IsAdmin && CurrentUserSession.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true))
-            return;
+        await SetBusyAsync(false);
     }
 
     async Task CancelEditRequestOrganization()
@@ -75,9 +74,10 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
-        IsBusyProgress = false;
+        
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await ReadOrganization();
+        await SetBusyAsync(false);
     }
 
     async Task ConfirmChangeOrganization()
@@ -105,8 +105,8 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         await SetBusyAsync();
 
         TResponseModel<bool> res = await CommerceRepo.OrganizationSetLegalAsync(req);
-        IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
         NavigationRepo.ReloadPage();
     }
 
@@ -122,7 +122,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
-        IsBusyProgress = false;
+        
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (CurrentOrganization.Id == 0)
@@ -132,5 +132,6 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         }
         else
             await ReadOrganization();
+        await SetBusyAsync(false);
     }
 }

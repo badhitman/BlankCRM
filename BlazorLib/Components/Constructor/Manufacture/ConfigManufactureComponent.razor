@@ -118,11 +118,12 @@
     {
         await SetBusyAsync();
         //ResponseBaseModel res = await ManufactureRepo.UpdateManufactureConfig(manufactureEdit);
-        IsBusyProgress = false;
+
         //SnackbarRepo.ShowMessagesResponse(res.Messages);
 
         // if (res.Success())
         //     Manufacture.Reload(manufactureEdit);
+        await SetBusyAsync(false);
     }
 
     protected override void OnInitialized()

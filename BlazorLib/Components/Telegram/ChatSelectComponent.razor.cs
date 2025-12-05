@@ -106,6 +106,6 @@ public partial class ChatSelectComponent : BlazorBusyComponentBaseModel
         if (!rest.Success())
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
         initValue = rest.Response ?? 0;
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 }

@@ -1,20 +1,14 @@
-﻿@using static SharedLib.GlobalStaticConstantsRoutes
+﻿@using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
 @inherits BlazorBusyComponentBaseAuthModel
 
-@if (editNomenclature is null)
-{
-    <figure class="text-center">
-        <blockquote class="blockquote">
-            <p>Товар не найден.</p>
-        </blockquote>
-        <figcaption class="blockquote-footer">
-            Либо у вас нет <cite title="или удалён">доступа</cite>
-        </figcaption>
-    </figure>
-}
-else
-{
-    <div class="card">
+<div class="card">
+    @if (editNomenclature is null)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
+    }
+    else
+    {
         <div class="card-header">
             <div class="input-group mb-2">
                 <span class="input-group-text">Конфигурация номенклатуры</span>
@@ -74,5 +68,5 @@ else
                 </NotAuthorized>
             </AuthorizeView>
         </div>
-    </div>
-}
+    }
+</div>

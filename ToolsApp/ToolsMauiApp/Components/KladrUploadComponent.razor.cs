@@ -67,13 +67,6 @@ public partial class KladrUploadComponent : BlazorBusyComponentBaseModel
     }
 
     /// <inheritdoc/>
-    public override bool IsBusyProgress
-    {
-        get => ChildsVotesBusyBalance != 0 || base.IsBusyProgress;
-        set => base.IsBusyProgress = value;
-    }
-
-    /// <inheritdoc/>
     public void InitHandleAction((KladrFileViewComponent ParentComponent, string FileName) sender)
     {
         ViewsChilds.Add(sender);

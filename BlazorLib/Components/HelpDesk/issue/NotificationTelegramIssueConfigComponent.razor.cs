@@ -48,8 +48,10 @@ public partial class NotificationTelegramIssueConfigComponent : BlazorBusyCompon
         await SetBusyAsync();
         TResponseModel<int> rest = await StorageRepo.SaveParameterAsync(SelectedChatSet.ChatTelegramId, KeyStorage, false);
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
-        IsBusyProgress = false;
+
         initValue = SelectedChatSet.ChatTelegramId;
+
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -57,9 +59,11 @@ public partial class NotificationTelegramIssueConfigComponent : BlazorBusyCompon
     {
         await SetBusyAsync();
         TResponseModel<long?> rest = await StorageRepo.ReadParameterAsync<long?>(KeyStorage);
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         initValue = rest.Response ?? 0;
         SelectedChatSet = ChatsTelegram.First(x => x.ChatTelegramId == initValue);
+
+        await SetBusyAsync(false);
     }
 }

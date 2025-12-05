@@ -86,15 +86,18 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
             }
         });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
-        IsBusyProgress = false;
-        if (!res.Success())
-            return;
 
+        if (!res.Success())
+        {
+            await SetBusyAsync(false);
+            return;
+        }
         Issue.Name = NameIssueEdit;
         Issue.Description = DescriptionIssueEdit;
         Issue.RubricIssueId = RubricIssueEdit;
 
         IsEditMode = false;
+        await SetBusyAsync(false);
     }
 
     void EditToggle()
@@ -111,7 +114,6 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
         await SetBusyAsync();
         TResponseModel<bool?> res = await SerializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ParameterShowDisabledRubrics);
         TResponseModel<ModesSelectRubricsEnum?> res_ModeSelectingRubrics = await SerializeStorageRepo.ReadParameterAsync<ModesSelectRubricsEnum?>(GlobalStaticCloudStorageMetadata.ModeSelectingRubrics);
-        IsBusyProgress = false;
 
         if (!res.Success())
             SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -124,5 +126,7 @@ public partial class IssueBodyComponent : IssueWrapBaseModel
         ShowDisabledRubrics = res.Response == true;
         ModeSelectingRubrics = res_ModeSelectingRubrics.Response.Value;
         SelectedRubric = Issue.RubricIssue;
+
+        await SetBusyAsync(false);
     }
 }

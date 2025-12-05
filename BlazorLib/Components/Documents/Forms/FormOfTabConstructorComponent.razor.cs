@@ -243,10 +243,8 @@ public partial class FormOfTabConstructorComponent : FormBaseModel
             throw new Exception();
 
         await SetBusyAsync();
-        
         TResponseModel<ValueDataForSessionOfDocumentModelDB[]> res = await ConstructorRepo.SaveSessionFormAsync(new() { JoinFormToTab = Join.Id, SessionId = DocumentKey.Value, SessionValues = SessionValues });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
-        IsBusyProgress = false;
 
         SessionValues.Clear();
         if (res.Response?.Length > 0)
@@ -262,6 +260,7 @@ public partial class FormOfTabConstructorComponent : FormBaseModel
             fb.CommitChange();
             fb.StateHasChangedCall();
         }
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

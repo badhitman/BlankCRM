@@ -40,15 +40,12 @@ public partial class ElementsOfDirectoryListViewComponent : BlazorBusyComponentB
         await SetBusyAsync();
         
         TResponseModel<List<EntryModel>> rest = await ConstructorRepo.GetElementsOfDirectoryAsync(SelectedDirectoryId);
-        IsBusyProgress = false;
-
+        
         if (!rest.Success())
             SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         EntriesElements = rest.Response;
-
-        if (state_has_change)
-            StateHasChanged();
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

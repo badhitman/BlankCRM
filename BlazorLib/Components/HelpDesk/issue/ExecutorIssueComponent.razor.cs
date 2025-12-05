@@ -36,21 +36,24 @@ public partial class ExecutorIssueComponent : IssueWrapBaseModel
             await SetBusyAsync();
             TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersIdentityByEmailsAsync([editExecutorEmail]);
             user_by_email = res.Response?.FirstOrDefault();
-            IsBusyProgress = false;
+
             if (user_by_email is null)
             {
                 SnackBarRepo.Error($"User with this email not found: {editExecutorEmail}");
+                await SetBusyAsync(false);
                 return;
             }
 
             if (user_by_email.Roles?.Any(x => GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Contains(x)) != true && !user_by_email.IsAdmin)
             {
                 SnackBarRepo.Error($"User {editExecutorEmail} cannot be installed by the performer: is not an employee");
+                await SetBusyAsync(false);
                 return;
             }
         }
 
         await SetExecutor(user_by_email?.UserId ?? "");
+        await SetBusyAsync(false);
     }
 
     async Task SetExecutor(string user_id)
@@ -60,35 +63,44 @@ public partial class ExecutorIssueComponent : IssueWrapBaseModel
 
         await SetBusyAsync();
         TResponseModel<bool> rest = await HelpDeskRepo.ExecuterUpdateAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { IssueId = Issue.Id, UserId = user_id } });
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
 
         if (!rest.Success())
+        {
+            await SetBusyAsync(false);
             return;
+        }
 
         IsEditMode = false;
 
         Issue.ExecutorIdentityUserId = user_id;
 
         if (string.IsNullOrWhiteSpace(user_id))
+        {
+            await SetBusyAsync(false);
             return;
+        }
 
         UsersIdentityDump ??= [];
         if (UsersIdentityDump.Any(x => x.UserId == user_id) != true)
         {
-            await SetBusyAsync();
             TResponseModel<UserInfoModel[]> res_user = await IdentityRepo.GetUsersOfIdentityAsync([user_id]);
-            IsBusyProgress = false;
 
             SnackBarRepo.ShowMessagesResponse(res_user.Messages);
             if (!res_user.Success() || res_user.Response is null || res_user.Response.Length != 1)
+            {
+                await SetBusyAsync(false);
                 return;
+            }
 
             UsersIdentityDump = [.. UsersIdentityDump.Union(res_user.Response)];
         }
 
         Executor = UsersIdentityDump?.FirstOrDefault(x => x.UserId == Issue.ExecutorIdentityUserId);
         editExecutorEmail = Executor?.Email ?? Issue.ExecutorIdentityUserId;
+
+        await SetBusyAsync(false);
     }
 
     void EditModeToggle()

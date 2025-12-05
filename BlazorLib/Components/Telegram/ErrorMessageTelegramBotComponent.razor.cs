@@ -41,8 +41,9 @@ public partial class ErrorMessageTelegramBotComponent : BlazorBusyComponentBaseM
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert(),
         }, token);
-        IsBusyProgress = false;
-        
+
+        await SetBusyAsync(false, token);
+
         if (err_res.Response is null)
             return new TableData<ErrorSendingMessageTelegramBotModelDB>() { TotalItems = 0, Items = [] };
 

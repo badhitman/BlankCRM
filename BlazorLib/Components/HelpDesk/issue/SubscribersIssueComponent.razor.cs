@@ -28,17 +28,16 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
         await SetBusyAsync();
 
         TResponseModel<UserInfoModel>? user_by_email = await IdentityRepo.FindUserByEmailAsync(addingSubscriber);
-        IsBusyProgress = false;
+
         if (user_by_email.Response is null)
         {
             SnackBarRepo.Error($"Пользователь с таким email не найден: {addingSubscriber}");
+            await SetBusyAsync(false);
             return;
         }
 
         if (!UsersIdentityDump.Any(x => x.UserId == user_by_email.Response.UserId))
             UsersIdentityDump.Add(user_by_email.Response);
-
-        await SetBusyAsync();
 
         TResponseModel<bool> add_subscriber_res = await HelpDeskRepo.SubscribeUpdateAsync(new()
         {
@@ -50,17 +49,20 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
                 UserId = user_by_email.Response.UserId,
             }
         });
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(add_subscriber_res.Messages);
         if (!add_subscriber_res.Success() || add_subscriber_res.Response != true)
+        {
+            await SetBusyAsync(false);
             return;
+        }
 
         addingSubscriber = null;
-        await SetBusyAsync();
+
         TResponseModel<List<SubscriberIssueHelpDeskModelDB>> res = await HelpDeskRepo.SubscribesListAsync(new() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession.UserId });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         Issue.Subscribers = res.Response;
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -93,14 +95,14 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {
-            IsBusyProgress = false;
+            await SetBusyAsync(false);
             return;
         }
 
         TResponseModel<List<SubscriberIssueHelpDeskModelDB>> res = await HelpDeskRepo.SubscribesListAsync(new TAuthRequestModel<int>() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession.UserId });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         Issue.Subscribers = res.Response;
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 
     async Task SubscribeMeToggle()
@@ -125,10 +127,13 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
 
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
+        {
+            await SetBusyAsync(false);
             return;
+        }
         TResponseModel<List<SubscriberIssueHelpDeskModelDB>> res = await HelpDeskRepo.SubscribesListAsync(new TAuthRequestModel<int>() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession.UserId });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         Issue.Subscribers = res.Response;
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 }

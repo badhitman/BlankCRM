@@ -77,7 +77,8 @@ public partial class PricesRulesForOfferComponent : BlazorBusyComponentBaseAuthM
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Response is not null && res.Success())
             rules = res.Response;
-        IsBusyProgress = false;
+        
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

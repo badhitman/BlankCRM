@@ -52,7 +52,7 @@ public partial class TabOfDocumentConstructorComponent : TTabOfDocumenBaseCompon
 
             await SetBusyAsync();
             SessionValues = [.. await JournalRepo.ReadSessionTabValues(Tab.Id, Session.Id)];
-            IsBusyProgress = false;
+            await SetBusyAsync(false);
         }
     }
 
@@ -65,8 +65,7 @@ public partial class TabOfDocumentConstructorComponent : TTabOfDocumenBaseCompon
 
             await SetBusyAsync();
             SessionValues = [.. await JournalRepo.ReadSessionTabValues(Tab.Id, Session.Id)];
-            IsBusyProgress = false;
-            StateHasChanged();
+            await SetBusyAsync(false);
         }
     }
 }

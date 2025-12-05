@@ -82,9 +82,10 @@ public partial class JournalUniversalComponent : BlazorBusyComponentBaseModel
                 PageSize = state.PageSize,
                 SortingDirection = state.SortDirection == SortDirection.Descending ? DirectionsEnum.Down : DirectionsEnum.Up
             }, ProjectId, token);
-        IsBusyProgress = false;
 
         totalItems = res.TotalRowsCount;
+        await SetBusyAsync(false, token);
+
         return new TableData<KeyValuePair<int, Dictionary<string, object>>>() { TotalItems = totalItems, Items = res.Response };
     }
 
@@ -104,18 +105,18 @@ public partial class JournalUniversalComponent : BlazorBusyComponentBaseModel
         {
             await SetBusyAsync();
             MySchemas = await JournalRepo.GetMyDocumentsSchemas();
-            IsBusyProgress = false;
 
             if (MySchemas.Length != 0 && !MySchemas.Any(x => x.Id == DocumentNameOrIdType))
             {
                 SelectedJournal = MySchemas[0].Id;
+                await SetBusyAsync(false);
                 return;
             }
         }
         await SetBusyAsync();
         TResponseModel<DocumentSchemeConstructorModelDB[]?> res_fs = await JournalRepo.FindDocumentSchemes(DocumentNameOrIdType, ProjectId);
         DocumentsSchemes = res_fs.Response;
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
 
         if (SelectedJournal is null)
             ColumnsNames = null;
@@ -125,9 +126,10 @@ public partial class JournalUniversalComponent : BlazorBusyComponentBaseModel
             TResponseModel<EntryAltModel[]?> res = await JournalRepo.GetColumnsForJournalAsync(SelectedJournal, ProjectId);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             ColumnsNames = res.Response;
-            IsBusyProgress = false;
         }
         if (table is not null)
             await table.ReloadServerData();
+
+        await SetBusyAsync(false);
     }
 }

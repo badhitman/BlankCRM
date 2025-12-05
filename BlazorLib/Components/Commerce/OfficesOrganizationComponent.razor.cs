@@ -78,11 +78,13 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
             KladrCode = addingKladrCode!,
             KladrTitle = addingKladrTitle!,
         });
-        IsBusyProgress = false;
+        
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success())
+        {
+            await SetBusyAsync(false);
             return;
-
+        }
         Organization.Offices ??= [];
         Organization.Offices.Add(new()
         {
@@ -97,6 +99,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         });
 
         ToggleMode();
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

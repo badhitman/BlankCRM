@@ -54,13 +54,14 @@ public partial class MembersOfProjectComponent : BlazorBusyComponentBaseModel
             ResponseBaseModel adding_member = await ConstructorRepo.AddMembersToProjectAsync(new() { ProjectId = ProjectView.Id, UsersIds = [user_info.Response.UserId] });
             SnackBarRepo.ShowMessagesResponse(adding_member.Messages);
         }
-        IsBusyProgress = false;
+
         emailForAddMember = null;
         TResponseModel<EntryAltModel[]> members_rest = await ConstructorRepo.GetMembersOfProjectAsync(ProjectView.Id);
-        ProjectView.Members = new(members_rest.Response ?? throw new Exception());
+        ProjectView.Members = [.. members_rest.Response ?? throw new Exception()];
 
         await ProjectsList.ReloadListProjects();
         ProjectsList.StateHasChangedCall();
+        await SetBusyAsync(false);
     }
 
     async Task Closed(MudChip<EntryAltModel> chip)
@@ -70,12 +71,13 @@ public partial class MembersOfProjectComponent : BlazorBusyComponentBaseModel
 
         await SetBusyAsync();
         ResponseBaseModel res = await ConstructorRepo.DeleteMembersFromProjectAsync(new() { ProjectId = ProjectView.Id, UsersIds = [chip.Value.Id] });
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         TResponseModel<EntryAltModel[]> rest_members = await ConstructorRepo.GetMembersOfProjectAsync(ProjectView.Id);
-        ProjectView.Members = new(rest_members.Response ?? throw new Exception());
+        ProjectView.Members = [.. rest_members.Response ?? throw new Exception()];
 
         await ProjectsList.ReloadListProjects();
         ProjectsList.StateHasChangedCall();
+        await SetBusyAsync(false);
     }
 }

@@ -59,8 +59,8 @@ public partial class MetaFilesComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync();
         await ReadCurrentUser();
         TResponseModel<FilesAreaMetadataModel[]> res = await FilesRepo.FilesAreaGetMetadataAsync(new());
-        await SetBusyAsync(false);
         FilesAreaMetadata = res.Response ?? throw new Exception();
-        _included = FilesAreaMetadata.Select(x => SelectedAreas?.Any(y => y == x.ApplicationName) == true).ToList();
+        _included = [.. FilesAreaMetadata.Select(x => SelectedAreas?.Any(y => y == x.ApplicationName) == true)];
+        await SetBusyAsync(false);
     }
 }

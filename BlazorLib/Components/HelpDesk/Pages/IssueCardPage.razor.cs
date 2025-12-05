@@ -119,7 +119,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
         TResponseModel<IssueHelpDeskModelDB[]> issue_res = await HelpDeskRepo.IssuesReadAsync(req);
         SnackBarRepo.ShowMessagesResponse(issue_res.Messages);
         IssueSource = issue_res.Response?.FirstOrDefault();
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 
     async Task FlushUsersDump()

@@ -46,7 +46,7 @@ public partial class DocumentEditConstructorComponent : DocumentEditBaseComponen
             SnackBarRepo.ShowMessagesResponse(session_data.Messages);
             session = session_data.Response;
         }
-        IsBusyProgress = false;
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

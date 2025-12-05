@@ -58,7 +58,7 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
             SnackBarRepo.Error("Не указано имя");
             return;
         }
-
+        await SetBusyAsync();
         TResponseModel<int> res = await HelpDeskRepo.IssueCreateOrUpdateAsync(new()
         {
             SenderActionUserId = UserIdentityId,
@@ -69,11 +69,13 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
                 Description = Description,
             }
         });
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success())
             ToggleMode();
         Update();
+
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -84,7 +86,6 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
         _showCreateIssue = res_ShowCreatingIssue.Success() && res_ShowCreatingIssue.Response == true;
         TResponseModel<bool?> res = await SerializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ParameterShowDisabledRubrics);
         TResponseModel<ModesSelectRubricsEnum?> res_ModeSelectingRubrics = await SerializeStorageRepo.ReadParameterAsync<ModesSelectRubricsEnum?>(GlobalStaticCloudStorageMetadata.ModeSelectingRubrics);
-        IsBusyProgress = false;
 
         if (!res.Success())
             SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -96,6 +97,8 @@ public partial class CreateIssueComponent : BlazorBusyComponentBaseModel
 
         ShowDisabledRubrics = res.Response == true;
         ModeSelectingRubrics = res_ModeSelectingRubrics.Response.Value;
+
+        await SetBusyAsync(false);
     }
 
     void RubricSelectAction(UniversalBaseModel? selectedRubric)

@@ -45,10 +45,11 @@ public partial class WappiChatWrapComponent : BlazorBusyComponentBaseModel
         TResponseModel<SendMessageResponseModel> rest = await TelegramRepo.SendWappiMessageAsync(req);
         _textSendMessage = "";
 
-        IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
-        
+
         if (SendMessageHandle is not null)
             SendMessageHandle(req);
+
+        await SetBusyAsync(false);
     }
 }

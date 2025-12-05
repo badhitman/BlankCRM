@@ -109,9 +109,11 @@
 
         await SetBusyAsync();
         ResponseBaseModel res = await RubricsRepo.RubricMoveAsync(new() { Payload = new() { Direction = dir, ObjectId = rubric.Value!.Id, ContextName = ContextName } });
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         ReloadNodeHandle(ItemModel.ParentId ?? 0);
+
+        await SetBusyAsync(false);
     }
 
     async Task SaveRubric()
@@ -136,9 +138,10 @@
             SortIndex = ItemModel.SortIndex,
             IsDisabled = ItemModel.IsDisabled,
         });
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         ItemUpdateHandle(ItemModel);
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>

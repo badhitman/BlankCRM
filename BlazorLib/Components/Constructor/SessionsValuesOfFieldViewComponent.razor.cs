@@ -43,14 +43,16 @@ public partial class SessionsValuesOfFieldViewComponent : BlazorBusyComponentBas
     {
         await SetBusyAsync();
         TResponseModel<EntryDictModel[]> rest = await ConstructorRepo.FindSessionsDocumentsByFormFieldNameAsync(new() { FormId = Form.Id, FieldName = FieldName });
-        IsBusyProgress = false;
-        
+
         if (!rest.Success())
         {
             SnackBarRepo.Error($"Ошибка 8BDC72AC-AAE3-4EB0-93D3-F510D2324A78 Action: {rest.Message()}");
+            await SetBusyAsync(false);
             return;
         }
         if (rest.Response is not null)
             ShowReferralsHandler(rest.Response);
+
+        await SetBusyAsync(false);
     }
 }

@@ -46,15 +46,14 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
             return;
 
         await SetBusyAsync();
-
         TResponseModel<int> res = await CommerceRepo.OfferUpdateAsync(new() { Payload = editOffer, SenderActionUserId = CurrentUserSession.UserId });
-        IsBusyProgress = false;
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success() && res.Response > 0)
             CurrentOffer = GlobalTools.CreateDeepCopy(editOffer)!;
 
         if (filesViewRef is not null)
             await filesViewRef.ReloadServerData();
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -69,9 +68,10 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
             throw new Exception("CurrentUserSession is null");
 
         TResponseModel<OfferModelDB[]> res = await CommerceRepo.OffersReadAsync(new() { Payload = [OfferId], SenderActionUserId = CurrentUserSession.UserId });
-        IsBusyProgress = false;
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         CurrentOffer = res.Response!.Single();
         editOffer = GlobalTools.CreateDeepCopy(CurrentOffer)!;
+        await SetBusyAsync(false);
     }
 }
