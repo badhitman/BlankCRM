@@ -52,8 +52,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
                 currentDoc.FromWalletId == editDoc.FromWalletId &&
                 currentDoc.ToWalletSum == editDoc.ToWalletSum &&
                 currentDoc.FromWalletSum == editDoc.FromWalletSum &&
-                currentDoc.Name == editDoc.Name &&
-                currentDoc.Description == editDoc.Description;
+                currentDoc.Name == editDoc.Name;
         }
     }
 

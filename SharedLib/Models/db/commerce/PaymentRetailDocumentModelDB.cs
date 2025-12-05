@@ -11,6 +11,7 @@ namespace SharedLib;
 /// PaymentRetailDocumentModelDB
 /// </summary>
 [Index(nameof(PayerIdentityUserId)), Index(nameof(PaymentSource)), Index(nameof(TypePayment)), Index(nameof(StatusPayment))]
+[Index(nameof(Name))]
 public class PaymentRetailDocumentModelDB : EntryUpdatedModel
 {
     /// <summary>

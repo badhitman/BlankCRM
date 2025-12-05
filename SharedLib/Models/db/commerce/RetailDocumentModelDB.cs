@@ -22,6 +22,9 @@ public class RetailDocumentModelDB : OrderDocumentBaseModel
     /// </summary>
     public int WarehouseId { get; set; }
 
+    /// <inheritdoc/>
+    public string? Description { get; set; }
+
     /// <summary>
     /// DeliveryDocument
     /// </summary>

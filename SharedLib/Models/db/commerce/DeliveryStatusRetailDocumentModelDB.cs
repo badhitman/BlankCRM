@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace SharedLib;
@@ -10,8 +9,8 @@ namespace SharedLib;
 /// <summary>
 /// DeliveryStatusDocument
 /// </summary>
-[Index(nameof(DeliveryStatus))]
-public class DeliveryStatusRetailDocumentModelDB : EntryUpdatedModel
+[Index(nameof(DeliveryStatus)),Index(nameof(Name))]
+public class DeliveryStatusRetailDocumentModelDB : EntryUpdatedLiteModel
 {
     /// <summary>
     /// Статус доставки

@@ -156,7 +156,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         IQueryable<WalletConversionRetailDocumentModelDB> q = context.ConversionsDocumentsWalletsRetail.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
-            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
+            q = q.Where(x => x.Name.Contains(req.FindQuery));
 
         string[]
             sendersUserFilter = req.Payload?.SendersUserFilter ?? [],
@@ -253,7 +253,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Where(x => x.Id == req.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.Description, req.Description)
                 .SetProperty(p => p.FromWalletId, req.FromWalletId)
                 .SetProperty(p => p.FromWalletSum, req.FromWalletSum)
                 .SetProperty(p => p.ToWalletId, req.ToWalletId)
@@ -638,7 +637,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         IQueryable<DeliveryStatusRetailDocumentModelDB>? q = context.DeliveryStatusesRetailDocuments.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
-            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
+            q = q.Where(x => x.Name.Contains(req.FindQuery));
 
         IQueryable<DeliveryStatusRetailDocumentModelDB>? pq = q
             .Skip(req.PageNum * req.PageSize)
@@ -921,7 +920,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Where(x => x.Id == req.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.Description, req.Description)
                 .SetProperty(p => p.DeliveryStatus, req.DeliveryStatus)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 

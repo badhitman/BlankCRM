@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20251205103253_CommerceContext001")]
+    [Migration("20251205154646_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -293,9 +293,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<int>("DeliveryStatus")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
                     b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
@@ -312,6 +309,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("DeliveryStatus");
 
                     b.HasIndex("LastUpdatedAtUTC");
+
+                    b.HasIndex("Name");
 
                     b.ToTable("DeliveryStatusesRetailDocuments");
                 });
@@ -572,6 +571,8 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("LastUpdatedAtUTC");
 
+                    b.HasIndex("Name");
+
                     b.HasIndex("OrganizationId");
 
                     b.HasIndex("ExternalDocumentId", "HelpDeskId", "AuthorIdentityUserId", "StatusDocument");
@@ -792,6 +793,8 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("LastUpdatedAtUTC");
 
+                    b.HasIndex("Name");
+
                     b.HasIndex("PayerIdentityUserId");
 
                     b.HasIndex("PaymentSource");
@@ -900,9 +903,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<DateOnly>("DateExecute")
                         .HasColumnType("date");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
                     b.Property<TimeOnly>("EndPart")
                         .HasColumnType("time without time zone");
 
@@ -943,6 +943,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("CreatedAtUTC");
 
                     b.HasIndex("LastUpdatedAtUTC");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("NomenclatureId");
 
@@ -1007,6 +1009,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("CreatedAtUTC");
 
                     b.HasIndex("LastUpdatedAtUTC");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("WarehouseId");
 
@@ -1261,9 +1265,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
                     b.Property<int>("FromWalletId")
                         .HasColumnType("integer");
 
@@ -1290,6 +1291,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("FromWalletId");
 
                     b.HasIndex("LastUpdatedAtUTC");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("ToWalletId");
 

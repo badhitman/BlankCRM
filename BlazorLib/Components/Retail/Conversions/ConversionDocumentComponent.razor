@@ -52,8 +52,7 @@ else
     @if (editDoc.FromWalletId > 0 && editDoc.FromWalletId == editDoc.ToWalletId)
     {
         <MudAlert Severity="Severity.Error">Счёт-отправитель не может быть счётом-получателем</MudAlert>
-    }
-    <MudTextField T="string" Label="Заметки" Variant="Variant.Outlined" Text="@editDoc.Description" Lines="5" Class="mt-3" />
+    }    
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
         <button disabled="@CannotSave" class="btn btn-primary" type="button" @onclick=SaveDoc>
             @(editDoc.Id <= 0 ? "Создать" : "Сохранить")

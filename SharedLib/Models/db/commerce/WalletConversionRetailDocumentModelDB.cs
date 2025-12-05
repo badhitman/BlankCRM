@@ -2,12 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// Документ конвертации/перевода с кошелька на кошелёк
 /// </summary>
-public class WalletConversionRetailDocumentModelDB : EntryUpdatedModel
+[Index(nameof(Name))]
+public class WalletConversionRetailDocumentModelDB : EntryUpdatedLiteModel
 {
     /// <summary>
     /// Кошелёк списания

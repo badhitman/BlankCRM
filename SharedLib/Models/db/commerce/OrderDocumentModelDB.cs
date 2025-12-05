@@ -11,6 +11,9 @@ namespace SharedLib;
 /// </summary>
 public class OrderDocumentModelDB : OrderDocumentBaseDBModel
 {
+    /// <inheritdoc/>
+    public string? Description { get; set; }
+
     /// <summary>
     /// Адреса доставки
     /// </summary>

@@ -10,8 +10,8 @@ namespace SharedLib;
 /// <summary>
 /// OrderDocumentBaseModel
 /// </summary>
-[Index(nameof(ExternalDocumentId), nameof(HelpDeskId), nameof(AuthorIdentityUserId), nameof(StatusDocument))]
-public class OrderDocumentBaseModel : EntryUpdatedModel
+[Index(nameof(ExternalDocumentId), nameof(HelpDeskId), nameof(AuthorIdentityUserId), nameof(StatusDocument)), Index(nameof(Name))]
+public class OrderDocumentBaseModel : EntryUpdatedLiteModel
 {
     /// <summary>
     /// Шаг/статус обращения: "Создан", "В работе", "На проверке" и "Готово"
