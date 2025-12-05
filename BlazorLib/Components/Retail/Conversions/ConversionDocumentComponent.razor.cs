@@ -2,15 +2,22 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using BlazorLib.Components.Retail.Wallet;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
 namespace BlazorLib.Components.Retail.Conversions;
 
+/// <summary>
+/// ConversionDocumentComponent
+/// </summary>
 public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCachedModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
+
+    [Inject]
+    NavigationManager NavRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -24,6 +31,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
 
     WalletConversionRetailDocumentModelDB? currentDoc, editDoc;
     UserInfoModel? userSender, userRecipient;
+    WalletSelectInputComponent? senderWalletRef, recipientWalletRef;
 
     bool CannotSave
     {
@@ -131,11 +139,43 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
 
     async Task SaveDoc()
     {
-        await SetBusyAsync();
+        if (editDoc is null)
+            throw new ArgumentNullException(nameof(editDoc));
 
+        await SetBusyAsync();
+        if (editDoc.Id <= 0)
+        {
+            TResponseModel<int> res = await RetailRepo.CreateConversionDocumentAsync(editDoc);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+            if (res.Success() && res.Response > 0)
+                NavRepo.NavigateTo($"/retail/conversion-document/{res.Response}");
+        }
+        else
+        {
+            ResponseBaseModel res = await RetailRepo.UpdateConversionDocumentAsync(editDoc);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+            if (res.Success())
+            {
+                TResponseModel<WalletConversionRetailDocumentModelDB[]> getDoc = await RetailRepo.GetConversionsDocumentsAsync(new() { Ids = [editDoc.Id] });
+                SnackBarRepo.ShowMessagesResponse(getDoc.Messages);
+                if (getDoc.Success() && getDoc.Response is not null && getDoc.Response.Length == 1)
+                {
+                    currentDoc = getDoc.Response[0];
+                    editDoc = getDoc.Response[0];
+                }
+            }
+        }
         await SetBusyAsync(false);
     }
 
-    void ResetEdit()
-        => editDoc = GlobalTools.CreateDeepCopy(currentDoc);
+    async Task ResetEdit()
+    {
+        if (senderWalletRef is null || recipientWalletRef is null || currentDoc is null)
+            return;
+
+        editDoc = GlobalTools.CreateDeepCopy(currentDoc);
+
+        await senderWalletRef.SetWallet(editDoc!.FromWallet);
+        await recipientWalletRef.SetWallet(editDoc.ToWallet);
+    }
 }

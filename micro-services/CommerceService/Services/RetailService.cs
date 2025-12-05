@@ -118,7 +118,24 @@ public class RetailService(IIdentityTransmission identityRepo,
                 }]
             };
 
+        int[] _walletsIds = [req.FromWalletId, req.ToWalletId];
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        WalletRetailModelDB[] walletsDb = await context.WalletsRetail
+            .Where(x => _walletsIds.Contains(x.Id))
+            .ToArrayAsync(cancellationToken: token);
+
+        WalletRetailModelDB
+            _fromWallet = walletsDb.First(x => x.Id == req.FromWalletId),
+            _toWallet = walletsDb.First(x => x.Id == req.ToWalletId);
+
+        await context.WalletsRetail.Where(x => x.Id == _fromWallet.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Balance, p => p.Balance - req.FromWalletSum), cancellationToken: token);
+
+        await context.WalletsRetail.Where(x => x.Id == _toWallet.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Balance, p => p.Balance + req.ToWalletSum), cancellationToken: token);
+
         await context.ConversionsDocumentsWalletsRetail.AddAsync(req, token);
         await context.SaveChangesAsync(token);
         return new TResponseModel<int>() { Response = req.Id };
@@ -196,6 +213,30 @@ public class RetailService(IIdentityTransmission identityRepo,
             };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        WalletConversionRetailDocumentModelDB _conversionDocDb = await context.ConversionsDocumentsWalletsRetail.FirstAsync(x => x.Id == req.Id, cancellationToken: token);
+
+        decimal
+            _deltaSender = req.FromWalletSum - _conversionDocDb.FromWalletSum,
+            _deltaRecipient = req.ToWalletSum - _conversionDocDb.ToWalletSum;
+
+        int[] _walletsIds = [req.FromWalletId, req.ToWalletId];
+
+        WalletRetailModelDB[] walletsDb = await context.WalletsRetail
+            .Where(x => _walletsIds.Contains(x.Id))
+            .ToArrayAsync(cancellationToken: token);
+
+        WalletRetailModelDB
+            _fromWallet = walletsDb.First(x => x.Id == req.FromWalletId),
+            _toWallet = walletsDb.First(x => x.Id == req.ToWalletId);
+
+        await context.WalletsRetail.Where(x => x.Id == _fromWallet.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Balance, p => p.Balance + _deltaSender), cancellationToken: token);
+
+        await context.WalletsRetail.Where(x => x.Id == _toWallet.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Balance, p => p.Balance + _deltaRecipient), cancellationToken: token);
+
 
         await context.ConversionsDocumentsWalletsRetail
             .Where(x => x.Id == req.Id)

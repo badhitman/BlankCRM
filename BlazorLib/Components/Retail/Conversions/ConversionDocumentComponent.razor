@@ -22,7 +22,10 @@ else
     <MudTextField @bind-Value="editDoc.Name" Label="Примечание" Variant="Variant.Text" Class="mb-3"></MudTextField>
     <MudGrid Class="mb-3">
         <MudItem xs="12" lg="6" Class="mb-2">
-            <WalletSelectInputComponent SelectWalletHandler="SelectWalletSenderAction" SelectUserHandler="SelectUserSenderAction" />
+            <WalletSelectInputComponent SelectWalletHandler="SelectWalletSenderAction"
+                                        SelectUserHandler="SelectUserSenderAction"
+                                        WalletInit="editDoc.FromWallet"
+                                        @ref=senderWalletRef />
             <MudNumericField @bind-Value="editDoc.FromWalletSum"
                              Label="Сумма списания"
                              Variant="Variant.Outlined"
@@ -30,7 +33,10 @@ else
                              Immediate />
         </MudItem>
         <MudItem xs="12" lg="6">
-            <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction" SelectUserHandler="SelectUserRecipientAction" />
+            <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction"
+                                        SelectUserHandler="SelectUserRecipientAction"
+                                        WalletInit="editDoc.ToWallet"
+                                        @ref=recipientWalletRef />
             <MudNumericField @bind-Value="editDoc.ToWalletSum"
                              Label="Сумма списания"
                              Variant="Variant.Outlined" Class="mt-3"

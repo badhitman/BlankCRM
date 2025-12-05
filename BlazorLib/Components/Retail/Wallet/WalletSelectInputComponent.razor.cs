@@ -119,4 +119,9 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
             walletsForSelect = getWallets.Response;
         }
     }
+
+    internal async Task SetWallet(WalletRetailModelDB? fromWallet)
+    {
+        throw new NotImplementedException();
+    }
 }
