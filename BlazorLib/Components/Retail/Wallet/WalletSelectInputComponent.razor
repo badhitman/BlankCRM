@@ -43,15 +43,14 @@
         {
             <MudSelect T="WalletRetailModelDB"
                        @bind-Value="CurrentWallet"
-                       Label="Select fast-food"
-                       HelperText="Кошелёк"
+                       Label="Кошелёк"
                        Placeholder="Please Select"
                        AdornmentIcon="@Icons.Material.Filled.Wallet"
                        AdornmentColor="Color.Primary">
                 <MudSelectItem T="WalletRetailModelDB" Value="@(null as WalletRetailModelDB)"></MudSelectItem>
                 @foreach (WalletRetailModelDB wallet in walletsForSelect)
                 {
-                    <MudSelectItem Value="@wallet">@wallet.Name `@wallet.WalletType?.Name` [@wallet.Balance]</MudSelectItem>
+                    <MudSelectItem Class="@(wallet.WalletType?.IsSystem == true ? "text-warning" : "")" Value="@wallet">@wallet.Name `@wallet.WalletType?.Name` [@wallet.Balance]</MudSelectItem>
                 }
             </MudSelect>
         }

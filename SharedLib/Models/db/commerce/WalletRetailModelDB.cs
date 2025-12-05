@@ -38,6 +38,13 @@ public class WalletRetailModelDB : EntryUpdatedModel
     [ConcurrencyCheck]
     public Guid Version { get; set; }
 
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"[{WalletType?.Name}] {Name}".Trim();
+    }
+
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {

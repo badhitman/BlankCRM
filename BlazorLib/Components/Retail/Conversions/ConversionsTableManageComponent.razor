@@ -18,9 +18,26 @@
         <MudTh>Зачисление</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Создан/Изменён"> @context.CreatedAtUTC / @context.LastUpdatedAtUTC</MudTd>
-        <MudTd DataLabel="Примечание">@context.Name</MudTd>
-        <MudTd DataLabel="Списание">@context.ToWallet @context.ToWalletSum</MudTd>
+        @{
+            DateTime cdt = context.CreatedAtUTC.GetCustomTime();
+            DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
+        }
+        <MudTd DataLabel="Создан/Изменён">
+            <a href="/retail/conversion-document/@context.Id">
+                <span>
+                    @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+                </span>
+                @if (udt.HasValue && udt != default)
+                {
+                    <text>/</text>
+                    <span>
+                        @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
+                    </span>
+                }
+            </a>
+        </MudTd>
+        <MudTd DataLabel="Примечание"><a href="/retail/conversion-document/@context.Id"></a>@context.Name</MudTd>
+        <MudTd DataLabel="Списание">@context.ToWallet?.ToString() @context.ToWalletSum</MudTd>
         <MudTd DataLabel="Зачисление">@context.FromWallet @context.FromWalletSum</MudTd>
     </RowTemplate>
     <NoRecordsContent>
@@ -33,7 +50,7 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
-<MudDialog @bind-Visible="_visible" Options="_dialogOptions" >
+<MudDialog @bind-Visible="_visible" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новый перевод (розница)

@@ -15,6 +15,12 @@
                 <sup class="ms-4 text-@(WalletTypeElement.IsDisabled ? "danger" : "success")">
                     @(WalletTypeElement.IsDisabled ? "выключено" : "активно")
                 </sup>
+                @if (WalletTypeElement.IsSystem)
+                {
+                    <sup class="ms-4 text-warning-emphasis">
+                        системный
+                    </sup>
+                }
             </h5>
             <small>@WalletTypeElement.SumBalances</small>
         </div>
@@ -59,7 +65,7 @@
                            id="switchCheckDefault-@_walletCopy.Id">
                     <label class="form-check-label" for="switchCheckDefault-@_walletCopy.Id">@(_walletCopy.IsDisabled ? "Выключено (включить?)" : "Включено (выключить?)")</label>
                 </div>
-                <div class="form-check form-check-inline ms-4">
+                <div class="form-check form-check-inline ms-3">
                     <input @bind="_walletCopy.IsSystem" class="form-check-input" type="checkbox" value="" id="checkDefault2-@_walletCopy.Id">
                     <label class="form-check-label" for="checkDefault2-@_walletCopy.Id">
                         Системный

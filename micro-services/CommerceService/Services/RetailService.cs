@@ -128,6 +128,8 @@ public class RetailService(IIdentityTransmission identityRepo,
             _fromWallet = walletsDb.First(x => x.Id == req.FromWalletId),
             _toWallet = walletsDb.First(x => x.Id == req.ToWalletId);
 
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
         await context.WalletsRetail.Where(x => x.Id == _fromWallet.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Balance, p => p.Balance - req.FromWalletSum), cancellationToken: token);
@@ -136,8 +138,13 @@ public class RetailService(IIdentityTransmission identityRepo,
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Balance, p => p.Balance + req.ToWalletSum), cancellationToken: token);
 
+        req.ToWallet = null;
+        req.FromWallet = null;
+        req.CreatedAtUTC = DateTime.UtcNow;
+
         await context.ConversionsDocumentsWalletsRetail.AddAsync(req, token);
         await context.SaveChangesAsync(token);
+        await transaction.CommitAsync(token);
         return new TResponseModel<int>() { Response = req.Id };
     }
 
@@ -175,7 +182,10 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.Include(x => x.FromWallet).Include(x => x.ToWallet).ToListAsync(cancellationToken: token)
+            Response = await pq
+                .Include(x => x.FromWallet).ThenInclude(x=>x!.WalletType)
+                .Include(x => x.ToWallet).ThenInclude(x => x!.WalletType)
+                .ToListAsync(cancellationToken: token)
         };
     }
 
@@ -229,6 +239,8 @@ public class RetailService(IIdentityTransmission identityRepo,
             _fromWallet = walletsDb.First(x => x.Id == req.FromWalletId),
             _toWallet = walletsDb.First(x => x.Id == req.ToWalletId);
 
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
         await context.WalletsRetail.Where(x => x.Id == _fromWallet.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Balance, p => p.Balance + _deltaSender), cancellationToken: token);
@@ -236,7 +248,6 @@ public class RetailService(IIdentityTransmission identityRepo,
         await context.WalletsRetail.Where(x => x.Id == _toWallet.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Balance, p => p.Balance + _deltaRecipient), cancellationToken: token);
-
 
         await context.ConversionsDocumentsWalletsRetail
             .Where(x => x.Id == req.Id)
@@ -249,6 +260,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .SetProperty(p => p.ToWalletSum, req.ToWalletSum)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
+        await transaction.CommitAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
@@ -791,17 +803,17 @@ public class RetailService(IIdentityTransmission identityRepo,
             List<WalletRetailModelDB> createWallets = [];
             foreach (string userId in req.Payload.UsersFilterIdentityId)
             {
-                walletsTypesDb.ForEach(w =>
+                walletsTypesDb.ForEach(walletType =>
                 {
-                    if (!res.Any(x => x.WalletTypeId == w.Id && x.UserIdentityId == userId) && (!w.IsSystem || getUsers.Response.First(u => u.UserId == userId).IsAdmin))
+                    if (!res.Any(x => x.WalletTypeId == walletType.Id && x.UserIdentityId == userId) && (!walletType.IsSystem || getUsers.Response.First(u => u.UserId == userId).IsAdmin))
                     {
                         createWallets.Add(new()
                         {
                             UserIdentityId = userId,
                             CreatedAtUTC = DateTime.UtcNow,
-                            Name = "auto generation",
+                            Name = "~",
                             Version = Guid.NewGuid(),
-                            WalletTypeId = w.Id,
+                            WalletTypeId = walletType.Id,
                         });
                     }
                 });

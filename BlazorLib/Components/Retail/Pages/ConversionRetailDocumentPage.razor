@@ -1,6 +1,11 @@
 ﻿@page "/retail/conversion-document/{ConversionId:int}"
 
-<h3>ConversionRetailDocumentPage</h3>
+@using BlazorLib.Components.Retail.Conversions
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<ConversionDocumentComponent ConversionDocumentId="ConversionId" />
 
 @code {
     [Parameter]

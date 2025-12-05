@@ -117,6 +117,7 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
 
         TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> reqW = new()
         {
+            PageSize = 100,
             Payload = new()
             {
                 UsersFilterIdentityId = [userId],
@@ -129,13 +130,13 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
             throw new Exception("Не удалось получить перечень кошельков пользователя");
         else
         {
-            walletsForSelect = [..getWallets.Response.Where(x=> currentUser.IsAdmin || x.WalletType?.IsSystem == true)];
+            walletsForSelect = [.. getWallets.Response.Where(x => currentUser.IsAdmin || x.WalletType?.IsSystem != true)];
         }
     }
 
-    internal async Task SetWallet(WalletRetailModelDB? wallet)
+    public async Task SetWallet(WalletRetailModelDB? wallet)
     {
         currentWallet = wallet;
-
+        await ReloadWallets(wallet?.UserIdentityId ?? "");
     }
 }
