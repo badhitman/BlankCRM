@@ -711,7 +711,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         TResponseModel<int> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync([req.Wallet.UserIdentityId], token);
+        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync([req.Wallet!.UserIdentityId], token);
         if (!user.Success())
         {
             res.AddRangeMessages(user.Messages);
@@ -792,6 +792,22 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .Include(x => x.Wallet)
                 .Include(x => x.OrdersLinks)
                 .ToListAsync(cancellationToken: token)
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<PaymentRetailDocumentModelDB[]>> GetPaymentsDocumentsAsync(GetPaymentsRetailOrdersDocumentsRequestModel req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        if (req.Ids is null || req.Ids.Length == 0)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Ids is null || Ids.Length == 0" }] };
+
+        return new()
+        {
+            Response = await context.PaymentsRetailDocuments
+            .Where(x => req.Ids.Contains(x.Id))
+            .Include(x => x.Wallet)
+            .ToArrayAsync(cancellationToken: token)
         };
     }
     #endregion

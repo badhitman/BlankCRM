@@ -21,7 +21,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
 
 
     /// <inheritdoc/>
-    [Parameter]
+    [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
 
     /// <inheritdoc/>

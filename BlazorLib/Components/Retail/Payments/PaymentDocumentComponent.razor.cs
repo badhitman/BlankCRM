@@ -30,7 +30,27 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseModel
     [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
 
+
     PaymentRetailDocumentModelDB? currentDoc, editDoc;
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (PaymentId < 1)
+        {
+            currentDoc = new()
+            {
+                DatePayment = DateTime.UtcNow,
+                StatusPayment = PaymentsRetailStatusesEnum.Awaiting,
+            };
+            editDoc = GlobalTools.CreateDeepCopy(currentDoc);
+        }
+        else
+        {
+            //await resDoc = await RetailRepo.pay();
+        }
+    }
 
     void SelectWalletRecipientAction(WalletRetailModelDB? wallet)
     {

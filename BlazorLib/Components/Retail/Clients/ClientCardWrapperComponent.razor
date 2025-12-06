@@ -1,4 +1,5 @@
-﻿@using BlazorLib.Components.Retail.Delivery
+﻿@using BlazorLib.Components.Retail.Conversions
+@using BlazorLib.Components.Retail.Delivery
 @using BlazorLib.Components.Retail.Orders
 @using BlazorLib.Components.Retail.Payments
 @using MudBlazor
@@ -16,6 +17,9 @@
         </MudTabPanel>
         <MudTabPanel Text="Платежи">
             <PaymentsManageComponent />
+        </MudTabPanel>
+        <MudTabPanel Text="Переводы">
+            <ConversionsTableManageComponent />
         </MudTabPanel>
     </CascadingValue>
 </MudTabs>

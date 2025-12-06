@@ -87,6 +87,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<PaymentRetailDocumentModelDB>> SelectPaymentsDocumentsAsync(TPaginationRequestStandardModel<SelectPaymentsRetailOrdersDocumentsRequestModel> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TResponseModel<PaymentRetailDocumentModelDB[]>> GetPaymentsDocumentsAsync(GetPaymentsRetailOrdersDocumentsRequestModel req, CancellationToken token = default);
     #endregion
 
     #region Wallet Type

@@ -78,6 +78,7 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
         _visible = false;
         _editPhone = null;
         await ReloadUserData(true);
+        await SetBusyAsync(false);
     }
 
 

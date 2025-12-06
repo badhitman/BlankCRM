@@ -25,6 +25,21 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [Parameter]
     public int? FilterOrderId { get; set; }
 
+
+    bool _visible;
+    readonly DialogOptions _dialogOptions = new()
+    {
+        FullWidth = true,
+        MaxWidth = MaxWidth.ExtraLarge,
+        CloseButton = true,
+    };
+
+
+    void CreateNewDeliveryOpenDialog()
+    {
+        _visible = true;
+    }
+
     async Task<TableData<DeliveryDocumentRetailModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);

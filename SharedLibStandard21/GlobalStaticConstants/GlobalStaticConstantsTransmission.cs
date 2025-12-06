@@ -734,10 +734,15 @@ public static partial class GlobalStaticConstantsTransmission
         #region Retail
         /// <inheritdoc/>
         public readonly static string SelectRowsDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.ROWS_CONTROLLER_NAME}-of-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.SELECT_ACTION_NAME);
+
         /// <inheritdoc/>
         public readonly static string UpdateRowDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.ROW_CONTROLLER_NAME}-of-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
+
         /// <inheritdoc/>
         public readonly static string CreateRowDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.ROW_CONTROLLER_NAME}-of-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string GetPaymentsDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.PAYMENTS_CONTROLLER_NAME}-of-{Routes.DOCUMENTS_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string UpdateDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);

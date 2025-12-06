@@ -13,6 +13,10 @@ namespace RemoteCallLib;
 public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 {
     /// <inheritdoc/>
+    public async Task<TResponseModel<PaymentRetailDocumentModelDB[]>> GetPaymentsDocumentsAsync(GetPaymentsRetailOrdersDocumentsRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<PaymentRetailDocumentModelDB[]>>(TransmissionQueues.GetPaymentsDocumentsRetailReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateRowDocumentRetailReceive, req, token: token) ?? new();
 

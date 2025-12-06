@@ -7,9 +7,9 @@
         <MudSpacer />
         <MudButton OnClick=CreateNewConversionOpenDialog
                    Variant="Variant.Outlined"
-                   EndIcon="@Icons.Material.Filled.AddCircle"
+                   StartIcon="@Icons.Material.Filled.Add"
                    IconColor="Color.Secondary"
-                   Size="Size.Large">Создать новый</MudButton>
+                   Size="Size.Large">Новый перевод/конвертация</MudButton>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Создан/Изменён</MudTh>
@@ -63,6 +63,8 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <ConversionDocumentComponent ClientId="@ClientId" />
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <ConversionDocumentComponent />
+        </CascadingValue>
     </DialogContent>
 </MudDialog>
