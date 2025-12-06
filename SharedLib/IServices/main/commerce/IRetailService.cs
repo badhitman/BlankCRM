@@ -145,7 +145,7 @@ public interface IRetailService
     public Task<TPaginationResponseModel<RowOfRetailOrderDocumentModelDB>> SelectRowsRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel> req, CancellationToken token = default);
     #endregion
 
-    #region Conversion Document
+    #region Conversion document`s
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default);
 
