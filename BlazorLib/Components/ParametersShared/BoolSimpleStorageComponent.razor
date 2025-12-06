@@ -11,7 +11,10 @@
     }
 </h6>
 <div class="stack gap-3">
-    <MudSwitch Disabled="IsBusyProgress" @bind-Value="StoreValue" ThumbIcon="@(StoreValue == true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(StoreValue == true ? Color.Success : Color.Error)">
+    <MudSwitch Disabled="IsBusyProgress"
+               @bind-Value="StoreValue"
+               ThumbIcon="@(StoreValue == true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)"
+               ThumbIconColor="@(StoreValue == true ? Color.Success : Color.Error)">
         @Label
     </MudSwitch>
     @if (StoreValue && !string.IsNullOrWhiteSpace(HintTrue))

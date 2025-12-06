@@ -8,6 +8,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.Retail.Delivery;
 
+/// <summary>
+/// DeliveryDocumentComponent
+/// </summary>
 public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]

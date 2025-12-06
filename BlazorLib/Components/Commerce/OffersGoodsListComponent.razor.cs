@@ -26,12 +26,24 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
 
 
     bool
-        _hideMultiplicity,
-        _hideWorth,
+        _showMultiplicity,
+        _showWorth,
         loadTableReady;
 
     private MudTable<OfferModelDB> table = default!;
+
     bool _visibleChangeConfig;
+    bool VisibleChangeConfig
+    {
+        get => _visibleChangeConfig;
+        set
+        {
+            _visibleChangeConfig = value;
+            if (!_visibleChangeConfig && table is not null)
+                InvokeAsync(table.ReloadServerData);
+        }
+    }
+
     readonly DialogOptions _dialogOptions = new()
     {
         FullWidth = true,
@@ -46,21 +58,21 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
         await SetBusyAsync();
 
         List<Task> tasks = [
-            Task.Run(async () => 
-            { 
-                TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.HideWorthOffers); 
-                if (!res.Success()) 
-                    SnackBarRepo.ShowMessagesResponse(res.Messages); 
-                else 
-                    _hideWorth = res.Response == true; 
+            Task.Run(async () =>
+            {
+                TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.HideWorthOffers);
+                if (!res.Success())
+                    SnackBarRepo.ShowMessagesResponse(res.Messages);
+                else
+                    _showWorth = res.Response != true;
             }),
-            Task.Run(async () => 
-            { 
-                TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.HideMultiplicityOffers); 
-                if (!res.Success()) 
-                    SnackBarRepo.ShowMessagesResponse(res.Messages); 
-                else 
-                    _hideMultiplicity = res.Response == true;})];
+            Task.Run(async () =>
+            {
+                TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.HideMultiplicityOffers);
+                if (!res.Success())
+                    SnackBarRepo.ShowMessagesResponse(res.Messages);
+                else
+                    _showMultiplicity = res.Response != true;})];
 
         await Task.WhenAll(tasks);
         loadTableReady = true;
@@ -72,7 +84,7 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
 
     void CancelChangeConfig()
     {
-        _visibleChangeConfig = !_visibleChangeConfig;
+        VisibleChangeConfig = !VisibleChangeConfig;
     }
 
     async void CreateOfferAction(OfferModelDB sender)

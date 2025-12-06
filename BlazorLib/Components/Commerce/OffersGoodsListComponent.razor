@@ -34,8 +34,8 @@
         <HeaderContent>
             <MudTh>Название</MudTh>
             <MudTh>Номенклатура</MudTh>
-            <MudTh>Цена@(_hideWorth ? "" : "/Стоимость")</MudTh>
-            @if (!_hideMultiplicity)
+            <MudTh>Цена@(_showWorth ? "" : "/Стоимость")</MudTh>
+            @if (!_showMultiplicity)
             {
                 <MudTh>Кратность</MudTh>
             }
@@ -55,13 +55,13 @@
                 <span>@($"`{context.Nomenclature?.Name}` ({context.Nomenclature?.BaseUnit.DescriptionInfo()})")</span>
             </MudTd>
             <MudTd DataLabel="Цена">
-                @($"{context.Price}{(_hideWorth ? "" : $"/{Math.Round(context.Price / context.Multiplicity, 2)}")}")
+                @($"{context.Price}{(_showWorth ? "" : $"/{Math.Round(context.Price / context.Multiplicity, 2)}")}")
                 @if (CurrentUserSession?.IsAdmin == true)
                 {
                     <PricesRulesForOfferComponent Offer="context" />
                 }
             </MudTd>
-            @if (!_hideMultiplicity)
+            @if (!_showMultiplicity)
             {
                 <MudTd DataLabel="Кратность">@context.Multiplicity</MudTd>
             }
@@ -81,26 +81,26 @@
         </PagerContent>
     </MudTable>
 </MudPaper>
-<MudDialog @bind-Visible="_visibleChangeConfig" Options="_dialogOptions">
+<MudDialog @bind-Visible="VisibleChangeConfig" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Настройки отображения
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Настройки отображения (товары)
         </MudText>
     </TitleContent>
     <DialogContent>
         <ul class="list-group list-group-flush">
             <li class="list-group-item my-2">
                 <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.HideMultiplicityOffers"
-                                            Title="Колонка кратности (скрыть?)"
+                                            Title="Колонка кратности"
                                             Label="Кратность: отображение колонки (товар)"
-                                            HintTrue="Колонка кратности скрыта"
-                                            HintFalse="" />
+                                            HintTrue="Колонка кратности отображается"
+                                            HintFalse="Колонка кратности скрыта" />
             </li>
             <li class="list-group-item my-2">
                 <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.HideWorthOffers"
-                                            Title="Стоимость (скрыть?)"
+                                            Title="Стоимость"
                                             Label="Отображение информации"
-                                            HintTrue="Стоимость не отображается"
+                                            HintTrue="Стоимость скрыта"
                                             HintFalse="Стоимость отображается" />
             </li>
         </ul>
