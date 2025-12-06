@@ -15,7 +15,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     IKladrNavigationService kladrRepo,
     IDbContextFactory<CommerceContext> commerceDbFactory) : IRetailService
 {
-    #region Delivery Service
+    #region Deliveries service`s
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateDeliveryServiceAsync(DeliveryServiceRetailModelDB req, CancellationToken token = default)
     {

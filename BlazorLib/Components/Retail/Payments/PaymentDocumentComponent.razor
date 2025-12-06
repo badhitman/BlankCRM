@@ -15,6 +15,25 @@
         }
         else
         {
+            <div class="mb-3">
+                <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
+                <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.TypePayment">
+                    @foreach (PaymentsRetailTypesEnum _pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
+                    {
+                        <option value="@_pt">@_pt.DescriptionInfo()</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputStatusPayment" class="form-label">Статус платежа</label>
+                <select class="form-select" id="exampleInputStatusPayment" @bind="editDoc.StatusPayment">
+                    @foreach (PaymentsRetailStatusesEnum _sp in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
+                    {
+                        <option value="@_sp">@_sp.DescriptionInfo()</option>
+                    }
+                </select>
+            </div>
+
             <MudGrid>
                 <MudItem xs="4">
                     <div class="mb-3">
@@ -35,30 +54,11 @@
                     </div>
                 </MudItem>
             </MudGrid>
-
-            <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction"
-                                        SelectUserHandler="SelectUserRecipientAction"
-                                        @ref=recipientWalletRef
-                                        WalletInit="currentWallet" />
-
             <div class="mb-3">
-                <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
-                <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.TypePayment">
-                    @foreach (PaymentsRetailTypesEnum _pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
-                    {
-                        <option value="@_pt">@_pt.DescriptionInfo()</option>
-                    }
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="exampleInputStatusPayment" class="form-label">Статус платежа</label>
-                <select class="form-select" id="exampleInputStatusPayment" @bind="editDoc.StatusPayment">
-                    @foreach (PaymentsRetailStatusesEnum _sp in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
-                    {
-                        <option value="@_sp">@_sp.DescriptionInfo()</option>
-                    }
-                </select>
+                <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction"
+                                            SelectUserHandler="SelectUserRecipientAction"
+                                            @ref=recipientWalletRef
+                                            WalletInit="currentWallet" />
             </div>
             @if (PaymentId > 0)
             {

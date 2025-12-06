@@ -109,7 +109,7 @@ public interface IRetailService
     public Task<TResponseModel<WalletRetailTypeViewModel[]>> WalletsTypesGetAsync(int[] reqIds, CancellationToken token = default);
     #endregion
 
-    #region Wallet
+    #region Wallet`s
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateWalletAsync(WalletRetailModelDB req, CancellationToken token = default);
 
@@ -120,7 +120,7 @@ public interface IRetailService
     public Task<TPaginationResponseModel<WalletRetailModelDB>> SelectWalletsAsync(TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> req, CancellationToken token = default);
     #endregion
 
-    #region Order-Document
+    #region Order`s (document retail)
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default);
 
@@ -134,7 +134,7 @@ public interface IRetailService
     public Task<TResponseModel<RetailDocumentModelDB[]>> RetailDocumentsGetAsync(RetailDocumentsGetRequestModel req, CancellationToken token = default);
     #endregion
 
-    #region Rows for Order-Document
+    #region Rows for retail order (document)
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default);
 
