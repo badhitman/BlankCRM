@@ -1,9 +1,13 @@
 @inherits LazySelectorComponent<UserInfoModel>
 
 <div style="@StyleElement">
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <label class="form-label">@Label</label>
+    }
     <div id="@toggleBtnId" class="input-group mb-3">
         <button @onclick="EditToggle" title="Установить" disabled="@(IsBusyProgress || IsReadOnly)" class="btn btn-outline-secondary bi bi-pencil" type="button">
-            @if(IsBusyProgress)
+            @if (IsBusyProgress)
             {
                 <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                 <span class="visually-hidden" role="status">Loading...</span>

@@ -50,29 +50,30 @@
                 <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" @bind="editDoc.DeliveryPaymentUponReceipt">
                 <label class="form-check-label" for="switchCheckDefault">Оплата при получении</label>
             </div>
+            <div class="mb-3">
+                @if (string.IsNullOrWhiteSpace(ClientId))
+                {
+                    <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
+                                              SelectedUserInit="@editDoc.RecipientIdentityUserId"
+                                              IsReadOnly="IsBusyProgress"
+                                              Label="Отправитель" />
+                }
+                else
+                {
+                    <div>
+                        <label for="formControlInputBuyer" class="form-label">Покупатель</label>
+                        <input class="form-control"
+                               type="text"
+                               value="@senderUser?.ToString()"
+                               aria-label="readonly input example"
+                               readonly
+                               id="formControlInputBuyer"
+                               aria-describedby="buyerHelp">
+                        <div id="buyerHelp" class="form-text">Контекст заказчика.</div>
+                    </div>
 
-            @if (string.IsNullOrWhiteSpace(ClientId))
-            {
-                <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
-                                          SelectedUserInit="@editDoc.RecipientIdentityUserId"
-                                          IsReadOnly="IsBusyProgress" />
-            }
-            else
-            {
-                <div class="mb-3">
-                    <label for="formControlInputBuyer" class="form-label">Покупатель</label>
-                    <input class="form-control"
-                           type="text"
-                           value="@senderUser?.ToString()"
-                           aria-label="readonly input example"
-                           readonly
-                           id="formControlInputBuyer"
-                           aria-describedby="buyerHelp">
-                    <div id="buyerHelp" class="form-text">Контекст заказчика.</div>
-                </div>
-
-            }
-
+                }
+            </div>
             <div class="card my-2">
                 <div class="card-body">
                     <KladrInputComponent @bind-KladrObject="SelectedKladrObject" />
@@ -89,6 +90,7 @@
 
             @if (DeliveryDocumentId > 0)
             {
+                <DeliveryStatusesTableComponent />
                 <p class="card-text">
                     <small class="text-body-secondary">@editDoc.CreatedAtUTC.GetCustomTime() @editDoc.LastUpdatedAtUTC?.GetCustomTime()</small>
                 </p>

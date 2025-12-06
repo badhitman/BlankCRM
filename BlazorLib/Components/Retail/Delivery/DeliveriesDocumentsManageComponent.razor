@@ -78,7 +78,7 @@
             }
             else
             {
-                <StatusesRowsAboutComponent DeliveryStatusesLog="@context.DeliveryStatusesLog" />
+                <DeliveryStatusesRowsAboutComponent DeliveryStatusesLog="@context.DeliveryStatusesLog" />
             }
         </MudTd>
         <MudTd DataLabel="Оплата">
@@ -89,7 +89,7 @@
             }
             else
             {
-                <PaymentsRowsAboutComponent Payments="@context.Payments" />
+                <DeliveryPaymentsRowsAboutComponent Payments="@context.Payments" />
             }
         </MudTd>
     </RowTemplate>

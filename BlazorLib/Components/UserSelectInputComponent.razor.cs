@@ -27,6 +27,11 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
     public string? StyleElement { get; set; }
 
     /// <inheritdoc/>
+    [Parameter]
+    public string? Label { get; set; }
+
+
+    /// <inheritdoc/>
     public override async Task LoadPartData()
     {
         await SetBusyAsync();
