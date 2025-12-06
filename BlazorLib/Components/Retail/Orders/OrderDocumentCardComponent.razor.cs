@@ -40,6 +40,20 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
 
+    DateTime? datePayment;
+    DateTime? DatePayment
+    {
+        get => datePayment;
+        set
+        {
+            if (editDocument is null)
+                return;
+
+            datePayment = value ?? DateTime.Now;
+            editDocument.DateDocument = datePayment ?? DateTime.Now;
+        }
+    }
+
     bool SelectUserHandlerIsProgress;
     async Task SelectUserHandlerBusy(bool is_busy = true, CancellationToken token = default)
     {
@@ -162,7 +176,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             if (res.Response is not null && res.Response.Length == 1)
             {
                 currentDocument = res.Response.First();
-
+                datePayment = currentDocument.DateDocument;
                 List<Task> tasks = [
                         Task.Run(async () => {
                             TResponseModel<UserInfoModel[]> getUsers = await IdentityRepo.GetUsersOfIdentityAsync([currentDocument.BuyerIdentityUserId, currentDocument.AuthorIdentityUserId]);
@@ -213,6 +227,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 BuyerIdentityUserId = ClientId ?? CurrentUserSession.UserId,
             };
+            datePayment = currentDocument.DateDocument;
         }
         editDocument = GlobalTools.CreateDeepCopy(currentDocument);
     }

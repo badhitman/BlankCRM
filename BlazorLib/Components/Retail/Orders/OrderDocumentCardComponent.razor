@@ -5,24 +5,17 @@
 
 @inherits BlazorBusyComponentBaseAuthModel
 
-@if (IsBusyProgress)
+@if (IsBusyProgress || editDocument is null)
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
-}
-else if (editDocument is null)
-{
-    <figure class="text-center">
-        <blockquote class="blockquote">
-            <p>Ошибка.</p>
-        </blockquote>
-        <figcaption class="blockquote-footer">
-            Не удалось загрузить данные <cite title="не найден в БД или нет прав доступа">документа</cite>
-        </figcaption>
-    </figure>
 }
 else
 {
     <div class="card">
+        <div class="card-header d-flex flex-row">
+            <MudDatePicker Label="Дата платежа" Editable="true" @bind-Date="DatePayment" Placeholder="Select Date" />
+            <MudSpacer />
+        </div>
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-6">

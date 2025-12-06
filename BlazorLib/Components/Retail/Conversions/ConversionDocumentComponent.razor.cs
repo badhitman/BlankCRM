@@ -80,13 +80,22 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
         await SetBusyAsync();
         await base.OnInitializedAsync();
         if (ConversionDocumentId <= 0)
-            currentDoc = new() { DateDocument = DateTime.Now };
+        {
+            datePayment = DateTime.Now;
+            currentDoc = new()
+            {
+                DateDocument = DateTime.Now
+            };
+        }
         else
         {
             TResponseModel<WalletConversionRetailDocumentModelDB[]> getDocument = await RetailRepo.GetConversionsDocumentsAsync(new() { Ids = [ConversionDocumentId] });
             SnackBarRepo.ShowMessagesResponse(getDocument.Messages);
             if (getDocument.Success() && getDocument.Response is not null)
+            {
                 currentDoc = getDocument.Response.First();
+                datePayment = currentDoc.DateDocument;
+            }
 
             if (currentDoc?.FromWallet is null || currentDoc.ToWallet is null)
                 SnackBarRepo.Error("currentDoc?.FromWallet is null || currentDoc.ToWallet is null");

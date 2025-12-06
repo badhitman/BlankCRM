@@ -283,7 +283,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateDeliveryStatusDocumentAsync(DeliveryStatusRetailDocumentModelDB req, CancellationToken token = default)
     {
-        req.DateOperation.SetKindUtc();
+        req.DateOperation = req.DateOperation.SetKindUtc();
         req.DeliveryDocument = null;
         req.Name = req.Name.Trim();
 
@@ -718,7 +718,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.PaymentSource = req.PaymentSource?.Trim();
         req.Name = req.Name.Trim();
         req.Description = req.Description?.Trim();
-        req.DatePayment.SetKindUtc();
+        req.DatePayment = req.DatePayment.SetKindUtc();
         req.CreatedAtUTC = DateTime.UtcNow;
 
         TResponseModel<int> res = new();
@@ -743,7 +743,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.PaymentSource = req.PaymentSource?.Trim();
         req.Name = req.Name.Trim();
         req.Description = req.Description?.Trim();
-        req.DatePayment.SetKindUtc();
+        req.DatePayment = req.DatePayment.SetKindUtc();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -926,7 +926,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Name = req.Name.Trim();
         req.Description = req.Description?.Trim();
         req.CreatedAtUTC = DateTime.UtcNow;
-        req.DateDocument.SetKindUtc();
+        req.DateDocument = req.DateDocument.SetKindUtc();
 
         if (req.Rows is not null && req.Rows.Count != 0)
         {
@@ -1066,7 +1066,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.ToWallet = null;
         req.FromWallet = null;
         req.CreatedAtUTC = DateTime.UtcNow;
-        req.DateDocument.SetKindUtc();
+        req.DateDocument = req.DateDocument.SetKindUtc();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         WalletRetailModelDB walletSenderDb = await context.WalletsRetail.Include(x => x.WalletType).FirstAsync(x => x.Id == req.FromWalletId, cancellationToken: token);
