@@ -171,7 +171,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
 
     async Task ResetEdit()
     {
-        if (senderWalletRef is null || recipientWalletRef is null || currentDoc is null)
+        if (senderWalletRef is null || recipientWalletRef is null || currentDoc is null || editDoc is null)
             return;
 
         editDoc = GlobalTools.CreateDeepCopy(currentDoc);

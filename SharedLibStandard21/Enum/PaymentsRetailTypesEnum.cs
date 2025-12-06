@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.ComponentModel;
+
 namespace SharedLib;
 
 /// <summary>
@@ -10,27 +12,26 @@ namespace SharedLib;
 public enum PaymentsRetailTypesEnum
 {
     /// <summary>
-    /// Наличные
+    /// Онлайн (картой)
     /// </summary>
-    Cash = 10,
+    [Description("Онлайн (картой)")]
+    OnlineBankCard = 0,
 
     /// <summary>
-    /// Картой (физически/офлайн)
+    /// Терминал (картой офлайн)
     /// </summary>
+    [Description("Терминал (картой офлайн)")]
     OfflineBankCard = 20,
 
     /// <summary>
-    /// Картой (онлайн)
+    /// Наличные
     /// </summary>
-    OnlineBankCard = 30,
+    [Description("Наличные")]
+    Cash = 40,
 
     /// <summary>
     /// QR (СБП)
     /// </summary>
-    OnlineQR = 40,
-
-    /// <summary>
-    /// С внутреннего кошелька
-    /// </summary>
-    InternalWallet = 50,
+    [Description("QR (СБП)")]
+    OnlineQR = 60,
 }

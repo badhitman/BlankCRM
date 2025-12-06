@@ -5,7 +5,7 @@
 
 <div class="card">
     <div class="card-header">
-        Входящий платёж: <MudDatePicker Label="Editable with Placeholder" Editable="true" @bind-Date="DatePayment" Placeholder="Select Date" />
+        <MudDatePicker Label="Дата платежа" Editable="true" @bind-Date="DatePayment" Placeholder="Select Date" />
     </div>
     <div class="card-body">
         @if (IsBusyProgress || editDoc is null)
@@ -37,6 +37,7 @@
 
             <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction"
                                         SelectUserHandler="SelectUserRecipientAction"
+                                        @ref=recipientWalletRef
                                         WalletInit="currentWallet" />
 
             <div class="mb-3">
@@ -50,7 +51,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="exampleInputStatusPayment" class="form-label">Тип/способ оплаты</label>
+                <label for="exampleInputStatusPayment" class="form-label">Статус платежа</label>
                 <select class="form-select" id="exampleInputStatusPayment" @bind="editDoc.StatusPayment">
                     @foreach (PaymentsRetailStatusesEnum _sp in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
                     {
@@ -68,10 +69,21 @@
                         <PaymentDeliveriesLinksRowsComponent />
                     </MudTabPanel>
                 </MudTabs>
+                <p class="card-text">
+                    <small class="text-body-secondary">@editDoc.CreatedAtUTC.GetCustomTime() @editDoc.LastUpdatedAtUTC?.GetCustomTime()</small>
+                </p>
             }
-            <p class="card-text">
-                <small class="text-body-secondary">@editDoc.CreatedAtUTC.GetCustomTime() @editDoc.LastUpdatedAtUTC?.GetCustomTime()</small>
-            </p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                <button disabled="@CannotSave" class="btn btn-primary" type="button" @onclick=SaveDoc>
+                    @(editDoc.Id <= 0 ? "Создать" : "Сохранить")
+                </button>
+                @if (!CannotSave)
+                {
+                    <button disabled="@CannotSave" class="btn btn-secondary" type="button" @onclick=ResetEdit>
+                        Сброс
+                    </button>
+                }
+            </div>
         }
     </div>
 </div>

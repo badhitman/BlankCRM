@@ -15,7 +15,7 @@ public enum PaymentsRetailStatusesEnum
     /// Ожидает оплаты
     /// </summary>
     [Description("Ожидает оплаты")]
-    Awaiting = 10,
+    Awaiting = 0,
 
     /// <summary>
     /// Оплачено
