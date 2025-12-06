@@ -1,47 +1,77 @@
 ﻿@using BlazorLib.Components.Retail.Wallet
 @using MudBlazor
-@inherits BlazorBusyComponentBaseModel
 
-<h3>PaymentDocumentComponent</h3>
+@inherits BlazorBusyComponentBaseAuthModel
 
-@if (IsBusyProgress || editDoc is null)
-{
-    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" data-cn="@this.GetType().Name" />
-}
-else
-{
-    <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction"
-                                SelectUserHandler="SelectUserRecipientAction"
-                                WalletInit="editDoc.Wallet" />
-
-    <div class="mb-3">
-        <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
-        <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.TypePayment">
-            @foreach (PaymentsRetailTypesEnum _pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
-            {
-                <option value="@_pt">@_pt.DescriptionInfo()</option>
-            }
-        </select>
+<div class="card">
+    <div class="card-header">
+        Входящий платёж: <MudDatePicker Label="Editable with Placeholder" Editable="true" @bind-Date="DatePayment" Placeholder="Select Date" />
     </div>
+    <div class="card-body">
+        @if (IsBusyProgress || editDoc is null)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" data-cn="@this.GetType().Name" />
+        }
+        else
+        {
+            <MudGrid>
+                <MudItem xs="4">
+                    <div class="mb-3">
+                        <label for="exampleInputName" class="form-label">Примечание</label>
+                        <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
+                    </div>
+                </MudItem>
+                <MudItem xs="4">
+                    <div class="mb-3">
+                        <label for="exampleInputPaymentSource" class="form-label">PaymentSource</label>
+                        <input type="text" class="form-control" id="exampleInputPaymentSource" @bind-value="editDoc.PaymentSource" @bind-value:event="oninput">
+                    </div>
+                </MudItem>
+                <MudItem xs="4">
+                    <div class="mb-3">
+                        <label for="exampleInputAmount" class="form-label">Amount</label>
+                        <input type="text" class="form-control" id="exampleInputAmount" @bind-value="editDoc.Amount" @bind-value:event="oninput">
+                    </div>
+                </MudItem>
+            </MudGrid>
 
-    <div class="mb-3">
-        <label for="exampleInputStatusPayment" class="form-label">Тип/способ оплаты</label>
-        <select class="form-select" id="exampleInputStatusPayment" @bind="editDoc.StatusPayment">
-            @foreach (PaymentsRetailStatusesEnum _sp in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
+            <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction"
+                                        SelectUserHandler="SelectUserRecipientAction"
+                                        WalletInit="currentWallet" />
+
+            <div class="mb-3">
+                <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
+                <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.TypePayment">
+                    @foreach (PaymentsRetailTypesEnum _pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
+                    {
+                        <option value="@_pt">@_pt.DescriptionInfo()</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputStatusPayment" class="form-label">Тип/способ оплаты</label>
+                <select class="form-select" id="exampleInputStatusPayment" @bind="editDoc.StatusPayment">
+                    @foreach (PaymentsRetailStatusesEnum _sp in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
+                    {
+                        <option value="@_sp">@_sp.DescriptionInfo()</option>
+                    }
+                </select>
+            </div>
+            @if (PaymentId > 0)
             {
-                <option value="@_sp">@_sp.DescriptionInfo()</option>
+                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+                    <MudTabPanel Text="Заказы">
+                        <PaymentOrdersLinksRowsComponent />
+                    </MudTabPanel>
+                    <MudTabPanel Text="Доставка">
+                        <PaymentDeliveriesLinksRowsComponent />
+                    </MudTabPanel>
+                </MudTabs>
             }
-        </select>
+            <p class="card-text">
+                <small class="text-body-secondary">@editDoc.CreatedAtUTC.GetCustomTime() @editDoc.LastUpdatedAtUTC?.GetCustomTime()</small>
+            </p>
+        }
     </div>
-    @if (PaymentId > 0)
-    {
-        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
-            <MudTabPanel Text="Заказы">
-                <PaymentOrdersLinksRowsComponent />
-            </MudTabPanel>
-            <MudTabPanel Text="Доставка">
-                <PaymentDeliveriesLinksRowsComponent />
-            </MudTabPanel>
-        </MudTabs>
-    }
-}
+</div>

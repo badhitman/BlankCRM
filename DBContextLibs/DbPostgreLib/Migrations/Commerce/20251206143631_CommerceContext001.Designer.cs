@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20251206113028_CommerceContext001")]
+    [Migration("20251206143631_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -764,6 +764,10 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
+                    b.Property<string>("AuthorUserIdentity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
@@ -797,6 +801,8 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorUserIdentity");
 
                     b.HasIndex("CreatedAtUTC");
 

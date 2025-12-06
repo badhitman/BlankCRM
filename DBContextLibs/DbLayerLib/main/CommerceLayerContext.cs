@@ -160,17 +160,25 @@ public partial class CommerceLayerContext : DbContext
     public DbSet<OrderDocumentModelDB> OrdersB2B { get; set; } = default!;
 
     /// <summary>
-    /// Офисы/филиалы организаций в заказе
-    /// </summary>
-    public DbSet<TabOfficeForOrderModelDb> OfficesForOrders { get; set; } = default!;
-
-    /// <summary>
     /// Строки заказов
     /// </summary>
     public DbSet<RowOfOrderDocumentModelDB> RowsOrders { get; set; } = default!;
 
+    /// <summary>
+    /// Офисы/филиалы организаций в заказе
+    /// </summary>
+    public DbSet<TabOfficeForOrderModelDb> OfficesForOrders { get; set; } = default!;
 
 
+    /// <summary>
+    /// Payments documents
+    /// </summary>
+    public DbSet<PaymentDocumentModelDb> PaymentsB2B { get; set; } = default!;
+
+
+    #region retail
+
+    #region order`s
     /// <summary>
     /// RetailOrders
     /// </summary>
@@ -180,9 +188,9 @@ public partial class CommerceLayerContext : DbContext
     /// RowsRetailsOrders
     /// </summary>
     public DbSet<RowOfRetailOrderDocumentModelDB> RowsRetailsOrders { get; set; } = default!;
+    #endregion
 
-
-
+    #region delivery
     /// <summary>
     /// Службы доставки
     /// </summary>
@@ -202,9 +210,9 @@ public partial class CommerceLayerContext : DbContext
     /// Хроника статусов доставки
     /// </summary>
     public DbSet<DeliveryStatusRetailDocumentModelDB> DeliveryStatusesRetailDocuments { get; set; } = default!;
+    #endregion
 
-
-
+    #region payment`s
     /// <summary>
     /// Оплаты
     /// </summary>
@@ -219,8 +227,9 @@ public partial class CommerceLayerContext : DbContext
     /// связи платежей с доставкой
     /// </summary>
     public DbSet<PaymentRetailDeliveryLinkModelDB> PaymentsDeliveriesDocumentsRetailLinks { get; set; } = default!;
+    #endregion
 
-
+    #region wallet`s
     /// <summary>
     /// Типы кошельков
     /// </summary>
@@ -235,11 +244,7 @@ public partial class CommerceLayerContext : DbContext
     /// Операции конвертации/перевода между кошельками
     /// </summary>
     public DbSet<WalletConversionRetailDocumentModelDB> ConversionsDocumentsWalletsRetail { get; set; } = default!;
+    #endregion
 
-
-
-    /// <summary>
-    /// Payments documents
-    /// </summary>
-    public DbSet<PaymentDocumentModelDb> PaymentsB2B { get; set; } = default!;
+    #endregion
 }

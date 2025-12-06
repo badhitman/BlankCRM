@@ -11,7 +11,7 @@ namespace SharedLib;
 /// PaymentRetailDocumentModelDB
 /// </summary>
 [Index(nameof(PaymentSource)), Index(nameof(TypePayment)), Index(nameof(StatusPayment))]
-[Index(nameof(Name)), Index(nameof(DatePayment))]
+[Index(nameof(Name)), Index(nameof(DatePayment)), Index(nameof(AuthorUserIdentity))]
 public class PaymentRetailDocumentModelDB : EntryUpdatedModel
 {
     /// <inheritdoc/>
@@ -46,6 +46,9 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     /// Кошелёк
     /// </summary>
     public int WalletId { get; set; }
+
+    /// <inheritdoc/>
+    public required string AuthorUserIdentity { get; set; }
 
     /// <inheritdoc/>
     public List<PaymentRetailOrderLinkModelDB>? OrdersLinks { get; set; }

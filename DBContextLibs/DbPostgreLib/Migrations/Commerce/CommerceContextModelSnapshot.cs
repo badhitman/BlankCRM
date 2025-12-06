@@ -761,6 +761,10 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
+                    b.Property<string>("AuthorUserIdentity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
@@ -794,6 +798,8 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorUserIdentity");
 
                     b.HasIndex("CreatedAtUTC");
 

@@ -778,6 +778,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     PaymentSource = table.Column<string>(type: "text", nullable: true),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     WalletId = table.Column<int>(type: "integer", nullable: false),
+                    AuthorUserIdentity = table.Column<string>(type: "text", nullable: false),
                     Version = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -1295,6 +1296,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_PaymentsOrdersRetailLinks_PaymentId",
                 table: "PaymentsOrdersRetailLinks",
                 column: "PaymentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsRetailDocuments_AuthorUserIdentity",
+                table: "PaymentsRetailDocuments",
+                column: "AuthorUserIdentity");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentsRetailDocuments_CreatedAtUTC",
