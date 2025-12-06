@@ -25,6 +25,7 @@ else
                 <label for="exampleFormControlInputFromWalletSum" class="form-label">Сумма списания</label>
                 <input @bind-value="editDoc.FromWalletSum"
                        @bind-value:event="oninput"
+                       @onfocus=OnFocusFromWalletSum
                        disabled="@IsBusyProgress"
                        type="number"
                        class="form-control"
@@ -41,6 +42,7 @@ else
                 <label for="exampleFormControlInputToWalletSum" class="form-label">Сумма списания</label>
                 <input @bind-value="editDoc.ToWalletSum"
                        @bind-value:event="oninput"
+                       @onfocus=OnFocusToWalletSum
                        disabled="@IsBusyProgress"
                        type="number"
                        class="form-control"
@@ -52,7 +54,13 @@ else
     @if (editDoc.FromWalletId > 0 && editDoc.FromWalletId == editDoc.ToWalletId)
     {
         <MudAlert Severity="Severity.Error">Счёт-отправитель не может быть счётом-получателем</MudAlert>
-    }    
+    }
+    @if (editDoc.FromWalletSum != editDoc.ToWalletSum && editDoc.FromWalletSum != 0 && editDoc.ToWalletSum != 0)
+    {
+        <MudAlert Severity="Severity.Info">
+            Обмен (@(editDoc.FromWalletSum < editDoc.ToWalletSum ? "повышающий" : "понижающий")) по курсу: @(Math.Round(editDoc.ToWalletSum / editDoc.FromWalletSum, 2))
+        </MudAlert>
+    }
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
         <button disabled="@CannotSave" class="btn btn-primary" type="button" @onclick=SaveDoc>
             @(editDoc.Id <= 0 ? "Создать" : "Сохранить")

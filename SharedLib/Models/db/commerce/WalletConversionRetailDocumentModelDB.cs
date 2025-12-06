@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
@@ -16,10 +17,12 @@ public class WalletConversionRetailDocumentModelDB : EntryUpdatedLiteModel
     /// Кошелёк списания
     /// </summary>
     public WalletRetailModelDB? FromWallet { get; set; }
+    
     /// <summary>
     /// Кошелёк списания
     /// </summary>
     public int FromWalletId { get; set; }
+    
     /// <summary>
     /// Сумма списания
     /// </summary>
@@ -29,12 +32,20 @@ public class WalletConversionRetailDocumentModelDB : EntryUpdatedLiteModel
     /// Кошелёк зачисления
     /// </summary>
     public WalletRetailModelDB? ToWallet { get; set; }
+    
     /// <summary>
     /// Кошелёк зачисления
     /// </summary>
     public int ToWalletId { get; set; }
+    
     /// <summary>
     /// Сумма зачисления
     /// </summary>
     public decimal ToWalletSum { get; set; }
+
+    /// <summary>
+    /// Version
+    /// </summary>
+    [ConcurrencyCheck]
+    public Guid Version { get; set; }
 }

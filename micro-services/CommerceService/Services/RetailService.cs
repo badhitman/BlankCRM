@@ -118,23 +118,18 @@ public class RetailService(IIdentityTransmission identityRepo,
                 }]
             };
 
-        int[] _walletsIds = [req.FromWalletId, req.ToWalletId];
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        WalletRetailModelDB[] walletsDb = await context.WalletsRetail
-            .Where(x => _walletsIds.Contains(x.Id))
-            .ToArrayAsync(cancellationToken: token);
+        req.Name = req.Name.Trim();
+        req.Version = Guid.NewGuid();
 
-        WalletRetailModelDB
-            _fromWallet = walletsDb.First(x => x.Id == req.FromWalletId),
-            _toWallet = walletsDb.First(x => x.Id == req.ToWalletId);
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
-        await context.WalletsRetail.Where(x => x.Id == _fromWallet.Id)
+        await context.WalletsRetail.Where(x => x.Id == req.FromWalletId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Balance, p => p.Balance - req.FromWalletSum), cancellationToken: token);
 
-        await context.WalletsRetail.Where(x => x.Id == _toWallet.Id)
+        await context.WalletsRetail.Where(x => x.Id == req.ToWalletId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Balance, p => p.Balance + req.ToWalletSum), cancellationToken: token);
 
@@ -183,7 +178,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq
-                .Include(x => x.FromWallet).ThenInclude(x=>x!.WalletType)
+                .Include(x => x.FromWallet).ThenInclude(x => x!.WalletType)
                 .Include(x => x.ToWallet).ThenInclude(x => x!.WalletType)
                 .ToListAsync(cancellationToken: token)
         };
@@ -224,30 +219,48 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         WalletConversionRetailDocumentModelDB _conversionDocDb = await context.ConversionsDocumentsWalletsRetail.FirstAsync(x => x.Id == req.Id, cancellationToken: token);
+        if (_conversionDocDb.Version != req.Version)
+            return ResponseBaseModel.CreateError("Документ уже кем-то изменён. Обновите страницу с документом и повторите попытку");
 
         decimal
             _deltaSender = req.FromWalletSum - _conversionDocDb.FromWalletSum,
             _deltaRecipient = req.ToWalletSum - _conversionDocDb.ToWalletSum;
 
-        int[] _walletsIds = [req.FromWalletId, req.ToWalletId];
-
-        WalletRetailModelDB[] walletsDb = await context.WalletsRetail
-            .Where(x => _walletsIds.Contains(x.Id))
-            .ToArrayAsync(cancellationToken: token);
-
-        WalletRetailModelDB
-            _fromWallet = walletsDb.First(x => x.Id == req.FromWalletId),
-            _toWallet = walletsDb.First(x => x.Id == req.ToWalletId);
-
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
-        await context.WalletsRetail.Where(x => x.Id == _fromWallet.Id)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Balance, p => p.Balance + _deltaSender), cancellationToken: token);
+        if (req.FromWalletId == _conversionDocDb.FromWalletId)
+        {
+            await context.WalletsRetail.Where(x => x.Id == req.FromWalletId)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Balance, p => p.Balance - _deltaSender), cancellationToken: token);
+        }
+        else
+        {
+            await context.WalletsRetail.Where(x => x.Id == _conversionDocDb.FromWalletId)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Balance, p => p.Balance + _conversionDocDb.FromWalletSum), cancellationToken: token);
 
-        await context.WalletsRetail.Where(x => x.Id == _toWallet.Id)
+            await context.WalletsRetail.Where(x => x.Id == req.FromWalletId)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Balance, p => p.Balance - req.FromWalletSum), cancellationToken: token);
+        }
+
+        if (req.ToWalletId == _conversionDocDb.ToWalletId)
+        {
+            await context.WalletsRetail.Where(x => x.Id == req.ToWalletId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Balance, p => p.Balance + _deltaRecipient), cancellationToken: token);
+        }
+        else
+        {
+            await context.WalletsRetail.Where(x => x.Id == _conversionDocDb.ToWalletId)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Balance, p => p.Balance - _conversionDocDb.ToWalletSum), cancellationToken: token);
+
+            await context.WalletsRetail.Where(x => x.Id == req.FromWalletId)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Balance, p => p.Balance + req.ToWalletSum), cancellationToken: token);
+        }
 
         await context.ConversionsDocumentsWalletsRetail
             .Where(x => x.Id == req.Id)
@@ -257,6 +270,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .SetProperty(p => p.FromWalletSum, req.FromWalletSum)
                 .SetProperty(p => p.ToWalletId, req.ToWalletId)
                 .SetProperty(p => p.ToWalletSum, req.ToWalletSum)
+                .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);

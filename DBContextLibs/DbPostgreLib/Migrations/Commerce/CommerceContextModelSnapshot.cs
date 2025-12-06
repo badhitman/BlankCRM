@@ -1281,6 +1281,10 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<decimal>("ToWalletSum")
                         .HasColumnType("numeric");
 
+                    b.Property<Guid>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAtUTC");

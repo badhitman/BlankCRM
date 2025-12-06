@@ -62,10 +62,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
         await SetBusyAsync();
         await base.OnInitializedAsync();
         if (ConversionDocumentId <= 0)
-        {
             currentDoc = new();
-            editDoc = new();
-        }
         else
         {
             TResponseModel<WalletConversionRetailDocumentModelDB[]> getDocument = await RetailRepo.GetConversionsDocumentsAsync(new() { Ids = [ConversionDocumentId] });
@@ -76,8 +73,8 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
             if (currentDoc?.FromWallet is null || currentDoc.ToWallet is null)
                 SnackBarRepo.Error("currentDoc?.FromWallet is null || currentDoc.ToWallet is null");
 
-            editDoc = GlobalTools.CreateDeepCopy(currentDoc);
         }
+        editDoc = GlobalTools.CreateDeepCopy(currentDoc);
 
         await SetBusyAsync(false);
         await UpdateUsers();
@@ -165,7 +162,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
                 if (getDoc.Success() && getDoc.Response is not null && getDoc.Response.Length == 1)
                 {
                     currentDoc = getDoc.Response[0];
-                    editDoc = getDoc.Response[0];
+                    editDoc = GlobalTools.CreateDeepCopy(currentDoc);
                 }
             }
         }
@@ -181,5 +178,23 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
 
         await senderWalletRef.SetWallet(editDoc!.FromWallet);
         await recipientWalletRef.SetWallet(editDoc.ToWallet);
+    }
+
+    void OnFocusFromWalletSum()
+    {
+        if (editDoc is null)
+            return;
+
+        if (editDoc.FromWalletSum == 0 && editDoc.ToWalletSum > 0)
+            editDoc.FromWalletSum = editDoc.ToWalletSum;
+    }
+
+    void OnFocusToWalletSum()
+    {
+        if (editDoc is null)
+            return;
+
+        if (editDoc.ToWalletSum == 0 && editDoc.FromWalletSum > 0)
+            editDoc.ToWalletSum = editDoc.FromWalletSum;
     }
 }

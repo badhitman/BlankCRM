@@ -740,6 +740,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     FromWalletSum = table.Column<decimal>(type: "numeric", nullable: false),
                     ToWalletId = table.Column<int>(type: "integer", nullable: false),
                     ToWalletSum = table.Column<decimal>(type: "numeric", nullable: false),
+                    Version = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)

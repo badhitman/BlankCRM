@@ -15,6 +15,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
     [Inject]
     IIdentityTransmission IdentityRepo { get; set; } = default!;
 
+
     /// <summary>
     /// Selected user
     /// </summary>

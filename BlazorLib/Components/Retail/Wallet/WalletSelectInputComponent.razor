@@ -16,7 +16,7 @@
             @if (string.IsNullOrWhiteSpace(PresetClientId))
             {
                 <UserSelectInputComponent SelectHandleAction="SelectUserAction"
-                                          SelectedUserInit="@(WalletInit?.UserIdentityId)" />
+                                          SelectedUserInit="@(currentUser?.UserId)" />
             }
             else
             {

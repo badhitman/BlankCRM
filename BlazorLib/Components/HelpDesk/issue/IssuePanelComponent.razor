@@ -7,18 +7,9 @@
             <StatusIssueComponent />
         </CascadingValue>
     </div>
-    <AuthorizeView Roles="@($"{string.Join(",",GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles)},{GlobalStaticConstantsRoles.Roles.Admin}")">
+    <AuthorizeView Roles="@($"{string.Join(",", GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles)},{GlobalStaticConstantsRoles.Roles.Admin}")">
         <Authorized>
             <div class="px-1"><SubscribersIssueComponent /></div>
-            @* <hr />
-            <div class="px-1">
-                <TagsViewComponent ApplicationsNames="@([GlobalStaticConstantsTransmission.Routes.ISSUE_CONTROLLER_NAME])"
-                                   ManageMode="true"
-                                   PrefixPropertyName="@GlobalStaticConstantsTransmission.Routes.DEFAULT_CONTROLLER_NAME"
-                                   PropertyName="@GlobalStaticConstantsTransmission.Routes.METADATA_CONTROLLER_NAME"
-                                   Title="Теги"
-                                   OwnerPrimaryKey="@CurrentIssue.Id" />
-            </div> *@
         </Authorized>
     </AuthorizeView>
     <div class="px-1"><AboutIssueComponent /></div>
