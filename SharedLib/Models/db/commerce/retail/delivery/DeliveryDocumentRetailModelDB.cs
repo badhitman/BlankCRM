@@ -11,13 +11,9 @@ namespace SharedLib;
 /// DeliveryDocumentModelDB
 /// </summary>
 [Index(nameof(DeliveryCode)), Index(nameof(DeliveryType)), Index(nameof(RecipientIdentityUserId)), Index(nameof(DeliveryPaymentUponReceipt))]
-[Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment)), Index(nameof(DateDocument)), Index(nameof(AuthorIdentityUserId))]
+[Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment)), Index(nameof(AuthorIdentityUserId))]
 public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
 {
-    /// <inheritdoc/>
-    [Required]
-    public required DateTime DateDocument { get; set; }
-
     /// <summary>
     /// DeliveryType
     /// </summary>

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20251206192801_CommerceContext001")]
+    [Migration("20251206194140_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -176,9 +176,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DateDocument")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("DeliveryCode")
                         .HasColumnType("text");
 
@@ -224,8 +221,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("AuthorIdentityUserId");
 
                     b.HasIndex("CreatedAtUTC");
-
-                    b.HasIndex("DateDocument");
 
                     b.HasIndex("DeliveryCode");
 

@@ -173,9 +173,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DateDocument")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("DeliveryCode")
                         .HasColumnType("text");
 
@@ -221,8 +218,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("AuthorIdentityUserId");
 
                     b.HasIndex("CreatedAtUTC");
-
-                    b.HasIndex("DateDocument");
 
                     b.HasIndex("DeliveryCode");
 

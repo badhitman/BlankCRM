@@ -122,7 +122,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             return res;
         }
 
-        req.DateDocument.SetKindUtc();
         req.CreatedAtUTC = DateTime.UtcNow;
         req.Order = null;
         req.Name = req.Name.Trim();
@@ -138,7 +137,6 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default)
     {
-        req.DateDocument.SetKindUtc();
         req.CreatedAtUTC = DateTime.UtcNow;
         req.Order = null;
         req.Name = req.Name.Trim();

@@ -299,7 +299,6 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DateDocument = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DeliveryType = table.Column<int>(type: "integer", nullable: false),
                     DeliveryPaymentUponReceipt = table.Column<bool>(type: "boolean", nullable: false),
                     RecipientIdentityUserId = table.Column<string>(type: "text", nullable: false),
@@ -1052,11 +1051,6 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_DeliveryRetailDocuments_CreatedAtUTC",
                 table: "DeliveryRetailDocuments",
                 column: "CreatedAtUTC");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DeliveryRetailDocuments_DateDocument",
-                table: "DeliveryRetailDocuments",
-                column: "DateDocument");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeliveryRetailDocuments_DeliveryCode",

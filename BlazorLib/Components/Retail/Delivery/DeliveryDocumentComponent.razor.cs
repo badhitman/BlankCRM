@@ -32,25 +32,15 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
 
-    DateTime? dateDocument;
-    DateTime? DateDocument
-    {
-        get => dateDocument;
-        set
-        {
-            if (editDoc is null)
-                return;
-
-            dateDocument = value ?? DateTime.Now;
-            editDoc.DateDocument = dateDocument ?? DateTime.Now;
-        }
-    }
 
     bool CannotSave
     {
         get
         {
-            if (currentDoc is null || editDoc is null)
+            if (currentDoc is null || editDoc is null || string.IsNullOrWhiteSpace(editDoc.KladrCode))
+                return true;
+
+            if (string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId) || editDoc.ShippingCost <= 0 || editDoc.WeightShipping <= 0)
                 return true;
 
             return
@@ -180,7 +170,6 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
             currentDoc = new()
             {
-                DateDocument = DateTime.Now,
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 RecipientIdentityUserId = ClientId ?? CurrentUserSession.UserId,
             };

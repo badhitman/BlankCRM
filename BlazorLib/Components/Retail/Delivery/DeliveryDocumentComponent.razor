@@ -4,10 +4,6 @@
 @inherits BlazorBusyComponentBaseAuthModel
 
 <div class="card">
-    <div class="card-header d-flex flex-row">
-        <MudDatePicker Label="Дата платежа" Editable="true" @bind-Date="DateDocument" Placeholder="Select Date" />
-        <MudSpacer />
-    </div>
     <div class="card-body">
         @if (IsBusyProgress || editDoc is null)
         {
@@ -16,10 +12,28 @@
         else
         {
             <MudGrid>
-                <MudItem xs="4">
+                <MudItem xs="3">
                     <div class="mb-3">
                         <label for="exampleInputName" class="form-label">Примечание</label>
                         <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
+                    </div>
+                </MudItem>
+                <MudItem xs="3">
+                    <div class="mb-3">
+                        <label for="exampleInputShippingCost" class="form-label">Стоимость доставки</label>
+                        <input type="number" class="form-control" id="exampleInputShippingCost" @bind-value="editDoc.ShippingCost" @bind-value:event="oninput">
+                    </div>
+                </MudItem>
+                <MudItem xs="3">
+                    <div class="mb-3">
+                        <label for="exampleInputDeliveryCode" class="form-label">Код доставки</label>
+                        <input type="number" class="form-control" id="exampleInputDeliveryCode" @bind-value="editDoc.DeliveryCode" @bind-value:event="oninput">
+                    </div>
+                </MudItem>
+                <MudItem xs="3">
+                    <div class="mb-3">
+                        <label for="exampleInputWeightShipping" class="form-label">Вес отправления</label>
+                        <input type="number" class="form-control" id="exampleInputWeightShipping" @bind-value="editDoc.WeightShipping" @bind-value:event="oninput">
                     </div>
                 </MudItem>
             </MudGrid>
@@ -32,18 +46,11 @@
                     }
                 </select>
             </div>
-            <div class="mb-3">
-                <label for="exampleInputWeightShipping" class="form-label">Вес отправления</label>
-                <input type="number" class="form-control" id="exampleInputWeightShipping" @bind-value="editDoc.WeightShipping" @bind-value:event="oninput">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" @bind="editDoc.DeliveryPaymentUponReceipt">
+                <label class="form-check-label" for="switchCheckDefault">Оплата при получении</label>
             </div>
-            <div class="mb-3">
-                <label for="exampleInputShippingCost" class="form-label">Стоимость доставки</label>
-                <input type="number" class="form-control" id="exampleInputShippingCost" @bind-value="editDoc.ShippingCost" @bind-value:event="oninput">
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputDeliveryCode" class="form-label">Код доставки</label>
-                <input type="number" class="form-control" id="exampleInputDeliveryCode" @bind-value="editDoc.DeliveryCode" @bind-value:event="oninput">
-            </div>
+
             @if (string.IsNullOrWhiteSpace(ClientId))
             {
                 <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
@@ -66,12 +73,7 @@
 
             }
 
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" @bind="editDoc.DeliveryPaymentUponReceipt">
-                <label class="form-check-label" for="switchCheckDefault">Оплата при получении</label>
-            </div>
-
-            <div class="card">
+            <div class="card my-2">
                 <div class="card-body">
                     <KladrInputComponent @bind-KladrObject="SelectedKladrObject" />
                     <div class="mb-3">
