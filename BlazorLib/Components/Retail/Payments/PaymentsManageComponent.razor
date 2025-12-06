@@ -35,7 +35,7 @@
         <MudTd DataLabel="Тип">@context.TypePayment.DescriptionInfo()</MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
-            <MudTd DataLabel="Тип">@(UsersCache.FirstOrDefault(x => x.UserId == context.PayerIdentityUserId)?.ToString() ?? context.PayerIdentityUserId)</MudTd>
+            <MudTd DataLabel="Тип">@(UsersCache.FirstOrDefault(x => x.UserId == context.Wallet!.UserIdentityId)?.ToString() ?? context.Wallet!.UserIdentityId)</MudTd>
         }
         <MudTd DataLabel="Статус">@context.StatusPayment.DescriptionInfo()</MudTd>
         <MudTd DataLabel="Direct">@context.PaymentSource</MudTd>

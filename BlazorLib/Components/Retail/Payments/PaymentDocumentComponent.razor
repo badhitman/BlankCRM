@@ -1,16 +1,47 @@
-﻿@using MudBlazor
+﻿@using BlazorLib.Components.Retail.Wallet
+@using MudBlazor
 @inherits BlazorBusyComponentBaseModel
 
 <h3>PaymentDocumentComponent</h3>
 
-@if (PaymentId > 0)
+@if (IsBusyProgress || editDoc is null)
 {
-    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
-        <MudTabPanel Text="Заказы">
-            <PaymentOrdersLinksRowsComponent />
-        </MudTabPanel>
-        <MudTabPanel Text="Доставка">
-            <PaymentDeliveriesLinksRowsComponent />
-        </MudTabPanel>
-    </MudTabs>
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" data-cn="@this.GetType().Name" />
+}
+else
+{
+    <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction"
+                                SelectUserHandler="SelectUserRecipientAction"
+                                WalletInit="editDoc.Wallet" />
+
+    <div class="mb-3">
+        <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
+        <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.TypePayment">
+            @foreach (PaymentsRetailTypesEnum _pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
+            {
+                <option value="@_pt">@_pt.DescriptionInfo()</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="exampleInputStatusPayment" class="form-label">Тип/способ оплаты</label>
+        <select class="form-select" id="exampleInputStatusPayment" @bind="editDoc.StatusPayment">
+            @foreach (PaymentsRetailStatusesEnum _sp in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
+            {
+                <option value="@_sp">@_sp.DescriptionInfo()</option>
+            }
+        </select>
+    </div>
+    @if (PaymentId > 0)
+    {
+        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+            <MudTabPanel Text="Заказы">
+                <PaymentOrdersLinksRowsComponent />
+            </MudTabPanel>
+            <MudTabPanel Text="Доставка">
+                <PaymentDeliveriesLinksRowsComponent />
+            </MudTabPanel>
+        </MudTabs>
+    }
 }

@@ -56,7 +56,7 @@ public partial class CommerceImplementService(
         if (!string.IsNullOrWhiteSpace(req.Payload.ExternalDocumentId))
         {
             payment_db = await context
-               .Payments
+               .PaymentsB2B
                .FirstOrDefaultAsync(x => x.ExternalDocumentId == req.Payload.ExternalDocumentId, cancellationToken: token);
 
             req.Payload.Id = req.Payload.Id > 0 ? req.Payload.Id : payment_db?.Id ?? 0;
@@ -80,19 +80,19 @@ public partial class CommerceImplementService(
             return res;
         }
 
-        res.Response = await context.Payments
+        res.Response = await context.PaymentsB2B
             .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set
             .SetProperty(p => p.Name, req.Payload.Name)
             .SetProperty(p => p.Amount, req.Payload.Amount), cancellationToken: token);
 
-        await context.Orders
+        await context.OrdersB2B
                .Where(x => x.Id == req.Payload.OrderId)
                .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
 
         if (!string.IsNullOrWhiteSpace(req.Payload.ExternalDocumentId) && payment_db?.ExternalDocumentId != req.Payload.ExternalDocumentId)
-            res.Response = await context.Payments
+            res.Response = await context.PaymentsB2B
             .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set.SetProperty(p => p.ExternalDocumentId, req.Payload.ExternalDocumentId), cancellationToken: token);
 
@@ -105,11 +105,11 @@ public partial class CommerceImplementService(
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         DateTime dtu = DateTime.UtcNow;
-        await context.Orders
-                .Where(x => context.Payments.Any(y => y.Id == req.Payload && y.OrderId == x.Id))
+        await context.OrdersB2B
+                .Where(x => context.PaymentsB2B.Any(y => y.Id == req.Payload && y.OrderId == x.Id))
                 .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
-        return ResponseBaseModel.CreateInfo($"Изменений бд: {await context.Payments.Where(x => x.Id == req.Payload).ExecuteDeleteAsync(cancellationToken: token)}");
+        return ResponseBaseModel.CreateInfo($"Изменений бд: {await context.PaymentsB2B.Where(x => x.Id == req.Payload).ExecuteDeleteAsync(cancellationToken: token)}");
     }
     #endregion
 
@@ -342,7 +342,7 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         int lc = await context
-            .Orders
+            .OrdersB2B
             .Where(x => context.RowsOrders.Any(y => y.OrderId == x.Id && y.OfferId == req.Payload))
             .CountAsync(cancellationToken: token);
 
@@ -506,7 +506,7 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<OrderDocumentModelDB> q = context
-            .Orders
+            .OrdersB2B
             .Where(x => req.IssueIds.Any(y => y == x.HelpDeskId))
             .AsQueryable();
 
@@ -540,7 +540,7 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<OrderDocumentModelDB> q = context
-            .Orders
+            .OrdersB2B
             .Where(x => req.Payload.Any(y => x.Id == y));
 
         res.Response = await q
@@ -570,7 +570,7 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<OrderDocumentModelDB> q = context
-            .Orders
+            .OrdersB2B
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.Payload.SenderActionUserId) && !req.Payload.SenderActionUserId.Equals(GlobalStaticConstantsRoles.Roles.System))
@@ -580,7 +580,7 @@ public partial class CommerceImplementService(
             q = q.Where(x => x.OrganizationId == req.Payload.Payload.OrganizationFilter);
 
         if (req.Payload.Payload.AddressForOrganizationFilter.HasValue && req.Payload.Payload.AddressForOrganizationFilter.Value != 0)
-            q = q.Where(x => context.OfficesOrders.Any(y => y.OrderId == x.Id && y.OfficeId == req.Payload.Payload.AddressForOrganizationFilter));
+            q = q.Where(x => context.OfficesForOrders.Any(y => y.OrderId == x.Id && y.OfficeId == req.Payload.Payload.AddressForOrganizationFilter));
 
         if (req.Payload.Payload.OfferFilter is not null && req.Payload.Payload.OfferFilter.Length != 0)
             q = q.Where(x => context.RowsOrders.Any(y => y.OrderId == x.Id && req.Payload.Payload.OfferFilter.Any(i => i == y.OfferId)));
@@ -863,7 +863,7 @@ public partial class CommerceImplementService(
             return res;
         }
 
-        OrderDocumentModelDB order_document = await context.Orders.FirstAsync(x => x.Id == req.Id, cancellationToken: token);
+        OrderDocumentModelDB order_document = await context.OrdersB2B.FirstAsync(x => x.Id == req.Id, cancellationToken: token);
         if (order_document.Version != req.Version)
         {
             msg = "Документ был кем-то изменён пока был открытым";
@@ -878,7 +878,7 @@ public partial class CommerceImplementService(
             return res;
         }
 
-        res.Response = await context.Orders
+        res.Response = await context.OrdersB2B
             .Where(x => x.Id == req.Id)
             .ExecuteUpdateAsync(set => set
             .SetProperty(p => p.Name, req.Name)
@@ -902,8 +902,8 @@ public partial class CommerceImplementService(
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<OrderRowsQueryRecord> queryDocumentDb = from r in context.RowsOrders
-                                                           join d in context.Orders.Where(x => x.Id == req.OrderId) on r.OrderId equals d.Id
-                                                           join t in context.OfficesOrders.Where(x => x.Id == req.OfficeOrderTabId) on r.OfficeOrderTabId equals t.Id
+                                                           join d in context.OrdersB2B.Where(x => x.Id == req.OrderId) on r.OrderId equals d.Id
+                                                           join t in context.OfficesForOrders.Where(x => x.Id == req.OfficeOrderTabId) on r.OfficeOrderTabId equals t.Id
                                                            join o in context.Offers on r.OfferId equals o.Id
                                                            join g in context.Nomenclatures on r.NomenclatureId equals g.Id
                                                            select new OrderRowsQueryRecord(d, t, r, o, g);
@@ -1006,7 +1006,7 @@ public partial class CommerceImplementService(
         }
 
         DateTime dtu = DateTime.UtcNow;
-        await context.Orders
+        await context.OrdersB2B
                 .Where(x => x.Id == req.OrderId)
                 .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Version, Guid.NewGuid())
@@ -1103,8 +1103,8 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<RowOfOrderDocumentModelDB> mainQuery = context.RowsOrders.Where(x => req.Any(y => y == x.Id));
         IQueryable<RowOrderDocumentRecord> q = from r in mainQuery
-                                               join d in context.Orders on r.OrderId equals d.Id
-                                               join t in context.OfficesOrders on r.OfficeOrderTabId equals t.Id
+                                               join d in context.OrdersB2B on r.OrderId equals d.Id
+                                               join t in context.OfficesForOrders on r.OfficeOrderTabId equals t.Id
                                                select new RowOrderDocumentRecord(
                                                    d.Id,
                                                    d.StatusDocument,
@@ -1155,7 +1155,7 @@ public partial class CommerceImplementService(
            .ToListAsync(cancellationToken: token);
 
         int[] documents_ids = [.. _allOffersOfDocuments.Select(x => x.DocumentId).Distinct()];
-        await context.Orders.Where(x => documents_ids.Any(y => y == x.Id)).ExecuteUpdateAsync(set => set.SetProperty(p => p.Version, Guid.NewGuid()).SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
+        await context.OrdersB2B.Where(x => documents_ids.Any(y => y == x.Id)).ExecuteUpdateAsync(set => set.SetProperty(p => p.Version, Guid.NewGuid()).SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         foreach (var rowEl in _allOffersOfDocuments.Where(x => x.DocumentStatus != StatusesDocumentsEnum.Canceled))
         {
@@ -1206,7 +1206,7 @@ public partial class CommerceImplementService(
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         OrderDocumentModelDB[] ordersDb = await context
-            .Orders
+            .OrdersB2B
             .Where(x => x.HelpDeskId == req.Payload.DocumentId && x.StatusDocument != req.Payload.Step)
             .Include(x => x.OfficesTabs!)
             .ThenInclude(x => x.Rows)
@@ -1225,7 +1225,7 @@ public partial class CommerceImplementService(
         if (_allOffersOfDocuments.Count == 0)
         {
             res.Response = await context
-                    .Orders
+                    .OrdersB2B
                     .Where(x => x.HelpDeskId == req.Payload.DocumentId)
                     .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token) != 0;
 
@@ -1310,7 +1310,7 @@ public partial class CommerceImplementService(
 
         await context.SaveChangesAsync(token);
         res.Response = await context
-                            .Orders
+                            .OrdersB2B
                             .Where(x => x.HelpDeskId == req.Payload.DocumentId)
                             .ExecuteUpdateAsync(set => set
                             .SetProperty(p => p.StatusDocument, req.Payload.Step)

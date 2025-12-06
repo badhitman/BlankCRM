@@ -119,8 +119,8 @@ public partial class CommerceImplementService : ICommerceService
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         int count = await context
-            .Orders
-            .CountAsync(x => context.OfficesOrders.Any(y => y.OrderId == x.Id && y.OfficeId == address_id), cancellationToken: token);
+            .OrdersB2B
+            .CountAsync(x => context.OfficesForOrders.Any(y => y.OrderId == x.Id && y.OfficeId == address_id), cancellationToken: token);
 
         if (count != 0)
             res.AddError($"Адрес используется в заказах: {count} шт.");

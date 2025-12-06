@@ -39,7 +39,7 @@
         <MudTd DataLabel="Примечание"><a href="/retail/conversion-document/@context.Id"></a>@context.Name</MudTd>
         <MudTd DataLabel="Списание">
             <span title="Текущий баланс" class="border border-warning-subtle me-2 pa-1">@context.FromWallet?.ToString()</span>
-            @context.FromWalletSum
+            - @context.FromWalletSum
         </MudTd>
         <MudTd DataLabel="Зачисление">
             <span title="Текущий баланс" class="border border-primary-subtle me-2 pa-1">@context.ToWallet?.ToString()</span>

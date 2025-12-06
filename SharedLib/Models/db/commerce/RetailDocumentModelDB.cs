@@ -3,15 +3,20 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
 /// <summary>
 /// RetailDocumentModelDB
 /// </summary>
-[Index(nameof(BuyerIdentityUserId)), Index(nameof(WarehouseId))]
+[Index(nameof(BuyerIdentityUserId)), Index(nameof(WarehouseId)), Index(nameof(DateDocument))]
 public class RetailDocumentModelDB : OrderDocumentBaseModel
 {
+    /// <inheritdoc/>
+    [Required]
+    public required DateTime DateDocument { get; set; }
+
     /// <summary>
     /// BuyerIdentityUserId
     /// </summary>

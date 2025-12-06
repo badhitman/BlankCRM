@@ -848,9 +848,6 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string UpdateWalletTypeRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.WALLET_CONTROLLER_NAME, Routes.TYPE_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string WalletBalanceUpdateRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.WALLET_CONTROLLER_NAME, Routes.BALANCE_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
-
-        /// <inheritdoc/>
         public readonly static string WalletsTypesGetRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.WALLET_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
         #endregion
 

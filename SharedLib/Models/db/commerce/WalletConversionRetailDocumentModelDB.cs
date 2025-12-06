@@ -10,19 +10,23 @@ namespace SharedLib;
 /// <summary>
 /// Документ конвертации/перевода с кошелька на кошелёк
 /// </summary>
-[Index(nameof(Name))]
+[Index(nameof(Name)), Index(nameof(DateDocument))]
 public class WalletConversionRetailDocumentModelDB : EntryUpdatedLiteModel
 {
+    /// <inheritdoc/>
+    [Required]
+    public required DateTime DateDocument { get; set; }
+
     /// <summary>
     /// Кошелёк списания
     /// </summary>
     public WalletRetailModelDB? FromWallet { get; set; }
-    
+
     /// <summary>
     /// Кошелёк списания
     /// </summary>
     public int FromWalletId { get; set; }
-    
+
     /// <summary>
     /// Сумма списания
     /// </summary>
@@ -32,12 +36,12 @@ public class WalletConversionRetailDocumentModelDB : EntryUpdatedLiteModel
     /// Кошелёк зачисления
     /// </summary>
     public WalletRetailModelDB? ToWallet { get; set; }
-    
+
     /// <summary>
     /// Кошелёк зачисления
     /// </summary>
     public int ToWalletId { get; set; }
-    
+
     /// <summary>
     /// Сумма зачисления
     /// </summary>

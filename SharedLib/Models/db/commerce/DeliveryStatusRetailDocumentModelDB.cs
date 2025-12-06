@@ -3,15 +3,20 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
 /// <summary>
 /// DeliveryStatusDocument
 /// </summary>
-[Index(nameof(DeliveryStatus)),Index(nameof(Name))]
+[Index(nameof(DeliveryStatus)), Index(nameof(Name)), Index(nameof(DateOperation))]
 public class DeliveryStatusRetailDocumentModelDB : EntryUpdatedLiteModel
 {
+    /// <inheritdoc/>
+    [Required]
+    public required DateTime DateOperation { get; set; }
+
     /// <summary>
     /// Статус доставки
     /// </summary>

@@ -29,4 +29,24 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
+
+    PaymentRetailDocumentModelDB? currentDoc, editDoc;
+
+    void SelectWalletRecipientAction(WalletRetailModelDB? wallet)
+    {
+        //if (editDoc is null)
+        //    throw new ArgumentNullException(nameof(editDoc));
+
+        //editDoc.ToWallet = wallet;
+        //editDoc.ToWalletId = wallet?.Id ?? 0;
+        //InvokeAsync(UpdateUsers);
+        StateHasChanged();
+    }
+
+
+    void SelectUserRecipientAction(UserInfoModel? user)
+    {
+        //userRecipient = user;
+        StateHasChanged();
+    }
 }

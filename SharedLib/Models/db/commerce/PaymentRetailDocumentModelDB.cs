@@ -10,10 +10,14 @@ namespace SharedLib;
 /// <summary>
 /// PaymentRetailDocumentModelDB
 /// </summary>
-[Index(nameof(PayerIdentityUserId)), Index(nameof(PaymentSource)), Index(nameof(TypePayment)), Index(nameof(StatusPayment))]
-[Index(nameof(Name))]
+[Index(nameof(PaymentSource)), Index(nameof(TypePayment)), Index(nameof(StatusPayment))]
+[Index(nameof(Name)), Index(nameof(DatePayment))]
 public class PaymentRetailDocumentModelDB : EntryUpdatedModel
 {
+    /// <inheritdoc/>
+    [Required]
+    public required DateTime DatePayment { get; set; }
+
     /// <summary>
     /// Тип/способ оплаты
     /// </summary>
@@ -23,11 +27,6 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     /// Status
     /// </summary>
     public required PaymentsRetailStatusesEnum StatusPayment { get; set; }
-
-    /// <summary>
-    /// Плательщик
-    /// </summary>
-    public required string PayerIdentityUserId { get; set; }
 
     /// <summary>
     /// Ссылка для оплаты
@@ -42,7 +41,7 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     /// <summary>
     /// Кошелёк
     /// </summary>
-    public WalletRetailModelDB? Wallet {  get; set; }
+    public WalletRetailModelDB? Wallet { get; set; }
     /// <summary>
     /// Кошелёк
     /// </summary>

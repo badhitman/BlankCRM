@@ -62,7 +62,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
         await SetBusyAsync();
         await base.OnInitializedAsync();
         if (ConversionDocumentId <= 0)
-            currentDoc = new();
+            currentDoc = new() { DateDocument = DateTime.Now };
         else
         {
             TResponseModel<WalletConversionRetailDocumentModelDB[]> getDocument = await RetailRepo.GetConversionsDocumentsAsync(new() { Ids = [ConversionDocumentId] });

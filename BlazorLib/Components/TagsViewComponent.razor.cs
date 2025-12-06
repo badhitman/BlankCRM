@@ -35,7 +35,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
     {
         if (string.IsNullOrWhiteSpace(_value) || !OwnerPrimaryKey.HasValue)
             return;
-
+        await SetBusyAsync();
         TResponseModel<bool> res = await TagsRepo.TagSetAsync(new()
         {
             PrefixPropertyName = PrefixPropertyName,
@@ -51,11 +51,12 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         else
         {
             await ReloadTags();
-            StateHasChanged();
+            await SetBusyAsync(false);
         }
         _value = "";
         if (maRef is not null)
             await maRef.ClearAsync();
+        await SetBusyAsync(false);
     }
 
     private async Task OnChipClosed(MudChip<TagViewModel> chip)
@@ -95,7 +96,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
             PageSize = 100,
             SortingDirection = DirectionsEnum.Down,
         };
-
+        await SetBusyAsync(token: token);
         TPaginationResponseModel<TagViewModel> res = await TagsRepo.TagsSelectAsync(req, token);
 
         if (res.TotalRowsCount > req.PageSize)
@@ -105,7 +106,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
 
         if (!string.IsNullOrWhiteSpace(value) && !res_data.Contains(value))
             res_data.Add(value);
-
+        await SetBusyAsync(false, token);
         return res_data.DistinctBy(x => x?.ToUpper());
     }
 
@@ -144,5 +145,6 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
         await SetBusyAsync();
         await ReadCurrentUser();
         await ReloadTags();
+        await SetBusyAsync(false);
     }
 }

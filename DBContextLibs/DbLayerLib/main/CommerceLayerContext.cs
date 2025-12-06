@@ -157,12 +157,12 @@ public partial class CommerceLayerContext : DbContext
     /// <summary>
     /// Заказы товаров со складов
     /// </summary>
-    public DbSet<OrderDocumentModelDB> Orders { get; set; } = default!;
+    public DbSet<OrderDocumentModelDB> OrdersB2B { get; set; } = default!;
 
     /// <summary>
     /// Офисы/филиалы организаций в заказе
     /// </summary>
-    public DbSet<TabOfficeForOrderModelDb> OfficesOrders { get; set; } = default!;
+    public DbSet<TabOfficeForOrderModelDb> OfficesForOrders { get; set; } = default!;
 
     /// <summary>
     /// Строки заказов
@@ -241,5 +241,5 @@ public partial class CommerceLayerContext : DbContext
     /// <summary>
     /// Payments documents
     /// </summary>
-    public DbSet<PaymentDocumentModelDb> Payments { get; set; } = default!;
+    public DbSet<PaymentDocumentModelDb> PaymentsB2B { get; set; } = default!;
 }

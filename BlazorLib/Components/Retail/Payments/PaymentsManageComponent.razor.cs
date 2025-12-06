@@ -52,7 +52,7 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
         await SetBusyAsync(false, token: token);
 
         if (res.Response is not null)
-            await CacheUsersUpdate([.. res.Response.Select(x => x.PayerIdentityUserId)]);
+            await CacheUsersUpdate([.. res.Response.Select(x => x.Wallet!.UserIdentityId)]);
 
         return new TableData<PaymentRetailDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

@@ -170,6 +170,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime>("DateDocument")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("DeliveryCode")
                         .HasColumnType("text");
 
@@ -215,6 +218,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("AddressUserComment");
 
                     b.HasIndex("CreatedAtUTC");
+
+                    b.HasIndex("DateDocument");
 
                     b.HasIndex("DeliveryCode");
 
@@ -284,6 +289,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime>("DateOperation")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("DeliveryDocumentId")
                         .HasColumnType("integer");
 
@@ -300,6 +308,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAtUTC");
+
+                    b.HasIndex("DateOperation");
 
                     b.HasIndex("DeliveryDocumentId");
 
@@ -574,7 +584,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("ExternalDocumentId", "HelpDeskId", "AuthorIdentityUserId", "StatusDocument");
 
-                    b.ToTable("Orders");
+                    b.ToTable("OrdersB2B");
                 });
 
             modelBuilder.Entity("SharedLib.OrganizationContractorModel", b =>
@@ -707,7 +717,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("PaymentsB2B");
                 });
 
             modelBuilder.Entity("SharedLib.PaymentRetailDeliveryLinkModelDB", b =>
@@ -754,6 +764,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime>("DatePayment")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -761,10 +774,6 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PayerIdentityUserId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -788,11 +797,11 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("CreatedAtUTC");
 
+                    b.HasIndex("DatePayment");
+
                     b.HasIndex("LastUpdatedAtUTC");
 
                     b.HasIndex("Name");
-
-                    b.HasIndex("PayerIdentityUserId");
 
                     b.HasIndex("PaymentSource");
 
@@ -973,6 +982,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime>("DateDocument")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -1004,6 +1016,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("BuyerIdentityUserId");
 
                     b.HasIndex("CreatedAtUTC");
+
+                    b.HasIndex("DateDocument");
 
                     b.HasIndex("LastUpdatedAtUTC");
 
@@ -1215,7 +1229,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("WarehouseId");
 
-                    b.ToTable("OfficesOrders");
+                    b.ToTable("OfficesForOrders");
                 });
 
             modelBuilder.Entity("SharedLib.UserOrganizationModelDB", b =>
@@ -1262,6 +1276,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<DateTime>("CreatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime>("DateDocument")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("FromWalletId")
                         .HasColumnType("integer");
 
@@ -1288,6 +1305,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAtUTC");
+
+                    b.HasIndex("DateDocument");
 
                     b.HasIndex("FromWalletId");
 

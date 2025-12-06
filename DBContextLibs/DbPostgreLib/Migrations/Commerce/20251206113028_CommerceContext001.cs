@@ -103,6 +103,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DateDocument = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     BuyerIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     WarehouseId = table.Column<int>(type: "integer", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
@@ -243,7 +244,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "OrdersB2B",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -261,9 +262,9 @@ namespace DbPostgreLib.Migrations.Commerce
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.PrimaryKey("PK_OrdersB2B", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_Organizations_OrganizationId",
+                        name: "FK_OrdersB2B_Organizations_OrganizationId",
                         column: x => x.OrganizationId,
                         principalTable: "Organizations",
                         principalColumn: "Id",
@@ -298,6 +299,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DateDocument = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DeliveryType = table.Column<int>(type: "integer", nullable: false),
                     DeliveryPaymentUponReceipt = table.Column<bool>(type: "boolean", nullable: false),
                     RecipientIdentityUserId = table.Column<string>(type: "text", nullable: false),
@@ -622,7 +624,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 });
 
             migrationBuilder.CreateTable(
-                name: "OfficesOrders",
+                name: "OfficesForOrders",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -633,23 +635,23 @@ namespace DbPostgreLib.Migrations.Commerce
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OfficesOrders", x => x.Id);
+                    table.PrimaryKey("PK_OfficesForOrders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OfficesOrders_Offices_OfficeId",
+                        name: "FK_OfficesForOrders_Offices_OfficeId",
                         column: x => x.OfficeId,
                         principalTable: "Offices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OfficesOrders_Orders_OrderId",
+                        name: "FK_OfficesForOrders_OrdersB2B_OrderId",
                         column: x => x.OrderId,
-                        principalTable: "Orders",
+                        principalTable: "OrdersB2B",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payments",
+                name: "PaymentsB2B",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -661,11 +663,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
+                    table.PrimaryKey("PK_PaymentsB2B", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Payments_Orders_OrderId",
+                        name: "FK_PaymentsB2B_OrdersB2B_OrderId",
                         column: x => x.OrderId,
-                        principalTable: "Orders",
+                        principalTable: "OrdersB2B",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -676,6 +678,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DateOperation = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DeliveryStatus = table.Column<int>(type: "integer", nullable: false),
                     DeliveryDocumentId = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
@@ -736,6 +739,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DateDocument = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     FromWalletId = table.Column<int>(type: "integer", nullable: false),
                     FromWalletSum = table.Column<decimal>(type: "numeric", nullable: false),
                     ToWalletId = table.Column<int>(type: "integer", nullable: false),
@@ -768,9 +772,9 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DatePayment = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     TypePayment = table.Column<int>(type: "integer", nullable: false),
                     StatusPayment = table.Column<int>(type: "integer", nullable: false),
-                    PayerIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     PaymentSource = table.Column<string>(type: "text", nullable: true),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     WalletId = table.Column<int>(type: "integer", nullable: false),
@@ -821,15 +825,15 @@ namespace DbPostgreLib.Migrations.Commerce
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RowsOrders_OfficesOrders_OfficeOrderTabId",
+                        name: "FK_RowsOrders_OfficesForOrders_OfficeOrderTabId",
                         column: x => x.OfficeOrderTabId,
-                        principalTable: "OfficesOrders",
+                        principalTable: "OfficesForOrders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RowsOrders_Orders_OrderId",
+                        name: "FK_RowsOrders_OrdersB2B_OrderId",
                         column: x => x.OrderId,
-                        principalTable: "Orders",
+                        principalTable: "OrdersB2B",
                         principalColumn: "Id");
                 });
 
@@ -1008,6 +1012,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "CreatedAtUTC");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConversionsDocumentsWalletsRetail_DateDocument",
+                table: "ConversionsDocumentsWalletsRetail",
+                column: "DateDocument");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ConversionsDocumentsWalletsRetail_FromWalletId",
                 table: "ConversionsDocumentsWalletsRetail",
                 column: "FromWalletId");
@@ -1036,6 +1045,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_DeliveryRetailDocuments_CreatedAtUTC",
                 table: "DeliveryRetailDocuments",
                 column: "CreatedAtUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeliveryRetailDocuments_DateDocument",
+                table: "DeliveryRetailDocuments",
+                column: "DateDocument");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeliveryRetailDocuments_DeliveryCode",
@@ -1096,6 +1110,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_DeliveryStatusesRetailDocuments_CreatedAtUTC",
                 table: "DeliveryStatusesRetailDocuments",
                 column: "CreatedAtUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeliveryStatusesRetailDocuments_DateOperation",
+                table: "DeliveryStatusesRetailDocuments",
+                column: "DateOperation");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeliveryStatusesRetailDocuments_DeliveryDocumentId",
@@ -1191,43 +1210,43 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OfficesOrders_OfficeId",
-                table: "OfficesOrders",
+                name: "IX_OfficesForOrders_OfficeId",
+                table: "OfficesForOrders",
                 column: "OfficeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OfficesOrders_OrderId",
-                table: "OfficesOrders",
+                name: "IX_OfficesForOrders_OrderId",
+                table: "OfficesForOrders",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OfficesOrders_WarehouseId",
-                table: "OfficesOrders",
+                name: "IX_OfficesForOrders_WarehouseId",
+                table: "OfficesForOrders",
                 column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CreatedAtUTC",
-                table: "Orders",
+                name: "IX_OrdersB2B_CreatedAtUTC",
+                table: "OrdersB2B",
                 column: "CreatedAtUTC");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_ExternalDocumentId_HelpDeskId_AuthorIdentityUserId_S~",
-                table: "Orders",
+                name: "IX_OrdersB2B_ExternalDocumentId_HelpDeskId_AuthorIdentityUserI~",
+                table: "OrdersB2B",
                 columns: new[] { "ExternalDocumentId", "HelpDeskId", "AuthorIdentityUserId", "StatusDocument" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_LastUpdatedAtUTC",
-                table: "Orders",
+                name: "IX_OrdersB2B_LastUpdatedAtUTC",
+                table: "OrdersB2B",
                 column: "LastUpdatedAtUTC");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_Name",
-                table: "Orders",
+                name: "IX_OrdersB2B_Name",
+                table: "OrdersB2B",
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_OrganizationId",
-                table: "Orders",
+                name: "IX_OrdersB2B_OrganizationId",
+                table: "OrdersB2B",
                 column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
@@ -1253,8 +1272,8 @@ namespace DbPostgreLib.Migrations.Commerce
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_OrderId",
-                table: "Payments",
+                name: "IX_PaymentsB2B_OrderId",
+                table: "PaymentsB2B",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
@@ -1283,6 +1302,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "CreatedAtUTC");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PaymentsRetailDocuments_DatePayment",
+                table: "PaymentsRetailDocuments",
+                column: "DatePayment");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PaymentsRetailDocuments_LastUpdatedAtUTC",
                 table: "PaymentsRetailDocuments",
                 column: "LastUpdatedAtUTC");
@@ -1291,11 +1315,6 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_PaymentsRetailDocuments_Name",
                 table: "PaymentsRetailDocuments",
                 column: "Name");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PaymentsRetailDocuments_PayerIdentityUserId",
-                table: "PaymentsRetailDocuments",
-                column: "PayerIdentityUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentsRetailDocuments_PaymentSource",
@@ -1342,6 +1361,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_RetailOrders_CreatedAtUTC",
                 table: "RetailOrders",
                 column: "CreatedAtUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RetailOrders_DateDocument",
+                table: "RetailOrders",
+                column: "DateDocument");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RetailOrders_ExternalDocumentId_HelpDeskId_AuthorIdentityUs~",
@@ -1619,7 +1643,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "OffersAvailability");
 
             migrationBuilder.DropTable(
-                name: "Payments");
+                name: "PaymentsB2B");
 
             migrationBuilder.DropTable(
                 name: "PaymentsDeliveriesDocumentsRetailLinks");
@@ -1655,7 +1679,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "DeliveryRetailDocuments");
 
             migrationBuilder.DropTable(
-                name: "OfficesOrders");
+                name: "OfficesForOrders");
 
             migrationBuilder.DropTable(
                 name: "WarehouseDocuments");
@@ -1673,7 +1697,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "Offices");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "OrdersB2B");
 
             migrationBuilder.DropTable(
                 name: "Nomenclatures");

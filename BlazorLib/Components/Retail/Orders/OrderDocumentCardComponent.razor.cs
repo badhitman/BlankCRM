@@ -208,6 +208,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
 
             currentDocument = new()
             {
+                DateDocument = DateTime.Now,
                 Rows = [],
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 BuyerIdentityUserId = ClientId ?? CurrentUserSession.UserId,
