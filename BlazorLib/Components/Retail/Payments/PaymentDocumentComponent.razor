@@ -57,8 +57,9 @@
             <div class="mb-3">
                 <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction"
                                             SelectUserHandler="SelectUserRecipientAction"
+                                            WalletInit="currentWallet"
                                             @ref=recipientWalletRef
-                                            WalletInit="currentWallet" />
+                                            HideSystemWallets />
             </div>
             @if (PaymentId > 0)
             {

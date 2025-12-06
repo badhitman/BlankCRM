@@ -46,6 +46,10 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public Action<UserInfoModel?>? SelectUserHandler { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public bool HideSystemWallets { get; set; }
+
 
     UserInfoModel? currentUser;
 
@@ -136,7 +140,7 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
         if (getWallets.Response is null || getWallets.Response.Count == 0)
             SnackBarRepo.Error("Не удалось получить перечень кошельков пользователя");
         else
-            walletsForSelect = [.. getWallets.Response];
+            walletsForSelect = [.. getWallets.Response.Where(x => !HideSystemWallets || x.WalletType?.IsSystem != true)];
 
         await SetBusyAsync(false);
     }
