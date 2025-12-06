@@ -11,7 +11,7 @@ namespace SharedLib;
 /// DeliveryDocumentModelDB
 /// </summary>
 [Index(nameof(DeliveryCode)), Index(nameof(DeliveryType)), Index(nameof(RecipientIdentityUserId)), Index(nameof(DeliveryPaymentUponReceipt))]
-[Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment)), Index(nameof(DateDocument))]
+[Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment)), Index(nameof(DateDocument)), Index(nameof(AuthorIdentityUserId))]
 public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
 {
     /// <inheritdoc/>
@@ -50,18 +50,15 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
 
     #region address
     /// <inheritdoc/>
-    [Required]
-    public required string KladrCode { get; set; }
+    public string? KladrCode { get; set; }
 
     /// <inheritdoc/>
-    [Required]
-    public required string KladrTitle { get; set; }
+    public string? KladrTitle { get; set; }
 
     /// <summary>
     /// Адрес 
     /// </summary>
-    [Required]
-    public required string AddressUserComment { get; set; }
+    public string? AddressUserComment { get; set; }
     #endregion
 
     /// <summary>
@@ -73,6 +70,9 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     /// Заказ (документ)
     /// </summary>
     public int? OrderId { get; set; }
+
+    /// <inheritdoc/>
+    public required string AuthorIdentityUserId { get; set; }
 
     /// <summary>
     /// StatusesLog

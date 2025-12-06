@@ -745,6 +745,9 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string GetPaymentsDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.PAYMENTS_CONTROLLER_NAME}-of-{Routes.DOCUMENTS_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
+        public readonly static string GetDeliveryDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.DOCUMENTS_CONTROLLER_NAME}-of-{Routes.DELIVERY_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string UpdateDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>

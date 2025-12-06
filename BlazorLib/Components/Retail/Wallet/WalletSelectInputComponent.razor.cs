@@ -132,12 +132,12 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
         };
         TPaginationResponseModel<WalletRetailModelDB> getWallets = await RetailRepo.SelectWalletsAsync(reqW);
         SnackBarRepo.ShowMessagesResponse(getWallets.Status.Messages);
+
         if (getWallets.Response is null || getWallets.Response.Count == 0)
             throw new Exception("Не удалось получить перечень кошельков пользователя");
         else
-        {
             walletsForSelect = [.. getWallets.Response];
-        }
+
         await SetBusyAsync(false);
     }
 

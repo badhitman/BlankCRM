@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.ComponentModel;
+
 namespace SharedLib;
 
 /// <summary>
@@ -12,15 +14,18 @@ public enum DeliveryTypesEnum
     /// <summary>
     /// Почта
     /// </summary>
-    StandardPost = 10,
+    [Description("Почта")]
+    StandardPost = 0,
 
     /// <summary>
     /// Курьерская служба
     /// </summary>
+    [Description("Курьерская служба")]
     CourierService = 20,
 
     /// <summary>
     /// Самовывоз
     /// </summary>
-    Pickup = 30,
+    [Description("Самовывоз")]
+    Pickup = 40,
 }

@@ -306,10 +306,11 @@ namespace DbPostgreLib.Migrations.Commerce
                     DeliveryCode = table.Column<string>(type: "text", nullable: true),
                     ShippingCost = table.Column<decimal>(type: "numeric", nullable: false),
                     WeightShipping = table.Column<decimal>(type: "numeric", nullable: false),
-                    KladrCode = table.Column<string>(type: "text", nullable: false),
-                    KladrTitle = table.Column<string>(type: "text", nullable: false),
-                    AddressUserComment = table.Column<string>(type: "text", nullable: false),
+                    KladrCode = table.Column<string>(type: "text", nullable: true),
+                    KladrTitle = table.Column<string>(type: "text", nullable: true),
+                    AddressUserComment = table.Column<string>(type: "text", nullable: true),
                     OrderId = table.Column<int>(type: "integer", nullable: true),
+                    AuthorIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -1041,6 +1042,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_DeliveryRetailDocuments_AddressUserComment",
                 table: "DeliveryRetailDocuments",
                 column: "AddressUserComment");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeliveryRetailDocuments_AuthorIdentityUserId",
+                table: "DeliveryRetailDocuments",
+                column: "AuthorIdentityUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeliveryRetailDocuments_CreatedAtUTC",

@@ -164,6 +164,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AddressUserComment")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AuthorIdentityUserId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -186,11 +189,9 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("text");
 
                     b.Property<string>("KladrCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("KladrTitle")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("LastUpdatedAtUTC")
@@ -216,6 +217,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasKey("Id");
 
                     b.HasIndex("AddressUserComment");
+
+                    b.HasIndex("AuthorIdentityUserId");
 
                     b.HasIndex("CreatedAtUTC");
 

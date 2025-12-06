@@ -1,7 +1,107 @@
-﻿<h3>DeliveryDocumentComponent</h3>
+﻿@using BlazorLib.Components.Kladr.control.input
+@using MudBlazor
 
-@code {
-    /// <inheritdoc/>
-    [CascadingParameter(Name = "ClientId")]
-    public string? ClientId { get; set; }
-}
+@inherits BlazorBusyComponentBaseAuthModel
+
+<div class="card">
+    <div class="card-header d-flex flex-row">
+        <MudDatePicker Label="Дата платежа" Editable="true" @bind-Date="DateDocument" Placeholder="Select Date" />
+        <MudSpacer />
+    </div>
+    <div class="card-body">
+        @if (IsBusyProgress || editDoc is null)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" data-cn="@this.GetType().Name" />
+        }
+        else
+        {
+            <MudGrid>
+                <MudItem xs="4">
+                    <div class="mb-3">
+                        <label for="exampleInputName" class="form-label">Примечание</label>
+                        <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
+                    </div>
+                </MudItem>
+            </MudGrid>
+            <div class="mb-3">
+                <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
+                <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.DeliveryType">
+                    @foreach (DeliveryTypesEnum _pt in Enum.GetValues(typeof(DeliveryTypesEnum)))
+                    {
+                        <option value="@_pt">@_pt.DescriptionInfo()</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputWeightShipping" class="form-label">Вес отправления</label>
+                <input type="number" class="form-control" id="exampleInputWeightShipping" @bind-value="editDoc.WeightShipping" @bind-value:event="oninput">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputShippingCost" class="form-label">Стоимость доставки</label>
+                <input type="number" class="form-control" id="exampleInputShippingCost" @bind-value="editDoc.ShippingCost" @bind-value:event="oninput">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputDeliveryCode" class="form-label">Код доставки</label>
+                <input type="number" class="form-control" id="exampleInputDeliveryCode" @bind-value="editDoc.DeliveryCode" @bind-value:event="oninput">
+            </div>
+            @if (string.IsNullOrWhiteSpace(ClientId))
+            {
+                <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
+                                          SelectedUserInit="@editDoc.RecipientIdentityUserId"
+                                          IsReadOnly="IsBusyProgress" />
+            }
+            else
+            {
+                <div class="mb-3">
+                    <label for="formControlInputBuyer" class="form-label">Покупатель</label>
+                    <input class="form-control"
+                           type="text"
+                           value="@senderUser?.ToString()"
+                           aria-label="readonly input example"
+                           readonly
+                           id="formControlInputBuyer"
+                           aria-describedby="buyerHelp">
+                    <div id="buyerHelp" class="form-text">Контекст заказчика.</div>
+                </div>
+
+            }
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" @bind="editDoc.DeliveryPaymentUponReceipt">
+                <label class="form-check-label" for="switchCheckDefault">Оплата при получении</label>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <KladrInputComponent @bind-KladrObject="SelectedKladrObject" />
+                    <div class="mb-3">
+                        <label for="detailsAddressControlTextarea" class="form-label">уточнение адреса (если требуется)</label>
+                        <textarea class="form-control" id="detailsAddressControlTextarea" rows="3" @oninput="AddressUserCommentHandleOnChange">@editDoc.AddressUserComment</textarea>
+                    </div>
+                </div>
+            </div>
+            <TinyMCE.Blazor.Editor @bind-Value="editDoc.Description"
+                                   ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc"
+                                   Conf="@editorConf"
+                                   Disable="@(DeliveryDocumentId < 1)" />
+
+            @if (DeliveryDocumentId > 0)
+            {
+                <p class="card-text">
+                    <small class="text-body-secondary">@editDoc.CreatedAtUTC.GetCustomTime() @editDoc.LastUpdatedAtUTC?.GetCustomTime()</small>
+                </p>
+            }
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                <button disabled="@CannotSave" class="btn btn-primary" type="button" @onclick=SaveDoc>
+                    @(editDoc.Id <= 0 ? "Создать" : "Сохранить")
+                </button>
+                @if (!CannotSave)
+                {
+                    <button disabled="@CannotSave" class="btn btn-secondary" type="button" @onclick=ResetEdit>
+                        Сброс
+                    </button>
+                }
+            </div>
+        }
+    </div>
+</div>

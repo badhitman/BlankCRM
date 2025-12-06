@@ -65,7 +65,7 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
            !GlobalTools.IsPhoneNumber(editClientCopy.PhoneNumber);
 
 
-    void HandleOnChange(ChangeEventArgs args)
+    void AddressUserCommentHandleOnChange(ChangeEventArgs args)
     {
         if (editClientCopy is null || editClientCopy is null)
         {

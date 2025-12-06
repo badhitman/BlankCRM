@@ -58,7 +58,7 @@
                         <KladrInputComponent @bind-KladrObject="SelectedKladrObject" />
                         <div class="mb-3">
                             <label for="detailsAddressControlTextarea" class="form-label">уточнение адреса (если требуется)</label>
-                            <textarea class="form-control" id="detailsAddressControlTextarea" rows="3" @oninput="HandleOnChange">@editClientCopy.AddressUserComment</textarea>
+                            <textarea class="form-control" id="detailsAddressControlTextarea" rows="3" @oninput="AddressUserCommentHandleOnChange">@editClientCopy.AddressUserComment</textarea>
                         </div>
                     </MudItem>
                 </MudGrid>

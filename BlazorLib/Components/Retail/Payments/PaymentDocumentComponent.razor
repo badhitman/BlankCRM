@@ -4,8 +4,9 @@
 @inherits BlazorBusyComponentBaseAuthModel
 
 <div class="card">
-    <div class="card-header">
+    <div class="card-header d-flex flex-row">
         <MudDatePicker Label="Дата платежа" Editable="true" @bind-Date="DatePayment" Placeholder="Select Date" />
+        <MudSpacer />
     </div>
     <div class="card-body">
         @if (IsBusyProgress || editDoc is null)

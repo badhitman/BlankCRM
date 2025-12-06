@@ -32,6 +32,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<DeliveryDocumentRetailModelDB>> SelectDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TResponseModel<DeliveryDocumentRetailModelDB[]>> GetDeliveryDocumentsAsync(GetDeliveryDocumentsRetailRequestModel req, CancellationToken token = default);
     #endregion
 
     #region Row Of Delivery Document

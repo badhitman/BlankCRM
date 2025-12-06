@@ -198,6 +198,21 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .ToListAsync(cancellationToken: token)
         };
     }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<DeliveryDocumentRetailModelDB[]>> GetDeliveryDocumentsAsync(GetDeliveryDocumentsRetailRequestModel req, CancellationToken token = default)
+    {
+        if (req.Ids is null || req.Ids.Length == 0)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Ids is null || Ids.Length == 0" }] };
+
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        return new()
+        {
+            Response = await context.DeliveryRetailDocuments
+                .Where(x => req.Ids.Contains(x.Id))
+                .ToArrayAsync(cancellationToken: token)
+        };
+    }
     #endregion
 
     #region Row`s Of Delivery Document
