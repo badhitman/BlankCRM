@@ -115,14 +115,15 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
         if (!findUser.Success() || findUser.Response is null)
             throw new Exception("can`t get user data. error {590D6CFB-21E2-4976-AEC9-34192D34D2A0}");
         User = findUser.Response.Single();
+        await SetBusyAsync(false);
     }
     /// <inheritdoc/>
 
     protected override async Task OnInitializedAsync()
     {
+        await SetBusyAsync();
         await Rest();
         await ReadState(false);
-        await SetBusyAsync();
 
         TResponseModel<UserTelegramBaseModel> bot_username_res = await TelegramRemoteRepo.AboutBotAsync();
 
@@ -130,10 +131,7 @@ public partial class TelegramJoinComponent : BlazorBusyComponentBaseModel
         Messages.AddRange(bot_username_res.Messages);
         if (User.TelegramId.HasValue)
         {
-            await SetBusyAsync();
-
             TResponseModel<TelegramUserBaseModel> rest = await IdentityRepo.GetTelegramUserCachedInfoAsync(User.TelegramId.Value);
-
             Messages.AddRange(rest.Messages);
             TelegramUser = rest.Response;
         }

@@ -15,14 +15,16 @@ namespace BlazorLib.Components.HelpDesk.issue;
 public partial class PulseJournalComponent : IssueWrapBaseModel
 {
     static MarkupString ms(string raw_html) => (MarkupString)raw_html;
+    MudTable<PulseViewModel>? tableRef;
+    bool doneTableLoad;
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
     private async Task<TableData<PulseViewModel>> ServerReload(TableState state, CancellationToken token)
     {
-        if (CurrentUserSession is null)
-            throw new Exception("CurrentUserSession is null");
+        if (!doneTableLoad || CurrentUserSession is null)
+            return new TableData<PulseViewModel>() { TotalItems = 0, Items = [] };
 
         await SetBusyAsync(token: token);
         TResponseModel<TPaginationResponseModel<PulseViewModel>> tp = await HelpDeskRepo.PulseSelectJournalAsync(new()
@@ -70,5 +72,8 @@ public partial class PulseJournalComponent : IssueWrapBaseModel
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        doneTableLoad = true;
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
     }
 }
