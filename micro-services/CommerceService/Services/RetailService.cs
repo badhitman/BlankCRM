@@ -1027,7 +1027,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
     #endregion
 
-    #region conversion`s
+    #region Conversion`s
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default)
     {
@@ -1066,6 +1066,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.ToWallet = null;
         req.FromWallet = null;
         req.CreatedAtUTC = DateTime.UtcNow;
+        req.DateDocument.SetKindUtc();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         WalletRetailModelDB walletSenderDb = await context.WalletsRetail.Include(x => x.WalletType).FirstAsync(x => x.Id == req.FromWalletId, cancellationToken: token);

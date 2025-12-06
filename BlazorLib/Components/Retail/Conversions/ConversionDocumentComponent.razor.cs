@@ -46,13 +46,31 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
             if (editDoc.FromWalletSum <= 0 || editDoc.ToWalletSum <= 0)
                 return true;
 
+            if (DatePayment is null || DatePayment == default)
+                return true;
+
             return
                 currentDoc.Id > 0 &&
                 currentDoc.ToWalletId == editDoc.ToWalletId &&
                 currentDoc.FromWalletId == editDoc.FromWalletId &&
                 currentDoc.ToWalletSum == editDoc.ToWalletSum &&
+                currentDoc.DateDocument == editDoc.DateDocument &&
                 currentDoc.FromWalletSum == editDoc.FromWalletSum &&
                 currentDoc.Name == editDoc.Name;
+        }
+    }
+
+    DateTime? datePayment;
+    DateTime? DatePayment
+    {
+        get => datePayment;
+        set
+        {
+            if (editDoc is null)
+                return;
+
+            datePayment = value ?? DateTime.Now;
+            editDoc.DateDocument = datePayment ?? DateTime.Now;
         }
     }
 
