@@ -40,7 +40,11 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
         {
             _visibleChangeConfig = value;
             if (!_visibleChangeConfig && table is not null)
-                InvokeAsync(table.ReloadServerData);
+                InvokeAsync(async () =>
+                {
+                    await table.ReloadServerData();
+                    await ReadConfig();
+                });
         }
     }
 
@@ -51,12 +55,9 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
         CloseOnEscapeKey = true,
     };
 
-    /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
+    async Task ReadConfig()
     {
-        await base.OnInitializedAsync();
         await SetBusyAsync();
-
         List<Task> tasks = [
             Task.Run(async () =>
             {
@@ -75,11 +76,22 @@ public partial class OffersGoodsListComponent : BlazorRegistersComponent
                     _showMultiplicity = res.Response != true;})];
 
         await Task.WhenAll(tasks);
-        loadTableReady = true;
         await SetBusyAsync(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await SetBusyAsync();
+        await ReadConfig();
+
+        loadTableReady = true;
 
         if (table is not null)
             await table.ReloadServerData();
+
+        await SetBusyAsync(false);
     }
 
     void CancelChangeConfig()

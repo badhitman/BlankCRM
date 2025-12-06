@@ -10,13 +10,6 @@
 </style>
 
 <MudPaper Class="pa-4 mt-3 position-relative">
-    <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
-        <Authorized>
-            <span title="Настройка отображения" @onclick="CancelChangeConfig" style="cursor:pointer;" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bi bi-gear-fill">
-                <span class="visually-hidden">view config</span>
-            </span>
-        </Authorized>
-    </AuthorizeView>
     <MudStack Spacing="2" Class="pb-2">
         @if (CurrentUserSession?.IsAdmin == true)
         {
@@ -82,20 +75,3 @@
         </PagerContent>
     </MudTable>
 </MudPaper>
-<MudDialog @bind-Visible="VisibleChangeConfig" Options="_dialogOptions">
-    <TitleContent>
-        <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Настройки отображения (услуги)
-        </MudText>
-    </TitleContent>
-    <DialogContent>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item my-2">
-                <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.HideMultiplicityOffers" Title="Колонка кратности" Label="Кратность: отображение колонки (аренда)" HintTrue="Колонка кратности скрыта" HintFalse="Колонка кратности отображается" />
-            </li>
-            <li class="list-group-item my-2">
-                <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.HideWorthOffers" Title="Стоимость" Label="Отображение информации" HintTrue="Стоимость не отображается" HintFalse="Стоимость отображается" />
-            </li>
-        </ul>
-    </DialogContent>
-</MudDialog>

@@ -31,30 +31,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
     bool readyLoadTable = false;
     List<RecordsAttendanceModelDB> currentRecords = [];
     private MudTable<OfferModelDB> table = default!;
-    bool _visibleChangeConfig;
-    bool VisibleChangeConfig
-    {
-        get => _visibleChangeConfig;
-        set
-        {
-            _visibleChangeConfig = value;
-            if (!_visibleChangeConfig && table is not null)
-                InvokeAsync(table.ReloadServerData);
-        }
-    }
 
-    readonly DialogOptions _dialogOptions = new()
-    {
-        FullWidth = true,
-        CloseButton = true,
-        CloseOnEscapeKey = true,
-    };
-
-
-    void CancelChangeConfig()
-    {
-        VisibleChangeConfig = !VisibleChangeConfig;
-    }
 
     async void CreateOfferAction(OfferModelDB sender)
     {
