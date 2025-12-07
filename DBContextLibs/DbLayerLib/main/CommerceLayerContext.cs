@@ -217,16 +217,6 @@ public partial class CommerceLayerContext : DbContext
     /// Оплаты
     /// </summary>
     public DbSet<PaymentRetailDocumentModelDB> PaymentsRetailDocuments { get; set; } = default!;
-
-    /// <summary>
-    /// связи платежей с заказами
-    /// </summary>
-    public DbSet<PaymentRetailOrderLinkModelDB> PaymentsOrdersRetailLinks { get; set; } = default!;
-
-    /// <summary>
-    /// связи платежей с доставкой
-    /// </summary>
-    public DbSet<PaymentRetailDeliveryLinkModelDB> PaymentsDeliveriesDocumentsRetailLinks { get; set; } = default!;
     #endregion
 
     #region wallet`s

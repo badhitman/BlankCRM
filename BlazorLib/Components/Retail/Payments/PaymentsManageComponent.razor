@@ -23,7 +23,6 @@
         <MudTh>Создан/Изменён</MudTh>
         <MudTh>Кошелёк</MudTh>
         <MudTh>Сумма</MudTh>
-        <MudTh>Расшифровка</MudTh>
         <MudTh>Описание</MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -53,16 +52,6 @@
         </MudTd>
         <MudTd DataLabel="Кошелёк">[@context.Wallet!.WalletType] '@context.Wallet.Name'</MudTd>
         <MudTd DataLabel="Сумма">@context.Amount</MudTd>
-        <MudTd DataLabel="Расшифровка">
-            @if (context.OrdersLinks is null || context.DeliveriesLinks is null)
-            {
-                <span class="badge text-bg-secondary">не загружено</span>
-            }
-            else
-            {
-                <PaymentsLinksAboutComponent OrdersLinks="context.OrdersLinks" DeliveriesLinks="context.DeliveriesLinks" />
-            }
-        </MudTd>
         <MudTd DataLabel="Описание">@context.Description</MudTd>
     </RowTemplate>
     <NoRecordsContent>

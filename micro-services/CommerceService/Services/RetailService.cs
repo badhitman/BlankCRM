@@ -26,17 +26,17 @@ public class RetailService(IIdentityTransmission identityRepo,
             return res;
         }
 
-        req.Name = req.Name.Trim();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        req.Name = req.Name.Trim();
+        req.Description = req.Description?.Trim();
+        req.CreatedAtUTC = DateTime.UtcNow;
 
         if (await context.DeliveryRetailServices.AnyAsync(x => x.Name == req.Name, cancellationToken: token))
         {
             res.AddError("Служба доставки с таким именем уже существует");
             return res;
         }
-
-        req.Description = req.Description?.Trim();
-        req.CreatedAtUTC = DateTime.UtcNow;
 
         if (await context.DeliveryRetailServices.AnyAsync(cancellationToken: token))
         {
@@ -192,7 +192,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq
                 .Include(x => x.DeliveryStatusesLog)
-                .Include(x => x.Payments)
                 .ToListAsync(cancellationToken: token)
         };
     }
@@ -217,14 +216,15 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateRowOfDeliveryDocumentAsync(RowOfDeliveryRetailDocumentModelDB req, CancellationToken token = default)
     {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
         req.Offer = null;
         req.Nomenclature = null;
         req.Offer = null;
         req.Document = null;
         req.Comment = req.Comment?.Trim();
-
         req.Version = Guid.NewGuid();
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
         await context.RowsDeliveryRetailDocuments.AddAsync(req, token);
         await context.SaveChangesAsync(token);
         return new() { Response = req.Id };
@@ -283,11 +283,12 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateDeliveryStatusDocumentAsync(DeliveryStatusRetailDocumentModelDB req, CancellationToken token = default)
     {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
         req.DateOperation = req.DateOperation.SetKindUtc();
         req.DeliveryDocument = null;
         req.Name = req.Name.Trim();
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         await context.DeliveryStatusesRetailDocuments.AddAsync(req, token);
         await context.SaveChangesAsync(token);
         return new() { Response = req.Id };
@@ -330,134 +331,6 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
-    }
-    #endregion
-
-    #region Payment Link -> to Delivery
-    /// <inheritdoc/> 
-    public async Task<TResponseModel<int>> CreatePaymentRetailDeliveryLinkAsync(PaymentRetailDeliveryLinkModelDB req, CancellationToken token = default)
-    {
-        req.DeliveryDocument = null;
-        req.Payment = null;
-        req.Name = req.Name.Trim();
-
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        await context.PaymentsDeliveriesDocumentsRetailLinks.AddAsync(req, token);
-        await context.SaveChangesAsync(token);
-        return new() { Response = req.Id };
-    }
-
-    /// <inheritdoc/> 
-    public async Task<ResponseBaseModel> UpdatePaymentRetailDeliveryLinkAsync(PaymentRetailDeliveryLinkModelDB req, CancellationToken token = default)
-    {
-        req.DeliveryDocument = null;
-        req.Payment = null;
-        req.Name = req.Name.Trim();
-
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        await context.PaymentsDeliveriesDocumentsRetailLinks.Where(x => x.Id == req.Id)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Amount, req.Amount)
-                .SetProperty(p => p.DeliveryDocumentId, req.DeliveryDocumentId)
-                .SetProperty(p => p.PaymentId, req.PaymentId)
-                .SetProperty(p => p.Name, req.Name), cancellationToken: token);
-
-        return ResponseBaseModel.CreateSuccess("Ok");
-    }
-
-    /// <inheritdoc/> 
-    public async Task<TPaginationResponseModel<PaymentRetailDeliveryLinkModelDB>> SelectPaymentsRetailDeliveriesLinksAsync(TPaginationRequestStandardModel<SelectPaymentsRetailDeliveriesLinksRequestModel> req, CancellationToken token = default)
-    {
-        if (req.Payload is null)
-            return new()
-            {
-                Status = new()
-                {
-                    Messages = [new()
-                    {
-                        TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null"
-                    }]
-                }
-            };
-
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<PaymentRetailDeliveryLinkModelDB>? q = context.PaymentsDeliveriesDocumentsRetailLinks.AsQueryable();
-
-        if (req.Payload.PaymentId.HasValue && req.Payload.PaymentId > 0)
-            q = q.Where(x => x.PaymentId == req.Payload.PaymentId);
-
-        if (req.Payload.DeliveryDocumentId.HasValue && req.Payload.DeliveryDocumentId > 0)
-            q = q.Where(x => x.DeliveryDocumentId == req.Payload.DeliveryDocumentId);
-
-        if (!string.IsNullOrWhiteSpace(req.FindQuery))
-            q = q.Where(x => x.Name.Contains(req.FindQuery));
-
-        IQueryable<PaymentRetailDeliveryLinkModelDB>? pq = q
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize);
-
-        return new()
-        {
-            PageNum = req.PageNum,
-            PageSize = req.PageSize,
-            SortingDirection = req.SortingDirection,
-            SortBy = req.SortBy,
-            TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.Include(x => x.DeliveryDocument).Include(x => x.Payment).ToListAsync(cancellationToken: token)
-        };
-    }
-    #endregion
-
-    #region Payment Link -> to Order
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreatePaymentOrderLinkAsync(PaymentRetailOrderLinkModelDB req, CancellationToken token = default)
-    {
-        req.Payment = null;
-        req.Order = null;
-        req.Name = req.Name.Trim();
-
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        await context.PaymentsOrdersRetailLinks.AddAsync(req, token);
-        await context.SaveChangesAsync(token);
-        return new() { Response = req.Id };
-    }
-
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdatePaymentOrderLinkAsync(PaymentRetailOrderLinkModelDB req, CancellationToken token = default)
-    {
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        await context.PaymentsOrdersRetailLinks
-            .Where(x => x.Id == req.Id)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name.Trim())
-                .SetProperty(p => p.Amount, req.Amount), cancellationToken: token);
-
-        return ResponseBaseModel.CreateSuccess("Ok");
-    }
-
-    /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<PaymentRetailOrderLinkModelDB>> SelectPaymentsOrdersLinksAsync(TPaginationRequestStandardModel<SelectPaymentsRetailOrdersLinksRequestModel> req, CancellationToken token = default)
-    {
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<PaymentRetailOrderLinkModelDB>? q = context.PaymentsOrdersRetailLinks.AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(req.FindQuery))
-            q = q.Where(x => x.Name.Contains(req.FindQuery));
-
-        IQueryable<PaymentRetailOrderLinkModelDB>? pq = q
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize);
-
-        return new()
-        {
-            PageNum = req.PageNum,
-            PageSize = req.PageSize,
-            SortingDirection = req.SortingDirection,
-            SortBy = req.SortBy,
-            TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.ToListAsync(cancellationToken: token)
-        };
     }
     #endregion
 
@@ -580,7 +453,6 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateWalletAsync(WalletRetailModelDB req, CancellationToken token = default)
     {
-        req.Version = Guid.NewGuid();
         TResponseModel<int> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -590,6 +462,11 @@ public class RetailService(IIdentityTransmission identityRepo,
             res.AddRangeMessages(user.Messages);
             return res;
         }
+
+        req.Version = Guid.NewGuid();
+        req.Description = req.Description?.Trim();
+        req.Name = req.Name.Trim();
+        req.WalletType = null;
 
         await context.WalletsRetail.AddAsync(req, token);
         await context.SaveChangesAsync(token);
@@ -710,8 +587,25 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default)
     {
-        if (req.Wallet is null || req.WalletId <= 0)
+        if (req.Amount <= 0)
+            return new()
+            {
+                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Сумма платежа должна быть больше нуля" }]
+            };
+
+        if (req.WalletId <= 0)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Не указан кошелёк" }] };
+
+        TResponseModel<int> res = new();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
+        WalletRetailModelDB walletDb = await context.WalletsRetail
+            .Include(x => x.WalletType)
+            .FirstAsync(x => x.Id == req.WalletId, cancellationToken: token);
+
+        if (walletDb.WalletType!.IsSystem)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Сочисление на системный кошелёк невозможно" }] };
 
         req.Version = Guid.NewGuid();
         req.Wallet = null;
@@ -721,18 +615,16 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.DatePayment = req.DatePayment.SetKindUtc();
         req.CreatedAtUTC = DateTime.UtcNow;
 
-        TResponseModel<int> res = new();
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync([req.Wallet!.UserIdentityId], token);
-        if (!user.Success())
-        {
-            res.AddRangeMessages(user.Messages);
-            return res;
-        }
-
         await context.PaymentsRetailDocuments.AddAsync(req, token);
         await context.SaveChangesAsync(token);
+
+        await context.WalletsRetail
+            .Where(x => x.Id == req.WalletId)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Balance, p => p.Balance + req.Amount), cancellationToken: token);
+
+        await transaction.CommitAsync(token);
+
         res.Response = req.Id;
         return res;
     }
@@ -740,12 +632,57 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default)
     {
+        if (req.Amount <= 0)
+            return ResponseBaseModel.CreateError("Сумма платежа должна быть больше нуля");
+
         req.PaymentSource = req.PaymentSource?.Trim();
         req.Name = req.Name.Trim();
         req.Description = req.Description?.Trim();
         req.DatePayment = req.DatePayment.SetKindUtc();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
+        PaymentRetailDocumentModelDB paymentDb = await context.PaymentsRetailDocuments
+            .Include(x => x.Wallet!)
+            .ThenInclude(x => x.WalletType)
+            .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
+
+        if (paymentDb.Version != req.Version)
+            return ResponseBaseModel.CreateError("Документ ранее был кем-то изменён. Обновите документ (F5) перед его редактированием.");
+
+        if (req.WalletId == paymentDb.WalletId)
+        {
+            decimal _deltaChange = req.Amount - paymentDb.Amount;
+            if (_deltaChange < 0 && paymentDb.Wallet!.Balance < -_deltaChange)
+                return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
+
+            if (_deltaChange != 0)
+            {
+                await context.WalletsRetail
+                    .Where(x => x.Id == paymentDb.WalletId)
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.Balance, p => p.Balance + _deltaChange)
+                        .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+            }
+        }
+        else if (paymentDb.Wallet!.Balance < paymentDb.Amount)
+        {
+            return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
+        }
+        else
+        {
+            await context.WalletsRetail
+                .Where(x => x.Id == req.WalletId)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Balance, p => p.Balance + req.Amount), cancellationToken: token);
+
+
+            await context.WalletsRetail
+                .Where(x => x.Id == paymentDb.WalletId)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Balance, p => p.Balance - paymentDb.Amount), cancellationToken: token);
+        }
 
         await context.PaymentsRetailDocuments
             .Where(x => x.Id == req.Id)
@@ -761,6 +698,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .SetProperty(p => p.Amount, req.Amount)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
+        await transaction.CommitAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
@@ -803,7 +741,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq
                 .Include(x => x.Wallet)
-                .Include(x => x.OrdersLinks)
                 .ToListAsync(cancellationToken: token)
         };
     }
@@ -835,6 +772,9 @@ public class RetailService(IIdentityTransmission identityRepo,
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         req.Version = Guid.NewGuid();
+        req.Order = null;
+        req.Nomenclature = null;
+        req.Offer = null;
 
         await context.RowsRetailsOrders.AddAsync(req, token);
         await context.SaveChangesAsync(token);
@@ -922,25 +862,21 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        req.Version = Guid.NewGuid();
-        req.Name = req.Name.Trim();
-        req.Description = req.Description?.Trim();
-        req.CreatedAtUTC = DateTime.UtcNow;
-        req.DateDocument = req.DateDocument.SetKindUtc();
-
         if (req.Rows is not null && req.Rows.Count != 0)
         {
-            //int[] _offersIds = [.. req.Rows.Select(x => x.OfferId)];
-            //OfferModelDB[] offersDb = await context.Offers.Where(x => _offersIds.Contains(x.Id)).ToArrayAsync(cancellationToken: token);
-
             req.Rows.ForEach(r =>
             {
                 r.Order = req;
                 r.Offer = null;
                 r.Nomenclature = null;
-                //r.NomenclatureId = offersDb.First(x => x.Id == r.OfferId).NomenclatureId;
             });
         }
+
+        req.Version = Guid.NewGuid();
+        req.Name = req.Name.Trim();
+        req.Description = req.Description?.Trim();
+        req.CreatedAtUTC = DateTime.UtcNow;
+        req.DateDocument = req.DateDocument.SetKindUtc();
 
         await context.RetailOrders.AddAsync(req, token);
         await context.SaveChangesAsync(token);
@@ -997,7 +933,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             Response = await pq
                 .OrderBy(x => x.CreatedAtUTC)
                 .Include(x => x.Rows)
-                .Include(x => x.PaymentsLinks)
                 .Include(x => x.DeliveryDocuments)
                 .ToListAsync(cancellationToken: token)
         };
@@ -1016,7 +951,6 @@ public class RetailService(IIdentityTransmission identityRepo,
                 ? await q.ToArrayAsync(cancellationToken: token)
                 : await q.Include(x => x.Rows)
                          .Include(x => x.DeliveryDocuments)
-                         .Include(x => x.PaymentsLinks)
                          .ToArrayAsync(cancellationToken: token)
         };
 
@@ -1061,13 +995,6 @@ public class RetailService(IIdentityTransmission identityRepo,
                 }]
             };
 
-        req.Name = req.Name.Trim();
-        req.Version = Guid.NewGuid();
-        req.ToWallet = null;
-        req.FromWallet = null;
-        req.CreatedAtUTC = DateTime.UtcNow;
-        req.DateDocument = req.DateDocument.SetKindUtc();
-
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         WalletRetailModelDB walletSenderDb = await context.WalletsRetail.Include(x => x.WalletType).FirstAsync(x => x.Id == req.FromWalletId, cancellationToken: token);
 
@@ -1083,6 +1010,13 @@ public class RetailService(IIdentityTransmission identityRepo,
         await context.WalletsRetail.Where(x => x.Id == req.ToWalletId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Balance, p => p.Balance + req.ToWalletSum), cancellationToken: token);
+
+        req.Name = req.Name.Trim();
+        req.Version = Guid.NewGuid();
+        req.ToWallet = null;
+        req.FromWallet = null;
+        req.CreatedAtUTC = DateTime.UtcNow;
+        req.DateDocument = req.DateDocument.SetKindUtc();
 
         await context.ConversionsDocumentsWalletsRetail.AddAsync(req, token);
         await context.SaveChangesAsync(token);

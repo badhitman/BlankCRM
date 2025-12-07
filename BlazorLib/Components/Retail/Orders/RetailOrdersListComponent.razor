@@ -18,7 +18,6 @@
         <MudTh>Склад</MudTh>
         <MudTh>Номенклатура</MudTh>
         <MudTh>Отгрузка</MudTh>
-        <MudTh>Платежи</MudTh>
         <MudTh>Информация</MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -50,9 +49,6 @@
         </MudTd>
         <MudTd DataLabel="Отгрузка">
             <OrderDeliveryAboutComponent DeliveryDocuments="@context.DeliveryDocuments" />
-        </MudTd>
-        <MudTd DataLabel="Платежи">
-            <OrderPaymentsAboutComponent PaymentsLinks="@context.PaymentsLinks" />
         </MudTd>
         <MudTd DataLabel="Информация">@context.Name @context.Description</MudTd>
     </RowTemplate>

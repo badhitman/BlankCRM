@@ -28,7 +28,6 @@
         <MudTh>Адрес</MudTh>
         <MudTh>Трэк/Код</MudTh>
         <MudTh>Статус</MudTh>
-        <MudTh>Оплата</MudTh>
     </HeaderContent>
     <RowTemplate>
         @{
@@ -79,17 +78,6 @@
             else
             {
                 <DeliveryStatusesRowsAboutComponent DeliveryStatusesLog="@context.DeliveryStatusesLog" />
-            }
-        </MudTd>
-        <MudTd DataLabel="Оплата">
-            @context.Payments
-            @if (context.Payments is null)
-            {
-                <span class="badge text-bg-danger">error</span>
-            }
-            else
-            {
-                <DeliveryPaymentsRowsAboutComponent Payments="@context.Payments" />
             }
         </MudTd>
     </RowTemplate>

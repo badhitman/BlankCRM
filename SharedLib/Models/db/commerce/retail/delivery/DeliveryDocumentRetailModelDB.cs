@@ -74,9 +74,4 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     /// StatusesLog
     /// </summary>
     public List<DeliveryStatusRetailDocumentModelDB>? DeliveryStatusesLog { get; set; }
-
-    /// <summary>
-    /// Дата оплаты
-    /// </summary>
-    public List<PaymentRetailDeliveryLinkModelDB>? Payments { get; set; }
 }

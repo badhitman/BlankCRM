@@ -39,9 +39,4 @@ public class RetailDocumentModelDB : OrderDocumentBaseModel
     /// Rows
     /// </summary>
     public List<RowOfRetailOrderDocumentModelDB>? Rows { get; set; }
-
-    /// <summary>
-    /// PaymentsLinks
-    /// </summary>
-    public List<PaymentRetailOrderLinkModelDB>? PaymentsLinks { get; set; }
 }

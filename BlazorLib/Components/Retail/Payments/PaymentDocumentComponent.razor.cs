@@ -48,12 +48,11 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
         }
     }
 
-
     bool CannotSave
     {
         get
         {
-            if (currentDoc is null || editDoc?.Wallet is null || editDoc.Wallet is null)
+            if (currentDoc is null || editDoc?.Wallet is null || editDoc.Amount <= 0 || DatePayment is null || DatePayment == default)
                 return true;
 
             return
@@ -69,6 +68,7 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
         }
     }
 
+
     async Task ResetEdit()
     {
         if (recipientWalletRef is null || editDoc is null)
@@ -81,13 +81,13 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
 
     async Task UpdateRecipient()
     {
-        if (editDoc is null)
+        if (editDoc is null || currentWallet is null)
             throw new Exception("editDoc is null");
 
         await SetBusyAsync();
-        TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([currentWallet!.UserIdentityId]);
+        TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([currentWallet.UserIdentityId]);
         SnackBarRepo.ShowMessagesResponse(getUser.Messages);
-        if (getUser.Success() && getUser.Response is not null && getUser.Response.Any(x => x.UserId == editDoc.Wallet!.UserIdentityId))
+        if (getUser.Success() && getUser.Response is not null && getUser.Response.Any(x => x.UserId == currentWallet.UserIdentityId))
             userRecipient = getUser.Response.First(x => x.UserId == currentWallet.UserIdentityId);
 
         await SetBusyAsync(false);
@@ -152,7 +152,7 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
                 currentDoc = resDoc.Response[0];
                 editDoc = GlobalTools.CreateDeepCopy(editDoc);
 
-                currentWallet = editDoc!.Wallet;
+                currentWallet = editDoc?.Wallet;
                 await UpdateRecipient();
             }
         }

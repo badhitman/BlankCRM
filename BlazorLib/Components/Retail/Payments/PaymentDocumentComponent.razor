@@ -5,7 +5,11 @@
 
 <div class="card">
     <div class="card-header d-flex flex-row">
-        <MudDatePicker Label="Дата платежа" Editable="true" @bind-Date="DatePayment" Placeholder="Select Date" />
+        <MudDatePicker Disabled="IsBusyProgress"
+                       Placeholder="Select Date"
+                       @bind-Date="DatePayment"
+                       Label="Дата платежа"
+                       Editable />
         <MudSpacer />
     </div>
     <div class="card-body">
@@ -63,14 +67,6 @@
             </div>
             @if (PaymentId > 0)
             {
-                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
-                    <MudTabPanel Text="Заказы">
-                        <PaymentOrdersLinksRowsComponent />
-                    </MudTabPanel>
-                    <MudTabPanel Text="Доставка">
-                        <PaymentDeliveriesLinksRowsComponent />
-                    </MudTabPanel>
-                </MudTabs>
                 <p class="card-text">
                     <small class="text-body-secondary">@editDoc.CreatedAtUTC.GetCustomTime() @editDoc.LastUpdatedAtUTC?.GetCustomTime()</small>
                 </p>

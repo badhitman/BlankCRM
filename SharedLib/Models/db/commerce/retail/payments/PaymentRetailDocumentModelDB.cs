@@ -51,12 +51,6 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     public required string AuthorUserIdentity { get; set; }
 
     /// <inheritdoc/>
-    public List<PaymentRetailOrderLinkModelDB>? OrdersLinks { get; set; }
-
-    /// <inheritdoc/>
-    public List<PaymentRetailDeliveryLinkModelDB>? DeliveriesLinks { get; set; }
-
-    /// <inheritdoc/>
     [ConcurrencyCheck]
     public Guid Version { get; set; }
 }
