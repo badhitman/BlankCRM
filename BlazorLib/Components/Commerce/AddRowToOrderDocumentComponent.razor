@@ -5,7 +5,16 @@
 
 @if (!IsShowAddingOffer)
 {
-    <MudButton Disabled="@(!ActualOffers.Any())" Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnExpandAddingOffer">Добавить</MudButton>
+    if (WarehouseId <= 0)
+    {
+        <MudTooltip Text="Укажите склад для определения остатков">
+            <MudButton Disabled Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnExpandAddingOffer">Добавить</MudButton>
+        </MudTooltip>
+    }
+    else
+    {
+        <MudButton Disabled="@(!ActualOffers.Any())" Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnExpandAddingOffer">Добавить</MudButton>
+    }
 }
 else
 {

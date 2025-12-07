@@ -68,6 +68,8 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
 
         if (directoryNav_ref is not null)
             await directoryNav_ref.SetBusyAsync(false);
+
+        await SetBusyAsync(false);
     }
 
     async void SelectedDirectoryChangeAction(int selectedDirectoryId)

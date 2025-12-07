@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Commerce;
@@ -116,7 +115,7 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
 
     bool IsShowAddingOffer;
     decimal QuantityValue { get; set; }
-    private void OnExpandAddingOffer()
+    void OnExpandAddingOffer()
     {
         System.Collections.Immutable.ImmutableList<decimal>? _qv = SelectedOffer?.QuantitiesValues;
         if (!IsShowAddingOffer && _qv is not null && _qv.Count != 0 && !ForceAdding)

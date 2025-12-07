@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Commerce;
 using Microsoft.AspNetCore.Components;
+using BlazorLib.Components.Commerce;
 using MudBlazor;
 using SharedLib;
 
@@ -51,7 +51,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             await SetBusyAsync();
             TPaginationResponseModel<RowOfRetailOrderDocumentModelDB> res = await RetailRepo.SelectRowsRetailDocumentsAsync(req);
             SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
-            if(res.Response is not null)
+            if (res.Response is not null)
             {
                 Document.Rows = res.Response;
             }
@@ -73,6 +73,8 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             });
         else
             StateHasChanged();
+
+        addingDomRef?.StateHasChangedCall();
     }
 
     decimal GetMaxValue(RowOfRetailOrderDocumentModelDB ctx)

@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
 
@@ -153,6 +152,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
             await ParentFormsPage.ReadCurrentMainProject();
             ParentFormsPage.StateHasChangedCall();
         }
+        await SetBusyAsync(false);
     }
 
     async Task CancelCreatingDirectory()
@@ -176,7 +176,7 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
         if (selectedDirectory is null || ParentFormsPage.MainProject is null)
             throw new Exception("Не выбран текущий/основной проект");
 
-        if(CurrentUserSession is null)
+        if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
         await SetBusyAsync();
@@ -242,5 +242,6 @@ public partial class DirectoryNavComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync();
         await ReadCurrentUser();
         await ReloadDirectories();
+        await SetBusyAsync(false);
     }
 }

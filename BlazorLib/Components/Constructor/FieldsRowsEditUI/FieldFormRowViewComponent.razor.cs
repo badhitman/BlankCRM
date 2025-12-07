@@ -423,9 +423,10 @@ public partial class FieldFormRowViewComponent : BlazorBusyComponentBaseAuthMode
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await SetBusyAsync();
         await ReadCurrentUser();
-
         SetFieldAction(Field);
+        await SetBusyAsync(false);
     }
 
     void ChildUpdates()

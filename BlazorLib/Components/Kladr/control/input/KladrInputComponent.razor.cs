@@ -41,6 +41,7 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
 
     async void ChangeSelectAction(KladrResponseModel sender)
     {
+        CurrentKladrObject = sender;
         if (KladrObject is null)
             KladrObject = new() { Id = sender.Code, Name = sender.GetFullName() };
         else
@@ -64,6 +65,7 @@ public partial class KladrInputComponent : BlazorBusyComponentBaseModel
 
         DialogOptions options = new() { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Large };
         IDialogReference res = await DialogService.ShowAsync<KladrSelectDialogComponent>("Выбор адреса:", parameters, options);
+        await Actualize();
         return res;
     }
 

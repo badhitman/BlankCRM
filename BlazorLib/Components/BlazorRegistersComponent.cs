@@ -41,7 +41,10 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
         goods = [.. goods.Where(x => x > 0 && !RegistersCache.Any(y => y.Id == x)).Distinct()];
 
         if (goods.Length == 0 && offers.Length == 0)
+        {
+            StateHasChanged();
             return;
+        }
 
         TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> reqData = new()
         {
@@ -57,9 +60,7 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
             SortingDirection = DirectionsEnum.Up,
         };
         await SetBusyAsync();
-
         TPaginationResponseModel<OfferAvailabilityModelDB> offersRegisters = await CommerceRepo.OffersRegistersSelectAsync(reqData);
-        await SetBusyAsync(false);
 
         if (offersRegisters.TotalRowsCount > offersRegisters.PageSize)
             SnackBarRepo.Error($"Записей больше: {offersRegisters.TotalRowsCount}");
@@ -71,5 +72,6 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
                 RegistersCache.AddRange(offersRegisters.Response.Where(x => !RegistersCache.Any(y => y.Id == x.Id)));
             }
         }
+        await SetBusyAsync(false);
     }
 }

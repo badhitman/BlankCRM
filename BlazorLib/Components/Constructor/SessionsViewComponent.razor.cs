@@ -2,9 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Constructor;
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -31,6 +29,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
 
 
     IEnumerable<DocumentSchemeConstructorModelDB> DocumentsAll = [];
+    bool tableLoadReady;
 
     int _selectedDocumentSchemeId;
     int SelectedDocumentSchemeId
@@ -64,8 +63,8 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
 
     protected private async Task<TableData<SessionOfDocumentDataModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        if (CurrentUserSession is null)
-            throw new Exception("CurrentUserSession is null");
+        if (table is null || CurrentUserSession is null)
+            return new TableData<SessionOfDocumentDataModelDB>() { TotalItems = 0, Items = [] };
 
         if (string.IsNullOrWhiteSpace(CurrentUserSession.UserId))
             throw new Exception("Не определён текущий пользователь");
@@ -235,8 +234,12 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
     {
         await SetBusyAsync();
         await ReadCurrentUser();
-        await SetBusyAsync();
         await RestUpdate();
+        tableLoadReady = true;
+
+        if (table is not null)
+            await table.ReloadServerData();
+
         await SetBusyAsync(false);
     }
 }

@@ -146,6 +146,9 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
 
     async Task MoveUp()
     {
+        if (IsMostUp)
+            return;
+
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
@@ -165,6 +168,9 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
 
     async Task MoveDown()
     {
+        if (IsMostDown)
+            return;
+
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
@@ -192,7 +198,7 @@ public partial class ElementDirectoryFieldSetComponent : BlazorBusyComponentBase
         await SetBusyAsync();
 
         ResponseBaseModel rest = await ConstructorRepo.DeleteElementFromDirectoryAsync(new() { Payload = ElementObject.Id, SenderActionUserId = CurrentUserSession.UserId });
-        
+
         SnackBarRepo.ShowMessagesResponse(rest.Messages);
         if (!rest.Success())
         {

@@ -1,4 +1,5 @@
 ﻿@using System.ComponentModel.DataAnnotations
+
 @inherits BlazorBusyComponentBaseAuthModel
 
 @if (IsBusyProgress)
@@ -11,7 +12,7 @@ else
     {
         <div class="input-group me-4">
             <span class="input-group-text">Справочник</span>
-            <select disabled="@(allDirectories.Any() != true )" @bind="SelectedDirectoryId" class="form-select" aria-label="reference/list">
+            <select disabled="@(allDirectories.Any() != true)" @bind="SelectedDirectoryId" class="form-select" aria-label="reference/list">
                 @if (allDirectories.Any() != true)
                 {
                     <option value="-1" selected>There are no reference books</option>
@@ -72,7 +73,7 @@ else
     {
         <div class="input-group me-4">
             <span class="input-group-text">Directory</span>
-            <input disabled type="text" value="@allDirectories.First(x=> x.Id == SelectedDirectoryId).Name" class="form-control">
+            <input disabled type="text" value="@allDirectories.First(x => x.Id == SelectedDirectoryId).Name" class="form-control">
             <button @onclick="DeleteSelectedDirectory" class="btn btn-outline-danger" type="button">Confirm deletion</button>
             <button @onclick="() => { DirectoryNavState = DirectoryNavStatesEnum.None; }" class="btn btn-outline-secondary" type="button">Cancel</button>
         </div>

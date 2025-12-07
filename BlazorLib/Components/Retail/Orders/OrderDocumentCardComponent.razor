@@ -12,98 +12,93 @@
 else
 {
     <div class="card">
-        <div class="card-header d-flex flex-row">
-            <MudDatePicker Label="Дата платежа" Editable="true" @bind-Date="DatePayment" Placeholder="Select Date" />
-            <MudSpacer />
-        </div>
         <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label for="inputExternalDocumentId" class="form-label">Номер (внешний)</label>
-                    <input type="text"
-                           class="form-control"
-                           id="inputExternalDocumentId"
-                           @bind-value="editDocument.ExternalDocumentId"
-                           @bind-value:event="oninput">
-                </div>
-                <div class="col-md-6">
-                    <label for="inputName4" class="form-label">Примечание</label>
-                    <input type="text"
-                           class="form-control"
-                           id="inputName4"
-                           @bind-value="editDocument.Name"
-                           @bind-value:event="oninput">
-                </div>
-                <RubricInputComponent SelectRubricsHandle="WarehouseSelectAction"
-                                      ModeSelectingRubrics=ModesSelectRubricsEnum.SelectAny
-                                      RubricInitial="@editDocument.WarehouseId"
-                                      Title="Склад списания"
-                                      ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
-                                      ShowDisabledRubrics />
-                @if (string.IsNullOrWhiteSpace(ClientId))
-                {
-                    <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
-                                              SelectedUserInit="@editDocument.BuyerIdentityUserId"
-                                              IsReadOnly="SelectUserHandlerIsProgress"
-                                              Label="Заказчик" />
-                }
-                else
-                {
-                    <div class="mb-3">
-                        <label for="formControlInputBuyer" class="form-label">Покупатель</label>
-                        <input class="form-control"
-                               type="text"
-                               value="@buyerUser?.ToString()"
-                               aria-label="readonly input example"
-                               readonly
-                               id="formControlInputBuyer"
-                               aria-describedby="buyerHelp">
-                        <div id="buyerHelp" class="form-text">Контекст заказчика.</div>
-                    </div>
+            <MudGrid Class="mb-2">
+                <MudItem xs="12" md="2">
+                    <MudDatePicker Label="Дата платежа" Editable @bind-Date="DatePayment" Placeholder="Select Date" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="5">
+                    <MudTextField @bind-Value="editDocument.ExternalDocumentId" Label="Номер (внешний)" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" md="5">
+                    <MudTextField @bind-Value="editDocument.Name" Label="Примечание" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
+            </MudGrid>
+            <MudGrid Class="mb-3">
+                <MudItem xs="12" md="6">
+                    <RubricInputComponent SelectRubricsHandle="WarehouseSelectAction"
+                                          ModeSelectingRubrics=ModesSelectRubricsEnum.SelectAny
+                                          RubricInitial="@editDocument.WarehouseId"
+                                          Title="Склад списания"
+                                          ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
+                                          ShowDisabledRubrics />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <label class="form-label">Статус</label>
+                    <select class="form-select" aria-label="Default select example" @bind="editDocument.StatusDocument">
+                        @foreach (StatusesDocumentsEnum sd in Enum.GetValues<StatusesDocumentsEnum>())
+                        {
+                            <option value="@sd">@sd.DescriptionInfo()</option>
+                        }
+                    </select>
+                </MudItem>
+            </MudGrid>
 
-                }
-                <MudSelect ReadOnly="@IsBusyProgress" @bind-Value="editDocument.StatusDocument" T="StatusesDocumentsEnum" Label="Статус" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
-                    @foreach (StatusesDocumentsEnum step in Enum.GetValues<StatusesDocumentsEnum>())
+            @if (string.IsNullOrWhiteSpace(ClientId))
+            {
+                <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
+                                          SelectedUserInit="@editDocument.BuyerIdentityUserId"
+                                          IsReadOnly="SelectUserHandlerIsProgress"
+                                          Label="Заказчик" />
+            }
+            else
+            {
+                <div class="mb-3">
+                    <label for="formControlInputBuyer" class="form-label">Покупатель</label>
+                    <input class="form-control"
+                           type="text"
+                           value="@buyerUser?.ToString()"
+                           aria-label="readonly input example"
+                           readonly
+                           id="formControlInputBuyer"
+                           aria-describedby="buyerHelp">
+                    <div id="buyerHelp" class="form-text">Контекст заказчика.</div>
+                </div>
+
+            }
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+                <MudTabPanel Text="Заказ">
+                    @if (editDocument is null)
                     {
-                        <MudSelectItem Class="@(step == editDocument.StatusDocument ? "text-primary fw-bold" : "")" T="StatusesDocumentsEnum" Value="@step">
-                            @step.DescriptionInfo()
-                        </MudSelectItem>
-                    }
-                </MudSelect>
-                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
-                    <MudTabPanel Text="Заказ">
-                        @if (editDocument is null)
-                        {
-                            <div class="text-center">
-                                <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
+                        <div class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
                             </div>
-                        }
-                        else
-                        {
-                            <OrderTableRowsComponent Document="editDocument" @ref=tableRowsRef />
-                        }
-                    </MudTabPanel>
-                    <MudTabPanel Text="Оплата" Disabled="@(OrderId < 1)">
-                        <PaymentsTableComponent OrderId="OrderId" />
-                    </MudTabPanel>
-                    <MudTabPanel Text="Отгрузка/Доставка" Disabled="@(OrderId < 1)">
-                        <DeliveriesDocumentsManageComponent FilterOrderId="OrderId" />
-                    </MudTabPanel>
-                    <MudTabPanel Text="Заметки" Disabled="@(OrderId < 1)">
-                        <TinyMCE.Blazor.Editor @bind-Value="editDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />
-                    </MudTabPanel>
-                    <MudTabPanel Text="Файлы" Disabled="@(OrderId < 1)">
-                        <FilesContextViewComponent ApplicationsNames="@([Routes.RETAIL_CONTROLLER_NAME])"
-                                                   PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
-                                                   PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
-                                                   OwnerPrimaryKey="OrderId"
-                                                   Title="Вложения"
-                                                   ManageMode />
-                    </MudTabPanel>
-                </MudTabs>
-            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <OrderTableRowsComponent Document="editDocument" @ref=tableRowsRef />
+                    }
+                </MudTabPanel>
+                <MudTabPanel Text="Оплата" Disabled="@(OrderId < 1)">
+                    <PaymentsTableComponent OrderId="OrderId" />
+                </MudTabPanel>
+                <MudTabPanel Text="Отгрузка/Доставка" Disabled="@(OrderId < 1)">
+                    <DeliveriesDocumentsManageComponent FilterOrderId="OrderId" />
+                </MudTabPanel>
+                <MudTabPanel Text="Заметки" Disabled="@(OrderId < 1)">
+                    <TinyMCE.Blazor.Editor @bind-Value="editDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />
+                </MudTabPanel>
+                <MudTabPanel Text="Файлы" Disabled="@(OrderId < 1)">
+                    <FilesContextViewComponent ApplicationsNames="@([Routes.RETAIL_CONTROLLER_NAME])"
+                                               PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
+                                               PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
+                                               OwnerPrimaryKey="OrderId"
+                                               Title="Вложения"
+                                               ManageMode />
+                </MudTabPanel>
+            </MudTabs>
 
             <p class="card-text">
                 @if (authorUser is not null)

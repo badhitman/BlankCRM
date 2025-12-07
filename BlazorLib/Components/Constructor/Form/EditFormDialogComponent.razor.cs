@@ -2,10 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Constructor;
 using BlazorLib.Components.Shared.tabs;
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -89,7 +87,9 @@ public partial class EditFormDialogComponent : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await SetBusyAsync();
         await ReadCurrentUser();
         ResetForm();
+        await SetBusyAsync(false);
     }
 }

@@ -4,7 +4,7 @@
 
 <MudDialog>
     <DialogContent>
-        @if (IsBusyProgress)
+        @if (IsBusyProgress || FormEditObject is null)
         {
             <div class="text-center">
                 <div class="spinner-border" role="status">

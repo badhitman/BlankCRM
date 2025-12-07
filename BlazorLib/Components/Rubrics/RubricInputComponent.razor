@@ -1,7 +1,7 @@
 ﻿@using MudBlazor
 @inherits BlazorBusyComponentBaseModel
 
-<p class="mb-0">
+<label class="form-label">
     @Title
     @if (IsBusyProgress)
     {
@@ -11,7 +11,7 @@
     {
         <sup style="cursor:pointer;" title="отменить изменения" class="ms-1 link-warning" @onclick="async () => await SetRubric(RubricInitial)">сброс</sup>
     }
-</p>
+</label>
 
 @foreach ((int parentId, List<UniversalBaseModel> nestedElements) _kvp in SelectSource)
 {
