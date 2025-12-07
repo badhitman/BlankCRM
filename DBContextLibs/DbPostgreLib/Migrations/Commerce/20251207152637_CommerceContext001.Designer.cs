@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20251207122515_CommerceContext001")]
+    [Migration("20251207152637_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -182,6 +182,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<bool>("DeliveryPaymentUponReceipt")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("DeliveryStatus")
+                        .HasColumnType("integer");
+
                     b.Property<int>("DeliveryType")
                         .HasColumnType("integer");
 
@@ -225,6 +228,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("DeliveryCode");
 
                     b.HasIndex("DeliveryPaymentUponReceipt");
+
+                    b.HasIndex("DeliveryStatus");
 
                     b.HasIndex("DeliveryType");
 

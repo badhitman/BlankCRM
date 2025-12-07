@@ -1,7 +1,13 @@
 ﻿@using MudBlazor
 @inherits BlazorBusyComponentUsersCachedModel
 
-<MudTable ServerData="ServerReload" Dense="true" Hover="true">
+<MudChipSet @bind-SelectedValues="SelectedTypes" SelectionMode="SelectionMode.MultiSelection" CheckMark Variant="Variant.Text" Color="Color.Info">
+    @foreach (DeliveryTypesEnum dt in Enum.GetValues(typeof(DeliveryTypesEnum)))
+    {
+        <MudChip Value="@dt" Text="@dt.DescriptionInfo()" />
+    }
+</MudChipSet>
+<MudTable ServerData="ServerReload" Dense Hover Striped @ref=tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Доставка (документы отгрузки)</MudText>
         <MudSpacer />
@@ -72,15 +78,10 @@
         </MudTd>
         <MudTd DataLabel="Адрес">@context.KladrTitle @context.AddressUserComment</MudTd>
         <MudTd DataLabel="Трэк/Код">@context.DeliveryCode</MudTd>
-
         <MudTd DataLabel="Статус">
-            @if (context.DeliveryStatusesLog is null)
+            @if (context.DeliveryStatus.HasValue)
             {
-                <span class="badge text-bg-danger">error</span>
-            }
-            else
-            {
-                <DeliveryStatusesRowsAboutComponent DeliveryStatusesLog="@context.DeliveryStatusesLog" />
+                <span class="badge text-bg-info">@context.DeliveryStatus?.DescriptionInfo()</span>
             }
         </MudTd>
     </RowTemplate>

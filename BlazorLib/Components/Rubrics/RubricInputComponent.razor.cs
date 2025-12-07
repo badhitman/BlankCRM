@@ -22,6 +22,10 @@ public partial class RubricInputComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter]
+    public string? NullElementText { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter]
     public int RubricInitial { get; set; }
 
     /// <inheritdoc/>
@@ -69,7 +73,7 @@ public partial class RubricInputComponent : BlazorBusyComponentBaseModel
     string TitleNullElement((int parentId, List<UniversalBaseModel> nestedElements) kvp, UniversalBaseModel? currentSelected)
     {
         return currentSelected is null
-            ? "Выбор элемента"
+            ? NullElementText ?? ""
             : "";
     }
 

@@ -21,6 +21,32 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
     [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
 
+    MudTable<PaymentRetailDocumentModelDB>? _tableRef;
+
+    IReadOnlyCollection<PaymentsRetailTypesEnum> _selectedPaymentsTypes = [];
+    IReadOnlyCollection<PaymentsRetailTypesEnum> SelectedPaymentsTypes
+    {
+        get => _selectedPaymentsTypes;
+        set
+        {
+            _selectedPaymentsTypes = value;
+            if (_tableRef is not null)
+                InvokeAsync(_tableRef.ReloadServerData);
+        }
+    }
+
+    IReadOnlyCollection<PaymentsRetailStatusesEnum> _selectedPaymentsStatuses = [];
+    IReadOnlyCollection<PaymentsRetailStatusesEnum> SelectedPaymentsStatuses
+    {
+        get => _selectedPaymentsStatuses;
+        set
+        {
+            _selectedPaymentsStatuses = value;
+            if (_tableRef is not null)
+                InvokeAsync(_tableRef.ReloadServerData);
+        }
+    }
+
 
     bool _visible;
     readonly DialogOptions _dialogOptions = new()
@@ -45,9 +71,16 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
             PageSize = state.PageSize,
             Payload = new()
             {
-                PayerFilterIdentityId = ClientId
+                PayerFilterIdentityId = ClientId,
             }
         };
+
+        if (SelectedPaymentsTypes.Count != 0)
+            req.Payload.TypesFilter = [.. SelectedPaymentsTypes];
+
+        if (SelectedPaymentsStatuses.Count != 0)
+            req.Payload.StatusesFilter = [.. SelectedPaymentsStatuses];
+
         TPaginationResponseModel<PaymentRetailDocumentModelDB>? res = await RetailRepo.SelectPaymentsDocumentsAsync(req, token);
         await SetBusyAsync(false, token: token);
 

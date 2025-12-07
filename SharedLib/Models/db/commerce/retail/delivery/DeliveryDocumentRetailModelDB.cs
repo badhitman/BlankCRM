@@ -11,13 +11,18 @@ namespace SharedLib;
 /// DeliveryDocumentModelDB
 /// </summary>
 [Index(nameof(DeliveryCode)), Index(nameof(DeliveryType)), Index(nameof(RecipientIdentityUserId)), Index(nameof(DeliveryPaymentUponReceipt))]
-[Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment)), Index(nameof(AuthorIdentityUserId))]
+[Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment)), Index(nameof(AuthorIdentityUserId)), Index(nameof(DeliveryStatus))]
 public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
 {
     /// <summary>
     /// DeliveryType
     /// </summary>
     public DeliveryTypesEnum DeliveryType { get; set; }
+
+    /// <summary>
+    /// Статус доставки
+    /// </summary>
+    public DeliveryStatusesEnum? DeliveryStatus { get; set; }
 
     /// <summary>
     /// Оплата при получении

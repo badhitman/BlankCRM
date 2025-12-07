@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using DbcLib;
+using System.Linq;
 
 namespace CommerceService;
 
@@ -159,6 +160,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .SetProperty(p => p.DeliveryPaymentUponReceipt, req.DeliveryPaymentUponReceipt)
                 .SetProperty(p => p.DeliveryCode, req.DeliveryCode)
                 .SetProperty(p => p.AddressUserComment, req.AddressUserComment)
+                .SetProperty(p => p.DeliveryStatus, context.DeliveryStatusesRetailDocuments.Where(y => y.DeliveryDocumentId == req.Id).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault())
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
@@ -175,6 +177,9 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.Payload?.RecipientsFilterIdentityId is not null && req.Payload.RecipientsFilterIdentityId.Length != 0)
             q = q.Where(x => req.Payload.RecipientsFilterIdentityId.Contains(x.RecipientIdentityUserId));
+
+        if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
+            q = q.Where(x => req.Payload.TypesFilter.Contains(x.DeliveryType));
 
         if (req.Payload?.FilterOrderId is not null && req.Payload.FilterOrderId > 0)
             q = q.Where(x => req.Payload.FilterOrderId == x.OrderId);
@@ -291,7 +296,33 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         await context.DeliveryStatusesRetailDocuments.AddAsync(req, token);
         await context.SaveChangesAsync(token);
+
+        await context.DeliveryRetailDocuments
+            .Where(x => x.Id == req.DeliveryDocumentId)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.DeliveryStatus, context.DeliveryStatusesRetailDocuments.Where(y => y.DeliveryDocumentId == req.DeliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
+
         return new() { Response = req.Id };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateDeliveryStatusDocumentAsync(DeliveryStatusRetailDocumentModelDB req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        await context.DeliveryStatusesRetailDocuments
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Name, req.Name)
+                .SetProperty(p => p.DeliveryStatus, req.DeliveryStatus)
+                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
+
+        await context.DeliveryRetailDocuments
+            .Where(x => x.Id == req.DeliveryDocumentId)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.DeliveryStatus, context.DeliveryStatusesRetailDocuments.Where(y => y.DeliveryDocumentId == req.DeliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Ok");
     }
 
     /// <inheritdoc/>
@@ -316,21 +347,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq.ToListAsync(cancellationToken: token)
         };
-    }
-
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateDeliveryStatusDocumentAsync(DeliveryStatusRetailDocumentModelDB req, CancellationToken token = default)
-    {
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        await context.DeliveryStatusesRetailDocuments
-            .Where(x => x.Id == req.Id)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.DeliveryStatus, req.DeliveryStatus)
-                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
-
-        return ResponseBaseModel.CreateSuccess("Ok");
     }
     #endregion
 
@@ -618,10 +634,13 @@ public class RetailService(IIdentityTransmission identityRepo,
         await context.PaymentsRetailDocuments.AddAsync(req, token);
         await context.SaveChangesAsync(token);
 
-        await context.WalletsRetail
-            .Where(x => x.Id == req.WalletId)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Balance, p => p.Balance + req.Amount), cancellationToken: token);
+        if (req.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+        {
+            await context.WalletsRetail
+             .Where(x => x.Id == req.WalletId)
+             .ExecuteUpdateAsync(set => set
+                 .SetProperty(p => p.Balance, p => p.Balance + req.Amount), cancellationToken: token);
+        }
 
         await transaction.CommitAsync(token);
 
@@ -651,37 +670,59 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (paymentDb.Version != req.Version)
             return ResponseBaseModel.CreateError("Документ ранее был кем-то изменён. Обновите документ (F5) перед его редактированием.");
 
-        if (req.WalletId == paymentDb.WalletId)
+        if (req.StatusPayment == paymentDb.StatusPayment && req.StatusPayment == PaymentsRetailStatusesEnum.Paid)
         {
-            decimal _deltaChange = req.Amount - paymentDb.Amount;
-            if (_deltaChange < 0 && paymentDb.Wallet!.Balance < -_deltaChange)
-                return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
-
-            if (_deltaChange != 0)
+            if (req.WalletId == paymentDb.WalletId)
             {
+                decimal _deltaChange = req.Amount - paymentDb.Amount;
+                if (_deltaChange < 0 && paymentDb.Wallet!.Balance < -_deltaChange)
+                    return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
+
+                if (_deltaChange != 0)
+                {
+                    await context.WalletsRetail
+                        .Where(x => x.Id == paymentDb.WalletId)
+                        .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.Balance, p => p.Balance + _deltaChange)
+                            .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+                }
+            }
+            else if (paymentDb.Wallet!.Balance < paymentDb.Amount)
+            {
+                return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
+            }
+            else
+            {
+                await context.WalletsRetail
+                    .Where(x => x.Id == req.WalletId)
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.Balance, p => p.Balance + req.Amount), cancellationToken: token);
+
                 await context.WalletsRetail
                     .Where(x => x.Id == paymentDb.WalletId)
                     .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.Balance, p => p.Balance + _deltaChange)
-                        .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+                        .SetProperty(p => p.Balance, p => p.Balance - paymentDb.Amount), cancellationToken: token);
             }
         }
-        else if (paymentDb.Wallet!.Balance < paymentDb.Amount)
+        else if (req.StatusPayment != paymentDb.StatusPayment)
         {
-            return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
-        }
-        else
-        {
-            await context.WalletsRetail
-                .Where(x => x.Id == req.WalletId)
-                .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.Balance, p => p.Balance + req.Amount), cancellationToken: token);
+            if (req.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+            {
+                await context.WalletsRetail
+                    .Where(x => x.Id == req.WalletId)
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.Balance, p => p.Balance + req.Amount), cancellationToken: token);
+            }
+            else if (paymentDb.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+            {
+                if (paymentDb.Wallet!.Balance < req.Amount)
+                    return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
 
-
-            await context.WalletsRetail
-                .Where(x => x.Id == paymentDb.WalletId)
-                .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.Balance, p => p.Balance - paymentDb.Amount), cancellationToken: token);
+                await context.WalletsRetail
+                    .Where(x => x.Id == paymentDb.WalletId)
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.Balance, p => p.Balance - req.Amount), cancellationToken: token);
+            }
         }
 
         await context.PaymentsRetailDocuments
@@ -728,6 +769,12 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => context.WalletsRetail.Any(y => y.Id == x.WalletId && y.UserIdentityId == req.Payload.PayerFilterIdentityId));
         }
 
+        if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
+            q = q.Where(x => req.Payload.TypesFilter.Contains(x.TypePayment));
+
+        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Length != 0)
+            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.StatusPayment));
+
         IQueryable<PaymentRetailDocumentModelDB>? pq = q
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
@@ -740,7 +787,8 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq
-                .Include(x => x.Wallet)
+                .Include(x => x.Wallet!)
+                .ThenInclude(x => x.WalletType)
                 .ToListAsync(cancellationToken: token)
         };
     }

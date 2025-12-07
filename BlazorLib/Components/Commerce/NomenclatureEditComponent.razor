@@ -36,16 +36,16 @@
             </div>
         </div>
         <div class="card-body">
-            <DynamicComponent Type="GetType(ViewSet.DescriptionInfo())" Parameters="Parameters" />
-            <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
-                <Authorized>
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <TinyMCE.Blazor.Editor @bind-Value="editNomenclature.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(NomenclatureId < 1)" />
-                        </div>
-                    </div>
-                    <div class="card mt-3">
-                        <div class="card-body">
+            <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+                <MudTabPanel Text="Параметры">
+                    <DynamicComponent Type="GetType(ViewSet.DescriptionInfo())" Parameters="Parameters" />
+                </MudTabPanel>
+                <AuthorizeView Roles="@GlobalStaticConstantsRoles.Roles.Admin">
+                    <Authorized>
+                        <MudTabPanel Text="Описание" Disabled="@(NomenclatureId < 1)">
+                            <TinyMCE.Blazor.Editor @bind-Value="editNomenclature.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" />
+                        </MudTabPanel>
+                        <MudTabPanel Text="Файлы" Disabled="@(NomenclatureId < 1)">
                             <FilesContextViewComponent ApplicationsNames="@([Routes.NOMENCLATURE_CONTROLLER_NAME])"
                                                        Title="Файлы"
                                                        PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
@@ -53,20 +53,25 @@
                                                        OwnerPrimaryKey="NomenclatureId"
                                                        @ref="filesViewRef"
                                                        ManageMode />
-                            <hr />
-                            <TagsViewComponent ApplicationsNames="@([Routes.NOMENCLATURE_CONTROLLER_NAME])"
-                                               ManageMode
-                                               PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
-                                               PropertyName="@Routes.METADATA_CONTROLLER_NAME"
-                                               Title="Теги"
-                                               OwnerPrimaryKey="@NomenclatureId" />
-                        </div>
-                    </div>
-                </Authorized>
-                <NotAuthorized>
-                    @((MarkupString)(editNomenclature.Description ?? ""))
-                </NotAuthorized>
-            </AuthorizeView>
+                        </MudTabPanel>
+                        <MudTabPanel Text="Теги" Disabled="@(NomenclatureId < 1)">
+                            <MudText>
+                                <TagsViewComponent ApplicationsNames="@([Routes.NOMENCLATURE_CONTROLLER_NAME])"
+                                                   ManageMode
+                                                   PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
+                                                   PropertyName="@Routes.METADATA_CONTROLLER_NAME"
+                                                   Title="Теги"
+                                                   OwnerPrimaryKey="@NomenclatureId" />
+                            </MudText>
+                        </MudTabPanel>
+                    </Authorized>
+                    <NotAuthorized>
+                        <MudTabPanel Text="Описание">
+                            @((MarkupString)(editNomenclature.Description ?? ""))
+                        </MudTabPanel>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </MudTabs>
         </div>
     }
 </div>

@@ -30,21 +30,18 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
 
 
     PaymentRetailDocumentModelDB? currentDoc, editDoc;
-    WalletRetailModelDB? currentWallet;
     UserInfoModel? userRecipient;
     WalletSelectInputComponent? recipientWalletRef;
 
-    DateTime? datePayment;
     DateTime? DatePayment
     {
-        get => datePayment;
+        get => editDoc?.DatePayment;
         set
         {
             if (editDoc is null)
                 return;
 
-            datePayment = value ?? DateTime.Now;
-            editDoc.DatePayment = datePayment ?? DateTime.Now;
+            editDoc.DatePayment = value ?? DateTime.Now;
         }
     }
 
@@ -81,14 +78,14 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
 
     async Task UpdateRecipient()
     {
-        if (editDoc is null || currentWallet is null)
+        if (editDoc?.Wallet is null)
             throw new Exception("editDoc is null");
 
         await SetBusyAsync();
-        TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([currentWallet.UserIdentityId]);
+        TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([editDoc.Wallet.UserIdentityId]);
         SnackBarRepo.ShowMessagesResponse(getUser.Messages);
-        if (getUser.Success() && getUser.Response is not null && getUser.Response.Any(x => x.UserId == currentWallet.UserIdentityId))
-            userRecipient = getUser.Response.First(x => x.UserId == currentWallet.UserIdentityId);
+        if (getUser.Success() && getUser.Response is not null && getUser.Response.Any(x => x.UserId == editDoc.Wallet.UserIdentityId))
+            userRecipient = getUser.Response.First(x => x.UserId == editDoc.Wallet.UserIdentityId);
 
         await SetBusyAsync(false);
     }
@@ -150,9 +147,8 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
             if (resDoc.Response is not null && resDoc.Response.Length == 1)
             {
                 currentDoc = resDoc.Response[0];
-                editDoc = GlobalTools.CreateDeepCopy(editDoc);
+                editDoc = GlobalTools.CreateDeepCopy(currentDoc);
 
-                currentWallet = editDoc?.Wallet;
                 await UpdateRecipient();
             }
         }
@@ -167,12 +163,10 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
         editDoc.Wallet = wallet;
         editDoc.WalletId = wallet?.Id ?? 0;
         InvokeAsync(UpdateRecipient);
-        StateHasChanged();
     }
 
     void SelectUserRecipientAction(UserInfoModel? user)
     {
         userRecipient = user;
-        StateHasChanged();
     }
 }

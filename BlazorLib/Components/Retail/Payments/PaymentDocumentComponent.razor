@@ -4,14 +4,6 @@
 @inherits BlazorBusyComponentBaseAuthModel
 
 <div class="card">
-    <div class="card-header d-flex flex-row">
-        <MudDatePicker Disabled="IsBusyProgress"
-                       Placeholder="Select Date"
-                       @bind-Date="DatePayment"
-                       Label="Дата платежа"
-                       Editable />
-        <MudSpacer />
-    </div>
     <div class="card-body">
         @if (IsBusyProgress || editDoc is null)
         {
@@ -38,19 +30,26 @@
                         }
                     </select>
                 </MudItem>
-                <MudItem xs="2">
+                <MudItem xs="6" md="2">
                     <div class="mb-3">
                         <label for="exampleInputAmount" class="form-label">Amount</label>
                         <input type="text" class="form-control" id="exampleInputAmount" @bind-value="editDoc.Amount" @bind-value:event="oninput">
                     </div>
                 </MudItem>
-                <MudItem xs="5">
+                <MudItem xs="6" md="2">
+                    <div class="mb-3">
+                        <label for="exampleInputDatePayment" class="form-label">Дата</label>
+                        <input @bind-value="@DatePayment" @bind-value:event="oninput" type="date" id="exampleInputDatePayment" class="form-control">
+                    </div>
+                </MudItem>
+
+                <MudItem xs="12" md="4">
                     <div class="mb-3">
                         <label for="exampleInputName" class="form-label">Примечание</label>
                         <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
                     </div>
                 </MudItem>
-                <MudItem xs="5">
+                <MudItem xs="12" md="4">
                     <div class="mb-3">
                         <label for="exampleInputPaymentSource" class="form-label">PaymentSource</label>
                         <input type="text" class="form-control" id="exampleInputPaymentSource" @bind-value="editDoc.PaymentSource" @bind-value:event="oninput">
@@ -60,7 +59,7 @@
             <div class="mb-3">
                 <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction"
                                             SelectUserHandler="SelectUserRecipientAction"
-                                            WalletInit="currentWallet"
+                                            WalletInit="editDoc.Wallet"
                                             @ref=recipientWalletRef
                                             HideSystemWallets />
             </div>

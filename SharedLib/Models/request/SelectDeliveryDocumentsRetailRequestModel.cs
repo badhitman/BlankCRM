@@ -16,4 +16,7 @@ public class SelectDeliveryDocumentsRetailRequestModel
 
     /// <inheritdoc/>
     public int? FilterOrderId { get; set; }
+
+    /// <inheritdoc/>
+    public DeliveryTypesEnum[]? TypesFilter {  get; set; }
 }

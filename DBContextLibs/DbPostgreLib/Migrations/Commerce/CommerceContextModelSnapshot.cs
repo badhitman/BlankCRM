@@ -179,6 +179,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<bool>("DeliveryPaymentUponReceipt")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("DeliveryStatus")
+                        .HasColumnType("integer");
+
                     b.Property<int>("DeliveryType")
                         .HasColumnType("integer");
 
@@ -222,6 +225,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("DeliveryCode");
 
                     b.HasIndex("DeliveryPaymentUponReceipt");
+
+                    b.HasIndex("DeliveryStatus");
 
                     b.HasIndex("DeliveryType");
 

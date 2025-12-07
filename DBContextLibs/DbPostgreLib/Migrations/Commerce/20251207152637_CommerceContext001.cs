@@ -300,6 +300,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DeliveryType = table.Column<int>(type: "integer", nullable: false),
+                    DeliveryStatus = table.Column<int>(type: "integer", nullable: true),
                     DeliveryPaymentUponReceipt = table.Column<bool>(type: "boolean", nullable: false),
                     RecipientIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     DeliveryCode = table.Column<string>(type: "text", nullable: true),
@@ -1006,6 +1007,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_DeliveryRetailDocuments_DeliveryPaymentUponReceipt",
                 table: "DeliveryRetailDocuments",
                 column: "DeliveryPaymentUponReceipt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeliveryRetailDocuments_DeliveryStatus",
+                table: "DeliveryRetailDocuments",
+                column: "DeliveryStatus");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeliveryRetailDocuments_DeliveryType",

@@ -13,4 +13,10 @@ public class SelectPaymentsRetailOrdersDocumentsRequestModel
     /// UserIdentityId
     /// </summary>
     public string? PayerFilterIdentityId { get; set; }
+
+    /// <inheritdoc/>
+    public PaymentsRetailTypesEnum[]? TypesFilter { get; set; }
+
+    /// <inheritdoc/>
+    public PaymentsRetailStatusesEnum[]? StatusesFilter { get; set; }
 }

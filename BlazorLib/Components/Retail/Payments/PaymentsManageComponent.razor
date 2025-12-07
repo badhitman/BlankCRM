@@ -1,12 +1,35 @@
 ﻿@using MudBlazor
 @inherits BlazorBusyComponentUsersCachedModel
 
-<MudTable ServerData="ServerReload" Dense Hover Loading="IsBusyProgress">
+<MudChipSet @bind-SelectedValues="SelectedPaymentsTypes"
+            SelectionMode="SelectionMode.MultiSelection"
+            CheckMark
+            Class="me-2"
+            Variant="Variant.Text"
+            Color="Color.Info">
+    @foreach (PaymentsRetailTypesEnum pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
+    {
+        <MudChip Value="@pt" Text="@pt.DescriptionInfo()" />
+    }
+</MudChipSet>
+
+<MudChipSet @bind-SelectedValues="SelectedPaymentsStatuses"
+            SelectionMode="SelectionMode.MultiSelection"
+            CheckMark
+            Variant="Variant.Text"
+            Color="Color.Surface">
+    @foreach (PaymentsRetailStatusesEnum ps in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
+    {
+        <MudChip Value="@ps" Text="@ps.DescriptionInfo()" />
+    }
+</MudChipSet>
+
+<MudTable ServerData="ServerReload" Dense Hover Loading="IsBusyProgress" @ref=_tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Платежи (розница)</MudText>
         <MudSpacer />
-        <MudButton Size="Size.Large"
-                   Variant="Variant.Outlined"
+
+        <MudButton Variant="Variant.Outlined"
                    IconColor="Color.Secondary"
                    OnClick=CreateNewOrderOpenDialog
                    EndIcon="@Icons.Material.Filled.Add">Создать платёж</MudButton>
@@ -30,27 +53,31 @@
             DateTime cdt = context.CreatedAtUTC.GetCustomTime();
             DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
         }
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Тип">@context.TypePayment.DescriptionInfo()</MudTd>
+        <MudTd DataLabel="Name">
+            <a href="/retail/payment-document/@context.Id">@context.Name</a>
+        </MudTd>
+        <MudTd DataLabel="Тип"><a href="/retail/payment-document/@context.Id">@context.TypePayment.DescriptionInfo()</a></MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
             <MudTd DataLabel="Тип">@(UsersCache.FirstOrDefault(x => x.UserId == context.Wallet!.UserIdentityId)?.ToString() ?? context.Wallet!.UserIdentityId)</MudTd>
         }
-        <MudTd DataLabel="Статус">@context.StatusPayment.DescriptionInfo()</MudTd>
+        <MudTd DataLabel="Статус"><a href="/retail/payment-document/@context.Id">@context.StatusPayment.DescriptionInfo()</a></MudTd>
         <MudTd DataLabel="Direct">@context.PaymentSource</MudTd>
         <MudTd DataLabel="Создан/Изменён">
-            <span>
-                @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
-            </span>
-            @if (udt.HasValue && udt != default)
-            {
-                <text>/</text>
+            <a href="/retail/payment-document/@context.Id">
                 <span>
-                    @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
+                    @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
                 </span>
-            }
+                @if (udt.HasValue && udt != default)
+                {
+                    <text>/</text>
+                    <span>
+                        @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
+                    </span>
+                }
+            </a>
         </MudTd>
-        <MudTd DataLabel="Кошелёк">[@context.Wallet!.WalletType] '@context.Wallet.Name'</MudTd>
+        <MudTd DataLabel="Кошелёк"><a href="/retail/wallet-card/@context.WalletId">[@context.Wallet!.WalletType!.Name] '@context.Wallet.Name'</a></MudTd>
         <MudTd DataLabel="Сумма">@context.Amount</MudTd>
         <MudTd DataLabel="Описание">@context.Description</MudTd>
     </RowTemplate>

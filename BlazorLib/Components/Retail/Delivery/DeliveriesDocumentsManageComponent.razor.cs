@@ -26,6 +26,18 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     public int? FilterOrderId { get; set; }
 
 
+    IReadOnlyCollection<DeliveryTypesEnum> _selectedTypes = [];
+    IReadOnlyCollection<DeliveryTypesEnum> SelectedTypes
+    {
+        get => _selectedTypes;
+        set
+        {
+            _selectedTypes = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+    MudTable<DeliveryDocumentRetailModelDB>? tableRef;
     bool _visible;
     readonly DialogOptions _dialogOptions = new()
     {
@@ -45,7 +57,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         await SetBusyAsync(token: token);
         TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req = new()
         {
-            Payload = new()
+            Payload = new(),
         };
 
         if (!string.IsNullOrWhiteSpace(ClientId))
@@ -53,6 +65,9 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
 
         if (FilterOrderId.HasValue && FilterOrderId > 0)
             req.Payload.FilterOrderId = FilterOrderId.Value;
+
+        if (SelectedTypes.Count != 0)
+            req.Payload.TypesFilter = [.. SelectedTypes];
 
         TPaginationResponseModel<DeliveryDocumentRetailModelDB>? res = await RetailRepo.SelectDeliveryDocumentsAsync(req, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
