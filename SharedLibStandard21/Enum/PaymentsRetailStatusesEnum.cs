@@ -26,6 +26,6 @@ public enum PaymentsRetailStatusesEnum
     /// <summary>
     /// Отменено
     /// </summary>
-    [Description("Отменена")]
+    [Description("Отменено")]
     Canceled = 1000
 }

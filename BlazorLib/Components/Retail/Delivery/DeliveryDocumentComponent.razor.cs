@@ -21,14 +21,18 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
 
     /// <inheritdoc/>
-    [CascadingParameter(Name = "ClientId")]
-    public string? ClientId { get; set; }
+    [Parameter, EditorRequired]
+    public required int OrderId { get; set; }
 
     /// <inheritdoc/>
     [Parameter]
     public int DeliveryDocumentId { get; set; }
 
+    /// <inheritdoc/>
+    [CascadingParameter(Name = "ClientId")]
+    public string? ClientId { get; set; }
 
+    RetailDocumentModelDB? currentOrder;
     DeliveryDocumentRetailModelDB? currentDoc, editDoc;
     UserInfoModel? senderUser;
 
@@ -136,6 +140,13 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        if (OrderId <= 0)
+        {
+            SnackBarRepo.Error("Не указан заказ");
+            throw new Exception("Не указан заказ");
+        }
+
+        await SetBusyAsync();
         await base.OnInitializedAsync();
         if (CurrentUserSession is null)
             throw new ArgumentNullException(nameof(CurrentUserSession));
@@ -143,20 +154,17 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{Routes.DELIVERY_CONTROLLER_NAME}/{Routes.DOCUMENT_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={DeliveryDocumentId}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
+        TResponseModel<RetailDocumentModelDB[]> orderDb = await RetailRepo.RetailDocumentsGetAsync(new() { Ids = [OrderId] });
+        SnackBarRepo.ShowMessagesResponse(orderDb.Messages);
+        currentOrder = orderDb.Response?.First();
 
         if (DeliveryDocumentId > 0)
         {
-            await SetBusyAsync();
             TResponseModel<DeliveryDocumentRetailModelDB[]>? res = await RetailRepo.GetDeliveryDocumentsAsync(new() { Ids = [DeliveryDocumentId] });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
             if (res.Response is not null && res.Response.Length == 1)
-            {
                 currentDoc = res.Response.First();
-
-            }
-
-            await SetBusyAsync(false);
         }
         else
         {
@@ -175,8 +183,10 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             {
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 RecipientIdentityUserId = ClientId ?? CurrentUserSession.UserId,
+                OrderId = OrderId,
             };
         }
         editDoc = GlobalTools.CreateDeepCopy(currentDoc);
+        await SetBusyAsync(false);
     }
 }

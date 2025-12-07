@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20251207105736_CommerceContext001")]
+    [Migration("20251207122515_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -201,7 +201,7 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
                     b.Property<string>("RecipientIdentityUserId")
@@ -1526,7 +1526,9 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     b.HasOne("SharedLib.RetailDocumentModelDB", "Order")
                         .WithMany("DeliveryDocuments")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Order");
                 });

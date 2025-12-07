@@ -10,9 +10,9 @@ namespace SharedLib;
 public class RegistersSelectRequestBaseModel
 {
     /// <summary>
-    /// Склад
+    /// Склады
     /// </summary>
-    public int WarehouseId { get; set; }
+    public int[]? WarehousesFilter { get; set; }
 
     /// <summary>
     /// Фильтр по номенклатуре

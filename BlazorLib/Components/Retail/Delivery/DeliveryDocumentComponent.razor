@@ -7,15 +7,16 @@
     <div class="card-body">
         @if (IsBusyProgress || editDoc is null)
         {
-            <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" data-cn="@this.GetType().Name" />
+            <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
         }
         else
         {
+            <h5 class="card-title">@currentOrder?.ToString() ?? "ошибка загрузки заказа"</h5>
             <MudGrid>
                 <MudItem xs="3">
                     <div class="mb-3">
-                        <label for="exampleInputName" class="form-label">Примечание</label>
-                        <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
+                        <label for="exampleInputWeightShipping" class="form-label">Вес отправления (кг)</label>
+                        <input type="number" class="form-control" id="exampleInputWeightShipping" @bind-value="editDoc.WeightShipping" @bind-value:event="oninput">
                     </div>
                 </MudItem>
                 <MudItem xs="3">
@@ -32,8 +33,8 @@
                 </MudItem>
                 <MudItem xs="3">
                     <div class="mb-3">
-                        <label for="exampleInputWeightShipping" class="form-label">Вес отправления</label>
-                        <input type="number" class="form-control" id="exampleInputWeightShipping" @bind-value="editDoc.WeightShipping" @bind-value:event="oninput">
+                        <label for="exampleInputName" class="form-label">Примечание</label>
+                        <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
                     </div>
                 </MudItem>
             </MudGrid>
@@ -56,7 +57,7 @@
                     <UserSelectInputComponent SelectHandleAction="SelectUserHandler"
                                               SelectedUserInit="@editDoc.RecipientIdentityUserId"
                                               IsReadOnly="IsBusyProgress"
-                                              Label="Отправитель" />
+                                              Label="Получатель" />
                 }
                 else
                 {
@@ -83,19 +84,24 @@
                     </div>
                 </div>
             </div>
-            <TinyMCE.Blazor.Editor @bind-Value="editDoc.Description"
-                                   ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc"
-                                   Conf="@editorConf"
-                                   Disable="@(DeliveryDocumentId < 1)" />
-            <div class="card my-3">
-                @if (DeliveryDocumentId > 0)
-                {
-                    <DeliveryStatusesTableComponent />
-                    <p class="card-text">
-                        <small class="text-body-secondary">@editDoc.CreatedAtUTC.GetCustomTime() @editDoc.LastUpdatedAtUTC?.GetCustomTime()</small>
-                    </p>
-                }
-            </div>
+
+            @if (DeliveryDocumentId > 0)
+            {
+                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+                    <MudTabPanel Text="Номенклатура">
+                        <DeliveryStatusesTableComponent />
+                    </MudTabPanel>
+                    <MudTabPanel Text="Примечания">
+                        <TinyMCE.Blazor.Editor @bind-Value="editDoc.Description"
+                                               ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc"
+                                               Conf="@editorConf" />
+                    </MudTabPanel>
+                </MudTabs>
+                <p class="card-text mt-2">
+                    <small class="text-body-secondary">@editDoc.CreatedAtUTC.GetCustomTime() @editDoc.LastUpdatedAtUTC?.GetCustomTime()</small>
+                </p>
+            }
+
             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
                 <button disabled="@CannotSave" class="btn btn-primary" type="button" @onclick=SaveDoc>
                     @(editDoc.Id <= 0 ? "Создать" : "Сохранить")

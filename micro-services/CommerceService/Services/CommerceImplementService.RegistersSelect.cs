@@ -40,8 +40,8 @@ public partial class CommerceImplementService : ICommerceService
         if (req.Payload.NomenclatureFilter is not null && req.Payload.NomenclatureFilter.Length != 0)
             q = q.Where(x => req.Payload.NomenclatureFilter.Any(y => y == x.NomenclatureId));
 
-        if (req.Payload.WarehouseId > 0)
-            q = q.Where(x => req.Payload.WarehouseId == x.WarehouseId);
+        if (req.Payload.WarehousesFilter is not null && req.Payload.WarehousesFilter.Length != 0)
+            q = q.Where(x => req.Payload.WarehousesFilter.Contains(x.WarehouseId));
 
         var exQuery = from offerAv in q
                       join oj in context.Offers on offerAv.OfferId equals oj.Id

@@ -308,7 +308,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     KladrCode = table.Column<string>(type: "text", nullable: true),
                     KladrTitle = table.Column<string>(type: "text", nullable: true),
                     AddressUserComment = table.Column<string>(type: "text", nullable: true),
-                    OrderId = table.Column<int>(type: "integer", nullable: true),
+                    OrderId = table.Column<int>(type: "integer", nullable: false),
                     AuthorIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -322,7 +322,8 @@ namespace DbPostgreLib.Migrations.Commerce
                         name: "FK_DeliveryRetailDocuments_RetailOrders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "RetailOrders",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

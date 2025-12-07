@@ -2,10 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib;
-using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Warehouse;
 
@@ -14,7 +13,35 @@ namespace BlazorLib.Components.Warehouse;
 /// </summary>
 public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedModel
 {
-    private MudTable<OfferAvailabilityModelDB>? table;
+    MudTable<OfferAvailabilityModelDB>? table;
+
+    List<UniversalBaseModel> Warehauses = [];
+
+    IReadOnlyCollection<int> _selectedWarehauses = [];
+    IReadOnlyCollection<int> SelectedWarehauses
+    {
+        get => _selectedWarehauses;
+        set
+        {
+            _selectedWarehauses = value;
+            if (table is not null)
+                InvokeAsync(table.ReloadServerData);
+        }
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        await base.OnInitializedAsync();
+        RubricsListRequestModel req = new()
+        {
+            ContextName = Routes.WAREHOUSE_CONTROLLER_NAME,
+        };
+
+        Warehauses = await HelpDeskRepo.RubricsChildListAsync(req);
+        await SetBusyAsync(false);
+    }
 
     async Task ReloadTable()
     {
@@ -29,20 +56,26 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
-    private async Task<TableData<OfferAvailabilityModelDB>> ServerReload(TableState state, CancellationToken token)
+    async Task<TableData<OfferAvailabilityModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
         TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req = new()
         {
             Payload = new()
             {
-                 MinQuantity = 1,
+                MinQuantity = 1,
             },
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert(),
         };
+
+        if (SelectedWarehauses.Count != 0 && SelectedWarehauses.Count != Warehauses.Count)
+        {
+            req.Payload.WarehousesFilter = [.. SelectedWarehauses];
+        }
+
         TPaginationResponseModel<OfferAvailabilityModelDB> rest = await CommerceRepo.OffersRegistersSelectAsync(req, token);
 
         if (rest.Response is not null)

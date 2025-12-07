@@ -5,11 +5,14 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">Доставка (документы отгрузки)</MudText>
         <MudSpacer />
-        <MudButton OnClick=CreateNewDeliveryOpenDialog
-                   Variant="Variant.Outlined"
-                   EndIcon="@Icons.Material.Filled.Add"
-                   IconColor="Color.Secondary"
-                   Size="Size.Large">Новая доставка</MudButton>
+        @if (FilterOrderId.HasValue && FilterOrderId.Value > 0)
+        {
+            <MudButton OnClick=CreateNewDeliveryOpenDialog
+                       Variant="Variant.Outlined"
+                       EndIcon="@Icons.Material.Filled.Add"
+                       IconColor="Color.Secondary"
+                       Size="Size.Large">Новая доставка</MudButton>
+        }
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Name</MudTh>
@@ -91,15 +94,19 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
-<MudDialog @bind-Visible="_visible" Options="_dialogOptions">
-    <TitleContent>
-        <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новая доставка (розница)
-        </MudText>
-    </TitleContent>
-    <DialogContent>
-        <CascadingValue Name="ClientId" Value="ClientId">
-            <DeliveryDocumentComponent />
-        </CascadingValue>
-    </DialogContent>
-</MudDialog>
+
+@if (FilterOrderId.HasValue && FilterOrderId.Value > 0)
+{
+    <MudDialog @bind-Visible="_visible" Options="_dialogOptions">
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новая доставка (розница)
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <CascadingValue Name="ClientId" Value="ClientId">
+                <DeliveryDocumentComponent OrderId="FilterOrderId.Value" />
+            </CascadingValue>
+        </DialogContent>
+    </MudDialog>
+}

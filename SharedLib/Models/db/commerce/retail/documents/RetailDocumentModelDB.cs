@@ -39,4 +39,10 @@ public class RetailDocumentModelDB : OrderDocumentBaseModel
     /// Rows
     /// </summary>
     public List<RowOfRetailOrderDocumentModelDB>? Rows { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{Name} [{DateDocument}]".Trim();
+    }
 }

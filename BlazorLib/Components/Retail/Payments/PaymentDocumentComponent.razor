@@ -19,42 +19,41 @@
         }
         else
         {
-            <div class="mb-3">
-                <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
-                <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.TypePayment">
-                    @foreach (PaymentsRetailTypesEnum _pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
-                    {
-                        <option value="@_pt">@_pt.DescriptionInfo()</option>
-                    }
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputStatusPayment" class="form-label">Статус платежа</label>
-                <select class="form-select" id="exampleInputStatusPayment" @bind="editDoc.StatusPayment">
-                    @foreach (PaymentsRetailStatusesEnum _sp in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
-                    {
-                        <option value="@_sp">@_sp.DescriptionInfo()</option>
-                    }
-                </select>
-            </div>
-
             <MudGrid>
-                <MudItem xs="4">
+                <MudItem xs="12" md="6" Class="mb-3">
+                    <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
+                    <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.TypePayment">
+                        @foreach (PaymentsRetailTypesEnum _pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
+                        {
+                            <option value="@_pt">@_pt.DescriptionInfo()</option>
+                        }
+                    </select>
+                </MudItem>
+                <MudItem xs="12" md="6" Class="mb-3">
+                    <label for="exampleInputStatusPayment" class="form-label">Статус платежа</label>
+                    <select class="form-select" id="exampleInputStatusPayment" @bind="editDoc.StatusPayment">
+                        @foreach (PaymentsRetailStatusesEnum _sp in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
+                        {
+                            <option value="@_sp">@_sp.DescriptionInfo()</option>
+                        }
+                    </select>
+                </MudItem>
+                <MudItem xs="2">
+                    <div class="mb-3">
+                        <label for="exampleInputAmount" class="form-label">Amount</label>
+                        <input type="text" class="form-control" id="exampleInputAmount" @bind-value="editDoc.Amount" @bind-value:event="oninput">
+                    </div>
+                </MudItem>
+                <MudItem xs="5">
                     <div class="mb-3">
                         <label for="exampleInputName" class="form-label">Примечание</label>
                         <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
                     </div>
                 </MudItem>
-                <MudItem xs="4">
+                <MudItem xs="5">
                     <div class="mb-3">
                         <label for="exampleInputPaymentSource" class="form-label">PaymentSource</label>
                         <input type="text" class="form-control" id="exampleInputPaymentSource" @bind-value="editDoc.PaymentSource" @bind-value:event="oninput">
-                    </div>
-                </MudItem>
-                <MudItem xs="4">
-                    <div class="mb-3">
-                        <label for="exampleInputAmount" class="form-label">Amount</label>
-                        <input type="text" class="form-control" id="exampleInputAmount" @bind-value="editDoc.Amount" @bind-value:event="oninput">
                     </div>
                 </MudItem>
             </MudGrid>

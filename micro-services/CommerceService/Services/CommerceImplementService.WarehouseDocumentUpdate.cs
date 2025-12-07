@@ -128,6 +128,8 @@ public partial class CommerceImplementService : ICommerceService
         int[] _offersIds = [.. warehouseDocumentDb.Rows.Select(x => x.OfferId).Distinct()];
         List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
             .Where(x => _offersIds.Any(y => y == x.OfferId))
+            .Include(x => x.Offer)
+            .Include(x => x.Nomenclature)
             .ToListAsync(cancellationToken: token);
 
         if (warehouseDocumentDb.IsDisabled != req.IsDisabled)
@@ -178,7 +180,7 @@ public partial class CommerceImplementService : ICommerceService
                     }
                     else
                     {
-                        msg = $"Количество сторно [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток отсутствует)";
+                        msg = $"Количество сторно [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
                         loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                         res.AddError($"{msg}. Баланс не может быть отрицательным");
                         break;
@@ -205,7 +207,7 @@ public partial class CommerceImplementService : ICommerceService
                     {
                         if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity)
                         {
-                            msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
+                            msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
                             loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                             res.AddError($"{msg}. Баланс не может быть отрицательным");
                             break;
@@ -220,7 +222,7 @@ public partial class CommerceImplementService : ICommerceService
                     }
                     else if (req.WritingOffWarehouseId > 0)
                     {
-                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток отсутствует)";
+                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
                         loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                         res.AddError($"{msg}. Баланс не может быть отрицательным");
                         break;
@@ -272,7 +274,7 @@ public partial class CommerceImplementService : ICommerceService
                     {
                         if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity)
                         {
-                            msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
+                            msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
                             loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                             res.AddError($"{msg}. Баланс не может быть отрицательным");
                             break;
@@ -287,7 +289,7 @@ public partial class CommerceImplementService : ICommerceService
                     }
                     else if (req.WritingOffWarehouseId > 0)
                     {
-                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток отсутствует)";
+                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
                         loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                         res.AddError($"{msg}. Баланс не может быть отрицательным");
                         break;
@@ -334,7 +336,7 @@ public partial class CommerceImplementService : ICommerceService
                     {
                         if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity)
                         {
-                            msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
+                            msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
                             loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                             res.AddError($"{msg}. Баланс не может быть отрицательным");
                             break;
@@ -349,7 +351,7 @@ public partial class CommerceImplementService : ICommerceService
                     }
                     else if (req.WritingOffWarehouseId > 0)
                     {
-                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.Name}'] не может быть списано (остаток отсутствует)";
+                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
                         loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                         res.AddError($"{msg}. Баланс не может быть отрицательным");
                         break;

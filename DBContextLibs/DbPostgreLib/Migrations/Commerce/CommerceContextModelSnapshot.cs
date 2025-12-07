@@ -198,7 +198,7 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
                     b.Property<string>("RecipientIdentityUserId")
@@ -1523,7 +1523,9 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     b.HasOne("SharedLib.RetailDocumentModelDB", "Order")
                         .WithMany("DeliveryDocuments")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Order");
                 });

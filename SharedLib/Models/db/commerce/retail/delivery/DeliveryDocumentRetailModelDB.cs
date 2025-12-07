@@ -65,7 +65,7 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     /// <summary>
     /// Заказ (документ)
     /// </summary>
-    public int? OrderId { get; set; }
+    public int OrderId { get; set; }
 
     /// <inheritdoc/>
     public required string AuthorIdentityUserId { get; set; }

@@ -57,81 +57,85 @@ else
     </div>
     @if (Id > 0)
     {
-        <MudTable Hover
-                  Loading="IsBusyProgress"
-                  ReadOnly="ReadOnly"
-                  SortLabel="@(nameof(RowOfOrderDocumentModelDB.Nomenclature.Name))"
-                  CanCancelEdit
-                  Items="@CurrentDocument.Rows"
-                  RowEditPreview="RowEditPreviewHandler"
-                  RowEditCommit="RowEditCommitHandler"
-                  CancelEditIcon="@Icons.Material.Filled.Cancel"
-                  CancelEditTooltip="Отменить изменение"
-                  CommitEditTooltip="Сохранить изменения"
-                  RowEditCancel="RowEditCancelHandler"
-                  EditTrigger="@EditTrigger">
+        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+            <MudTabPanel Text="Номенклатура">
+                <MudTable Hover
+                          Loading="IsBusyProgress"
+                          ReadOnly="ReadOnly"
+                          SortLabel="@(nameof(RowOfOrderDocumentModelDB.Nomenclature.Name))"
+                          CanCancelEdit
+                          Items="@CurrentDocument.Rows"
+                          RowEditPreview="RowEditPreviewHandler"
+                          RowEditCommit="RowEditCommitHandler"
+                          CancelEditIcon="@Icons.Material.Filled.Cancel"
+                          CancelEditTooltip="Отменить изменение"
+                          CommitEditTooltip="Сохранить изменения"
+                          RowEditCancel="RowEditCancelHandler"
+                          EditTrigger="@EditTrigger">
 
-            <ToolBarContent>
-                <MudText Typo="Typo.h6">
-                    Номенклатура поступления
-                </MudText>
-                <MudSpacer />
-                @if (!ReadOnly)
-                {
-                    <div class="ms-3">
-                        <AddRowToOrderDocumentComponent @ref="addingDomRef"
-                                                        ShowRegistersOffersQuantity ForceAdding
-                                                        WarehouseId="editDocument.WarehouseId"
-                                                        AllOffers="allOffers"
-                                                        CurrentRows="CurrentDocument.Rows!.Select(x => x.OfferId).ToList()"
-                                                        AddingOfferHandler="AddingOfferAction" />
-                    </div>
-                }
-            </ToolBarContent>
-            <ColGroup>
-                <col />
-                <col />
-                <col style="width:50px;" />
-                @if (EditTrigger == TableEditTrigger.EditButton)
-                {
-                    <col style="width:50px;" />
-                }
-            </ColGroup>
-            <HeaderContent>
-                <MudTh>Название</MudTh>
-                <MudTh>Количество</MudTh>
-                <MudTh></MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="Name">
-                    <a href="/nomenclature/offer-card/@context!.Offer!.Id">@context!.Offer!.GetName()</a>
-                </MudTd>
-                <MudTd DataLabel="Quantity">
-                    @context!.Quantity
-                </MudTd>
-                <MudTd>
-                    <MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
-                </MudTd>
-            </RowTemplate>
-            <RowEditingTemplate>
-                <MudTd DataLabel="Name">
-                    @context.Offer?.GetName() // @(context.Quantity * context.Offer?.Price) руб.
-                </MudTd>
-                <MudTd DataLabel="Quantity" UserAttributes="@(new() { { "colspan", 2 } })">
-                    @* <MudNumericField @bind-Value="context.Quantity" Required Min="1" /> *@
-                    <input type="number" @bind="context.Quantity" class="form-control" />
-                </MudTd>
-            </RowEditingTemplate>
-            <PagerContent>
-                <MudTablePager />
-            </PagerContent>
-            <EditButtonContent Context="button">
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
-            </EditButtonContent>
-        </MudTable>
-        <hr />
-        <span>Описание:</span>
-        <TinyMCE.Blazor.Editor @bind-Value="editDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" />
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">
+                            Номенклатура поступления
+                        </MudText>
+                        <MudSpacer />
+                        @if (!ReadOnly)
+                        {
+                            <div class="ms-3">
+                                <AddRowToOrderDocumentComponent @ref="addingDomRef"
+                                                                ShowRegistersOffersQuantity ForceAdding
+                                                                WarehouseId="editDocument.WarehouseId"
+                                                                AllOffers="allOffers"
+                                                                CurrentRows="CurrentDocument.Rows!.Select(x => x.OfferId).ToList()"
+                                                                AddingOfferHandler="AddingOfferAction" />
+                            </div>
+                        }
+                    </ToolBarContent>
+                    <ColGroup>
+                        <col />
+                        <col />
+                        <col style="width:50px;" />
+                        @if (EditTrigger == TableEditTrigger.EditButton)
+                        {
+                            <col style="width:50px;" />
+                        }
+                    </ColGroup>
+                    <HeaderContent>
+                        <MudTh>Название</MudTh>
+                        <MudTh>Количество</MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Name">
+                            <a href="/nomenclature/offer-card/@context!.Offer!.Id">@context!.Offer!.GetName()</a>
+                        </MudTd>
+                        <MudTd DataLabel="Quantity">
+                            @context!.Quantity
+                        </MudTd>
+                        <MudTd>
+                            <MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+                        </MudTd>
+                    </RowTemplate>
+                    <RowEditingTemplate>
+                        <MudTd DataLabel="Name">
+                            @context.Offer?.GetName() // @(context.Quantity* context.Offer?.Price) руб.
+                        </MudTd>
+                        <MudTd DataLabel="Quantity" UserAttributes="@(new() { { "colspan", 2 } })">
+                            @* <MudNumericField @bind-Value="context.Quantity" Required Min="1" /> *@
+                            <input type="number" @bind="context.Quantity" class="form-control" />
+                        </MudTd>
+                    </RowEditingTemplate>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                    <EditButtonContent Context="button">
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+                    </EditButtonContent>
+                </MudTable>
+            </MudTabPanel>
+            <MudTabPanel Text="Заметки">
+                <TinyMCE.Blazor.Editor @bind-Value="editDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" />
+            </MudTabPanel>
+        </MudTabs>
     }
     else
     {
@@ -143,8 +147,5 @@ else
                 Для добавления строк <cite title="сохраните документ">запишите документ</cite>
             </figcaption>
         </figure>
-        <hr />
-        <span>Описание:</span>
-        <InputRichTextComponent @bind-Value="editDocument.Description" />
     }
 }
