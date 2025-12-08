@@ -29,4 +29,9 @@ public record UserInfoBaseModel
 
     /// <inheritdoc/>
     public string? PhoneNumber { get; set; }
+
+    /// <summary>
+    /// Идентификатор (внешний)
+    /// </summary>
+    public string? ExternalUserId { get; set; }
 }

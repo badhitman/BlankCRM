@@ -183,7 +183,6 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             {
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 RecipientIdentityUserId = ClientId ?? CurrentUserSession.UserId,
-                OrderId = OrderId,
             };
         }
         editDoc = GlobalTools.CreateDeepCopy(currentDoc);

@@ -34,6 +34,11 @@ public class IdentityDetailsModel
     /// </summary>
     public string? PhoneNum { get; set; }
 
+    /// <summary>
+    /// Идентификатор (внешний)
+    /// </summary>
+    public string? ExternalUserId { get; set; }
+
     #region address
     /// <inheritdoc/>
     [Required]

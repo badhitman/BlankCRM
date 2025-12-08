@@ -1,0 +1,9 @@
+﻿<h3>DeliveryOrdersLinksComponent</h3>
+
+@code {
+    /// <summary>
+    /// Заказы (документы)
+    /// </summary>
+    [Parameter,EditorRequired]
+    public required List<RetailDeliveryOrderLinkModelDB> Orders { get; set; }
+}

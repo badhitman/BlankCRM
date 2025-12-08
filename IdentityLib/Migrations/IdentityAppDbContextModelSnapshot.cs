@@ -76,6 +76,9 @@ namespace IdentityLib.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("ExternalUserId")
+                        .HasColumnType("text");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("text");
 
@@ -139,6 +142,8 @@ namespace IdentityLib.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChatTelegramId");
+
+                    b.HasIndex("ExternalUserId");
 
                     b.HasIndex("KladrCode");
 

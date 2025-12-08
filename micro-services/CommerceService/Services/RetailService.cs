@@ -2,10 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using System.Linq;
+using DbcLib;
 
 namespace CommerceService;
 
@@ -124,7 +123,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         }
 
         req.CreatedAtUTC = DateTime.UtcNow;
-        req.Order = null;
+        req.Orders = null;
         req.Name = req.Name.Trim();
         req.Description = req.Description?.Trim();
         req.DeliveryCode = req.DeliveryCode?.Trim();
@@ -139,7 +138,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<ResponseBaseModel> UpdateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default)
     {
         req.CreatedAtUTC = DateTime.UtcNow;
-        req.Order = null;
+        req.Orders = null;
         req.Name = req.Name.Trim();
         req.Description = req.Description?.Trim();
         req.DeliveryCode = req.DeliveryCode?.Trim();
@@ -182,7 +181,9 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => req.Payload.TypesFilter.Contains(x.DeliveryType));
 
         if (req.Payload?.FilterOrderId is not null && req.Payload.FilterOrderId > 0)
-            q = q.Where(x => req.Payload.FilterOrderId == x.OrderId);
+            q = from deliveryDoc in q
+                join linkItem in context.DeliveriesOrdersLinks.Where(x => x.OrderDocumentId == req.Payload.FilterOrderId) on deliveryDoc.Id equals linkItem.DeliveryDocumentId
+                select deliveryDoc;
 
         IQueryable<DeliveryDocumentRetailModelDB>? pq = q
             .Skip(req.PageNum * req.PageSize)
@@ -884,7 +885,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
     #endregion
 
-    #region Order-Document
+    #region Order`s (document`s)
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default)
     {
@@ -967,6 +968,9 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.CreatorsFilterIdentityId is not null && req.Payload.CreatorsFilterIdentityId.Length != 0)
             q = q.Where(x => req.Payload.CreatorsFilterIdentityId.Contains(x.AuthorIdentityUserId));
 
+        if (req.Payload?.WithoutDeliveryOnly == true)
+            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id));
+
         IQueryable<RetailDocumentModelDB> pq = q
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
@@ -981,7 +985,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             Response = await pq
                 .OrderBy(x => x.CreatedAtUTC)
                 .Include(x => x.Rows)
-                .Include(x => x.DeliveryDocuments)
+                .Include(x => x.Deliveries)
                 .ToListAsync(cancellationToken: token)
         };
     }
@@ -998,7 +1002,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             Response = !req.IncludeDataExternal
                 ? await q.ToArrayAsync(cancellationToken: token)
                 : await q.Include(x => x.Rows)
-                         .Include(x => x.DeliveryDocuments)
+                         .Include(x => x.Deliveries)
                          .ToArrayAsync(cancellationToken: token)
         };
 

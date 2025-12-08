@@ -18,4 +18,9 @@ public class SelectRetailDocumentsRequestModel
     /// CreatorsFilterIdentityId
     /// </summary>
     public string[]? CreatorsFilterIdentityId { get; set; }
+
+    /// <summary>
+    /// Только без привязки к отправкам
+    /// </summary>
+    public bool WithoutDeliveryOnly { get; set; }
 }

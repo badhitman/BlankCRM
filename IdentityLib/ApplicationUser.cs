@@ -11,7 +11,7 @@ namespace IdentityLib;
 /// <summary>
 /// Пользователь [Identity]
 /// </summary>
-[Index(nameof(ChatTelegramId)), Index(nameof(KladrCode)), Index(nameof(RequestChangePhone)), Index(nameof(PhoneNumber))]
+[Index(nameof(ChatTelegramId)), Index(nameof(KladrCode)), Index(nameof(RequestChangePhone)), Index(nameof(PhoneNumber)), Index(nameof(ExternalUserId))]
 [Index(nameof(NormalizedFirstNameUpper)), Index(nameof(NormalizedLastNameUpper)), Index(nameof(NormalizedPatronymicUpper))]
 public class ApplicationUser : IdentityUser
 {
@@ -62,6 +62,11 @@ public class ApplicationUser : IdentityUser
     /// <inheritdoc/>
     public string? RequestChangePhone { get; set; }
 
+    /// <summary>
+    /// Идентификатор (внешний)
+    /// </summary>
+    public string? ExternalUserId { get; set; }
+
     /// <inheritdoc/>
     public static explicit operator UserInfoModel(ApplicationUser app_user)
     {
@@ -81,6 +86,7 @@ public class ApplicationUser : IdentityUser
             patronymic: app_user.Patronymic,
             kladrTitle: app_user.KladrTitle,
             kladrCode: app_user.KladrCode,
+            externalUserId: app_user.ExternalUserId,
             addressUserComment: app_user.AddressUserComment);
     }
 }

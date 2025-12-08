@@ -188,6 +188,11 @@ public partial class CommerceLayerContext : DbContext
     /// RowsRetailsOrders
     /// </summary>
     public DbSet<RowOfRetailOrderDocumentModelDB> RowsRetailsOrders { get; set; } = default!;
+
+    /// <summary>
+    /// DeliveriesOrdersLinks
+    /// </summary>
+    public DbSet<RetailDeliveryOrderLinkModelDB> DeliveriesOrdersLinks { get; set; } = default!;
     #endregion
 
     #region delivery

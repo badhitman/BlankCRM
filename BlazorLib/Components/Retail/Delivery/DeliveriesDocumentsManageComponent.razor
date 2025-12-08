@@ -29,10 +29,7 @@
             <MudTh>Получатель</MudTh>
         }
         <MudTh>Стоимость доставки</MudTh>
-        @if (!FilterOrderId.HasValue || FilterOrderId.Value < 1)
-        {
-            <MudTh>Заказ</MudTh>
-        }
+        <MudTh>Заказ(ы)</MudTh>
         <MudTh>Создан/Изменён</MudTh>
         <MudTh>Адрес</MudTh>
         <MudTh>Трэк/Код</MudTh>
@@ -59,11 +56,16 @@
             </MudTd>
         }
         <MudTd DataLabel="Стоимость доставки">@context.ShippingCost</MudTd>
-        @if (!FilterOrderId.HasValue || FilterOrderId.Value < 1)
-        {
-            <MudTd DataLabel="Заказ">@context.Order</MudTd>
-        }
-
+        <MudTd DataLabel="Заказ(ы)">
+            @if (context.Orders is null)
+            {
+                <span class="badge text-bg-danger">данные не загружены</span>
+            }
+            else
+            {
+                <DeliveryOrdersLinksComponent Orders="context.Orders" />
+            }
+        </MudTd>
         <MudTd DataLabel="Создан/Изменён">
             <span>
                 @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>

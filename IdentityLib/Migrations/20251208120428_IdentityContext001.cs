@@ -43,6 +43,7 @@ namespace IdentityLib.Migrations
                     KladrTitle = table.Column<string>(type: "text", nullable: true),
                     AddressUserComment = table.Column<string>(type: "text", nullable: true),
                     RequestChangePhone = table.Column<string>(type: "text", nullable: true),
+                    ExternalUserId = table.Column<string>(type: "text", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -243,6 +244,11 @@ namespace IdentityLib.Migrations
                 name: "IX_ApplicationUsers_ChatTelegramId",
                 table: "ApplicationUsers",
                 column: "ChatTelegramId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUsers_ExternalUserId",
+                table: "ApplicationUsers",
+                column: "ExternalUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApplicationUsers_KladrCode",

@@ -36,22 +36,28 @@
             if (editClientCopy is not null)
             {
                 <MudGrid>
-                    <MudItem xs="12" md="4">
+                    <MudItem xs="12" sm=6 md="3">
                         <div class="mb-3">
-                            <label for="exampleInputSurname1" class="form-label">Фамилия</label>
-                            <input type="text" class="form-control" id="exampleInputSurname1" @bind-value="editClientCopy.GivenName" @bind-value:event="oninput">
+                            <label for="exampleInputSurname" class="form-label">Фамилия</label>
+                            <input type="text" class="form-control" id="exampleInputSurname" @bind-value="editClientCopy.GivenName" @bind-value:event="oninput">
                         </div>
                     </MudItem>
-                    <MudItem xs="12" md="4">
+                    <MudItem xs="12" sm=6 md="3">
                         <div class="mb-3">
-                            <label for="exampleInputLastName1" class="form-label">Имя</label>
-                            <input type="text" class="form-control" id="exampleInputLastName1" @bind-value="editClientCopy.Surname" @bind-value:event="oninput">
+                            <label for="exampleInputLastName" class="form-label">Имя</label>
+                            <input type="text" class="form-control" id="exampleInputLastName" @bind-value="editClientCopy.Surname" @bind-value:event="oninput">
                         </div>
                     </MudItem>
-                    <MudItem xs="12" md="4">
+                    <MudItem xs="12" sm=6 md="3">
                         <div class="mb-3">
-                            <label for="exampleInputPatronymic1" class="form-label">Отчество</label>
-                            <input type="text" class="form-control" id="exampleInputPatronymic1" @bind-value="editClientCopy.Patronymic" @bind-value:event="oninput">
+                            <label for="exampleInputPatronymic" class="form-label">Отчество</label>
+                            <input type="text" class="form-control" id="exampleInputPatronymic" @bind-value="editClientCopy.Patronymic" @bind-value:event="oninput">
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm=6 md="3">
+                        <div class="mb-3">
+                            <label for="exampleInputExternalUserId" class="form-label">Идентификатор (внешний)</label>
+                            <input type="text" class="form-control" id="exampleInputExternalUserId" @bind-value="editClientCopy.ExternalUserId" @bind-value:event="oninput">
                         </div>
                     </MudItem>
                     <MudItem xs="12">

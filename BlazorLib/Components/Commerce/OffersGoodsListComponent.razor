@@ -40,7 +40,7 @@
                 <MudTh>Кратность</MudTh>
             }
             <MudTh>Ед. изм.</MudTh>
-            <MudTh>Баланс</MudTh>
+            <MudTh>Остатки</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Название">
@@ -66,7 +66,7 @@
                 <MudTd DataLabel="Кратность">@context.Multiplicity</MudTd>
             }
             <MudTd DataLabel="Ед. изм.">@context.OfferUnit.DescriptionInfo()</MudTd>
-            <MudTd DataLabel="Баланс">
+            <MudTd DataLabel="Остатки">
                 @RegistersCache.Where(x => x.OfferId == context.Id).Sum(x => x.Quantity)
             </MudTd>
         </RowTemplate>

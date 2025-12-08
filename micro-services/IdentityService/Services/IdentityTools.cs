@@ -785,6 +785,7 @@ public class IdentityTools(
 
         await q
             .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.ExternalUserId, req.ExternalUserId)
                 .SetProperty(p => p.FirstName, req.FirstName)
                 .SetProperty(p => p.NormalizedFirstNameUpper, req.FirstName.ToUpper())
                 .SetProperty(p => p.LastName, req.LastName)
@@ -943,7 +944,8 @@ public class IdentityTools(
                 EF.Functions.Like(x.NormalizedFirstNameUpper, $"%{upp_query}%") ||
                 EF.Functions.Like(x.NormalizedLastNameUpper, $"%{upp_query}%") ||
                 EF.Functions.Like(x.NormalizedPatronymicUpper, $"%{upp_query}%") ||
-                EF.Functions.Like(x.PhoneNumber, $"%{upp_query}%") ||
+                EF.Functions.Like(x.ExternalUserId, req.FindQuery) ||
+                EF.Functions.Like(x.PhoneNumber, req.FindQuery) ||
                 x.Id == req.FindQuery);
         }
         int total = await q.CountAsync(cancellationToken: token);
@@ -966,6 +968,7 @@ public class IdentityTools(
                 x.Patronymic,
                 x.KladrTitle,
                 x.KladrCode,
+                x.ExternalUserId,
                 x.AddressUserComment,
             })
             .ToArrayAsync(cancellationToken: token);
@@ -996,6 +999,7 @@ public class IdentityTools(
                    firstName: x.FirstName,
                    lastName: x.LastName,
                    patronymic: x.Patronymic,
+                   externalUserId: x.ExternalUserId,
                    roles: [.. roles.Where(y => y.UserId == x.Id).Select(z => z.RoleName)],
                    claims: [.. claims.Where(o => o.UserId == x.Id).Select(q => new EntryAltModel() { Id = q.ClaimType, Name = q.ClaimValue })]));
 

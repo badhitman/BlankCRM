@@ -120,6 +120,7 @@ public class UsersAuthenticateService(
             patronymic: au.Patronymic,
             kladrTitle: au.KladrTitle,
             kladrCode: au.KladrCode,
+            externalUserId: au.ExternalUserId,
             addressUserComment:au.AddressUserComment)
         };
     }

@@ -63,7 +63,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
 
     protected private async Task<TableData<SessionOfDocumentDataModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        if (table is null || CurrentUserSession is null)
+        if (!tableLoadReady || CurrentUserSession is null)
             return new TableData<SessionOfDocumentDataModelDB>() { TotalItems = 0, Items = [] };
 
         if (string.IsNullOrWhiteSpace(CurrentUserSession.UserId))

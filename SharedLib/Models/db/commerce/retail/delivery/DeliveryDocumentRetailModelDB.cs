@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace SharedLib;
@@ -63,14 +62,9 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     #endregion
 
     /// <summary>
-    /// Заказ (документ)
+    /// Заказы (документы)
     /// </summary>
-    public RetailDocumentModelDB? Order { get; set; }
-
-    /// <summary>
-    /// Заказ (документ)
-    /// </summary>
-    public int OrderId { get; set; }
+    public List<RetailDeliveryOrderLinkModelDB>? Orders { get; set; }
 
     /// <inheritdoc/>
     public required string AuthorIdentityUserId { get; set; }

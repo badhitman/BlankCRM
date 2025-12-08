@@ -11,5 +11,11 @@
             <option value="@uom">@uom.DescriptionInfo()</option>
         }
     </select>
-    <button @onclick="CreateNewNomenclature" disabled="@(!CanSave)" class="btn btn-outline-secondary" type="button" id="button-addon2">Создать</button>
+    <button @onclick="CreateNewNomenclature"
+            disabled="@(!CanSave)"
+            class="btn btn-outline-@(CanSave ? "success" : "secondary")"
+            type="button"
+            id="button-addon2">
+        Создать
+    </button>
 </div>

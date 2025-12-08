@@ -78,7 +78,7 @@ public static partial class GlobalStaticConstants
     /// <summary>
     /// Fake Host
     /// </summary>
-    public const string FakeHost = "fake.null";
+    public const string FakeHost = "local";
 
     /// <summary>
     /// TinyMCEditorUploadImage

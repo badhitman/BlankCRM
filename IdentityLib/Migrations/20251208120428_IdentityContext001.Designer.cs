@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IdentityLib.Migrations
 {
     [DbContext(typeof(IdentityAppDbContext))]
-    [Migration("20251130135531_IdentityContext001")]
+    [Migration("20251208120428_IdentityContext001")]
     partial class IdentityContext001
     {
         /// <inheritdoc />
@@ -79,6 +79,9 @@ namespace IdentityLib.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("ExternalUserId")
+                        .HasColumnType("text");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("text");
 
@@ -142,6 +145,8 @@ namespace IdentityLib.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChatTelegramId");
+
+                    b.HasIndex("ExternalUserId");
 
                     b.HasIndex("KladrCode");
 

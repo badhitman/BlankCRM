@@ -126,6 +126,7 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
             Patronymic = editClientCopy.Patronymic,
             FirstName = editClientCopy.GivenName,
             LastName = editClientCopy.Surname,
+            ExternalUserId = editClientCopy.ExternalUserId,
             UpdateAddress = true,
         };
 
