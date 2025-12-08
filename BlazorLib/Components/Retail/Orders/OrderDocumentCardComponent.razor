@@ -81,9 +81,6 @@ else
                         <OrderTableRowsComponent Document="editDocument" @ref=tableRowsRef />
                     }
                 </MudTabPanel>
-                <MudTabPanel Text="Оплата" Disabled="@(OrderId < 1)">
-                    <PaymentsTableComponent OrderId="OrderId" />
-                </MudTabPanel>
                 <MudTabPanel Text="Отгрузка/Доставка" Disabled="@(OrderId < 1)">
                     <DeliveriesDocumentsManageComponent FilterOrderId="OrderId" />
                 </MudTabPanel>
@@ -93,7 +90,7 @@ else
                 <MudTabPanel Text="Файлы" Disabled="@(OrderId < 1)">
                     <FilesContextViewComponent ApplicationsNames="@([Routes.RETAIL_CONTROLLER_NAME])"
                                                PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
-                                               PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
+                                               PrefixPropertyName="@Routes.DOCUMENT_CONTROLLER_NAME"
                                                OwnerPrimaryKey="OrderId"
                                                Title="Вложения"
                                                ManageMode />

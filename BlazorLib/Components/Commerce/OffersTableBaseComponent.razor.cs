@@ -64,13 +64,13 @@ public abstract class OffersTableBaseComponent : BlazorRegistersComponent
     /// <summary>
     /// LoadOffers
     /// </summary>
-    protected async Task LoadOffers(int page_num)
+    public async Task LoadOffers(int page_num)
     {
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
         if (page_num == 0)
-            allOffers = [];
+            allOffers.Clear();
 
         TPaginationRequestStandardModel<OffersSelectRequestModel> req = new()
         {

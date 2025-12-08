@@ -163,7 +163,7 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
         {
             if (cacheId != SelectedOfferId && SelectedOffer is not null && !ForceAdding)
             {
-                await CacheRegistersUpdate(offers: OffersNodes.SelectMany(x => x.Select(y => y.Id)).ToArray(), goods: [], WarehouseId, true);
+                await CacheRegistersUpdate(offers: [.. OffersNodes.SelectMany(x => x.Select(y => y.Id))], goods: [], WarehouseId, true);
                 cacheId = SelectedOfferId;
                 StateHasChanged();
             }
@@ -171,12 +171,22 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
     }
 
     /// <inheritdoc/>
+    public async Task RegistersReload()
+    {
+        await SetBusyAsync();
+        await CacheRegistersUpdate(offers: [.. OffersNodes.SelectMany(x => x.Select(y => y.Id))], goods: [], WarehouseId, true);
+        await SetBusyAsync(false);
+    }
+
+    /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await SetBusyAsync();
         SelectedOfferId = ActualOffers.FirstOrDefault()?.Id;
         if (SelectedOffer is not null && !ForceAdding)
             await CacheRegistersUpdate(offers: [SelectedOffer.Id], goods: [], WarehouseId, true);
 
         cacheId = SelectedOfferId;
+        await SetBusyAsync(false);
     }
 }

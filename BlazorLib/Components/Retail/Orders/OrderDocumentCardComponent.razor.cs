@@ -125,7 +125,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
         await SetBusyAsync(false);
     }
 
-    void WarehouseSelectAction(UniversalBaseModel? selectedWarehouse)
+    async void WarehouseSelectAction(UniversalBaseModel? selectedWarehouse)
     {
         if (editDocument is null)
             throw new ArgumentNullException(nameof(editDocument));
@@ -133,7 +133,12 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
         editDocument.WarehouseId = selectedWarehouse?.Id ?? 0;
 
         StateHasChanged();
-        tableRowsRef?.UpdateData();
+        if (tableRowsRef is not null)
+        {
+            await tableRowsRef.LoadOffers(0);
+            if (tableRowsRef.AddingDomRef is not null)
+                await tableRowsRef.AddingDomRef.RegistersReload();
+        }
     }
 
     async void SelectUserHandler(UserInfoModel? selected)

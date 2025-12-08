@@ -32,7 +32,9 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
 
     List<RowOfRetailOrderDocumentModelDB> pagedData = [];
     RowOfRetailOrderDocumentModelDB? elementBeforeEdit;
-    AddRowToOrderDocumentComponent? addingDomRef;
+
+    /// <inheritdoc/>
+    public AddRowToOrderDocumentComponent? AddingDomRef { get; private set; }
 
 
     /// <inheritdoc/>
@@ -74,7 +76,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
         else
             StateHasChanged();
 
-        addingDomRef?.StateHasChangedCall();
+        AddingDomRef?.StateHasChangedCall();
     }
 
     decimal GetMaxValue(RowOfRetailOrderDocumentModelDB ctx)
@@ -117,7 +119,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             DocumentUpdateHandler();
         UpdateData();
         StateHasChanged();
-        addingDomRef!.StateHasChangedCall();
+        AddingDomRef!.StateHasChangedCall();
     }
 
     /// <inheritdoc/>
@@ -128,7 +130,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
         if (DocumentUpdateHandler is not null)
             DocumentUpdateHandler();
 
-        addingDomRef?.StateHasChangedCall();
+        AddingDomRef?.StateHasChangedCall();
     }
 
     /// <inheritdoc/>
