@@ -972,6 +972,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id));
 
         IQueryable<RetailDocumentModelDB> pq = q
+            .OrderBy(x => x.CreatedAtUTC)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
@@ -983,7 +984,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq
-                .OrderBy(x => x.CreatedAtUTC)
                 .Include(x => x.Rows)
                 .Include(x => x.Deliveries)
                 .ToListAsync(cancellationToken: token)

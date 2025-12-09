@@ -52,6 +52,7 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
                 currentUser.GivenName == editClientCopy.GivenName &&
                 currentUser.Surname == editClientCopy.Surname &&
                 currentUser.Patronymic == editClientCopy.Patronymic &&
+                currentUser.ExternalUserId == editClientCopy.ExternalUserId &&
                 currentUser.KladrTitle == editClientCopy.KladrTitle &&
                 currentUser.KladrCode == editClientCopy.KladrCode &&
                 currentUser.AddressUserComment == editClientCopy.AddressUserComment;

@@ -201,9 +201,6 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("RecipientIdentityUserId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -235,8 +232,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("KladrTitle");
 
                     b.HasIndex("LastUpdatedAtUTC");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("RecipientIdentityUserId");
 
@@ -912,6 +907,29 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("AttendancesReg");
                 });
 
+            modelBuilder.Entity("SharedLib.RetailDeliveryOrderLinkModelDB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DeliveryDocumentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrderDocumentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryDocumentId");
+
+                    b.HasIndex("OrderDocumentId");
+
+                    b.ToTable("DeliveriesOrdersLinks");
+                });
+
             modelBuilder.Entity("SharedLib.RetailDocumentModelDB", b =>
                 {
                     b.Property<int>("Id")
@@ -1524,17 +1542,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Offer");
                 });
 
-            modelBuilder.Entity("SharedLib.DeliveryDocumentRetailModelDB", b =>
-                {
-                    b.HasOne("SharedLib.RetailDocumentModelDB", "Order")
-                        .WithMany("DeliveryDocuments")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("SharedLib.DeliveryStatusRetailDocumentModelDB", b =>
                 {
                     b.HasOne("SharedLib.DeliveryDocumentRetailModelDB", "DeliveryDocument")
@@ -1673,6 +1680,25 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Offer");
 
                     b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("SharedLib.RetailDeliveryOrderLinkModelDB", b =>
+                {
+                    b.HasOne("SharedLib.DeliveryDocumentRetailModelDB", "DeliveryDocument")
+                        .WithMany("Orders")
+                        .HasForeignKey("DeliveryDocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SharedLib.RetailDocumentModelDB", "OrderDocument")
+                        .WithMany("Deliveries")
+                        .HasForeignKey("OrderDocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeliveryDocument");
+
+                    b.Navigation("OrderDocument");
                 });
 
             modelBuilder.Entity("SharedLib.RowOfDeliveryRetailDocumentModelDB", b =>
@@ -1867,6 +1893,8 @@ namespace DbPostgreLib.Migrations.Commerce
             modelBuilder.Entity("SharedLib.DeliveryDocumentRetailModelDB", b =>
                 {
                     b.Navigation("DeliveryStatusesLog");
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("SharedLib.NomenclatureModelDB", b =>
@@ -1901,7 +1929,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
             modelBuilder.Entity("SharedLib.RetailDocumentModelDB", b =>
                 {
-                    b.Navigation("DeliveryDocuments");
+                    b.Navigation("Deliveries");
 
                     b.Navigation("Rows");
                 });

@@ -619,6 +619,7 @@ public class IdentityTools(
                 Patronymic = app_user.Patronymic,
                 KladrCode = app_user.KladrCode,
                 KladrTitle = app_user.KladrTitle,
+                ExternalUserId = app_user.ExternalUserId,
                 AddressUserComment = app_user.AddressUserComment,
                 AccessFailedCount = app_user.AccessFailedCount,
                 Email = app_user.Email,
