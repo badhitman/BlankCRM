@@ -1013,6 +1013,52 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
     #endregion
 
+    #region Deliveries orders link`s 
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> CreateDeliveryOrderLinkDocumentAsync(RetailDeliveryOrderLinkModelDB req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        await context.DeliveriesOrdersLinks.AddAsync(req, token);
+        await context.SaveChangesAsync(token);
+        return new() { Response = req.Id };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateDeliveryOrderLinkDocumentAsync(RetailDeliveryOrderLinkModelDB req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        await context.DeliveriesOrdersLinks
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.OrderDocumentId, req.OrderDocumentId)
+                .SetProperty(p => p.DeliveryDocumentId, req.DeliveryDocumentId), cancellationToken: token);
+        await context.SaveChangesAsync(token);
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<RetailDeliveryOrderLinkModelDB>> SelectDeliveriesOrdersLinksDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<RetailDeliveryOrderLinkModelDB> q = context.DeliveriesOrdersLinks.AsQueryable();
+
+        IQueryable<RetailDeliveryOrderLinkModelDB> pq = q
+            .OrderBy(x => new { x.OrderDocumentId, x.DeliveryDocumentId })
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await pq.ToListAsync(cancellationToken: token)
+        };
+        throw new NotImplementedException();
+    }
+    #endregion
+
     #region Conversion`s
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default)
