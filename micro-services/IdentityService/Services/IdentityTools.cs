@@ -791,7 +791,8 @@ public class IdentityTools(
                 .SetProperty(p => p.NormalizedFirstNameUpper, req.FirstName.ToUpper())
                 .SetProperty(p => p.LastName, req.LastName)
                 .SetProperty(p => p.NormalizedLastNameUpper, req.LastName.ToUpper())
-                .SetProperty(p => p.Patronymic, req.Patronymic.ToUpper()), cancellationToken: token);
+                .SetProperty(p => p.Patronymic, req.Patronymic)
+                .SetProperty(p => p.NormalizedPatronymicUpper, req.Patronymic.ToUpper()), cancellationToken: token);
 
         if (req.UpdateAddress)
         {
@@ -1285,8 +1286,8 @@ public class IdentityTools(
 
         using IUserEmailStore<ApplicationUser> emailStore = (IUserEmailStore<ApplicationUser>)userStore;
         ApplicationUser user = IdentityStatic.CreateInstanceUser();
-        await userStore.SetUserNameAsync(user, email, CancellationToken.None);
-        await emailStore.SetEmailAsync(user, email, CancellationToken.None);
+        await userStore.SetUserNameAsync(user, email, token);
+        await emailStore.SetEmailAsync(user, email, token);
 
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         IdentityResult result = await userManager.CreateAsync(user);
@@ -1355,8 +1356,8 @@ public class IdentityTools(
 
         using IUserEmailStore<ApplicationUser> emailStore = (IUserEmailStore<ApplicationUser>)userStore;
         ApplicationUser user = IdentityStatic.CreateInstanceUser();
-        await userStore.SetUserNameAsync(user, req.Payload.UserName, CancellationToken.None);
-        await emailStore.SetEmailAsync(user, req.Payload.UserName, CancellationToken.None);
+        await userStore.SetUserNameAsync(user, req.Payload.UserName, token);
+        await emailStore.SetEmailAsync(user, req.Payload.UserName, token);
 
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         IdentityResult result = await userManager.CreateAsync(user);
@@ -1408,13 +1409,13 @@ public class IdentityTools(
         ApplicationUser user = IdentityStatic.CreateInstanceUser();
 
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        await userStore.SetUserNameAsync(user, req.Email, CancellationToken.None);
+        await userStore.SetUserNameAsync(user, req.Email, token);
 
         using IUserEmailStore<ApplicationUser> emailStore = (IUserEmailStore<ApplicationUser>)userStore;
 
         try
         {
-            await emailStore.SetEmailAsync(user, req.Email, CancellationToken.None);
+            await emailStore.SetEmailAsync(user, req.Email, token);
 
             IdentityResult result = await userManager.CreateAsync(user, req.Password);
 

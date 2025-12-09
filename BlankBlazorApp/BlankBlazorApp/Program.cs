@@ -32,6 +32,8 @@ Console.OutputEncoding = Encoding.UTF8;
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddConsole(); // Adds console logging
+
 builder.AddServiceDefaults();
 // NLog: Setup NLog for Dependency injection
 builder.Logging.ClearProviders()

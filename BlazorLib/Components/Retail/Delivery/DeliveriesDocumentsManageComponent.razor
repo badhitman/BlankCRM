@@ -13,16 +13,21 @@
         <MudSpacer />
         @if (FilterOrderId.HasValue && FilterOrderId.Value > 0)
         {
-            <MudButton OnClick=CreateNewDeliveryOpenDialog
-                       Variant="Variant.Outlined"
-                       EndIcon="@Icons.Material.Filled.Add"
-                       IconColor="Color.Secondary"
-                       Size="Size.Large">Новая доставка</MudButton>
-            <MudButton OnClick=CreateNewDeliveryOpenDialog
-                       Variant="Variant.Outlined"
-                       EndIcon="@Icons.Material.Filled.DeviceHub"
-                       IconColor="Color.Secondary"
-                       Size="Size.Large">Включить в доставку</MudButton>
+            <MudTooltip Text="Создать новый документ доставки">
+                <MudButton OnClick=CreateNewDeliveryOpenDialog
+                           Class="me-2"
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.Add"
+                           IconColor="Color.Secondary"
+                           Size="Size.Large">Новая доставка</MudButton>
+            </MudTooltip>
+            <MudTooltip Text="Добавить заказ в созданную ранее доставку">
+                <MudButton OnClick=CreateNewDeliveryOpenDialog
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.DeviceHub"
+                           IconColor="Color.Secondary"
+                           Size="Size.Large">Включить в доставку</MudButton>
+            </MudTooltip>
         }
     </ToolBarContent>
     <HeaderContent>
@@ -113,7 +118,7 @@
         </TitleContent>
         <DialogContent>
             <CascadingValue Name="ClientId" Value="ClientId">
-                <DeliveryDocumentComponent OrderId="FilterOrderId.Value" />
+                <DeliveryDocumentComponent />
             </CascadingValue>
         </DialogContent>
     </MudDialog>

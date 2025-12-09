@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
+
 
 #if DEBUG
 
@@ -23,6 +25,9 @@ public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
     [Inject]
     public ISnackbar SnackBarRepo { get; set; } = default!;
 
+    [Inject]
+    ILogger<BlazorBusyComponentBaseModel> LoggerRepo { get; set; } = default!;
+
 
     bool _isBusyProgress;
     /// <summary>
@@ -36,12 +41,29 @@ public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
     /// </summary>
     public async Task SetBusyAsync(bool is_busy = true, CancellationToken token = default)
     {
-        if (is_busy)
-            Interlocked.Increment(ref _deepBusyCount);
-        else
-            Interlocked.Decrement(ref _deepBusyCount);
+        lock (LoggerRepo)
+        {
+            if (is_busy)
+            {
+                Interlocked.Increment(ref _deepBusyCount);
+                token.Register(async () =>
+                {
+                    if (_deepBusyCount > 0)
+                        Interlocked.Decrement(ref _deepBusyCount);
 
-        _isBusyProgress = _deepBusyCount > 0;
+                    _isBusyProgress = _deepBusyCount > 0;
+                    await Task.Delay(1, CancellationToken.None);
+                });
+            }
+            else if (_deepBusyCount > 0)
+                Interlocked.Decrement(ref _deepBusyCount);
+
+            _isBusyProgress = _deepBusyCount > 0;
+            //#if DEBUG
+            //            LoggerRepo.LogInformation($"{this.GetType().Name} > req {is_busy}: {_deepBusyCount}\n{Environment.StackTrace}");
+            //#endif
+        }
+
         await Task.Delay(1, token);
         await InvokeAsync(StateHasChanged);
     }

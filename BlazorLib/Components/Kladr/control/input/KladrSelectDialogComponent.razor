@@ -105,6 +105,8 @@
         }
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Отмена</MudButton>
+        <small>Поиск выполняется <cite title="названия начинаются с заглавной буквы, учитывайте это">с учётом регистра</cite>. К тому же вместо ё может быть е.</small>
+        <MudSpacer />
+        <MudButton Variant="Variant.Outlined" OnClick="Cancel">Отмена</MudButton>
     </DialogActions>
 </MudDialog>

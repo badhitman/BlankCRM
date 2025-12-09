@@ -15,7 +15,7 @@ namespace BlazorLib.Components.Kladr.control.input;
 public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IKladrNavigationService kladrRepo { get; set; } = default!;
+    IKladrNavigationService KladrRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -94,8 +94,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         else
         {
             await SetBusyAsync();
-            ResponseBaseModel res = await kladrRepo.ChildsContainsAsync(mdCode.ChildsCodesTemplate);
-            await SetBusyAsync(false);
+            ResponseBaseModel res = await KladrRepo.ChildsContainsAsync(mdCode.ChildsCodesTemplate);
             if (!res.Success())
             {
                 ChangeSelectHandle(selected);
@@ -103,6 +102,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
             }
             else
                 await RebuildTable();
+            await SetBusyAsync(false);
         }
     }
 
@@ -147,7 +147,8 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
             IncludeHouses = includeHouses,
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsFindAsync(req, token);
+        
+        TPaginationResponseModel<KladrResponseModel> res = await KladrRepo.ObjectsFindAsync(req, token);
         partData = res.Response;
         await SetBusyAsync(false, token: token);
         // Return the data
@@ -158,12 +159,12 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
-        Dictionary<KladrChainTypesEnum, JObject[]> regionsRest = await kladrRepo.ObjectsListForParentAsync(new());
-        await SetBusyAsync(false);
+        Dictionary<KladrChainTypesEnum, JObject[]> regionsRest = await KladrRepo.ObjectsListForParentAsync(new());
         foreach (RootKLADRModel? region in regionsRest.SelectMany(x => x.Value).Select(x => x.ToObject<RootKLADRModel>()!))
             regions.Add(new(region.CODE, region.NAME, region.SOCR));
 
         _states = [.. regions.Where(x => x.Code.EndsWith("00")).Select(x => x.ToString()).Order()];
+        await SetBusyAsync(false);
     }
 
     private Task<IEnumerable<string?>> SearchRegion(string? value, CancellationToken token)
