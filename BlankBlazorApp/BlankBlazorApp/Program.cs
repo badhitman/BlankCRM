@@ -52,6 +52,7 @@ if (!string.IsNullOrWhiteSpace(_modePrefix) && !GlobalStaticConstantsTransmissio
 
 string curr_dir = Directory.GetCurrentDirectory();
 builder.Configuration.SetBasePath(curr_dir);
+
 string path_load = Path.Combine(curr_dir, "appsettings.json");
 if (Path.Exists(path_load))
 {

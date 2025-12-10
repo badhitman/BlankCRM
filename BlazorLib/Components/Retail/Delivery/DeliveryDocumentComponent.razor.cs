@@ -40,7 +40,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     {
         get
         {
-            if (currentDoc is null || editDoc is null || string.IsNullOrWhiteSpace(editDoc.KladrCode))
+            if (IsBusyProgress || currentDoc is null || editDoc is null || string.IsNullOrWhiteSpace(editDoc.KladrCode))
                 return true;
 
             if (string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId) || editDoc.ShippingCost <= 0 || editDoc.WeightShipping <= 0)
@@ -50,6 +50,19 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
                 currentDoc.Id > 0 &&
                 currentDoc.Description == editDoc.Description &&
                 currentDoc.Name == editDoc.Name;
+        }
+    }
+
+    EntryAltModel? DeliveryAddressSelectedKladrObject
+    {
+        get => EntryAltModel.Build(editDoc?.KladrCode ?? "", editDoc?.KladrTitle ?? "");
+        set
+        {
+            if (editDoc is null)
+                return;
+
+            editDoc.KladrCode = value?.Id ?? "";
+            editDoc.KladrTitle = value?.Name ?? "";
         }
     }
 
@@ -72,19 +85,23 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         }
     }
 
-    EntryAltModel? SelectedKladrObject
+    async Task SetDeliveryAddressFromUserRecipient()
     {
-        get => EntryAltModel.Build(editDoc?.KladrCode ?? "", editDoc?.KladrTitle ?? "");
-        set
+        if (string.IsNullOrWhiteSpace(editDoc?.RecipientIdentityUserId))
+            throw new Exception("editDoc?.RecipientIdentityUserId");
+
+        await SetBusyAsync();
+        TResponseModel<UserInfoModel[]> res = await IdentityRepo.GetUsersOfIdentityAsync([editDoc.RecipientIdentityUserId]);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        if (res.Success() && res.Response is not null && res.Response.Any(x => x.UserId == editDoc.RecipientIdentityUserId))
         {
-            if (editDoc is null)
-                return;
-
-            editDoc.KladrCode = value?.Id ?? "";
-            editDoc.KladrTitle = value?.Name ?? "";
+            UserInfoModel _usr = res.Response.First(x => x.UserId == editDoc.RecipientIdentityUserId);
+            editDoc.KladrCode = _usr.KladrCode;
+            editDoc.KladrTitle = _usr.KladrTitle;
+            editDoc.AddressUserComment = _usr.AddressUserComment;
         }
+        await SetBusyAsync();
     }
-
 
     void AddressUserCommentHandleOnChange(ChangeEventArgs args)
     {

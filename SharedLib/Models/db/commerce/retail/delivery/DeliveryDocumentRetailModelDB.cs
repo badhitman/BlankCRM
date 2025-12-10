@@ -64,7 +64,7 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     /// <summary>
     /// Заказы (документы)
     /// </summary>
-    public List<RetailDeliveryOrderLinkModelDB>? Orders { get; set; }
+    public List<RetailDeliveryOrderLinkModelDB>? OrdersLinks { get; set; }
 
     /// <inheritdoc/>
     public required string AuthorIdentityUserId { get; set; }

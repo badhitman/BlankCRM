@@ -7,7 +7,7 @@
         <MudChip Value="@dt" Text="@dt.DescriptionInfo()" />
     }
 </MudChipSet>
-<MudTable ServerData="ServerReload" Dense Hover Striped @ref=tableRef>
+<MudTable ServerData="ServerReload" Dense Hover @ref=tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Доставка (документы отгрузки)</MudText>
         <MudSpacer />
@@ -31,8 +31,7 @@
         }
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Name</MudTh>
-        <MudTh>Тип</MudTh>
+        <MudTh>Тип/Дата</MudTh>
         <MudTh>Вес</MudTh>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
@@ -40,24 +39,33 @@
         }
         <MudTh>Стоимость доставки</MudTh>
         <MudTh>Заказ(ы)</MudTh>
-        <MudTh>Создан/Изменён</MudTh>
         <MudTh>Адрес</MudTh>
         <MudTh>Трэк/Код</MudTh>
         <MudTh>Статус</MudTh>
+        <MudTh>Примечание</MudTh>
     </HeaderContent>
     <RowTemplate>
         @{
             DateTime cdt = context.CreatedAtUTC.GetCustomTime();
             DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
         }
-        <MudTd DataLabel="Name">
-            <span>@context.Name</span>
-            @if (context.DeliveryPaymentUponReceipt)
-            {
-                <sup class="ms-2">[оплата при получении]</sup>
-            }
+        <MudTd DataLabel="Тип">
+            <a href="/retail/delivery-document/@context.Id">
+                <mark>@context.DeliveryType.DescriptionInfo()</mark>
+                <text>[</text>
+                <span>
+                    @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+                </span>
+                @if (udt.HasValue && udt != default)
+                {
+                    <text>/</text>
+                    <span>
+                        @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
+                    </span>
+                }
+                <text>]</text>
+            </a>
         </MudTd>
-        <MudTd DataLabel="Тип">@context.DeliveryType</MudTd>
         <MudTd DataLabel="Вес">@context.WeightShipping</MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
@@ -67,25 +75,13 @@
         }
         <MudTd DataLabel="Стоимость доставки">@context.ShippingCost</MudTd>
         <MudTd DataLabel="Заказ(ы)">
-            @if (context.Orders is null)
+            @if (context.OrdersLinks is null)
             {
                 <span class="badge text-bg-danger">данные не загружены</span>
             }
             else
             {
-                <DeliveryOrdersLinksComponent Orders="context.Orders" />
-            }
-        </MudTd>
-        <MudTd DataLabel="Создан/Изменён">
-            <span>
-                @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
-            </span>
-            @if (udt.HasValue && udt != default)
-            {
-                <text>/</text>
-                <span>
-                    @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
-                </span>
+                <DeliveryOrdersLinksComponent Orders="context.OrdersLinks" />
             }
         </MudTd>
         <MudTd DataLabel="Адрес">@context.KladrTitle @context.AddressUserComment</MudTd>
@@ -93,7 +89,14 @@
         <MudTd DataLabel="Статус">
             @if (context.DeliveryStatus.HasValue)
             {
-                <span class="badge text-bg-info">@context.DeliveryStatus?.DescriptionInfo()</span>
+                <span class="badge text-bg-info">@(context.DeliveryStatus?.DescriptionInfo() ?? "без движения")</span>
+            }
+        </MudTd>
+        <MudTd DataLabel="Name">
+            <span>@context.Name</span>
+            @if (context.DeliveryPaymentUponReceipt)
+            {
+                <sup class="ms-2">[оплата при получении]</sup>
             }
         </MudTd>
     </RowTemplate>

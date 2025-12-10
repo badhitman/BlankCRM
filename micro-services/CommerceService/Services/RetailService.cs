@@ -123,7 +123,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         }
 
         req.CreatedAtUTC = DateTime.UtcNow;
-        req.Orders = null;
+        req.OrdersLinks = null;
         req.Name = req.Name.Trim();
         req.Description = req.Description?.Trim();
         req.DeliveryCode = req.DeliveryCode?.Trim();
@@ -138,7 +138,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<ResponseBaseModel> UpdateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default)
     {
         req.CreatedAtUTC = DateTime.UtcNow;
-        req.Orders = null;
+        req.OrdersLinks = null;
         req.Name = req.Name.Trim();
         req.Description = req.Description?.Trim();
         req.DeliveryCode = req.DeliveryCode?.Trim();
@@ -198,6 +198,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq
                 .Include(x => x.DeliveryStatusesLog)
+                .Include(x => x.OrdersLinks)
                 .ToListAsync(cancellationToken: token)
         };
     }

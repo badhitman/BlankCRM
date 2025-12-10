@@ -76,10 +76,16 @@
             </div>
             <div class="card my-3">
                 <div class="card-body">
-                    <KladrInputComponent @bind-KladrObject="SelectedKladrObject" />
+                    @if (DeliveryAddressSelectedKladrObject?.Id != editDoc.RecipientIdentityUserId && !string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId))
+                    {
+                        <div class="d-grid gap-2 mb-2">
+                            <button @onclick=SetDeliveryAddressFromUserRecipient class="btn btn-primary btn-sm" type="button">Установить адрес получателя</button>
+                        </div>
+                    }
+                    <KladrInputComponent @bind-KladrObject="DeliveryAddressSelectedKladrObject" />
                     <div class="mb-3">
                         <label for="detailsAddressControlTextarea" class="form-label">уточнение адреса (если требуется)</label>
-                        <textarea class="form-control" id="detailsAddressControlTextarea" rows="3" @oninput="AddressUserCommentHandleOnChange">@editDoc.AddressUserComment</textarea>
+                        <textarea disabled="@IsBusyProgress" class="form-control" id="detailsAddressControlTextarea" rows="3" @oninput="AddressUserCommentHandleOnChange">@editDoc.AddressUserComment</textarea>
                     </div>
                 </div>
             </div>
@@ -92,6 +98,7 @@
                     </MudTabPanel>
                     <MudTabPanel Text="Примечания">
                         <TinyMCE.Blazor.Editor @bind-Value="editDoc.Description"
+                                               Disable="IsBusyProgress"
                                                ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc"
                                                Conf="@editorConf" />
                     </MudTabPanel>
