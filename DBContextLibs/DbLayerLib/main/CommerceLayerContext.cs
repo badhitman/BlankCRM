@@ -29,10 +29,10 @@ public partial class CommerceLayerContext : DbContext
     /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-#if DEBUG
-        options.EnableSensitiveDataLogging(true);
-        options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
-#endif
+//#if DEBUG
+//        options.EnableSensitiveDataLogging(true);
+//        options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+//#endif
     }
 
     /// <inheritdoc/>

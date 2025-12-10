@@ -28,10 +28,10 @@ public abstract partial class KladrLayerContext : DbContext
     /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-#if DEBUG
-        options.EnableSensitiveDataLogging(true);
-        options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
-#endif
+        //#if DEBUG
+        //        options.EnableSensitiveDataLogging(true);
+        //        options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+        //#endif
     }
 
     /// <inheritdoc/>
@@ -282,7 +282,7 @@ public abstract partial class KladrLayerContext : DbContext
 
         while (_count > _offset)
         {
-            logger.LogInformation($"insert [part] streets: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<StreetKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()} ORDER BY \"Id\" OFFSET {_offset} LIMIT {_partSize}", cancellationToken: token)}");
+            logger.LogInformation($"insert [part] streets ({Math.Round((decimal)_offset / (_count / 100), 2)} %): {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<StreetKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<StreetTempKLADRModelDB>()} ORDER BY \"Id\" OFFSET {_offset} LIMIT {_partSize}", cancellationToken: token)}");
             _offset += _partSize;
         }
 
@@ -291,7 +291,7 @@ public abstract partial class KladrLayerContext : DbContext
         _count = await TempHousesKLADR.CountAsync(cancellationToken: token);
         while (_count > _offset)
         {
-            logger.LogInformation($"insert [part] houses: {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<HouseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()} ORDER BY \"Id\" OFFSET {_offset} LIMIT {_partSize}", cancellationToken: token)}");
+            logger.LogInformation($"insert [part] houses ({Math.Round((decimal)_offset / (_count / 100), 2)} %): {await Database.ExecuteSqlRawAsync($"INSERT INTO {this.GetTableNameWithScheme<HouseKLADRModelDB>()} SELECT * FROM {this.GetTableNameWithScheme<HouseTempKLADRModelDB>()} ORDER BY \"Id\" OFFSET {_offset} LIMIT {_partSize}", cancellationToken: token)}");
             _offset += _partSize;
         }
 
