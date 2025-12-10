@@ -2,13 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
-using MudBlazor.Services;
-using ToolsMauiLib;
-using SharedLib;
 using DbcLib;
+using Microsoft.Extensions.Logging;
+using MudBlazor.Services;
+using SharedLib;
+using System.Net;
 using System.Text;
+using ToolsMauiLib;
 
 namespace ToolsMauiApp;
 
@@ -52,7 +53,16 @@ public static class MauiProgram
         {
             cc.BaseAddress = new Uri(_conf.AddressBaseUri ?? "localhost");
             cc.DefaultRequestHeaders.Add(_conf.HeaderName, _conf.TokenAccess);
+        })
+#if DEBUG
+        .ConfigurePrimaryHttpMessageHandler(() =>
+        {
+            return new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = delegate { return true; }
+            };
         });
+#endif
         // #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();

@@ -18,8 +18,11 @@ public class ToolsSystemHTTPRestService(ApiRestConfigModelDB ApiConnect, IHttpCl
     /// <inheritdoc/>
     public async Task<TResponseModel<ExpressProfileResponseModel>> GetMeAsync(CancellationToken cancellationToken = default)
     {
-        using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
+        if (!Uri.TryCreate(ApiConnect.AddressBaseUri.NormalizedUriEnd(), UriKind.Absolute, out _))
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка валидации BaseUri" }] };
 
+        using HttpClient client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
+        
         TResponseModel<ExpressProfileResponseModel> res = await client.GetStringAsync<ExpressProfileResponseModel>($"{ApiConnect.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.INFO_CONTROLLER_NAME}/{Routes.MY_CONTROLLER_NAME}", cancellationToken: cancellationToken);
 
         if (string.IsNullOrWhiteSpace(res.Response?.UserName))
