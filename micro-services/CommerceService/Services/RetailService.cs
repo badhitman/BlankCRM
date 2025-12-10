@@ -1055,7 +1055,14 @@ public class RetailService(IIdentityTransmission identityRepo,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq.ToListAsync(cancellationToken: token)
         };
-        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DeleteDeliveryOrderLinkDocumentAsync(int req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        await context.DeliveriesOrdersLinks.Where(x => x.Id == req).ExecuteDeleteAsync(cancellationToken: token);
+        return ResponseBaseModel.CreateSuccess("Ok");
     }
     #endregion
 
