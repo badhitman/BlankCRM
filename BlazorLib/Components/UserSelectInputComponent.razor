@@ -6,7 +6,7 @@
         <label class="form-label">@Label</label>
     }
     <div id="@toggleBtnId" class="input-group mb-3">
-        <button @onclick="EditToggle" title="Установить" disabled="@(IsBusyProgress || IsReadOnly)" class="btn btn-outline-secondary bi bi-pencil" type="button">
+        <button @onclick="EditToggle" title="РЈСЃС‚Р°РЅРѕРІРёС‚СЊ" disabled="@(IsBusyProgress || IsReadOnly)" class="btn btn-outline-secondary bi bi-pencil" type="button">
             @if (IsBusyProgress)
             {
                 <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
@@ -19,12 +19,12 @@
                disabled="@(IsBusyProgress)"
                readonly="@(!IsEditing)"
                class="form-control"
-               title="@(IsEditing ? "Введите текст запроса для поиска пользователя" : "")"
-               placeholder="@(IsEditing ? "Поиск пользователя" : "")"
-               aria-label="Text input with dropdown button">
+               title="@(IsEditing ? "Р’РІРµРґРёС‚Рµ С‚РµРєСЃС‚ Р·Р°РїСЂРѕСЃР° РґР»СЏ РїРѕРёСЃРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ" : "")"
+               placeholder="@(IsEditing ? "РџРѕРёСЃРє РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ" : "")"
+               aria-label="Text input user with dropdown button">
 
         <ul class="chat-selector-input dropdown-menu @ShowIfEditing" id="@dropdownId" style="@StyleIfEditing" data-meta="@HeightDropdown">
-            <i title="Отмена (закрыть меню выбора)" @onclick="EditToggle" class="bi bi-x-lg position-absolute top-0 end-0" style="cursor:pointer; padding-right:3px;"></i>
+            <i title="РћС‚РјРµРЅР° (Р·Р°РєСЂС‹С‚СЊ РјРµРЅСЋ РІС‹Р±РѕСЂР°)" @onclick="EditToggle" class="bi bi-x-lg position-absolute top-0 end-0" style="cursor:pointer; padding-right:3px;"></i>
             @foreach (UserInfoModel uinf in LoadedData)
             {
                 <li @onclick="() => SelectElementEvent(uinf)"><span class="dropdown-item">@uinf.ToString()</span></li>
@@ -32,7 +32,7 @@
             @if (LoadedData.Count < TotalRowsCount)
             {
                 <li><hr class="dropdown-divider"></li>
-                <li @onclick="LoadPartData"><span class="dropdown-item">Загрузить ещё</span></li>
+                <li @onclick="LoadPartData"><span class="dropdown-item">Р—Р°РіСЂСѓР·РёС‚СЊ РµС‰С‘</span></li>
             }
         </ul>
     </div>
