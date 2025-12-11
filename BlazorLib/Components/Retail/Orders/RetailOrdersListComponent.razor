@@ -1,11 +1,28 @@
 ﻿@using MudBlazor
 @inherits BlazorBusyComponentBaseModel
 
-<MudTable ServerData="ServerReload" Dense Hover>
+<MudTable ServerData="ServerReload"
+          T="RetailDocumentModelDB"
+          OnRowClick="RowClickEvent"
+          RowClass="@(RowClickEventHandler is null ? "" : "cursor-pointer")"
+          Dense Hover
+          @ref="tableRef">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Заказы (розница)</MudText>
         <MudSpacer />
-        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="CreateNewOrderOpenDialog">Новый заказ</MudButton>
+        @if (RowClickEventHandler is null)
+        {
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="CreateNewOrderOpenDialog">Новый заказ</MudButton>
+            @if (FilterDeliveryId.HasValue && FilterDeliveryId.Value > 0)
+            {
+                <MudTooltip Text="Добавить заказ в созданную ранее доставку">
+                    <MudButton OnClick=IncludeExistOrderOpenDialog
+                               Variant="Variant.Outlined"
+                               EndIcon="@Icons.Material.Filled.DeviceHub"
+                               IconColor="Color.Secondary">Включить в доставку</MudButton>
+                </MudTooltip>
+            }
+        }
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Номер</MudTh>
@@ -38,6 +55,18 @@
                     @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
                 </span>
             }
+            @if (FilterDeliveryId.HasValue && FilterDeliveryId.Value > 0)
+            {
+                if (initDeleteDeliveryFromOrder == context.Id)
+                {
+                    <span class="badge text-bg-danger cursor-pointer me-1" @onclick="async () => await DeleteOrderLink(context.Id)">подтвердить удаление</span>
+                    <span class="badge text-bg-success cursor-pointer" @onclick="async () => initDeleteDeliveryFromOrder = null">отмена</span>
+                }
+                else
+                {
+                    <span class="badge text-bg-secondary cursor-pointer" @onclick="async () => await DeleteOrderLink(context.Id)">удалить заказ из доставки</span>
+                }
+            }
         </MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
@@ -62,15 +91,30 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
-<MudDialog @bind-Visible="_visible" Options="_dialogOptions">
-    <TitleContent>
-        <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новый заказ (розница)
-        </MudText>
-    </TitleContent>
-    <DialogContent>
-        <CascadingValue Value="ClientId" Name="ClientId">
-            <OrderDocumentCardComponent />
-        </CascadingValue>
-    </DialogContent>
-</MudDialog>
+@if (FilterDeliveryId.HasValue && FilterDeliveryId.Value > 0)
+{
+    <MudDialog @bind-Visible="_visibleCreateNewOrder" Options="_dialogOptions">
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новый заказ (розница)
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <CascadingValue Value="ClientId" Name="ClientId">
+                <OrderDocumentCardComponent />
+            </CascadingValue>
+        </DialogContent>
+    </MudDialog>
+    <MudDialog @bind-Visible="_visibleIncludeOrder" Options="_dialogOptions">
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите заказ (для добавления к доставке)
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <CascadingValue Name="ClientId" Value="ClientId">
+                <RetailOrdersListComponent RowClickEventHandler="SelectRowAction" ExcludeDeliveryId=FilterDeliveryId />
+            </CascadingValue>
+        </DialogContent>
+    </MudDialog>
+}

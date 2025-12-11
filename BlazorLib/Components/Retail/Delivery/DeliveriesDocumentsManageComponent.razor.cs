@@ -21,12 +21,14 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Вывод документов доставки только для указанного заказа
+    /// </summary>
     [Parameter]
     public int? FilterOrderId { get; set; }
 
     /// <summary>
-    /// Исключить документы доставки по номеру заказа
+    /// Исключить из вывода документы доставки по номеру заказа
     /// </summary>
     [Parameter]
     public int? ExcludeOrderId { get; set; }
@@ -93,7 +95,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         _visibleIncludeExistDelivery = true;
     }
 
-    async void SelectRovAction(TableRowClickEventArgs<DeliveryDocumentRetailModelDB> tableRow)
+    async void SelectRowAction(TableRowClickEventArgs<DeliveryDocumentRetailModelDB> tableRow)
     {
         _visibleIncludeExistDelivery = false;
 
@@ -139,6 +141,9 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         {
             Payload = new(),
         };
+
+        if (ExcludeOrderId.HasValue && ExcludeOrderId > 0)
+            req.Payload.ExcludeOrderId = ExcludeOrderId.Value;
 
         if (!string.IsNullOrWhiteSpace(ClientId))
             req.Payload.RecipientsFilterIdentityId = [ClientId];

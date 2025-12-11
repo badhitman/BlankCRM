@@ -22,16 +22,39 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     [Inject]
     IIdentityTransmission IdentityRepo { get; set; } = default!;
 
-    /// <inheritdoc/>
-    [Parameter]
-    public int? FilterOrderId { get; set; }
 
     /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
 
+    /// <summary>
+    /// Вывод заказов только для указанного документа доставки
+    /// </summary>
+    [Parameter]
+    public int? FilterDeliveryId { get; set; }
 
-    bool _visible;
+    /// <summary>
+    /// Исключить из вывода заказы, которые участвуют в доставке
+    /// </summary>
+    [Parameter]
+    public bool WithoutDeliveriesOnly { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter]
+    public Action<TableRowClickEventArgs<RetailDocumentModelDB>>? RowClickEventHandler { get; set; }
+
+
+    /// <summary>
+    /// RubricsCache
+    /// </summary>
+    protected List<RubricStandardModel> RubricsCache = [];
+    /// <summary>
+    /// UsersCache
+    /// </summary>
+    protected List<UserInfoModel> UsersCache = [];
+
+    MudTable<RetailDocumentModelDB>? tableRef;
+    bool _visibleCreateNewOrder, _visibleIncludeOrder;
     readonly DialogOptions _dialogOptions = new()
     {
         FullWidth = true,
@@ -42,17 +65,80 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
 
     void CreateNewOrderOpenDialog()
     {
-        _visible = true;
+        _visibleCreateNewOrder = true;
     }
 
-    /// <summary>
-    /// RubricsCache
-    /// </summary>
-    protected List<RubricStandardModel> RubricsCache = [];
-    /// <summary>
-    /// UsersCache
-    /// </summary>
-    protected List<UserInfoModel> UsersCache = [];
+    void IncludeExistOrderOpenDialog()
+    {
+        _visibleIncludeOrder = true;
+    }
+
+    async void SelectRowAction(TableRowClickEventArgs<RetailDocumentModelDB> tableRow)
+    {
+        _visibleIncludeOrder = false;
+
+        if (tableRow.Item is null)
+        {
+            StateHasChanged();
+            return;
+        }
+
+        if (!FilterDeliveryId.HasValue || FilterDeliveryId <= 0)
+        {
+            SnackBarRepo.Error("Не определён контекст заказа (розница)");
+            StateHasChanged();
+            return;
+        }
+
+        await SetBusyAsync();
+
+        TResponseModel<int> res = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new()
+        {
+            DeliveryDocumentId = FilterDeliveryId.Value,
+            OrderDocumentId = tableRow.Item.Id
+        });
+
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+
+        await SetBusyAsync(false);
+    }
+
+    void RowClickEvent(TableRowClickEventArgs<RetailDocumentModelDB> tableRowClickEventArgs)
+    {
+        if (RowClickEventHandler is not null)
+            RowClickEventHandler(tableRowClickEventArgs);
+    }
+
+
+    int? initDeleteDeliveryFromOrder;
+    async Task DeleteOrderLink(int orderDocumentId)
+    {
+        if (initDeleteDeliveryFromOrder is null)
+        {
+            initDeleteDeliveryFromOrder = orderDocumentId;
+            return;
+        }
+        initDeleteDeliveryFromOrder = null;
+
+        if (!FilterDeliveryId.HasValue || FilterDeliveryId <= 0)
+        {
+            SnackBarRepo.Error("Не определён контекст заказа (розница)");
+            StateHasChanged();
+            return;
+        }
+
+        await SetBusyAsync();
+        ResponseBaseModel res = await RetailRepo.DeleteDeliveryOrderLinkDocumentAsync(new()
+        {
+            DeliveryId = FilterDeliveryId.Value,
+            OrderId = orderDocumentId,
+        });
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
+    }
 
 
     /// <summary>
@@ -93,8 +179,19 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
 
     async Task<TableData<RetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
+        TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req = new() { Payload = new() };
+
+        if (WithoutDeliveriesOnly)
+            req.Payload.WithoutDeliveriesOnly = true;
+
+        if (!string.IsNullOrWhiteSpace(ClientId))
+            req.Payload.BuyersFilterIdentityId = [ClientId];
+
+        if (FilterDeliveryId.HasValue && FilterDeliveryId > 0)
+            req.Payload.FilterDeliveryId = FilterDeliveryId.Value;
+
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<RetailDocumentModelDB>? res = await RetailRepo.SelectRetailDocumentsAsync(new(), token);
+        TPaginationResponseModel<RetailDocumentModelDB> res = await RetailRepo.SelectRetailDocumentsAsync(req, token);
 
         if (res.Response is not null)
         {

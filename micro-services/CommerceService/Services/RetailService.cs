@@ -75,6 +75,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
 
         IQueryable<DeliveryServiceRetailModelDB>? pq = q
+            .OrderBy(x => x.SortIndex)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
@@ -172,7 +173,10 @@ public class RetailService(IIdentityTransmission identityRepo,
         IQueryable<DeliveryDocumentRetailModelDB>? q = context.DeliveryRetailDocuments.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
-            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
+            q = q.Where(x =>
+                x.Name.Contains(req.FindQuery) ||
+                (x.Description != null && x.Description.Contains(req.FindQuery)) ||
+                (x.DeliveryCode != null && x.DeliveryCode.Contains(req.FindQuery)));
 
         if (req.Payload?.RecipientsFilterIdentityId is not null && req.Payload.RecipientsFilterIdentityId.Length != 0)
             q = q.Where(x => req.Payload.RecipientsFilterIdentityId.Contains(x.RecipientIdentityUserId));
@@ -180,8 +184,8 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
             q = q.Where(x => req.Payload.TypesFilter.Contains(x.DeliveryType));
 
-        if (req.Payload?.ExcludeDeliveryId.HasValue == true && req.Payload.ExcludeDeliveryId > 0)
-            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.DeliveryDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeDeliveryId));
+        if (req.Payload?.ExcludeOrderId.HasValue == true && req.Payload.ExcludeOrderId > 0)
+            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.DeliveryDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
 
         if (req.Payload?.FilterOrderId is not null && req.Payload.FilterOrderId > 0)
             q = from deliveryDoc in q
@@ -189,6 +193,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                 select deliveryDoc;
 
         IQueryable<DeliveryDocumentRetailModelDB>? pq = q
+            .OrderBy(x => x.CreatedAtUTC)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
@@ -271,9 +276,10 @@ public class RetailService(IIdentityTransmission identityRepo,
             return new() { Status = new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }] } };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RowOfDeliveryRetailDocumentModelDB>? q = context.RowsDeliveryRetailDocuments.Where(x => x.DocumentId == req.Payload.DeliveryDocumentId).AsQueryable();
+        IQueryable<RowOfDeliveryRetailDocumentModelDB> q = context.RowsDeliveryRetailDocuments.Where(x => x.DocumentId == req.Payload.DeliveryDocumentId).AsQueryable();
 
-        IQueryable<RowOfDeliveryRetailDocumentModelDB>? pq = q
+        IQueryable<RowOfDeliveryRetailDocumentModelDB> pq = q
+            .OrderBy(x => x.Id)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
@@ -340,6 +346,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => x.Name.Contains(req.FindQuery));
 
         IQueryable<DeliveryStatusRetailDocumentModelDB>? pq = q
+            .OrderBy(x => x.DateOperation)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
@@ -420,6 +427,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
 
         IQueryable<WalletRetailTypeModelDB>? pq = q
+            .OrderBy(x => x.SortIndex)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
@@ -781,6 +789,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => req.Payload.StatusesFilter.Contains(x.StatusPayment));
 
         IQueryable<PaymentRetailDocumentModelDB>? pq = q
+            .OrderBy(x => x.DatePayment)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
@@ -874,6 +883,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         IQueryable<RowOfRetailOrderDocumentModelDB>? q = context.RowsRetailsOrders.Where(x => x.OrderId == req.Payload.OrderId).AsQueryable();
 
         IQueryable<RowOfRetailOrderDocumentModelDB>? pq = q
+            .OrderBy(x => x.Id)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
@@ -964,7 +974,10 @@ public class RetailService(IIdentityTransmission identityRepo,
         IQueryable<RetailDocumentModelDB> q = context.RetailOrders.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
-            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
+            q = q.Where(x =>
+                x.Name.Contains(req.FindQuery) ||
+                (x.Description != null && x.Description.Contains(req.FindQuery)) ||
+                (x.ExternalDocumentId != null && x.ExternalDocumentId.Contains(req.FindQuery)));
 
         if (req.Payload?.BuyersFilterIdentityId is not null && req.Payload.BuyersFilterIdentityId.Length != 0)
             q = q.Where(x => req.Payload.BuyersFilterIdentityId.Contains(x.BuyerIdentityUserId));
@@ -972,8 +985,11 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.CreatorsFilterIdentityId is not null && req.Payload.CreatorsFilterIdentityId.Length != 0)
             q = q.Where(x => req.Payload.CreatorsFilterIdentityId.Contains(x.AuthorIdentityUserId));
 
-        if (req.Payload?.ExcludeDeliveryId.HasValue == true && req.Payload.ExcludeDeliveryId > 0)
-            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id && y.DeliveryDocumentId == req.Payload.ExcludeDeliveryId));
+        if (req.Payload?.WithoutDeliveriesOnly == true)
+            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id));
+
+        if (req.Payload?.FilterDeliveryId.HasValue == true && req.Payload.FilterDeliveryId > 0)
+            q = q.Where(x => context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id && y.DeliveryDocumentId == req.Payload.FilterDeliveryId));
 
         IQueryable<RetailDocumentModelDB> pq = q
             .OrderBy(x => x.DateDocument)
@@ -1283,6 +1299,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             select doc;
 
         IQueryable<WalletConversionRetailDocumentModelDB> pq = q
+            .OrderBy(x => x.DateDocument)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 

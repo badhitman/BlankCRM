@@ -23,5 +23,5 @@ public class SelectDeliveryDocumentsRetailRequestModel
     /// <summary>
     /// Исключить по документу доставки
     /// </summary>
-    public int? ExcludeDeliveryId { get; set; }
+    public int? ExcludeOrderId { get; set; }
 }

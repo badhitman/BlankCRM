@@ -7,8 +7,8 @@
         <MudChip Value="@dt" Text="@dt.DescriptionInfo()" />
     }
 </MudChipSet>
-<MudTable T="DeliveryDocumentRetailModelDB"
-          ServerData="ServerReload"
+<MudTable ServerData="ServerReload"
+          T="DeliveryDocumentRetailModelDB"
           OnRowClick="RowClickEvent"
           RowClass="@(RowClickEventHandler is null ? "" : "cursor-pointer")"
           Dense Hover @ref=tableRef>
@@ -151,7 +151,7 @@
         </TitleContent>
         <DialogContent>
             <CascadingValue Name="ClientId" Value="ClientId">
-                <DeliveriesDocumentsManageComponent RowClickEventHandler="SelectRovAction" ExcludeOrderId="FilterOrderId" />
+                <DeliveriesDocumentsManageComponent RowClickEventHandler="SelectRowAction" FilterOrderId="FilterOrderId" />
             </CascadingValue>
         </DialogContent>
     </MudDialog>
