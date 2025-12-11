@@ -24,64 +24,70 @@ public enum UnitsOfMeasurementEnum
     Set = 20,
 
     /// <summary>
+    /// Пачка
+    /// </summary>
+    [Description("Пачка")]
+    Packs = 40,
+
+    /// <summary>
     /// Литр
     /// </summary>
     [Description("Литр")]
-    Liter = 40,
+    Liter = 60,
 
     /// <summary>
     /// Коробка
     /// </summary>
     [Description("Коробка")]
-    Box = 60,
+    Box = 80,
 
     /// <summary>
     /// Кг
     /// </summary>
     [Description("Кг")]
-    Kilogram = 80,
+    Kilogram = 100,
 
     /// <summary>
     /// Бутылка
     /// </summary>
     [Description("Бутылка")]
-    Bottle = 100,
+    Bottle = 120,
 
     /// <summary>
     /// Кипа
     /// </summary>
     [Description("Кипа")]
-    Stack = 120,
+    Stack = 140,
 
     /// <summary>
     /// Связка
     /// </summary>
     [Description("Связка")]
-    Bunch = 140,
+    Bunch = 160,
 
     /// <summary>
     /// Час
     /// </summary>
     [Description("Час")]
-    Hour = 160,
+    Hour = 180,
 
     /// <summary>
     /// День
     /// </summary>
     [Description("День")]
-    Day = 180,
+    Day = 200,
 
     /// <summary>
     /// Неделя
     /// </summary>
     [Description("Неделя")]
-    Week = 200,
+    Week = 220,
 
     /// <summary>
     /// Месяц
     /// </summary>
     [Description("Месяц")]
-    Month = 220,
+    Month = 240,
 
     /// <summary>
     /// None

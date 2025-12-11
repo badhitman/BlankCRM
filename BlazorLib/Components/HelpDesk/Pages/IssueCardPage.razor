@@ -11,7 +11,7 @@
 
 @if (IsBusyProgress)
 {
-    <MudProgressLinear Color="Color.Secondary" Indeterminate="true" Class="my-7" />
+    <MudProgressLinear Color="Color.Secondary" Indeterminate Class="my-7" />
 }
 else
 {
@@ -69,7 +69,7 @@ else
                                                                                PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
                                                                                OwnerPrimaryKey="Id"
                                                                                Title="Files"
-                                                                               ManageMode="true" />
+                                                                               ManageMode />
                                                 </MudTabPanel>
                                             }
                                         </MudTabs>

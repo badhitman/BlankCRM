@@ -27,7 +27,7 @@
                 @if (!MailAddress.TryCreate(context.Email, out MailAddress? resMail) || resMail.Host.Equals(GlobalStaticConstants.FakeHost) == true)
                 {
                     isFakeEmail = true;
-                    <a href="@($"/Users/Profiles/view-{context.UserId}")" class="font-monospace" title="@GlobalStaticConstants.FakeHost">no-email</a>
+                    <a href="@($"/Users/Profiles/view-{context.UserId}")" class="font-monospace" title="@GlobalStaticConstants.FakeHost">[no-email] @context.GivenName @context.Surname</a>
                 }
                 else
                 {

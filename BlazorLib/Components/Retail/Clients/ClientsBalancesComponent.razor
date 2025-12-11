@@ -1,0 +1,9 @@
+﻿@foreach (WalletRetailModelDB _w in Wallets)
+{
+    <span class="me-1 badge text-bg-@(@_w.WalletType?.IsSystem == true ? "warning" : "light")">[@_w.WalletType?.Name] @_w.Balance</span>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public List<WalletRetailModelDB> Wallets { get; set; }
+}

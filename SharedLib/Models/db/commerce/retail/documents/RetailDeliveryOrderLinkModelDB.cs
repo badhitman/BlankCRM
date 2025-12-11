@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
@@ -9,6 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// RetailDeliveryOrderLinkModelDB
 /// </summary>
+[Index(nameof(OrderDocumentId), nameof(DeliveryDocumentId), IsUnique = true)]
 public class RetailDeliveryOrderLinkModelDB
 {
     /// <summary>

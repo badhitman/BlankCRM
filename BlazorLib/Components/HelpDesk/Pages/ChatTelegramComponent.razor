@@ -35,13 +35,13 @@ else
         <hr />
     }
 
-    <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
+    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
         <MudTabPanel Text="Чат">
             <TelegramChatWrapComponent Chat="Chat" />
         </MudTabPanel>
         <MudTabPanel Disabled="@(CurrentUser is null)" Text="Issues">
             <CascadingValue Value="SetTab">
-                <TabSetComponent IsSilent="true" AsPills="true">
+                <TabSetComponent IsSilent AsPills>
                     <TabComponent SystemName="@(nameof(HelpDeskJournalModesEnum.ActualOnly))" Title="Opened">
                         <HelpDeskJournalComponent UserIdentityId="@CurrentUser!.UserIdentityId" UserArea="UsersAreasHelpDeskEnum.Author" JournalMode="HelpDeskJournalModesEnum.ActualOnly" />
                     </TabComponent>

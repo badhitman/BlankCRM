@@ -11,7 +11,7 @@
 
 @if (IsBusyProgress)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-7" />
 }
 
 <div class="card my-2">
@@ -21,7 +21,7 @@
         {
             <h6 class="card-subtitle mb-2 text-body-secondary">@Subtitle</h6>
         }
-        <ChatSelectInputComponent NullableAllow="true" SelectedChat="initValue" SelectHandleAction="SelectChatHandler" SetHeightCard="SetHeightCard" @ref="selectorInput" />
+        <ChatSelectInputComponent NullableAllow SelectedChat="initValue" SelectHandleAction="SelectChatHandler" SetHeightCard="SetHeightCard" @ref="selectorInput" />
         @if (!string.IsNullOrWhiteSpace(Hint))
         {
             <footer style="padding-top: 5px;" class="blockquote-footer">@Hint</footer>

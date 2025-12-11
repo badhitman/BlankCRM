@@ -7,16 +7,21 @@
         <MudStack Justify="@Justify.Center" Class="mud-width-full">
             <MudGrid>
                 <MudItem xs="12" sm="12" md="12">
-                    <MudAutocomplete Disabled="IsBusyProgress" @ref="maRef" @bind-Value="TagAdding" SearchFunc="Search" Dense="true" Clearable="true" ShowProgressIndicator="true">
+                    <MudAutocomplete 
+                        Disabled="IsBusyProgress" 
+                        @ref="maRef"
+                        @bind-Value="TagAdding" 
+                        SearchFunc="Search" 
+                        Dense Clearable ShowProgressIndicator>
                         <ProgressIndicatorTemplate>
-                            <MudProgressLinear Size="Size.Small" Indeterminate="true" />
+                            <MudProgressLinear Size="Size.Small" Indeterminate />
                         </ProgressIndicatorTemplate>
                     </MudAutocomplete>
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
                     @if (IsBusyProgress)
                     {
-                        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-3" />
+                        <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
                     }
                     else
                     {

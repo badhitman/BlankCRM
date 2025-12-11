@@ -145,9 +145,9 @@ public static partial class GlobalStaticConstants
     public const string HostAddressProperty = "[HostAddressProperty]";
 
     /// <summary>
-    /// DocumentLinkAddressProperty
+    /// DocumentLinkProperty
     /// </summary>
-    public const string DocumentLinkAddressProperty = "[DocumentLinkAddressProperty]";
+    public const string DocumentLinkProperty = "[DocumentLinkProperty]";
 
     /// <summary>
     /// TelegramIdClaimName

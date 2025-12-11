@@ -25,6 +25,16 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [Parameter]
     public int? FilterOrderId { get; set; }
 
+    /// <summary>
+    /// Исключить документы доставки по номеру заказа
+    /// </summary>
+    [Parameter]
+    public int? ExcludeOrderId { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter]
+    public Action<TableRowClickEventArgs<DeliveryDocumentRetailModelDB>>? RowClickEventHandler { get; set; }
+
 
     IReadOnlyCollection<DeliveryTypesEnum> _selectedTypes = [];
     IReadOnlyCollection<DeliveryTypesEnum> SelectedTypes
@@ -38,7 +48,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         }
     }
     MudTable<DeliveryDocumentRetailModelDB>? tableRef;
-    bool _visible;
+    bool _visibleCreateNewDelivery, _visibleIncludeExistDelivery;
     readonly DialogOptions _dialogOptions = new()
     {
         FullWidth = true,
@@ -46,10 +56,79 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         CloseButton = true,
     };
 
+    int? initDeleteOrderFromDelivery;
+    async Task DeleteDeliveryLink(int deliveryDocumentId)
+    {
+        if (initDeleteOrderFromDelivery is null)
+        {
+            initDeleteOrderFromDelivery = deliveryDocumentId;
+            return;
+        }
+        initDeleteOrderFromDelivery = null;
+
+        if (!FilterOrderId.HasValue || FilterOrderId <= 0)
+        {
+            SnackBarRepo.Error("Не определён контекст заказа (розница)");
+            StateHasChanged();
+            return;
+        }
+
+        await SetBusyAsync();
+        var res = await RetailRepo.DeleteDeliveryOrderLinkDocumentAsync(new()
+        {
+            DeliveryId = deliveryDocumentId,
+            OrderDeliveryLinkId = FilterOrderId,
+        });
+        await SetBusyAsync(false);
+    }
 
     void CreateNewDeliveryOpenDialog()
     {
-        _visible = true;
+        _visibleCreateNewDelivery = true;
+    }
+
+    void IncludeExistDeliveryOpenDialog()
+    {
+        _visibleIncludeExistDelivery = true;
+    }
+
+    async void SelectRovAction(TableRowClickEventArgs<DeliveryDocumentRetailModelDB> tableRow)
+    {
+        _visibleIncludeExistDelivery = false;
+
+        if (tableRow.Item is null)
+        {
+            StateHasChanged();
+            return;
+        }
+
+        if (!FilterOrderId.HasValue || FilterOrderId <= 0)
+        {
+            SnackBarRepo.Error("Не определён контекст заказа (розница)");
+            StateHasChanged();
+            return;
+        }
+
+        await SetBusyAsync();
+
+        TResponseModel<int> res = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new()
+        {
+            DeliveryDocumentId = tableRow.Item.Id,
+            OrderDocumentId = FilterOrderId.Value
+        });
+
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+
+        await SetBusyAsync(false);
+    }
+
+    void RowClickEvent(TableRowClickEventArgs<DeliveryDocumentRetailModelDB> tableRowClickEventArgs)
+    {
+        if (RowClickEventHandler is not null)
+            RowClickEventHandler(tableRowClickEventArgs);
     }
 
     async Task<TableData<DeliveryDocumentRetailModelDB>> ServerReload(TableState state, CancellationToken token)

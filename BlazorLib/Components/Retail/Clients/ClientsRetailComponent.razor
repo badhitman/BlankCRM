@@ -11,12 +11,16 @@
     <HeaderContent>
         <MudTh>ФИО</MudTh>
         <MudTh>Username</MudTh>
-        <MudTh>Contacts</MudTh>
+        <MudTh>Баланс</MudTh>
+        <MudTh>Контакты</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Nr"><a href="/retail/client-card/@context.UserId">@context.GivenName @context.Surname @context.Patronymic</a></MudTd>
-        <MudTd DataLabel="Sign"><a href="/retail/client-card/@context.UserId">@context.UserName</a></MudTd>
-        <MudTd DataLabel="Name">
+        <MudTd DataLabel="ФИО"><a href="/retail/client-card/@context.UserId">@context.GivenName @context.Surname @context.Patronymic</a></MudTd>
+        <MudTd DataLabel="Username"><a href="/retail/client-card/@context.UserId">@context.UserName</a></MudTd>
+        <MudTd DataLabel="Баланс">
+            <ClientsBalancesComponent Wallets="[..WalletsCache.Where(x => x.Balance != 0 && x.UserIdentityId == context.UserId)]" />
+        </MudTd>
+        <MudTd DataLabel="Контакты">
             <span class="me-2">
                 @context.PhoneNumber
                 @if (context.RequestChangePhone != context.PhoneNumber)

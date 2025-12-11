@@ -54,7 +54,7 @@
                                                                            GlobalStaticConstantsRoles.Roles.RetailManage])" />
     </MudTabPanel>
     <MudTabPanel Text="Notification templates">
-        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
+        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
             <MudTabPanel Text="Email">
                 <div class="card my-3">
                     <div class="card-body">
@@ -69,7 +69,7 @@
                                 </p>
                             </div>
                         </div>
-                        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
+                        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
                             @foreach (StatusesDocumentsEnum stepEnum in Enum.GetValues(typeof(StatusesDocumentsEnum)).Cast<StatusesDocumentsEnum>())
                             {
                                 <MudTabPanel Text="@stepEnum.DescriptionInfo()">
@@ -115,7 +115,7 @@
                                 </p>
                             </div>
                         </div>
-                        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
+                        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
                             @foreach (StatusesDocumentsEnum stepEnum in Enum.GetValues(typeof(StatusesDocumentsEnum)).Cast<StatusesDocumentsEnum>())
                             {
                                 <MudTabPanel Text="@stepEnum.DescriptionInfo()">
@@ -190,7 +190,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
+                        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
                             @foreach (StatusesDocumentsEnum stepEnum in Enum.GetValues(typeof(StatusesDocumentsEnum)).Cast<StatusesDocumentsEnum>())
                             {
                                 <MudTabPanel Text="@stepEnum.DescriptionInfo()">
@@ -234,7 +234,7 @@
                     <p>Статус документа.</p>
                 </dd>
 
-                <dt class="col-sm-3">@GlobalStaticConstants.DocumentLinkAddressProperty</dt>
+                <dt class="col-sm-3">@GlobalStaticConstants.DocumentLinkProperty</dt>
                 <dd class="col-sm-9">
                     <p>Ссылка на документ.</p>
                 </dd>

@@ -70,7 +70,7 @@ public interface IRetailService
     public Task<TPaginationResponseModel<RetailDeliveryOrderLinkModelDB>> SelectDeliveriesOrdersLinksDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeleteDeliveryOrderLinkDocumentAsync(int req, CancellationToken token = default);
+    public Task<ResponseBaseModel> DeleteDeliveryOrderLinkDocumentAsync(DeleteDeliveryOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default);
     #endregion
 
     #region Payment Document

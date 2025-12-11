@@ -9,5 +9,9 @@ namespace SharedLib;
 /// </summary>
 public class SelectDeliveriesOrdersLinksRetailDocumentsRequestModel
 {
+    /// <inheritdoc/>
+    public int[]? OrdersIds { get; set; }
 
+    /// <inheritdoc/>
+    public int[]? DeliveriesIds { get; set; }
 }
