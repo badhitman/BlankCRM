@@ -1,4 +1,5 @@
-﻿@using MudBlazor
+﻿@using Microsoft.Extensions.Options
+@using MudBlazor
 @implements IDisposable
 
 @inject IParametersStorageTransmission StoreRepo
@@ -35,22 +36,29 @@
                 </div>
             </Authorized>
             <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link px-3" href="Account/Register">
-                        <span aria-hidden="true"></span> @localizer["Registration"]
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link px-3" href="Account/Login">
-                        <span aria-hidden="true"></span> @localizer["Login"]
-                    </NavLink>
-                </div>
+                @if (!ServerConfig.Value.HideAuthArea)
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link px-3" href="Account/Register">
+                            <span aria-hidden="true"></span> @localizer["Registration"]
+                        </NavLink>
+                    </div>
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link px-3" href="Account/Login">
+                            <span aria-hidden="true"></span> @localizer["Login"]
+                        </NavLink>
+                    </div>
+                }
             </NotAuthorized>
         </AuthorizeView>
     </nav>
 </div>
 
 @code {
+    [Inject]
+    IOptions<ServerConfigModel> ServerConfig { get; set; } = default!;
+
+
     [CascadingParameter, EditorRequired]
     public required NavMainMenuModel NavMainMenu { get; set; }
 

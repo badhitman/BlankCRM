@@ -28,6 +28,16 @@ public class ServerConfigModel
     /// Скрипты для вставки в сайт
     /// </summary>
     public ScriptInjectionModel[]? ScriptsInject { get; set; }
+
+    /// <summary>
+    /// Скрыть выбор языка
+    /// </summary>
+    public bool HideLanguageSelector { get; set; }
+
+    /// <summary>
+    /// Скрыть навигацию для входа/авторизации
+    /// </summary>
+    public bool HideAuthArea { get; set; }
 }
 
 /// <summary>

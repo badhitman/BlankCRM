@@ -1,5 +1,6 @@
 ﻿@using BlazorLib.Components.Kladr.control.input
 @using MudBlazor
+@using static SharedLib.GlobalStaticConstantsRoutes
 
 @inherits BlazorBusyComponentBaseAuthModel
 
@@ -35,6 +36,14 @@
                         <label for="exampleInputName" class="form-label">Примечание</label>
                         <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
                     </div>
+                </MudItem>
+                <MudItem>
+                    <RubricInputComponent SelectRubricsHandle="WarehouseSelectAction"
+                                          ModeSelectingRubrics=ModesSelectRubricsEnum.SelectAny
+                                          RubricInitial="@editDoc.WarehouseId"
+                                          Title="Склад списания"
+                                          ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
+                                          ShowDisabledRubrics />
                 </MudItem>
             </MudGrid>
             <div class="mb-3">
@@ -94,6 +103,9 @@
             {
                 <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
                     <MudTabPanel Text="Номенклатура">
+                        <DeliveryStatusesTableComponent />
+                    </MudTabPanel>
+                    <MudTabPanel Text="Статусы">
                         <DeliveryStatusesTableComponent />
                     </MudTabPanel>
                     <MudTabPanel Text="Примечания">

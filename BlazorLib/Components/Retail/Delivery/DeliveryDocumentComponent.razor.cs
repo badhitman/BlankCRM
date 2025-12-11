@@ -43,12 +43,16 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             if (IsBusyProgress || currentDoc is null || editDoc is null || string.IsNullOrWhiteSpace(editDoc.KladrCode))
                 return true;
 
-            if (string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId) || editDoc.ShippingCost <= 0 || editDoc.WeightShipping <= 0)
+            if (string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId) || editDoc.WarehouseId <= 0 || editDoc.ShippingCost <= 0 || editDoc.WeightShipping <= 0)
                 return true;
 
             return
                 currentDoc.Id > 0 &&
+                currentDoc.RecipientIdentityUserId == editDoc.RecipientIdentityUserId &&
+                currentDoc.ShippingCost == editDoc.ShippingCost &&
+                currentDoc.WeightShipping == editDoc.WeightShipping &&
                 currentDoc.Description == editDoc.Description &&
+                currentDoc.WarehouseId == editDoc.WarehouseId &&
                 currentDoc.Name == editDoc.Name;
         }
     }
@@ -65,6 +69,24 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             editDoc.KladrTitle = value?.Name ?? "";
         }
     }
+
+
+    async void WarehouseSelectAction(UniversalBaseModel? selectedWarehouse)
+    {
+        //if (editDocument is null)
+        //    throw new ArgumentNullException(nameof(editDocument));
+
+        //editDocument.WarehouseId = selectedWarehouse?.Id ?? 0;
+
+        //StateHasChanged();
+        //if (tableRowsRef is not null)
+        //{
+        //    await tableRowsRef.LoadOffers(0);
+        //    if (tableRowsRef.AddingDomRef is not null)
+        //        await tableRowsRef.AddingDomRef.RegistersReload();
+        //}
+    }
+
 
     async void SelectUserHandler(UserInfoModel? selected)
     {

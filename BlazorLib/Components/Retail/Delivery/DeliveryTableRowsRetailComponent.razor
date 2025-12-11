@@ -4,7 +4,7 @@
 @inherits OffersTableBaseComponent
 
 <MudTable Dense Hover ReadOnly="ReadOnly"
-          SortLabel="@(nameof(RowOfOrderDocumentModelDB.Nomenclature.Name))"
+          SortLabel="@(nameof(RowOfDeliveryRetailDocumentModelDB.Nomenclature.Name))"
           CanCancelEdit
           Items="@Document?.Rows"
           RowEditPreview="RowEditPreviewHandler"
@@ -15,7 +15,7 @@
           RowEditCancel="RowEditCancelHandler"
           EditTrigger="@EditTrigger">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Номенклатура заказа (розница)</MudText>
+        <MudText Typo="Typo.h6">Номенклатура отгрузки (розница)</MudText>
         <MudSpacer />
         @if (!ReadOnly && Document is not null)
         {

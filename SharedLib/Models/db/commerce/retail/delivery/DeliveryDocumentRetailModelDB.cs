@@ -9,8 +9,9 @@ namespace SharedLib;
 /// <summary>
 /// DeliveryDocumentModelDB
 /// </summary>
-[Index(nameof(DeliveryCode)), Index(nameof(DeliveryType)), Index(nameof(RecipientIdentityUserId)), Index(nameof(DeliveryPaymentUponReceipt))]
-[Index(nameof(KladrCode)), Index(nameof(KladrTitle)), Index(nameof(AddressUserComment)), Index(nameof(AuthorIdentityUserId)), Index(nameof(DeliveryStatus))]
+[Index(nameof(DeliveryCode)), Index(nameof(RecipientIdentityUserId)), Index(nameof(DeliveryPaymentUponReceipt))]
+[Index(nameof(KladrCode)), Index(nameof(AddressUserComment)), Index(nameof(AuthorIdentityUserId)), Index(nameof(DeliveryStatus))]
+[Index(nameof(WarehouseId)), Index(nameof(DeliveryType)), Index(nameof(KladrTitle))]
 public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
 {
     /// <summary>
@@ -48,6 +49,11 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     /// </summary>
     public decimal WeightShipping { get; set; }
 
+    /// <summary>
+    /// Склад списания
+    /// </summary>
+    public int WarehouseId { get; set; }
+
     #region address
     /// <inheritdoc/>
     public string? KladrCode { get; set; }
@@ -61,13 +67,16 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     public string? AddressUserComment { get; set; }
     #endregion
 
+    /// <inheritdoc/>
+    public required string AuthorIdentityUserId { get; set; }
+
+    /// <inheritdoc/>
+    public List<RowOfDeliveryRetailDocumentModelDB>? Rows { get; set; }
+
     /// <summary>
     /// Заказы (документы)
     /// </summary>
     public List<RetailDeliveryOrderLinkModelDB>? OrdersLinks { get; set; }
-
-    /// <inheritdoc/>
-    public required string AuthorIdentityUserId { get; set; }
 
     /// <summary>
     /// StatusesLog
