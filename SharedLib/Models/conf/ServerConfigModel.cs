@@ -18,4 +18,32 @@ public class ServerConfigModel
     /// Конфигурация reCaptcha
     /// </summary>
     public ReCaptchaConfigClientModel? ReCaptchaConfig { get; set; }
+
+    /// <summary>
+    /// Стили для вставки в сайт
+    /// </summary>
+    public StyleInjectionModel[]? StylesInject { get; set; }
+
+    /// <summary>
+    /// Скрипты для вставки в сайт
+    /// </summary>
+    public ScriptInjectionModel[]? ScriptsInject { get; set; }
+}
+
+/// <summary>
+/// StyleInjectionModel
+/// </summary>
+public class StyleInjectionModel()
+{
+    /// <inheritdoc/>
+    public required string Href { get; set; }
+}
+
+/// <summary>
+/// ScriptInjectionModel
+/// </summary>
+public class ScriptInjectionModel()
+{
+    /// <inheritdoc/>
+    public required string Src { get; set; }
 }

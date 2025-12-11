@@ -20,6 +20,9 @@ public partial class App
     IOptions<TelegramBotConfigModel> WebConfig { get; set; } = default!;
 
     [Inject]
+    IOptions<ServerConfigModel> ServerConfig { get; set; } = default!;
+
+    [Inject]
     NavigationManager NavigatorRepo { get; set; } = default!;
 
 
