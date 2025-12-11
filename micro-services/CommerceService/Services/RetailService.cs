@@ -180,6 +180,9 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
             q = q.Where(x => req.Payload.TypesFilter.Contains(x.DeliveryType));
 
+        if (req.Payload?.ExcludeDeliveryId.HasValue == true && req.Payload.ExcludeDeliveryId > 0)
+            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.DeliveryDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeDeliveryId));
+
         if (req.Payload?.FilterOrderId is not null && req.Payload.FilterOrderId > 0)
             q = from deliveryDoc in q
                 join linkItem in context.DeliveriesOrdersLinks.Where(x => x.OrderDocumentId == req.Payload.FilterOrderId) on deliveryDoc.Id equals linkItem.DeliveryDocumentId
@@ -969,8 +972,8 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.CreatorsFilterIdentityId is not null && req.Payload.CreatorsFilterIdentityId.Length != 0)
             q = q.Where(x => req.Payload.CreatorsFilterIdentityId.Contains(x.AuthorIdentityUserId));
 
-        if (req.Payload?.ExcludeOrderId.HasValue == true && req.Payload.ExcludeOrderId > 0)
-            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
+        if (req.Payload?.ExcludeDeliveryId.HasValue == true && req.Payload.ExcludeDeliveryId > 0)
+            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id && y.DeliveryDocumentId == req.Payload.ExcludeDeliveryId));
 
         IQueryable<RetailDocumentModelDB> pq = q
             .OrderBy(x => x.DateDocument)

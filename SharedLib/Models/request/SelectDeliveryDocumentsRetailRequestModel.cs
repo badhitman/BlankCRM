@@ -19,4 +19,9 @@ public class SelectDeliveryDocumentsRetailRequestModel
 
     /// <inheritdoc/>
     public DeliveryTypesEnum[]? TypesFilter {  get; set; }
+
+    /// <summary>
+    /// Исключить по документу доставки
+    /// </summary>
+    public int? ExcludeDeliveryId { get; set; }
 }

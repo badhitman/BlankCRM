@@ -22,6 +22,9 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     [Inject]
     IIdentityTransmission IdentityRepo { get; set; } = default!;
 
+    /// <inheritdoc/>
+    [Parameter]
+    public int? FilterOrderId { get; set; }
 
     /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]

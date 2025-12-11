@@ -20,7 +20,7 @@ public class SelectRetailDocumentsRequestModel
     public string[]? CreatorsFilterIdentityId { get; set; }
 
     /// <summary>
-    /// Исключить документы доставки по номеру заказа
+    /// Исключить по документу доставки
     /// </summary>
-    public int? ExcludeOrderId { get; set; }
+    public int? ExcludeDeliveryId { get; set; }
 }

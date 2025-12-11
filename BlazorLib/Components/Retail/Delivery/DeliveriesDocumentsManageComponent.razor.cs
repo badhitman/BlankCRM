@@ -74,11 +74,12 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         }
 
         await SetBusyAsync();
-        var res = await RetailRepo.DeleteDeliveryOrderLinkDocumentAsync(new()
+        ResponseBaseModel res = await RetailRepo.DeleteDeliveryOrderLinkDocumentAsync(new()
         {
             DeliveryId = deliveryDocumentId,
-            OrderDeliveryLinkId = FilterOrderId,
+            OrderId = FilterOrderId.Value,
         });
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
     }
 
