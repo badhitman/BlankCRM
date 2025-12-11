@@ -684,7 +684,7 @@ public partial class CommerceImplementService : ICommerceService
         {
             req.IsDisabled = true;
             req.Id = 0;
-            req.CreatedAtUTC = req.LastUpdatedAtUTC;
+            req.CreatedAtUTC = DateTime.UtcNow;
             await context.WeeklySchedules.AddAsync(req, token);
             await context.SaveChangesAsync(token);
             res.Response = req.Id;
@@ -764,6 +764,7 @@ public partial class CommerceImplementService : ICommerceService
             req.Payload.Id = 0;
             req.Payload.CreatedAtUTC = DateTime.UtcNow;
             req.Payload.LastUpdatedAtUTC = DateTime.UtcNow;
+
             await context.CalendarsSchedules.AddAsync(req.Payload, token);
             await context.SaveChangesAsync(token);
             res.Response = req.Payload.Id;

@@ -17,7 +17,7 @@ public class EntrySwitchableUpdatedModel : IdSwitchableModel
     /// <summary>
     /// Дата последнего обновления
     /// </summary>
-    public DateTime LastUpdatedAtUTC { get; set; }
+    public DateTime? LastUpdatedAtUTC { get; set; }
 
     /// <summary>
     /// Дата создания

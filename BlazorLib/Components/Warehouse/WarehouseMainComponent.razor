@@ -17,7 +17,7 @@
     <RowTemplate>
         @{
             DateTime cdt = context.CreatedAtUTC.GetCustomTime();
-            DateTime udt = context.LastUpdatedAtUTC.GetCustomTime();
+            DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
             DateTime ddt = context.DeliveryDate.GetCustomTime();
         }
         <MudTd DataLabel="Примечание">
@@ -37,10 +37,13 @@
             <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">
                 @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
             </span>
-            /
-            <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">
-                @udt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.ToString("t", GlobalStaticConstants.RU)</sup>
-            </span>
+            @if (udt is not null)
+            {
+                <text>/</text>
+                <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">
+                    @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
+                </span>
+            }
         </MudTd>
     </RowTemplate>
     <NoRecordsContent>

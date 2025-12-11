@@ -9,6 +9,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.Retail.Delivery;
 
+/// <summary>
+/// DeliveryTableRowsRetailComponent
+/// </summary>
 public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
 {
     [Inject]

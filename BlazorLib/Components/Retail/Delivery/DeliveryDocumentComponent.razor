@@ -109,7 +109,7 @@
             {
                 <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
                     <MudTabPanel Text="Номенклатура">
-                        <DeliveryTableRowsRetailComponent Document="editDoc" />
+                        <DeliveryTableRowsRetailComponent Document="editDoc" @ref=tableRowsRef />
                     </MudTabPanel>
                     <MudTabPanel Text="Заказы">
                         <RetailOrdersListComponent FilterDeliveryId="DeliveryDocumentId" RowClickEventHandler="SelectOrderEvent" />
