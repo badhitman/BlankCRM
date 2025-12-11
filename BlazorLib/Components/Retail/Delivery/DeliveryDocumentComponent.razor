@@ -1,4 +1,5 @@
 ﻿@using BlazorLib.Components.Kladr.control.input
+@using BlazorLib.Components.Retail.Orders
 @using MudBlazor
 @using static SharedLib.GlobalStaticConstantsRoutes
 
@@ -74,7 +75,7 @@
                         <label for="formControlInputBuyer" class="form-label">Покупатель</label>
                         <input class="form-control"
                                type="text"
-                               value="@senderUser?.ToString()"
+                               value="@recipientUser?.ToString()"
                                aria-label="readonly input example"
                                readonly
                                id="formControlInputBuyer"
@@ -86,7 +87,7 @@
             </div>
             <div class="card my-3">
                 <div class="card-body">
-                    @if (DeliveryAddressSelectedKladrObject?.Id != editDoc.RecipientIdentityUserId && !string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId))
+                    @if (CanCopyAddressFromRecipient)
                     {
                         <div class="d-grid gap-2 mb-2">
                             <button @onclick=SetDeliveryAddressFromUserRecipient
@@ -109,6 +110,9 @@
                 <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
                     <MudTabPanel Text="Номенклатура">
                         <DeliveryTableRowsRetailComponent Document="editDoc" />
+                    </MudTabPanel>
+                    <MudTabPanel Text="Заказы">
+                        <RetailOrdersListComponent FilterDeliveryId="DeliveryDocumentId" RowClickEventHandler="SelectOrderEvent" />
                     </MudTabPanel>
                     <MudTabPanel Text="Статусы">
                         <DeliveryStatusesTableComponent Document="editDoc" />

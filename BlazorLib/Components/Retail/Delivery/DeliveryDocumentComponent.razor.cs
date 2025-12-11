@@ -5,6 +5,7 @@
 using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
+using MudBlazor;
 
 namespace BlazorLib.Components.Retail.Delivery;
 
@@ -30,11 +31,10 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
 
     DeliveryDocumentRetailModelDB? currentDoc, editDoc;
-    UserInfoModel? senderUser;
+    UserInfoModel? recipientUser;
     DeliveryTableRowsRetailComponent? tableRowsRef;
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
-
 
     bool CannotSave
     {
@@ -57,6 +57,22 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         }
     }
 
+    bool CanCopyAddressFromRecipient
+    {
+        get
+        {
+            if (editDoc is null || DeliveryAddressSelectedKladrObject is null || recipientUser is null)
+                return false;
+
+            if (string.IsNullOrWhiteSpace(recipientUser.KladrCode) || string.IsNullOrWhiteSpace(recipientUser.KladrTitle))
+                return false;
+
+            return
+                DeliveryAddressSelectedKladrObject.Id != editDoc.KladrCode &&
+                !string.IsNullOrWhiteSpace(editDoc.KladrCode);
+        }
+    }
+
     EntryAltModel? DeliveryAddressSelectedKladrObject
     {
         get => EntryAltModel.Build(editDoc?.KladrCode ?? "", editDoc?.KladrTitle ?? "");
@@ -69,6 +85,24 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             editDoc.KladrTitle = value?.Name ?? "";
         }
     }
+
+
+    async void SelectOrderEvent(TableRowClickEventArgs<RetailDocumentModelDB> tableRow)
+    {
+        if (tableRow.Item is null)
+            return;
+
+        RetailDeliveryOrderLinkModelDB req = new()
+        {
+            OrderDocumentId = tableRow.Item.Id,
+            DeliveryDocumentId = DeliveryDocumentId
+        };
+        await SetBusyAsync();
+        TResponseModel<int> res = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        await SetBusyAsync(false);
+    }
+
 
     async void WarehouseSelectAction(UniversalBaseModel? selectedWarehouse)
     {
@@ -88,21 +122,22 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
     async void SelectUserHandler(UserInfoModel? selected)
     {
-        if (editDoc is null || selected?.UserId == senderUser?.UserId)
+        if (editDoc is null || selected?.UserId == recipientUser?.UserId)
             return;
 
         editDoc.RecipientIdentityUserId = selected?.UserId ?? "";
         if (string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId))
-            senderUser = null;
+            recipientUser = null;
         else
         {
             TResponseModel<UserInfoModel[]> getUsers = await IdentityRepo.GetUsersOfIdentityAsync([editDoc.RecipientIdentityUserId]);
             SnackBarRepo.ShowMessagesResponse(getUsers.Messages);
             if (getUsers.Success() && getUsers.Response is not null && getUsers.Response.Any(x => x.UserId == editDoc.RecipientIdentityUserId))
             {
-                senderUser = getUsers.Response.First(x => x.UserId == editDoc.RecipientIdentityUserId);
+                recipientUser = getUsers.Response.First(x => x.UserId == editDoc.RecipientIdentityUserId);
             }
         }
+        StateHasChanged();
     }
 
     async Task SetDeliveryAddressFromUserRecipient()
@@ -197,7 +232,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
                 SnackBarRepo.ShowMessagesResponse(getUsers.Messages);
                 if (getUsers.Success() && getUsers.Response is not null && getUsers.Response.Any(x => x.UserId == ClientId))
                 {
-                    senderUser = getUsers.Response.First(x => x.UserId == ClientId);
+                    recipientUser = getUsers.Response.First(x => x.UserId == ClientId);
                 }
             }
 

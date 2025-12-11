@@ -103,7 +103,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
     #endregion
 
-    #region Delivery Document
+    #region Delivery document
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default)
     {
@@ -630,7 +630,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
     #endregion
 
-    #region Payment Document
+    #region Payment document
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default)
     {
@@ -842,7 +842,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
     #endregion
 
-    #region Rows for Order-Document
+    #region Rows for order-document
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
     {
@@ -961,7 +961,15 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         await context.RetailOrders.AddAsync(req, token);
         await context.SaveChangesAsync(token);
-        return new TResponseModel<int>() { Response = req.Id };
+        return new TResponseModel<int>()
+        {
+            Response = req.Id,
+            Messages = [new()
+            {
+                TypeMessage = MessagesTypesEnum.Success,
+                 Text = "Заказ успешно создан"
+            }]
+        };
     }
 
     /// <inheritdoc/>
@@ -969,20 +977,20 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        await context.RetailOrders
-            .Where(x => x.Id == req.Id)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name.Trim())
-                .SetProperty(p => p.DateDocument, req.DateDocument.SetKindUtc())
-                .SetProperty(p => p.StatusDocument, req.StatusDocument)
-                .SetProperty(p => p.BuyerIdentityUserId, req.BuyerIdentityUserId)
-                .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.Description, req.Description)
-                .SetProperty(p => p.WarehouseId, req.WarehouseId)
-                .SetProperty(p => p.ExternalDocumentId, req.ExternalDocumentId)
-                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
+        int res = await context.RetailOrders
+              .Where(x => x.Id == req.Id)
+              .ExecuteUpdateAsync(set => set
+                  .SetProperty(p => p.Name, req.Name.Trim())
+                  .SetProperty(p => p.DateDocument, req.DateDocument.SetKindUtc())
+                  .SetProperty(p => p.StatusDocument, req.StatusDocument)
+                  .SetProperty(p => p.BuyerIdentityUserId, req.BuyerIdentityUserId)
+                  .SetProperty(p => p.Version, Guid.NewGuid())
+                  .SetProperty(p => p.Description, req.Description)
+                  .SetProperty(p => p.WarehouseId, req.WarehouseId)
+                  .SetProperty(p => p.ExternalDocumentId, req.ExternalDocumentId)
+                  .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
-        return ResponseBaseModel.CreateSuccess("Ok");
+        return ResponseBaseModel.CreateSuccess("Документ/заказ обновлён");
     }
 
     /// <inheritdoc/>

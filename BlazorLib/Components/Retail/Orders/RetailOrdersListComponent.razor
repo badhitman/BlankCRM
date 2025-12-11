@@ -91,7 +91,7 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
-@if (FilterDeliveryId.HasValue && FilterDeliveryId.Value > 0)
+@if (RowClickEventHandler is null)
 {
     <MudDialog @bind-Visible="_visibleCreateNewOrder" Options="_dialogOptions">
         <TitleContent>
@@ -105,6 +105,9 @@
             </CascadingValue>
         </DialogContent>
     </MudDialog>
+}
+else
+{
     <MudDialog @bind-Visible="_visibleIncludeOrder" Options="_dialogOptions">
         <TitleContent>
             <MudText Typo="Typo.h6">

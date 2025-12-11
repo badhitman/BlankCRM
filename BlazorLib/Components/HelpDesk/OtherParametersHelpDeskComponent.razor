@@ -2,6 +2,7 @@
 @using BlazorLib.Components.Commerce
 @using BlazorLib.Components
 @using BlazorLib
+@using BlazorLib.Components.Shared
 @using MudBlazor
 @using SharedLib
 
@@ -71,5 +72,8 @@
                 </div>
             </li>
         </ul>
+    </MudTabPanel>
+    <MudTabPanel Text="SnackBar stack">
+        <SnackBarHistoryComponent />
     </MudTabPanel>
 </MudTabs>

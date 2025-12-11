@@ -30,28 +30,3 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
-@code {
-    /// <summary>
-    /// SnackBar
-    /// </summary>
-    [Inject]
-    public ISnackbar SnackBarRepo { get; set; } = default!;
-
-    private string searchString1 = "";
-    private HashSet<MessageViewModel> selectedItems = new HashSet<MessageViewModel>();
-
-    private IEnumerable<MessageViewModel> Elements = [];
-
-    /// <inheritdoc/>
-    protected override void OnInitialized()
-    {
-        Elements = SnackBarRepo.GetHistoryMessages();
-    }
-
-    private bool FilterFunc1(MessageViewModel? element) => FilterFunc(element, searchString1);
-
-    private bool FilterFunc(MessageViewModel? element, string searchString)
-    {
-        return element?.Message.Text?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true;
-    }
-}
