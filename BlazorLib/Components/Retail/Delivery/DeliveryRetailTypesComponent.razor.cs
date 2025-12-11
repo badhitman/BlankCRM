@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Retail.Delivery;
 public partial class DeliveryRetailTypesComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
-    IRetailService retailRepo { get; set; } = default!;
+    IRetailService RetailRepo { get; set; } = default!;
 
 
     List<DeliveryServiceRetailModelDB>? DeliveriesServicesList;
@@ -23,7 +23,7 @@ public partial class DeliveryRetailTypesComponent : BlazorBusyComponentBaseModel
     async Task CreateNew()
     {
         await SetBusyAsync();
-        TResponseModel<int>? resCreate = await retailRepo.CreateDeliveryServiceAsync(creatingDeliveryService);
+        TResponseModel<int>? resCreate = await RetailRepo.CreateDeliveryServiceAsync(creatingDeliveryService);
         if(!resCreate.Success())
         {
             SnackBarRepo.ShowMessagesResponse(resCreate.Messages);
@@ -32,7 +32,7 @@ public partial class DeliveryRetailTypesComponent : BlazorBusyComponentBaseModel
         }
 
         creatingDeliveryService = new();
-        TPaginationResponseModel<DeliveryServiceRetailModelDB>? res = await retailRepo.SelectDeliveryServicesAsync(new () { PageSize = int.MaxValue });
+        TPaginationResponseModel<DeliveryServiceRetailModelDB>? res = await RetailRepo.SelectDeliveryServicesAsync(new () { PageSize = int.MaxValue });
         DeliveriesServicesList = res.Response;
         await SetBusyAsync(false);
     }
@@ -42,7 +42,7 @@ public partial class DeliveryRetailTypesComponent : BlazorBusyComponentBaseModel
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
-        TPaginationResponseModel<DeliveryServiceRetailModelDB>? res = await retailRepo.SelectDeliveryServicesAsync(new () { PageSize = int.MaxValue });
+        TPaginationResponseModel<DeliveryServiceRetailModelDB>? res = await RetailRepo.SelectDeliveryServicesAsync(new () { PageSize = int.MaxValue });
         DeliveriesServicesList = res.Response;
         await SetBusyAsync(false);
     }

@@ -1,5 +1,28 @@
-﻿<h3>DeliveryStatusesTableComponent</h3>
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
 
-@code {
+<MudTable ServerData="ServerReload" Dense="true" Hover="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Статусы доставки (розница)</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Дата</MudTh>
+        <MudTh>Статус</MudTh>
+        <MudTh>Примечание</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Дата">@context.DateOperation</MudTd>
+        <MudTd DataLabel="Статус">@context.DeliveryStatus.DescriptionInfo()</MudTd>
+        <MudTd DataLabel="Примечание">@context.Name</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 
-}

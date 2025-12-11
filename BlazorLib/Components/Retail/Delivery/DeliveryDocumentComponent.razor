@@ -103,10 +103,10 @@
             {
                 <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
                     <MudTabPanel Text="Номенклатура">
-                        <DeliveryStatusesTableComponent />
+                        <DeliveryTableRowsRetailComponent Document="editDoc" />
                     </MudTabPanel>
                     <MudTabPanel Text="Статусы">
-                        <DeliveryStatusesTableComponent />
+                        <DeliveryStatusesTableComponent Document="editDoc" />
                     </MudTabPanel>
                     <MudTabPanel Text="Примечания">
                         <TinyMCE.Blazor.Editor @bind-Value="editDoc.Description"

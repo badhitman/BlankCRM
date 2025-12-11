@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DbcLib;
+using DocumentFormat.OpenXml.Drawing;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using DbcLib;
 
 namespace CommerceService;
 
@@ -295,7 +296,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
     #endregion
 
-    #region Status Delivery Document
+    #region Statuses (for delivery document)
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateDeliveryStatusDocumentAsync(DeliveryStatusRetailDocumentModelDB req, CancellationToken token = default)
     {
@@ -359,6 +360,23 @@ public class RetailService(IIdentityTransmission identityRepo,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq.ToListAsync(cancellationToken: token)
         };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DeleteDeliveryStatusDocumentAsync(int statusId, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<DeliveryStatusRetailDocumentModelDB> q = context.DeliveryStatusesRetailDocuments.Where(x => x.Id == statusId);
+        int deliveryDocumentId = await q.Select(x => x.DeliveryDocumentId).FirstAsync(cancellationToken: token);
+
+        await q.ExecuteDeleteAsync(cancellationToken: token);
+
+        await context.DeliveryRetailDocuments
+            .Where(x => x.Id == deliveryDocumentId)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.DeliveryStatus, context.DeliveryStatusesRetailDocuments.Where(y => y.DeliveryDocumentId == deliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Ok");
     }
     #endregion
 

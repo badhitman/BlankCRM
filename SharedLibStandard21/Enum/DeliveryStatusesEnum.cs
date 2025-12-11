@@ -12,26 +12,26 @@ namespace SharedLib;
 public enum DeliveryStatusesEnum
 {
     /// <summary>
-    /// Created
+    /// Комплектуется
     /// </summary>
-    [Description("Created")]
+    [Description("Комплектуется")]
     Created = 10,
 
     /// <summary>
-    /// Progress
+    /// Отправлен
     /// </summary>
-    [Description("Progress")]
+    [Description("Отправлен")]
     Progress = 20,
 
     /// <summary>
-    /// Delivered
+    /// Доставлен
     /// </summary>
-    [Description("Delivered")]
+    [Description("Доставлен")]
     Delivered = 30,
 
     /// <summary>
-    /// Cancel
+    /// Отменён
     /// </summary>
-    [Description("Cancel")]
+    [Description("Отменён")]
     Canceled = 1000
 }

@@ -128,21 +128,21 @@
     </PagerContent>
 </MudTable>
 
-@if (FilterOrderId.HasValue && FilterOrderId.Value > 0)
-{
-    <MudDialog @bind-Visible="_visibleCreateNewDelivery" Options="_dialogOptions">
-        <TitleContent>
-            <MudText Typo="Typo.h6">
-                <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новая доставка (розница)
-            </MudText>
-        </TitleContent>
-        <DialogContent>
-            <CascadingValue Name="ClientId" Value="ClientId">
-                <DeliveryDocumentComponent />
-            </CascadingValue>
-        </DialogContent>
-    </MudDialog>
+<MudDialog @bind-Visible="_visibleCreateNewDelivery" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новая доставка (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <DeliveryDocumentComponent />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
 
+@if (!FilterOrderId.HasValue || FilterOrderId.Value == 0)
+{
     <MudDialog @bind-Visible="_visibleIncludeExistDelivery" Options="_dialogOptions">
         <TitleContent>
             <MudText Typo="Typo.h6">
