@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// В© https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
@@ -20,16 +20,16 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
 
 
     /// <summary>
-    /// Предустановленный пользователь
+    /// РџСЂРµРґСѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
     /// </summary>
     /// <remarks>
-    /// Если указан, то сменить его нельзя
+    /// Р•СЃР»Рё СѓРєР°Р·Р°РЅ, С‚Рѕ СЃРјРµРЅРёС‚СЊ РµРіРѕ РЅРµР»СЊР·СЏ
     /// </remarks>
     [Parameter]
     public string? PresetClientId { get; set; }
 
     /// <summary>
-    /// Выбранный кошелёк
+    /// Р’С‹Р±СЂР°РЅРЅС‹Р№ РєРѕС€РµР»С‘Рє
     /// </summary>
     [Parameter]
     public WalletRetailModelDB? WalletInit { get; set; }
@@ -138,7 +138,7 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
         SnackBarRepo.ShowMessagesResponse(getWallets.Status.Messages);
 
         if (getWallets.Response is null || getWallets.Response.Count == 0)
-            SnackBarRepo.Error("Не удалось получить перечень кошельков пользователя");
+            SnackBarRepo.Error("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ РїРµСЂРµС‡РµРЅСЊ РєРѕС€РµР»СЊРєРѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ");
         else
             walletsForSelect = [.. getWallets.Response.Where(x => !HideSystemWallets || x.WalletType?.IsSystem != true)];
 

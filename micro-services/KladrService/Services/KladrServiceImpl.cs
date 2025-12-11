@@ -158,14 +158,7 @@ ILogger<KladrServiceImpl> loggerRepo) : IKladrService
         loggerRepo.LogInformation($"call > {nameof(FlushTempKladrAsync)}");
         using KladrContext context = await kladrDbFactory.CreateDbContextAsync(token);
 
-        try
-        {
-            await context.FlushTempKladr(token);
-            return ResponseBaseModel.CreateSuccess("Ok");
-        }
-        catch (Exception ex)
-        {
-            return ResponseBaseModel.CreateError(ex);
-        }
+        await context.FlushTempKladr(token);
+        return ResponseBaseModel.CreateSuccess("Ok");
     }
 }
