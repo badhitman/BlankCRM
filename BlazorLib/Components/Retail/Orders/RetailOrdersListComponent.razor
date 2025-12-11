@@ -13,15 +13,6 @@
         @if (RowClickEventHandler is null)
         {
             <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="CreateNewOrderOpenDialog">Новый заказ</MudButton>
-            @if (FilterDeliveryId.HasValue && FilterDeliveryId.Value > 0)
-            {
-                <MudTooltip Text="Добавить заказ в созданную ранее доставку">
-                    <MudButton OnClick=IncludeExistOrderOpenDialog
-                               Variant="Variant.Outlined"
-                               EndIcon="@Icons.Material.Filled.DeviceHub"
-                               IconColor="Color.Secondary">Включить в доставку</MudButton>
-                </MudTooltip>
-            }
         }
     </ToolBarContent>
     <HeaderContent>
@@ -42,8 +33,26 @@
             DateTime cdt = context.CreatedAtUTC.GetCustomTime();
             DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
         }
-        <MudTd DataLabel="Номер"><a href="/retail/order-document/@context.Id">@context.ExternalDocumentId</a></MudTd>
-        <MudTd DataLabel="Статус"><a href="/retail/order-document/@context.Id">@context.StatusDocument.DescriptionInfo()</a></MudTd>
+        <MudTd DataLabel="Номер">
+            @if (RowClickEventHandler is null)
+            {
+                <a href="/retail/order-document/@context.Id">@context.ExternalDocumentId</a>
+            }
+            else
+            {
+                <span>@context.ExternalDocumentId</span>
+            }
+        </MudTd>
+        <MudTd DataLabel="Статус">
+            @if (RowClickEventHandler is null)
+            {
+                <a href="/retail/order-document/@context.Id">@context.StatusDocument.DescriptionInfo()</a>
+            }
+            else
+            {
+                <span>@context.StatusDocument.DescriptionInfo()</span>
+            }
+        </MudTd>
         <MudTd DataLabel="Создан/Изменён">
             <span>
                 @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
@@ -102,21 +111,6 @@
         <DialogContent>
             <CascadingValue Value="ClientId" Name="ClientId">
                 <OrderDocumentCardComponent />
-            </CascadingValue>
-        </DialogContent>
-    </MudDialog>
-}
-else
-{
-    <MudDialog @bind-Visible="_visibleIncludeOrder" Options="_dialogOptions">
-        <TitleContent>
-            <MudText Typo="Typo.h6">
-                <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите заказ (для добавления к доставке)
-            </MudText>
-        </TitleContent>
-        <DialogContent>
-            <CascadingValue Name="ClientId" Value="ClientId">
-                <RetailOrdersListComponent RowClickEventHandler="SelectRowAction" />
             </CascadingValue>
         </DialogContent>
     </MudDialog>

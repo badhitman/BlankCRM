@@ -87,23 +87,6 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     }
 
 
-    async void SelectOrderEvent(TableRowClickEventArgs<RetailDocumentModelDB> tableRow)
-    {
-        if (tableRow.Item is null)
-            return;
-
-        RetailDeliveryOrderLinkModelDB req = new()
-        {
-            OrderDocumentId = tableRow.Item.Id,
-            DeliveryDocumentId = DeliveryDocumentId
-        };
-        await SetBusyAsync();
-        TResponseModel<int> res = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(req);
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusyAsync(false);
-    }
-
-
     async void WarehouseSelectAction(UniversalBaseModel? selectedWarehouse)
     {
         if (editDoc is null)

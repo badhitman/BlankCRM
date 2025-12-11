@@ -21,6 +21,40 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
     [Parameter, EditorRequired]
     public DeliveryDocumentRetailModelDB Document { get; set; }
 
+    DeliveryStatusesEnum? newStatus;
+    DateTime? createdDate;
+    string? createdName;
+    MudTable<DeliveryStatusRetailDocumentModelDB>? tableRef;
+
+    async Task AddNewStatus()
+    {
+        if (!createdDate.HasValue || createdDate == default || !newStatus.HasValue)
+            return;
+
+        DeliveryStatusRetailDocumentModelDB req = new()
+        {
+            DateOperation = createdDate.Value,
+            DeliveryDocumentId = Document.Id,
+            Name = createdName ?? "",
+            DeliveryStatus = newStatus.Value,
+            DeliveryDocument = Document
+        };
+        await SetBusyAsync();
+        TResponseModel<int> res = await RetailRepo.CreateDeliveryStatusDocumentAsync(req);
+        if(!res.Success())
+        {
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+            await SetBusyAsync(false);
+        }
+
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+
+        newStatus = null;
+        createdDate = null;
+        createdName = null;
+        await SetBusyAsync(false);
+    }
 
     async Task<TableData<DeliveryStatusRetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {

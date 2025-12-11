@@ -33,12 +33,6 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public int? FilterDeliveryId { get; set; }
 
-    /// <summary>
-    /// Исключить из вывода заказы, которые участвуют в доставке
-    /// </summary>
-    [Parameter]
-    public bool WithoutDeliveriesOnly { get; set; }
-
     /// <inheritdoc/>
     [Parameter]
     public Action<TableRowClickEventArgs<RetailDocumentModelDB>>? RowClickEventHandler { get; set; }
@@ -54,7 +48,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     protected List<UserInfoModel> UsersCache = [];
 
     MudTable<RetailDocumentModelDB>? tableRef;
-    bool _visibleCreateNewOrder, _visibleIncludeOrder;
+    bool _visibleCreateNewOrder;
     readonly DialogOptions _dialogOptions = new()
     {
         FullWidth = true,
@@ -66,44 +60,6 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     void CreateNewOrderOpenDialog()
     {
         _visibleCreateNewOrder = true;
-    }
-
-    void IncludeExistOrderOpenDialog()
-    {
-        _visibleIncludeOrder = true;
-    }
-
-    async void SelectRowAction(TableRowClickEventArgs<RetailDocumentModelDB> tableRow)
-    {
-        _visibleIncludeOrder = false;
-
-        if (tableRow.Item is null)
-        {
-            StateHasChanged();
-            return;
-        }
-
-        if (!FilterDeliveryId.HasValue || FilterDeliveryId <= 0)
-        {
-            SnackBarRepo.Error("Не определён контекст заказа (розница)");
-            StateHasChanged();
-            return;
-        }
-
-        await SetBusyAsync();
-
-        TResponseModel<int> res = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new()
-        {
-            DeliveryDocumentId = FilterDeliveryId.Value,
-            OrderDocumentId = tableRow.Item.Id
-        });
-
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
-
-        if (tableRef is not null)
-            await tableRef.ReloadServerData();
-
-        await SetBusyAsync(false);
     }
 
     void RowClickEvent(TableRowClickEventArgs<RetailDocumentModelDB> tableRowClickEventArgs)
@@ -180,9 +136,6 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     async Task<TableData<RetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req = new() { Payload = new() };
-
-        if (WithoutDeliveriesOnly)
-            req.Payload.WithoutDeliveriesOnly = true;
 
         if (!string.IsNullOrWhiteSpace(ClientId))
             req.Payload.BuyersFilterIdentityId = [ClientId];

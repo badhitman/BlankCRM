@@ -1,5 +1,6 @@
 ﻿@using BlazorLib.Components.Kladr.control.input
 @using BlazorLib.Components.Retail.Orders
+@using BlazorLib.Components.Retail.OrdersDeliveriesLinks
 @using MudBlazor
 @using static SharedLib.GlobalStaticConstantsRoutes
 
@@ -112,7 +113,7 @@
                         <DeliveryTableRowsRetailComponent Document="editDoc" @ref=tableRowsRef />
                     </MudTabPanel>
                     <MudTabPanel Text="Заказы">
-                        <RetailOrdersListComponent FilterDeliveryId="DeliveryDocumentId" RowClickEventHandler="SelectOrderEvent" />
+                        <OrdersDeliveriesLinksTableComponent DeliveryId="DeliveryDocumentId" />
                     </MudTabPanel>
                     <MudTabPanel Text="Статусы">
                         <DeliveryStatusesTableComponent Document="editDoc" />

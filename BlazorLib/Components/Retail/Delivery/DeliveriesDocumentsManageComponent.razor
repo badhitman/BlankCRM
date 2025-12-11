@@ -15,28 +15,17 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">Доставка (документы отгрузки)</MudText>
         <MudSpacer />
-        @if (RowClickEventHandler is null)
-        {
-            <MudTooltip Text="Создать новый документ доставки">
-                <MudButton OnClick=CreateNewDeliveryOpenDialog
-                           Class="me-2"
-                           Variant="Variant.Outlined"
-                           EndIcon="@Icons.Material.Filled.Add"
-                           IconColor="Color.Secondary">Новая доставка</MudButton>
-            </MudTooltip>
-            @if (FilterOrderId.HasValue && FilterOrderId.Value > 0)
-            {
-                <MudTooltip Text="Добавить заказ в созданную ранее доставку">
-                    <MudButton OnClick=IncludeExistDeliveryOpenDialog
-                               Variant="Variant.Outlined"
-                               EndIcon="@Icons.Material.Filled.DeviceHub"
-                               IconColor="Color.Secondary">Включить в доставку</MudButton>
-                </MudTooltip>
-            }
-        }
+        <MudTooltip Text="Создать новый документ доставки">
+            <MudButton OnClick=CreateNewDeliveryOpenDialog
+                       Class="me-2"
+                       Variant="Variant.Outlined"
+                       EndIcon="@Icons.Material.Filled.Add"
+                       IconColor="Color.Secondary">Новая доставка</MudButton>
+        </MudTooltip>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Тип/Дата</MudTh>
+        <MudTh>Тип</MudTh>
+        <MudTh>Дата</MudTh>
         <MudTh>Вес</MudTh>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
@@ -55,9 +44,26 @@
             DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
         }
         <MudTd DataLabel="Тип">
-            <a href="/retail/delivery-document/@context.Id">
-                <mark>@context.DeliveryType.DescriptionInfo()</mark>
-                <text>[</text>
+            @context.DeliveryType.DescriptionInfo()
+        </MudTd>
+        <MudTd DataLabel="Дата">
+            @if (RowClickEventHandler is null)
+            {
+                <a href="/retail/delivery-document/@context.Id">
+                    <span>
+                        @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+                    </span>
+                    @if (udt.HasValue && udt != default)
+                    {
+                        <text>/</text>
+                        <span>
+                            @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
+                        </span>
+                    }
+                </a>
+            }
+            else
+            {
                 <span>
                     @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
                 </span>
@@ -68,8 +74,8 @@
                         @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
                     </span>
                 }
-                <text>]</text>
-            </a>
+            }
+
             @if (FilterOrderId.HasValue && FilterOrderId.Value > 0)
             {
                 if (initDeleteOrderFromDelivery == context.Id)
@@ -98,7 +104,7 @@
             }
             else
             {
-                <DeliveryOrdersLinksComponent Orders="context.OrdersLinks" />
+                <DeliveryOrdersLinksAboutComponent Orders="context.OrdersLinks" />
             }
         </MudTd>
         <MudTd DataLabel="Адрес">@context.KladrTitle @context.AddressUserComment</MudTd>
@@ -140,19 +146,3 @@
         </CascadingValue>
     </DialogContent>
 </MudDialog>
-
-@if (!FilterOrderId.HasValue || FilterOrderId.Value == 0)
-{
-    <MudDialog @bind-Visible="_visibleIncludeExistDelivery" Options="_dialogOptions">
-        <TitleContent>
-            <MudText Typo="Typo.h6">
-                <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите доставку (розница)
-            </MudText>
-        </TitleContent>
-        <DialogContent>
-            <CascadingValue Name="ClientId" Value="ClientId">
-                <DeliveriesDocumentsManageComponent RowClickEventHandler="SelectRowAction" FilterOrderId="FilterOrderId" />
-            </CascadingValue>
-        </DialogContent>
-    </MudDialog>
-}

@@ -50,7 +50,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         }
     }
     MudTable<DeliveryDocumentRetailModelDB>? tableRef;
-    bool _visibleCreateNewDelivery, _visibleIncludeExistDelivery;
+    bool _visibleCreateNewDelivery;
     readonly DialogOptions _dialogOptions = new()
     {
         FullWidth = true,
@@ -88,44 +88,6 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     void CreateNewDeliveryOpenDialog()
     {
         _visibleCreateNewDelivery = true;
-    }
-
-    void IncludeExistDeliveryOpenDialog()
-    {
-        _visibleIncludeExistDelivery = true;
-    }
-
-    async void SelectRowAction(TableRowClickEventArgs<DeliveryDocumentRetailModelDB> tableRow)
-    {
-        _visibleIncludeExistDelivery = false;
-
-        if (tableRow.Item is null)
-        {
-            StateHasChanged();
-            return;
-        }
-
-        if (!FilterOrderId.HasValue || FilterOrderId <= 0)
-        {
-            SnackBarRepo.Error("Не определён контекст заказа (розница)");
-            StateHasChanged();
-            return;
-        }
-
-        await SetBusyAsync();
-
-        TResponseModel<int> res = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new()
-        {
-            DeliveryDocumentId = tableRow.Item.Id,
-            OrderDocumentId = FilterOrderId.Value
-        });
-
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
-
-        if (tableRef is not null)
-            await tableRef.ReloadServerData();
-
-        await SetBusyAsync(false);
     }
 
     void RowClickEvent(TableRowClickEventArgs<DeliveryDocumentRetailModelDB> tableRowClickEventArgs)

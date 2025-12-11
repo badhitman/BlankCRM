@@ -2,10 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
-using DocumentFormat.OpenXml.Drawing;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
+using DbcLib;
 
 namespace CommerceService;
 
@@ -305,6 +304,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.DateOperation = req.DateOperation.SetKindUtc();
         req.DeliveryDocument = null;
         req.Name = req.Name.Trim();
+        req.CreatedAtUTC = DateTime.UtcNow;
 
         await context.DeliveryStatusesRetailDocuments.AddAsync(req, token);
         await context.SaveChangesAsync(token);
@@ -1080,7 +1080,8 @@ public class RetailService(IIdentityTransmission identityRepo,
         await context.DeliveriesOrdersLinks
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.OrderDocumentId, req.OrderDocumentId)
-                .SetProperty(p => p.DeliveryDocumentId, req.DeliveryDocumentId), cancellationToken: token);
+                .SetProperty(p => p.DeliveryDocumentId, req.DeliveryDocumentId)
+                .SetProperty(p => p.WeightShipping, req.WeightShipping), cancellationToken: token);
         await context.SaveChangesAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }

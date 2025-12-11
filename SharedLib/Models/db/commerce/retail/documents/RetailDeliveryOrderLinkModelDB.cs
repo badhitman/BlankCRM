@@ -19,6 +19,11 @@ public class RetailDeliveryOrderLinkModelDB
     [Key]
     public int Id { get; set; }
 
+    /// <summary>
+    /// Вес отправления
+    /// </summary>
+    public decimal WeightShipping { get; set; }
+
     /// <inheritdoc/>
     public RetailDocumentModelDB? OrderDocument { get; set; }
     /// <inheritdoc/>
