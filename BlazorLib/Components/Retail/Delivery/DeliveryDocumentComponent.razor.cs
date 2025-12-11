@@ -31,7 +31,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
     DeliveryDocumentRetailModelDB? currentDoc, editDoc;
     UserInfoModel? senderUser;
-
+    DeliveryTableRowsRetailComponent? tableRowsRef;
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
 
@@ -70,23 +70,21 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         }
     }
 
-
     async void WarehouseSelectAction(UniversalBaseModel? selectedWarehouse)
     {
-        //if (editDocument is null)
-        //    throw new ArgumentNullException(nameof(editDocument));
+        if (editDoc is null)
+            throw new ArgumentNullException(nameof(editDoc));
 
-        //editDocument.WarehouseId = selectedWarehouse?.Id ?? 0;
+        editDoc.WarehouseId = selectedWarehouse?.Id ?? 0;
 
-        //StateHasChanged();
-        //if (tableRowsRef is not null)
-        //{
-        //    await tableRowsRef.LoadOffers(0);
-        //    if (tableRowsRef.AddingDomRef is not null)
-        //        await tableRowsRef.AddingDomRef.RegistersReload();
-        //}
+        StateHasChanged();
+        if (tableRowsRef is not null)
+        {
+            await tableRowsRef.LoadOffers(0);
+            if (tableRowsRef.AddingDomRef is not null)
+                await tableRowsRef.AddingDomRef.RegistersReload();
+        }
     }
-
 
     async void SelectUserHandler(UserInfoModel? selected)
     {
@@ -122,7 +120,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             editDoc.KladrTitle = _usr.KladrTitle;
             editDoc.AddressUserComment = _usr.AddressUserComment;
         }
-        await SetBusyAsync();
+        await SetBusyAsync(false);
     }
 
     void AddressUserCommentHandleOnChange(ChangeEventArgs args)
@@ -195,7 +193,6 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         {
             if (!string.IsNullOrWhiteSpace(ClientId))
             {
-
                 TResponseModel<UserInfoModel[]> getUsers = await IdentityRepo.GetUsersOfIdentityAsync([ClientId]);
                 SnackBarRepo.ShowMessagesResponse(getUsers.Messages);
                 if (getUsers.Success() && getUsers.Response is not null && getUsers.Response.Any(x => x.UserId == ClientId))

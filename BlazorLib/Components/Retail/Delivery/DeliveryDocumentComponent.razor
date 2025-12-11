@@ -37,24 +37,25 @@
                         <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
                     </div>
                 </MudItem>
-                <MudItem>
+                <MudItem xs="12" md=6 Class="mb-3">
                     <RubricInputComponent SelectRubricsHandle="WarehouseSelectAction"
                                           ModeSelectingRubrics=ModesSelectRubricsEnum.SelectAny
                                           RubricInitial="@editDoc.WarehouseId"
-                                          Title="Склад списания"
+                                          Title="Склад отгрузки"
                                           ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
                                           ShowDisabledRubrics />
                 </MudItem>
+                <MudItem xs="12" md=6 Class="mb-3">
+                    <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
+                    <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.DeliveryType">
+                        @foreach (DeliveryTypesEnum _pt in Enum.GetValues(typeof(DeliveryTypesEnum)))
+                        {
+                            <option value="@_pt">@_pt.DescriptionInfo()</option>
+                        }
+                    </select>
+                </MudItem>
             </MudGrid>
-            <div class="mb-3">
-                <label for="exampleInputTypePayment" class="form-label">Тип/способ оплаты</label>
-                <select class="form-select" id="exampleInputTypePayment" @bind="editDoc.DeliveryType">
-                    @foreach (DeliveryTypesEnum _pt in Enum.GetValues(typeof(DeliveryTypesEnum)))
-                    {
-                        <option value="@_pt">@_pt.DescriptionInfo()</option>
-                    }
-                </select>
-            </div>
+
             <div class="form-check form-switch mb-3">
                 <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" @bind="editDoc.DeliveryPaymentUponReceipt">
                 <label class="form-check-label" for="switchCheckDefault">Оплата при получении</label>
@@ -88,7 +89,11 @@
                     @if (DeliveryAddressSelectedKladrObject?.Id != editDoc.RecipientIdentityUserId && !string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId))
                     {
                         <div class="d-grid gap-2 mb-2">
-                            <button @onclick=SetDeliveryAddressFromUserRecipient class="btn btn-primary btn-sm" type="button">Установить адрес получателя</button>
+                            <button @onclick=SetDeliveryAddressFromUserRecipient
+                                    class="btn btn-primary btn-sm"
+                                    type="button">
+                                Установить адрес получателя
+                            </button>
                         </div>
                     }
                     <KladrInputComponent @bind-KladrObject="DeliveryAddressSelectedKladrObject" />
