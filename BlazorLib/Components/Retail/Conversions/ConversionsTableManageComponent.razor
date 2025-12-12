@@ -11,28 +11,20 @@
                    IconColor="Color.Secondary">Новый перевод/конвертация</MudButton>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Создан/Изменён</MudTh>
+        <MudTh>Дата</MudTh>
         <MudTh>Примечание</MudTh>
         <MudTh>Списание</MudTh>
         <MudTh>Зачисление</MudTh>
     </HeaderContent>
     <RowTemplate>
         @{
-            DateTime cdt = context.CreatedAtUTC.GetCustomTime();
-            DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
+            DateTime ddt = context.DateDocument.GetCustomTime();
         }
-        <MudTd DataLabel="Создан/Изменён">
+        <MudTd DataLabel="Дата">
             <a href="/retail/conversion-document/@context.Id">
                 <span>
-                    @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
+                    @ddt.ToString("d", GlobalStaticConstants.RU)
                 </span>
-                @if (udt.HasValue && udt != default)
-                {
-                    <text>/</text>
-                    <span>
-                        @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
-                    </span>
-                }
             </a>
         </MudTd>
         <MudTd DataLabel="Примечание"><a href="/retail/conversion-document/@context.Id"></a>@context.Name</MudTd>

@@ -1,30 +1,36 @@
 ﻿@using MudBlazor
 @inherits BlazorBusyComponentUsersCachedModel
-
-<MudChipSet Class="mb-2"
-            @bind-SelectedValues="SelectedTypes"
-            SelectionMode="SelectionMode.MultiSelection"
-            CheckMark Variant="Variant.Text"
-            Color="Color.Info">
-    @foreach (DeliveryTypesEnum dt in Enum.GetValues(typeof(DeliveryTypesEnum)))
-    {
-        <MudChip Value="@dt" Text="@dt.DescriptionInfo()" />
-    }
-</MudChipSet>
-<MudStack Row>
-    <MudChipSet Class="mb-2"
-                @bind-SelectedValues="SelectedStatuses"
-                SelectionMode="SelectionMode.MultiSelection"
-                CheckMark Variant="Variant.Text"
-                Color="Color.Info">
-        @foreach (DeliveryStatusesEnum ds in Enum.GetValues<DeliveryStatusesEnum>())
-        {
-            <MudChip Value="@ds" Text="@ds.DescriptionInfo()" />
-        }
-    </MudChipSet>
-    <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset @ref=unsetChipRef OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
+<MudStack AlignItems="AlignItems.Center" Row Class="p-1">
+    <div class="card mb-1">
+        <div class="card-body p-1">
+            <MudChipSet @bind-SelectedValues="SelectedTypes"
+                        SelectionMode="SelectionMode.MultiSelection"
+                        CheckMark Variant="Variant.Text"
+                        Color="Color.Info">
+                @foreach (DeliveryTypesEnum dt in Enum.GetValues(typeof(DeliveryTypesEnum)))
+                {
+                    <MudChip Value="@dt" Text="@dt.DescriptionInfo()" />
+                }
+            </MudChipSet>
+        </div>
+    </div>
+    <div class="card mb-1">
+        <div class="card-body p-1">
+            <MudStack Row>
+                <MudChipSet @bind-SelectedValues="SelectedStatuses"
+                            SelectionMode="SelectionMode.MultiSelection"
+                            CheckMark Variant="Variant.Text"
+                            Color="Color.Surface">
+                    @foreach (DeliveryStatusesEnum ds in Enum.GetValues<DeliveryStatusesEnum>())
+                    {
+                        <MudChip Value="@ds" Text="@ds.DescriptionInfo()" />
+                    }
+                </MudChipSet>
+                <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset @ref=unsetChipRef OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
+            </MudStack>
+        </div>
+    </div>
 </MudStack>
-
 
 <MudTable ServerData="ServerReload"
           T="DeliveryDocumentRetailModelDB"
