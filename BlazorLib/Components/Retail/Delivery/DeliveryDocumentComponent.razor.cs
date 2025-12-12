@@ -5,7 +5,6 @@
 using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
-using MudBlazor;
 
 namespace BlazorLib.Components.Retail.Delivery;
 
@@ -39,6 +38,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     DeliveryTableRowsRetailComponent? tableRowsRef;
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
+    decimal totalWeight;
 
     bool CannotSave
     {
@@ -201,6 +201,20 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         await SetBusyAsync(false);
     }
 
+    async void ReloadDeliveriesOrdersLincsAction()
+    {
+        if (DeliveryDocumentId > 0)
+        {
+            await SetBusyAsync();
+
+            TResponseModel<decimal> totalW = await RetailRepo.TotalWeightOrdersLinksDocumentsAsync(new() { DeliveryDocumentId = DeliveryDocumentId });
+            SnackBarRepo.ShowMessagesResponse(totalW.Messages);
+            totalWeight = totalW.Response;
+
+            await SetBusyAsync(false);
+        }
+    }
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
@@ -218,7 +232,12 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
             if (res.Response is not null && res.Response.Length == 1)
+            {
                 currentDoc = res.Response.First();
+                TResponseModel<decimal> totalW = await RetailRepo.TotalWeightOrdersLinksDocumentsAsync(new() { DeliveryDocumentId = currentDoc.Id });
+                SnackBarRepo.ShowMessagesResponse(totalW.Messages);
+                totalWeight = totalW.Response;
+            }
         }
         else
         {

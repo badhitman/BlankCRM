@@ -2,10 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using System.Linq;
+using DbcLib;
 
 namespace CommerceService;
 
@@ -1147,6 +1146,19 @@ public class RetailService(IIdentityTransmission identityRepo,
                                 ? await pq.Include(x => x.DeliveryDocument).ToListAsync(cancellationToken: token)
                                 : await pq.Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
         };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<decimal>> TotalWeightOrdersLinksDocumentsAsync(TotalWeightDeliveriesOrdersLinksDocumentsRequestModel req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        if (req.DeliveryDocumentId <= 0)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Не указан документ доставки" }] };
+
+        if (!await context.DeliveriesOrdersLinks.AnyAsync(x => x.DeliveryDocumentId == req.DeliveryDocumentId, cancellationToken: token))
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Info, Text = "Документ доставки без заказов" }] };
+
+        return new() { Response = await context.DeliveriesOrdersLinks.Where(x => x.DeliveryDocumentId == req.DeliveryDocumentId).SumAsync(x => x.WeightShipping, cancellationToken: token) };
     }
 
     /// <inheritdoc/>

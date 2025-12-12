@@ -106,9 +106,8 @@
             <MudTd DataLabel="Доставка">@context.DeliveryDocument?.ToString()</MudTd>
         }
         <MudTd DataLabel="Вес" colspan=2>
-            <input type="number" class="form-label" @bind="context.WeightShipping" />
+            <input type="number" class="form-control" @bind="context.WeightShipping" />
         </MudTd>
-
     </RowEditingTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>

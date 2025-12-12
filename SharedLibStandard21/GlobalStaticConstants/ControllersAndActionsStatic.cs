@@ -167,6 +167,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string ORDER_CONTROLLER_NAME = "order";
 
         /// <summary>
+        /// Total
+        /// </summary>
+        public const string TOTAL_CONTROLLER_NAME = "total";
+
+        /// <summary>
+        /// Weight
+        /// </summary>
+        public const string WEIGHT_CONTROLLER_NAME = "weight";
+
+        /// <summary>
         /// Settings
         /// </summary>
         public const string SETTINGS_ACTION_NAME = "settings";
@@ -1450,6 +1460,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Create
         /// </summary>
         public const string CREATE_ACTION_NAME = "create";
+
+        /// <summary>
+        /// Sum
+        /// </summary>
+        public const string SUM_ACTION_NAME = "sum";
 
         /// <summary>
         /// add

@@ -153,6 +153,10 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateDeliveryOrderLinkDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
+    public async Task<TResponseModel<decimal>> TotalWeightOrdersLinksDocumentsAsync(TotalWeightDeliveriesOrdersLinksDocumentsRequestModel req, CancellationToken token = default)
+      => await rabbitClient.MqRemoteCallAsync<TResponseModel<decimal>>(TransmissionQueues.TotalWeightOrdersLinksDocumentsRetailReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateDeliveryOrderLinkDocumentAsync(RetailDeliveryOrderLinkModelDB req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.UpdateDeliveryOrderLinkDocumentRetailReceive, req, token: token) ?? new();
 
@@ -181,5 +185,5 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
     /// <inheritdoc/>
     public async Task<TResponseModel<WalletConversionRetailDocumentModelDB[]>> GetConversionsDocumentsAsync(ReadWalletsRetailsConversionDocumentsRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<WalletConversionRetailDocumentModelDB[]>>(TransmissionQueues.GetConversionsDocumentsRetailReceive, req, token: token) ?? new();
-    #endregion
+#endregion
 }

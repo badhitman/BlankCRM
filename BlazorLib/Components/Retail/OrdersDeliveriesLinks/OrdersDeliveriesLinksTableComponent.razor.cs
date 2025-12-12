@@ -25,6 +25,10 @@ public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBa
     public int DeliveryId { get; set; }
 
     /// <inheritdoc/>
+    [Parameter]
+    public Action? ReloadDeliveriesOrdersLincs { get; set; }
+
+    /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
 
@@ -73,6 +77,8 @@ public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBa
             await tableRef.ReloadServerData();
 
         await SetBusyAsync(false);
+        if (ReloadDeliveriesOrdersLincs is not null)
+            ReloadDeliveriesOrdersLincs();
     }
 
     void BackupItem(object element)
@@ -108,6 +114,8 @@ public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBa
                 await tableRef.ReloadServerData();
 
             await SetBusyAsync(false);
+            if (ReloadDeliveriesOrdersLincs is not null)
+                ReloadDeliveriesOrdersLincs();
         }
     }
 

@@ -14,6 +14,12 @@
         }
         else
         {
+            @if (totalWeight != editDoc.WeightShipping)
+            {
+                <div class="alert alert-warning" role="alert">
+                    Вес отправления не не совпадает с суммой весов заказов!
+                </div>
+            }
             <MudGrid>
                 <MudItem xs="3">
                     <div class="mb-3">
@@ -113,7 +119,7 @@
                         <DeliveryTableRowsRetailComponent Document="editDoc" @ref=tableRowsRef />
                     </MudTabPanel>
                     <MudTabPanel Text="Заказы">
-                        <OrdersDeliveriesLinksTableComponent DeliveryId="DeliveryDocumentId" />
+                        <OrdersDeliveriesLinksTableComponent DeliveryId="DeliveryDocumentId" ReloadDeliveriesOrdersLincs="ReloadDeliveriesOrdersLincsAction" />
                     </MudTabPanel>
                     <MudTabPanel Text="Статусы">
                         <DeliveryStatusesTableComponent Document="editDoc" />

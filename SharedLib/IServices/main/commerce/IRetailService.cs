@@ -73,6 +73,9 @@ public interface IRetailService
     public Task<TPaginationResponseModel<RetailDeliveryOrderLinkModelDB>> SelectDeliveriesOrdersLinksDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
+    public Task<TResponseModel<decimal>> TotalWeightOrdersLinksDocumentsAsync(TotalWeightDeliveriesOrdersLinksDocumentsRequestModel req, CancellationToken token = default);
+
+    /// <inheritdoc/>
     public Task<ResponseBaseModel> DeleteDeliveryOrderLinkDocumentAsync(DeleteDeliveryOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default);
     #endregion
 
