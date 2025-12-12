@@ -45,7 +45,7 @@
         <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Дата">@context.DateOperation</MudTd>
+        <MudTd DataLabel="Дата">@context.DateOperation.ToString("d", GlobalStaticConstants.RU)</MudTd>
         <MudTd DataLabel="Статус">@context.DeliveryStatus.DescriptionInfo()</MudTd>
         <MudTd DataLabel="Примечание">@context.Name</MudTd>
         <MudTd>
@@ -79,7 +79,7 @@
         </MudTd>
     </RowEditingTemplate>
     <NoRecordsContent>
-        <MudText>No matching records found</MudText>
+        <MudText>Соответствующих записей не найдено</MudText>
     </NoRecordsContent>
     <LoadingContent>
         <MudText>Loading...</MudText>
