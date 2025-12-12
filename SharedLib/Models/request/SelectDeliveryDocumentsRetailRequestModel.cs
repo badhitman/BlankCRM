@@ -18,7 +18,10 @@ public class SelectDeliveryDocumentsRetailRequestModel
     public int? FilterOrderId { get; set; }
 
     /// <inheritdoc/>
-    public DeliveryTypesEnum[]? TypesFilter {  get; set; }
+    public DeliveryTypesEnum[]? TypesFilter { get; set; }
+
+    /// <inheritdoc/>
+    public DeliveryStatusesEnum?[]? StatusesFilter { get; set; }
 
     /// <summary>
     /// Исключить по документу доставки

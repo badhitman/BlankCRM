@@ -18,21 +18,66 @@
     </button>
 </div>
 
-<MudTable ServerData="ServerReload" Dense Hover @ref=tableRef>
+<MudTable ApplyButtonPosition="TableApplyButtonPosition.End"
+          EditButtonPosition="TableEditButtonPosition.End"
+          RowEditCancel="ResetItemToOriginalValues"
+          EditTrigger="TableEditTrigger.EditButton"
+          RowEditCommit="ItemHasBeenCommitted"
+          RowEditPreview="BackupItem"
+          ServerData="ServerReload"
+          Dense Hover CanCancelEdit
+          @ref=tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Статусы доставки (розница)</MudText>
         <MudSpacer />
     </ToolBarContent>
+    <ColGroup>
+        <col />
+        <col />
+        <col />
+        <col style="@(initDeleteRowStatusId.HasValue ? "width:250px;" : "width:50px;")" />
+        <col style="width:50px;" />
+    </ColGroup>
     <HeaderContent>
         <MudTh>Дата</MudTh>
         <MudTh>Статус</MudTh>
         <MudTh>Примечание</MudTh>
+        <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Дата">@context.DateOperation</MudTd>
         <MudTd DataLabel="Статус">@context.DeliveryStatus.DescriptionInfo()</MudTd>
         <MudTd DataLabel="Примечание">@context.Name</MudTd>
+        <MudTd>
+            @if (initDeleteRowStatusId.HasValue && initDeleteRowStatusId == context.Id)
+            {
+                <span title="кликните для подтверждения удаления" class="me-2 badge text-bg-danger cursor-pointer" @onclick="() => DeleteRow(context.Id)">Подтвердить удаление</span>
+                <span title="кликните для отмены удаления" class="text-bg-secondary cursor-pointer badge" @onclick="() => initDeleteRowStatusId = null">отмена</span>
+            }
+            else
+            {
+                <MudIconButton OnClick="() => DeleteRow(context.Id)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+            }
+        </MudTd>
     </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Дата">
+            <MudDatePicker @bind-Date="editDate" Required />
+        </MudTd>
+        <MudTd DataLabel="Статус">
+            <MudSelect @bind-Value="editStatus"
+                       Dense
+                       FitContent>
+                @foreach (DeliveryStatusesEnum _st in Enum.GetValues<DeliveryStatusesEnum>())
+                {
+                    <MudSelectItem Value="_st">@_st.DescriptionInfo()</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+        <MudTd DataLabel="Примечание" colspan="2">
+            <MudTextField @bind-Value="editName" />
+        </MudTd>
+    </RowEditingTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>
     </NoRecordsContent>

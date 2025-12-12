@@ -37,6 +37,18 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [Parameter]
     public Action<TableRowClickEventArgs<DeliveryDocumentRetailModelDB>>? RowClickEventHandler { get; set; }
 
+    // 
+    IReadOnlyCollection<DeliveryStatusesEnum?> _selectedStatuses = [];
+    IReadOnlyCollection<DeliveryStatusesEnum?> SelectedStatuses
+    {
+        get => _selectedStatuses;
+        set
+        {
+            _selectedStatuses = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
 
     IReadOnlyCollection<DeliveryTypesEnum> _selectedTypes = [];
     IReadOnlyCollection<DeliveryTypesEnum> SelectedTypes
@@ -115,6 +127,8 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
 
         if (SelectedTypes.Count != 0)
             req.Payload.TypesFilter = [.. SelectedTypes];
+
+        // SelectedStatuses
 
         TPaginationResponseModel<DeliveryDocumentRetailModelDB>? res = await RetailRepo.SelectDeliveryDocumentsAsync(req, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);

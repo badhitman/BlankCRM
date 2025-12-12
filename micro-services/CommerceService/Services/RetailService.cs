@@ -2,9 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using DbcLib;
+using System.Linq;
 
 namespace CommerceService;
 
@@ -183,6 +184,9 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
             q = q.Where(x => req.Payload.TypesFilter.Contains(x.DeliveryType));
+
+        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Length != 0)
+            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.DeliveryStatus));
 
         if (req.Payload?.ExcludeOrderId.HasValue == true && req.Payload.ExcludeOrderId > 0)
             q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.DeliveryDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
@@ -376,7 +380,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.DeliveryStatus, context.DeliveryStatusesRetailDocuments.Where(y => y.DeliveryDocumentId == deliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
 
-        return ResponseBaseModel.CreateSuccess("Ok");
+        return ResponseBaseModel.CreateSuccess("Строка-статус успешно удалена");
     }
     #endregion
 
