@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+
 namespace SharedLib;
 
 /// <summary>
@@ -19,4 +20,10 @@ public class SelectPaymentsRetailOrdersDocumentsRequestModel
 
     /// <inheritdoc/>
     public PaymentsRetailStatusesEnum[]? StatusesFilter { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime? Start { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime? End { get; set; }
 }

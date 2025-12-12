@@ -731,6 +731,15 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Length != 0)
             q = q.Where(x => req.Payload.StatusesFilter.Contains(x.StatusPayment));
 
+        if (req.Payload?.Start is not null && req.Payload.Start != default)
+            q = q.Where(x => x.DatePayment >= req.Payload.Start.SetKindUtc());
+
+        if (req.Payload?.End is not null && req.Payload.End != default)
+        {
+            req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+            q = q.Where(x => x.DatePayment <= req.Payload.End);
+        }
+
         IQueryable<PaymentRetailDocumentModelDB>? pq = q
             .OrderBy(x => x.DatePayment)
             .Skip(req.PageNum * req.PageSize)
@@ -943,11 +952,11 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => req.Payload.StatusesFilter.Contains(x.StatusDocument));
 
         if (req.Payload?.Start is not null && req.Payload.Start != default)
-            q = q.Where(x => x.DateDocument >= req.Payload.Start);
+            q = q.Where(x => x.DateDocument >= req.Payload.Start.SetKindUtc());
 
         if (req.Payload?.End is not null && req.Payload.End != default)
         {
-            req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59);
+            req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
             q = q.Where(x => x.DateDocument <= req.Payload.End);
         }
 

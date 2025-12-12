@@ -146,13 +146,10 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         if (SelectedStatuses.Count != 0)
             req.Payload.StatusesFilter = [.. SelectedStatuses];
 
-        if(DateRangeProp is not null)
+        if (DateRangeProp is not null)
         {
-            if(DateRangeProp.Start is not null)
-            {
-                req.Payload.Start = DateRangeProp.Start;
-                req.Payload.End = DateRangeProp.End;
-            }
+            req.Payload.Start = DateRangeProp.Start;
+            req.Payload.End = DateRangeProp.End;
         }
 
         await SetBusyAsync(token: token);

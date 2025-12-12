@@ -44,7 +44,7 @@
     <HeaderContent>
         <MudTh>Номер</MudTh>
         <MudTh>Статус</MudTh>
-        <MudTh>Создан/Изменён</MudTh>
+        <MudTh>Дата</MudTh>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
             <MudTh>Заказчик</MudTh>
@@ -56,8 +56,7 @@
     </HeaderContent>
     <RowTemplate>
         @{
-            DateTime cdt = context.CreatedAtUTC.GetCustomTime();
-            DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
+            DateTime ddt = context.DateDocument.GetCustomTime();
         }
         <MudTd DataLabel="Номер">
             @if (RowClickEventHandler is null)
@@ -79,17 +78,8 @@
                 <span>@context.StatusDocument.DescriptionInfo()</span>
             }
         </MudTd>
-        <MudTd DataLabel="Создан/Изменён">
-            <span>
-                @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
-            </span>
-            @if (udt.HasValue && udt != default)
-            {
-                <text>/</text>
-                <span>
-                    @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
-                </span>
-            }
+        <MudTd DataLabel="Дата">
+            <a href="/retail/order-document/@context.Id">@ddt.ToString("d", GlobalStaticConstants.RU)</a>
         </MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
@@ -105,7 +95,7 @@
         <MudTd DataLabel="Информация">@context.Name @context.Description</MudTd>
     </RowTemplate>
     <NoRecordsContent>
-        <MudText>Соответствующих записей не найдено</MudText>
+        <MudText>No matching records found</MudText>
     </NoRecordsContent>
     <LoadingContent>
         <MudText>Loading...</MudText>

@@ -23,6 +23,18 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
 
     MudTable<PaymentRetailDocumentModelDB>? _tableRef;
 
+    DateRange? _dateRange;
+    DateRange? DateRangeProp
+    {
+        get => _dateRange;
+        set
+        {
+            _dateRange = value;
+            if (_tableRef is not null)
+                InvokeAsync(_tableRef.ReloadServerData);
+        }
+    }
+
     IReadOnlyCollection<PaymentsRetailTypesEnum> _selectedPaymentsTypes = [];
     IReadOnlyCollection<PaymentsRetailTypesEnum> SelectedPaymentsTypes
     {
@@ -80,6 +92,12 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
 
         if (SelectedPaymentsStatuses.Count != 0)
             req.Payload.StatusesFilter = [.. SelectedPaymentsStatuses];
+
+        if (DateRangeProp is not null)
+        {
+            req.Payload.Start = DateRangeProp.Start;
+            req.Payload.End = DateRangeProp.End;
+        }
 
         TPaginationResponseModel<PaymentRetailDocumentModelDB>? res = await RetailRepo.SelectPaymentsDocumentsAsync(req, token);
         await SetBusyAsync(false, token: token);

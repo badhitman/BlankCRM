@@ -1,29 +1,33 @@
 ﻿@using MudBlazor
+
 @inherits BlazorBusyComponentUsersCachedModel
 
-<MudChipSet @bind-SelectedValues="SelectedPaymentsTypes"
-            SelectionMode="SelectionMode.MultiSelection"
-            CheckMark
-            Class="me-2"
-            Variant="Variant.Text"
-            Color="Color.Info">
-    @foreach (PaymentsRetailTypesEnum pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
-    {
-        <MudChip Value="@pt" Text="@pt.DescriptionInfo()" />
-    }
-</MudChipSet>
+<MudStack AlignItems="AlignItems.Center" Row>
+    <MudChipSet @bind-SelectedValues="SelectedPaymentsTypes"
+                SelectionMode="SelectionMode.MultiSelection"
+                CheckMark
+                Class="me-2"
+                Variant="Variant.Text"
+                Color="Color.Info">
+        @foreach (PaymentsRetailTypesEnum pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
+        {
+            <MudChip Value="@pt" Text="@pt.DescriptionInfo()" />
+        }
+    </MudChipSet>
 
-<MudChipSet @bind-SelectedValues="SelectedPaymentsStatuses"
-            SelectionMode="SelectionMode.MultiSelection"
-            CheckMark
-            Variant="Variant.Text"
-            Color="Color.Surface">
-    @foreach (PaymentsRetailStatusesEnum ps in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
-    {
-        <MudChip Value="@ps" Text="@ps.DescriptionInfo()" />
-    }
-</MudChipSet>
-
+    <MudChipSet @bind-SelectedValues="SelectedPaymentsStatuses"
+                SelectionMode="SelectionMode.MultiSelection"
+                CheckMark
+                Variant="Variant.Text"
+                Color="Color.Surface">
+        @foreach (PaymentsRetailStatusesEnum ps in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
+        {
+            <MudChip Value="@ps" Text="@ps.DescriptionInfo()" />
+        }
+    </MudChipSet>
+    <MudSpacer />
+    <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
+</MudStack>
 <MudTable ServerData="ServerReload" Dense Hover Loading="IsBusyProgress" @ref=_tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Платежи (розница)</MudText>
@@ -37,52 +41,38 @@
     <HeaderContent>
         <MudTh>Name</MudTh>
         <MudTh>Тип</MudTh>
+        <MudTh>Статус</MudTh>
+        <MudTh>Дата</MudTh>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
             <MudTh>Плательщик</MudTh>
         }
-        <MudTh>Статус</MudTh>
-        <MudTh>Direct</MudTh>
-        <MudTh>Создан/Изменён</MudTh>
         <MudTh>Кошелёк</MudTh>
         <MudTh>Сумма</MudTh>
+        <MudTh>Direct</MudTh>
         <MudTh>Описание</MudTh>
     </HeaderContent>
     <RowTemplate>
         @{
-            DateTime cdt = context.CreatedAtUTC.GetCustomTime();
-            DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
+            DateTime pdt = context.DatePayment;
         }
-        <MudTd DataLabel="Name">
-            <a href="/retail/payment-document/@context.Id">@context.Name</a>
-        </MudTd>
+        <MudTd DataLabel="Name"><a href="/retail/payment-document/@context.Id">@context.Name</a></MudTd>
         <MudTd DataLabel="Тип"><a href="/retail/payment-document/@context.Id">@context.TypePayment.DescriptionInfo()</a></MudTd>
+        <MudTd DataLabel="Статус"><a href="/retail/payment-document/@context.Id">@context.StatusPayment.DescriptionInfo()</a></MudTd>
+        <MudTd DataLabel="Дата">
+            <a href="/retail/payment-document/@context.Id">@pdt.ToString("d", GlobalStaticConstants.RU)</a>
+        </MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
-            <MudTd DataLabel="Тип">@(UsersCache.FirstOrDefault(x => x.UserId == context.Wallet!.UserIdentityId)?.ToString() ?? context.Wallet!.UserIdentityId)</MudTd>
+            <MudTd DataLabel="Плательщик">@(UsersCache.FirstOrDefault(x => x.UserId == context.Wallet!.UserIdentityId)?.ToString() ?? context.Wallet!.UserIdentityId)</MudTd>
         }
-        <MudTd DataLabel="Статус"><a href="/retail/payment-document/@context.Id">@context.StatusPayment.DescriptionInfo()</a></MudTd>
-        <MudTd DataLabel="Direct">@context.PaymentSource</MudTd>
-        <MudTd DataLabel="Создан/Изменён">
-            <a href="/retail/payment-document/@context.Id">
-                <span>
-                    @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
-                </span>
-                @if (udt.HasValue && udt != default)
-                {
-                    <text>/</text>
-                    <span>
-                        @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
-                    </span>
-                }
-            </a>
-        </MudTd>
         <MudTd DataLabel="Кошелёк"><a href="/retail/wallet-card/@context.WalletId">[@context.Wallet!.WalletType!.Name] '@context.Wallet.Name'</a></MudTd>
         <MudTd DataLabel="Сумма">@context.Amount</MudTd>
+        <MudTd DataLabel="Direct">@context.PaymentSource</MudTd>
         <MudTd DataLabel="Описание">@context.Description</MudTd>
     </RowTemplate>
     <NoRecordsContent>
-        <MudText>Соответствующих записей не найдено</MudText>
+        <MudText>No matching records found</MudText>
     </NoRecordsContent>
     <LoadingContent>
         <MudText>Loading...</MudText>
