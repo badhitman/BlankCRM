@@ -32,6 +32,9 @@ public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBa
     decimal fullScale;
     bool _visibleIncludeExistDelivery, _visibleIncludeOrder;
     MudTable<RetailDeliveryOrderLinkModelDB>? tableRef;
+    int? initDeleteRow;
+    RetailDeliveryOrderLinkModelDB? elementBeforeEdit;
+
 
     readonly static DialogOptions _dialogOptions = new()
     {
@@ -39,6 +42,80 @@ public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBa
         MaxWidth = MaxWidth.ExtraLarge,
         CloseButton = true,
     };
+
+
+    async Task DeleteRow(int rowStatusId)
+    {
+        if (initDeleteRow is null)
+        {
+            initDeleteRow = rowStatusId;
+            return;
+        }
+        if (initDeleteRow != rowStatusId)
+        {
+            initDeleteRow = null;
+            return;
+        }
+        DeleteDeliveryOrderLinkRetailDocumentsRequestModel req = new()
+        {
+            OrderDeliveryLinkId = initDeleteRow.Value
+        };
+        await SetBusyAsync();
+
+        ResponseBaseModel res = await RetailRepo.DeleteDeliveryOrderLinkDocumentAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        initDeleteRow = null;
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+
+        await SetBusyAsync(false);
+    }
+
+    void BackupItem(object element)
+    {
+        initDeleteRow = null;
+        if (element is RetailDeliveryOrderLinkModelDB other)
+        {
+            elementBeforeEdit = GlobalTools.CreateDeepCopy(other)!;
+        }
+    }
+
+    async void ItemHasBeenCommitted(object element)
+    {
+        initDeleteRow = null;
+
+        if (element is RetailDeliveryOrderLinkModelDB other)
+        {
+            RetailDeliveryOrderLinkModelDB req = new()
+            {
+                WeightShipping = other.WeightShipping,
+                Id = other.Id,
+            };
+            await SetBusyAsync();
+            ResponseBaseModel res = await RetailRepo.UpdateDeliveryOrderLinkDocumentAsync(req);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+            if (!res.Success())
+            {
+                await SetBusyAsync(false);
+                return;
+            }
+
+            if (tableRef is not null)
+                await tableRef.ReloadServerData();
+
+            await SetBusyAsync(false);
+        }
+    }
+
+    void ResetItemToOriginalValues(object element)
+    {
+        initDeleteRow = null;
+        if (elementBeforeEdit is null)
+            return;
+
+        if (element is RetailDeliveryOrderLinkModelDB other)
+            other.WeightShipping = elementBeforeEdit.WeightShipping;
+    }
 
     void IncludeExistDeliveryOpenDialog()
     {

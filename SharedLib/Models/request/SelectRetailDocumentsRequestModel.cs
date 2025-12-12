@@ -20,12 +20,7 @@ public class SelectRetailDocumentsRequestModel
     public string[]? CreatorsFilterIdentityId { get; set; }
 
     /// <summary>
-    /// Ограничить вывод заказов только для указанного документа доставки
+    /// Получить заказы за исключением тех, которые уже добавлены в данную доставку
     /// </summary>
-    public int? FilterDeliveryId { get; set; }
-
-    /// <summary>
-    /// Только заказы, которые не добавлены ни в одну доставку
-    /// </summary>
-    public bool WithoutDeliveriesOnly { get; set; }
+    public int? ExcludeDeliveryId { get; set; }
 }

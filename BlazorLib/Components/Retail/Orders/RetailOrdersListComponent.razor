@@ -64,18 +64,6 @@
                     @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
                 </span>
             }
-            @if (FilterDeliveryId.HasValue && FilterDeliveryId.Value > 0)
-            {
-                if (initDeleteDeliveryFromOrder == context.Id)
-                {
-                    <span class="badge text-bg-danger cursor-pointer me-1" @onclick="async () => await DeleteOrderLink(context.Id)">подтвердить удаление</span>
-                    <span class="badge text-bg-success cursor-pointer" @onclick="async () => initDeleteDeliveryFromOrder = null">отмена</span>
-                }
-                else
-                {
-                    <span class="badge text-bg-secondary cursor-pointer" @onclick="async () => await DeleteOrderLink(context.Id)">удалить заказ из доставки</span>
-                }
-            }
         </MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {

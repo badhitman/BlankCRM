@@ -28,10 +28,10 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     public string? ClientId { get; set; }
 
     /// <summary>
-    /// Вывод заказов только для указанного документа доставки
+    /// Скрыть доставку с указанной доставкой
     /// </summary>
     [Parameter]
-    public int? FilterDeliveryId { get; set; }
+    public int? ExcludeDeliveryId { get; set; }
 
     /// <inheritdoc/>
     [Parameter]
@@ -67,35 +67,6 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         if (RowClickEventHandler is not null)
             RowClickEventHandler(tableRowClickEventArgs);
     }
-
-
-    int? initDeleteDeliveryFromOrder;
-    async Task DeleteOrderLink(int orderDocumentId)
-    {
-        if (initDeleteDeliveryFromOrder is null)
-        {
-            initDeleteDeliveryFromOrder = orderDocumentId;
-            return;
-        }
-        initDeleteDeliveryFromOrder = null;
-
-        if (!FilterDeliveryId.HasValue || FilterDeliveryId <= 0)
-        {
-            SnackBarRepo.Error("Не определён контекст заказа (розница)");
-            StateHasChanged();
-            return;
-        }
-
-        await SetBusyAsync();
-        ResponseBaseModel res = await RetailRepo.DeleteDeliveryOrderLinkDocumentAsync(new()
-        {
-            DeliveryId = FilterDeliveryId.Value,
-            OrderId = orderDocumentId,
-        });
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
-        await SetBusyAsync(false);
-    }
-
 
     /// <summary>
     /// CacheUsersUpdate
@@ -140,8 +111,8 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         if (!string.IsNullOrWhiteSpace(ClientId))
             req.Payload.BuyersFilterIdentityId = [ClientId];
 
-        if (FilterDeliveryId.HasValue && FilterDeliveryId > 0)
-            req.Payload.FilterDeliveryId = FilterDeliveryId.Value;
+        if (ExcludeDeliveryId.HasValue && ExcludeDeliveryId > 0)
+            req.Payload.ExcludeDeliveryId = ExcludeDeliveryId;
 
         await SetBusyAsync(token: token);
         TPaginationResponseModel<RetailDocumentModelDB> res = await RetailRepo.SelectRetailDocumentsAsync(req, token);

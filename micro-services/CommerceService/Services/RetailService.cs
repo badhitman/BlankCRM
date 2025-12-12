@@ -1024,11 +1024,8 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.CreatorsFilterIdentityId is not null && req.Payload.CreatorsFilterIdentityId.Length != 0)
             q = q.Where(x => req.Payload.CreatorsFilterIdentityId.Contains(x.AuthorIdentityUserId));
 
-        if (req.Payload?.WithoutDeliveriesOnly == true)
-            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id));
-
-        if (req.Payload?.FilterDeliveryId.HasValue == true && req.Payload.FilterDeliveryId > 0)
-            q = q.Where(x => context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id && y.DeliveryDocumentId == req.Payload.FilterDeliveryId));
+        if (req.Payload?.ExcludeDeliveryId.HasValue == true && req.Payload.ExcludeDeliveryId > 0)
+            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id && y.DeliveryDocumentId == req.Payload.ExcludeDeliveryId));
 
         IQueryable<RetailDocumentModelDB> pq = q
             .OrderBy(x => x.DateDocument)
@@ -1092,8 +1089,8 @@ public class RetailService(IIdentityTransmission identityRepo,
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         await context.DeliveriesOrdersLinks
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.OrderDocumentId, req.OrderDocumentId)
-                .SetProperty(p => p.DeliveryDocumentId, req.DeliveryDocumentId)
+                //.SetProperty(p => p.OrderDocumentId, req.OrderDocumentId)
+                //.SetProperty(p => p.DeliveryDocumentId, req.DeliveryDocumentId)
                 .SetProperty(p => p.WeightShipping, req.WeightShipping), cancellationToken: token);
         await context.SaveChangesAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");

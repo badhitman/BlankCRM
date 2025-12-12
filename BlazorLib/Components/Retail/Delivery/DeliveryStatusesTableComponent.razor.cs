@@ -57,6 +57,8 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
 
     async void ItemHasBeenCommitted(object element)
     {
+        initDeleteRowStatusId = null;
+
         if (!editDate.HasValue || editDate == default || !editRowId.HasValue)
             return;
 
@@ -72,10 +74,11 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
             };
             await SetBusyAsync();
             ResponseBaseModel res = await RetailRepo.UpdateDeliveryStatusDocumentAsync(req);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (!res.Success())
             {
-                SnackBarRepo.ShowMessagesResponse(res.Messages);
                 await SetBusyAsync(false);
+                return;
             }
 
             if (tableRef is not null)
@@ -90,6 +93,8 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
 
     void BackupItem(object element)
     {
+        initDeleteRowStatusId = null;
+
         if (element is DeliveryStatusRetailDocumentModelDB other)
         {
             editDate = other.DateOperation;
@@ -108,6 +113,8 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
 
     void ResetItemToOriginalValues(object element)
     {
+        initDeleteRowStatusId = null;
+
         if (elementBeforeEdit is null)
             return;
 
@@ -125,6 +132,8 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
 
     async Task AddNewStatus()
     {
+        initDeleteRowStatusId = null;
+
         if (!createdDate.HasValue || createdDate == default || !newStatus.HasValue)
             return;
 
