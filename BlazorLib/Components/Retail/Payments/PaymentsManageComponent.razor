@@ -73,7 +73,7 @@
         {
             <MudTd DataLabel="Плательщик">@(UsersCache.FirstOrDefault(x => x.UserId == context.Wallet!.UserIdentityId)?.ToString() ?? context.Wallet!.UserIdentityId)</MudTd>
         }
-        <MudTd DataLabel="Кошелёк"><a href="/retail/wallet-card/@context.WalletId">[@context.Wallet!.WalletType!.Name] '@context.Wallet.Name'</a></MudTd>
+        <MudTd DataLabel="Кошелёк">[@context.Wallet!.WalletType!.Name] '@context.Wallet.Name'</MudTd>
         <MudTd DataLabel="Сумма">@context.Amount</MudTd>
         <MudTd DataLabel="Direct">@context.PaymentSource</MudTd>
         <MudTd DataLabel="Описание">@context.Description</MudTd>
