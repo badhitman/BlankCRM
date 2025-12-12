@@ -15,93 +15,6 @@ public class RetailService(IIdentityTransmission identityRepo,
     IKladrNavigationService kladrRepo,
     IDbContextFactory<CommerceContext> commerceDbFactory) : IRetailService
 {
-    #region Deliveries service`s
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateDeliveryServiceAsync(DeliveryServiceRetailModelDB req, CancellationToken token = default)
-    {
-        TResponseModel<int> res = new();
-        if (string.IsNullOrWhiteSpace(req.Name))
-        {
-            res.AddError("Укажите имя");
-            return res;
-        }
-
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        req.Name = req.Name.Trim();
-        req.Description = req.Description?.Trim();
-        req.CreatedAtUTC = DateTime.UtcNow;
-
-        if (await context.DeliveryRetailServices.AnyAsync(x => x.Name == req.Name, cancellationToken: token))
-        {
-            res.AddError("Служба доставки с таким именем уже существует");
-            return res;
-        }
-
-        if (await context.DeliveryRetailServices.AnyAsync(cancellationToken: token))
-        {
-            req.SortIndex = await context.DeliveryRetailServices.MaxAsync(x => x.SortIndex, cancellationToken: token);
-            req.SortIndex++;
-        }
-        else
-            req.SortIndex = 1;
-
-        await context.DeliveryRetailServices.AddAsync(req, token);
-        await context.SaveChangesAsync(token);
-
-        return new() { Response = req.Id };
-    }
-
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateDeliveryServiceAsync(DeliveryServiceRetailModelDB req, CancellationToken token = default)
-    {
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        await context.DeliveryRetailServices
-            .Where(x => x.Id == req.Id)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name), cancellationToken: token);
-
-        return ResponseBaseModel.CreateSuccess("Ok");
-    }
-
-    /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<DeliveryServiceRetailModelDB>> SelectDeliveryServicesAsync(TPaginationRequestStandardModel<SelectDeliveryServicesRetailRequestModel> req, CancellationToken token = default)
-    {
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DeliveryServiceRetailModelDB>? q = context.DeliveryRetailServices.AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(req.FindQuery))
-            q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
-
-        IQueryable<DeliveryServiceRetailModelDB>? pq = q
-            .OrderBy(x => x.SortIndex)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize);
-
-        return new()
-        {
-            PageNum = req.PageNum,
-            PageSize = req.PageSize,
-            SortingDirection = req.SortingDirection,
-            SortBy = req.SortBy,
-            TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.OrderBy(x => x.SortIndex).ToListAsync(cancellationToken: token)
-        };
-    }
-
-    /// <inheritdoc/> 
-    public async Task<TResponseModel<DeliveryServiceRetailModelDB[]>> DeliveryServicesGetAsync(int[] reqIds, CancellationToken token = default)
-    {
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        return new()
-        {
-            Response = await context.DeliveryRetailServices.Where(x => reqIds.Contains(x.Id)).ToArrayAsync(cancellationToken: token)
-        };
-    }
-    #endregion
-
     #region Delivery document
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default)
@@ -1099,6 +1012,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         await context.DeliveriesOrdersLinks
+            .Where(x => x.Id == req.Id || (req.OrderDocumentId == x.OrderDocumentId && req.DeliveryDocumentId == x.DeliveryDocumentId))
             .ExecuteUpdateAsync(set => set
                 //.SetProperty(p => p.OrderDocumentId, req.OrderDocumentId)
                 //.SetProperty(p => p.DeliveryDocumentId, req.DeliveryDocumentId)

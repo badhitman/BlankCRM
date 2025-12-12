@@ -18,10 +18,10 @@ public enum DeliveryTypesEnum
     StandardPost = 0,
 
     /// <summary>
-    /// Курьерская служба
+    /// СДЕК
     /// </summary>
-    [Description("Курьерская служба")]
-    CourierService = 20,
+    [Description("СДЕК")]
+    CDEK = 20,
 
     /// <summary>
     /// Самовывоз

@@ -790,9 +790,6 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string CreateDeliveryDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string CreateDeliveryServiceRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.SERVICE_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
-
-        /// <inheritdoc/>
         public readonly static string CreateDeliveryStatusDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, $"{Routes.STATUS_CONTROLLER_NAME}-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.CREATE_ACTION_NAME);
 
         /// <inheritdoc/>
@@ -811,13 +808,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string CreateWalletTypeRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.WALLET_CONTROLLER_NAME, Routes.TYPE_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string DeliveryServicesGetRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME, Routes.SERVICES_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
-
-        /// <inheritdoc/>
         public readonly static string SelectDeliveryDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
-
-        /// <inheritdoc/>
-        public readonly static string SelectDeliveryServicesRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.SERVICES_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string SelectDeliveryStatusesDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.STATUSES_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
@@ -836,9 +827,6 @@ public static partial class GlobalStaticConstantsTransmission
 
         /// <inheritdoc/>
         public readonly static string UpdateDeliveryDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
-
-        /// <inheritdoc/>
-        public readonly static string UpdateDeliveryServiceRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.SERVICE_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string UpdateDeliveryStatusDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.STATUS_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);

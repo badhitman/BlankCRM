@@ -9,20 +9,6 @@ namespace SharedLib;
 /// </summary>
 public interface IRetailService
 {
-    #region Delivery Service
-    /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateDeliveryServiceAsync(DeliveryServiceRetailModelDB req, CancellationToken token = default);
-
-    /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdateDeliveryServiceAsync(DeliveryServiceRetailModelDB req, CancellationToken token = default);
-
-    /// <inheritdoc/>
-    public Task<TPaginationResponseModel<DeliveryServiceRetailModelDB>> SelectDeliveryServicesAsync(TPaginationRequestStandardModel<SelectDeliveryServicesRetailRequestModel> req, CancellationToken token = default);
-
-    /// <inheritdoc/>
-    public Task<TResponseModel<DeliveryServiceRetailModelDB[]>> DeliveryServicesGetAsync(int[] reqIds, CancellationToken token = default);
-    #endregion
-
     #region Delivery Document
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default);

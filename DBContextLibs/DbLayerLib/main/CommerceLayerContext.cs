@@ -197,11 +197,6 @@ public partial class CommerceLayerContext : DbContext
 
     #region delivery
     /// <summary>
-    /// Службы доставки
-    /// </summary>
-    public DbSet<DeliveryServiceRetailModelDB> DeliveryRetailServices { get; set; } = default!;
-
-    /// <summary>
     /// DeliveryDocuments
     /// </summary>
     public DbSet<DeliveryDocumentRetailModelDB> DeliveryRetailDocuments { get; set; } = default!;
