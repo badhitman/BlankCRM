@@ -21,7 +21,7 @@ public class SelectDeliveryDocumentsRetailRequestModel
     public DeliveryTypesEnum[]? TypesFilter { get; set; }
 
     /// <inheritdoc/>
-    public DeliveryStatusesEnum?[]? StatusesFilter { get; set; }
+    public List<DeliveryStatusesEnum?>? StatusesFilter { get; set; }
 
     /// <summary>
     /// Исключить по документу доставки

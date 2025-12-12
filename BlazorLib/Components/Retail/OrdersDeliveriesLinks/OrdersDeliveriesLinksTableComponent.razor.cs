@@ -137,6 +137,10 @@ public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBa
         TPaginationResponseModel<RetailDeliveryOrderLinkModelDB> res = await RetailRepo.SelectDeliveriesOrdersLinksDocumentsAsync(req, token);
         fullScale = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.WeightShipping);
         await SetBusyAsync(false, token);
-        return new TableData<RetailDeliveryOrderLinkModelDB>() { TotalItems = 0, Items = [] };
+
+        if (!res.Status.Success())
+            return new TableData<RetailDeliveryOrderLinkModelDB>() { TotalItems = 0, Items = [] };
+
+        return new TableData<RetailDeliveryOrderLinkModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 }

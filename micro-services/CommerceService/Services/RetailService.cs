@@ -185,8 +185,12 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
             q = q.Where(x => req.Payload.TypesFilter.Contains(x.DeliveryType));
 
-        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Length != 0)
-            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.DeliveryStatus));
+        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Count != 0)
+        {
+            bool selectedUnset = req.Payload.StatusesFilter.Contains(null);
+            req.Payload.StatusesFilter = [.. req.Payload.StatusesFilter.Where(x => x is not null).Distinct()];
+            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.DeliveryStatus) || (selectedUnset && (x.DeliveryStatus == null || x.DeliveryStatus == 0)));
+        }
 
         if (req.Payload?.ExcludeOrderId.HasValue == true && req.Payload.ExcludeOrderId > 0)
             q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.DeliveryDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
@@ -201,6 +205,14 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
+        List<DeliveryDocumentRetailModelDB> res = await pq
+                .Include(x => x.DeliveryStatusesLog)
+                .Include(x => x.OrdersLinks)
+                .ToListAsync(cancellationToken: token);
+
+        if (res.Count != 0)
+            res.ForEach(x => { if (x.DeliveryStatus == 0) { x.DeliveryStatus = null; } });
+
         return new()
         {
             PageNum = req.PageNum,
@@ -208,10 +220,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq
-                .Include(x => x.DeliveryStatusesLog)
-                .Include(x => x.OrdersLinks)
-                .ToListAsync(cancellationToken: token)
+            Response = res
         };
     }
 
@@ -1096,16 +1105,25 @@ public class RetailService(IIdentityTransmission identityRepo,
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<RetailDeliveryOrderLinkModelDB> q = context.DeliveriesOrdersLinks.AsQueryable();
 
-        if (req.Payload?.OrdersIds is not null && req.Payload.OrdersIds.Length != 0)
-            q = q.Where(x => req.Payload.OrdersIds.Contains(x.OrderDocumentId));
+        bool
+            forOrders = req.Payload?.OrdersIds is not null && req.Payload.OrdersIds.Length != 0,
+            forDeliveries = req.Payload?.DeliveriesIds is not null && req.Payload.DeliveriesIds.Length != 0;
 
-        if (req.Payload?.DeliveriesIds is not null && req.Payload.DeliveriesIds.Length != 0)
-            q = q.Where(x => req.Payload.DeliveriesIds.Contains(x.DeliveryDocumentId));
+        if (forOrders)
+            q = q.Where(x => req.Payload!.OrdersIds!.Contains(x.OrderDocumentId));
+
+        if (forDeliveries)
+            q = q.Where(x => req.Payload!.DeliveriesIds!.Contains(x.DeliveryDocumentId));
 
         IQueryable<RetailDeliveryOrderLinkModelDB> pq = q
-            .OrderBy(x => new { x.OrderDocumentId, x.DeliveryDocumentId })
+            .OrderBy(x => x.OrderDocumentId)
+            .ThenBy(x => x.DeliveryDocumentId)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
+
+#if DEBUG
+        var v = await pq.ToListAsync(cancellationToken: token);
+#endif
 
         return new()
         {
@@ -1114,7 +1132,11 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.ToListAsync(cancellationToken: token)
+            Response = (forOrders && forDeliveries) || (!forOrders && !forDeliveries)
+                            ? await pq.Include(x => x.DeliveryDocument).Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
+                            : forOrders
+                                ? await pq.Include(x => x.DeliveryDocument).ToListAsync(cancellationToken: token)
+                                : await pq.Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
         };
     }
 

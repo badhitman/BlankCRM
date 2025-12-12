@@ -5,23 +5,29 @@
 
 <MudTable ServerData="ServerReload" Dense Hover @ref=tableRef>
     <ToolBarContent>
-        @if (OrderId > 0 || DeliveryId > 0 && (DeliveryId == 0 || OrderId == 0))
+        @if (fullScale > 0 && (OrderId > 0 || DeliveryId > 0 && (DeliveryId == 0 || OrderId == 0)))
         {
             <MudText Typo="Typo.h6">Общий вес: @fullScale</MudText>
         }
         <MudSpacer />
-        <MudTooltip Text="Добавить созданный ранее заказ в текущую доставку">
-            <MudButton OnClick=IncludeExistOrderOpenDialog
-                       Variant="Variant.Outlined"
-                       EndIcon="@Icons.Material.Filled.DeviceHub"
-                       IconColor="Color.Secondary">Включить существующий заказ</MudButton>
-        </MudTooltip>
-        <MudTooltip Text="Добавить заказ в созданную ранее доставку">
-            <MudButton OnClick=IncludeExistDeliveryOpenDialog
-                       Variant="Variant.Outlined"
-                       EndIcon="@Icons.Material.Filled.DeviceHub"
-                       IconColor="Color.Secondary">Включить в доставку</MudButton>
-        </MudTooltip>
+        @if (DeliveryId > 0)
+        {
+            <MudTooltip Text="Добавить созданный ранее заказ в текущую доставку">
+                <MudButton OnClick=IncludeExistOrderOpenDialog
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.DeviceHub"
+                           IconColor="Color.Secondary">Включить существующий заказ</MudButton>
+            </MudTooltip>
+        }
+        @if (OrderId > 0)
+        {
+            <MudTooltip Text="Добавить заказ в созданную ранее доставку">
+                <MudButton OnClick=IncludeExistDeliveryOpenDialog
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.DeviceHub"
+                           IconColor="Color.Secondary">Включить в доставку</MudButton>
+            </MudTooltip>
+        }
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Доставка</MudTh>

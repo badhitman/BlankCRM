@@ -11,17 +11,20 @@
         <MudChip Value="@dt" Text="@dt.DescriptionInfo()" />
     }
 </MudChipSet>
-<MudChipSet Class="mb-2"
-            @bind-SelectedValues="SelectedStatuses"
-            SelectionMode="SelectionMode.MultiSelection"
-            CheckMark Variant="Variant.Text"
-            Color="Color.Info">
-    <MudChip Value="@((DeliveryStatusesEnum?)null)" Text="Не обработан" />
-    @foreach (DeliveryStatusesEnum dt in Enum.GetValues(typeof(DeliveryStatusesEnum)))
-    {
-        <MudChip Value="@dt" Text="@dt.DescriptionInfo()" />
-    }
-</MudChipSet>
+<MudStack Row>
+    <MudChipSet Class="mb-2"
+                @bind-SelectedValues="SelectedStatuses"
+                SelectionMode="SelectionMode.MultiSelection"
+                CheckMark Variant="Variant.Text"
+                Color="Color.Info">
+        @foreach (DeliveryStatusesEnum ds in Enum.GetValues<DeliveryStatusesEnum>())
+        {
+            <MudChip Value="@ds" Text="@ds.DescriptionInfo()" />
+        }
+    </MudChipSet>
+    <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset @ref=unsetChipRef OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
+</MudStack>
+
 
 <MudTable ServerData="ServerReload"
           T="DeliveryDocumentRetailModelDB"

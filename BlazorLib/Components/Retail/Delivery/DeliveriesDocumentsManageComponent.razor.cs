@@ -37,9 +37,11 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [Parameter]
     public Action<TableRowClickEventArgs<DeliveryDocumentRetailModelDB>>? RowClickEventHandler { get; set; }
 
-    // 
-    IReadOnlyCollection<DeliveryStatusesEnum?> _selectedStatuses = [];
-    IReadOnlyCollection<DeliveryStatusesEnum?> SelectedStatuses
+
+    MudChip<string>? unsetChipRef;
+    bool includeUnset;
+    IReadOnlyCollection<DeliveryStatusesEnum> _selectedStatuses = [];
+    IReadOnlyCollection<DeliveryStatusesEnum> SelectedStatuses
     {
         get => _selectedStatuses;
         set
@@ -97,6 +99,13 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         await SetBusyAsync(false);
     }
 
+    async void OnChipClicked()
+    {
+        includeUnset = !includeUnset;
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+    }
+
     void CreateNewDeliveryOpenDialog()
     {
         _visibleCreateNewDelivery = true;
@@ -125,10 +134,17 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         if (FilterOrderId.HasValue && FilterOrderId > 0)
             req.Payload.FilterOrderId = FilterOrderId.Value;
 
-        if (SelectedTypes.Count != 0)
+        if (_selectedTypes.Count != 0)
             req.Payload.TypesFilter = [.. SelectedTypes];
 
-        // SelectedStatuses
+        if (SelectedStatuses.Count != 0)
+            req.Payload.StatusesFilter = [.. SelectedStatuses];
+
+        if (includeUnset)
+        {
+            req.Payload.StatusesFilter ??= [];
+            req.Payload.StatusesFilter.Add(null);
+        }
 
         TPaginationResponseModel<DeliveryDocumentRetailModelDB>? res = await RetailRepo.SelectDeliveryDocumentsAsync(req, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
