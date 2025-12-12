@@ -28,6 +28,10 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
     public int OrderId { get; set; }
 
     /// <inheritdoc/>
+    [Parameter]
+    public int InjectToDeliveryId { get; set; }
+
+    /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
 
@@ -113,7 +117,15 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             TResponseModel<int> res = await RetailRepo.CreateRetailDocumentAsync(editDocument);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success() && res.Response > 0)
+            {
+                if (InjectToDeliveryId > 0)
+                {
+                    TResponseModel<int> linkAddRes = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new() { DeliveryDocumentId = InjectToDeliveryId, OrderDocumentId = res.Response });
+                    SnackBarRepo.ShowMessagesResponse(linkAddRes.Messages);
+                }
+
                 NavRepo.NavigateTo($"/retail/order-document/{res.Response}");
+            }
         }
         else
         {

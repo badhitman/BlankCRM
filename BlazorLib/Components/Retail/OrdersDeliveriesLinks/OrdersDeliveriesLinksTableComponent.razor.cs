@@ -29,8 +29,13 @@ public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBa
     public string? ClientId { get; set; }
 
 
+    bool
+        _visibleIncludeExistDelivery,
+        _visibleIncludeOrder,
+        _visibleCreateNewOrder,
+        _visibleCreateNewDelivery;
+
     decimal fullScale;
-    bool _visibleIncludeExistDelivery, _visibleIncludeOrder;
     MudTable<RetailDeliveryOrderLinkModelDB>? tableRef;
     int? initDeleteRow;
     RetailDeliveryOrderLinkModelDB? elementBeforeEdit;
@@ -42,7 +47,6 @@ public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBa
         MaxWidth = MaxWidth.ExtraLarge,
         CloseButton = true,
     };
-
 
     async Task DeleteRow(int rowStatusId)
     {

@@ -55,7 +55,30 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         MaxWidth = MaxWidth.ExtraLarge,
         CloseButton = true
     };
+    string? searchString;
+    DateRange? _dateRange;
+    DateRange? DateRangeProp
+    {
+        get => _dateRange;
+        set
+        {
+            _dateRange = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
 
+    IReadOnlyCollection<StatusesDocumentsEnum> _selectedStatuses = [];
+    IReadOnlyCollection<StatusesDocumentsEnum> SelectedStatuses
+    {
+        get => _selectedStatuses;
+        set
+        {
+            _selectedStatuses = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
 
     void CreateNewOrderOpenDialog()
     {
@@ -106,13 +129,31 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
 
     async Task<TableData<RetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req = new() { Payload = new() };
+        TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req = new()
+        {
+            Payload = new(),
+            PageSize = state.PageSize,
+            PageNum = state.Page,
+            FindQuery = searchString,
+        };
 
         if (!string.IsNullOrWhiteSpace(ClientId))
             req.Payload.BuyersFilterIdentityId = [ClientId];
 
         if (ExcludeDeliveryId.HasValue && ExcludeDeliveryId > 0)
             req.Payload.ExcludeDeliveryId = ExcludeDeliveryId;
+
+        if (SelectedStatuses.Count != 0)
+            req.Payload.StatusesFilter = [.. SelectedStatuses];
+
+        if(DateRangeProp is not null)
+        {
+            if(DateRangeProp.Start is not null)
+            {
+                req.Payload.Start = DateRangeProp.Start;
+                req.Payload.End = DateRangeProp.End;
+            }
+        }
 
         await SetBusyAsync(token: token);
         TPaginationResponseModel<RetailDocumentModelDB> res = await RetailRepo.SelectRetailDocumentsAsync(req, token);
@@ -136,5 +177,12 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
 
         await SetBusyAsync(false, token: token);
         return new TableData<RetailDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+    }
+
+    async void OnSearch(string text)
+    {
+        searchString = text;
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
     }
 }

@@ -1027,6 +1027,18 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.ExcludeDeliveryId.HasValue == true && req.Payload.ExcludeDeliveryId > 0)
             q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id && y.DeliveryDocumentId == req.Payload.ExcludeDeliveryId));
 
+        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Length != 0)
+            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.StatusDocument));
+
+        if (req.Payload?.Start is not null && req.Payload.Start != default)
+            q = q.Where(x => x.DateDocument >= req.Payload.Start);
+
+        if (req.Payload?.End is not null && req.Payload.End != default)
+        {
+            req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59);
+            q = q.Where(x => x.DateDocument <= req.Payload.End);
+        }
+
         IQueryable<RetailDocumentModelDB> pq = q
             .OrderBy(x => x.DateDocument)
             .Skip(req.PageNum * req.PageSize)

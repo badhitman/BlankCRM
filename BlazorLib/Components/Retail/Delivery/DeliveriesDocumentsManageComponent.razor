@@ -35,11 +35,14 @@
         <MudText Typo="Typo.h6">Доставка (документы отгрузки)</MudText>
         <MudSpacer />
         <MudTooltip Text="Создать новый документ доставки">
-            <MudButton OnClick=CreateNewDeliveryOpenDialog
-                       Class="me-2"
-                       Variant="Variant.Outlined"
-                       EndIcon="@Icons.Material.Filled.Add"
-                       IconColor="Color.Secondary">Новая доставка</MudButton>
+            @if (RowClickEventHandler is null)
+            {
+                <MudButton OnClick=CreateNewDeliveryOpenDialog
+                           Class="me-2"
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.Add"
+                           IconColor="Color.Secondary">Новая доставка</MudButton>
+            }
         </MudTooltip>
     </ToolBarContent>
     <HeaderContent>

@@ -1,6 +1,22 @@
 ﻿@using MudBlazor
 @inherits BlazorBusyComponentBaseModel
 
+
+<MudStack AlignItems="AlignItems.Center" Row>
+    <MudChipSet @bind-SelectedValues="SelectedStatuses"
+                SelectionMode="SelectionMode.MultiSelection"
+                CheckMark
+                Variant="Variant.Text"
+                Class="mb-2"
+                Color="Color.Info">
+        @foreach (StatusesDocumentsEnum sd in Enum.GetValues<StatusesDocumentsEnum>())
+        {
+            <MudChip Value="@sd" Text="@sd.DescriptionInfo()" />
+        }
+    </MudChipSet>
+    <MudSpacer />
+    <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
+</MudStack>
 <MudTable ServerData="ServerReload"
           T="RetailDocumentModelDB"
           OnRowClick="RowClickEvent"
@@ -10,9 +26,19 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">Заказы (розница)</MudText>
         <MudSpacer />
+        <MudTextField T="string"
+                      ValueChanged="@(s => OnSearch(s))"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="me-2"></MudTextField>
         @if (RowClickEventHandler is null)
         {
-            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="CreateNewOrderOpenDialog">Новый заказ</MudButton>
+            <MudButton Variant="Variant.Outlined"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       Color="Color.Primary"
+                       OnClick="CreateNewOrderOpenDialog">Новый заказ</MudButton>
         }
     </ToolBarContent>
     <HeaderContent>

@@ -82,4 +82,18 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     /// StatusesLog
     /// </summary>
     public List<DeliveryStatusRetailDocumentModelDB>? DeliveryStatusesLog { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        string res = $"[{DeliveryType.DescriptionInfo()}]";
+
+        if (DeliveryStatus is null || DeliveryStatus == 0)
+            res = $"{res} (не обработан)";
+
+        if (!string.IsNullOrWhiteSpace(Name))
+            res = $"{res} `{Name}`";
+
+        return $"{res}. вес отправления: {WeightShipping}";
+    }
 }

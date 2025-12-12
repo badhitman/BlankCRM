@@ -15,11 +15,17 @@
     <ToolBarContent>
         @if (fullScale > 0 && (OrderId > 0 || DeliveryId > 0 && (DeliveryId == 0 || OrderId == 0)))
         {
-            <MudText Typo="Typo.h6">Общий вес: @fullScale</MudText>
+            <span class="lead">Общий вес: <strong>@fullScale</strong></span>
         }
         <MudSpacer />
         @if (DeliveryId > 0)
         {
+            <MudButton OnClick="() => _visibleCreateNewOrder = true"
+                       Class="me-2"
+                       Variant="Variant.Outlined"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       Color="Color.Primary">Новый заказ</MudButton>
+
             <MudTooltip Text="Добавить созданный ранее заказ в текущую доставку">
                 <MudButton OnClick=IncludeExistOrderOpenDialog
                            Variant="Variant.Outlined"
@@ -29,6 +35,12 @@
         }
         @if (OrderId > 0)
         {
+            <MudButton OnClick="() => _visibleCreateNewDelivery = true"
+                       Class="me-2"
+                       Variant="Variant.Outlined"
+                       EndIcon="@Icons.Material.Filled.Add"
+                       IconColor="Color.Secondary">Новая доставка</MudButton>
+
             <MudTooltip Text="Добавить заказ в созданную ранее доставку">
                 <MudButton OnClick=IncludeExistDeliveryOpenDialog
                            Variant="Variant.Outlined"
@@ -65,11 +77,11 @@
     <RowTemplate>
         @if (OrderId <= 0)
         {
-            <MudTd DataLabel="Заказ">@context.OrderDocument</MudTd>
+            <MudTd DataLabel="Заказ"><a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a></MudTd>
         }
         @if (DeliveryId <= 0)
         {
-            <MudTd DataLabel="Доставка">@context.DeliveryDocument</MudTd>
+            <MudTd DataLabel="Доставка"><a href="/retail/delivery-document/@context.DeliveryDocumentId">@context.DeliveryDocument?.ToString()</a></MudTd>
         }
         <MudTd Class="@(context.WeightShipping <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">@context.WeightShipping</MudTd>
         <MudTd>
@@ -109,6 +121,31 @@
     </PagerContent>
 </MudTable>
 
+<MudDialog @bind-Visible="_visibleCreateNewOrder" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новый заказ (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Value="ClientId" Name="ClientId">
+            <OrderDocumentCardComponent InjectToDeliveryId="DeliveryId" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-Visible="_visibleCreateNewDelivery" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новая доставка (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <DeliveryDocumentComponent InjectToOrderId="OrderId" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
+
 <MudDialog @bind-Visible="_visibleIncludeExistDelivery" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
@@ -121,7 +158,6 @@
         </CascadingValue>
     </DialogContent>
 </MudDialog>
-
 <MudDialog @bind-Visible="_visibleIncludeOrder" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">

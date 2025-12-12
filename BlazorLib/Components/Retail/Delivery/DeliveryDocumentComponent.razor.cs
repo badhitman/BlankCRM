@@ -26,6 +26,10 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     public int DeliveryDocumentId { get; set; }
 
     /// <inheritdoc/>
+    [Parameter]
+    public int InjectToOrderId { get; set; }
+
+    /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
 
@@ -167,8 +171,17 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         {
             TResponseModel<int> res = await RetailRepo.CreateDeliveryDocumentAsync(editDoc);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
+
             if (res.Success() && res.Response > 0)
+            {
+                if (InjectToOrderId > 0)
+                {
+                    TResponseModel<int> linkAddRes = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new() { DeliveryDocumentId = res.Response, OrderDocumentId = InjectToOrderId });
+                    SnackBarRepo.ShowMessagesResponse(linkAddRes.Messages);
+                }
+
                 NavRepo.NavigateTo($"/retail/delivery-document/{res.Response}");
+            }
         }
         else
         {
