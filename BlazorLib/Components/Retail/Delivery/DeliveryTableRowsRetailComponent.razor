@@ -6,12 +6,13 @@
 <MudTable Dense Hover ReadOnly="ReadOnly"
           SortLabel="@(nameof(RowOfDeliveryRetailDocumentModelDB.Nomenclature.Name))"
           CanCancelEdit
-          Items="@Document?.Rows"
+          ServerData="ServerReload"
+          @ref=tableRef
           RowEditPreview="RowEditPreviewHandler"
           RowEditCommit="RowEditCommitHandler"
           CancelEditIcon="@Icons.Material.Filled.Cancel"
           CancelEditTooltip="Отменить изменение"
-          CommitEditTooltip="Сохранить изменения"
+          CommitEditTooltip="Сохранить измененияDocument"
           RowEditCancel="RowEditCancelHandler"
           EditTrigger="@EditTrigger">
     <ToolBarContent>
@@ -91,17 +92,18 @@
         </MudTd>
         <MudTd DataLabel="Quantity">
             @{
-                var _alowedValues = context.Offer?.QuantitiesValues;
+                System.Collections.Immutable.ImmutableList<decimal>? _allowedValues = context.Offer?.QuantitiesValues;
             }
-            @if (_alowedValues is null || _alowedValues.Count == 0 || ForceAdding)
+            @if (_allowedValues is null || _allowedValues.Count == 0 || ForceAdding)
             {
-                <MudNumericField @bind-Value="context!.Quantity" Required Min="1" Max="GetMaxValue(context)" />
+                @* <MudNumericField @bind-Value="context!.Quantity" Required Min="1" Max="GetMaxValue(context)" /> *@
+                <input type="number" class="form-control" @bind="context!.Quantity" />
             }
             else
             {
                 bool overLimit = false;
                 <MudSelect T="decimal" Label="Количество" Required @bind-Value="context!.Quantity">
-                    @foreach (decimal ql in _alowedValues)
+                    @foreach (decimal ql in _allowedValues)
                     {
                         overLimit = overLimit || ql > GetMaxValue(context);
                         <MudSelectItem Disabled="@overLimit" Value="@ql" />

@@ -111,6 +111,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
                 Offer = off,
                 OfferId = off.Id,
                 Quantity = off.Quantity,
+                Amount = off.Quantity * off.Price,
             });
         else
             Document.Rows[exist_row].Quantity = +off.Quantity;

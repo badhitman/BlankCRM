@@ -71,11 +71,11 @@
         <MudTd DataLabel="Статус">
             @if (RowClickEventHandler is null)
             {
-                <a href="/retail/order-document/@context.Id">@context.StatusDocument.DescriptionInfo()</a>
+                <a href="/retail/order-document/@context.Id">@context.StatusDocument?.DescriptionInfo()</a>
             }
             else
             {
-                <span>@context.StatusDocument.DescriptionInfo()</span>
+                <span>@context.StatusDocument?.DescriptionInfo()</span>
             }
         </MudTd>
         <MudTd DataLabel="Дата">

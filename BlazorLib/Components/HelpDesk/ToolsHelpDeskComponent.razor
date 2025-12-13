@@ -33,6 +33,41 @@
             <MudTabPanel Text="Типы кошельков">
                 <WalletRetailTypesComponent />
             </MudTabPanel>
+            <MudTabPanel Text="Other">
+                <div class="row row-cols-1 row-cols-md-2 g-1">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowingTelegramArea"
+                                                            Title="Отображение TG чатов в заявке"
+                                                            Label="TG чаты в заявках"
+                                                            HintTrue="В заявке будет отображаться диалог связанных TG чатов"
+                                                            HintFalse="Чаты TG не отображаются в заявках" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.AllowOfferFreePrice"
+                                                            Title="Отображение TG чатов в заявке"
+                                                            Label="TG чаты в заявках"
+                                                            HintTrue="В заявке будет отображаться диалог связанных TG чатов"
+                                                            HintFalse="Чаты TG не отображаются в заявках" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <RubricParameterStorageComponent Label="Rubric for new orders"
+                                                                 HelperText="Automatically assign a category when creating an order"
+                                                                 KeyStorage="GlobalStaticCloudStorageMetadata.RubricIssueForCreateOrder" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </MudTabPanel>
         </MudTabs>
     </MudTabPanel>
     <MudTabPanel Text="HelpDesk">
@@ -45,10 +80,10 @@
         <UsersTableComponent HideClaimsColumn HideRolesColumn
                              RolesMarkers="@showMarkersRoles"
                              RolesManageKit="@GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Union(
-                                                                          [GlobalStaticConstantsRoles.Roles.CommerceManager,
-                                                                           GlobalStaticConstantsRoles.Roles.CommerceClient,
-                                                                           GlobalStaticConstantsRoles.Roles.Debug,
-                                                                           GlobalStaticConstantsRoles.Roles.RetailManage])" />
+                                                                                                                                                                 [GlobalStaticConstantsRoles.Roles.CommerceManager,
+                                                                                                                                                                  GlobalStaticConstantsRoles.Roles.CommerceClient,
+                                                                                                                                                                  GlobalStaticConstantsRoles.Roles.Debug,
+                                                                                                                                                                  GlobalStaticConstantsRoles.Roles.RetailManage])" />
     </MudTabPanel>
     <MudTabPanel Text="Notification templates">
         <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
@@ -256,13 +291,6 @@
                 <div class="card">
                     <div class="card-body">
                         <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowCreatingIssue" Title="Ручное создание обращений-заявок в СЭД" Label="Создание заявок" HintTrue="Кнопка создания обращения активна" HintFalse="Ручное создание обращений отключено" />
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.ShowingTelegramArea" Title="Отображение TG чатов в заявке" Label="TG чаты в заявках" HintTrue="В заявке будет отображаться диалог связанных TG чатов" HintFalse="Чаты TG не отображаются в заявках" />
                     </div>
                 </div>
             </div>

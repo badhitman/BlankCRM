@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// DeliveryStatusDocument
+/// DeliveryStatusRetailDocumentModelDB
 /// </summary>
 [Index(nameof(DeliveryStatus)), Index(nameof(Name)), Index(nameof(DateOperation))]
 public class DeliveryStatusRetailDocumentModelDB : EntryUpdatedLiteModel

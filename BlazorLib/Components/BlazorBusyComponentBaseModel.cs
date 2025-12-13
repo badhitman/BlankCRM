@@ -59,9 +59,6 @@ public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
                 Interlocked.Decrement(ref _deepBusyCount);
 
             _isBusyProgress = _deepBusyCount > 0;
-            //#if DEBUG
-            //            LoggerRepo.LogInformation($"{this.GetType().Name} > req {is_busy}: {_deepBusyCount}\n{Environment.StackTrace}");
-            //#endif
         }
 
         await Task.Delay(1, token);

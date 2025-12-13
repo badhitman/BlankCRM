@@ -5,6 +5,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
+using System.Text.RegularExpressions;
 
 namespace CommerceService;
 
@@ -147,6 +148,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         {
             Response = await context.DeliveryRetailDocuments
                 .Where(x => req.Ids.Contains(x.Id))
+                .Include(x => x.Rows)
                 .ToArrayAsync(cancellationToken: token)
         };
     }
@@ -215,7 +217,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.ToListAsync(cancellationToken: token)
+            Response = await pq.Include(x => x.Offer).ToListAsync(cancellationToken: token)
         };
     }
     #endregion
@@ -776,81 +778,6 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
     #endregion
 
-    #region Rows for order-document
-    /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
-    {
-        if (req.Quantity <= 0)
-            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Количество должно быть больше нуля" }] };
-
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        req.Version = Guid.NewGuid();
-        req.Order = null;
-        req.Nomenclature = null;
-        req.Offer = null;
-
-        await context.RowsRetailsOrders.AddAsync(req, token);
-        await context.SaveChangesAsync(token);
-
-        await context.RetailOrders
-          .Where(x => x.Id == req.OrderId)
-          .ExecuteUpdateAsync(set => set
-              .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
-
-        return new TResponseModel<int>() { Response = req.Id };
-    }
-
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
-    {
-        if (req.Quantity <= 0)
-            return ResponseBaseModel.CreateError("Количество должно быть больше нуля");
-
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        await context.RowsRetailsOrders
-          .Where(x => x.Id == req.Id)
-          .ExecuteUpdateAsync(set => set
-              .SetProperty(p => p.Comment, req.Comment)
-              .SetProperty(p => p.Quantity, req.Quantity)
-              .SetProperty(p => p.Version, Guid.NewGuid())
-              .SetProperty(p => p.Amount, req.Amount), cancellationToken: token);
-
-        await context.RetailOrders
-          .Where(x => x.Id == req.OrderId)
-          .ExecuteUpdateAsync(set => set
-              .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
-
-        return ResponseBaseModel.CreateSuccess("Ok");
-    }
-
-    /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<RowOfRetailOrderDocumentModelDB>> SelectRowsRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel> req, CancellationToken token = default)
-    {
-        if (req.Payload is null)
-            return new() { Status = new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }] } };
-
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RowOfRetailOrderDocumentModelDB>? q = context.RowsRetailsOrders.Where(x => x.OrderId == req.Payload.OrderId).AsQueryable();
-
-        IQueryable<RowOfRetailOrderDocumentModelDB>? pq = q
-            .OrderBy(x => x.Id)
-            .Skip(req.PageNum * req.PageSize)
-            .Take(req.PageSize);
-
-        return new()
-        {
-            PageNum = req.PageNum,
-            PageSize = req.PageSize,
-            SortingDirection = req.SortingDirection,
-            SortBy = req.SortBy,
-            TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.Include(x => x.Offer).ToListAsync(cancellationToken: token)
-        };
-    }
-    #endregion
-
     #region Order`s (document`s)
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default)
@@ -867,6 +794,9 @@ public class RetailService(IIdentityTransmission identityRepo,
             res.AddError("Не указан покупатель");
             return res;
         }
+        req.ExternalDocumentId = string.IsNullOrWhiteSpace(req.ExternalDocumentId)
+            ? null
+            : Regex.Replace(req.ExternalDocumentId, @"\s+", "");
 
         TResponseModel<UserInfoModel[]> getUsers = await identityRepo.GetUsersOfIdentityAsync([req.AuthorIdentityUserId, req.BuyerIdentityUserId], token);
         if (!getUsers.Success())
@@ -876,6 +806,9 @@ public class RetailService(IIdentityTransmission identityRepo,
         }
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.RetailOrders.AnyAsync(x => x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Документ [ext #:{req.ExternalDocumentId}] уже существует" }] };
 
         if (req.Rows is not null && req.Rows.Count != 0)
         {
@@ -910,6 +843,9 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<ResponseBaseModel> UpdateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.RetailOrders.AnyAsync(x => x.Id != req.Id && x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
+            return ResponseBaseModel.CreateError($"Документ [ext #:{req.ExternalDocumentId}] уже существует");
 
         int res = await context.RetailOrders
               .Where(x => x.Id == req.Id)
@@ -990,7 +926,8 @@ public class RetailService(IIdentityTransmission identityRepo,
         {
             Response = !req.IncludeDataExternal
                 ? await q.ToArrayAsync(cancellationToken: token)
-                : await q.Include(x => x.Rows)
+                : await q.Include(x => x.Rows!)
+                         .ThenInclude(x => x.Offer)
                          .Include(x => x.Deliveries)
                          .ToArrayAsync(cancellationToken: token)
         };
@@ -1000,6 +937,83 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         return res;
     }
+    #endregion
+
+    #region Rows for order-document
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> CreateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
+    {
+        if (req.Quantity <= 0)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Количество должно быть больше нуля" }] };
+
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        req.Version = Guid.NewGuid();
+        req.Order = null;
+        req.Nomenclature = null;
+        req.Offer = null;
+
+        await context.RowsRetailsOrders.AddAsync(req, token);
+        await context.SaveChangesAsync(token);
+
+        await context.RetailOrders
+          .Where(x => x.Id == req.OrderId)
+          .ExecuteUpdateAsync(set => set
+              .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+
+        return new TResponseModel<int>() { Response = req.Id };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
+    {
+        if (req.Quantity <= 0)
+            return ResponseBaseModel.CreateError("Количество должно быть больше нуля");
+
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        await context.RowsRetailsOrders
+          .Where(x => x.Id == req.Id)
+          .ExecuteUpdateAsync(set => set
+              .SetProperty(p => p.Comment, req.Comment)
+              .SetProperty(p => p.Quantity, req.Quantity)
+              .SetProperty(p => p.Version, Guid.NewGuid())
+              .SetProperty(p => p.Amount, req.Amount), cancellationToken: token);
+
+        await context.RetailOrders
+          .Where(x => x.Id == req.OrderId)
+          .ExecuteUpdateAsync(set => set
+              .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<RowOfRetailOrderDocumentModelDB>> SelectRowsRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel> req, CancellationToken token = default)
+    {
+        if (req.Payload is null)
+            return new() { Status = new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }] } };
+
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<RowOfRetailOrderDocumentModelDB>? q = context.RowsRetailsOrders.Where(x => x.OrderId == req.Payload.OrderId).AsQueryable();
+
+        IQueryable<RowOfRetailOrderDocumentModelDB>? pq = q
+            .OrderBy(x => x.Id)
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await pq.Include(x => x.Offer).ToListAsync(cancellationToken: token)
+        };
+    }
+
+
     #endregion
 
     #region Deliveries orders link`s 
@@ -1052,10 +1066,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
-#if DEBUG
-        var v = await pq.ToListAsync(cancellationToken: token);
-#endif
-
         return new()
         {
             PageNum = req.PageNum,
@@ -1067,12 +1077,12 @@ public class RetailService(IIdentityTransmission identityRepo,
                             ? await pq.Include(x => x.DeliveryDocument).Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
                             : forOrders
                                 ? await pq.Include(x => x.DeliveryDocument).ToListAsync(cancellationToken: token)
-                                : await pq.Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
+                                : await pq.Include(x => x.OrderDocument!).ToListAsync(cancellationToken: token)
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<decimal>> TotalWeightOrdersLinksDocumentsAsync(TotalWeightDeliveriesOrdersLinksDocumentsRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<decimal>> TotalWeightOrdersDocumentsLinksAsync(TotalWeightDeliveriesOrdersLinksDocumentsRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         if (req.DeliveryDocumentId <= 0)
@@ -1096,6 +1106,58 @@ public class RetailService(IIdentityTransmission identityRepo,
         return res == 0
             ? ResponseBaseModel.CreateInfo("Объект уже удалён")
             : ResponseBaseModel.CreateSuccess("Удалено");
+    }
+    #endregion
+
+    #region Payments orders link`s
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> CreatePaymentOrderLinkDocumentAsync(RetailPaymentOrderLinkModelDB req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdatePaymentOrderLinkDocumentAsync(RetailPaymentOrderLinkModelDB req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<RetailPaymentOrderLinkModelDB>> SelectPaymentsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(DeletePaymentOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+    #endregion
+
+    #region Statuses (of order`s document)
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> CreateOrderStatusDocumentAsync(OrderStatusRetailDocumentModelDB req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateOrderStatusDocumentAsync(OrderStatusRetailDocumentModelDB req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<OrderStatusRetailDocumentModelDB>> SelectOrderDocumentStatusesAsync(TPaginationRequestStandardModel<SelectOrderStatusesRetailDocumentsRequestModel> req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DeleteOrderStatusDocumentAsync(int statusId, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
     }
     #endregion
 

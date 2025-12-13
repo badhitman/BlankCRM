@@ -29,10 +29,10 @@ public partial class CommerceLayerContext : DbContext
     /// <inheritdoc/>
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-//#if DEBUG
-//        options.EnableSensitiveDataLogging(true);
-//        options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
-//#endif
+        //#if DEBUG
+        //        options.EnableSensitiveDataLogging(true);
+        //        options.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+        //#endif
     }
 
     /// <inheritdoc/>
@@ -193,6 +193,11 @@ public partial class CommerceLayerContext : DbContext
     /// DeliveriesOrdersLinks
     /// </summary>
     public DbSet<RetailDeliveryOrderLinkModelDB> DeliveriesOrdersLinks { get; set; } = default!;
+
+    /// <summary>
+    /// DeliveriesOrdersLinks
+    /// </summary>
+    public DbSet<OrderStatusRetailDocumentModelDB> OrdersStatuses { get; set; } = default!;
     #endregion
 
     #region delivery
@@ -217,6 +222,11 @@ public partial class CommerceLayerContext : DbContext
     /// Оплаты
     /// </summary>
     public DbSet<PaymentRetailDocumentModelDB> PaymentsRetailDocuments { get; set; } = default!;
+
+    /// <summary>
+    /// Связи платежей с заказами (retail)
+    /// </summary>
+    public DbSet<RetailPaymentOrderLinkModelDB> PaymentsOrdersLinks { get; set; } = default!;
     #endregion
 
     #region wallet`s

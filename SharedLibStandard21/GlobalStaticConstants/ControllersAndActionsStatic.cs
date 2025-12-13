@@ -898,6 +898,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string PRICE_CONTROLLER_NAME = "price";
 
         /// <summary>
+        /// Free
+        /// </summary>
+        public const string FREE_CONTROLLER_NAME = "free";
+
+        /// <summary>
         /// Disabled
         /// </summary>
         public const string DISABLED_CONTROLLER_NAME = "disabled";

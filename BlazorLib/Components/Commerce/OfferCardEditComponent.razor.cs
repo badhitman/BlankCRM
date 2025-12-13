@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
@@ -16,6 +15,9 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     ICommerceTransmission CommerceRepo { get; set; } = default!;
+
+    [Inject]
+    IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
 
 
     /// <summary>
@@ -30,19 +32,20 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
     FilesContextViewComponent? filesViewRef;
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
+    bool allowOfferFreePrice;
 
     bool CanSave =>
         editOffer.IsDisabled != CurrentOffer.IsDisabled ||
         editOffer.ShortName != CurrentOffer.ShortName ||
         editOffer.Name != CurrentOffer.Name ||
         editOffer.QuantitiesTemplate != CurrentOffer.QuantitiesTemplate ||
-        editOffer.Price != CurrentOffer.Price ||
+        (editOffer.Price != CurrentOffer.Price && ((allowOfferFreePrice && editOffer.Price == 0) || editOffer.Price > 0)) ||
         editOffer.Multiplicity != CurrentOffer.Multiplicity ||
         editOffer.OfferUnit != CurrentOffer.OfferUnit;
 
     async Task SaveOffer()
     {
-        if(CurrentUserSession is null)
+        if (CurrentUserSession is null)
             return;
 
         await SetBusyAsync();
@@ -63,14 +66,20 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
         await SetBusyAsync();
-        await ReadCurrentUser();
+        await base.OnInitializedAsync();
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
-        TResponseModel<OfferModelDB[]> res = await CommerceRepo.OffersReadAsync(new() { Payload = [OfferId], SenderActionUserId = CurrentUserSession.UserId });
+        List<Task> tasks = [
+               Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.AllowOfferFreePrice); allowOfferFreePrice = res.Response == true; }),
+                Task.Run(async () => {
+                    TResponseModel<OfferModelDB[]> res = await CommerceRepo.OffersReadAsync(new() { Payload = [OfferId], SenderActionUserId = CurrentUserSession.UserId });
+                    SnackBarRepo.ShowMessagesResponse(res.Messages);
+                    CurrentOffer = res.Response!.Single();
+                })
+           ];
+        await Task.WhenAll(tasks);
 
-        SnackBarRepo.ShowMessagesResponse(res.Messages);
-        CurrentOffer = res.Response!.Single();
         editOffer = GlobalTools.CreateDeepCopy(CurrentOffer)!;
         await SetBusyAsync(false);
     }

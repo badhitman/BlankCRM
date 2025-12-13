@@ -207,7 +207,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         {
             await SetBusyAsync();
 
-            TResponseModel<decimal> totalW = await RetailRepo.TotalWeightOrdersLinksDocumentsAsync(new() { DeliveryDocumentId = DeliveryDocumentId });
+            TResponseModel<decimal> totalW = await RetailRepo.TotalWeightOrdersDocumentsLinksAsync(new() { DeliveryDocumentId = DeliveryDocumentId });
             SnackBarRepo.ShowMessagesResponse(totalW.Messages);
             totalWeight = totalW.Response;
 
@@ -234,7 +234,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             if (res.Response is not null && res.Response.Length == 1)
             {
                 currentDoc = res.Response.First();
-                TResponseModel<decimal> totalW = await RetailRepo.TotalWeightOrdersLinksDocumentsAsync(new() { DeliveryDocumentId = currentDoc.Id });
+                TResponseModel<decimal> totalW = await RetailRepo.TotalWeightOrdersDocumentsLinksAsync(new() { DeliveryDocumentId = currentDoc.Id });
                 SnackBarRepo.ShowMessagesResponse(totalW.Messages);
                 totalWeight = totalW.Response;
             }

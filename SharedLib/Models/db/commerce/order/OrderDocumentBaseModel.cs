@@ -16,7 +16,7 @@ public class OrderDocumentBaseModel : EntryUpdatedLiteModel
     /// <summary>
     /// Шаг/статус обращения: "Создан", "В работе", "На проверке" и "Готово"
     /// </summary>
-    public StatusesDocumentsEnum StatusDocument { get; set; }
+    public StatusesDocumentsEnum? StatusDocument { get; set; }
 
     /// <summary>
     /// IdentityUserId

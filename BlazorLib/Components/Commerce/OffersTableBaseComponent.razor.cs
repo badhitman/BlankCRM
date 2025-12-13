@@ -50,7 +50,6 @@ public abstract class OffersTableBaseComponent : BlazorRegistersComponent
     {
         if (DocumentUpdateHandler is not null)
             DocumentUpdateHandler();
-
     }
 
     /// <inheritdoc/>

@@ -150,6 +150,15 @@ public static partial class GlobalStaticCloudStorageMetadata
     };
 
     /// <summary>
+    /// Разрешить офферы с нулевой ценой
+    /// </summary>
+    public static StorageMetadataModel AllowOfferFreePrice => new()
+    {
+        ApplicationName = Routes.OFFER_CONTROLLER_NAME,
+        PropertyName = Path.Combine(Routes.ALLOW_ACTION_NAME, Routes.FREE_CONTROLLER_NAME, Routes.PRICE_CONTROLLER_NAME),
+    };
+
+    /// <summary>
     /// ShowingTelegramArea
     /// </summary>
     public static StorageMetadataModel GlobalEnable2FA => new()

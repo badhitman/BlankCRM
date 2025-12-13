@@ -20,6 +20,6 @@ public class TotalWeightOrdersLinksDocumentsReceive(IRetailService commRepo)
     public async Task<TResponseModel<decimal>?> ResponseHandleActionAsync(TotalWeightDeliveriesOrdersLinksDocumentsRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.TotalWeightOrdersLinksDocumentsAsync(req, token);
+        return await commRepo.TotalWeightOrdersDocumentsLinksAsync(req, token);
     }
 }

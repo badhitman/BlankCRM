@@ -21,6 +21,7 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
     [Parameter, EditorRequired]
     public DeliveryDocumentRetailModelDB Document { get; set; }
 
+
     DateTime? createdDate, editDate;
     DeliveryStatusesEnum? newStatus;
     DeliveryStatusesEnum editStatus;
@@ -67,7 +68,7 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
             DeliveryStatusRetailDocumentModelDB req = new()
             {
                 DateOperation = editDate.Value,
-                DeliveryDocumentId = editRowId.Value,
+                DeliveryDocumentId = Document.Id,
                 Name = editName ?? "",
                 DeliveryStatus = editStatus,
                 Id = editRowId.Value,

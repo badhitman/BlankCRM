@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Commerce;
@@ -15,6 +14,9 @@ public partial class OfferCreatingFormComponent : BlazorBusyComponentBaseAuthMod
 {
     [Inject]
     ICommerceTransmission CommerceRepo { get; set; } = default!;
+
+    [Inject]
+    IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
 
 
     /// <summary>
@@ -34,8 +36,12 @@ public partial class OfferCreatingFormComponent : BlazorBusyComponentBaseAuthMod
     decimal priceOffer;
     uint multiplicityOffer;
     string? nameOffer;
+    bool allowOfferFreePrice;
 
-    bool CanSave => priceOffer > 0 && multiplicityOffer > 0 && UnitOffer != UnitsOfMeasurementEnum.None;
+    bool CanSave =>
+        (priceOffer > 0 || (allowOfferFreePrice && priceOffer == 0)) &&
+        multiplicityOffer > 0 &&
+        UnitOffer != UnitsOfMeasurementEnum.None;
 
     async Task AddOffer()
     {
@@ -51,7 +57,7 @@ public partial class OfferCreatingFormComponent : BlazorBusyComponentBaseAuthMod
             Price = priceOffer,
         };
         await SetBusyAsync();
-        
+
         TResponseModel<int> res = await CommerceRepo.OfferUpdateAsync(new() { Payload = off, SenderActionUserId = CurrentUserSession.UserId });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -65,6 +71,18 @@ public partial class OfferCreatingFormComponent : BlazorBusyComponentBaseAuthMod
             multiplicityOffer = 0;
             nameOffer = null;
         }
+        await SetBusyAsync(false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await SetBusyAsync();
+        List<Task> tasks = [
+                Task.Run(async () => { TResponseModel<bool?> res = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.AllowOfferFreePrice); allowOfferFreePrice = res.Response == true; }),
+                Task.Run(base.OnInitializedAsync)
+            ];
+        await Task.WhenAll(tasks);
         await SetBusyAsync(false);
     }
 }
