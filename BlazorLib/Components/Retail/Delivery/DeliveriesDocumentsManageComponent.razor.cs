@@ -37,7 +37,6 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [Parameter]
     public Action<TableRowClickEventArgs<DeliveryDocumentRetailModelDB>>? RowClickEventHandler { get; set; }
 
-
     MudChip<string>? unsetChipRef;
     bool includeUnset;
     IReadOnlyCollection<DeliveryStatusesEnum> _selectedStatuses = [];
