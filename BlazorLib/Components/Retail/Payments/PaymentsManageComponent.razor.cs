@@ -21,6 +21,15 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
     [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public Action<TableRowClickEventArgs<PaymentRetailDocumentModelDB>>? RowClickEventHandler { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter]
+    public int ExcludeOrderId { get; set; }
+
+
     MudTable<PaymentRetailDocumentModelDB>? _tableRef;
 
     DateRange? _dateRange;

@@ -1,0 +1,171 @@
+﻿@inherits OrderLinkBaseComponent<RetailDeliveryOrderLinkModelDB>
+
+@using BlazorLib.Components.Retail.Delivery
+@using MudBlazor
+
+<MudTable @ref=tableRef
+          ApplyButtonPosition="TableApplyButtonPosition.End"
+          EditButtonPosition="TableEditButtonPosition.End"
+          ServerData="ServerReload"
+          EditTrigger="TableEditTrigger.EditButton"
+          CanCancelEdit Dense Hover
+          RowEditPreview="BackupItem"
+          RowEditCommit="ItemHasBeenCommitted"
+          RowEditCancel="ResetItemToOriginalValues">
+    <ToolBarContent>
+        @if (fullScale > 0 && (OrderId > 0 || DeliveryId > 0 && (DeliveryId == 0 || OrderId == 0)))
+        {
+            <span class="lead">Общий вес: <strong>@fullScale</strong></span>
+        }
+        <MudSpacer />
+        @if (DeliveryId > 0)
+        {
+            <MudButton OnClick="() => _visibleCreateNewOrder = true"
+                       Class="me-2"
+                       Variant="Variant.Outlined"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       Color="Color.Primary">Новый заказ</MudButton>
+
+            <MudTooltip Text="Добавить созданный ранее заказ в текущую доставку">
+                <MudButton OnClick=IncludeExistOrderOpenDialog
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.DeviceHub"
+                           IconColor="Color.Secondary">Включить существующий заказ</MudButton>
+            </MudTooltip>
+        }
+        @if (OrderId > 0)
+        {
+            <MudButton OnClick="() => _visibleCreateNewDelivery = true"
+                       Class="me-2"
+                       Variant="Variant.Outlined"
+                       EndIcon="@Icons.Material.Filled.Add"
+                       IconColor="Color.Secondary">Новая доставка</MudButton>
+
+            <MudTooltip Text="Добавить заказ в созданную ранее доставку">
+                <MudButton OnClick=IncludeExistDeliveryOpenDialog
+                           Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.DeviceHub"
+                           IconColor="Color.Secondary">Включить в доставку</MudButton>
+            </MudTooltip>
+        }
+    </ToolBarContent>
+    <ColGroup>
+        @if (OrderId <= 0)
+        {
+            <col />
+        }
+        @if (DeliveryId <= 0)
+        {
+            <col />
+        }
+        <col />
+        <col style="@(initDeleteRow > 0 ? "width:250px;" : "width:50px;")" />
+        <col style="width:50px;" />
+    </ColGroup>
+    <HeaderContent>
+        @if (OrderId <= 0)
+        {
+            <MudTh>Заказ</MudTh>
+        }
+        @if (DeliveryId <= 0)
+        {
+            <MudTh>Доставка</MudTh>
+        }
+        <MudTh>Вес</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @if (OrderId <= 0)
+        {
+            <MudTd DataLabel="Заказ"><a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a></MudTd>
+        }
+        @if (DeliveryId <= 0)
+        {
+            <MudTd DataLabel="Доставка"><a href="/retail/delivery-document/@context.DeliveryDocumentId">@context.DeliveryDocument?.ToString()</a></MudTd>
+        }
+        <MudTd Class="@(context.WeightShipping <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">@context.WeightShipping</MudTd>
+        <MudTd>
+            @if (initDeleteRow == context.Id)
+            {
+                <span title="кликните для подтверждения удаления" class="me-2 badge text-bg-danger cursor-pointer" @onclick="() => DeleteRow(context.Id)">Подтвердить удаление</span>
+                <span title="кликните для отмены удаления" class="text-bg-secondary cursor-pointer badge" @onclick="() => initDeleteRow = 0">отмена</span>
+            }
+            else
+            {
+                <MudIconButton OnClick="() => DeleteRow(context.Id)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+            }
+        </MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        @if (OrderId <= 0)
+        {
+            <MudTd DataLabel="Заказ">@context.OrderDocument?.ToString()</MudTd>
+        }
+        @if (DeliveryId <= 0)
+        {
+            <MudTd DataLabel="Доставка">@context.DeliveryDocument?.ToString()</MudTd>
+        }
+        <MudTd DataLabel="Вес" colspan=2>
+            <input type="number" class="form-control" @bind="context.WeightShipping" />
+        </MudTd>
+    </RowEditingTemplate>
+    <NoRecordsContent>
+        <MudText>Соответствующих записей не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+<MudDialog @bind-Visible="_visibleCreateNewOrder" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Новый заказ (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Value="ClientId" Name="ClientId">
+            <OrderDocumentCardComponent InjectToDeliveryId="DeliveryId" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-Visible="_visibleCreateNewDelivery" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новая доставка (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <DeliveryDocumentComponent InjectToOrderId="OrderId" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
+
+<MudDialog @bind-Visible="_visibleIncludeExistDelivery" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите доставку (розница)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <DeliveriesDocumentsManageComponent RowClickEventHandler="SelectDeliveryRowAction" ExcludeOrderId="OrderId" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-Visible="_visibleIncludeOrder" Options="_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите заказ (для добавления к доставке)
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <CascadingValue Name="ClientId" Value="ClientId">
+            <RetailOrdersListComponent RowClickEventHandler="SelectOrderRowAction" ExcludeDeliveryId="DeliveryId" />
+        </CascadingValue>
+    </DialogContent>
+</MudDialog>

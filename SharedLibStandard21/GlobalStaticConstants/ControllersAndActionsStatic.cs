@@ -557,6 +557,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string DELIVERY_CONTROLLER_NAME = "delivery";
 
         /// <summary>
+        /// Deliveries
+        /// </summary>
+        public const string DELIVERIES_CONTROLLER_NAME = "deliveries";
+
+        /// <summary>
         /// Service
         /// </summary>
         public const string SERVICE_CONTROLLER_NAME = "service";

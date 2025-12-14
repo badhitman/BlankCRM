@@ -2,10 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
-using System.Text.RegularExpressions;
 
 namespace CommerceService;
 
@@ -1025,6 +1025,9 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (await context.DeliveriesOrdersLinks.AnyAsync(x => x.DeliveryDocumentId == req.DeliveryDocumentId && x.OrderDocumentId == req.OrderDocumentId, cancellationToken: token))
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Warning, Text = "Документ уже добавлен" }] };
 
+        req.OrderDocument = null;
+        req.DeliveryDocument = null;
+
         await context.DeliveriesOrdersLinks.AddAsync(req, token);
         await context.SaveChangesAsync(token);
         return new() { Response = req.Id };
@@ -1037,8 +1040,6 @@ public class RetailService(IIdentityTransmission identityRepo,
         await context.DeliveriesOrdersLinks
             .Where(x => x.Id == req.Id || (req.OrderDocumentId == x.OrderDocumentId && req.DeliveryDocumentId == x.DeliveryDocumentId))
             .ExecuteUpdateAsync(set => set
-                //.SetProperty(p => p.OrderDocumentId, req.OrderDocumentId)
-                //.SetProperty(p => p.DeliveryDocumentId, req.DeliveryDocumentId)
                 .SetProperty(p => p.WeightShipping, req.WeightShipping), cancellationToken: token);
         await context.SaveChangesAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
@@ -1113,25 +1114,81 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreatePaymentOrderLinkDocumentAsync(PaymentOrderRetailLinkModelDB req, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        req.OrderDocument = null;
+        req.PaymentDocument = null;
+        req.Name = req.Name?.Trim();
+
+        await context.PaymentsOrdersLinks.AddAsync(req, token);
+        await context.SaveChangesAsync(token);
+
+        return new() { Response = req.Id };
     }
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdatePaymentOrderLinkDocumentAsync(PaymentOrderRetailLinkModelDB req, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        req.Name = req.Name?.Trim();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        await context.PaymentsOrdersLinks
+            .Where(x => x.Id == req.Id || (req.OrderDocumentId == x.OrderDocumentId && req.PaymentDocumentId == x.PaymentDocumentId))
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Name, req.Name)
+                .SetProperty(p => p.AmountPayment, req.AmountPayment), cancellationToken: token);
+        await context.SaveChangesAsync(token);
+        return ResponseBaseModel.CreateSuccess("Ok");
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<PaymentOrderRetailLinkModelDB>> SelectPaymentsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<PaymentOrderRetailLinkModelDB>> SelectPaymentsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectPaymentsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<PaymentOrderRetailLinkModelDB> q = context.PaymentsOrdersLinks.AsQueryable();
+
+        bool
+            forOrders = req.Payload?.OrdersIds is not null && req.Payload.OrdersIds.Length != 0,
+            forPayments = req.Payload?.PaymentsIds is not null && req.Payload.PaymentsIds.Length != 0;
+
+        if (forOrders)
+            q = q.Where(x => req.Payload!.OrdersIds!.Contains(x.OrderDocumentId));
+
+        if (forPayments)
+            q = q.Where(x => req.Payload!.PaymentsIds!.Contains(x.PaymentDocumentId));
+
+        IQueryable<PaymentOrderRetailLinkModelDB> pq = q
+            .OrderBy(x => x.OrderDocumentId)
+            .ThenBy(x => x.PaymentDocumentId)
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = (forOrders && forPayments) || (!forOrders && !forPayments)
+                            ? await pq.Include(x => x.PaymentDocument).Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
+                            : forOrders
+                                ? await pq.Include(x => x.PaymentDocument).ToListAsync(cancellationToken: token)
+                                : await pq.Include(x => x.OrderDocument!).ToListAsync(cancellationToken: token)
+        };
     }
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(DeletePaymentOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        int res = await context.PaymentsOrdersLinks
+             .Where(x => x.Id == req.OrderPaymentLinkId || (x.OrderDocumentId == req.OrderId && x.PaymentDocumentId == req.PaymentId))
+             .ExecuteDeleteAsync(cancellationToken: token);
+
+        return res == 0
+            ? ResponseBaseModel.CreateInfo("Объект уже удалён")
+            : ResponseBaseModel.CreateSuccess("Удалено");
     }
     #endregion
 
@@ -1139,25 +1196,84 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateOrderStatusDocumentAsync(OrderStatusRetailDocumentModelDB req, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        req.DateOperation = req.DateOperation.SetKindUtc();
+        req.OrderDocument = null;
+        req.Name = req.Name.Trim();
+        req.CreatedAtUTC = DateTime.UtcNow;
+
+        await context.OrdersStatuses.AddAsync(req, token);
+        await context.SaveChangesAsync(token);
+
+        await context.RetailOrders
+            .Where(x => x.Id == req.OrderDocumentId)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.StatusDocument, context.OrdersStatuses.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+
+        return new() { Response = req.Id };
     }
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateOrderStatusDocumentAsync(OrderStatusRetailDocumentModelDB req, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        req.Name = req.Name.Trim();
+        await context.OrdersStatuses
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Name, req.Name)
+                .SetProperty(p => p.StatusDocument, req.StatusDocument)
+                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
+
+        await context.RetailOrders
+            .Where(x => x.Id == req.OrderDocumentId)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.StatusDocument, context.OrdersStatuses.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Ok");
     }
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<OrderStatusRetailDocumentModelDB>> SelectOrderDocumentStatusesAsync(TPaginationRequestStandardModel<SelectOrderStatusesRetailDocumentsRequestModel> req, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<OrderStatusRetailDocumentModelDB>? q = context.OrdersStatuses.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => x.Name.Contains(req.FindQuery));
+
+        IQueryable<OrderStatusRetailDocumentModelDB>? pq = q
+            .OrderBy(x => x.DateOperation)
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = await pq.ToListAsync(cancellationToken: token)
+        };
     }
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteOrderStatusDocumentAsync(int statusId, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<OrderStatusRetailDocumentModelDB> q = context.OrdersStatuses.Where(x => x.Id == statusId);
+        int deliveryDocumentId = await q.Select(x => x.OrderDocumentId).FirstAsync(cancellationToken: token);
+
+        await q.ExecuteDeleteAsync(cancellationToken: token);
+
+        await context.RetailOrders
+            .Where(x => x.Id == deliveryDocumentId)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.StatusDocument, context.OrdersStatuses.Where(y => y.OrderDocumentId == deliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Строка-статус успешно удалена");
     }
     #endregion
 
@@ -1374,6 +1490,89 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .Include(x => x.ToWallet).ThenInclude(x => x!.WalletType)
                 .ToListAsync(cancellationToken: token)
         };
+    }
+
+
+    #endregion
+
+    #region Conversions orders link`s
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> CreateConversionOrderLinkDocumentAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        if (await context.ConversionsOrdersLinksRetail.AnyAsync(x => x.ConversionDocumentId == req.ConversionDocumentId && x.OrderDocumentId == req.OrderDocumentId, cancellationToken: token))
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Warning, Text = "Документ уже добавлен" }] };
+
+        req.OrderDocument = null;
+        req.ConversionDocument = null;
+
+        await context.ConversionsOrdersLinksRetail.AddAsync(req, token);
+        await context.SaveChangesAsync(token);
+        return new() { Response = req.Id };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        await context.ConversionsOrdersLinksRetail
+            .Where(x => x.Id == req.Id || (req.OrderDocumentId == x.OrderDocumentId && req.ConversionDocumentId == x.ConversionDocumentId))
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.AmountPayment, req.AmountPayment), cancellationToken: token);
+        await context.SaveChangesAsync(token);
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<ConversionOrderRetailLinkModelDB>> SelectConversionsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectConversionsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<ConversionOrderRetailLinkModelDB> q = context.ConversionsOrdersLinksRetail.AsQueryable();
+
+        bool
+            forOrders = req.Payload?.OrdersIds is not null && req.Payload.OrdersIds.Length != 0,
+            forConversions = req.Payload?.ConversionsIds is not null && req.Payload.ConversionsIds.Length != 0;
+
+        if (forOrders)
+            q = q.Where(x => req.Payload!.OrdersIds!.Contains(x.OrderDocumentId));
+
+        if (forConversions)
+            q = q.Where(x => req.Payload!.ConversionsIds!.Contains(x.ConversionDocumentId));
+
+        IQueryable<ConversionOrderRetailLinkModelDB> pq = q
+            .OrderBy(x => x.OrderDocumentId)
+            .ThenBy(x => x.ConversionDocumentId)
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = (forOrders && forConversions) || (!forOrders && !forConversions)
+                            ? await pq.Include(x => x.ConversionDocument).Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
+                            : forOrders
+                                ? await pq.Include(x => x.ConversionDocument).ToListAsync(cancellationToken: token)
+                                : await pq.Include(x => x.OrderDocument!).ToListAsync(cancellationToken: token)
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        int res = await context.ConversionsOrdersLinksRetail
+             .Where(x => x.Id == req.OrderConversionLinkId || (x.OrderDocumentId == req.OrderId && x.ConversionDocumentId == req.ConversionId))
+             .ExecuteDeleteAsync(cancellationToken: token);
+
+        return res == 0
+            ? ResponseBaseModel.CreateInfo("Объект уже удалён")
+            : ResponseBaseModel.CreateSuccess("Удалено");
     }
     #endregion
 }

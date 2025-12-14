@@ -6,94 +6,44 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.Retail.OrdersDeliveriesLinks;
+namespace BlazorLib.Components.Retail.OrdersLinks;
 
 /// <summary>
 /// OrdersDeliveriesLinksTableComponent
 /// </summary>
-public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBaseModel
+public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponent<RetailDeliveryOrderLinkModelDB>
 {
-    [Inject]
-    IRetailService RetailRepo { get; set; } = default!;
-
-    /// <inheritdoc/>
-    [Parameter]
-    public int OrderId { get; set; }
-
     /// <inheritdoc/>
     [Parameter]
     public int DeliveryId { get; set; }
 
-    /// <inheritdoc/>
-    [Parameter]
-    public Action? ReloadDeliveriesOrdersLincs { get; set; }
-
-    /// <inheritdoc/>
-    [CascadingParameter(Name = "ClientId")]
-    public string? ClientId { get; set; }
-
 
     bool
         _visibleIncludeExistDelivery,
-        _visibleIncludeOrder,
-        _visibleCreateNewOrder,
         _visibleCreateNewDelivery;
 
     decimal fullScale;
-    MudTable<RetailDeliveryOrderLinkModelDB>? tableRef;
-    int? initDeleteRow;
-    RetailDeliveryOrderLinkModelDB? elementBeforeEdit;
 
 
-    readonly static DialogOptions _dialogOptions = new()
+    async Task DeleteRow(int rowLinkId)
     {
-        FullWidth = true,
-        MaxWidth = MaxWidth.ExtraLarge,
-        CloseButton = true,
-    };
+        if (!CanDeleteRow(rowLinkId))
+            return;
 
-    async Task DeleteRow(int rowStatusId)
-    {
-        if (initDeleteRow is null)
-        {
-            initDeleteRow = rowStatusId;
-            return;
-        }
-        if (initDeleteRow != rowStatusId)
-        {
-            initDeleteRow = null;
-            return;
-        }
         DeleteDeliveryOrderLinkRetailDocumentsRequestModel req = new()
         {
-            OrderDeliveryLinkId = initDeleteRow.Value
+            OrderDeliveryLinkId = initDeleteRow
         };
         await SetBusyAsync();
 
         ResponseBaseModel res = await RetailRepo.DeleteDeliveryOrderLinkDocumentAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
-        initDeleteRow = null;
-        if (tableRef is not null)
-            await tableRef.ReloadServerData();
 
-        await SetBusyAsync(false);
-        if (ReloadDeliveriesOrdersLincs is not null)
-            ReloadDeliveriesOrdersLincs();
-    }
-
-    void BackupItem(object element)
-    {
-        initDeleteRow = null;
-        if (element is RetailDeliveryOrderLinkModelDB other)
-        {
-            elementBeforeEdit = GlobalTools.CreateDeepCopy(other)!;
-        }
+        await DeleteRowFinalize();
     }
 
     async void ItemHasBeenCommitted(object element)
     {
-        initDeleteRow = null;
-
         if (element is RetailDeliveryOrderLinkModelDB other)
         {
             RetailDeliveryOrderLinkModelDB req = new()
@@ -110,18 +60,13 @@ public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBa
                 return;
             }
 
-            if (tableRef is not null)
-                await tableRef.ReloadServerData();
-
-            await SetBusyAsync(false);
-            if (ReloadDeliveriesOrdersLincs is not null)
-                ReloadDeliveriesOrdersLincs();
+            await ItemHasBeenCommittedFinalize();
         }
     }
 
     void ResetItemToOriginalValues(object element)
     {
-        initDeleteRow = null;
+        initDeleteRow = 0;
         if (elementBeforeEdit is null)
             return;
 
@@ -129,15 +74,7 @@ public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBa
             other.WeightShipping = elementBeforeEdit.WeightShipping;
     }
 
-    void IncludeExistDeliveryOpenDialog()
-    {
-        _visibleIncludeExistDelivery = true;
-    }
-
-    void IncludeExistOrderOpenDialog()
-    {
-        _visibleIncludeOrder = true;
-    }
+    void IncludeExistDeliveryOpenDialog() => _visibleIncludeExistDelivery = true;
 
     async void SelectOrderRowAction(TableRowClickEventArgs<DocumentRetailModelDB> tableRow)
     {

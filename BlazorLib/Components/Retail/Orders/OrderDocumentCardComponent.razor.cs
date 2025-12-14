@@ -32,6 +32,10 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
     public int InjectToDeliveryId { get; set; }
 
     /// <inheritdoc/>
+    [Parameter]
+    public int InjectToPaymentId { get; set; }
+
+    /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
 

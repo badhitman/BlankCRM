@@ -10,7 +10,7 @@ namespace SharedLib;
 /// <summary>
 /// RetailDeliveryOrderLinkModelDB
 /// </summary>
-[Index(nameof(OrderDocumentId), nameof(DeliveryDocumentId), IsUnique = true)]
+[Index(nameof(OrderDocumentId), nameof(DeliveryDocumentId), IsUnique = true), Index(nameof(Name))]
 public class RetailDeliveryOrderLinkModelDB
 {
     /// <summary>
@@ -23,6 +23,9 @@ public class RetailDeliveryOrderLinkModelDB
     /// Вес отправления
     /// </summary>
     public decimal WeightShipping { get; set; }
+
+    /// <inheritdoc/>
+    public string? Name { get; set; }
 
     /// <inheritdoc/>
     public DocumentRetailModelDB? OrderDocument { get; set; }

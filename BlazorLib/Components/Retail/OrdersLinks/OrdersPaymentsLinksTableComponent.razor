@@ -1,6 +1,7 @@
-﻿@inherits BlazorBusyComponentBaseModel
+﻿@inherits OrderLinkBaseComponent<PaymentOrderRetailLinkModelDB>
 
 @using BlazorLib.Components.Retail.Delivery
+@using BlazorLib.Components.Retail.Payments
 @using MudBlazor
 
 <MudTable @ref=tableRef
@@ -13,12 +14,12 @@
           RowEditCommit="ItemHasBeenCommitted"
           RowEditCancel="ResetItemToOriginalValues">
     <ToolBarContent>
-        @if (fullScale > 0 && (OrderId > 0 || DeliveryId > 0 && (DeliveryId == 0 || OrderId == 0)))
+        @if (fullScale > 0 && (OrderId > 0 || PaymentId > 0 && (PaymentId == 0 || OrderId == 0)))
         {
             <span class="lead">Общий вес: <strong>@fullScale</strong></span>
         }
         <MudSpacer />
-        @if (DeliveryId > 0)
+        @if (PaymentId > 0)
         {
             <MudButton OnClick="() => _visibleCreateNewOrder = true"
                        Class="me-2"
@@ -35,14 +36,14 @@
         }
         @if (OrderId > 0)
         {
-            <MudButton OnClick="() => _visibleCreateNewDelivery = true"
+            <MudButton OnClick="() => _visibleCreateNewPayment = true"
                        Class="me-2"
                        Variant="Variant.Outlined"
                        EndIcon="@Icons.Material.Filled.Add"
-                       IconColor="Color.Secondary">Новая доставка</MudButton>
+                       IconColor="Color.Secondary">Новый платёж</MudButton>
 
-            <MudTooltip Text="Добавить заказ в созданную ранее доставку">
-                <MudButton OnClick=IncludeExistDeliveryOpenDialog
+            <MudTooltip Text="Добавить заказ в созданный ранее платёж">
+                <MudButton OnClick=IncludeExistPaymentOpenDialog
                            Variant="Variant.Outlined"
                            EndIcon="@Icons.Material.Filled.DeviceHub"
                            IconColor="Color.Secondary">Включить в доставку</MudButton>
@@ -54,12 +55,12 @@
         {
             <col />
         }
-        @if (DeliveryId <= 0)
+        @if (PaymentId <= 0)
         {
             <col />
         }
         <col />
-        <col style="@(initDeleteRow.HasValue ? "width:250px;" : "width:50px;")" />
+        <col style="@(initDeleteRow > 0 ? "width:250px;" : "width:50px;")" />
         <col style="width:50px;" />
     </ColGroup>
     <HeaderContent>
@@ -67,7 +68,7 @@
         {
             <MudTh>Заказ</MudTh>
         }
-        @if (DeliveryId <= 0)
+        @if (PaymentId <= 0)
         {
             <MudTh>Доставка</MudTh>
         }
@@ -79,16 +80,16 @@
         {
             <MudTd DataLabel="Заказ"><a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a></MudTd>
         }
-        @if (DeliveryId <= 0)
+        @if (PaymentId <= 0)
         {
-            <MudTd DataLabel="Доставка"><a href="/retail/delivery-document/@context.DeliveryDocumentId">@context.DeliveryDocument?.ToString()</a></MudTd>
+            <MudTd DataLabel="Доставка"><a href="/retail/payment-document/@context.PaymentDocumentId">@context.PaymentDocument?.ToString()</a></MudTd>
         }
-        <MudTd Class="@(context.WeightShipping <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">@context.WeightShipping</MudTd>
+        <MudTd Class="@(context.AmountPayment <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">@context.AmountPayment</MudTd>
         <MudTd>
-            @if (initDeleteRow.HasValue && initDeleteRow == context.Id)
+            @if (initDeleteRow == context.Id)
             {
                 <span title="кликните для подтверждения удаления" class="me-2 badge text-bg-danger cursor-pointer" @onclick="() => DeleteRow(context.Id)">Подтвердить удаление</span>
-                <span title="кликните для отмены удаления" class="text-bg-secondary cursor-pointer badge" @onclick="() => initDeleteRow = null">отмена</span>
+                <span title="кликните для отмены удаления" class="text-bg-secondary cursor-pointer badge" @onclick="() => initDeleteRow = 0">отмена</span>
             }
             else
             {
@@ -101,12 +102,12 @@
         {
             <MudTd DataLabel="Заказ">@context.OrderDocument?.ToString()</MudTd>
         }
-        @if (DeliveryId <= 0)
+        @if (PaymentId <= 0)
         {
-            <MudTd DataLabel="Доставка">@context.DeliveryDocument?.ToString()</MudTd>
+            <MudTd DataLabel="Доставка">@context.PaymentDocument?.ToString()</MudTd>
         }
         <MudTd DataLabel="Вес" colspan=2>
-            <input type="number" class="form-control" @bind="context.WeightShipping" />
+            <input type="number" class="form-control" @bind="context.AmountPayment" />
         </MudTd>
     </RowEditingTemplate>
     <NoRecordsContent>
@@ -128,11 +129,11 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Value="ClientId" Name="ClientId">
-            <OrderDocumentCardComponent InjectToDeliveryId="DeliveryId" />
+            <OrderDocumentCardComponent InjectToPaymentId="PaymentId" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>
-<MudDialog @bind-Visible="_visibleCreateNewDelivery" Options="_dialogOptions">
+<MudDialog @bind-Visible="_visibleCreateNewPayment" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новая доставка (розница)
@@ -140,12 +141,12 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Name="ClientId" Value="ClientId">
-            <DeliveryDocumentComponent InjectToOrderId="OrderId" />
+            <PaymentDocumentComponent InjectToOrderId="OrderId" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>
 
-<MudDialog @bind-Visible="_visibleIncludeExistDelivery" Options="_dialogOptions">
+<MudDialog @bind-Visible="_visibleIncludeExistPayment" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите доставку (розница)
@@ -153,7 +154,7 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Name="ClientId" Value="ClientId">
-            <DeliveriesDocumentsManageComponent RowClickEventHandler="SelectDeliveryRowAction" ExcludeOrderId="OrderId" />
+            <PaymentsManageComponent RowClickEventHandler="SelectPaymentRowAction" ExcludeOrderId="OrderId" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>
@@ -165,7 +166,7 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Name="ClientId" Value="ClientId">
-            <RetailOrdersListComponent RowClickEventHandler="SelectOrderRowAction" ExcludeDeliveryId="DeliveryId" />
+            <RetailOrdersListComponent RowClickEventHandler="SelectOrderRowAction" ExcludePaymentId="PaymentId" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>

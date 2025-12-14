@@ -1,6 +1,6 @@
 ﻿@using static SharedLib.GlobalStaticConstantsRoutes
 @using BlazorLib.Components.Retail.Delivery
-@using BlazorLib.Components.Retail.OrdersDeliveriesLinks
+@using BlazorLib.Components.Retail.OrdersLinks
 @using BlazorLib.Components.Retail.Payments
 @using MudBlazor
 
@@ -84,6 +84,9 @@ else
                 </MudTabPanel>
                 <MudTabPanel Text="Отгрузка/Доставка" Disabled="@(OrderId < 1)">
                     <OrdersDeliveriesLinksTableComponent OrderId="OrderId" />
+                </MudTabPanel>
+                <MudTabPanel Text="Платежи" Disabled="@(OrderId < 1)">
+                    <OrdersPaymentsLinksTableComponent OrderId="OrderId" />
                 </MudTabPanel>
                 <MudTabPanel Text="Заметки" Disabled="@(OrderId < 1)">
                     <TinyMCE.Blazor.Editor @bind-Value="editDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />

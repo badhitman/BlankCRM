@@ -25,6 +25,10 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
     public int PaymentId { get; set; }
 
     /// <inheritdoc/>
+    [Parameter]
+    public int InjectToOrderId { get; set; }
+
+    /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
     public string? ClientId { get; set; }
 

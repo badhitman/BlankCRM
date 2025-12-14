@@ -19,6 +19,9 @@ public class PaymentOrderRetailLinkModelDB
     [Key]
     public int Id { get; set; }
 
+    /// <inheritdoc/>
+    public string? Name { get; set; }
+
     /// <summary>
     /// Сумма оплаты
     /// </summary>
