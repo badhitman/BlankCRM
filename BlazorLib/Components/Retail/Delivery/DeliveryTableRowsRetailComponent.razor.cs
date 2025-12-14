@@ -109,7 +109,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
         if (res.Response is not null && res.Response.Count != 0)
         {
-            TResponseModel<RetailDocumentModelDB[]> readOrders = await RetailRepo.RetailDocumentsGetAsync(new() { Ids = [.. res.Response.Select(x => x.OrderDocumentId)], IncludeDataExternal = true });
+            TResponseModel<DocumentRetailModelDB[]> readOrders = await RetailRepo.RetailDocumentsGetAsync(new() { Ids = [.. res.Response.Select(x => x.OrderDocumentId)], IncludeDataExternal = true });
             SnackBarRepo.ShowMessagesResponse(readOrders.Messages);
 
             readOrders.Response?.SelectMany(x => x.Rows!)

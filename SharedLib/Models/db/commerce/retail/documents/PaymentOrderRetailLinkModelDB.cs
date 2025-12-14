@@ -8,10 +8,10 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// RetailPaymentOrderLinkModelDB
+/// PaymentOrderRetailLinkModelDB
 /// </summary>
 [Index(nameof(OrderDocumentId), nameof(PaymentDocumentId), IsUnique = true)]
-public class RetailPaymentOrderLinkModelDB
+public class PaymentOrderRetailLinkModelDB
 {
     /// <summary>
     /// Идентификатор/Key
@@ -25,7 +25,7 @@ public class RetailPaymentOrderLinkModelDB
     public decimal AmountPayment { get; set; }
 
     /// <inheritdoc/>
-    public RetailDocumentModelDB? OrderDocument { get; set; }
+    public DocumentRetailModelDB? OrderDocument { get; set; }
     /// <inheritdoc/>
     public int OrderDocumentId { get; set; }
 

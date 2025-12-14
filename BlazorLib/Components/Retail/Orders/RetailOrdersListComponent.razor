@@ -18,7 +18,7 @@
     <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
 </MudStack>
 <MudTable ServerData="ServerReload"
-          T="RetailDocumentModelDB"
+          T="DocumentRetailModelDB"
           OnRowClick="RowClickEvent"
           RowClass="@(RowClickEventHandler is null ? "" : "cursor-pointer")"
           Dense Hover

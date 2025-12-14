@@ -11,7 +11,7 @@ namespace SharedLib;
 /// RetailDocumentModelDB
 /// </summary>
 [Index(nameof(BuyerIdentityUserId)), Index(nameof(WarehouseId)), Index(nameof(DateDocument))]
-public class RetailDocumentModelDB : OrderDocumentBaseModel
+public class DocumentRetailModelDB : OrderDocumentBaseModel
 {
     /// <inheritdoc/>
     [Required]
@@ -37,6 +37,11 @@ public class RetailDocumentModelDB : OrderDocumentBaseModel
 
     /// <inheritdoc/>
     public List<RowOfRetailOrderDocumentModelDB>? Rows { get; set; }
+
+    /// <summary>
+    /// Orders
+    /// </summary>
+    public List<ConversionOrderRetailLinkModelDB>? Conversions { get; set; }
 
     /// <inheritdoc/>
     public override string ToString()

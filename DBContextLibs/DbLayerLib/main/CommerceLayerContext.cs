@@ -176,13 +176,13 @@ public partial class CommerceLayerContext : DbContext
     public DbSet<PaymentDocumentModelDb> PaymentsB2B { get; set; } = default!;
 
 
-    #region retail
+    #region Retail
 
-    #region order`s
+    #region Order`s
     /// <summary>
     /// RetailOrders
     /// </summary>
-    public DbSet<RetailDocumentModelDB> RetailOrders { get; set; } = default!;
+    public DbSet<DocumentRetailModelDB> RetailOrders { get; set; } = default!;
 
     /// <summary>
     /// RowsRetailsOrders
@@ -200,7 +200,7 @@ public partial class CommerceLayerContext : DbContext
     public DbSet<OrderStatusRetailDocumentModelDB> OrdersStatuses { get; set; } = default!;
     #endregion
 
-    #region delivery
+    #region Delivery
     /// <summary>
     /// DeliveryDocuments
     /// </summary>
@@ -217,7 +217,7 @@ public partial class CommerceLayerContext : DbContext
     public DbSet<DeliveryStatusRetailDocumentModelDB> DeliveryStatusesRetailDocuments { get; set; } = default!;
     #endregion
 
-    #region payment`s
+    #region Payment`s
     /// <summary>
     /// Оплаты
     /// </summary>
@@ -226,10 +226,10 @@ public partial class CommerceLayerContext : DbContext
     /// <summary>
     /// Связи платежей с заказами (retail)
     /// </summary>
-    public DbSet<RetailPaymentOrderLinkModelDB> PaymentsOrdersLinks { get; set; } = default!;
+    public DbSet<PaymentOrderRetailLinkModelDB> PaymentsOrdersLinks { get; set; } = default!;
     #endregion
 
-    #region wallet`s
+    #region Wallet`s
     /// <summary>
     /// Типы кошельков
     /// </summary>
@@ -239,11 +239,18 @@ public partial class CommerceLayerContext : DbContext
     /// Кошельки
     /// </summary>
     public DbSet<WalletRetailModelDB> WalletsRetail { get; set; } = default!;
+    #endregion
 
+    #region Conversion`s
     /// <summary>
     /// Операции конвертации/перевода между кошельками
     /// </summary>
     public DbSet<WalletConversionRetailDocumentModelDB> ConversionsDocumentsWalletsRetail { get; set; } = default!;
+
+    /// <summary>
+    /// ConversionsOrdersLinksRetail
+    /// </summary>
+    public DbSet<ConversionOrderRetailLinkModelDB> ConversionsOrdersLinksRetail { get; set; } = default!;
     #endregion
 
     #endregion

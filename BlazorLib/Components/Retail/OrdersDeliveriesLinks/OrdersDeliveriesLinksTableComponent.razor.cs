@@ -139,7 +139,7 @@ public partial class OrdersDeliveriesLinksTableComponent : BlazorBusyComponentBa
         _visibleIncludeOrder = true;
     }
 
-    async void SelectOrderRowAction(TableRowClickEventArgs<RetailDocumentModelDB> tableRow)
+    async void SelectOrderRowAction(TableRowClickEventArgs<DocumentRetailModelDB> tableRow)
     {
         _visibleIncludeOrder = false;
 

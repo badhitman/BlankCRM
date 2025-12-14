@@ -35,7 +35,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter]
-    public Action<TableRowClickEventArgs<RetailDocumentModelDB>>? RowClickEventHandler { get; set; }
+    public Action<TableRowClickEventArgs<DocumentRetailModelDB>>? RowClickEventHandler { get; set; }
 
 
     /// <summary>
@@ -47,7 +47,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     /// </summary>
     protected List<UserInfoModel> UsersCache = [];
 
-    MudTable<RetailDocumentModelDB>? tableRef;
+    MudTable<DocumentRetailModelDB>? tableRef;
     bool _visibleCreateNewOrder;
     readonly DialogOptions _dialogOptions = new()
     {
@@ -85,7 +85,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         _visibleCreateNewOrder = true;
     }
 
-    void RowClickEvent(TableRowClickEventArgs<RetailDocumentModelDB> tableRowClickEventArgs)
+    void RowClickEvent(TableRowClickEventArgs<DocumentRetailModelDB> tableRowClickEventArgs)
     {
         if (RowClickEventHandler is not null)
             RowClickEventHandler(tableRowClickEventArgs);
@@ -127,7 +127,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
             }
     }
 
-    async Task<TableData<RetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
+    async Task<TableData<DocumentRetailModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req = new()
         {
@@ -153,7 +153,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         }
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<RetailDocumentModelDB> res = await RetailRepo.SelectRetailDocumentsAsync(req, token);
+        TPaginationResponseModel<DocumentRetailModelDB> res = await RetailRepo.SelectRetailDocumentsAsync(req, token);
 
         if (res.Response is not null)
         {
@@ -173,7 +173,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         }
 
         await SetBusyAsync(false, token: token);
-        return new TableData<RetailDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        return new TableData<DocumentRetailModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 
     async void OnSearch(string text)

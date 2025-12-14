@@ -25,6 +25,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     DeliveryCode = table.Column<string>(type: "text", nullable: true),
                     ShippingCost = table.Column<decimal>(type: "numeric", nullable: false),
                     WeightShipping = table.Column<decimal>(type: "numeric", nullable: false),
+                    WarehouseId = table.Column<int>(type: "integer", nullable: false),
                     KladrCode = table.Column<string>(type: "text", nullable: true),
                     KladrTitle = table.Column<string>(type: "text", nullable: true),
                     AddressUserComment = table.Column<string>(type: "text", nullable: true),
@@ -37,24 +38,6 @@ namespace DbPostgreLib.Migrations.Commerce
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeliveryRetailDocuments", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DeliveryRetailServices",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
-                    SortIndex = table.Column<int>(type: "integer", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DeliveryRetailServices", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,7 +64,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     BaseUnit = table.Column<int>(type: "integer", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
@@ -137,7 +120,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Name = table.Column<string>(type: "text", nullable: false),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    StatusDocument = table.Column<int>(type: "integer", nullable: false),
+                    StatusDocument = table.Column<int>(type: "integer", nullable: true),
                     AuthorIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     ExternalDocumentId = table.Column<string>(type: "text", nullable: true),
                     HelpDeskId = table.Column<int>(type: "integer", nullable: true),
@@ -181,7 +164,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Version = table.Column<Guid>(type: "uuid", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
                 },
@@ -228,7 +211,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
                 },
@@ -304,7 +287,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Name = table.Column<string>(type: "text", nullable: false),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    StatusDocument = table.Column<int>(type: "integer", nullable: false),
+                    StatusDocument = table.Column<int>(type: "integer", nullable: true),
                     AuthorIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     ExternalDocumentId = table.Column<string>(type: "text", nullable: true),
                     HelpDeskId = table.Column<int>(type: "integer", nullable: true),
@@ -350,6 +333,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    WeightShipping = table.Column<decimal>(type: "numeric", nullable: false),
                     OrderDocumentId = table.Column<int>(type: "integer", nullable: false),
                     DeliveryDocumentId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -364,6 +348,30 @@ namespace DbPostgreLib.Migrations.Commerce
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_DeliveriesOrdersLinks_RetailOrders_OrderDocumentId",
+                        column: x => x.OrderDocumentId,
+                        principalTable: "RetailOrders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrdersStatuses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DateOperation = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    StatusDocument = table.Column<int>(type: "integer", nullable: false),
+                    OrderDocumentId = table.Column<int>(type: "integer", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrdersStatuses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrdersStatuses_RetailOrders_OrderDocumentId",
                         column: x => x.OrderDocumentId,
                         principalTable: "RetailOrders",
                         principalColumn: "Id",
@@ -411,7 +419,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Name = table.Column<string>(type: "text", nullable: false),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    StatusDocument = table.Column<int>(type: "integer", nullable: false),
+                    StatusDocument = table.Column<int>(type: "integer", nullable: true),
                     AuthorIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     ExternalDocumentId = table.Column<string>(type: "text", nullable: true),
                     HelpDeskId = table.Column<int>(type: "integer", nullable: true),
@@ -450,7 +458,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     DateScheduleCalendar = table.Column<string>(type: "character varying(10)", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
-                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
@@ -543,7 +551,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     PriceRule = table.Column<decimal>(type: "numeric", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
                 },
@@ -676,7 +684,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Weekday = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
-                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
@@ -859,6 +867,60 @@ namespace DbPostgreLib.Migrations.Commerce
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ConversionsOrdersLinksRetail",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AmountPayment = table.Column<decimal>(type: "numeric", nullable: false),
+                    OrderDocumentId = table.Column<int>(type: "integer", nullable: false),
+                    ConversionDocumentId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConversionsOrdersLinksRetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConversionsOrdersLinksRetail_ConversionsDocumentsWalletsRet~",
+                        column: x => x.ConversionDocumentId,
+                        principalTable: "ConversionsDocumentsWalletsRetail",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConversionsOrdersLinksRetail_RetailOrders_OrderDocumentId",
+                        column: x => x.OrderDocumentId,
+                        principalTable: "RetailOrders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PaymentsOrdersLinks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AmountPayment = table.Column<decimal>(type: "numeric", nullable: false),
+                    OrderDocumentId = table.Column<int>(type: "integer", nullable: false),
+                    PaymentDocumentId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PaymentsOrdersLinks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PaymentsOrdersLinks_PaymentsRetailDocuments_PaymentDocument~",
+                        column: x => x.PaymentDocumentId,
+                        principalTable: "PaymentsRetailDocuments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PaymentsOrdersLinks_RetailOrders_OrderDocumentId",
+                        column: x => x.OrderDocumentId,
+                        principalTable: "RetailOrders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AttendancesReg_CreatedAtUTC",
                 table: "AttendancesReg",
@@ -1003,14 +1065,26 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "ToWalletId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConversionsOrdersLinksRetail_ConversionDocumentId",
+                table: "ConversionsOrdersLinksRetail",
+                column: "ConversionDocumentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConversionsOrdersLinksRetail_OrderDocumentId_ConversionDocu~",
+                table: "ConversionsOrdersLinksRetail",
+                columns: new[] { "OrderDocumentId", "ConversionDocumentId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DeliveriesOrdersLinks_DeliveryDocumentId",
                 table: "DeliveriesOrdersLinks",
                 column: "DeliveryDocumentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeliveriesOrdersLinks_OrderDocumentId",
+                name: "IX_DeliveriesOrdersLinks_OrderDocumentId_DeliveryDocumentId",
                 table: "DeliveriesOrdersLinks",
-                column: "OrderDocumentId");
+                columns: new[] { "OrderDocumentId", "DeliveryDocumentId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeliveryRetailDocuments_AddressUserComment",
@@ -1068,19 +1142,9 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "RecipientIdentityUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeliveryRetailServices_CreatedAtUTC",
-                table: "DeliveryRetailServices",
-                column: "CreatedAtUTC");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DeliveryRetailServices_IsDisabled",
-                table: "DeliveryRetailServices",
-                column: "IsDisabled");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DeliveryRetailServices_LastUpdatedAtUTC",
-                table: "DeliveryRetailServices",
-                column: "LastUpdatedAtUTC");
+                name: "IX_DeliveryRetailDocuments_WarehouseId",
+                table: "DeliveryRetailDocuments",
+                column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeliveryStatusesRetailDocuments_CreatedAtUTC",
@@ -1226,6 +1290,36 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrdersStatuses_CreatedAtUTC",
+                table: "OrdersStatuses",
+                column: "CreatedAtUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrdersStatuses_DateOperation",
+                table: "OrdersStatuses",
+                column: "DateOperation");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrdersStatuses_LastUpdatedAtUTC",
+                table: "OrdersStatuses",
+                column: "LastUpdatedAtUTC");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrdersStatuses_Name",
+                table: "OrdersStatuses",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrdersStatuses_OrderDocumentId",
+                table: "OrdersStatuses",
+                column: "OrderDocumentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrdersStatuses_StatusDocument",
+                table: "OrdersStatuses",
+                column: "StatusDocument");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Organizations_INN",
                 table: "Organizations",
                 column: "INN",
@@ -1251,6 +1345,17 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_PaymentsB2B_OrderId",
                 table: "PaymentsB2B",
                 column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsOrdersLinks_OrderDocumentId_PaymentDocumentId",
+                table: "PaymentsOrdersLinks",
+                columns: new[] { "OrderDocumentId", "PaymentDocumentId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsOrdersLinks_PaymentDocumentId",
+                table: "PaymentsOrdersLinks",
+                column: "PaymentDocumentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentsRetailDocuments_AuthorUserIdentity",
@@ -1589,13 +1694,10 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "Contractors");
 
             migrationBuilder.DropTable(
-                name: "ConversionsDocumentsWalletsRetail");
+                name: "ConversionsOrdersLinksRetail");
 
             migrationBuilder.DropTable(
                 name: "DeliveriesOrdersLinks");
-
-            migrationBuilder.DropTable(
-                name: "DeliveryRetailServices");
 
             migrationBuilder.DropTable(
                 name: "DeliveryStatusesRetailDocuments");
@@ -1607,10 +1709,13 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "OffersAvailability");
 
             migrationBuilder.DropTable(
+                name: "OrdersStatuses");
+
+            migrationBuilder.DropTable(
                 name: "PaymentsB2B");
 
             migrationBuilder.DropTable(
-                name: "PaymentsRetailDocuments");
+                name: "PaymentsOrdersLinks");
 
             migrationBuilder.DropTable(
                 name: "PricesRules");
@@ -1634,7 +1739,10 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "WeeklySchedules");
 
             migrationBuilder.DropTable(
-                name: "WalletsRetail");
+                name: "ConversionsDocumentsWalletsRetail");
+
+            migrationBuilder.DropTable(
+                name: "PaymentsRetailDocuments");
 
             migrationBuilder.DropTable(
                 name: "DeliveryRetailDocuments");
@@ -1652,7 +1760,7 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "Offers");
 
             migrationBuilder.DropTable(
-                name: "WalletsRetailTypes");
+                name: "WalletsRetail");
 
             migrationBuilder.DropTable(
                 name: "Offices");
@@ -1662,6 +1770,9 @@ namespace DbPostgreLib.Migrations.Commerce
 
             migrationBuilder.DropTable(
                 name: "Nomenclatures");
+
+            migrationBuilder.DropTable(
+                name: "WalletsRetailTypes");
 
             migrationBuilder.DropTable(
                 name: "Organizations");

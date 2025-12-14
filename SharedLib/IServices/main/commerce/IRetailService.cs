@@ -67,13 +67,13 @@ public interface IRetailService
 
     #region Payments orders link`s
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreatePaymentOrderLinkDocumentAsync(RetailPaymentOrderLinkModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreatePaymentOrderLinkDocumentAsync(PaymentOrderRetailLinkModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdatePaymentOrderLinkDocumentAsync(RetailPaymentOrderLinkModelDB req, CancellationToken token = default);
+    public Task<ResponseBaseModel> UpdatePaymentOrderLinkDocumentAsync(PaymentOrderRetailLinkModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseModel<RetailPaymentOrderLinkModelDB>> SelectPaymentsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<PaymentOrderRetailLinkModelDB>> SelectPaymentsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(DeletePaymentOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default);
@@ -120,16 +120,16 @@ public interface IRetailService
 
     #region Order`s (document retail)
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateRetailDocumentAsync(DocumentRetailModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default);
+    public Task<ResponseBaseModel> UpdateRetailDocumentAsync(DocumentRetailModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseModel<RetailDocumentModelDB>> SelectRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<DocumentRetailModelDB>> SelectRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<RetailDocumentModelDB[]>> RetailDocumentsGetAsync(RetailDocumentsGetRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<DocumentRetailModelDB[]>> RetailDocumentsGetAsync(RetailDocumentsGetRequestModel req, CancellationToken token = default);
     #endregion
 
     #region Statuses (of order`s document)

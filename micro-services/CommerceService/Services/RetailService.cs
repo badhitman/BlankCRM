@@ -780,7 +780,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
     #region Order`s (document`s)
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateRetailDocumentAsync(DocumentRetailModelDB req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         if (string.IsNullOrWhiteSpace(req.AuthorIdentityUserId))
@@ -840,7 +840,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateRetailDocumentAsync(RetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateRetailDocumentAsync(DocumentRetailModelDB req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -864,10 +864,10 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<RetailDocumentModelDB>> SelectRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<DocumentRetailModelDB>> SelectRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RetailDocumentModelDB> q = context.RetailOrders.AsQueryable();
+        IQueryable<DocumentRetailModelDB> q = context.RetailOrders.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x =>
@@ -896,7 +896,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => x.DateDocument <= req.Payload.End);
         }
 
-        IQueryable<RetailDocumentModelDB> pq = q
+        IQueryable<DocumentRetailModelDB> pq = q
             .OrderBy(x => x.DateDocument)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
@@ -916,13 +916,13 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<RetailDocumentModelDB[]>> RetailDocumentsGetAsync(RetailDocumentsGetRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<DocumentRetailModelDB[]>> RetailDocumentsGetAsync(RetailDocumentsGetRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RetailDocumentModelDB>? q = context.RetailOrders
+        IQueryable<DocumentRetailModelDB>? q = context.RetailOrders
             .Where(x => req.Ids.Contains(x.Id));
 
-        TResponseModel<RetailDocumentModelDB[]> res = new()
+        TResponseModel<DocumentRetailModelDB[]> res = new()
         {
             Response = !req.IncludeDataExternal
                 ? await q.ToArrayAsync(cancellationToken: token)
@@ -1111,19 +1111,19 @@ public class RetailService(IIdentityTransmission identityRepo,
 
     #region Payments orders link`s
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreatePaymentOrderLinkDocumentAsync(RetailPaymentOrderLinkModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreatePaymentOrderLinkDocumentAsync(PaymentOrderRetailLinkModelDB req, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdatePaymentOrderLinkDocumentAsync(RetailPaymentOrderLinkModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdatePaymentOrderLinkDocumentAsync(PaymentOrderRetailLinkModelDB req, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<RetailPaymentOrderLinkModelDB>> SelectPaymentsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<PaymentOrderRetailLinkModelDB>> SelectPaymentsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }

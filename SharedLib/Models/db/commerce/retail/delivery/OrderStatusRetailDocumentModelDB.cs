@@ -25,7 +25,7 @@ public class OrderStatusRetailDocumentModelDB : EntryUpdatedLiteModel
     /// <summary>
     /// OrderDocument
     /// </summary>
-    public RetailDocumentModelDB? OrderDocument { get; set; }
+    public DocumentRetailModelDB? OrderDocument { get; set; }
     /// <summary>
     /// OrderDocument
     /// </summary>

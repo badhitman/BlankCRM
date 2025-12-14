@@ -8,10 +8,10 @@ using System.ComponentModel.DataAnnotations;
 namespace SharedLib;
 
 /// <summary>
-/// RetailDeliveryOrderLinkModelDB
+/// ConversionOrderRetailLinkModelDB
 /// </summary>
-[Index(nameof(OrderDocumentId), nameof(DeliveryDocumentId), IsUnique = true)]
-public class RetailDeliveryOrderLinkModelDB
+[Index(nameof(OrderDocumentId), nameof(ConversionDocumentId), IsUnique = true)]
+public class ConversionOrderRetailLinkModelDB
 {
     /// <summary>
     /// Идентификатор/Key
@@ -20,9 +20,9 @@ public class RetailDeliveryOrderLinkModelDB
     public int Id { get; set; }
 
     /// <summary>
-    /// Вес отправления
+    /// Сумма оплаты
     /// </summary>
-    public decimal WeightShipping { get; set; }
+    public decimal AmountPayment { get; set; }
 
     /// <inheritdoc/>
     public DocumentRetailModelDB? OrderDocument { get; set; }
@@ -31,7 +31,7 @@ public class RetailDeliveryOrderLinkModelDB
 
 
     /// <inheritdoc/>
-    public DeliveryDocumentRetailModelDB? DeliveryDocument { get; set; }
+    public WalletConversionRetailDocumentModelDB? ConversionDocument { get; set; }
     /// <inheritdoc/>
-    public int DeliveryDocumentId { get; set; }
+    public int ConversionDocumentId { get; set; }
 }

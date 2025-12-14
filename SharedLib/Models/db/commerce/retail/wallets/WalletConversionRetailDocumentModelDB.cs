@@ -48,6 +48,11 @@ public class WalletConversionRetailDocumentModelDB : EntryUpdatedLiteModel
     public decimal ToWalletSum { get; set; }
 
     /// <summary>
+    /// Orders
+    /// </summary>
+    public List<ConversionOrderRetailLinkModelDB>? Orders { get; set; }
+
+    /// <summary>
     /// Version
     /// </summary>
     [ConcurrencyCheck]

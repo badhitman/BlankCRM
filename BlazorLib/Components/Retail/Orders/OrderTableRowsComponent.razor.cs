@@ -20,7 +20,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public RetailDocumentModelDB Document { get; set; }
+    public DocumentRetailModelDB Document { get; set; }
 
     /// <summary>
     /// Если true - тогда можно добавлять офферы, которых нет в остатках.

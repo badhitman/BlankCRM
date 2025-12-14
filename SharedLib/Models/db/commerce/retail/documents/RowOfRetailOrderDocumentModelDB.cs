@@ -12,7 +12,7 @@ public class RowOfRetailOrderDocumentModelDB : RowOfRetailOrderDocumentBaseModel
     /// <summary>
     /// Заказ (документ)
     /// </summary>
-    public RetailDocumentModelDB? Order { get; set; }
+    public DocumentRetailModelDB? Order { get; set; }
 
     /// <summary>
     /// Заказ (документ)
