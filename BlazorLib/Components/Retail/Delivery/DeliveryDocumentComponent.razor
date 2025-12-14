@@ -14,7 +14,7 @@
         }
         else
         {
-            @if (totalWeight != editDoc.WeightShipping)
+            @if (editDoc.Id > 0 && totalWeight != editDoc.WeightShipping)
             {
                 <div class="alert alert-warning" role="alert">
                     Вес отправления не совпадает с суммой весов заказов!
