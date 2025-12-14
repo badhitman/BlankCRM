@@ -88,6 +88,9 @@ else
                 <MudTabPanel Text="Платежи" Disabled="@(OrderId < 1)">
                     <OrdersPaymentsLinksTableComponent OrderId="OrderId" />
                 </MudTabPanel>
+                <MudTabPanel Text="Переводы" Disabled="@(OrderId < 1)">
+                    <OrdersConversionsLinksTableComponent OrderId="OrderId" />
+                </MudTabPanel>
                 <MudTabPanel Text="Заметки" Disabled="@(OrderId < 1)">
                     <TinyMCE.Blazor.Editor @bind-Value="editDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />
                 </MudTabPanel>

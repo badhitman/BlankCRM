@@ -39,6 +39,12 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public int? ExcludePaymentId { get; set; }
 
+    /// <summary>
+    /// Скрыть доставку с указанным переводом
+    /// </summary>
+    [Parameter]
+    public int? ExcludeConversionId { get; set; }
+
     /// <inheritdoc/>
     [Parameter]
     public Action<TableRowClickEventArgs<DocumentRetailModelDB>>? RowClickEventHandler { get; set; }

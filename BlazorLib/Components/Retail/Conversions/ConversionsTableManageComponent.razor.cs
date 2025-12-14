@@ -17,12 +17,22 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
     IRetailService RetailRepo { get; set; } = default!;
 
 
+    /// <inheritdoc/>
+    [Parameter]
+    public int ExcludeOrderId { get; set; }
+
+    /// <inheritdoc/>
+    [Parameter]
+    public Action<TableRowClickEventArgs<WalletConversionRetailDocumentModelDB>>? RowClickEventHandler { get; set; }
+
+
+
     bool _visible;
     readonly DialogOptions _dialogOptions = new()
     {
         FullWidth = true,
         MaxWidth = MaxWidth.ExtraLarge,
-        CloseButton = true,         
+        CloseButton = true,
     };
 
 

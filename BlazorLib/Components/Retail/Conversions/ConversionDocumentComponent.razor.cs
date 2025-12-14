@@ -28,6 +28,10 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     [Parameter]
     public int ConversionDocumentId { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public int InjectToOrderId { get; set; }
+
 
     WalletConversionRetailDocumentModelDB? currentDoc, editDoc;
     UserInfoModel? userSender, userRecipient;

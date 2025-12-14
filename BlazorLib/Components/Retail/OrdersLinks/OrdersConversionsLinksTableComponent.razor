@@ -1,5 +1,6 @@
-﻿@inherits OrderLinkBaseComponent<PaymentOrderRetailLinkModelDB>
+﻿@inherits OrderLinkBaseComponent<ConversionOrderRetailLinkModelDB>
 
+@using BlazorLib.Components.Retail.Conversions
 @using BlazorLib.Components.Retail.Delivery
 @using BlazorLib.Components.Retail.Payments
 @using MudBlazor
@@ -14,12 +15,12 @@
           RowEditCommit="ItemHasBeenCommitted"
           RowEditCancel="ResetItemToOriginalValues">
     <ToolBarContent>
-        @if (fullScale > 0 && (OrderId > 0 || PaymentId > 0 && (PaymentId == 0 || OrderId == 0)))
+        @if (fullScale > 0 && (OrderId > 0 || ConversionId > 0 && (ConversionId == 0 || OrderId == 0)))
         {
             <span class="lead">Общий вес: <strong>@fullScale</strong></span>
         }
         <MudSpacer />
-        @if (PaymentId > 0)
+        @if (ConversionId > 0)
         {
             <MudButton OnClick="() => _visibleCreateNewOrder = true"
                        Class="me-2"
@@ -36,14 +37,14 @@
         }
         @if (OrderId > 0)
         {
-            <MudButton OnClick="() => _visibleCreateNewPayment = true"
+            <MudButton OnClick="() => _visibleCreateNewConversion = true"
                        Class="me-2"
                        Variant="Variant.Outlined"
                        EndIcon="@Icons.Material.Filled.Add"
                        IconColor="Color.Secondary">Новый платёж</MudButton>
 
             <MudTooltip Text="Добавить заказ в созданный ранее платёж">
-                <MudButton OnClick=IncludeExistPaymentOpenDialog
+                <MudButton OnClick=IncludeExistConversionOpenDialog
                            Variant="Variant.Outlined"
                            EndIcon="@Icons.Material.Filled.DeviceHub"
                            IconColor="Color.Secondary">Включить в доставку</MudButton>
@@ -55,7 +56,7 @@
         {
             <col />
         }
-        @if (PaymentId <= 0)
+        @if (ConversionId <= 0)
         {
             <col />
         }
@@ -68,9 +69,9 @@
         {
             <MudTh>Заказ</MudTh>
         }
-        @if (PaymentId <= 0)
+        @if (ConversionId <= 0)
         {
-            <MudTh>Платёж</MudTh>
+            <MudTh>Перевод</MudTh>
         }
         <MudTh>Вес</MudTh>
         <MudTh></MudTh>
@@ -80,9 +81,9 @@
         {
             <MudTd DataLabel="Заказ"><a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a></MudTd>
         }
-        @if (PaymentId <= 0)
+        @if (ConversionId <= 0)
         {
-            <MudTd DataLabel="Платёж"><a href="/retail/payment-document/@context.PaymentDocumentId">@context.PaymentDocument?.ToString()</a></MudTd>
+            <MudTd DataLabel="Перевод"><a href="/retail/conversion-document/@context.ConversionDocumentId">@context.ConversionDocument?.ToString()</a></MudTd>
         }
         <MudTd Class="@(context.AmountPayment <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">@context.AmountPayment</MudTd>
         <MudTd>
@@ -102,9 +103,9 @@
         {
             <MudTd DataLabel="Заказ">@context.OrderDocument?.ToString()</MudTd>
         }
-        @if (PaymentId <= 0)
+        @if (ConversionId <= 0)
         {
-            <MudTd DataLabel="Доставка">@context.PaymentDocument?.ToString()</MudTd>
+            <MudTd DataLabel="Доставка">@context.ConversionDocument?.ToString()</MudTd>
         }
         <MudTd DataLabel="Вес" colspan=2>
             <input type="number" class="form-control" @bind="context.AmountPayment" />
@@ -129,11 +130,11 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Value="ClientId" Name="ClientId">
-            <OrderDocumentCardComponent InjectToPaymentId="PaymentId" />
+            <OrderDocumentCardComponent InjectToConversionId="ConversionId" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>
-<MudDialog @bind-Visible="_visibleCreateNewPayment" Options="_dialogOptions">
+<MudDialog @bind-Visible="_visibleCreateNewConversion" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новая доставка (розница)
@@ -141,12 +142,12 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Name="ClientId" Value="ClientId">
-            <PaymentDocumentComponent InjectToOrderId="OrderId" />
+            <ConversionDocumentComponent InjectToOrderId="OrderId" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>
 
-<MudDialog @bind-Visible="_visibleIncludeExistPayment" Options="_dialogOptions">
+<MudDialog @bind-Visible="_visibleIncludeExistConversion" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите доставку (розница)
@@ -154,7 +155,7 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Name="ClientId" Value="ClientId">
-            <PaymentsManageComponent RowClickEventHandler="SelectPaymentRowAction" ExcludeOrderId="OrderId" />
+            <ConversionsTableManageComponent RowClickEventHandler="SelectConversionRowAction" ExcludeOrderId="OrderId" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>
@@ -166,7 +167,7 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Name="ClientId" Value="ClientId">
-            <RetailOrdersListComponent RowClickEventHandler="SelectOrderRowAction" ExcludePaymentId="PaymentId" />
+            <RetailOrdersListComponent RowClickEventHandler="SelectOrderRowAction" ExcludePaymentId="ConversionId" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>
