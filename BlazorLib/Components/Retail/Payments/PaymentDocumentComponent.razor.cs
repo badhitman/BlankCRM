@@ -105,7 +105,19 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
             TResponseModel<int> res = await RetailRepo.CreatePaymentDocumentAsync(editDoc);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success() && res.Response > 0)
+            {
+                if (InjectToOrderId > 0)
+                {
+                    TResponseModel<int> orderPaymentLinkRes = await RetailRepo.CreatePaymentOrderLinkDocumentAsync(new()
+                    {
+                        OrderDocumentId = InjectToOrderId,
+                        PaymentDocumentId = editDoc.Id,
+                    });
+                    SnackBarRepo.ShowMessagesResponse(orderPaymentLinkRes.Messages);
+                }
+
                 NavRepo.NavigateTo($"/retail/payment-document/{res.Response}");
+            }
         }
         else
         {

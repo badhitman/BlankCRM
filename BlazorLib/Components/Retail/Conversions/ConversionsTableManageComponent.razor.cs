@@ -52,12 +52,6 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
     };
 
 
-    void CreateNewConversionOpenDialog()
-    {
-        _visible = true;
-    }
-
-
     DateRange? _dateRange;
     DateRange? DateRangeProp
     {
@@ -68,6 +62,11 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
             if (tableRef is not null)
                 InvokeAsync(tableRef.ReloadServerData);
         }
+    }
+
+    void CreateNewConversionOpenDialog()
+    {
+        _visible = true;
     }
 
     async Task DisabledToggle(int conversionId)
