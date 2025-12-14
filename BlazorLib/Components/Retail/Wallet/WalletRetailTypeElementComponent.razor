@@ -56,19 +56,31 @@
                               id="exampleFormControlTextarea-@_walletCopy.Id"
                               rows="3"></textarea>
                 </div>
-                <div class="form-check form-switch form-check-inline">
+                <div class="form-check form-switch form-check-inline me-2">
                     <input @bind="_walletCopy.IsDisabled"
                            class="form-check-input"
                            disabled="@IsBusyProgress"
                            type="checkbox"
                            role="switch"
-                           id="switchCheckDefault-@_walletCopy.Id">
-                    <label class="form-check-label" for="switchCheckDefault-@_walletCopy.Id">@(_walletCopy.IsDisabled ? "Выключено (включить?)" : "Включено (выключить?)")</label>
+                           id="switchCheckDefaultIsDisabled-@_walletCopy.Id">
+                    <label class="form-check-label" for="switchCheckDefaultIsDisabled-@_walletCopy.Id">@(_walletCopy.IsDisabled ? "Выключено (включить?)" : "Включено (выключить?)")</label>
                 </div>
-                <div class="form-check form-check-inline ms-3">
-                    <input @bind="_walletCopy.IsSystem" class="form-check-input" type="checkbox" value="" id="checkDefault2-@_walletCopy.Id">
-                    <label class="form-check-label" for="checkDefault2-@_walletCopy.Id">
+                <div class="form-check form-check-inline me-2">
+                    <input @bind="_walletCopy.IsSystem"
+                           class="form-check-input"
+                           type="checkbox"
+                           id="checkDefaultIsSystem-@_walletCopy.Id">
+                    <label class="form-check-label" for="checkDefaultIsSystem-@_walletCopy.Id">
                         Системный
+                    </label>
+                </div>
+                <div class="form-check form-check-inline me-2">
+                    <input @bind="_walletCopy.IgnoreBalanceChanges"
+                           class="form-check-input"
+                           type="checkbox"
+                           id="checkDefaultIgnoreBalanceChanges-@_walletCopy.Id">
+                    <label class="form-check-label" for="checkDefaultIgnoreBalanceChanges-@_walletCopy.Id">
+                        Игнорировать движения
                     </label>
                 </div>
             </div>

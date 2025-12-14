@@ -1,11 +1,20 @@
-﻿@inherits BlazorBusyComponentBaseModel
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
 
-<h6 class="card-subtitle mb-2 text-body-secondary">@Label</h6>
 <div class="vstack gap-3">
-    <RubricInputComponent SelectRubricsHandle="RubricSelectAction"
-                          ModeSelectingRubrics=ModeSelectingRubrics
-                          RubricInitial="@(_rubricSelected ?? 0)"
-                          ShowDisabledRubrics />
+    @if (IsBusyProgress)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
+    }
+    else
+    {
+        <RubricInputComponent SelectRubricsHandle="RubricSelectAction"
+                              ModeSelectingRubrics=ModeSelectingRubrics
+                              RubricInitial="@(_rubricSelected ?? 0)"
+                              ContextName="@KeyStorage.ContextName"
+                              Title="@Label"
+                              ShowDisabledRubrics />
+    }
 </div>
 
 @if (!string.IsNullOrWhiteSpace(HelperText))

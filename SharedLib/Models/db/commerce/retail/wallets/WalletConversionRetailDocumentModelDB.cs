@@ -10,12 +10,17 @@ namespace SharedLib;
 /// <summary>
 /// Документ конвертации/перевода с кошелька на кошелёк
 /// </summary>
-[Index(nameof(Name)), Index(nameof(DateDocument))]
-public class WalletConversionRetailDocumentModelDB : EntryUpdatedLiteModel
+[Index(nameof(Name)), Index(nameof(DateDocument)), Index(nameof(IsDisabled))]
+public class WalletConversionRetailDocumentModelDB : EntryUpdatedModel
 {
     /// <inheritdoc/>
     [Required]
     public required DateTime DateDocument { get; set; }
+    
+    /// <summary>
+    /// Объект отключён
+    /// </summary>
+    public bool IsDisabled { get; set; }
 
     /// <summary>
     /// Кошелёк списания

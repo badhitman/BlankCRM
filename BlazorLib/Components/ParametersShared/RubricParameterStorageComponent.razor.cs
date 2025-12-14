@@ -26,7 +26,7 @@ public partial class RubricParameterStorageComponent : BlazorBusyComponentBaseMo
     /// KeyStorage
     /// </summary>
     [Parameter, EditorRequired]
-    public required StorageMetadataModel KeyStorage { get; set; }
+    public required StorageContextMetadataModel KeyStorage { get; set; }
 
     /// <summary>
     /// HelperText

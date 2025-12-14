@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.HelpDesk
 {
     [DbContext(typeof(HelpDeskContext))]
-    [Migration("20251203071035_HelpDeskPostgreContext001")]
+    [Migration("20251214102211_HelpDeskPostgreContext001")]
     partial class HelpDeskPostgreContext001
     {
         /// <inheritdoc />
@@ -407,7 +407,7 @@ namespace DbPostgreLib.Migrations.HelpDesk
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")

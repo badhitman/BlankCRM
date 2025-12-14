@@ -20,6 +20,9 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
     IRubricsTransmission RubricsRepo { get; set; } = default!;
 
     [Inject]
+    IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
+
+    [Inject]
     NavigationManager NavRepo { get; set; } = default!;
 
 
@@ -192,9 +195,11 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
         images_upload_url = $"{GlobalStaticConstants.TinyMCEditorUploadImage}{Routes.RETAIL_CONTROLLER_NAME}/{Routes.DOCUMENT_CONTROLLER_NAME}?{nameof(StorageMetadataModel.PrefixPropertyName)}={Routes.IMAGE_ACTION_NAME}&{nameof(StorageMetadataModel.OwnerPrimaryKey)}={OrderId}";
         editorConf = GlobalStaticConstants.TinyMCEditorConf(images_upload_url);
 
+        await SetBusyAsync();
+        List<Task> tasks = [];
+
         if (OrderId > 0)
         {
-            await SetBusyAsync();
             TResponseModel<DocumentRetailModelDB[]> res = await RetailRepo.RetailDocumentsGetAsync(new() { Ids = [OrderId] });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
@@ -202,17 +207,18 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             {
                 currentDocument = res.Response.First();
                 datePayment = currentDocument.DateDocument;
-                List<Task> tasks = [
-                        Task.Run(async () => {
+                tasks.Add(
+                        Task.Run(async () =>
+                        {
                             TResponseModel<UserInfoModel[]> getUsers = await IdentityRepo.GetUsersOfIdentityAsync([currentDocument.BuyerIdentityUserId, currentDocument.AuthorIdentityUserId]);
                             SnackBarRepo.ShowMessagesResponse(getUsers.Messages);
-                            if(getUsers.Success() && getUsers.Response is not null && getUsers.Response.Length == 2)
+                            if (getUsers.Success() && getUsers.Response is not null && getUsers.Response.Length == 2)
                             {
-                                authorUser = getUsers.Response.First(x=>x.UserId == currentDocument.AuthorIdentityUserId);
+                                authorUser = getUsers.Response.First(x => x.UserId == currentDocument.AuthorIdentityUserId);
                                 buyerUser = getUsers.Response.First(x => x.UserId == currentDocument.BuyerIdentityUserId);
                             }
                         })
-                    ];
+                    );
 
                 if (currentDocument.WarehouseId > 0)
                 {
@@ -226,23 +232,21 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
                         }
                     }));
                 }
-
-                await Task.WhenAll(tasks);
             }
-
-            await SetBusyAsync(false);
         }
         else
         {
+            TResponseModel<int?> defaultWarehouse = await StorageTransmissionRepo.ReadParameterAsync<int?>(GlobalStaticCloudStorageMetadata.WarehouseDefaultForRetailOrder);
+
             if (!string.IsNullOrWhiteSpace(ClientId))
             {
-
-                TResponseModel<UserInfoModel[]> getUsers = await IdentityRepo.GetUsersOfIdentityAsync([ClientId]);
-                SnackBarRepo.ShowMessagesResponse(getUsers.Messages);
-                if (getUsers.Success() && getUsers.Response is not null && getUsers.Response.Any(x => x.UserId == ClientId))
+                tasks.Add(Task.Run(async () =>
                 {
-                    buyerUser = getUsers.Response.First(x => x.UserId == ClientId);
-                }
+                    TResponseModel<UserInfoModel[]> getUsers = await IdentityRepo.GetUsersOfIdentityAsync([ClientId]);
+                    SnackBarRepo.ShowMessagesResponse(getUsers.Messages);
+                    if (getUsers.Success() && getUsers.Response is not null && getUsers.Response.Any(x => x.UserId == ClientId))
+                        buyerUser = getUsers.Response.First(x => x.UserId == ClientId);
+                }));
             }
 
             currentDocument = new()
@@ -251,9 +255,12 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
                 Rows = [],
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 BuyerIdentityUserId = ClientId ?? CurrentUserSession.UserId,
+                WarehouseId = defaultWarehouse.Response ?? 0,
             };
             datePayment = currentDocument.DateDocument;
         }
+        await Task.WhenAll(tasks);
+        await SetBusyAsync(false);
         editDocument = GlobalTools.CreateDeepCopy(currentDocument);
     }
 }

@@ -17,18 +17,24 @@
     <MudTabPanel Text="Other">
         <ul class="list-group list-group-flush">
             <li class="list-group-item my-2">
-                <div class="row row-cols-1 row-cols-md-2 g-1">                    
+                <div class="row row-cols-1 row-cols-md-2 g-1">
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
-                                <RubricParameterStorageComponent Label="Rubric for new booking" HelperText="Automatic assignment of a category when booking a service/booking" KeyStorage="GlobalStaticCloudStorageMetadata.RubricIssueForCreateAttendanceOrder" />
+                                <RubricParameterStorageComponent Label="Rubric for new booking"
+                                                                 HelperText="Automatic assignment of a category when booking a service/booking"
+                                                                 KeyStorage="GlobalStaticCloudStorageMetadata.RubricIssueForCreateAttendanceOrder" />
                             </div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
-                                <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.GlobalEnable2FA" Title="Global two-factor authentication" Label="2FA" HintTrue="2fa is forced on for everyone" HintFalse="2fa for each user individually" />
+                                <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.GlobalEnable2FA"
+                                                            Title="Global two-factor authentication"
+                                                            Label="2FA"
+                                                            HintTrue="2fa is forced on for everyone"
+                                                            HintFalse="2fa for each user individually" />
                             </div>
                         </div>
                     </div>

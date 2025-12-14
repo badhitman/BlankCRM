@@ -12,6 +12,11 @@ public class WalletRetailTypeModelDB : EntryUpdatedModel
     /// <inheritdoc/>
     public bool IsDisabled { get; set; }
 
+    /// <summary>
+    /// Игнорировать изменение баланса
+    /// </summary>
+    public bool IgnoreBalanceChanges { get; set; }
+
     /// <inheritdoc/>
     public int SortIndex { get; set; }
 
@@ -19,10 +24,19 @@ public class WalletRetailTypeModelDB : EntryUpdatedModel
     public override bool Equals(object obj)
     {
         if (obj is WalletRetailTypeViewModel walletOther2)
-            return walletOther2.IsSystem == IsSystem && walletOther2.IsDisabled == IsDisabled && walletOther2.Name == Name && walletOther2.Description == Description;
+            return
+                walletOther2.IsSystem == IsSystem &&
+                walletOther2.IsDisabled == IsDisabled &&
+                walletOther2.IgnoreBalanceChanges == IgnoreBalanceChanges &&
+                walletOther2.Name == Name &&
+                walletOther2.Description == Description;
 
         if (obj is WalletRetailTypeModelDB walletOther)
-            return walletOther.IsSystem == IsSystem && walletOther.IsDisabled == IsDisabled && walletOther.Name == Name && walletOther.Description == Description;
+            return
+                walletOther.IsSystem == IsSystem &&
+                walletOther.IsDisabled == IsDisabled &&
+                walletOther.IgnoreBalanceChanges == IgnoreBalanceChanges &&
+                walletOther.Name == Name && walletOther.Description == Description;
 
         return false;
     }

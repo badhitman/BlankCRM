@@ -14,4 +14,7 @@ public class SelectWalletsRetailsConversionDocumentsRequestModel
 
     /// <inheritdoc/>
     public string[]? RecipientsUserFilter { get; set; }
+
+    /// <inheritdoc/>
+    public bool IncludeDisabled { get; set; }
 }

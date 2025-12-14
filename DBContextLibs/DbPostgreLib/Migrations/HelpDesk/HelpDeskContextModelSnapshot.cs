@@ -404,7 +404,7 @@ namespace DbPostgreLib.Migrations.HelpDesk
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastUpdatedAtUTC")
+                    b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")

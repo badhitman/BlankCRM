@@ -207,16 +207,36 @@ public static partial class GlobalStaticCloudStorageMetadata
     /// <summary>
     /// RubricIssueForCreateOrder
     /// </summary>
-    public static StorageMetadataModel RubricIssueForCreateOrder => new()
+    public static StorageContextMetadataModel RubricIssueForCreateOrder => new()
     {
         ApplicationName = Routes.HELPDESK_CONTROLLER_NAME,
         PropertyName = Path.Combine(Routes.CREATE_ACTION_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.RUBRIC_CONTROLLER_NAME),
     };
 
     /// <summary>
+    /// WarehouseDefaultForRetailOrder
+    /// </summary>
+    public static StorageContextMetadataModel WarehouseDefaultForRetailOrder => new()
+    {
+        ApplicationName = Routes.RETAIL_CONTROLLER_NAME,
+        PropertyName = Path.Combine(Routes.DEFAULT_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.WAREHOUSE_CONTROLLER_NAME),
+        ContextName = Routes.WAREHOUSE_CONTROLLER_NAME,
+    };
+
+    /// <summary>
+    /// WarehouseDefaultForRetailDelivery
+    /// </summary>
+    public static StorageContextMetadataModel WarehouseDefaultForRetailDelivery => new()
+    {
+        ApplicationName = Routes.RETAIL_CONTROLLER_NAME,
+        PropertyName = Path.Combine(Routes.DEFAULT_CONTROLLER_NAME, Routes.DELIVERY_CONTROLLER_NAME, Routes.WAREHOUSE_CONTROLLER_NAME),
+        ContextName = Routes.WAREHOUSE_CONTROLLER_NAME,
+    };
+
+    /// <summary>
     /// RubricIssueForCreateAttendanceOrder
     /// </summary>
-    public static StorageMetadataModel RubricIssueForCreateAttendanceOrder => new()
+    public static StorageContextMetadataModel RubricIssueForCreateAttendanceOrder => new()
     {
         ApplicationName = Routes.HELPDESK_CONTROLLER_NAME,
         PropertyName = Path.Combine(Routes.CREATE_ACTION_NAME, $"{Routes.ORDER_CONTROLLER_NAME}-{Routes.ATTENDANCE_CONTROLLER_NAME}", Routes.RUBRIC_CONTROLLER_NAME),

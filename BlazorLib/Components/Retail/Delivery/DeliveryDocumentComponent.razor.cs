@@ -19,6 +19,9 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     [Inject]
     NavigationManager NavRepo { get; set; } = default!;
 
+    [Inject]
+    IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter]
@@ -241,6 +244,8 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         }
         else
         {
+            TResponseModel<int?> defaultWarehouse = await StorageTransmissionRepo.ReadParameterAsync<int?>(GlobalStaticCloudStorageMetadata.WarehouseDefaultForRetailDelivery);
+
             if (!string.IsNullOrWhiteSpace(ClientId))
             {
                 TResponseModel<UserInfoModel[]> getUsers = await IdentityRepo.GetUsersOfIdentityAsync([ClientId]);
@@ -255,6 +260,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             {
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 RecipientIdentityUserId = ClientId ?? CurrentUserSession.UserId,
+                WarehouseId = defaultWarehouse.Response ?? 0
             };
         }
         editDoc = GlobalTools.CreateDeepCopy(currentDoc);

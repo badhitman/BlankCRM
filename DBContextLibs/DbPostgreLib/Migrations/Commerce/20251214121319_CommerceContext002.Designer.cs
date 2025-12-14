@@ -3,6 +3,7 @@ using System;
 using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    partial class CommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20251214121319_CommerceContext002")]
+    partial class CommerceContext002
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1323,17 +1326,11 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<DateTime>("DateDocument")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
                     b.Property<int>("FromWalletId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("FromWalletSum")
                         .HasColumnType("numeric");
-
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastUpdatedAtUTC")
                         .HasColumnType("timestamp with time zone");
@@ -1359,8 +1356,6 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("DateDocument");
 
                     b.HasIndex("FromWalletId");
-
-                    b.HasIndex("IsDisabled");
 
                     b.HasIndex("LastUpdatedAtUTC");
 
