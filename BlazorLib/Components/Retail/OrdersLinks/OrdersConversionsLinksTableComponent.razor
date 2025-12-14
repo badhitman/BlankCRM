@@ -26,13 +26,13 @@
                        Class="me-2"
                        Variant="Variant.Outlined"
                        StartIcon="@Icons.Material.Filled.Add"
-                       Color="Color.Primary">Новый заказ</MudButton>
+                       Color="Color.Secondary">Новый заказ</MudButton>
 
             <MudTooltip Text="Добавить созданный ранее заказ в текущую доставку">
                 <MudButton OnClick=IncludeExistOrderOpenDialog
                            Variant="Variant.Outlined"
                            EndIcon="@Icons.Material.Filled.DeviceHub"
-                           IconColor="Color.Secondary">Включить существующий заказ</MudButton>
+                           IconColor="Color.Secondary">Включить в существующий заказ</MudButton>
             </MudTooltip>
         }
         @if (OrderId > 0)

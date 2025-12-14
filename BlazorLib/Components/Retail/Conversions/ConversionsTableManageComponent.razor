@@ -1,10 +1,18 @@
 ﻿@using MudBlazor
+
 @inherits BlazorBusyComponentUsersCachedModel
 
-<MudTable ServerData="ServerReload" Dense Hover>
+<MudTable ServerData="ServerReload" Dense Hover @ref=tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Переводы (розница)</MudText>
+        <div class="form-check form-switch form-check-inline ms-2">
+            <MudTooltip Text="Отображение удалённых документов">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" @bind=ShowDeleted>
+                <label class="form-check-label" for="switchCheckDefault">удалённые</label>
+            </MudTooltip>
+        </div>
         <MudSpacer />
+        <MudDateRangePicker Class="me-2" PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Clearable />
         <MudButton OnClick=CreateNewConversionOpenDialog
                    Variant="Variant.Outlined"
                    StartIcon="@Icons.Material.Filled.Add"
@@ -15,6 +23,7 @@
         <MudTh>Примечание</MudTh>
         <MudTh>Списание</MudTh>
         <MudTh>Зачисление</MudTh>
+        <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
         @{
@@ -26,6 +35,7 @@
                     @ddt.ToString("d", GlobalStaticConstants.RU)
                 </span>
             </a>
+
         </MudTd>
         <MudTd DataLabel="Примечание"><a href="/retail/conversion-document/@context.Id"></a>@context.Name</MudTd>
         <MudTd DataLabel="Списание">
@@ -35,6 +45,11 @@
         <MudTd DataLabel="Зачисление">
             <span title="Текущий баланс" class="border border-primary-subtle me-2 pa-1">@context.ToWallet?.ToString()</span>
             @context.ToWalletSum
+        </MudTd>
+        <MudTd>
+            <span class="badge text-bg-@(context.IsDisabled ? "secondary" : "success") cursor-pointer" @onclick="async () => await DisabledToggle(context.Id)">
+                @(context.IsDisabled ? "выключено (включить?)" : "включено (выключить?)")
+            </span>
         </MudTd>
     </RowTemplate>
     <NoRecordsContent>

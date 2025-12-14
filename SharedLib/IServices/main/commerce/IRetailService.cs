@@ -169,6 +169,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TResponseModel<WalletConversionRetailDocumentModelDB[]>> GetConversionsDocumentsAsync(ReadWalletsRetailsConversionDocumentsRequestModel req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> DeleteToggleConversionAsync(int conversionId, CancellationToken token = default);
     #endregion
 
     #region Conversions orders link`s

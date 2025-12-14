@@ -25,7 +25,23 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
     [Parameter]
     public Action<TableRowClickEventArgs<WalletConversionRetailDocumentModelDB>>? RowClickEventHandler { get; set; }
 
+    /// <inheritdoc/>
+    [CascadingParameter(Name = "ClientId")]
+    public string? ClientId { get; set; }
 
+
+    bool showDeleted;
+    bool ShowDeleted
+    {
+        get => showDeleted;
+        set
+        {
+            showDeleted = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+    MudTable<WalletConversionRetailDocumentModelDB>? tableRef;
 
     bool _visible;
     readonly DialogOptions _dialogOptions = new()
@@ -41,9 +57,30 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
         _visible = true;
     }
 
-    /// <inheritdoc/>
-    [CascadingParameter(Name = "ClientId")]
-    public string? ClientId { get; set; }
+
+    DateRange? _dateRange;
+    DateRange? DateRangeProp
+    {
+        get => _dateRange;
+        set
+        {
+            _dateRange = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+
+    async Task DisabledToggle(int conversionId)
+    {
+        await SetBusyAsync();
+
+        ResponseBaseModel res = await RetailRepo.DeleteToggleConversionAsync(conversionId);
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+
+        await SetBusyAsync(false);
+    }
 
     async Task<TableData<WalletConversionRetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
@@ -51,7 +88,18 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
+            Payload = new()
+            {
+                IncludeDisabled = ShowDeleted
+            }
         };
+
+        if (DateRangeProp is not null)
+        {
+            req.Payload.Start = DateRangeProp.Start;
+            req.Payload.End = DateRangeProp.End;
+        }
+
         await SetBusyAsync(token: token);
         TPaginationResponseModel<WalletConversionRetailDocumentModelDB> res = await RetailRepo.SelectConversionsDocumentsAsync(req, token);
 

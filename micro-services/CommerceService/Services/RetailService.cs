@@ -1491,7 +1491,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         IQueryable<WalletConversionRetailDocumentModelDB> q = context.ConversionsDocumentsWalletsRetail.AsQueryable();
 
-        if (req.Payload!.IncludeDisabled != true)
+        if (req.Payload?.IncludeDisabled != true)
             q = q.Where(x => !x.IsDisabled);
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
@@ -1510,6 +1510,15 @@ public class RetailService(IIdentityTransmission identityRepo,
 
             select doc;
 
+        if (req.Payload?.Start is not null && req.Payload.Start != default)
+            q = q.Where(x => x.DateDocument >= req.Payload.Start.SetKindUtc());
+
+        if (req.Payload?.End is not null && req.Payload.End != default)
+        {
+            req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+            q = q.Where(x => x.DateDocument <= req.Payload.End);
+        }
+
         IQueryable<WalletConversionRetailDocumentModelDB> pq = q
             .OrderBy(x => x.DateDocument)
             .Skip(req.PageNum * req.PageSize)
@@ -1527,6 +1536,21 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .Include(x => x.ToWallet).ThenInclude(x => x!.WalletType)
                 .ToListAsync(cancellationToken: token)
         };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DeleteToggleConversionAsync(int conversionId, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<WalletConversionRetailDocumentModelDB> q = context.ConversionsDocumentsWalletsRetail
+            .Where(x => x.Id == conversionId);
+        await q.ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.IsDisabled, p => !p.IsDisabled), cancellationToken: token);
+
+        return
+            ResponseBaseModel
+            .CreateSuccess($"Документ: успешно {(await q.Select(x => x.IsDisabled)
+                .FirstAsync(cancellationToken: token) ? "включён" : "выключен")}");
     }
     #endregion
 
