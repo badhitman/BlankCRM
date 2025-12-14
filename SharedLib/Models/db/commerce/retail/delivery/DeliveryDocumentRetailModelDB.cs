@@ -76,7 +76,7 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     /// <summary>
     /// Заказы (документы)
     /// </summary>
-    public List<RetailDeliveryOrderLinkModelDB>? OrdersLinks { get; set; }
+    public List<RetailOrderDeliveryLinkModelDB>? OrdersLinks { get; set; }
 
     /// <summary>
     /// StatusesLog

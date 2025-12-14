@@ -15,41 +15,41 @@ public enum StatusesDocumentsEnum
     /// Создан
     /// </summary>
     [Description("Создан")]
-    Created = 0,
+    Created = 20,
 
     /// <summary>
     /// Повторное открытие
     /// </summary>
-    [Description("Повторное открытие")]
-    Reopen = 10,
+    [Description("Возврашён в работу")]
+    Reopen = 40,
 
     /// <summary>
     /// Приостановлен
     /// </summary>
     [Description("Приостановлен")]
-    Pause = 20,
+    Pause = 60,
 
     /// <summary>
     /// В работе
     /// </summary>
     [Description("В работе")]
-    Progress = 30,
+    Progress = 80,
 
     /// <summary>
     /// Проверка
     /// </summary>
     [Description("Проверка")]
-    Check = 40,
+    Check = 100,
 
     /// <summary>
     /// Выполнен
     /// </summary>
     [Description("Выполнен")]
-    Done = 50,
+    Done = 120,
 
     /// <summary>
     /// Аннулирован
     /// </summary>
-    [Description("Аннулирован")]
+    [Description("Отменён")]
     Canceled = 1000
 }

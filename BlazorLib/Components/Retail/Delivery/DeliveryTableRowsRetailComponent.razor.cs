@@ -105,7 +105,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             }
         };
         await SetBusyAsync();
-        TPaginationResponseModel<RetailDeliveryOrderLinkModelDB> res = await RetailRepo.SelectDeliveriesOrdersLinksDocumentsAsync(req);
+        TPaginationResponseModel<RetailOrderDeliveryLinkModelDB> res = await RetailRepo.SelectDeliveriesOrdersLinksDocumentsAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
         if (res.Response is not null && res.Response.Count != 0)
         {

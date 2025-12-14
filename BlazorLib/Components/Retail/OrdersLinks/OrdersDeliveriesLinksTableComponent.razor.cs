@@ -11,7 +11,7 @@ namespace BlazorLib.Components.Retail.OrdersLinks;
 /// <summary>
 /// OrdersDeliveriesLinksTableComponent
 /// </summary>
-public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponent<RetailDeliveryOrderLinkModelDB>
+public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponent<RetailOrderDeliveryLinkModelDB>
 {
     /// <inheritdoc/>
     [Parameter]
@@ -44,9 +44,9 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
 
     async void ItemHasBeenCommitted(object element)
     {
-        if (element is RetailDeliveryOrderLinkModelDB other)
+        if (element is RetailOrderDeliveryLinkModelDB other)
         {
-            RetailDeliveryOrderLinkModelDB req = new()
+            RetailOrderDeliveryLinkModelDB req = new()
             {
                 WeightShipping = other.WeightShipping,
                 Id = other.Id,
@@ -70,7 +70,7 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         if (elementBeforeEdit is null)
             return;
 
-        if (element is RetailDeliveryOrderLinkModelDB other)
+        if (element is RetailOrderDeliveryLinkModelDB other)
             other.WeightShipping = elementBeforeEdit.WeightShipping;
     }
 
@@ -144,7 +144,7 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
     }
 
 
-    async Task<TableData<RetailDeliveryOrderLinkModelDB>> ServerReload(TableState state, CancellationToken token)
+    async Task<TableData<RetailOrderDeliveryLinkModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req = new()
         {
@@ -160,13 +160,13 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
             req.Payload.DeliveriesIds = [DeliveryId];
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<RetailDeliveryOrderLinkModelDB> res = await RetailRepo.SelectDeliveriesOrdersLinksDocumentsAsync(req, token);
+        TPaginationResponseModel<RetailOrderDeliveryLinkModelDB> res = await RetailRepo.SelectDeliveriesOrdersLinksDocumentsAsync(req, token);
         fullScale = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.WeightShipping);
         await SetBusyAsync(false, token);
 
         if (!res.Status.Success())
-            return new TableData<RetailDeliveryOrderLinkModelDB>() { TotalItems = 0, Items = [] };
+            return new TableData<RetailOrderDeliveryLinkModelDB>() { TotalItems = 0, Items = [] };
 
-        return new TableData<RetailDeliveryOrderLinkModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        return new TableData<RetailOrderDeliveryLinkModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 }

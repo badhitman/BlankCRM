@@ -1,0 +1,91 @@
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseModel
+<div class="input-group mb-3">
+    <input disabled="@IsBusyProgress" type="date" class="form-control" id="inputDate" @bind="createdDate">
+    <select disabled="@IsBusyProgress" class="form-select" aria-label="Default select example" @bind=newStatus>
+        <option selected="@(newStatus is null)" value="@((StatusesDocumentsEnum?)null)"></option>
+        @foreach (StatusesDocumentsEnum _st in Enum.GetValues<StatusesDocumentsEnum>())
+        {
+            <option value="@_st">@_st.DescriptionInfo()</option>
+        }
+    </select>
+    <input disabled="@IsBusyProgress" type="text" class="form-control" id="inputName" placeholder="Примечание" @bind=createdName>
+    <button @onclick="AddNewStatus"
+            type="button"
+            class="btn btn-primary"
+            disabled="@(newStatus is null || createdDate is null || IsBusyProgress)">
+        Новый статус
+    </button>
+</div>
+
+<MudTable ApplyButtonPosition="TableApplyButtonPosition.End"
+          EditButtonPosition="TableEditButtonPosition.End"
+          RowEditCancel="ResetItemToOriginalValues"
+          EditTrigger="TableEditTrigger.EditButton"
+          RowEditCommit="ItemHasBeenCommitted"
+          RowEditPreview="BackupItem"
+          ServerData="ServerReload"
+          Dense Hover CanCancelEdit
+          @ref=tableRef>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Статусы заказа (розница)</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <ColGroup>
+        <col />
+        <col />
+        <col />
+        <col style="@(initDeleteRowStatusId.HasValue ? "width:250px;" : "width:50px;")" />
+        <col style="width:50px;" />
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>Дата</MudTh>
+        <MudTh>Статус</MudTh>
+        <MudTh>Примечание</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Дата">@context.DateOperation.ToString("d", GlobalStaticConstants.RU)</MudTd>
+        <MudTd DataLabel="Статус">@context.StatusDocument.DescriptionInfo()</MudTd>
+        <MudTd DataLabel="Примечание">@context.Name</MudTd>
+        <MudTd>
+            @if (initDeleteRowStatusId.HasValue && initDeleteRowStatusId == context.Id)
+            {
+                <span title="кликните для подтверждения удаления" class="me-2 badge text-bg-danger cursor-pointer" @onclick="() => DeleteRow(context.Id)">Подтвердить удаление</span>
+                <span title="кликните для отмены удаления" class="text-bg-secondary cursor-pointer badge" @onclick="() => initDeleteRowStatusId = null">отмена</span>
+            }
+            else
+            {
+                <MudIconButton OnClick="() => DeleteRow(context.Id)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+            }
+        </MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Дата">
+            <MudDatePicker @bind-Date="editDate" Required />
+        </MudTd>
+        <MudTd DataLabel="Статус">
+            <MudSelect @bind-Value="editStatus"
+                       Dense
+                       FitContent>
+                @foreach (StatusesDocumentsEnum _st in Enum.GetValues<StatusesDocumentsEnum>())
+                {
+                    <MudSelectItem Value="_st">@_st.DescriptionInfo()</MudSelectItem>
+                }
+            </MudSelect>
+        </MudTd>
+        <MudTd DataLabel="Примечание" colspan="2">
+            <MudTextField @bind-Value="editName" />
+        </MudTd>
+    </RowEditingTemplate>
+    <NoRecordsContent>
+        <MudText>Соответствующих записей не найдено</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+

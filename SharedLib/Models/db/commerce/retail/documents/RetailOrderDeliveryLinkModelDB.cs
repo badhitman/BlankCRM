@@ -11,7 +11,7 @@ namespace SharedLib;
 /// RetailDeliveryOrderLinkModelDB
 /// </summary>
 [Index(nameof(OrderDocumentId), nameof(DeliveryDocumentId), IsUnique = true), Index(nameof(Name))]
-public class RetailDeliveryOrderLinkModelDB
+public class RetailOrderDeliveryLinkModelDB
 {
     /// <summary>
     /// Идентификатор/Key

@@ -43,7 +43,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Description = req.Description?.Trim();
         req.DeliveryCode = req.DeliveryCode?.Trim();
 
-        await context.DeliveryRetailDocuments.AddAsync(req, token);
+        await context.DeliveryDocumentsRetail.AddAsync(req, token);
         await context.SaveChangesAsync(token);
         res.Response = req.Id;
         return res;
@@ -60,7 +60,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        await context.DeliveryRetailDocuments
+        await context.DeliveryDocumentsRetail
             .Where(x => x.Id == req.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Name, req.Name)
@@ -74,7 +74,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .SetProperty(p => p.DeliveryPaymentUponReceipt, req.DeliveryPaymentUponReceipt)
                 .SetProperty(p => p.DeliveryCode, req.DeliveryCode)
                 .SetProperty(p => p.AddressUserComment, req.AddressUserComment)
-                .SetProperty(p => p.DeliveryStatus, context.DeliveryStatusesRetailDocuments.Where(y => y.DeliveryDocumentId == req.Id).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault())
+                .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.Id).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault())
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
@@ -84,7 +84,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<DeliveryDocumentRetailModelDB>> SelectDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DeliveryDocumentRetailModelDB>? q = context.DeliveryRetailDocuments.AsQueryable();
+        IQueryable<DeliveryDocumentRetailModelDB>? q = context.DeliveryDocumentsRetail.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x =>
@@ -106,11 +106,11 @@ public class RetailService(IIdentityTransmission identityRepo,
         }
 
         if (req.Payload?.ExcludeOrderId.HasValue == true && req.Payload.ExcludeOrderId > 0)
-            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.DeliveryDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
+            q = q.Where(x => !context.OrdersDeliveriesLinks.Any(y => y.DeliveryDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
 
         if (req.Payload?.FilterOrderId is not null && req.Payload.FilterOrderId > 0)
             q = from deliveryDoc in q
-                join linkItem in context.DeliveriesOrdersLinks.Where(x => x.OrderDocumentId == req.Payload.FilterOrderId) on deliveryDoc.Id equals linkItem.DeliveryDocumentId
+                join linkItem in context.OrdersDeliveriesLinks.Where(x => x.OrderDocumentId == req.Payload.FilterOrderId) on deliveryDoc.Id equals linkItem.DeliveryDocumentId
                 select deliveryDoc;
 
         IQueryable<DeliveryDocumentRetailModelDB>? pq = q
@@ -146,7 +146,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         return new()
         {
-            Response = await context.DeliveryRetailDocuments
+            Response = await context.DeliveryDocumentsRetail
                 .Where(x => req.Ids.Contains(x.Id))
                 .Include(x => x.Rows)
                 .ToArrayAsync(cancellationToken: token)
@@ -167,7 +167,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Comment = req.Comment?.Trim();
         req.Version = Guid.NewGuid();
 
-        await context.RowsDeliveryRetailDocuments.AddAsync(req, token);
+        await context.RowsDeliveryDocumentsRetail.AddAsync(req, token);
         await context.SaveChangesAsync(token);
         return new() { Response = req.Id };
     }
@@ -183,7 +183,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        await context.RowsDeliveryRetailDocuments
+        await context.RowsDeliveryDocumentsRetail
             .Where(x => x.Id == req.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.OfferId, req.OfferId)
@@ -203,7 +203,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             return new() { Status = new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }] } };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RowOfDeliveryRetailDocumentModelDB> q = context.RowsDeliveryRetailDocuments.Where(x => x.DocumentId == req.Payload.DeliveryDocumentId).AsQueryable();
+        IQueryable<RowOfDeliveryRetailDocumentModelDB> q = context.RowsDeliveryDocumentsRetail.Where(x => x.DocumentId == req.Payload.DeliveryDocumentId).AsQueryable();
 
         IQueryable<RowOfDeliveryRetailDocumentModelDB> pq = q
             .OrderBy(x => x.Id)
@@ -233,13 +233,13 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Name = req.Name.Trim();
         req.CreatedAtUTC = DateTime.UtcNow;
 
-        await context.DeliveryStatusesRetailDocuments.AddAsync(req, token);
+        await context.DeliveriesStatusesDocumentsRetail.AddAsync(req, token);
         await context.SaveChangesAsync(token);
 
-        await context.DeliveryRetailDocuments
+        await context.DeliveryDocumentsRetail
             .Where(x => x.Id == req.DeliveryDocumentId)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.DeliveryStatus, context.DeliveryStatusesRetailDocuments.Where(y => y.DeliveryDocumentId == req.DeliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.DeliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
 
         return new() { Response = req.Id };
     }
@@ -249,17 +249,17 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        await context.DeliveryStatusesRetailDocuments
+        await context.DeliveriesStatusesDocumentsRetail
             .Where(x => x.Id == req.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Name, req.Name)
                 .SetProperty(p => p.DeliveryStatus, req.DeliveryStatus)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
-        await context.DeliveryRetailDocuments
+        await context.DeliveryDocumentsRetail
             .Where(x => x.Id == req.DeliveryDocumentId)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.DeliveryStatus, context.DeliveryStatusesRetailDocuments.Where(y => y.DeliveryDocumentId == req.DeliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.DeliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
@@ -268,7 +268,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<DeliveryStatusRetailDocumentModelDB>> SelectDeliveryStatusesDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryStatusesRetailDocumentsRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DeliveryStatusRetailDocumentModelDB>? q = context.DeliveryStatusesRetailDocuments.AsQueryable();
+        IQueryable<DeliveryStatusRetailDocumentModelDB>? q = context.DeliveriesStatusesDocumentsRetail.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery));
@@ -293,15 +293,15 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<ResponseBaseModel> DeleteDeliveryStatusDocumentAsync(int statusId, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DeliveryStatusRetailDocumentModelDB> q = context.DeliveryStatusesRetailDocuments.Where(x => x.Id == statusId);
+        IQueryable<DeliveryStatusRetailDocumentModelDB> q = context.DeliveriesStatusesDocumentsRetail.Where(x => x.Id == statusId);
         int deliveryDocumentId = await q.Select(x => x.DeliveryDocumentId).FirstAsync(cancellationToken: token);
 
         await q.ExecuteDeleteAsync(cancellationToken: token);
 
-        await context.DeliveryRetailDocuments
+        await context.DeliveryDocumentsRetail
             .Where(x => x.Id == deliveryDocumentId)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.DeliveryStatus, context.DeliveryStatusesRetailDocuments.Where(y => y.DeliveryDocumentId == deliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == deliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Строка-статус успешно удалена");
     }
@@ -807,7 +807,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.RetailOrders.AnyAsync(x => x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
+        if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.OrdersRetail.AnyAsync(x => x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Документ [ext #:{req.ExternalDocumentId}] уже существует" }] };
 
         if (req.Rows is not null && req.Rows.Count != 0)
@@ -826,7 +826,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.CreatedAtUTC = DateTime.UtcNow;
         req.DateDocument = req.DateDocument.SetKindUtc();
 
-        await context.RetailOrders.AddAsync(req, token);
+        await context.OrdersRetail.AddAsync(req, token);
         await context.SaveChangesAsync(token);
         return new TResponseModel<int>()
         {
@@ -844,10 +844,10 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.RetailOrders.AnyAsync(x => x.Id != req.Id && x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
+        if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.OrdersRetail.AnyAsync(x => x.Id != req.Id && x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
             return ResponseBaseModel.CreateError($"Документ [ext #:{req.ExternalDocumentId}] уже существует");
 
-        int res = await context.RetailOrders
+        int res = await context.OrdersRetail
               .Where(x => x.Id == req.Id)
               .ExecuteUpdateAsync(set => set
                   .SetProperty(p => p.Name, req.Name.Trim())
@@ -867,7 +867,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<DocumentRetailModelDB>> SelectRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DocumentRetailModelDB> q = context.RetailOrders.AsQueryable();
+        IQueryable<DocumentRetailModelDB> q = context.OrdersRetail.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x =>
@@ -882,7 +882,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => req.Payload.CreatorsFilterIdentityId.Contains(x.AuthorIdentityUserId));
 
         if (req.Payload?.ExcludeDeliveryId.HasValue == true && req.Payload.ExcludeDeliveryId > 0)
-            q = q.Where(x => !context.DeliveriesOrdersLinks.Any(y => y.OrderDocumentId == x.Id && y.DeliveryDocumentId == req.Payload.ExcludeDeliveryId));
+            q = q.Where(x => !context.OrdersDeliveriesLinks.Any(y => y.OrderDocumentId == x.Id && y.DeliveryDocumentId == req.Payload.ExcludeDeliveryId));
 
         if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Length != 0)
             q = q.Where(x => req.Payload.StatusesFilter.Contains(x.StatusDocument));
@@ -901,6 +901,13 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
+        List<DocumentRetailModelDB> res = await pq
+                .Include(x => x.Rows)
+                .Include(x => x.Deliveries)
+                .ToListAsync(cancellationToken: token);
+
+        res.ForEach(x=> { if (x.StatusDocument == 0 || x.StatusDocument == default) x.StatusDocument = null; });
+
         return new()
         {
             PageNum = req.PageNum,
@@ -908,10 +915,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq
-                .Include(x => x.Rows)
-                .Include(x => x.Deliveries)
-                .ToListAsync(cancellationToken: token)
+            Response = res
         };
     }
 
@@ -919,7 +923,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TResponseModel<DocumentRetailModelDB[]>> RetailDocumentsGetAsync(RetailDocumentsGetRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DocumentRetailModelDB>? q = context.RetailOrders
+        IQueryable<DocumentRetailModelDB>? q = context.OrdersRetail
             .Where(x => req.Ids.Contains(x.Id));
 
         TResponseModel<DocumentRetailModelDB[]> res = new()
@@ -953,10 +957,10 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Nomenclature = null;
         req.Offer = null;
 
-        await context.RowsRetailsOrders.AddAsync(req, token);
+        await context.RowsOrdersRetails.AddAsync(req, token);
         await context.SaveChangesAsync(token);
 
-        await context.RetailOrders
+        await context.OrdersRetail
           .Where(x => x.Id == req.OrderId)
           .ExecuteUpdateAsync(set => set
               .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
@@ -972,7 +976,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        await context.RowsRetailsOrders
+        await context.RowsOrdersRetails
           .Where(x => x.Id == req.Id)
           .ExecuteUpdateAsync(set => set
               .SetProperty(p => p.Comment, req.Comment)
@@ -980,7 +984,7 @@ public class RetailService(IIdentityTransmission identityRepo,
               .SetProperty(p => p.Version, Guid.NewGuid())
               .SetProperty(p => p.Amount, req.Amount), cancellationToken: token);
 
-        await context.RetailOrders
+        await context.OrdersRetail
           .Where(x => x.Id == req.OrderId)
           .ExecuteUpdateAsync(set => set
               .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
@@ -995,7 +999,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             return new() { Status = new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }] } };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RowOfRetailOrderDocumentModelDB>? q = context.RowsRetailsOrders.Where(x => x.OrderId == req.Payload.OrderId).AsQueryable();
+        IQueryable<RowOfRetailOrderDocumentModelDB>? q = context.RowsOrdersRetails.Where(x => x.OrderId == req.Payload.OrderId).AsQueryable();
 
         IQueryable<RowOfRetailOrderDocumentModelDB>? pq = q
             .OrderBy(x => x.Id)
@@ -1018,26 +1022,26 @@ public class RetailService(IIdentityTransmission identityRepo,
 
     #region Deliveries orders link`s 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateDeliveryOrderLinkDocumentAsync(RetailDeliveryOrderLinkModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateDeliveryOrderLinkDocumentAsync(RetailOrderDeliveryLinkModelDB req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        if (await context.DeliveriesOrdersLinks.AnyAsync(x => x.DeliveryDocumentId == req.DeliveryDocumentId && x.OrderDocumentId == req.OrderDocumentId, cancellationToken: token))
+        if (await context.OrdersDeliveriesLinks.AnyAsync(x => x.DeliveryDocumentId == req.DeliveryDocumentId && x.OrderDocumentId == req.OrderDocumentId, cancellationToken: token))
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Warning, Text = "Документ уже добавлен" }] };
 
         req.OrderDocument = null;
         req.DeliveryDocument = null;
 
-        await context.DeliveriesOrdersLinks.AddAsync(req, token);
+        await context.OrdersDeliveriesLinks.AddAsync(req, token);
         await context.SaveChangesAsync(token);
         return new() { Response = req.Id };
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateDeliveryOrderLinkDocumentAsync(RetailDeliveryOrderLinkModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateDeliveryOrderLinkDocumentAsync(RetailOrderDeliveryLinkModelDB req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        await context.DeliveriesOrdersLinks
+        await context.OrdersDeliveriesLinks
             .Where(x => x.Id == req.Id || (req.OrderDocumentId == x.OrderDocumentId && req.DeliveryDocumentId == x.DeliveryDocumentId))
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.WeightShipping, req.WeightShipping), cancellationToken: token);
@@ -1046,10 +1050,10 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<RetailDeliveryOrderLinkModelDB>> SelectDeliveriesOrdersLinksDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<RetailOrderDeliveryLinkModelDB>> SelectDeliveriesOrdersLinksDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RetailDeliveryOrderLinkModelDB> q = context.DeliveriesOrdersLinks.AsQueryable();
+        IQueryable<RetailOrderDeliveryLinkModelDB> q = context.OrdersDeliveriesLinks.AsQueryable();
 
         bool
             forOrders = req.Payload?.OrdersIds is not null && req.Payload.OrdersIds.Length != 0,
@@ -1061,7 +1065,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (forDeliveries)
             q = q.Where(x => req.Payload!.DeliveriesIds!.Contains(x.DeliveryDocumentId));
 
-        IQueryable<RetailDeliveryOrderLinkModelDB> pq = q
+        IQueryable<RetailOrderDeliveryLinkModelDB> pq = q
             .OrderBy(x => x.OrderDocumentId)
             .ThenBy(x => x.DeliveryDocumentId)
             .Skip(req.PageNum * req.PageSize)
@@ -1089,10 +1093,10 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.DeliveryDocumentId <= 0)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Не указан документ доставки" }] };
 
-        if (!await context.DeliveriesOrdersLinks.AnyAsync(x => x.DeliveryDocumentId == req.DeliveryDocumentId, cancellationToken: token))
+        if (!await context.OrdersDeliveriesLinks.AnyAsync(x => x.DeliveryDocumentId == req.DeliveryDocumentId, cancellationToken: token))
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Info, Text = "Документ доставки без заказов" }] };
 
-        return new() { Response = await context.DeliveriesOrdersLinks.Where(x => x.DeliveryDocumentId == req.DeliveryDocumentId).SumAsync(x => x.WeightShipping, cancellationToken: token) };
+        return new() { Response = await context.OrdersDeliveriesLinks.Where(x => x.DeliveryDocumentId == req.DeliveryDocumentId).SumAsync(x => x.WeightShipping, cancellationToken: token) };
     }
 
     /// <inheritdoc/>
@@ -1100,7 +1104,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        int res = await context.DeliveriesOrdersLinks
+        int res = await context.OrdersDeliveriesLinks
              .Where(x => x.Id == req.OrderDeliveryLinkId || (x.OrderDocumentId == req.OrderId && x.DeliveryDocumentId == req.DeliveryId))
              .ExecuteDeleteAsync(cancellationToken: token);
 
@@ -1203,13 +1207,13 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Name = req.Name.Trim();
         req.CreatedAtUTC = DateTime.UtcNow;
 
-        await context.OrdersStatuses.AddAsync(req, token);
+        await context.OrdersStatusesRetails.AddAsync(req, token);
         await context.SaveChangesAsync(token);
 
-        await context.RetailOrders
+        await context.OrdersRetail
             .Where(x => x.Id == req.OrderDocumentId)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.StatusDocument, context.OrdersStatuses.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
         return new() { Response = req.Id };
     }
@@ -1219,17 +1223,17 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         req.Name = req.Name.Trim();
-        await context.OrdersStatuses
+        await context.OrdersStatusesRetails
             .Where(x => x.Id == req.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Name, req.Name)
                 .SetProperty(p => p.StatusDocument, req.StatusDocument)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
-        await context.RetailOrders
+        await context.OrdersRetail
             .Where(x => x.Id == req.OrderDocumentId)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.StatusDocument, context.OrdersStatuses.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");
     }
@@ -1238,7 +1242,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<OrderStatusRetailDocumentModelDB>> SelectOrderDocumentStatusesAsync(TPaginationRequestStandardModel<SelectOrderStatusesRetailDocumentsRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<OrderStatusRetailDocumentModelDB>? q = context.OrdersStatuses.AsQueryable();
+        IQueryable<OrderStatusRetailDocumentModelDB>? q = context.OrdersStatusesRetails.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery));
@@ -1263,15 +1267,15 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<ResponseBaseModel> DeleteOrderStatusDocumentAsync(int statusId, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<OrderStatusRetailDocumentModelDB> q = context.OrdersStatuses.Where(x => x.Id == statusId);
+        IQueryable<OrderStatusRetailDocumentModelDB> q = context.OrdersStatusesRetails.Where(x => x.Id == statusId);
         int deliveryDocumentId = await q.Select(x => x.OrderDocumentId).FirstAsync(cancellationToken: token);
 
         await q.ExecuteDeleteAsync(cancellationToken: token);
 
-        await context.RetailOrders
+        await context.OrdersRetail
             .Where(x => x.Id == deliveryDocumentId)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.StatusDocument, context.OrdersStatuses.Where(y => y.OrderDocumentId == deliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == deliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Строка-статус успешно удалена");
     }

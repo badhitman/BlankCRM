@@ -267,7 +267,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("WarehouseId");
 
-                    b.ToTable("DeliveryRetailDocuments");
+                    b.ToTable("DeliveryDocumentsRetail");
                 });
 
             modelBuilder.Entity("SharedLib.DeliveryStatusRetailDocumentModelDB", b =>
@@ -311,7 +311,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("Name");
 
-                    b.ToTable("DeliveryStatusesRetailDocuments");
+                    b.ToTable("DeliveriesStatusesDocumentsRetail");
                 });
 
             modelBuilder.Entity("SharedLib.DocumentRetailModelDB", b =>
@@ -378,7 +378,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("ExternalDocumentId", "HelpDeskId", "AuthorIdentityUserId", "StatusDocument");
 
-                    b.ToTable("RetailOrders");
+                    b.ToTable("OrdersRetail");
                 });
 
             modelBuilder.Entity("SharedLib.LockTransactionModelDB", b =>
@@ -687,7 +687,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("StatusDocument");
 
-                    b.ToTable("OrdersStatuses");
+                    b.ToTable("OrdersStatusesRetails");
                 });
 
             modelBuilder.Entity("SharedLib.OrganizationContractorModel", b =>
@@ -833,6 +833,9 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.Property<decimal>("AmountPayment")
                         .HasColumnType("numeric");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.Property<int>("OrderDocumentId")
                         .HasColumnType("integer");
@@ -1039,7 +1042,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.ToTable("AttendancesReg");
                 });
 
-            modelBuilder.Entity("SharedLib.RetailDeliveryOrderLinkModelDB", b =>
+            modelBuilder.Entity("SharedLib.RetailOrderDeliveryLinkModelDB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1049,6 +1052,9 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.Property<int>("DeliveryDocumentId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.Property<int>("OrderDocumentId")
                         .HasColumnType("integer");
@@ -1060,10 +1066,12 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("DeliveryDocumentId");
 
+                    b.HasIndex("Name");
+
                     b.HasIndex("OrderDocumentId", "DeliveryDocumentId")
                         .IsUnique();
 
-                    b.ToTable("DeliveriesOrdersLinks");
+                    b.ToTable("OrdersDeliveriesLinks");
                 });
 
             modelBuilder.Entity("SharedLib.RowOfDeliveryRetailDocumentModelDB", b =>
@@ -1106,7 +1114,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("Quantity");
 
-                    b.ToTable("RowsDeliveryRetailDocuments");
+                    b.ToTable("RowsDeliveryDocumentsRetail");
                 });
 
             modelBuilder.Entity("SharedLib.RowOfOrderDocumentModelDB", b =>
@@ -1197,7 +1205,7 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.HasIndex("Quantity");
 
-                    b.ToTable("RowsRetailsOrders");
+                    b.ToTable("RowsOrdersRetails");
                 });
 
             modelBuilder.Entity("SharedLib.RowOfWarehouseDocumentModelDB", b =>
@@ -1800,7 +1808,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("SharedLib.RetailDeliveryOrderLinkModelDB", b =>
+            modelBuilder.Entity("SharedLib.RetailOrderDeliveryLinkModelDB", b =>
                 {
                     b.HasOne("SharedLib.DeliveryDocumentRetailModelDB", "DeliveryDocument")
                         .WithMany("OrdersLinks")

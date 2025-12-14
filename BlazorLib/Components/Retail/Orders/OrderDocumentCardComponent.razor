@@ -82,6 +82,9 @@ else
                         <OrderTableRowsComponent Document="editDocument" @ref=tableRowsRef />
                     }
                 </MudTabPanel>
+                <MudTabPanel Text="Статусы" Disabled="@(OrderId < 1)">
+                    <OrderStatusesTableComponent Document="editDocument" />
+                </MudTabPanel>
                 <MudTabPanel Text="Отгрузка/Доставка" Disabled="@(OrderId < 1)">
                     <OrdersDeliveriesLinksTableComponent OrderId="OrderId" />
                 </MudTabPanel>

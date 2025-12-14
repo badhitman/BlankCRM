@@ -182,39 +182,39 @@ public partial class CommerceLayerContext : DbContext
     /// <summary>
     /// RetailOrders
     /// </summary>
-    public DbSet<DocumentRetailModelDB> RetailOrders { get; set; } = default!;
+    public DbSet<DocumentRetailModelDB> OrdersRetail { get; set; } = default!;
 
     /// <summary>
     /// RowsRetailsOrders
     /// </summary>
-    public DbSet<RowOfRetailOrderDocumentModelDB> RowsRetailsOrders { get; set; } = default!;
+    public DbSet<RowOfRetailOrderDocumentModelDB> RowsOrdersRetails { get; set; } = default!;
 
     /// <summary>
-    /// DeliveriesOrdersLinks
+    /// OrdersDeliveriesLinks
     /// </summary>
-    public DbSet<RetailDeliveryOrderLinkModelDB> DeliveriesOrdersLinks { get; set; } = default!;
+    public DbSet<RetailOrderDeliveryLinkModelDB> OrdersDeliveriesLinks { get; set; } = default!;
 
     /// <summary>
-    /// DeliveriesOrdersLinks
+    /// OrdersStatuses
     /// </summary>
-    public DbSet<OrderStatusRetailDocumentModelDB> OrdersStatuses { get; set; } = default!;
+    public DbSet<OrderStatusRetailDocumentModelDB> OrdersStatusesRetails { get; set; } = default!;
     #endregion
 
     #region Delivery
     /// <summary>
     /// DeliveryDocuments
     /// </summary>
-    public DbSet<DeliveryDocumentRetailModelDB> DeliveryRetailDocuments { get; set; } = default!;
+    public DbSet<DeliveryDocumentRetailModelDB> DeliveryDocumentsRetail { get; set; } = default!;
 
     /// <summary>
     /// RowsDeliveryRetailDocuments
     /// </summary>
-    public DbSet<RowOfDeliveryRetailDocumentModelDB> RowsDeliveryRetailDocuments { get; set; } = default!;
+    public DbSet<RowOfDeliveryRetailDocumentModelDB> RowsDeliveryDocumentsRetail { get; set; } = default!;
 
     /// <summary>
     /// Хроника статусов доставки
     /// </summary>
-    public DbSet<DeliveryStatusRetailDocumentModelDB> DeliveryStatusesRetailDocuments { get; set; } = default!;
+    public DbSet<DeliveryStatusRetailDocumentModelDB> DeliveriesStatusesDocumentsRetail { get; set; } = default!;
     #endregion
 
     #region Payment`s

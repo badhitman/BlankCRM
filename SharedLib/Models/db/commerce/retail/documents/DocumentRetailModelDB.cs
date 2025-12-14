@@ -33,7 +33,7 @@ public class DocumentRetailModelDB : OrderDocumentBaseModel
     /// <summary>
     /// DeliveryDocument
     /// </summary>
-    public List<RetailDeliveryOrderLinkModelDB>? Deliveries { get; set; }
+    public List<RetailOrderDeliveryLinkModelDB>? Deliveries { get; set; }
 
     /// <inheritdoc/>
     public List<RowOfRetailOrderDocumentModelDB>? Rows { get; set; }
