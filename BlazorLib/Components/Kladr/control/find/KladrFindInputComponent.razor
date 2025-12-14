@@ -3,7 +3,7 @@
 @inherits BlazorBusyComponentBaseModel
 
 <div class="input-group mb-3">
-    <span class="input-group-text">Поиск адреса</span>
+    <span class="input-group-text">Поиск адреса 1</span>
     <input @bind-value="FindText" @bind-value:event="oninput" type="text" class="form-control" placeholder="Искомое название" aria-label="с учётом регистра" aria-describedby="button-addon2">
     <button @onclick="OpenDialogAsync" class="btn btn-outline-secondary" type="button" id="button-addon2" disabled="@(string.IsNullOrWhiteSpace(FindText))">Найти</button>
 </div>

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using DbLayerLib;
 using SharedLib;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace DbcLib;
 
@@ -47,13 +48,14 @@ public abstract partial class KladrLayerContext : DbContext
     /// <inheritdoc/>
     static string GetFindQuery(string findText, bool housesInclude, string[]? codeLikeFilters = null)
     {
+        string findTextCompress = Regex.Replace(findText, @"\s+", "");
         return $@"SELECT x.""CODE"" FROM ((SELECT o.""CODE"", o.""NAME"", 1 as ""LEVEL""
                     FROM public.""{nameof(ObjectsKLADR)}"" AS o
-                    WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"o.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR o.""NAME"" LIKE '{findText}'))
+                    WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"o.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR o.""NAME"" LIKE '%{findText}%' OR o.""NAME"" LIKE '%{findTextCompress}%'))
                     UNION
                     (SELECT s.""CODE"", s.""NAME"", 2 as ""LEVEL""
                     FROM public.""{nameof(StreetsKLADR)}"" AS s
-                    WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"s.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR s.""NAME"" LIKE '{findText}'))
+                    WHERE {(codeLikeFilters is null || codeLikeFilters.Length == 0 || codeLikeFilters.Length == 0 ? "" : $"({string.Join(" OR ", codeLikeFilters.Select(x => $"s.\"CODE\" LIKE '{x}'"))}) AND")} ({string.IsNullOrWhiteSpace(findText)} OR s.""NAME"" LIKE '{findText}' OR s.""NAME"" LIKE '{findTextCompress}'))
                     {(!housesInclude ? "" : $@"
                     UNION
                     (SELECT h.""CODE"", h.""NAME"", 3 as ""LEVEL""

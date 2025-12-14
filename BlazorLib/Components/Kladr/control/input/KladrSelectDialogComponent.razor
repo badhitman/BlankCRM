@@ -56,7 +56,7 @@
                             <span class="visually-hidden" role="status">Loading...</span>
                         </button>
                     }
-                    <input @bind="FindName" type="text" class="form-control" placeholder="Поиск адреса" disabled="@IsBusyProgress">
+                    <input @bind="FindName" type="text" class="form-control" placeholder="Поиск адреса 3" disabled="@IsBusyProgress">
                     <button @onclick="async () => { if (!IsBusyProgress) { await RebuildTable(); } }" class="btn btn-outline-secondary" type="button" disabled="@IsBusyProgress">Найти</button>
                 </div>
             }
