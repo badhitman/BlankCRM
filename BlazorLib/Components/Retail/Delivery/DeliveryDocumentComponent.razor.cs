@@ -41,7 +41,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     DeliveryTableRowsRetailComponent? tableRowsRef;
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
-    decimal totalWeight;
+    decimal totalWeightOrdersDocumentsLinks;
 
     bool CannotSave
     {
@@ -74,9 +74,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             if (string.IsNullOrWhiteSpace(recipientUser.KladrCode) || string.IsNullOrWhiteSpace(recipientUser.KladrTitle))
                 return false;
 
-            return
-                DeliveryAddressSelectedKladrObject.Id != editDoc.KladrCode &&
-                !string.IsNullOrWhiteSpace(editDoc.KladrCode);
+            return recipientUser.KladrCode != editDoc.KladrCode;
         }
     }
 
@@ -212,7 +210,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
             TResponseModel<decimal> totalW = await RetailRepo.TotalWeightOrdersDocumentsLinksAsync(new() { DeliveryDocumentId = DeliveryDocumentId });
             SnackBarRepo.ShowMessagesResponse(totalW.Messages);
-            totalWeight = totalW.Response;
+            totalWeightOrdersDocumentsLinks = totalW.Response;
 
             await SetBusyAsync(false);
         }
@@ -239,7 +237,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
                 currentDoc = res.Response.First();
                 TResponseModel<decimal> totalW = await RetailRepo.TotalWeightOrdersDocumentsLinksAsync(new() { DeliveryDocumentId = currentDoc.Id });
                 SnackBarRepo.ShowMessagesResponse(totalW.Messages);
-                totalWeight = totalW.Response;
+                totalWeightOrdersDocumentsLinks = totalW.Response;
             }
         }
         else

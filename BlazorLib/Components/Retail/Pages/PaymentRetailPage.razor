@@ -6,6 +6,8 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize]
 
+<h4>Платёж/оплата # @PaymentId</h4>
+
 <PaymentDocumentComponent PaymentId="PaymentId" />
 
 @code {

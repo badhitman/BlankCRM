@@ -1,10 +1,11 @@
 ﻿@page "/retail/order-document/{OrderId:int}"
+
 @using BlazorLib.Components.Retail.Orders
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize]
 
-<h5>Заказ (розница)</h5>
+<h4>Заказ (розница) # @OrderId</h4>
 <OrderDocumentCardComponent OrderId="OrderId" />
 
 @code {

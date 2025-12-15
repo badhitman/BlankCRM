@@ -163,20 +163,6 @@ window.clipboardCopy = {
     }
 }
 
-window.JivoIsLoaded = false;
-function jivo_onLoadCallback() {
-    window.JivoIsLoaded = true;
-    console.log('Widget is active')
-}
-
-window.tryInitJivoSite = function () {
-    if (window.JivoIsLoaded == true) {
-        jivo_init();
-        console.log('Widget re active')
-    }
-};
-window.addEventListener('change', (event) => { window.tryInitJivoSite(); });
-
 window.bootstrapTheme = {
     IsDark: function () {
         let attrName = 'data-bs-theme';
