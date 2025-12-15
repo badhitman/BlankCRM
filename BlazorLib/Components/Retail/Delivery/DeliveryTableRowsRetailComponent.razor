@@ -6,7 +6,7 @@
 <MudTable Dense Hover ReadOnly="ReadOnly"
           SortLabel="@(nameof(RowOfDeliveryRetailDocumentModelDB.Nomenclature.Name))"
           CanCancelEdit
-          ServerData="ServerReload"
+          Items="itemsData"
           @ref=tableRef
           RowEditPreview="RowEditPreviewHandler"
           RowEditCommit="RowEditCommitHandler"
@@ -28,7 +28,7 @@
                                                 @ref="AddingDomRef"
                                                 WarehouseId="Document.WarehouseId"
                                                 AllOffers="allOffers"
-                                                CurrentRows="pagedData.Select(x => x.OfferId).ToList()"
+                                                CurrentRows="itemsData.Select(x => x.OfferId).ToList()"
                                                 AddingOfferHandler="AddingOfferAction" />
             </div>
         }
@@ -126,4 +126,17 @@
     </PagerContent>
 </MudTable>
 
-<OrdersEqualsAndLoadComponent Document="Document" />
+@if (Document.Id > 0 && OffersForAddQuery.Any())
+{
+    <div class="alert alert-primary mt-2" role="alert">
+        <h5 class="alert-heading">Добавить недостающие позиции из заказов?</h5>
+        <hr />
+        @foreach (KeyValuePair<OfferModelDB, (decimal Quantity, decimal Amount)> off in OffersForAddQuery)
+        {
+            <MudChip T="KeyValuePair<OfferModelDB, (decimal Quantity, decimal Amount)>"
+                     Variant="Variant.Outlined"
+                     OnClick="async () => await AddOfferToDeliveryDocument(off)"
+                     Color="Color.Primary">@off.Key.GetName() - x @off.Value (на сумму: @off.Value.Amount)</MudChip>
+        }
+    </div>
+}

@@ -39,7 +39,7 @@
     {
         foreach (ScriptInjectionModel scriptSrc in ServerConfig.Value.ScriptsInject)
         {
-            <script src="@scriptSrc.Src"></script>
+            <script src="@scriptSrc.Src" defer></script>
         }
     }
 </head>

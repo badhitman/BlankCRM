@@ -202,7 +202,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         await SetBusyAsync(false);
     }
 
-    async void ReloadDeliveriesOrdersLincsAction()
+    async void ReloadDeliveriesOrdersLinksAction()
     {
         if (DeliveryDocumentId > 0)
         {

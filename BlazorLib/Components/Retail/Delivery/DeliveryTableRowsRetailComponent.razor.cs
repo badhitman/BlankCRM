@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib.Components.Commerce;
 using Microsoft.AspNetCore.Components;
+using BlazorLib.Components.Commerce;
 using MudBlazor;
 using SharedLib;
 
@@ -30,9 +30,12 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     public DeliveryDocumentRetailModelDB Document { get; set; }
 
 
-    List<RowOfDeliveryRetailDocumentModelDB> pagedData = [];
+    readonly List<RowOfDeliveryRetailDocumentModelDB> itemsData = [];
     RowOfDeliveryRetailDocumentModelDB? elementBeforeEdit;
-    Dictionary<OfferModelDB, (decimal Quantity, decimal Amount)> offersOfOrders = [];
+
+    readonly Dictionary<OfferModelDB, (decimal Quantity, decimal Amount)> offersOfOrders = [];
+
+
     MudTable<RowOfDeliveryRetailDocumentModelDB>? tableRef;
 
     IQueryable<KeyValuePair<OfferModelDB, (decimal Quantity, decimal Amount)>> OffersForAddQuery =>
@@ -43,47 +46,34 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     /// <inheritdoc/>
     public AddRowToOrderDocumentComponent? AddingDomRef { get; private set; }
 
-    async void AddOfferToDeliveryDocument(KeyValuePair<OfferModelDB, (decimal Quantity, decimal Amount)> offerForAddElement)
+    async Task AddOfferToDeliveryDocument(KeyValuePair<OfferModelDB, (decimal Quantity, decimal Amount)> offerForAddElement)
     {
         Document.Rows ??= [];
         int exist_row = Document.Rows.FindIndex(x => x.OfferId == offerForAddElement.Key.Id);
         if (exist_row < 0)
         {
-            if (Document.Id <= 0)
+            RowOfDeliveryRetailDocumentModelDB req = new()
             {
-                Document.Rows.Add(new RowOfDeliveryRetailDocumentModelDB()
-                {
-                    Document = Document,
-                    DocumentId = Document.Id,
-                    Nomenclature = offerForAddElement.Key.Nomenclature,
-                    NomenclatureId = offerForAddElement.Key.NomenclatureId,
-                    Offer = offerForAddElement.Key,
-                    OfferId = offerForAddElement.Key.Id,
-                    Quantity = offerForAddElement.Value.Quantity,
-                    Amount = offerForAddElement.Value.Amount,
-                });
-            }
-            else
-            {
-                RowOfDeliveryRetailDocumentModelDB req = new()
-                {
-                    Document = Document,
-                    DocumentId = Document.Id,
-                    Nomenclature = offerForAddElement.Key.Nomenclature,
-                    NomenclatureId = offerForAddElement.Key.NomenclatureId,
-                    Offer = offerForAddElement.Key,
-                    OfferId = offerForAddElement.Key.Id,
-                    Quantity = offerForAddElement.Value.Quantity,
-                    Amount = offerForAddElement.Value.Amount,
-                };
-                await SetBusyAsync();
-                TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(req);
-                SnackBarRepo.ShowMessagesResponse(res.Messages);
-                if (tableRef is not null)
-                    await tableRef.ReloadServerData();
+                Document = Document,
+                DocumentId = Document.Id,
+                Nomenclature = offerForAddElement.Key.Nomenclature,
+                NomenclatureId = offerForAddElement.Key.NomenclatureId,
+                Offer = offerForAddElement.Key,
+                OfferId = offerForAddElement.Key.Id,
+                Quantity = offerForAddElement.Value.Quantity,
+                Amount = offerForAddElement.Value.Amount,
+            };
+            await SetBusyAsync();
+            TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(req);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
 
-                await SetBusyAsync(false);
-            }
+            await ElementsReload();
+
+            if (tableRef is not null)
+                await tableRef.ReloadServerData();
+
+            await GetOrdersOffers();
+            await SetBusyAsync(false);
 
             if (DocumentUpdateHandler is not null)
                 DocumentUpdateHandler();
@@ -96,6 +86,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
 
     async Task GetOrdersOffers()
     {
+        offersOfOrders.Clear();
         TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req = new()
         {
             PageSize = int.MaxValue,
@@ -128,6 +119,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
+        await ElementsReload();
         List<Task> tasks = [
                 Task.Run(base.OnInitializedAsync),
                 Task.Run(GetOrdersOffers),
@@ -137,7 +129,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
         await SetBusyAsync(false);
     }
 
-    async Task<TableData<RowOfDeliveryRetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
+    async Task ElementsReload()
     {
         TPaginationRequestStandardModel<SelectRowsOfDeliveriesRetailDocumentsRequestModel> req = new()
         {
@@ -145,19 +137,17 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             {
                 DeliveryDocumentId = Document.Id,
             },
-            PageNum = state.Page,
-            PageSize = state.PageSize,
+            PageSize = int.MaxValue,
         };
-        await SetBusyAsync(token: token);
-        TPaginationResponseModel<RowOfDeliveryRetailDocumentModelDB> res = await RetailRepo.SelectRowsOfDeliveryDocumentsAsync(req, token);
+        await SetBusyAsync();
+        TPaginationResponseModel<RowOfDeliveryRetailDocumentModelDB> res = await RetailRepo.SelectRowsOfDeliveryDocumentsAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
 
-        pagedData.Clear();
+        itemsData.Clear();
         if (res.Response is not null)
-            pagedData.AddRange(res.Response);
+            itemsData.AddRange(res.Response);
 
-        await SetBusyAsync(false, token);
-        return new TableData<RowOfDeliveryRetailDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -232,6 +222,8 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                 await SetBusyAsync();
                 TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(req);
                 SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+                await ElementsReload();
                 if (tableRef is not null)
                     await tableRef.ReloadServerData();
 
@@ -248,6 +240,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                 ResponseBaseModel res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(Document.Rows[exist_row]);
                 SnackBarRepo.ShowMessagesResponse(res.Messages);
 
+                await ElementsReload();
                 if (tableRef is not null)
                     await tableRef.ReloadServerData();
 
@@ -291,6 +284,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                     await SetBusyAsync();
                     TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(off);
                     SnackBarRepo.ShowMessagesResponse(res.Messages);
+                    await ElementsReload();
                     if (tableRef is not null)
                         await tableRef.ReloadServerData();
 
@@ -305,6 +299,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                     ResponseBaseModel res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(off);
                     SnackBarRepo.ShowMessagesResponse(res.Messages);
 
+                    await ElementsReload();
                     if (tableRef is not null)
                         await tableRef.ReloadServerData();
 
