@@ -175,6 +175,7 @@ window.tryInitJivoSite = function () {
         console.log('Widget re active')
     }
 };
+window.addEventListener('change', (event) => { window.tryInitJivoSite(); });
 
 window.bootstrapTheme = {
     IsDark: function () {
