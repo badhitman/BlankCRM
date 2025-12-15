@@ -42,6 +42,12 @@
             <script src="@scriptSrc.Src?version=@GlobalStaticConstants.InitSalt"></script>
         }
     }
+    <script>
+        function jivo_onLoadCallback() {
+           jivo_init();
+           console.log('Widget is active')
+          }
+    </script>
 </head>
 
 <body>
