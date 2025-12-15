@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
+using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
 
@@ -17,6 +18,9 @@ public partial class App
     ITelegramTransmission TgRemoteCall { get; set; } = default!;
 
     [Inject]
+    IJSRuntime JS { get; set; } = default!;
+
+    [Inject]
     IOptions<TelegramBotConfigModel> WebConfig { get; set; } = default!;
 
     [Inject]
@@ -32,6 +36,8 @@ public partial class App
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await JS.InvokeVoidAsync("tryInitJivoSite");
+
         if (WebConfig.Value.BaseUri is null)
             WebConfig.Value.BaseUri = NavigatorRepo.BaseUri;
 
