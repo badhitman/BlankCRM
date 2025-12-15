@@ -162,12 +162,22 @@ window.clipboardCopy = {
             });
     }
 }
+
+var JivoIsLoaded = false;
+function jivo_onLoadCallback() {
+    JivoIsLoaded = true;
+    console.log('Widget is active')
+}
+
 $(document).ready(function () {
     // Code to run when the DOM is ready
     console.info('document ready');
-    // jivo_init();
-    // console.log('Widget is active')
+    if (JivoIsLoaded == true) {
+        jivo_init();
+        console.log('Widget re active')
+    }
 });
+
 window.bootstrapTheme = {
     IsDark: function () {
         let attrName = 'data-bs-theme';
