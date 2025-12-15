@@ -170,7 +170,7 @@ function jivo_onLoadCallback() {
 }
 
 window.tryInitJivoSite = function () {
-    if (window.JivoIsLoaded) {
+    if (window.JivoIsLoaded == true) {
         jivo_init();
         console.log('Widget re active')
     }

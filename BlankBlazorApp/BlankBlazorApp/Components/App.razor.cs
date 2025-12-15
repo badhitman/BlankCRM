@@ -36,7 +36,7 @@ public partial class App
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await JS.InvokeVoidAsync("tryInitJivoSite");
+        // await JS.InvokeVoidAsync("tryInitJivoSite");
 
         if (WebConfig.Value.BaseUri is null)
             WebConfig.Value.BaseUri = NavigatorRepo.BaseUri;
