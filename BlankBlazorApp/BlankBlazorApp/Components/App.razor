@@ -20,18 +20,18 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <script type="text/javascript">
         window.downloadFileFromStream = async (fileName, contentStreamReference) => {
-        const arrayBuffer = await contentStreamReference.arrayBuffer();
-        const blob = new Blob([arrayBuffer]);
-        const url = URL.createObjectURL(blob);
-        triggerFileDownload(fileName, url);
-        URL.revokeObjectURL(url);
+            const arrayBuffer = await contentStreamReference.arrayBuffer();
+            const blob = new Blob([arrayBuffer]);
+            const url = URL.createObjectURL(blob);
+            triggerFileDownload(fileName, url);
+            URL.revokeObjectURL(url);
         };
         window.triggerFileDownload = (fileName, url) => {
-        const anchorElement = document.createElement('a');
-        anchorElement.href = url;
-        anchorElement.download = fileName ?? '';
-        anchorElement.click();
-        anchorElement.remove();
+            const anchorElement = document.createElement('a');
+            anchorElement.href = url;
+            anchorElement.download = fileName ?? '';
+            anchorElement.click();
+            anchorElement.remove();
         };
     </script>
     <HeadOutlet />
@@ -50,7 +50,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function()
         {
-            DOMContentLoaded();
+            DOMContentLoaded();            
         });
     </script>
     <script src="/lib/jquery/jquery.min.js?version=@GlobalStaticConstants.InitSalt"></script>
@@ -74,8 +74,6 @@
             $(document).tooltip({
                 track: true
             });
-            // jivo_init();
-            // console.log('Widget is active')
         };
         window.tooltipeHide = () => {
             $("div.ui-tooltip").hide();
