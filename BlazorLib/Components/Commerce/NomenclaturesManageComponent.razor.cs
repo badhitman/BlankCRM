@@ -4,7 +4,6 @@
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -72,9 +71,7 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
 
         if (res.Response is not null)
         {
-            await CacheRegistersUpdate(offers: [], goods: res.Response.Select(x => x.Id).ToArray());
-            await SetBusyAsync(false, token);
-            return new TableData<NomenclatureModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+            await CacheRegistersUpdate(offers: [], goods: [.. res.Response.Select(x => x.Id)]);
         }
 
         await SetBusyAsync(false, token);

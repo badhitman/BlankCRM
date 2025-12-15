@@ -15,36 +15,38 @@
 }
 else
 {
-    <MudSelect Label="Регион(ы) поиска"
-               Clearable
-               OnClose="() => InvokeAsync(tableRef!.ReloadServerData)"
-               OnClearButtonClick="() => InvokeAsync(tableRef!.ReloadServerData)"
-               MultiSelection @bind-SelectedValues="_regionsSelected"
-               Disabled="IsBusyProgress"
-               MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))"
-               T="string">
-        @foreach (var state in regions)
-        {
-            <MudSelectItem T="string" Value="@state.Code">@state</MudSelectItem>
-        }
-    </MudSelect>
-    <MudTable ServerData="ServerReload" Loading="IsBusyProgress" Dense Hover @ref="tableRef">
-        <HeaderContent>
-            <MudTh></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd>
-                <KladrFindTableRowComponent KladrRow="context" HighlightedText="@FindText" />
-            </MudTd>
-        </RowTemplate>
-        <NoRecordsContent>
-            <MudText>Nothing found</MudText>
-        </NoRecordsContent>
-        <LoadingContent>
-            <MudText>Downloading...</MudText>
-        </LoadingContent>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
-    </MudTable>
+    <div title="@GetType().Name">
+        <MudSelect Label="Регион(ы) поиска"
+                   Clearable
+                   OnClose="() => InvokeAsync(tableRef!.ReloadServerData)"
+                   OnClearButtonClick="() => InvokeAsync(tableRef!.ReloadServerData)"
+                   MultiSelection @bind-SelectedValues="_regionsSelected"
+                   Disabled="IsBusyProgress"
+                   MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))"
+                   T="string">
+            @foreach (var state in regions)
+            {
+                <MudSelectItem T="string" Value="@state.Code">@state</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTable ServerData="ServerReload" Loading="IsBusyProgress" Dense Hover @ref="tableRef">
+            <HeaderContent>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    <KladrFindTableRowComponent KladrRow="context" HighlightedText="@FindText" />
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>Nothing found</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>Downloading...</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </div>
 }

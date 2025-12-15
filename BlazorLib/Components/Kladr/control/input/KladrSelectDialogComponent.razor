@@ -48,7 +48,7 @@
         {
             if (CurrentMD is null || CurrentMD.Level < KladrTypesObjectsEnum.Street)
             {
-                <div class="input-group mb-3">
+                <div class="input-group mb-3" title="@GetType().Name">
                     @if (IsBusyProgress)
                     {
                         <button class="btn btn-outline-info" type="button" disabled title="Обработка запроса выполняется">
@@ -56,8 +56,13 @@
                             <span class="visually-hidden" role="status">Loading...</span>
                         </button>
                     }
-                    <input @bind="FindName" type="text" class="form-control" placeholder="Поиск адреса 3" disabled="@IsBusyProgress">
-                    <button @onclick="async () => { if (!IsBusyProgress) { await RebuildTable(); } }" class="btn btn-outline-secondary" type="button" disabled="@IsBusyProgress">Найти</button>
+                    <input @bind="FindName" type="text" class="form-control" placeholder="Поиск адреса" disabled="@IsBusyProgress">
+                    <button @onclick="async () => { if (!IsBusyProgress) { await RebuildTable(); } }"
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            disabled="@IsBusyProgress">
+                        Найти
+                    </button>
                 </div>
             }
 

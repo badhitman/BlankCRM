@@ -26,22 +26,13 @@ else
                 </MudItem>
             </MudGrid>
             <MudGrid Class="mb-3">
-                <MudItem xs="12" md="6">
+                <MudItem xs="12">
                     <RubricInputComponent SelectRubricsHandle="WarehouseSelectAction"
                                           ModeSelectingRubrics=ModesSelectRubricsEnum.SelectAny
                                           RubricInitial="@editDocument.WarehouseId"
                                           Title="Склад списания"
                                           ContextName="@Routes.WAREHOUSE_CONTROLLER_NAME"
                                           ShowDisabledRubrics />
-                </MudItem>
-                <MudItem xs="12" md="6">
-                    <label class="form-label">Статус</label>
-                    <select class="form-select" aria-label="Default select example" @bind="editDocument.StatusDocument">
-                        @foreach (StatusesDocumentsEnum sd in Enum.GetValues<StatusesDocumentsEnum>())
-                        {
-                            <option value="@sd">@sd.DescriptionInfo()</option>
-                        }
-                    </select>
                 </MudItem>
             </MudGrid>
 

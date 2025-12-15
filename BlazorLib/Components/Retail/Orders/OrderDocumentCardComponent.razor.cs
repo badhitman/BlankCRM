@@ -108,7 +108,6 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
                     currentDocument.BuyerIdentityUserId == editDocument.BuyerIdentityUserId &&
                     currentDocument.WarehouseId == editDocument.WarehouseId &&
                     currentDocument.Name == editDocument.Name &&
-                    currentDocument.StatusDocument == editDocument.StatusDocument &&
                     currentDocument.ExternalDocumentId == editDocument.ExternalDocumentId &&
                     currentDocument.Description == editDocument.Description &&
                     currentDocument.HelpDeskId == editDocument.HelpDeskId;

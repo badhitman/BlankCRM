@@ -800,17 +800,17 @@ public class RetailService(IIdentityTransmission identityRepo,
             ? null
             : Regex.Replace(req.ExternalDocumentId, @"\s+", "");
 
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.OrdersRetail.AnyAsync(x => x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Документ [ext #:{req.ExternalDocumentId}] уже существует" }] };
+
         TResponseModel<UserInfoModel[]> getUsers = await identityRepo.GetUsersOfIdentityAsync([req.AuthorIdentityUserId, req.BuyerIdentityUserId], token);
         if (!getUsers.Success())
         {
             res.AddRangeMessages(getUsers.Messages);
             return res;
         }
-
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.OrdersRetail.AnyAsync(x => x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
-            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Документ [ext #:{req.ExternalDocumentId}] уже существует" }] };
 
         if (req.Rows is not null && req.Rows.Count != 0)
         {
@@ -1542,15 +1542,51 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<ResponseBaseModel> DeleteToggleConversionAsync(int conversionId, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
         IQueryable<WalletConversionRetailDocumentModelDB> q = context.ConversionsDocumentsWalletsRetail
             .Where(x => x.Id == conversionId);
+
+        WalletConversionRetailDocumentModelDB conversionDb = await q
+            .Include(x => x.ToWallet!).ThenInclude(x => x.WalletType)
+            .Include(x => x.FromWallet!).ThenInclude(x => x.WalletType)
+            .FirstAsync(x => x.Id == conversionId, cancellationToken: token);
+
+        if (conversionDb.ToWalletId < 1 || conversionDb.ToWalletId < 1)
+            return ResponseBaseModel.CreateError("Укажите кошельки списания и зачисления!");
+
+        if (conversionDb.ToWalletSum <= 0 || conversionDb.FromWalletSum <= 0)
+            return ResponseBaseModel.CreateError("Укажите сумму списания и зачисления!");
+
+        if (conversionDb.ToWalletId == conversionDb.FromWalletId)
+            return ResponseBaseModel.CreateError("Счёт списания не может совпадать со счётом зачисления");
+
+        conversionDb.IsDisabled = !conversionDb.IsDisabled;
+
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
+        if (!conversionDb.FromWallet!.WalletType!.IsSystem && !conversionDb.FromWallet.WalletType!.IgnoreBalanceChanges && conversionDb.FromWallet.Balance < conversionDb.FromWalletSum)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Баланс не может стать отрицательным в следствии списания" }] };
+
+        await context.WalletsRetail
+                .Where(x => x.Id == conversionDb.FromWalletId)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Balance, b => b.Balance - conversionDb.FromWalletSum), cancellationToken: token);
+
+        if (!conversionDb.ToWallet!.WalletType!.IgnoreBalanceChanges)
+        {
+            await context.WalletsRetail
+                .Where(x => x.Id == conversionDb.ToWalletId)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Balance, b => b.Balance + conversionDb.ToWalletSum), cancellationToken: token);
+        }
+
         await q.ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.IsDisabled, p => !p.IsDisabled), cancellationToken: token);
+                    .SetProperty(p => p.IsDisabled, conversionDb.IsDisabled)
+                    .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
         return
             ResponseBaseModel
-            .CreateSuccess($"Документ: успешно {(await q.Select(x => x.IsDisabled)
-                .FirstAsync(cancellationToken: token) ? "включён" : "выключен")}");
+            .CreateSuccess($"Документ: успешно {(conversionDb.IsDisabled ? "включён" : "выключен")}");
     }
     #endregion
 

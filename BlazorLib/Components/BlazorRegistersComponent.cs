@@ -52,7 +52,7 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
             {
                 OfferFilter = [.. offers],
                 NomenclatureFilter = [.. goods],
-                WarehousesFilter = [warehouseId],
+                WarehousesFilter = warehouseId <= 0 ? null : [warehouseId],
                 MinQuantity = 1,
             },
             PageNum = 0,
