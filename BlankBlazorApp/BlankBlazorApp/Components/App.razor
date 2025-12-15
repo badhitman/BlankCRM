@@ -39,15 +39,9 @@
     {
         foreach (ScriptInjectionModel scriptSrc in ServerConfig.Value.ScriptsInject)
         {
-            <script src="@scriptSrc.Src?version=@GlobalStaticConstants.InitSalt"></script>
+            <script src="@scriptSrc.Src"></script>
         }
     }
-    <script>
-        function jivo_onLoadCallback() {
-           jivo_init();
-           console.log('Widget is active')
-          }
-    </script>
 </head>
 
 <body>
@@ -80,6 +74,8 @@
             $(document).tooltip({
                 track: true
             });
+            // jivo_init();
+            // console.log('Widget is active')
         };
         window.tooltipeHide = () => {
             $("div.ui-tooltip").hide();
