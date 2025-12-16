@@ -42,7 +42,7 @@ public class WalletRetailModelDB : EntryUpdatedModel
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{Balance} [{WalletType?.Name}] {Name}".Trim();
+        return $"[{WalletType?.Name}] {Name}".Trim();
     }
 
     /// <inheritdoc/>

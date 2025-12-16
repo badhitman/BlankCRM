@@ -22,6 +22,9 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     [Inject]
     IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
 
+    [Inject]
+    ITelegramTransmission TelegramRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [Parameter]
@@ -36,6 +39,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     public string? ClientId { get; set; }
 
 
+    ChatTelegramModelDB? currentChatTelegram;
     DeliveryDocumentRetailModelDB? currentDoc, editDoc;
     UserInfoModel? recipientUser;
     DeliveryTableRowsRetailComponent? tableRowsRef;
@@ -123,6 +127,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             if (getUsers.Success() && getUsers.Response is not null && getUsers.Response.Any(x => x.UserId == editDoc.RecipientIdentityUserId))
             {
                 recipientUser = getUsers.Response.First(x => x.UserId == editDoc.RecipientIdentityUserId);
+                await ReadRecipientUser();
             }
         }
         StateHasChanged();
@@ -230,6 +235,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
                 TResponseModel<decimal> totalW = await RetailRepo.TotalWeightOrdersDocumentsLinksAsync(new() { DeliveryDocumentId = currentDoc.Id });
                 SnackBarRepo.ShowMessagesResponse(totalW.Messages);
                 totalWeightOrdersDocumentsLinks = totalW.Response;
+                await ReadRecipientUser();
             }
         }
         else
@@ -254,6 +260,22 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             };
         }
         editDoc = GlobalTools.CreateDeepCopy(currentDoc);
+        await SetBusyAsync(false);
+    }
+
+    async Task ReadRecipientUser()
+    {
+        if (recipientUser is null)
+            return;
+
+        await SetBusyAsync();
+
+        if (recipientUser.TelegramId.HasValue)
+        {
+            List<ChatTelegramModelDB> chats = await TelegramRepo.ChatsReadTelegramAsync([recipientUser.TelegramId.Value]);
+            currentChatTelegram = chats.FirstOrDefault();
+        }
+
         await SetBusyAsync(false);
     }
 }

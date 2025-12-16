@@ -3,8 +3,14 @@
 @inherits BlazorBusyComponentBaseAuthModel
 
 <div class="card">
-    <div class="card-header">
-        @if (IsBusyProgress)
+    @if (CurrentOffer is not null)
+    {
+        <div class="card-header">
+            <span>Offer #@CurrentOffer.Id <sup><a href="/nomenclature/card/@CurrentOffer.NomenclatureId">номенклатура @CurrentOffer.Nomenclature?.Name</a></sup></span>
+        </div>
+    }
+    <div class="card-body">
+        @if (IsBusyProgress || editOffer is null)
         {
             <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
         }
@@ -23,7 +29,8 @@
                         </MudSelect>
                         <MudNumericField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Multiplicity" Label="Кратность" Variant="Variant.Outlined" Immediate />
                         <MudNumericField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Price" Label="Цена" Format="N2" Variant="Variant.Outlined" Immediate />
-                        <MudFab Disabled="(IsBusyProgress || !CanSave || CurrentUserSession?.IsAdmin != true)" title="Сохранить изменения" OnClick="SaveOffer" StartIcon="@Icons.Material.Filled.Save" Color="@(CanSave ? Color.Info : Color.Default)" Size="Size.Small" Class="align-self-center" />
+                        <MudNumericField Disabled="(IsBusyProgress || CurrentUserSession?.IsAdmin != true)" @bind-Value="editOffer.Weight" Label="Вес" Format="N2" Variant="Variant.Outlined" Immediate />
+                        <MudFab Disabled="(IsBusyProgress || !CanSave || CurrentUserSession?.IsAdmin != true)" title="Сохранить изменения" OnClick="SaveOffer" StartIcon="@Icons.Material.Filled.Save" Color="@(CanSave? Color.Info: Color.Default)" Size="Size.Small" Class="align-self-center" />
                         @if (!IsBusyProgress || CanSave)
                         {
                             <MudFab OnClick="() => editOffer = GlobalTools.CreateDeepCopy(CurrentOffer)!" title="Отменить изменение" StartIcon="@Icons.Material.Filled.Cancel" Color="Color.Surface" Size="Size.Small" Class="align-self-center" />
@@ -54,24 +61,6 @@
                                     <TinyMCE.Blazor.Editor @bind-Value="editOffer.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OfferId < 1)" />
                                 </div>
                             </div>
-                            <div class="card mt-3">
-                                <div class="card-body">
-                                    <FilesContextViewComponent ApplicationsNames="@([Routes.OFFER_CONTROLLER_NAME])"
-                                                               PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
-                                                               PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
-                                                               OwnerPrimaryKey="OfferId"
-                                                               @ref="filesViewRef"
-                                                               Title="Файлы"
-                                                               ManageMode />
-                                    <hr />
-                                    <TagsViewComponent ApplicationsNames="@([Routes.OFFER_CONTROLLER_NAME])"
-                                                       ManageMode
-                                                       PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
-                                                       PropertyName="@Routes.METADATA_CONTROLLER_NAME"
-                                                       Title="Теги"
-                                                       OwnerPrimaryKey="@OfferId" />
-                                </div>
-                            </div>
                         </Authorized>
                         <NotAuthorized>
                             @((MarkupString)(editOffer.Description ?? ""))
@@ -85,6 +74,27 @@
                         </MudTabPanel>
                     </Authorized>
                 </AuthorizeView>
+                <MudTabPanel Text="About">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <FilesContextViewComponent ApplicationsNames="@([Routes.OFFER_CONTROLLER_NAME])"
+                                                       PrefixPropertyName="@Routes.USER_CONTROLLER_NAME"
+                                                       PropertyName="@Routes.ATTACHMENT_CONTROLLER_NAME"
+                                                       OwnerPrimaryKey="OfferId"
+                                                       @ref="filesViewRef"
+                                                       Title="Файлы"
+                                                       ManageMode />
+                            <hr />
+
+                        </div>
+                    </div>
+                    <TagsViewComponent ApplicationsNames="@([Routes.OFFER_CONTROLLER_NAME])"
+                                       ManageMode
+                                       PrefixPropertyName="@Routes.DEFAULT_CONTROLLER_NAME"
+                                       PropertyName="@Routes.METADATA_CONTROLLER_NAME"
+                                       Title="Теги"
+                                       OwnerPrimaryKey="@OfferId" />
+                </MudTabPanel>
             </MudTabs>
         }
     </div>

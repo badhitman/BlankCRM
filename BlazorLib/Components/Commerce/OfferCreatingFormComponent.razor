@@ -9,6 +9,7 @@
             <MudSelectItem Value="u">@u.DescriptionInfo()</MudSelectItem>
         }
     </MudSelect>
+    <MudNumericField @bind-Value="weightOffer" Label="Вес" Variant="Variant.Outlined" />
     <MudNumericField Disabled="IsBusyProgress" @bind-Value="multiplicityOffer" Label="Кратность" Variant="Variant.Outlined" Immediate />
     <MudNumericField Disabled="IsBusyProgress" @bind-Value="priceOffer" Label="Цена" Format="N2" Variant="Variant.Outlined" Immediate />
     <MudFab Disabled="(!CanSave || IsBusyProgress)" OnClick="AddOffer" StartIcon="@Icons.Material.Filled.Add" Color="@(CanSave ? Color.Info : Color.Default)" Size="Size.Small" Class="align-self-center" />

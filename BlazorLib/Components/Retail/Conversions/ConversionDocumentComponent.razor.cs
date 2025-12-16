@@ -17,6 +17,9 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     IRetailService RetailRepo { get; set; } = default!;
 
     [Inject]
+    ITelegramTransmission TelegramRepo { get; set; } = default!;
+
+    [Inject]
     NavigationManager NavRepo { get; set; } = default!;
 
 
@@ -36,6 +39,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     WalletConversionRetailDocumentModelDB? currentDoc, editDoc;
     UserInfoModel? userSender, userRecipient;
     WalletSelectInputComponent? senderWalletRef, recipientWalletRef;
+    readonly List<ChatTelegramModelDB> currentChatTelegrams = [];
 
     bool CannotSave
     {
@@ -127,12 +131,26 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
             return;
 
         await CacheUsersUpdate([.. usersIds]);
-
+        currentChatTelegrams.Clear();
+        List<long> _chatsIds = [];
         if (editDoc.FromWallet is not null)
+        {
             userSender = UsersCache.First(x => x.UserId == editDoc.FromWallet.UserIdentityId);
+            if (userSender.TelegramId.HasValue)
+                _chatsIds.Add(userSender.TelegramId.Value);
+        }
 
         if (editDoc.ToWallet is not null)
+        {
             userRecipient = UsersCache.First(x => x.UserId == editDoc.ToWallet.UserIdentityId);
+            if (userRecipient.TelegramId.HasValue)
+                _chatsIds.Add(userRecipient.TelegramId.Value);
+        }
+        if (_chatsIds.Count != 0)
+        {
+            List<ChatTelegramModelDB> chats = await TelegramRepo.ChatsReadTelegramAsync([.. _chatsIds]);
+            currentChatTelegrams.AddRange(chats);
+        }
     }
 
     void SelectUserSenderAction(UserInfoModel? user)

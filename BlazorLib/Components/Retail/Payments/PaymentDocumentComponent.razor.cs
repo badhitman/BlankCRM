@@ -17,6 +17,9 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
     IRetailService RetailRepo { get; set; } = default!;
 
     [Inject]
+    ITelegramTransmission TelegramRepo { get; set; } = default!;
+
+    [Inject]
     NavigationManager NavRepo { get; set; } = default!;
 
 
@@ -36,6 +39,7 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
     PaymentRetailDocumentModelDB? currentDoc, editDoc;
     UserInfoModel? userRecipient;
     WalletSelectInputComponent? recipientWalletRef;
+    ChatTelegramModelDB? currentChatTelegram;
 
     DateTime? DatePayment
     {
@@ -89,8 +93,15 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
         TResponseModel<UserInfoModel[]> getUser = await IdentityRepo.GetUsersOfIdentityAsync([editDoc.Wallet.UserIdentityId]);
         SnackBarRepo.ShowMessagesResponse(getUser.Messages);
         if (getUser.Success() && getUser.Response is not null && getUser.Response.Any(x => x.UserId == editDoc.Wallet.UserIdentityId))
+        {
             userRecipient = getUser.Response.First(x => x.UserId == editDoc.Wallet.UserIdentityId);
 
+            if (userRecipient.TelegramId.HasValue)
+            {
+                List<ChatTelegramModelDB> chats = await TelegramRepo.ChatsReadTelegramAsync([userRecipient.TelegramId.Value]);
+                currentChatTelegram = chats.FirstOrDefault();
+            }
+        }
         await SetBusyAsync(false);
     }
 

@@ -23,6 +23,11 @@ public abstract class RowOfBaseDocumentModel
     public OfferModelDB? Offer { get; set; }
 
     /// <summary>
+    /// Вес
+    /// </summary>
+    public decimal WeightOffer { get; set; }
+
+    /// <summary>
     /// Offer
     /// </summary>
     public int OfferId { get; set; }

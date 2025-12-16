@@ -1,5 +1,6 @@
 ﻿@using BlazorLib.Components.Retail.OrdersLinks
 @using BlazorLib.Components.Retail.Wallet
+@using BlazorLib.Components.Telegram
 @using MudBlazor
 
 @inherits BlazorBusyComponentBaseAuthModel
@@ -82,6 +83,12 @@
                 <MudTabPanel Text="Платежи" Disabled="@(PaymentId < 1)">
                     <OrdersPaymentsLinksTableComponent PaymentId="PaymentId" />
                 </MudTabPanel>
+                @if (currentChatTelegram is not null)
+                {
+                    <MudTabPanel Text="Telegram">
+                        <TelegramChatWrapComponent Chat="currentChatTelegram" />
+                    </MudTabPanel>
+                }
             </MudTabs>
 
             @if (PaymentId > 0)

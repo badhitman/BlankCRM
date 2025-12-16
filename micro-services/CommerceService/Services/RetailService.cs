@@ -163,7 +163,9 @@ public class RetailService(IIdentityTransmission identityRepo,
         {
             Response = await context.DeliveryDocumentsRetail
                 .Where(x => req.Ids.Contains(x.Id))
-                .Include(x => x.Rows)
+                .Include(x => x.Rows!)
+                .ThenInclude(x => x.Offer!)
+                .ThenInclude(x => x.Nomenclature)
                 .ToArrayAsync(cancellationToken: token)
         };
     }
@@ -637,8 +639,6 @@ public class RetailService(IIdentityTransmission identityRepo,
         }
 
         await transaction.CommitAsync(token);
-
-
         return res;
     }
 
@@ -1413,7 +1413,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.InjectToOrderId > 0)
         {
-            await context.ConversionsOrdersLinksRetail.AddAsync(new() {  ConversionDocumentId = docDb.Id, OrderDocumentId = req.InjectToOrderId }, token);
+            await context.ConversionsOrdersLinksRetail.AddAsync(new() { ConversionDocumentId = docDb.Id, OrderDocumentId = req.InjectToOrderId }, token);
             await context.SaveChangesAsync(token);
             res.AddInfo($"Добавлена связь документа перевода/конвертации #{docDb.Id} с заказом #{req.InjectToOrderId}");
         }

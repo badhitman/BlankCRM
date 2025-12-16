@@ -27,21 +27,21 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
     public int OfferId { get; set; }
 
 
-    OfferModelDB CurrentOffer = default!;
-    OfferModelDB editOffer = default!;
+    OfferModelDB? CurrentOffer, editOffer;
     FilesContextViewComponent? filesViewRef;
     string images_upload_url = default!;
     Dictionary<string, object> editorConf = default!;
     bool allowOfferFreePrice;
 
-    bool CanSave =>
+    bool CanSave => CurrentOffer is null || editOffer is null ||
         editOffer.IsDisabled != CurrentOffer.IsDisabled ||
         editOffer.ShortName != CurrentOffer.ShortName ||
         editOffer.Name != CurrentOffer.Name ||
         editOffer.QuantitiesTemplate != CurrentOffer.QuantitiesTemplate ||
         (editOffer.Price != CurrentOffer.Price && ((allowOfferFreePrice && editOffer.Price == 0) || editOffer.Price > 0)) ||
         editOffer.Multiplicity != CurrentOffer.Multiplicity ||
-        editOffer.OfferUnit != CurrentOffer.OfferUnit;
+        editOffer.OfferUnit != CurrentOffer.OfferUnit ||
+        editOffer.Weight != CurrentOffer.Weight;
 
     async Task SaveOffer()
     {

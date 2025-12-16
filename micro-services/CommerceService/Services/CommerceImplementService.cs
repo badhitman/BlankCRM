@@ -243,6 +243,7 @@ public partial class CommerceImplementService(
                 OfferUnit = req.Payload.OfferUnit,
                 Price = req.Payload.Price,
                 LastUpdatedAtUTC = dtu,
+                Weight = req.Payload.Weight,
             };
 
             await context.AddAsync(req.Payload, token);
@@ -264,6 +265,7 @@ public partial class CommerceImplementService(
             .SetProperty(p => p.NomenclatureId, req.Payload.NomenclatureId)
             .SetProperty(p => p.OfferUnit, req.Payload.OfferUnit)
             .SetProperty(p => p.Price, req.Payload.Price)
+            .SetProperty(p => p.Weight, req.Payload.Weight)
             .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
         res.AddSuccess($"Обновление `{GetType().Name}` выполнено");
@@ -331,7 +333,13 @@ public partial class CommerceImplementService(
         }
         req.Payload = [.. req.Payload.Where(x => x > 0)];
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        res.Response = await context.Offers.Where(x => req.Payload.Any(y => x.Id == y)).ToArrayAsync(cancellationToken: token);
+
+        res.Response = await context
+            .Offers
+            .Where(x => req.Payload.Any(y => x.Id == y))
+            .Include(x => x.Nomenclature)
+            .ToArrayAsync(cancellationToken: token);
+
         return res;
     }
 

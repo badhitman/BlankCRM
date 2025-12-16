@@ -1,6 +1,7 @@
 ﻿@using BlazorLib.Components.Kladr.control.input
 @using BlazorLib.Components.Retail.Orders
 @using BlazorLib.Components.Retail.OrdersLinks
+@using BlazorLib.Components.Telegram
 @using MudBlazor
 @using static SharedLib.GlobalStaticConstantsRoutes
 
@@ -132,7 +133,14 @@
                                                ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc"
                                                Conf="@editorConf" />
                     </MudTabPanel>
+                    @if (currentChatTelegram is not null)
+                    {
+                        <MudTabPanel Text="Telegram">
+                            <TelegramChatWrapComponent Chat="currentChatTelegram" />
+                        </MudTabPanel>
+                    }
                 </MudTabs>
+
                 <p class="card-text mt-2">
                     <small class="text-body-secondary">@editDoc.CreatedAtUTC.GetCustomTime() @editDoc.LastUpdatedAtUTC?.GetCustomTime()</small>
                 </p>

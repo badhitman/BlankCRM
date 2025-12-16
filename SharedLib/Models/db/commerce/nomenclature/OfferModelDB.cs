@@ -84,6 +84,11 @@ public class OfferModelDB : EntrySwitchableUpdatedModel
     public decimal Price { get; set; }
 
     /// <summary>
+    /// Вес
+    /// </summary>
+    public decimal Weight { get; set; }
+
+    /// <summary>
     /// Правила ценообразования
     /// </summary>
     public List<PriceRuleForOfferModelDB>? PricesRules { get; set; }

@@ -2,6 +2,7 @@
 
 @using BlazorLib.Components.Retail.OrdersLinks
 @using BlazorLib.Components.Retail.Wallet
+@using BlazorLib.Components.Telegram
 @using MudBlazor
 
 <div class="card">
@@ -86,6 +87,19 @@
         @if (ConversionDocumentId > 0)
         {
             <OrdersConversionsLinksTableComponent ConversionId="ConversionDocumentId" />
+        }
+        @if (currentChatTelegrams.Count != 0)
+        {
+            <MudExpansionPanel Text="Telegram">
+                <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+                    @foreach (ChatTelegramModelDB _chat in currentChatTelegrams)
+                    {
+                        <MudTabPanel Text="@_chat.ToString()">
+                            <TelegramChatWrapComponent Chat="_chat" />
+                        </MudTabPanel>
+                    }
+                </MudTabs>
+            </MudExpansionPanel>
         }
     </div>
 </div>

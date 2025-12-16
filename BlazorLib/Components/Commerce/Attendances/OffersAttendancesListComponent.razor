@@ -29,6 +29,7 @@
             <MudTh>Название</MudTh>
             <MudTh>Цена</MudTh>
             <MudTh>Ед. изм.</MudTh>
+            <MudTh>Вес</MudTh>
             <MudTh>Записи</MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -47,6 +48,7 @@
                 @context.Price
             </MudTd>
             <MudTd DataLabel="Ед. изм.">@context.OfferUnit.DescriptionInfo()</MudTd>
+            <MudTd DataLabel="Вес">@context.Weight</MudTd>
             <MudTd DataLabel="Записи">
                 @{
                     RecordsAttendanceModelDB[] crs = currentRecords.Where(x => x.OfferId == context.Id).ToArray();

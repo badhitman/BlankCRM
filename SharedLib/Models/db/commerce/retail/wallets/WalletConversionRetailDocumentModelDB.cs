@@ -64,6 +64,12 @@ public class WalletConversionRetailDocumentModelDB : EntryUpdatedModel
     public Guid Version { get; set; }
 
     /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"[{DateDocument}] ({FromWallet} -> {ToWallet})";
+    }
+
+    /// <inheritdoc/>
     public static WalletConversionRetailDocumentModelDB Build(CreateWalletConversionRetailDocumentRequestModel other)
     {
         return new()

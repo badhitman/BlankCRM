@@ -36,6 +36,7 @@ public partial class OfferCreatingFormComponent : BlazorBusyComponentBaseAuthMod
     decimal priceOffer;
     uint multiplicityOffer;
     string? nameOffer;
+    decimal weightOffer;
     bool allowOfferFreePrice;
 
     bool CanSave =>
@@ -55,10 +56,15 @@ public partial class OfferCreatingFormComponent : BlazorBusyComponentBaseAuthMod
             Multiplicity = multiplicityOffer,
             OfferUnit = UnitOffer,
             Price = priceOffer,
+            Weight = weightOffer,
         };
         await SetBusyAsync();
 
-        TResponseModel<int> res = await CommerceRepo.OfferUpdateAsync(new() { Payload = off, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> res = await CommerceRepo.OfferUpdateAsync(new()
+        {
+            Payload = off,
+            SenderActionUserId = CurrentUserSession.UserId
+        });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success() && res.Response > 0)
@@ -70,6 +76,7 @@ public partial class OfferCreatingFormComponent : BlazorBusyComponentBaseAuthMod
             priceOffer = 0;
             multiplicityOffer = 0;
             nameOffer = null;
+            weightOffer = 0;
         }
         await SetBusyAsync(false);
     }
