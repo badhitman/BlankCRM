@@ -1588,13 +1588,15 @@ public class RetailService(IIdentityTransmission identityRepo,
                     .SetProperty(p => p.Balance, b => b.Balance + conversionDb.ToWalletSum), cancellationToken: token);
         }
 
-        await q.ExecuteUpdateAsync(set => set
+       int res = await q.ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.IsDisabled, conversionDb.IsDisabled)
                     .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
+        await transaction.CommitAsync(token);
+
         return
             ResponseBaseModel
-            .CreateSuccess($"Документ: успешно {(conversionDb.IsDisabled ? "включён" : "выключен")}");
+            .CreateSuccess($"Документ: успешно {(conversionDb.IsDisabled ? "выключен" : "включён")}");
     }
     #endregion
 

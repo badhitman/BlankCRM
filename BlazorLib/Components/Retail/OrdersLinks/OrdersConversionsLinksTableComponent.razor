@@ -15,9 +15,9 @@
           RowEditCommit="ItemHasBeenCommitted"
           RowEditCancel="ResetItemToOriginalValues">
     <ToolBarContent>
-        @if (fullScale > 0 && (OrderId > 0 || ConversionId > 0 && (ConversionId == 0 || OrderId == 0)))
+        @if (fullAmountPayment > 0 && (OrderId > 0 || ConversionId > 0 && (ConversionId == 0 || OrderId == 0)))
         {
-            <span class="lead">Общий вес: <strong>@fullScale</strong></span>
+            <span class="lead">Общая сумма: <strong>@fullAmountPayment</strong></span>
         }
         <MudSpacer />
         @if (ConversionId > 0)
@@ -73,7 +73,7 @@
         {
             <MudTh>Перевод</MudTh>
         }
-        <MudTh>Вес</MudTh>
+        <MudTh>Сумма</MudTh>
         <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -85,7 +85,7 @@
         {
             <MudTd DataLabel="Перевод"><a href="/retail/conversion-document/@context.ConversionDocumentId">@context.ConversionDocument?.ToString()</a></MudTd>
         }
-        <MudTd Class="@(context.AmountPayment <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">@context.AmountPayment</MudTd>
+        <MudTd Class="@(context.AmountPayment <= 0 ? "text-bg-danger" : "")" DataLabel="Сумма">@context.AmountPayment</MudTd>
         <MudTd>
             @if (initDeleteRow == context.Id)
             {

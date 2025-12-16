@@ -22,7 +22,7 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
         _visibleIncludeExistConversion,
         _visibleCreateNewConversion;
 
-    decimal fullScale;
+    decimal fullAmountPayment;
 
 
     async Task DeleteRow(int rowLinkId)
@@ -161,7 +161,7 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
 
         await SetBusyAsync(token: token);
         TPaginationResponseModel<ConversionOrderRetailLinkModelDB> res = await RetailRepo.SelectConversionsOrdersDocumentsLinksAsync(req, token);
-        fullScale = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.AmountPayment);
+        fullAmountPayment = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.AmountPayment);
         await SetBusyAsync(false, token);
 
         if (!res.Status.Success())
