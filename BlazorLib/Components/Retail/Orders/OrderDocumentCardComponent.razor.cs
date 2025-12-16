@@ -133,6 +133,16 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
                     TResponseModel<int> linkAddRes = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new() { DeliveryDocumentId = InjectToDeliveryId, OrderDocumentId = res.Response });
                     SnackBarRepo.ShowMessagesResponse(linkAddRes.Messages);
                 }
+                if (InjectToConversionId > 0)
+                {
+                    TResponseModel<int> linkAddRes = await RetailRepo.CreateConversionOrderLinkDocumentAsync(new() { ConversionDocumentId = InjectToConversionId, OrderDocumentId = res.Response });
+                    SnackBarRepo.ShowMessagesResponse(linkAddRes.Messages);
+                }
+                if (InjectToPaymentId > 0)
+                {
+                    TResponseModel<int> linkAddRes = await RetailRepo.CreatePaymentOrderLinkDocumentAsync(new() { PaymentDocumentId = InjectToPaymentId, OrderDocumentId = res.Response });
+                    SnackBarRepo.ShowMessagesResponse(linkAddRes.Messages);
+                }
 
                 NavRepo.NavigateTo($"/retail/order-document/{res.Response}");
             }
