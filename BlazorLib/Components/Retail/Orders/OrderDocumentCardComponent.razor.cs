@@ -124,28 +124,10 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
         await SetBusyAsync();
         if (OrderId < 1)
         {
-            TResponseModel<int> res = await RetailRepo.CreateRetailDocumentAsync(editDocument);
+            TResponseModel<int> res = await RetailRepo.CreateRetailDocumentAsync(CreateDocumentRetailRequestModel.Build(editDocument, InjectToDeliveryId, InjectToConversionId, InjectToPaymentId));
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success() && res.Response > 0)
-            {
-                if (InjectToDeliveryId > 0)
-                {
-                    TResponseModel<int> linkAddRes = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new() { DeliveryDocumentId = InjectToDeliveryId, OrderDocumentId = res.Response });
-                    SnackBarRepo.ShowMessagesResponse(linkAddRes.Messages);
-                }
-                if (InjectToConversionId > 0)
-                {
-                    TResponseModel<int> linkAddRes = await RetailRepo.CreateConversionOrderLinkDocumentAsync(new() { ConversionDocumentId = InjectToConversionId, OrderDocumentId = res.Response });
-                    SnackBarRepo.ShowMessagesResponse(linkAddRes.Messages);
-                }
-                if (InjectToPaymentId > 0)
-                {
-                    TResponseModel<int> linkAddRes = await RetailRepo.CreatePaymentOrderLinkDocumentAsync(new() { PaymentDocumentId = InjectToPaymentId, OrderDocumentId = res.Response });
-                    SnackBarRepo.ShowMessagesResponse(linkAddRes.Messages);
-                }
-
                 NavRepo.NavigateTo($"/retail/order-document/{res.Response}");
-            }
         }
         else
         {

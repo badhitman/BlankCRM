@@ -15,7 +15,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 {
     #region Order`s (document retail)
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateRetailDocumentAsync(DocumentRetailModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateRetailDocumentAsync(CreateDocumentRetailRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -65,7 +65,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 
     #region Delivery Document
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateDeliveryDocumentAsync(CreateDeliveryDocumentRetailRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateDeliveryDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -140,7 +140,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 
     #region Payment Document
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreatePaymentDocumentAsync(CreatePaymentRetailDocumentRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreatePaymentDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -208,7 +208,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 
     #region Conversion`s
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateConversionDocumentAsync(CreateWalletConversionRetailDocumentRequestModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateConversionDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

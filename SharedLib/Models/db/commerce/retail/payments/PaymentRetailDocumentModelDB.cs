@@ -53,4 +53,26 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     /// <inheritdoc/>
     [ConcurrencyCheck]
     public Guid Version { get; set; }
+
+    /// <inheritdoc/>
+    public static PaymentRetailDocumentModelDB Build(CreatePaymentRetailDocumentRequestModel other)
+    {
+        return new()
+        {
+            AuthorUserIdentity = other.AuthorUserIdentity,
+            DatePayment = other.DatePayment,
+            TypePayment = other.TypePayment,
+            Version = other.Version,
+            PaymentSource = other.PaymentSource,
+            StatusPayment = other.StatusPayment,
+            Amount = other.Amount,
+            CreatedAtUTC = other.CreatedAtUTC,
+            Description = other.Description,
+            Id = other.Id,
+            LastUpdatedAtUTC = other.LastUpdatedAtUTC,
+            Name = other.Name,
+            Wallet = other.Wallet,
+            WalletId = other.WalletId,
+        };
+    }
 }

@@ -16,7 +16,7 @@ public class WalletConversionRetailDocumentModelDB : EntryUpdatedModel
     /// <inheritdoc/>
     [Required]
     public required DateTime DateDocument { get; set; }
-    
+
     /// <summary>
     /// Объект отключён
     /// </summary>
@@ -62,4 +62,27 @@ public class WalletConversionRetailDocumentModelDB : EntryUpdatedModel
     /// </summary>
     [ConcurrencyCheck]
     public Guid Version { get; set; }
+
+    /// <inheritdoc/>
+    public static WalletConversionRetailDocumentModelDB Build(CreateWalletConversionRetailDocumentRequestModel other)
+    {
+        return new()
+        {
+            DateDocument = other.DateDocument,
+            CreatedAtUTC = other.CreatedAtUTC,
+            Description = other.Description,
+            FromWallet = other.FromWallet,
+            FromWalletId = other.FromWalletId,
+            FromWalletSum = other.FromWalletSum,
+            ToWallet = other.ToWallet,
+            ToWalletId = other.ToWalletId,
+            Id = other.Id,
+            IsDisabled = other.IsDisabled,
+            LastUpdatedAtUTC = other.LastUpdatedAtUTC,
+            Name = other.Name,
+            Orders = other.Orders,
+            ToWalletSum = other.ToWalletSum,
+            Version = other.Version,
+        };
+    }
 }

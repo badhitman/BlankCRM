@@ -177,21 +177,10 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
         await SetBusyAsync();
         if (editDoc.Id <= 0)
         {
-            TResponseModel<int> res = await RetailRepo.CreateConversionDocumentAsync(editDoc);
+            TResponseModel<int> res = await RetailRepo.CreateConversionDocumentAsync(CreateWalletConversionRetailDocumentRequestModel.Build(editDoc, InjectToOrderId));
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success() && res.Response > 0)
-            {
-                if (InjectToOrderId > 0)
-                {
-                    TResponseModel<int> conversionOrderLink = await RetailRepo.CreateConversionOrderLinkDocumentAsync(new()
-                    {
-                        OrderDocumentId = InjectToOrderId,
-                        ConversionDocumentId = res.Response,
-                    });
-                    SnackBarRepo.ShowMessagesResponse(conversionOrderLink.Messages);
-                }
                 NavRepo.NavigateTo($"/retail/conversion-document/{res.Response}");
-            }
         }
         else
         {

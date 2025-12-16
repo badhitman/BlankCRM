@@ -48,4 +48,28 @@ public class DocumentRetailModelDB : OrderDocumentBaseModel
     {
         return $"{Name} [{DateDocument}]".Trim();
     }
+
+    /// <inheritdoc/>
+    public static DocumentRetailModelDB Build(CreateDocumentRetailRequestModel other)
+    {
+        return new()
+        {
+            AuthorIdentityUserId = other.AuthorIdentityUserId,
+            Description = other.Description,
+            DateDocument = other.DateDocument,
+            BuyerIdentityUserId = other.BuyerIdentityUserId,
+            Conversions = other.Conversions,
+            CreatedAtUTC = other.CreatedAtUTC,
+            Deliveries = other.Deliveries,
+            Rows = other.Rows,
+            ExternalDocumentId = other.ExternalDocumentId,
+            HelpDeskId = other.HelpDeskId,
+            Id = other.Id,
+            LastUpdatedAtUTC = other.LastUpdatedAtUTC,
+            Name = other.Name,
+            StatusDocument = other.StatusDocument,
+            Version = other.Version,
+            WarehouseId = other.WarehouseId,
+        };
+    }
 }

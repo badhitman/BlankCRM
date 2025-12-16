@@ -170,19 +170,11 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         await SetBusyAsync();
         if (editDoc.Id <= 0)
         {
-            TResponseModel<int> res = await RetailRepo.CreateDeliveryDocumentAsync(editDoc);
+            TResponseModel<int> res = await RetailRepo.CreateDeliveryDocumentAsync(CreateDeliveryDocumentRetailRequestModel.Build(editDoc, InjectToOrderId));
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
             if (res.Success() && res.Response > 0)
-            {
-                if (InjectToOrderId > 0)
-                {
-                    TResponseModel<int> linkAddRes = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new() { DeliveryDocumentId = res.Response, OrderDocumentId = InjectToOrderId });
-                    SnackBarRepo.ShowMessagesResponse(linkAddRes.Messages);
-                }
-
                 NavRepo.NavigateTo($"/retail/delivery-document/{res.Response}");
-            }
         }
         else
         {

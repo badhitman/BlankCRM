@@ -11,7 +11,7 @@ public interface IRetailService
 {
     #region Delivery Document
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateDeliveryDocumentAsync(CreateDeliveryDocumentRetailRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> UpdateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default);
@@ -84,7 +84,7 @@ public interface IRetailService
 
     #region Payment Document
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreatePaymentDocumentAsync(CreatePaymentRetailDocumentRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> UpdatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default);
@@ -123,7 +123,7 @@ public interface IRetailService
 
     #region Order`s (document retail)
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateRetailDocumentAsync(DocumentRetailModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateRetailDocumentAsync(CreateDocumentRetailRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> UpdateRetailDocumentAsync(DocumentRetailModelDB req, CancellationToken token = default);
@@ -162,7 +162,7 @@ public interface IRetailService
 
     #region Conversion document`s
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateConversionDocumentAsync(CreateWalletConversionRetailDocumentRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> UpdateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default);

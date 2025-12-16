@@ -96,4 +96,32 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
 
         return $"{res}. вес отправления: {WeightShipping}";
     }
+
+    /// <inheritdoc/>
+    public static DeliveryDocumentRetailModelDB Build(CreateDeliveryDocumentRetailRequestModel other)
+    {
+        return new()
+        {
+            AuthorIdentityUserId = other.AuthorIdentityUserId,
+            RecipientIdentityUserId = other.RecipientIdentityUserId,
+            AddressUserComment = other.AddressUserComment,
+            CreatedAtUTC = other.CreatedAtUTC,
+            DeliveryCode = other.DeliveryCode,
+            DeliveryPaymentUponReceipt = other.DeliveryPaymentUponReceipt,
+            DeliveryStatus = other.DeliveryStatus,
+            DeliveryStatusesLog = other.DeliveryStatusesLog,
+            DeliveryType = other.DeliveryType,
+            Description = other.Description,
+            Id = other.Id,
+            KladrCode = other.KladrCode,
+            KladrTitle = other.KladrTitle,
+            LastUpdatedAtUTC = other.LastUpdatedAtUTC,
+            Name = other.Name,
+            OrdersLinks = other.OrdersLinks,
+            Rows = other.Rows,
+            ShippingCost = other.ShippingCost,
+            WarehouseId = other.WarehouseId,
+            WeightShipping = other.WeightShipping,
+        };
+    }
 }

@@ -18,7 +18,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 {
     #region Delivery document
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateDeliveryDocumentAsync(CreateDeliveryDocumentRetailRequestModel req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
@@ -43,9 +43,24 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Description = req.Description?.Trim();
         req.DeliveryCode = req.DeliveryCode?.Trim();
 
-        await context.DeliveryDocumentsRetail.AddAsync(req, token);
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
+        DeliveryDocumentRetailModelDB docDb = DeliveryDocumentRetailModelDB.Build(req);
+
+        await context.DeliveryDocumentsRetail.AddAsync(docDb, token);
         await context.SaveChangesAsync(token);
-        res.Response = req.Id;
+        res.Response = docDb.Id;
+        res.AddSuccess($"Документ отгрузки/доставки создан #{docDb.Id}");
+
+        if (req.InjectToOrderId > 0)
+        {
+            await context.OrdersDeliveriesLinks.AddAsync(new() { DeliveryDocumentId = docDb.Id, OrderDocumentId = req.InjectToOrderId }, token);
+            await context.SaveChangesAsync(token);
+            res.AddInfo($"Добавлена связь документа отгрузки/доставки #{docDb.Id} с заказом #{req.InjectToOrderId}");
+        }
+
+        await transaction.CommitAsync(token);
+
         return res;
     }
 
@@ -569,7 +584,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
     #region Payment document
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreatePaymentDocumentAsync(CreatePaymentRetailDocumentRequestModel req, CancellationToken token = default)
     {
         if (req.Amount <= 0)
             return new()
@@ -582,7 +597,6 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         TResponseModel<int> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         WalletRetailModelDB walletDb = await context.WalletsRetail
             .Include(x => x.WalletType)
@@ -599,8 +613,20 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.DatePayment = req.DatePayment.SetKindUtc();
         req.CreatedAtUTC = DateTime.UtcNow;
 
-        await context.PaymentsRetailDocuments.AddAsync(req, token);
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+        PaymentRetailDocumentModelDB docDb = PaymentRetailDocumentModelDB.Build(req);
+
+        await context.PaymentsRetailDocuments.AddAsync(docDb, token);
         await context.SaveChangesAsync(token);
+        res.Response = docDb.Id;
+        res.AddSuccess($"Документ платежа/оплаты создан #{docDb.Id}");
+
+        if (req.InjectToOrderId > 0)
+        {
+            await context.PaymentsOrdersLinks.AddAsync(new() { OrderDocumentId = req.InjectToOrderId, PaymentDocumentId = docDb.Id }, token);
+            await context.SaveChangesAsync(token);
+            res.AddInfo($"Добавлена связь оплаты/платежа #{docDb.Id} с заказом #{req.InjectToOrderId}");
+        }
 
         if (req.StatusPayment == PaymentsRetailStatusesEnum.Paid)
         {
@@ -612,7 +638,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         await transaction.CommitAsync(token);
 
-        res.Response = req.Id;
+
         return res;
     }
 
@@ -790,7 +816,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
     #region Order`s (document`s)
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateRetailDocumentAsync(DocumentRetailModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateRetailDocumentAsync(CreateDocumentRetailRequestModel req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         if (string.IsNullOrWhiteSpace(req.AuthorIdentityUserId))
@@ -836,17 +862,39 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.CreatedAtUTC = DateTime.UtcNow;
         req.DateDocument = req.DateDocument.SetKindUtc();
 
-        await context.OrdersRetail.AddAsync(req, token);
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
+        DocumentRetailModelDB docDb = DocumentRetailModelDB.Build(req);
+
+        await context.OrdersRetail.AddAsync(docDb, token);
         await context.SaveChangesAsync(token);
-        return new TResponseModel<int>()
+        res.AddSuccess($"Заказ успешно создан #{docDb.Id}");
+        res.Response = docDb.Id;
+
+        if (req.InjectToPaymentId > 0)
         {
-            Response = req.Id,
-            Messages = [new()
-            {
-                TypeMessage = MessagesTypesEnum.Success,
-                 Text = "Заказ успешно создан"
-            }]
-        };
+            await context.PaymentsOrdersLinks.AddAsync(new() { OrderDocumentId = req.Id, PaymentDocumentId = req.InjectToPaymentId }, token);
+            await context.SaveChangesAsync(token);
+            res.AddInfo("Создана связь заказа с платежом");
+        }
+
+        if (req.InjectToConversionId > 0)
+        {
+            await context.ConversionsOrdersLinksRetail.AddAsync(new() { OrderDocumentId = req.Id, ConversionDocumentId = req.InjectToConversionId }, token);
+            await context.SaveChangesAsync(token);
+            res.AddInfo("Создана связь заказа с переводом/конвертацией");
+        }
+
+        if (req.InjectToDeliveryId > 0)
+        {
+            await context.OrdersDeliveriesLinks.AddAsync(new() { OrderDocumentId = req.Id, DeliveryDocumentId = req.InjectToDeliveryId }, token);
+            await context.SaveChangesAsync(token);
+            res.AddInfo("Создана связь заказа с отгрузкой/доставкой");
+        }
+
+        await transaction.CommitAsync(token);
+
+        return res;
     }
 
     /// <inheritdoc/>
@@ -1293,7 +1341,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
     #region Conversion`s
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateConversionDocumentAsync(CreateWalletConversionRetailDocumentRequestModel req, CancellationToken token = default)
     {
         if (req.ToWalletId < 1 || req.ToWalletId < 1)
             return new()
@@ -1324,6 +1372,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                     Text = "Счёт списания не может совпадать со счётом зачисления"
                 }]
             };
+        TResponseModel<int> res = new();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         WalletRetailModelDB[] walletsDb = await context.WalletsRetail
@@ -1357,8 +1406,18 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.CreatedAtUTC = DateTime.UtcNow;
         req.DateDocument = req.DateDocument.SetKindUtc();
 
-        await context.ConversionsDocumentsWalletsRetail.AddAsync(req, token);
+        WalletConversionRetailDocumentModelDB docDb = WalletConversionRetailDocumentModelDB.Build(req);
+        await context.ConversionsDocumentsWalletsRetail.AddAsync(docDb, token);
         await context.SaveChangesAsync(token);
+        res.AddSuccess($"Документ перевода/конвертации создан #{docDb.Id}");
+
+        if (req.InjectToOrderId > 0)
+        {
+            await context.ConversionsOrdersLinksRetail.AddAsync(new() {  ConversionDocumentId = docDb.Id, OrderDocumentId = req.InjectToOrderId }, token);
+            await context.SaveChangesAsync(token);
+            res.AddInfo($"Добавлена связь документа перевода/конвертации #{docDb.Id} с заказом #{req.InjectToOrderId}");
+        }
+
         await transaction.CommitAsync(token);
         return new TResponseModel<int>() { Response = req.Id };
     }
@@ -1588,9 +1647,9 @@ public class RetailService(IIdentityTransmission identityRepo,
                     .SetProperty(p => p.Balance, b => b.Balance + conversionDb.ToWalletSum), cancellationToken: token);
         }
 
-       int res = await q.ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.IsDisabled, conversionDb.IsDisabled)
-                    .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+        int res = await q.ExecuteUpdateAsync(set => set
+                     .SetProperty(p => p.IsDisabled, conversionDb.IsDisabled)
+                     .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
         await transaction.CommitAsync(token);
 
