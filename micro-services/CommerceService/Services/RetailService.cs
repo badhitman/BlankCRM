@@ -220,6 +220,14 @@ public class RetailService(IIdentityTransmission identityRepo,
             Response = await pq.Include(x => x.Offer).ToListAsync(cancellationToken: token)
         };
     }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DeleteRowOfDeliveryDocumentAsync(int rowId, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        await context.RowsDeliveryDocumentsRetail.Where(x => x.Id == rowId).ExecuteDeleteAsync(cancellationToken: token);
+        return ResponseBaseModel.CreateSuccess("Элемент удалён");
+    }
     #endregion
 
     #region Statuses (for delivery document)

@@ -30,21 +30,18 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     public DeliveryDocumentRetailModelDB Document { get; set; }
 
 
-    readonly List<RowOfDeliveryRetailDocumentModelDB> itemsData = [];
-    RowOfDeliveryRetailDocumentModelDB? elementBeforeEdit;
-
-    readonly Dictionary<OfferModelDB, (decimal Quantity, decimal Amount)> offersOfOrders = [];
-
-
+    /// <inheritdoc/>
+    public AddRowToOrderDocumentComponent? AddingDomRef { get; private set; }
     MudTable<RowOfDeliveryRetailDocumentModelDB>? tableRef;
+    RowOfDeliveryRetailDocumentModelDB? elementBeforeEdit;
 
     IQueryable<KeyValuePair<OfferModelDB, (decimal Quantity, decimal Amount)>> OffersForAddQuery =>
         offersOfOrders
         .Where(x => Document.Rows?.Any(y => y.OfferId == x.Key.Id) != true)
         .AsQueryable();
 
-    /// <inheritdoc/>
-    public AddRowToOrderDocumentComponent? AddingDomRef { get; private set; }
+    readonly Dictionary<OfferModelDB, (decimal Quantity, decimal Amount)> offersOfOrders = [];
+
 
     async Task AddOfferToDeliveryDocument(KeyValuePair<OfferModelDB, (decimal Quantity, decimal Amount)> offerForAddElement)
     {
@@ -72,6 +69,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             if (tableRef is not null)
                 await tableRef.ReloadServerData();
 
+            await ElementsReload();
             await GetOrdersOffers();
             await SetBusyAsync(false);
 
@@ -119,10 +117,10 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
-        await ElementsReload();
         List<Task> tasks = [
                 Task.Run(base.OnInitializedAsync),
                 Task.Run(GetOrdersOffers),
+                Task.Run(ElementsReload),
             ];
 
         await Task.WhenAll(tasks);
@@ -143,9 +141,9 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
         TPaginationResponseModel<RowOfDeliveryRetailDocumentModelDB> res = await RetailRepo.SelectRowsOfDeliveryDocumentsAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
 
-        itemsData.Clear();
+        Document.Rows!.Clear();
         if (res.Response is not null)
-            itemsData.AddRange(res.Response);
+            Document.Rows.AddRange(res.Response);
 
         await SetBusyAsync(false);
     }
@@ -257,10 +255,21 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     }
 
     /// <inheritdoc/>
-    protected override void DeleteRow(int offerId)
+    protected override async void DeleteRow(int offerId)
     {
-        Document.Rows ??= [];
-        Document.Rows.RemoveAll(x => x.OfferId == offerId);
+        if (Document.Id <= 0)
+        {
+            Document.Rows ??= [];
+            Document.Rows.RemoveAll(x => x.OfferId == offerId);
+        }
+        else
+        {
+            RowOfDeliveryRetailDocumentModelDB rowOfDocument = Document.Rows!.First(x => x.OfferId == offerId);
+            ResponseBaseModel res = await RetailRepo.DeleteRowOfDeliveryDocumentAsync(rowOfDocument.Id);
+            SnackBarRepo.ShowMessagesResponse(res.Messages);
+        }
+        await ElementsReload();
+        await GetOrdersOffers();
         if (DocumentUpdateHandler is not null)
             DocumentUpdateHandler();
 
