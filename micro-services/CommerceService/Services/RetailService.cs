@@ -1074,8 +1074,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             Response = await pq.Include(x => x.Offer).ToListAsync(cancellationToken: token)
         };
     }
-
-
     #endregion
 
     #region Deliveries orders link`s 

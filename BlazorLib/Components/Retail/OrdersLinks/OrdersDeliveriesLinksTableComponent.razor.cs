@@ -22,7 +22,7 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         _visibleIncludeExistDelivery,
         _visibleCreateNewDelivery;
 
-    decimal fullScale;
+    decimal fullWeight;
 
 
     async Task DeleteRow(int rowLinkId)
@@ -94,11 +94,21 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         }
 
         await SetBusyAsync();
-
+        TPaginationResponseModel<RowOfRetailOrderDocumentModelDB> rowsForOrder = await RetailRepo.SelectRowsRetailDocumentsAsync(new TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel>()
+        {
+            Payload = new()
+            {
+                OrderId = tableRow.Item.Id,
+            },
+            PageSize = int.MaxValue,
+        });
         TResponseModel<int> res = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new()
         {
             DeliveryDocumentId = DeliveryId,
-            OrderDocumentId = tableRow.Item.Id
+            OrderDocumentId = tableRow.Item.Id,
+            WeightShipping = rowsForOrder.Response is null || rowsForOrder.Response.Count == 0
+                ? 0
+                : rowsForOrder.Response.Sum(x => x.Quantity * x.Offer!.Weight)
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -161,7 +171,7 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
 
         await SetBusyAsync(token: token);
         TPaginationResponseModel<RetailOrderDeliveryLinkModelDB> res = await RetailRepo.SelectDeliveriesOrdersLinksDocumentsAsync(req, token);
-        fullScale = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.WeightShipping);
+        fullWeight = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.WeightShipping);
         await SetBusyAsync(false, token);
 
         if (!res.Status.Success())

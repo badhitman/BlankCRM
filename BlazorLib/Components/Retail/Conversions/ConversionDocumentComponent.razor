@@ -90,7 +90,7 @@
         }
         @if (currentChatTelegrams.Count != 0)
         {
-            <MudExpansionPanel Text="Telegram">
+            <MudExpansionPanel Text="Telegram" Class="mt-2">
                 <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
                     @foreach (ChatTelegramModelDB _chat in currentChatTelegrams)
                     {

@@ -14,9 +14,9 @@
           RowEditCommit="ItemHasBeenCommitted"
           RowEditCancel="ResetItemToOriginalValues">
     <ToolBarContent>
-        @if (fullScale > 0 && (OrderId > 0 || PaymentId > 0 && (PaymentId == 0 || OrderId == 0)))
+        @if (fullWeight > 0 && (OrderId > 0 || PaymentId > 0 && (PaymentId == 0 || OrderId == 0)))
         {
-            <span class="lead">Общий вес: <strong>@fullScale</strong></span>
+            <span class="lead">Общий вес: <strong>@fullWeight</strong></span>
         }
         <MudSpacer />
         @if (PaymentId > 0)
