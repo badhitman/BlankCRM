@@ -54,7 +54,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             if (IsBusyProgress || currentDoc is null || editDoc is null || string.IsNullOrWhiteSpace(editDoc.KladrCode))
                 return true;
 
-            if (string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId) || editDoc.WarehouseId <= 0 || editDoc.ShippingCost <= 0 || editDoc.WeightShipping <= 0)
+            if (string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId) || editDoc.WarehouseId <= 0 || editDoc.WeightShipping <= 0)
                 return true;
 
             return
