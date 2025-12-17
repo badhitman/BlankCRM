@@ -28,7 +28,7 @@ public class ResetPasswordReceive(IIdentityTools idRepo, ILogger<ResetPasswordRe
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(IdentityPasswordTokenModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
+        //loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
         return await idRepo.ResetPasswordAsync(req, token);
     }
 }

@@ -3,9 +3,9 @@
 ////////////////////////////////////////////////
 
 using DbcLib;
+using DocumentFormat.OpenXml.Drawing;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace CommerceService;
@@ -14,6 +14,7 @@ namespace CommerceService;
 /// Розница
 /// </summary>
 public class RetailService(IIdentityTransmission identityRepo,
+    ILogger<RetailService> loggerRepo,
     IKladrNavigationService kladrRepo,
     IDbContextFactory<CommerceContext> commerceDbFactory) : IRetailService
 {
@@ -1004,6 +1005,15 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (res.Response.Length != req.Ids.Length)
             res.AddError("Некоторые документы не найдены");
 
+        if (req.UpdateStatuses)
+            foreach (DocumentRetailModelDB docDb in res.Response)
+            {
+                await context.OrdersRetail
+                    .Where(x => x.Id == docDb.Id)
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == docDb.Id).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+            }
+
         return res;
     }
     #endregion
@@ -1270,13 +1280,18 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Name = req.Name.Trim();
         req.CreatedAtUTC = DateTime.UtcNow;
 
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
         await context.OrdersStatusesRetails.AddAsync(req, token);
         await context.SaveChangesAsync(token);
+        loggerRepo.LogInformation($"Для заказа (розница) #{req.OrderDocumentId} добавлен статус: [{req.DateOperation}] {req.StatusDocument}");
 
         await context.OrdersRetail
             .Where(x => x.Id == req.OrderDocumentId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+
+        await transaction.CommitAsync(token);
 
         return new() { Response = req.Id };
     }
@@ -1285,6 +1300,8 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<ResponseBaseModel> UpdateOrderStatusDocumentAsync(OrderStatusRetailDocumentModelDB req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
         req.Name = req.Name.Trim();
         await context.OrdersStatusesRetails
             .Where(x => x.Id == req.Id)
@@ -1293,11 +1310,14 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .SetProperty(p => p.StatusDocument, req.StatusDocument)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
+        loggerRepo.LogInformation($"Для заказа (розница) #{req.OrderDocumentId} обновлён статус: [{req.DateOperation}] {req.StatusDocument}");
+
         await context.OrdersRetail
             .Where(x => x.Id == req.OrderDocumentId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
+        await transaction.CommitAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
@@ -1333,13 +1353,18 @@ public class RetailService(IIdentityTransmission identityRepo,
         IQueryable<OrderStatusRetailDocumentModelDB> q = context.OrdersStatusesRetails.Where(x => x.Id == statusId);
         int deliveryDocumentId = await q.Select(x => x.OrderDocumentId).FirstAsync(cancellationToken: token);
 
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
         await q.ExecuteDeleteAsync(cancellationToken: token);
+
+        loggerRepo.LogInformation($"Для заказа (розница) #{deliveryDocumentId} удалён статус #{statusId}");
 
         await context.OrdersRetail
             .Where(x => x.Id == deliveryDocumentId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == deliveryDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
+        await transaction.CommitAsync(cancellationToken: token);
         return ResponseBaseModel.CreateSuccess("Строка-статус успешно удалена");
     }
     #endregion

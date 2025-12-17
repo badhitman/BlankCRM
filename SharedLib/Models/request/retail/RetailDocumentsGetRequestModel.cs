@@ -14,4 +14,9 @@ public class RetailDocumentsGetRequestModel
 
     /// <inheritdoc/>
     public bool IncludeDataExternal { get; set; }
+
+    /// <summary>
+    /// Проверка статуса документа
+    /// </summary>
+    public bool UpdateStatuses { get; set; }
 }

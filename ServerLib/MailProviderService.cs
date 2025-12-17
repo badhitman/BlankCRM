@@ -19,6 +19,7 @@ public class MailProviderService(IOptions<SmtpConfigModel> _config, ILogger<Mail
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SendEmailAsync(string email, string subject, string message, string mimekit_format = "html", CancellationToken token = default)
     {
+        loggerRepo.LogWarning($"`{nameof(email)}: {email}` [`{nameof(subject)}`: {subject}] - {message}");
         if (email != "*")
         {
             if (!System.Net.Mail.MailAddress.TryCreate(email, out System.Net.Mail.MailAddress? mail) || mail is null)

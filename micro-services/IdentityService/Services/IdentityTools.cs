@@ -28,6 +28,7 @@ public class IdentityTools(
     //RoleManager<ApplicationRole> roleManager,
     //UserManager<ApplicationUser> userManager,
     IManualCustomCacheService memCache,
+    IParametersStorageTransmission StorageTransmissionRepo,
     IMailProviderService mailRepo,
     ILogger<IdentityTools> loggerRepo,
     ITelegramTransmission tgRemoteRepo,
@@ -1314,6 +1315,15 @@ public class IdentityTools(
         req.Payload.Surname = req.Payload.Surname?.Trim();
         req.Payload.Patronymic = req.Payload.Patronymic?.Trim();
 
+        TResponseModel<bool?> requiredPhoneForUser = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.RequiredPhoneForUser, token);
+        TResponseModel<bool?> userEmailEmailGenerate = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.UserEmailEmailGenerate, token);
+
+        if (requiredPhoneForUser.Response == true && (string.IsNullOrWhiteSpace(req.Payload.PhoneNumber) || !GlobalTools.IsPhoneNumber(req.Payload.PhoneNumber)))
+            return new() { Messages = [new() { Text = "Телефон должен быть в формате: +79994440011 (можно без +)", TypeMessage = MessagesTypesEnum.Error }] };
+
+        if (userEmailEmailGenerate.Response == true && string.IsNullOrWhiteSpace(req.Payload.UserName))
+            req.Payload.UserName = $"{Guid.NewGuid()}@{GlobalStaticConstants.FakeHost}";
+
         if (!MailAddress.TryCreate(req.Payload.UserName, out _))
             return new() { Messages = [new() { Text = "Email (Username) не корректный", TypeMessage = MessagesTypesEnum.Error }] };
 
@@ -1347,7 +1357,9 @@ public class IdentityTools(
             if (!GlobalTools.IsPhoneNumber(req.Payload.PhoneNumber))
                 return new() { Messages = [new() { Text = "Телефон должен быть в формате: +79994440011 (можно без +)", TypeMessage = MessagesTypesEnum.Error }] };
 
-            if (await ctx.Users.AnyAsync(x => x.PhoneNumber == req.Payload.PhoneNumber || x.PhoneNumber == $"+{req.Payload.PhoneNumber}", cancellationToken: token))
+            TResponseModel<bool?> userPhoneForUserCloneAllow = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.UserPhoneForUserCloneAllow, token);
+
+            if (userPhoneForUserCloneAllow.Response != true && await ctx.Users.AnyAsync(x => x.PhoneNumber == req.Payload.PhoneNumber || x.PhoneNumber == $"+{req.Payload.PhoneNumber}", cancellationToken: token))
                 return new() { Messages = [new() { Text = "Пользователь с таким телефоном уже существует", TypeMessage = MessagesTypesEnum.Error }] };
         }
 

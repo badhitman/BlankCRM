@@ -169,6 +169,36 @@ public static partial class GlobalStaticCloudStorageMetadata
     };
 
     /// <summary>
+    /// RequiredPhoneForUser
+    /// </summary>
+    public static StorageMetadataModel RequiredPhoneForUser => new()
+    {
+        ApplicationName = Routes.IDENTITY_CONTROLLER_NAME,
+        PropertyName = Path.Combine(Routes.USER_CONTROLLER_NAME, Routes.PHONE_CONTROLLER_NAME, Routes.REQUIRED_CONTROLLER_NAME),
+        PrefixPropertyName = Routes.GLOBAL_CONTROLLER_NAME,
+    };
+
+    /// <summary>
+    /// UserPhoneForUserCloneControl
+    /// </summary>
+    public static StorageMetadataModel UserPhoneForUserCloneAllow => new()
+    {
+        ApplicationName = Routes.IDENTITY_CONTROLLER_NAME,
+        PropertyName = Path.Combine(Routes.USER_CONTROLLER_NAME, Routes.PHONE_CONTROLLER_NAME, Routes.SAME_CONTROLLER_NAME, Routes.ALLOW_ACTION_NAME),
+        PrefixPropertyName = Routes.GLOBAL_CONTROLLER_NAME,
+    };
+
+    /// <summary>
+    /// UserEmailEmailGenerate
+    /// </summary>
+    public static StorageMetadataModel UserEmailEmailGenerate => new()
+    {
+        ApplicationName = Routes.IDENTITY_CONTROLLER_NAME,
+        PropertyName = Path.Combine(Routes.USER_CONTROLLER_NAME, Routes.EMAIL_CONTROLLER_NAME, Routes.GENERATE_ACTION_NAME),
+        PrefixPropertyName = Routes.GLOBAL_CONTROLLER_NAME,
+    };
+
+    /// <summary>
     /// ShowingWappiArea
     /// </summary>
     public static StorageMetadataModel ShowingWappiArea => new()

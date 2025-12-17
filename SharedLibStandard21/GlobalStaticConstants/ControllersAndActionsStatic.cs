@@ -918,6 +918,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string ENABLED_CONTROLLER_NAME = "enabled";
 
         /// <summary>
+        /// Required
+        /// </summary>
+        public const string REQUIRED_CONTROLLER_NAME = "required";
+
+        /// <summary>
+        /// Same (одинаковый)
+        /// </summary>
+        public const string SAME_CONTROLLER_NAME = "same";
+
+        /// <summary>
         /// Issue
         /// </summary>
         public const string ISSUE_CONTROLLER_NAME = "issue";

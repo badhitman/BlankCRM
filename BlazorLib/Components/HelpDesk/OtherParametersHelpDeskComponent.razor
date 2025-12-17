@@ -38,6 +38,39 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.RequiredPhoneForUser"
+                                                            Title="Требование телефона для пользователя"
+                                                            Label="Телефон пользователя"
+                                                            HintTrue="Для создания пользователя телефон обязателен"
+                                                            HintFalse="Для создания пользователя телефон не обязателен" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.UserPhoneForUserCloneAllow"
+                                                            Title="Запрет на одинаковые телефоны пользователей"
+                                                            Label="Контроль уникальности телефонов"
+                                                            HintTrue="Одинаковые телефоны разрешается вводить"
+                                                            HintFalse="Телефоны пользователей могут быть одинаковыми" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.UserEmailEmailGenerate"
+                                                            Title="При ручном вводе пользователя/клиента ему можно не указывать email"
+                                                            Label="Автогенератор Email"
+                                                            HintTrue="Email клиенту можно не указывать"
+                                                            HintFalse="Email клиента требуется указывать" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </li>
             <li class="list-group-item my-2">

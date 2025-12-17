@@ -35,10 +35,7 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
     {
         get
         {
-            if (string.IsNullOrWhiteSpace(newUser.UserName))
-                return true;
-
-            if (!MailAddress.TryCreate(newUser.UserName, out _))
+            if (string.IsNullOrWhiteSpace(newUser.PhoneNumber) || string.IsNullOrWhiteSpace(newUser.GivenName) || string.IsNullOrWhiteSpace(newUser.Surname) || string.IsNullOrWhiteSpace(newUser.Patronymic))
                 return true;
 
             if (!string.IsNullOrWhiteSpace(newUser.PhoneNumber))
