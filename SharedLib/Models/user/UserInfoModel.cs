@@ -54,7 +54,7 @@ public record UserInfoModel : UserInfoMainModel
         if (!UserName.EndsWith($"@{GlobalStaticConstants.FakeHost}"))
             _res = $"{_res} ({UserName}";
 
-        if (!UserName.Equals(Email) && !Email.EndsWith($"@{GlobalStaticConstants.FakeHost}"))
+        if (!string.IsNullOrWhiteSpace(Email) && !UserName.Equals(Email) && Email.EndsWith($"@{GlobalStaticConstants.FakeHost}") != true)
             _res += $" {Email}";
 
         if (!string.IsNullOrWhiteSpace(PhoneNumber))
