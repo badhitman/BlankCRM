@@ -30,8 +30,14 @@ public enum PaymentsRetailTypesEnum
     Cash = 40,
 
     /// <summary>
+    /// На сайте
+    /// </summary>
+    [Description("На сайте")]
+    OnSite = 60,
+
+    /// <summary>
     /// QR (СБП)
     /// </summary>
     [Description("QR (СБП)")]
-    OnlineQR = 60,
+    OnlineQR = 70,
 }

@@ -49,9 +49,12 @@ public record UserInfoModel : UserInfoMainModel
     /// <inheritdoc/>
     public override string ToString()
     {
-        string _res = $"{UserName} {GivenName} {Surname}";
+        string _res = $"{GivenName} {Surname}";
 
-        if (!UserName.Equals(Email))
+        if (!UserName.EndsWith($"@{GlobalStaticConstants.FakeHost}"))
+            _res = $"{_res} ({UserName}";
+
+        if (!UserName.Equals(Email) && !Email.EndsWith($"@{GlobalStaticConstants.FakeHost}"))
             _res += $" {Email}";
 
         if (!string.IsNullOrWhiteSpace(PhoneNumber))
