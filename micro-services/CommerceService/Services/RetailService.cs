@@ -349,15 +349,16 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Name = req.Name.Trim();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        
         if (await context.WalletsRetailTypes.AnyAsync(x => x.Name == req.Name, cancellationToken: token))
         {
             res.AddError("Тип кошелька с таким именем уже существует");
             return res;
         }
-
+        
         req.Description = req.Description?.Trim();
         req.CreatedAtUTC = DateTime.UtcNow;
-
+        
         if (await context.WalletsRetailTypes.AnyAsync(cancellationToken: token))
         {
             req.SortIndex = await context.WalletsRetailTypes.MaxAsync(x => x.SortIndex, cancellationToken: token);
@@ -368,6 +369,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         await context.WalletsRetailTypes.AddAsync(req, token);
         await context.SaveChangesAsync(token);
+
         return new() { Response = req.Id };
     }
 
@@ -443,6 +445,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                 CreatedAtUTC = x.CreatedAtUTC,
                 Description = x.Description,
                 IsDisabled = x.IsDisabled,
+                IgnoreBalanceChanges = x.IgnoreBalanceChanges,
                 IsSystem = x.IsSystem,
                 SortIndex = x.SortIndex,
                 LastUpdatedAtUTC = x.LastUpdatedAtUTC,

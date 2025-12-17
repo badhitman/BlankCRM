@@ -24,6 +24,12 @@ public enum DeliveryTypesEnum
     CDEK = 20,
 
     /// <summary>
+    /// СДЕК (международный)
+    /// </summary>
+    [Description("СДЕК (международный)")]
+    InternationalCDEK = 40,
+
+    /// <summary>
     /// Самовывоз
     /// </summary>
     [Description("Самовывоз")]
