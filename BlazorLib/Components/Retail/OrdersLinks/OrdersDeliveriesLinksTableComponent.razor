@@ -83,7 +83,9 @@
         {
             <MudTd DataLabel="Доставка"><a href="/retail/delivery-document/@context.DeliveryDocumentId">@context.DeliveryDocument?.ToString()</a></MudTd>
         }
-        <MudTd Class="@(context.WeightShipping <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">@context.WeightShipping</MudTd>
+        <MudTd Class="@(context.WeightShipping <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">
+            @context.WeightShipping
+        </MudTd>
         <MudTd>
             @if (initDeleteRow == context.Id)
             {

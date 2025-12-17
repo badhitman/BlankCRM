@@ -2,10 +2,11 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.Text.RegularExpressions;
+using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
-using DbcLib;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace CommerceService;
 
@@ -845,9 +846,10 @@ public class RetailService(IIdentityTransmission identityRepo,
             res.AddRangeMessages(getUsers.Messages);
             return res;
         }
-
+        List<RowOfRetailOrderDocumentModelDB> rowsDump = [];
         if (req.Rows is not null && req.Rows.Count != 0)
         {
+            rowsDump = GlobalTools.CreateDeepCopy(req.Rows)!;
             req.Rows.ForEach(r =>
             {
                 r.Order = req;
@@ -887,7 +889,12 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.InjectToDeliveryId > 0)
         {
-            await context.OrdersDeliveriesLinks.AddAsync(new() { OrderDocumentId = req.Id, DeliveryDocumentId = req.InjectToDeliveryId }, token);
+            await context.OrdersDeliveriesLinks.AddAsync(new()
+            {
+                OrderDocumentId = req.Id,
+                DeliveryDocumentId = req.InjectToDeliveryId,
+                WeightShipping = rowsDump.Count == 0 ? 0 : rowsDump.Sum(x => x.WeightOffer)
+            }, token);
             await context.SaveChangesAsync(token);
             res.AddInfo("Создана связь заказа с отгрузкой/доставкой");
         }
