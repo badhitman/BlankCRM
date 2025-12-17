@@ -39,5 +39,5 @@ public enum PaymentsRetailTypesEnum
     /// QR (СБП)
     /// </summary>
     [Description("QR (СБП)")]
-    OnlineQR = 70,
+    OnlineQR = 80,
 }
