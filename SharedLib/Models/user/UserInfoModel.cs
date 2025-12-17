@@ -50,12 +50,20 @@ public record UserInfoModel : UserInfoMainModel
     public override string ToString()
     {
         string _res = $"{GivenName} {Surname}";
-
+        bool _needEndTag = false;
         if (!UserName.EndsWith($"@{GlobalStaticConstants.FakeHost}"))
-            _res = $"{_res} ({UserName}";
+        {
+            _res = $"{_res} <{UserName}";
+            _needEndTag = true;
+        }
 
         if (!string.IsNullOrWhiteSpace(Email) && !UserName.Equals(Email) && Email.EndsWith($"@{GlobalStaticConstants.FakeHost}") != true)
+        {
             _res += $" {Email}";
+            _needEndTag = true;
+        }
+        if (_needEndTag)
+            _res += ">";
 
         if (!string.IsNullOrWhiteSpace(PhoneNumber))
             _res += $" ({PhoneNumber})";

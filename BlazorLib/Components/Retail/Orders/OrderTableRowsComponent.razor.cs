@@ -97,12 +97,13 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     }
 
     /// <inheritdoc/>
-    protected override void AddingOfferAction(OfferActionModel off)
+    protected override async void AddingOfferAction(OfferActionModel off)
     {
         Document.Rows ??= [];
         int exist_row = Document.Rows.FindIndex(x => x.OfferId == off.Id);
         if (exist_row < 0)
-            Document.Rows.Add(new RowOfRetailOrderDocumentModelDB()
+        {
+            RowOfRetailOrderDocumentModelDB newOrderElement = new()
             {
                 Order = Document,
                 OrderId = Document.Id,
@@ -112,12 +113,34 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
                 OfferId = off.Id,
                 Quantity = off.Quantity,
                 Amount = off.Quantity * off.Price,
-            });
+                WeightOffer = off.Weight * off.Quantity,
+            };
+            if (Document.Id == 0)
+                Document.Rows.Add(newOrderElement);
+            else
+            {
+                await SetBusyAsync();
+                TResponseModel<int> resAddingRow = await RetailRepo.CreateRowRetailDocumentAsync(newOrderElement);
+                SnackBarRepo.ShowMessagesResponse(resAddingRow.Messages);
+                await SetBusyAsync(false);
+            }
+        }
         else
+        {
             Document.Rows[exist_row].Quantity = +off.Quantity;
+            Document.Rows[exist_row].WeightOffer = Document.Rows[exist_row].Quantity * off.Weight;
+            if (Document.Id > 0)
+            {
+                await SetBusyAsync();
+                ResponseBaseModel resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(Document.Rows[exist_row]);
+                SnackBarRepo.ShowMessagesResponse(resUpdateRow.Messages);
+                await SetBusyAsync(false);
+            }
+        }
 
         if (DocumentUpdateHandler is not null)
             DocumentUpdateHandler();
+
         UpdateData();
         StateHasChanged();
         AddingDomRef!.StateHasChangedCall();
