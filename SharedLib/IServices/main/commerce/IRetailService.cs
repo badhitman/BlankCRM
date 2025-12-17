@@ -157,6 +157,9 @@ public interface IRetailService
     public Task<ResponseBaseModel> UpdateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>
+    public Task<ResponseBaseModel> DeleteRowRetailDocumentAsync(int rowId, CancellationToken token = default);
+
+    /// <inheritdoc/>
     public Task<TPaginationResponseModel<RowOfRetailOrderDocumentModelDB>> SelectRowsRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel> req, CancellationToken token = default);
     #endregion
 

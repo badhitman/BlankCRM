@@ -86,16 +86,16 @@
         <MudTd DataLabel="Остаток">
             @(this.RegistersCache.Where(x => x.OfferId == context.OfferId && x.WarehouseId == Document?.WarehouseId).Sum(x => x.Quantity))
         </MudTd>
-        <MudTd DataLabel="Price">
+        <MudTd DataLabel="Цена">
             @(context.Offer!.Price)
         </MudTd>
-        <MudTd DataLabel="Quantity">
+        <MudTd DataLabel="Количество">
             @{
                 var _alowedValues = context.Offer?.QuantitiesValues;
             }
             @if (_alowedValues is null || _alowedValues.Count == 0 || ForceAdding)
             {
-                <MudNumericField @bind-Value="context!.Quantity" Required Min="1" Max="GetMaxValue(context)" />
+                <input type="number" class="form-control" @bind-value="context.Quantity" @bind-value:event="oninput" />
             }
             else
             {

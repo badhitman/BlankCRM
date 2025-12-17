@@ -349,16 +349,16 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Name = req.Name.Trim();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        
+
         if (await context.WalletsRetailTypes.AnyAsync(x => x.Name == req.Name, cancellationToken: token))
         {
             res.AddError("Тип кошелька с таким именем уже существует");
             return res;
         }
-        
+
         req.Description = req.Description?.Trim();
         req.CreatedAtUTC = DateTime.UtcNow;
-        
+
         if (await context.WalletsRetailTypes.AnyAsync(cancellationToken: token))
         {
             req.SortIndex = await context.WalletsRetailTypes.MaxAsync(x => x.SortIndex, cancellationToken: token);
@@ -1097,6 +1097,14 @@ public class RetailService(IIdentityTransmission identityRepo,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq.Include(x => x.Offer).ToListAsync(cancellationToken: token)
         };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DeleteRowRetailDocumentAsync(int rowId, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        await context.RowsOrdersRetails.Where(x => x.Id == rowId).ExecuteDeleteAsync(cancellationToken: token);
+        return ResponseBaseModel.CreateSuccess("Строка документа удалена");
     }
     #endregion
 

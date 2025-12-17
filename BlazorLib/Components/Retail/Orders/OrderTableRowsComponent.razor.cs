@@ -42,23 +42,26 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     {
         await base.OnInitializedAsync();
         if (Document.Id > 0)
+            await ReloadTableItems();
+    }
+
+    async Task ReloadTableItems()
+    {
+        TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel> req = new()
         {
-            TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel> req = new()
+            Payload = new()
             {
-                Payload = new()
-                {
-                    OrderId = Document.Id,
-                }
-            };
-            await SetBusyAsync();
-            TPaginationResponseModel<RowOfRetailOrderDocumentModelDB> res = await RetailRepo.SelectRowsRetailDocumentsAsync(req);
-            SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
-            if (res.Response is not null)
-            {
-                Document.Rows = res.Response;
+                OrderId = Document.Id,
             }
-            await SetBusyAsync(false);
+        };
+        await SetBusyAsync();
+        TPaginationResponseModel<RowOfRetailOrderDocumentModelDB> res = await RetailRepo.SelectRowsRetailDocumentsAsync(req);
+        SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
+        if (res.Response is not null)
+        {
+            Document.Rows = res.Response;
         }
+        await SetBusyAsync(false);
     }
 
     /// <inheritdoc/>
@@ -97,6 +100,32 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     }
 
     /// <inheritdoc/>
+    protected override async void RowEditCommitHandler(object element)
+    {
+        Document.Rows ??= [];
+
+        if (element is RowOfRetailOrderDocumentModelDB rowOrder)
+        {
+            int exist_row = Document.Rows.FindIndex(x => x.OfferId == rowOrder.OfferId);
+            if (exist_row >= 0)
+            {
+
+                Document.Rows[exist_row].Quantity = +rowOrder.Quantity;
+                Document.Rows[exist_row].WeightOffer = Document.Rows[exist_row].Quantity * rowOrder.Offer!.Weight;
+                if (Document.Id > 0)
+                {
+                    await SetBusyAsync();
+                    ResponseBaseModel resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(Document.Rows[exist_row]);
+                    SnackBarRepo.ShowMessagesResponse(resUpdateRow.Messages);
+                    await ReloadTableItems();
+                    await SetBusyAsync(false);
+                }
+            }
+        }
+        base.RowEditCommitHandler(element);
+    }
+
+    /// <inheritdoc/>
     protected override async void AddingOfferAction(OfferActionModel off)
     {
         Document.Rows ??= [];
@@ -122,6 +151,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
                 await SetBusyAsync();
                 TResponseModel<int> resAddingRow = await RetailRepo.CreateRowRetailDocumentAsync(newOrderElement);
                 SnackBarRepo.ShowMessagesResponse(resAddingRow.Messages);
+                await ReloadTableItems();
                 await SetBusyAsync(false);
             }
         }
@@ -134,6 +164,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
                 await SetBusyAsync();
                 ResponseBaseModel resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(Document.Rows[exist_row]);
                 SnackBarRepo.ShowMessagesResponse(resUpdateRow.Messages);
+                await ReloadTableItems();
                 await SetBusyAsync(false);
             }
         }
@@ -147,14 +178,29 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     }
 
     /// <inheritdoc/>
-    protected override void DeleteRow(int offerId)
+    protected override async void DeleteRow(int offerId)
     {
         Document.Rows ??= [];
-        Document.Rows.RemoveAll(x => x.OfferId == offerId);
+        if (Document.Id <= 0)
+            Document.Rows.RemoveAll(x => x.OfferId == offerId);
+
         if (DocumentUpdateHandler is not null)
             DocumentUpdateHandler();
 
         AddingDomRef?.StateHasChangedCall();
+
+        if (Document.Id > 0)
+        {
+            int exist_row = Document.Rows.FindIndex(x => x.OfferId == offerId);
+            if (exist_row >= 0 && Document.Rows[exist_row].Id > 0)
+            {
+                await SetBusyAsync();
+                ResponseBaseModel resDelRow = await RetailRepo.DeleteRowRetailDocumentAsync(Document.Rows[exist_row].Id);
+                SnackBarRepo.ShowMessagesResponse(resDelRow.Messages);
+                await ReloadTableItems();
+                await SetBusyAsync(false);
+            }
+        }
     }
 
     /// <inheritdoc/>
