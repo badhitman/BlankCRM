@@ -33,5 +33,5 @@ public enum DeliveryTypesEnum
     /// Самовывоз
     /// </summary>
     [Description("Самовывоз")]
-    Pickup = 40,
+    Pickup = 60,
 }
