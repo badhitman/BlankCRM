@@ -1328,8 +1328,26 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<OrderStatusRetailDocumentModelDB>> SelectOrderDocumentStatusesAsync(TPaginationRequestStandardModel<SelectOrderStatusesRetailDocumentsRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+        {
+            string msg = "req.Payload is null";
+            loggerRepo.LogError(msg);
+            return new()
+            {
+                Status = new()
+                {
+                    Messages = [new()
+                    {
+                        TypeMessage = MessagesTypesEnum.Error,
+                        Text = msg
+                    }]
+                }
+            };
+        }
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<OrderStatusRetailDocumentModelDB>? q = context.OrdersStatusesRetails.AsQueryable();
+        IQueryable<OrderStatusRetailDocumentModelDB>? q = context.OrdersStatusesRetails
+            .Where(x => x.OrderDocumentId == req.Payload.OrderDocumentId).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery));
