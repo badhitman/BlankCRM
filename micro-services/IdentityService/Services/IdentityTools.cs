@@ -1359,7 +1359,7 @@ public class IdentityTools(
 
             TResponseModel<bool?> userPhoneForUserCloneAllow = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.UserPhoneForUserCloneAllow, token);
 
-            if (userPhoneForUserCloneAllow.Response != true || await ctx.Users.AnyAsync(x => x.PhoneNumber == req.Payload.PhoneNumber || x.PhoneNumber == $"+{req.Payload.PhoneNumber}", cancellationToken: token))
+            if (userPhoneForUserCloneAllow.Response != true && await ctx.Users.AnyAsync(x => x.PhoneNumber == req.Payload.PhoneNumber || x.PhoneNumber == $"+{req.Payload.PhoneNumber}", cancellationToken: token))
                 return new() { Messages = [new() { Text = "Пользователь с таким телефоном уже существует", TypeMessage = MessagesTypesEnum.Error }] };
         }
 
