@@ -21,8 +21,8 @@
                 <span @onclick="() => SetPhone(currentUser.RequestChangePhone)" title="кликните для подтверждения" style="cursor:pointer" class="badge rounded-pill text-bg-success ms-2">подтвердить?</span>
                 <span @onclick="() => SetPhone(currentUser.PhoneNumber)" title="кликните для того что бы аннулировать запрос" style="cursor:pointer" class="badge rounded-pill text-bg-secondary ms-2">отклонить?</span>
             </h6>
+            <hr />
         }
-        <hr />
         @if (IsBusyProgress)
         {
             <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" />
