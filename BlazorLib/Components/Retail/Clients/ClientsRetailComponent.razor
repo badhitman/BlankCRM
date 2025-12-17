@@ -16,7 +16,12 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="ФИО"><a href="/retail/client-card/@context.UserId">@context.GivenName @context.Surname @context.Patronymic</a></MudTd>
-        <MudTd DataLabel="Username"><a href="/retail/client-card/@context.UserId">@context.UserName</a></MudTd>
+        <MudTd DataLabel="Username">
+            @if (!@context.UserName.EndsWith(GlobalStaticConstants.FakeHost))
+            {
+                <a href="/retail/client-card/@context.UserId">@context.UserName</a>
+            }
+        </MudTd>
         <MudTd DataLabel="Баланс">
             <ClientsBalancesComponent Wallets="[..WalletsCache.Where(x => x.Balance != 0 && x.UserIdentityId == context.UserId)]" />
         </MudTd>
