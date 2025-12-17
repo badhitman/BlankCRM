@@ -6,7 +6,14 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">@currentUser?.UserName</h5>
+        @if (currentUser?.UserName.EndsWith($"@{GlobalStaticConstants.FakeHost}") != true)
+        {
+            <h5 class="card-title">
+
+                @currentUser?.UserName
+            </h5>
+        }
+
         @if (currentUser is not null && currentUser.PhoneNumber != currentUser.RequestChangePhone && !string.IsNullOrWhiteSpace(currentUser.RequestChangePhone))
         {
             <h6 class="card-subtitle mb-6 text-body-secondary">
