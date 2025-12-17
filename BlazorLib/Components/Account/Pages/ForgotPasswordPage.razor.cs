@@ -35,13 +35,13 @@ public partial class ForgotPasswordPage
     {
         TResponseModel<UserInfoModel>? user = await IdentityRepo.FindUserByEmailAsync(Input.Email);
         if (user.Response is null)
-            RedirectManager.RedirectTo("Account/ForgotPasswordConfirmation");
+            RedirectManager.RedirectTo("Account/InvalidPasswordReset");
 
         TResponseModel<bool> email_is_confirmed_rest = await UsersProfilesRepo.IsEmailConfirmedAsync(user.Response.UserId);
         if (user is null || !email_is_confirmed_rest.Success() || email_is_confirmed_rest.Response != true)
         {
             // Don't reveal that the user does not exist or is not confirmed
-            RedirectManager.RedirectTo("Account/ForgotPasswordConfirmation");
+            RedirectManager.RedirectTo("Account/ForgotPassword");
         }
         Messages.AddRange(email_is_confirmed_rest.Messages);
 

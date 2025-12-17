@@ -1404,6 +1404,7 @@ public class IdentityTools(
                 .ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.FirstName, req.Payload.GivenName)
                     .SetProperty(p => p.LastName, req.Payload.Surname)
+                    .SetProperty(p => p.EmailConfirmed, true)
                     .SetProperty(p => p.Patronymic, req.Payload.Patronymic), cancellationToken: token);
 
         return new()
