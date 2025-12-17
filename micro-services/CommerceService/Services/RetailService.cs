@@ -5,6 +5,7 @@
 using DbcLib;
 using DocumentFormat.OpenXml.Drawing;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SharedLib;
 using System.Text.RegularExpressions;
 
@@ -1006,6 +1007,8 @@ public class RetailService(IIdentityTransmission identityRepo,
             res.AddError("Некоторые документы не найдены");
 
         if (req.UpdateStatuses)
+        {
+            loggerRepo.LogInformation($"Обновление статусов заказам: {JsonConvert.SerializeObject(req.Ids)}");
             foreach (DocumentRetailModelDB docDb in res.Response)
             {
                 await context.OrdersRetail
@@ -1013,6 +1016,7 @@ public class RetailService(IIdentityTransmission identityRepo,
                     .ExecuteUpdateAsync(set => set
                         .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == docDb.Id).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
             }
+        }
 
         return res;
     }
