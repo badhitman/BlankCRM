@@ -13,7 +13,7 @@
           RowEditCommit="ItemHasBeenCommitted"
           RowEditCancel="ResetItemToOriginalValues">
     <ToolBarContent>
-        @if (fullWeight > 0 && (OrderId > 0 || DeliveryId > 0 && (DeliveryId == 0 || OrderId == 0)))
+        @if (fullWeight > 0 && ((OrderParent is not null && OrderParent.Id > 0) || DeliveryId > 0 && (DeliveryId == 0 || (OrderParent is null || OrderParent.Id == 0))))
         {
             <span class="lead">Общий вес: <strong>@fullWeight</strong></span>
         }
@@ -33,7 +33,7 @@
                            IconColor="Color.Secondary">Включить в существующий заказ</MudButton>
             </MudTooltip>
         }
-        @if (OrderId > 0)
+        @if (OrderParent is not null && OrderParent.Id > 0)
         {
             <MudButton OnClick="() => _visibleCreateNewDelivery = true"
                        Class="me-2"
@@ -50,7 +50,7 @@
         }
     </ToolBarContent>
     <ColGroup>
-        @if (OrderId <= 0)
+        @if (OrderParent is null || OrderParent.Id <= 0)
         {
             <col />
         }
@@ -63,7 +63,7 @@
         <col style="width:50px;" />
     </ColGroup>
     <HeaderContent>
-        @if (OrderId <= 0)
+        @if (OrderParent is null || OrderParent.Id <= 0)
         {
             <MudTh>Заказ</MudTh>
         }
@@ -75,7 +75,7 @@
         <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
-        @if (OrderId <= 0)
+        @if (OrderParent is null || OrderParent.Id <= 0)
         {
             <MudTd DataLabel="Заказ"><a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a></MudTd>
         }
@@ -99,7 +99,7 @@
         </MudTd>
     </RowTemplate>
     <RowEditingTemplate>
-        @if (OrderId <= 0)
+        @if (OrderParent is null || OrderParent.Id <= 0)
         {
             <MudTd DataLabel="Заказ">@context.OrderDocument?.ToString()</MudTd>
         }
@@ -143,7 +143,7 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Name="ClientId" Value="ClientId">
-            <DeliveryDocumentComponent InjectToOrderId="OrderId" />
+            <DeliveryDocumentComponent InjectToOrder="OrderParent" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>
@@ -156,7 +156,7 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Name="ClientId" Value="ClientId">
-            <DeliveriesDocumentsManageComponent RowClickEventHandler="SelectDeliveryRowAction" ExcludeOrderId="OrderId" />
+            <DeliveriesDocumentsManageComponent RowClickEventHandler="SelectDeliveryRowAction" ExcludeOrder="OrderParent" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>

@@ -27,7 +27,7 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
 
     /// <inheritdoc/>
     [Parameter]
-    public int ExcludeOrderId { get; set; }
+    public DocumentRetailModelDB? ExcludeOrder { get; set; }
 
 
     MudTable<PaymentRetailDocumentModelDB>? _tableRef;
@@ -112,6 +112,9 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
             req.Payload.Start = DateRangeProp.Start;
             req.Payload.End = DateRangeProp.End;
         }
+
+        if(ExcludeOrder is not null && ExcludeOrder.Id > 0)
+            req.Payload.ExcludeOrderId = ExcludeOrder.Id;
 
         TPaginationResponseModel<PaymentRetailDocumentModelDB>? res = await RetailRepo.SelectPaymentsDocumentsAsync(req, token);
         await SetBusyAsync(false, token: token);

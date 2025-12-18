@@ -24,4 +24,9 @@ public class SelectWalletsRetailsConversionDocumentsRequestModel
 
     /// <inheritdoc/>
     public DateTime? End { get; set; }
+
+    /// <summary>
+    /// Исключить переводы, которые уже связаны с указанным заказом
+    /// </summary>
+    public int ExcludeOrderId { get; set; }
 }

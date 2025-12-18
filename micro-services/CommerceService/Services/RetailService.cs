@@ -784,6 +784,9 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => x.DatePayment <= req.Payload.End);
         }
 
+        if (req.Payload is not null && req.Payload.ExcludeOrderId > 0)
+            q = q.Where(x => !context.PaymentsOrdersLinks.Any(y => y.PaymentDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
+
         IQueryable<PaymentRetailDocumentModelDB>? pq = q
             .OrderBy(x => x.DatePayment)
             .Skip(req.PageNum * req.PageSize)
@@ -1648,6 +1651,9 @@ public class RetailService(IIdentityTransmission identityRepo,
             req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
             q = q.Where(x => x.DateDocument <= req.Payload.End);
         }
+
+        if (req.Payload is not null && req.Payload.ExcludeOrderId > 0)
+            q = q.Where(x => !context.ConversionsOrdersLinksRetail.Any(y => y.ConversionDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
 
         IQueryable<WalletConversionRetailDocumentModelDB> pq = q
             .OrderBy(x => x.DateDocument)

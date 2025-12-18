@@ -20,7 +20,7 @@ public class OrderLinkBaseComponent<T> : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter]
-    public int OrderId { get; set; }
+    public DocumentRetailModelDB? OrderParent { get; set; }
 
     /// <inheritdoc/>
     [Parameter]

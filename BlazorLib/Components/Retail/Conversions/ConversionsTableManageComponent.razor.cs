@@ -19,7 +19,7 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
 
     /// <inheritdoc/>
     [Parameter]
-    public int ExcludeOrderId { get; set; }
+    public DocumentRetailModelDB? ExcludeOrder { get; set; }
 
     /// <inheritdoc/>
     [Parameter]
@@ -80,13 +80,13 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
 
         await SetBusyAsync(false);
     }
-        
+
     void RowClickEvent(TableRowClickEventArgs<WalletConversionRetailDocumentModelDB> tableRowClickEventArgs)
     {
         if (RowClickEventHandler is not null)
             RowClickEventHandler(tableRowClickEventArgs);
-    } 
-     
+    }
+
     async Task<TableData<WalletConversionRetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         TPaginationRequestStandardModel<SelectWalletsRetailsConversionDocumentsRequestModel> req = new()
@@ -105,9 +105,12 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
             req.Payload.End = DateRangeProp.End;
         }
 
+        if (ExcludeOrder is not null && ExcludeOrder.Id > 0)
+            req.Payload.ExcludeOrderId = ExcludeOrder.Id;
+
         await SetBusyAsync(token: token);
         TPaginationResponseModel<WalletConversionRetailDocumentModelDB> res = await RetailRepo.SelectConversionsDocumentsAsync(req, token);
-
+        SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
         await SetBusyAsync(token: token);
         return new TableData<WalletConversionRetailDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

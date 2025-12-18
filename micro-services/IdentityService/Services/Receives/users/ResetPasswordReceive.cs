@@ -12,7 +12,7 @@ namespace IdentityService.Services.Receives.users;
 /// Сбрасывает пароль на указанный
 /// после проверки заданного сброса пароля.
 /// </summary>
-public class ResetPasswordReceive(IIdentityTools idRepo, ILogger<ResetPasswordReceive> loggerRepo)
+public class ResetPasswordReceive(IIdentityTools idRepo)
     : IResponseReceive<IdentityPasswordTokenModel?, ResponseBaseModel?>
 {
     /// <summary>
@@ -28,7 +28,6 @@ public class ResetPasswordReceive(IIdentityTools idRepo, ILogger<ResetPasswordRe
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(IdentityPasswordTokenModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        //loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
         return await idRepo.ResetPasswordAsync(req, token);
     }
 }

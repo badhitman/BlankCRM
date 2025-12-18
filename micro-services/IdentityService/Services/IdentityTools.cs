@@ -1376,15 +1376,22 @@ public class IdentityTools(
         if (!result.Succeeded)
             return new() { Messages = result.Errors.Select(x => new ResultMessage() { Text = $"[{x.Code}: {x.Description}]", TypeMessage = MessagesTypesEnum.Error }).ToList() };
 
+        await ctx.Users.Where(x => x.Id == user.Id)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.FirstName, req.Payload.GivenName)
+                    .SetProperty(p => p.LastName, req.Payload.Surname)
+                    .SetProperty(p => p.EmailConfirmed, true)
+                    .SetProperty(p => p.Patronymic, req.Payload.Patronymic), cancellationToken: token);
+
         if (req.Payload.GivenName != null)
             await ctx.Users.Where(x => x.Id == user.Id)
                     .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.FirstName, req.Payload.GivenName.ToUpper()), cancellationToken: token);
+                        .SetProperty(p => p.NormalizedFirstNameUpper, req.Payload.GivenName.ToUpper()), cancellationToken: token);
 
         if (req.Payload.Surname != null)
             await ctx.Users.Where(x => x.Id == user.Id)
                     .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.LastName, req.Payload.Surname.ToUpper()), cancellationToken: token);
+                        .SetProperty(p => p.NormalizedLastNameUpper, req.Payload.Surname.ToUpper()), cancellationToken: token);
 
         if (req.Payload.Patronymic != null)
             await ctx.Users.Where(x => x.Id == user.Id)
@@ -1399,13 +1406,6 @@ public class IdentityTools(
                     .SetProperty(p => p.RequestChangePhone, req.Payload.PhoneNumber)
                     .SetProperty(p => p.PhoneNumberConfirmed, true), cancellationToken: token);
         }
-
-        await ctx.Users.Where(x => x.Id == user.Id)
-                .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.FirstName, req.Payload.GivenName)
-                    .SetProperty(p => p.LastName, req.Payload.Surname)
-                    .SetProperty(p => p.EmailConfirmed, true)
-                    .SetProperty(p => p.Patronymic, req.Payload.Patronymic), cancellationToken: token);
 
         return new()
         {

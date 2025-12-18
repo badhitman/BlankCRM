@@ -32,7 +32,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
     /// <inheritdoc/>
     [Parameter]
-    public int InjectToOrderId { get; set; }
+    public DocumentRetailModelDB? InjectToOrder { get; set; }
 
     /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
@@ -175,7 +175,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         await SetBusyAsync();
         if (editDoc.Id <= 0)
         {
-            TResponseModel<int> res = await RetailRepo.CreateDeliveryDocumentAsync(CreateDeliveryDocumentRetailRequestModel.Build(editDoc, InjectToOrderId));
+            TResponseModel<int> res = await RetailRepo.CreateDeliveryDocumentAsync(CreateDeliveryDocumentRetailRequestModel.Build(editDoc, InjectToOrder?.Id ?? 0));
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
             if (res.Success() && res.Response > 0)

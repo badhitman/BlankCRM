@@ -15,7 +15,7 @@
           RowEditCommit="ItemHasBeenCommitted"
           RowEditCancel="ResetItemToOriginalValues">
     <ToolBarContent>
-        @if (fullAmountPayment > 0 && (OrderId > 0 || ConversionId > 0 && (ConversionId == 0 || OrderId == 0)))
+        @if (fullAmountPayment > 0 && ((OrderParent is not null && OrderParent.Id > 0) || ConversionId > 0 && (ConversionId == 0 || (OrderParent is null || OrderParent.Id == 0))))
         {
             <span class="lead">Общая сумма: <strong>@fullAmountPayment</strong></span>
         }
@@ -35,7 +35,7 @@
                            IconColor="Color.Secondary">Включить в существующий заказ</MudButton>
             </MudTooltip>
         }
-        @if (OrderId > 0)
+        @if (OrderParent is not null && OrderParent.Id > 0)
         {
             <MudButton OnClick="() => _visibleCreateNewConversion = true"
                        Class="me-2"
@@ -52,7 +52,7 @@
         }
     </ToolBarContent>
     <ColGroup>
-        @if (OrderId <= 0)
+        @if (OrderParent is null || OrderParent.Id <= 0)
         {
             <col />
         }
@@ -65,7 +65,7 @@
         <col style="width:50px;" />
     </ColGroup>
     <HeaderContent>
-        @if (OrderId <= 0)
+        @if (OrderParent is null || OrderParent.Id <= 0)
         {
             <MudTh>Заказ</MudTh>
         }
@@ -77,7 +77,7 @@
         <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
-        @if (OrderId <= 0)
+        @if (OrderParent is null || OrderParent.Id <= 0)
         {
             <MudTd DataLabel="Заказ"><a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a></MudTd>
         }
@@ -99,7 +99,7 @@
         </MudTd>
     </RowTemplate>
     <RowEditingTemplate>
-        @if (OrderId <= 0)
+        @if (OrderParent is null || OrderParent.Id <= 0)
         {
             <MudTd DataLabel="Заказ">@context.OrderDocument?.ToString()</MudTd>
         }
@@ -134,6 +134,7 @@
         </CascadingValue>
     </DialogContent>
 </MudDialog>
+
 <MudDialog @bind-Visible="_visibleCreateNewConversion" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
@@ -142,7 +143,7 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Name="ClientId" Value="ClientId">
-            <ConversionDocumentComponent InjectToOrderId="OrderId" />
+            <ConversionDocumentComponent InjectToOrder="OrderParent" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>
@@ -155,7 +156,7 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Name="ClientId" Value="ClientId">
-            <ConversionsTableManageComponent RowClickEventHandler="SelectConversionRowAction" ExcludeOrderId="OrderId" />
+            <ConversionsTableManageComponent RowClickEventHandler="SelectConversionRowAction" ExcludeOrder="OrderParent" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>

@@ -33,8 +33,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
 
     /// <inheritdoc/>
     [Parameter]
-    public int InjectToOrderId { get; set; }
-
+    public DocumentRetailModelDB? InjectToOrder { get; set; }
 
     WalletConversionRetailDocumentModelDB? currentDoc, editDoc;
     UserInfoModel? userSender, userRecipient;
@@ -87,11 +86,6 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     {
         await SetBusyAsync();
         await base.OnInitializedAsync();
-        //DocumentRetailModelDB? parentOder
-        //if (InjectToOrderId > 0)
-        //{
-        //    TResponseModel<DocumentRetailModelDB[]> parentOrderRes = await RetailRepo.RetailDocumentsGetAsync(new() { Ids = [InjectToOrderId] });
-        //}
 
         if (ConversionDocumentId <= 0)
         {
@@ -201,7 +195,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
         await SetBusyAsync();
         if (editDoc.Id <= 0)
         {
-            TResponseModel<int> res = await RetailRepo.CreateConversionDocumentAsync(CreateWalletConversionRetailDocumentRequestModel.Build(editDoc, InjectToOrderId));
+            TResponseModel<int> res = await RetailRepo.CreateConversionDocumentAsync(CreateWalletConversionRetailDocumentRequestModel.Build(editDoc, InjectToOrder?.Id ?? 0));
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success() && res.Response > 0)
                 NavRepo.NavigateTo($"/retail/conversion-document/{res.Response}");

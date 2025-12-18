@@ -31,7 +31,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     /// Исключить из вывода документы доставки по номеру заказа
     /// </summary>
     [Parameter]
-    public int? ExcludeOrderId { get; set; }
+    public DocumentRetailModelDB? ExcludeOrder { get; set; }
 
     /// <inheritdoc/>
     [Parameter]
@@ -124,8 +124,8 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
             Payload = new(),
         };
 
-        if (ExcludeOrderId.HasValue && ExcludeOrderId > 0)
-            req.Payload.ExcludeOrderId = ExcludeOrderId.Value;
+        if (ExcludeOrder is not null && ExcludeOrder.Id > 0)
+            req.Payload.ExcludeOrderId = ExcludeOrder.Id;
 
         if (!string.IsNullOrWhiteSpace(ClientId))
             req.Payload.RecipientsFilterIdentityId = [ClientId];

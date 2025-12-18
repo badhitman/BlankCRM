@@ -120,7 +120,7 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
             return;
         }
 
-        if (OrderId <= 0)
+        if (OrderParent is null || OrderParent.Id <= 0)
         {
             SnackBarRepo.Error("Не определён контекст заказа (розница)");
             StateHasChanged();
@@ -132,7 +132,7 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
         TResponseModel<int> res = await RetailRepo.CreateConversionOrderLinkDocumentAsync(new()
         {
             ConversionDocumentId = tableRow.Item.Id,
-            OrderDocumentId = OrderId
+            OrderDocumentId = OrderParent.Id
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -153,8 +153,8 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
             Payload = new()
         };
 
-        if (OrderId > 0)
-            req.Payload.OrdersIds = [OrderId];
+        if (OrderParent is not null && OrderParent.Id > 0)
+            req.Payload.OrdersIds = [OrderParent.Id];
 
         if (ConversionId > 0)
             req.Payload.ConversionsIds = [ConversionId];

@@ -77,13 +77,13 @@ else
                     <OrderStatusesTableComponent Document="editDocument" />
                 </MudTabPanel>
                 <MudTabPanel Text="Отгрузка/Доставка" Disabled="@(OrderId < 1)">
-                    <OrdersDeliveriesLinksTableComponent OrderId="OrderId" />
+                    <OrdersDeliveriesLinksTableComponent OrderParent="editDocument" />
                 </MudTabPanel>
                 <MudTabPanel Text="Платежи" Disabled="@(OrderId < 1)">
-                    <OrdersPaymentsLinksTableComponent OrderId="OrderId" />
+                    <OrdersPaymentsLinksTableComponent OrderParent="editDocument" />
                 </MudTabPanel>
                 <MudTabPanel Text="Переводы" Disabled="@(OrderId < 1)">
-                    <OrdersConversionsLinksTableComponent OrderId="OrderId" />
+                    <OrdersConversionsLinksTableComponent OrderParent="editDocument" />
                 </MudTabPanel>
                 <MudTabPanel Text="Заметки" Disabled="@(OrderId < 1)">
                     <TinyMCE.Blazor.Editor @bind-Value="editDocument.Description" ScriptSrc="@GlobalStaticConstants.TinyMCEditorScriptSrc" Conf="@editorConf" Disable="@(OrderId < 1)" />

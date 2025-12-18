@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Изменяет пароль пользователя после подтверждения правильности указанного currentPassword
 /// </summary>
-public class ChangePasswordForUserReceive(IIdentityTools idRepo, ILogger<ChangePasswordForUserReceive> loggerRepo)
+public class ChangePasswordForUserReceive(IIdentityTools idRepo)
     : IResponseReceive<IdentityChangePasswordModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -23,7 +23,6 @@ public class ChangePasswordForUserReceive(IIdentityTools idRepo, ILogger<ChangeP
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(IdentityChangePasswordModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        //loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
         return await idRepo.ChangePasswordAsync(req, token);
     }
 }

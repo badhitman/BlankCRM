@@ -26,4 +26,9 @@ public class SelectPaymentsRetailOrdersDocumentsRequestModel
 
     /// <inheritdoc/>
     public DateTime? End { get; set; }
+
+    /// <summary>
+    /// Исключить из выдачи платежи, которые уже связаны с указанным заказом
+    /// </summary>
+    public int ExcludeOrderId { get; set; }
 }
