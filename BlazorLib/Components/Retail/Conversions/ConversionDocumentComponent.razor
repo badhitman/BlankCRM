@@ -83,7 +83,7 @@
 
             @if (userSender is not null && userRecipient is not null && !string.IsNullOrWhiteSpace(userSender.UserId) && userSender.UserId == userRecipient.UserId)
             {
-                <MudAlert Severity="Severity.Info">Конвертация/перевод между счетами одного клиента</MudAlert>
+                <MudAlert Severity="Severity.Info" Class="mb-2">Конвертация/перевод между счетами одного клиента</MudAlert>
             }
         }
         @if (ConversionDocumentId > 0)

@@ -239,6 +239,11 @@ public partial class CommerceLayerContext : DbContext
     /// Кошельки
     /// </summary>
     public DbSet<WalletRetailModelDB> WalletsRetail { get; set; } = default!;
+
+    /// <summary>
+    /// DisabledPaymentsTypesForWallets
+    /// </summary>
+    public DbSet<DisabledPaymentTypeForWalletRetailTypeModelDB> DisabledPaymentsTypesForWallets { get; set; } = default!;
     #endregion
 
     #region Conversion`s
