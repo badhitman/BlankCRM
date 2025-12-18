@@ -23,6 +23,7 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
     List<WalletRetailModelDB> WalletsCache = [];
 
     string? searchString;
+    bool expandNewUserForm = false;
     MudTable<UserInfoModel>? table;
     UserInfoBaseModel newUser = new()
     {
