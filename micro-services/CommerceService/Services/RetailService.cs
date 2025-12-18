@@ -305,7 +305,9 @@ public class RetailService(IIdentityTransmission identityRepo,
             };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DeliveryStatusRetailDocumentModelDB>? q = context.DeliveriesStatusesDocumentsRetail.Where(x => x.DeliveryDocumentId == req.Payload.DeliveryDocumentId).AsQueryable();
+        IQueryable<DeliveryStatusRetailDocumentModelDB>? q = context.DeliveriesStatusesDocumentsRetail
+            .Where(x => x.DeliveryDocumentId == req.Payload.DeliveryDocumentId)
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery));
