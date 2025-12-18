@@ -21,7 +21,7 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
 
 
     List<WalletRetailModelDB> WalletsCache = [];
-
+    MudExpansionPanels? newUserRef;
     string? searchString;
     bool expandNewUserForm = false;
     MudTable<UserInfoModel>? table;
@@ -66,6 +66,7 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
             {
                 UserName = ""
             };
+            await newUserRef.CollapseAllAsync();
             await table.ReloadServerData();
         }
         await SetBusyAsync(false);
