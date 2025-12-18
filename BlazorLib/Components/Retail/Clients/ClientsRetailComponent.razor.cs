@@ -3,10 +3,8 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging.Abstractions;
 using MudBlazor;
 using SharedLib;
-using System.Net.Mail;
 
 namespace BlazorLib.Components.Retail.Clients;
 
@@ -64,8 +62,7 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
         await SetBusyAsync(false);
 
         if (res.Success())
-            NavigationRepo.NavigateTo($"/retail/client-card/{res.Response}");
-
+            NavigationRepo.NavigateTo(NavigationRepo.Uri, forceLoad: true);
     }
 
     /// <summary>
