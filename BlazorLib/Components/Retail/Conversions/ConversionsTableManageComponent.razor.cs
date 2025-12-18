@@ -98,7 +98,10 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
                 IncludeDisabled = ShowDeleted,
                 RecipientsUserFilter = string.IsNullOrWhiteSpace(ClientId)
                     ? null
-                    : [ClientId]
+                    : [ClientId],
+                SendersUserFilter = string.IsNullOrWhiteSpace(ClientId)
+                    ? null
+                    : [ClientId],
             },
         };
 
