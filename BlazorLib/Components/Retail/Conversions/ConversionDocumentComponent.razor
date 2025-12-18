@@ -25,6 +25,7 @@
                                                 SelectUserHandler="SelectUserSenderAction"
                                                 WalletInit="editDoc.FromWallet"
                                                 Title="Отправитель"
+                                                PresetClientId="@(InjectToOrder?.BuyerIdentityUserId)"
                                                 @ref=senderWalletRef />
                     <div class="mt-3">
                         <label for="exampleFormControlInputFromWalletSum" class="form-label">Сумма списания</label>
@@ -43,6 +44,7 @@
                                                 SelectUserHandler="SelectUserRecipientAction"
                                                 WalletInit="editDoc.ToWallet"
                                                 Title="Получатель"
+                                                PresetClientId="@(InjectToOrder?.BuyerIdentityUserId)"
                                                 @ref=recipientWalletRef />
                     <div class="mt-3">
                         <label for="exampleFormControlInputToWalletSum" class="form-label">Сумма зачисления</label>

@@ -359,16 +359,18 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.Description = req.Description?.Trim();
         req.CreatedAtUTC = DateTime.UtcNow;
 
-        if (await context.WalletsRetailTypes.AnyAsync(cancellationToken: token))
+        await context.WalletsRetailTypes.AddAsync(req, token);
+        await context.SaveChangesAsync(token);
+
+        if (await context.WalletsRetailTypes.AnyAsync(x => x.Id != req.Id, cancellationToken: token))
         {
             req.SortIndex = await context.WalletsRetailTypes.MaxAsync(x => x.SortIndex, cancellationToken: token);
             req.SortIndex++;
+            context.WalletsRetailTypes.Update(req);
+            await context.SaveChangesAsync(token);
         }
         else
             req.SortIndex = 1;
-
-        await context.WalletsRetailTypes.AddAsync(req, token);
-        await context.SaveChangesAsync(token);
 
         return new() { Response = req.Id };
     }
@@ -969,14 +971,26 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => x.DateDocument <= req.Payload.End);
         }
 
-        IQueryable<DocumentRetailModelDB> pq = q
-            .OrderBy(x => x.DateDocument)
+        IOrderedQueryable<DocumentRetailModelDB> oq = req.SortingDirection == DirectionsEnum.Up
+            ? q.OrderBy(x => x.DateDocument)
+            : q.OrderByDescending(x => x.DateDocument);
+
+        IQueryable<DocumentRetailModelDB> pq = oq
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
         List<DocumentRetailModelDB> res = await pq
                 .Include(x => x.Rows)
-                .Include(x => x.Deliveries)
+
+                .Include(x => x.Deliveries!)
+                .ThenInclude(x => x.DeliveryDocument)
+
+                .Include(x => x.Conversions!)
+                .ThenInclude(x => x.ConversionDocument)
+
+                .Include(x => x.Payments!)
+                .ThenInclude(x => x.PaymentDocument)
+
                 .ToListAsync(cancellationToken: token);
 
         res.ForEach(x => { if (x.StatusDocument == 0 || x.StatusDocument == default) x.StatusDocument = null; });

@@ -30,18 +30,23 @@ public class DocumentRetailModelDB : OrderDocumentBaseModel
     /// <inheritdoc/>
     public string? Description { get; set; }
 
+    /// <inheritdoc/>
+    public List<RowOfRetailOrderDocumentModelDB>? Rows { get; set; }
+
     /// <summary>
     /// DeliveryDocument
     /// </summary>
     public List<RetailOrderDeliveryLinkModelDB>? Deliveries { get; set; }
 
-    /// <inheritdoc/>
-    public List<RowOfRetailOrderDocumentModelDB>? Rows { get; set; }
-
     /// <summary>
     /// Orders
     /// </summary>
     public List<ConversionOrderRetailLinkModelDB>? Conversions { get; set; }
+
+    /// <summary>
+    /// Payments
+    /// </summary>
+    public List<PaymentOrderRetailLinkModelDB>? Payments { get; set; }
 
     /// <inheritdoc/>
     public override string ToString()

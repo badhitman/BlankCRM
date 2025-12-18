@@ -22,6 +22,7 @@
           OnRowClick="RowClickEvent"
           RowClass="@(RowClickEventHandler is null ? "" : "cursor-pointer")"
           Dense Hover
+          SortLabel="@(nameof(DocumentRetailModelDB.DateDocument))"
           @ref="tableRef">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Заказы (розница)</MudText>
@@ -44,12 +45,12 @@
     <HeaderContent>
         <MudTh>Номер</MudTh>
         <MudTh>Статус</MudTh>
-        <MudTh>Дата</MudTh>
+        <MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(DocumentRetailModelDB.DateDocument))" T="DocumentRetailModelDB">Дата</MudTableSortLabel>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
             <MudTh>Заказчик</MudTh>
         }
-        <MudTh>Склад</MudTh>
+        <MudTh>Финансы</MudTh>
         <MudTh>Номенклатура</MudTh>
         <MudTh>Отгрузка</MudTh>
         <MudTh>Информация</MudTh>
@@ -85,13 +86,23 @@
         {
             <MudTd DataLabel="Заказчик"><MudLink Class="text-success-emphasis" title="Переход в карточку клиента" Href="@($"/retail/client-card/{context.BuyerIdentityUserId}")">@(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")</MudLink></MudTd>
         }
-        <MudTd DataLabel="Склад">@(RubricsCache.FirstOrDefault(x => x.Id == context.WarehouseId)?.Name ?? $"#{context.WarehouseId}")</MudTd>
+        <MudTd DataLabel="Финансы">
+            @if (context.Conversions is not null && context.Conversions.Count != 0)
+            {
+                <OrderConversionsAboutComponent ConversionsDocuments="@context.Conversions" />
+            }
+            @if (context.Payments is not null && context.Payments.Count != 0)
+            {
+                <OrderPaymentsAboutComponent PaymentsDocuments="@context.Payments" />
+            }
+        </MudTd>
         <MudTd DataLabel="Номенклатура">
             <OrderRowsAboutComponent Rows="@context.Rows" />
         </MudTd>
         <MudTd DataLabel="Отгрузка">
-            <OrderDeliveryAboutComponent DeliveriesDocuments="@context.Deliveries" />
+            <OrderDeliveriesAboutComponent DeliveriesDocuments="@context.Deliveries" />
         </MudTd>
+
         <MudTd DataLabel="Информация">@context.Name @context.Description</MudTd>
     </RowTemplate>
     <NoRecordsContent>

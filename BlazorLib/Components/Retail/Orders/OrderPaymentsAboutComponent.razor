@@ -1,0 +1,7 @@
+﻿<span class="border border-warning-subtle">
+    <b>Платежи x @PaymentsDocuments.Count</b>
+</span>
+@code {
+    [Parameter, EditorRequired]
+    public required List<PaymentOrderRetailLinkModelDB> PaymentsDocuments { get; set; }
+}

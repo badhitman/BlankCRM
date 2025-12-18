@@ -92,7 +92,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
             datePayment = DateTime.Now;
             currentDoc = new()
             {
-                DateDocument = DateTime.Now
+                DateDocument = DateTime.Now,
             };
         }
         else
