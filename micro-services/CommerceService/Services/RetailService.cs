@@ -295,8 +295,17 @@ public class RetailService(IIdentityTransmission identityRepo,
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<DeliveryStatusRetailDocumentModelDB>> SelectDeliveryStatusesDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryStatusesRetailDocumentsRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return new()
+            {
+                Status = new()
+                {
+                    Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }]
+                }
+            };
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DeliveryStatusRetailDocumentModelDB>? q = context.DeliveriesStatusesDocumentsRetail.AsQueryable();
+        IQueryable<DeliveryStatusRetailDocumentModelDB>? q = context.DeliveriesStatusesDocumentsRetail.Where(x => x.DeliveryDocumentId == req.Payload.DeliveryDocumentId).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery));
