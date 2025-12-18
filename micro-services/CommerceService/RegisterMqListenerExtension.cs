@@ -19,6 +19,7 @@ public static class RegisterMqListenerExtension
     {
         return services
             .RegisterMqListener<UpdateWalletTypeReceive, WalletRetailTypeModelDB, ResponseBaseModel>()
+            .RegisterMqListener<ToggleWalletTypeDisabledForPaymentTypeReceive, ToggleWalletTypeDisabledForPaymentTypeRequestModel, ResponseBaseModel>()
             .RegisterMqListener<UpdateWalletReceive, WalletRetailModelDB, ResponseBaseModel>()
             .RegisterMqListener<UpdateRowOfDeliveryDocumentReceive, RowOfDeliveryRetailDocumentModelDB, ResponseBaseModel>()
             .RegisterMqListener<UpdatePaymentDocumentReceive, PaymentRetailDocumentModelDB, ResponseBaseModel>()

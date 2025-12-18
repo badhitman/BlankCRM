@@ -56,4 +56,9 @@ public class WalletRetailTypeModelDB : EntryUpdatedModel
     /// Системный
     /// </summary>
     public bool IsSystem { get; set; }
+
+    /// <summary>
+    /// DisabledPaymentsTypes
+    /// </summary>
+    public List<DisabledPaymentTypeForWalletRetailTypeModelDB>? DisabledPaymentsTypes { get; set; }
 }

@@ -50,6 +50,10 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public bool HideSystemWallets { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public PaymentsRetailTypesEnum? PaymentRetailTypeFilter { get; set; }
+
 
     UserInfoModel? currentUser;
 
@@ -127,7 +131,7 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync();
         TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> reqW = new()
         {
-            PageSize = 100,
+            PageSize = int.MaxValue,
             Payload = new()
             {
                 UsersFilterIdentityId = [currentUser.UserId],

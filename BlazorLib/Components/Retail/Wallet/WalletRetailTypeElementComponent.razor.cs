@@ -33,6 +33,18 @@ public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseM
         _walletCopy = null;
     }
 
+    async Task ChangeState(PaymentsRetailTypesEnum prt, WalletRetailTypeViewModel walletType)
+    {
+        await SetBusyAsync();
+        ResponseBaseModel res = await RetailRepo.ToggleWalletTypeDisabledForPaymentTypeAsync(new() { PaymentType = prt, WalletTypeId = walletType.Id });
+        SnackBarRepo.ShowMessagesResponse(res.Messages);
+
+        TResponseModel<WalletRetailTypeViewModel[]> getWT = await RetailRepo.WalletsTypesGetAsync([walletType.Id]);
+        walletType.DisabledPaymentsTypes = getWT.Response?.FirstOrDefault()?.DisabledPaymentsTypes;
+
+        await SetBusyAsync(false);
+    }
+
     async Task Save()
     {
         if (_walletCopy is null)

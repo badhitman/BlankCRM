@@ -409,19 +409,28 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
-        List<WalletRetailTypeViewModel> res = await pq.OrderBy(x => x.SortIndex).Select(x => new WalletRetailTypeViewModel()
-        {
-            Id = x.Id,
-            CreatedAtUTC = x.CreatedAtUTC,
-            Description = x.Description,
-            LastUpdatedAtUTC = x.LastUpdatedAtUTC,
-            Name = x.Name,
-            IsDisabled = x.IsDisabled,
-            SortIndex = x.SortIndex,
-            IsSystem = x.IsSystem,
-            IgnoreBalanceChanges = x.IgnoreBalanceChanges,
-            SumBalances = context.WalletsRetail.Where(y => y.WalletTypeId == x.Id).Sum(y => y.Balance)
-        }).ToListAsync(cancellationToken: token);
+        //List<WalletRetailTypeViewModel> res = await pq.OrderBy(x => x.SortIndex).Select(x => new WalletRetailTypeViewModel()
+        //{
+        //    Id = x.Id,
+        //    CreatedAtUTC = x.CreatedAtUTC,
+        //    Description = x.Description,
+        //    LastUpdatedAtUTC = x.LastUpdatedAtUTC,
+        //    Name = x.Name,
+        //    IsDisabled = x.IsDisabled,
+        //    SortIndex = x.SortIndex,
+        //    IsSystem = x.IsSystem,
+        //    IgnoreBalanceChanges = x.IgnoreBalanceChanges,
+        //    SumBalances = context.WalletsRetail.Where(y => y.WalletTypeId == x.Id).Sum(y => y.Balance)
+        //}).ToListAsync(cancellationToken: token);
+
+        List<WalletRetailTypeModelDB> res = await pq
+            .OrderBy(x => x.SortIndex)
+            .Include(x => x.DisabledPaymentsTypes)
+            .ToListAsync(cancellationToken: token);
+
+        var sumRes = await pq
+            .Select(x => new { x.Id, sum = context.WalletsRetail.Where(y => y.WalletTypeId == x.Id).Sum(z => z.Balance) })
+            .ToArrayAsync(cancellationToken: token);
 
         return new()
         {
@@ -430,7 +439,20 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = res,
+            Response = [..res.Select(x => new WalletRetailTypeViewModel()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                IsSystem = x.IsSystem,
+                SortIndex = x.SortIndex,
+                IsDisabled = x.IsDisabled,
+                Description = x.Description,
+                CreatedAtUTC = x.CreatedAtUTC,
+                LastUpdatedAtUTC = x.LastUpdatedAtUTC,
+                IgnoreBalanceChanges = x.IgnoreBalanceChanges,
+                DisabledPaymentsTypes = x.DisabledPaymentsTypes,
+                SumBalances = sumRes.Where(y => y.Id == x.Id).FirstOrDefault()?.sum ?? 0
+            })],
         };
     }
 
@@ -438,23 +460,57 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TResponseModel<WalletRetailTypeViewModel[]>> WalletsTypesGetAsync(int[] reqIds, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<WalletRetailTypeModelDB> q = context.WalletsRetailTypes
+            .Where(x => reqIds.Contains(x.Id));
+
+        WalletRetailTypeModelDB[] res = await q
+            .Include(x => x.DisabledPaymentsTypes)
+            .ToArrayAsync(cancellationToken: token);
+
+        var sumRes = await q
+            .Select(x => new { x.Id, sum = context.WalletsRetail.Where(y => y.WalletTypeId == x.Id).Sum(z => z.Balance) })
+            .ToArrayAsync(cancellationToken: token);
 
         return new()
         {
-            Response = await context.WalletsRetailTypes.Where(x => reqIds.Contains(x.Id)).Select(x => new WalletRetailTypeViewModel()
+            Response = [..res.Select(x => new WalletRetailTypeViewModel()
             {
                 Id = x.Id,
-                CreatedAtUTC = x.CreatedAtUTC,
-                Description = x.Description,
-                IsDisabled = x.IsDisabled,
-                IgnoreBalanceChanges = x.IgnoreBalanceChanges,
+                Name = x.Name,
                 IsSystem = x.IsSystem,
                 SortIndex = x.SortIndex,
+                IsDisabled = x.IsDisabled,
+                Description = x.Description,
+                CreatedAtUTC = x.CreatedAtUTC,
                 LastUpdatedAtUTC = x.LastUpdatedAtUTC,
-                Name = x.Name,
-                SumBalances = context.WalletsRetail.Where(y => y.WalletTypeId == x.Id).Sum(y => y.Balance)
-            }).ToArrayAsync(cancellationToken: token)
+                IgnoreBalanceChanges = x.IgnoreBalanceChanges,
+                DisabledPaymentsTypes = x.DisabledPaymentsTypes,
+                SumBalances = sumRes.Where(y => y.Id == x.Id).FirstOrDefault()?.sum ?? 0
+            })]
         };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> ToggleWalletTypeDisabledForPaymentTypeAsync(ToggleWalletTypeDisabledForPaymentTypeRequestModel req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        IQueryable<DisabledPaymentTypeForWalletRetailTypeModelDB> q = context
+            .DisabledPaymentsTypesForWallets
+            .Where(x => x.WalletTypeId == req.WalletTypeId && x.PaymentType == req.PaymentType);
+
+        if (await q.ExecuteDeleteAsync(cancellationToken: token) == 0)
+        {
+            await context
+            .DisabledPaymentsTypesForWallets.AddAsync(new()
+            {
+                PaymentType = req.PaymentType,
+                WalletTypeId = req.WalletTypeId,
+            }, token);
+            await context.SaveChangesAsync(token);
+        }
+
+        return ResponseBaseModel.CreateSuccess("Ok");
     }
     #endregion
 
@@ -541,7 +597,10 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
-        List<WalletRetailModelDB> res = await pq.Include(x => x.WalletType).ToListAsync(cancellationToken: token);
+        List<WalletRetailModelDB> walletsRes = await pq
+            .Include(x => x.WalletType!)
+            .ThenInclude(x => x.DisabledPaymentsTypes)
+            .ToListAsync(cancellationToken: token);
 
         if (req.Payload.AutoGenerationWallets == true && req.Payload.UsersFilterIdentityId is not null && req.Payload.UsersFilterIdentityId.Length != 0)
         {
@@ -558,7 +617,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             {
                 walletsTypesDb.ForEach(walletType =>
                 {
-                    if (!res.Any(x => x.WalletTypeId == walletType.Id && x.UserIdentityId == userId) && (!walletType.IsSystem || getUsers.Response.First(u => u.UserId == userId).IsAdmin))
+                    if (!walletsRes.Any(x => x.WalletTypeId == walletType.Id && x.UserIdentityId == userId) && (!walletType.IsSystem || getUsers.Response.First(u => u.UserId == userId).IsAdmin))
                     {
                         createWallets.Add(new()
                         {
@@ -576,7 +635,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             {
                 await context.WalletsRetail.AddRangeAsync(createWallets, token);
                 await context.SaveChangesAsync(cancellationToken: token);
-                res = await pq.Include(x => x.WalletType).ToListAsync(cancellationToken: token);
+                walletsRes = await pq.Include(x => x.WalletType).ToListAsync(cancellationToken: token);
             }
         }
 
@@ -587,7 +646,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = res,
+            Response = walletsRes,
         };
     }
     #endregion
