@@ -77,10 +77,15 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
         CloseButton = true
     };
 
-
     void CreateNewOrderOpenDialog()
     {
         _visible = true;
+    }
+
+    void RowClickEvent(TableRowClickEventArgs<PaymentRetailDocumentModelDB> tableRowClickEventArgs)
+    {
+        if (RowClickEventHandler is not null)
+            RowClickEventHandler(tableRowClickEventArgs);
     }
 
     async Task<TableData<PaymentRetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)

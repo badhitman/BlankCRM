@@ -46,7 +46,7 @@
                 <MudButton OnClick=IncludeExistPaymentOpenDialog
                            Variant="Variant.Outlined"
                            EndIcon="@Icons.Material.Filled.DeviceHub"
-                           IconColor="Color.Secondary">Включить в доставку</MudButton>
+                           IconColor="Color.Secondary">Включить в платёж</MudButton>
             </MudTooltip>
         }
     </ToolBarContent>
@@ -78,11 +78,15 @@
     <RowTemplate>
         @if (OrderId <= 0)
         {
-            <MudTd DataLabel="Заказ"><a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a></MudTd>
+            <MudTd DataLabel="Заказ">
+                <a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a>
+            </MudTd>
         }
         @if (PaymentId <= 0)
         {
-            <MudTd DataLabel="Платёж"><a href="/retail/payment-document/@context.PaymentDocumentId">@context.PaymentDocument?.ToString()</a></MudTd>
+            <MudTd DataLabel="Платёж">
+                <a href="/retail/payment-document/@context.PaymentDocumentId">@context.PaymentDocument?.ToString()</a>
+            </MudTd>
         }
         <MudTd Class="@(context.AmountPayment <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">@context.AmountPayment</MudTd>
         <MudTd>
@@ -149,7 +153,7 @@
 <MudDialog @bind-Visible="_visibleIncludeExistPayment" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите доставку (розница)
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите платёж для связи его заказом
         </MudText>
     </TitleContent>
     <DialogContent>

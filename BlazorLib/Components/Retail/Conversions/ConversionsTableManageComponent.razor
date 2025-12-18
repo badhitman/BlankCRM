@@ -2,7 +2,12 @@
 
 @inherits BlazorBusyComponentUsersCachedModel
 
-<MudTable ServerData="ServerReload" Dense Hover @ref=tableRef>
+<MudTable ServerData="ServerReload"
+          Dense Hover
+          T="WalletConversionRetailDocumentModelDB"
+          OnRowClick="RowClickEvent"
+          RowClass="@(RowClickEventHandler is null ? " " : " cursor-pointer")"
+          @ref=tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Переводы (розница)</MudText>
         <div class="form-check form-switch form-check-inline ms-2">
@@ -13,17 +18,23 @@
         </div>
         <MudSpacer />
         <MudDateRangePicker Class="me-2" PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Clearable />
-        <MudButton OnClick=CreateNewConversionOpenDialog
-                   Variant="Variant.Outlined"
-                   StartIcon="@Icons.Material.Filled.Add"
-                   IconColor="Color.Secondary">Новый перевод/конвертация</MudButton>
+        @if (RowClickEventHandler is null)
+        {
+            <MudButton OnClick=CreateNewConversionOpenDialog
+                       Variant="Variant.Outlined"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       IconColor="Color.Secondary">Новый перевод/конвертация</MudButton>
+        }
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Дата</MudTh>
         <MudTh>Примечание</MudTh>
         <MudTh>Списание</MudTh>
         <MudTh>Зачисление</MudTh>
-        <MudTh></MudTh>
+        @if (RowClickEventHandler is null)
+        {
+            <MudTh></MudTh>
+        }
     </HeaderContent>
     <RowTemplate>
         @{
@@ -46,11 +57,15 @@
             <span title="Текущий баланс" class="border border-primary-subtle me-2 pa-1">@context.ToWallet?.ToString()</span>
             @context.ToWalletSum
         </MudTd>
-        <MudTd>
-            <span class="badge text-bg-@(context.IsDisabled ? "secondary" : "success") cursor-pointer" @onclick="async () => await DisabledToggle(context.Id)">
-                @(context.IsDisabled ? "выключено (включить?)" : "включено (выключить?)")
-            </span>
-        </MudTd>
+        @if (RowClickEventHandler is null)
+        {
+            <MudTd>
+                <span class="badge text-bg-@(context.IsDisabled ? "secondary" : "success") cursor-pointer"
+                      @onclick="async () => await DisabledToggle(context.Id)">
+                    @(context.IsDisabled ? "выключено (включить?)" : "включено (выключить?)")
+                </span>
+            </MudTd>
+        }
     </RowTemplate>
     <NoRecordsContent>
         <MudText>Соответствующих записей не найдено</MudText>

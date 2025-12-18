@@ -87,6 +87,12 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     {
         await SetBusyAsync();
         await base.OnInitializedAsync();
+        //DocumentRetailModelDB? parentOder
+        //if (InjectToOrderId > 0)
+        //{
+        //    TResponseModel<DocumentRetailModelDB[]> parentOrderRes = await RetailRepo.RetailDocumentsGetAsync(new() { Ids = [InjectToOrderId] });
+        //}
+
         if (ConversionDocumentId <= 0)
         {
             datePayment = DateTime.Now;

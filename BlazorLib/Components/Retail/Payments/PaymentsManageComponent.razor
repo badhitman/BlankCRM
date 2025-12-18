@@ -35,15 +35,23 @@
     <MudSpacer />
     <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
 </MudStack>
-<MudTable ServerData="ServerReload" Dense Hover Loading="IsBusyProgress" @ref=_tableRef>
+<MudTable ServerData="ServerReload"
+          T="PaymentRetailDocumentModelDB"
+          OnRowClick="RowClickEvent"
+          Dense Hover
+          Loading="IsBusyProgress"
+          RowClass="@(RowClickEventHandler is null ? "" : "cursor-pointer")"
+          @ref=_tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Платежи (розница)</MudText>
         <MudSpacer />
-
-        <MudButton Variant="Variant.Outlined"
-                   IconColor="Color.Secondary"
-                   OnClick=CreateNewOrderOpenDialog
-                   EndIcon="@Icons.Material.Filled.Add">Создать платёж</MudButton>
+        @if (RowClickEventHandler is null)
+        {
+            <MudButton Variant="Variant.Outlined"
+                       IconColor="Color.Secondary"
+                       OnClick=CreateNewOrderOpenDialog
+                       EndIcon="@Icons.Material.Filled.Add">Создать платёж</MudButton>
+        }
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Name</MudTh>

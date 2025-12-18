@@ -55,6 +55,12 @@ public class PaymentRetailDocumentModelDB : EntryUpdatedModel
     public Guid Version { get; set; }
 
     /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"[{DatePayment} {TypePayment.DescriptionInfo()}] `{StatusPayment.DescriptionInfo()}` - {Amount}";
+    }
+
+    /// <inheritdoc/>
     public static PaymentRetailDocumentModelDB Build(CreatePaymentRetailDocumentRequestModel other)
     {
         return new()

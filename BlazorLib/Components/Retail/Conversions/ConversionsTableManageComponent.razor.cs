@@ -80,7 +80,13 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
 
         await SetBusyAsync(false);
     }
-
+        
+    void RowClickEvent(TableRowClickEventArgs<WalletConversionRetailDocumentModelDB> tableRowClickEventArgs)
+    {
+        if (RowClickEventHandler is not null)
+            RowClickEventHandler(tableRowClickEventArgs);
+    } 
+     
     async Task<TableData<WalletConversionRetailDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         TPaginationRequestStandardModel<SelectWalletsRetailsConversionDocumentsRequestModel> req = new()

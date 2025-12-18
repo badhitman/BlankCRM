@@ -41,13 +41,13 @@
                        Class="me-2"
                        Variant="Variant.Outlined"
                        EndIcon="@Icons.Material.Filled.Add"
-                       IconColor="Color.Secondary">Новый платёж</MudButton>
+                       IconColor="Color.Secondary">Новый перевод</MudButton>
 
             <MudTooltip Text="Добавить заказ в созданный ранее платёж">
                 <MudButton OnClick=IncludeExistConversionOpenDialog
                            Variant="Variant.Outlined"
                            EndIcon="@Icons.Material.Filled.DeviceHub"
-                           IconColor="Color.Secondary">Включить в доставку</MudButton>
+                           IconColor="Color.Secondary">Включить в перевод</MudButton>
             </MudTooltip>
         }
     </ToolBarContent>
@@ -137,7 +137,7 @@
 <MudDialog @bind-Visible="_visibleCreateNewConversion" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новая доставка (розница)
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Новая перевод/конвертация (розница)
         </MudText>
     </TitleContent>
     <DialogContent>
@@ -150,7 +150,7 @@
 <MudDialog @bind-Visible="_visibleIncludeExistConversion" Options="_dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите доставку (розница)
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />Укажите перевод/конвертацию
         </MudText>
     </TitleContent>
     <DialogContent>

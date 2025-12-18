@@ -1774,6 +1774,27 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
+        Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<ConversionOrderRetailLinkModelDB, DocumentRetailModelDB?>? v = pq
+            .Include(x => x.ConversionDocument!)
+            .ThenInclude(x => x.FromWallet!)
+            .ThenInclude(x => x.WalletType)
+            .Include(x => x.ConversionDocument!)
+            .ThenInclude(x => x.ToWallet!)
+            .ThenInclude(x => x.WalletType)
+            .Include(x => x.OrderDocument);
+
+        Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<ConversionOrderRetailLinkModelDB, DocumentRetailModelDB?> BuildQuery()
+        {
+            return pq
+            .Include(x => x.ConversionDocument!)
+            .ThenInclude(x => x.FromWallet!)
+            .ThenInclude(x => x.WalletType)
+            .Include(x => x.ConversionDocument!)
+            .ThenInclude(x => x.ToWallet!)
+            .ThenInclude(x => x.WalletType)
+            .Include(x => x.OrderDocument);
+        }
+
         return new()
         {
             PageNum = req.PageNum,
@@ -1781,11 +1802,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = (forOrders && forConversions) || (!forOrders && !forConversions)
-                            ? await pq.Include(x => x.ConversionDocument).Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
-                            : forOrders
-                                ? await pq.Include(x => x.ConversionDocument).ToListAsync(cancellationToken: token)
-                                : await pq.Include(x => x.OrderDocument!).ToListAsync(cancellationToken: token)
+            Response = await BuildQuery().ToListAsync(cancellationToken: token)
         };
     }
 
