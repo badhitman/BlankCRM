@@ -59,10 +59,16 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
             Payload = newUser
         });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
+        if (res.Success() && table is not null)
+        {
+            newUser = new()
+            {
+                UserName = ""
+            };
+            await table.ReloadServerData();
+        }
         await SetBusyAsync(false);
 
-        if (res.Success())
-            NavigationRepo.NavigateTo(NavigationRepo.Uri, forceLoad: true);
     }
 
     /// <summary>
