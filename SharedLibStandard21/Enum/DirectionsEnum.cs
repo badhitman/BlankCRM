@@ -17,5 +17,10 @@ public enum DirectionsEnum
     /// <summary>
     /// Вниз
     /// </summary>
-    Down
+    Down,
+
+    /// <summary>
+    /// None
+    /// </summary>
+    None = 1000
 }

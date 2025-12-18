@@ -165,9 +165,9 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         }
 
         req.SortBy = state.SortLabel;
-        req.SortingDirection = state.SortDirection == SortDirection.Ascending
-            ? DirectionsEnum.Up
-            : DirectionsEnum.Down;
+        req.SortingDirection = state.SortDirection == SortDirection.Descending
+            ? DirectionsEnum.Down
+            : DirectionsEnum.Up;
 
         await SetBusyAsync(token: token);
         TPaginationResponseModel<DocumentRetailModelDB> res = await RetailRepo.SelectRetailDocumentsAsync(req, token);
