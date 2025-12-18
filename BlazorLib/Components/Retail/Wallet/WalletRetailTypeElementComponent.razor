@@ -28,7 +28,7 @@
 
         <div class="card">
             <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-body-secondary">Отключённые типы оплаты</h6>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Отключённые типы оплаты (для платежей)</h6>
                 @foreach (PaymentsRetailTypesEnum prt in Enum.GetValues<PaymentsRetailTypesEnum>())
                 {
                     bool _ic = WalletTypeElement.DisabledPaymentsTypes!.Any(x => x.PaymentType == prt) == true;

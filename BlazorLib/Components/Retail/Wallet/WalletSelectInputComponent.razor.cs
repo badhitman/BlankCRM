@@ -57,6 +57,7 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
 
     UserInfoModel? currentUser;
 
+
     WalletRetailModelDB? currentWallet;
     WalletRetailModelDB? CurrentWallet
     {

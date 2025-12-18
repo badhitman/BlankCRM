@@ -53,7 +53,7 @@
                            AdornmentIcon="@Icons.Material.Filled.Wallet"
                            AdornmentColor="Color.Primary">
                     <MudSelectItem T="WalletRetailModelDB" Value="@(null as WalletRetailModelDB)"></MudSelectItem>
-                    @foreach (WalletRetailModelDB wallet in walletsForSelect)
+                    @foreach (WalletRetailModelDB wallet in walletsForSelect.Where(x => PaymentRetailTypeFilter is null || x.WalletType.DisabledPaymentsTypes?.Any(x => x.PaymentType != PaymentRetailTypeFilter) != true))
                     {
                         <MudSelectItem Class="@(wallet.WalletType?.IsSystem == true ? "text-warning" : "")" Value="@wallet">@wallet.Name `@wallet.WalletType?.Name` [@wallet.Balance]</MudSelectItem>
                     }
