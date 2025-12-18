@@ -63,7 +63,10 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
             {
                 UserName = ""
             };
-            await newUserRef.CollapseAllAsync();
+
+            if (newUserRef is not null)
+                await newUserRef.CollapseAllAsync();
+
             await table.ReloadServerData();
         }
         await SetBusyAsync(false);
