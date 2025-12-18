@@ -16,9 +16,6 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
-    [Inject]
-    NavigationManager NavigationRepo { get; set; } = default!;
-
 
     List<WalletRetailModelDB> WalletsCache = [];
     MudExpansionPanels? newUserRef;

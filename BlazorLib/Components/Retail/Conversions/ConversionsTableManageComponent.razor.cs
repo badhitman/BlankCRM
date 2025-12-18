@@ -95,8 +95,11 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
             PageSize = state.PageSize,
             Payload = new()
             {
-                IncludeDisabled = ShowDeleted
-            }
+                IncludeDisabled = ShowDeleted,
+                RecipientsUserFilter = string.IsNullOrWhiteSpace(ClientId)
+                    ? null
+                    : [ClientId]
+            },
         };
 
         if (DateRangeProp is not null)
