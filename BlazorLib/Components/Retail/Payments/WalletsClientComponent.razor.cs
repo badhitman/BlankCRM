@@ -13,5 +13,5 @@ public partial class WalletsClientComponent : BlazorBusyComponentBaseModel
 {
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public string ClientId { get; set; }
+    public required string ClientId { get; set; }
 }

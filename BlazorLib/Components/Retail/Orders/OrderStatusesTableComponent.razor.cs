@@ -19,7 +19,7 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public DocumentRetailModelDB Document { get; set; }
+    public required DocumentRetailModelDB Document { get; set; }
 
 
     DateTime? createdDate, editDate;

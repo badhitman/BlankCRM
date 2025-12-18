@@ -27,7 +27,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public DeliveryDocumentRetailModelDB Document { get; set; }
+    public required DeliveryDocumentRetailModelDB Document { get; set; }
 
 
     /// <inheritdoc/>

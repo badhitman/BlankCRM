@@ -40,7 +40,7 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public Action<WalletRetailModelDB?> SelectWalletHandler { get; set; }
+    public required Action<WalletRetailModelDB?> SelectWalletHandler { get; set; }
 
     /// <inheritdoc/>
     [Parameter]

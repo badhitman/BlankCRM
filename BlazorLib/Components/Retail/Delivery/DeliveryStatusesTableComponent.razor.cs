@@ -19,7 +19,7 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
 
     /// <inheritdoc/>
     [Parameter, EditorRequired]
-    public DeliveryDocumentRetailModelDB Document { get; set; }
+    public required DeliveryDocumentRetailModelDB Document { get; set; }
 
 
     DateTime? createdDate, editDate;
