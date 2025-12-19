@@ -137,21 +137,12 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.Payload?.Start is not null && req.Payload.Start != default)
         {
-            req.Payload.Start.Value.AddHours(-req.Payload.Start.Value.Hour);
-            req.Payload.Start.Value.AddMinutes(-req.Payload.Start.Value.Minute);
-            req.Payload.Start.Value.AddSeconds(-req.Payload.Start.Value.Second);
-
             req.Payload.Start = req.Payload.Start.SetKindUtc();
-
             q = q.Where(x => x.CreatedAtUTC >= req.Payload.Start);
         }
 
         if (req.Payload?.End is not null && req.Payload.End != default)
         {
-            req.Payload.End.Value.AddHours(-req.Payload.End.Value.Hour);
-            req.Payload.End.Value.AddMinutes(-req.Payload.End.Value.Minute);
-            req.Payload.End.Value.AddSeconds(-req.Payload.End.Value.Second);
-
             req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
             q = q.Where(x => x.CreatedAtUTC <= req.Payload.End);
         }
