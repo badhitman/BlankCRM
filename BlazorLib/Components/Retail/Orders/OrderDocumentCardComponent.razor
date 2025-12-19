@@ -56,8 +56,21 @@ else
                            aria-describedby="buyerHelp">
                     <div id="buyerHelp" class="form-text">Контекст заказчика.</div>
                 </div>
-
             }
+
+            @if (editDocument.Rows is not null && editDocument.Conversions is not null && editDocument.Payments is not null)
+            {
+                decimal rowsSum = editDocument.Rows.Count == 0 ? 0 : editDocument.Rows.Sum(x => x.Amount);
+                decimal paymentsSum = editDocument.Payments.Count == 0 ? 0 : editDocument.Payments.Sum(x => x.AmountPayment);
+                decimal conversionsSum = editDocument.Conversions.Count == 0 ? 0 : editDocument.Conversions.Sum(x => x.AmountPayment);
+                if (rowsSum != (paymentsSum + conversionsSum))
+                {
+                    <MudAlert Severity="Severity.Error">
+                        Сумма заказа [@rowsSum] отличается от суммы финансовых операций [@paymentsSum + @conversionsSum = @(paymentsSum + conversionsSum)]
+                    </MudAlert>
+                }
+            }
+
             <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
                 <MudTabPanel Text="Номенклатура">
                     @if (editDocument is null)

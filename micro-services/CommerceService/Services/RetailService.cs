@@ -1075,7 +1075,16 @@ public class RetailService(IIdentityTransmission identityRepo,
                 ? await q.ToArrayAsync(cancellationToken: token)
                 : await q.Include(x => x.Rows!)
                          .ThenInclude(x => x.Offer)
-                         .Include(x => x.Deliveries)
+
+                         .Include(x => x.Deliveries!)
+                         .ThenInclude(x => x.DeliveryDocument)
+
+                         .Include(x => x.Conversions!)
+                         .ThenInclude(x => x.ConversionDocument)
+
+                         .Include(x => x.Payments!)
+                         .ThenInclude(x => x.PaymentDocument)
+
                          .ToArrayAsync(cancellationToken: token)
         };
 
