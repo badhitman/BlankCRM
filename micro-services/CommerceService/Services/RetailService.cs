@@ -131,9 +131,12 @@ public class RetailService(IIdentityTransmission identityRepo,
                 join linkItem in context.OrdersDeliveriesLinks.Where(x => x.OrderDocumentId == req.Payload.FilterOrderId) on deliveryDoc.Id equals linkItem.DeliveryDocumentId
                 select deliveryDoc;
 
-        IOrderedQueryable<DeliveryDocumentRetailModelDB> oq = req.SortingDirection == DirectionsEnum.Up
-            ? q.OrderBy(x => x.CreatedAtUTC)
-            : q.OrderByDescending(x => x.CreatedAtUTC);
+        IOrderedQueryable<DeliveryDocumentRetailModelDB> oq = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => q.OrderBy(x => x.CreatedAtUTC),
+            DirectionsEnum.Down => q.OrderByDescending(x => x.CreatedAtUTC),
+            _ => q.OrderByDescending(x => x.Name)
+        };
 
         if (req.Payload?.Start is not null && req.Payload.Start != default)
         {
@@ -860,9 +863,12 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload is not null && req.Payload.ExcludeOrderId > 0)
             q = q.Where(x => !context.PaymentsOrdersLinks.Any(y => y.PaymentDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
 
-        IOrderedQueryable<PaymentRetailDocumentModelDB> oq = req.SortingDirection == DirectionsEnum.Up
-            ? q.OrderBy(x => x.DatePayment)
-            : q.OrderByDescending(x => x.DatePayment);
+        IOrderedQueryable<PaymentRetailDocumentModelDB> oq = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => q.OrderBy(x => x.DatePayment),
+            DirectionsEnum.Down => q.OrderByDescending(x => x.DatePayment),
+            _ => q.OrderByDescending(x => x.Name)
+        };
 
         IQueryable<PaymentRetailDocumentModelDB>? pq = oq
             .Skip(req.PageNum * req.PageSize)
@@ -1048,9 +1054,12 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload is not null && req.Payload.EqualsSumFilter == true)
             q = q.Where(x => context.RowsOrdersRetails.Where(y => y.OrderId == x.Id).Sum(y => y.Amount) != (context.PaymentsOrdersLinks.Where(y => y.OrderDocumentId == x.Id).Sum(y => y.AmountPayment) + context.ConversionsOrdersLinksRetail.Where(y => y.OrderDocumentId == x.Id).Sum(y => y.AmountPayment)));
 
-        IOrderedQueryable<DocumentRetailModelDB> oq = req.SortingDirection == DirectionsEnum.Up
-            ? q.OrderBy(x => x.DateDocument)
-            : q.OrderByDescending(x => x.DateDocument);
+        IOrderedQueryable<DocumentRetailModelDB> oq = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => q.OrderBy(x => x.DateDocument),
+            DirectionsEnum.Down => q.OrderByDescending(x => x.DateDocument),
+            _ => q.OrderByDescending(x => x.Name)
+        };
 
         IQueryable<DocumentRetailModelDB> pq = oq
             .Skip(req.PageNum * req.PageSize)
@@ -1755,9 +1764,12 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload is not null && req.Payload.ExcludeOrderId > 0)
             q = q.Where(x => !context.ConversionsOrdersLinksRetail.Any(y => y.ConversionDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
 
-        IOrderedQueryable<WalletConversionRetailDocumentModelDB> oq = req.SortingDirection == DirectionsEnum.Up
-            ? q.OrderBy(x => x.DateDocument)
-            : q.OrderByDescending(x => x.DateDocument);
+        IOrderedQueryable<WalletConversionRetailDocumentModelDB> oq = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => q.OrderBy(x => x.DateDocument),
+            DirectionsEnum.Down => q.OrderByDescending(x => x.DateDocument),
+            _ => q.OrderByDescending(x => x.Name)
+        };
 
         IQueryable<WalletConversionRetailDocumentModelDB> pq = oq
             .Skip(req.PageNum * req.PageSize)
