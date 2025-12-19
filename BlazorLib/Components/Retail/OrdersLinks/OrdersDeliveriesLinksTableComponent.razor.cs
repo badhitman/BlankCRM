@@ -23,6 +23,14 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         _visibleCreateNewDelivery;
 
     decimal fullWeight;
+    IReadOnlyCollection<StatusesDocumentsEnum?> statusesForSelect = [
+            null,
+            StatusesDocumentsEnum.Reopen,
+            StatusesDocumentsEnum.Progress,
+            StatusesDocumentsEnum.Created,
+            StatusesDocumentsEnum.Pause,
+            StatusesDocumentsEnum.Check
+        ];
 
 
     async Task DeleteRow(int rowLinkId)

@@ -49,6 +49,10 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     [Parameter]
     public Action<TableRowClickEventArgs<DocumentRetailModelDB>>? RowClickEventHandler { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public List<StatusesDocumentsEnum?>? PresetStatusesDocuments { get; set; }
+
 
     bool _equalSumFilter;
     bool EqualSumFilter
@@ -167,7 +171,9 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         if (ExcludeDeliveryId.HasValue && ExcludeDeliveryId > 0)
             req.Payload.ExcludeDeliveryId = ExcludeDeliveryId;
 
-        if (SelectedStatuses.Count != 0)
+        if (PresetStatusesDocuments is not null && PresetStatusesDocuments.Count != 0)
+            req.Payload.StatusesFilter = [.. PresetStatusesDocuments];
+        else if (SelectedStatuses.Count != 0)
             req.Payload.StatusesFilter = [.. SelectedStatuses];
 
         if (DateRangeProp is not null)

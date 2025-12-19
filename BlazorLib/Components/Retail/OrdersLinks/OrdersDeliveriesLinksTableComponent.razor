@@ -20,11 +20,11 @@
         <MudSpacer />
         @if (DeliveryId > 0)
         {
-            <MudButton OnClick="() => _visibleCreateNewOrder = true"
+            @* <MudButton OnClick="() => _visibleCreateNewOrder = true"
                        Class="me-2"
                        Variant="Variant.Outlined"
                        StartIcon="@Icons.Material.Filled.Add"
-                       IconColor="Color.Secondary">Новый заказ</MudButton>
+                       IconColor="Color.Secondary">Новый заказ</MudButton> *@
 
             <MudTooltip Text="Добавить созданный ранее заказ в текущую доставку">
                 <MudButton OnClick=IncludeExistOrderOpenDialog
@@ -169,7 +169,9 @@
     </TitleContent>
     <DialogContent>
         <CascadingValue Name="ClientId" Value="ClientId">
-            <RetailOrdersListComponent RowClickEventHandler="SelectOrderRowAction" ExcludeDeliveryId="DeliveryId" />
+            <RetailOrdersListComponent RowClickEventHandler="SelectOrderRowAction"
+                                       PresetStatusesDocuments="@([..statusesForSelect])"
+                                       ExcludeDeliveryId="DeliveryId" />
         </CascadingValue>
     </DialogContent>
 </MudDialog>

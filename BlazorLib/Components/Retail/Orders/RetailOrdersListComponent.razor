@@ -3,17 +3,31 @@
 
 
 <MudStack AlignItems="AlignItems.Center" Row>
-    <MudChipSet @bind-SelectedValues="SelectedStatuses"
-                SelectionMode="SelectionMode.MultiSelection"
-                CheckMark
-                Variant="Variant.Text"
-                Class="mb-2"
-                Color="Color.Info">
-        @foreach (StatusesDocumentsEnum sd in Enum.GetValues<StatusesDocumentsEnum>())
-        {
-            <MudChip Value="@sd" Text="@sd.DescriptionInfo()" />
-        }
-    </MudChipSet>
+    @if (PresetStatusesDocuments is null || PresetStatusesDocuments.Count == 0)
+    {
+        <MudChipSet @bind-SelectedValues="SelectedStatuses"
+                    SelectionMode="SelectionMode.MultiSelection"
+                    CheckMark
+                    Variant="Variant.Text"
+                    Class="mb-2"
+                    Color="Color.Info">
+            @foreach (StatusesDocumentsEnum sd in Enum.GetValues<StatusesDocumentsEnum>())
+            {
+                <MudChip Value="@sd" Text="@sd.DescriptionInfo()" />
+            }
+        </MudChipSet>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                @foreach (StatusesDocumentsEnum? sd in PresetStatusesDocuments)
+                {
+                    <span class="badge text-bg-secondary me-1">@(sd?.DescriptionInfo() ?? "не обработан")</span>
+                }
+            </div>
+        </div>
+    }
     <MudSpacer />
     <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
 </MudStack>
