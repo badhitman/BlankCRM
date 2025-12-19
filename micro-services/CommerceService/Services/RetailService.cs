@@ -147,7 +147,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         {
             DirectionsEnum.Up => q.OrderBy(x => x.CreatedAtUTC),
             DirectionsEnum.Down => q.OrderByDescending(x => x.CreatedAtUTC),
-            _ => q.OrderByDescending(x => x.Name)
+            _ => q.OrderBy(x => x.Name)
         };
 
         IQueryable<DeliveryDocumentRetailModelDB> pq = oq
@@ -867,7 +867,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         {
             DirectionsEnum.Up => q.OrderBy(x => x.DatePayment),
             DirectionsEnum.Down => q.OrderByDescending(x => x.DatePayment),
-            _ => q.OrderByDescending(x => x.Name)
+            _ => q.OrderBy(x => x.Name)
         };
 
         IQueryable<PaymentRetailDocumentModelDB>? pq = oq
@@ -1058,7 +1058,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         {
             DirectionsEnum.Up => q.OrderBy(x => x.DateDocument),
             DirectionsEnum.Down => q.OrderByDescending(x => x.DateDocument),
-            _ => q.OrderByDescending(x => x.Name)
+            _ => q.OrderBy(x => x.Name)
         };
 
         IQueryable<DocumentRetailModelDB> pq = oq
@@ -1768,7 +1768,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         {
             DirectionsEnum.Up => q.OrderBy(x => x.DateDocument),
             DirectionsEnum.Down => q.OrderByDescending(x => x.DateDocument),
-            _ => q.OrderByDescending(x => x.Name)
+            _ => q.OrderBy(x => x.Name)
         };
 
         IQueryable<WalletConversionRetailDocumentModelDB> pq = oq
