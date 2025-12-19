@@ -104,11 +104,29 @@
             }
         </MudTd>
         <MudTd DataLabel="Дата">
-            <a href="/retail/order-document/@context.Id">@ddt.ToString("d", GlobalStaticConstants.RU)</a>
+            @if (RowClickEventHandler is null)
+            {
+                <a href="/retail/order-document/@context.Id">@ddt.ToString("d", GlobalStaticConstants.RU)</a>
+            }
+            else
+            {
+                <span>@ddt.ToString("d", GlobalStaticConstants.RU)</span>
+            }
         </MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
-            <MudTd DataLabel="Заказчик"><MudLink Class="text-success-emphasis" title="Переход в карточку клиента" Href="@($"/retail/client-card/{context.BuyerIdentityUserId}")">@(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")</MudLink></MudTd>
+            <MudTd DataLabel="Заказчик">
+                @if (RowClickEventHandler is null)
+                {
+                    <MudLink Class="text-success-emphasis" title="Переход в карточку клиента" Href="@($"/retail/client-card/{context.BuyerIdentityUserId}")">
+                        @(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")
+                    </MudLink>
+                }
+                else
+                {
+                    <span>@(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")</span>
+                }
+            </MudTd>
         }
         <MudTd DataLabel="Финансы">
             @if (context.Conversions is not null && context.Conversions.Count != 0)
