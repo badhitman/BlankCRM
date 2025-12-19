@@ -268,14 +268,11 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         if (recipientUser is null)
             return;
 
-        await SetBusyAsync();
-
         if (recipientUser.TelegramId.HasValue)
         {
             List<ChatTelegramModelDB> chats = await TelegramRepo.ChatsReadTelegramAsync([recipientUser.TelegramId.Value]);
             currentChatTelegram = chats.FirstOrDefault();
         }
-
-        await SetBusyAsync(false);
+        StateHasChangedCall();
     }
 }
