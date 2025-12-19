@@ -33,10 +33,11 @@
                                @bind-value:event="oninput"
                                @onfocus=OnFocusFromWalletSum
                                disabled="@IsBusyProgress"
+                               readonly="@(editDoc.FromWalletId <= 0)"
                                type="number"
                                class="form-control"
                                id="exampleFormControlInputFromWalletSum"
-                               placeholder="Сумма списания">
+                               placeholder="@(editDoc.FromWalletId <= 0 ? "Укажите кошелёк" : "Сумма списания")">
                     </div>
                 </MudItem>
                 <MudItem xs="12" lg="6">
@@ -52,10 +53,11 @@
                                @bind-value:event="oninput"
                                @onfocus=OnFocusToWalletSum
                                disabled="@IsBusyProgress"
+                               readonly="@(editDoc.ToWalletId <= 0)"
                                type="number"
                                class="form-control"
                                id="exampleFormControlInputToWalletSum"
-                               placeholder="Сумма зачисления">
+                               placeholder="@(editDoc.ToWalletId <= 0 ? "Укажите кошелёк" : "Сумма зачисления")">
                     </div>
                 </MudItem>
             </MudGrid>
@@ -66,7 +68,7 @@
             @if (editDoc.FromWalletSum != editDoc.ToWalletSum && editDoc.FromWalletSum != 0 && editDoc.ToWalletSum != 0)
             {
                 <MudAlert Severity="Severity.Info">
-                    Обмен (@(editDoc.FromWalletSum < editDoc.ToWalletSum ? "повышающий" : "понижающий")) по курсу: @(Math.Round(editDoc.ToWalletSum / editDoc.FromWalletSum, 2))
+                    Обмен (@(editDoc.FromWalletSum < editDoc.ToWalletSum ? "повышающий" : "понижающий")) по курсу: @(Math.Round(editDoc.ToWalletSum / editDoc.FromWalletSum, 4))
                 </MudAlert>
             }
             <div class="d-grid gap-2 d-md-flex justify-content-md-end my-3">

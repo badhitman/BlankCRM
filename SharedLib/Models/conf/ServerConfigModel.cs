@@ -30,6 +30,11 @@ public class ServerConfigModel
     public ScriptInjectionModel[]? ScriptsInject { get; set; }
 
     /// <summary>
+    /// Рекомендуемый курсы конвертаций/переводов
+    /// </summary>
+    public WalletTypeConversionExchangeModel[]? ExchangeRateConversions { get; set; }
+
+    /// <summary>
     /// Скрыть выбор языка
     /// </summary>
     public bool HideLanguageSelector { get; set; }
@@ -38,22 +43,4 @@ public class ServerConfigModel
     /// Скрыть навигацию для входа/авторизации
     /// </summary>
     public bool HideAuthArea { get; set; }
-}
-
-/// <summary>
-/// StyleInjectionModel
-/// </summary>
-public class StyleInjectionModel()
-{
-    /// <inheritdoc/>
-    public required string Href { get; set; }
-}
-
-/// <summary>
-/// ScriptInjectionModel
-/// </summary>
-public class ScriptInjectionModel()
-{
-    /// <inheritdoc/>
-    public required string Src { get; set; }
 }

@@ -420,20 +420,6 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
-        //List<WalletRetailTypeViewModel> res = await pq.OrderBy(x => x.SortIndex).Select(x => new WalletRetailTypeViewModel()
-        //{
-        //    Id = x.Id,
-        //    CreatedAtUTC = x.CreatedAtUTC,
-        //    Description = x.Description,
-        //    LastUpdatedAtUTC = x.LastUpdatedAtUTC,
-        //    Name = x.Name,
-        //    IsDisabled = x.IsDisabled,
-        //    SortIndex = x.SortIndex,
-        //    IsSystem = x.IsSystem,
-        //    IgnoreBalanceChanges = x.IgnoreBalanceChanges,
-        //    SumBalances = context.WalletsRetail.Where(y => y.WalletTypeId == x.Id).Sum(y => y.Balance)
-        //}).ToListAsync(cancellationToken: token);
-
         List<WalletRetailTypeModelDB> res = await pq
             .OrderBy(x => x.SortIndex)
             .Include(x => x.DisabledPaymentsTypes)

@@ -11,7 +11,9 @@
     {
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">
-                <span class="@(WalletTypeElement.IsDisabled ? "text-decoration-line-through" : "")">@WalletTypeElement.Name</span>
+                <span class="@(WalletTypeElement.IsDisabled ? "text-decoration-line-through" : "")">
+                    @WalletTypeElement.Name #@WalletTypeElement.Id
+                </span>
                 <sup class="ms-4 text-@(WalletTypeElement.IsDisabled ? "danger" : "success")">
                     @(WalletTypeElement.IsDisabled ? "выключено" : "активно")
                 </sup>
@@ -24,11 +26,14 @@
             </h5>
             <small>@WalletTypeElement.SumBalances</small>
         </div>
-        <p class="mb-1 @(WalletTypeElement.IsDisabled ? "text-decoration-line-through" : "")">@WalletTypeElement.Description</p>
-
+        <p class="mb-1 @(WalletTypeElement.IsDisabled ? "text-decoration-line-through" : "")">
+            @WalletTypeElement.Description
+        </p>
         <div class="card">
             <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-body-secondary">Отключённые типы оплаты (для платежей)</h6>
+                <h6 class="card-subtitle mb-2 text-body-secondary">
+                    Отключённые типы оплаты (для платежей)
+                </h6>
                 @foreach (PaymentsRetailTypesEnum prt in Enum.GetValues<PaymentsRetailTypesEnum>())
                 {
                     bool _ic = WalletTypeElement.DisabledPaymentsTypes!.Any(x => x.PaymentType == prt) == true;
@@ -48,7 +53,9 @@
             Создан: @WalletTypeElement.CreatedAtUTC.GetCustomTime()
             @if (WalletTypeElement.LastUpdatedAtUTC.HasValue && WalletTypeElement.LastUpdatedAtUTC != default)
             {
-                <strong class="ms-3">updated: @WalletTypeElement.LastUpdatedAtUTC.Value.GetCustomTime()</strong>
+                <strong class="ms-3">
+                    updated: @WalletTypeElement.LastUpdatedAtUTC.Value.GetCustomTime()
+                </strong>
             }
         </small>
     }
@@ -57,7 +64,9 @@
         <div class="card mt-3">
             <div class="card-body">
                 <div class="mb-3">
-                    <label for="exampleFormControlInput-@_walletCopy.Id" class="form-label">Название</label>
+                    <label for="exampleFormControlInput-@_walletCopy.Id" class="form-label">
+                        Название
+                    </label>
                     <input @bind-value="_walletCopy.Name"
                            @bind-value:event="oninput"
                            disabled="@IsBusyProgress"
@@ -67,7 +76,9 @@
                            placeholder="Name">
                 </div>
                 <div class="mb-3">
-                    <label for="exampleFormControlTextarea-@_walletCopy.Id" class="form-label">Описание</label>
+                    <label for="exampleFormControlTextarea-@_walletCopy.Id" class="form-label">
+                        Описание
+                    </label>
                     <textarea @bind-value="_walletCopy.Description"
                               @bind-value:event="oninput"
                               disabled="@IsBusyProgress"
@@ -82,7 +93,10 @@
                            type="checkbox"
                            role="switch"
                            id="switchCheckDefaultIsDisabled-@_walletCopy.Id">
-                    <label class="form-check-label" for="switchCheckDefaultIsDisabled-@_walletCopy.Id">@(_walletCopy.IsDisabled ? "Выключено (включить?)" : "Включено (выключить?)")</label>
+                    <label class="form-check-label"
+                           for="switchCheckDefaultIsDisabled-@_walletCopy.Id">
+                        @(_walletCopy.IsDisabled ? "Выключено (включить?)" : "Включено (выключить?)")
+                    </label>
                 </div>
                 <div class="form-check form-check-inline me-2">
                     <input @bind="_walletCopy.IsSystem"

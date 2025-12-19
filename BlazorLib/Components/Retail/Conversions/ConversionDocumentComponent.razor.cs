@@ -4,6 +4,7 @@
 
 using BlazorLib.Components.Retail.Wallet;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 using SharedLib;
 
 namespace BlazorLib.Components.Retail.Conversions;
@@ -22,6 +23,8 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     [Inject]
     NavigationManager NavRepo { get; set; } = default!;
 
+    [Inject]
+    IOptions<ServerConfigModel> SrvConf { get; set; } = default!;
 
     /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
@@ -231,19 +234,33 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
 
     void OnFocusFromWalletSum()
     {
-        if (editDoc is null)
+        if (editDoc?.FromWallet is null || editDoc.FromWalletId <= 0 || editDoc.ToWalletId <= 0)
             return;
 
         if (editDoc.FromWalletSum == 0 && editDoc.ToWalletSum > 0)
-            editDoc.FromWalletSum = editDoc.ToWalletSum;
+        {
+            WalletTypeConversionExchangeModel? confRate = SrvConf.Value.ExchangeRateConversions?
+                .FirstOrDefault(x => x.WalletTypeSenderId == editDoc.FromWallet.WalletTypeId);
+
+            editDoc.FromWalletSum = confRate is null
+                ? editDoc.ToWalletSum
+                : Math.Round(editDoc.ToWalletSum / confRate.ExchangeRate, 2);
+        }
     }
 
     void OnFocusToWalletSum()
     {
-        if (editDoc is null)
+        if (editDoc?.ToWallet is null || editDoc.ToWalletId <= 0 || editDoc.FromWalletId <= 0)
             return;
 
         if (editDoc.ToWalletSum == 0 && editDoc.FromWalletSum > 0)
-            editDoc.ToWalletSum = editDoc.FromWalletSum;
+        {
+            WalletTypeConversionExchangeModel? confRate = SrvConf.Value.ExchangeRateConversions?
+                .FirstOrDefault(x => x.WalletTypeRecipientId == editDoc.ToWallet.WalletTypeId);
+
+            editDoc.ToWalletSum = confRate is null
+                ? editDoc.FromWalletSum
+                : Math.Round(editDoc.FromWalletSum * confRate.ExchangeRate, 2);
+        }
     }
 }
