@@ -131,13 +131,6 @@ public class RetailService(IIdentityTransmission identityRepo,
                 join linkItem in context.OrdersDeliveriesLinks.Where(x => x.OrderDocumentId == req.Payload.FilterOrderId) on deliveryDoc.Id equals linkItem.DeliveryDocumentId
                 select deliveryDoc;
 
-        IOrderedQueryable<DeliveryDocumentRetailModelDB> oq = req.SortingDirection switch
-        {
-            DirectionsEnum.Up => q.OrderBy(x => x.CreatedAtUTC),
-            DirectionsEnum.Down => q.OrderByDescending(x => x.CreatedAtUTC),
-            _ => q.OrderByDescending(x => x.Name)
-        };
-
         if (req.Payload?.Start is not null && req.Payload.Start != default)
         {
             req.Payload.Start = req.Payload.Start.SetKindUtc();
@@ -149,6 +142,13 @@ public class RetailService(IIdentityTransmission identityRepo,
             req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
             q = q.Where(x => x.CreatedAtUTC <= req.Payload.End);
         }
+
+        IOrderedQueryable<DeliveryDocumentRetailModelDB> oq = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => q.OrderBy(x => x.CreatedAtUTC),
+            DirectionsEnum.Down => q.OrderByDescending(x => x.CreatedAtUTC),
+            _ => q.OrderByDescending(x => x.Name)
+        };
 
         IQueryable<DeliveryDocumentRetailModelDB> pq = oq
             .Skip(req.PageNum * req.PageSize)
