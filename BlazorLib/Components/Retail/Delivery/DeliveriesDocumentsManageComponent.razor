@@ -19,16 +19,26 @@
     <div class="card mb-1">
         <div class="card-body p-1">
             <MudStack Row>
-                <MudChipSet @bind-SelectedValues="SelectedStatuses"
-                            SelectionMode="SelectionMode.MultiSelection"
-                            CheckMark Variant="Variant.Text"
-                            Color="Color.Surface">
-                    @foreach (DeliveryStatusesEnum ds in Enum.GetValues<DeliveryStatusesEnum>())
+                @if (PresetStatusesDocuments is null || PresetStatusesDocuments.Count != 0)
+                {
+                    <MudChipSet @bind-SelectedValues="SelectedStatuses"
+                                SelectionMode="SelectionMode.MultiSelection"
+                                CheckMark Variant="Variant.Text"
+                                Color="Color.Surface">
+                        @foreach (DeliveryStatusesEnum ds in Enum.GetValues<DeliveryStatusesEnum>())
+                        {
+                            <MudChip Value="@ds" Text="@ds.DescriptionInfo()" />
+                        }
+                    </MudChipSet>
+                    <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset @ref=unsetChipRef OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
+                }
+                else
+                {
+                    @foreach (StatusesDocumentsEnum _mc in PresetStatusesDocuments)
                     {
-                        <MudChip Value="@ds" Text="@ds.DescriptionInfo()" />
+                        <span class="badge rounded-pill text-bg-primary me-2">@_mc.DescriptionInfo()</span>
                     }
-                </MudChipSet>
-                <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset @ref=unsetChipRef OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
+                }
             </MudStack>
         </div>
     </div>

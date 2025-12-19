@@ -37,6 +37,10 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [Parameter]
     public Action<TableRowClickEventArgs<DeliveryDocumentRetailModelDB>>? RowClickEventHandler { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public IReadOnlyCollection<DeliveryStatusesEnum?>? PresetStatusesDocuments { get; set; }
+
 
     MudChip<string>? unsetChipRef;
     bool includeUnset;
@@ -153,7 +157,9 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         if (_selectedTypes.Count != 0)
             req.Payload.TypesFilter = [.. SelectedTypes];
 
-        if (SelectedStatuses.Count != 0)
+        if (PresetStatusesDocuments is not null && PresetStatusesDocuments.Count != 0)
+            req.Payload.StatusesFilter = [.. PresetStatusesDocuments];
+        else if (SelectedStatuses.Count != 0)
             req.Payload.StatusesFilter = [.. SelectedStatuses];
 
         if (includeUnset)

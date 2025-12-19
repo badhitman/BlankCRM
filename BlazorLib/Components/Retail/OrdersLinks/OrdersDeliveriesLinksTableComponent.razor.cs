@@ -17,6 +17,10 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
     [Parameter]
     public int DeliveryId { get; set; }
 
+    /// <inheritdoc/>
+    [Parameter]
+    public IReadOnlyCollection<StatusesDocumentsEnum>? PresetStatusesForSelect { get; set; }
+
 
     bool
         _visibleIncludeExistDelivery,
