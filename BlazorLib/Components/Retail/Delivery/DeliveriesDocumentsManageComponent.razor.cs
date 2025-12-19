@@ -37,6 +37,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [Parameter]
     public Action<TableRowClickEventArgs<DeliveryDocumentRetailModelDB>>? RowClickEventHandler { get; set; }
 
+
     MudChip<string>? unsetChipRef;
     bool includeUnset;
     IReadOnlyCollection<DeliveryStatusesEnum> _selectedStatuses = [];
@@ -70,6 +71,18 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         MaxWidth = MaxWidth.ExtraLarge,
         CloseButton = true,
     };
+
+    DateRange? _dateRange;
+    DateRange? DateRangeProp
+    {
+        get => _dateRange;
+        set
+        {
+            _dateRange = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
 
     int? initDeleteOrderFromDelivery;
     async Task DeleteDeliveryLink(int deliveryDocumentId)
@@ -147,6 +160,12 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         {
             req.Payload.StatusesFilter ??= [];
             req.Payload.StatusesFilter.Add(null);
+        }
+
+        if (DateRangeProp is not null)
+        {
+            req.Payload.Start = DateRangeProp.Start;
+            req.Payload.End = DateRangeProp.End;
         }
 
         TPaginationResponseModel<DeliveryDocumentRetailModelDB>? res = await RetailRepo.SelectDeliveryDocumentsAsync(req, token);

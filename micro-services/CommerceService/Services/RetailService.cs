@@ -135,6 +135,15 @@ public class RetailService(IIdentityTransmission identityRepo,
             ? q.OrderBy(x => x.CreatedAtUTC)
             : q.OrderByDescending(x => x.CreatedAtUTC);
 
+        if (req.Payload?.Start is not null && req.Payload.Start != default)
+            q = q.Where(x => x.CreatedAtUTC >= req.Payload.Start.SetKindUtc());
+
+        if (req.Payload?.End is not null && req.Payload.End != default)
+        {
+            req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+            q = q.Where(x => x.CreatedAtUTC <= req.Payload.End);
+        }
+
         IQueryable<DeliveryDocumentRetailModelDB> pq = oq
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);

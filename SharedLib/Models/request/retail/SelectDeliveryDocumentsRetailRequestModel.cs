@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 
+
 namespace SharedLib;
 
 /// <summary>
@@ -28,4 +29,10 @@ public class SelectDeliveryDocumentsRetailRequestModel
     /// Исключить по документу доставки
     /// </summary>
     public int? ExcludeOrderId { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime? Start { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime? End { get; set; }
 }
