@@ -65,7 +65,7 @@ else
                 decimal conversionsSum = editDocument.Conversions.Count == 0 ? 0 : editDocument.Conversions.Sum(x => x.AmountPayment);
                 if (rowsSum != (paymentsSum + conversionsSum))
                 {
-                    <MudAlert Severity="Severity.Error">
+                    <MudAlert Severity="Severity.Error" Class="mb-2">
                         Сумма заказа [@rowsSum] отличается от суммы финансовых операций [@paymentsSum + @conversionsSum = @(paymentsSum + conversionsSum)]
                     </MudAlert>
                 }

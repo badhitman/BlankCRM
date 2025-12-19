@@ -194,7 +194,8 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             TResponseModel<DocumentRetailModelDB[]> res = await RetailRepo.RetailDocumentsGetAsync(new()
             {
                 Ids = [OrderId],
-                UpdateStatuses = true
+                UpdateStatuses = true,
+                IncludeDataExternal = true,
             });
 
             SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -256,7 +257,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             datePayment = currentDocument.DateDocument;
         }
         await Task.WhenAll(tasks);
-        await SetBusyAsync(false);
         editDocument = GlobalTools.CreateDeepCopy(currentDocument);
+        await SetBusyAsync(false);
     }
 }
