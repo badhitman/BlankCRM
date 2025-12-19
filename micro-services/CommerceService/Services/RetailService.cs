@@ -160,7 +160,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
-        List<DeliveryDocumentRetailModelDB> res = await pq
+        List<DeliveryDocumentRetailModelDB> res = await oq
                 .Include(x => x.DeliveryStatusesLog)
                 .Include(x => x.OrdersLinks)
                 .ToListAsync(cancellationToken: token);
