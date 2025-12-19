@@ -122,6 +122,8 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req = new()
         {
             Payload = new(),
+            PageNum = state.Page,
+            PageSize = state.PageSize,
         };
 
         if (ExcludeOrder is not null && ExcludeOrder.Id > 0)
