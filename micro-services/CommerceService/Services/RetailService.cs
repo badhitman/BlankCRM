@@ -131,8 +131,11 @@ public class RetailService(IIdentityTransmission identityRepo,
                 join linkItem in context.OrdersDeliveriesLinks.Where(x => x.OrderDocumentId == req.Payload.FilterOrderId) on deliveryDoc.Id equals linkItem.DeliveryDocumentId
                 select deliveryDoc;
 
-        IQueryable<DeliveryDocumentRetailModelDB>? pq = q
-            .OrderBy(x => x.CreatedAtUTC)
+        IOrderedQueryable<DeliveryDocumentRetailModelDB> oq = req.SortingDirection == DirectionsEnum.Up
+            ? q.OrderBy(x => x.CreatedAtUTC)
+            : q.OrderByDescending(x => x.CreatedAtUTC);
+
+        IQueryable<DeliveryDocumentRetailModelDB> pq = oq
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
@@ -845,8 +848,11 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload is not null && req.Payload.ExcludeOrderId > 0)
             q = q.Where(x => !context.PaymentsOrdersLinks.Any(y => y.PaymentDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
 
-        IQueryable<PaymentRetailDocumentModelDB>? pq = q
-            .OrderBy(x => x.DatePayment)
+        IOrderedQueryable<PaymentRetailDocumentModelDB> oq = req.SortingDirection == DirectionsEnum.Up
+            ? q.OrderBy(x => x.DatePayment)
+            : q.OrderByDescending(x => x.DatePayment);
+
+        IQueryable<PaymentRetailDocumentModelDB>? pq = oq
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
@@ -1737,8 +1743,11 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload is not null && req.Payload.ExcludeOrderId > 0)
             q = q.Where(x => !context.ConversionsOrdersLinksRetail.Any(y => y.ConversionDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
 
-        IQueryable<WalletConversionRetailDocumentModelDB> pq = q
-            .OrderBy(x => x.DateDocument)
+        IOrderedQueryable<WalletConversionRetailDocumentModelDB> oq = req.SortingDirection == DirectionsEnum.Up
+            ? q.OrderBy(x => x.DateDocument)
+            : q.OrderByDescending(x => x.DateDocument);
+
+        IQueryable<WalletConversionRetailDocumentModelDB> pq = oq
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 

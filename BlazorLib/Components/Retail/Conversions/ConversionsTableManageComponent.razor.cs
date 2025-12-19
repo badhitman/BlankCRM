@@ -93,6 +93,8 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
+            SortingDirection = state.SortDirection.Convert(),
+            SortBy = state.SortLabel,
             Payload = new()
             {
                 IncludeDisabled = ShowDeleted,

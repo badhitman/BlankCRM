@@ -60,7 +60,7 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
                 Payload = new() { ChatId = ChatId, SearchQuery = SearchStringQuery },
                 PageNum = state.Page,
                 PageSize = state.PageSize,
-                SortingDirection = state.SortDirection == SortDirection.Descending ? DirectionsEnum.Down : DirectionsEnum.Up,
+                SortingDirection = state.SortDirection.Convert(),
                 SortBy = state.SortLabel,
             }, token);
 

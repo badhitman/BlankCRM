@@ -95,6 +95,8 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
+            SortingDirection = state.SortDirection.Convert(),
+            SortBy = state.SortLabel,
             Payload = new()
             {
                 PayerFilterIdentityId = ClientId,
@@ -113,7 +115,7 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
             req.Payload.End = DateRangeProp.End;
         }
 
-        if(ExcludeOrder is not null && ExcludeOrder.Id > 0)
+        if (ExcludeOrder is not null && ExcludeOrder.Id > 0)
             req.Payload.ExcludeOrderId = ExcludeOrder.Id;
 
         TPaginationResponseModel<PaymentRetailDocumentModelDB>? res = await RetailRepo.SelectPaymentsDocumentsAsync(req, token);

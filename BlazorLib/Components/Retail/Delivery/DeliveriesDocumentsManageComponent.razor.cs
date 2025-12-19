@@ -124,6 +124,8 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
             Payload = new(),
             PageNum = state.Page,
             PageSize = state.PageSize,
+            SortingDirection = state.SortDirection.Convert(),
+            SortBy = state.SortLabel,
         };
 
         if (ExcludeOrder is not null && ExcludeOrder.Id > 0)

@@ -57,7 +57,7 @@
         <MudTh>Name</MudTh>
         <MudTh>Тип</MudTh>
         <MudTh>Статус</MudTh>
-        <MudTh>Дата</MudTh>
+        <MudTh><MudTableSortLabel T="PaymentRetailDocumentModelDB" InitialDirection="@SortDirection.Descending" SortLabel="@(nameof(PaymentRetailDocumentModelDB.DatePayment))"> Дата</MudTableSortLabel></MudTh>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
             <MudTh>Плательщик</MudTh>

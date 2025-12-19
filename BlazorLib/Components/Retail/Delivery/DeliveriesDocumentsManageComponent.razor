@@ -38,7 +38,7 @@
           T="DeliveryDocumentRetailModelDB"
           OnRowClick="RowClickEvent"
           RowClass="@(RowClickEventHandler is null ? "" : "cursor-pointer")"
-          Dense Hover 
+          Dense Hover
           @ref=tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Доставка (документы отгрузки)</MudText>
@@ -56,7 +56,7 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Тип</MudTh>
-        <MudTh>Дата</MudTh>
+        <MudTh><MudTableSortLabel T="DeliveryDocumentRetailModelDB" InitialDirection="@SortDirection.Descending" SortLabel="@(nameof(DeliveryDocumentRetailModelDB.CreatedAtUTC))"> Дата</MudTableSortLabel></MudTh>
         <MudTh>Вес</MudTh>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
