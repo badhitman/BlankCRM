@@ -51,7 +51,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
     {
         get
         {
-            if (IsBusyProgress || currentDoc is null || editDoc is null || (string.IsNullOrWhiteSpace(editDoc.KladrCode) && string.IsNullOrWhiteSpace(editDoc.AddressUserComment)))
+            if (IsBusyProgress || currentDoc is null || editDoc is null || (editDoc.DeliveryType != DeliveryTypesEnum.Pickup && string.IsNullOrWhiteSpace(editDoc.KladrCode) && string.IsNullOrWhiteSpace(editDoc.AddressUserComment)))
                 return true;
 
             if (string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId) || editDoc.WarehouseId <= 0 || editDoc.WeightShipping <= 0)
@@ -59,6 +59,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
             return
                 currentDoc.Id > 0 &&
+                currentDoc.DeliveryType == editDoc.DeliveryType &&
                 currentDoc.RecipientIdentityUserId == editDoc.RecipientIdentityUserId &&
                 currentDoc.ShippingCost == editDoc.ShippingCost &&
                 currentDoc.WeightShipping == editDoc.WeightShipping &&
