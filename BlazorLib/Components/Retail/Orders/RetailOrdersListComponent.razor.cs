@@ -50,6 +50,18 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     public Action<TableRowClickEventArgs<DocumentRetailModelDB>>? RowClickEventHandler { get; set; }
 
 
+    bool _equalSumFilter;
+    bool EqualSumFilter
+    {
+        get => _equalSumFilter;
+        set
+        {
+            _equalSumFilter = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+
     /// <summary>
     /// RubricsCache
     /// </summary>
@@ -168,6 +180,9 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         req.SortingDirection = state.SortDirection == SortDirection.Descending
             ? DirectionsEnum.Down
             : DirectionsEnum.Up;
+
+        if (EqualSumFilter)
+            req.Payload.EqualsSumFilter = true;
 
         await SetBusyAsync(token: token);
         TPaginationResponseModel<DocumentRetailModelDB> res = await RetailRepo.SelectRetailDocumentsAsync(req, token);

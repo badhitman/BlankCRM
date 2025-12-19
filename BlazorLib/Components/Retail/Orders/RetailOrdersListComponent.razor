@@ -25,7 +25,17 @@
           SortLabel="@(nameof(DocumentRetailModelDB.DateDocument))"
           @ref="tableRef">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Заказы (розница)</MudText>
+        <MudText Typo="Typo.h6">
+            Заказы (розница)
+        </MudText>
+        <div class="form-check form-switch form-check-inline ms-2">
+            <MudTooltip Text="Отображение документов с рваными финансами">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" @bind=EqualSumFilter>
+                <label class="form-check-label" for="switchCheckDefault">
+                    разность сумм
+                </label>
+            </MudTooltip>
+        </div>
         <MudSpacer />
         <MudTextField T="string"
                       ValueChanged="@(s => OnSearch(s))"

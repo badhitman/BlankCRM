@@ -1027,6 +1027,9 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => x.DateDocument <= req.Payload.End);
         }
 
+        if (req.Payload is not null && req.Payload.EqualsSumFilter == true)
+            q = q.Where(x => context.RowsOrdersRetails.Where(y => y.OrderId == x.Id).Sum(y => y.Amount) != (context.PaymentsOrdersLinks.Where(y => y.OrderDocumentId == x.Id).Sum(y => y.AmountPayment) + context.ConversionsOrdersLinksRetail.Where(y => y.OrderDocumentId == x.Id).Sum(y => y.AmountPayment)));
+
         IOrderedQueryable<DocumentRetailModelDB> oq = req.SortingDirection == DirectionsEnum.Up
             ? q.OrderBy(x => x.DateDocument)
             : q.OrderByDescending(x => x.DateDocument);
