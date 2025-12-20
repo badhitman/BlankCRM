@@ -81,7 +81,7 @@
         </MudTooltip>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Тип/Код</MudTh>
+        <MudTh>Тип</MudTh>
         <MudTh>
             <MudTableSortLabel T="DeliveryDocumentRetailModelDB" InitialDirection="@SortDirection.Descending" SortLabel="@(nameof(DeliveryDocumentRetailModelDB.CreatedAtUTC))">
                 Дата
@@ -106,8 +106,6 @@
         }
         <MudTd DataLabel="Тип">
             @context.DeliveryType.DescriptionInfo()
-            /
-            @context.DeliveryCode
         </MudTd>
         <MudTd DataLabel="Дата">
             @if (RowClickEventHandler is null)
