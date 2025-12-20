@@ -154,7 +154,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
-        List<DeliveryDocumentRetailModelDB> res = await oq
+        List<DeliveryDocumentRetailModelDB> res = await pq
                 .Include(x => x.Rows!)
                 .ThenInclude(x => x.Offer)
                 .Include(x => x.DeliveryStatusesLog)
