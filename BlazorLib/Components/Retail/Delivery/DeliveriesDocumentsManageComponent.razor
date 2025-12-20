@@ -77,12 +77,12 @@
         <MudTh>Тип</MudTh>
         <MudTh><MudTableSortLabel T="DeliveryDocumentRetailModelDB" InitialDirection="@SortDirection.Descending" SortLabel="@(nameof(DeliveryDocumentRetailModelDB.CreatedAtUTC))"> Дата</MudTableSortLabel></MudTh>
         <MudTh>Вес</MudTh>
+        <MudTh>Заказ(ы)</MudTh>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
             <MudTh>Получатель</MudTh>
         }
         <MudTh>Стоимость доставки</MudTh>
-        <MudTh>Заказ(ы)</MudTh>
         <MudTh>Адрес</MudTh>
         <MudTh>Трэк/Код</MudTh>
         <MudTh>Статус</MudTh>
@@ -142,13 +142,6 @@
         <MudTd DataLabel="Вес">
             @context.WeightShipping <code title="расчётный вес по строкам документа">(@(context.Rows is null || context.Rows.Count == 0 ? 0 : context.Rows.Sum(x => x.WeightOffer)))</code>
         </MudTd>
-        @if (string.IsNullOrWhiteSpace(ClientId))
-        {
-            <MudTd DataLabel="Получатель">
-                @(UsersCache.FirstOrDefault(x => x.UserId == context.RecipientIdentityUserId)?.ToString() ?? context.RecipientIdentityUserId)
-            </MudTd>
-        }
-        <MudTd DataLabel="Стоимость доставки">@context.ShippingCost</MudTd>
         <MudTd DataLabel="Заказ(ы)">
             @if (context.OrdersLinks is null)
             {
@@ -159,6 +152,13 @@
                 <DeliveryOrdersLinksAboutComponent Orders="context.OrdersLinks" />
             }
         </MudTd>
+        @if (string.IsNullOrWhiteSpace(ClientId))
+        {
+            <MudTd DataLabel="Получатель">
+                @(UsersCache.FirstOrDefault(x => x.UserId == context.RecipientIdentityUserId)?.ToString() ?? context.RecipientIdentityUserId)
+            </MudTd>
+        }
+        <MudTd DataLabel="Стоимость доставки">@context.ShippingCost</MudTd>
         <MudTd DataLabel="Адрес">@context.KladrTitle @context.AddressUserComment</MudTd>
         <MudTd DataLabel="Трэк/Код">@context.DeliveryCode</MudTd>
         <MudTd DataLabel="Статус">
