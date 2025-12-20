@@ -57,7 +57,12 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.InjectToOrderId > 0)
         {
-            await context.OrdersDeliveriesLinks.AddAsync(new() { DeliveryDocumentId = docDb.Id, OrderDocumentId = req.InjectToOrderId }, token);
+            await context.OrdersDeliveriesLinks.AddAsync(new()
+            {
+                DeliveryDocumentId = docDb.Id,
+                OrderDocumentId = req.InjectToOrderId,
+                WeightShipping = req.WeightShipping,
+            }, token);
             await context.SaveChangesAsync(token);
             res.AddInfo($"Добавлена связь документа отгрузки/доставки #{docDb.Id} с заказом #{req.InjectToOrderId}");
         }
@@ -725,7 +730,12 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.InjectToOrderId > 0)
         {
-            await context.PaymentsOrdersLinks.AddAsync(new() { OrderDocumentId = req.InjectToOrderId, PaymentDocumentId = docDb.Id }, token);
+            await context.PaymentsOrdersLinks.AddAsync(new()
+            {
+                OrderDocumentId = req.InjectToOrderId,
+                PaymentDocumentId = docDb.Id,
+                AmountPayment = docDb.Amount
+            }, token);
             await context.SaveChangesAsync(token);
             res.AddInfo($"Добавлена связь оплаты/платежа #{docDb.Id} с заказом #{req.InjectToOrderId}");
         }
@@ -983,7 +993,14 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.InjectToPaymentId > 0)
         {
-            await context.PaymentsOrdersLinks.AddAsync(new() { OrderDocumentId = req.Id, PaymentDocumentId = req.InjectToPaymentId }, token);
+            await context.PaymentsOrdersLinks.AddAsync(new()
+            {
+                OrderDocumentId = req.Id,
+                PaymentDocumentId = req.InjectToPaymentId,
+                AmountPayment = req.Rows is null || req.Rows.Count == 0
+                    ? 0
+                    : req.Rows.Sum(x => x.Amount)
+            }, token);
             await context.SaveChangesAsync(token);
             res.AddInfo("Создана связь заказа с платежом");
         }
@@ -1670,7 +1687,12 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         if (req.InjectToOrderId > 0)
         {
-            await context.ConversionsOrdersLinksRetail.AddAsync(new() { ConversionDocumentId = docDb.Id, OrderDocumentId = req.InjectToOrderId }, token);
+            await context.ConversionsOrdersLinksRetail.AddAsync(new()
+            {
+                ConversionDocumentId = docDb.Id,
+                OrderDocumentId = req.InjectToOrderId,
+                AmountPayment = req.ToWalletSum,
+            }, token);
             await context.SaveChangesAsync(token);
             res.AddInfo($"Добавлена связь документа перевода/конвертации #{docDb.Id} с заказом #{req.InjectToOrderId}");
         }
