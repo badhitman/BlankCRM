@@ -51,7 +51,7 @@ public class DocumentRetailModelDB : OrderDocumentBaseModel
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{Name} [{DateDocument}]".Trim();
+        return $"{Name} [{DateDocument}] `{ExternalDocumentId}`".Trim();
     }
 
     /// <inheritdoc/>

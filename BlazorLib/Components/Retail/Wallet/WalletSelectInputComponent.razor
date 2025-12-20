@@ -13,12 +13,7 @@
         }
         else
         {
-            @if (string.IsNullOrWhiteSpace(PresetClientId))
-            {
-                <UserSelectInputComponent SelectHandleAction="SelectUserAction"
-                                          SelectedUserInit="@(currentUser?.UserId)" />
-            }
-            else
+            @if (HoldClientId && !string.IsNullOrWhiteSpace(PresetClientId))
             {
                 <div class="mb-3">
                     <label for="formControlInputBuyer" class="form-label">Пользователь</label>
@@ -31,6 +26,11 @@
                            aria-describedby="buyerHelp">
                     <div id="buyerHelp" class="form-text">Контекст заказчика.</div>
                 </div>
+            }
+            else
+            {
+                <UserSelectInputComponent SelectHandleAction="SelectUserAction"
+                                          SelectedUserInit="@(currentUser?.UserId)" />
             }
 
             @if (string.IsNullOrWhiteSpace(currentUser?.UserId))

@@ -29,6 +29,12 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
     public string? PresetClientId { get; set; }
 
     /// <summary>
+    /// HoldClientId
+    /// </summary>
+    [Parameter]
+    public bool HoldClientId { get; set; }
+
+    /// <summary>
     /// Выбранный кошелёк
     /// </summary>
     [Parameter]
