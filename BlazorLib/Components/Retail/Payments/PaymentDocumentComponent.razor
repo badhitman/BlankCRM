@@ -64,6 +64,7 @@
                         <WalletSelectInputComponent SelectWalletHandler="SelectWalletRecipientAction"
                                                     SelectUserHandler="SelectUserRecipientAction"
                                                     WalletInit="editDoc.Wallet"
+                                                    PresetClientId="@(InjectToOrder?.BuyerIdentityUserId)"
                                                     PaymentRetailTypeFilter="editDoc.TypePayment"
                                                     @ref=recipientWalletRef
                                                     Title="Плательщик"
