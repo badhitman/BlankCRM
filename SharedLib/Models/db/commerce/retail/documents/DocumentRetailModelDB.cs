@@ -57,7 +57,7 @@ public class DocumentRetailModelDB : OrderDocumentBaseModel
     /// <inheritdoc/>
     public static DocumentRetailModelDB Build(CreateDocumentRetailRequestModel other)
     {
-        return new()
+        DocumentRetailModelDB _rd = new()
         {
             AuthorIdentityUserId = other.AuthorIdentityUserId,
             Description = other.Description,
@@ -66,7 +66,6 @@ public class DocumentRetailModelDB : OrderDocumentBaseModel
             Conversions = other.Conversions,
             CreatedAtUTC = other.CreatedAtUTC,
             Deliveries = other.Deliveries,
-            Rows = other.Rows,
             ExternalDocumentId = other.ExternalDocumentId,
             HelpDeskId = other.HelpDeskId,
             Id = other.Id,
@@ -75,6 +74,13 @@ public class DocumentRetailModelDB : OrderDocumentBaseModel
             StatusDocument = other.StatusDocument,
             Version = other.Version,
             WarehouseId = other.WarehouseId,
+
+            Rows = other.Rows,
         };
+
+        if (_rd.Id == 0)
+            _rd.Rows?.ForEach(x => { x.Order = _rd; });
+
+        return _rd;
     }
 }
