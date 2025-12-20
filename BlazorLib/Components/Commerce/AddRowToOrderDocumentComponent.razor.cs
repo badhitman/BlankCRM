@@ -140,6 +140,7 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
             Name = SelectedOffer!.Name,
             Nomenclature = SelectedOffer.Nomenclature,
             Quantity = QuantityValue,
+            Weight = SelectedOffer.Weight * QuantityValue,
             Multiplicity = SelectedOffer.Multiplicity,
             OfferUnit = SelectedOffer.OfferUnit,
             Price = SelectedOffer.Price,
