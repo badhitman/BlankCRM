@@ -34,9 +34,9 @@
                 }
                 else
                 {
-                    @foreach (StatusesDocumentsEnum _mc in PresetStatusesDocuments)
+                    @foreach (StatusesDocumentsEnum? _mc in PresetStatusesDocuments)
                     {
-                        <span class="badge rounded-pill text-bg-primary me-2">@_mc.DescriptionInfo()</span>
+                        <span class="badge rounded-pill text-bg-primary me-2">@(_mc?.DescriptionInfo() ?? "не обработан")</span>
                     }
                 }
             </MudStack>
