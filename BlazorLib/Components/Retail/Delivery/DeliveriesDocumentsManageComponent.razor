@@ -62,6 +62,13 @@
             </MudTooltip>
         </div>
         <MudSpacer />
+        <MudTextField T="string"
+                      ValueChanged="@(s => OnSearch(s))"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0 me-2"></MudTextField>
         <MudTooltip Text="Создать новый документ доставки">
             @if (RowClickEventHandler is null)
             {

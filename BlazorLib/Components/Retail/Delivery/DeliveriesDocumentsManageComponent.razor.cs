@@ -42,6 +42,8 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     public IReadOnlyCollection<DeliveryStatusesEnum?>? PresetStatusesDocuments { get; set; }
 
     bool _equalSumFilter;
+    string? searchString = null;
+
     bool EqualSumFilter
     {
         get => _equalSumFilter;
@@ -124,6 +126,13 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
+    }
+
+    void OnSearch(string text)
+    {
+        searchString = text;
+        if (tableRef is not null)
+            InvokeAsync(tableRef.ReloadServerData);
     }
 
     async void OnChipClicked()

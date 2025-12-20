@@ -18,8 +18,14 @@
             <span class="lead">Общий вес: <strong>@fullWeight</strong></span>
         }
         <MudSpacer />
-        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField T="string"
+                      ValueChanged="@(s => OnSearch(s))"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0 me-2"></MudTextField>
+
         @if (DeliveryId > 0)
         {
             <MudTooltip Text="Добавить созданный ранее заказ в текущую доставку">
@@ -75,7 +81,7 @@
         {
             <MudTd DataLabel="Заказ">
                 <a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a>
-                </MudTd>
+            </MudTd>
         }
         @if (DeliveryId <= 0)
         {
