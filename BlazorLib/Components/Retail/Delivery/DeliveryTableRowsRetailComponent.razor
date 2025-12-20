@@ -39,6 +39,7 @@
         <col />
         <col />
         <col />
+        <col />
         <col style="width:50px;" />
         @if (EditTrigger == TableEditTrigger.EditButton)
         {
@@ -50,6 +51,7 @@
         <MudTh>Остаток</MudTh>
         <MudTh>Цена</MudTh>
         <MudTh>Количество</MudTh>
+        <MudTh>Вес</MudTh>
         <MudTh>Сумма</MudTh>
         <MudTh></MudTh>
     </HeaderContent>
@@ -75,6 +77,9 @@
         <MudTd title="@(warningRow ? "Остатки меньше требуемого" : "")" Class="@(warningRow ? "mud-theme-warning" : "")" DataLabel="Количество">
             @context!.Quantity
         </MudTd>
+        <MudTd DataLabel="Вес">
+            @context!.WeightOffer
+        </MudTd>
         <MudTd DataLabel="Сумма">
             @(context!.Quantity * context.Offer!.Price)
         </MudTd>
@@ -87,10 +92,10 @@
         <MudTd DataLabel="Остаток">
             @(this.RegistersCache.Where(x => x.OfferId == context.OfferId && x.WarehouseId == Document?.WarehouseId).Sum(x => x.Quantity))
         </MudTd>
-        <MudTd DataLabel="Price">
+        <MudTd DataLabel="Цена">
             @(context.Offer!.Price)
         </MudTd>
-        <MudTd DataLabel="Quantity">
+        <MudTd DataLabel="Количество">
             @{
                 System.Collections.Immutable.ImmutableList<decimal>? _allowedValues = context.Offer?.QuantitiesValues;
             }
@@ -111,10 +116,28 @@
                 </MudSelect>
             }
         </MudTd>
+        <MudTd DataLabel="Вес">
+            <input type="number" class="form-control" @bind="context!.WeightOffer" />
+        </MudTd>
         <MudTd colspan="2">
             @(context!.Quantity * context.Offer!.Price)
         </MudTd>
     </RowEditingTemplate>
+    <FooterContent>
+        <MudTh></MudTh>
+        <MudTh></MudTh>
+        <MudTh></MudTh>
+        <MudTh colspan="2">
+            <span class="badge text-bg-primary">
+                Общий вес: @(Document?.Rows is null || Document.Rows.Count == 0 ? 0 : Document.Rows.Sum(x => x.WeightOffer))
+            </span>
+        </MudTh>
+        <MudTh colspan="2">
+            <span class="badge text-bg-info">
+                Общая сумма: @(Document?.Rows is null || Document.Rows.Count == 0 ? 0 : Document.Rows.Sum(x => x.Amount))
+            </span>
+        </MudTh>
+    </FooterContent>
     <NoRecordsContent>
         <MudText>Соответствующих записей не найдено</MudText>
     </NoRecordsContent>

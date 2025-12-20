@@ -38,6 +38,7 @@
         <col />
         <col />
         <col />
+        <col />
         <col style="width:50px;" />
         @if (EditTrigger == TableEditTrigger.EditButton)
         {
@@ -49,6 +50,7 @@
         <MudTh>Остаток</MudTh>
         <MudTh>Цена</MudTh>
         <MudTh>Количество</MudTh>
+        <MudTh>Вес</MudTh>
         <MudTh>Сумма</MudTh>
         <MudTh></MudTh>
     </HeaderContent>
@@ -73,6 +75,9 @@
         </MudTd>
         <MudTd title="@(warningRow ? "Остатки меньше требуемого" : "")" Class="@(warningRow ? "mud-theme-warning" : "")" DataLabel="Количество">
             @context!.Quantity
+        </MudTd>
+        <MudTd DataLabel="Вес">
+            @context!.WeightOffer
         </MudTd>
         <MudTd DataLabel="Сумма">
             @context!.Amount
@@ -109,6 +114,9 @@
                 </MudSelect>
             }
         </MudTd>
+        <MudTd DataLabel="Вес">
+            <input type="number" class="form-control" @bind-value="context.WeightOffer" @bind-value:event="oninput" />
+        </MudTd>
         <MudTd colspan="2">
             @(context!.Quantity * context.Offer!.Price)
         </MudTd>
@@ -119,6 +127,21 @@
     <LoadingContent>
         <MudText>Loading...</MudText>
     </LoadingContent>
+    <FooterContent>
+        <MudTh></MudTh>
+        <MudTh></MudTh>
+        <MudTh></MudTh>
+        <MudTh colspan="2">
+            <span class="badge text-bg-primary">
+                Общий вес: @(Document?.Rows is null || Document.Rows.Count == 0 ? 0 : Document.Rows.Sum(x => x.WeightOffer))
+            </span>
+        </MudTh>
+        <MudTh colspan="2">
+            <span class="badge text-bg-info">
+                Общая сумма: @(Document?.Rows is null || Document.Rows.Count == 0 ? 0 : Document.Rows.Sum(x => x.Amount))
+            </span>
+        </MudTh>
+    </FooterContent>
     <PagerContent>
         <MudTablePager />
     </PagerContent>
