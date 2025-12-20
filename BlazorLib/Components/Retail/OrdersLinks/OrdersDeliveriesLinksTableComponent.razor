@@ -18,6 +18,8 @@
             <span class="lead">Общий вес: <strong>@fullWeight</strong></span>
         }
         <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         @if (DeliveryId > 0)
         {
             <MudTooltip Text="Добавить созданный ранее заказ в текущую доставку">

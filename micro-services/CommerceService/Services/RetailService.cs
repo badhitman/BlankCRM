@@ -1314,6 +1314,9 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (forDeliveries)
             q = q.Where(x => req.Payload!.DeliveriesIds!.Contains(x.DeliveryDocumentId));
 
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x => context.OrdersRetail.Any(y => x.OrderDocumentId == y.Id && y.ExternalDocumentId != null && y.ExternalDocumentId.Contains(req.FindQuery)));
+
         IQueryable<RetailOrderDeliveryLinkModelDB> pq = q
             .OrderBy(x => x.OrderDocumentId)
             .ThenBy(x => x.DeliveryDocumentId)

@@ -26,6 +26,8 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         _visibleIncludeExistDelivery,
         _visibleCreateNewDelivery;
 
+    string? searchString = null;
+
     decimal fullWeight;
     IReadOnlyCollection<StatusesDocumentsEnum?> statusesForSelect = [
             null,
@@ -155,8 +157,8 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         {
             DeliveryDocumentId = tableRow.Item.Id,
             OrderDocumentId = OrderParent.Id,
-            WeightShipping = tableRow.Item.Rows is null || tableRow.Item.Rows.Count == 0 
-                ? 0 
+            WeightShipping = tableRow.Item.Rows is null || tableRow.Item.Rows.Count == 0
+                ? 0
                 : tableRow.Item.Rows.Sum(x => x.Quantity * x.Offer!.Weight)
         });
 
@@ -175,6 +177,7 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
+            FindQuery = searchString,
             Payload = new()
         };
 
@@ -190,8 +193,23 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         await SetBusyAsync(false, token);
 
         if (!res.Status.Success())
-            return new TableData<RetailOrderDeliveryLinkModelDB>() { TotalItems = 0, Items = [] };
+            return new TableData<RetailOrderDeliveryLinkModelDB>()
+            {
+                TotalItems = 0,
+                Items = []
+            };
 
-        return new TableData<RetailOrderDeliveryLinkModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        return new TableData<RetailOrderDeliveryLinkModelDB>()
+        {
+            TotalItems = res.TotalRowsCount,
+            Items = res.Response
+        };
+    }
+
+    void OnSearch(string text)
+    {
+        searchString = text;
+        if (tableRef is not null)
+            InvokeAsync(tableRef.ReloadServerData);
     }
 }
