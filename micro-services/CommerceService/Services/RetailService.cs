@@ -1684,6 +1684,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.DateDocument = req.DateDocument.SetKindUtc();
 
         WalletConversionRetailDocumentModelDB docDb = WalletConversionRetailDocumentModelDB.Build(req);
+        
         await context.ConversionsDocumentsWalletsRetail.AddAsync(docDb, token);
         await context.SaveChangesAsync(token);
         res.AddSuccess($"Документ перевода/конвертации создан #{docDb.Id}");
@@ -1701,7 +1702,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         }
 
         await transaction.CommitAsync(token);
-        return new TResponseModel<int>() { Response = req.Id };
+        return new TResponseModel<int>() { Response = docDb.Id };
     }
 
     /// <inheritdoc/>
