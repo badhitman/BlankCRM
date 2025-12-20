@@ -89,16 +89,6 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             : RegistersCache.Where(x => x.OfferId == ctx.OfferId && x.WarehouseId == Document?.WarehouseId).Sum(x => x.Quantity);
     }
 
-    async void SelectOfferAction(OfferModelDB? offer)
-    {
-        if (Document.Rows is null || Document.Rows.Count == 0)
-            return;
-
-        await SetBusyAsync();
-        await CacheRegistersUpdate(offers: [.. Document.Rows.Select(x => x.OfferId)], goods: [], Document.WarehouseId, true);
-        await SetBusyAsync(false);
-    }
-
     /// <inheritdoc/>
     protected override async void RowEditCommitHandler(object element)
     {
@@ -131,6 +121,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     protected override async void AddingOfferAction(OfferActionModel off)
     {
         Document.Rows ??= [];
+        await SetBusyAsync();
         int exist_row = Document.Rows.FindIndex(x => x.OfferId == off.Id);
         if (exist_row < 0)
         {
@@ -177,7 +168,9 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             DocumentUpdateHandler();
 
         UpdateData();
-        StateHasChanged();
+        await CacheRegistersUpdate(offers: [.. Document.Rows.Select(x => x.OfferId)], goods: [], Document.WarehouseId, true);
+
+        await SetBusyAsync(false);
         AddingDomRef!.StateHasChangedCall();
     }
 

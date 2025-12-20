@@ -6,6 +6,7 @@
 <MudTable Dense Hover ReadOnly="ReadOnly"
           SortLabel="@(nameof(RowOfOrderDocumentModelDB.Nomenclature.Name))"
           CanCancelEdit
+          Loading="IsBusyProgress"
           Items="@Document?.Rows"
           RowEditPreview="RowEditPreviewHandler"
           RowEditCommit="RowEditCommitHandler"
@@ -22,7 +23,6 @@
             <div class="ms-3">
                 <AddRowToOrderDocumentComponent ForceAdding="ForceAdding"
                                                 ShowPriceOffers
-                                                SelectOfferHandler="SelectOfferAction"
                                                 ShowRegistersOffersQuantity
                                                 @ref="AddingDomRef"
                                                 WarehouseId="Document.WarehouseId"

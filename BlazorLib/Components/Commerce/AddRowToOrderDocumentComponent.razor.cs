@@ -52,7 +52,7 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
     public bool ForceAdding { get; set; }
 
     /// <summary>
-    /// Обработчик добавления оффера
+    /// Обработчик добавления оффера (кнопка +)
     /// </summary>
     [Parameter, EditorRequired]
     public required Action<OfferActionModel> AddingOfferHandler { get; set; }

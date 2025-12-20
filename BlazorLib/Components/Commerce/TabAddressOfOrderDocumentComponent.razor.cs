@@ -98,9 +98,10 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
     }
 
     /// <inheritdoc/>
-    protected override void AddingOfferAction(OfferActionModel off)
+    protected override async void AddingOfferAction(OfferActionModel off)
     {
         CurrentTab.Rows ??= [];
+        await SetBusyAsync();
         int exist_row = CurrentTab.Rows.FindIndex(x => x.OfferId == off.Id);
         if (exist_row < 0)
             CurrentTab.Rows.Add(new RowOfOrderDocumentModelDB()
@@ -121,7 +122,8 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
         if (DocumentUpdateHandler is not null)
             DocumentUpdateHandler();
 
-        StateHasChanged();
+        await CacheRegistersUpdate(offers: [.. CurrentTab.Rows.Select(x => x.OfferId)], goods: [], CurrentTab.WarehouseId, true);
+        await SetBusyAsync(false);
         addingDomRef!.StateHasChangedCall();
     }
 
