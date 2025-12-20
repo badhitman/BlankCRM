@@ -98,7 +98,10 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
         TResponseModel<int> res = await RetailRepo.CreateConversionOrderLinkDocumentAsync(new()
         {
             ConversionDocumentId = ConversionId,
-            OrderDocumentId = tableRow.Item.Id
+            OrderDocumentId = tableRow.Item.Id,
+            AmountPayment = tableRow.Item.Rows is null || tableRow.Item.Rows.Count == 0
+                 ? 0
+                 : tableRow.Item.Rows.Sum(x => x.Amount)
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -132,7 +135,8 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
         TResponseModel<int> res = await RetailRepo.CreateConversionOrderLinkDocumentAsync(new()
         {
             ConversionDocumentId = tableRow.Item.Id,
-            OrderDocumentId = OrderParent.Id
+            OrderDocumentId = OrderParent.Id,
+            AmountPayment = tableRow.Item.ToWalletSum,
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);

@@ -98,7 +98,10 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
         TResponseModel<int> res = await RetailRepo.CreatePaymentOrderLinkDocumentAsync(new()
         {
             PaymentDocumentId = PaymentId,
-            OrderDocumentId = tableRow.Item.Id
+            OrderDocumentId = tableRow.Item.Id,
+            AmountPayment = tableRow.Item.Rows is null || tableRow.Item.Rows.Count == 0
+                ? 0
+                : tableRow.Item.Rows.Sum(x => x.Amount)
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -132,7 +135,8 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
         TResponseModel<int> res = await RetailRepo.CreatePaymentOrderLinkDocumentAsync(new()
         {
             PaymentDocumentId = tableRow.Item.Id,
-            OrderDocumentId = OrderParent.Id
+            OrderDocumentId = OrderParent.Id,
+            AmountPayment = tableRow.Item.Amount,
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);

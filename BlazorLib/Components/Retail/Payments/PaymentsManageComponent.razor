@@ -71,11 +71,45 @@
         @{
             DateTime pdt = context.DatePayment;
         }
-        <MudTd DataLabel="Name"><a href="/retail/payment-document/@context.Id">@context.Name</a></MudTd>
-        <MudTd DataLabel="Тип"><a href="/retail/payment-document/@context.Id">@context.TypePayment.DescriptionInfo()</a></MudTd>
-        <MudTd DataLabel="Статус"><a href="/retail/payment-document/@context.Id">@context.StatusPayment.DescriptionInfo()</a></MudTd>
+        <MudTd DataLabel="Name">
+            @if (RowClickEventHandler is null)
+            {
+                <a href="/retail/payment-document/@context.Id">@context.Name</a>
+            }
+            else
+            {
+                <span>@context.Name</span>
+            }
+        </MudTd>
+        <MudTd DataLabel="Тип">
+            @if (RowClickEventHandler is null)
+            {
+                <a href="/retail/payment-document/@context.Id">@context.TypePayment.DescriptionInfo()</a>
+            }
+            else
+            {
+                <span>@context.TypePayment.DescriptionInfo()</span>
+            }
+        </MudTd>
+        <MudTd DataLabel="Статус">
+            @if (RowClickEventHandler is null)
+            {
+                <a href="/retail/payment-document/@context.Id">@context.StatusPayment.DescriptionInfo()</a>
+            }
+            else
+            {
+                <span>@context.StatusPayment.DescriptionInfo()</span>
+            }
+        </MudTd>
         <MudTd DataLabel="Дата">
-            <a href="/retail/payment-document/@context.Id">@pdt.ToString("d", GlobalStaticConstants.RU)</a>
+            @if (RowClickEventHandler is null)
+            {
+                <a href="/retail/payment-document/@context.Id">@pdt.ToString("d", GlobalStaticConstants.RU)</a>
+            }
+            else
+            {
+                <span>@pdt.ToString("d", GlobalStaticConstants.RU)</span>
+            }
         </MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {

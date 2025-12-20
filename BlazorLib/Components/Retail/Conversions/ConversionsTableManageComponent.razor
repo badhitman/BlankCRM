@@ -41,14 +41,27 @@
             DateTime ddt = context.DateDocument.GetCustomTime();
         }
         <MudTd DataLabel="Дата">
-            <a href="/retail/conversion-document/@context.Id">
-                <span>
+            @if (RowClickEventHandler is null)
+            {
+                <a href="/retail/conversion-document/@context.Id">
                     @ddt.ToString("d", GlobalStaticConstants.RU)
-                </span>
-            </a>
-
+                </a>
+            }
+            else
+            {
+                <span>@ddt.ToString("d", GlobalStaticConstants.RU)</span>
+            }
         </MudTd>
-        <MudTd DataLabel="Примечание"><a href="/retail/conversion-document/@context.Id"></a>@context.Name</MudTd>
+        <MudTd DataLabel="Примечание">
+            @if (RowClickEventHandler is null)
+            {
+                <a href="/retail/conversion-document/@context.Id">@context.Name</a>
+            }
+            else
+            {
+                <span>@context.Name</span>
+            }
+        </MudTd>
         <MudTd DataLabel="Списание">
             <span title="Текущий баланс" class="border border-warning-subtle me-2 pa-1">@context.FromWallet?.ToString()</span>
             - @context.FromWalletSum

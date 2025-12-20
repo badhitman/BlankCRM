@@ -154,7 +154,10 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         TResponseModel<int> res = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new()
         {
             DeliveryDocumentId = tableRow.Item.Id,
-            OrderDocumentId = OrderParent.Id
+            OrderDocumentId = OrderParent.Id,
+            WeightShipping = tableRow.Item.Rows is null || tableRow.Item.Rows.Count == 0 
+                ? 0 
+                : tableRow.Item.Rows.Sum(x => x.Quantity * x.Offer!.Weight)
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);

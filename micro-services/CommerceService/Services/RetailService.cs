@@ -155,6 +155,8 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Take(req.PageSize);
 
         List<DeliveryDocumentRetailModelDB> res = await oq
+                .Include(x => x.Rows!)
+                .ThenInclude(x => x.Offer)
                 .Include(x => x.DeliveryStatusesLog)
                 .Include(x => x.OrdersLinks)
                 .ToListAsync(cancellationToken: token);
@@ -248,6 +250,19 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
+        List<RowOfDeliveryRetailDocumentModelDB> res = await pq.Include(x => x.Offer).ToListAsync(cancellationToken: token);
+        foreach (RowOfDeliveryRetailDocumentModelDB row in res.Where(x => x.Amount <= 0 || x.WeightOffer <= 0))
+        {
+            if (row.Amount <= 0)
+                row.Amount = row.Quantity * row.Offer!.Price;
+
+            if (row.WeightOffer <= 0)
+                row.WeightOffer = row.Quantity * row.Offer!.Weight;
+
+            context.Update(row);
+            await context.SaveChangesAsync(token);
+        }
+
         return new()
         {
             PageNum = req.PageNum,
@@ -255,7 +270,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.Include(x => x.Offer).ToListAsync(cancellationToken: token)
+            Response = res
         };
     }
 
@@ -1066,7 +1081,8 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Take(req.PageSize);
 
         List<DocumentRetailModelDB> res = await pq
-                .Include(x => x.Rows)
+                .Include(x => x.Rows!)
+                .ThenInclude(x => x.Offer)
 
                 .Include(x => x.Deliveries!)
                 .ThenInclude(x => x.DeliveryDocument)
@@ -1200,6 +1216,19 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
+        List<RowOfRetailOrderDocumentModelDB> res = await pq.Include(x => x.Offer).ToListAsync(cancellationToken: token);
+        foreach (RowOfRetailOrderDocumentModelDB row in res.Where(x => x.Amount <= 0 || x.WeightOffer <= 0))
+        {
+            if (row.Amount <= 0)
+                row.Amount = row.Quantity * row.Offer!.Price;
+
+            if (row.WeightOffer <= 0)
+                row.WeightOffer = row.Quantity * row.Offer!.Weight;
+
+            context.Update(row);
+            await context.SaveChangesAsync(token);
+        }
+
         return new()
         {
             PageNum = req.PageNum,
@@ -1207,7 +1236,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await pq.Include(x => x.Offer).ToListAsync(cancellationToken: token)
+            Response = res
         };
     }
 
@@ -1271,6 +1300,35 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
+        List<RetailOrderDeliveryLinkModelDB> res = (forOrders && forDeliveries) || (!forOrders && !forDeliveries)
+                            ? await pq.Include(x => x.DeliveryDocument).Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
+                            : forOrders
+                                ? await pq.Include(x => x.DeliveryDocument!).ThenInclude(x => x.Rows!).ThenInclude(x => x.Offer).ToListAsync(cancellationToken: token)
+                                : await pq.Include(x => x.OrderDocument!).ThenInclude(x => x.Rows!).ThenInclude(x => x.Offer).ToListAsync(cancellationToken: token);
+
+        if (forOrders != forDeliveries)
+            foreach (RetailOrderDeliveryLinkModelDB row in res.Where(x => x.WeightShipping <= 0))
+            {
+                if (forOrders)
+                {
+                    row.WeightShipping = row.DeliveryDocument?.Rows is null || row.DeliveryDocument.Rows.Count == 0
+                        ? 0
+                        : row.DeliveryDocument.Rows.Sum(x => x.WeightOffer);
+                }
+                else if (forDeliveries)
+                {
+                    row.WeightShipping = row.OrderDocument?.Rows is null || row.OrderDocument.Rows.Count == 0
+                        ? 0
+                        : row.OrderDocument.Rows.Sum(x => x.WeightOffer);
+                }
+
+                if (row.WeightShipping != 0)
+                {
+                    context.Update(row);
+                    await context.SaveChangesAsync(token);
+                }
+            }
+
         return new()
         {
             PageNum = req.PageNum,
@@ -1278,11 +1336,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = (forOrders && forDeliveries) || (!forOrders && !forDeliveries)
-                            ? await pq.Include(x => x.DeliveryDocument).Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
-                            : forOrders
-                                ? await pq.Include(x => x.DeliveryDocument).ToListAsync(cancellationToken: token)
-                                : await pq.Include(x => x.OrderDocument!).ToListAsync(cancellationToken: token)
+            Response = res
         };
     }
 
@@ -1366,6 +1420,35 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
+        List<PaymentOrderRetailLinkModelDB> res = (forOrders && forPayments) || (!forOrders && !forPayments)
+                            ? await pq.Include(x => x.PaymentDocument).Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
+                            : forOrders
+                                ? await pq.Include(x => x.PaymentDocument).ToListAsync(cancellationToken: token)
+                                : await pq.Include(x => x.OrderDocument!).ThenInclude(x => x.Rows!).ThenInclude(x => x.Offer).ToListAsync(cancellationToken: token);
+
+        if (forOrders != forPayments)
+            foreach (PaymentOrderRetailLinkModelDB row in res.Where(x => x.AmountPayment <= 0))
+            {
+                if (forOrders)
+                {
+                    row.AmountPayment = row.PaymentDocument is null
+                        ? 0
+                        : row.PaymentDocument.Amount;
+                }
+                else if (forPayments)
+                {
+                    row.AmountPayment = row.OrderDocument?.Rows is null || row.OrderDocument.Rows.Count == 0
+                        ? 0
+                        : row.OrderDocument.Rows.Sum(x => x.Amount);
+                }
+
+                if (row.AmountPayment != 0)
+                {
+                    context.Update(row);
+                    await context.SaveChangesAsync(token);
+                }
+            }
+
         return new()
         {
             PageNum = req.PageNum,
@@ -1373,11 +1456,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = (forOrders && forPayments) || (!forOrders && !forPayments)
-                            ? await pq.Include(x => x.PaymentDocument).Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
-                            : forOrders
-                                ? await pq.Include(x => x.PaymentDocument).ToListAsync(cancellationToken: token)
-                                : await pq.Include(x => x.OrderDocument!).ToListAsync(cancellationToken: token)
+            Response = res
         };
     }
 
@@ -1916,6 +1995,32 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Include(x => x.OrderDocument);
         }
 
+        List<ConversionOrderRetailLinkModelDB> res = await BuildQuery().ToListAsync(cancellationToken: token);
+
+        if (forOrders != forConversions)
+            foreach (ConversionOrderRetailLinkModelDB row in res.Where(x => x.AmountPayment <= 0))
+            {
+                if (forOrders)
+                {
+                    row.AmountPayment = row.ConversionDocument is null
+                        ? 0
+                        : row.ConversionDocument.ToWalletSum;
+                }
+                else if (forConversions)
+                {
+                    row.AmountPayment = row.OrderDocument?.Rows is null || row.OrderDocument.Rows.Count == 0
+                        ? 0
+                        : row.OrderDocument.Rows.Sum(x => x.Amount);
+                }
+
+                if (row.AmountPayment != 0)
+                {
+                    context.Update(row);
+                    await context.SaveChangesAsync(token);
+                }
+            }
+
+
         return new()
         {
             PageNum = req.PageNum,
@@ -1923,7 +2028,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
-            Response = await BuildQuery().ToListAsync(cancellationToken: token)
+            Response = res,
         };
     }
 
