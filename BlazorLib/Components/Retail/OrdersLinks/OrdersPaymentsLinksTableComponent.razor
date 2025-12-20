@@ -14,9 +14,9 @@
           RowEditCommit="ItemHasBeenCommitted"
           RowEditCancel="ResetItemToOriginalValues">
     <ToolBarContent>
-        @if (fullWeight > 0 && ((OrderParent is not null && OrderParent.Id > 0) || PaymentId > 0 && (PaymentId == 0 || (OrderParent is null || OrderParent.Id == 0))))
+        @if (fullAmount > 0 && ((OrderParent is not null && OrderParent.Id > 0) || PaymentId > 0 && (PaymentId == 0 || (OrderParent is null || OrderParent.Id == 0))))
         {
-            <span class="lead">Общий вес: <strong>@fullWeight</strong></span>
+            <span class="lead">Общая сумма: <strong>@fullAmount</strong></span>
         }
         <MudSpacer />
         @if (PaymentId > 0)

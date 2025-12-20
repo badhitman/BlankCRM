@@ -112,6 +112,8 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
 
                 Document.Rows[exist_row].Quantity = +rowOrder.Quantity;
                 Document.Rows[exist_row].WeightOffer = Document.Rows[exist_row].Quantity * rowOrder.Offer!.Weight;
+                Document.Rows[exist_row].Amount = Document.Rows[exist_row].Quantity * rowOrder.Offer!.Price;
+
                 if (Document.Id > 0)
                 {
                     await SetBusyAsync();
@@ -159,6 +161,8 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
         {
             Document.Rows[exist_row].Quantity = +off.Quantity;
             Document.Rows[exist_row].WeightOffer = Document.Rows[exist_row].Quantity * off.Weight;
+            Document.Rows[exist_row].Amount = Document.Rows[exist_row].Quantity * off.Price;
+
             if (Document.Id > 0)
             {
                 await SetBusyAsync();

@@ -81,7 +81,7 @@
                         }
                     </div>
                 </MudTabPanel>
-                <MudTabPanel Text="Платежи" Disabled="@(PaymentId < 1)">
+                <MudTabPanel Text="Заказы" Disabled="@(PaymentId < 1)">
                     <OrdersPaymentsLinksTableComponent PaymentId="PaymentId" />
                 </MudTabPanel>
                 @if (currentChatTelegram is not null)

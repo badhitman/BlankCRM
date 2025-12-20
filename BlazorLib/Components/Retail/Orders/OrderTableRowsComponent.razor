@@ -75,7 +75,7 @@
             @context!.Quantity
         </MudTd>
         <MudTd DataLabel="Сумма">
-            @(context!.Quantity * context.Offer!.Price)
+            @context!.Amount
         </MudTd>
         <MudTd><MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" /></MudTd>
     </RowTemplate>

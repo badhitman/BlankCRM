@@ -22,7 +22,7 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
         _visibleIncludeExistPayment,
         _visibleCreateNewPayment;
 
-    decimal fullWeight;
+    decimal fullAmount;
 
 
     async Task DeleteRow(int rowLinkId)
@@ -161,7 +161,7 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
 
         await SetBusyAsync(token: token);
         TPaginationResponseModel<PaymentOrderRetailLinkModelDB> res = await RetailRepo.SelectPaymentsOrdersDocumentsLinksAsync(req, token);
-        fullWeight = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.AmountPayment);
+        fullAmount = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.AmountPayment);
         await SetBusyAsync(false, token);
 
         if (!res.Status.Success())
