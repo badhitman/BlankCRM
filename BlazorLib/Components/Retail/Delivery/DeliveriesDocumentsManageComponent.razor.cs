@@ -41,6 +41,17 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [Parameter]
     public IReadOnlyCollection<DeliveryStatusesEnum?>? PresetStatusesDocuments { get; set; }
 
+    bool _equalSumFilter;
+    bool EqualSumFilter
+    {
+        get => _equalSumFilter;
+        set
+        {
+            _equalSumFilter = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
 
     MudChip<string>? unsetChipRef;
     bool includeUnset;
@@ -173,6 +184,9 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
             req.Payload.Start = DateRangeProp.Start;
             req.Payload.End = DateRangeProp.End;
         }
+
+        if (EqualSumFilter)
+            req.Payload.EqualSumFilter = EqualSumFilter;
 
         TPaginationResponseModel<DeliveryDocumentRetailModelDB>? res = await RetailRepo.SelectDeliveryDocumentsAsync(req, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);

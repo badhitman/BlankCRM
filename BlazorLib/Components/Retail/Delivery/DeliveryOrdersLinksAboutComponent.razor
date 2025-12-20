@@ -1,9 +1,9 @@
-﻿<span>x @Orders.Count</span>
+﻿<span>x @Orders.Count (@(Orders.Count == 0 ? 0 : Orders.Sum(x => x.WeightShipping)) кг)</span>
 
 @code {
     /// <summary>
     /// Заказы (документы)
     /// </summary>
-    [Parameter,EditorRequired]
+    [Parameter, EditorRequired]
     public required List<RetailOrderDeliveryLinkModelDB> Orders { get; set; }
 }

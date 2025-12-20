@@ -143,6 +143,9 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => x.CreatedAtUTC <= req.Payload.End);
         }
 
+        if (req.Payload?.EqualSumFilter == true)
+            q = q.Where(x => context.RowsDeliveryDocumentsRetail.Where(y => x.Id == y.DocumentId).Sum(y => y.WeightOffer) != context.OrdersDeliveriesLinks.Where(y => x.Id == y.OrderDocumentId).Sum(y => y.WeightShipping));
+
         IOrderedQueryable<DeliveryDocumentRetailModelDB> oq = req.SortingDirection switch
         {
             DirectionsEnum.Up => q.OrderBy(x => x.CreatedAtUTC),

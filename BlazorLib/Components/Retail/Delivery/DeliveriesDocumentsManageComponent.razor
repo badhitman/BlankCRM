@@ -53,6 +53,14 @@
           @ref=tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Доставка (документы отгрузки)</MudText>
+        <div class="form-check form-switch form-check-inline ms-2">
+            <MudTooltip Text="Отображение документов с расхождением финансов с заказом по сумме">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" @bind=EqualSumFilter>
+                <label class="form-check-label" for="switchCheckDefault">
+                    расхождение сумм
+                </label>
+            </MudTooltip>
+        </div>
         <MudSpacer />
         <MudTooltip Text="Создать новый документ доставки">
             @if (RowClickEventHandler is null)
@@ -131,7 +139,9 @@
                 }
             }
         </MudTd>
-        <MudTd DataLabel="Вес">@context.WeightShipping</MudTd>
+        <MudTd DataLabel="Вес">
+            @context.WeightShipping <code title="расчётный вес по строкам документа">(@(context.Rows is null || context.Rows.Count == 0 ? 0 : context.Rows.Sum(x => x.WeightOffer)))</code>
+        </MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
             <MudTd DataLabel="Получатель">

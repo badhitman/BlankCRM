@@ -35,4 +35,7 @@ public class SelectDeliveryDocumentsRetailRequestModel
 
     /// <inheritdoc/>
     public DateTime? End { get; set; }
+
+    /// <inheritdoc/>
+    public bool? EqualSumFilter { get; set; }
 }
