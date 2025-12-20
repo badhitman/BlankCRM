@@ -80,6 +80,8 @@ public class DocumentRetailModelDB : OrderDocumentBaseModel
 
         if (_rd.Id == 0)
             _rd.Rows?.ForEach(x => { x.Order = _rd; });
+        else
+            _rd.Rows?.ForEach(x => { x.Order = null; });
 
         return _rd;
     }

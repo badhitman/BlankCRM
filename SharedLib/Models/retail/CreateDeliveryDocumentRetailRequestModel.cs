@@ -16,7 +16,7 @@ public class CreateDeliveryDocumentRetailRequestModel : DeliveryDocumentRetailMo
     /// <inheritdoc/>
     public static CreateDeliveryDocumentRetailRequestModel Build(DeliveryDocumentRetailModelDB other, int injectToOrderId)
     {
-        return new()
+        CreateDeliveryDocumentRetailRequestModel res = new()
         {
             AuthorIdentityUserId = other.AuthorIdentityUserId,
             RecipientIdentityUserId = other.RecipientIdentityUserId,
@@ -40,5 +40,18 @@ public class CreateDeliveryDocumentRetailRequestModel : DeliveryDocumentRetailMo
             WarehouseId = other.WarehouseId,
             WeightShipping = other.WeightShipping,
         };
+
+        if (res.Id <= 0)
+            res.Rows?.ForEach(r =>
+            {
+                r.Document = res;
+            });
+        else
+            res.Rows?.ForEach(r =>
+            {
+                r.Document = null;
+            });
+
+        return res;
     }
 }
