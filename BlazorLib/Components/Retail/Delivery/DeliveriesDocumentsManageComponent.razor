@@ -81,8 +81,12 @@
         </MudTooltip>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Тип</MudTh>
-        <MudTh><MudTableSortLabel T="DeliveryDocumentRetailModelDB" InitialDirection="@SortDirection.Descending" SortLabel="@(nameof(DeliveryDocumentRetailModelDB.CreatedAtUTC))"> Дата</MudTableSortLabel></MudTh>
+        <MudTh>Тип/Код</MudTh>
+        <MudTh>
+            <MudTableSortLabel T="DeliveryDocumentRetailModelDB" InitialDirection="@SortDirection.Descending" SortLabel="@(nameof(DeliveryDocumentRetailModelDB.CreatedAtUTC))">
+                Дата
+            </MudTableSortLabel>
+        </MudTh>
         <MudTh>Вес</MudTh>
         <MudTh>Заказ(ы)</MudTh>
         @if (string.IsNullOrWhiteSpace(ClientId))
@@ -102,6 +106,8 @@
         }
         <MudTd DataLabel="Тип">
             @context.DeliveryType.DescriptionInfo()
+            /
+            @context.DeliveryCode
         </MudTd>
         <MudTd DataLabel="Дата">
             @if (RowClickEventHandler is null)
