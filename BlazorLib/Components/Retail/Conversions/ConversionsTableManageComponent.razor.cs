@@ -119,6 +119,10 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
         await SetBusyAsync(token: token);
         TPaginationResponseModel<WalletConversionRetailDocumentModelDB> res = await RetailRepo.SelectConversionsDocumentsAsync(req, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
+
+        if (res.Response is not null && res.Response.Count != 0)
+            await CacheUsersUpdate([.. res.Response.Select(x => x.FromWallet!.UserIdentityId).Union(res.Response.Select(x => x.ToWallet!.UserIdentityId))]);
+
         await SetBusyAsync(token: token);
         return new TableData<WalletConversionRetailDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

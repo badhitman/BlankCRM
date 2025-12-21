@@ -27,7 +27,11 @@
         }
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel T="WalletConversionRetailDocumentModelDB" InitialDirection="@SortDirection.Descending" SortLabel="@(nameof(WalletConversionRetailDocumentModelDB.DateDocument))">Дата</MudTableSortLabel></MudTh>
+        <MudTh>
+            <MudTableSortLabel T="WalletConversionRetailDocumentModelDB"
+                               InitialDirection="@SortDirection.Descending"
+                               SortLabel="@(nameof(WalletConversionRetailDocumentModelDB.DateDocument))">Дата</MudTableSortLabel>
+        </MudTh>
         <MudTh>Примечание</MudTh>
         <MudTh>Списание</MudTh>
         <MudTh>Зачисление</MudTh>
@@ -63,8 +67,8 @@
             }
         </MudTd>
         <MudTd DataLabel="Списание">
-            <span title="Текущий баланс" class="border border-warning-subtle me-2 pa-1">@context.FromWallet?.ToString()</span>
-            - @context.FromWalletSum
+            <span title="Текущий баланс" class="border border-warning-subtle me-2 pa-1">@context.FromWallet!.ToString() [@(UsersCache.FirstOrDefault(x => x.UserId == context.FromWallet.UserIdentityId)?.ToString())]</span>
+            - @context.FromWalletSum [@(UsersCache.FirstOrDefault(x => x.UserId == context.ToWallet!.UserIdentityId)?.ToString())]
         </MudTd>
         <MudTd DataLabel="Зачисление">
             <span title="Текущий баланс" class="border border-primary-subtle me-2 pa-1">@context.ToWallet?.ToString()</span>

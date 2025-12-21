@@ -1684,7 +1684,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         req.DateDocument = req.DateDocument.SetKindUtc();
 
         WalletConversionRetailDocumentModelDB docDb = WalletConversionRetailDocumentModelDB.Build(req);
-        
+
         await context.ConversionsDocumentsWalletsRetail.AddAsync(docDb, token);
         await context.SaveChangesAsync(token);
         res.AddSuccess($"Документ перевода/конвертации создан #{docDb.Id}");
@@ -1891,8 +1891,8 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortBy = req.SortBy,
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq
-                .Include(x => x.FromWallet).ThenInclude(x => x!.WalletType)
-                .Include(x => x.ToWallet).ThenInclude(x => x!.WalletType)
+                .Include(x => x.FromWallet).ThenInclude(x => x!.WalletType).Include(x => x.Orders)
+                .Include(x => x.ToWallet).ThenInclude(x => x!.WalletType).Include(x => x.Orders)
                 .ToListAsync(cancellationToken: token)
         };
     }
