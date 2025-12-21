@@ -15,10 +15,6 @@
           RowEditCommit="ItemHasBeenCommitted"
           RowEditCancel="ResetItemToOriginalValues">
     <ToolBarContent>
-        @if (fullAmountPayment > 0 && ((OrderParent is not null && OrderParent.Id > 0) || ConversionId > 0 && (ConversionId == 0 || (OrderParent is null || OrderParent.Id == 0))))
-        {
-            <span class="lead">Общая сумма: <strong>@fullAmountPayment</strong></span>
-        }
         <MudSpacer />
         @if (ConversionId > 0)
         {
@@ -83,7 +79,10 @@
         }
         @if (ConversionId <= 0)
         {
-            <MudTd DataLabel="Перевод"><a href="/retail/conversion-document/@context.ConversionDocumentId">@context.ConversionDocument?.ToString()</a></MudTd>
+            <MudTd DataLabel="Перевод">
+                <a href="/retail/conversion-document/@context.ConversionDocumentId">@context.ConversionDocument?.ToString()</a>
+                [@(UsersCache.FirstOrDefault(x => x.UserId == context.ConversionDocument!.FromWallet!.UserIdentityId)?.ToString()) -> @(UsersCache.FirstOrDefault(x => x.UserId == context.ConversionDocument!.ToWallet!.UserIdentityId)?.ToString())]
+            </MudTd>
         }
         <MudTd Class="@(context.AmountPayment <= 0 ? "text-bg-danger" : "")" DataLabel="Сумма">@context.AmountPayment</MudTd>
         <MudTd>

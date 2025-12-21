@@ -3,7 +3,9 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
+using Newtonsoft.Json;
 using SharedLib;
 
 namespace BlazorLib.Components.Retail.OrdersLinks;
@@ -14,6 +16,11 @@ namespace BlazorLib.Components.Retail.OrdersLinks;
 public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseComponent<ConversionOrderRetailLinkModelDB>
 {
     /// <inheritdoc/>
+    [Inject]
+    protected IIdentityTransmission IdentityRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
     [Parameter]
     public int ConversionId { get; set; }
 
@@ -22,8 +29,33 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
         _visibleIncludeExistConversion,
         _visibleCreateNewConversion;
 
-    decimal fullAmountPayment;
 
+    /// <summary>
+    /// UsersCache
+    /// </summary>
+    protected List<UserInfoModel> UsersCache = [];
+
+
+    /// <summary>
+    /// CacheUsersUpdate
+    /// </summary>
+    protected async Task CacheUsersUpdate(string[] usersIds)
+    {
+        usersIds = [.. usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct()];
+        if (usersIds.Length == 0)
+            return;
+
+        await SetBusyAsync();
+        TResponseModel<UserInfoModel[]> users = await IdentityRepo.GetUsersOfIdentityAsync(usersIds);
+        SnackBarRepo.ShowMessagesResponse(users.Messages);
+        if (users.Success() && users.Response is not null && users.Response.Length != 0)
+            lock (UsersCache)
+            {
+                UsersCache.AddRange(users.Response.Where(x => !UsersCache.Any(y => y.UserId == x.UserId)));
+            }
+
+        await SetBusyAsync(false);
+    }
 
     async Task DeleteRow(int rowLinkId)
     {
@@ -165,7 +197,10 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
 
         await SetBusyAsync(token: token);
         TPaginationResponseModel<ConversionOrderRetailLinkModelDB> res = await RetailRepo.SelectConversionsOrdersDocumentsLinksAsync(req, token);
-        fullAmountPayment = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.AmountPayment);
+       
+        if (res.Response is not null && res.Response.Count != 0)
+            await CacheUsersUpdate([.. res.Response.Select(x => x.ConversionDocument!.FromWallet!.UserIdentityId).Union(res.Response.Select(x => x.ConversionDocument!.ToWallet!.UserIdentityId))]);
+       
         await SetBusyAsync(false, token);
 
         if (!res.Status.Success())
