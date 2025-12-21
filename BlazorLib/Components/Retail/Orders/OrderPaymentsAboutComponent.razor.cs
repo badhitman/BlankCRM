@@ -7,6 +7,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.Retail.Orders;
 
+/// <summary>
+/// OrderPaymentsAboutComponent
+/// </summary>
 public partial class OrderPaymentsAboutComponent
 {
     /// <inheritdoc/>
