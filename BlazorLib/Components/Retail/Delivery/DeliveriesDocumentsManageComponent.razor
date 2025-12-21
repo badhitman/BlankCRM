@@ -43,6 +43,7 @@
         </div>
     </div>
     <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
+    <MudIconButton OnClick="DownloadFullPrice" Icon="@Icons.Material.Filled.Download" />
 </MudStack>
 
 <MudTable ServerData="ServerReload"

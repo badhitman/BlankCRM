@@ -1500,8 +1500,6 @@ public partial class CommerceImplementService(
     {
         string docName = $"Заказ {orderDb.Name} от {orderDb.CreatedAtUTC.GetHumanDateTime()}";
         using MemoryStream XLSStream = new();
-
-
         WorkbookPart? wBookPart = null;
 
         using SpreadsheetDocument spreadsheetDoc = SpreadsheetDocument.Create(XLSStream, SpreadsheetDocumentType.Workbook);

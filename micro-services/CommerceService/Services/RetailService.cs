@@ -3,11 +3,15 @@
 ////////////////////////////////////////////////
 
 using DbcLib;
-using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharedLib;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace CommerceService;
 
@@ -107,7 +111,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<DeliveryDocumentRetailModelDB>> SelectDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DeliveryDocumentRetailModelDB>? q = context.DeliveryDocumentsRetail.AsQueryable();
+        IQueryable<DeliveryDocumentRetailModelDB> q = context.DeliveryDocumentsRetail.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x =>
@@ -199,6 +203,112 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .ThenInclude(x => x.Nomenclature)
                 .ToArrayAsync(cancellationToken: token)
         };
+    }
+
+    /// <inheritdoc/>
+    public async Task<FileAttachModel> GetDeliveriesJournalFileAsync(SelectDeliveryDocumentsRetailRequestModel req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<DeliveryDocumentRetailModelDB> q = context.DeliveryDocumentsRetail.AsQueryable();
+
+        if (req.RecipientsFilterIdentityId is not null && req.RecipientsFilterIdentityId.Length != 0)
+            q = q.Where(x => req.RecipientsFilterIdentityId.Contains(x.RecipientIdentityUserId));
+
+        if (req.TypesFilter is not null && req.TypesFilter.Length != 0)
+            q = q.Where(x => req.TypesFilter.Contains(x.DeliveryType));
+
+        if (req.StatusesFilter is not null && req.StatusesFilter.Count != 0)
+        {
+            bool selectedUnset = req.StatusesFilter.Contains(null);
+            req.StatusesFilter = [.. req.StatusesFilter.Where(x => x is not null).Distinct()];
+            q = q.Where(x => req.StatusesFilter.Contains(x.DeliveryStatus) || (selectedUnset && (x.DeliveryStatus == null || x.DeliveryStatus == 0)));
+        }
+
+        if (req.ExcludeOrderId.HasValue == true && req.ExcludeOrderId > 0)
+            q = q.Where(x => !context.OrdersDeliveriesLinks.Any(y => y.DeliveryDocumentId == x.Id && y.OrderDocumentId == req.ExcludeOrderId));
+
+        if (req.FilterOrderId is not null && req.FilterOrderId > 0)
+            q = from deliveryDoc in q
+                join linkItem in context.OrdersDeliveriesLinks.Where(x => x.OrderDocumentId == req.FilterOrderId) on deliveryDoc.Id equals linkItem.DeliveryDocumentId
+                select deliveryDoc;
+
+        if (req.Start is not null && req.Start != default)
+        {
+            req.Start = req.Start.SetKindUtc();
+            q = q.Where(x => x.CreatedAtUTC >= req.Start);
+        }
+
+        if (req.End is not null && req.End != default)
+        {
+            req.End = req.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+            q = q.Where(x => x.CreatedAtUTC <= req.End);
+        }
+
+        if (req.EqualSumFilter == true)
+            q = q.Where(x => context.RowsDeliveryDocumentsRetail.Where(y => x.Id == y.DocumentId).Sum(y => y.WeightOffer) != context.OrdersDeliveriesLinks.Where(y => x.Id == y.OrderDocumentId).Sum(y => y.WeightShipping));
+
+        q = q.OrderBy(x => x.CreatedAtUTC);
+
+        List<DeliveryDocumentRetailModelDB> resDb = await q
+                .Include(x => x.Rows!)
+                .ThenInclude(x => x.Offer)
+                .Include(x => x.DeliveryStatusesLog)
+                .Include(x => x.OrdersLinks)
+                .ToListAsync(cancellationToken: token);
+
+        string docName = $"Журнал отгрузки от {DateTime.Now.GetHumanDateTime()}";
+        FileAttachModel res;
+
+        try
+        {
+            res = new()
+            {
+                Data = await SaveDeliveriesJournalAsExcel(req, resDb, context, token),
+                ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("xlsx")).Key,
+                Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.xlsx",
+            };
+        }
+        catch (Exception ex)
+        {
+            loggerRepo.LogError(ex, $"Ошибка создания Excel документа: {docName}");
+            HtmlGenerator.html5.areas.div wrapDiv = new();
+            wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.p(docName));
+
+            resDb.ForEach(aNode =>
+            {
+                HtmlGenerator.html5.areas.div addressDiv = new();
+                addressDiv.AddDomNode(new HtmlGenerator.html5.textual.p($"Адрес: `{aNode.KladrTitle}` {aNode.AddressUserComment}".Trim()));
+
+                HtmlGenerator.html5.tables.table my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
+                my_table.THead.AddColumn("Наименование").AddColumn("Цена").AddColumn("Кол-во").AddColumn("Вес").AddColumn("Сумма");
+
+                aNode.Rows?.ForEach(dr =>
+                {
+                    my_table.TBody.AddRow([dr.Offer!.GetName(), dr.Offer.Price.ToString(), dr.Quantity.ToString(), dr.Amount.ToString()]);
+                });
+                addressDiv.AddDomNode(my_table);
+                addressDiv.AddDomNode(new HtmlGenerator.html5.textual.p($"Итого: {aNode.Rows!.Sum(x => x.Amount)}") { css_style = "float: right;" });
+                wrapDiv.AddDomNode(addressDiv);
+            });
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            string test_s = $"<style>table, th, td {{border: 1px solid black;border-collapse: collapse;}}</style>{wrapDiv.GetHTML()}";
+
+            using MemoryStream ms = new();
+            StreamWriter writer = new(ms);
+            writer.Write(test_s);
+            writer.Flush();
+            ms.Position = 0;
+
+            res = new()
+            {
+                Data = ms.ToArray(),
+                ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("html")).Key,
+                Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.html",
+            };
+        }
+
+        return res;
     }
     #endregion
 
@@ -2073,6 +2183,211 @@ public class RetailService(IIdentityTransmission identityRepo,
         return res == 0
             ? ResponseBaseModel.CreateInfo("Объект уже удалён")
             : ResponseBaseModel.CreateSuccess("Удалено");
+    }
+    #endregion
+
+    #region static
+    async Task<byte[]> SaveDeliveriesJournalAsExcel(SelectDeliveryDocumentsRetailRequestModel req, List<DeliveryDocumentRetailModelDB> journalDb, CommerceContext context, CancellationToken token = default)
+    {
+        string[] usersList = [.. journalDb.Select(x => x.RecipientIdentityUserId).Distinct()];
+        TResponseModel<UserInfoModel[]> users = await identityRepo.GetUsersOfIdentityAsync(usersList, token);
+        UserInfoModel[] usersDb = users.Response ?? throw new("users for deliveries journal - IS NULL");
+
+        using MemoryStream XLSStream = new();
+        WorkbookPart? wBookPart = null;
+
+        using SpreadsheetDocument spreadsheetDoc = SpreadsheetDocument.Create(XLSStream, SpreadsheetDocumentType.Workbook);
+
+        wBookPart = spreadsheetDoc.AddWorkbookPart();
+        wBookPart.Workbook = new Workbook();
+        uint sheetId = 1;
+        WorkbookPart workbookPart = spreadsheetDoc.WorkbookPart ?? spreadsheetDoc.AddWorkbookPart();
+
+        WorkbookStylesPart wbsp = workbookPart.AddNewPart<WorkbookStylesPart>();
+
+        wbsp.Stylesheet = GenerateExcelStyleSheet();
+        wbsp.Stylesheet.Save();
+
+        workbookPart.Workbook.Sheets = new Sheets();
+
+        WorksheetPart wSheetPart;
+
+        Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? workbookPart.Workbook.AppendChild(new Sheets());
+        foreach (DeliveryDocumentRetailModelDB table in journalDb)
+        {
+            wSheetPart = wBookPart.AddNewPart<WorksheetPart>();
+            Sheet sheet = new() { Id = workbookPart.GetIdOfPart(wSheetPart), SheetId = sheetId, Name = $"№{table.Id} {table.Name}" };//
+            sheets.Append(sheet);
+
+            SheetData sheetData = new();
+            wSheetPart.Worksheet = new Worksheet(sheetData);
+
+            Columns lstColumns = wSheetPart.Worksheet.GetFirstChild<Columns>()!;
+            bool needToInsertColumns = false;
+            if (lstColumns == null)
+            {
+                lstColumns = new Columns();
+                needToInsertColumns = true;
+            }
+
+            lstColumns.Append(new Column() { Min = 1, Max = 1, Width = 100, CustomWidth = true, BestFit = true, });
+            lstColumns.Append(new Column() { Min = 2, Max = 2, Width = 8, CustomWidth = true, BestFit = true, });
+            lstColumns.Append(new Column() { Min = 3, Max = 3, Width = 8, CustomWidth = true, BestFit = true, });
+            lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 15, CustomWidth = true, BestFit = true, });
+            lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 15, CustomWidth = true, BestFit = true, });
+
+            if (needToInsertColumns)
+                wSheetPart.Worksheet.InsertAt(lstColumns, 0);
+
+            Row topRow = new() { RowIndex = 2 };
+            InsertExcelCell(topRow, 1, $"Адрес доставки: {table.KladrTitle} {table.AddressUserComment}", CellValues.String, 0);
+            sheetData!.Append(topRow);
+
+            topRow = new() { RowIndex = 3 };
+            InsertExcelCell(topRow, 1, $"Получатель: {usersDb.First(x=>x.UserId == table.RecipientIdentityUserId).ToString()}", CellValues.String, 0);
+            sheetData!.Append(topRow);
+
+            Row headerRow = new() { RowIndex = 5 };
+            InsertExcelCell(headerRow, 1, "Наименование", CellValues.String, 1);
+            InsertExcelCell(headerRow, 2, "Цена", CellValues.String, 1);
+            InsertExcelCell(headerRow, 3, "Кол-во", CellValues.String, 1);
+            InsertExcelCell(headerRow, 4, "Вес", CellValues.String, 1);
+            InsertExcelCell(headerRow, 5, "Сумма", CellValues.String, 1);
+            sheetData.AppendChild(headerRow);
+
+            uint row_index = 5;
+            foreach (RowOfDeliveryRetailDocumentModelDB dr in table.Rows!)
+            {
+                Row row = new() { RowIndex = row_index++ };
+                InsertExcelCell(row, 1, dr.Offer!.GetName(), CellValues.String, 0);
+                InsertExcelCell(row, 2, dr.Offer.Price.ToString(), CellValues.String, 0);
+                InsertExcelCell(row, 3, dr.Quantity.ToString(), CellValues.String, 0);
+                InsertExcelCell(row, 4, dr.WeightOffer.ToString(), CellValues.String, 0);
+                InsertExcelCell(row, 5, dr.Amount.ToString(), CellValues.String, 0);
+                sheetData.Append(row);
+            }
+            Row btRow = new() { RowIndex = row_index++ };
+            InsertExcelCell(btRow, 1, "", CellValues.String, 0);
+            InsertExcelCell(btRow, 2, "", CellValues.String, 0);
+            InsertExcelCell(btRow, 3, "Итого:", CellValues.String, 0);
+            InsertExcelCell(btRow, 4, table.Rows!.Sum(x => x.WeightOffer).ToString(), CellValues.String, 0);
+            InsertExcelCell(btRow, 5, table.Rows!.Sum(x => x.Amount).ToString(), CellValues.String, 0);
+            sheetData.Append(btRow);
+            sheetId++;
+        }
+
+        workbookPart.Workbook.Save();
+        spreadsheetDoc.Save();
+
+        XLSStream.Position = 0;
+        return XLSStream.ToArray();
+    }
+
+    static Stylesheet GenerateExcelStyleSheet()
+    {
+        return new Stylesheet(
+            new Fonts(
+                new Font(                                                               // Стиль под номером 0 - Шрифт по умолчанию.
+                    new FontSize() { Val = 11 },
+                    new Color() { Rgb = new HexBinaryValue() { Value = "000000" } },
+                    new FontName() { Val = "Calibri" }),
+                new Font(                                                               // Стиль под номером 1 - Жирный шрифт Times New Roman.
+                    new Bold(),
+                    new FontSize() { Val = 11 },
+                    new Color() { Rgb = new HexBinaryValue() { Value = "000000" } },
+                    new FontName() { Val = "Times New Roman" }),
+                new Font(                                                               // Стиль под номером 2 - Обычный шрифт Times New Roman.
+                    new FontSize() { Val = 11 },
+                    new Color() { Rgb = new HexBinaryValue() { Value = "000000" } },
+                    new FontName() { Val = "Times New Roman" }),
+                new Font(                                                               // Стиль под номером 3 - Шрифт Times New Roman размером 14.
+                    new FontSize() { Val = 14 },
+                    new Color() { Rgb = new HexBinaryValue() { Value = "000000" } },
+        new FontName() { Val = "Times New Roman" })
+        ),
+        new Fills(
+                new Fill(                                                           // Стиль под номером 0 - Заполнение ячейки по умолчанию.
+        new PatternFill() { PatternType = PatternValues.None }),
+                new Fill(                                                           // Стиль под номером 1 - Заполнение ячейки серым цветом
+                    new PatternFill(
+                        new ForegroundColor() { Rgb = new HexBinaryValue() { Value = "FFAAAAAA" } }
+        )
+                    { PatternType = PatternValues.Solid }),
+        new Fill(                                                           // Стиль под номером 2 - Заполнение ячейки красным.
+                    new PatternFill(
+                        new ForegroundColor() { Rgb = new HexBinaryValue() { Value = "FFEFEFEF" } }
+                    )
+                    { PatternType = PatternValues.Solid })
+            )
+            ,
+            new Borders(
+                new Border(                                                         // Стиль под номером 0 - Грани.
+                    new LeftBorder(),
+                    new RightBorder(),
+                    new TopBorder(),
+                    new BottomBorder(),
+                    new DiagonalBorder()),
+                new Border(                                                         // Стиль под номером 1 - Грани
+                    new LeftBorder(
+                        new Color() { Auto = true }
+                    )
+                    { Style = BorderStyleValues.Medium },
+                    new RightBorder(
+                        new Color() { Indexed = (UInt32Value)64U }
+                    )
+                    { Style = BorderStyleValues.Medium },
+                    new TopBorder(
+                        new Color() { Auto = true }
+                    )
+                    { Style = BorderStyleValues.Medium },
+                    new BottomBorder(
+                        new Color() { Indexed = (UInt32Value)64U }
+                    )
+                    { Style = BorderStyleValues.Medium },
+                    new DiagonalBorder()),
+                new Border(                                                         // Стиль под номером 2 - Грани.
+                    new LeftBorder(
+                        new Color() { Auto = true }
+                    )
+                    { Style = BorderStyleValues.Thin },
+                    new RightBorder(
+                        new Color() { Indexed = (UInt32Value)64U }
+                    )
+                    { Style = BorderStyleValues.Thin },
+                    new TopBorder(
+                        new Color() { Auto = true }
+                    )
+                    { Style = BorderStyleValues.Thin },
+                    new BottomBorder(
+                        new Color() { Indexed = (UInt32Value)64U }
+                    )
+                    { Style = BorderStyleValues.Thin },
+                    new DiagonalBorder())
+            ),
+            new CellFormats(
+                new CellFormat() { FontId = 0, FillId = 0, BorderId = 0 },                          // Стиль под номером 0 - The default cell style.  (по умолчанию)
+                new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center, WrapText = true }) { FontId = 1, FillId = 2, BorderId = 1, ApplyFont = true },       // Стиль под номером 1 - Bold 
+                new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center, WrapText = true }) { FontId = 2, FillId = 0, BorderId = 2, ApplyFont = true },       // Стиль под номером 2 - REgular
+                new CellFormat() { FontId = 3, FillId = 0, BorderId = 2, ApplyFont = true, NumberFormatId = 4 },       // Стиль под номером 3 - Times Roman
+                new CellFormat() { FontId = 0, FillId = 2, BorderId = 0, ApplyFill = true },       // Стиль под номером 4 - Yellow Fill
+                new CellFormat(                                                                   // Стиль под номером 5 - Alignment
+                    new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }
+                )
+                { FontId = 0, FillId = 0, BorderId = 0, ApplyAlignment = true },
+                new CellFormat() { FontId = 0, FillId = 0, BorderId = 1, ApplyBorder = true },      // Стиль под номером 6 - Border
+                new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Right, Vertical = VerticalAlignmentValues.Center, WrapText = true }) { FontId = 2, FillId = 0, BorderId = 2, ApplyFont = true, NumberFormatId = 4 }       // Стиль под номером 7 - Задает числовой формат полю.
+            )
+        );
+    }
+
+    static void InsertExcelCell(Row row, int cell_num, string val, CellValues type, uint styleIndex)
+    {
+        Cell? refCell = null;
+        Cell newCell = new() { CellReference = cell_num.ToString() + ":" + row.RowIndex?.ToString(), StyleIndex = styleIndex };
+        row.InsertBefore(newCell, refCell);
+
+        newCell.CellValue = new CellValue(val);
+        newCell.DataType = new EnumValue<CellValues>(type);
     }
     #endregion
 }

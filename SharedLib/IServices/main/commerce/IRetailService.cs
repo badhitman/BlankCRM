@@ -21,6 +21,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TResponseModel<DeliveryDocumentRetailModelDB[]>> GetDeliveryDocumentsAsync(GetDeliveryDocumentsRetailRequestModel req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<FileAttachModel> GetDeliveriesJournalFileAsync(SelectDeliveryDocumentsRetailRequestModel req, CancellationToken token = default);
     #endregion
 
     #region Row Of Delivery Document

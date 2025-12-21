@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
 
@@ -15,6 +16,9 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
+
+    [Inject]
+    IJSRuntime JsRuntimeRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -153,49 +157,30 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
             RowClickEventHandler(tableRowClickEventArgs);
     }
 
+    async Task DownloadFullPrice()
+    {
+        await SetBusyAsync();
+        FileAttachModel res = await RetailRepo.GetDeliveriesJournalFileAsync(getRequestPayload());
+        await SetBusyAsync(false);
+        if (res.Data.Length != 0)
+        {
+            using MemoryStream ms = new(res.Data);
+            using DotNetStreamReference streamRef = new(stream: ms);
+            await JsRuntimeRepo.InvokeVoidAsync("downloadFileFromStream", res.Name, streamRef);
+        }
+    }
+
     async Task<TableData<DeliveryDocumentRetailModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
         TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req = new()
         {
-            Payload = new(),
+            Payload = getRequestPayload(),
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortingDirection = state.SortDirection.Convert(),
             SortBy = state.SortLabel,
         };
-
-        if (ExcludeOrder is not null && ExcludeOrder.Id > 0)
-            req.Payload.ExcludeOrderId = ExcludeOrder.Id;
-
-        if (!string.IsNullOrWhiteSpace(ClientId))
-            req.Payload.RecipientsFilterIdentityId = [ClientId];
-
-        if (FilterOrderId.HasValue && FilterOrderId > 0)
-            req.Payload.FilterOrderId = FilterOrderId.Value;
-
-        if (_selectedTypes.Count != 0)
-            req.Payload.TypesFilter = [.. SelectedTypes];
-
-        if (PresetStatusesDocuments is not null && PresetStatusesDocuments.Count != 0)
-            req.Payload.StatusesFilter = [.. PresetStatusesDocuments];
-        else if (SelectedStatuses.Count != 0)
-            req.Payload.StatusesFilter = [.. SelectedStatuses];
-
-        if (includeUnset)
-        {
-            req.Payload.StatusesFilter ??= [];
-            req.Payload.StatusesFilter.Add(null);
-        }
-
-        if (DateRangeProp is not null)
-        {
-            req.Payload.Start = DateRangeProp.Start;
-            req.Payload.End = DateRangeProp.End;
-        }
-
-        if (EqualSumFilter)
-            req.Payload.EqualSumFilter = EqualSumFilter;
 
         TPaginationResponseModel<DeliveryDocumentRetailModelDB>? res = await RetailRepo.SelectDeliveryDocumentsAsync(req, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
@@ -204,5 +189,44 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
 
         await SetBusyAsync(false, token);
         return new TableData<DeliveryDocumentRetailModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+    }
+
+    SelectDeliveryDocumentsRetailRequestModel getRequestPayload()
+    {
+        SelectDeliveryDocumentsRetailRequestModel req = new();
+
+        if (ExcludeOrder is not null && ExcludeOrder.Id > 0)
+            req.ExcludeOrderId = ExcludeOrder.Id;
+
+        if (!string.IsNullOrWhiteSpace(ClientId))
+            req.RecipientsFilterIdentityId = [ClientId];
+
+        if (FilterOrderId.HasValue && FilterOrderId > 0)
+            req.FilterOrderId = FilterOrderId.Value;
+
+        if (_selectedTypes.Count != 0)
+            req.TypesFilter = [.. SelectedTypes];
+
+        if (PresetStatusesDocuments is not null && PresetStatusesDocuments.Count != 0)
+            req.StatusesFilter = [.. PresetStatusesDocuments];
+        else if (SelectedStatuses.Count != 0)
+            req.StatusesFilter = [.. SelectedStatuses];
+
+        if (includeUnset)
+        {
+            req.StatusesFilter ??= [];
+            req.StatusesFilter.Add(null);
+        }
+
+        if (DateRangeProp is not null)
+        {
+            req.Start = DateRangeProp.Start;
+            req.End = DateRangeProp.End;
+        }
+
+        if (EqualSumFilter)
+            req.EqualSumFilter = EqualSumFilter;
+
+        return req;
     }
 }

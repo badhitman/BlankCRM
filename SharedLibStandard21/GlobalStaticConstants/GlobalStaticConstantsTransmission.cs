@@ -751,6 +751,9 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string GetDeliveryDocumentsRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.DOCUMENTS_CONTROLLER_NAME}-of-{Routes.DELIVERY_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
+        public readonly static string GetDeliveriesJournalFileRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.JOURNAL_CONTROLLER_NAME}-{Routes.DELIVERIES_CONTROLLER_NAME}-{Routes.FILE_CONTROLLER_NAME}", Routes.DOWNLOAD_ACTION_NAME);//GetDeliveriesJournalFile
+
+        /// <inheritdoc/>
         public readonly static string UpdateDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
