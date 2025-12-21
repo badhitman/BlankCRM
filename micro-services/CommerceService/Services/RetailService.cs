@@ -4,14 +4,12 @@
 
 using DbcLib;
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharedLib;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace CommerceService;
 
@@ -256,57 +254,66 @@ public class RetailService(IIdentityTransmission identityRepo,
                 .Include(x => x.OrdersLinks)
                 .ToListAsync(cancellationToken: token);
 
-        string docName = $"Журнал отгрузки от {DateTime.Now.GetHumanDateTime()}";
+        string[] usersList = [.. resDb.Select(x => x.RecipientIdentityUserId).Distinct()];
+        TResponseModel<UserInfoModel[]> users = await identityRepo.GetUsersOfIdentityAsync(usersList, token);
+        UserInfoModel[] usersDb = users.Response ?? throw new("users for deliveries journal - IS NULL");
+
+        string docName = $"Журнал отгрузки {DateTime.Now.GetHumanDateTime()}";
         FileAttachModel res;
 
-        try
+        HtmlGenerator.html5.areas.div wrapDiv = new();
+        // wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.p(docName));
+
+        resDb.ForEach(aNode =>
         {
-            res = new()
+            HtmlGenerator.html5.forms.fieldset addressDiv = new($"#{aNode.Id} {aNode.Name} (заявлено {aNode.WeightShipping} kg)".Trim(), $"doc_{aNode.Id}");
+
+            addressDiv.AddDomNode(new HtmlGenerator.html5.textual.strong("Адрес:"));
+            addressDiv.AddDomNode(new HtmlGenerator.html5.textual.span($"`{aNode.KladrTitle}` {aNode.AddressUserComment}".Trim()));
+            addressDiv.AddDomNode(new HtmlGenerator.html5.textual.strong("Получатель"));
+            addressDiv.AddDomNode(new HtmlGenerator.html5.textual.span($"{usersDb.First(x => x.UserId == aNode.RecipientIdentityUserId).ToString()}".Trim()));
+
+            HtmlGenerator.html5.tables.table my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
+
+            my_table
+                .THead.AddColumn("Наименование")
+                .AddColumn("Цена")
+                .AddColumn("Кол-во")
+                .AddColumn("Вес")
+                .AddColumn("Сумма");
+
+            aNode.Rows?.ForEach(dr =>
             {
-                Data = await SaveDeliveriesJournalAsExcel(req, resDb, context, token),
-                ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("xlsx")).Key,
-                Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.xlsx",
-            };
-        }
-        catch (Exception ex)
-        {
-            loggerRepo.LogError(ex, $"Ошибка создания Excel документа: {docName}");
-            HtmlGenerator.html5.areas.div wrapDiv = new();
-            wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.p(docName));
-
-            resDb.ForEach(aNode =>
-            {
-                HtmlGenerator.html5.areas.div addressDiv = new();
-                addressDiv.AddDomNode(new HtmlGenerator.html5.textual.p($"Адрес: `{aNode.KladrTitle}` {aNode.AddressUserComment}".Trim()));
-
-                HtmlGenerator.html5.tables.table my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
-                my_table.THead.AddColumn("Наименование").AddColumn("Цена").AddColumn("Кол-во").AddColumn("Вес").AddColumn("Сумма");
-
-                aNode.Rows?.ForEach(dr =>
-                {
-                    my_table.TBody.AddRow([dr.Offer!.GetName(), dr.Offer.Price.ToString(), dr.Quantity.ToString(), dr.Amount.ToString()]);
-                });
-                addressDiv.AddDomNode(my_table);
-                addressDiv.AddDomNode(new HtmlGenerator.html5.textual.p($"Итого: {aNode.Rows!.Sum(x => x.Amount)}") { css_style = "float: right;" });
-                wrapDiv.AddDomNode(addressDiv);
+                my_table.TBody.AddRow(
+                    [dr.Offer!.GetName(),
+                            dr.Offer.Price.ToString(),
+                            dr.Quantity.ToString(),
+                            dr.WeightOffer.ToString(),
+                            dr.Amount.ToString()]);
             });
 
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            string test_s = $"<style>table, th, td {{border: 1px solid black;border-collapse: collapse;}}</style>{wrapDiv.GetHTML()}";
+            my_table.TBody.AddRow(["", "", "", $"Итого вес:{aNode.Rows!.Sum(x => x.WeightOffer)}", $"Итого сумма: {aNode.Rows!.Sum(x => x.Amount)}"]);
 
-            using MemoryStream ms = new();
-            StreamWriter writer = new(ms);
-            writer.Write(test_s);
-            writer.Flush();
-            ms.Position = 0;
+            addressDiv.AddDomNode(my_table);
 
-            res = new()
-            {
-                Data = ms.ToArray(),
-                ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("html")).Key,
-                Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.html",
-            };
-        }
+            wrapDiv.AddDomNode(addressDiv);
+        });
+
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        string test_s = $"<style>table, th, td {{border: 1px solid black;border-collapse: collapse;}}</style>{wrapDiv.GetHTML()}";
+
+        using MemoryStream ms = new();
+        StreamWriter writer = new(ms);
+        writer.Write(test_s);
+        writer.Flush();
+        ms.Position = 0;
+
+        res = new()
+        {
+            Data = ms.ToArray(),
+            ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("html")).Key,
+            Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.html",
+        };
 
         return res;
     }
@@ -2187,103 +2194,8 @@ public class RetailService(IIdentityTransmission identityRepo,
     #endregion
 
     #region static
-    async Task<byte[]> SaveDeliveriesJournalAsExcel(SelectDeliveryDocumentsRetailRequestModel req, List<DeliveryDocumentRetailModelDB> journalDb, CommerceContext context, CancellationToken token = default)
-    {
-        string[] usersList = [.. journalDb.Select(x => x.RecipientIdentityUserId).Distinct()];
-        TResponseModel<UserInfoModel[]> users = await identityRepo.GetUsersOfIdentityAsync(usersList, token);
-        UserInfoModel[] usersDb = users.Response ?? throw new("users for deliveries journal - IS NULL");
 
-        using MemoryStream XLSStream = new();
-        WorkbookPart? wBookPart = null;
-
-        using SpreadsheetDocument spreadsheetDoc = SpreadsheetDocument.Create(XLSStream, SpreadsheetDocumentType.Workbook);
-
-        wBookPart = spreadsheetDoc.AddWorkbookPart();
-        wBookPart.Workbook = new Workbook();
-        uint sheetId = 1;
-        WorkbookPart workbookPart = spreadsheetDoc.WorkbookPart ?? spreadsheetDoc.AddWorkbookPart();
-
-        WorkbookStylesPart wbsp = workbookPart.AddNewPart<WorkbookStylesPart>();
-
-        wbsp.Stylesheet = GenerateExcelStyleSheet();
-        wbsp.Stylesheet.Save();
-
-        workbookPart.Workbook.Sheets = new Sheets();
-
-        WorksheetPart wSheetPart;
-
-        Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? workbookPart.Workbook.AppendChild(new Sheets());
-        foreach (DeliveryDocumentRetailModelDB table in journalDb)
-        {
-            wSheetPart = wBookPart.AddNewPart<WorksheetPart>();
-            Sheet sheet = new() { Id = workbookPart.GetIdOfPart(wSheetPart), SheetId = sheetId, Name = $"№{table.Id} {table.Name}" };//
-            sheets.Append(sheet);
-
-            SheetData sheetData = new();
-            wSheetPart.Worksheet = new Worksheet(sheetData);
-
-            Columns lstColumns = wSheetPart.Worksheet.GetFirstChild<Columns>()!;
-            bool needToInsertColumns = false;
-            if (lstColumns == null)
-            {
-                lstColumns = new Columns();
-                needToInsertColumns = true;
-            }
-
-            lstColumns.Append(new Column() { Min = 1, Max = 1, Width = 100, CustomWidth = true, BestFit = true, });
-            lstColumns.Append(new Column() { Min = 2, Max = 2, Width = 8, CustomWidth = true, BestFit = true, });
-            lstColumns.Append(new Column() { Min = 3, Max = 3, Width = 8, CustomWidth = true, BestFit = true, });
-            lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 15, CustomWidth = true, BestFit = true, });
-            lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 15, CustomWidth = true, BestFit = true, });
-
-            if (needToInsertColumns)
-                wSheetPart.Worksheet.InsertAt(lstColumns, 0);
-
-            Row topRow = new() { RowIndex = 2 };
-            InsertExcelCell(topRow, 1, $"Адрес доставки: {table.KladrTitle} {table.AddressUserComment}", CellValues.String, 0);
-            sheetData!.Append(topRow);
-
-            topRow = new() { RowIndex = 3 };
-            InsertExcelCell(topRow, 1, $"Получатель: {usersDb.First(x=>x.UserId == table.RecipientIdentityUserId).ToString()}", CellValues.String, 0);
-            sheetData!.Append(topRow);
-
-            Row headerRow = new() { RowIndex = 5 };
-            InsertExcelCell(headerRow, 1, "Наименование", CellValues.String, 1);
-            InsertExcelCell(headerRow, 2, "Цена", CellValues.String, 1);
-            InsertExcelCell(headerRow, 3, "Кол-во", CellValues.String, 1);
-            InsertExcelCell(headerRow, 4, "Вес", CellValues.String, 1);
-            InsertExcelCell(headerRow, 5, "Сумма", CellValues.String, 1);
-            sheetData.AppendChild(headerRow);
-
-            uint row_index = 5;
-            foreach (RowOfDeliveryRetailDocumentModelDB dr in table.Rows!)
-            {
-                Row row = new() { RowIndex = row_index++ };
-                InsertExcelCell(row, 1, dr.Offer!.GetName(), CellValues.String, 0);
-                InsertExcelCell(row, 2, dr.Offer.Price.ToString(), CellValues.String, 0);
-                InsertExcelCell(row, 3, dr.Quantity.ToString(), CellValues.String, 0);
-                InsertExcelCell(row, 4, dr.WeightOffer.ToString(), CellValues.String, 0);
-                InsertExcelCell(row, 5, dr.Amount.ToString(), CellValues.String, 0);
-                sheetData.Append(row);
-            }
-            Row btRow = new() { RowIndex = row_index++ };
-            InsertExcelCell(btRow, 1, "", CellValues.String, 0);
-            InsertExcelCell(btRow, 2, "", CellValues.String, 0);
-            InsertExcelCell(btRow, 3, "Итого:", CellValues.String, 0);
-            InsertExcelCell(btRow, 4, table.Rows!.Sum(x => x.WeightOffer).ToString(), CellValues.String, 0);
-            InsertExcelCell(btRow, 5, table.Rows!.Sum(x => x.Amount).ToString(), CellValues.String, 0);
-            sheetData.Append(btRow);
-            sheetId++;
-        }
-
-        workbookPart.Workbook.Save();
-        spreadsheetDoc.Save();
-
-        XLSStream.Position = 0;
-        return XLSStream.ToArray();
-    }
-
-    static Stylesheet GenerateExcelStyleSheet()
+    /*static Stylesheet GenerateExcelStyleSheet()
     {
         return new Stylesheet(
             new Fonts(
@@ -2389,5 +2301,101 @@ public class RetailService(IIdentityTransmission identityRepo,
         newCell.CellValue = new CellValue(val);
         newCell.DataType = new EnumValue<CellValues>(type);
     }
+
+    async Task<byte[]> SaveDeliveriesJournalAsExcel(SelectDeliveryDocumentsRetailRequestModel req, List<DeliveryDocumentRetailModelDB> journalDb, CommerceContext context, CancellationToken token = default)
+    {
+        string[] usersList = [.. journalDb.Select(x => x.RecipientIdentityUserId).Distinct()];
+        TResponseModel<UserInfoModel[]> users = await identityRepo.GetUsersOfIdentityAsync(usersList, token);
+        UserInfoModel[] usersDb = users.Response ?? throw new("users for deliveries journal - IS NULL");
+
+        using MemoryStream HTMLStream = new();
+        //WorkbookPart? wBookPart = null;
+
+        //using SpreadsheetDocument spreadsheetDoc = SpreadsheetDocument.Create(HTMLStream, SpreadsheetDocumentType.Workbook);
+
+        //wBookPart = spreadsheetDoc.AddWorkbookPart();
+        //wBookPart.Workbook = new Workbook();
+        //uint sheetId = 1;
+        //WorkbookPart workbookPart = spreadsheetDoc.WorkbookPart ?? spreadsheetDoc.AddWorkbookPart();
+
+        //WorkbookStylesPart wbsp = workbookPart.AddNewPart<WorkbookStylesPart>();
+
+        //wbsp.Stylesheet = GenerateExcelStyleSheet();
+        //wbsp.Stylesheet.Save();
+
+        //workbookPart.Workbook.Sheets = new Sheets();
+
+        //WorksheetPart wSheetPart;
+
+        //Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>() ?? workbookPart.Workbook.AppendChild(new Sheets());
+        //foreach (DeliveryDocumentRetailModelDB table in journalDb)
+        //{
+        //    wSheetPart = wBookPart.AddNewPart<WorksheetPart>();
+        //    Sheet sheet = new() { Id = workbookPart.GetIdOfPart(wSheetPart), SheetId = sheetId, Name = $"№{table.Id} {table.Name}" };//
+        //    sheets.Append(sheet);
+
+        //    SheetData sheetData = new();
+        //    wSheetPart.Worksheet = new Worksheet(sheetData);
+
+        //    Columns lstColumns = wSheetPart.Worksheet.GetFirstChild<Columns>()!;
+        //    bool needToInsertColumns = false;
+        //    if (lstColumns == null)
+        //    {
+        //        lstColumns = new Columns();
+        //        needToInsertColumns = true;
+        //    }
+
+        //    lstColumns.Append(new Column() { Min = 1, Max = 1, Width = 100, CustomWidth = true, BestFit = true, });
+        //    lstColumns.Append(new Column() { Min = 2, Max = 2, Width = 8, CustomWidth = true, BestFit = true, });
+        //    lstColumns.Append(new Column() { Min = 3, Max = 3, Width = 8, CustomWidth = true, BestFit = true, });
+        //    lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 15, CustomWidth = true, BestFit = true, });
+        //    lstColumns.Append(new Column() { Min = 4, Max = 4, Width = 15, CustomWidth = true, BestFit = true, });
+
+        //    if (needToInsertColumns)
+        //        wSheetPart.Worksheet.InsertAt(lstColumns, 0);
+
+        //    Row topRow = new() { RowIndex = 2 };
+        //    InsertExcelCell(topRow, 1, $"Адрес доставки: {table.KladrTitle} {table.AddressUserComment}", CellValues.String, 0);
+        //    sheetData!.Append(topRow);
+
+        //    topRow = new() { RowIndex = 3 };
+        //    InsertExcelCell(topRow, 1, $"Получатель: {usersDb.First(x=>x.UserId == table.RecipientIdentityUserId).ToString()}", CellValues.String, 0);
+        //    sheetData!.Append(topRow);
+
+        //    Row headerRow = new() { RowIndex = 5 };
+        //    InsertExcelCell(headerRow, 1, "Наименование", CellValues.String, 1);
+        //    InsertExcelCell(headerRow, 2, "Цена", CellValues.String, 1);
+        //    InsertExcelCell(headerRow, 3, "Кол-во", CellValues.String, 1);
+        //    InsertExcelCell(headerRow, 4, "Вес", CellValues.String, 1);
+        //    InsertExcelCell(headerRow, 5, "Сумма", CellValues.String, 1);
+        //    sheetData.AppendChild(headerRow);
+
+        //    uint row_index = 5;
+        //    foreach (RowOfDeliveryRetailDocumentModelDB dr in table.Rows!)
+        //    {
+        //        Row row = new() { RowIndex = row_index++ };
+        //        InsertExcelCell(row, 1, dr.Offer!.GetName(), CellValues.String, 0);
+        //        InsertExcelCell(row, 2, dr.Offer.Price.ToString(), CellValues.String, 0);
+        //        InsertExcelCell(row, 3, dr.Quantity.ToString(), CellValues.String, 0);
+        //        InsertExcelCell(row, 4, dr.WeightOffer.ToString(), CellValues.String, 0);
+        //        InsertExcelCell(row, 5, dr.Amount.ToString(), CellValues.String, 0);
+        //        sheetData.Append(row);
+        //    }
+        //    Row btRow = new() { RowIndex = row_index++ };
+        //    InsertExcelCell(btRow, 1, "", CellValues.String, 0);
+        //    InsertExcelCell(btRow, 2, "", CellValues.String, 0);
+        //    InsertExcelCell(btRow, 3, "Итого:", CellValues.String, 0);
+        //    InsertExcelCell(btRow, 4, table.Rows!.Sum(x => x.WeightOffer).ToString(), CellValues.String, 0);
+        //    InsertExcelCell(btRow, 5, table.Rows!.Sum(x => x.Amount).ToString(), CellValues.String, 0);
+        //    sheetData.Append(btRow);
+        //    sheetId++;
+        //}
+
+        //workbookPart.Workbook.Save();
+        //spreadsheetDoc.Save();
+
+        //XLSStream.Position = 0;
+        return HTMLStream.ToArray();
+    }*/
     #endregion
 }
