@@ -13,12 +13,12 @@ public partial class OrderPaymentsAboutComponent
     [Parameter, EditorRequired]
     public required List<PaymentOrderRetailLinkModelDB> PaymentsDocuments { get; set; }
 
-    PaymentOrderRetailLinkModelDB[]? ActualConversionsDocuments;
+    PaymentOrderRetailLinkModelDB[]? ActualPaymentsDocuments;
 
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        ActualConversionsDocuments = [.. PaymentsDocuments.Where(x => x.PaymentDocument?.StatusPayment == PaymentsRetailStatusesEnum.Paid)];
+        ActualPaymentsDocuments = [.. PaymentsDocuments.Where(x => x.PaymentDocument?.StatusPayment == PaymentsRetailStatusesEnum.Paid)];
     }
 }
