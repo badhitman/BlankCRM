@@ -13,10 +13,10 @@
           RowEditCommit="ItemHasBeenCommitted"
           RowEditCancel="ResetItemToOriginalValues">
     <ToolBarContent>
-        @if (fullWeight > 0 && ((OrderParent is not null && OrderParent.Id > 0) || DeliveryId > 0 && (DeliveryId == 0 || (OrderParent is null || OrderParent.Id == 0))))
+        @* @if (fullWeight > 0 && ((OrderParent is not null && OrderParent.Id > 0) || DeliveryId > 0 && (DeliveryId == 0 || (OrderParent is null || OrderParent.Id == 0))))
         {
             <span class="lead">Общий вес: <strong>@fullWeight</strong></span>
-        }
+        } *@
         <MudSpacer />
         <MudTextField T="string"
                       ValueChanged="@(s => OnSearch(s))"
@@ -52,12 +52,13 @@
         }
     </ToolBarContent>
     <ColGroup>
-        @if (OrderParent is null || OrderParent.Id <= 0)
+        @if (DeliveryId <= 0)
         {
             <col />
         }
-        @if (DeliveryId <= 0)
+        @if (OrderParent is null || OrderParent.Id <= 0)
         {
+            <col />
             <col />
         }
         <col />
@@ -65,27 +66,33 @@
         <col style="width:50px;" />
     </ColGroup>
     <HeaderContent>
-        @if (OrderParent is null || OrderParent.Id <= 0)
-        {
-            <MudTh>Заказ</MudTh>
-        }
         @if (DeliveryId <= 0)
         {
             <MudTh>Доставка</MudTh>
+        }
+        @if (OrderParent is null || OrderParent.Id <= 0)
+        {
+            <MudTh>Получатель</MudTh>
+            <MudTh>Заказ</MudTh>
         }
         <MudTh>Вес</MudTh>
         <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
+        @if (DeliveryId <= 0)
+        {
+            <MudTd DataLabel="Доставка">
+                <a href="/retail/delivery-document/@context.DeliveryDocumentId">@context.DeliveryDocument?.ToString()</a>
+            </MudTd>
+        }
         @if (OrderParent is null || OrderParent.Id <= 0)
         {
+            <MudTd DataLabel="Получатель">
+                @UsersCache.FirstOrDefault(x => x.UserId == context.DeliveryDocument!.RecipientIdentityUserId)?.ToString()
+            </MudTd>
             <MudTd DataLabel="Заказ">
                 <a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a>
             </MudTd>
-        }
-        @if (DeliveryId <= 0)
-        {
-            <MudTd DataLabel="Доставка"><a href="/retail/delivery-document/@context.DeliveryDocumentId">@context.DeliveryDocument?.ToString()</a></MudTd>
         }
         <MudTd Class="@(context.WeightShipping <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">
             @context.WeightShipping

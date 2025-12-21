@@ -67,12 +67,12 @@
             }
         </MudTd>
         <MudTd DataLabel="Списание">
-            <span title="Текущий баланс" class="border border-warning-subtle me-2 pa-1">@context.FromWallet!.ToString() [@(UsersCache.FirstOrDefault(x => x.UserId == context.FromWallet.UserIdentityId)?.ToString())]</span>
-            - @context.FromWalletSum [@(UsersCache.FirstOrDefault(x => x.UserId == context.ToWallet!.UserIdentityId)?.ToString())]
+            <span title="Текущий баланс" class="border border-warning-subtle me-2 pa-1">@context.FromWallet!.ToString()</span>
+            - @context.FromWalletSum [@(UsersCache.FirstOrDefault(x => x.UserId == context.FromWallet.UserIdentityId)?.ToString())]
         </MudTd>
         <MudTd DataLabel="Зачисление">
             <span title="Текущий баланс" class="border border-primary-subtle me-2 pa-1">@context.ToWallet?.ToString()</span>
-            @context.ToWalletSum
+            @context.ToWalletSum [@(UsersCache.FirstOrDefault(x => x.UserId == context.ToWallet!.UserIdentityId)?.ToString())]
         </MudTd>
         @if (RowClickEventHandler is null)
         {
