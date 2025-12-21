@@ -59,6 +59,9 @@
         @if (OrderParent is null || OrderParent.Id <= 0)
         {
             <col />
+        }
+        else
+        {
             <col />
         }
         <col />
@@ -72,8 +75,11 @@
         }
         @if (OrderParent is null || OrderParent.Id <= 0)
         {
-            <MudTh>Получатель</MudTh>
             <MudTh>Заказ</MudTh>
+        }
+        else
+        {
+            <MudTh>Получатель</MudTh>
         }
         <MudTh>Вес</MudTh>
         <MudTh></MudTh>
@@ -87,11 +93,14 @@
         }
         @if (OrderParent is null || OrderParent.Id <= 0)
         {
-            <MudTd DataLabel="Получатель">
-                @UsersCache.FirstOrDefault(x => x.UserId == context.DeliveryDocument!.RecipientIdentityUserId)?.ToString()
-            </MudTd>
             <MudTd DataLabel="Заказ">
                 <a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a>
+            </MudTd>
+        }
+        else
+        {
+            <MudTd DataLabel="Получатель">
+                @UsersCache.FirstOrDefault(x => x.UserId == context.DeliveryDocument!.RecipientIdentityUserId)?.ToString()
             </MudTd>
         }
         <MudTd Class="@(context.WeightShipping <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">
