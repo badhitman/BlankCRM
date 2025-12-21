@@ -14,6 +14,11 @@ namespace BlazorLib.Components.Retail.OrdersLinks;
 public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<PaymentOrderRetailLinkModelDB>
 {
     /// <inheritdoc/>
+    [Inject]
+    protected IIdentityTransmission IdentityRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
     [Parameter]
     public int PaymentId { get; set; }
 
@@ -21,8 +26,6 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
     bool
         _visibleIncludeExistPayment,
         _visibleCreateNewPayment;
-
-    decimal fullAmount;
 
 
     async Task DeleteRow(int rowLinkId)
@@ -75,7 +78,32 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
     }
 
     void IncludeExistPaymentOpenDialog() => _visibleIncludeExistPayment = true;
+    /// <summary>
+    /// UsersCache
+    /// </summary>
+    protected List<UserInfoModel> UsersCache = [];
 
+
+    /// <summary>
+    /// CacheUsersUpdate
+    /// </summary>
+    protected async Task CacheUsersUpdate(string[] usersIds)
+    {
+        usersIds = [.. usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct()];
+        if (usersIds.Length == 0)
+            return;
+
+        await SetBusyAsync();
+        TResponseModel<UserInfoModel[]> users = await IdentityRepo.GetUsersOfIdentityAsync(usersIds);
+        SnackBarRepo.ShowMessagesResponse(users.Messages);
+        if (users.Success() && users.Response is not null && users.Response.Length != 0)
+            lock (UsersCache)
+            {
+                UsersCache.AddRange(users.Response.Where(x => !UsersCache.Any(y => y.UserId == x.UserId)));
+            }
+
+        await SetBusyAsync(false);
+    }
     async void SelectOrderRowAction(TableRowClickEventArgs<DocumentRetailModelDB> tableRow)
     {
         _visibleIncludeOrder = false;
@@ -165,7 +193,10 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
 
         await SetBusyAsync(token: token);
         TPaginationResponseModel<PaymentOrderRetailLinkModelDB> res = await RetailRepo.SelectPaymentsOrdersDocumentsLinksAsync(req, token);
-        fullAmount = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.AmountPayment);
+
+        if (res.Response is not null && res.Response.Count != 0)
+            await CacheUsersUpdate([.. res.Response.Select(x => x.PaymentDocument!.Wallet!.UserIdentityId).Union(res.Response.Select(x => x.ConversionDocument!.ToWallet!.UserIdentityId))]);
+
         await SetBusyAsync(false, token);
 
         if (!res.Status.Success())

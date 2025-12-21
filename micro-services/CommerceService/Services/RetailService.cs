@@ -1446,7 +1446,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         List<PaymentOrderRetailLinkModelDB> res = (forOrders && forPayments) || (!forOrders && !forPayments)
                             ? await pq.Include(x => x.PaymentDocument).Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
                             : forOrders
-                                ? await pq.Include(x => x.PaymentDocument).ToListAsync(cancellationToken: token)
+                                ? await pq.Include(x => x.PaymentDocument!).ThenInclude(x => x.Wallet).ToListAsync(cancellationToken: token)
                                 : await pq.Include(x => x.OrderDocument!).ThenInclude(x => x.Rows!).ThenInclude(x => x.Offer).ToListAsync(cancellationToken: token);
 
         if (forOrders != forPayments)

@@ -14,10 +14,6 @@
           RowEditCommit="ItemHasBeenCommitted"
           RowEditCancel="ResetItemToOriginalValues">
     <ToolBarContent>
-        @if (fullAmount > 0 && ((OrderParent is not null && OrderParent.Id > 0) || PaymentId > 0 && (PaymentId == 0 || (OrderParent is null || OrderParent.Id == 0))))
-        {
-            <span class="lead">Общая сумма: <strong>@fullAmount</strong></span>
-        }
         <MudSpacer />
         @if (PaymentId > 0)
         {
@@ -80,6 +76,7 @@
         {
             <MudTd DataLabel="Заказ">
                 <a href="/retail/order-document/@context.OrderDocumentId">@context.OrderDocument?.ToString()</a>
+                [@(UsersCache.FirstOrDefault(x => x.UserId == context.PaymentDocument!.Wallet!.UserIdentityId)?.ToString())]
             </MudTd>
         }
         @if (PaymentId <= 0)
