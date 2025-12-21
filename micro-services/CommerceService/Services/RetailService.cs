@@ -266,7 +266,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
         resDb.ForEach(aNode =>
         {
-            HtmlGenerator.html5.forms.fieldset addressDiv = new($"#{aNode.Id} {aNode.Name} (заявлено {aNode.WeightShipping} kg)".Trim(), $"doc_{aNode.Id}");
+            HtmlGenerator.html5.forms.fieldset addressDiv = new($"#{aNode.Id} {aNode.Name} {aNode.DeliveryStatus} (заявлено {aNode.WeightShipping} kg)".Trim().Replace("  ", " "), $"doc_{aNode.Id}");
 
             addressDiv.AddDomNode(new HtmlGenerator.html5.textual.strong("Адрес:"));
             addressDiv.AddDomNode(new HtmlGenerator.html5.textual.span($"`{aNode.KladrTitle}` {aNode.AddressUserComment}".Trim()));
@@ -1204,7 +1204,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         }
 
         if (req.Payload is not null && req.Payload.EqualsSumFilter == true)
-            q = q.Where(x => context.RowsOrdersRetails.Where(y => y.OrderId == x.Id).Sum(y => y.Amount) != (context.PaymentsOrdersLinks.Where(y => y.OrderDocumentId == x.Id).Sum(y => y.AmountPayment) + context.ConversionsOrdersLinksRetail.Where(y => y.OrderDocumentId == x.Id).Sum(y => y.AmountPayment)));
+            q = q.Where(x => context.RowsOrdersRetails.Where(y => y.OrderId == x.Id).Sum(y => y.Amount) != (context.PaymentsOrdersLinks.Where(y => y.OrderDocumentId == x.Id && context.PaymentsRetailDocuments.Any(z => z.StatusPayment == PaymentsRetailStatusesEnum.Paid && z.Id == y.PaymentDocumentId)).Sum(y => y.AmountPayment) + context.ConversionsOrdersLinksRetail.Where(y => y.OrderDocumentId == x.Id && context.ConversionsDocumentsWalletsRetail.Any(z => z.Id == y.ConversionDocumentId && !z.IsDisabled)).Sum(y => y.AmountPayment)));
 
         IOrderedQueryable<DocumentRetailModelDB> oq = req.SortingDirection switch
         {
