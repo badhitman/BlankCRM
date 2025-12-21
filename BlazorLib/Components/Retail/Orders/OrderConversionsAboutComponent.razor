@@ -1,7 +1,3 @@
 ﻿<span class="border border-primary">
-    <b>Переводы x @ConversionsDocuments.Count (@ConversionsDocuments.Sum(x => x.AmountPayment))</b>
+    <b>Переводы x @ActualConversionsDocuments?.Length (@ActualConversionsDocuments?.Sum(x => x.AmountPayment))</b>
 </span>
-@code {
-    [Parameter, EditorRequired]
-    public required List<ConversionOrderRetailLinkModelDB> ConversionsDocuments { get; set; }
-}

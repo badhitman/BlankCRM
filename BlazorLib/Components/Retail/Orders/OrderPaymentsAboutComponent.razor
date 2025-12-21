@@ -1,7 +1,4 @@
 ﻿<span class="border border-warning-subtle">
     <b>Платежи x @PaymentsDocuments.Count (@PaymentsDocuments.Sum(x => x.AmountPayment))</b>
 </span>
-@code {
-    [Parameter, EditorRequired]
-    public required List<PaymentOrderRetailLinkModelDB> PaymentsDocuments { get; set; }
-}
+
