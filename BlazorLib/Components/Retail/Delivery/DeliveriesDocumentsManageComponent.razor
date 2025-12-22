@@ -30,7 +30,7 @@
                             <MudChip Value="@ds" Text="@ds.DescriptionInfo()" />
                         }
                     </MudChipSet>
-                    <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset @ref=unsetChipRef OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
+                    <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
                 }
                 else
                 {

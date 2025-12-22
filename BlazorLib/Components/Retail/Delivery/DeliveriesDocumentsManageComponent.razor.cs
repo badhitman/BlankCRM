@@ -59,8 +59,8 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         }
     }
 
-    MudChip<string>? unsetChipRef;
     bool includeUnset;
+
     IReadOnlyCollection<DeliveryStatusesEnum> _selectedStatuses = [];
     IReadOnlyCollection<DeliveryStatusesEnum> SelectedStatuses
     {
@@ -139,7 +139,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
             InvokeAsync(tableRef.ReloadServerData);
     }
 
-    async void OnChipClicked()
+    async Task OnChipClicked()
     {
         includeUnset = !includeUnset;
         if (tableRef is not null)

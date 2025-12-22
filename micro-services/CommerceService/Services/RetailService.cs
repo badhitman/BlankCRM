@@ -976,7 +976,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (!string.IsNullOrWhiteSpace(req.Payload?.PayerFilterIdentityId))
             q = q.Where(x => context.WalletsRetail.Any(y => y.Id == x.WalletId && y.UserIdentityId == req.Payload.PayerFilterIdentityId));
 
-        if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
+        if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Count != 0)
             q = q.Where(x => req.Payload.TypesFilter.Contains(x.TypePayment));
 
         if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Length != 0)
@@ -2201,11 +2201,21 @@ public class RetailService(IIdentityTransmission identityRepo,
                  select doc;
         }
 
-        if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
-            qp = qp.Where(x => req.Payload.TypesFilter.Contains(x.TypePayment));
+        bool conversionCheck =
+            req.Payload?.TypesFilter is null ||
+            req.Payload.TypesFilter.Count == 0 ||
+            req.Payload.TypesFilter.Contains(null);
 
-        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Length != 0)
-            qp = qp.Where(x => req.Payload.StatusesFilter.Contains(x.StatusPayment));
+        bool paymentsCheck =
+            req.Payload?.TypesFilter is null ||
+            req.Payload.TypesFilter.Count == 0 ||
+            req.Payload.TypesFilter.Any(x => x is not null);
+
+        if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Any(x => x is not null))
+        {
+            req.Payload.TypesFilter.RemoveAll(x => x is null);
+            qp = qp.Where(x => req.Payload.TypesFilter.Contains(x.TypePayment));
+        }
 
         if (req.Payload?.Start is not null && req.Payload.Start != default)
         {
@@ -2220,13 +2230,17 @@ public class RetailService(IIdentityTransmission identityRepo,
             qc = qc.Where(x => x.DateDocument <= req.Payload.End);
         }
 
-        var _qp1 = qp.Select(x => new { WalletId = x.WalletId, Amount = x.Amount });
+        var _qp1 = qp.Select(x => new { x.WalletId, x.Amount });
         var _qp2 = qc.Select(x => new { WalletId = x.FromWalletId, Amount = -x.FromWalletSum });
         var _qp3 = qc.Select(x => new { WalletId = x.ToWalletId, Amount = x.ToWalletSum });
 
-        var _fq = from p in _qp1.Union(_qp2).Union(_qp3)
+        var unionQuery = conversionCheck ? _qp1.Union(_qp2).Union(_qp3) : _qp1;
+        if (!paymentsCheck)
+            unionQuery = _qp2.Union(_qp3);
+
+        var _fq = from p in unionQuery
                   group p by p.WalletId
-                                                     into g
+                  into g
                   select new { WalletId = g.Key, Amount = g.Sum(x => x.Amount) };
 
         var _oq = req.SortingDirection == DirectionsEnum.Up

@@ -16,20 +16,7 @@
                     <MudChip Value="@pt" Text="@pt.DescriptionInfo()" />
                 }
             </MudChipSet>
-        </div>
-    </div>
-    <div class="card mb-1">
-        <div class="card-body p-1">
-            <MudChipSet @bind-SelectedValues="SelectedPaymentsStatuses"
-                        SelectionMode="SelectionMode.MultiSelection"
-                        CheckMark
-                        Variant="Variant.Text"
-                        Color="Color.Surface">
-                @foreach (PaymentsRetailStatusesEnum ps in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
-                {
-                    <MudChip Value="@ps" Text="@ps.DescriptionInfo()" />
-                }
-            </MudChipSet>
+            <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset OnClick="OnChipClicked" Color="Color.Default">Переводы</MudChip>
         </div>
     </div>
     <MudSpacer />

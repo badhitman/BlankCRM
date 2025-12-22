@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// SelectPaymentsRetailReportRequestModel
 /// </summary>
-public class SelectPaymentsRetailReportRequestModel: SelectPaymentsRetailBaseRequestModel
+public class SelectPaymentsRetailReportRequestModel : SelectPaymentsRetailBaseRequestModel
 {
     /// <inheritdoc/>
     public string[]? FilterIdentityIds { get; set; }

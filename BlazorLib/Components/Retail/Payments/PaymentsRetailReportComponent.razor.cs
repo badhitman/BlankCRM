@@ -19,6 +19,8 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
 
     MudTable<WalletRetailReportRowModel>? _tableRef;
 
+    bool includeUnset;
+
     DateRange? _dateRange;
     DateRange? DateRangeProp
     {
@@ -43,16 +45,11 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
         }
     }
 
-    IReadOnlyCollection<PaymentsRetailStatusesEnum> _selectedPaymentsStatuses = [];
-    IReadOnlyCollection<PaymentsRetailStatusesEnum> SelectedPaymentsStatuses
+    async Task OnChipClicked()
     {
-        get => _selectedPaymentsStatuses;
-        set
-        {
-            _selectedPaymentsStatuses = value;
-            if (_tableRef is not null)
-                InvokeAsync(_tableRef.ReloadServerData);
-        }
+        includeUnset = !includeUnset;
+        if (_tableRef is not null)
+            await _tableRef.ReloadServerData();
     }
 
     async Task<TableData<WalletRetailReportRowModel>> ServerReload(TableState state, CancellationToken token)
@@ -69,8 +66,11 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
         if (SelectedPaymentsTypes.Count != 0)
             req.Payload.TypesFilter = [.. SelectedPaymentsTypes];
 
-        if (SelectedPaymentsStatuses.Count != 0)
-            req.Payload.StatusesFilter = [.. SelectedPaymentsStatuses];
+        if (includeUnset)
+        {
+            req.Payload.TypesFilter ??= [];
+            req.Payload.TypesFilter.Add(null);
+        }
 
         if (DateRangeProp is not null)
         {

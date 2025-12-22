@@ -14,6 +14,9 @@ public class SelectPaymentsRetailOrdersDocumentsRequestModel : SelectPaymentsRet
     /// </summary>
     public string? PayerFilterIdentityId { get; set; }
 
+    /// <inheritdoc/>
+    public PaymentsRetailStatusesEnum[]? StatusesFilter { get; set; }
+
     /// <summary>
     /// Исключить из выдачи платежи, которые уже связаны с указанным заказом
     /// </summary>

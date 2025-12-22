@@ -8,12 +8,14 @@ namespace SharedLib;
 /// SelectPaymentsRetailBaseRequestModel
 /// </summary>
 public class SelectPaymentsRetailBaseRequestModel
-{   
-    /// <inheritdoc/>
-    public PaymentsRetailTypesEnum[]? TypesFilter { get; set; }
-
-    /// <inheritdoc/>
-    public PaymentsRetailStatusesEnum[]? StatusesFilter { get; set; }
+{
+    /// <summary>
+    /// Типы платежей
+    /// </summary>
+    /// <remarks>
+    /// Если в перечне есть NULL, тогда он расценивается как перевод/конвертация
+    /// </remarks>
+    public List<PaymentsRetailTypesEnum?>? TypesFilter { get; set; }
 
     /// <inheritdoc/>
     public DateTime? Start { get; set; }
