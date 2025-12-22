@@ -2183,10 +2183,13 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        IQueryable<PaymentRetailDocumentModelDB> qp = context.PaymentsRetailDocuments.AsQueryable();
+        IQueryable<PaymentRetailDocumentModelDB> qp = context.PaymentsRetailDocuments
+            .Where(x => x.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+            .AsQueryable();
 
         IQueryable<WalletConversionRetailDocumentModelDB> qc = context.ConversionsDocumentsWalletsRetail
-            .Where(x => !x.IsDisabled).AsQueryable();
+            .Where(x => !x.IsDisabled)
+            .AsQueryable();
 
         if (req.Payload?.FilterIdentityIds is not null && req.Payload.FilterIdentityIds.Length != 0)
         {
