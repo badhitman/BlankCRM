@@ -2,13 +2,12 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-
 namespace SharedLib;
 
 /// <summary>
 /// SelectRetailDocumentsRequestModel
 /// </summary>
-public class SelectRetailDocumentsRequestModel
+public class SelectRetailDocumentsRequestModel : SelectRetailDocumentsBaseModel
 {
     /// <summary>
     /// BuyerFilterIdentityId
@@ -29,12 +28,4 @@ public class SelectRetailDocumentsRequestModel
     /// Получить заказы за исключением тех, которые уже добавлены в данную доставку
     /// </summary>
     public int? ExcludeDeliveryId { get; set; }
-
-    /// <inheritdoc/>
-    public List<StatusesDocumentsEnum?>? StatusesFilter { get; set; }
-
-    /// <inheritdoc/>
-    public DateTime? Start { get; set; }
-    /// <inheritdoc/>
-    public DateTime? End { get; set; }
 }

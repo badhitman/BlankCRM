@@ -1,5 +1,6 @@
-﻿@using MudBlazor
-<h3>OffersOfOrdersRetailReportComponent</h3>
+﻿@inherits BlazorBusyComponentBaseModel
+
+@using MudBlazor
 
 <MudStack AlignItems="AlignItems.Center" Row>
     <MudChipSet @bind-SelectedValues="SelectedStatuses"
@@ -14,47 +15,30 @@
         }
     </MudChipSet>
     <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
-
     <MudSpacer />
     <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
 </MudStack>
-
-@code {
-    [Inject]
-    IRetailService RetailRepo { get; set; } = default!;
-
-
-    bool includeUnset;
-    MudTable<DeliveryDocumentRetailModelDB>? tableRef;
-
-    DateRange? _dateRange;
-    DateRange? DateRangeProp
-    {
-        get => _dateRange;
-        set
-        {
-            _dateRange = value;
-            if (tableRef is not null)
-                InvokeAsync(tableRef.ReloadServerData);
-        }
-    }
-
-    IReadOnlyCollection<StatusesDocumentsEnum> _selectedStatuses = [];
-    IReadOnlyCollection<StatusesDocumentsEnum> SelectedStatuses
-    {
-        get => _selectedStatuses;
-        set
-        {
-            _selectedStatuses = value;
-            if (tableRef is not null)
-                InvokeAsync(tableRef.ReloadServerData);
-        }
-    }
-
-    async Task OnChipClicked()
-    {
-        includeUnset = !includeUnset;
-        if (tableRef is not null)
-            await tableRef.ReloadServerData();
-    }
-}
+<MudTable ServerData="ServerReload" Dense Hover>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Товарный отчёт</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Offer</MudTh>
+        <MudTh>Кол-во</MudTh>
+        <MudTh>Сумма</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Offer">@context.Offer</MudTd>
+        <MudTd DataLabel="Кол-во">@context.CountSum</MudTd>
+        <MudTd DataLabel="Сумма">@context.AmountSum</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

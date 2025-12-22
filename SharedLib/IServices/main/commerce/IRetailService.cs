@@ -99,9 +99,12 @@ public interface IRetailService
     public Task<TResponseModel<PaymentRetailDocumentModelDB[]>> GetPaymentsDocumentsAsync(GetPaymentsRetailOrdersDocumentsRequestModel req, CancellationToken token = default);
     #endregion
 
-    #region report`s
+    #region Report`s
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<WalletRetailReportRowModel>> FinancialsReportRetailAsync(TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TPaginationResponseModel<OffersOfOrdersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default);
     #endregion
 
     #region Wallet Type

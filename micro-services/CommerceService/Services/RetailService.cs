@@ -1336,7 +1336,9 @@ public class RetailService(IIdentityTransmission identityRepo,
             return new() { Status = new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }] } };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RowOfRetailOrderDocumentModelDB>? q = context.RowsOrdersRetails.Where(x => x.OrderId == req.Payload.OrderId).AsQueryable();
+        IQueryable<RowOfRetailOrderDocumentModelDB>? q = context.RowsOrdersRetails
+            .Where(x => x.OrderId == req.Payload.OrderId)
+            .AsQueryable();
 
         IQueryable<RowOfRetailOrderDocumentModelDB>? pq = q
             .OrderBy(x => x.Id)
@@ -2290,11 +2292,91 @@ public class RetailService(IIdentityTransmission identityRepo,
             Response = [.. res.Select(x => getObject(x.WalletId, x.Amount))]
         };
     }
-    record struct WalletRetailReportRawModel(int WalletId, decimal Amount);
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<OffersOfOrdersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<DocumentRetailModelDB> q = context.OrdersRetail
+            .Where(x => x.StatusDocument == StatusesDocumentsEnum.Done)
+            .Where(x => context.RowsOrdersRetails.Where(y => y.OrderId == x.Id).Sum(y => y.Amount) == (context.PaymentsOrdersLinks.Where(y => y.OrderDocumentId == x.Id && context.PaymentsRetailDocuments.Any(z => z.StatusPayment == PaymentsRetailStatusesEnum.Paid && z.Id == y.PaymentDocumentId)).Sum(y => y.AmountPayment) + context.ConversionsOrdersLinksRetail.Where(y => y.OrderDocumentId == x.Id && context.ConversionsDocumentsWalletsRetail.Any(z => z.Id == y.ConversionDocumentId && !z.IsDisabled)).Sum(y => y.AmountPayment)))
+            .AsQueryable();
+
+        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Count != 0)
+        {
+            bool _unsetChecked = req.Payload.StatusesFilter.Contains(null);
+            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.StatusDocument) || (_unsetChecked && x.StatusDocument == 0));
+        }
+
+        if (req.Payload?.Start is not null && req.Payload.Start != default)
+            q = q.Where(x => x.DateDocument >= req.Payload.Start.SetKindUtc());
+
+        if (req.Payload?.End is not null && req.Payload.End != default)
+        {
+            req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+            q = q.Where(x => x.DateDocument <= req.Payload.End);
+        }
+
+        IQueryable<RowOfRetailOrderDocumentModelDB>? qr = context.RowsOrdersRetails
+           .Where(x => q.Any(y => y.Id == x.OrderId))
+           .AsQueryable();
+
+
+        var _fq = from p in qr
+                  group p by p.OfferId
+                  into g
+                  select new { OfferId = g.Key, Amount = g.Sum(x => x.Amount), Counter = g.Sum(x => x.Quantity) };
+
+
+        var oq = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => _fq.OrderBy(x => x.Amount),
+            DirectionsEnum.Down => _fq.OrderByDescending(x => x.Amount),
+            _ => _fq.OrderBy(x => x.OfferId)
+        };
+
+        var pq = oq
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        var res = await pq.ToListAsync(cancellationToken: token);
+        if (res.Count == 0)
+            return new()
+            {
+                PageNum = req.PageNum,
+                PageSize = req.PageSize,
+                SortingDirection = req.SortingDirection,
+                SortBy = req.SortBy,
+                TotalRowsCount = 0,
+                Response = []
+            };
+
+        int[] offersIds = [.. res.Select(x => x.OfferId)];
+        OfferModelDB[] offersDb = await context.Offers.Where(x => offersIds.Contains(x.Id)).ToArrayAsync(cancellationToken: token);
+
+        OffersOfOrdersRetailReportRowModel getObject(decimal offerId, decimal amountSum, decimal countSum)
+        {
+            return new()
+            {
+                AmountSum = amountSum,
+                CountSum = countSum,
+                Offer = offersDb.First(x => x.Id == offerId)
+            };
+        }
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await _fq.CountAsync(cancellationToken: token),
+            Response = [.. res.Select(x => getObject(x.OfferId, x.Amount, x.Counter))],
+        };
+    }
     #endregion
 
     #region static
-
     /*static Stylesheet GenerateExcelStyleSheet()
     {
         return new Stylesheet(

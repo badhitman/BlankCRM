@@ -198,9 +198,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         }
 
         req.SortBy = state.SortLabel;
-        req.SortingDirection = state.SortDirection == SortDirection.Descending
-            ? DirectionsEnum.Down
-            : DirectionsEnum.Up;
+        req.SortingDirection = state.SortDirection.Convert();
 
         if (EqualSumFilter)
             req.Payload.EqualsSumFilter = true;
