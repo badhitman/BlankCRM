@@ -16,6 +16,7 @@
                 <MudChip Value="@sd" Text="@sd.DescriptionInfo()" />
             }
         </MudChipSet>
+        <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
     }
     else
     {

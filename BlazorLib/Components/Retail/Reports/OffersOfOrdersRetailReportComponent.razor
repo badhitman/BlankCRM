@@ -1,5 +1,60 @@
-﻿<h3>OffersOfOrdersRetailReportComponent</h3>
+﻿@using MudBlazor
+<h3>OffersOfOrdersRetailReportComponent</h3>
+
+<MudStack AlignItems="AlignItems.Center" Row>
+    <MudChipSet @bind-SelectedValues="SelectedStatuses"
+                SelectionMode="SelectionMode.MultiSelection"
+                CheckMark
+                Variant="Variant.Text"
+                Class="mb-2"
+                Color="Color.Info">
+        @foreach (StatusesDocumentsEnum sd in Enum.GetValues<StatusesDocumentsEnum>())
+        {
+            <MudChip Value="@sd" Text="@sd.DescriptionInfo()" />
+        }
+    </MudChipSet>
+    <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
+
+    <MudSpacer />
+    <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
+</MudStack>
 
 @code {
+    [Inject]
+    IRetailService RetailRepo { get; set; } = default!;
 
+
+    bool includeUnset;
+    MudTable<DeliveryDocumentRetailModelDB>? tableRef;
+
+    DateRange? _dateRange;
+    DateRange? DateRangeProp
+    {
+        get => _dateRange;
+        set
+        {
+            _dateRange = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+
+    IReadOnlyCollection<StatusesDocumentsEnum> _selectedStatuses = [];
+    IReadOnlyCollection<StatusesDocumentsEnum> SelectedStatuses
+    {
+        get => _selectedStatuses;
+        set
+        {
+            _selectedStatuses = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+
+    async Task OnChipClicked()
+    {
+        includeUnset = !includeUnset;
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+    }
 }

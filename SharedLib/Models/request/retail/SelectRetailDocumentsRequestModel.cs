@@ -31,7 +31,7 @@ public class SelectRetailDocumentsRequestModel
     public int? ExcludeDeliveryId { get; set; }
 
     /// <inheritdoc/>
-    public StatusesDocumentsEnum?[]? StatusesFilter { get; set; }
+    public List<StatusesDocumentsEnum?>? StatusesFilter { get; set; }
 
     /// <inheritdoc/>
     public DateTime? Start { get; set; }

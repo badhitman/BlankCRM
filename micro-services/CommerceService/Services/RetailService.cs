@@ -7,6 +7,7 @@ using DocumentFormat.OpenXml;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharedLib;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using static MongoDB.Driver.WriteConcern;
@@ -1177,8 +1178,11 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.ExcludeDeliveryId.HasValue == true && req.Payload.ExcludeDeliveryId > 0)
             q = q.Where(x => !context.OrdersDeliveriesLinks.Any(y => y.OrderDocumentId == x.Id && y.DeliveryDocumentId == req.Payload.ExcludeDeliveryId));
 
-        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Length != 0)
-            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.StatusDocument));
+        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Count != 0)
+        {
+            bool _unsetChecked = req.Payload.StatusesFilter.Contains(null);
+            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.StatusDocument) || (_unsetChecked && x.StatusDocument == 0));
+        }
 
         if (req.Payload?.Start is not null && req.Payload.Start != default)
             q = q.Where(x => x.DateDocument >= req.Payload.Start.SetKindUtc());

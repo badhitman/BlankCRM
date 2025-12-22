@@ -54,6 +54,8 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     public List<StatusesDocumentsEnum?>? PresetStatusesDocuments { get; set; }
 
 
+    bool includeUnset;
+
     bool _equalSumFilter;
     bool EqualSumFilter
     {
@@ -94,6 +96,13 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
             if (tableRef is not null)
                 InvokeAsync(tableRef.ReloadServerData);
         }
+    }
+
+    async Task OnChipClicked()
+    {
+        includeUnset = !includeUnset;
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
     }
 
     IReadOnlyCollection<StatusesDocumentsEnum> _selectedStatuses = [];
@@ -175,6 +184,12 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
             req.Payload.StatusesFilter = [.. PresetStatusesDocuments];
         else if (SelectedStatuses.Count != 0)
             req.Payload.StatusesFilter = [.. SelectedStatuses];
+
+        if (includeUnset)
+        {
+            req.Payload.StatusesFilter ??= [];
+            req.Payload.StatusesFilter.Add(null);
+        }
 
         if (DateRangeProp is not null)
         {
