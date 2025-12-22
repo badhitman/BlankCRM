@@ -5,8 +5,6 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
-using System.Net.Http;
-using static MudBlazor.CategoryTypes;
 
 namespace BlazorLib.Components.Retail.Reports;
 
@@ -20,7 +18,7 @@ public partial class OffersOfOrdersRetailReportComponent : BlazorBusyComponentBa
 
 
     bool includeUnset;
-    MudTable<DeliveryDocumentRetailModelDB>? tableRef;
+    MudTable<OffersOfOrdersRetailReportRowModel>? tableRef;
 
     DateRange? _dateRange;
     DateRange? DateRangeProp

@@ -39,7 +39,7 @@ public class OfferModelDB : EntrySwitchableUpdatedModel
             if (string.IsNullOrWhiteSpace(QuantitiesTemplate))
                 return true;
 
-            return QuantitiesTemplate.SplitToDecimalList().Count != 0 && 
+            return QuantitiesTemplate.SplitToDecimalList().Count != 0 &&
                 string.Join(" ", QuantitiesTemplate.SplitToDecimalList()).Length == QuantitiesTemplate.Trim().Length;
         }
     }

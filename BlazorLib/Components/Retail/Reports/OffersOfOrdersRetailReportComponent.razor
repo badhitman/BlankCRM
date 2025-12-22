@@ -18,7 +18,9 @@
     <MudSpacer />
     <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
 </MudStack>
-<MudTable ServerData="ServerReload" Dense Hover>
+<MudTable ServerData="ServerReload"
+          Dense Hover Striped
+          @ref=tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Товарный отчёт</MudText>
     </ToolBarContent>
@@ -28,7 +30,7 @@
         <MudTh>Сумма</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Offer">@context.Offer</MudTd>
+        <MudTd DataLabel="Offer">@context.Offer.GetName()</MudTd>
         <MudTd DataLabel="Кол-во">@context.CountSum</MudTd>
         <MudTd DataLabel="Сумма">@context.AmountSum</MudTd>
     </RowTemplate>
