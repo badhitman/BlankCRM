@@ -17,6 +17,19 @@ public partial class OffersOfOrdersRetailReportComponent : BlazorBusyComponentBa
     IRetailService RetailRepo { get; set; } = default!;
 
 
+    bool _allowSumConflict;
+    bool AllowSumsConflict
+    {
+        get => _allowSumConflict;
+        set
+        {
+            _allowSumConflict = value;
+            if (tableRef is not null)
+                InvokeAsync(tableRef.ReloadServerData);
+        }
+    }
+
+
     bool includeUnset;
     MudTable<OffersOfOrdersRetailReportRowModel>? tableRef;
 
@@ -61,6 +74,9 @@ public partial class OffersOfOrdersRetailReportComponent : BlazorBusyComponentBa
             SortBy = state.SortLabel,
             Payload = new(),
         };
+
+        if (AllowSumsConflict)
+            req.Payload.EqualsSumFilter = AllowSumsConflict;
 
         if (SelectedStatuses.Count != 0)
             req.Payload.StatusesFilter = [.. SelectedStatuses];

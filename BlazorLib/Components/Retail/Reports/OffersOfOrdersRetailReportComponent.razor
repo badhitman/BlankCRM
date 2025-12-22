@@ -23,6 +23,15 @@
           @ref=tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Товарный отчёт</MudText>
+        <div class="form-check form-switch form-check-inline ms-2">
+            <MudTooltip Text="Отображение документов с расхождением доставки с заказами по сумме весов">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" @bind=AllowSumsConflict>
+                <label class="form-check-label" for="switchCheckDefault">
+                    разрешить расхождение весов
+                </label>
+            </MudTooltip>
+        </div>
+        <MudSpacer />
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Offer</MudTh>
