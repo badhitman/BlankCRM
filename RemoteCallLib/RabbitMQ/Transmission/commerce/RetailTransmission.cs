@@ -266,5 +266,9 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<OffersOfOrdersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<OffersOfOrdersRetailReportRowModel>>(TransmissionQueues.OffersOfOrdersReportRetailReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<MainReportResponseModel> GetMainReportAsync(PeriodBaseModel req, CancellationToken token = default)
+       => await rabbitClient.MqRemoteCallAsync<MainReportResponseModel>(TransmissionQueues.GetMainReportRetailReceive, req, token: token) ?? new();
     #endregion
 }

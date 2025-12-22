@@ -105,6 +105,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<OffersOfOrdersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<MainReportResponseModel> GetMainReportAsync(PeriodBaseModel req, CancellationToken token = default);
     #endregion
 
     #region Wallet Type

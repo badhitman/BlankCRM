@@ -8,7 +8,7 @@ namespace SharedLib;
 /// <summary>
 /// SelectRetailDocumentsRequestModel
 /// </summary>
-public class SelectRetailDocumentsBaseModel
+public class SelectRetailDocumentsBaseModel : PeriodBaseModel
 {
     /// <inheritdoc/>
     public List<StatusesDocumentsEnum?>? StatusesFilter { get; set; }
@@ -17,9 +17,4 @@ public class SelectRetailDocumentsBaseModel
     /// Только заказы с рваными сумами
     /// </summary>
     public bool? EqualsSumFilter { get; set; }
-
-    /// <inheritdoc/>
-    public DateTime? Start { get; set; }
-    /// <inheritdoc/>
-    public DateTime? End { get; set; }
 }

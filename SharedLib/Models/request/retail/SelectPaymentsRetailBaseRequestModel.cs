@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// SelectPaymentsRetailBaseRequestModel
 /// </summary>
-public class SelectPaymentsRetailBaseRequestModel
+public class SelectPaymentsRetailBaseRequestModel : PeriodBaseModel
 {
     /// <summary>
     /// Типы платежей
@@ -16,10 +16,4 @@ public class SelectPaymentsRetailBaseRequestModel
     /// Если в перечне есть NULL, тогда он расценивается как перевод/конвертация
     /// </remarks>
     public List<PaymentsRetailTypesEnum?>? TypesFilter { get; set; }
-
-    /// <inheritdoc/>
-    public DateTime? Start { get; set; }
-
-    /// <inheritdoc/>
-    public DateTime? End { get; set; }
 }

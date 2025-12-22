@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// SelectDeliveryDocumentsRetailRequestModel
 /// </summary>
-public class SelectDeliveryDocumentsRetailRequestModel
+public class SelectDeliveryDocumentsRetailRequestModel : PeriodBaseModel
 {
     /// <summary>
     /// UserIdentityId
@@ -27,12 +27,6 @@ public class SelectDeliveryDocumentsRetailRequestModel
     /// Исключить по документу доставки
     /// </summary>
     public int? ExcludeOrderId { get; set; }
-
-    /// <inheritdoc/>
-    public DateTime? Start { get; set; }
-
-    /// <inheritdoc/>
-    public DateTime? End { get; set; }
 
     /// <inheritdoc/>
     public bool? EqualSumFilter { get; set; }
