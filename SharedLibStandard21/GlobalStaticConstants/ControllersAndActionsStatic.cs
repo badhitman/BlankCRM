@@ -497,6 +497,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string RETAIL_CONTROLLER_NAME = "retail";
 
         /// <summary>
+        /// Financials
+        /// </summary>
+        public const string FINANCIALS_CONTROLLER_NAME = "financials";
+
+        /// <summary>
         /// Wallet
         /// </summary>
         public const string WALLET_CONTROLLER_NAME = "wallet";

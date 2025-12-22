@@ -802,7 +802,10 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string DeletePaymentOrderLinkDocumentReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.PAYMENT_CONTROLLER_NAME}-{Routes.LINK_CONTROLLER_NAME}-of-{Routes.ORDER_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string DeleteConversionOrderLinkDocumentReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.CONVERSION_CONTROLLER_NAME}-{Routes.LINK_CONTROLLER_NAME}-of-{Routes.ORDER_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
+        public readonly static string DeleteConversionOrderLinkDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.CONVERSION_CONTROLLER_NAME}-{Routes.LINK_CONTROLLER_NAME}-of-{Routes.ORDER_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string FinancialsReportRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, $"{Routes.FINANCIALS_CONTROLLER_NAME}-{Routes.REPORT_CONTROLLER_NAME}", Routes.GENERATE_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string CreateConversionDocumentRetailReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.RETAIL_CONTROLLER_NAME, Routes.CONVERSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);

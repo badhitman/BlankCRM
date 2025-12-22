@@ -177,7 +177,6 @@ public partial class CommerceLayerContext : DbContext
 
 
     #region Retail
-
     #region Order`s
     /// <summary>
     /// RetailOrders
@@ -257,6 +256,5 @@ public partial class CommerceLayerContext : DbContext
     /// </summary>
     public DbSet<ConversionOrderRetailLinkModelDB> ConversionsOrdersLinksRetail { get; set; } = default!;
     #endregion
-
     #endregion
 }

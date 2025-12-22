@@ -20,6 +20,6 @@ public class SelectConversionsOrdersDocumentsLinksReceive(IRetailService commRep
     public async Task<TPaginationResponseModel<ConversionOrderRetailLinkModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectConversionsOrdersLinksRetailDocumentsRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.SelectConversionsOrdersDocumentsLinksAsync(req, token);
+        return await commRepo.SelectConversionsOrdersDocumentsLinksRetailAsync(req, token);
     }
 }

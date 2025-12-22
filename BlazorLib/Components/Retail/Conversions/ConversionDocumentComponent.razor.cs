@@ -100,7 +100,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
         }
         else
         {
-            TResponseModel<WalletConversionRetailDocumentModelDB[]> getDocument = await RetailRepo.GetConversionsDocumentsAsync(new() { Ids = [ConversionDocumentId] });
+            TResponseModel<WalletConversionRetailDocumentModelDB[]> getDocument = await RetailRepo.GetConversionsDocumentsRetailAsync(new() { Ids = [ConversionDocumentId] });
             SnackBarRepo.ShowMessagesResponse(getDocument.Messages);
             if (getDocument.Success() && getDocument.Response is not null)
             {
@@ -198,18 +198,18 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
         await SetBusyAsync();
         if (editDoc.Id <= 0)
         {
-            TResponseModel<int> res = await RetailRepo.CreateConversionDocumentAsync(CreateWalletConversionRetailDocumentRequestModel.Build(editDoc, InjectToOrder?.Id ?? 0));
+            TResponseModel<int> res = await RetailRepo.CreateConversionDocumentRetailAsync(CreateWalletConversionRetailDocumentRequestModel.Build(editDoc, InjectToOrder?.Id ?? 0));
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success() && res.Response > 0)
                 NavRepo.NavigateTo($"/retail/conversion-document/{res.Response}");
         }
         else
         {
-            ResponseBaseModel res = await RetailRepo.UpdateConversionDocumentAsync(editDoc);
+            ResponseBaseModel res = await RetailRepo.UpdateConversionDocumentRetailAsync(editDoc);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
             {
-                TResponseModel<WalletConversionRetailDocumentModelDB[]> getDoc = await RetailRepo.GetConversionsDocumentsAsync(new() { Ids = [editDoc.Id] });
+                TResponseModel<WalletConversionRetailDocumentModelDB[]> getDoc = await RetailRepo.GetConversionsDocumentsRetailAsync(new() { Ids = [editDoc.Id] });
                 SnackBarRepo.ShowMessagesResponse(getDoc.Messages);
                 if (getDoc.Success() && getDoc.Response is not null && getDoc.Response.Length == 1)
                 {

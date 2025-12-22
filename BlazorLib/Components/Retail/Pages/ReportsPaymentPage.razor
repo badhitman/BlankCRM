@@ -1,0 +1,14 @@
+﻿@page "/retail/reports"
+
+@using BlazorLib.Components.Retail.Payments
+@using BlazorLib.Components.Retail.Orders
+@using MudBlazor
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@attribute [Authorize]
+
+<MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+    <MudTabPanel Text="Финансы">
+        <PaymentsRetailReportComponent />
+    </MudTabPanel>
+</MudTabs>

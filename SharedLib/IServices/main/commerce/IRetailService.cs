@@ -99,6 +99,11 @@ public interface IRetailService
     public Task<TResponseModel<PaymentRetailDocumentModelDB[]>> GetPaymentsDocumentsAsync(GetPaymentsRetailOrdersDocumentsRequestModel req, CancellationToken token = default);
     #endregion
 
+    #region report`s
+    /// <inheritdoc/>
+    public Task<TPaginationResponseModel<WalletRetailReportRowModel>> FinancialsReportRetailAsync(TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel> req, CancellationToken token = default);
+    #endregion
+
     #region Wallet Type
     /// <inheritdoc/>
     public Task<TResponseModel<int>> CreateWalletTypeAsync(WalletRetailTypeModelDB req, CancellationToken token = default);
@@ -171,32 +176,32 @@ public interface IRetailService
 
     #region Conversion document`s
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateConversionDocumentAsync(CreateWalletConversionRetailDocumentRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateConversionDocumentRetailAsync(CreateWalletConversionRetailDocumentRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default);
+    public Task<ResponseBaseModel> UpdateConversionDocumentRetailAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseModel<WalletConversionRetailDocumentModelDB>> SelectConversionsDocumentsAsync(TPaginationRequestStandardModel<SelectWalletsRetailsConversionDocumentsRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<WalletConversionRetailDocumentModelDB>> SelectConversionsDocumentsRetailAsync(TPaginationRequestStandardModel<SelectWalletsRetailsConversionDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<WalletConversionRetailDocumentModelDB[]>> GetConversionsDocumentsAsync(ReadWalletsRetailsConversionDocumentsRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<WalletConversionRetailDocumentModelDB[]>> GetConversionsDocumentsRetailAsync(ReadWalletsRetailsConversionDocumentsRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeleteToggleConversionAsync(int conversionId, CancellationToken token = default);
+    public Task<ResponseBaseModel> DeleteToggleConversionRetailAsync(int conversionId, CancellationToken token = default);
     #endregion
 
     #region Conversions orders link`s
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateConversionOrderLinkDocumentAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateConversionOrderLinkDocumentRetailAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default);
+    public Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentRetailAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseModel<ConversionOrderRetailLinkModelDB>> SelectConversionsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectConversionsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseModel<ConversionOrderRetailLinkModelDB>> SelectConversionsOrdersDocumentsLinksRetailAsync(TPaginationRequestStandardModel<SelectConversionsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentRetailAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default);
     #endregion
 }

@@ -73,7 +73,7 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
     {
         await SetBusyAsync();
 
-        ResponseBaseModel res = await RetailRepo.DeleteToggleConversionAsync(conversionId);
+        ResponseBaseModel res = await RetailRepo.DeleteToggleConversionRetailAsync(conversionId);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (tableRef is not null)
             await tableRef.ReloadServerData();
@@ -117,7 +117,7 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
             req.Payload.ExcludeOrderId = ExcludeOrder.Id;
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<WalletConversionRetailDocumentModelDB> res = await RetailRepo.SelectConversionsDocumentsAsync(req, token);
+        TPaginationResponseModel<WalletConversionRetailDocumentModelDB> res = await RetailRepo.SelectConversionsDocumentsRetailAsync(req, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
 
         if (res.Response is not null && res.Response.Count != 0)

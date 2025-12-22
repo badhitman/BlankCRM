@@ -1,0 +1,62 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+@using MudBlazor
+
+<MudStack AlignItems="AlignItems.Center" Row Class="mb-1">
+    <div class="card">
+        <div class="card-body p-1">
+            <MudChipSet @bind-SelectedValues="SelectedPaymentsTypes"
+                        SelectionMode="SelectionMode.MultiSelection"
+                        CheckMark
+                        Class="me-2"
+                        Variant="Variant.Text"
+                        Color="Color.Info">
+                @foreach (PaymentsRetailTypesEnum pt in Enum.GetValues(typeof(PaymentsRetailTypesEnum)))
+                {
+                    <MudChip Value="@pt" Text="@pt.DescriptionInfo()" />
+                }
+            </MudChipSet>
+        </div>
+    </div>
+    <div class="card mb-1">
+        <div class="card-body p-1">
+            <MudChipSet @bind-SelectedValues="SelectedPaymentsStatuses"
+                        SelectionMode="SelectionMode.MultiSelection"
+                        CheckMark
+                        Variant="Variant.Text"
+                        Color="Color.Surface">
+                @foreach (PaymentsRetailStatusesEnum ps in Enum.GetValues(typeof(PaymentsRetailStatusesEnum)))
+                {
+                    <MudChip Value="@ps" Text="@ps.DescriptionInfo()" />
+                }
+            </MudChipSet>
+        </div>
+    </div>
+    <MudSpacer />
+    <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
+</MudStack>
+<MudTable ServerData="ServerReload" Dense Hover @ref=_tableRef>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Финансовый отчёт (обороты)</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Wallet</MudTh>
+        <MudTh>User</MudTh>
+        <MudTh><MudTableSortLabel T="WalletRetailReportRowModel" SortLabel="@(nameof(WalletRetailReportRowModel))">Amount</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Wallet">@context.Wallet.ToString()</MudTd>
+        <MudTd DataLabel="User">@context.User.ToString()</MudTd>
+        <MudTd DataLabel="Amount">@context.Amount</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

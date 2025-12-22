@@ -4,12 +4,12 @@
 
 using DbcLib;
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharedLib;
 using System.Text;
 using System.Text.RegularExpressions;
+using static MongoDB.Driver.WriteConcern;
 
 namespace CommerceService;
 
@@ -974,21 +974,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
 
         if (!string.IsNullOrWhiteSpace(req.Payload?.PayerFilterIdentityId))
-        {
-            TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync([req.Payload.PayerFilterIdentityId], token);
-            if (!user.Success())
-            {
-                return new()
-                {
-                    Status = new()
-                    {
-                        Messages = user.Messages
-                    }
-                };
-            }
-
             q = q.Where(x => context.WalletsRetail.Any(y => y.Id == x.WalletId && y.UserIdentityId == req.Payload.PayerFilterIdentityId));
-        }
 
         if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
             q = q.Where(x => req.Payload.TypesFilter.Contains(x.TypePayment));
@@ -1735,7 +1721,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
     #region Conversion`s
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateConversionDocumentAsync(CreateWalletConversionRetailDocumentRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateConversionDocumentRetailAsync(CreateWalletConversionRetailDocumentRequestModel req, CancellationToken token = default)
     {
         if (req.ToWalletId < 1 || req.ToWalletId < 1)
             return new()
@@ -1823,7 +1809,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateConversionDocumentAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateConversionDocumentRetailAsync(WalletConversionRetailDocumentModelDB req, CancellationToken token = default)
     {
         if (req.ToWalletId < 1 || req.ToWalletId < 1)
             return new()
@@ -1935,7 +1921,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/> 
-    public async Task<TResponseModel<WalletConversionRetailDocumentModelDB[]>> GetConversionsDocumentsAsync(ReadWalletsRetailsConversionDocumentsRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<WalletConversionRetailDocumentModelDB[]>> GetConversionsDocumentsRetailAsync(ReadWalletsRetailsConversionDocumentsRequestModel req, CancellationToken token = default)
     {
         if (req.Ids.Length == 0)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Ids.Length == 0" }] };
@@ -1952,10 +1938,9 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WalletConversionRetailDocumentModelDB>> SelectConversionsDocumentsAsync(TPaginationRequestStandardModel<SelectWalletsRetailsConversionDocumentsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<WalletConversionRetailDocumentModelDB>> SelectConversionsDocumentsRetailAsync(TPaginationRequestStandardModel<SelectWalletsRetailsConversionDocumentsRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
         IQueryable<WalletConversionRetailDocumentModelDB> q = context.ConversionsDocumentsWalletsRetail.AsQueryable();
 
         if (req.Payload?.IncludeDisabled != true)
@@ -1972,8 +1957,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             join sender in context.WalletsRetail on doc.FromWalletId equals sender.Id
             join recipient in context.WalletsRetail on doc.ToWalletId equals recipient.Id
 
-            where sendersUserFilter.Length == 0 || sendersUserFilter.Contains(sender.UserIdentityId)
-            where recipientsUserFilter.Length == 0 || recipientsUserFilter.Contains(recipient.UserIdentityId)
+            where sendersUserFilter.Length == 0 || sendersUserFilter.Contains(sender.UserIdentityId) || recipientsUserFilter.Contains(recipient.UserIdentityId)
 
             select doc;
 
@@ -2015,7 +1999,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteToggleConversionAsync(int conversionId, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteToggleConversionRetailAsync(int conversionId, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -2070,7 +2054,7 @@ public class RetailService(IIdentityTransmission identityRepo,
 
     #region Conversions orders link`s
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateConversionOrderLinkDocumentAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateConversionOrderLinkDocumentRetailAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -2086,7 +2070,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentRetailAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         await context.ConversionsOrdersLinksRetail
@@ -2099,7 +2083,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ConversionOrderRetailLinkModelDB>> SelectConversionsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectConversionsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<ConversionOrderRetailLinkModelDB>> SelectConversionsOrdersDocumentsLinksRetailAsync(TPaginationRequestStandardModel<SelectConversionsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<ConversionOrderRetailLinkModelDB> q = context.ConversionsOrdersLinksRetail.AsQueryable();
@@ -2179,7 +2163,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentRetailAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -2191,6 +2175,101 @@ public class RetailService(IIdentityTransmission identityRepo,
             ? ResponseBaseModel.CreateInfo("Объект уже удалён")
             : ResponseBaseModel.CreateSuccess("Удалено");
     }
+    #endregion
+
+    #region report`s
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<WalletRetailReportRowModel>> FinancialsReportRetailAsync(TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel> req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        IQueryable<PaymentRetailDocumentModelDB> qp = context.PaymentsRetailDocuments.AsQueryable();
+
+        IQueryable<WalletConversionRetailDocumentModelDB> qc = context.ConversionsDocumentsWalletsRetail
+            .Where(x => !x.IsDisabled).AsQueryable();
+
+        if (req.Payload?.FilterIdentityIds is not null && req.Payload.FilterIdentityIds.Length != 0)
+        {
+            qp = qp.Where(x => context.WalletsRetail.Any(y => y.Id == x.WalletId && req.Payload.FilterIdentityIds.Contains(y.UserIdentityId)));
+
+            qc = from doc in qc
+                 join sender in context.WalletsRetail on doc.FromWalletId equals sender.Id
+                 join recipient in context.WalletsRetail on doc.ToWalletId equals recipient.Id
+
+                 where req.Payload.FilterIdentityIds.Length == 0 || req.Payload.FilterIdentityIds.Contains(sender.UserIdentityId) || req.Payload.FilterIdentityIds.Contains(recipient.UserIdentityId)
+
+                 select doc;
+        }
+
+        if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
+            qp = qp.Where(x => req.Payload.TypesFilter.Contains(x.TypePayment));
+
+        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Length != 0)
+            qp = qp.Where(x => req.Payload.StatusesFilter.Contains(x.StatusPayment));
+
+        if (req.Payload?.Start is not null && req.Payload.Start != default)
+        {
+            qp = qp.Where(x => x.DatePayment >= req.Payload.Start.SetKindUtc());
+            qc = qc.Where(x => x.DateDocument >= req.Payload.Start.SetKindUtc());
+        }
+
+        if (req.Payload?.End is not null && req.Payload.End != default)
+        {
+            req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+            qp = qp.Where(x => x.DatePayment <= req.Payload.End);
+            qc = qc.Where(x => x.DateDocument <= req.Payload.End);
+        }
+
+        var _qp1 = qp.Select(x => new { WalletId = x.WalletId, Amount = x.Amount });
+        var _qp2 = qc.Select(x => new { WalletId = x.FromWalletId, Amount = -x.FromWalletSum });
+        var _qp3 = qc.Select(x => new { WalletId = x.ToWalletId, Amount = x.ToWalletSum });
+
+        var _fq = from p in _qp1.Union(_qp2).Union(_qp3)
+                  group p by p.WalletId
+                                                     into g
+                  select new { WalletId = g.Key, Amount = g.Sum(x => x.Amount) };
+
+        var _oq = req.SortingDirection == DirectionsEnum.Up
+            ? _fq.OrderBy(x => x.Amount)
+            : _fq.OrderByDescending(x => x.Amount);
+
+        var pq = _oq
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        var res = await pq.ToListAsync(cancellationToken: token);
+
+        int[] _walletsIds = [.. res.Select(x => x.WalletId).Distinct()];
+        WalletRetailModelDB[] getWalletsDb = await context.WalletsRetail
+            .Where(x => _walletsIds.Contains(x.Id))
+            .Include(x => x.WalletType)
+            .ToArrayAsync(cancellationToken: token);
+
+        string[] usersIds = [.. getWalletsDb.Select(x => x.UserIdentityId).Distinct()];
+        TResponseModel<UserInfoModel[]> getUsers = await identityRepo.GetUsersOfIdentityAsync(usersIds, token);
+
+        WalletRetailReportRowModel getObject(int walletId, decimal amount)
+        {
+            WalletRetailModelDB _w = getWalletsDb.First(y => y.Id == walletId);
+            return new()
+            {
+                Amount = amount,
+                Wallet = _w,
+                User = getUsers.Response!.First(x => x.UserId == _w.UserIdentityId)
+            };
+        }
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await _fq.CountAsync(cancellationToken: token),
+            Response = [.. res.Select(x => getObject(x.WalletId, x.Amount))]
+        };
+    }
+    record struct WalletRetailReportRawModel(int WalletId, decimal Amount);
     #endregion
 
     #region static

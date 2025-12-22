@@ -20,6 +20,6 @@ public class CreateConversionDocumentReceive(IRetailService commRepo)
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(CreateWalletConversionRetailDocumentRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.CreateConversionDocumentAsync(req, token);
+        return await commRepo.CreateConversionDocumentRetailAsync(req, token);
     }
 }

@@ -20,6 +20,6 @@ public class DeleteToggleConversionReceive(IRetailService commRepo)
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.DeleteToggleConversionAsync(req.Value, token);
+        return await commRepo.DeleteToggleConversionRetailAsync(req.Value, token);
     }
 }

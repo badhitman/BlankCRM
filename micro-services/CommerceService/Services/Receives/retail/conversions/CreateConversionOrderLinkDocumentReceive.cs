@@ -20,6 +20,6 @@ public class CreateConversionOrderLinkDocumentReceive(IRetailService commRepo)
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(ConversionOrderRetailLinkModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.CreateConversionOrderLinkDocumentAsync(req, token);
+        return await commRepo.CreateConversionOrderLinkDocumentRetailAsync(req, token);
     }
 }

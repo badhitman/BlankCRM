@@ -20,6 +20,6 @@ public class UpdateConversionDocumentReceive(IRetailService commRepo)
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(WalletConversionRetailDocumentModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.UpdateConversionDocumentAsync(req, token);
+        return await commRepo.UpdateConversionDocumentRetailAsync(req, token);
     }
 }

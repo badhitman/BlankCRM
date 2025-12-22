@@ -68,7 +68,7 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
         };
         await SetBusyAsync();
 
-        ResponseBaseModel res = await RetailRepo.DeleteConversionOrderLinkDocumentAsync(req);
+        ResponseBaseModel res = await RetailRepo.DeleteConversionOrderLinkDocumentRetailAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         await DeleteRowFinalize();
@@ -84,7 +84,7 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
                 Id = other.Id,
             };
             await SetBusyAsync();
-            ResponseBaseModel res = await RetailRepo.UpdateConversionOrderLinkDocumentAsync(req);
+            ResponseBaseModel res = await RetailRepo.UpdateConversionOrderLinkDocumentRetailAsync(req);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (!res.Success())
             {
@@ -127,7 +127,7 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
 
         await SetBusyAsync();
 
-        TResponseModel<int> res = await RetailRepo.CreateConversionOrderLinkDocumentAsync(new()
+        TResponseModel<int> res = await RetailRepo.CreateConversionOrderLinkDocumentRetailAsync(new()
         {
             ConversionDocumentId = ConversionId,
             OrderDocumentId = tableRow.Item.Id,
@@ -164,7 +164,7 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
 
         await SetBusyAsync();
 
-        TResponseModel<int> res = await RetailRepo.CreateConversionOrderLinkDocumentAsync(new()
+        TResponseModel<int> res = await RetailRepo.CreateConversionOrderLinkDocumentRetailAsync(new()
         {
             ConversionDocumentId = tableRow.Item.Id,
             OrderDocumentId = OrderParent.Id,
@@ -196,7 +196,7 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
             req.Payload.ConversionsIds = [ConversionId];
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<ConversionOrderRetailLinkModelDB> res = await RetailRepo.SelectConversionsOrdersDocumentsLinksAsync(req, token);
+        TPaginationResponseModel<ConversionOrderRetailLinkModelDB> res = await RetailRepo.SelectConversionsOrdersDocumentsLinksRetailAsync(req, token);
        
         if (res.Response is not null && res.Response.Count != 0)
             await CacheUsersUpdate([.. res.Response.Select(x => x.ConversionDocument!.FromWallet!.UserIdentityId).Union(res.Response.Select(x => x.ConversionDocument!.ToWallet!.UserIdentityId))]);

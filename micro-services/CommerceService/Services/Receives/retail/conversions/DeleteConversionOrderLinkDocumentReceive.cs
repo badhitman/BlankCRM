@@ -14,12 +14,12 @@ public class DeleteConversionOrderLinkDocumentReceive(IRetailService commRepo)
     : IResponseReceive<DeleteConversionOrderLinkRetailDocumentsRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteConversionOrderLinkDocumentReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteConversionOrderLinkDocumentRetailReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.DeleteConversionOrderLinkDocumentAsync(req, token);
+        return await commRepo.DeleteConversionOrderLinkDocumentRetailAsync(req, token);
     }
 }

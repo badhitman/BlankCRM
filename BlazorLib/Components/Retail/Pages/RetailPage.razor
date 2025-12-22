@@ -28,4 +28,17 @@
     <MudTabPanel Text="Доставка">
         <DeliveriesDocumentsManageComponent />
     </MudTabPanel>
+    <MudTabPanel Text="Отчёты">
+        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
+            <MudTabPanel Text="Обороты">
+                <PaymentsRetailReportComponent />
+            </MudTabPanel>
+            <MudTabPanel Text="Товары" Disabled>
+
+            </MudTabPanel>
+            <MudTabPanel Text="Сводный" Disabled>
+
+            </MudTabPanel>
+        </MudTabs>
+    </MudTabPanel>
 </MudTabs>
