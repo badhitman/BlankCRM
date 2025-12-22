@@ -5,6 +5,7 @@
 @using BlazorLib.Components.Retail.Payments
 @using BlazorLib.Components.Retail.Clients
 @using BlazorLib.Components.Retail.Orders
+@using BlazorLib.Components.Retail.Reports
 @using BlazorLib.Components.Retail.Wallet
 @using BlazorLib.Components.Retail
 @using MudBlazor
@@ -33,11 +34,11 @@
             <MudTabPanel Text="Обороты">
                 <PaymentsRetailReportComponent />
             </MudTabPanel>
-            <MudTabPanel Text="Товары" Disabled>
-
+            <MudTabPanel Text="Товары">
+                <OffersOfOrdersRetailReportComponent />
             </MudTabPanel>
-            <MudTabPanel Text="Сводный" Disabled>
-
+            <MudTabPanel Text="Сводный">
+                <MainRetailReportComponent />
             </MudTabPanel>
         </MudTabs>
     </MudTabPanel>

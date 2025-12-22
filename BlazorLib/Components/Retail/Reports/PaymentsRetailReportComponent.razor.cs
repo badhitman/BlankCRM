@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.Retail.Payments;
+namespace BlazorLib.Components.Retail.Reports;
 
 /// <summary>
 /// PaymentsRetailReportComponent
