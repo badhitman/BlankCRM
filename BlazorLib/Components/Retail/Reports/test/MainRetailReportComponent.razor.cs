@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.Retail.Reports;
+namespace BlazorLib.Components.Retail.Reports.test;
 
 /// <summary>
 /// MainRetailReportComponent

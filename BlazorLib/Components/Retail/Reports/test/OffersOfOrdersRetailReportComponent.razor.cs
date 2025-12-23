@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
-namespace BlazorLib.Components.Retail.Reports;
+namespace BlazorLib.Components.Retail.Reports.test;
 
 /// <summary>
-/// OffersOfDeliveriesRetailReportComponent
+/// OffersOfOrdersRetailReportComponent
 /// </summary>
-public partial class OffersOfDeliveriesRetailReportComponent : BlazorBusyComponentBaseModel
+public partial class OffersOfOrdersRetailReportComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
@@ -45,8 +45,8 @@ public partial class OffersOfDeliveriesRetailReportComponent : BlazorBusyCompone
         }
     }
 
-    IReadOnlyCollection<DeliveryStatusesEnum> _selectedStatuses = [];
-    IReadOnlyCollection<DeliveryStatusesEnum> SelectedStatuses
+    IReadOnlyCollection<StatusesDocumentsEnum> _selectedStatuses = [];
+    IReadOnlyCollection<StatusesDocumentsEnum> SelectedStatuses
     {
         get => _selectedStatuses;
         set
@@ -66,7 +66,7 @@ public partial class OffersOfDeliveriesRetailReportComponent : BlazorBusyCompone
 
     async Task<TableData<OffersRetailReportRowModel>> ServerReload(TableState state, CancellationToken token)
     {
-        TPaginationRequestStandardModel<SelectOffersOfDeliveriesRetailReportRequestModel> req = new()
+        TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req = new()
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
@@ -94,7 +94,7 @@ public partial class OffersOfDeliveriesRetailReportComponent : BlazorBusyCompone
         }
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<OffersRetailReportRowModel> res = await RetailRepo.OffersOfDeliveriesReportRetailAsync(req, token);
+        TPaginationResponseModel<OffersRetailReportRowModel> res = await RetailRepo.OffersOfOrdersReportRetailAsync(req, token);
         await SetBusyAsync(false, token);
 
         if (res.Response is null)

@@ -111,6 +111,9 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<MainReportResponseModel> GetMainReportAsync(PeriodBaseModel req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<PeriodBaseModel> AboutPeriodAsync(object? req, CancellationToken token = default);
     #endregion
 
     #region Wallet Type

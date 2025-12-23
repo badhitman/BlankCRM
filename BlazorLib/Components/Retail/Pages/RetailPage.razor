@@ -1,13 +1,11 @@
 ﻿@page "/retail"
 
 @using BlazorLib.Components.Retail.Conversions
+@using BlazorLib.Components.Retail.Reports.mmm
 @using BlazorLib.Components.Retail.Delivery
 @using BlazorLib.Components.Retail.Payments
 @using BlazorLib.Components.Retail.Clients
 @using BlazorLib.Components.Retail.Orders
-@using BlazorLib.Components.Retail.Reports
-@using BlazorLib.Components.Retail.Wallet
-@using BlazorLib.Components.Retail
 @using MudBlazor
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
@@ -30,19 +28,6 @@
         <DeliveriesDocumentsManageComponent />
     </MudTabPanel>
     <MudTabPanel Text="Отчёты">
-        <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
-            <MudTabPanel Text="Финансовый">
-                <PaymentsRetailReportComponent />
-            </MudTabPanel>
-            <MudTabPanel Text="Торговый">
-                <OffersOfOrdersRetailReportComponent />
-            </MudTabPanel>
-            <MudTabPanel Text="Отгрузка">
-                <OffersOfDeliveriesRetailReportComponent />
-            </MudTabPanel>
-            <MudTabPanel Text="Сводный">
-                <MainRetailReportComponent />
-            </MudTabPanel>
-        </MudTabs>
+        <OrdersMMMWrapperComponent />
     </MudTabPanel>
 </MudTabs>

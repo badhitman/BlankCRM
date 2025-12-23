@@ -2493,6 +2493,27 @@ public class RetailService(IIdentityTransmission identityRepo,
             ConversionsSumAmount = await qco.SumAsync(x => x.AmountPayment, cancellationToken: token)
         };
     }
+
+    /// <inheritdoc/>
+    public async Task<PeriodBaseModel> AboutPeriodAsync(object? req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        IQueryable<DateTime> q1 = context.OrdersRetail.Select(x => x.DateDocument);
+        IQueryable<DateTime> q2 = context.PaymentsRetailDocuments.Select(x => x.DatePayment);
+        IQueryable<DateTime> q3 = context.DeliveryDocumentsRetail.Select(x => x.CreatedAtUTC);
+        IQueryable<DateTime> q4 = context.ConversionsDocumentsWalletsRetail.Select(x => x.DateDocument);
+
+        IQueryable<DateTime> q = q1.Union(q2).Union(q3).Union(q4);
+        if (!await q.AnyAsync(cancellationToken: token))
+            return new();
+
+        return new()
+        {
+            Start = await q.MinAsync(cancellationToken: token),
+            End = await q.MaxAsync(cancellationToken: token),
+        };
+    }
     #endregion
 
     #region static
