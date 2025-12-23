@@ -47,7 +47,7 @@ else
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Итого:</th>
+                        <th scope="row"><div class="d-flex flex-row-reverse">Итого:</div></th>
                         <td>
                             @(Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2).ToString("C"))
                             <span>(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)))</span>
@@ -71,7 +71,7 @@ else
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Итого:</th>
+                        <th scope="row"><div class="d-flex flex-row-reverse">Итого:</div></th>
                         <td>
                             @(Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2).ToString("C"))
                             <span>(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)))</span>
