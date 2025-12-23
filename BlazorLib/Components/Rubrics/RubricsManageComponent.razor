@@ -129,7 +129,7 @@
         }
         else
         {
-            InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataRubricModel(x))]; //.Cast<TreeItemDataRubricModel>()];
+            InitialTreeItems = [.. ConvertRubrics(rubrics).Select(x => new TreeItemDataRubricModel(x))];
         }
         await SetBusyAsync(false);
     }

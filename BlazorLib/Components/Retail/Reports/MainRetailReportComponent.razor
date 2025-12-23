@@ -13,10 +13,10 @@ else
     <MudCard>
         <MudCardHeader>
             <CardHeaderContent>
-                <MudText Typo="Typo.h6">The Story Book</MudText>
+                <MudText Typo="Typo.h6">Всего заказов [@ReportData?.DoneOrdersCount шт.] на сумму [@ReportData?.DoneOrdersSumAmount.ToString("C")]</MudText>
             </CardHeaderContent>
             <CardHeaderActions>
-                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+                <MudIconButton Icon="@Icons.Material.Filled.Cached" Color="Color.Default" OnClick="ReloadServerData" />
             </CardHeaderActions>
         </MudCardHeader>
         <MudCardContent>

@@ -2,15 +2,12 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
-using DocumentFormat.OpenXml;
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using SharedLib;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using static MongoDB.Driver.WriteConcern;
+using SharedLib;
+using DbcLib;
 
 namespace CommerceService;
 
@@ -464,7 +461,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DeliveryStatusRetailDocumentModelDB>? q = context.DeliveriesStatusesDocumentsRetail
+        IQueryable<DeliveryStatusRetailDocumentModelDB> q = context.DeliveriesStatusesDocumentsRetail
             .Where(x => x.DeliveryDocumentId == req.Payload.DeliveryDocumentId)
             .AsQueryable();
 
@@ -569,7 +566,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<WalletRetailTypeViewModel>> SelectWalletsTypesAsync(TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<WalletRetailTypeModelDB>? q = context.WalletsRetailTypes.AsQueryable();
+        IQueryable<WalletRetailTypeModelDB> q = context.WalletsRetailTypes.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
@@ -726,7 +723,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<WalletRetailModelDB>? q = context.WalletsRetail.AsQueryable();
+        IQueryable<WalletRetailModelDB> q = context.WalletsRetail.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
@@ -969,7 +966,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<PaymentRetailDocumentModelDB>> SelectPaymentsDocumentsAsync(TPaginationRequestStandardModel<SelectPaymentsRetailOrdersDocumentsRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<PaymentRetailDocumentModelDB>? q = context.PaymentsRetailDocuments.AsQueryable();
+        IQueryable<PaymentRetailDocumentModelDB> q = context.PaymentsRetailDocuments.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
             q = q.Where(x => x.Name.Contains(req.FindQuery) || (x.Description != null && x.Description.Contains(req.FindQuery)));
@@ -1239,7 +1236,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TResponseModel<DocumentRetailModelDB[]>> RetailDocumentsGetAsync(RetailDocumentsGetRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DocumentRetailModelDB>? q = context.OrdersRetail
+        IQueryable<DocumentRetailModelDB> q = context.OrdersRetail
             .Where(x => req.Ids.Contains(x.Id));
 
         TResponseModel<DocumentRetailModelDB[]> res = new()
@@ -1336,7 +1333,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             return new() { Status = new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }] } };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RowOfRetailOrderDocumentModelDB>? q = context.RowsOrdersRetails
+        IQueryable<RowOfRetailOrderDocumentModelDB> q = context.RowsOrdersRetails
             .Where(x => x.OrderId == req.Payload.OrderId)
             .AsQueryable();
 
@@ -1680,7 +1677,7 @@ public class RetailService(IIdentityTransmission identityRepo,
         }
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<OrderStatusRetailDocumentModelDB>? q = context.OrdersStatusesRetails
+        IQueryable<OrderStatusRetailDocumentModelDB> q = context.OrdersStatusesRetails
             .Where(x => x.OrderDocumentId == req.Payload.OrderDocumentId).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(req.FindQuery))
@@ -2381,9 +2378,32 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<MainReportResponseModel> GetMainReportAsync(PeriodBaseModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        IQueryable<DocumentRetailModelDB> q = context.OrdersRetail
+            .Where(x => x.StatusDocument == StatusesDocumentsEnum.Done)
+            .AsQueryable();
+
+        IQueryable<PaymentRetailDocumentModelDB> qp = context.PaymentsRetailDocuments
+            .Where(x => x.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+            .AsQueryable();
+
+        if (req.Start is not null && req.Start != default)
+        {
+            q = q.Where(x => x.DateDocument >= req.Start.SetKindUtc());
+            qp = qp.Where(x => x.DatePayment >= req.Start.SetKindUtc());
+        }
+
+        if (req.End is not null && req.End != default)
+        {
+            req.End = req.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+            q = q.Where(x => x.DateDocument <= req.End);
+            qp = qp.Where(x => x.DatePayment <= req.End);
+        }
+        
         return new()
         {
-
+            DoneOrdersCount = await q.CountAsync(cancellationToken: token),
+            DoneOrdersSumAmount = await context.RowsOrdersRetails.Where(x => q.Any(y => y.Id == x.OrderId)).SumAsync(x => x.Amount, cancellationToken: token)
         };
     }
     #endregion

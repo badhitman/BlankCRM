@@ -14,6 +14,8 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     IRetailService RetailRepo { get; set; } = default!;
 
 
+    MainReportResponseModel? ReportData;
+
     DateRange? _dateRange;
     DateRange? DateRangeProp
     {
@@ -36,7 +38,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         }
 
         await SetBusyAsync();
-        var res = await RetailRepo.GetMainReportAsync(req);
+        ReportData = await RetailRepo.GetMainReportAsync(req);
         await SetBusyAsync(false);
     }
 

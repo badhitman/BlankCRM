@@ -782,7 +782,7 @@ public class IdentityTools(
         if (user_db is null)
             return ResponseBaseModel.CreateInfo("Без изменений");
 
-        IQueryable<ApplicationUser>? q = identityContext
+        IQueryable<ApplicationUser> q = identityContext
             .Users
             .Where(x => x.Id == req.UserId);
 
