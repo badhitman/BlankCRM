@@ -248,13 +248,13 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
                 }));
             }
 
-            DateTime dtSY = new(DateTime.Now.Year, 1, 1);
-            var cal = new GregorianCalendar();
+            //DateTime dtSY = new(DateTime.Now.Year, 1, 1);
+            GregorianCalendar cal = new();
 
             currentDocument = new()
             {
                 DateDocument = DateTime.Now,
-                NumWeekOfYear = cal.GetWeekOfYear(dtSY, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday),
+                NumWeekOfYear = cal.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday),
                 Rows = [],
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 BuyerIdentityUserId = ClientId ?? CurrentUserSession.UserId,
