@@ -55,6 +55,30 @@ else
                     </tr>
                 </tbody>
             </table>
+            <hr />
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th scope="row">офисные за онлайн контракты</th>
+                        <td>
+                            @((decimal)(ReportData.DoneOrdersCount * 540 * 0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">офисные при оплате на складе (+переводы/конвертации)</th>
+                        <td>
+                            @((decimal)(ReportData.DoneOrdersCount * 540 * 0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Итого:</th>
+                        <td>
+                            @(Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2).ToString("C"))
+                            <span>(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)))</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </MudCardContent>
         @* <MudCardActions>
             <MudButton Variant="Variant.Text" Color="Color.Primary">Read more</MudButton>
