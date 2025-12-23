@@ -28,14 +28,16 @@
         <MudSpacer />
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Wallet</MudTh>
-        <MudTh>User</MudTh>
-        <MudTh><MudTableSortLabel T="WalletRetailReportRowModel" SortLabel="@(nameof(WalletRetailReportRowModel))">Amount</MudTableSortLabel></MudTh>
+        <MudTh>Кошелёк</MudTh>
+        <MudTh>Пользователь</MudTh>
+        <MudTh>
+            <MudTableSortLabel T="WalletRetailReportRowModel" SortLabel="@(nameof(WalletRetailReportRowModel.Amount))">Сумма</MudTableSortLabel>
+        </MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Wallet">@context.Wallet.ToString()</MudTd>
-        <MudTd DataLabel="User">@context.User.ToString()</MudTd>
-        <MudTd DataLabel="Amount">@context.Amount</MudTd>
+        <MudTd DataLabel="Кошелёк">@context.Wallet.ToString()</MudTd>
+        <MudTd DataLabel="Пользователь">@context.User.ToString()</MudTd>
+        <MudTd DataLabel="Сумма">@context.Amount</MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>

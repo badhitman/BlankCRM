@@ -2320,12 +2320,10 @@ public class RetailService(IIdentityTransmission identityRepo,
            .Where(x => q.Any(y => y.Id == x.OrderId))
            .AsQueryable();
 
-
         var _fq = from p in qr
                   group p by p.OfferId
                   into g
                   select new { OfferId = g.Key, Amount = g.Sum(x => x.Amount), Counter = g.Sum(x => x.Quantity) };
-
 
         var oq = req.SortingDirection switch
         {

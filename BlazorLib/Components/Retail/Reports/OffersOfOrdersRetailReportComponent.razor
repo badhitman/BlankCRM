@@ -36,7 +36,9 @@
     <HeaderContent>
         <MudTh>Offer</MudTh>
         <MudTh>Кол-во</MudTh>
-        <MudTh>Сумма</MudTh>
+        <MudTh>
+            <MudTableSortLabel T="OffersOfOrdersRetailReportRowModel" SortLabel="@(nameof(OffersOfOrdersRetailReportRowModel.AmountSum))">Сумма</MudTableSortLabel>
+        </MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Offer">@context.Offer.GetName()</MudTd>
