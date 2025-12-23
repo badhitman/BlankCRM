@@ -18,10 +18,13 @@ else
                 <MudItem xs="12" md="2">
                     <MudDatePicker Label="Дата заказа" Editable @bind-Date="DatePayment" Placeholder="Select Date" Variant="Variant.Outlined" />
                 </MudItem>
-                <MudItem xs="12" md="5">
+                <MudItem xs="12" md="2">
+                    <MudTextField Label="Неделя" @bind-Value="editDocument.NumWeekOfYear" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" md="4">
                     <MudTextField @bind-Value="editDocument.ExternalDocumentId" Label="Номер (внешний)" Variant="Variant.Outlined"></MudTextField>
                 </MudItem>
-                <MudItem xs="12" md="5">
+                <MudItem xs="12" md="4">
                     <MudTextField @bind-Value="editDocument.Name" Label="Примечание" Variant="Variant.Outlined"></MudTextField>
                 </MudItem>
             </MudGrid>

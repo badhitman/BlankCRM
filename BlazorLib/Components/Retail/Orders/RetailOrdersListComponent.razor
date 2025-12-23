@@ -71,6 +71,7 @@
         <MudTh>Номер</MudTh>
         <MudTh>Статус</MudTh>
         <MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="@(nameof(DocumentRetailModelDB.DateDocument))" T="DocumentRetailModelDB">Дата</MudTableSortLabel>
+        <MudTh>Неделя</MudTh>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
             <MudTh>Заказчик</MudTh>
@@ -113,6 +114,9 @@
             {
                 <span>@ddt.ToString("d", GlobalStaticConstants.RU)</span>
             }
+        </MudTd>
+        <MudTd DataLabel="Неделя">
+            @context.NumWeekOfYear
         </MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {

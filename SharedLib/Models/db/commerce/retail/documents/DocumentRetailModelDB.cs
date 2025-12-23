@@ -10,12 +10,15 @@ namespace SharedLib;
 /// <summary>
 /// RetailDocumentModelDB
 /// </summary>
-[Index(nameof(BuyerIdentityUserId)), Index(nameof(WarehouseId)), Index(nameof(DateDocument))]
+[Index(nameof(BuyerIdentityUserId)), Index(nameof(WarehouseId)), Index(nameof(DateDocument)), Index(nameof(NumWeekOfYear))]
 public class DocumentRetailModelDB : OrderDocumentBaseModel
 {
     /// <inheritdoc/>
     [Required]
     public required DateTime DateDocument { get; set; }
+
+    /// <inheritdoc/>
+    public int NumWeekOfYear { get; set; }
 
     /// <summary>
     /// BuyerIdentityUserId

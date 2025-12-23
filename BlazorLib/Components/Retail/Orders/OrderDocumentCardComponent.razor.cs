@@ -5,6 +5,7 @@
 using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.AspNetCore.Components;
 using SharedLib;
+using System.Globalization;
 
 namespace BlazorLib.Components.Retail.Orders;
 
@@ -106,6 +107,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             if (OrderId > 0)
                 return
                     currentDocument.BuyerIdentityUserId == editDocument.BuyerIdentityUserId &&
+                    currentDocument.NumWeekOfYear == editDocument.NumWeekOfYear &&
                     currentDocument.WarehouseId == editDocument.WarehouseId &&
                     currentDocument.Name == editDocument.Name &&
                     currentDocument.ExternalDocumentId == editDocument.ExternalDocumentId &&
@@ -246,9 +248,13 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
                 }));
             }
 
+            DateTime dtSY = new(DateTime.Now.Year, 1, 1);
+            var cal = new GregorianCalendar();
+
             currentDocument = new()
             {
                 DateDocument = DateTime.Now,
+                NumWeekOfYear = cal.GetWeekOfYear(dtSY, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday),
                 Rows = [],
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 BuyerIdentityUserId = ClientId ?? CurrentUserSession.UserId,

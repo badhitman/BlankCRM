@@ -1142,6 +1142,7 @@ public class RetailService(IIdentityTransmission identityRepo,
               .Where(x => x.Id == req.Id)
               .ExecuteUpdateAsync(set => set
                   .SetProperty(p => p.Name, req.Name.Trim())
+                  .SetProperty(p => p.NumWeekOfYear, req.NumWeekOfYear)
                   .SetProperty(p => p.DateDocument, req.DateDocument.SetKindUtc())
                   .SetProperty(p => p.StatusDocument, req.StatusDocument)
                   .SetProperty(p => p.BuyerIdentityUserId, req.BuyerIdentityUserId)
