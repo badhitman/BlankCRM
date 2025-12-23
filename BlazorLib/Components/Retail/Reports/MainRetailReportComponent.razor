@@ -73,8 +73,7 @@ else
                     <tr>
                         <th scope="row"><div class="d-flex flex-row-reverse">Итого:</div></th>
                         <td>
-                            @(Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2).ToString("C"))
-                            <span>(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)))</span>
+                            @(((decimal)(ReportData.DoneOrdersCount * 540 * 0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + ((decimal)(ReportData.DoneOrdersCount * 540 * 0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120))
                         </td>
                     </tr>
                 </tbody>
