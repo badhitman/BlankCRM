@@ -8,6 +8,9 @@ using SharedLib;
 
 namespace BlazorLib.Components.Retail.Reports;
 
+/// <summary>
+/// MainRetailReportComponent
+/// </summary>
 public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
