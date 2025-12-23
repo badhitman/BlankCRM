@@ -2499,10 +2499,11 @@ public class RetailService(IIdentityTransmission identityRepo,
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        IQueryable<DateTime> q1 = context.OrdersRetail.Select(x => x.DateDocument);
-        IQueryable<DateTime> q2 = context.PaymentsRetailDocuments.Select(x => x.DatePayment);
-        IQueryable<DateTime> q3 = context.DeliveryDocumentsRetail.Select(x => x.CreatedAtUTC);
-        IQueryable<DateTime> q4 = context.ConversionsDocumentsWalletsRetail.Select(x => x.DateDocument);
+        IQueryable<DateTime>
+            q1 = context.OrdersRetail.Select(x => x.DateDocument),
+            q2 = context.PaymentsRetailDocuments.Select(x => x.DatePayment),
+            q3 = context.DeliveryDocumentsRetail.Select(x => x.CreatedAtUTC),
+            q4 = context.ConversionsDocumentsWalletsRetail.Select(x => x.DateDocument);
 
         IQueryable<DateTime> q = q1.Union(q2).Union(q3).Union(q4);
         if (!await q.AnyAsync(cancellationToken: token))

@@ -1,0 +1,13 @@
+﻿@inherits BlazorBusyComponentBaseModel
+
+@using BlazorLib.Components.Retail.Reports.test
+@using MudBlazor
+
+@if (IsBusyProgress || aboutPeriod is null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" data-cn="@this.GetType().Name" />
+}
+else
+{
+    <MMMMonthSelectorComponent />
+}
