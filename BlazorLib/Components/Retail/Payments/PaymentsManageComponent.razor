@@ -54,7 +54,6 @@
         }
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Name</MudTh>
         <MudTh>Тип</MudTh>
         <MudTh>Статус</MudTh>
         <MudTh><MudTableSortLabel T="PaymentRetailDocumentModelDB" InitialDirection="@SortDirection.Descending" SortLabel="@(nameof(PaymentRetailDocumentModelDB.DatePayment))"> Дата</MudTableSortLabel></MudTh>
@@ -65,22 +64,12 @@
         <MudTh>Кошелёк</MudTh>
         <MudTh>Сумма</MudTh>
         <MudTh>Direct</MudTh>
-        <MudTh>Описание</MudTh>
+        <MudTh>Примечание</MudTh>
     </HeaderContent>
     <RowTemplate>
         @{
             DateTime pdt = context.DatePayment;
         }
-        <MudTd DataLabel="Name">
-            @if (RowClickEventHandler is null)
-            {
-                <a href="/retail/payment-document/@context.Id">@context.Name</a>
-            }
-            else
-            {
-                <span>@context.Name</span>
-            }
-        </MudTd>
         <MudTd DataLabel="Тип">
             @if (RowClickEventHandler is null)
             {
@@ -118,7 +107,7 @@
         <MudTd DataLabel="Кошелёк">[@context.Wallet!.WalletType!.Name] '@context.Wallet.Name'</MudTd>
         <MudTd DataLabel="Сумма">@context.Amount</MudTd>
         <MudTd DataLabel="Direct">@context.PaymentSource</MudTd>
-        <MudTd DataLabel="Описание">@context.Description</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>Соответствующих записей не найдено</MudText>
