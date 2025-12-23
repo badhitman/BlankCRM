@@ -9,5 +9,6 @@ namespace SharedLib;
 /// </summary>
 public class SelectOffersOfOrdersRetailReportRequestModel : SelectRetailDocumentsBaseModel
 {
-
+    /// <inheritdoc/>
+    public List<StatusesDocumentsEnum?>? StatusesFilter { get; set; }
 }

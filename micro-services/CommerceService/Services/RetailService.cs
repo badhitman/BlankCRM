@@ -2291,7 +2291,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OffersOfOrdersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<DocumentRetailModelDB> q = context.OrdersRetail.AsQueryable();
@@ -2351,7 +2351,89 @@ public class RetailService(IIdentityTransmission identityRepo,
         int[] offersIds = [.. res.Select(x => x.OfferId)];
         OfferModelDB[] offersDb = await context.Offers.Where(x => offersIds.Contains(x.Id)).ToArrayAsync(cancellationToken: token);
 
-        OffersOfOrdersRetailReportRowModel getObject(decimal offerId, decimal amountSum, decimal countSum)
+        OffersRetailReportRowModel getObject(decimal offerId, decimal amountSum, decimal countSum)
+        {
+            return new()
+            {
+                AmountSum = amountSum,
+                CountSum = countSum,
+                Offer = offersDb.First(x => x.Id == offerId)
+            };
+        }
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await _fq.CountAsync(cancellationToken: token),
+            Response = [.. res.Select(x => getObject(x.OfferId, x.Amount, x.Counter))],
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfDeliveriesReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfDeliveriesRetailReportRequestModel> req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<DeliveryDocumentRetailModelDB> q = context.DeliveryDocumentsRetail.AsQueryable();
+
+        //if (req.Payload?.EqualsSumFilter != true)
+        //    q = context.DeliveryDocumentsRetail
+        //        .Where(x => context.RowsDeliveryDocumentsRetail.Where(y => y.DocumentId == x.Id).Sum(y => y.Amount) == (context.OrdersDeliveriesLinks.Where(y => y.OrderDocumentId == x.Id && context.PaymentsRetailDocuments.Any(z => z.StatusPayment == PaymentsRetailStatusesEnum.Paid && z.Id == y.PaymentDocumentId)).Sum(y => y.AmountPayment) + context.ConversionsOrdersLinksRetail.Where(y => y.OrderDocumentId == x.Id && context.ConversionsDocumentsWalletsRetail.Any(z => z.Id == y.ConversionDocumentId && !z.IsDisabled)).Sum(y => y.AmountPayment)))
+        //        .AsQueryable();
+
+        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Count != 0)
+        {
+            bool _unsetChecked = req.Payload.StatusesFilter.Contains(null);
+            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.DeliveryStatus) || (_unsetChecked && x.DeliveryStatus == 0));
+        }
+
+        if (req.Payload?.Start is not null && req.Payload.Start != default)
+            q = q.Where(x => x.CreatedAtUTC >= req.Payload.Start.SetKindUtc());
+
+        if (req.Payload?.End is not null && req.Payload.End != default)
+        {
+            req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+            q = q.Where(x => x.CreatedAtUTC <= req.Payload.End);
+        }
+
+        var qr = context.RowsDeliveryDocumentsRetail
+           .Where(x => q.Any(y => y.Id == x.DocumentId))
+           .AsQueryable();
+
+        var _fq = from p in qr
+                  group p by p.OfferId
+                  into g
+                  select new { OfferId = g.Key, Amount = g.Sum(x => x.Amount), Counter = g.Sum(x => x.Quantity) };
+
+        var oq = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => _fq.OrderBy(x => x.Amount),
+            DirectionsEnum.Down => _fq.OrderByDescending(x => x.Amount),
+            _ => _fq.OrderBy(x => x.OfferId)
+        };
+
+        var pq = oq
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        var res = await pq.ToListAsync(cancellationToken: token);
+        if (res.Count == 0)
+            return new()
+            {
+                PageNum = req.PageNum,
+                PageSize = req.PageSize,
+                SortingDirection = req.SortingDirection,
+                SortBy = req.SortBy,
+                TotalRowsCount = 0,
+                Response = []
+            };
+
+        int[] offersIds = [.. res.Select(x => x.OfferId)];
+        OfferModelDB[] offersDb = await context.Offers.Where(x => offersIds.Contains(x.Id)).ToArrayAsync(cancellationToken: token);
+
+        OffersRetailReportRowModel getObject(decimal offerId, decimal amountSum, decimal countSum)
         {
             return new()
             {
@@ -2381,25 +2463,25 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Where(x => x.StatusDocument == StatusesDocumentsEnum.Done)
             .AsQueryable();
 
-        IQueryable<PaymentRetailDocumentModelDB> qp = context.PaymentsRetailDocuments
-            .Where(x => x.StatusPayment == PaymentsRetailStatusesEnum.Paid)
-            .AsQueryable();
+        //IQueryable<PaymentRetailDocumentModelDB> qp = context.PaymentsRetailDocuments
+        //    .Where(x => x.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+        //    .AsQueryable();
 
         if (req.Start is not null && req.Start != default)
         {
             q = q.Where(x => x.DateDocument >= req.Start.SetKindUtc());
-            qp = qp.Where(x => x.DatePayment >= req.Start.SetKindUtc());
+            // qp = qp.Where(x => x.DatePayment >= req.Start.SetKindUtc());
         }
 
         if (req.End is not null && req.End != default)
         {
             req.End = req.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
             q = q.Where(x => x.DateDocument <= req.End);
-            qp = qp.Where(x => x.DatePayment <= req.End);
+            // qp = qp.Where(x => x.DatePayment <= req.End);
         }
 
         IQueryable<PaymentOrderRetailLinkModelDB> qpo = context.PaymentsOrdersLinks.Where(x => x.PaymentDocument!.StatusPayment == PaymentsRetailStatusesEnum.Paid && q.Any(y => y.Id == x.OrderDocumentId)).AsQueryable();
-        IQueryable<ConversionOrderRetailLinkModelDB> qco = context.ConversionsOrdersLinksRetail.Where(x => !x.ConversionDocument!.IsDisabled  && q.Any(y => y.Id == x.OrderDocumentId)).AsQueryable();
+        IQueryable<ConversionOrderRetailLinkModelDB> qco = context.ConversionsOrdersLinksRetail.Where(x => !x.ConversionDocument!.IsDisabled && q.Any(y => y.Id == x.OrderDocumentId)).AsQueryable();
 
         return new()
         {

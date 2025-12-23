@@ -9,6 +9,9 @@ namespace SharedLib;
 /// </summary>
 public class SelectRetailDocumentsRequestModel : SelectRetailDocumentsBaseModel
 {
+    /// <inheritdoc/>
+    public List<StatusesDocumentsEnum?>? StatusesFilter { get; set; }
+
     /// <summary>
     /// BuyerFilterIdentityId
     /// </summary>

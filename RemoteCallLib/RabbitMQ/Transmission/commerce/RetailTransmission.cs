@@ -264,11 +264,15 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<WalletRetailReportRowModel>>(TransmissionQueues.FinancialsReportRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OffersOfOrdersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)
-       => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<OffersOfOrdersRetailReportRowModel>>(TransmissionQueues.OffersOfOrdersReportRetailReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)
+       => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<OffersRetailReportRowModel>>(TransmissionQueues.OffersOfOrdersReportRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<MainReportResponseModel> GetMainReportAsync(PeriodBaseModel req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<MainReportResponseModel>(TransmissionQueues.GetMainReportRetailReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfDeliveriesReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfDeliveriesRetailReportRequestModel> req, CancellationToken token = default)
+       => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<OffersRetailReportRowModel>>(TransmissionQueues.OffersOfDeliveriesReportRetailReceive, req, token: token) ?? new();
     #endregion
 }

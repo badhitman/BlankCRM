@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// OffersOfOrdersRetailReportRowModel
 /// </summary>
-public class OffersOfOrdersRetailReportRowModel
+public class OffersRetailReportRowModel
 {
     /// <summary>
     /// Offer

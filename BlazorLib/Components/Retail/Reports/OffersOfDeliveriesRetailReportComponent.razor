@@ -9,7 +9,7 @@
                 Variant="Variant.Text"
                 Class="mb-2"
                 Color="Color.Info">
-        @foreach (StatusesDocumentsEnum sd in Enum.GetValues<StatusesDocumentsEnum>())
+        @foreach (DeliveryStatusesEnum sd in Enum.GetValues<DeliveryStatusesEnum>())
         {
             <MudChip Value="@sd" Text="@sd.DescriptionInfo()" />
         }
