@@ -2399,11 +2399,17 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => x.DateDocument <= req.End);
             qp = qp.Where(x => x.DatePayment <= req.End);
         }
-        
+
+        IQueryable<PaymentOrderRetailLinkModelDB> qpo = context.PaymentsOrdersLinks.Where(x => x.PaymentDocument!.StatusPayment == PaymentsRetailStatusesEnum.Paid && q.Any(y => y.Id == x.OrderDocumentId)).AsQueryable();
+        IQueryable<ConversionOrderRetailLinkModelDB> qco = context.ConversionsOrdersLinksRetail.Where(x => !x.ConversionDocument!.IsDisabled  && q.Any(y => y.Id == x.OrderDocumentId)).AsQueryable();
+
         return new()
         {
             DoneOrdersCount = await q.CountAsync(cancellationToken: token),
-            DoneOrdersSumAmount = await context.RowsOrdersRetails.Where(x => q.Any(y => y.Id == x.OrderId)).SumAsync(x => x.Amount, cancellationToken: token)
+            DoneOrdersSumAmount = await context.RowsOrdersRetails.Where(x => q.Any(y => y.Id == x.OrderId)).SumAsync(x => x.Amount, cancellationToken: token),
+            PaidOnSitePaymentsSumAmount = await qpo.Where(x => x.PaymentDocument!.TypePayment == PaymentsRetailTypesEnum.OnSite).SumAsync(x => x.AmountPayment, cancellationToken: token),
+            PaidNoSitePaymentsSumAmount = await qpo.Where(x => x.PaymentDocument!.TypePayment != PaymentsRetailTypesEnum.OnSite).SumAsync(x => x.AmountPayment, cancellationToken: token),
+            ConversionsSumAmount = await qco.SumAsync(x => x.AmountPayment, cancellationToken: token)
         };
     }
     #endregion

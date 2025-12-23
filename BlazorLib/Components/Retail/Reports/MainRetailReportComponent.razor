@@ -4,7 +4,7 @@
 
 <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
 
-@if (IsBusyProgress)
+@if (IsBusyProgress || ReportData is null)
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" data-cn="@this.GetType().Name" />
 }
@@ -13,18 +13,51 @@ else
     <MudCard>
         <MudCardHeader>
             <CardHeaderContent>
-                <MudText Typo="Typo.h6">Всего заказов [@ReportData?.DoneOrdersCount шт.] на сумму [@ReportData?.DoneOrdersSumAmount.ToString("C")]</MudText>
+                <MudText Typo="Typo.h6">
+                    Всего заказов [@ReportData.DoneOrdersCount шт.] на сумму [@ReportData.DoneOrdersSumAmount.ToString("C")]
+                    <span class="ms-2">(@(Math.Round((ReportData.DoneOrdersSumAmount / 120), 2)))</span>
+                </MudText>
             </CardHeaderContent>
             <CardHeaderActions>
                 <MudIconButton Icon="@Icons.Material.Filled.Cached" Color="Color.Default" OnClick="ReloadServerData" />
             </CardHeaderActions>
         </MudCardHeader>
         <MudCardContent>
-            <MudText>This day everything happened.</MudText>
-            <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th scope="row">Оплачено "На сайте"</th>
+                        <td>
+                            @ReportData.PaidOnSitePaymentsSumAmount.ToString("C")
+                            <span class="ms-2">(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount / 120), 2)))</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Другие платежи</th>
+                        <td>
+                            @ReportData.PaidNoSitePaymentsSumAmount.ToString("C")
+                            <span class="ms-2">(@(Math.Round((ReportData.PaidNoSitePaymentsSumAmount / 120), 2)))</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Перевод/конвертация (поступило)</th>
+                        <td>
+                            @ReportData.ConversionsSumAmount.ToString("C")
+                            <span class="ms-2">(@(Math.Round((ReportData.ConversionsSumAmount / 120), 2)))</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Итого:</th>
+                        <td>
+                            @(Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2).ToString("C"))
+                            <span>(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)))</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </MudCardContent>
-        <MudCardActions>
+        @* <MudCardActions>
             <MudButton Variant="Variant.Text" Color="Color.Primary">Read more</MudButton>
-        </MudCardActions>
+        </MudCardActions> *@
     </MudCard>
 }
