@@ -20,7 +20,7 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
 
     /// <inheritdoc/>
     [CascadingParameter]
-    public MMMYearSelectorComponent? Owner { get; set; }
+    public MMMWrapperComponent? Owner { get; set; }
 
 
     MudTable<WalletRetailReportRowModel>? _tableRef;

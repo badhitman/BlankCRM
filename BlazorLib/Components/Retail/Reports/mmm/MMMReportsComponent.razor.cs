@@ -9,9 +9,9 @@ using SharedLib;
 namespace BlazorLib.Components.Retail.Reports.mmm;
 
 /// <summary>
-/// MMMMonthSelectorComponent
+/// MMMReportsComponent
 /// </summary>
-public partial class MMMMonthSelectorComponent : BlazorBusyComponentBaseModel
+public partial class MMMReportsComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
@@ -19,7 +19,7 @@ public partial class MMMMonthSelectorComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [CascadingParameter]
-    public MMMYearSelectorComponent? Owner { get; set; }
+    public MMMWrapperComponent? Owner { get; set; }
 
 
     PaymentsRetailReportComponent? _finReport;

@@ -23,7 +23,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
 
     /// <inheritdoc/>
     [CascadingParameter]
-    public MMMYearSelectorComponent? Owner { get; set; }
+    public MMMWrapperComponent? Owner { get; set; }
 
 
     StorageMetadataModel StorageMetadata = new()

@@ -9,9 +9,9 @@ using SharedLib;
 namespace BlazorLib.Components.Retail.Reports.mmm;
 
 /// <summary>
-/// OrdersMMMYearSelectorComponent
+/// MMMWrapperComponent
 /// </summary>
-public partial class MMMYearSelectorComponent
+public partial class MMMWrapperComponent
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
@@ -19,7 +19,7 @@ public partial class MMMYearSelectorComponent
 
     PeriodBaseModel? aboutPeriod;
     List<int> Years = [];
-    MMMMonthSelectorComponent? monthSelect_ref;
+    MMMReportsComponent? monthSelect_ref;
     GregorianCalendar cal = new();
     List<WeekMetadataModel> Weeklies = [];
 

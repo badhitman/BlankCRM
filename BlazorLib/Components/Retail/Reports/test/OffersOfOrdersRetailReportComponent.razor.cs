@@ -20,7 +20,7 @@ public partial class OffersOfOrdersRetailReportComponent : BlazorBusyComponentBa
 
     /// <inheritdoc/>
     [CascadingParameter]
-    public MMMYearSelectorComponent? Owner { get; set; }
+    public MMMWrapperComponent? Owner { get; set; }
 
 
     bool _allowSumConflict;
