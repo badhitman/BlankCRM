@@ -9,11 +9,11 @@
 else
 {
     <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
-        <MudTabPanel Text="Финансовый">
-            <PaymentsRetailReportComponent @ref=_finReport />
-        </MudTabPanel>
         <MudTabPanel Text="Торговый">
             <OffersOfOrdersRetailReportComponent @ref=_retailReport />
+        </MudTabPanel>
+        <MudTabPanel Text="Финансовый">
+            <PaymentsRetailReportComponent @ref=_finReport />
         </MudTabPanel>
         <MudTabPanel Text="Отгрузка">
             <OffersOfDeliveriesRetailReportComponent @ref=_delReport />
