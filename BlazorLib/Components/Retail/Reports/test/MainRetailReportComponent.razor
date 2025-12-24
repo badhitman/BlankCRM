@@ -74,13 +74,13 @@ else
                         <tr>
                             <th scope="row">офисные за онлайн контракты</th>
                             <td>
-                                @((decimal)(ReportData.DoneOrdersCount * BonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120)
+                                @((decimal)(BonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120)
                             </td>
                         </tr>
                         <tr>
                             <th scope="row">офисные при оплате на складе (+переводы/конвертации)</th>
                             <td>
-                                @((decimal)(ReportData.DoneOrdersCount * BonusAmount * (decimal)0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120)
+                                @((decimal)(BonusAmount * (decimal)0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120)
                             </td>
                         </tr>
                         <tr>
