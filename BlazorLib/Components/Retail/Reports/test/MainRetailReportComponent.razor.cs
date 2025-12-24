@@ -39,6 +39,13 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     public async Task ReloadServerData()
     {
+        if (Owner?.SelectedWeek is not null)
+            _dateRange = new()
+            {
+                Start = Owner.SelectedWeek.Value.Start,
+                End = Owner.SelectedWeek.Value.End,
+            };
+
         MainReportRequestModel req = new();
 
         if (Owner is not null && Owner.SelectedWeek.HasValue)

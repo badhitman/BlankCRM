@@ -73,6 +73,13 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
     /// <inheritdoc/>
     public async Task Reload()
     {
+        if (Owner?.SelectedWeek is not null)
+            _dateRange = new()
+            {
+                Start = Owner.SelectedWeek.Value.Start,
+                End = Owner.SelectedWeek.Value.End,
+            };
+
         if (_tableRef is not null)
             await _tableRef.ReloadServerData();
     }

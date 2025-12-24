@@ -66,6 +66,13 @@ public partial class OffersOfOrdersRetailReportComponent : BlazorBusyComponentBa
     /// <inheritdoc/>
     public async Task Reload()
     {
+        if (Owner?.SelectedWeek is not null)
+            _dateRange = new()
+            {
+                Start = Owner.SelectedWeek.Value.Start,
+                End = Owner.SelectedWeek.Value.End,
+            };
+
         if (tableRef is not null)
             await tableRef.ReloadServerData();
     }

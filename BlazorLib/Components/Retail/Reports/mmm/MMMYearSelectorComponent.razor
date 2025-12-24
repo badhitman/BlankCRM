@@ -17,15 +17,20 @@ else
             }
         </div>
     </div>
-    @foreach (WeekMetadataModel _w in Weeklies)
-    {
-        <button @onclick="() => SelectWeek(_w)"
-                type="button"
-                class=@GetCssForBtn(_w)
-                title="@($"{_w.Start} - {_w.End}")">
-            @_w.NumWeekOfYear
-        </button>
-    }
+    <div class="card mb-3">
+        <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-body-secondary">Неделя</h6>
+            @foreach (WeekMetadataModel _w in Weeklies)
+            {
+                <button @onclick="() => SelectWeek(_w)"
+                        type="button"
+                        class=@GetCssForBtn(_w)
+                        title="@($"{_w.Start} - {_w.End}")">
+                    @_w.NumWeekOfYear
+                </button>
+            }
+        </div>
+    </div>
     <CascadingValue Value="this">
         <MMMMonthSelectorComponent @ref=monthSelect_ref />
     </CascadingValue>
