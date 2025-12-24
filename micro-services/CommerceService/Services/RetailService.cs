@@ -2186,22 +2186,21 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<WalletRetailReportRowModel>> FinancialsReportRetailAsync(TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<PaymentOrderRetailLinkModelDB> qp = context.PaymentsOrdersLinks
+            .Where(x => x.PaymentDocument!.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+            .Where(x => x.OrderDocument!.StatusDocument == StatusesDocumentsEnum.Done);
 
-        IQueryable<PaymentRetailDocumentModelDB> qp = context.PaymentsRetailDocuments
-            .Where(x => x.StatusPayment == PaymentsRetailStatusesEnum.Paid)
-            .AsQueryable();
-
-        IQueryable<WalletConversionRetailDocumentModelDB> qc = context.ConversionsDocumentsWalletsRetail
-            .Where(x => !x.IsDisabled)
-            .AsQueryable();
+        IQueryable<ConversionOrderRetailLinkModelDB> qc = context.ConversionsOrdersLinksRetail
+            .Where(x => !x.ConversionDocument!.IsDisabled)
+            .Where(x => x.OrderDocument!.StatusDocument == StatusesDocumentsEnum.Done);
 
         if (req.Payload?.FilterIdentityIds is not null && req.Payload.FilterIdentityIds.Length != 0)
         {
-            qp = qp.Where(x => context.WalletsRetail.Any(y => y.Id == x.WalletId && req.Payload.FilterIdentityIds.Contains(y.UserIdentityId)));
+            qp = qp.Where(x => context.WalletsRetail.Any(y => y.Id == x.PaymentDocument!.WalletId && req.Payload.FilterIdentityIds.Contains(y.UserIdentityId)));
 
             qc = from doc in qc
-                 join sender in context.WalletsRetail on doc.FromWalletId equals sender.Id
-                 join recipient in context.WalletsRetail on doc.ToWalletId equals recipient.Id
+                 join sender in context.WalletsRetail on doc.ConversionDocument!.FromWalletId equals sender.Id
+                 join recipient in context.WalletsRetail on doc.ConversionDocument!.ToWalletId equals recipient.Id
 
                  where req.Payload.FilterIdentityIds.Length == 0 || req.Payload.FilterIdentityIds.Contains(sender.UserIdentityId) || req.Payload.FilterIdentityIds.Contains(recipient.UserIdentityId)
 
@@ -2221,25 +2220,31 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Any(x => x is not null))
         {
             req.Payload.TypesFilter.RemoveAll(x => x is null);
-            qp = qp.Where(x => req.Payload.TypesFilter.Contains(x.TypePayment));
+            qp = qp.Where(x => req.Payload.TypesFilter.Contains(x.PaymentDocument!.TypePayment));
+        }
+
+        if (req.Payload is not null && req.Payload.NumWeekOfYear > 0)
+        {
+            qp = qp.Where(x => x.OrderDocument!.NumWeekOfYear == req.Payload.NumWeekOfYear);
+            qc = qc.Where(x => x.OrderDocument!.NumWeekOfYear == req.Payload.NumWeekOfYear);
         }
 
         if (req.Payload?.Start is not null && req.Payload.Start != default)
         {
-            qp = qp.Where(x => x.DatePayment >= req.Payload.Start.SetKindUtc());
-            qc = qc.Where(x => x.DateDocument >= req.Payload.Start.SetKindUtc());
+            qp = qp.Where(x => x.PaymentDocument!.DatePayment >= req.Payload.Start.SetKindUtc());
+            qc = qc.Where(x => x.ConversionDocument!.DateDocument >= req.Payload.Start.SetKindUtc());
         }
 
         if (req.Payload?.End is not null && req.Payload.End != default)
         {
             req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
-            qp = qp.Where(x => x.DatePayment <= req.Payload.End);
-            qc = qc.Where(x => x.DateDocument <= req.Payload.End);
+            qp = qp.Where(x => x.PaymentDocument!.DatePayment <= req.Payload.End);
+            qc = qc.Where(x => x.ConversionDocument!.DateDocument <= req.Payload.End);
         }
 
-        var _qp1 = qp.Select(x => new { x.WalletId, x.Amount });
-        var _qp2 = qc.Select(x => new { WalletId = x.FromWalletId, Amount = -x.FromWalletSum });
-        var _qp3 = qc.Select(x => new { WalletId = x.ToWalletId, Amount = x.ToWalletSum });
+        var _qp1 = qp.Select(x => new { x.PaymentDocument!.WalletId, Amount = x.AmountPayment });
+        var _qp2 = qc.Select(x => new { WalletId = x.ConversionDocument!.FromWalletId, Amount = -x.ConversionDocument.FromWalletSum });
+        var _qp3 = qc.Select(x => new { WalletId = x.ConversionDocument!.ToWalletId, Amount = x.ConversionDocument.ToWalletSum });
 
         var unionQuery = conversionCheck ? _qp1.Union(_qp2).Union(_qp3) : _qp1;
         if (!paymentsCheck)
@@ -2481,8 +2486,11 @@ public class RetailService(IIdentityTransmission identityRepo,
             // qp = qp.Where(x => x.DatePayment <= req.End);
         }
 
-        IQueryable<PaymentOrderRetailLinkModelDB> qpo = context.PaymentsOrdersLinks.Where(x => x.PaymentDocument!.StatusPayment == PaymentsRetailStatusesEnum.Paid && q.Any(y => y.Id == x.OrderDocumentId)).AsQueryable();
-        IQueryable<ConversionOrderRetailLinkModelDB> qco = context.ConversionsOrdersLinksRetail.Where(x => !x.ConversionDocument!.IsDisabled && q.Any(y => y.Id == x.OrderDocumentId)).AsQueryable();
+        IQueryable<PaymentOrderRetailLinkModelDB> qpo = context.PaymentsOrdersLinks
+            .Where(x => x.PaymentDocument!.StatusPayment == PaymentsRetailStatusesEnum.Paid && q.Any(y => y.Id == x.OrderDocumentId));
+
+        IQueryable<ConversionOrderRetailLinkModelDB> qco = context.ConversionsOrdersLinksRetail
+            .Where(x => !x.ConversionDocument!.IsDisabled && q.Any(y => y.Id == x.OrderDocumentId));
 
         return new()
         {

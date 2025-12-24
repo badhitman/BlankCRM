@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using BlazorLib.Components.Retail.Reports.mmm;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
@@ -15,6 +16,11 @@ public partial class OffersOfDeliveriesRetailReportComponent : BlazorBusyCompone
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
+
+
+    /// <inheritdoc/>
+    [CascadingParameter]
+    public MMMYearSelectorComponent? Owner { get; set; }
 
 
     bool _allowSumConflict;
@@ -57,6 +63,25 @@ public partial class OffersOfDeliveriesRetailReportComponent : BlazorBusyCompone
         }
     }
 
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (Owner?.SelectedWeek is not null)
+            _dateRange = new()
+            {
+                Start = Owner.SelectedWeek.Value.Start,
+                End = Owner.SelectedWeek.Value.End,
+            };
+    }
+
+    /// <inheritdoc/>
+    public async Task Reload()
+    {
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+    }
+
     async Task OnChipClicked()
     {
         includeUnset = !includeUnset;
@@ -87,7 +112,11 @@ public partial class OffersOfDeliveriesRetailReportComponent : BlazorBusyCompone
             req.Payload.StatusesFilter.Add(null);
         }
 
-        if (DateRangeProp is not null)
+        if (Owner is not null && Owner.SelectedWeek.HasValue)
+        {
+            req.Payload.NumWeekOfYear = Owner.SelectedWeek.Value.NumWeekOfYear;
+        }
+        else if (DateRangeProp is not null)
         {
             req.Payload.Start = DateRangeProp.Start;
             req.Payload.End = DateRangeProp.End;

@@ -14,4 +14,7 @@ public class SelectOffersOfDeliveriesRetailReportRequestModel : SelectRetailDocu
 
     /// <inheritdoc/>
     public List<DeliveryTypesEnum?>? TypesFilter { get; set; }
+
+    /// <inheritdoc/>
+    public int NumWeekOfYear { get; set; }
 }

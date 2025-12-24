@@ -20,9 +20,13 @@
         </div>
     </div>
     <MudSpacer />
-    <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
+    <MudDateRangePicker Disabled=@(Owner is not null)
+                        Clearable=@(Owner is null)
+                        PickerVariant="@PickerVariant.Inline"
+                        @bind-DateRange="@DateRangeProp"
+                        Margin="Margin.Dense" />
 </MudStack>
-<MudTable ServerData="ServerReload" Dense Hover @ref=_tableRef>
+<MudTable ServerData="ServerReload" Dense Hover @ref=_tableRef Loading=IsBusyProgress>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Финансовый отчёт (обороты)</MudText>
         <MudSpacer />

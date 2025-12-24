@@ -11,4 +11,7 @@ public class SelectPaymentsRetailReportRequestModel : SelectPaymentsRetailBaseRe
 {
     /// <inheritdoc/>
     public string[]? FilterIdentityIds { get; set; }
+
+    /// <inheritdoc/>
+    public int NumWeekOfYear { get; set; }
 }

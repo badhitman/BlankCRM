@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using BlazorLib.Components.Retail.Reports.mmm;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
@@ -17,6 +18,11 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     IRetailService RetailRepo { get; set; } = default!;
 
 
+    /// <inheritdoc/>
+    [CascadingParameter]
+    public MMMYearSelectorComponent? Owner { get; set; }
+
+
     MainReportResponseModel? ReportData;
 
     DateRange? _dateRange;
@@ -30,7 +36,8 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         }
     }
 
-    async Task ReloadServerData()
+    /// <inheritdoc/>
+    public async Task ReloadServerData()
     {
         PeriodBaseModel req = new();
 
@@ -49,6 +56,14 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        if (Owner?.SelectedWeek is not null)
+            _dateRange = new()
+            {
+                Start = Owner.SelectedWeek.Value.Start,
+                End = Owner.SelectedWeek.Value.End,
+            };
+
         await ReloadServerData();
     }
 }

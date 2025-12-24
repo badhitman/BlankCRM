@@ -16,7 +16,11 @@
     </MudChipSet>
     <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
     <MudSpacer />
-    <MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
+    <MudDateRangePicker PickerVariant="@PickerVariant.Inline"
+                        @bind-DateRange="@DateRangeProp"
+                        Margin="Margin.Dense"
+                        Disabled=@(Owner is not null)
+                        Clearable=@(Owner is null) />
 </MudStack>
 <MudTable ServerData="ServerReload"
           Dense Hover Striped

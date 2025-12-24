@@ -11,4 +11,7 @@ public class SelectOffersOfOrdersRetailReportRequestModel : SelectRetailDocument
 {
     /// <inheritdoc/>
     public List<StatusesDocumentsEnum?>? StatusesFilter { get; set; }
+
+    /// <inheritdoc/>
+    public int NumWeekOfYear { get; set; }
 }

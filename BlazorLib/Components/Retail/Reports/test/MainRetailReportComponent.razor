@@ -2,7 +2,11 @@
 
 @using MudBlazor
 
-<MudDateRangePicker PickerVariant="@PickerVariant.Inline" @bind-DateRange="@DateRangeProp" Margin="Margin.Dense" Clearable />
+<MudDateRangePicker PickerVariant="@PickerVariant.Inline"
+                    @bind-DateRange="@DateRangeProp"
+                    Margin="Margin.Dense"
+                    Disabled=@(Owner is not null)
+                    Clearable=@(Owner is null) />
 
 @if (IsBusyProgress || ReportData is null)
 {

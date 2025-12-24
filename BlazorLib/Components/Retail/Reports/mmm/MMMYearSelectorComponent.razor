@@ -9,5 +9,24 @@
 }
 else
 {
-    <MMMMonthSelectorComponent />
+    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group me-2" role="group" aria-label="First group">
+            @foreach (int _year in Years)
+            {
+                <button type="button" class="btn btn-@(SelectedYear == _year ? "" : "-outline")primary">@_year</button>
+            }
+        </div>
+    </div>
+    @foreach (WeekMetadataModel _w in Weeklies)
+    {
+        <button @onclick="async () => await SelectWeek(_w)"
+                type="button"
+                class=@GetCssForBtn(_w)
+                title="@($"{_w.Start} - {_w.End}")">
+            @_w.NumWeekOfYear
+        </button>
+    }
+    <CascadingValue Value="this">
+        <MMMMonthSelectorComponent @ref=monthSelect_ref />
+    </CascadingValue>
 }
