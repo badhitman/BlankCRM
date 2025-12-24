@@ -2507,7 +2507,8 @@ public class RetailService(IIdentityTransmission identityRepo,
             PaidOnSitePaymentsCount = await qpo.Where(x => x.PaymentDocument!.TypePayment == PaymentsRetailTypesEnum.OnSite).CountAsync(token),
             PaidNoSitePaymentsSumAmount = await qpo.Where(x => x.PaymentDocument!.TypePayment != PaymentsRetailTypesEnum.OnSite).SumAsync(x => x.AmountPayment, cancellationToken: token),
             PaidNoSitePaymentsCount = await qpo.Where(x => x.PaymentDocument!.TypePayment != PaymentsRetailTypesEnum.OnSite).CountAsync(cancellationToken: token),
-            ConversionsSumAmount = await qco.SumAsync(x => x.AmountPayment, cancellationToken: token)
+            ConversionsSumAmount = await qco.SumAsync(x => x.AmountPayment, cancellationToken: token),
+            ConversionsCount = await qco.CountAsync( token),
         };
     }
 
