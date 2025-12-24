@@ -2364,8 +2364,8 @@ public class RetailService(IIdentityTransmission identityRepo,
         {
             return new()
             {
-                AmountSum = amountSum,
-                CountSum = countSum,
+                Sum = amountSum,
+                Count = countSum,
                 Offer = offersDb.First(x => x.Id == offerId)
             };
         }
@@ -2385,29 +2385,35 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfDeliveriesReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfDeliveriesRetailReportRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RetailOrderDeliveryLinkModelDB> q = context.OrdersDeliveriesLinks.AsQueryable();
+        IQueryable<RowOfDeliveryRetailDocumentModelDB> q = context.RowsDeliveryDocumentsRetail.AsQueryable();
 
         //if (req.Payload?.EqualsSumFilter != true)
-        //    q = context.DeliveryDocumentsRetail
-        //        .Where(x => context.RowsDeliveryDocumentsRetail.Where(y => y.DocumentId == x.Id).Sum(y => y.Amount) == (context.OrdersDeliveriesLinks.Where(y => y.OrderDocumentId == x.Id && context.PaymentsRetailDocuments.Any(z => z.StatusPayment == PaymentsRetailStatusesEnum.Paid && z.Id == y.PaymentDocumentId)).Sum(y => y.AmountPayment) + context.ConversionsOrdersLinksRetail.Where(y => y.OrderDocumentId == x.Id && context.ConversionsDocumentsWalletsRetail.Any(z => z.Id == y.ConversionDocumentId && !z.IsDisabled)).Sum(y => y.AmountPayment)))
-        //        .AsQueryable();
+        //{
+        //    IQueryable<DocumentRetailModelDB> qe = context.OrdersRetail
+        //            .Where(x => 
+        //                context.RowsOrdersRetails.Where(y => y.OrderId == x.Id).Sum(y => y.Amount) == 
+        //                (context.OrdersDeliveriesLinks.Where(y => y.OrderDocumentId == x.Id && context.OrdersDeliveriesLinks.Any(z => z.DeliveryDocument.DeliveryStatus == DeliveryStatusesEnum.Delivered && z. == y.PaymentDocumentId)).Sum(y => y.AmountPayment) + context.ConversionsOrdersLinksRetail.Where(y => y.OrderDocumentId == x.Id && context.ConversionsDocumentsWalletsRetail.Any(z => z.Id == y.ConversionDocumentId && !z.IsDisabled)).Sum(y => y.AmountPayment)))
+        //            .AsQueryable();
+
+        //    q = q.Where(x => qe.Any(y => y.Id == x.OrderDocumentId));
+        //}
 
         if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Count != 0)
         {
             bool _unsetChecked = req.Payload.StatusesFilter.Contains(null);
-            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.DeliveryDocument!.DeliveryStatus) || (_unsetChecked && x.DeliveryDocument!.DeliveryStatus == 0));
+            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.Document!.DeliveryStatus) || (_unsetChecked && x.Document!.DeliveryStatus == 0));
         }
 
-        if (req.Payload is not null && req.Payload.NumWeekOfYear > 0)
-            q = q.Where(x => x.OrderDocument!.NumWeekOfYear == req.Payload.NumWeekOfYear);
+        //if (req.Payload is not null && req.Payload.NumWeekOfYear > 0)
+        //    q = q.Where(x => x.Document!.NumWeekOfYear == req.Payload.NumWeekOfYear);
 
         if (req.Payload?.Start is not null && req.Payload.Start != default)
-            q = q.Where(x => x.DeliveryDocument!.CreatedAtUTC >= req.Payload.Start.SetKindUtc());
+            q = q.Where(x => x.Document!.CreatedAtUTC >= req.Payload.Start.SetKindUtc());
 
         if (req.Payload?.End is not null && req.Payload.End != default)
         {
             req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
-            q = q.Where(x => x.DeliveryDocument!.CreatedAtUTC <= req.Payload.End);
+            q = q.Where(x => x.Document!.CreatedAtUTC <= req.Payload.End);
         }
 
         IQueryable<RowOfDeliveryRetailDocumentModelDB> qr = context.RowsDeliveryDocumentsRetail
@@ -2417,12 +2423,12 @@ public class RetailService(IIdentityTransmission identityRepo,
         var _fq = from p in qr
                   group p by p.OfferId
                   into g
-                  select new { OfferId = g.Key, Amount = g.Sum(x => x.Amount), Counter = g.Sum(x => x.Quantity) };
+                  select new { OfferId = g.Key, Weight = g.Sum(x => x.WeightOffer), Counter = g.Sum(x => x.Quantity) };
 
         var oq = req.SortingDirection switch
         {
-            DirectionsEnum.Up => _fq.OrderBy(x => x.Amount),
-            DirectionsEnum.Down => _fq.OrderByDescending(x => x.Amount),
+            DirectionsEnum.Up => _fq.OrderBy(x => x.Weight),
+            DirectionsEnum.Down => _fq.OrderByDescending(x => x.Weight),
             _ => _fq.OrderBy(x => x.OfferId)
         };
 
@@ -2445,12 +2451,12 @@ public class RetailService(IIdentityTransmission identityRepo,
         int[] offersIds = [.. res.Select(x => x.OfferId)];
         OfferModelDB[] offersDb = await context.Offers.Where(x => offersIds.Contains(x.Id)).ToArrayAsync(cancellationToken: token);
 
-        OffersRetailReportRowModel getObject(decimal offerId, decimal amountSum, decimal countSum)
+        OffersRetailReportRowModel getObject(decimal offerId, decimal weightSum, decimal countSum)
         {
             return new()
             {
-                AmountSum = amountSum,
-                CountSum = countSum,
+                Sum = weightSum,
+                Count = countSum,
                 Offer = offersDb.First(x => x.Id == offerId)
             };
         }
@@ -2462,7 +2468,7 @@ public class RetailService(IIdentityTransmission identityRepo,
             SortingDirection = req.SortingDirection,
             SortBy = req.SortBy,
             TotalRowsCount = await _fq.CountAsync(cancellationToken: token),
-            Response = [.. res.Select(x => getObject(x.OfferId, x.Amount, x.Counter))],
+            Response = [.. res.Select(x => getObject(x.OfferId, x.Weight, x.Counter))],
         };
     }
 

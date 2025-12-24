@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <summary>
-/// OffersOfOrdersRetailReportRowModel
+/// OffersRetailReportRowModel
 /// </summary>
 public class OffersRetailReportRowModel
 {
@@ -17,10 +17,10 @@ public class OffersRetailReportRowModel
     /// <summary>
     /// Сумма
     /// </summary>
-    public required decimal AmountSum { get; set; }
+    public required decimal Sum { get; set; }
 
     /// <summary>
     /// Количество
     /// </summary>
-    public required decimal CountSum { get; set; }
+    public required decimal Count { get; set; }
 }

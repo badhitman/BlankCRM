@@ -18,10 +18,10 @@ public partial class MMMWrapperComponent
 
 
     PeriodBaseModel? aboutPeriod;
-    List<int> Years = [];
+    readonly List<int> Years = [];
     MMMReportsComponent? monthSelect_ref;
-    GregorianCalendar cal = new();
-    List<WeekMetadataModel> Weeklies = [];
+    readonly GregorianCalendar cal = new();
+    readonly List<WeekMetadataModel> Weeklies = [];
 
     string GetCssForBtn(WeekMetadataModel _w)
     {

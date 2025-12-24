@@ -60,13 +60,62 @@ else
                 </tbody>
             </table>
             <hr />
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Офисные</label>
+            <div class="mb-4">
+                <label class="form-label">Офисные</label>
                 <input type="number"
                        class="form-control"
                        @bind-value="BonusAmount"
                        @bind-value:event="oninput">
             </div>
+
+            <div class="input-group mb-2" title="перевод в компанию на расчетный счет">
+                <span class="input-group-text">перевод в компанию на расчетный счет</span>
+                <input type="number"
+                       class="form-control"
+                       @bind-value:event="oninput"
+                       @bind-value="TransferToCompanyBankAccount">
+                <input type="text"
+                       class="form-control"
+                       @bind-value:event="oninput"
+                       @bind-value="TransferToCompanyBankAccountFootNote">
+            </div>
+
+            <div class="input-group mb-2" title="перевод в компанию бонусов">
+                <span class="input-group-text">перевод в компанию бонусов</span>
+                <input type="number"
+                       class="form-control"
+                       @bind-value:event="oninput"
+                       @bind-value="TransferBonusesCompany">
+                <input type="text"
+                       class="form-control"
+                       @bind-value:event="oninput"
+                       @bind-value="TransferBonusesCompanyFootNote">
+            </div>
+
+            <div class="input-group mb-2" title="оплата наличными">
+                <span class="input-group-text">оплата наличными</span>
+                <input type="number"
+                       class="form-control"
+                       @bind-value:event="oninput"
+                       @bind-value="CashPayment">
+                <input type="text"
+                       class="form-control"
+                       @bind-value:event="oninput"
+                       @bind-value="CashPaymentFootNote">
+            </div>
+
+            <div class="input-group mb-2" title="долг">
+                <span class="input-group-text">долг</span>
+                <input type="number"
+                       class="form-control"
+                       @bind-value:event="oninput"
+                       @bind-value="Debt">
+                <input type="text"
+                       class="form-control"
+                       @bind-value:event="oninput"
+                       @bind-value="DebtFootNote">
+            </div>
+
             @if (_bonusAmount > 0)
             {
                 <table class="table">

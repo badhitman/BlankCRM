@@ -41,13 +41,13 @@
         <MudTh>Offer</MudTh>
         <MudTh>Кол-во</MudTh>
         <MudTh>
-            <MudTableSortLabel T="OffersRetailReportRowModel" SortLabel="@(nameof(OffersRetailReportRowModel.AmountSum))">Сумма</MudTableSortLabel>
+            <MudTableSortLabel T="OffersRetailReportRowModel" SortLabel="@(nameof(OffersRetailReportRowModel.Sum))">Сумма</MudTableSortLabel>
         </MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Offer">@context.Offer.GetName()</MudTd>
-        <MudTd DataLabel="Кол-во">@context.CountSum</MudTd>
-        <MudTd DataLabel="Сумма">@context.AmountSum</MudTd>
+        <MudTd DataLabel="Кол-во">@context.Count</MudTd>
+        <MudTd DataLabel="Сумма">@context.Sum</MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>
