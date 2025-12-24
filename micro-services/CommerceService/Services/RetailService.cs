@@ -2461,7 +2461,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<MainReportResponseModel> GetMainReportAsync(PeriodBaseModel req, CancellationToken token = default)
+    public async Task<MainReportResponseModel> GetMainReportAsync(MainReportRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 

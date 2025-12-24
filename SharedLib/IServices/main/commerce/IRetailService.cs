@@ -110,7 +110,7 @@ public interface IRetailService
     public Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfDeliveriesReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfDeliveriesRetailReportRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<MainReportResponseModel> GetMainReportAsync(PeriodBaseModel req, CancellationToken token = default);
+    public Task<MainReportResponseModel> GetMainReportAsync(MainReportRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<PeriodBaseModel> AboutPeriodAsync(object? req = default, CancellationToken token = default);

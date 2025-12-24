@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// GetMainReport
 /// </summary>
 public class GetMainReportRetailReceive(IRetailService commRepo)
-    : IResponseReceive<PeriodBaseModel?, MainReportResponseModel?>
+    : IResponseReceive<MainReportRequestModel?, MainReportResponseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetMainReportRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<MainReportResponseModel?> ResponseHandleActionAsync(PeriodBaseModel? req, CancellationToken token = default)
+    public async Task<MainReportResponseModel?> ResponseHandleActionAsync(MainReportRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commRepo.GetMainReportAsync(req, token);
