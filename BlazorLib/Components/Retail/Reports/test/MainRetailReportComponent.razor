@@ -86,54 +86,77 @@ else
                 </table>
             }
 
-            <div class="input-group mb-2" title="перевод в компанию на расчетный счет">
-                <span class="input-group-text">перевод в компанию на расчетный счет</span>
-                <input type="number"
-                       class="form-control"
-                       @bind-value:event="oninput"
-                       @bind-value="TransferToCompanyBankAccount">
-                <input type="text"
-                       class="form-control"
-                       @bind-value:event="oninput"
-                       @bind-value="TransferToCompanyBankAccountFootNote">
-            </div>
-
-            <div class="input-group mb-2" title="перевод в компанию бонусов">
-                <span class="input-group-text">перевод в компанию бонусов</span>
-                <input type="number"
-                       class="form-control"
-                       @bind-value:event="oninput"
-                       @bind-value="TransferBonusesCompany">
-                <input type="text"
-                       class="form-control"
-                       @bind-value:event="oninput"
-                       @bind-value="TransferBonusesCompanyFootNote">
-            </div>
-
-            <div class="input-group mb-2" title="оплата наличными">
-                <span class="input-group-text">оплата наличными</span>
-                <input type="number"
-                       class="form-control"
-                       @bind-value:event="oninput"
-                       @bind-value="CashPayment">
-                <input type="text"
-                       class="form-control"
-                       @bind-value:event="oninput"
-                       @bind-value="CashPaymentFootNote">
-            </div>
-
-            <div class="input-group mb-2" title="долг">
-                <span class="input-group-text">долг</span>
-                <input type="number"
-                       class="form-control"
-                       @bind-value:event="oninput"
-                       @bind-value="Debt">
-                <input type="text"
-                       class="form-control"
-                       @bind-value:event="oninput"
-                       @bind-value="DebtFootNote">
-            </div>
-
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Note</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">перевод в компанию на расчетный счет</th>
+                        <td>
+                            <input type="number"
+                                   class="form-control"
+                                   @bind-value:event="oninput"
+                                   @bind-value="TransferToCompanyBankAccount">
+                        </td>
+                        <td>
+                            <input type="text"
+                                   class="form-control"
+                                   @bind-value:event="oninput"
+                                   @bind-value="TransferToCompanyBankAccountFootNote">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">перевод в компанию бонусо</th>
+                        <td>
+                            <input type="number"
+                                   class="form-control"
+                                   @bind-value:event="oninput"
+                                   @bind-value="TransferBonusesCompany">
+                        </td>
+                        <td>
+                            <input type="text"
+                                   class="form-control"
+                                   @bind-value:event="oninput"
+                                   @bind-value="TransferBonusesCompanyFootNote">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">оплата наличными</th>
+                        <td>
+                            <input type="number"
+                                   class="form-control"
+                                   @bind-value:event="oninput"
+                                   @bind-value="CashPayment">
+                        </td>
+                        <td>
+                            <input type="text"
+                                   class="form-control"
+                                   @bind-value:event="oninput"
+                                   @bind-value="CashPaymentFootNote">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">долг</th>
+                        <td>
+                            <input type="number"
+                                   class="form-control"
+                                   @bind-value:event="oninput"
+                                   @bind-value="Debt">
+                        </td>
+                        <td>
+                            <input type="text"
+                                   class="form-control"
+                                   @bind-value:event="oninput"
+                                   @bind-value="DebtFootNote">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </MudCardContent>
         @* <MudCardActions>
             <MudButton Variant="Variant.Text" Color="Color.Primary">Read more</MudButton>
