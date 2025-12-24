@@ -264,28 +264,9 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     #endregion
 
     #region BonusAmount
-    readonly StorageMetadataModel BonusAmountStorageMetadata = new()
-    {
-        ApplicationName = "MMM",
-        PropertyName = "BonusAmount",
-    };
 
     decimal _bonusAmount = 0;
-    decimal BonusAmount
-    {
-        get => _bonusAmount;
-        set
-        {
-            _bonusAmount = value;
-            InvokeAsync(SaveBonusAmountParameter);
-        }
-    }
 
-    async void SaveBonusAmountParameter()
-    {
-        _ = await StorageTransmissionRepo.SaveParameterAsync<decimal?>(BonusAmount, BonusAmountStorageMetadata, true);
-        StateHasChanged();
-    }
     #endregion
 
     /// <inheritdoc/>
@@ -338,7 +319,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
 
         await SetBusyAsync();
 
-        TResponseModel<decimal> getDecimal = await StorageTransmissionRepo.ReadParameterAsync<decimal>(BonusAmountStorageMetadata);
+        TResponseModel<decimal> getDecimal = await StorageTransmissionRepo.ReadParameterAsync<decimal>(GlobalStaticCloudStorageMetadata.BonusAmountStorageMetadata);
         _bonusAmount = getDecimal.Response;
 
         getDecimal = await StorageTransmissionRepo.ReadParameterAsync<decimal>(DebtStorageMetadata);

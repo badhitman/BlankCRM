@@ -64,6 +64,13 @@ public static partial class GlobalStaticCloudStorageMetadata
         PrefixPropertyName = Routes.DUMP_ACTION_NAME,
     };
 
+    /// <inheritdoc/>
+    public static readonly StorageMetadataModel BonusAmountStorageMetadata = new()
+    {
+        ApplicationName = "MMM",
+        PropertyName = "BonusAmount",
+    };
+
     /// <summary>
     /// QuoteSmallStrategyBidVolume
     /// </summary>

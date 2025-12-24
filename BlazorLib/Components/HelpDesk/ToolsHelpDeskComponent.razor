@@ -84,6 +84,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <DecimalParameterStorageComponent Label="Офисные"
+                                                                  InitValueIfNotExist=540
+                                                                  HelperText="Офисные"
+                                                                  KeyStorage="GlobalStaticCloudStorageMetadata.BonusAmountStorageMetadata" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </MudTabPanel>
         </MudTabs>
@@ -98,10 +108,10 @@
         <UsersTableComponent HideClaimsColumn HideRolesColumn
                              RolesMarkers="@showMarkersRoles"
                              RolesManageKit="@GlobalStaticConstantsRoles.Roles.AllHelpDeskRoles.Union(
-                                                                                                                                                                                                                                                        [GlobalStaticConstantsRoles.Roles.CommerceManager,
-                                                                                                                                                                                                                                                         GlobalStaticConstantsRoles.Roles.CommerceClient,
-                                                                                                                                                                                                                                                         GlobalStaticConstantsRoles.Roles.Debug,
-                                                                                                                                                                                                                                                         GlobalStaticConstantsRoles.Roles.RetailManage])" />
+                                                                                                                                                                                                                                                                                                                  [GlobalStaticConstantsRoles.Roles.CommerceManager,
+                                                                                                                                                                                                                                                                                                                   GlobalStaticConstantsRoles.Roles.CommerceClient,
+                                                                                                                                                                                                                                                                                                                   GlobalStaticConstantsRoles.Roles.Debug,
+                                                                                                                                                                                                                                                                                                                   GlobalStaticConstantsRoles.Roles.RetailManage])" />
     </MudTabPanel>
     <MudTabPanel Text="Notification templates">
         <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">
