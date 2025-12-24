@@ -32,7 +32,7 @@ else
                     <tr>
                         <th scope="row">Оплачено "На сайте"</th>
                         <td>
-                            @ReportData.PaidOnSitePaymentsSumAmount.ToString("C")
+                            x @ReportData.PaidOnSitePaymentsCount шт. @ReportData.PaidOnSitePaymentsSumAmount.ToString("C")
                             <span class="ms-2">(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount / 120), 2)))</span>
                         </td>
                     </tr>
@@ -60,13 +60,39 @@ else
                 </tbody>
             </table>
             <hr />
-            <div class="mb-4">
+            <div class="mb-3">
                 <label class="form-label">Офисные</label>
                 <input type="number"
                        class="form-control"
                        @bind-value="BonusAmount"
                        @bind-value:event="oninput">
             </div>
+
+            @if (_bonusAmount > 0)
+            {
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th scope="row">офисные за онлайн контракты</th>
+                            <td>
+                                @((decimal)(BonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120)
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">офисные при оплате на складе (+переводы/конвертации)</th>
+                            <td>
+                                @((decimal)(BonusAmount * (decimal)0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120)
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><div class="d-flex flex-row-reverse">Итого:</div></th>
+                            <td>
+                                @(((decimal)(BonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + ((decimal)(BonusAmount * (decimal)0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120))
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
 
             <div class="input-group mb-2" title="перевод в компанию на расчетный счет">
                 <span class="input-group-text">перевод в компанию на расчетный счет</span>
@@ -116,31 +142,6 @@ else
                        @bind-value="DebtFootNote">
             </div>
 
-            @if (_bonusAmount > 0)
-            {
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <th scope="row">офисные за онлайн контракты</th>
-                            <td>
-                                @((decimal)(BonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120)
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">офисные при оплате на складе (+переводы/конвертации)</th>
-                            <td>
-                                @((decimal)(BonusAmount * (decimal)0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120)
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><div class="d-flex flex-row-reverse">Итого:</div></th>
-                            <td>
-                                @(((decimal)(BonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + ((decimal)(BonusAmount * (decimal)0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120))
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            }
         </MudCardContent>
         @* <MudCardActions>
             <MudButton Variant="Variant.Text" Color="Color.Primary">Read more</MudButton>

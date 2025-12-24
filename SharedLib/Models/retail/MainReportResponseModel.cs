@@ -28,6 +28,11 @@ public class MainReportResponseModel
     public decimal PaidOnSitePaymentsSumAmount { get; set; }
 
     /// <summary>
+    /// Оплаты [на сайте]
+    /// </summary>
+    public int PaidOnSitePaymentsCount { get; set; }
+
+    /// <summary>
     /// Оплаты [не на сайте]
     /// </summary>
     public decimal PaidNoSitePaymentsSumAmount { get; set; }
