@@ -17,11 +17,32 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
+    [Inject]
+    IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [CascadingParameter]
     public MMMYearSelectorComponent? Owner { get; set; }
 
+
+    StorageMetadataModel StorageMetadata = new()
+    {
+        ApplicationName = "MMM",
+        PropertyName = "office",
+        PrefixPropertyName = "bonus-amount",
+    };
+
+    decimal _bonusAmount = 0;
+    decimal BonusAmount
+    {
+        get => _bonusAmount;
+        set
+        {
+            _bonusAmount = value;
+            InvokeAsync(SaveParameter);
+        }
+    }
 
     MainReportResponseModel? ReportData;
 
@@ -34,6 +55,12 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
             _dateRange = value;
             InvokeAsync(ReloadServerData);
         }
+    }
+
+    async void SaveParameter()
+    {
+        _ = await StorageTransmissionRepo.SaveParameterAsync<decimal?>(BonusAmount, StorageMetadata, true);
+        StateHasChanged();
     }
 
     /// <inheritdoc/>
@@ -68,6 +95,9 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     {
         await base.OnInitializedAsync();
 
+        await SetBusyAsync();
+        TResponseModel<decimal> showCreatingIssue = await StorageTransmissionRepo.ReadParameterAsync<decimal>(StorageMetadata);
+        _bonusAmount = showCreatingIssue.Response;
         if (Owner?.SelectedWeek is not null)
             _dateRange = new()
             {
@@ -76,5 +106,6 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
             };
 
         await ReloadServerData();
+        await SetBusyAsync(false);
     }
 }
