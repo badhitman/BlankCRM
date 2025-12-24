@@ -2313,6 +2313,9 @@ public class RetailService(IIdentityTransmission identityRepo,
             q = q.Where(x => req.Payload.StatusesFilter.Contains(x.StatusDocument) || (_unsetChecked && x.StatusDocument == 0));
         }
 
+        if (req.Payload is not null && req.Payload.NumWeekOfYear > 0)
+            q = q.Where(x => x.NumWeekOfYear == req.Payload.NumWeekOfYear);
+
         if (req.Payload?.Start is not null && req.Payload.Start != default)
             q = q.Where(x => x.DateDocument >= req.Payload.Start.SetKindUtc());
 
@@ -2382,7 +2385,7 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfDeliveriesReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfDeliveriesRetailReportRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<DeliveryDocumentRetailModelDB> q = context.DeliveryDocumentsRetail.AsQueryable();
+        IQueryable<RetailOrderDeliveryLinkModelDB> q = context.OrdersDeliveriesLinks.AsQueryable();
 
         //if (req.Payload?.EqualsSumFilter != true)
         //    q = context.DeliveryDocumentsRetail
@@ -2392,19 +2395,22 @@ public class RetailService(IIdentityTransmission identityRepo,
         if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Count != 0)
         {
             bool _unsetChecked = req.Payload.StatusesFilter.Contains(null);
-            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.DeliveryStatus) || (_unsetChecked && x.DeliveryStatus == 0));
+            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.DeliveryDocument!.DeliveryStatus) || (_unsetChecked && x.DeliveryDocument!.DeliveryStatus == 0));
         }
 
+        if (req.Payload is not null && req.Payload.NumWeekOfYear > 0)
+            q = q.Where(x => x.OrderDocument!.NumWeekOfYear == req.Payload.NumWeekOfYear);
+
         if (req.Payload?.Start is not null && req.Payload.Start != default)
-            q = q.Where(x => x.CreatedAtUTC >= req.Payload.Start.SetKindUtc());
+            q = q.Where(x => x.DeliveryDocument!.CreatedAtUTC >= req.Payload.Start.SetKindUtc());
 
         if (req.Payload?.End is not null && req.Payload.End != default)
         {
             req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
-            q = q.Where(x => x.CreatedAtUTC <= req.Payload.End);
+            q = q.Where(x => x.DeliveryDocument!.CreatedAtUTC <= req.Payload.End);
         }
 
-        var qr = context.RowsDeliveryDocumentsRetail
+        IQueryable<RowOfDeliveryRetailDocumentModelDB> qr = context.RowsDeliveryDocumentsRetail
            .Where(x => q.Any(y => y.Id == x.DocumentId))
            .AsQueryable();
 

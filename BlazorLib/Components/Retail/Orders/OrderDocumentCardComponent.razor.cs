@@ -48,6 +48,9 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
     public string? ClientId { get; set; }
 
 
+    static readonly GregorianCalendar cal = new();
+
+
     DocumentRetailModelDB? currentDocument, editDocument;
     UserInfoModel? authorUser, buyerUser;
     RubricStandardModel? currentWarehouse;
@@ -248,13 +251,9 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
                 }));
             }
 
-            //DateTime dtSY = new(DateTime.Now.Year, 1, 1);
-            GregorianCalendar cal = new();
-
             currentDocument = new()
             {
                 DateDocument = DateTime.Now,
-                NumWeekOfYear = cal.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday),
                 Rows = [],
                 AuthorIdentityUserId = CurrentUserSession.UserId,
                 BuyerIdentityUserId = ClientId ?? CurrentUserSession.UserId,
@@ -264,6 +263,10 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
         }
         await Task.WhenAll(tasks);
         editDocument = GlobalTools.CreateDeepCopy(currentDocument);
+        if(editDocument is not null && editDocument.NumWeekOfYear < 1)
+        {
+            editDocument.NumWeekOfYear = cal.GetWeekOfYear(editDocument.CreatedAtUTC, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday);
+        }
         await SetBusyAsync(false);
     }
 }
