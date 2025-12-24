@@ -38,6 +38,11 @@ public class MainReportResponseModel
     public decimal PaidNoSitePaymentsSumAmount { get; set; }
 
     /// <summary>
+    /// Оплаты [не на сайте]
+    /// </summary>
+    public decimal PaidNoSitePaymentsCount { get; set; }
+
+    /// <summary>
     /// Поступило в переводах/конвертации
     /// </summary>
     public decimal ConversionsSumAmount { get; set; }

@@ -39,7 +39,7 @@ else
                     <tr>
                         <th scope="row">Другие платежи</th>
                         <td>
-                            @ReportData.PaidNoSitePaymentsSumAmount.ToString("C")
+                            x @ReportData.PaidNoSitePaymentsCount шт. @ReportData.PaidNoSitePaymentsSumAmount.ToString("C")
                             <span class="ms-2">(@(Math.Round((ReportData.PaidNoSitePaymentsSumAmount / 120), 2)))</span>
                         </td>
                     </tr>
@@ -65,13 +65,13 @@ else
                 <table class="table">
                     <tbody>
                         <tr>
-                            <th scope="row">офисные за онлайн контракты</th>
+                            <th scope="row">Офисные за онлайн контракты</th>
                             <td>
                                 @((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120)
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">офисные при оплате на складе (+переводы/конвертации)</th>
+                            <th scope="row">Офисные при оплате на складе (+переводы/конвертации)</th>
                             <td>
                                 @((decimal)(_bonusAmount * (decimal)0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120)
                             </td>
@@ -96,7 +96,7 @@ else
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row">перевод в компанию на расчетный счет</th>
+                        <th scope="row">Перевод в компанию на расчетный счет</th>
                         <td>
                             <input type="number"
                                    class="form-control"
@@ -111,7 +111,7 @@ else
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">перевод в компанию бонусо</th>
+                        <th scope="row">Перевод в компанию бонусов</th>
                         <td>
                             <input type="number"
                                    class="form-control"
@@ -126,7 +126,7 @@ else
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">оплата наличными</th>
+                        <th scope="row">Оплата наличными</th>
                         <td>
                             <input type="number"
                                    class="form-control"
@@ -141,7 +141,7 @@ else
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">долг</th>
+                        <th scope="row">Долг</th>
                         <td>
                             <input type="number"
                                    class="form-control"
