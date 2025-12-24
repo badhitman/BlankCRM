@@ -19,7 +19,7 @@ else
     </div>
     @foreach (WeekMetadataModel _w in Weeklies)
     {
-        <button @onclick="async () => await SelectWeek(_w)"
+        <button @onclick="() => SelectWeek(_w)"
                 type="button"
                 class=@GetCssForBtn(_w)
                 title="@($"{_w.Start} - {_w.End}")">

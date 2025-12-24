@@ -67,10 +67,9 @@ public partial class MMMYearSelectorComponent
         }
     }
 
-    async Task SelectWeek(WeekMetadataModel _w)
+    void SelectWeek(WeekMetadataModel _w)
     {
-        if (monthSelect_ref is not null)
-            await monthSelect_ref.Reload();
+        SelectedWeek = _w;
     }
 
     void WeekliesUpdate()
