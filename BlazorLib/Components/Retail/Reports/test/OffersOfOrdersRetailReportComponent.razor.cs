@@ -72,7 +72,7 @@ public partial class OffersOfOrdersRetailReportComponent : BlazorBusyComponentBa
                 Start = Owner.SelectedWeek.Value.Start,
                 End = Owner.SelectedWeek.Value.End,
             };
-
+        
         if (tableRef is not null)
             await tableRef.ReloadServerData();
     }
