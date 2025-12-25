@@ -38,6 +38,7 @@ public class CreateDocumentRetailRequestModel : DocumentRetailModelDB
             InjectToPaymentId = injectToPaymentId,
             LastUpdatedAtUTC = editDocument.LastUpdatedAtUTC,
             Name = editDocument.Name,
+            NumWeekOfYear = editDocument.NumWeekOfYear,
             Rows = editDocument.Rows,
             StatusDocument = editDocument.StatusDocument,
             Version = editDocument.Version,
