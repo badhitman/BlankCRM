@@ -91,6 +91,51 @@ else
                         </tr>
                     </tbody>
                 </table>
+
+                <hr />
+                <p class="lead">К оплате:</p>
+                <MudSimpleTable Dense Hover Bordered Striped Style="overflow-x: auto;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Сумма заявок:</td>
+                            <td>@(Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount), 2))</td>
+                        </tr>
+                        <tr>
+                            <td>минус [офисные при оплате на складе]</td>
+                            <td>@((decimal)(_bonusAmount * (decimal)0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120)</td>
+                        </tr>
+                        <tr>
+                            <td>минус [офисные за онлайн контракты]</td>
+                            <td>@((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120)</td>
+                        </tr>
+                        <tr>
+                            <td>минус [перевод в компанию бонусов]</td>
+                            <td>@(TransferBonusesCompany * 42)</td>
+                        </tr>
+                        <tr>
+                            <td>минус [перевод в компанию на расчетный счет]</td>
+                            <td>@TransferToCompanyBankAccount</td>
+                        </tr>
+                        <tr>
+                            <td>минус [долг]</td>
+                            <td>@Debt</td>
+                        </tr>
+                        <tr>
+                            <td>минус [оплата наличными]</td>
+                            <td>@CashPayment</td>
+                        </tr>
+                        <tr>
+                            <td>Итого:</td>
+                            <td>@(Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) - ((decimal)(_bonusAmount * (decimal)0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120), 2) - ((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount - Debt - CashPayment)</td>
+                        </tr>
+                    </tbody>
+                </MudSimpleTable>
             }
 
             <table class="table">
@@ -120,10 +165,14 @@ else
                     <tr>
                         <th scope="row">Перевод в компанию бонусов</th>
                         <td>
-                            <input type="number"
-                                   class="form-control"
-                                   @bind-value:event="oninput"
-                                   @bind-value="TransferBonusesCompany">
+
+                            <div class="input-group">
+                                <input type="number"
+                                       class="form-control"
+                                       @bind-value:event="oninput"
+                                       @bind-value="TransferBonusesCompany">
+                                <span class="input-group-text" id="basic-addon2">(@(TransferBonusesCompany * 42))</span>
+                            </div>
                         </td>
                         <td>
                             <input type="text"
