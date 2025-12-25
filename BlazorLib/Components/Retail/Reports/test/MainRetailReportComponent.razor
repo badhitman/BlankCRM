@@ -80,7 +80,7 @@ else
                         <tr>
                             <th scope="row">Офисные при оплате на складе (+переводы/конвертации)</th>
                             <td>
-                                @(((decimal)(_bonusAmount * (decimal)0.1) * ((Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount), 2) + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120))
+                                @(Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount)) + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120), 2))
                             </td>
                         </tr>
                         <tr>
