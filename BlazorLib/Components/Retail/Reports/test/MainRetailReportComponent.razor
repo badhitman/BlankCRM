@@ -86,7 +86,7 @@ else
                         <tr>
                             <th scope="row"><div class="d-flex flex-row-reverse">Итого:</div></th>
                             <td>
-                                @(Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount)) + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120)), 2))
+                                @(Math.Round(((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) + (((decimal)(_bonusAmount * (decimal)0.1) * ((((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount))) * (decimal)0.1) / 120)), 2))
                             </td>
                         </tr>
                     </tbody>
