@@ -46,5 +46,9 @@ public class MainReportResponseModel
     /// Поступило в переводах/конвертации
     /// </summary>
     public decimal ConversionsSumAmount { get; set; }
+
+    /// <summary>
+    /// Поступило в переводах/конвертации
+    /// </summary>
     public int ConversionsCount { get; set; }
 }

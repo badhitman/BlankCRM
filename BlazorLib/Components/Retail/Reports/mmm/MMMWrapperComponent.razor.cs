@@ -11,7 +11,7 @@ namespace BlazorLib.Components.Retail.Reports.mmm;
 /// <summary>
 /// MMMWrapperComponent
 /// </summary>
-public partial class MMMWrapperComponent
+public partial class MMMWrapperComponent : BlazorBusyComponentBaseModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
@@ -126,7 +126,7 @@ public partial class MMMWrapperComponent
         DayOfWeek dayOfWeek = _cdt.DayOfWeek;
         while (dayOfWeek > DayOfWeek.Wednesday)
         {
-            _cdt.AddDays(-1);
+            _cdt = _cdt.AddDays(-1);
             dayOfWeek = _cdt.DayOfWeek;
         }
         selectedWeek = new(numWeekOfYear, _cdt, EndOfDay(_cdt.AddDays(7)));
