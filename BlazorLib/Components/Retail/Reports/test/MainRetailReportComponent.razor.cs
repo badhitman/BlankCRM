@@ -263,11 +263,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
     }
     #endregion
 
-    #region BonusAmount
-
     decimal _bonusAmount = 0;
-
-    #endregion
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
