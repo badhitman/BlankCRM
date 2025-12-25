@@ -122,6 +122,9 @@ public partial class OffersOfDeliveriesRetailReportComponent : BlazorBusyCompone
             req.Payload.End = DateRangeProp.End;
         }
 
+        if (AllowSumsConflict)
+            req.Payload.EqualsSumFilter = true;
+
         await SetBusyAsync(token: token);
         TPaginationResponseModel<OffersRetailReportRowModel> res = await RetailRepo.OffersOfDeliveriesReportRetailAsync(req, token);
         await SetBusyAsync(false, token);
