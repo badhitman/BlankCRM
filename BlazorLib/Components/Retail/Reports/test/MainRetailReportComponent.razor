@@ -107,7 +107,7 @@ else
                         </tr>
                         <tr>
                             <td>минус [офисные при оплате на складе]</td>
-                            <td>@((decimal)(_bonusAmount * (decimal)0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120)</td>
+                            <td>@(((decimal)(_bonusAmount * (decimal)0.1) * ((Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount), 2) + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120))</td>
                         </tr>
                         <tr>
                             <td>минус [офисные за онлайн контракты]</td>
@@ -131,7 +131,7 @@ else
                         </tr>
                         <tr>
                             <td>Итого:</td>
-                            <td>@(Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) - ((decimal)(_bonusAmount * (decimal)0.1) * ((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120), 2) - ((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount - Debt - CashPayment)</td>
+                            <td>@(Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount) - (((decimal)(_bonusAmount * (decimal)0.1) * ((Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount), 2) + ReportData.ConversionsSumAmount) * (decimal)0.1) / 120)), 2) - ((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120) - (TransferBonusesCompany * 42) - TransferToCompanyBankAccount - Debt - CashPayment)</td>
                         </tr>
                     </tbody>
                 </MudSimpleTable>
