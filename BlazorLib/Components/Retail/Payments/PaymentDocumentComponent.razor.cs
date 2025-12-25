@@ -115,8 +115,13 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
         {
             TResponseModel<int> res = await RetailRepo.CreatePaymentDocumentAsync(CreatePaymentRetailDocumentRequestModel.Build(editDoc, InjectToOrder?.Id ?? 0));
             SnackBarRepo.ShowMessagesResponse(res.Messages);
-            if (res.Success() && res.Response > 0)
-                NavRepo.NavigateTo($"/retail/payment-document/{res.Response}");
+            if (res.Success())
+            {
+                if (InjectToOrder is not null && InjectToOrder.Id > 0)
+                    NavRepo.NavigateTo($"/retail/order-document/{InjectToOrder.Id}", true);
+                else if (res.Response > 0)
+                    NavRepo.NavigateTo($"/retail/payment-document/{res.Response}");
+            }
         }
         else
         {
