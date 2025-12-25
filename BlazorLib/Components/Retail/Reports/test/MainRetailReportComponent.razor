@@ -37,14 +37,21 @@ else
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Другие платежи</th>
+                        <th scope="row">Другое</th>
+                        <td>
+                            x (@ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт. @(ReportData.PaidNoSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount).ToString("C")
+                            <span class="ms-2">(@(Math.Round((ReportData.PaidNoSitePaymentsSumAmount / 120), 2)))</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Платежи</th>
                         <td>
                             x @ReportData.PaidNoSitePaymentsCount шт. @ReportData.PaidNoSitePaymentsSumAmount.ToString("C")
                             <span class="ms-2">(@(Math.Round((ReportData.PaidNoSitePaymentsSumAmount / 120), 2)))</span>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Перевод/конвертация (поступило)</th>
+                        <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Перевод/конвертация (поступило)</th>
                         <td>
                             x @ReportData.ConversionsCount @ReportData.ConversionsSumAmount.ToString("C")
                             <span class="ms-2">(@(Math.Round((ReportData.ConversionsSumAmount / 120), 2)))</span>
