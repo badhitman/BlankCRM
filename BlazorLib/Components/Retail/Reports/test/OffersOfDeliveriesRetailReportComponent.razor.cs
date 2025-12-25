@@ -107,9 +107,6 @@ public partial class OffersOfDeliveriesRetailReportComponent : BlazorBusyCompone
             Payload = new(),
         };
 
-        if (AllowSumsConflict)
-            req.Payload.EqualsSumFilter = AllowSumsConflict;
-
         if (SelectedStatuses.Count != 0)
             req.Payload.StatusesFilter = [.. SelectedStatuses];
 
@@ -119,10 +116,6 @@ public partial class OffersOfDeliveriesRetailReportComponent : BlazorBusyCompone
             req.Payload.StatusesFilter.Add(null);
         }
 
-        if (Owner is not null && Owner.SelectedWeek.HasValue)
-        {
-            req.Payload.NumWeekOfYear = Owner.SelectedWeek.Value.NumWeekOfYear;
-        }
         else if (DateRangeProp is not null)
         {
             req.Payload.Start = DateRangeProp.Start;

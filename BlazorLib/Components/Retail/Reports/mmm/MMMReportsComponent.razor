@@ -10,17 +10,17 @@
 else
 {
     <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-6">
-        <MudTabPanel Text="Торговый">
-            <OffersOfOrdersRetailReportComponent @ref=_retailReport />
-        </MudTabPanel>
-        @* <MudTabPanel Text="Финансовый">
-            <PaymentsRetailReportComponent @ref=_finReport />
-        </MudTabPanel>
-        <MudTabPanel Text="Отгрузка">
-            <OffersOfDeliveriesRetailReportComponent @ref=_delReport />
-        </MudTabPanel> *@
         <MudTabPanel Text="Сводный">
             <MainRetailReportComponent @ref=_mainReport />
         </MudTabPanel>
+        <MudTabPanel Text="Торговый">
+            <OffersOfOrdersRetailReportComponent @ref=_retailReport />
+        </MudTabPanel>
+        <MudTabPanel Text="Отгрузка" BadgeDot BadgeColor="@Color.Secondary">
+            <OffersOfDeliveriesRetailReportComponent @ref=_delReport />
+        </MudTabPanel>
+        @* <MudTabPanel Text="Финансовый" BadgeDot BadgeColor="@Color.Secondary">
+            <PaymentsRetailReportComponent @ref=_finReport />
+        </MudTabPanel> *@
     </MudTabs>
 }

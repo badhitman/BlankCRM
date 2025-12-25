@@ -7,14 +7,11 @@ namespace SharedLib;
 /// <summary>
 /// SelectOffersOfDeliveriesRetailReportRequestModel
 /// </summary>
-public class SelectOffersOfDeliveriesRetailReportRequestModel : SelectRetailDocumentsBaseModel
+public class SelectOffersOfDeliveriesRetailReportRequestModel : PeriodBaseModel
 {
     /// <inheritdoc/>
     public List<DeliveryStatusesEnum?>? StatusesFilter { get; set; }
 
     /// <inheritdoc/>
     public List<DeliveryTypesEnum?>? TypesFilter { get; set; }
-
-    /// <inheritdoc/>
-    public int NumWeekOfYear { get; set; }
 }
