@@ -6,7 +6,7 @@
 namespace SharedLib;
 
 /// <summary>
-/// SelectRetailDocumentsRequestModel
+/// SelectRetailDocumentsBaseModel
 /// </summary>
 public class SelectRetailDocumentsBaseModel : PeriodBaseModel
 {

@@ -2428,24 +2428,32 @@ public class RetailService(IIdentityTransmission identityRepo,
     public async Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfDeliveriesReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfDeliveriesRetailReportRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RowOfDeliveryRetailDocumentModelDB> q = context.RowsDeliveryDocumentsRetail.AsQueryable();
+        IQueryable<DeliveryDocumentRetailModelDB> q = context.DeliveryDocumentsRetail.AsQueryable();
+
+        if (req.Payload?.EqualsSumFilter != true)
+            q = context.DeliveryDocumentsRetail
+                .Where(x => context.RowsDeliveryDocumentsRetail.Where(y => y.DocumentId == x.Id).Sum(y => y.WeightOffer) == (context.OrdersDeliveriesLinks.Where(y => y.OrderDocumentId == x.Id && context.DeliveryDocumentsRetail.Any(z => z.DeliveryStatus == DeliveryStatusesEnum.Delivered && z.Id == y.DeliveryDocumentId)).Sum(y => y.WeightShipping)))
+                .AsQueryable();
 
         if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Count != 0)
         {
             bool _unsetChecked = req.Payload.StatusesFilter.Contains(null);
-            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.Document!.DeliveryStatus) || (_unsetChecked && x.Document!.DeliveryStatus == 0));
+            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.DeliveryStatus) || (_unsetChecked && x.DeliveryStatus == 0));
         }
 
         if (req.Payload?.Start is not null && req.Payload.Start != default)
-            q = q.Where(x => x.Document!.CreatedAtUTC >= req.Payload.Start.SetKindUtc());
+            q = q.Where(x => x.CreatedAtUTC >= req.Payload.Start.SetKindUtc());
 
         if (req.Payload?.End is not null && req.Payload.End != default)
         {
             req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
-            q = q.Where(x => x.Document!.CreatedAtUTC <= req.Payload.End);
+            q = q.Where(x => x.CreatedAtUTC <= req.Payload.End);
         }
 
-        var _fq = from p in q
+        IQueryable<RowOfDeliveryRetailDocumentModelDB> qr = context.RowsDeliveryDocumentsRetail.Where(x => q.Any(y => y.Id == x.DocumentId)).AsQueryable();
+
+
+        var _fq = from p in qr
                   group p by p.OfferId
                   into g
                   select new { OfferId = g.Key, Weight = g.Sum(x => x.WeightOffer), Counter = g.Sum(x => x.Quantity) };

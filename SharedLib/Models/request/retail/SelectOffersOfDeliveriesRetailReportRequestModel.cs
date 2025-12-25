@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// SelectOffersOfDeliveriesRetailReportRequestModel
 /// </summary>
-public class SelectOffersOfDeliveriesRetailReportRequestModel : PeriodBaseModel
+public class SelectOffersOfDeliveriesRetailReportRequestModel : SelectRetailDocumentsBaseModel
 {
     /// <inheritdoc/>
     public List<DeliveryStatusesEnum?>? StatusesFilter { get; set; }
