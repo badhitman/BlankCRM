@@ -1550,11 +1550,13 @@ public class RetailService(IIdentityTransmission identityRepo,
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 
-        List<PaymentOrderRetailLinkModelDB> res = (forOrders && forPayments) || (!forOrders && !forPayments)
-                            ? await pq.Include(x => x.PaymentDocument).Include(x => x.OrderDocument).ToListAsync(cancellationToken: token)
-                            : forOrders
-                                ? await pq.Include(x => x.PaymentDocument!).ThenInclude(x => x.Wallet).ToListAsync(cancellationToken: token)
-                                : await pq.Include(x => x.OrderDocument!).ThenInclude(x => x.Rows!).ThenInclude(x => x.Offer).ToListAsync(cancellationToken: token);
+        List<PaymentOrderRetailLinkModelDB> res = await pq
+            .Include(x => x.PaymentDocument!)
+            .ThenInclude(x => x.Wallet)
+            .Include(x => x.OrderDocument!)
+            .ThenInclude(x => x.Rows!)
+            .ThenInclude(x => x.Offer)
+            .ToListAsync(cancellationToken: token);
 
         if (forOrders != forPayments)
             foreach (PaymentOrderRetailLinkModelDB row in res.Where(x => x.AmountPayment <= 0))

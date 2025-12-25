@@ -72,6 +72,7 @@ public class DocumentRetailModelDB : OrderDocumentBaseModel
             ExternalDocumentId = other.ExternalDocumentId,
             HelpDeskId = other.HelpDeskId,
             Id = other.Id,
+            NumWeekOfYear = other.NumWeekOfYear,
             LastUpdatedAtUTC = other.LastUpdatedAtUTC,
             Name = other.Name,
             StatusDocument = other.StatusDocument,
