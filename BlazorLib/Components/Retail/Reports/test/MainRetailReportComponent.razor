@@ -74,7 +74,7 @@ else
                         <tr>
                             <th scope="row">Офисные за онлайн контракты</th>
                             <td>
-                                @((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120)
+                                @(Math.Round((decimal)(_bonusAmount * (decimal)0.1) * (ReportData.PaidOnSitePaymentsSumAmount * (decimal)0.1) / 120, 2))
                             </td>
                         </tr>
                         <tr>
