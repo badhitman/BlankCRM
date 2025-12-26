@@ -22,7 +22,7 @@ public partial class MMMReportsComponent : BlazorBusyComponentBaseModel
     public MMMWrapperComponent? Owner { get; set; }
 
 
-    PaymentsRetailReportComponent? _finReport;
+    //PaymentsRetailReportComponent? _finReport;
     OffersOfOrdersRetailReportComponent? _retailReport;
     OffersOfDeliveriesRetailReportComponent? _delReport;
     MainRetailReportComponent? _mainReport;
@@ -30,8 +30,8 @@ public partial class MMMReportsComponent : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     public async Task Reload()
     {
-        if (_finReport is not null)
-            await _finReport.Reload();
+        //if (_finReport is not null)
+        //    await _finReport.Reload();
 
         if (_retailReport is not null)
             await _retailReport.Reload();

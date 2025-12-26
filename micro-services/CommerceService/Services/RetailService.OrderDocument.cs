@@ -127,13 +127,11 @@ public partial class RetailService : IRetailService
             return ResponseBaseModel.CreateError($"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить");
 
         TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
-
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
-        List<LockTransactionModelDB> offersLocked = [];
-        StatusesDocumentsEnum?[] ignoreStatuses = [StatusesDocumentsEnum.Canceled, null];
 
         if (!ignoreStatuses.Contains(orderDb.StatusDocument) && orderDb.WarehouseId != req.WarehouseId)
         {
+            List<LockTransactionModelDB> offersLocked = [];
             foreach (RowOfRetailOrderDocumentModelDB rowDoc in orderDb.Rows!)
             {
                 offersLocked.AddRange(new LockTransactionModelDB()

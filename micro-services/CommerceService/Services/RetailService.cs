@@ -17,6 +17,14 @@ public partial class RetailService(IIdentityTransmission identityRepo,
     IParametersStorageTransmission StorageTransmissionRepo,
     IDbContextFactory<CommerceContext> commerceDbFactory) : IRetailService
 {
+    /// <summary>
+    /// Статусы документов, которые не участвуют в оборотах
+    /// </summary>
+    /// <remarks>
+    /// Движения остатков на складах
+    /// </remarks>
+    static readonly StatusesDocumentsEnum?[] ignoreStatuses = [StatusesDocumentsEnum.Canceled, null];
+
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)
     {

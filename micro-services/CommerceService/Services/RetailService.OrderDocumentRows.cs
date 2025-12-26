@@ -62,8 +62,6 @@ public partial class RetailService : IRetailService
         TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo
             .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
 
-        StatusesDocumentsEnum?[] ignoreStatuses = [StatusesDocumentsEnum.Canceled, null];
-
         if (!ignoreStatuses.Contains(docDb.StatusDocument))
         {
             if (res_WarehouseReserveForRetailOrder.Response != true)
@@ -141,8 +139,110 @@ public partial class RetailService : IRetailService
 
         DocumentRetailModelDB docDb = await context.OrdersRetail
             .FirstAsync(x => x.Id == req.OrderId, cancellationToken: token);
-
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
+        if (!ignoreStatuses.Contains(docDb.StatusDocument))
+        {
+            RowOfOrderDocumentModelDB rowDb = await context.RowsOrders.FirstAsync(x => x.Id == req.Id, cancellationToken: token);
+
+            List<LockTransactionModelDB> lockers = [new()
+            {
+                LockerName = nameof(OfferAvailabilityModelDB),
+                LockerId = req.OfferId,
+                LockerAreaId = docDb.WarehouseId,
+            }];
+            if (rowDb.OfferId != req.OfferId)
+                lockers.Add(new()
+                {
+                    LockerName = nameof(OfferAvailabilityModelDB),
+                    LockerId = rowDb.OfferId,
+                    LockerAreaId = docDb.WarehouseId,
+                });
+
+            string msg;
+            try
+            {
+                await context.AddRangeAsync(lockers, token);
+                await context.SaveChangesAsync(token);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(token);
+                msg = $"Не удалось выполнить команду: ";
+                loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                return ResponseBaseModel.CreateError($"{msg}{ex.Message}"); ;
+            }
+
+            List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
+                .OffersAvailability
+                .Where(x => x.OfferId == req.OfferId || x.OfferId == rowDb.OfferId)
+                .ToListAsync(cancellationToken: token);
+
+            OfferAvailabilityModelDB?
+                regOfferAv = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == req.OfferId && x.WarehouseId == docDb.WarehouseId),
+                regOfferAvWritingOff = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == rowDb.OfferId && x.WarehouseId == docDb.WarehouseId);
+
+            if (rowDb.OfferId != req.OfferId)
+            {
+                if (res_WarehouseReserveForRetailOrder.Response == true)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+
+            if (res_WarehouseReserveForRetailOrder.Response == true)
+            {
+
+            }
+            else
+            {
+                if (regOfferAv is null)
+                {
+                    if (req.Quantity < 0)
+                    {
+                        await transaction.RollbackAsync(token);
+                        msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{req.OfferId}";
+                        loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+
+                        return ResponseBaseModel.CreateError(msg);
+                    }
+
+                    if (req.Quantity > 0)
+                        await context.OffersAvailability.AddAsync(new()
+                        {
+                            OfferId = req.OfferId,
+                            NomenclatureId = req.NomenclatureId,
+                            WarehouseId = docDb.WarehouseId,
+                            Quantity = req.Quantity,
+                        }, token);
+                }
+                else
+                {
+                    if (regOfferAv.Quantity < -req.Quantity)
+                    {
+                        await transaction.RollbackAsync(token);
+                        msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
+                        loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+
+                        return ResponseBaseModel.CreateError(msg);
+                    }
+
+                    await context.OffersAvailability
+                        .Where(x => x.Id == regOfferAv.Id)
+                            .ExecuteUpdateAsync(set => set
+                                .SetProperty(p => p.Quantity, p => p.Quantity + req.Quantity), cancellationToken: token);
+                }
+            }
+
+            if (lockers.Count != 0)
+                context.RemoveRange(lockers);
+
+            await context.SaveChangesAsync(token);
+        }
 
         await context.RowsOrdersRetails
           .Where(x => x.Id == req.Id)
@@ -157,6 +257,7 @@ public partial class RetailService : IRetailService
           .ExecuteUpdateAsync(set => set
               .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
+        await transaction.CommitAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 

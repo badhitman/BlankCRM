@@ -269,10 +269,9 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         if (lockers.Count != 0)
-        {
             context.RemoveRange(lockers);
-            await context.SaveChangesAsync(token);
-        }
+
+        await context.SaveChangesAsync(token);
 
         await transaction.CommitAsync(token);
 
