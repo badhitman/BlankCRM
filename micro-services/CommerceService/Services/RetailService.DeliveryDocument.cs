@@ -1,0 +1,312 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using Microsoft.EntityFrameworkCore;
+using System.Text;
+using SharedLib;
+using DbcLib;
+
+namespace CommerceService;
+
+/// <summary>
+/// Розница
+/// </summary>
+public partial class RetailService : IRetailService
+{
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> CreateDeliveryDocumentAsync(CreateDeliveryDocumentRetailRequestModel req, CancellationToken token = default)
+    {
+        TResponseModel<int> res = new();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        TResponseModel<KladrResponseModel> kladrObj = await kladrRepo.ObjectGetAsync(new() { Code = req.KladrCode }, token);
+        if (!kladrObj.Success())
+        {
+            res.AddRangeMessages(kladrObj.Messages);
+            return res;
+        }
+
+        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync([req.RecipientIdentityUserId], token);
+        if (!user.Success())
+        {
+            res.AddRangeMessages(user.Messages);
+            return res;
+        }
+
+        req.CreatedAtUTC = DateTime.UtcNow;
+        req.OrdersLinks = null;
+        req.Name = req.Name.Trim();
+        req.Description = req.Description?.Trim();
+        req.DeliveryCode = req.DeliveryCode?.Trim();
+
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+
+        DeliveryDocumentRetailModelDB docDb = DeliveryDocumentRetailModelDB.Build(req);
+
+        await context.DeliveryDocumentsRetail.AddAsync(docDb, token);
+        await context.SaveChangesAsync(token);
+        res.Response = docDb.Id;
+        res.AddSuccess($"Документ отгрузки/доставки создан #{docDb.Id}");
+
+        if (req.InjectToOrderId > 0)
+        {
+            await context.OrdersDeliveriesLinks.AddAsync(new()
+            {
+                DeliveryDocumentId = docDb.Id,
+                OrderDocumentId = req.InjectToOrderId,
+                WeightShipping = req.WeightShipping,
+            }, token);
+            await context.SaveChangesAsync(token);
+            res.AddInfo($"Добавлена связь документа отгрузки/доставки #{docDb.Id} с заказом #{req.InjectToOrderId}");
+        }
+
+        await transaction.CommitAsync(token);
+
+        return res;
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default)
+    {
+        req.CreatedAtUTC = DateTime.UtcNow;
+        req.OrdersLinks = null;
+        req.Name = req.Name.Trim();
+        req.Description = req.Description?.Trim();
+        req.DeliveryCode = req.DeliveryCode?.Trim();
+
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        await context.DeliveryDocumentsRetail
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Name, req.Name)
+                .SetProperty(p => p.Description, req.Description)
+                .SetProperty(p => p.WeightShipping, req.WeightShipping)
+                .SetProperty(p => p.ShippingCost, req.ShippingCost)
+                .SetProperty(p => p.RecipientIdentityUserId, req.RecipientIdentityUserId)
+                .SetProperty(p => p.KladrTitle, req.KladrTitle)
+                .SetProperty(p => p.KladrCode, req.KladrCode)
+                .SetProperty(p => p.DeliveryType, req.DeliveryType)
+                .SetProperty(p => p.DeliveryPaymentUponReceipt, req.DeliveryPaymentUponReceipt)
+                .SetProperty(p => p.DeliveryCode, req.DeliveryCode)
+                .SetProperty(p => p.AddressUserComment, req.AddressUserComment)
+                .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.Id).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault())
+                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<DeliveryDocumentRetailModelDB>> SelectDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<DeliveryDocumentRetailModelDB> q = context.DeliveryDocumentsRetail.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(req.FindQuery))
+            q = q.Where(x =>
+                x.Name.Contains(req.FindQuery) ||
+                (x.Description != null && x.Description.Contains(req.FindQuery)) ||
+                (x.DeliveryCode != null && x.DeliveryCode.Contains(req.FindQuery)));
+
+        if (req.Payload?.RecipientsFilterIdentityId is not null && req.Payload.RecipientsFilterIdentityId.Length != 0)
+            q = q.Where(x => req.Payload.RecipientsFilterIdentityId.Contains(x.RecipientIdentityUserId));
+
+        if (req.Payload?.TypesFilter is not null && req.Payload.TypesFilter.Length != 0)
+            q = q.Where(x => req.Payload.TypesFilter.Contains(x.DeliveryType));
+
+        if (req.Payload?.StatusesFilter is not null && req.Payload.StatusesFilter.Count != 0)
+        {
+            bool selectedUnset = req.Payload.StatusesFilter.Contains(null);
+            req.Payload.StatusesFilter = [.. req.Payload.StatusesFilter.Where(x => x is not null).Distinct()];
+            q = q.Where(x => req.Payload.StatusesFilter.Contains(x.DeliveryStatus) || (selectedUnset && (x.DeliveryStatus == null || x.DeliveryStatus == 0)));
+        }
+
+        if (req.Payload?.ExcludeOrderId.HasValue == true && req.Payload.ExcludeOrderId > 0)
+            q = q.Where(x => !context.OrdersDeliveriesLinks.Any(y => y.DeliveryDocumentId == x.Id && y.OrderDocumentId == req.Payload.ExcludeOrderId));
+
+        if (req.Payload?.FilterOrderId is not null && req.Payload.FilterOrderId > 0)
+            q = from deliveryDoc in q
+                join linkItem in context.OrdersDeliveriesLinks.Where(x => x.OrderDocumentId == req.Payload.FilterOrderId) on deliveryDoc.Id equals linkItem.DeliveryDocumentId
+                select deliveryDoc;
+
+        if (req.Payload?.Start is not null && req.Payload.Start != default)
+        {
+            req.Payload.Start = req.Payload.Start.SetKindUtc();
+            q = q.Where(x => x.CreatedAtUTC >= req.Payload.Start);
+        }
+
+        if (req.Payload?.End is not null && req.Payload.End != default)
+        {
+            req.Payload.End = req.Payload.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+            q = q.Where(x => x.CreatedAtUTC <= req.Payload.End);
+        }
+
+        if (req.Payload?.EqualSumFilter == true)
+            q = q.Where(x => context.RowsDeliveryDocumentsRetail.Where(y => x.Id == y.DocumentId).Sum(y => y.WeightOffer) != context.OrdersDeliveriesLinks.Where(y => x.Id == y.OrderDocumentId).Sum(y => y.WeightShipping));
+
+        IOrderedQueryable<DeliveryDocumentRetailModelDB> oq = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => q.OrderBy(x => x.CreatedAtUTC),
+            DirectionsEnum.Down => q.OrderByDescending(x => x.CreatedAtUTC),
+            _ => q.OrderBy(x => x.Name)
+        };
+
+        IQueryable<DeliveryDocumentRetailModelDB> pq = oq
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        List<DeliveryDocumentRetailModelDB> res = await pq
+                .Include(x => x.Rows!)
+                .ThenInclude(x => x.Offer)
+                .Include(x => x.DeliveryStatusesLog)
+                .Include(x => x.OrdersLinks)
+                .ToListAsync(cancellationToken: token);
+
+        if (res.Count != 0)
+            res.ForEach(x => { if (x.DeliveryStatus == 0) { x.DeliveryStatus = null; } });
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = res
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<DeliveryDocumentRetailModelDB[]>> GetDeliveryDocumentsAsync(GetDeliveryDocumentsRetailRequestModel req, CancellationToken token = default)
+    {
+        if (req.Ids is null || req.Ids.Length == 0)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Ids is null || Ids.Length == 0" }] };
+
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        return new()
+        {
+            Response = await context.DeliveryDocumentsRetail
+                .Where(x => req.Ids.Contains(x.Id))
+                .Include(x => x.Rows!)
+                .ThenInclude(x => x.Offer!)
+                .ThenInclude(x => x.Nomenclature)
+                .ToArrayAsync(cancellationToken: token)
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<FileAttachModel> GetDeliveriesJournalFileAsync(SelectDeliveryDocumentsRetailRequestModel req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<DeliveryDocumentRetailModelDB> q = context.DeliveryDocumentsRetail.AsQueryable();
+
+        if (req.RecipientsFilterIdentityId is not null && req.RecipientsFilterIdentityId.Length != 0)
+            q = q.Where(x => req.RecipientsFilterIdentityId.Contains(x.RecipientIdentityUserId));
+
+        if (req.TypesFilter is not null && req.TypesFilter.Length != 0)
+            q = q.Where(x => req.TypesFilter.Contains(x.DeliveryType));
+
+        if (req.StatusesFilter is not null && req.StatusesFilter.Count != 0)
+        {
+            bool selectedUnset = req.StatusesFilter.Contains(null);
+            req.StatusesFilter = [.. req.StatusesFilter.Where(x => x is not null).Distinct()];
+            q = q.Where(x => req.StatusesFilter.Contains(x.DeliveryStatus) || (selectedUnset && (x.DeliveryStatus == null || x.DeliveryStatus == 0)));
+        }
+
+        if (req.ExcludeOrderId.HasValue == true && req.ExcludeOrderId > 0)
+            q = q.Where(x => !context.OrdersDeliveriesLinks.Any(y => y.DeliveryDocumentId == x.Id && y.OrderDocumentId == req.ExcludeOrderId));
+
+        if (req.FilterOrderId is not null && req.FilterOrderId > 0)
+            q = from deliveryDoc in q
+                join linkItem in context.OrdersDeliveriesLinks.Where(x => x.OrderDocumentId == req.FilterOrderId) on deliveryDoc.Id equals linkItem.DeliveryDocumentId
+                select deliveryDoc;
+
+        if (req.Start is not null && req.Start != default)
+        {
+            req.Start = req.Start.SetKindUtc();
+            q = q.Where(x => x.CreatedAtUTC >= req.Start);
+        }
+
+        if (req.End is not null && req.End != default)
+        {
+            req.End = req.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+            q = q.Where(x => x.CreatedAtUTC <= req.End);
+        }
+
+        if (req.EqualSumFilter == true)
+            q = q.Where(x => context.RowsDeliveryDocumentsRetail.Where(y => x.Id == y.DocumentId).Sum(y => y.WeightOffer) != context.OrdersDeliveriesLinks.Where(y => x.Id == y.OrderDocumentId).Sum(y => y.WeightShipping));
+
+        q = q.OrderBy(x => x.CreatedAtUTC);
+
+        List<DeliveryDocumentRetailModelDB> resDb = await q
+                .Include(x => x.Rows!)
+                .ThenInclude(x => x.Offer)
+                .Include(x => x.DeliveryStatusesLog)
+                .Include(x => x.OrdersLinks)
+                .ToListAsync(cancellationToken: token);
+
+        string[] usersList = [.. resDb.Select(x => x.RecipientIdentityUserId).Distinct()];
+        TResponseModel<UserInfoModel[]> users = await identityRepo.GetUsersOfIdentityAsync(usersList, token);
+        UserInfoModel[] usersDb = users.Response ?? throw new("users for deliveries journal - IS NULL");
+
+        string docName = $"Журнал отгрузки {DateTime.Now.GetHumanDateTime()}";
+        FileAttachModel res;
+
+        HtmlGenerator.html5.areas.div wrapDiv = new();
+        // wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.p(docName));
+
+        resDb.ForEach(aNode =>
+        {
+            HtmlGenerator.html5.forms.fieldset addressDiv = new($"#{aNode.Id} {aNode.Name} {aNode.DeliveryStatus} (заявлено {aNode.WeightShipping} kg)".Trim().Replace("  ", " "), $"doc_{aNode.Id}");
+
+            addressDiv.AddDomNode(new HtmlGenerator.html5.textual.strong("Адрес:"));
+            addressDiv.AddDomNode(new HtmlGenerator.html5.textual.span($"`{aNode.KladrTitle}` {aNode.AddressUserComment}".Trim()));
+            addressDiv.AddDomNode(new HtmlGenerator.html5.textual.strong("Получатель"));
+            addressDiv.AddDomNode(new HtmlGenerator.html5.textual.span($"{usersDb.First(x => x.UserId == aNode.RecipientIdentityUserId).ToString()}".Trim()));
+
+            HtmlGenerator.html5.tables.table my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
+
+            my_table
+                .THead.AddColumn("Наименование")
+                .AddColumn("Цена")
+                .AddColumn("Кол-во")
+                .AddColumn("Вес")
+                .AddColumn("Сумма");
+
+            aNode.Rows?.ForEach(dr =>
+            {
+                my_table.TBody.AddRow(
+                    [dr.Offer!.GetName(),
+                            dr.Offer.Price.ToString(),
+                            dr.Quantity.ToString(),
+                            dr.WeightOffer.ToString(),
+                            dr.Amount.ToString()]);
+            });
+
+            my_table.TBody.AddRow(["", "", "", $"Итого вес:{aNode.Rows!.Sum(x => x.WeightOffer)}", $"Итого сумма: {aNode.Rows!.Sum(x => x.Amount)}"]);
+
+            addressDiv.AddDomNode(my_table);
+
+            wrapDiv.AddDomNode(addressDiv);
+        });
+
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        string test_s = $"<style>table, th, td {{border: 1px solid black;border-collapse: collapse;}}</style>{wrapDiv.GetHTML()}";
+
+        using MemoryStream ms = new();
+        StreamWriter writer = new(ms);
+        writer.Write(test_s);
+        writer.Flush();
+        ms.Position = 0;
+
+        res = new()
+        {
+            Data = ms.ToArray(),
+            ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("html")).Key,
+            Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.html",
+        };
+
+        return res;
+    }
+}

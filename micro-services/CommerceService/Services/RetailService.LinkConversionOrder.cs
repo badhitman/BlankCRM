@@ -1,0 +1,138 @@
+﻿////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
+using Microsoft.EntityFrameworkCore;
+using SharedLib;
+using DbcLib;
+
+namespace CommerceService;
+
+/// <summary>
+/// Розница
+/// </summary>
+public partial class RetailService : IRetailService
+{
+    /// <inheritdoc/>
+    public async Task<TResponseModel<int>> CreateConversionOrderLinkDocumentRetailAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        if (await context.ConversionsOrdersLinksRetail.AnyAsync(x => x.ConversionDocumentId == req.ConversionDocumentId && x.OrderDocumentId == req.OrderDocumentId, cancellationToken: token))
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Warning, Text = "Документ уже добавлен" }] };
+
+        req.OrderDocument = null;
+        req.ConversionDocument = null;
+
+        await context.ConversionsOrdersLinksRetail.AddAsync(req, token);
+        await context.SaveChangesAsync(token);
+        return new() { Response = req.Id };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentRetailAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        await context.ConversionsOrdersLinksRetail
+            .Where(x => x.Id == req.Id || (req.OrderDocumentId == x.OrderDocumentId && req.ConversionDocumentId == x.ConversionDocumentId))
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.AmountPayment, req.AmountPayment), cancellationToken: token);
+
+        await context.SaveChangesAsync(token);
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseModel<ConversionOrderRetailLinkModelDB>> SelectConversionsOrdersDocumentsLinksRetailAsync(TPaginationRequestStandardModel<SelectConversionsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<ConversionOrderRetailLinkModelDB> q = context.ConversionsOrdersLinksRetail.AsQueryable();
+
+        bool
+            forOrders = req.Payload?.OrdersIds is not null && req.Payload.OrdersIds.Length != 0,
+            forConversions = req.Payload?.ConversionsIds is not null && req.Payload.ConversionsIds.Length != 0;
+
+        if (forOrders)
+            q = q.Where(x => req.Payload!.OrdersIds!.Contains(x.OrderDocumentId));
+
+        if (forConversions)
+            q = q.Where(x => req.Payload!.ConversionsIds!.Contains(x.ConversionDocumentId));
+
+        IQueryable<ConversionOrderRetailLinkModelDB> pq = q
+            .OrderBy(x => x.OrderDocumentId)
+            .ThenBy(x => x.ConversionDocumentId)
+            .Skip(req.PageNum * req.PageSize)
+            .Take(req.PageSize);
+
+        Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<ConversionOrderRetailLinkModelDB, DocumentRetailModelDB?>? v = pq
+            .Include(x => x.ConversionDocument!)
+            .ThenInclude(x => x.FromWallet!)
+            .ThenInclude(x => x.WalletType)
+            .Include(x => x.ConversionDocument!)
+            .ThenInclude(x => x.ToWallet!)
+            .ThenInclude(x => x.WalletType)
+            .Include(x => x.OrderDocument);
+
+        Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<ConversionOrderRetailLinkModelDB, DocumentRetailModelDB?> BuildQuery()
+        {
+            return pq
+            .Include(x => x.ConversionDocument!)
+            .ThenInclude(x => x.FromWallet!)
+            .ThenInclude(x => x.WalletType)
+            .Include(x => x.ConversionDocument!)
+            .ThenInclude(x => x.ToWallet!)
+            .ThenInclude(x => x.WalletType)
+            .Include(x => x.OrderDocument);
+        }
+
+        List<ConversionOrderRetailLinkModelDB> res = await BuildQuery().ToListAsync(cancellationToken: token);
+
+        if (forOrders != forConversions)
+            foreach (ConversionOrderRetailLinkModelDB row in res.Where(x => x.AmountPayment <= 0))
+            {
+                if (forOrders)
+                {
+                    row.AmountPayment = row.ConversionDocument is null
+                        ? 0
+                        : row.ConversionDocument.ToWalletSum;
+                }
+                else if (forConversions)
+                {
+                    row.AmountPayment = row.OrderDocument?.Rows is null || row.OrderDocument.Rows.Count == 0
+                        ? 0
+                        : row.OrderDocument.Rows.Sum(x => x.Amount);
+                }
+
+                if (row.AmountPayment != 0)
+                {
+                    context.Update(row);
+                    await context.SaveChangesAsync(token);
+                }
+            }
+
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            SortingDirection = req.SortingDirection,
+            SortBy = req.SortBy,
+            TotalRowsCount = await q.CountAsync(cancellationToken: token),
+            Response = res,
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentRetailAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        int res = await context.ConversionsOrdersLinksRetail
+             .Where(x => x.Id == req.OrderConversionLinkId || (x.OrderDocumentId == req.OrderId && x.ConversionDocumentId == req.ConversionId))
+             .ExecuteDeleteAsync(cancellationToken: token);
+
+        return res == 0
+            ? ResponseBaseModel.CreateInfo("Объект уже удалён")
+            : ResponseBaseModel.CreateSuccess("Удалено");
+    }
+}
