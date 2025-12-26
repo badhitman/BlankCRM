@@ -139,8 +139,8 @@ public partial class CommerceImplementService : ICommerceService
                 foreach (RowOfWarehouseDocumentModelDB rowOfDocument in warehouseDocumentDb.Rows)
                 {
                     OfferAvailabilityModelDB?
-                                            registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId),
-                                            registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WritingOffWarehouseId);
+                                            registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == warehouseDocumentDb.WarehouseId),
+                                            registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == warehouseDocumentDb.WritingOffWarehouseId);
 
                     if (registerOfferWriteOff is not null)
                     {
@@ -150,11 +150,11 @@ public partial class CommerceImplementService : ICommerceService
 
                         registerOfferWriteOff.Quantity += rowOfDocument.Quantity;
                     }
-                    else if (req.WritingOffWarehouseId > 0)
+                    else if (warehouseDocumentDb.WritingOffWarehouseId > 0)
                     {
                         registerOfferWriteOff = new OfferAvailabilityModelDB()
                         {
-                            WarehouseId = req.WritingOffWarehouseId,
+                            WarehouseId = warehouseDocumentDb.WritingOffWarehouseId,
                             Quantity = rowOfDocument.Quantity,
                             NomenclatureId = rowOfDocument.NomenclatureId,
                             OfferId = rowOfDocument.OfferId,
@@ -200,8 +200,9 @@ public partial class CommerceImplementService : ICommerceService
             {
                 foreach (RowOfWarehouseDocumentModelDB rowOfDocument in warehouseDocumentDb.Rows)
                 {
-                    OfferAvailabilityModelDB? registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId);
-                    OfferAvailabilityModelDB? registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WritingOffWarehouseId);
+                    OfferAvailabilityModelDB?
+                        registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId),
+                        registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WritingOffWarehouseId);
 
                     if (registerOfferWriteOff is not null)
                     {

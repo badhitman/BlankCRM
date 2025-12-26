@@ -254,6 +254,19 @@ public static partial class GlobalStaticCloudStorageMetadata
     };
 
     /// <summary>
+    /// Резервировать товар (вместо списания)
+    /// </summary>
+    /// <remarks>
+    /// По умолчанию позиции списываются для заказов, но можно изменить поведение так что бы наоборот - зачислялось (вставало в резерв)
+    /// </remarks>
+    public static StorageContextMetadataModel WarehouseReserveForRetailOrder => new()
+    {
+        ApplicationName = Routes.RETAIL_CONTROLLER_NAME,
+        PropertyName = Path.Combine(Routes.RESERVE_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.WAREHOUSE_CONTROLLER_NAME),
+        ContextName = Routes.REMAINING_CONTROLLER_NAME,
+    };
+
+    /// <summary>
     /// WarehouseDefaultForRetailDelivery
     /// </summary>
     public static StorageContextMetadataModel WarehouseDefaultForRetailDelivery => new()

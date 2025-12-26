@@ -34,6 +34,11 @@ namespace SharedLib
             /// RetailManage
             /// </summary>
             public const string RetailManage = "RetailManage";
+
+            /// <summary>
+            /// RetailReports
+            /// </summary>
+            public const string RetailReports = "RetailReports";
             #endregion
 
             #region HelpDesk

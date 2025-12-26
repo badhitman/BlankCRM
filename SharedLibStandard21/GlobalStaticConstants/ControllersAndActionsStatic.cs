@@ -908,6 +908,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string DEFAULT_CONTROLLER_NAME = "default";
 
         /// <summary>
+        /// Reserve
+        /// </summary>
+        public const string RESERVE_CONTROLLER_NAME = "reserve";
+
+        /// <summary>
+        /// Remaining
+        /// </summary>
+        public const string REMAINING_CONTROLLER_NAME = "remaining";
+
+        /// <summary>
         /// Price
         /// </summary>
         public const string PRICE_CONTROLLER_NAME = "price";

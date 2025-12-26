@@ -25,12 +25,6 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
     [Inject]
     protected IJSRuntime JS { get; set; } = default!;
 
-    /// <summary>
-    /// UsersManageRepo
-    /// </summary>
-    [Inject]
-    IUsersProfilesService UsersManageRepo { get; set; } = default!;
-
     [Inject]
     IIdentityTransmission IdentityRepo { get; set; } = default!;
 

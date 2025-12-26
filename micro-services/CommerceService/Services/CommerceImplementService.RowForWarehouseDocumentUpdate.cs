@@ -268,8 +268,12 @@ public partial class CommerceImplementService : ICommerceService
                       .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
         }
 
-        context.RemoveRange(lockers);
-        await context.SaveChangesAsync(token);
+        if (lockers.Count != 0)
+        {
+            context.RemoveRange(lockers);
+            await context.SaveChangesAsync(token);
+        }
+
         await transaction.CommitAsync(token);
 
         res.AddSuccess($"Обновление `строки складского документа` выполнено");

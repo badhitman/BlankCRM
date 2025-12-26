@@ -27,7 +27,11 @@
     <MudTabPanel Text="Доставка">
         <DeliveriesDocumentsManageComponent />
     </MudTabPanel>
-    <MudTabPanel Text="Отчёты">
-        <MMMWrapperComponent />
-    </MudTabPanel>
+    <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug},{GlobalStaticConstantsRoles.Roles.RetailReports}")">
+        <Authorized>
+            <MudTabPanel Text="Отчёты">
+                <MMMWrapperComponent />
+            </MudTabPanel>
+        </Authorized>
+    </AuthorizeView>
 </MudTabs>

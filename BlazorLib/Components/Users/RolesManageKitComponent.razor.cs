@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Users;
@@ -43,6 +42,7 @@ public partial class RolesManageKitComponent : BlazorBusyComponentBaseModel
             GlobalStaticConstantsRoles.Roles.CommerceManager => "Manger (com)",
             GlobalStaticConstantsRoles.Roles.CommerceClient => "Покупатель (b2b)",
             GlobalStaticConstantsRoles.Roles.RetailManage => "Manger (retail)",
+            GlobalStaticConstantsRoles.Roles.RetailReports => "Reports (retail)",
             _ => name
         };
     }
