@@ -23,7 +23,7 @@ public partial class RetailService(IIdentityTransmission identityRepo,
     /// <remarks>
     /// Движения остатков на складах
     /// </remarks>
-    static readonly StatusesDocumentsEnum?[] ignoreStatuses = [StatusesDocumentsEnum.Canceled, null];
+    static readonly StatusesDocumentsEnum?[] offStatuses = [StatusesDocumentsEnum.Canceled, null];
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)

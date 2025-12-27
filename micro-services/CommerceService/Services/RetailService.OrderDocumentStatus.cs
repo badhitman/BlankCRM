@@ -3,8 +3,8 @@
 ////////////////////////////////////////////////
 
 using DbcLib;
-using DocumentFormat.OpenXml.Drawing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
 using SharedLib;
 
@@ -79,7 +79,7 @@ public partial class RetailService : IRetailService
             .Select(s => s.StatusDocument)
             .FirstAsync(cancellationToken: token);
 
-        if ((ignoreStatuses.Contains(_newStatus) && ignoreStatuses.Contains(_oldStatus)) || (!ignoreStatuses.Contains(_newStatus) && !ignoreStatuses.Contains(_oldStatus)))
+        if ((offStatuses.Contains(_newStatus) && offStatuses.Contains(_oldStatus)) || (!offStatuses.Contains(_newStatus) && !offStatuses.Contains(_oldStatus)))
         {
             await transaction.CommitAsync(token);
             return new() { Response = req.Id };
@@ -90,37 +90,7 @@ public partial class RetailService : IRetailService
            .Where(x => _offersIds.Contains(x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        OfferAvailabilityModelDB? regOfferAv;
-
-
-        if (!ignoreStatuses.Contains(_newStatus))
-        {
-            foreach (RowOfRetailOrderDocumentModelDB row in orderDb.Rows)
-            {
-                if (res_WarehouseReserveForRetailOrder.Response == true)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
-        }
-        else if (!ignoreStatuses.Contains(_oldStatus))
-        {
-            foreach (RowOfRetailOrderDocumentModelDB row in orderDb.Rows)
-            {
-                if (res_WarehouseReserveForRetailOrder.Response == true)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
-        }
+        await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
 
         if (lockers.Count != 0)
         {
@@ -174,7 +144,7 @@ public partial class RetailService : IRetailService
             .Select(s => s.StatusDocument)
             .FirstAsync(cancellationToken: token);
 
-        if ((ignoreStatuses.Contains(_newStatus) && ignoreStatuses.Contains(_oldStatus)) || (!ignoreStatuses.Contains(_newStatus) && !ignoreStatuses.Contains(_oldStatus)))
+        if ((offStatuses.Contains(_newStatus) && offStatuses.Contains(_oldStatus)) || (!offStatuses.Contains(_newStatus) && !offStatuses.Contains(_oldStatus)))
         {
             await transaction.CommitAsync(token);
             return ResponseBaseModel.CreateSuccess("Ok");
@@ -207,36 +177,7 @@ public partial class RetailService : IRetailService
            .Where(x => _offersIds.Contains(x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        OfferAvailabilityModelDB? regOfferAv;
-
-        if (!ignoreStatuses.Contains(_newStatus))
-        {
-            foreach (RowOfRetailOrderDocumentModelDB row in orderDb.Rows)
-            {
-                if (res_WarehouseReserveForRetailOrder.Response == true)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
-        }
-        else if (!ignoreStatuses.Contains(_oldStatus))
-        {
-            foreach (RowOfRetailOrderDocumentModelDB row in orderDb.Rows)
-            {
-                if (res_WarehouseReserveForRetailOrder.Response == true)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
-        }
+        await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
 
         if (lockers.Count != 0)
         {
@@ -276,7 +217,7 @@ public partial class RetailService : IRetailService
             .Select(s => s.StatusDocument)
             .FirstAsync(cancellationToken: token);
 
-        if ((ignoreStatuses.Contains(_newStatus) && ignoreStatuses.Contains(_oldStatus)) || (!ignoreStatuses.Contains(_newStatus) && !ignoreStatuses.Contains(_oldStatus)))
+        if ((offStatuses.Contains(_newStatus) && offStatuses.Contains(_oldStatus)) || (!offStatuses.Contains(_newStatus) && !offStatuses.Contains(_oldStatus)))
         {
             await transaction.CommitAsync(token);
             return ResponseBaseModel.CreateSuccess("Ok");
@@ -314,36 +255,7 @@ public partial class RetailService : IRetailService
            .Where(x => _offersIds.Contains(x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        OfferAvailabilityModelDB? regOfferAv;
-
-        if (!ignoreStatuses.Contains(_newStatus))
-        {
-            foreach (RowOfRetailOrderDocumentModelDB row in orderDb.Rows)
-            {
-                if (res_WarehouseReserveForRetailOrder.Response == true)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
-        }
-        else if (!ignoreStatuses.Contains(_oldStatus))
-        {
-            foreach (RowOfRetailOrderDocumentModelDB row in orderDb.Rows!)
-            {
-                if (res_WarehouseReserveForRetailOrder.Response == true)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
-        }
+        await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
 
         if (lockers.Count != 0)
         {
@@ -396,5 +308,38 @@ public partial class RetailService : IRetailService
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq.ToListAsync(cancellationToken: token)
         };
+    }
+
+    async Task DoIt(CommerceContext context, IDbContextTransaction transaction, List<RowOfRetailOrderDocumentModelDB> rows, bool reserveForRetailOrder, bool isEnableDocument, List<OfferAvailabilityModelDB> offerAvailabilityDB, DocumentRetailModelDB orderDb, CancellationToken token = default)
+    {
+        foreach (RowOfRetailOrderDocumentModelDB row in rows)
+        {
+            OfferAvailabilityModelDB? regOfferAv = offerAvailabilityDB
+                .FirstOrDefault(x => x.OfferId == row.OfferId && x.WarehouseId == orderDb.WarehouseId);
+
+            if (isEnableDocument) // (ON) включение
+            {
+                if (reserveForRetailOrder)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+            else // (OFF) выключение
+            {
+                if (reserveForRetailOrder)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+        }
+
     }
 }

@@ -66,7 +66,7 @@ public partial class RetailService : IRetailService
         TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo
             .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
 
-        if (!ignoreStatuses.Contains(docDb.StatusDocument))
+        if (!offStatuses.Contains(docDb.StatusDocument))
         {
             if (res_WarehouseReserveForRetailOrder.Response != true)
             {
@@ -154,7 +154,7 @@ public partial class RetailService : IRetailService
         if (rowDb.Version != req.Version)
             return ResponseBaseModel.CreateError($"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова");
 
-        if (ignoreStatuses.Contains(docDb.StatusDocument))
+        if (offStatuses.Contains(docDb.StatusDocument))
         {
             await context.RowsOrdersRetails
                 .Where(x => x.Id == req.Id)
@@ -395,7 +395,7 @@ public partial class RetailService : IRetailService
         DocumentRetailModelDB docDb = rowDb.Order!;
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
-        if (!ignoreStatuses.Contains(docDb.StatusDocument))
+        if (!offStatuses.Contains(docDb.StatusDocument))
         {
             TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo
                 .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
