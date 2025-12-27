@@ -122,6 +122,12 @@ public partial class RetailService : IRetailService
             }
         }
 
+        if (lockers.Count != 0)
+        {
+            context.RemoveRange(lockers);
+            await context.SaveChangesAsync(token);
+        }
+
         await transaction.CommitAsync(token);
 
         return new() { Response = req.Id };
@@ -232,6 +238,12 @@ public partial class RetailService : IRetailService
             }
         }
 
+        if (lockers.Count != 0)
+        {
+            context.RemoveRange(lockers);
+            await context.SaveChangesAsync(token);
+        }
+
         await transaction.CommitAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
@@ -331,6 +343,12 @@ public partial class RetailService : IRetailService
 
                 }
             }
+        }
+
+        if (lockers.Count != 0)
+        {
+            context.RemoveRange(lockers);
+            await context.SaveChangesAsync(token);
         }
 
         await transaction.CommitAsync(cancellationToken: token);
