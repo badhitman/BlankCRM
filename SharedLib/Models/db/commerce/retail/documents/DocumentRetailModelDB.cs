@@ -51,6 +51,11 @@ public class DocumentRetailModelDB : OrderDocumentBaseModel
     /// </summary>
     public List<PaymentOrderRetailLinkModelDB>? Payments { get; set; }
 
+    /// <summary>
+    /// Statuses
+    /// </summary>
+    public List<OrderStatusRetailDocumentModelDB>? Statuses { get; set; }
+
     /// <inheritdoc/>
     public override string ToString()
     {

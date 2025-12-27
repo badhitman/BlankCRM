@@ -2,43 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
-
 namespace SharedLib;
 
 /// <summary>
 /// RowOfBaseDocumentModel
 /// </summary>
-public abstract class RowOfBaseDocumentModel
+public abstract class RowOfBaseDocumentModel : RowOfSimpleDocumentModel
 {
-    /// <summary>
-    /// Идентификатор/Key
-    /// </summary>
-    [Key]
-    public int Id { get; set; }
-
-    /// <summary>
-    /// Торговое предложение
-    /// </summary>
-    public OfferModelDB? Offer { get; set; }
-
     /// <summary>
     /// Вес
     /// </summary>
     public decimal WeightOffer { get; set; }
-
-    /// <summary>
-    /// Offer
-    /// </summary>
-    public int OfferId { get; set; }
-
-    /// <summary>
-    /// Номенклатура
-    /// </summary>
-    public NomenclatureModelDB? Nomenclature { get; set; }
-
-    /// <summary>
-    /// Nomenclature
-    /// </summary>
-    public int NomenclatureId { get; set; }
 }

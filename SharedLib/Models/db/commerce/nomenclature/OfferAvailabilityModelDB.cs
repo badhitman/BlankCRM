@@ -9,11 +9,16 @@ namespace SharedLib;
 /// <summary>
 /// OfferAvailabilityModelDB
 /// </summary>
-[Index(nameof(WarehouseId), nameof(OfferId), IsUnique = true)]
-public class OfferAvailabilityModelDB : RowOfMiddleDocumentModel
+[Index(nameof(WarehouseId), nameof(OfferId), IsUnique = true), Index(nameof(Quantity))]
+public class OfferAvailabilityModelDB : RowOfSimpleDocumentModel
 {
     /// <summary>
     /// Склад
     /// </summary>
     public required int WarehouseId { get; set; }
+
+    /// <summary>
+    /// Количество
+    /// </summary>
+    public decimal Quantity { get; set; }
 }
