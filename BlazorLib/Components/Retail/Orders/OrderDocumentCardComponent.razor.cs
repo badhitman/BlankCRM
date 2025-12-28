@@ -209,7 +209,6 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             TResponseModel<DocumentRetailModelDB[]> res = await RetailRepo.RetailDocumentsGetAsync(new()
             {
                 Ids = [OrderId],
-                UpdateStatuses = true,
                 IncludeDataExternal = true,
             });
 

@@ -426,18 +426,6 @@ public partial class RetailService : IRetailService
         if (res.Response.Length != req.Ids.Length)
             res.AddError("Некоторые документы не найдены");
 
-        if (req.UpdateStatuses)
-        {
-            loggerRepo.LogInformation($"Обновление статусов заказам: {JsonConvert.SerializeObject(req.Ids)}");
-            foreach (DocumentRetailModelDB docDb in res.Response)
-            {
-                await context.OrdersRetail
-                    .Where(x => x.Id == docDb.Id)
-                    .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == docDb.Id).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
-            }
-        }
-
         return res;
     }
 }
