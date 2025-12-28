@@ -28,7 +28,7 @@ public static class Extensions
             SortDirection.Ascending => DirectionsEnum.Up,
             SortDirection.Descending => DirectionsEnum.Down,
             SortDirection.None => DirectionsEnum.None,
-            _ => DirectionsEnum.Up,
+            _ => DirectionsEnum.None,
         };
     }
 

@@ -54,6 +54,13 @@ public partial class CommerceImplementService : ICommerceService
            ? q.OrderBy(x => x.CreatedAtUTC)
            : q.OrderByDescending(x => x.CreatedAtUTC);
 
+        oq = req.SortingDirection switch
+        {
+            DirectionsEnum.Up => q.OrderBy(x => x.DeliveryDate),
+            DirectionsEnum.Down => q.OrderByDescending(x => x.DeliveryDate),
+            _ => q.OrderBy(x => x.CreatedAtUTC)
+        };
+
         IQueryable<WarehouseDocumentModelDB> pq = oq
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
