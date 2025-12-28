@@ -71,6 +71,17 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
+                                <BoolSimpleStorageComponent StorageMetadata="GlobalStaticCloudStorageMetadata.WarehouseNegativeBalanceAllowed"
+                                                            Title="Отрицательный баланс склада (в документах перемещения)"
+                                                            Label="Отрицательный баланс склада"
+                                                            HintTrue="В складских документах [Перемещения] разрешается создавать отрицательный баланс на остатках"
+                                                            HintFalse="В складских документах [Перемещения] запрещён отрицательный баланс на остатках" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
                                 <RubricParameterStorageComponent Label="Rubric for new orders"
                                                                  HelperText="Automatically assign a category when creating an order"
                                                                  KeyStorage="GlobalStaticCloudStorageMetadata.RubricIssueForCreateOrder" />

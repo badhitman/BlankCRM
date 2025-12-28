@@ -244,6 +244,16 @@ public static partial class GlobalStaticCloudStorageMetadata
     };
 
     /// <summary>
+    /// WarehouseNegativeBalanceAllowed
+    /// </summary>
+    public static StorageContextMetadataModel WarehouseNegativeBalanceAllowed => new()
+    {
+        ApplicationName = Routes.WAREHOUSE_CONTROLLER_NAME,
+        PropertyName = Path.Combine(Routes.NEGATIVE_CONTROLLER_NAME, Routes.BALANCE_CONTROLLER_NAME, Routes.ALLOW_ACTION_NAME),
+        ContextName = Routes.RETAIL_CONTROLLER_NAME,
+    };
+
+    /// <summary>
     /// WarehouseDefaultForRetailOrder
     /// </summary>
     public static StorageContextMetadataModel WarehouseDefaultForRetailOrder => new()

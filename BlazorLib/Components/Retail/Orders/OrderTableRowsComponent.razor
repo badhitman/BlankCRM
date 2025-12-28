@@ -21,7 +21,7 @@
         @if (!ReadOnly && Document is not null)
         {
             <div class="ms-3">
-                <AddRowToOrderDocumentComponent ForceAdding="ForceAdding"
+                <AddRowToOrderDocumentComponent ForceAdding="@(ForceAdding || _warehouseReserveForRetailOrder)"
                                                 ShowPriceOffers
                                                 ShowRegistersOffersQuantity
                                                 @ref="AddingDomRef"

@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
 using BlazorLib.Components.Commerce;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
 
@@ -16,6 +16,9 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
+
+    [Inject]
+    IParametersStorageTransmission StorageTransmissionRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -32,6 +35,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
 
     List<RowOfRetailOrderDocumentModelDB> pagedData = [];
     RowOfRetailOrderDocumentModelDB? elementBeforeEdit;
+    bool _warehouseReserveForRetailOrder;
 
     /// <inheritdoc/>
     public AddRowToOrderDocumentComponent? AddingDomRef { get; private set; }
@@ -41,6 +45,11 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo
+               .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder);
+        _warehouseReserveForRetailOrder = res_WarehouseReserveForRetailOrder.Response == true;
+
         if (Document.Id > 0)
             await ReloadTableItems();
     }

@@ -26,6 +26,9 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
+        TResponseModel<bool?> res_WarehouseNegativeBalanceAllowed = await StorageTransmissionRepo
+              .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseNegativeBalanceAllowed, token);
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<WarehouseDocumentModelDB> queryDocumentDb = context
             .WarehouseDocuments

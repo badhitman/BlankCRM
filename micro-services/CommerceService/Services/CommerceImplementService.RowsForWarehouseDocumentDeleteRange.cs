@@ -25,6 +25,10 @@ public partial class CommerceImplementService : ICommerceService
             res.AddError($"Пустой запрос > {nameof(RowsForWarehouseDocumentDeleteAsync)}");
             return res;
         }
+
+        TResponseModel<bool?> res_WarehouseNegativeBalanceAllowed = await StorageTransmissionRepo
+              .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseNegativeBalanceAllowed, token);
+
         req = [.. req.Distinct()];
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<RowOfWarehouseDocumentModelDB> mainQuery = context.RowsWarehouses.Where(x => req.Any(y => y == x.Id));
