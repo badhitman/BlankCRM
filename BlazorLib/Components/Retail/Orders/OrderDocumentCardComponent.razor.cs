@@ -132,7 +132,17 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             TResponseModel<int> res = await RetailRepo.CreateRetailDocumentAsync(CreateDocumentRetailRequestModel.Build(editDocument, InjectToDeliveryId, InjectToConversionId, InjectToPaymentId));
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success() && res.Response > 0)
+            {
+                TResponseModel<int> setStatus = await RetailRepo.CreateOrderStatusDocumentAsync(new()
+                {
+                    DateOperation = DateTime.Now,
+                    CreatedAtUTC = DateTime.Now,
+                    OrderDocumentId = res.Response,
+                    StatusDocument = StatusesDocumentsEnum.Created,
+                });
+                SnackBarRepo.ShowMessagesResponse(setStatus.Messages);
                 NavRepo.NavigateTo($"/retail/order-document/{res.Response}");
+            }
         }
         else
         {
@@ -263,7 +273,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
         }
         await Task.WhenAll(tasks);
         editDocument = GlobalTools.CreateDeepCopy(currentDocument);
-        if(editDocument is not null && editDocument.NumWeekOfYear < 1)
+        if (editDocument is not null && editDocument.NumWeekOfYear < 1)
         {
             editDocument.NumWeekOfYear = cal.GetWeekOfYear(editDocument.CreatedAtUTC, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday);
         }

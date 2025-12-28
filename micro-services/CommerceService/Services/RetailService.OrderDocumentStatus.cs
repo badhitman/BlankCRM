@@ -2,11 +2,11 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
 using SharedLib;
+using DbcLib;
 
 namespace CommerceService;
 
@@ -22,18 +22,18 @@ public partial class RetailService : IRetailService
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        DocumentRetailModelDB orderDb = await context.OrdersRetail
+        DocumentRetailModelDB docDb = await context.OrdersRetail
             .Include(x => x.Rows)
             .FirstAsync(x => x.Id == req.OrderDocumentId, cancellationToken: token);
 
-        StatusesDocumentsEnum? _oldStatus = orderDb.StatusDocument;
+        StatusesDocumentsEnum? _oldStatus = docDb.StatusDocument;
 
         req.DateOperation = req.DateOperation.SetKindUtc();
         req.OrderDocument = null;
         req.Name = req.Name.Trim();
         req.CreatedAtUTC = DateTime.UtcNow;
 
-        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         await context.OrdersStatusesRetails.AddAsync(req, token);
         await context.SaveChangesAsync(token);
@@ -45,18 +45,18 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
-        if (orderDb.Rows is null || orderDb.Rows.Count == 0)
+        if (docDb.Rows is null || docDb.Rows.Count == 0)
         {
             await transaction.CommitAsync(token);
             return new() { Response = req.Id };
         }
 
-        int[] _offersIds = [.. orderDb.Rows.Select(x => x.OfferId)];
+        int[] _offersIds = [.. docDb.Rows.Select(x => x.OfferId)];
         List<LockTransactionModelDB> lockers = [.._offersIds.Select(x=> new LockTransactionModelDB()
         {
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
-            LockerAreaId = orderDb.WarehouseId,
+            LockerAreaId = docDb.WarehouseId,
         })];
 
         string msg;
@@ -90,7 +90,7 @@ public partial class RetailService : IRetailService
            .Where(x => _offersIds.Contains(x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        ResponseBaseModel res = await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offOrdersStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
+        ResponseBaseModel res = await DoIt(context, transaction, docDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offOrdersStatuses.Contains(_newStatus), offerAvailabilityDB, docDb, token);
         if (!res.Success())
         {
             await transaction.RollbackAsync(token);
@@ -104,8 +104,7 @@ public partial class RetailService : IRetailService
         }
 
         await transaction.CommitAsync(token);
-
-        return new() { Response = req.Id };
+        return new() { Response = req.Id, Messages = [new() { TypeMessage = MessagesTypesEnum.Success, Text = (_oldStatus == _newStatus ? "конечный статус документа без изменений" : "статус документа изменён") }] };
     }
 
     /// <inheritdoc/>
@@ -119,7 +118,7 @@ public partial class RetailService : IRetailService
             .Include(x => x.Rows)
             .FirstAsync(x => x.Id == req.OrderDocumentId, cancellationToken: token);
         StatusesDocumentsEnum? _oldStatus = orderDb.StatusDocument;
-        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         req.Name = req.Name.Trim();
         await context.OrdersStatusesRetails
@@ -219,7 +218,8 @@ public partial class RetailService : IRetailService
         await context.OrdersRetail
             .Where(x => x.Id == orderDb.Id)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Version, Guid.NewGuid()).SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == orderDb.Id).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == orderDb.Id).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
         StatusesDocumentsEnum _newStatus = await context.OrdersStatusesRetails
             .Where(y => y.OrderDocumentId == orderDb.Id)
@@ -283,7 +283,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DoIt(CommerceContext context, IDbContextTransaction transaction, List<RowOfRetailOrderDocumentModelDB> rows, bool reserveForRetailOrder, bool isEnableDocument, List<OfferAvailabilityModelDB> offerAvailabilityDB, DocumentRetailModelDB orderDb, CancellationToken token = default)
+    async Task<ResponseBaseModel> DoIt(CommerceContext context, IDbContextTransaction transaction, List<RowOfRetailOrderDocumentModelDB> rows, bool reserveForRetailOrder, bool isEnableDocument, List<OfferAvailabilityModelDB> offerAvailabilityDB, DocumentRetailModelDB orderDb, CancellationToken token = default)
     {
         foreach (RowOfRetailOrderDocumentModelDB row in rows)
         {

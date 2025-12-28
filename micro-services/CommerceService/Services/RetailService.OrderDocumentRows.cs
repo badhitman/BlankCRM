@@ -146,7 +146,7 @@ public partial class RetailService : IRetailService
         DocumentRetailModelDB docDb = await context.OrdersRetail
             .FirstAsync(x => x.Id == req.OrderId, cancellationToken: token);
 
-        RowOfOrderDocumentModelDB rowDb = await context.RowsOrders
+        RowOfRetailOrderDocumentModelDB? rowDb = await context.RowsOrdersRetails
             .Include(x => x.Offer!)
             .ThenInclude(x => x.Nomenclature)
             .FirstAsync(x => x.Id == req.Id, cancellationToken: token);

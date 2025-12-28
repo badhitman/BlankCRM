@@ -182,6 +182,8 @@ public partial class RetailService : IRetailService
                         Quantity = rowOfDocument.Quantity,
                     };
                     await context.OffersAvailability.AddAsync(registerOffer, cancellationToken: token);
+                    await context.SaveChangesAsync(token);
+                    registersOffersDb.Add(registerOffer);
                 }
             }
 
