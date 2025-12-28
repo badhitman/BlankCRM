@@ -386,7 +386,7 @@ public partial class CommerceImplementService : ICommerceService
 
                     if (registerOfferWriteOff is not null)
                     {
-                        if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity)
+                        if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity && warehouseNegativeBalanceAllowed.Response != true)
                         {
                             msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
                             loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
@@ -403,10 +403,25 @@ public partial class CommerceImplementService : ICommerceService
                     }
                     else if (req.WritingOffWarehouseId > 0)
                     {
-                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
-                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-                        res.AddError($"{msg}. Баланс не может быть отрицательным");
-                        break;
+                        if (warehouseNegativeBalanceAllowed.Response != true)
+                        {
+                            msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
+                            loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                            res.AddError($"{msg}. Баланс не может быть отрицательным");
+                            break;
+                        }
+                        else
+                        {
+                            registerOfferWriteOff = new()
+                            {
+                                WarehouseId = warehouseDocumentDb.WarehouseId,
+                                NomenclatureId = rowOfDocument.NomenclatureId,
+                                OfferId = rowOfDocument.OfferId,
+                                Quantity = -rowOfDocument.Quantity,
+                            };
+                            await context.OffersAvailability.AddAsync(registerOfferWriteOff, token);
+                            await context.SaveChangesAsync(token);
+                        }
                     }
 
                     if (registerOffer is not null)
