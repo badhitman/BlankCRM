@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLib;
 
@@ -83,6 +84,12 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     /// </summary>
     public List<DeliveryStatusRetailDocumentModelDB>? DeliveryStatusesLog { get; set; }
 
+    /// <summary>
+    /// Version
+    /// </summary>
+    [ConcurrencyCheck]
+    public Guid Version { get; set; }
+
     /// <inheritdoc/>
     public override string ToString()
     {
@@ -113,6 +120,7 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
             DeliveryType = other.DeliveryType,
             Description = other.Description,
             Id = other.Id,
+            Version = other.Version,
             KladrCode = other.KladrCode,
             KladrTitle = other.KladrTitle,
             LastUpdatedAtUTC = other.LastUpdatedAtUTC,

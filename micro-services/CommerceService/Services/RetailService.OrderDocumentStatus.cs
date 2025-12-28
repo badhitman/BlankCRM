@@ -79,7 +79,7 @@ public partial class RetailService : IRetailService
             .Select(s => s.StatusDocument)
             .FirstAsync(cancellationToken: token);
 
-        if ((offStatuses.Contains(_newStatus) && offStatuses.Contains(_oldStatus)) || (!offStatuses.Contains(_newStatus) && !offStatuses.Contains(_oldStatus)))
+        if ((offOrdersStatuses.Contains(_newStatus) && offOrdersStatuses.Contains(_oldStatus)) || (!offOrdersStatuses.Contains(_newStatus) && !offOrdersStatuses.Contains(_oldStatus)))
         {
             await transaction.CommitAsync(token);
             return new() { Response = req.Id };
@@ -90,7 +90,12 @@ public partial class RetailService : IRetailService
            .Where(x => _offersIds.Contains(x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
+        ResponseBaseModel res = await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offOrdersStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
+        if (!res.Success())
+        {
+            await transaction.RollbackAsync(token);
+            return new() { Messages = res.Messages };
+        }
 
         if (lockers.Count != 0)
         {
@@ -144,7 +149,7 @@ public partial class RetailService : IRetailService
             .Select(s => s.StatusDocument)
             .FirstAsync(cancellationToken: token);
 
-        if ((offStatuses.Contains(_newStatus) && offStatuses.Contains(_oldStatus)) || (!offStatuses.Contains(_newStatus) && !offStatuses.Contains(_oldStatus)))
+        if ((offOrdersStatuses.Contains(_newStatus) && offOrdersStatuses.Contains(_oldStatus)) || (!offOrdersStatuses.Contains(_newStatus) && !offOrdersStatuses.Contains(_oldStatus)))
         {
             await transaction.CommitAsync(token);
             return ResponseBaseModel.CreateSuccess("Ok");
@@ -177,7 +182,12 @@ public partial class RetailService : IRetailService
            .Where(x => _offersIds.Contains(x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
+        ResponseBaseModel res = await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offOrdersStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
+        if (!res.Success())
+        {
+            await transaction.RollbackAsync(token);
+            return new() { Messages = res.Messages };
+        }
 
         if (lockers.Count != 0)
         {
@@ -200,7 +210,7 @@ public partial class RetailService : IRetailService
             .Include(x => x.Rows)
             .FirstAsync(cancellationToken: token) ?? throw new Exception($"{nameof(DeleteOrderStatusDocumentAsync)}");
         StatusesDocumentsEnum? _oldStatus = orderDb.StatusDocument;
-        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+        using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         await q.ExecuteDeleteAsync(cancellationToken: token);
 
@@ -217,7 +227,7 @@ public partial class RetailService : IRetailService
             .Select(s => s.StatusDocument)
             .FirstAsync(cancellationToken: token);
 
-        if ((offStatuses.Contains(_newStatus) && offStatuses.Contains(_oldStatus)) || (!offStatuses.Contains(_newStatus) && !offStatuses.Contains(_oldStatus)))
+        if ((offOrdersStatuses.Contains(_newStatus) && offOrdersStatuses.Contains(_oldStatus)) || (!offOrdersStatuses.Contains(_newStatus) && !offOrdersStatuses.Contains(_oldStatus)))
         {
             await transaction.CommitAsync(token);
             return ResponseBaseModel.CreateSuccess("Ok");
@@ -255,7 +265,12 @@ public partial class RetailService : IRetailService
            .Where(x => _offersIds.Contains(x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
+        ResponseBaseModel res = await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offOrdersStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
+        if (!res.Success())
+        {
+            await transaction.RollbackAsync(token);
+            return new() { Messages = res.Messages };
+        }
 
         if (lockers.Count != 0)
         {
@@ -265,6 +280,116 @@ public partial class RetailService : IRetailService
 
         await transaction.CommitAsync(cancellationToken: token);
         return ResponseBaseModel.CreateSuccess("Строка-статус успешно удалена");
+    }
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> DoIt(CommerceContext context, IDbContextTransaction transaction, List<RowOfRetailOrderDocumentModelDB> rows, bool reserveForRetailOrder, bool isEnableDocument, List<OfferAvailabilityModelDB> offerAvailabilityDB, DocumentRetailModelDB orderDb, CancellationToken token = default)
+    {
+        foreach (RowOfRetailOrderDocumentModelDB row in rows)
+        {
+            OfferAvailabilityModelDB? regOfferAv = offerAvailabilityDB
+                .FirstOrDefault(x => x.OfferId == row.OfferId && x.WarehouseId == orderDb.WarehouseId);
+            string msg;
+            if (isEnableDocument) // (ON) включение
+            {
+                if (reserveForRetailOrder) // зачислить остаток на склад
+                {
+                    if (regOfferAv is null)
+                    {
+                        regOfferAv = new()
+                        {
+                            WarehouseId = orderDb.WarehouseId,
+                            NomenclatureId = row.NomenclatureId,
+                            OfferId = row.OfferId,
+                            Quantity = row.Quantity,
+                        };
+                        await context.OffersAvailability.AddAsync(regOfferAv, token);
+                        await context.SaveChangesAsync(token);
+                        offerAvailabilityDB.Add(regOfferAv);
+                    }
+                    else
+                    {
+                        await context.OffersAvailability.Where(x => x.Id == regOfferAv.Id)
+                            .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.Quantity, p => p.Quantity + row.Quantity), cancellationToken: token);
+                    }
+                }
+                else // списать остаток со склада
+                {
+                    if (regOfferAv is null)
+                    {
+                        await transaction.RollbackAsync(token);
+                        msg = $"На складе #{orderDb.WarehouseId} отсутствует офер #{row.OfferId}";
+                        loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+
+                        return ResponseBaseModel.CreateError(msg);
+                    }
+                    else if (regOfferAv.Quantity < row.Quantity)
+                    {
+                        await transaction.RollbackAsync(token);
+                        msg = $"На складе #{orderDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
+                        loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+
+                        return ResponseBaseModel.CreateError(msg);
+                    }
+
+                    await context.OffersAvailability
+                        .Where(x => x.Id == regOfferAv.Id)
+                        .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.Quantity, p => p.Quantity - row.Quantity), cancellationToken: token);
+                }
+            }
+            else // (OFF) выключение
+            {
+                if (reserveForRetailOrder) // списать остаток со склада
+                {
+                    if (regOfferAv is null)
+                    {
+                        await transaction.RollbackAsync(token);
+                        msg = $"На складе #{orderDb.WarehouseId} отсутствует офер #{row.OfferId}";
+                        loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+
+                        return ResponseBaseModel.CreateError(msg);
+                    }
+                    else if (regOfferAv.Quantity < row.Quantity)
+                    {
+                        await transaction.RollbackAsync(token);
+                        msg = $"На складе #{orderDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
+                        loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+
+                        return ResponseBaseModel.CreateError(msg);
+                    }
+
+                    await context.OffersAvailability
+                        .Where(x => x.Id == regOfferAv.Id)
+                        .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.Quantity, p => p.Quantity - row.Quantity), cancellationToken: token);
+                }
+                else // зачислить остаток на склад
+                {
+                    if (regOfferAv is null)
+                    {
+                        regOfferAv = new()
+                        {
+                            WarehouseId = orderDb.WarehouseId,
+                            NomenclatureId = row.NomenclatureId,
+                            OfferId = row.OfferId,
+                            Quantity = row.Quantity,
+                        };
+                        await context.OffersAvailability.AddAsync(regOfferAv, token);
+                        await context.SaveChangesAsync(token);
+                        offerAvailabilityDB.Add(regOfferAv);
+                    }
+                    else
+                    {
+                        await context.OffersAvailability.Where(x => x.Id == regOfferAv.Id)
+                            .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.Quantity, p => p.Quantity + row.Quantity), cancellationToken: token);
+                    }
+                }
+            }
+        }
+        return ResponseBaseModel.CreateSuccess("Ok");
     }
 
     /// <inheritdoc/>
@@ -308,38 +433,5 @@ public partial class RetailService : IRetailService
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             Response = await pq.ToListAsync(cancellationToken: token)
         };
-    }
-
-    async Task DoIt(CommerceContext context, IDbContextTransaction transaction, List<RowOfRetailOrderDocumentModelDB> rows, bool reserveForRetailOrder, bool isEnableDocument, List<OfferAvailabilityModelDB> offerAvailabilityDB, DocumentRetailModelDB orderDb, CancellationToken token = default)
-    {
-        foreach (RowOfRetailOrderDocumentModelDB row in rows)
-        {
-            OfferAvailabilityModelDB? regOfferAv = offerAvailabilityDB
-                .FirstOrDefault(x => x.OfferId == row.OfferId && x.WarehouseId == orderDb.WarehouseId);
-
-            if (isEnableDocument) // (ON) включение
-            {
-                if (reserveForRetailOrder)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
-            else // (OFF) выключение
-            {
-                if (reserveForRetailOrder)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
-        }
-
     }
 }

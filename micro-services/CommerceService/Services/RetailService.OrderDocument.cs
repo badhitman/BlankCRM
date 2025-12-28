@@ -19,6 +19,13 @@ public partial class RetailService : IRetailService
     public async Task<TResponseModel<int>> CreateRetailDocumentAsync(CreateDocumentRetailRequestModel req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
+
+        if (req.WarehouseId <= 0)
+        {
+            res.AddError("Не указан склад");
+            return res;
+        }
+
         if (string.IsNullOrWhiteSpace(req.AuthorIdentityUserId))
         {
             res.AddError("Не указан автор/создатель документа");
@@ -113,26 +120,28 @@ public partial class RetailService : IRetailService
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateRetailDocumentAsync(DocumentRetailModelDB req, CancellationToken token = default)
     {
+        if (req.WarehouseId <= 0)
+            return ResponseBaseModel.CreateError("Не указан склад");
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         string msg;
         req.ExternalDocumentId = req.ExternalDocumentId?.Trim();
         if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.OrdersRetail.AnyAsync(x => x.Id != req.Id && x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
             return ResponseBaseModel.CreateError($"Документ [ext #:{req.ExternalDocumentId}] уже существует");
 
-        DocumentRetailModelDB orderDb = await context.OrdersRetail
+        DocumentRetailModelDB documentDb = await context.OrdersRetail
             .Include(x => x.Rows)
             .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
 
-        if (orderDb.Version != req.Version)
+        if (documentDb.Version != req.Version)
             return ResponseBaseModel.CreateError($"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить");
 
-        TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
-        if (!offStatuses.Contains(orderDb.StatusDocument) && orderDb.WarehouseId != req.WarehouseId)
+        if (!offOrdersStatuses.Contains(documentDb.StatusDocument) && documentDb.WarehouseId != req.WarehouseId)
         {
             List<LockTransactionModelDB> offersLocked = [];
-            foreach (RowOfRetailOrderDocumentModelDB rowDoc in orderDb.Rows!)
+            foreach (RowOfRetailOrderDocumentModelDB rowDoc in documentDb.Rows!)
             {
                 offersLocked.AddRange(new LockTransactionModelDB()
                 {
@@ -143,7 +152,7 @@ public partial class RetailService : IRetailService
                 new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
-                    LockerAreaId = orderDb.WarehouseId,
+                    LockerAreaId = documentDb.WarehouseId,
                     LockerId = rowDoc.OfferId,
                 });
             }
@@ -164,63 +173,114 @@ public partial class RetailService : IRetailService
             }
 
             ResponseBaseModel res = new();
-            int[] _offersIds = [.. orderDb.Rows.Select(x => x.OfferId).Distinct()];
+            int[] _offersIds = [.. documentDb.Rows.Select(x => x.OfferId).Distinct()];
             List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
                 .Where(x => _offersIds.Any(y => y == x.OfferId))
                 .Include(x => x.Offer)
                 .Include(x => x.Nomenclature)
                 .ToListAsync(cancellationToken: token);
 
-            foreach (RowOfRetailOrderDocumentModelDB rowOfDocument in orderDb.Rows)
+            TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo
+                .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
+
+            foreach (RowOfRetailOrderDocumentModelDB rowOfDocument in documentDb.Rows)
             {
                 OfferAvailabilityModelDB?
                     registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId),
-                    registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == orderDb.WarehouseId);
+                    registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == documentDb.WarehouseId);
 
-                if (registerOfferWriteOff is not null)
+                if (res_WarehouseReserveForRetailOrder.Response == true)
                 {
-                    if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity)
+                    if (registerOfferWriteOff is null)
                     {
-                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
+                        registerOfferWriteOff = new()
+                        {
+                            WarehouseId = documentDb.WarehouseId,
+                            NomenclatureId = rowOfDocument.NomenclatureId,
+                            OfferId = rowOfDocument.OfferId,
+                            Quantity = rowOfDocument.Quantity,
+                        };
+                        await context.OffersAvailability.AddAsync(registerOfferWriteOff, token);
+                        await context.SaveChangesAsync(token);
+                        registersOffersDb.Add(registerOfferWriteOff);
+                    }
+                    else
+                        await context.OffersAvailability
+                            .Where(x => x.Id == registerOfferWriteOff.Id)
+                            .ExecuteUpdateAsync(x => x.SetProperty(p => p.Quantity, p => p.Quantity + rowOfDocument.Quantity), cancellationToken: token);
+                }
+                else
+                {
+                    if (registerOfferWriteOff is not null)
+                    {
+                        if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity)
+                        {
+                            msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
+                            loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                            res.AddError($"{msg}. Баланс не может быть отрицательным");
+                            break;
+                        }
+
+                        await context.OffersAvailability
+                            .Where(y => y.Id == registerOfferWriteOff.Id)
+                            .ExecuteUpdateAsync(set =>
+                                set.SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocument.Quantity), cancellationToken: token);
+
+                        registerOfferWriteOff.Quantity -= rowOfDocument.Quantity;
+                    }
+                    else if (documentDb.WarehouseId > 0)
+                    {
+                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
                         loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                         res.AddError($"{msg}. Баланс не может быть отрицательным");
                         break;
                     }
-
-                    await context.OffersAvailability
-                        .Where(y => y.Id == registerOfferWriteOff.Id)
-                        .ExecuteUpdateAsync(set =>
-                            set.SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocument.Quantity), cancellationToken: token);
-
-                    registerOfferWriteOff.Quantity -= rowOfDocument.Quantity;
-                }
-                else if (orderDb.WarehouseId > 0)
-                {
-                    msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
-                    loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-                    res.AddError($"{msg}. Баланс не может быть отрицательным");
-                    break;
                 }
 
-                if (registerOffer is not null)
+                if (res_WarehouseReserveForRetailOrder.Response == true)
                 {
-                    await context.OffersAvailability
-                         .Where(y => y.Id == registerOffer.Id)
-                         .ExecuteUpdateAsync(set => set
-                            .SetProperty(p => p.Quantity, p => p.Quantity + rowOfDocument.Quantity), cancellationToken: token);
-
-                    registerOffer.Quantity += rowOfDocument.Quantity;
+                    if (registerOffer is null)
+                    {
+                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
+                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        res.AddError($"{msg}. Баланс не может быть отрицательным");
+                        return res;
+                    }
+                    else if (registerOffer.Quantity < rowOfDocument.Quantity)
+                    {
+                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток {registerOffer.Quantity})";
+                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        res.AddError($"{msg}. Баланс не может быть отрицательным");
+                        return res;
+                    }
+                    else
+                        await context.OffersAvailability
+                            .Where(x => x.Id == registerOffer.Id)
+                            .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocument.Quantity), cancellationToken: token);
                 }
                 else
                 {
-                    registerOffer = new OfferAvailabilityModelDB()
+                    if (registerOffer is not null)
                     {
-                        WarehouseId = req.WarehouseId,
-                        NomenclatureId = rowOfDocument.NomenclatureId,
-                        OfferId = rowOfDocument.OfferId,
-                        Quantity = rowOfDocument.Quantity,
-                    };
-                    await context.OffersAvailability.AddAsync(registerOffer, cancellationToken: token);
+                        await context.OffersAvailability
+                             .Where(y => y.Id == registerOffer.Id)
+                             .ExecuteUpdateAsync(set => set
+                                .SetProperty(p => p.Quantity, p => p.Quantity + rowOfDocument.Quantity), cancellationToken: token);
+
+                        registerOffer.Quantity += rowOfDocument.Quantity;
+                    }
+                    else
+                    {
+                        registerOffer = new OfferAvailabilityModelDB()
+                        {
+                            WarehouseId = req.WarehouseId,
+                            NomenclatureId = rowOfDocument.NomenclatureId,
+                            OfferId = rowOfDocument.OfferId,
+                            Quantity = rowOfDocument.Quantity,
+                        };
+                        await context.OffersAvailability.AddAsync(registerOffer, cancellationToken: token);
+                    }
                 }
             }
 

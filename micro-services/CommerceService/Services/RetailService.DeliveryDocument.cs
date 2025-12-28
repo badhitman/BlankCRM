@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Text;
 using SharedLib;
 using DbcLib;
@@ -39,6 +40,7 @@ public partial class RetailService : IRetailService
         req.Name = req.Name.Trim();
         req.Description = req.Description?.Trim();
         req.DeliveryCode = req.DeliveryCode?.Trim();
+        req.Version = Guid.NewGuid();
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
@@ -77,6 +79,128 @@ public partial class RetailService : IRetailService
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
+        DeliveryDocumentRetailModelDB? documentDb = await context.DeliveryDocumentsRetail
+            .Include(x => x.Rows)
+            .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
+
+        if (documentDb.Version != req.Version)
+            return ResponseBaseModel.CreateError($"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить");
+
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
+        string msg;
+        if (!offDeliveriesStatuses.Contains(documentDb.DeliveryStatus) && documentDb.WarehouseId != req.WarehouseId)
+        {
+            List<LockTransactionModelDB> offersLocked = [];
+            foreach (RowOfDeliveryRetailDocumentModelDB rowDoc in documentDb.Rows!)
+            {
+                offersLocked.AddRange(new LockTransactionModelDB()
+                {
+                    LockerName = nameof(OfferAvailabilityModelDB),
+                    LockerAreaId = req.WarehouseId,
+                    LockerId = rowDoc.OfferId,
+                },
+                new LockTransactionModelDB()
+                {
+                    LockerName = nameof(OfferAvailabilityModelDB),
+                    LockerAreaId = documentDb.WarehouseId,
+                    LockerId = rowDoc.OfferId,
+                });
+            }
+            if (offersLocked.Count != 0)
+            {
+                try
+                {
+                    await context.AddRangeAsync(offersLocked, token);
+                    await context.SaveChangesAsync(token);
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync(token);
+                    msg = $"Не удалось выполнить команду блокировки регистров остатков {nameof(UpdateRetailDocumentAsync)}: ";
+                    loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                    return ResponseBaseModel.CreateError($"{msg}{ex.Message}");
+                }
+            }
+
+            ResponseBaseModel res = new();
+            int[] _offersIds = [.. documentDb.Rows.Select(x => x.OfferId).Distinct()];
+            List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
+                .Where(x => _offersIds.Any(y => y == x.OfferId))
+                .Include(x => x.Offer)
+                .Include(x => x.Nomenclature)
+                .ToListAsync(cancellationToken: token);
+
+            foreach (RowOfDeliveryRetailDocumentModelDB rowOfDocument in documentDb.Rows)
+            {
+                OfferAvailabilityModelDB?
+                    registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId),
+                    registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == documentDb.WarehouseId);
+
+                if (registerOfferWriteOff is not null)
+                {
+                    if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity)
+                    {
+                        await transaction.RollbackAsync(token);
+                        msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
+                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        res.AddError($"{msg}. Баланс не может быть отрицательным");
+                        break;
+                    }
+
+                    await context.OffersAvailability
+                        .Where(y => y.Id == registerOfferWriteOff.Id)
+                        .ExecuteUpdateAsync(set =>
+                            set.SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocument.Quantity), cancellationToken: token);
+
+                    registerOfferWriteOff.Quantity -= rowOfDocument.Quantity;
+                }
+                else if (documentDb.WarehouseId > 0)
+                {
+                    await transaction.RollbackAsync(token);
+                    msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
+                    loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                    res.AddError($"{msg}. Баланс не может быть отрицательным");
+                    break;
+                }
+
+                if (registerOffer is not null)
+                {
+                    await context.OffersAvailability
+                         .Where(y => y.Id == registerOffer.Id)
+                         .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.Quantity, p => p.Quantity + rowOfDocument.Quantity), cancellationToken: token);
+
+                    registerOffer.Quantity += rowOfDocument.Quantity;
+                }
+                else
+                {
+                    registerOffer = new OfferAvailabilityModelDB()
+                    {
+                        WarehouseId = req.WarehouseId,
+                        NomenclatureId = rowOfDocument.NomenclatureId,
+                        OfferId = rowOfDocument.OfferId,
+                        Quantity = rowOfDocument.Quantity,
+                    };
+                    await context.OffersAvailability.AddAsync(registerOffer, cancellationToken: token);
+                }
+            }
+
+            if (!res.Success())
+            {
+                await transaction.RollbackAsync(token);
+                msg = $"Не удалось обновить складской документ: ";
+                loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                res.AddError(msg);
+                return res;
+            }
+
+            if (offersLocked.Count != 0)
+            {
+                context.RemoveRange(offersLocked);
+                await context.SaveChangesAsync(token);
+            }
+        }
+
         await context.DeliveryDocumentsRetail
             .Where(x => x.Id == req.Id)
             .ExecuteUpdateAsync(set => set
@@ -90,10 +214,12 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.DeliveryType, req.DeliveryType)
                 .SetProperty(p => p.DeliveryPaymentUponReceipt, req.DeliveryPaymentUponReceipt)
                 .SetProperty(p => p.DeliveryCode, req.DeliveryCode)
+                .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.AddressUserComment, req.AddressUserComment)
                 .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.Id).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault())
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
+        await transaction.CommitAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
