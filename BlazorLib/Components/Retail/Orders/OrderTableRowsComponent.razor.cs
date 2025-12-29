@@ -13,7 +13,7 @@ namespace BlazorLib.Components.Retail.Orders;
 /// OrderTableRowsComponent
 /// </summary>
 public partial class OrderTableRowsComponent : OffersTableBaseComponent
-{
+{//InvokeAsync(async () => await CacheRegistersUpdate(offers: [SelectedOffer.Id], goods: [], WarehouseId, true));
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
@@ -52,6 +52,8 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
 
         if (Document.Id > 0)
             await ReloadTableItems();
+        else if (Document.Rows is not null)
+            await CacheRegistersUpdate(offers: [.. Document.Rows.Select(x => x.OfferId)], goods: [], Document.WarehouseId, true);
     }
 
     async Task ReloadTableItems()
@@ -70,6 +72,10 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
         {
             Document.Rows = res.Response;
         }
+
+        if (Document.Rows is not null)
+            await CacheRegistersUpdate(offers: [.. Document.Rows.Select(x => x.OfferId)], goods: [], Document.WarehouseId, true);
+
         await SetBusyAsync(false);
     }
 
