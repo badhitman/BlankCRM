@@ -83,15 +83,24 @@
             @context!.Amount
         </MudTd>
         <MudTd>
-            <MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
-            <AuthorizeView Context="row" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
-                <Authorized>
-                    @if (_problemDeleteRow == context.Id)
-                    {
-                        <MudIconButton OnClick="() => DeleteRow(context.OfferId, true)" Icon="@Icons.Material.Filled.Dangerous" Color="Color.Secondary" Class="ms-2" title="Удалить принудительно" />
-                    }
-                </Authorized>
-            </AuthorizeView>
+            @if (!_problemDeleteRow.HasValue)
+            {
+                <MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+            }
+            else
+            {
+                <MudButtonGroup Color="Color.Primary" Variant="Variant.Text">
+                    <MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+                    <AuthorizeView Context="row" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+                        <Authorized>
+                            @if (_problemDeleteRow == context.OfferId)
+                            {
+                                <MudIconButton OnClick="() => DeleteRow(context.OfferId, true)" Icon="@Icons.Material.Filled.Dangerous" Color="Color.Secondary" Class="ms-2" title="Удалить принудительно" />
+                            }
+                        </Authorized>
+                    </AuthorizeView>
+                </MudButtonGroup>
+            }
         </MudTd>
     </RowTemplate>
     <RowEditingTemplate>

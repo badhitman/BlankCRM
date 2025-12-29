@@ -71,7 +71,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
                 if (resDelRow.Success() && resDelRow.Response is not null)
                     Document.Version = resDelRow.Response.Value;
                 else
-                    _problemDeleteRow = Document.Rows[exist_row].Id;
+                    _problemDeleteRow = offerId;
 
                 await ReloadTableItems();
                 await SetBusyAsync(false);
