@@ -2,9 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
 using MudBlazor;
 using SharedLib;
-using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace BlazorLib.Components.Warehouse;
 
@@ -15,15 +15,15 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
 {
     MudTable<OfferAvailabilityModelDB>? table;
 
-    List<UniversalBaseModel> Warehauses = [];
+    List<UniversalBaseModel> Warehouses = [];
 
-    IReadOnlyCollection<int> _selectedWarehauses = [];
-    IReadOnlyCollection<int> SelectedWarehauses
+    IReadOnlyCollection<int> _selectedWarehouses = [];
+    IReadOnlyCollection<int> SelectedWarehouses
     {
-        get => _selectedWarehauses;
+        get => _selectedWarehouses;
         set
         {
-            _selectedWarehauses = value;
+            _selectedWarehouses = value;
             if (table is not null)
                 InvokeAsync(table.ReloadServerData);
         }
@@ -39,7 +39,7 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
             ContextName = Routes.WAREHOUSE_CONTROLLER_NAME,
         };
 
-        Warehauses = await HelpDeskRepo.RubricsChildListAsync(req);
+        Warehouses = await HelpDeskRepo.RubricsChildListAsync(req);
         await SetBusyAsync(false);
     }
 
@@ -61,19 +61,16 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
         await SetBusyAsync(token: token);
         TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req = new()
         {
-            Payload = new()
-            {
-                MinQuantity = 1,
-            },
+            Payload = new(),
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert(),
         };
 
-        if (SelectedWarehauses.Count != 0 && SelectedWarehauses.Count != Warehauses.Count)
+        if (SelectedWarehouses.Count != 0 && SelectedWarehouses.Count != Warehouses.Count)
         {
-            req.Payload.WarehousesFilter = [.. SelectedWarehauses];
+            req.Payload.WarehousesFilter = [.. SelectedWarehouses];
         }
 
         TPaginationResponseModel<OfferAvailabilityModelDB> rest = await CommerceRepo.OffersRegistersSelectAsync(req, token);
