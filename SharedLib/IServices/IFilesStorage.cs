@@ -31,4 +31,9 @@ public interface IFilesStorage
     /// Save file into storage
     /// </summary>
     public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageFileMetadataModel> req, CancellationToken token = default);
+
+    /// <summary>
+    /// GetDirectoryInfo
+    /// </summary>
+    public Task<TResponseModel<DirectoryReadResponseModel>> GetDirectoryInfoAsync(DirectoryReadRequestModel req, CancellationToken token = default);
 }

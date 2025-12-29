@@ -1063,6 +1063,11 @@ public static partial class GlobalStaticConstantsTransmission
         /// </remarks>
         public readonly static string FilesAreaGetMetadataReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.STORAGE_CONTROLLER_NAME, $"{Routes.FILES_CONTROLLER_NAME}-{Routes.AREAS_CONTROLLER_NAME}", $"{Routes.METADATA_CONTROLLER_NAME}-{Routes.CALCULATE_ACTION_NAME}");
 
+        /// <summary>
+        /// Прочитать папку (информацию о её содержимом)
+        /// </summary>
+        public readonly static string GetDirectoryInfoReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.STORAGE_CONTROLLER_NAME, $"{Routes.DIRECTORY_CONTROLLER_NAME}-{Routes.INFO_CONTROLLER_NAME}", $"{Routes.READ_ACTION_NAME}-{Routes.FILES_CONTROLLER_NAME}-{Routes.SYSTEM_CONTROLLER_NAME}");
+
         /// <inheritdoc/>
         public readonly static string SaveCloudParameterReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CLOUD_CONTROLLER_NAME, Routes.PROPERTY_CONTROLLER_NAME, Routes.SET_ACTION_NAME);
 

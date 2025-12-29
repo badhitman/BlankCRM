@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using DbcLib;
+using HtmlGenerator.html5.collections;
 using ImageMagick;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
@@ -116,6 +117,41 @@ public class StorageFilesImpl(
             Response = await oq.ToListAsync(cancellationToken: token),
         };
         return res;
+    }
+
+    /// <inheritdoc/>
+    public Task<TResponseModel<DirectoryReadResponseModel>> GetDirectoryInfoAsync(DirectoryReadRequestModel req, CancellationToken token = default)
+    {
+        TResponseModel<DirectoryReadResponseModel> res = new();
+        if (!Directory.Exists(req.FolderPath))
+        {
+            res.AddError($"Папка [{req.FolderPath}] не существует");
+            return Task.FromResult(res);
+        }
+        
+        FileInfo _root = new FileInfo(req.FolderPath);
+        res.Response = new()
+        {
+            FullPath = _root.FullName,
+            LastWriteTimeUtc = _root.LastWriteTimeUtc,
+            FileSizeBytes = _root.Length,
+            IsDirectory = (_root.Attributes & FileAttributes.Directory) == FileAttributes.Directory,
+            DirectoryItems = []
+        };
+
+        string[] allFiles = Directory.GetFiles(req.FolderPath);
+        foreach (string _f in allFiles)
+        {
+            FileInfo _fi = new(_f);
+            res.Response.DirectoryItems.Add(new()
+            {
+                FullPath = _fi.FullName,
+                IsDirectory = (_fi.Attributes & FileAttributes.Directory) == FileAttributes.Directory,
+                FileSizeBytes = _fi.Length,
+                LastWriteTimeUtc = _fi.LastWriteTimeUtc,
+            });
+        }
+        return Task.FromResult(res);
     }
 
     /// <inheritdoc/>

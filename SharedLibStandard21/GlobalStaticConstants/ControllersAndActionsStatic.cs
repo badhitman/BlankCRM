@@ -1450,6 +1450,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string SYSTEMS_CONTROLLER_NAME = "systems";
 
         /// <summary>
+        /// System
+        /// </summary>
+        public const string SYSTEM_CONTROLLER_NAME = "system";
+
+        /// <summary>
         /// Совладельцы
         /// </summary>
         public const string CO_OWNER_CONTROLLER_NAME = "co-owner";
