@@ -55,9 +55,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
         else if (Document.Rows is not null)
         {
             await CacheRegistersUpdate(_offers: [.. Document.Rows.Select(x => x.OfferId)], _goods: [], Document.WarehouseId, true);
-
-            if (AddingDomRef is not null)
-                AddingDomRef.SetRegistersCache(RegistersCache);
+            AddingDomRef?.SetRegistersCache(RegistersCache);
         }
     }
 
@@ -81,9 +79,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
         if (Document.Rows is not null)
         {
             await CacheRegistersUpdate(_offers: [.. Document.Rows.Select(x => x.OfferId)], _goods: [], Document.WarehouseId, true);
-            
-            if (AddingDomRef is not null)
-                AddingDomRef.SetRegistersCache(RegistersCache);
+            AddingDomRef?.SetRegistersCache(RegistersCache);
         }
         await SetBusyAsync(false);
     }
