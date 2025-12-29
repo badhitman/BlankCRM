@@ -15,10 +15,10 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<KeyValuePair<int, Guid>?>> CreateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
     {
         string msg;
-        TResponseModel<int> res = new();
+        TResponseModel<KeyValuePair<int, Guid>?> res = new();
 
         if (req.Quantity <= 0)
             return new()
@@ -120,24 +120,25 @@ public partial class RetailService : IRetailService
         await context.RowsOrdersRetails.AddAsync(req, token);
         await context.SaveChangesAsync(token);
 
-        await context.OrdersRetail
-          .Where(x => x.Id == req.OrderId)
-          .ExecuteUpdateAsync(set => set
-              .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
-
         await context.LockTransactions
             .Where(x => x.Id == locker.Id)
             .ExecuteDeleteAsync(cancellationToken: token);
 
+        Guid _orderGuid = Guid.NewGuid();
+        await context.OrdersRetail
+          .Where(x => x.Id == req.OrderId)
+          .ExecuteUpdateAsync(set => set
+              .SetProperty(p => p.Version, _orderGuid), cancellationToken: token);
+
         await transaction.CommitAsync(token);
-        return new TResponseModel<int>() { Response = req.Id };
+        return new() { Response = new(req.Id, _orderGuid) };
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
     {
         if (req.Quantity <= 0)
-            return ResponseBaseModel.CreateError("Количество должно быть больше нуля");
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Количество должно быть больше нуля" }] };
 
         TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo
             .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
@@ -152,8 +153,11 @@ public partial class RetailService : IRetailService
             .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
 
         if (rowDb.Version != req.Version)
-            return ResponseBaseModel.CreateError($"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова");
-
+            return new()
+            {
+                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова" }]
+            };
+        Guid _orderGuid;
         if (offOrdersStatuses.Contains(docDb.StatusDocument))
         {
             await context.RowsOrdersRetails
@@ -164,12 +168,17 @@ public partial class RetailService : IRetailService
                     .SetProperty(p => p.Version, Guid.NewGuid())
                     .SetProperty(p => p.Amount, req.Amount), cancellationToken: token);
 
+            _orderGuid = Guid.NewGuid();
             await context.OrdersRetail
               .Where(x => x.Id == req.OrderId)
               .ExecuteUpdateAsync(set => set
-                  .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+                  .SetProperty(p => p.Version, _orderGuid), cancellationToken: token);
 
-            return ResponseBaseModel.CreateSuccess("Ok");
+            return new()
+            {
+                Response = _orderGuid,
+                Messages = [new() { Text = "Ok", TypeMessage = MessagesTypesEnum.Success }]
+            };
         }
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
@@ -199,7 +208,7 @@ public partial class RetailService : IRetailService
             await transaction.RollbackAsync(token);
             msg = $"Не удалось выполнить команду: ";
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-            return ResponseBaseModel.CreateError($"{msg}{ex.Message}"); ;
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}{ex.Message}" }] };
         }
 
         List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
@@ -220,14 +229,14 @@ public partial class RetailService : IRetailService
                     await transaction.RollbackAsync(token);
                     msg = $"Количество [offer: #{rowDb.OfferId} '{rowDb.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
                     loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(rowDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-                    return ResponseBaseModel.CreateError($"{msg}. Баланс не может быть отрицательным");
+                    return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}. Баланс не может быть отрицательным" }] };
                 }
                 else if (regOfferAv.Quantity < rowDb.Quantity)
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"Количество [offer: #{rowDb.OfferId} '{rowDb.Offer?.GetName()}'] не может быть списано (остаток {regOfferAv.Quantity})";
                     loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(rowDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-                    return ResponseBaseModel.CreateError($"{msg}. Баланс не может быть отрицательным");
+                    return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}. Баланс не может быть отрицательным" }] };
                 }
 
                 await context.OffersAvailability
@@ -274,14 +283,14 @@ public partial class RetailService : IRetailService
                     await transaction.RollbackAsync(token);
                     msg = $"Количество [offer: #{req.OfferId} '{req.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
                     loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-                    return ResponseBaseModel.CreateError($"{msg}. Баланс не может быть отрицательным");
+                    return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}. Баланс не может быть отрицательным" }] };
                 }
                 else if (regOfferAv.Quantity + _quantity < 0)
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"Количество [offer: #{req.OfferId} '{req.Offer?.GetName()}'] не может быть списано (остаток {regOfferAv.Quantity})";
                     loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-                    return ResponseBaseModel.CreateError($"{msg}. Баланс не может быть отрицательным");
+                    return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}. Баланс не может быть отрицательным" }] };
                 }
                 else
                 {
@@ -343,7 +352,7 @@ public partial class RetailService : IRetailService
                     msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{req.OfferId}";
                     loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
-                    return ResponseBaseModel.CreateError(msg);
+                    return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = msg }] };
                 }
                 else if (regOfferAv.Quantity < _quantity)
                 {
@@ -351,7 +360,7 @@ public partial class RetailService : IRetailService
                     msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
                     loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
-                    return ResponseBaseModel.CreateError(msg);
+                    return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = msg }] };
                 }
 
                 await context.OffersAvailability
@@ -374,17 +383,22 @@ public partial class RetailService : IRetailService
               .SetProperty(p => p.Version, Guid.NewGuid())
               .SetProperty(p => p.Amount, req.Amount), cancellationToken: token);
 
+        _orderGuid = Guid.NewGuid();
         await context.OrdersRetail
           .Where(x => x.Id == req.OrderId)
           .ExecuteUpdateAsync(set => set
-              .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+              .SetProperty(p => p.Version, _orderGuid), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        return ResponseBaseModel.CreateSuccess("Ok");
+        return new()
+        {
+            Response = _orderGuid,
+            Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ok" }]
+        };
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteRowRetailDocumentAsync(int rowId, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> DeleteRowRetailDocumentAsync(int rowId, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -418,7 +432,7 @@ public partial class RetailService : IRetailService
                 await transaction.RollbackAsync(token);
                 msg = $"Не удалось выполнить команду: ";
                 loggerRepo.LogError(ex, $"{msg} #{rowId}");
-                return ResponseBaseModel.CreateError($"{msg}{ex.Message}"); ;
+                return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}{ex.Message}" }] };
             }
 
             OfferAvailabilityModelDB? regOfferAv = await context
@@ -434,7 +448,7 @@ public partial class RetailService : IRetailService
                     msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{rowDb.OfferId}";
                     loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(rowDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
-                    return ResponseBaseModel.CreateError(msg);
+                    return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = msg }] };
                 }
                 else if (regOfferAv.Quantity < rowDb.Quantity)
                 {
@@ -442,7 +456,7 @@ public partial class RetailService : IRetailService
                     msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
                     loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(rowDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
-                    return ResponseBaseModel.CreateError(msg);
+                    return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = msg }] };
                 }
 
                 await context.OffersAvailability
@@ -482,12 +496,19 @@ public partial class RetailService : IRetailService
             .Where(x => x.Id == rowId)
             .ExecuteDeleteAsync(cancellationToken: token);
 
+        Guid _orderGuid = Guid.NewGuid();
+
         await context.OrdersRetail
             .Where(x => x.Id == docDb.Id)
-            .ExecuteUpdateAsync(set => set.SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+            .ExecuteUpdateAsync(set => set
+            .SetProperty(p => p.Version, _orderGuid), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        return ResponseBaseModel.CreateSuccess("Строка документа удалена");
+        return new()
+        {
+            Response = _orderGuid,
+            Messages = [new() { TypeMessage = MessagesTypesEnum.Info, Text = "Строка документа удалена" }]
+        };
     }
 
     /// <inheritdoc/>

@@ -26,7 +26,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        TResponseModel<bool?> res_WarehouseNegativeBalanceAllowed = await StorageTransmissionRepo
+        TResponseModel<bool?> warehouseNegativeBalanceAllowed = await StorageTransmissionRepo
               .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseNegativeBalanceAllowed, token);
 
         req = [.. req.Distinct()];
@@ -121,10 +121,35 @@ public partial class CommerceImplementService : ICommerceService
                         .SetProperty(p => p.Quantity, p => p.Quantity + rowEl.Quantity), cancellationToken: token);
             }
 
-            if (offerRegister is null || offerRegister.Quantity < rowEl.Quantity)
+            if (offerRegister is null)
+            {
+                if (warehouseNegativeBalanceAllowed.Response != true)
+                {
+                    await transaction.RollbackAsync(token);
+                    msg = $"Остаток оффера #{rowEl.OfferId} на складе #{rowEl.WarehouseId} не достаточный";
+                    loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                    res.AddError(msg);
+                    return res;
+                }
+                else
+                {
+                    offerRegister = new()
+                    {
+                        NomenclatureId = rowEl.NomenclatureId,
+                        WarehouseId = rowEl.WarehouseId,
+                        Quantity = -rowEl.Quantity,
+                        OfferId = rowEl.OfferId,
+                    };
+
+                    registersOffersDb.Add(offerRegister);
+                    await context.OffersAvailability.AddAsync(offerRegister, token);
+                    await context.SaveChangesAsync(token);
+                }
+            }
+            else if (offerRegister.Quantity < rowEl.Quantity && warehouseNegativeBalanceAllowed.Response != true)
             {
                 await transaction.RollbackAsync(token);
-                msg = $"Остаток офера #{rowEl.OfferId} на складе #{rowEl.WarehouseId} не достаточный";
+                msg = $"Остаток оффера #{rowEl.OfferId} на складе #{rowEl.WarehouseId} не достаточный";
                 loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError(msg);
                 return res;

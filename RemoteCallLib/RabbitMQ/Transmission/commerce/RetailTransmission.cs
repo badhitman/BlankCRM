@@ -33,20 +33,20 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 
     #region Rows for retail order (document)
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateRowDocumentRetailReceive, req, token: token) ?? new();
+    public async Task<TResponseModel<KeyValuePair<int, Guid>?>> CreateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<KeyValuePair<int, Guid>?>>(TransmissionQueues.CreateRowDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.UpdateRowDocumentRetailReceive, req, token: token) ?? new();
+    public async Task<TResponseModel<Guid?>> UpdateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<Guid?>>(TransmissionQueues.UpdateRowDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<RowOfRetailOrderDocumentModelDB>> SelectRowsRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel> req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<RowOfRetailOrderDocumentModelDB>>(TransmissionQueues.SelectRowsDocumentsRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteRowRetailDocumentAsync(int rowId, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.DeleteRowDocumentRetailReceive, rowId, token: token) ?? new();
+    public async Task<TResponseModel<Guid?>> DeleteRowRetailDocumentAsync(int rowId, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<Guid?>>(TransmissionQueues.DeleteRowDocumentRetailReceive, rowId, token: token) ?? new();
     #endregion
 
     #region Statuses (of order`s document)

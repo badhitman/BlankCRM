@@ -26,7 +26,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        TResponseModel<bool?> res_WarehouseNegativeBalanceAllowed = await StorageTransmissionRepo
+        TResponseModel<bool?> warehouseNegativeBalanceAllowed = await StorageTransmissionRepo
               .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseNegativeBalanceAllowed, token);
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
@@ -60,6 +60,14 @@ public partial class CommerceImplementService : ICommerceService
         RowOfWarehouseDocumentModelDB? rowDb = req.Id > 0
             ? await context.RowsWarehouses.FirstAsync(x => x.Id == req.Id, cancellationToken: token)
             : null;
+
+        if (rowDb is not null && rowDb.Version != req.Version)
+        {
+            msg = "Строка документа была уже кем-то изменена";
+            loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            res.AddError($"{msg}. Обновите документ (F5), что бы получить актуальные данные");
+            return res;
+        }
 
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
 
@@ -121,16 +129,13 @@ public partial class CommerceImplementService : ICommerceService
             .Where(x => x.OfferId == req.OfferId || (rowDb != null && x.OfferId == rowDb.OfferId))
             .ToListAsync(cancellationToken: token);
 
-        OfferAvailabilityModelDB?
-            regOfferAv = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == req.OfferId && x.WarehouseId == warehouseDocDB.WarehouseId),
-            regOfferAvWritingOff = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == req.OfferId && x.WarehouseId == warehouseDocDB.WritingOffWarehouseId);
-
         if (!warehouseDocDB.IsDisabled)
         {
+            OfferAvailabilityModelDB? regOfferAv, regOfferAvWritingOff;
             if (rowDb is not null && rowDb.OfferId != req.OfferId)
             {
-                regOfferAv = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == rowDb.OfferId && x.WarehouseId == warehouseDocDB.WarehouseId);
-                regOfferAvWritingOff = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == rowDb.OfferId && x.WarehouseId == warehouseDocDB.WritingOffWarehouseId);
+                regOfferAv = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == rowDb.OfferId && x.WarehouseId == warehouseDocDB.WritingOffWarehouseId);
+                regOfferAvWritingOff = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == rowDb.OfferId && x.WarehouseId == warehouseDocDB.WarehouseId);
 
                 if (warehouseDocDB.WritingOffWarehouseId > 0)
                 {
@@ -145,6 +150,7 @@ public partial class CommerceImplementService : ICommerceService
                         };
 
                         await context.OffersAvailability.AddAsync(regOfferAvWritingOff, token);
+                        await context.SaveChangesAsync(token);
                         offerAvailabilityDB.Add(regOfferAvWritingOff);
                     }
                     else
@@ -156,8 +162,33 @@ public partial class CommerceImplementService : ICommerceService
                         regOfferAvWritingOff.Quantity += rowDb.Quantity;
                     }
                 }
+                //
+                if (regOfferAvWritingOff is null)
+                {
+                    if (warehouseNegativeBalanceAllowed.Response == true)
+                    {
+                        regOfferAvWritingOff = new()
+                        {
+                            WarehouseId = warehouseDocDB.WarehouseId,
+                            Quantity = -rowDb.Quantity,
+                            NomenclatureId = rowDb.NomenclatureId,
+                            OfferId = rowDb.OfferId,
+                        };
+                        await context.OffersAvailability.AddAsync(regOfferAvWritingOff, token);
+                        await context.SaveChangesAsync(token);
+                        offerAvailabilityDB.Add(regOfferAvWritingOff);
+                    }
+                    else
+                    {
+                        await transaction.RollbackAsync(token);
+                        msg = $"Остаток офера #{rowDb.OfferId} на складе #{warehouseDocDB.WarehouseId} не достаточный";
+                        loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        res.AddError(msg);
+                        return res;
+                    }
 
-                if (regOfferAv is null || regOfferAv.Quantity < rowDb.Quantity)
+                }
+                else if (regOfferAvWritingOff.Quantity < rowDb.Quantity && warehouseNegativeBalanceAllowed.Response != true)
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"Остаток офера #{rowDb.OfferId} на складе #{warehouseDocDB.WarehouseId} не достаточный";
@@ -167,22 +198,25 @@ public partial class CommerceImplementService : ICommerceService
                 }
                 else
                 {
-                    await context.OffersAvailability.Where(y => y.Id == regOfferAv.Id)
+                    await context.OffersAvailability.Where(y => y.Id == regOfferAvWritingOff.Id)
                                                .ExecuteUpdateAsync(set => set
                                                   .SetProperty(p => p.Quantity, p => p.Quantity - rowDb.Quantity), cancellationToken: token);
 
-                    regOfferAv.Quantity -= rowDb.Quantity;
+                    regOfferAvWritingOff.Quantity -= rowDb.Quantity;
                 }
             }
 
-            decimal _quantity;
+            regOfferAv = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == req.OfferId && x.WarehouseId == warehouseDocDB.WarehouseId);
+            regOfferAvWritingOff = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == req.OfferId && x.WarehouseId == warehouseDocDB.WritingOffWarehouseId);
+            // 
+
+            decimal _quantity = rowDb is null
+                   ? -req.Quantity
+                   : -(rowDb.Quantity - req.Quantity);
+
             if (warehouseDocDB.WritingOffWarehouseId > 0)
             {
-                _quantity = rowDb is null
-                   ? -req.Quantity
-                   : rowDb.Quantity - req.Quantity;
-
-                if (regOfferAvWritingOff is null || regOfferAvWritingOff.Quantity < -_quantity)
+                if (regOfferAvWritingOff is null || regOfferAvWritingOff.Quantity + _quantity < 0 || warehouseNegativeBalanceAllowed.Response != true)
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"Остаток офера #{req.OfferId} на складе #{warehouseDocDB.WritingOffWarehouseId} списания не достаточный";
@@ -198,22 +232,32 @@ public partial class CommerceImplementService : ICommerceService
                 regOfferAvWritingOff.Quantity += _quantity;
             }
 
-            _quantity = rowDb is null
-                   ? req.Quantity
-                   : req.Quantity - rowDb.Quantity;
+            _quantity = -_quantity;
 
             if (regOfferAv is null)
             {
                 if (_quantity < 0)
                 {
-                    await transaction.RollbackAsync(token);
-                    msg = $"На складе #{warehouseDocDB.WarehouseId} отсутствует офер #{req.OfferId}";
-                    loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-                    res.AddError(msg);
-                    return res;
+                    if (warehouseNegativeBalanceAllowed.Response != true)
+                    {
+                        await transaction.RollbackAsync(token);
+                        msg = $"На складе #{warehouseDocDB.WarehouseId} отсутствует офер #{req.OfferId}";
+                        loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        res.AddError(msg);
+                        return res;
+                    }
+                    else
+                    {
+                        regOfferAv = new()
+                        {
+                            WarehouseId = warehouseDocDB.WarehouseId,
+                            OfferId = req.OfferId,
+                            NomenclatureId = req.NomenclatureId,
+                            Quantity = _quantity,
+                        };
+                    }
                 }
-
-                if (_quantity > 0)
+                else if (_quantity > 0)
                     await context.OffersAvailability.AddAsync(new()
                     {
                         OfferId = req.OfferId,
@@ -224,7 +268,7 @@ public partial class CommerceImplementService : ICommerceService
             }
             else
             {
-                if (regOfferAv.Quantity < -_quantity)
+                if (regOfferAv.Quantity < -_quantity && warehouseNegativeBalanceAllowed.Response != true)
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"На складе #{warehouseDocDB.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
@@ -253,14 +297,6 @@ public partial class CommerceImplementService : ICommerceService
         }
         else
         {
-            if (rowDb.Version != req.Version)
-            {
-                await transaction.RollbackAsync(token);
-                msg = "Строка документа была уже кем-то изменена";
-                loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-                res.AddError($"{msg}. Обновите документ (F5), что бы получить актуальные данные");
-                return res;
-            }
 
             res.Response = await context.RowsWarehouses
                    .Where(x => x.Id == req.Id)

@@ -116,8 +116,12 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
                 if (Document.Id > 0)
                 {
                     await SetBusyAsync();
-                    ResponseBaseModel resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(Document.Rows[exist_row]);
+                    TResponseModel<Guid?>? resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(Document.Rows[exist_row]);
                     SnackBarRepo.ShowMessagesResponse(resUpdateRow.Messages);
+
+                    if (resUpdateRow.Success() && resUpdateRow.Response is not null)
+                        Document.Version = resUpdateRow.Response.Value;
+
                     await ReloadTableItems();
                     await SetBusyAsync(false);
                 }
@@ -151,8 +155,12 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             else
             {
                 await SetBusyAsync();
-                TResponseModel<int> resAddingRow = await RetailRepo.CreateRowRetailDocumentAsync(newOrderElement);
+                TResponseModel<KeyValuePair<int, Guid>?> resAddingRow = await RetailRepo.CreateRowRetailDocumentAsync(newOrderElement);
                 SnackBarRepo.ShowMessagesResponse(resAddingRow.Messages);
+
+                if (resAddingRow.Success() && resAddingRow.Response is not null)
+                    Document.Version = resAddingRow.Response.Value.Value;
+
                 await ReloadTableItems();
                 await SetBusyAsync(false);
             }
@@ -166,8 +174,12 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             if (Document.Id > 0)
             {
                 await SetBusyAsync();
-                ResponseBaseModel resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(Document.Rows[exist_row]);
+                TResponseModel<Guid?> resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(Document.Rows[exist_row]);
                 SnackBarRepo.ShowMessagesResponse(resUpdateRow.Messages);
+
+                if (resUpdateRow.Success() && resUpdateRow.Response is not null)
+                    Document.Version = resUpdateRow.Response.Value;
+
                 await ReloadTableItems();
                 await SetBusyAsync(false);
             }
@@ -201,8 +213,12 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             if (exist_row >= 0 && Document.Rows[exist_row].Id > 0)
             {
                 await SetBusyAsync();
-                ResponseBaseModel resDelRow = await RetailRepo.DeleteRowRetailDocumentAsync(Document.Rows[exist_row].Id);
+                TResponseModel<Guid?> resDelRow = await RetailRepo.DeleteRowRetailDocumentAsync(Document.Rows[exist_row].Id);
                 SnackBarRepo.ShowMessagesResponse(resDelRow.Messages);
+
+                if (resDelRow.Success() && resDelRow.Response is not null)
+                    Document.Version = resDelRow.Response.Value;
+
                 await ReloadTableItems();
                 await SetBusyAsync(false);
             }
