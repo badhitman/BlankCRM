@@ -115,7 +115,7 @@
             }
         </MudTd>
         <MudTd DataLabel="Вес">
-            <input type="number" class="form-control" @bind-value="context.WeightOffer" @bind-value:event="oninput" />
+            @(context!.Quantity * context.Offer!.Weight)
         </MudTd>
         <MudTd colspan="2">
             @(context!.Quantity * context.Offer!.Price)
