@@ -216,7 +216,31 @@ public partial class CommerceImplementService : ICommerceService
 
             if (warehouseDocDB.WritingOffWarehouseId > 0)
             {
-                if (regOfferAvWritingOff is null || regOfferAvWritingOff.Quantity + _quantity < 0 || warehouseNegativeBalanceAllowed.Response != true)
+                if (regOfferAvWritingOff is null)
+                {
+                    if (warehouseNegativeBalanceAllowed.Response != true)
+                    {
+                        await transaction.RollbackAsync(token);
+                        msg = $"Остаток офера #{req.OfferId} на складе #{warehouseDocDB.WritingOffWarehouseId} списания не достаточный";
+                        loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        res.AddError(msg);
+                        return res;
+                    }
+                    else
+                    {
+                        regOfferAvWritingOff = new()
+                        {
+                            WarehouseId = warehouseDocDB.WritingOffWarehouseId,
+                            OfferId = req.OfferId,
+                            NomenclatureId = req.NomenclatureId,
+                            Quantity = _quantity,
+                        };
+                        await context.OffersAvailability.AddAsync(regOfferAvWritingOff, token);
+                        await context.SaveChangesAsync(token);
+                        offerAvailabilityDB.Add(regOfferAvWritingOff);
+                    }
+                }
+                else if (regOfferAvWritingOff.Quantity + _quantity < 0 && warehouseNegativeBalanceAllowed.Response != true)
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"Остаток офера #{req.OfferId} на складе #{warehouseDocDB.WritingOffWarehouseId} списания не достаточный";
@@ -224,12 +248,14 @@ public partial class CommerceImplementService : ICommerceService
                     res.AddError(msg);
                     return res;
                 }
+                else
+                {
+                    await context.OffersAvailability.Where(y => y.Id == regOfferAvWritingOff.Id)
+                            .ExecuteUpdateAsync(set => set
+                               .SetProperty(p => p.Quantity, p => p.Quantity + _quantity), cancellationToken: token);
 
-                await context.OffersAvailability.Where(y => y.Id == regOfferAvWritingOff.Id)
-                        .ExecuteUpdateAsync(set => set
-                           .SetProperty(p => p.Quantity, p => p.Quantity + _quantity), cancellationToken: token);
-
-                regOfferAvWritingOff.Quantity += _quantity;
+                    regOfferAvWritingOff.Quantity += _quantity;
+                }
             }
 
             _quantity = -_quantity;
