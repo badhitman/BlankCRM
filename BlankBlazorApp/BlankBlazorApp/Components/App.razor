@@ -1,6 +1,6 @@
-﻿@using SharedLib
+﻿@using System.Globalization
 @using System.Reflection
-@using System.Globalization
+@using SharedLib
 
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentCulture.Parent.Name" data-bs-theme="dark">
@@ -17,6 +17,13 @@
     <link rel="stylesheet" href="app.css?version=@GlobalStaticConstants.InitSalt" />
     <link rel="stylesheet" href="/js/ckeditor5/ckeditor5.css?version=@GlobalStaticConstants.InitSalt" />
     <link rel="stylesheet" href="BlankBlazorApp.styles.css" />
+    @if (ServerConfig.Value.StylesInject is not null && ServerConfig.Value.StylesInject.Length != 0)
+    {
+        foreach (InjectionBaseModel styleSrc in ServerConfig.Value.StylesInject.Where(x => FilterLocalPathsForInject(x.LocalPathsForInject)))
+        {
+            <link rel="stylesheet" href="@styleSrc.Src" />
+        }
+    }
     <link rel="icon" type="image/png" href="favicon.png" />
     <script type="text/javascript">
         window.downloadFileFromStream = async (fileName, contentStreamReference) => {
@@ -37,9 +44,9 @@
     <HeadOutlet />
     @if (ServerConfig.Value.ScriptsInject is not null && ServerConfig.Value.ScriptsInject.Length != 0)
     {
-        foreach (ScriptInjectionModel scriptSrc in ServerConfig.Value.ScriptsInject)
+        foreach (InjectionBaseModel scriptSrc in ServerConfig.Value.ScriptsInject.Where(x => FilterLocalPathsForInject(x.LocalPathsForInject)))
         {
-            <script src="@scriptSrc.Src" defer></script>
+            <script src="@scriptSrc.Src"></script>
         }
     }
 </head>

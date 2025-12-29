@@ -5,10 +5,20 @@
 namespace SharedLib;
 
 /// <summary>
-/// ScriptInjectionModel
+/// InjectionBaseModel
 /// </summary>
-public class ScriptInjectionModel()
+public class InjectionBaseModel()
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// Ссылка к скрипту
+    /// </summary>
     public required string Src { get; set; }
+
+    /// <summary>
+    /// Пути для инъекции ссылки
+    /// </summary>
+    /// <remarks>
+    /// Если не указано, тогда инъекция для всех страниц.
+    /// </remarks>
+    public string[]? LocalPathsForInject { get; set; }
 }

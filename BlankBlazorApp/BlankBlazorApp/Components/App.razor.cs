@@ -29,10 +29,21 @@ public partial class App
 
     static bool _isLoaded = false;
     static bool _includeTelegramBotWeAppScript = false;
+    Uri? _uri;
+
+    bool FilterLocalPathsForInject(string[]? localPathsForInject)
+    {
+        if (localPathsForInject is null || localPathsForInject.Length == 0 || _uri is null)
+            return true;
+
+        return localPathsForInject.Any(y => y.Equals(_uri.LocalPath, StringComparison.OrdinalIgnoreCase));
+    }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        _uri = new(NavigatorRepo.Uri);
+
         if (WebConfig.Value.BaseUri is null)
             WebConfig.Value.BaseUri = NavigatorRepo.BaseUri;
 

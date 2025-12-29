@@ -22,12 +22,12 @@ public class ServerConfigModel
     /// <summary>
     /// Стили для вставки в сайт
     /// </summary>
-    public StyleInjectionModel[]? StylesInject { get; set; }
+    public InjectionBaseModel[]? StylesInject { get; set; }
 
     /// <summary>
     /// Скрипты для вставки в сайт
     /// </summary>
-    public ScriptInjectionModel[]? ScriptsInject { get; set; }
+    public InjectionBaseModel[]? ScriptsInject { get; set; }
 
     /// <summary>
     /// Рекомендуемый курсы конвертаций/переводов
