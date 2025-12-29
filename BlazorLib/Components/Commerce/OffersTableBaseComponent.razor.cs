@@ -113,5 +113,5 @@ public abstract class OffersTableBaseComponent : BlazorRegistersComponent
     /// <summary>
     /// DeleteRow
     /// </summary>
-    protected abstract void DeleteRow(int offerId);
+    protected abstract void DeleteRow(int offerId, bool forceDelete = false);
 }

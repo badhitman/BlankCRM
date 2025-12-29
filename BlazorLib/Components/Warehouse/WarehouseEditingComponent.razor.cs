@@ -203,7 +203,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     }
 
     /// <inheritdoc/>
-    protected override async void DeleteRow(int offerId)
+    protected override async void DeleteRow(int offerId, bool forceDelete = false)
     {
         CurrentDocument.Rows ??= [];
         RowOfWarehouseDocumentModelDB? currentRow = CurrentDocument.Rows.FirstOrDefault(x => x.OfferId == offerId);

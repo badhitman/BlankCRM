@@ -82,7 +82,17 @@
         <MudTd DataLabel="Сумма">
             @context!.Amount
         </MudTd>
-        <MudTd><MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" /></MudTd>
+        <MudTd>
+            <MudIconButton OnClick="() => DeleteRow(context.OfferId)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+            <AuthorizeView Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
+                <Authorizing>
+                    @if (_problemDeleteRow == context.Id)
+                    {
+                        <MudIconButton OnClick="() => DeleteRow(context.OfferId, true)" Icon="@Icons.Material.Filled.Dangerous" Color="Color.Secondary" Class="ms-2" title="Удалить принудительно" />
+                    }
+                </Authorizing>
+            </AuthorizeView>
+        </MudTd>
     </RowTemplate>
     <RowEditingTemplate>
         <MudTd DataLabel="Name">

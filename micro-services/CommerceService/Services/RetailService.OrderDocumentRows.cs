@@ -400,13 +400,13 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> DeleteRowRetailDocumentAsync(int rowId, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> DeleteRowRetailDocumentAsync(DeleteRowRetailDocumentRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         RowOfRetailOrderDocumentModelDB rowDb = await context.RowsOrdersRetails
             .Include(x => x.Order)
-            .FirstAsync(x => x.Id == rowId, cancellationToken: token);
+            .FirstAsync(x => x.Id == req.RowId, cancellationToken: token);
 
         DocumentRetailModelDB docDb = rowDb.Order!;
 
@@ -433,7 +433,7 @@ public partial class RetailService : IRetailService
             {
                 await transaction.RollbackAsync(token);
                 msg = $"Не удалось выполнить команду: ";
-                loggerRepo.LogError(ex, $"{msg} #{rowId}");
+                loggerRepo.LogError(ex, $"{msg} #{req.RowId}");
                 return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}{ex.Message}" }] };
             }
 
@@ -446,25 +446,38 @@ public partial class RetailService : IRetailService
             {
                 if (regOfferAv is null)
                 {
-                    await transaction.RollbackAsync(token);
-                    msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{rowDb.OfferId}";
-                    loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(rowDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-
-                    return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = msg }] };
+                    if (req.ForceDelete)
+                    {
+                        regOfferAv = new()
+                        {
+                            WarehouseId = docDb.WarehouseId,
+                            NomenclatureId = rowDb.NomenclatureId,
+                            OfferId = rowDb.OfferId,
+                            Quantity = -rowDb.Quantity,
+                        };
+                        await context.OffersAvailability.AddAsync(regOfferAv, token);
+                        await context.SaveChangesAsync(token);
+                    }
+                    else
+                    {
+                        await transaction.RollbackAsync(token);
+                        msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{rowDb.OfferId}";
+                        loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(rowDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = msg }] };
+                    }
                 }
-                else if (regOfferAv.Quantity < rowDb.Quantity)
+                else if (regOfferAv.Quantity < rowDb.Quantity && !req.ForceDelete)
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
                     loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(rowDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-
                     return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = msg }] };
                 }
-
-                await context.OffersAvailability
-                    .Where(x => x.Id == regOfferAv.Id)
-                    .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.Quantity, p => p.Quantity - rowDb.Quantity), cancellationToken: token);
+                else
+                    await context.OffersAvailability
+                        .Where(x => x.Id == regOfferAv.Id)
+                        .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.Quantity, p => p.Quantity - rowDb.Quantity), cancellationToken: token);
             }
             else
             {
@@ -495,7 +508,7 @@ public partial class RetailService : IRetailService
         }
 
         await context.RowsOrdersRetails
-            .Where(x => x.Id == rowId)
+            .Where(x => x.Id == req.RowId)
             .ExecuteDeleteAsync(cancellationToken: token);
 
         Guid _orderGuid = Guid.NewGuid();

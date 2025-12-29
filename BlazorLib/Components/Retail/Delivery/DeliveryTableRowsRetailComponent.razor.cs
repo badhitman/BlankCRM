@@ -248,7 +248,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     }
 
     /// <inheritdoc/>
-    protected override async void DeleteRow(int offerId)
+    protected override async void DeleteRow(int offerId, bool forceDelete = false)
     {
         if (Document.Id <= 0)
         {

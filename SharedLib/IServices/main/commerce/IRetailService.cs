@@ -180,7 +180,7 @@ public interface IRetailService
     public Task<TResponseModel<Guid?>> UpdateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TResponseModel<Guid?>> DeleteRowRetailDocumentAsync(int rowId, CancellationToken token = default);
+    public Task<TResponseModel<Guid?>> DeleteRowRetailDocumentAsync(DeleteRowRetailDocumentRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TPaginationResponseModel<RowOfRetailOrderDocumentModelDB>> SelectRowsRetailDocumentsAsync(TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel> req, CancellationToken token = default);

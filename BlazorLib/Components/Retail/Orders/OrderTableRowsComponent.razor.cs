@@ -39,6 +39,45 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     /// <inheritdoc/>
     public AddRowToOrderDocumentComponent? AddingDomRef { get; private set; }
 
+    int? _problemDeleteRow;
+    /// <inheritdoc/>
+    protected override async void DeleteRow(int offerId, bool forceDelete = false)
+    {
+        Document.Rows ??= [];
+        if (Document.Id <= 0)
+            Document.Rows.RemoveAll(x => x.OfferId == offerId);
+
+        if (DocumentUpdateHandler is not null)
+            DocumentUpdateHandler();
+
+        AddingDomRef?.StateHasChangedCall();
+
+        if (Document.Id > 0)
+        {
+            int exist_row = Document.Rows.FindIndex(x => x.OfferId == offerId);
+            if (exist_row >= 0 && Document.Rows[exist_row].Id > 0)
+            {
+                DeleteRowRetailDocumentRequestModel _reqDel = new()
+                {
+                    RowId = Document.Rows[exist_row].Id,
+                    ForceDelete = forceDelete && _problemDeleteRow == offerId
+                };
+
+                _problemDeleteRow = null;
+                await SetBusyAsync();
+                TResponseModel<Guid?> resDelRow = await RetailRepo.DeleteRowRetailDocumentAsync(_reqDel);
+                SnackBarRepo.ShowMessagesResponse(resDelRow.Messages);
+
+                if (resDelRow.Success() && resDelRow.Response is not null)
+                    Document.Version = resDelRow.Response.Value;
+                else
+                    _problemDeleteRow = Document.Rows[exist_row].Id;
+
+                await ReloadTableItems();
+                await SetBusyAsync(false);
+            }
+        }
+    }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
@@ -203,36 +242,6 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
 
         await SetBusyAsync(false);
         AddingDomRef!.StateHasChangedCall();
-    }
-
-    /// <inheritdoc/>
-    protected override async void DeleteRow(int offerId)
-    {
-        Document.Rows ??= [];
-        if (Document.Id <= 0)
-            Document.Rows.RemoveAll(x => x.OfferId == offerId);
-
-        if (DocumentUpdateHandler is not null)
-            DocumentUpdateHandler();
-
-        AddingDomRef?.StateHasChangedCall();
-
-        if (Document.Id > 0)
-        {
-            int exist_row = Document.Rows.FindIndex(x => x.OfferId == offerId);
-            if (exist_row >= 0 && Document.Rows[exist_row].Id > 0)
-            {
-                await SetBusyAsync();
-                TResponseModel<Guid?> resDelRow = await RetailRepo.DeleteRowRetailDocumentAsync(Document.Rows[exist_row].Id);
-                SnackBarRepo.ShowMessagesResponse(resDelRow.Messages);
-
-                if (resDelRow.Success() && resDelRow.Response is not null)
-                    Document.Version = resDelRow.Response.Value;
-
-                await ReloadTableItems();
-                await SetBusyAsync(false);
-            }
-        }
     }
 
     /// <inheritdoc/>

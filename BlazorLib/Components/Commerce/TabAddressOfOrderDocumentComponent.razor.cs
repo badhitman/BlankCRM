@@ -87,7 +87,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
     }
 
     /// <inheritdoc/>
-    protected override void DeleteRow(int offerId)
+    protected override void DeleteRow(int offerId, bool forceDelete = false)
     {
         CurrentTab.Rows ??= [];
         CurrentTab.Rows.RemoveAll(x => x.OfferId == offerId);
