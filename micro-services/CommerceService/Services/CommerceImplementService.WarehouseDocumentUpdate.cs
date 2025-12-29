@@ -73,7 +73,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        if (warehouseDocumentDb.Rows is null || warehouseDocumentDb.Rows.Count != 0)
+        if (warehouseDocumentDb.Rows is null || warehouseDocumentDb.Rows.Count == 0)
         {
             res.Response = await context.WarehouseDocuments
                 .Where(x => x.Id == req.Id)
