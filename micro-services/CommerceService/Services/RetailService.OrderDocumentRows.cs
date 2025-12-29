@@ -393,7 +393,7 @@ public partial class RetailService : IRetailService
         return new()
         {
             Response = _orderGuid,
-            Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ok" }]
+            Messages = [new() { TypeMessage = MessagesTypesEnum.Info, Text = "Ok" }]
         };
     }
 
