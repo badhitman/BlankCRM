@@ -128,16 +128,18 @@ public class StorageFilesImpl(
             res.AddError($"Папка [{req.FolderPath}] не существует");
             return Task.FromResult(res);
         }
-        
-        FileInfo _root = new FileInfo(req.FolderPath);
+
+        FileInfo _root = new(req.FolderPath);
         res.Response = new()
         {
             FullPath = _root.FullName,
             LastWriteTimeUtc = _root.LastWriteTimeUtc,
-            FileSizeBytes = _root.Length,
             IsDirectory = (_root.Attributes & FileAttributes.Directory) == FileAttributes.Directory,
             DirectoryItems = []
         };
+
+        if (!res.Response.IsDirectory)
+            res.Response.FileSizeBytes = _root.Length;
 
         string[] allFiles = Directory.GetFiles(req.FolderPath);
         foreach (string _f in allFiles)
