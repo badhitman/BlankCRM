@@ -82,7 +82,7 @@
         </MudTooltip>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Тип</MudTh>
+        <MudTh>Тип/Статус</MudTh>
         <MudTh>
             <MudTableSortLabel T="DeliveryDocumentRetailModelDB" InitialDirection="@SortDirection.Descending" SortLabel="@(nameof(DeliveryDocumentRetailModelDB.CreatedAtUTC))">
                 Дата
@@ -97,7 +97,6 @@
         <MudTh>Стоимость доставки</MudTh>
         <MudTh>Адрес</MudTh>
         <MudTh>Трэк/Код</MudTh>
-        <MudTh>Статус</MudTh>
         <MudTh>Примечание</MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -105,8 +104,12 @@
             DateTime cdt = context.CreatedAtUTC.GetCustomTime();
             DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
         }
-        <MudTd DataLabel="Тип">
+        <MudTd DataLabel="Тип/Статус">
             @context.DeliveryType.DescriptionInfo()
+            @if (context.DeliveryStatus.HasValue)
+            {
+                <span class="badge text-bg-info">/ @(context.DeliveryStatus.DescriptionInfo())</span>
+            }
         </MudTd>
         <MudTd DataLabel="Дата">
             @if (RowClickEventHandler is null)
@@ -173,12 +176,6 @@
         <MudTd DataLabel="Стоимость доставки">@context.ShippingCost</MudTd>
         <MudTd DataLabel="Адрес">@context.KladrTitle @context.AddressUserComment</MudTd>
         <MudTd DataLabel="Трэк/Код">@context.DeliveryCode</MudTd>
-        <MudTd DataLabel="Статус">
-            @if (context.DeliveryStatus.HasValue)
-            {
-                <span class="badge text-bg-info">@(context.DeliveryStatus?.DescriptionInfo() ?? "без движения")</span>
-            }
-        </MudTd>
         <MudTd DataLabel="Name">
             <span>@context.Name</span>
             @if (context.DeliveryPaymentUponReceipt)
