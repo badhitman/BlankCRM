@@ -20,7 +20,7 @@ else if (DirectoryData.DirectoryItems is null || DirectoryData.DirectoryItems.Co
 }
 else
 {
-    <MudPaper Width="300px" Elevation="0">
+    <MudPaper Elevation="0">
         <MudTreeView Hover @bind-SelectedValue="SelectedValue" SelectionMode="@SelectionMode.SingleSelection">
             @foreach (DirectoryItemModel _fiElement in DirectoryData.DirectoryItems)
             {
