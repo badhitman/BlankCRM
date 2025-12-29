@@ -44,7 +44,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
         await SetBusyAsync();
 
         List<Task> tasks = [
-            CacheRegistersUpdate(offers: [.. CurrentTab.Rows!.Select(x => x.OfferId)],goods: [],CurrentTab.WarehouseId, true),
+            CacheRegistersUpdate(_offers: [.. CurrentTab.Rows!.Select(x => x.OfferId)],_goods: [],CurrentTab.WarehouseId, true),
             Task.Run(async () => { TResponseModel<bool?> showingPriceSelectorOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ShowingPriceSelectorOrder); _showingPriceSelectorOrder = showingPriceSelectorOrder.Response == true; if (!showingPriceSelectorOrder.Success()) SnackBarRepo.ShowMessagesResponse(showingPriceSelectorOrder.Messages); }) ];
 
         await Task.WhenAll(tasks);
@@ -58,7 +58,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
             return;
 
         await SetBusyAsync();
-        await CacheRegistersUpdate(offers: [.. CurrentTab.Rows.Select(x => x.OfferId)], goods: [], CurrentTab.WarehouseId, true);
+        await CacheRegistersUpdate(_offers: [.. CurrentTab.Rows.Select(x => x.OfferId)], _goods: [], CurrentTab.WarehouseId, true);
         await SetBusyAsync(false);
     }
 
@@ -79,7 +79,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
         if (CurrentTab.Rows is not null)
             InvokeAsync(async () =>
             {
-                await CacheRegistersUpdate(offers: [.. CurrentTab.Rows.Select(x => x.OfferId)], goods: [], CurrentTab.WarehouseId, true);
+                await CacheRegistersUpdate(_offers: [.. CurrentTab.Rows.Select(x => x.OfferId)], _goods: [], CurrentTab.WarehouseId, true);
                 StateHasChanged();
             });
         else
@@ -122,7 +122,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
         if (DocumentUpdateHandler is not null)
             DocumentUpdateHandler();
 
-        await CacheRegistersUpdate(offers: [.. CurrentTab.Rows.Select(x => x.OfferId)], goods: [], CurrentTab.WarehouseId, true);
+        await CacheRegistersUpdate(_offers: [.. CurrentTab.Rows.Select(x => x.OfferId)], _goods: [], CurrentTab.WarehouseId, true);
         await SetBusyAsync(false);
         addingDomRef!.StateHasChangedCall();
     }

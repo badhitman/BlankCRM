@@ -157,7 +157,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
         if (Document.Rows is not null)
             InvokeAsync(async () =>
             {
-                await CacheRegistersUpdate(offers: [.. Document.Rows.Select(x => x.OfferId)], goods: [], Document.WarehouseId, true);
+                await CacheRegistersUpdate(_offers: [.. Document.Rows.Select(x => x.OfferId)], _goods: [], Document.WarehouseId, true);
                 StateHasChanged();
             });
         else
@@ -241,7 +241,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             DocumentUpdateHandler();
 
         UpdateData();
-        await CacheRegistersUpdate(offers: [.. Document.Rows.Select(x => x.OfferId)], goods: [], Document.WarehouseId, true);
+        await CacheRegistersUpdate(_offers: [.. Document.Rows.Select(x => x.OfferId)], _goods: [], Document.WarehouseId, true);
 
         await SetBusyAsync(false);
         AddingDomRef?.StateHasChangedCall();

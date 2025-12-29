@@ -71,7 +71,7 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
 
         if (res.Response is not null)
         {
-            await CacheRegistersUpdate(offers: [], goods: [.. res.Response.Select(x => x.Id)]);
+            await CacheRegistersUpdate(_offers: [], _goods: [.. res.Response.Select(x => x.Id)]);
         }
 
         await SetBusyAsync(false, token);

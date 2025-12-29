@@ -22,12 +22,24 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
     /// <summary>
     /// RegistersCache
     /// </summary>
-    public List<OfferAvailabilityModelDB> RegistersCache = [];
+    public List<OfferAvailabilityModelDB> RegistersCache { get; private set; } = [];
+
+    int[] offers = [];
+    int[] goods = [];
+    int warehouseId = 0;
+
+
+    /// <inheritdoc/>
+    public void SetRegistersCache(List<OfferAvailabilityModelDB> registersCache)
+    {
+        RegistersCache = registersCache;
+        StateHasChanged();
+    }
 
     /// <summary>
     /// CacheRegistersUpdate
     /// </summary>
-    protected async Task CacheRegistersUpdate(int[] offers, int[] goods, int warehouseId = 0, bool clearCache = false)
+    public async Task CacheRegistersUpdate(int[] _offers, int[] _goods, int _warehouseId = 0, bool clearCache = false)
     {
         if (clearCache)
         {
@@ -37,8 +49,8 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
             }
         }
 
-        offers = [.. offers.Where(x => x > 0 && !RegistersCache.Any(y => y.Id == x)).Distinct()];
-        goods = [.. goods.Where(x => x > 0 && !RegistersCache.Any(y => y.Id == x)).Distinct()];
+        offers = [.. _offers.Where(x => x > 0 && !RegistersCache.Any(y => y.Id == x)).Distinct()];
+        goods = [.. _goods.Where(x => x > 0 && !RegistersCache.Any(y => y.Id == x)).Distinct()];
 
         if (goods.Length == 0 && offers.Length == 0)
         {

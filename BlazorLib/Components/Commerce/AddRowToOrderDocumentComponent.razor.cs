@@ -85,7 +85,7 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
                 QuantityValue = 1;
 
             if (SelectedOffer is not null && !ForceAdding)
-                InvokeAsync(async () => await CacheRegistersUpdate(offers: [SelectedOffer.Id], goods: [], WarehouseId, true));
+                InvokeAsync(async () => await CacheRegistersUpdate(_offers: [SelectedOffer.Id], _goods: [], WarehouseId, true));
             if (SelectOfferHandler is not null)
                 SelectOfferHandler(SelectedOffer);
         }
@@ -164,7 +164,7 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
         {
             if (cacheId != SelectedOfferId && SelectedOffer is not null && !ForceAdding)
             {
-                await CacheRegistersUpdate(offers: [.. OffersNodes.SelectMany(x => x.Select(y => y.Id))], goods: [], WarehouseId, true);
+                await CacheRegistersUpdate(_offers: [.. OffersNodes.SelectMany(x => x.Select(y => y.Id))], _goods: [], WarehouseId, true);
                 cacheId = SelectedOfferId;
                 StateHasChanged();
             }
@@ -175,7 +175,7 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
     public async Task RegistersReload()
     {
         await SetBusyAsync();
-        await CacheRegistersUpdate(offers: [.. OffersNodes.SelectMany(x => x.Select(y => y.Id))], goods: [], WarehouseId, true);
+        await CacheRegistersUpdate(_offers: [.. OffersNodes.SelectMany(x => x.Select(y => y.Id))], _goods: [], WarehouseId, true);
         await SetBusyAsync(false);
     }
 
@@ -185,7 +185,7 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
         await SetBusyAsync();
         SelectedOfferId = ActualOffers.FirstOrDefault()?.Id;
         if (SelectedOffer is not null && !ForceAdding)
-            await CacheRegistersUpdate(offers: [SelectedOffer.Id], goods: [], WarehouseId, true);
+            await CacheRegistersUpdate(_offers: [SelectedOffer.Id], _goods: [], WarehouseId, true);
 
         cacheId = SelectedOfferId;
         await SetBusyAsync(false);
