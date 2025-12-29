@@ -1,0 +1,31 @@
+﻿@using MudBlazor
+@inherits BlazorBusyComponentBaseAuthModel
+
+@if (IsBusyProgress || DirectoryData is null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" data-cn="@this.GetType().Name" />
+}
+else if (DirectoryData.DirectoryItems is null || DirectoryData.DirectoryItems.Count == 0)
+{
+    <dl>
+        <dt>Full name</dt>
+        <dd>@DirectoryData.FullPath <sup>@DirectoryData.LastWriteTimeUtc</sup></dd>
+
+        <dt>Size</dt>
+        <dd>@GlobalToolsStandard.SizeDataAsString(DirectoryData.FileSizeBytes)</dd>
+
+        <dt>IsDirectory</dt>
+        <dd>@DirectoryData.IsDirectory</dd>
+    </dl>
+}
+else
+{
+    <MudPaper Width="300px" Elevation="0">
+        <MudTreeView Hover @bind-SelectedValue="SelectedValue" SelectionMode="@SelectionMode.SingleSelection">
+            @foreach (DirectoryItemModel _fiElement in DirectoryData.DirectoryItems)
+            {
+                <MudTreeViewItem Value="@($"{_fiElement.FullPath} - {@GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")" Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)" />
+            }
+        </MudTreeView>
+    </MudPaper>
+}

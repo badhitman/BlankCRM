@@ -43,4 +43,9 @@ public class ServerConfigModel
     /// Скрыть навигацию для входа/авторизации
     /// </summary>
     public bool HideAuthArea { get; set; }
+
+    /// <summary>
+    /// Папки (или файлы) для отображения в инструментах
+    /// </summary>
+    public string[]? DirectoriesReadList { get; set; }
 }

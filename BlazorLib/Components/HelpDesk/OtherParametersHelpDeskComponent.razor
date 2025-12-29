@@ -1,8 +1,10 @@
 @using BlazorLib.Components.ParametersShared
 @using BlazorLib.Components.Commerce
+@using BlazorLib.Components.Shared
 @using BlazorLib.Components
 @using BlazorLib
-@using BlazorLib.Components.Shared
+@using BlazorLib.Components.Storage
+@using Microsoft.Extensions.Options
 @using MudBlazor
 @using SharedLib
 
@@ -108,4 +110,19 @@
     <MudTabPanel Text="SnackBar stack">
         <SnackBarHistoryComponent />
     </MudTabPanel>
+    @if (ServerConfig.Value.DirectoriesReadList is not null && ServerConfig.Value.DirectoriesReadList.Length != 0)
+    {
+        <MudTabPanel Text="Файлы/папки">
+            @foreach (string _path in ServerConfig.Value.DirectoriesReadList)
+            {
+                <FolderRootViewComponent FolderPath="@_path" />
+                <hr />
+            }
+        </MudTabPanel>
+    }
 </MudTabs>
+
+@code {
+    [Inject]
+    IOptions<ServerConfigModel> ServerConfig { get; set; } = default!;
+}
