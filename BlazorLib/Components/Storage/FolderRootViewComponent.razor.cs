@@ -7,7 +7,10 @@ using SharedLib;
 
 namespace BlazorLib.Components.Storage;
 
-public partial class FolderRootViewComponent
+/// <summary>
+/// FolderRootViewComponent
+/// </summary>
+public partial class FolderRootViewComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IStorageTransmission StorageRepo { get; set; } = default!;

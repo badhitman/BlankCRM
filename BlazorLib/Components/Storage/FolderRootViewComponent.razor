@@ -20,12 +20,18 @@ else if (DirectoryData.DirectoryItems is null || DirectoryData.DirectoryItems.Co
 }
 else
 {
-    <MudPaper Elevation="0">
-        <MudTreeView Hover @bind-SelectedValue="SelectedValue" SelectionMode="@SelectionMode.SingleSelection">
-            @foreach (DirectoryItemModel _fiElement in DirectoryData.DirectoryItems)
-            {
-                <MudTreeViewItem Value="@($"{_fiElement.FullPath} - {@GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")" Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)" />
-            }
-        </MudTreeView>
-    </MudPaper>
+    <div class="card">
+        <div class="card-body">
+            <h6 class="card-title">@DirectoryData.FullPath</h6>
+            <MudPaper Elevation="0">
+                <MudTreeView Hover @bind-SelectedValue="SelectedValue" SelectionMode="@SelectionMode.SingleSelection">
+                    @foreach (DirectoryItemModel _fiElement in DirectoryData.DirectoryItems)
+                    {
+                        <MudTreeViewItem Value="@($"{_fiElement.FullPath} - {@GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")" Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)" />
+                    }
+                </MudTreeView>
+            </MudPaper>
+        </div>
+    </div>
+
 }
