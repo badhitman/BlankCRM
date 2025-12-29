@@ -26,7 +26,8 @@ else
                     <MudTreeView Hover @bind-SelectedValue="SelectedValue" SelectionMode="@SelectionMode.SingleSelection">
                         @foreach (DirectoryItemModel _fiElement in DirectoryData.DirectoryItems)
                         {
-                            <MudTreeViewItem Value="@($"{_fiElement.FullPath} - {@GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")" Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)" />
+                            int startSegment = _fiElement.FullPath.IndexOf(DirectoryData.FullPath);
+                            <MudTreeViewItem Value="@($"{(startSegment < 0 ? _fiElement.FullPath : _fiElement.FullPath.Substring(startSegment))} - {@GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")" Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)" />
                         }
                     </MudTreeView>
                 </MudPaper>
