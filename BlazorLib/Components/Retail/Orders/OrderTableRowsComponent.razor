@@ -27,7 +27,7 @@
                                                 @ref="AddingDomRef"
                                                 WarehouseId="Document.WarehouseId"
                                                 AllOffers="allOffers"
-                                                CurrentRows="pagedData.Select(x => x.OfferId).ToList()"
+                                                CurrentRows="Document.Rows!.Select(x => x.OfferId).ToList()"
                                                 AddingOfferHandler="AddingOfferAction" />
             </div>
         }

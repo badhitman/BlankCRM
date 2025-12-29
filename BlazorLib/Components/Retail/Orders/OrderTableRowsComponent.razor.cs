@@ -33,7 +33,6 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     public bool ForceAdding { get; set; }
 
 
-    List<RowOfRetailOrderDocumentModelDB> pagedData = [];
     RowOfRetailOrderDocumentModelDB? elementBeforeEdit;
     bool _warehouseReserveForRetailOrder;
 
