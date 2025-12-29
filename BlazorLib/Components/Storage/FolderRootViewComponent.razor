@@ -5,33 +5,32 @@
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate Class="my-3" data-cn="@this.GetType().Name" />
 }
-else if (DirectoryData.DirectoryItems is null || DirectoryData.DirectoryItems.Count == 0)
-{
-    <dl>
-        <dt>Full name</dt>
-        <dd>@DirectoryData.FullPath <sup>@DirectoryData.LastWriteTimeUtc</sup></dd>
-
-        <dt>Size</dt>
-        <dd>@GlobalToolsStandard.SizeDataAsString(DirectoryData.FileSizeBytes)</dd>
-
-        <dt>IsDirectory</dt>
-        <dd>@DirectoryData.IsDirectory</dd>
-    </dl>
-}
 else
 {
     <div class="card">
         <div class="card-body">
             <h6 class="card-title">@DirectoryData.FullPath</h6>
-            <MudPaper Elevation="0">
-                <MudTreeView Hover @bind-SelectedValue="SelectedValue" SelectionMode="@SelectionMode.SingleSelection">
-                    @foreach (DirectoryItemModel _fiElement in DirectoryData.DirectoryItems)
-                    {
-                        <MudTreeViewItem Value="@($"{_fiElement.FullPath} - {@GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")" Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)" />
-                    }
-                </MudTreeView>
-            </MudPaper>
+            @if (DirectoryData.DirectoryItems is null || DirectoryData.DirectoryItems.Count == 0)
+            {
+                <dl>
+                    <dt>Size</dt>
+                    <dd>@GlobalToolsStandard.SizeDataAsString(DirectoryData.FileSizeBytes)</dd>
+
+                    <dt>IsDirectory</dt>
+                    <dd>@DirectoryData.IsDirectory</dd>
+                </dl>
+            }
+            else
+            {
+                <MudPaper Elevation="0">
+                    <MudTreeView Hover @bind-SelectedValue="SelectedValue" SelectionMode="@SelectionMode.SingleSelection">
+                        @foreach (DirectoryItemModel _fiElement in DirectoryData.DirectoryItems)
+                        {
+                            <MudTreeViewItem Value="@($"{_fiElement.FullPath} - {@GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")" Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)" />
+                        }
+                    </MudTreeView>
+                </MudPaper>
+            }
         </div>
     </div>
-
 }
