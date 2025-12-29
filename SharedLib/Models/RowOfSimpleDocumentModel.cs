@@ -36,4 +36,10 @@ public abstract class RowOfSimpleDocumentModel
     /// Nomenclature
     /// </summary>
     public int NomenclatureId { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"#{Id} '{Offer?.GetName()}'";
+    }
 }

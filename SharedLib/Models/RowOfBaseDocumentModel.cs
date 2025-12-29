@@ -13,4 +13,10 @@ public abstract class RowOfBaseDocumentModel : RowOfSimpleDocumentModel
     /// Вес
     /// </summary>
     public decimal WeightOffer { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{base.ToString()} (w:{WeightOffer})";
+    }
 }

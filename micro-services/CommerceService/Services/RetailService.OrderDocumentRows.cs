@@ -165,6 +165,7 @@ public partial class RetailService : IRetailService
                 .ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.Comment, req.Comment)
                     .SetProperty(p => p.Quantity, req.Quantity)
+                    .SetProperty(p => p.WeightOffer, req.WeightOffer)
                     .SetProperty(p => p.Version, Guid.NewGuid())
                     .SetProperty(p => p.Amount, req.Amount), cancellationToken: token);
 
@@ -380,6 +381,7 @@ public partial class RetailService : IRetailService
           .ExecuteUpdateAsync(set => set
               .SetProperty(p => p.Comment, req.Comment)
               .SetProperty(p => p.Quantity, req.Quantity)
+              .SetProperty(p => p.WeightOffer, req.WeightOffer)
               .SetProperty(p => p.Version, Guid.NewGuid())
               .SetProperty(p => p.Amount, req.Amount), cancellationToken: token);
 

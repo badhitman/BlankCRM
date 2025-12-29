@@ -16,4 +16,10 @@ public abstract class RowOfMiddleDocumentModel : RowOfBaseDocumentModel
     /// Количество
     /// </summary>
     public decimal Quantity { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{base.ToString()} (q:{Quantity})";
+    }
 }

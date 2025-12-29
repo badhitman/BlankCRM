@@ -26,4 +26,10 @@ public class RowOfRetailOrderDocumentBaseModelDB : RowOfMiddleDocumentModel
     /// </summary>
     [ConcurrencyCheck]
     public Guid Version { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{base.ToString()} (a:{Amount})";
+    }
 }

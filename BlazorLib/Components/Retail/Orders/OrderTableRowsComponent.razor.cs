@@ -119,7 +119,6 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             int exist_row = Document.Rows.FindIndex(x => x.OfferId == rowOrder.OfferId);
             if (exist_row >= 0)
             {
-
                 Document.Rows[exist_row].Quantity = +rowOrder.Quantity;
                 Document.Rows[exist_row].WeightOffer = Document.Rows[exist_row].Quantity * rowOrder.Offer!.Weight;
                 Document.Rows[exist_row].Amount = Document.Rows[exist_row].Quantity * rowOrder.Offer!.Price;
