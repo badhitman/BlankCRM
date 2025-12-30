@@ -23,7 +23,7 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd>
-            <MudChat ChatPosition="@(ChatId == context.From?.Id ? ChatBubblePosition.Start : ChatBubblePosition.End)">
+            <MudChat ChatPosition="@(ChatId == context.ChatId ? ChatBubblePosition.Start : ChatBubblePosition.End)">
                 <MudChatHeader Name="@context.From!.GetName()" Time="@($"{context.CreatedAtUtc.GetCustomTime().ToString("d", GlobalStaticConstants.RU)} {@context.CreatedAtUtc.GetCustomTime().ToString("t", GlobalStaticConstants.RU)}")" />
                 <MudChatBubble>
                     @context.Text
