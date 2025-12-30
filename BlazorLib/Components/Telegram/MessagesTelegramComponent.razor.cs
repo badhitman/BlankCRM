@@ -23,7 +23,6 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public int ChatId { get; set; }
 
-
     private string _searchStringQuery = "";
     private string SearchStringQuery
     {
@@ -40,6 +39,7 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     /// Table
     /// </summary>
     public MudTable<MessageTelegramModelDB>? TableRef { get; set; }
+
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
