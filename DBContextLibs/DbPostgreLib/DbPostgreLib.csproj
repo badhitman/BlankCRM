@@ -25,4 +25,8 @@
 		<ProjectReference Include="..\DbLayerLib\DbLayerLib.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Migrations\Commerce\" />
+	</ItemGroup>
+
 </Project>

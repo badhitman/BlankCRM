@@ -135,7 +135,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             {
                 TResponseModel<int> setStatus = await RetailRepo.CreateOrderStatusDocumentAsync(new()
                 {
-                    DateOperation = DateTime.Now,
+                    DateOperation = DateTime.Now.Date,
                     CreatedAtUTC = DateTime.Now,
                     OrderDocumentId = res.Response,
                     StatusDocument = StatusesDocumentsEnum.Created,

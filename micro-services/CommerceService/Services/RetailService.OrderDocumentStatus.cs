@@ -43,7 +43,7 @@ public partial class RetailService : IRetailService
             .Where(x => x.Id == req.OrderDocumentId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
         if (docDb.Rows is null || docDb.Rows.Count == 0)
         {
@@ -76,6 +76,7 @@ public partial class RetailService : IRetailService
         StatusesDocumentsEnum _newStatus = await context.OrdersStatusesRetails
             .Where(y => y.OrderDocumentId == req.OrderDocumentId)
             .OrderByDescending(z => z.DateOperation)
+            .ThenByDescending(os => os.Id)
             .Select(s => s.StatusDocument)
             .FirstAsync(cancellationToken: token);
 
@@ -134,7 +135,7 @@ public partial class RetailService : IRetailService
             .Where(x => x.Id == req.OrderDocumentId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
         if (orderDb.Rows is null || orderDb.Rows.Count == 0)
         {
@@ -145,6 +146,7 @@ public partial class RetailService : IRetailService
         StatusesDocumentsEnum _newStatus = await context.OrdersStatusesRetails
             .Where(y => y.OrderDocumentId == req.OrderDocumentId)
             .OrderByDescending(z => z.DateOperation)
+            .ThenByDescending(os => os.Id)
             .Select(s => s.StatusDocument)
             .FirstAsync(cancellationToken: token);
 
@@ -219,11 +221,12 @@ public partial class RetailService : IRetailService
             .Where(x => x.Id == orderDb.Id)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == orderDb.Id).OrderByDescending(z => z.DateOperation).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == orderDb.Id).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
         StatusesDocumentsEnum _newStatus = await context.OrdersStatusesRetails
             .Where(y => y.OrderDocumentId == orderDb.Id)
             .OrderByDescending(z => z.DateOperation)
+            .ThenByDescending(os => os.Id)
             .Select(s => s.StatusDocument)
             .FirstAsync(cancellationToken: token);
 
@@ -421,6 +424,7 @@ public partial class RetailService : IRetailService
 
         IQueryable<OrderStatusRetailDocumentModelDB>? pq = q
             .OrderBy(x => x.DateOperation)
+            .ThenBy(os => os.Id)
             .Skip(req.PageNum * req.PageSize)
             .Take(req.PageSize);
 

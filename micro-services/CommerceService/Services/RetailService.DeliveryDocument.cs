@@ -218,7 +218,7 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.DeliveryCode, req.DeliveryCode)
                 .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.AddressUserComment, req.AddressUserComment)
-                .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.Id).OrderByDescending(z => z.DateOperation).Select(s => s.DeliveryStatus).FirstOrDefault())
+                .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.Id).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.DeliveryStatus).FirstOrDefault())
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);

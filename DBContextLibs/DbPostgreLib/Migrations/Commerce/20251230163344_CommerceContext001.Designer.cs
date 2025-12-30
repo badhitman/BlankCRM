@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20251220083736_CommerceContext006")]
-    partial class CommerceContext006
+    [Migration("20251230163344_CommerceContext001")]
+    partial class CommerceContext001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -238,6 +238,10 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Property<decimal>("ShippingCost")
                         .HasColumnType("numeric");
 
+                    b.Property<Guid>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid");
+
                     b.Property<int>("WarehouseId")
                         .HasColumnType("integer");
 
@@ -379,6 +383,9 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("NumWeekOfYear")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("StatusDocument")
                         .HasColumnType("integer");
 
@@ -400,6 +407,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.HasIndex("LastUpdatedAtUTC");
 
                     b.HasIndex("Name");
+
+                    b.HasIndex("NumWeekOfYear");
 
                     b.HasIndex("WarehouseId");
 
@@ -510,9 +519,6 @@ namespace DbPostgreLib.Migrations.Commerce
 
                     b.Property<int>("WarehouseId")
                         .HasColumnType("integer");
-
-                    b.Property<decimal>("WeightOffer")
-                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -1772,7 +1778,7 @@ namespace DbPostgreLib.Migrations.Commerce
             modelBuilder.Entity("SharedLib.OrderStatusRetailDocumentModelDB", b =>
                 {
                     b.HasOne("SharedLib.DocumentRetailModelDB", "OrderDocument")
-                        .WithMany()
+                        .WithMany("Statuses")
                         .HasForeignKey("OrderDocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2102,6 +2108,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     b.Navigation("Payments");
 
                     b.Navigation("Rows");
+
+                    b.Navigation("Statuses");
                 });
 
             modelBuilder.Entity("SharedLib.NomenclatureModelDB", b =>

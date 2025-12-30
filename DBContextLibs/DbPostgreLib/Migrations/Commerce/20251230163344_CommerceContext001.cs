@@ -30,6 +30,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     KladrTitle = table.Column<string>(type: "text", nullable: true),
                     AddressUserComment = table.Column<string>(type: "text", nullable: true),
                     AuthorIdentityUserId = table.Column<string>(type: "text", nullable: false),
+                    Version = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -64,9 +65,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     BaseUnit = table.Column<int>(type: "integer", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
                     SortIndex = table.Column<long>(type: "bigint", nullable: false),
                     ParentId = table.Column<int>(type: "integer", nullable: true),
@@ -85,6 +86,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DateDocument = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    NumWeekOfYear = table.Column<int>(type: "integer", nullable: false),
                     BuyerIdentityUserId = table.Column<string>(type: "text", nullable: false),
                     WarehouseId = table.Column<int>(type: "integer", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
@@ -138,6 +140,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
+                    IgnoreBalanceChanges = table.Column<bool>(type: "boolean", nullable: false),
                     SortIndex = table.Column<int>(type: "integer", nullable: false),
                     IsSystem = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
@@ -164,9 +167,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     Version = table.Column<Guid>(type: "uuid", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -209,11 +212,12 @@ namespace DbPostgreLib.Migrations.Commerce
                     OfferUnit = table.Column<int>(type: "integer", nullable: false),
                     Multiplicity = table.Column<decimal>(type: "numeric", nullable: false),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    Weight = table.Column<decimal>(type: "numeric", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -380,6 +384,26 @@ namespace DbPostgreLib.Migrations.Commerce
                 });
 
             migrationBuilder.CreateTable(
+                name: "DisabledPaymentsTypesForWallets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PaymentType = table.Column<int>(type: "integer", nullable: false),
+                    WalletTypeId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DisabledPaymentsTypesForWallets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DisabledPaymentsTypesForWallets_WalletsRetailTypes_WalletTy~",
+                        column: x => x.WalletTypeId,
+                        principalTable: "WalletsRetailTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WalletsRetail",
                 columns: table => new
                 {
@@ -459,9 +483,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     DateScheduleCalendar = table.Column<string>(type: "character varying(10)", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
                     SortIndex = table.Column<long>(type: "bigint", nullable: false),
                     ParentId = table.Column<int>(type: "integer", nullable: true),
@@ -520,9 +544,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     WarehouseId = table.Column<int>(type: "integer", nullable: false),
+                    Quantity = table.Column<decimal>(type: "numeric", nullable: false),
                     OfferId = table.Column<int>(type: "integer", nullable: false),
-                    NomenclatureId = table.Column<int>(type: "integer", nullable: false),
-                    Quantity = table.Column<decimal>(type: "numeric", nullable: false)
+                    NomenclatureId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -552,9 +576,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     PriceRule = table.Column<decimal>(type: "numeric", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -576,6 +600,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     DocumentId = table.Column<int>(type: "integer", nullable: false),
                     OfferId = table.Column<int>(type: "integer", nullable: false),
                     NomenclatureId = table.Column<int>(type: "integer", nullable: false),
+                    WeightOffer = table.Column<decimal>(type: "numeric", nullable: false),
                     Quantity = table.Column<decimal>(type: "numeric", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Comment = table.Column<string>(type: "text", nullable: true),
@@ -613,6 +638,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     OrderId = table.Column<int>(type: "integer", nullable: false),
                     OfferId = table.Column<int>(type: "integer", nullable: false),
                     NomenclatureId = table.Column<int>(type: "integer", nullable: false),
+                    WeightOffer = table.Column<decimal>(type: "numeric", nullable: false),
                     Quantity = table.Column<decimal>(type: "numeric", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Comment = table.Column<string>(type: "text", nullable: true),
@@ -651,6 +677,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Version = table.Column<Guid>(type: "uuid", nullable: false),
                     OfferId = table.Column<int>(type: "integer", nullable: false),
                     NomenclatureId = table.Column<int>(type: "integer", nullable: false),
+                    WeightOffer = table.Column<decimal>(type: "numeric", nullable: false),
                     Quantity = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
@@ -685,9 +712,9 @@ namespace DbPostgreLib.Migrations.Commerce
                     Weekday = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
                     SortIndex = table.Column<long>(type: "bigint", nullable: false),
                     ParentId = table.Column<int>(type: "integer", nullable: true),
@@ -770,6 +797,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DateDocument = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsDisabled = table.Column<bool>(type: "boolean", nullable: false),
                     FromWalletId = table.Column<int>(type: "integer", nullable: false),
                     FromWalletSum = table.Column<decimal>(type: "numeric", nullable: false),
                     ToWalletId = table.Column<int>(type: "integer", nullable: false),
@@ -777,7 +805,8 @@ namespace DbPostgreLib.Migrations.Commerce
                     Version = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     LastUpdatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CreatedAtUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -838,6 +867,7 @@ namespace DbPostgreLib.Migrations.Commerce
                     Version = table.Column<Guid>(type: "uuid", nullable: false),
                     OfferId = table.Column<int>(type: "integer", nullable: false),
                     NomenclatureId = table.Column<int>(type: "integer", nullable: false),
+                    WeightOffer = table.Column<decimal>(type: "numeric", nullable: false),
                     Quantity = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
@@ -1052,6 +1082,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "FromWalletId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConversionsDocumentsWalletsRetail_IsDisabled",
+                table: "ConversionsDocumentsWalletsRetail",
+                column: "IsDisabled");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ConversionsDocumentsWalletsRetail_LastUpdatedAtUTC",
                 table: "ConversionsDocumentsWalletsRetail",
                 column: "LastUpdatedAtUTC");
@@ -1166,6 +1201,17 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_DeliveryDocumentsRetail_WarehouseId",
                 table: "DeliveryDocumentsRetail",
                 column: "WarehouseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DisabledPaymentsTypesForWallets_PaymentType_WalletTypeId",
+                table: "DisabledPaymentsTypesForWallets",
+                columns: new[] { "PaymentType", "WalletTypeId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DisabledPaymentsTypesForWallets_WalletTypeId",
+                table: "DisabledPaymentsTypesForWallets",
+                column: "WalletTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LockTransactions_LockerId_LockerName_LockerAreaId",
@@ -1325,6 +1371,11 @@ namespace DbPostgreLib.Migrations.Commerce
                 name: "IX_OrdersRetail_Name",
                 table: "OrdersRetail",
                 column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrdersRetail_NumWeekOfYear",
+                table: "OrdersRetail",
+                column: "NumWeekOfYear");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrdersRetail_WarehouseId",
@@ -1522,9 +1573,10 @@ namespace DbPostgreLib.Migrations.Commerce
                 column: "OfferId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RowsOrdersRetails_OrderId",
+                name: "IX_RowsOrdersRetails_OrderId_OfferId",
                 table: "RowsOrdersRetails",
-                column: "OrderId");
+                columns: new[] { "OrderId", "OfferId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RowsOrdersRetails_Quantity",
@@ -1705,6 +1757,9 @@ namespace DbPostgreLib.Migrations.Commerce
 
             migrationBuilder.DropTable(
                 name: "DeliveriesStatusesDocumentsRetail");
+
+            migrationBuilder.DropTable(
+                name: "DisabledPaymentsTypesForWallets");
 
             migrationBuilder.DropTable(
                 name: "LockTransactions");

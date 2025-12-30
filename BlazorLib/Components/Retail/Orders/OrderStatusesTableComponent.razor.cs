@@ -176,6 +176,6 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseModel
         await SetBusyAsync(token: token);
         TPaginationResponseModel<OrderStatusRetailDocumentModelDB> res = await RetailRepo.SelectOrderDocumentStatusesAsync(req, token);
         await SetBusyAsync(false, token);
-        return new TableData<OrderStatusRetailDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+        return new TableData<OrderStatusRetailDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response?.OrderByDescending(x => x.DateOperation).ThenByDescending(os => os.Id) };
     }
 }
