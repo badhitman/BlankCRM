@@ -98,12 +98,14 @@ public partial class RetailService : IRetailService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = req.WarehouseId,
                     LockerId = rowDoc.OfferId,
+                    Marker = nameof(UpdateDeliveryDocumentAsync),
                 },
                 new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = documentDb.WarehouseId,
                     LockerId = rowDoc.OfferId,
+                    Marker = nameof(UpdateDeliveryDocumentAsync),
                 });
             }
             if (offersLocked.Count != 0)

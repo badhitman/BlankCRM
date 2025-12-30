@@ -62,6 +62,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerId = x.OfferId,
                     LockerAreaId = x.WarehouseId,
+                    Marker = nameof(RowsForWarehouseDocumentDeleteAsync),
                 });
 
             if (!offersLocked.Any(y => y.LockerId == x.OfferId && y.LockerAreaId == x.WritingOffWarehouseId))
@@ -70,6 +71,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerId = x.OfferId,
                     LockerAreaId = x.WritingOffWarehouseId,
+                    Marker = nameof(RowsForWarehouseDocumentDeleteAsync),
                 });
         }
 

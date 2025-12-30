@@ -31,4 +31,7 @@ public class LockTransactionModelDB
 
     /// <inheritdoc/>
     public required int LockerAreaId { get; set; }
+
+    /// <inheritdoc/>
+    public required string Marker { get; set; }
 }

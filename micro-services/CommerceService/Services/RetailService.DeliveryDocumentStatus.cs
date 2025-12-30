@@ -56,6 +56,7 @@ public partial class RetailService : IRetailService
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
             LockerAreaId = docDb.WarehouseId,
+            Marker = nameof(CreateDeliveryStatusDocumentAsync)
         })];
 
         string msg;
@@ -81,6 +82,12 @@ public partial class RetailService : IRetailService
 
         if ((offDeliveriesStatuses.Contains(_newStatus) && offDeliveriesStatuses.Contains(_oldStatus)) || (!offDeliveriesStatuses.Contains(_newStatus) && !offDeliveriesStatuses.Contains(_oldStatus)))
         {
+            if (lockers.Count != 0)
+            {
+                context.RemoveRange(lockers);
+                await context.SaveChangesAsync(token);
+            }
+
             await transaction.CommitAsync(token);
             return new() { Response = req.Id };
         }
@@ -157,6 +164,7 @@ public partial class RetailService : IRetailService
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
             LockerAreaId = docDb.WarehouseId,
+            Marker = nameof(UpdateDeliveryStatusDocumentAsync)
         })];
 
         string msg;
@@ -237,6 +245,7 @@ public partial class RetailService : IRetailService
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
             LockerAreaId = docDb.WarehouseId,
+            Marker = nameof(DeleteDeliveryStatusDocumentAsync),
         })];
 
         string msg;

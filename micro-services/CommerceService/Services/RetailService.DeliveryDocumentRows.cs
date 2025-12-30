@@ -32,6 +32,7 @@ public partial class RetailService : IRetailService
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = req.OfferId,
                 LockerAreaId = docDb.WarehouseId,
+                Marker = nameof(CreateRowOfDeliveryDocumentAsync),
             };
             try
             {
@@ -150,6 +151,7 @@ public partial class RetailService : IRetailService
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = req.OfferId,
                 LockerAreaId = docDb.WarehouseId,
+                Marker = nameof(UpdateRowOfDeliveryDocumentAsync),
             }];
         if (rowDb.OfferId != req.OfferId)
             lockers.Add(new()
@@ -157,6 +159,7 @@ public partial class RetailService : IRetailService
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = rowDb.OfferId,
                 LockerAreaId = docDb.WarehouseId,
+                Marker = nameof(UpdateRowOfDeliveryDocumentAsync),
             });
 
         string msg;
@@ -319,6 +322,7 @@ public partial class RetailService : IRetailService
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = rowDb.OfferId,
                 LockerAreaId = docDb.WarehouseId,
+                Marker = nameof(DeleteRowOfDeliveryDocumentAsync),
             }];
 
         string msg;

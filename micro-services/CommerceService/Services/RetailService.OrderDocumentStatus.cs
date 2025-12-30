@@ -57,6 +57,7 @@ public partial class RetailService : IRetailService
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
             LockerAreaId = docDb.WarehouseId,
+            Marker = nameof(CreateOrderStatusDocumentAsync),
         })];
 
         string msg;
@@ -162,6 +163,7 @@ public partial class RetailService : IRetailService
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
             LockerAreaId = orderDb.WarehouseId,
+            Marker = nameof(UpdateOrderStatusDocumentAsync)
         })];
 
         string msg;
@@ -248,6 +250,7 @@ public partial class RetailService : IRetailService
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
             LockerAreaId = orderDb.WarehouseId,
+            Marker = nameof(DeleteOrderStatusDocumentAsync),
         })];
 
         string msg;

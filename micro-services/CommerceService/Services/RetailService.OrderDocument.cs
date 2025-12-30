@@ -148,12 +148,14 @@ public partial class RetailService : IRetailService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = req.WarehouseId,
                     LockerId = rowDoc.OfferId,
+                    Marker = nameof(UpdateRetailDocumentAsync),
                 },
                 new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = documentDb.WarehouseId,
                     LockerId = rowDoc.OfferId,
+                    Marker = nameof(UpdateRetailDocumentAsync),
                 });
             }
             if (offersLocked.Count != 0)
@@ -312,7 +314,6 @@ public partial class RetailService : IRetailService
                   .SetProperty(p => p.WarehouseId, req.WarehouseId)
                   .SetProperty(p => p.ExternalDocumentId, req.ExternalDocumentId)
                   .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
-
 
         await transaction.CommitAsync(token);
 

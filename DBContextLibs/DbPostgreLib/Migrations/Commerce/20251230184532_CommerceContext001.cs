@@ -49,7 +49,8 @@ namespace DbPostgreLib.Migrations.Commerce
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     LockerName = table.Column<string>(type: "text", nullable: false),
                     LockerId = table.Column<int>(type: "integer", nullable: false),
-                    LockerAreaId = table.Column<int>(type: "integer", nullable: false)
+                    LockerAreaId = table.Column<int>(type: "integer", nullable: false),
+                    Marker = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbPostgreLib.Migrations.Commerce
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20251230163344_CommerceContext001")]
+    [Migration("20251230184532_CommerceContext001")]
     partial class CommerceContext001
     {
         /// <inheritdoc />
@@ -432,6 +432,10 @@ namespace DbPostgreLib.Migrations.Commerce
                         .HasColumnType("integer");
 
                     b.Property<string>("LockerName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Marker")
                         .IsRequired()
                         .HasColumnType("text");
 

@@ -794,7 +794,8 @@ public partial class CommerceImplementService(
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.Row.OfferId,
-                LockerAreaId = x.WarehouseId
+                LockerAreaId = x.WarehouseId,
+                Marker = nameof(OrderUpdateAsync),
             })];
 
             try
@@ -1027,6 +1028,7 @@ public partial class CommerceImplementService(
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = req.OfferId,
             LockerAreaId = commDataDb.WarehouseId,
+            Marker = nameof(RowForOrderUpdateAsync),
         }];
 
         if (rowDb is not null && rowDb.OfferId != req.OfferId)
@@ -1036,6 +1038,7 @@ public partial class CommerceImplementService(
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = rowDb.OfferId,
                 LockerAreaId = commDataDb.WarehouseId,
+                Marker = nameof(RowForOrderUpdateAsync),
             });
         }
 
@@ -1215,7 +1218,8 @@ public partial class CommerceImplementService(
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.OfferId,
-                LockerAreaId = x.WarehouseId
+                LockerAreaId = x.WarehouseId,
+                Marker = nameof(RowsForOrderDeleteAsync)
             })];
 
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken: token);
@@ -1325,7 +1329,8 @@ public partial class CommerceImplementService(
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.Row.OfferId,
-                LockerAreaId = x.WarehouseId
+                LockerAreaId = x.WarehouseId,
+                Marker  = nameof(StatusesOrdersChangeByHelpDeskDocumentIdAsync),
             })];
 
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);

@@ -99,6 +99,7 @@ public partial class CommerceImplementService : ICommerceService
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerAreaId = req.WarehouseId,
                 LockerId = rowDoc.OfferId,
+                Marker = nameof(WarehouseDocumentUpdateAsync),
             });
             if (req.WritingOffWarehouseId > 0)
                 offersLocked.Add(new LockTransactionModelDB()
@@ -106,6 +107,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = req.WritingOffWarehouseId,
                     LockerId = rowDoc.OfferId,
+                    Marker = nameof(WarehouseDocumentUpdateAsync),
                 });
 
             if (warehouseDocumentDb.WritingOffWarehouseId != req.WritingOffWarehouseId && warehouseDocumentDb.WritingOffWarehouseId > 0)
@@ -114,6 +116,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = warehouseDocumentDb.WritingOffWarehouseId,
                     LockerId = rowDoc.OfferId,
+                    Marker = nameof(WarehouseDocumentUpdateAsync),
                 });
 
             if (warehouseDocumentDb.WarehouseId != req.WarehouseId)
@@ -122,6 +125,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = warehouseDocumentDb.WarehouseId,
                     LockerId = rowDoc.OfferId,
+                    Marker = nameof(WarehouseDocumentUpdateAsync),
                 });
         }
         offersLocked = [.. offersLocked.DistinctBy(x => x.LockerAreaId)];
@@ -456,6 +460,7 @@ public partial class CommerceImplementService : ICommerceService
 
         if (offersLocked.Count != 0)
             context.RemoveRange(offersLocked);
+
         await context.SaveChangesAsync(token);
 
         res.Response = await context.WarehouseDocuments

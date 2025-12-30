@@ -432,6 +432,10 @@ namespace DbPostgreLib.Migrations.Commerce
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Marker")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("LockerId", "LockerName", "LockerAreaId")

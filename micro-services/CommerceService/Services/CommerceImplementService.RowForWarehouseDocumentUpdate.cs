@@ -80,6 +80,7 @@ public partial class CommerceImplementService : ICommerceService
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = req.OfferId,
             LockerAreaId = warehouseDocDB.WarehouseId,
+            Marker = nameof(RowForWarehouseDocumentUpdateAsync),
         }];
 
         if (warehouseDocDB.WritingOffWarehouseId > 0)
@@ -89,6 +90,7 @@ public partial class CommerceImplementService : ICommerceService
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = req.OfferId,
                 LockerAreaId = warehouseDocDB.WritingOffWarehouseId,
+                Marker = nameof(RowForWarehouseDocumentUpdateAsync),
             });
         }
 
@@ -99,6 +101,7 @@ public partial class CommerceImplementService : ICommerceService
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = rowDb.OfferId,
                 LockerAreaId = warehouseDocDB.WarehouseId,
+                Marker = nameof(RowForWarehouseDocumentUpdateAsync),
             });
 
             if (warehouseDocDB.WritingOffWarehouseId > 0)
@@ -107,6 +110,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerId = rowDb.OfferId,
                     LockerAreaId = warehouseDocDB.WritingOffWarehouseId,
+                    Marker = nameof(RowForWarehouseDocumentUpdateAsync),
                 });
         }
 
