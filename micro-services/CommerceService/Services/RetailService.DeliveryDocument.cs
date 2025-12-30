@@ -391,7 +391,7 @@ public partial class RetailService : IRetailService
             addressDiv.AddDomNode(new HtmlGenerator.html5.textual.strong("Адрес:"));
             addressDiv.AddDomNode(new HtmlGenerator.html5.textual.span($"`{aNode.KladrTitle}` {aNode.AddressUserComment}".Trim()));
             addressDiv.AddDomNode(new HtmlGenerator.html5.textual.strong("Получатель"));
-            addressDiv.AddDomNode(new HtmlGenerator.html5.textual.span($"{usersDb.First(x => x.UserId == aNode.RecipientIdentityUserId).ToString()}".Trim()));
+            addressDiv.AddDomNode(new HtmlGenerator.html5.textual.span($"{usersDb.First(x => x.UserId == aNode.RecipientIdentityUserId)}".Trim()));
 
             HtmlGenerator.html5.tables.table my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
 
