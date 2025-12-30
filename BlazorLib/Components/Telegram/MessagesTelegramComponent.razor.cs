@@ -23,6 +23,9 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     [Parameter, EditorRequired]
     public int ChatId { get; set; }
 
+
+    ChatTelegramModelDB? CurrentChat;
+
     private string _searchStringQuery = "";
     private string SearchStringQuery
     {
@@ -40,6 +43,14 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     /// </summary>
     public MudTable<MessageTelegramModelDB>? TableRef { get; set; }
 
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await SetBusyAsync();
+        CurrentChat = await TelegramRepo.ChatTelegramReadAsync(ChatId);
+        await SetBusyAsync(false);
+    }
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
