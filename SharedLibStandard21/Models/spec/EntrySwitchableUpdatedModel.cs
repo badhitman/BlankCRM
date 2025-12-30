@@ -15,6 +15,11 @@ public class EntrySwitchableUpdatedModel : IdSwitchableModel
     public virtual string? Name { get; set; }
 
     /// <summary>
+    /// Описание/примечание для объекта
+    /// </summary>
+    public string? Description { get; set; }
+
+    /// <summary>
     /// Дата последнего обновления
     /// </summary>
     public DateTime? LastUpdatedAtUTC { get; set; }
@@ -23,9 +28,4 @@ public class EntrySwitchableUpdatedModel : IdSwitchableModel
     /// Дата создания
     /// </summary>
     public DateTime CreatedAtUTC { get; set; }
-
-    /// <summary>
-    /// Описание/примечание для объекта
-    /// </summary>
-    public string? Description { get; set; }
 }

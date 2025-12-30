@@ -140,8 +140,12 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<FileAttachModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrderReportGetCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<FileAttachModel> PriceFullFileGetAsync(CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<FileAttachModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PriceFullFileGetCommerceReceive, token: token) ?? new();
+    public async Task<FileAttachModel> PriceFullFileGetExcelAsync(CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<FileAttachModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PriceFullFileGetExcelCommerceReceive, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<FileAttachModel> PriceFullFileGetJsonAsync(CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<FileAttachModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PriceFullFileGetJsonCommerceReceive, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> WeeklyScheduleUpdateAsync(WeeklyScheduleModelDB work, CancellationToken token = default)
@@ -198,4 +202,8 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.IncomingMerchantPaymentTBankReceive, req, false, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UploadOffersAsync(List<NomenclatureScopeModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.UploadOffersCommerceReceive, req, token: token) ?? new();
 }

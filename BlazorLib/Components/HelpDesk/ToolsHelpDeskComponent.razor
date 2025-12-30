@@ -1,6 +1,7 @@
 @using BlazorLib.Components.Kladr
 @using BlazorLib.Components.ParametersShared
 @using BlazorLib.Components.Retail.Delivery
+@using BlazorLib.Components.Retail.Tools
 @using BlazorLib.Components.Retail.Wallet
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Authorization
@@ -117,6 +118,9 @@
                         </div>
                     </div>
                 </div>
+            </MudTabPanel>
+            <MudTabPanel Text="json price view">
+                <JsonPriceViewComponent />
             </MudTabPanel>
         </MudTabs>
     </MudTabPanel>

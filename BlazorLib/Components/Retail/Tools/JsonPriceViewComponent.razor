@@ -1,0 +1,37 @@
+﻿@using MudBlazor
+
+@inherits BlazorBusyComponentBaseModel
+
+@if (CatalogData is null)
+{
+    <MudTextField T="string" Label="JSON price" Variant="Variant.Outlined" @bind-Value=sampleJson Lines="55" Clearable AutoFocus Immediate />
+    <MudButton Disabled="string.IsNullOrWhiteSpace(sampleJson)"
+               Variant="Variant.Filled"
+               Color="Color.Primary"
+               Class="mt-2"
+               OnClick="TryParseJson"
+               FullWidth>@(string.IsNullOrWhiteSpace(sampleJson) ? "Insert JSON" : "Parse")</MudButton>
+}
+else
+{
+    <MudTreeView T="string" ReadOnly>
+        @foreach (NomenclatureScopeModel nom in CatalogData)
+        {
+            <MudTreeViewItem Text="@($"{nom.Name} [{nom.BaseUnit}]")">
+                @if (nom.Offers is not null)
+                {
+                    foreach (OfferScopeModel _of in nom.Offers)
+                    {
+                        <MudTreeViewItem Text="@($"{_of.Name} [{_of.OfferUnit}] - Price {_of.Price:C}; Weight {_of.Weight};")" />
+                    }
+                }
+            </MudTreeViewItem>
+        }
+    </MudTreeView>
+    <MudButton Disabled="string.IsNullOrWhiteSpace(sampleJson)"
+               Variant="Variant.Filled"
+               Color="Color.Warning"
+               Class="mt-2"
+               OnClick="WriteOffers"
+               FullWidth>Load/Write catalog</MudButton>
+}

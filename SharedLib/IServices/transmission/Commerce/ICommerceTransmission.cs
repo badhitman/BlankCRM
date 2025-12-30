@@ -15,11 +15,6 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default);
 
     /// <summary>
-    /// Price Full - file get
-    /// </summary>
-    public Task<FileAttachModel> PriceFullFileGetAsync(CancellationToken token = default);
-
-    /// <summary>
     /// Order report get
     /// </summary>
     public Task<TResponseModel<FileAttachModel>> OrderReportGetAsync(TAuthRequestModel<int> req, CancellationToken token = default);

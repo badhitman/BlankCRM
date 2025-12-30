@@ -435,6 +435,7 @@ public static partial class GlobalTools
         {"text/xml", new[]{"xml"}},
         {"image/gif", new[]{"gif"}},
         {"image/jpeg", new[]{"jpeg", "jpg"}},
+        {"application/json", new[]{"json"}},
         {"application/x-javascript", new[]{"js"}},
         {"application/atom+xml", new[]{"atom"}},
         {"application/rss+xml", new[]{"rss"}},

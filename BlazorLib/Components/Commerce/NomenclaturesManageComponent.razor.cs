@@ -42,7 +42,24 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
     async Task DownloadFullPrice()
     {
         await SetBusyAsync();
-        FileAttachModel res = await CommerceRepo.PriceFullFileGetAsync();
+        FileAttachModel res = await CommerceRepo.PriceFullFileGetExcelAsync();
+
+        await SetBusyAsync(false);
+        if (res.Data.Length != 0)
+        {
+            using MemoryStream ms = new(res.Data);
+            using DotNetStreamReference streamRef = new(stream: ms);
+            await JsRuntimeRepo.InvokeVoidAsync("downloadFileFromStream", res.Name, streamRef);
+        }
+    }
+
+    /// <summary>
+    /// Скачать полный прайс
+    /// </summary>
+    async Task DownloadFullPriceJSON()
+    {
+        await SetBusyAsync();
+        FileAttachModel res = await CommerceRepo.PriceFullFileGetJsonAsync();
 
         await SetBusyAsync(false);
         if (res.Data.Length != 0)

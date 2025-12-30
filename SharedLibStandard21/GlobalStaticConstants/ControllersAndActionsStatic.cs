@@ -928,6 +928,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string PRICE_CONTROLLER_NAME = "price";
 
         /// <summary>
+        /// Excel
+        /// </summary>
+        public const string EXCEL_CONTROLLER_NAME = "excel";
+
+        /// <summary>
+        /// JSON
+        /// </summary>
+        public const string JSON_CONTROLLER_NAME = "json";
+
+        /// <summary>
         /// Free
         /// </summary>
         public const string FREE_CONTROLLER_NAME = "free";

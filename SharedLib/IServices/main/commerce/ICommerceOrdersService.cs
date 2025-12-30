@@ -125,11 +125,6 @@ public partial interface ICommerceService
     public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default);
 
     /// <summary>
-    /// Get full price file Excel (*.xlsx)
-    /// </summary>
-    public Task<FileAttachModel> GetFullPriceFileAsync(CancellationToken token = default);
-
-    /// <summary>
     /// Get order report file Excel (*.xlsx)
     /// </summary>
     public Task<TResponseModel<FileAttachModel>> GetOrderReportFileAsync(TAuthRequestModel<int> req, CancellationToken token = default);

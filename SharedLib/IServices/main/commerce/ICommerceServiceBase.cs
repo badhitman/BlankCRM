@@ -8,6 +8,21 @@ namespace SharedLib;
 public interface ICommerceServiceBase
 {
     /// <summary>
+    /// Price Full - file get
+    /// </summary>
+    public Task<FileAttachModel> PriceFullFileGetExcelAsync(CancellationToken token = default);
+
+    /// <summary>
+    /// Price Full - file get
+    /// </summary>
+    public Task<FileAttachModel> PriceFullFileGetJsonAsync(CancellationToken token = default);
+
+    /// <summary>
+    /// UploadOffersAsync
+    /// </summary>
+    public Task<ResponseBaseModel> UploadOffersAsync(List<NomenclatureScopeModel> req, CancellationToken token = default);
+
+    /// <summary>
     /// Подбор сотрудников (связи пользователей с компаниями)
     /// </summary>
     public Task<TResponseModel<TPaginationResponseModel<UserOrganizationModelDB>>> UsersOrganizationsSelectAsync(TPaginationRequestAuthModel<UsersOrganizationsStatusesRequestModel> req, CancellationToken token = default);

@@ -204,6 +204,84 @@ public partial class CommerceImplementService(
 
     #region offers
     /// <inheritdoc/>
+    public async Task<ResponseBaseModel> UploadOffersAsync(List<NomenclatureScopeModel> req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        if (req.Count == 0)
+            return ResponseBaseModel.CreateWarning("List<NomenclatureScopeModel> Count == 0");
+
+        string? _nameUpper;
+        List<ResultMessage> Messages = [];
+        foreach (NomenclatureScopeModel _n in req)
+        {
+            if (!Enum.TryParse<UnitsOfMeasurementEnum>(_n.BaseUnit, true, out UnitsOfMeasurementEnum _bu))
+            {
+                Messages.Add(new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Единица измерения `{_n.BaseUnit}` не корректная (не удалось конвертировать)" });
+                continue;
+            }
+
+            _nameUpper = _n.Name?.ToUpper().Trim();
+            NomenclatureModelDB? readNomenclature = await context.Nomenclatures
+                .FirstOrDefaultAsync(x => x.NormalizedNameUpper == _nameUpper, cancellationToken: token);
+
+            if (readNomenclature is null)
+            {
+                Messages.Add(new() { TypeMessage = MessagesTypesEnum.Info, Text = $"Создана номенклатура: {_n.Name}" });
+                readNomenclature = new()
+                {
+                    IsDisabled = _n.IsDisabled,
+                    NormalizedNameUpper = _nameUpper,
+                    BaseUnit = _bu,
+                    Description = _n.Description,
+                    Name = _n.Name,
+                    CreatedAtUTC = DateTime.UtcNow,
+                };
+                await context.Nomenclatures.AddAsync(readNomenclature, token);
+                await context.SaveChangesAsync(cancellationToken: token);
+            }
+
+            foreach (OfferScopeModel _off in _n.Offers)
+            {
+                if (!Enum.TryParse(_off.OfferUnit, true, out _bu))
+                {
+                    Messages.Add(new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Единица измерения `{_off.OfferUnit}` не корректная (не удалось конвертировать)" });
+                    continue;
+                }
+
+                // _nameUpper = _off.Name?.ToUpper().Trim();
+                OfferModelDB? readOffer = await context.Offers
+                    .FirstOrDefaultAsync(x => x.NomenclatureId == readNomenclature.Id && x.Name == _off.Name, cancellationToken: token);
+
+                if (readOffer is null)
+                {
+                    Messages.Add(new() { TypeMessage = MessagesTypesEnum.Info, Text = $"Создан оффер: {_off.Name}" });
+                    readOffer = new()
+                    {
+                        IsDisabled = _off.IsDisabled,
+                        Description = _off.Description,
+                        Name = _off.Name,
+                        Multiplicity = _off.Multiplicity,
+                        NomenclatureId = readNomenclature.Id,
+                        Price = _off.Price,
+                        Weight = _off.Weight,
+                        ShortName = _off.ShortName,
+                        QuantitiesTemplate = _off.QuantitiesTemplate,
+                        OfferUnit = _bu,
+                        CreatedAtUTC = DateTime.UtcNow,
+                    };
+
+                    await context.Offers.AddAsync(readOffer, token);
+                    await context.SaveChangesAsync(cancellationToken: token);
+                }
+            }
+        }
+
+        if (Messages.Count != 0)
+            return ResponseBaseModel.Create(Messages);
+
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+    /// <inheritdoc/>
     public async Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestModel<OfferModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
@@ -1451,7 +1529,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<FileAttachModel> GetFullPriceFileAsync(CancellationToken token = default)
+    public async Task<FileAttachModel> PriceFullFileGetExcelAsync(CancellationToken token = default)
     {
         string docName = $"Прайс на {DateTime.Now.GetHumanDateTime()}";
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
@@ -1481,6 +1559,83 @@ public partial class CommerceImplementService(
                 Data = ExportPrice(gof, rubricsDb.Response),
                 ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("xlsx")).Key,
                 Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.xlsx",
+            };
+        }
+        catch (Exception ex)
+        {
+            loggerRepo.LogError(ex, $"Ошибка создания Excel документа: {docName}");
+            return new()
+            {
+                Data = [],
+                ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("html")).Key,
+                Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.html",
+            };
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task<FileAttachModel> PriceFullFileGetJsonAsync(CancellationToken token = default)
+    {
+        string docName = $"Прайс на {DateTime.Now.GetHumanDateTime()}";
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        List<OfferModelDB> offersAll = await context.Offers
+            .Include(x => x.Nomenclature)
+            .Include(x => x.Registers)
+            .ToListAsync(cancellationToken: token);
+
+        if (offersAll.Count == 0)
+        {
+            loggerRepo.LogWarning($"Пустой прайс: {docName}");
+            return new()
+            {
+                Data = [],
+                ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("html")).Key,
+                Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.html",
+            };
+        }
+
+        int[] rubricsIds = [.. offersAll.SelectMany(x => x.Registers!).Select(x => x.WarehouseId).Distinct()];
+        TResponseModel<List<RubricStandardModel>> rubricsDb = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
+
+        List<NomenclatureScopeModel> _catalogData = [];
+        foreach (IGrouping<NomenclatureModelDB?, OfferModelDB> _gn in offersAll.GroupBy(x => x.Nomenclature))
+        {
+            NomenclatureScopeModel _nom = new()
+            {
+                BaseUnit = _gn.Key!.BaseUnit.ToString(),
+                IsDisabled = _gn.Key.IsDisabled,
+                Description = _gn.Key.Description,
+                Name = _gn.Key.Name,
+                Offers = [.. _gn.Select(x => new OfferScopeModel()
+                {
+                    Name = x.Name,
+                    Description = x.Description,
+                    IsDisabled = x.IsDisabled,
+                    Multiplicity = x.Multiplicity,
+                    OfferUnit = x.OfferUnit.ToString(),
+                    Price = x.Price,
+                    QuantitiesTemplate = x.QuantitiesTemplate,
+                    ShortName = x.ShortName,
+                    Weight = x.Weight,
+                    Registers = [.. x.Registers!.Select(y=> new OfferAvailabilityScopeModel()
+                    {
+                        Warehouse = rubricsDb.Response!.First(r=>r.Id == y.WarehouseId).Name!,
+                         Quantity = y.Quantity,
+                    })]
+                })]
+            };
+            _catalogData.Add(_nom);
+        }
+
+        string inputString = JsonConvert.SerializeObject(_catalogData);
+
+        try
+        {
+            return new()
+            {
+                Data = Encoding.UTF8.GetBytes(inputString),
+                ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("json")).Key,
+                Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.json",
             };
         }
         catch (Exception ex)

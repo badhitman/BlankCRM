@@ -598,7 +598,10 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string OrderReportGetCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORDER_CONTROLLER_NAME}-{Routes.REPORT_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string PriceFullFileGetCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.PRICE_CONTROLLER_NAME}-{Routes.FULL_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
+        public readonly static string PriceFullFileGetExcelCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.PRICE_CONTROLLER_NAME}-{Routes.FULL_CONTROLLER_NAME}", $"{Routes.GET_ACTION_NAME}-{Routes.EXCEL_CONTROLLER_NAME}");
+
+        /// <inheritdoc/>
+        public readonly static string PriceFullFileGetJsonCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.PRICE_CONTROLLER_NAME}-{Routes.FULL_CONTROLLER_NAME}", $"{Routes.GET_ACTION_NAME}-{Routes.JSON_CONTROLLER_NAME}");
 
         /// <inheritdoc/>
         public readonly static string WarehousesDocumentsReadCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.WAREHOUSE_CONTROLLER_NAME}-{Routes.DOCUMENTS_CONTROLLER_NAME}", Routes.READ_ACTION_NAME);
@@ -614,6 +617,9 @@ public static partial class GlobalStaticConstantsTransmission
 
         /// <inheritdoc/>
         public readonly static string BankDetailsDeleteCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATIONS_CONTROLLER_NAME}-{Routes.BANK_CONTROLLER_NAME}-{Routes.DETAILS_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UploadOffersCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.OFFERS_CONTROLLER_NAME, Routes.UPLOAD_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string IncomingMerchantPaymentTBankReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"T-{Routes.BANK_CONTROLLER_NAME}", Routes.MERCHANT_CONTROLLER_NAME, $"{Routes.INCOMING_CONTROLLER_NAME}-{Routes.PAYMENT_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
