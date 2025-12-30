@@ -77,4 +77,10 @@ public class UserTelegramBaseModel
 
         return $"{name}{(IsBot ? " [is bot]" : "")}";
     }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return GetName();
+    }
 }
