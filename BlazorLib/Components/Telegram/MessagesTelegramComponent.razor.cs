@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -23,12 +22,6 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     /// </summary>
     [Parameter, EditorRequired]
     public int ChatId { get; set; }
-
-    /// <summary>
-    /// Отображение колонки чата назначения
-    /// </summary>
-    [Parameter]
-    public bool ShowDestinationChat { get; set; }
 
 
     private string _searchStringQuery = "";
