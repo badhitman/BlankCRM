@@ -9,7 +9,15 @@ else
 {
     <div class="card">
         <div class="card-body">
-            <h6 class="card-title">@DirectoryData.FullPath</h6>
+            <h6 class="card-title">
+                @DirectoryData.FullPath
+                @if (DirectoryData.DirectoryItems is not null && DirectoryData.DirectoryItems.Count != 0)
+                {
+                    <sup>
+                        x @DirectoryData.DirectoryItems.Count ( @(DirectoryData.DirectoryItems.Sum(x => x.FileSizeBytes)) )
+                    </sup>
+                }
+            </h6>
             @if (DirectoryData.DirectoryItems is null || DirectoryData.DirectoryItems.Count == 0)
             {
                 <dl>
@@ -27,7 +35,8 @@ else
                         @foreach (DirectoryItemModel _fiElement in DirectoryData.DirectoryItems)
                         {
                             int startSegment = _fiElement.FullPath.IndexOf(DirectoryData.FullPath);
-                            <MudTreeViewItem Value="@($"{(startSegment < 0 ? _fiElement.FullPath : $"...{_fiElement.FullPath.Substring(startSegment + DirectoryData.FullPath.Length)}")} - {@GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")" Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)" />
+                            <MudTreeViewItem Value="@($"{(startSegment < 0 ? _fiElement.FullPath : $"...{_fiElement.FullPath.Substring(startSegment + DirectoryData.FullPath.Length)}")} - {GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")"
+                                             Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)" />
                         }
                     </MudTreeView>
                 </MudPaper>
