@@ -14,7 +14,7 @@ else
                 @if (DirectoryData.DirectoryItems is not null && DirectoryData.DirectoryItems.Count != 0)
                 {
                     <sup>
-                        x @DirectoryData.DirectoryItems.Count ( @(DirectoryData.DirectoryItems.Sum(x => x.FileSizeBytes)) )
+                        x @DirectoryData.DirectoryItems.Count ( @(GlobalToolsStandard.SizeDataAsString(DirectoryData.DirectoryItems.Sum(x => x.FileSizeBytes))) )
                     </sup>
                 }
             </h6>
