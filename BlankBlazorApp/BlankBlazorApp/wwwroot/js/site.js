@@ -179,7 +179,7 @@ function DOMContentLoaded() {
         var tg = window.Telegram;
         if (window.Telegram.WebApp.initData == "" || window.Telegram.WebApp.initData == undefined || window.Telegram.WebApp.initData == null) {
             console.warn(JSON.stringify(tg));
-            Blazor.start().then(function () { console.warn("Blazor started!") });
+            //Blazor.start().then(function () { console.warn("Blazor started!") });
             return;
         }
         console.warn(JSON.stringify(window.Telegram.WebApp.initData));
@@ -221,7 +221,7 @@ function DOMContentLoaded() {
     }
 
     // console.warn(JSON.stringify(tg));
-    Blazor.start().then(function () { console.warn("Blazor started!") });
+    //Blazor.start().then(function () { console.warn("Blazor started!") });
 
     /*
     Blazor.start({ssr: { }, circuit: { }, webAssembly: { }});

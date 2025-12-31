@@ -160,7 +160,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "custom", "custom", "{8EA09A
 		..\secrets\email-conf.Development.json = ..\secrets\email-conf.Development.json
 		..\secrets\excenge-conf.Development.json = ..\secrets\excenge-conf.Development.json
 		..\secrets\mongo-conf.json = ..\secrets\mongo-conf.json
-		..\secrets\mqtt-conf.Development.json = ..\secrets\mqtt-conf.Development.json
 		..\secrets\rabbitmq-conf.Development.json = ..\secrets\rabbitmq-conf.Development.json
 		..\secrets\telegram-bot.Development.json = ..\secrets\telegram-bot.Development.json
 		..\secrets\top-menu.Development.json = ..\secrets\top-menu.Development.json

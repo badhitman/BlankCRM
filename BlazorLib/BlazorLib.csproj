@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -16,15 +16,20 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Components\Shared\Layouts\ReconnectModal.razor.css" />
+	  <None Remove="Components\Shared\Layouts\ReconnectModal.razor.js" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<SupportedPlatform Include="browser" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.10" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.10" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.1" />
 		<PackageReference Include="MudBlazor" Version="8.15.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="9.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="10.0.1" />
 		<PackageReference Include="TinyMCE.Blazor" Version="2.2.1" />
 	</ItemGroup>
 

@@ -159,30 +159,30 @@ otel.WithTracing(tracing =>
 });
 IHost host = builder.Build();
 
-JobManager.Initialize();
-JobManager.JobException += JobManager_JobException;
-JobManager.JobStart += JobManager_JobStart;
+//JobManager.Initialize();
+//JobManager.JobException += JobManager_JobException;
+//JobManager.JobStart += JobManager_JobStart;
 
-void JobManager_JobStart(JobStartInfo info)
-{
-    logger.Info($"FluentJob `{info.Name}`: started");
-}
+//void JobManager_JobStart(JobStartInfo info)
+//{
+//    logger.Info($"FluentJob `{info.Name}`: started");
+//}
 
-JobManager.JobEnd += JobManager_JobEnd;
+//JobManager.JobEnd += JobManager_JobEnd;
 
-void JobManager_JobEnd(JobEndInfo info)
-{
-    logger.Info($"FluentJob `{info.Name}`: ended ({info.Duration})");
-}
+//void JobManager_JobEnd(JobEndInfo info)
+//{
+//    logger.Info($"FluentJob `{info.Name}`: ended ({info.Duration})");
+//}
 
-void JobManager_JobException(JobExceptionInfo info)
-{
-    logger.Error("An error just happened with a scheduled job: " + info.Exception);
-}
+//void JobManager_JobException(JobExceptionInfo info)
+//{
+//    logger.Error("An error just happened with a scheduled job: " + info.Exception);
+//}
 
-JobManager.AddJob(
-    () => Console.WriteLine("5 minutes just passed."),
-    s => s.WithName("simple test job").ToRunEvery(5).Minutes()
-);
+//JobManager.AddJob(
+//    () => Console.WriteLine("5 minutes just passed."),
+//    s => s.WithName("simple test job").ToRunEvery(5).Minutes()
+//);
 
 host.Run();

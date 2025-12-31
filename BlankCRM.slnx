@@ -1,0 +1,130 @@
+<Solution>
+  <Folder Name="/blank/">
+    <Project Path="BlankBlazorApp/BlankBlazorApp.Client/BlankBlazorApp.Client.csproj" />
+    <Project Path="BlankBlazorApp/BlankBlazorApp/BlankBlazorApp.csproj" />
+  </Folder>
+  <Folder Name="/libs/">
+    <Project Path="BlazorLib/BlazorLib.csproj" />
+    <Project Path="BlazorServerLib/BlazorWebLib.csproj" />
+    <Project Path="CodegeneratorLib/CodegeneratorLib.csproj" />
+    <Project Path="IdentityLib/IdentityLib.csproj" />
+    <Project Path="ServerLib/ServerLib.csproj" />
+    <Project Path="SharedLib/SharedLib.csproj" />
+    <Project Path="SharedLibStandard21/SharedLibStandard21.csproj" />
+  </Folder>
+  <Folder Name="/libs/bus/">
+    <Project Path="RemoteCallLib/MQTTCallLib/MQTTCallLib.csproj" />
+    <Project Path="RemoteCallLib/RabbitMQ/RabbitMQCallLib.csproj" />
+  </Folder>
+  <Folder Name="/libs/db/">
+    <File Path="DBContextLibs/README.md" />
+    <Project Path="DBContextLibs/DbLayerLib/DbLayerLib.csproj" />
+  </Folder>
+  <Folder Name="/libs/db/drivers/">
+    <Project Path="DBContextLibs/DbMySQLLib/DbMySQLLib.csproj" />
+    <Project Path="DBContextLibs/DbPostgreLib/DbPostgreLib.csproj" />
+    <Project Path="DBContextLibs/DbSqliteLib/DbSqliteLib.csproj" />
+  </Folder>
+  <Folder Name="/maui/">
+    <Project Path="ToolsApp/ToolsMauiApp/ToolsMauiApp.csproj">
+      <Deploy Solution="Debug|*" />
+    </Project>
+    <Project Path="ToolsApp/ToolsMauiAppMigration/ToolsMauiAppMigration.csproj" />
+    <Project Path="ToolsApp/ToolsMauiLib/ToolsMauiLib.csproj" />
+  </Folder>
+  <Folder Name="/services/">
+    <Project Path="micro-services/ApiRestService/ApiRestService.csproj" />
+    <Project Path="micro-services/BankService/BankService.csproj" />
+    <Project Path="micro-services/CommerceService/CommerceService.csproj" />
+    <Project Path="micro-services/ConstructorService/ConstructorService.csproj" />
+    <Project Path="micro-services/FilesIndexingService/FilesIndexingService.csproj" />
+    <Project Path="micro-services/HelpDeskService/HelpDeskService.csproj" />
+    <Project Path="micro-services/IdentityService/IdentityService.csproj" />
+    <Project Path="micro-services/KladrService/KladrService.csproj" />
+    <Project Path="micro-services/LdapService/LdapService.csproj" />
+    <Project Path="micro-services/StorageService/StorageService.csproj" />
+    <Project Path="micro-services/TelegramBotService/TelegramBotService.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="CONTACT.md" />
+    <File Path="README.md" />
+    <Project Path="../HtmlGenerator/HtmlGenerator.csproj" />
+    <Project Path="../TinkofClientApi/TinkoffPaymentClientApi/TinkoffPaymentClientApi.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/devops/">
+    <File Path="devops/build-win.ps1" />
+    <File Path="devops/docker-compose.yml" />
+    <File Path="devops/dumps.sh" />
+    <File Path="devops/prod-builds.update.sh" />
+    <File Path="devops/README.md" />
+    <File Path="devops/readme.stage.txt" />
+    <File Path="devops/stage-builds.update.sh" />
+  </Folder>
+  <Folder Name="/Solution Items/devops/etc/" />
+  <Folder Name="/Solution Items/devops/etc/nginx/">
+    <File Path="devops/etc/nginx/mongo.express" />
+  </Folder>
+  <Folder Name="/Solution Items/devops/etc/nginx/prod/">
+    <File Path="devops/etc/nginx/api.app" />
+    <File Path="devops/etc/nginx/web.app" />
+  </Folder>
+  <Folder Name="/Solution Items/devops/etc/nginx/stage/">
+    <File Path="devops/etc/nginx/stage/api.staging.app" />
+    <File Path="devops/etc/nginx/stage/web.staging.app" />
+  </Folder>
+  <Folder Name="/Solution Items/devops/etc/systemd/">
+    <File Path="devops/etc/systemd/system/docker-compose-app.service" />
+  </Folder>
+  <Folder Name="/Solution Items/devops/etc/systemd/prod/">
+    <File Path="devops/etc/systemd/system/api.app.service" />
+    <File Path="devops/etc/systemd/system/bank.app.service" />
+    <File Path="devops/etc/systemd/system/bus.app.service" />
+    <File Path="devops/etc/systemd/system/comm.app.service" />
+    <File Path="devops/etc/systemd/system/constructor.app.service" />
+    <File Path="devops/etc/systemd/system/filesindexing.app.service" />
+    <File Path="devops/etc/systemd/system/hd.app.service" />
+    <File Path="devops/etc/systemd/system/identity.app.service" />
+    <File Path="devops/etc/systemd/system/kladr.app.service" />
+    <File Path="devops/etc/systemd/system/ldap.app.service" />
+    <File Path="devops/etc/systemd/system/tg.app.service" />
+    <File Path="devops/etc/systemd/system/web.app.service" />
+  </Folder>
+  <Folder Name="/Solution Items/devops/etc/systemd/stage/">
+    <File Path="devops/etc/systemd/system/api.app.stage.service" />
+    <File Path="devops/etc/systemd/system/bank.app.stage.service" />
+    <File Path="devops/etc/systemd/system/bus.app.stage.service" />
+    <File Path="devops/etc/systemd/system/comm.app.stage.service" />
+    <File Path="devops/etc/systemd/system/constructor.app.stage.service" />
+    <File Path="devops/etc/systemd/system/filesindexing.app.stage.service" />
+    <File Path="devops/etc/systemd/system/hd.app.stage.service" />
+    <File Path="devops/etc/systemd/system/identity.app.stage.service" />
+    <File Path="devops/etc/systemd/system/kladr.app.stage.service" />
+    <File Path="devops/etc/systemd/system/ldap.app.stage.service" />
+    <File Path="devops/etc/systemd/system/tg.app.stage.service" />
+    <File Path="devops/etc/systemd/system/web.app.stage.service" />
+  </Folder>
+  <Folder Name="/Solution Items/secrets/" />
+  <Folder Name="/Solution Items/secrets/AppHost/">
+    <File Path="../secrets-BlankCRM.AppHost/api-access.json" />
+    <File Path="../secrets-BlankCRM.AppHost/connections-strings.Development.json" />
+    <File Path="../secrets-BlankCRM.AppHost/email-conf.Development.json" />
+    <File Path="../secrets-BlankCRM.AppHost/excenge-conf.Development.json" />
+    <File Path="../secrets-BlankCRM.AppHost/mongo-conf.json" />
+    <File Path="../secrets-BlankCRM.AppHost/rabbitmq-conf.Development.json" />
+    <File Path="../secrets-BlankCRM.AppHost/telegram-bot.Development.json" />
+  </Folder>
+  <Folder Name="/Solution Items/secrets/custom/">
+    <File Path="../secrets/api-access.json" />
+    <File Path="../secrets/connections-strings.Development.json" />
+    <File Path="../secrets/email-conf.Development.json" />
+    <File Path="../secrets/excenge-conf.Development.json" />
+    <File Path="../secrets/mongo-conf.json" />
+    <File Path="../secrets/rabbitmq-conf.Development.json" />
+    <File Path="../secrets/telegram-bot.Development.json" />
+    <File Path="../secrets/top-menu.Development.json" />
+  </Folder>
+  <Project Path="BlankCRM.AppHost/BlankCRM.AppHost.csproj" />
+  <Project Path="BlankCRM.ServiceDefaults/BlankCRM.ServiceDefaults.csproj" />
+  
+</Solution>

@@ -1,5 +1,7 @@
 ﻿@using System.Globalization
 @using System.Reflection
+@using BlankBlazorApp.Components.Layout
+@using BlazorLib.Components.Shared.Layouts
 @using SharedLib
 
 <!DOCTYPE html>
@@ -9,14 +11,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
+    <ResourcePreloader />
+
+    <link rel="stylesheet" href="@Assets["lib/bootstrap/css/bootstrap.min.css"]" />
+    @* <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css?version=@GlobalStaticConstants.InitSalt" /> *@
+
+    <link rel="stylesheet" href="@Assets["app.css"]" />
+    @* <link rel="stylesheet" href="app.css?version=@GlobalStaticConstants.InitSalt" /> *@
+
+    <link rel="stylesheet" href="@Assets["BlankBlazorApp.styles.css"]" />
+    @* <link rel="stylesheet" href="BlankBlazorApp.styles.css" /> *@
+
+    <ImportMap />
+
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/lib/bootstrap-icons/font/bootstrap-icons.min.css?version=@GlobalStaticConstants.InitSalt">
     <link rel="stylesheet" href="/lib/jqueryui/jquery-ui.min.css?version=@GlobalStaticConstants.InitSalt" />
-    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css?version=@GlobalStaticConstants.InitSalt" />
     <link rel="stylesheet" href="/lib/highlight.js/styles/default.min.css?version=@GlobalStaticConstants.InitSalt" />
-    <link rel="stylesheet" href="app.css?version=@GlobalStaticConstants.InitSalt" />
     <link rel="stylesheet" href="/js/ckeditor5/ckeditor5.css?version=@GlobalStaticConstants.InitSalt" />
-    <link rel="stylesheet" href="BlankBlazorApp.styles.css" />
     @if (ServerConfig.Value.StylesInject is not null && ServerConfig.Value.StylesInject.Length != 0)
     {
         foreach (InjectionBaseModel styleSrc in ServerConfig.Value.StylesInject.Where(x => FilterLocalPathsForInject(x.LocalPathsForInject)))
@@ -53,7 +65,8 @@
 
 <body>
     <Routes />
-    <script src="_framework/blazor.web.js" autostart="false"></script>
+    <ReconnectModal />
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function()
         {

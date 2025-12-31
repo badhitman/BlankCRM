@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>dotnet-TelegramBotService-413c9242-2635-4f2c-83a9-4a9a0f121d35</UserSecretsId>
@@ -18,19 +18,19 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.10" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
-		<PackageReference Include="NLog" Version="6.0.6" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
+		<PackageReference Include="NLog" Version="6.0.7" />
 		<PackageReference Include="NLog.Database" Version="6.0.3" />
 		<PackageReference Include="NLog.Extensions.Logging" Version="6.1.0" />
 		<PackageReference Include="NLog.Web.AspNetCore" Version="6.1.0" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-		<PackageReference Include="Telegram.Bot" Version="22.7.5" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+		<PackageReference Include="Telegram.Bot" Version="22.7.6" />
 	</ItemGroup>
 
 	<ItemGroup>

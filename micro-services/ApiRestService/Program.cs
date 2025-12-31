@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Converters;
 using System.Diagnostics.Metrics;
-using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -20,6 +19,7 @@ using SharedLib;
 using NLog.Web;
 using NLog;
 using DbcLib;
+using Microsoft.OpenApi;
 
 Console.OutputEncoding = Encoding.UTF8;
 Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
