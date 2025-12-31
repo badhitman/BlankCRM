@@ -6,6 +6,10 @@
     .links-for-files-messages i > u {
         cursor: pointer;
     }
+
+    #tg-chats-table td.mud-table-cell {
+        border-bottom: none;
+    }
 </style>
 
 @if (CurrentChat is null)
@@ -14,7 +18,7 @@
 }
 else
 {
-    <MudTable @ref="TableRef" ServerData="ServerReload" Dense Hover Bordered=false>
+    <MudTable @ref="TableRef" ServerData="ServerReload" Dense Hover id="tg-chats-table">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Сообщения (Telegram)</MudText>
             <MudSpacer />
