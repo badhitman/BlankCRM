@@ -13,7 +13,7 @@ else
                 @DirectoryData.FullPath
                 @if (DirectoryData.DirectoryItems is not null && DirectoryData.DirectoryItems.Count != 0)
                 {
-                    <sup>
+                    <sup class="badge text-bg-primary ms-2">
                         x @DirectoryData.DirectoryItems.Count ( @(GlobalToolsStandard.SizeDataAsString(DirectoryData.DirectoryItems.Sum(x => x.FileSizeBytes))) )
                     </sup>
                 }

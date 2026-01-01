@@ -2,7 +2,7 @@
 @using System.Globalization
 @inherits BlazorBusyComponentBaseAuthModel
 
-<MudTable Loading="IsBusyProgress" ServerData="ServerReload" Dense Hover>
+<MudTable Loading="IsBusyProgress" ServerData="ServerReload" Dense Hover @ref="tableRef">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Заказы</MudText>
         <MudSpacer />

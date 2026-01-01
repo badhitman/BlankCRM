@@ -3,10 +3,8 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
-using System.Globalization;
 
 namespace BlazorLib.Components.Commerce;
 
@@ -47,8 +45,17 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
     public int? OfferFilter { get; set; }
 
 
+    MudTable<OrderDocumentModelDB>? tableRef;
     List<OrderDocumentModelDB> documentsPartData = [];
     readonly List<IssueHelpDeskModelDB> IssuesCacheDump = [];
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (tableRef is not null)
+            await tableRef.ReloadServerData();
+    }
 
     async Task UpdateCacheIssues()
     {
@@ -78,7 +85,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
     async Task<TableData<OrderDocumentModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         if (CurrentUserSession is null)
-            throw new Exception("CurrentUserSession is null");
+            return new TableData<OrderDocumentModelDB>() { TotalItems = 0, Items = [] };
 
         TPaginationRequestStandardModel<TAuthRequestModel<OrdersSelectRequestModel>> req = new()
         {
