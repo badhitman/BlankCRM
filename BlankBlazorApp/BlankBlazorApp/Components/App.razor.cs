@@ -55,7 +55,10 @@ public partial class App
         {
             TResponseModel<string?> resHeaderDom = await StoreRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.HeaderHtmlDomInject);
             if (resHeaderDom.Success())
+            {
                 _headerHtmlDomInject = resHeaderDom.Response;
+                StateHasChanged();
+            }
         }
 
         if (!_isLoaded)
