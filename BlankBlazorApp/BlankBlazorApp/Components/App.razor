@@ -54,17 +54,6 @@
         };
     </script>
     <HeadOutlet />
-    @if (ServerConfig.Value.ScriptsInject is not null && ServerConfig.Value.ScriptsInject.Length != 0)
-    {
-        foreach (InjectionBaseModel scriptSrc in ServerConfig.Value.ScriptsInject.Where(x => FilterLocalPathsForInject(x.LocalPathsForInject)))
-        {
-            <script src="@scriptSrc.Src"></script>
-        }
-    }
-    @if(_headerHtmlDomInject is not null)
-    {
-        @myMarkup
-    }
 </head>
 
 <body>
@@ -110,5 +99,16 @@
         <span id="components-reconnect-current-attempt"></span> /
         <span id="components-reconnect-max-retries"></span>)
     </div>
+    @if (ServerConfig.Value.ScriptsInject is not null && ServerConfig.Value.ScriptsInject.Length != 0)
+    {
+        foreach (InjectionBaseModel scriptSrc in ServerConfig.Value.ScriptsInject.Where(x => FilterLocalPathsForInject(x.LocalPathsForInject)))
+        {
+            <script src="@scriptSrc.Src"></script>
+        }
+    }
+    @if (_headerHtmlDomInject is not null)
+    {
+        @myMarkup
+    }
 </body>
 </html>
