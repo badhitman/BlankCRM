@@ -27,7 +27,7 @@ public partial class App
     NavigationManager NavigatorRepo { get; set; } = default!;
 
 
-    string? _headerHtmlDomInject;
+    static string? _headerHtmlDomInject;
     static bool _isLoaded = false;
     static bool _includeTelegramBotWeAppScript = false;
     Uri? _uri;

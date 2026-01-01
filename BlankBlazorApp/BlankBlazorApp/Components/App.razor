@@ -61,6 +61,10 @@
             <script src="@scriptSrc.Src"></script>
         }
     }
+    @if(_headerHtmlDomInject is not null)
+    {
+        @_headerHtmlDomInject
+    }
 </head>
 
 <body>
