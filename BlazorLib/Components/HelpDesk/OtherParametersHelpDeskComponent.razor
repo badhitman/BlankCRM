@@ -113,11 +113,21 @@
     @if (ServerConfig.Value.DirectoriesReadList is not null && ServerConfig.Value.DirectoriesReadList.Length != 0)
     {
         <MudTabPanel Text="Файлы/папки">
-            @foreach (string _path in ServerConfig.Value.DirectoriesReadList)
-            {
-                <FolderRootViewComponent FolderPath="@_path" />
-                <hr />
-            }
+            <MudTable Items="@ServerConfig.Value.DirectoriesReadList">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Periodic Elements</MudText>
+                    <MudSpacer />
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd><FolderRootViewComponent FolderPath="@context" /></MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
         </MudTabPanel>
     }
 </MudTabs>
