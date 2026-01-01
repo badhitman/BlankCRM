@@ -114,18 +114,11 @@
     {
         <MudTabPanel Text="Файлы/папки">
             <MudTable Items="@ServerConfig.Value.DirectoriesReadList">
-                <ToolBarContent>
-                    <MudText Typo="Typo.h6">Periodic Elements</MudText>
-                    <MudSpacer />
-                </ToolBarContent>
-                <HeaderContent>
-                    <MudTh></MudTh>
-                </HeaderContent>
                 <RowTemplate>
                     <MudTd><FolderRootViewComponent FolderPath="@context" /></MudTd>
                 </RowTemplate>
                 <PagerContent>
-                    <MudTablePager PageSizeOptions="new int[] { 3,5, 10, int.MaxValue }" />
+                    <MudTablePager PageSizeOptions="new int[] { 3, 5, 10, int.MaxValue }" />
                 </PagerContent>
             </MudTable>
         </MudTabPanel>

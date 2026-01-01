@@ -140,8 +140,8 @@ public class StorageFilesImpl(
         if (!res.Response.IsDirectory)
             res.Response.FileSizeBytes = _root.Length;
 
-        string[] allFiles = Directory.GetFiles(req.FolderPath);
-        foreach (string _f in allFiles)
+        string[] allFiles = Directory.GetFiles(req.FolderPath), allDirectories = Directory.GetDirectories(req.FolderPath);
+        foreach (string _f in allDirectories.Union(allFiles))
         {
             FileInfo _fi = new(_f);
             res.Response.DirectoryItems.Add(new()
