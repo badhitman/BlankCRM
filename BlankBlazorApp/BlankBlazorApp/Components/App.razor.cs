@@ -28,7 +28,7 @@ public partial class App
 
 
     static string? _headerHtmlDomInject;
-    static MarkupString myMarkup = new(_headerHtmlDomInject ?? "");
+    static MarkupString myMarkup => new(_headerHtmlDomInject ?? "");
 
 
     static bool _isLoaded = false;
