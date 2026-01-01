@@ -143,13 +143,15 @@ public class StorageFilesImpl(
         string[] allFiles = Directory.GetFiles(req.FolderPath), allDirectories = Directory.GetDirectories(req.FolderPath);
         foreach (string _f in allDirectories.Union(allFiles))
         {
+            FileAttributes attr = File.GetAttributes(_f);
+            bool _isDir = (attr & FileAttributes.Directory) == FileAttributes.Directory;
             FileInfo _fi = new(_f);
             res.Response.DirectoryItems.Add(new()
             {
                 FullPath = _fi.FullName,
-                IsDirectory = (_fi.Attributes & FileAttributes.Directory) == FileAttributes.Directory,
-                FileSizeBytes = _fi.Length,
-                LastWriteTimeUtc = _fi.LastWriteTimeUtc,
+                IsDirectory = _isDir,
+                FileSizeBytes = _isDir ? default : _fi.Length,
+                LastWriteTimeUtc = _isDir ? default : _fi.LastWriteTimeUtc,
             });
         }
         return Task.FromResult(res);
