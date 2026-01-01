@@ -53,7 +53,7 @@ public static class MauiProgram
         {
             cc.BaseAddress = new Uri(_conf.AddressBaseUri ?? "localhost");
             cc.DefaultRequestHeaders.Add(_conf.HeaderName, _conf.TokenAccess);
-        })
+        });
 #if DEBUG
         .ConfigurePrimaryHttpMessageHandler(() =>
         {
