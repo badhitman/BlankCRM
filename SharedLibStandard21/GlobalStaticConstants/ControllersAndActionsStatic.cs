@@ -847,6 +847,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string HEALTH_CONTROLLER_NAME = "health";
 
         /// <summary>
+        /// Header
+        /// </summary>
+        public const string HEADER_CONTROLLER_NAME = "header";
+
+        /// <summary>
         /// Product
         /// </summary>
         public const string PRODUCT_CONTROLLER_NAME = "product";
@@ -1720,6 +1725,11 @@ public static partial class GlobalStaticConstantsRoutes
         /// Include
         /// </summary>
         public const string INCLUDE_ACTION_NAME = "include";
+
+        /// <summary>
+        /// Inject
+        /// </summary>
+        public const string INJECT_ACTION_NAME = "inject";
 
         /// <summary>
         /// Get

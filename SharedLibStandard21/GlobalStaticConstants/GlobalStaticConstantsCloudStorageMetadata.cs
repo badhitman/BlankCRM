@@ -59,6 +59,16 @@ public static partial class GlobalStaticCloudStorageMetadata
     };
 
     /// <summary>
+    /// HeaderDomInject
+    /// </summary>
+    public static StorageMetadataModel HeaderHtmlDomInject => new()
+    {
+        ApplicationName = $"{Routes.HTML_CONTROLLER_NAME}-{Routes.DOCUMENT_CONTROLLER_NAME}",
+        PropertyName = Routes.HEADER_CONTROLLER_NAME,
+        PrefixPropertyName = Routes.INJECT_ACTION_NAME,
+    };
+
+    /// <summary>
     /// Отображение отключённых рубрик
     /// </summary>
     public static StorageMetadataModel ParameterShowDisabledRubrics => new()

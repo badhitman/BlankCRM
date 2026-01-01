@@ -27,6 +27,7 @@ public partial class App
     NavigationManager NavigatorRepo { get; set; } = default!;
 
 
+    string? _headerHtmlDomInject;
     static bool _isLoaded = false;
     static bool _includeTelegramBotWeAppScript = false;
     Uri? _uri;
@@ -41,11 +42,18 @@ public partial class App
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
-    {
+    {//
         _uri = new(NavigatorRepo.Uri);
 
         if (WebConfig.Value.BaseUri is null)
             WebConfig.Value.BaseUri = NavigatorRepo.BaseUri;
+
+        if (_headerHtmlDomInject is null)
+        {
+            TResponseModel<string?> resHeaderDom = await StoreRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.HeaderHtmlDomInject);
+            if (resHeaderDom.Success())
+                _headerHtmlDomInject = resHeaderDom.Response;
+        }
 
         if (!_isLoaded)
         {

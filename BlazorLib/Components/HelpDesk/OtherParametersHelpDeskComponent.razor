@@ -16,7 +16,7 @@
         <hr />
         <TinyMCEComponent Label="Home PRIVATE" HelperText="Page for authorized users" KeyStorage="GlobalStaticCloudStorageMetadata.HomePagePrivate" />
     </MudTabPanel>
-    <MudTabPanel Text="Other">
+    <MudTabPanel Text="Parameters">
         <ul class="list-group list-group-flush">
             <li class="list-group-item my-2">
                 <div class="row row-cols-1 row-cols-md-2 g-1">
@@ -109,6 +109,9 @@
     </MudTabPanel>
     <MudTabPanel Text="SnackBar stack">
         <SnackBarHistoryComponent />
+    </MudTabPanel>
+    <MudTabPanel Text="Header inject">
+        <TextareaParameterStorageComponent HelperText="HTML DOM Header - Inject" Label="" RowsSize="20" KeyStorage="GlobalStaticCloudStorageMetadata.HeaderHtmlDomInject" />
     </MudTabPanel>
     @if (ServerConfig.Value.DirectoriesReadList is not null && ServerConfig.Value.DirectoriesReadList.Length != 0)
     {
