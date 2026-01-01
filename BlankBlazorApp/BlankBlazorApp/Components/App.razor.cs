@@ -28,6 +28,9 @@ public partial class App
 
 
     static string? _headerHtmlDomInject;
+    static string myMarkup = _headerHtmlDomInject ?? "";
+
+
     static bool _isLoaded = false;
     static bool _includeTelegramBotWeAppScript = false;
     Uri? _uri;
