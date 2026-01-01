@@ -2,11 +2,10 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using BlazorLib;
-using HtmlGenerator.html5.forms;
 using Microsoft.AspNetCore.Components;
-using SharedLib;
 using System.Net.Mail;
+using BlazorLib;
+using SharedLib;
 
 namespace BlazorWebLib.Components.Account.Pages.Manage;
 
@@ -16,10 +15,10 @@ namespace BlazorWebLib.Components.Account.Pages.Manage;
 public partial class EmailPage : BlazorBusyComponentBaseAuthModel
 {
     [SupplyParameterFromForm(FormName = "change-email")]
-     NewEmailSingleModel? Input { get; set; }
+    NewEmailSingleModel? Input { get; set; }
 
-     string? email;
-     bool isEmailConfirmed;
+    string? email;
+    bool isEmailConfirmed;
     IEnumerable<ResultMessage>? Messages;
 
     /// <inheritdoc/>

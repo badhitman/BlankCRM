@@ -39,11 +39,14 @@
                     <button type="submit" class="btn btn-link" form="send-verification-form">Отправить письмо с подтверждением</button>
                 </div>
             }
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Пожалуйста, введите новый адрес электронной почты." />
-                <label for="new-email" class="form-label">Новый E-mail</label>
-                <ValidationMessage For="() => Input.NewEmail" class="text-danger" />
-            </div>
+            @if (Input is not null)
+            {
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Пожалуйста, введите новый адрес электронной почты." />
+                    <label for="new-email" class="form-label">Новый E-mail</label>
+                    <ValidationMessage For="() => Input.NewEmail" class="text-danger" />
+                </div>
+            }
             <button type="submit" class="w-100 btn btn-lg btn-primary">Изменить e-mail</button>
         </EditForm>
     </div>
