@@ -125,7 +125,7 @@
                     <MudTd><FolderRootViewComponent FolderPath="@context" /></MudTd>
                 </RowTemplate>
                 <PagerContent>
-                    <MudTablePager />
+                    <MudTablePager PageSizeOptions="new int[] { 3,5, 10, int.MaxValue }" />
                 </PagerContent>
             </MudTable>
         </MudTabPanel>
