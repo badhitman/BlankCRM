@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>dotnet-ApiRusklimatComService-F579A158-22FE-404C-9F04-814E79A07715</UserSecretsId>
@@ -17,17 +17,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.4" />
-		<PackageReference Include="NLog" Version="5.4.0" />
-		<PackageReference Include="NLog.Extensions.Logging" Version="5.4.0" />
-		<PackageReference Include="NLog.Web.AspNetCore" Version="5.4.0" />
-		<PackageReference Include="NLog.Database" Version="5.4.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.4" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.1" />
+		<PackageReference Include="NLog" Version="6.0.7" />
+		<PackageReference Include="NLog.Extensions.Logging" Version="6.1.0" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="6.1.0" />
+		<PackageReference Include="NLog.Database" Version="6.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.1" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
