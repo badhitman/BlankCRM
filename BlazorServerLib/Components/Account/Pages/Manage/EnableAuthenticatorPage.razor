@@ -49,11 +49,14 @@ else
                     <div class="col-md-6">
                         <EditForm Model="Input" FormName="send-code" OnValidSubmit="OnValidSubmitAsync" method="post">
                             <DataAnnotationsValidator />
-                            <div class="form-floating mb-3">
-                                <InputText @bind-Value="Input.Code" class="form-control" autocomplete="off" placeholder="Пожалуйста, введите код." />
-                                <label for="code" class="control-label form-label">Проверочный код</label>
-                                <ValidationMessage For="() => Input.Code" class="text-danger" />
-                            </div>
+                            @if (Input is not null)
+                            {
+                                <div class="form-floating mb-3">
+                                    <InputText @bind-Value="Input.Code" class="form-control" autocomplete="off" placeholder="Пожалуйста, введите код." />
+                                    <label for="code" class="control-label form-label">Проверочный код</label>
+                                    <ValidationMessage For="() => Input.Code" class="text-danger" />
+                                </div>
+                            }
                             <button type="submit" class="w-100 btn btn-lg btn-primary">Проверить</button>
                             <ValidationSummary class="text-danger" role="alert" />
                         </EditForm>

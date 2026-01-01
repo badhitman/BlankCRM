@@ -18,9 +18,9 @@ public partial class TelegramUsersPage
 
 
     [SupplyParameterFromForm]
-    private SimplePaginationRequestModel Input { get; set; } = new() { FindQuery = "" };
+    SimplePaginationRequestModel? Input { get; set; }
 
-    PaginationState pagination = new PaginationState { ItemsPerPage = 15 };
+    PaginationState pagination = new() { ItemsPerPage = 15 };
     string? nameFilter;
     QuickGrid<TelegramUserViewModel>? myGrid;
     int numResults;
@@ -31,6 +31,7 @@ public partial class TelegramUsersPage
     /// <inheritdoc/>
     protected override void OnInitialized()
     {
+        Input ??= new() { FindQuery = "" };
         foodRecallProvider = async req =>
         {
             TPaginationResponseModel<TelegramUserViewModel> res = await IdentityRepo.FindUsersTelegramAsync(new SimplePaginationRequestModel()

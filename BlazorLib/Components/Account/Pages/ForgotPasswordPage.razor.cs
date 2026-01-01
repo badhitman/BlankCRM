@@ -26,13 +26,23 @@ public partial class ForgotPasswordPage
 
 
     [SupplyParameterFromForm]
-    private EmailSingleModel Input { get; set; } = new();
+    EmailSingleModel? Input { get; set; }
 
 
     List<ResultMessage> Messages = [];
 
+    /// <inheritdoc/>
+    protected override void OnInitialized()
+    {
+        Input ??= new();
+        base.OnInitialized();
+    }
+
     private async Task OnValidSubmitAsync()
     {
+        if (Input is null)
+            throw new ArgumentNullException(nameof(Input));
+
         TResponseModel<UserInfoModel>? user = await IdentityRepo.FindUserByEmailAsync(Input.Email);
         if (user.Response is null)
             RedirectManager.RedirectTo("Account/InvalidPasswordReset");

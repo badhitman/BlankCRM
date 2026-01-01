@@ -2,10 +2,11 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
-using System.Net.Mail;
 using BlazorLib;
+using HtmlGenerator.html5.forms;
+using Microsoft.AspNetCore.Components;
 using SharedLib;
+using System.Net.Mail;
 
 namespace BlazorWebLib.Components.Account.Pages.Manage;
 
@@ -15,15 +16,16 @@ namespace BlazorWebLib.Components.Account.Pages.Manage;
 public partial class EmailPage : BlazorBusyComponentBaseAuthModel
 {
     [SupplyParameterFromForm(FormName = "change-email")]
-    private NewEmailSingleModel Input { get; set; } = new();
+     NewEmailSingleModel? Input { get; set; }
 
-    private string? email;
-    private bool isEmailConfirmed;
+     string? email;
+     bool isEmailConfirmed;
     IEnumerable<ResultMessage>? Messages;
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        Input ??= new();
         await ReadCurrentUser();
         if (CurrentUserSession is null)
             throw new Exception($"Пользователь сессии не определён");
@@ -38,7 +40,7 @@ public partial class EmailPage : BlazorBusyComponentBaseAuthModel
 
     private async Task OnValidSubmitAsync()
     {
-        if (Input.NewEmail is null || Input.NewEmail == email)
+        if (Input?.NewEmail is null || Input.NewEmail == email)
         {
             Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "Ваш адрес электронной почты не изменился." }];
             return;

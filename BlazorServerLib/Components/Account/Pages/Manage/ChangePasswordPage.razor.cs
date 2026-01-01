@@ -3,8 +3,8 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
+using BlazorLib;
 
 namespace BlazorWebLib.Components.Account.Pages.Manage;
 
@@ -20,7 +20,7 @@ public partial class ChangePasswordPage
     IUsersProfilesService UsersProfilesRepo { get; set; } = default!;
 
     [SupplyParameterFromForm]
-    private ChangePasswordModel Input { get; set; } = new();
+    ChangePasswordModel? Input { get; set; }
 
 
     IEnumerable<ResultMessage>? Messages;
@@ -28,6 +28,7 @@ public partial class ChangePasswordPage
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        Input ??= new();
         TResponseModel<bool?> rest = await UsersProfilesRepo.UserHasPasswordAsync();
         //user = rest.UserInfo;
         Messages = rest.Messages;
@@ -39,6 +40,9 @@ public partial class ChangePasswordPage
 
     private async Task OnValidSubmitAsync()
     {
+        if (Input is null)
+            throw new ArgumentNullException(nameof(Input));
+
         Messages = null;
         ResponseBaseModel changePasswordResult = await UsersProfilesRepo.ChangePasswordAsync(Input.OldPassword, Input.NewPassword);
         Messages = changePasswordResult.Messages;

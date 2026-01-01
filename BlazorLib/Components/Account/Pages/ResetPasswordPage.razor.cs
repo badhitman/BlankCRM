@@ -2,10 +2,11 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.WebUtilities;
+using HtmlGenerator.html5.forms;
 using Microsoft.AspNetCore.Components;
-using System.Text;
+using Microsoft.AspNetCore.WebUtilities;
 using SharedLib;
+using System.Text;
 
 namespace BlazorLib.Components.Account.Pages;
 
@@ -18,14 +19,11 @@ public partial class ResetPasswordPage
     IdentityRedirectManager RedirectManager { get; set; } = default!;
 
     [Inject]
-    IUsersProfilesService UsersProfilesRepo { get; set; } = default!;
-
-    [Inject]
     IIdentityTransmission IdentityRepo { get; set; } = default!;
 
 
     [SupplyParameterFromForm]
-    private LoginWithCodeModel Input { get; set; } = new();
+    private LoginWithCodeModel? Input { get; set; }
 
     [SupplyParameterFromQuery]
     private string? Code { get; set; }
@@ -40,12 +38,15 @@ public partial class ResetPasswordPage
         {
             RedirectManager.RedirectTo("Account/InvalidPasswordReset");
         }
-
+        Input ??= new();
         Input.Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
     }
 
     private async Task OnValidSubmitAsync()
     {
+        if (Input is null)
+            throw new ArgumentNullException(nameof(Input));
+
         TResponseModel<UserInfoModel> user = await IdentityRepo.FindUserByEmailAsync(Input.Email);
         if (user.Response is null)
         {

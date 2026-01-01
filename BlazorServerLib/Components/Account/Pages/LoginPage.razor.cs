@@ -26,28 +26,28 @@ public partial class LoginPage(IUsersAuthenticateService UserAuthManage, Navigat
     [Inject]
     ILogger<LoginPage> Logger { get; set; } = default!;
 
-    [Inject] 
-    IStringLocalizer<Resources> localizer  { get; set; } = default!;
+    [Inject]
+    IStringLocalizer<Resources> localizer { get; set; } = default!;
 
 
     [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
+    string? ReturnUrl { get; set; }
 
     [SupplyParameterFromQuery]
-    private string? TwoFactorCode { get; set; }
+    string? TwoFactorCode { get; set; }
 
     [SupplyParameterFromQuery]
-    private string? UserAlias { get; set; }
+    string? UserAlias { get; set; }
 
     [SupplyParameterFromForm]
     // #if DEMO
     //     private UserAuthorizationModel Input { get; set; } = new() { Password = "Qwerty123!" };
     //     bool IsDebug = true;
     // #else
-    private UserAuthorizationModel Input { get; set; } = new();
+    UserAuthorizationModel? Input { get; set; }
     bool IsDebug = false;
     //#endif
 
@@ -63,6 +63,7 @@ public partial class LoginPage(IUsersAuthenticateService UserAuthManage, Navigat
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        Input ??= new();
         if (HttpMethods.IsGet(HttpContext.Request.Method) && HttpContext.User.Identity?.IsAuthenticated == true)
         {
             // Clear the existing external cookie to ensure a clean login process
@@ -77,6 +78,9 @@ public partial class LoginPage(IUsersAuthenticateService UserAuthManage, Navigat
     /// </summary>
     public async Task OnValidSubmit()
     {
+        if (Input is null)
+            throw new ArgumentNullException(nameof(Input));
+
         result = await UserAuthManage.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe);
         Messages.AddRange(result.Messages);
         if (result.RequiresTwoFactor == true)
@@ -90,6 +94,9 @@ public partial class LoginPage(IUsersAuthenticateService UserAuthManage, Navigat
 
     private async Task Login2FA()
     {
+        if (Input is null)
+            throw new ArgumentNullException(nameof(Input));
+
         if (string.IsNullOrWhiteSpace(TwoFactorCode) || string.IsNullOrWhiteSpace(UserAlias))
             return;
 
@@ -109,7 +116,7 @@ public partial class LoginPage(IUsersAuthenticateService UserAuthManage, Navigat
         else
         {
             Logger.LogWarning("Invalid authenticator code entered.");
-            Messages =[new() { TypeMessage = MessagesTypesEnum.Error, Text = "Неверный код аутентификации." }];
+            Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Неверный код аутентификации." }];
         }
     }
 }

@@ -2,13 +2,13 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components.Authorization;
+using BlazorLib;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using SharedLib;
 using System.Globalization;
 using System.Net.Mail;
 using System.Text;
-using BlazorLib;
-using SharedLib;
 
 namespace BlazorWebLib.Components.Account.Pages.Manage;
 
@@ -21,26 +21,30 @@ public partial class EnableAuthenticatorPage : BlazorBusyComponentBaseAuthModel
     AuthenticationStateProvider AuthRepo { get; set; } = default!;
 
     [SupplyParameterFromForm]
-    private CodeSingleModel Input { get; set; } = new();
+    CodeSingleModel? Input { get; set; }
 
-    private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+    const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-    private string? message;
-    private string? sharedKey;
-    private string? authenticatorUri;
-    private IEnumerable<string>? recoveryCodes;
+    string? message;
+    string? sharedKey;
+    string? authenticatorUri;
+    IEnumerable<string>? recoveryCodes;
 
     List<ResultMessage> Messages = [];
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        Input ??= new();
         await base.OnInitializedAsync();
         await LoadSharedKeyAndQrCodeUriAsync();
     }
 
     private async Task OnValidSubmitAsync()
     {
+        if (Input is null)
+            throw new ArgumentNullException(nameof(Input));
+
         // Strip spaces and hyphens
         string verificationCode = Input.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
         var is_2fa_token_valid_rest = await UsersProfilesRepo.VerifyTwoFactorTokenAsync(verificationCode);

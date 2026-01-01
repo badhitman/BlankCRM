@@ -12,11 +12,11 @@
     <div class="col-md-4">
         <section>
             <StatusMessage Messages="@result?.Messages" />
-            @if (result?.RequiresTwoFactor == true)
+            @if (result?.RequiresTwoFactor == true && Input is not null)
             {
                 <LoginWith2faComponent RememberMe="Input.RememberMe" RememberMachine ReturnUrl="@ReturnUrl" UserAlias="@result.UserId" />
             }
-            else
+            else if (Input is not null)
             {
                 <EditForm Model="Input" method="post" OnValidSubmit="OnValidSubmit" FormName="login">
                     <DataAnnotationsValidator />

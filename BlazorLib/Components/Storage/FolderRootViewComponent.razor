@@ -35,7 +35,7 @@ else
                         @foreach (DirectoryItemModel _fiElement in DirectoryData.DirectoryItems)
                         {
                             int startSegment = _fiElement.FullPath.IndexOf(DirectoryData.FullPath);
-                            <MudTreeViewItem Value="@($"{(startSegment < 0 ? _fiElement.FullPath : $"...{_fiElement.FullPath.Substring(startSegment + DirectoryData.FullPath.Length)}")} - {GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")"
+                            <MudTreeViewItem Value="@($"{(startSegment < 0 ? _fiElement.FullPath : $"...{_fiElement.FullPath.Substring(startSegment + DirectoryData.FullPath.Length)}")}{(_fiElement.IsDirectory ? "" : $" - {GlobalToolsStandard.SizeDataAsString(_fiElement.FileSizeBytes)}")}")"
                                              Icon="@(_fiElement.IsDirectory? Icons.Custom.Uncategorized.Folder : Icons.Material.Filled.InsertDriveFile)" />
                         }
                     </MudTreeView>

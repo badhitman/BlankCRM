@@ -14,7 +14,7 @@ namespace BlazorWebLib.Components.Account.Pages.Manage;
 public partial class DeletePersonalDataPage : BlazorBusyComponentBaseAuthModel
 {
     [SupplyParameterFromForm]
-    private PasswordSingleModel Input { get; set; } = new();
+    PasswordSingleModel? Input { get; set; }
 
 
     bool requirePassword;
@@ -24,8 +24,8 @@ public partial class DeletePersonalDataPage : BlazorBusyComponentBaseAuthModel
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
         Input ??= new();
+        await base.OnInitializedAsync();
         var rest = await UsersProfilesRepo.UserHasPasswordAsync();
         Messages = rest.Messages;
         requirePassword = rest.Response == true;
@@ -33,6 +33,9 @@ public partial class DeletePersonalDataPage : BlazorBusyComponentBaseAuthModel
 
     private async Task OnValidSubmitAsync()
     {
+        if (Input is null)
+            throw new ArgumentNullException(nameof(Input));
+
         var rest = await UsersProfilesRepo.CheckUserPasswordAsync(Input.Password);
         Messages = rest.Messages;
         if (requirePassword && !rest.Success())

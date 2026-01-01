@@ -21,13 +21,14 @@ public partial class SetPasswordPage : BlazorBusyComponentBaseAuthModel
 
 
     [SupplyParameterFromForm]
-    private SetNewPasswordModel Input { get; set; } = new();
+    SetNewPasswordModel? Input { get; set; }
 
     List<ResultMessage>? Messages;
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        Input ??= new();
         await base.OnInitializedAsync();
 
         TResponseModel<bool?> hasPassword = await UsersProfilesRepo.UserHasPasswordAsync();
@@ -40,6 +41,9 @@ public partial class SetPasswordPage : BlazorBusyComponentBaseAuthModel
 
     private async Task OnValidSubmitAsync()
     {
+        if (Input is null)
+            throw new ArgumentNullException(nameof(Input));
+
         Messages = null;
         ResponseBaseModel rest = await UsersProfilesRepo.AddPasswordAsync(Input.NewPassword!);
         Messages = rest.Messages;
