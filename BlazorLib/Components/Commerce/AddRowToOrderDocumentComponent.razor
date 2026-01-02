@@ -20,7 +20,7 @@ else
 {
     <div class="hstack gap-3">
         <select @bind="SelectedOfferId" class="form-select" aria-label="Добавить позиции в заказ">
-            @foreach (IGrouping<NomenclatureModelDB?, OfferModelDB> opt_g in OffersNodes)
+            @foreach (IGrouping<NomenclatureModelDB?, OfferModelDB> opt_g in OffersNodes.Where(x => x.Key?.IsDisabled != true))
             {
                 <optgroup label="@opt_g.Key!.Name">
                     @foreach (OfferModelDB opt in opt_g.Where(x => !x.IsDisabled))
