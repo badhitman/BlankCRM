@@ -23,11 +23,14 @@ else
             @foreach (IGrouping<NomenclatureModelDB?, OfferModelDB> opt_g in OffersNodes)
             {
                 <optgroup label="@opt_g.Key!.Name">
-                    @foreach (OfferModelDB opt in opt_g)
+                    @foreach (OfferModelDB opt in opt_g.Where(x => !x.IsDisabled))
                     {
                         List<OfferAvailabilityModelDB> snap = RegistersCache.Where(x => x.OfferId == opt.Id).ToList();
                         decimal _sum = snap.Sum(x => x.Quantity);
-                        <option disabled="@(!ForceAdding && _sum == 0)" value="@opt.Id">@($"{opt.GetName()}{(ShowPriceOffers ? $" ({(Math.Round((opt.Price / opt.Multiplicity), 2)).ToString(GlobalStaticConstants.RU)} руб.за {opt.Nomenclature?.BaseUnit.DescriptionInfo()})" : "")}{(ShowRegistersOffersQuantity ? $"   /   {GetOfferQuantity(opt)} {opt.OfferUnit.DescriptionInfo()}" : "")}")</option>
+                        bool _isDis = !ForceAdding && _sum == 0;
+                        <option disabled="@_isDis" value="@opt.Id">
+                            @($"{opt.GetName()}{(ShowPriceOffers ? $" ({(Math.Round((opt.Price / opt.Multiplicity), 2)).ToString(GlobalStaticConstants.RU)} руб.за {opt.Nomenclature?.BaseUnit.DescriptionInfo()})" : "")}{(ShowRegistersOffersQuantity ? $"   /   {GetOfferQuantity(opt)} {opt.OfferUnit.DescriptionInfo()}" : "")}")
+                        </option>
                     }
                 </optgroup>
             }
