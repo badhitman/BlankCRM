@@ -73,7 +73,7 @@
             }
             @if (sumConversionsOrdersAmounts != editDoc.ToWalletSum)
             {
-                <MudAlert Severity="Severity.Warning">
+                <MudAlert Severity="Severity.Error" Class="mt-2">
                     Сумма сумм по заказам [@sumConversionsOrdersAmounts] отличается от уммы зачисления!
                 </MudAlert>
             }
