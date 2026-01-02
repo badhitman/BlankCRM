@@ -14,7 +14,7 @@ public class DeleteDeliveryOrderLinkDocumentReceive(IRetailService commRepo)
     : IResponseReceive<DeleteDeliveryOrderLinkRetailDocumentsRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDeliveryOrderLinkDocumentReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDeliveryOrderLinkDocumentRetailReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(DeleteDeliveryOrderLinkRetailDocumentsRequestModel? req, CancellationToken token = default)

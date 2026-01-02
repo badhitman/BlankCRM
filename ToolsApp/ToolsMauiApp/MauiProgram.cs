@@ -53,7 +53,7 @@ public static class MauiProgram
         {
             cc.BaseAddress = new Uri(_conf.AddressBaseUri ?? "localhost");
             cc.DefaultRequestHeaders.Add(_conf.HeaderName, _conf.TokenAccess);
-        });
+        })
 #if DEBUG
         .ConfigurePrimaryHttpMessageHandler(() =>
         {
@@ -63,6 +63,7 @@ public static class MauiProgram
             };
         });
 #endif
+        ;
         // #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();

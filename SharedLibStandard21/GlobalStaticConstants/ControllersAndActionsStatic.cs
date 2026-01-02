@@ -27,6 +27,16 @@ public static partial class GlobalStaticConstantsRoutes
         public const string GLOBAL_CONTROLLER_NAME = "global";
 
         /// <summary>
+        /// Amount
+        /// </summary>
+        public const string AMOUNT_CONTROLLER_NAME = "amount";
+
+        /// <summary>
+        /// Amounts
+        /// </summary>
+        public const string AMOUNTS_CONTROLLER_NAME = "amounts";
+
+        /// <summary>
         /// Аутентификация
         /// </summary>
         public const string AUTHENTICATION_CONTROLLER_NAME = "authentication";

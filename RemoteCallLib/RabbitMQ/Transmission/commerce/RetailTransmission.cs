@@ -143,7 +143,11 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteDeliveryOrderLinkDocumentAsync(DeleteDeliveryOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
-       => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.DeleteDeliveryOrderLinkDocumentReceive, req, token: token) ?? new();
+       => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.DeleteDeliveryOrderLinkDocumentRetailReceive, req, token: token) ?? new();
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<decimal>> GetSumConversionsOrdersAmountsAsync(GetSumConversionsOrdersAmountsRequestModel req, CancellationToken token = default)
+       => await rabbitClient.MqRemoteCallAsync<TResponseModel<decimal>>(TransmissionQueues.GetSumConversionsOrdersAmountsRetailReceive, req, token: token) ?? new();
     #endregion
 
     #region Payment Document

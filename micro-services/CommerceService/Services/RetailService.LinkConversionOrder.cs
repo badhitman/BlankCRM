@@ -135,4 +135,10 @@ public partial class RetailService : IRetailService
             ? ResponseBaseModel.CreateInfo("Объект уже удалён")
             : ResponseBaseModel.CreateSuccess("Удалено");
     }
+
+    /// <inheritdoc/>
+    public async Task<TResponseModel<decimal>> GetSumConversionsOrdersAmountsAsync(GetSumConversionsOrdersAmountsRequestModel req, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
 }

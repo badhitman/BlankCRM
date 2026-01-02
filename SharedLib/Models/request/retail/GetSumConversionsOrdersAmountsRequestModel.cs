@@ -5,13 +5,13 @@
 namespace SharedLib;
 
 /// <summary>
-/// SelectConversionsOrdersLinksRetailDocumentsRequest
+/// GetSumConversionsOrdersAmountsRequest
 /// </summary>
-public class SelectConversionsOrdersLinksRetailDocumentsRequestModel
+public class GetSumConversionsOrdersAmountsRequestModel
 {
     /// <inheritdoc/>
-    public int[]? OrdersIds { get; set; }
+    public int[]? ConversionsDocumentsIds { get; set; }
 
     /// <inheritdoc/>
-    public int[]? ConversionsIds { get; set; }
+    public int[]? DeliveriesDocumentsIds { get; set; }
 }

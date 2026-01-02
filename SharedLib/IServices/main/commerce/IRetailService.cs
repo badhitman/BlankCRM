@@ -215,5 +215,8 @@ public interface IRetailService
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentRetailAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<TResponseModel<decimal>> GetSumConversionsOrdersAmountsAsync(GetSumConversionsOrdersAmountsRequestModel req, CancellationToken token = default);
     #endregion
 }
