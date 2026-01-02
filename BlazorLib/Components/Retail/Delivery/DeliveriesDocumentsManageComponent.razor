@@ -176,7 +176,7 @@
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
             <MudTd DataLabel="Получатель">
-                <MudLink Href="@($"/retail/client-card/{context.RecipientIdentityUserId}")">
+                <MudLink Href="@($"/retail/client-card/{context.RecipientIdentityUserId}")" Color="Color.Success">
                     @(UsersCache.FirstOrDefault(x => x.UserId == context.RecipientIdentityUserId)?.ToString() ?? context.RecipientIdentityUserId)
                 </MudLink>
             </MudTd>

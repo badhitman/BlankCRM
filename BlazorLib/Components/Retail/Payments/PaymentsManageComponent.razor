@@ -106,7 +106,11 @@
         </MudTd>
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
-            <MudTd DataLabel="Плательщик">@(UsersCache.FirstOrDefault(x => x.UserId == context.Wallet!.UserIdentityId)?.ToString() ?? context.Wallet!.UserIdentityId)</MudTd>
+            <MudTd DataLabel="Плательщик">
+                <MudLink Href="@($"/retail/client-card/{context.Wallet!.UserIdentityId}")" Color="Color.Success">
+                    @(UsersCache.FirstOrDefault(x => x.UserId == context.Wallet!.UserIdentityId)?.ToString() ?? context.Wallet!.UserIdentityId)
+                </MudLink>
+            </MudTd>
         }
         <MudTd DataLabel="Кошелёк">[@context.Wallet!.WalletType!.Name] '@context.Wallet.Name'</MudTd>
         <MudTd DataLabel="Сумма">@context.Amount</MudTd>

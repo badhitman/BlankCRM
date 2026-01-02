@@ -129,7 +129,7 @@
             <MudTd DataLabel="Заказчик">
                 @if (RowClickEventHandler is null)
                 {
-                    <MudLink Class="text-success-emphasis" title="Переход в карточку клиента" Href="@($"/retail/client-card/{context.BuyerIdentityUserId}")">
+                    <MudLink Color="Color.Success" title="Переход в карточку клиента" Href="@($"/retail/client-card/{context.BuyerIdentityUserId}")">
                         @(UsersCache.FirstOrDefault(x => x.UserId == context.BuyerIdentityUserId)?.ToString() ?? $"#{context.BuyerIdentityUserId}")
                     </MudLink>
                 }

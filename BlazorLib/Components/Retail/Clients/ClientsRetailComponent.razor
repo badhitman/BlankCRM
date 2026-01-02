@@ -16,12 +16,12 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="ФИО">
-            <MudLink Href="@($"/retail/client-card/{context.UserId}")">@context.GivenName @context.Surname @context.Patronymic</MudLink>
+            <MudLink Href="@($"/retail/client-card/{context.UserId}")" Color="Color.Success">@context.GivenName @context.Surname @context.Patronymic</MudLink>
         </MudTd>
         <MudTd DataLabel="Username">
             @if (!@context.UserName.EndsWith(GlobalStaticConstants.FakeHost))
             {
-                <MudLink Href="@($"/retail/client-card/{context.UserId}")">@context.UserName</MudLink>
+                <MudLink Href="@($"/retail/client-card/{context.UserId}")" Color="Color.Success">@context.UserName</MudLink>
             }
         </MudTd>
         <MudTd DataLabel="Баланс">
@@ -29,7 +29,7 @@
         </MudTd>
         <MudTd DataLabel="Контакты">
             <span class="me-2">
-                <MudLink Href="@($"/retail/client-card/{context.UserId}")">
+                <MudLink Href="@($"/retail/client-card/{context.UserId}")" Color="Color.Success">
                     @context.PhoneNumber
                     @if (context.RequestChangePhone != context.PhoneNumber)
                     {
