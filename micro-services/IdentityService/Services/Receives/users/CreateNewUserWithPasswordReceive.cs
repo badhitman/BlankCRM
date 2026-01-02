@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Регистрация нового пользователя с паролем (Identity)
 /// </summary>
-public class CreateNewUserWithPasswordReceive(IIdentityTools idRepo, ILogger<CreateNewUserWithPasswordReceive> loggerRepo)
+public class CreateNewUserWithPasswordReceive(IIdentityTools idRepo)
     : IResponseReceive<RegisterNewUserPasswordModel?, RegistrationNewUserResponseModel?>
 {
     /// <inheritdoc/>
