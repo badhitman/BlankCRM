@@ -88,7 +88,9 @@
         <MudTd DataLabel="Номер">
             @if (RowClickEventHandler is null)
             {
-                <a href="/retail/order-document/@context.Id">@context.ExternalDocumentId</a>
+                <MudLink Href="@($"/retail/order-document/{context.Id}")">
+                    @context.ExternalDocumentId
+                </MudLink>
             }
             else
             {
@@ -98,7 +100,9 @@
         <MudTd DataLabel="Статус">
             @if (RowClickEventHandler is null)
             {
-                <a href="/retail/order-document/@context.Id">@context.StatusDocument?.DescriptionInfo()</a>
+                <MudLink Href="@($"/retail/order-document/{context.Id}")">
+                    @context.StatusDocument?.DescriptionInfo()
+                </MudLink>
             }
             else
             {
@@ -108,7 +112,9 @@
         <MudTd DataLabel="Дата">
             @if (RowClickEventHandler is null)
             {
-                <a href="/retail/order-document/@context.Id">@ddt.ToString("d", GlobalStaticConstants.RU)</a>
+                <MudLink Href="@($"/retail/order-document/{context.Id}")">
+                    @ddt.ToString("d", GlobalStaticConstants.RU)
+                </MudLink>
             }
             else
             {
