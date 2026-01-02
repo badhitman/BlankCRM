@@ -3,9 +3,7 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
-using Newtonsoft.Json;
 using SharedLib;
 
 namespace BlazorLib.Components.Retail.OrdersLinks;
@@ -28,7 +26,6 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
     bool
         _visibleIncludeExistConversion,
         _visibleCreateNewConversion;
-
 
     /// <summary>
     /// UsersCache
@@ -197,10 +194,10 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
 
         await SetBusyAsync(token: token);
         TPaginationResponseModel<ConversionOrderRetailLinkModelDB> res = await RetailRepo.SelectConversionsOrdersDocumentsLinksRetailAsync(req, token);
-       
+
         if (res.Response is not null && res.Response.Count != 0)
             await CacheUsersUpdate([.. res.Response.Select(x => x.ConversionDocument!.FromWallet!.UserIdentityId).Union(res.Response.Select(x => x.ConversionDocument!.ToWallet!.UserIdentityId))]);
-       
+
         await SetBusyAsync(false, token);
 
         if (!res.Status.Success())

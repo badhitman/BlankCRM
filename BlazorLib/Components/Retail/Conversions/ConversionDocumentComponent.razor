@@ -33,7 +33,7 @@
                                @bind-value:event="oninput"
                                @onfocus=OnFocusFromWalletSum
                                disabled="@IsBusyProgress"
-                               readonly="@(editDoc.FromWalletId <= 0)"
+                               readonly="@readonlyInputFromWalletSum"
                                type="number"
                                class="form-control"
                                id="exampleFormControlInputFromWalletSum"
@@ -53,7 +53,7 @@
                                @bind-value:event="oninput"
                                @onfocus=OnFocusToWalletSum
                                disabled="@IsBusyProgress"
-                               readonly="@(editDoc.ToWalletId <= 0)"
+                               readonly="@readonlyInputToWalletSum"
                                type="number"
                                class="form-control"
                                id="exampleFormControlInputToWalletSum"
@@ -69,6 +69,12 @@
             {
                 <MudAlert Severity="Severity.Info">
                     Обмен (@(editDoc.FromWalletSum < editDoc.ToWalletSum ? "повышающий" : "понижающий")) по курсу: @(Math.Round(editDoc.ToWalletSum / editDoc.FromWalletSum, 4))
+                </MudAlert>
+            }
+            @if (sumConversionsOrdersAmounts != editDoc.ToWalletSum)
+            {
+                <MudAlert Severity="Severity.Warning">
+                    Сумма сумм по заказам [@sumConversionsOrdersAmounts] отличается от уммы зачисления!
                 </MudAlert>
             }
             <div class="d-grid gap-2 d-md-flex justify-content-md-end my-3">
@@ -90,7 +96,7 @@
         }
         @if (ConversionDocumentId > 0)
         {
-            <OrdersConversionsLinksTableComponent ConversionId="ConversionDocumentId" />
+            <OrdersConversionsLinksTableComponent ConversionId="ConversionDocumentId" ReloadOrdersLinks="ReloadOrdersLinksAction" />
         }
         @if (currentChatTelegrams.Count != 0)
         {

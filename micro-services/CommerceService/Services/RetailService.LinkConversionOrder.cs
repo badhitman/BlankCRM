@@ -139,6 +139,18 @@ public partial class RetailService : IRetailService
     /// <inheritdoc/>
     public async Task<TResponseModel<decimal>> GetSumConversionsOrdersAmountsAsync(GetSumConversionsOrdersAmountsRequestModel req, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<ConversionOrderRetailLinkModelDB> q = context.ConversionsOrdersLinksRetail.AsQueryable();
+
+        if (req.ConversionsDocumentsIds is not null && req.ConversionsDocumentsIds.Length != 0)
+            q = q.Where(x => req.ConversionsDocumentsIds.Contains(x.ConversionDocumentId));
+
+        if (req.OrdersDocumentsIds is not null && req.OrdersDocumentsIds.Length != 0)
+            q = q.Where(x => req.OrdersDocumentsIds.Contains(x.OrderDocumentId));
+
+        return new()
+        {
+            Response = await q.AnyAsync(cancellationToken: token) ? await q.SumAsync(x => x.AmountPayment, cancellationToken: token) : 0
+        };
     }
 }

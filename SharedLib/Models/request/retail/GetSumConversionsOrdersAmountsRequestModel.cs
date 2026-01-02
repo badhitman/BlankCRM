@@ -13,5 +13,5 @@ public class GetSumConversionsOrdersAmountsRequestModel
     public int[]? ConversionsDocumentsIds { get; set; }
 
     /// <inheritdoc/>
-    public int[]? DeliveriesDocumentsIds { get; set; }
+    public int[]? OrdersDocumentsIds { get; set; }
 }

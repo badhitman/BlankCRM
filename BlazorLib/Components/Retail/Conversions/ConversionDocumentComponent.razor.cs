@@ -42,6 +42,10 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     UserInfoModel? userSender, userRecipient;
     WalletSelectInputComponent? senderWalletRef, recipientWalletRef;
     readonly List<ChatTelegramModelDB> currentChatTelegrams = [];
+    decimal sumConversionsOrdersAmounts;
+
+    bool readonlyInputFromWalletSum => editDoc is null || editDoc.FromWalletId <= 0;
+    bool readonlyInputToWalletSum => editDoc is null || editDoc.ToWalletId <= 0;
 
     bool CannotSave
     {
@@ -84,6 +88,15 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
         }
     }
 
+    async void ReloadOrdersLinksAction()
+    {
+        TResponseModel<decimal> _sumConversionsOrdersAmounts = await RetailRepo.GetSumConversionsOrdersAmountsAsync(new() { ConversionsDocumentsIds = [ConversionDocumentId] });
+        if (_sumConversionsOrdersAmounts.Success())
+            sumConversionsOrdersAmounts = _sumConversionsOrdersAmounts.Response;
+
+        StateHasChanged();
+    }
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
@@ -106,6 +119,9 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
             {
                 currentDoc = getDocument.Response.First();
                 datePayment = currentDoc.DateDocument;
+                TResponseModel<decimal> _sumConversionsOrdersAmounts = await RetailRepo.GetSumConversionsOrdersAmountsAsync(new() { ConversionsDocumentsIds = [ConversionDocumentId] });
+                if (_sumConversionsOrdersAmounts.Success())
+                    sumConversionsOrdersAmounts = _sumConversionsOrdersAmounts.Response;
             }
 
             if (currentDoc?.FromWallet is null || currentDoc.ToWallet is null)

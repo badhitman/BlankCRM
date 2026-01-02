@@ -47,9 +47,10 @@
         <MudTd DataLabel="Дата">
             @if (RowClickEventHandler is null)
             {
-                <a href="/retail/conversion-document/@context.Id">
+
+                <MudLink Href="@($"/retail/conversion-document/{context.Id}")">
                     @ddt.ToString("d", GlobalStaticConstants.RU)
-                </a>
+                </MudLink>
             }
             else
             {
@@ -59,7 +60,9 @@
         <MudTd DataLabel="Примечание">
             @if (RowClickEventHandler is null)
             {
-                <a href="/retail/conversion-document/@context.Id">@context.Name</a>
+                <MudLink Href="@($"/retail/conversion-document/{context.Id}")">
+                    @context.Name
+                </MudLink>
             }
             else
             {
