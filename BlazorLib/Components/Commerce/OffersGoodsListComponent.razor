@@ -45,7 +45,9 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Название">
-                <a href="/nomenclature/offer-card/@context.Id">@context.Name</a>
+                <MudLink Href="@($"/nomenclature/offer-card/{context.Id}")" Class="@(context.IsDisabled ? "text-decoration-line-through opacity-50" : "")">
+                    @context.Name
+                </MudLink>
                 <AuthorizeView Context="col" Roles="@($"{GlobalStaticConstantsRoles.Roles.Admin}")">
                     <Authorized>
                         <sup class="text-secondary-emphasis">@context.QuantitiesTemplate</sup>
