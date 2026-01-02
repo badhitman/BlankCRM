@@ -83,6 +83,11 @@ public partial class RetailService : IRetailService
 
         if ((offOrdersStatuses.Contains(_newStatus) && offOrdersStatuses.Contains(_oldStatus)) || (!offOrdersStatuses.Contains(_newStatus) && !offOrdersStatuses.Contains(_oldStatus)))
         {
+            if (lockers.Count != 0)
+            {
+                context.RemoveRange(lockers);
+                await context.SaveChangesAsync(token);
+            }
             await transaction.CommitAsync(token);
             return new() { Response = req.Id };
         }
