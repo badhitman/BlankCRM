@@ -105,16 +105,18 @@
             DateTime? udt = context.LastUpdatedAtUTC?.GetCustomTime();
         }
         <MudTd DataLabel="Тип/Статус">
-            @context.DeliveryType.DescriptionInfo()
-            @if (context.DeliveryStatus.HasValue)
-            {
-                <span class="badge text-bg-info">/ @(context.DeliveryStatus.DescriptionInfo())</span>
-            }
+            <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
+                @context.DeliveryType.DescriptionInfo()
+                @if (context.DeliveryStatus.HasValue)
+                {
+                    <span class="badge text-bg-info">/ @(context.DeliveryStatus.DescriptionInfo())</span>
+                }
+            </MudLink>
         </MudTd>
         <MudTd DataLabel="Дата">
             @if (RowClickEventHandler is null)
             {
-                <a href="/retail/delivery-document/@context.Id">
+                <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
                     <span>
                         @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
                     </span>
@@ -125,20 +127,22 @@
                             @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
                         </span>
                     }
-                </a>
+                </MudLink>
             }
             else
             {
-                <span>
-                    @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
-                </span>
-                @if (udt.HasValue && udt != default)
-                {
-                    <text>/</text>
+                <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
                     <span>
-                        @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
+                        @cdt.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@cdt.ToString("t", GlobalStaticConstants.RU)</sup>
                     </span>
-                }
+                    @if (udt.HasValue && udt != default)
+                    {
+                        <text>/</text>
+                        <span>
+                            @udt.Value.ToString("d", GlobalStaticConstants.RU) <sup class="text-secondary">@udt.Value.ToString("t", GlobalStaticConstants.RU)</sup>
+                        </span>
+                    }
+                </MudLink>
             }
 
             @if (FilterOrderId.HasValue && FilterOrderId.Value > 0)
@@ -155,7 +159,9 @@
             }
         </MudTd>
         <MudTd DataLabel="Вес">
-            @context.WeightShipping <code title="расчётный вес по строкам документа">(@(context.Rows is null || context.Rows.Count == 0 ? 0 : context.Rows.Sum(x => x.WeightOffer)))</code>
+            <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
+                @context.WeightShipping <code title="расчётный вес по строкам документа">(@(context.Rows is null || context.Rows.Count == 0 ? 0 : context.Rows.Sum(x => x.WeightOffer)))</code>
+            </MudLink>
         </MudTd>
         <MudTd DataLabel="Заказ(ы)">
             @if (context.OrdersLinks is null)

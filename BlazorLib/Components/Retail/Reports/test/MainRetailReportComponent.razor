@@ -41,7 +41,7 @@ else
                         <th scope="row">Другое</th>
                         <td>
                             x @(ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт. @((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount).ToString("C"))
-                            <span class="ms-2">(@(Math.Round((ReportData.PaidNoSitePaymentsSumAmount / 120), 2)))</span>
+                            <span class="ms-2">(@(Math.Round(((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120), 2)))</span>
                         </td>
                     </tr>
                     <tr>

@@ -57,7 +57,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
             if (editDoc.DeliveryType != DeliveryTypesEnum.Pickup && string.IsNullOrWhiteSpace(editDoc.KladrCode) && string.IsNullOrWhiteSpace(editDoc.AddressUserComment))
                 return true;
 
-            if (string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId) || editDoc.WarehouseId <= 0 || editDoc.WeightShipping <= 0)
+            if (string.IsNullOrWhiteSpace(editDoc.RecipientIdentityUserId) || editDoc.WarehouseId <= 0)
                 return true;
 
             return

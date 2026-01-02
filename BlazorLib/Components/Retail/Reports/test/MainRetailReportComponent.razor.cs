@@ -285,7 +285,7 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         HtmlGenerator.html5.tables.table my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
 
         my_table.TBody.AddRow(["Оплачено \"На сайте\"", $"x {ReportData.PaidOnSitePaymentsCount} шт. {ReportData.PaidOnSitePaymentsSumAmount:C} ({Math.Round((ReportData.PaidOnSitePaymentsSumAmount / 120), 2)})"]);
-        my_table.TBody.AddRow(["Другое", $"x {ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount} шт. {ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount:C} ({Math.Round(ReportData.PaidNoSitePaymentsSumAmount / 120, 2)})"]);
+        my_table.TBody.AddRow(["Другое", $"x {ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount} шт. {ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount:C} ({Math.Round((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
         my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Платежи", $"x {ReportData.PaidNoSitePaymentsCount} шт. {ReportData.PaidNoSitePaymentsSumAmount:C} ({Math.Round(ReportData.PaidNoSitePaymentsSumAmount / 120, 2)})"]);
         my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Перевод/конвертация (поступило)", $"x {ReportData.ConversionsCount} {ReportData.ConversionsSumAmount:C} ({(Math.Round((ReportData.ConversionsSumAmount / 120), 2))})"]);
         my_table.TBody.AddRow(["Итого:", $"{Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2):C} ({Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
