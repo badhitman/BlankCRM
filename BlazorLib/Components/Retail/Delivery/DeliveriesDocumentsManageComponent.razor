@@ -159,8 +159,8 @@
             }
         </MudTd>
         <MudTd DataLabel="Вес">
-            <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
-                @context.WeightShipping <code title="расчётный вес по строкам документа">(@(context.Rows is null || context.Rows.Count == 0 ? 0 : context.Rows.Sum(x => x.WeightOffer)))</code>
+            <MudLink Href="@($"/retail/delivery-document/{context.Id}")" title="вес отгрузки (в т.ч. по строкам документа)">
+                @context.WeightShipping <code>(@(context.Rows is null || context.Rows.Count == 0 ? 0 : context.Rows.Sum(x => x.WeightOffer)))</code>
             </MudLink>
         </MudTd>
         <MudTd DataLabel="Заказ(ы)">
