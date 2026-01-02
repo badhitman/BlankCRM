@@ -15,11 +15,13 @@
         <MudTh>Контакты</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="ФИО"><a href="/retail/client-card/@context.UserId">@context.GivenName @context.Surname @context.Patronymic</a></MudTd>
+        <MudTd DataLabel="ФИО">
+            <MudLink Href="@($"/retail/client-card/{context.UserId}")">@context.GivenName @context.Surname @context.Patronymic</MudLink>
+        </MudTd>
         <MudTd DataLabel="Username">
             @if (!@context.UserName.EndsWith(GlobalStaticConstants.FakeHost))
             {
-                <a href="/retail/client-card/@context.UserId">@context.UserName</a>
+                <MudLink Href="@($"/retail/client-card/{context.UserId}")">@context.UserName</MudLink>
             }
         </MudTd>
         <MudTd DataLabel="Баланс">
