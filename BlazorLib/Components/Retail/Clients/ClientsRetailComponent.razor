@@ -29,11 +29,13 @@
         </MudTd>
         <MudTd DataLabel="Контакты">
             <span class="me-2">
-                @context.PhoneNumber
-                @if (context.RequestChangePhone != context.PhoneNumber)
-                {
-                    <strong class="ms-2">запрос на изменение телефона: @context.RequestChangePhone</strong>
-                }
+                <MudLink Href="@($"/retail/client-card/{context.UserId}")">
+                    @context.PhoneNumber
+                    @if (context.RequestChangePhone != context.PhoneNumber)
+                    {
+                        <strong class="ms-2">запрос на изменение телефона: @context.RequestChangePhone</strong>
+                    }
+                </MudLink>
             </span>
             <span class="me-2">@context.KladrTitle @context.AddressUserComment</span>
         </MudTd>

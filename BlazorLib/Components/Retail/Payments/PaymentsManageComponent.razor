@@ -73,7 +73,7 @@
         <MudTd DataLabel="Тип">
             @if (RowClickEventHandler is null)
             {
-                <a href="/retail/payment-document/@context.Id">@context.TypePayment.DescriptionInfo()</a>
+                <MudLink Href="@($"/retail/payment-document/{context.Id}")">@context.TypePayment.DescriptionInfo()</MudLink>
             }
             else
             {
@@ -83,7 +83,7 @@
         <MudTd DataLabel="Статус">
             @if (RowClickEventHandler is null)
             {
-                <a href="/retail/payment-document/@context.Id">@context.StatusPayment.DescriptionInfo()</a>
+                <MudLink Href="@($"/retail/payment-document/{context.Id}")">@context.StatusPayment.DescriptionInfo()</MudLink>
             }
             else
             {
@@ -93,7 +93,7 @@
         <MudTd DataLabel="Дата">
             @if (RowClickEventHandler is null)
             {
-                <a href="/retail/payment-document/@context.Id">@pdt.ToString("d", GlobalStaticConstants.RU)</a>
+                <MudLink Href="@($"/retail/payment-document/{context.Id}")">@pdt.ToString("d", GlobalStaticConstants.RU)</MudLink>
             }
             else
             {
