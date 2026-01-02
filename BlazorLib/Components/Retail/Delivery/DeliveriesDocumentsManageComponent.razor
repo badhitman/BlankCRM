@@ -107,11 +107,11 @@
         <MudTd DataLabel="Тип/Статус">
             <MudLink Href="@($"/retail/delivery-document/{context.Id}")">
                 @context.DeliveryType.DescriptionInfo()
-                @if (context.DeliveryStatus.HasValue)
-                {
-                    <span class="badge text-bg-info">/ @(context.DeliveryStatus.DescriptionInfo())</span>
-                }
             </MudLink>
+            @if (context.DeliveryStatus.HasValue)
+            {
+                <span class="badge text-bg-info ms-2">@(context.DeliveryStatus.DescriptionInfo())</span>
+            }
         </MudTd>
         <MudTd DataLabel="Дата">
             @if (RowClickEventHandler is null)
@@ -176,7 +176,9 @@
         @if (string.IsNullOrWhiteSpace(ClientId))
         {
             <MudTd DataLabel="Получатель">
-                @(UsersCache.FirstOrDefault(x => x.UserId == context.RecipientIdentityUserId)?.ToString() ?? context.RecipientIdentityUserId)
+                <MudLink Href="@($"/retail/client-card/{context.RecipientIdentityUserId}")">
+                    @(UsersCache.FirstOrDefault(x => x.UserId == context.RecipientIdentityUserId)?.ToString() ?? context.RecipientIdentityUserId)
+                </MudLink>
             </MudTd>
         }
         <MudTd DataLabel="Стоимость доставки">@context.ShippingCost</MudTd>
