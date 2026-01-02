@@ -18,11 +18,11 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 	  <RunAOTCompilation>True</RunAOTCompilation>
 		<WasmStripILAfterAOT>True</WasmStripILAfterAOT>
-		<WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+		<WarningsAsErrors>$(WarningsAsErrors);NU1605;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;CA2016;</WarningsAsErrors>
+	  <WarningsAsErrors>$(WarningsAsErrors);NU1605;</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>

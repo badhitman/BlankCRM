@@ -47,14 +47,14 @@
 	
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<WarningsNotAsErrors>NU1605;CA2016;</WarningsNotAsErrors>
+		<WarningsNotAsErrors>NU1605;</WarningsNotAsErrors>
 		<EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 		<SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
-		<WarningsNotAsErrors>NU1605;CA2016;</WarningsNotAsErrors>
+		<WarningsNotAsErrors>NU1605;</WarningsNotAsErrors>
 		<Optimize>False</Optimize>
 		<AndroidPackageFormat>apk</AndroidPackageFormat>
 		<RunAOTCompilation>False</RunAOTCompilation>
@@ -64,34 +64,34 @@
 	
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<WarningsNotAsErrors>NU1605;CA2016;</WarningsNotAsErrors>
+		<WarningsNotAsErrors>NU1605;</WarningsNotAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-maccatalyst|AnyCPU'">
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<WarningsNotAsErrors>NU1605;CA2016;</WarningsNotAsErrors>
+		<WarningsNotAsErrors>NU1605;</WarningsNotAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-windows10.0.19041.0|AnyCPU'">
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<WarningsNotAsErrors>NU1605;CA2016;</WarningsNotAsErrors>
+		<WarningsNotAsErrors>NU1605;</WarningsNotAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<WarningsNotAsErrors>NU1605;CA2016;</WarningsNotAsErrors>
+		<WarningsNotAsErrors>NU1605;</WarningsNotAsErrors>
 		<Optimize>False</Optimize>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-maccatalyst|AnyCPU'">
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<WarningsNotAsErrors>NU1605;CA2016;</WarningsNotAsErrors>
+		<WarningsNotAsErrors>NU1605;</WarningsNotAsErrors>
 		<Optimize>False</Optimize>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-windows10.0.19041.0|AnyCPU'">
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<WarningsNotAsErrors>NU1605;CA2016;</WarningsNotAsErrors>
+		<WarningsNotAsErrors>NU1605;</WarningsNotAsErrors>
 		<Optimize>False</Optimize>
 	</PropertyGroup>
 	<ItemGroup>
