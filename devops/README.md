@@ -14,11 +14,11 @@ ufw allow 80
 ufw enable
 ```
 
-#### .NET9
+#### .NET10
 ref - https://learn.microsoft.com/ru-ru/dotnet/core/install/linux-ubuntu-install?tabs=dotnet9&pivots=os-linux-ubuntu-2404
 ```
 sudo add-apt-repository ppa:dotnet/backports
-sudo apt update && sudo apt install -y dotnet-sdk-9.0
+sudo apt update && sudo apt install -y dotnet-sdk-10.0
 ```
 
 #### Docker
