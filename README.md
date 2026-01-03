@@ -163,6 +163,10 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 - Тэги. Общая система тегов для прикладных объектов.
 - Обслуживает [функционал хранения файлов](#хранение-файлов): MongoDB.Driver.GridFS
 
+#### [FilesIndexingService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/FilesIndexingService)
+Индексация файлов.
+- извлечение текстовых данных из Excel
+
 #### [CommerceService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/CommerceService)
 - Справочник номенклатуры и офферов с настраиваемыми правилами ценообразования. Клиенты ведут свой перечень юридических лиц с разбивкой по филиалам, для которых можно формировать заказы. Документы после создания сразу попадают в основную СЭД, где с ними можно работать: менять статус, вести диалог с клиентом и т.д.
 - Остатки на складах в разрезе номенклатуры и офферов
