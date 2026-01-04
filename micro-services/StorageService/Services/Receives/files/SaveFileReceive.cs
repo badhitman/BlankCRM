@@ -21,6 +21,7 @@ public class SaveFileReceive(ILogger<SaveFileReceive> LoggerRepo, IFilesStorage 
     public async Task<TResponseModel<StorageFileModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<StorageFileMetadataModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         return await serializeStorageRepo.SaveFileAsync(req, token);
     }

@@ -12,7 +12,8 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// Save parameter
 /// </summary>
-public class SaveParameterReceive(IParametersStorage serializeStorageRepo, ILogger<SaveParameterReceive> LoggerRepo) : IResponseReceive<StorageCloudParameterPayloadModel?, TResponseModel<int?>?>
+public class SaveParameterReceive(IParametersStorage serializeStorageRepo, ILogger<SaveParameterReceive> LoggerRepo) 
+    : IResponseReceive<StorageCloudParameterPayloadModel?, TResponseModel<int?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SaveCloudParameterReceive;
@@ -21,6 +22,7 @@ public class SaveParameterReceive(IParametersStorage serializeStorageRepo, ILogg
     public async Task<TResponseModel<int?>?> ResponseHandleActionAsync(StorageCloudParameterPayloadModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
         req.Normalize();
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         Regex rx = new(@"\s+", RegexOptions.Compiled);

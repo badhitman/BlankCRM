@@ -21,6 +21,7 @@ public class FilesSelectReceive(ILogger<FilesSelectReceive> loggerRepo, IFilesSt
     public async Task<TPaginationResponseModel<StorageFileModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         return await serializeStorageRepo.FilesSelectAsync(req, token);
     }

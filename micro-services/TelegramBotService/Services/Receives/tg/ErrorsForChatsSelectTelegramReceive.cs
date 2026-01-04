@@ -11,7 +11,7 @@ namespace Transmission.Receives.telegram;
 /// <summary>
 /// Получить ошибки отправок сообщений (для чатов)
 /// </summary>
-public class ErrorsForChatsSelectTelegramReceive(ITelegramBotService tgRepo, IFilesIndexing indexingRepo)
+public class ErrorsForChatsSelectTelegramReceive(ITelegramBotService tgRepo)
     : IResponseReceive<TPaginationRequestStandardModel<long[]>?, TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>?>
 {
     /// <inheritdoc/>
@@ -21,9 +21,6 @@ public class ErrorsForChatsSelectTelegramReceive(ITelegramBotService tgRepo, IFi
     public async Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<long[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
 
         return await tgRepo.ErrorsForChatsSelectTelegramAsync(req, token);
     }

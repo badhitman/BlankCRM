@@ -11,7 +11,7 @@ namespace Transmission.Receives.telegram;
 /// <summary>
 /// Получить чаты
 /// </summary>
-public class ChatsSelectTelegramReceive(ITelegramBotService tgRepo, IFilesIndexing indexingRepo)
+public class ChatsSelectTelegramReceive(ITelegramBotService tgRepo)
     : IResponseReceive<TPaginationRequestStandardModel<string?>?, TPaginationResponseModel<ChatTelegramModelDB>?>
 {
     /// <inheritdoc/>
@@ -21,9 +21,6 @@ public class ChatsSelectTelegramReceive(ITelegramBotService tgRepo, IFilesIndexi
     public async Task<TPaginationResponseModel<ChatTelegramModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<string?>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
 
         return await tgRepo.ChatsSelectTelegramAsync(req, token);
     }

@@ -11,7 +11,7 @@ namespace Transmission.Receives.telegram;
 /// <summary>
 /// Прочитать данные чата
 /// </summary>
-public class ChatTelegramReadReceive(ITelegramBotService tgRepo, IFilesIndexing indexingRepo)
+public class ChatTelegramReadReceive(ITelegramBotService tgRepo)
     : IResponseReceive<int, ChatTelegramModelDB?>
 {
     /// <inheritdoc/>
@@ -22,9 +22,6 @@ public class ChatTelegramReadReceive(ITelegramBotService tgRepo, IFilesIndexing 
     {
         if (chat_id <= 0)
             throw new Exception($"chat id incorrect: {chat_id}");
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, chat_id.GetType().Name, JsonConvert.SerializeObject(chat_id));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
 
         return await tgRepo.ChatTelegramReadAsync(chat_id, token);
     }

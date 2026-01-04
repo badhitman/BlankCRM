@@ -14,7 +14,7 @@ namespace Transmission.Receives.storage;
 /// <remarks>
 /// Общий размер и количество группируется по AppName
 /// </remarks>
-public class FilesAreaGetMetadataReceive(ILogger<FilesSelectReceive> loggerRepo, IFilesStorage serializeStorageRepo)
+public class FilesAreaGetMetadataReceive(ILogger<FilesSelectReceive> loggerRepo, IFilesStorage serializeStorageRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<FilesAreaMetadataRequestModel?, TResponseModel<FilesAreaMetadataModel[]>?>
 {
     /// <inheritdoc/>
@@ -29,6 +29,10 @@ public class FilesAreaGetMetadataReceive(ILogger<FilesSelectReceive> loggerRepo,
     public async Task<TResponseModel<FilesAreaMetadataModel[]>?> ResponseHandleActionAsync(FilesAreaMetadataRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         return await serializeStorageRepo.FilesAreaGetMetadataAsync(req, token);
     }

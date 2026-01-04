@@ -21,6 +21,7 @@ public class GetDirectoryInfoReceive(ILogger<FilesSelectReceive> loggerRepo, IFi
     public async Task<TResponseModel<DirectoryReadResponseModel>?> ResponseHandleActionAsync(DirectoryReadRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         return await serializeStorageRepo.GetDirectoryInfoAsync(req, token);
     }

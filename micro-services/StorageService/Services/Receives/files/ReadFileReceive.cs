@@ -11,7 +11,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// Read file
 /// </summary>
-public class ReadFileReceive(    ILogger<ReadFileReceive> LoggerRepo, IFilesStorage serializeStorageRepo) 
+public class ReadFileReceive(ILogger<ReadFileReceive> LoggerRepo, IFilesStorage serializeStorageRepo)
     : IResponseReceive<TAuthRequestModel<RequestFileReadModel>?, TResponseModel<FileContentModel>?>
 {
     /// <inheritdoc/>
@@ -21,6 +21,7 @@ public class ReadFileReceive(    ILogger<ReadFileReceive> LoggerRepo, IFilesStor
     public async Task<TResponseModel<FileContentModel>?> ResponseHandleActionAsync(TAuthRequestModel<RequestFileReadModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         return await serializeStorageRepo.ReadFileAsync(req, token);
     }

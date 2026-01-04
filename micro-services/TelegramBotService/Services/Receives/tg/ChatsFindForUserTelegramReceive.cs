@@ -11,7 +11,7 @@ namespace Transmission.Receives.telegram;
 /// <summary>
 /// Найти чаты пользователей
 /// </summary>
-public class ChatsFindForUserTelegramReceive(ITelegramBotService tgRepo, IFilesIndexing indexingRepo)
+public class ChatsFindForUserTelegramReceive(ITelegramBotService tgRepo)
     : IResponseReceive<long[]?, List<ChatTelegramModelDB>?>
 {
     /// <inheritdoc/>
@@ -21,9 +21,6 @@ public class ChatsFindForUserTelegramReceive(ITelegramBotService tgRepo, IFilesI
     public async Task<List<ChatTelegramModelDB>?> ResponseHandleActionAsync(long[]? chats_ids, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(chats_ids);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, chats_ids.GetType().Name, JsonConvert.SerializeObject(chats_ids));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
 
         return await tgRepo.ChatsFindForUserTelegramAsync(chats_ids, token);
     }

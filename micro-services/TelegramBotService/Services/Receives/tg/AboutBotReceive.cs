@@ -10,7 +10,7 @@ namespace Transmission.Receives.telegram;
 /// <summary>
 /// Получить Username TelegramBot
 /// </summary>
-public class AboutBotReceive(ITelegramBotService tgRepo, IFilesIndexing indexingRepo)
+public class AboutBotReceive(ITelegramBotService tgRepo)
     : IResponseReceive<object?, TResponseModel<UserTelegramBaseModel>?>
 {
     /// <inheritdoc/>
@@ -19,9 +19,7 @@ public class AboutBotReceive(ITelegramBotService tgRepo, IFilesIndexing indexing
     /// <inheritdoc/>
     public async Task<TResponseModel<UserTelegramBaseModel>?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)
     {
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name);
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name);        
         return await tgRepo.AboutBotAsync(token);
     }
 }

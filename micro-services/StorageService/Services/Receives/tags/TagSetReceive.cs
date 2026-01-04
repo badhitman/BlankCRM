@@ -6,14 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
-using DbcLib;
 
 namespace Transmission.Receives.storage;
 
 /// <summary>
 /// TagSetReceive
 /// </summary>
-public class TagSetReceive(ILogger<TagSetReceive> loggerRepo, IParametersStorage serializeStorageRepo)
+public class TagSetReceive(ILogger<TagSetReceive> loggerRepo, IParametersStorage serializeStorageRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TagSetModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -23,6 +22,10 @@ public class TagSetReceive(ILogger<TagSetReceive> loggerRepo, IParametersStorage
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TagSetModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         return await serializeStorageRepo.TagSetAsync(req, token);
     }
