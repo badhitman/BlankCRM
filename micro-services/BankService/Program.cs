@@ -94,13 +94,14 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 
 builder.Services
-.Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
-.Configure<TBankSettings>(builder.Configuration.GetSection(nameof(TBankSettings)))
+    .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+    .Configure<TBankSettings>(builder.Configuration.GetSection(nameof(TBankSettings)))
 ;
 
 builder.Services
     .AddScoped<IBankService, BankImplementService>()
     .AddScoped<IMerchantService, MerchantImplementService>()
+    .AddScoped<IFilesIndexing, FileIndexingTransmission>()
     ;
 
 builder.Services.AddSingleton<WebConfigModel>();

@@ -91,11 +91,14 @@ public class Program
 
 
         builder.Services
-        .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
-        .Configure<HelpDeskConfigModel>(builder.Configuration.GetSection(HelpDeskConfigModel.Configuration))
+            .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+            .Configure<HelpDeskConfigModel>(builder.Configuration.GetSection(HelpDeskConfigModel.Configuration))
         ;
 
-        builder.Services.AddScoped<IArticlesService, ArticlesService>();
+        builder.Services
+            .AddScoped<IArticlesService, ArticlesService>()
+            .AddScoped<IFilesIndexing, FileIndexingTransmission>();
+
         builder.Services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = builder.Configuration.GetConnectionString($"RedisConnectionString{_modePrefix}");

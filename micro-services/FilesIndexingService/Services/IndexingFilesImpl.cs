@@ -5,11 +5,11 @@
 using DbcLib;
 using DocumentFormat.OpenXml.Packaging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using SharedLib;
-using System.IO;
 
 namespace FileIndexingService;
 
@@ -18,9 +18,20 @@ namespace FileIndexingService;
 /// </summary>
 public class IndexingFilesImpl(
     IDbContextFactory<FilesIndexingContext> fileIndexingDbFactory,
-    IStorageTransmission storagrRepo,
-    IMongoDatabase mongoFs) : IFilesIndexing
+    IOptions<MongoConfigModel> mongoConf,
+    IStorageTransmission storageRepo) : IFilesIndexing
 {
+    /// <inheritdoc/>
+    public async Task<ResponseBaseModel> SaveTraceForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default)
+    {
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase(mongoConf.Value.BusTracesSystemName);
+        IMongoCollection<TraceReceiverRecord> traceReceiverRecords = mongoFs.GetCollection<TraceReceiverRecord>(nameof(TraceReceiverRecord));
+
+        await traceReceiverRecords.InsertOneAsync(req, cancellationToken: token);
+
+        return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> IndexingFileAsync(StorageFileMiddleModel req, CancellationToken token = default)
     {
@@ -43,7 +54,7 @@ public class IndexingFilesImpl(
                 FileId = req.Payload
             }
         };
-        TResponseModel<FileContentModel>? fileData = await storagrRepo.ReadFileAsync(fileReq, token);
+        TResponseModel<FileContentModel>? fileData = await storageRepo.ReadFileAsync(fileReq, token);
         TResponseModel<SpreadsheetDocumentIndexingFileResponseModel> res = new()
         {
             Messages = fileData.Messages
@@ -75,7 +86,7 @@ public class IndexingFilesImpl(
                 FileId = req.Payload
             }
         };
-        TResponseModel<FileContentModel>? fileData = await storagrRepo.ReadFileAsync(fileReq, token);
+        TResponseModel<FileContentModel>? fileData = await storageRepo.ReadFileAsync(fileReq, token);
 
 
         TResponseModel<WordprocessingDocumentIndexingFileResponseModel> res = new()
@@ -102,6 +113,7 @@ public class IndexingFilesImpl(
         if (await context.SheetsExcelIndexesFiles.AnyAsync(x => x.StoreFileId == file_db.Id, cancellationToken: token))
             return ResponseBaseModel.CreateInfo("the file is already indexed");
 
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase(mongoConf.Value.FilesSystemName);
         using MemoryStream stream = new();
         GridFSBucket gridFS = new(mongoFs);
         await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);
@@ -193,6 +205,7 @@ public class IndexingFilesImpl(
         if (await context.TablesWordIndexesFiles.AnyAsync(x => x.StoreFileId == file_db.Id, cancellationToken: token) || await context.ParagraphsWordIndexesFiles.AnyAsync(x => x.StoreFileId == file_db.Id, cancellationToken: token))
             return ResponseBaseModel.CreateInfo("the file is already indexed");
 
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase(mongoConf.Value.FilesSystemName);
         using MemoryStream stream = new();
         GridFSBucket gridFS = new(mongoFs);
         await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);

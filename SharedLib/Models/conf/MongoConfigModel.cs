@@ -25,7 +25,12 @@ public class MongoConfigModel : HostConfigModel
     /// <summary>
     /// FilesSystemName
     /// </summary>
-    public required string FilesSystemName { get; set; } = "files-system";
+    public string FilesSystemName { get; set; } = "files-system";
+
+    /// <summary>
+    /// BusTracesSystemName
+    /// </summary>
+    public string BusTracesSystemName { get; set; } = "bus-traces";
 
     /// <inheritdoc/>
     public override string ToString()

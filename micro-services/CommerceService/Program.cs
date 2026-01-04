@@ -96,12 +96,13 @@ builder.Services
 
 builder.Services
     .AddScoped<ICommerceService, CommerceImplementService>()
-    .AddScoped<IRetailService, RetailService>();
+    .AddScoped<IRetailService, RetailService>()
+    .AddScoped<IFilesIndexing, FileIndexingTransmission>();
 
 builder.Services.AddSingleton<WebConfigModel>();
 builder.Services.AddOptions();
 string connectionString = builder.Configuration.GetConnectionString($"CommerceConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'CommerceConnection{_modePrefix}' not found.");
-logger.Warn($"connection db: {connectionString}");
+
 builder.Services.AddDbContextFactory<CommerceContext>(opt =>
 {
     opt.UseNpgsql(connectionString);

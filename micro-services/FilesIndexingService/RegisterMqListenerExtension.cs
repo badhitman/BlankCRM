@@ -21,6 +21,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<IndexingFileReceive, StorageFileMiddleModel, ResponseBaseModel>()
             .RegisterMqListener<SpreadsheetDocumentGetIndexReceive, TAuthRequestModel<int>, TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>>()
             .RegisterMqListener<WordprocessingDocumentGetIndexReceive, TAuthRequestModel<int>, TResponseModel<WordprocessingDocumentIndexingFileResponseModel>>()
+            .RegisterMqListener<SaveTraceForReceiverHandle, TraceReceiverRecord, ResponseBaseModel>()
             ;
     }
 }

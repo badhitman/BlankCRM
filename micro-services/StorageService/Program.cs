@@ -92,15 +92,11 @@ public class Program
 
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+            .Configure<MongoConfigModel>(builder.Configuration.GetSection(MongoConfigModel.Configuration))
             .Configure<WebConfigModel>(builder.Configuration.GetSection(WebConfigModel.Configuration))
             ;
 
         builder.Services.AddSingleton<WebConfigModel>();
-
-        MongoConfigModel _jo = builder.Configuration.GetSection(MongoConfigModel.Configuration).Get<MongoConfigModel>()!;
-        string _mcs = _jo.ToString();
-        IMongoDatabase _mcli = new MongoClient(_mcs).GetDatabase(_jo.FilesSystemName);
-        builder.Services.AddSingleton(sp => _mcli);
 
         builder.Services.AddMemoryCache();
 

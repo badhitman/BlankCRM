@@ -165,7 +165,8 @@ dotnet run --project BlankCRM.AppHost/BlankCRM.AppHost.csproj --publisher manife
 
 #### [FilesIndexingService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/FilesIndexingService)
 Индексация файлов.
-- извлечение текстовых данных из Excel
+- извлечение текстовых данных из Excel (.xlsx)
+- извлечение текстовых данных из Word (.docx)
 
 #### [CommerceService](https://github.com/badhitman/BlankCRM/tree/main/micro-services/CommerceService)
 - Справочник номенклатуры и офферов с настраиваемыми правилами ценообразования. Клиенты ведут свой перечень юридических лиц с разбивкой по филиалам, для которых можно формировать заказы. Документы после создания сразу попадают в основную СЭД, где с ними можно работать: менять статус, вести диалог с клиентом и т.д.

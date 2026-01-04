@@ -1,3 +1,5 @@
+using RemoteCallLib;
+using SharedLib;
 using System.Text;
 
 namespace LdapService;
@@ -9,6 +11,8 @@ public class Program
         Console.OutputEncoding = Encoding.UTF8;
         var builder = Host.CreateApplicationBuilder(args);
         builder.Services.AddHostedService<Worker>();
+
+        builder.Services.AddScoped<IFilesIndexing, FileIndexingTransmission>();
 
         var host = builder.Build();
         host.Run();

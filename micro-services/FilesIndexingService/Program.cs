@@ -1,18 +1,21 @@
-using DbcLib;
+////////////////////////////////////////////////
+// © https://github.com/badhitman - @FakeGov 
+////////////////////////////////////////////////
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using MongoDB.Driver;
-using NLog;
+using System.Diagnostics.Metrics;
 using NLog.Extensions.Logging;
-using NLog.Web;
-using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using MongoDB.Driver;
+using OpenTelemetry;
 using RemoteCallLib;
-using SharedLib;
-using System.Diagnostics.Metrics;
 using System.Text;
+using SharedLib;
+using NLog.Web;
+using DbcLib;
+using NLog;
 
 namespace FileIndexingService;
 
@@ -92,12 +95,8 @@ public class Program
 
         builder.Services
             .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+            .Configure<MongoConfigModel>(builder.Configuration.GetSection(MongoConfigModel.Configuration))
             ;
-
-        MongoConfigModel _jo = builder.Configuration.GetSection(MongoConfigModel.Configuration).Get<MongoConfigModel>()!;
-        string _mcs = _jo.ToString();
-        IMongoDatabase _mcli = new MongoClient(_mcs).GetDatabase(_jo.FilesSystemName);
-        builder.Services.AddSingleton(sp => _mcli);
 
         builder.Services.AddMemoryCache();
 

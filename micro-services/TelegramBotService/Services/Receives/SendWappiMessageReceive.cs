@@ -15,6 +15,7 @@ namespace Transmission.Receives.telegram;
 public class SendWappiMessageReceive(
     ILogger<SendWappiMessageReceive> _logger,
     IHttpClientFactory HttpClientFactory,
+    IFilesIndexing indexingRepo,
     IParametersStorageTransmission StorageTransmissionRepo) : IResponseReceive<EntryAltExtModel?, TResponseModel<SendMessageResponseModel?>?>
 {
     /// <inheritdoc/>
@@ -24,6 +25,10 @@ public class SendWappiMessageReceive(
     public async Task<TResponseModel<SendMessageResponseModel?>?> ResponseHandleActionAsync(EntryAltExtModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+        
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<SendMessageResponseModel?> res = new();
 

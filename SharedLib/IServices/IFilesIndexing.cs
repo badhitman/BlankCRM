@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <summary>
-/// Индексирование файлов
+/// Индексирование данных
 /// </summary>
 public interface IFilesIndexing
 {
@@ -17,4 +17,7 @@ public interface IFilesIndexing
 
     /// <inheritdoc/>
     public Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>> WordprocessingDocumentGetIndexAsync(TAuthRequestModel<int> req, CancellationToken token = default);
+
+    /// <inheritdoc/>
+    public Task<ResponseBaseModel> SaveTraceForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default);
 }

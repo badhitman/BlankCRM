@@ -129,6 +129,7 @@ public class Program
         .AddScoped<ITelegramBotService, TelegramBotServiceImplement>()
         .AddScoped<StoreTelegramService>()
         .AddScoped<UpdateHandler>()
+        .AddScoped<IFilesIndexing, FileIndexingTransmission>()
         .AddScoped<ReceiverService>();
 
         builder.Services.AddHostedService<PollingService>();

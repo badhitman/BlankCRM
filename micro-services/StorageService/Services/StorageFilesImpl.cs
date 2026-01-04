@@ -2,15 +2,16 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using static SharedLib.GlobalStaticConstantsRoutes;
-using System.Text.RegularExpressions;
-using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver.GridFS;
-using MongoDB.Driver;
-using MongoDB.Bson;
-using ImageMagick;
-using SharedLib;
 using DbcLib;
+using ImageMagick;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
+using SharedLib;
+using System.Text.RegularExpressions;
+using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace StorageService;
 
@@ -19,8 +20,7 @@ namespace StorageService;
 /// </summary>
 public class StorageFilesImpl(
     IDbContextFactory<StorageContext> cloudParametersDbFactory,
-    //MongoClient mongoCli,
-    IMongoDatabase mongoFs,
+    IOptions<MongoConfigModel> mongoConf,
     IIdentityTransmission identityRepo,
     ICommerceTransmission commRepo,
     IHelpDeskTransmission HelpDeskRepo,
@@ -241,6 +241,7 @@ public class StorageFilesImpl(
         }
 
         using MemoryStream stream = new();
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase(mongoConf.Value.FilesSystemName);
         GridFSBucket gridFS = new(mongoFs);
         await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);
 
@@ -279,7 +280,7 @@ public class StorageFilesImpl(
         }
 
         req.Payload.FileName ??= "";
-
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase(mongoConf.Value.FilesSystemName);
         GridFSBucket gridFS = new(mongoFs);
         Regex rx = new(@"\s+", RegexOptions.Compiled);
         string _file_name = rx.Replace(req.Payload.FileName.Trim(), " ");

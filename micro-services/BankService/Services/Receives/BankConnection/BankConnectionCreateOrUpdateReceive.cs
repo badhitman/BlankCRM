@@ -11,7 +11,7 @@ namespace Transmission.Receives.bank;
 /// <summary>
 /// BankConnectionCreateOrUpdateReceive
 /// </summary>
-public class BankConnectionCreateOrUpdateReceive(IBankService bankRepo, ILogger<BankConnectionCreateOrUpdateReceive> loggerRepo) 
+public class BankConnectionCreateOrUpdateReceive(IBankService bankRepo, ILogger<BankConnectionCreateOrUpdateReceive> loggerRepo, IFilesIndexing indexingRepo) 
     : IResponseReceive<BankConnectionModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

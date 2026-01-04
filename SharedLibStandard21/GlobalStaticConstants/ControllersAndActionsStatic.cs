@@ -612,6 +612,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string INDEXING_CONTROLLER_NAME = "indexing";
 
         /// <summary>
+        /// Receiver
+        /// </summary>
+        public const string RECEIVER_CONTROLLER_NAME = "receiver";
+
+        /// <summary>
         /// КЛАДР 4.0
         /// </summary>
         public const string KLADR_CONTROLLER_NAME = "kladr";

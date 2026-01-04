@@ -107,7 +107,9 @@ builder.Services.AddDbContextFactory<ConstructorContext>(opt =>
 });
 
 builder.Services.AddMemoryCache();
-builder.Services.AddScoped<IConstructorService, FormsConstructorService>();
+builder.Services
+    .AddScoped<IConstructorService, FormsConstructorService>()
+    .AddScoped<IFilesIndexing, FileIndexingTransmission>();
 
 string appName = typeof(Program).Assembly.GetName().Name ?? "AssemblyName";
 #region MQ Transmission (remote methods call)

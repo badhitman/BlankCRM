@@ -98,9 +98,9 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 
 builder.Services
-.Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
-.Configure<RestApiConfigBaseModel>(builder.Configuration.GetSection("ApiAccess"))
-.Configure<PartUploadSessionConfigModel>(builder.Configuration.GetSection("PartUploadSessionConfig"))
+    .Configure<RabbitMQConfigModel>(builder.Configuration.GetSection(RabbitMQConfigModel.Configuration))
+    .Configure<RestApiConfigBaseModel>(builder.Configuration.GetSection("ApiAccess"))
+    .Configure<PartUploadSessionConfigModel>(builder.Configuration.GetSection("PartUploadSessionConfig"))
 ;
 
 builder.Services.AddOpenApi();
@@ -120,7 +120,9 @@ builder.Services.AddStackExchangeRedisCache(options =>
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddTransient<UnhandledExceptionAttribute>();
-builder.Services.AddScoped<RolesAuthorizationFilter>();
+builder.Services
+    .AddScoped<RolesAuthorizationFilter>()
+    .AddScoped<IFilesIndexing, FileIndexingTransmission>();
 
 builder.Services.AddScoped<ExpressUserPermissionModel>();
 
