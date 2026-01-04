@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// PaymentDocumentUpdateReceive
 /// </summary>
-public class PaymentDocumentUpdateReceive(ICommerceService commerceRepo, ILogger<PaymentDocumentUpdateReceive> loggerRepo)
+public class PaymentDocumentUpdateReceive(ICommerceService commerceRepo, ILogger<PaymentDocumentUpdateReceive> loggerRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestModel<PaymentDocumentBaseModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

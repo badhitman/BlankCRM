@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// DeleteToggleConversion
 /// </summary>
-public class DeleteToggleConversionReceive(IRetailService commRepo)
+public class DeleteToggleConversionReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<int?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

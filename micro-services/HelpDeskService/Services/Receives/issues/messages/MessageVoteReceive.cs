@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -10,7 +11,8 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// MessageVote Receive
 /// </summary>
-public class MessageVoteReceive(IHelpDeskService hdRepo) : IResponseReceive<TAuthRequestModel<VoteIssueRequestModel>?, TResponseModel<bool?>?>
+public class MessageVoteReceive(IHelpDeskService hdRepo, IFilesIndexing indexingRepo)
+    : IResponseReceive<TAuthRequestModel<VoteIssueRequestModel>?, TResponseModel<bool?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MessageOfIssueVoteHelpDeskReceive;
@@ -19,6 +21,10 @@ public class MessageVoteReceive(IHelpDeskService hdRepo) : IResponseReceive<TAut
     public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestModel<VoteIssueRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await hdRepo.MessageVoteAsync(req, token);
     }
 }

@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -10,15 +11,20 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Сохранить данные формы документа из сессии
 /// </summary>
-public class SaveSessionFormReceive(IConstructorService conService) : IResponseReceive<SaveConstructorSessionRequestModel?, TResponseModel<ValueDataForSessionOfDocumentModelDB[]>?>
+public class SaveSessionFormReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+    : IResponseReceive<SaveConstructorSessionRequestModel?, TResponseModel<ValueDataForSessionOfDocumentModelDB[]>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SaveSessionFormReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>?> ResponseHandleActionAsync(SaveConstructorSessionRequestModel? payload, CancellationToken token = default)
+    public async Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>?> ResponseHandleActionAsync(SaveConstructorSessionRequestModel? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(payload);
-        return await conService.SaveSessionFormAsync(payload, token);
+        ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
+        return await conService.SaveSessionFormAsync(req, token);
     }
 }

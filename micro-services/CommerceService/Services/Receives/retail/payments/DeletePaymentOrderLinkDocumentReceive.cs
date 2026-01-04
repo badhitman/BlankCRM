@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// DeletePaymentOrderLinkDocument
 /// </summary>
-public class DeletePaymentOrderLinkDocumentReceive(IRetailService commRepo)
+public class DeletePaymentOrderLinkDocumentReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<DeletePaymentOrderLinkRetailDocumentsRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

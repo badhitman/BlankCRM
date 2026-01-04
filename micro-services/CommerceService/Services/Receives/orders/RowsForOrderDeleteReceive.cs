@@ -11,7 +11,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// RowsForOrderDeleteReceive
 /// </summary>
-public class RowsForOrderDeleteReceive(ICommerceService commRepo, ILogger<RowsForOrderDeleteReceive> loggerRepo) : IResponseReceive<int[]?, TResponseModel<bool>?>
+public class RowsForOrderDeleteReceive(ICommerceService commRepo, ILogger<RowsForOrderDeleteReceive> loggerRepo, IFilesIndexing indexingRepo)
+    : IResponseReceive<int[]?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RowsDeleteFromOrderCommerceReceive;
@@ -20,7 +21,10 @@ public class RowsForOrderDeleteReceive(ICommerceService commRepo, ILogger<RowsFo
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commRepo.RowsForOrderDeleteAsync(req, token);
     }
 }

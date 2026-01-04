@@ -11,7 +11,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Organization offer-contract update (toggle)
 /// </summary>
-public class OrganizationOfferContractUpdateReceive(ICommerceService commerceRepo, ILogger<OrganizationOfferContractUpdateReceive> loggerRepo) : IResponseReceive<TAuthRequestModel<OrganizationOfferToggleModel>?, TResponseModel<bool>?>
+public class OrganizationOfferContractUpdateReceive(ICommerceService commerceRepo, ILogger<OrganizationOfferContractUpdateReceive> loggerRepo, IFilesIndexing indexingRepo) 
+    : IResponseReceive<TAuthRequestModel<OrganizationOfferToggleModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrganizationOfferContractUpdateOrCreateCommerceReceive;

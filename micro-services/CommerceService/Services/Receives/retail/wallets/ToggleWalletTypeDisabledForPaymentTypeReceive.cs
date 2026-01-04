@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// ToggleWalletTypeDisabledForPaymentType
 /// </summary>
-public class ToggleWalletTypeDisabledForPaymentTypeReceive(IRetailService commRepo)
+public class ToggleWalletTypeDisabledForPaymentTypeReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<ToggleWalletTypeDisabledForPaymentTypeRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

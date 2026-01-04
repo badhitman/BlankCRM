@@ -11,7 +11,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// OfficesOrganizationDeleteReceive
 /// </summary>
-public class OfficesOrganizationDeleteReceive(ICommerceService commerceRepo, ILogger<OfficesOrganizationDeleteReceive> loggerRepo) : IResponseReceive<int, ResponseBaseModel?>
+public class OfficesOrganizationDeleteReceive(ICommerceService commerceRepo, ILogger<OfficesOrganizationDeleteReceive> loggerRepo, IFilesIndexing indexingRepo) 
+    : IResponseReceive<int, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OfficeOrganizationDeleteCommerceReceive;

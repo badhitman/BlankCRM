@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -10,7 +11,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// AttendancesRecordsStatusChangeByHelpDeskIdReceive
 /// </summary>
-public class AttendancesRecordsStatusChangeByHelpDeskIdReceive(ICommerceService commRepo) : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
+public class AttendancesRecordsStatusChangeByHelpDeskIdReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
+    : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrdersAttendancesStatusesChangeByHelpDeskDocumentIdReceive;
@@ -19,6 +21,10 @@ public class AttendancesRecordsStatusChangeByHelpDeskIdReceive(ICommerceService 
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestModel<StatusChangeRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commRepo.RecordsAttendancesStatusesChangeByHelpDeskIdAsync(req, token);
     }
 }

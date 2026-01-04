@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -10,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// UpdateWallet
 /// </summary>
-public class UpdateWalletReceive(IRetailService commRepo)
+public class UpdateWalletReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<WalletRetailModelDB?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -20,6 +21,10 @@ public class UpdateWalletReceive(IRetailService commRepo)
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(WalletRetailModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commRepo.UpdateWalletAsync(req, token);
     }
 }

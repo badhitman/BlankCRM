@@ -11,7 +11,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Обновление WeeklyScheduleUpdateReceive
 /// </summary>
-public class WeeklyScheduleUpdateReceive(ICommerceService commerceRepo, ILogger<WeeklyScheduleUpdateReceive> loggerRepo) : IResponseReceive<WeeklyScheduleModelDB?, TResponseModel<int>?>
+public class WeeklyScheduleUpdateReceive(ICommerceService commerceRepo, ILogger<WeeklyScheduleUpdateReceive> loggerRepo, IFilesIndexing indexingRepo)
+    : IResponseReceive<WeeklyScheduleModelDB?, TResponseModel<int>?>
 {
     /// <summary>
     /// Обновление WorkSchedule
@@ -24,7 +25,10 @@ public class WeeklyScheduleUpdateReceive(ICommerceService commerceRepo, ILogger<
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(WeeklyScheduleModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commerceRepo.WeeklyScheduleUpdateAsync(req, token);
     }
 }

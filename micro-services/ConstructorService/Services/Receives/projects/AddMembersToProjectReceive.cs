@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -10,7 +11,8 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// AddMembersToProjectReceive
 /// </summary>
-public class AddMembersToProjectReceive(IConstructorService conService) : IResponseReceive<UsersProjectModel?, ResponseBaseModel?>
+public class AddMembersToProjectReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+    : IResponseReceive<UsersProjectModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.AddMembersToProjectReceive;
@@ -19,6 +21,10 @@ public class AddMembersToProjectReceive(IConstructorService conService) : IRespo
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UsersProjectModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await conService.AddMemberToProjectAsync(req, token);
     }
 }

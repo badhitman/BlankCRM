@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// IncomingMerchantPaymentTBankReceive
 /// </summary>
-public class IncomingMerchantPaymentTBankReceive(ICommerceService commerceRepo, ILogger<IncomingMerchantPaymentTBankReceive> loggerRepo)
+public class IncomingMerchantPaymentTBankReceive(ICommerceService commerceRepo, ILogger<IncomingMerchantPaymentTBankReceive> loggerRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<IncomingMerchantPaymentTBankNotifyModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

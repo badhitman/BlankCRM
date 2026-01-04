@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// UpdatePaymentOrderLinkDocument
 /// </summary>
-public class UpdatePaymentOrderLinkDocumentReceive(IRetailService commRepo)
+public class UpdatePaymentOrderLinkDocumentReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<PaymentOrderRetailLinkModelDB?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

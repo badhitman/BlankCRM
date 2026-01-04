@@ -11,7 +11,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// StatusOrderChangeByHelpDeskDocumentIdReceive
 /// </summary>
-public class StatusOrderChangeByHelpDeskDocumentIdReceive(ICommerceService commRepo, ILogger<StatusOrderChangeByHelpDeskDocumentIdReceive> LoggerRepo) : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
+public class StatusOrderChangeByHelpDeskDocumentIdReceive(ICommerceService commRepo, ILogger<StatusOrderChangeByHelpDeskDocumentIdReceive> LoggerRepo, IFilesIndexing indexingRepo)
+    : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.StatusChangeOrderByHelpDeskDocumentIdReceive;
@@ -20,7 +21,10 @@ public class StatusOrderChangeByHelpDeskDocumentIdReceive(ICommerceService commR
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestModel<StatusChangeRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commRepo.StatusesOrdersChangeByHelpDeskDocumentIdAsync(req, token);
     }
 }

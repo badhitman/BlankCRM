@@ -11,7 +11,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// RowForOrderUpdateReceive
 /// </summary>
-public class RowForOrderUpdateReceive(ICommerceService commRepo, ILogger<RowForOrderUpdateReceive> loggerRepo) : IResponseReceive<RowOfOrderDocumentModelDB?, TResponseModel<int>?>
+public class RowForOrderUpdateReceive(ICommerceService commRepo, ILogger<RowForOrderUpdateReceive> loggerRepo, IFilesIndexing indexingRepo)
+    : IResponseReceive<RowOfOrderDocumentModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RowForOrderUpdateCommerceReceive;
@@ -20,7 +21,10 @@ public class RowForOrderUpdateReceive(ICommerceService commRepo, ILogger<RowForO
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(RowOfOrderDocumentModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commRepo.RowForOrderUpdateAsync(req, token);
     }
 }

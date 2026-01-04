@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// PriceRuleDeleteReceive
 /// </summary>
-public class PriceRuleDeleteReceive(ICommerceService commerceRepo, ILogger<PriceRuleDeleteReceive> loggerRepo)
+public class PriceRuleDeleteReceive(ICommerceService commerceRepo, ILogger<PriceRuleDeleteReceive> loggerRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,10 @@ public class PriceRuleDeleteReceive(ICommerceService commerceRepo, ILogger<Price
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req.Payload, GlobalStaticConstants.JsonSerializerSettings)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commerceRepo.PriceRuleDeleteAsync(req, token);
     }
 }

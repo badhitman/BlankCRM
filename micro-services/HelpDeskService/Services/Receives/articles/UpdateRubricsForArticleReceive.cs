@@ -11,7 +11,8 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// UpdateRubricsForArticleReceive
 /// </summary>
-public class UpdateRubricsForArticleReceive(IArticlesService artRepo, ILogger<ArticleCreateOrUpdateReceive> loggerRepo) : IResponseReceive<ArticleRubricsSetModel?, ResponseBaseModel?>
+public class UpdateRubricsForArticleReceive(IArticlesService artRepo, ILogger<ArticleCreateOrUpdateReceive> loggerRepo, IFilesIndexing indexingRepo)
+    : IResponseReceive<ArticleRubricsSetModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RubricsForArticleSetReceive;
@@ -20,6 +21,10 @@ public class UpdateRubricsForArticleReceive(IArticlesService artRepo, ILogger<Ar
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ArticleRubricsSetModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         return await artRepo.UpdateRubricsForArticleAsync(req, token);
     }

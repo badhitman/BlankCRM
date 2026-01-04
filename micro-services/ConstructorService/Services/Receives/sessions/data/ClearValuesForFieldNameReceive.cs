@@ -10,15 +10,20 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Удалить значения (введённые в сессиях) по имени поля
 /// </summary>
-public class ClearValuesForFieldNameReceive(IConstructorService conService) : IResponseReceive<FormFieldOfSessionModel?, ResponseBaseModel?>
+public class ClearValuesForFieldNameReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+    : IResponseReceive<FormFieldOfSessionModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ClearValuesForFieldNameReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(FormFieldOfSessionModel? payload, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(FormFieldOfSessionModel? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(payload);
-        return await conService.ClearValuesForFieldNameAsync(payload, token);
+        ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
+        return await conService.ClearValuesForFieldNameAsync(req, token);
     }
 }

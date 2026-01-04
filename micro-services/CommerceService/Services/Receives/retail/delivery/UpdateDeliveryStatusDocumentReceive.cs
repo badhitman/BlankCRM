@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// UpdateDeliveryStatusDocument
 /// </summary>
-public class UpdateDeliveryStatusDocumentReceive(IRetailService commRepo)
+public class UpdateDeliveryStatusDocumentReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<DeliveryStatusRetailDocumentModelDB?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

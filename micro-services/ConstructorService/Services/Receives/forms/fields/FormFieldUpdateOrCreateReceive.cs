@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -10,15 +11,20 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Обновить/создать поле формы (простой тип)
 /// </summary>
-public class FormFieldUpdateOrCreateReceive(IConstructorService conService) : IResponseReceive<TAuthRequestModel<FieldFormConstructorModelDB>?, ResponseBaseModel?>
+public class FormFieldUpdateOrCreateReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+    : IResponseReceive<TAuthRequestModel<FieldFormConstructorModelDB>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FormFieldUpdateOrCreateReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<FieldFormConstructorModelDB>? payload, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<FieldFormConstructorModelDB>? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(payload);
-        return await conService.FormFieldUpdateOrCreateAsync(payload, token);
+        ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
+        return await conService.FormFieldUpdateOrCreateAsync(req, token);
     }
 }

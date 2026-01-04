@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// CreateWalletType
 /// </summary>
-public class CreateWalletTypeReceive(IRetailService commRepo)
+public class CreateWalletTypeReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<WalletRetailTypeModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

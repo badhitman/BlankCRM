@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// UploadOffersReceive
 /// </summary>
-public class UploadOffersReceive(ICommerceService commerceRepo, ILogger<OfferDeleteReceive> loggerRepo)
+public class UploadOffersReceive(ICommerceService commerceRepo, ILogger<OfferDeleteReceive> loggerRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<List<NomenclatureScopeModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,10 @@ public class UploadOffersReceive(ICommerceService commerceRepo, ILogger<OfferDel
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(List<NomenclatureScopeModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commerceRepo.UploadOffersAsync(req, token);
     }
 }

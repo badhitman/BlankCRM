@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// CreateOrderStatusDocument
 /// </summary>
-public class CreateOrderStatusDocumentReceive(IRetailService commRepo)
+public class CreateOrderStatusDocumentReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<OrderStatusRetailDocumentModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

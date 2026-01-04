@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -10,16 +11,20 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Обновить (или создать) сессию опроса/анкеты
 /// </summary>
-public class UpdateOrCreateSessionDocumentReceive(IConstructorService conService) 
+public class UpdateOrCreateSessionDocumentReceive(IConstructorService conService, IFilesIndexing indexingRepo)
     : IResponseReceive<SessionOfDocumentDataModelDB?, TResponseModel<SessionOfDocumentDataModelDB?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateOrCreateSessionDocumentReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SessionOfDocumentDataModelDB?>?> ResponseHandleActionAsync(SessionOfDocumentDataModelDB? payload, CancellationToken token = default)
+    public async Task<TResponseModel<SessionOfDocumentDataModelDB?>?> ResponseHandleActionAsync(SessionOfDocumentDataModelDB? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(payload);
-        return await conService.UpdateOrCreateSessionDocumentAsync(payload, token);
+        ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
+        return await conService.UpdateOrCreateSessionDocumentAsync(req, token);
     }
 }

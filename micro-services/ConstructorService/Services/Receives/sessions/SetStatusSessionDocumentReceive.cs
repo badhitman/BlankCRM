@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -10,15 +11,20 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Установить статус сессии (от менеджера)
 /// </summary>
-public class SetStatusSessionDocumentReceive(IConstructorService conService) : IResponseReceive<SessionStatusModel?, ResponseBaseModel?>
+public class SetStatusSessionDocumentReceive(IConstructorService conService, IFilesIndexing indexingRepo)
+    : IResponseReceive<SessionStatusModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetStatusSessionDocumentReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SessionStatusModel? payload, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SessionStatusModel? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(payload);
-        return await conService.SetStatusSessionDocumentAsync(payload, token);
+        ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
+        return await conService.SetStatusSessionDocumentAsync(req, token);
     }
 }

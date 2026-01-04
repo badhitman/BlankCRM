@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -10,7 +11,8 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// Сообщение в обращение
 /// </summary>
-public class MessageUpdateOrCreateReceive(IHelpDeskService hdRepo) : IResponseReceive<TAuthRequestModel<IssueMessageHelpDeskBaseModel>?, TResponseModel<int?>?>
+public class MessageUpdateOrCreateReceive(IHelpDeskService hdRepo, IFilesIndexing indexingRepo)
+    : IResponseReceive<TAuthRequestModel<IssueMessageHelpDeskBaseModel>?, TResponseModel<int?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MessageOfIssueUpdateHelpDeskReceive;
@@ -21,6 +23,10 @@ public class MessageUpdateOrCreateReceive(IHelpDeskService hdRepo) : IResponseRe
     public async Task<TResponseModel<int?>?> ResponseHandleActionAsync(TAuthRequestModel<IssueMessageHelpDeskBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await hdRepo.MessageUpdateOrCreateAsync(req, token);
     }
 }
