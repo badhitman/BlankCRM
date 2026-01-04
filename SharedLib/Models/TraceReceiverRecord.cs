@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
+
 namespace SharedLib;
 
 /// <summary>
@@ -55,5 +57,15 @@ public class TraceReceiverRecord
             ReceiverName = _receiverName,
             RequestKey = _requestKey,
         };
+    }
+
+    /// <inheritdoc/>
+    public TraceReceiverRecord SetResponse(object sender)
+    {
+        UTCTimestampFinalReceive = DateTime.UtcNow;
+        ResponseBodyJson = JsonConvert.SerializeObject(sender);
+        ResponseTypeName = sender.GetType().Name;
+
+        return this;
     }
 }

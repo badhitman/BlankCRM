@@ -11,7 +11,7 @@ namespace Transmission.Receives.telegram;
 /// <summary>
 /// Set web config site
 /// </summary>
-public class SetWebConfigReceive(TelegramBotConfigModel webConfig, ILogger<SetWebConfigReceive> _logger, IFilesIndexing indexingRepo)
+public class SetWebConfigReceive(TelegramBotConfigModel webConfig, ILogger<SetWebConfigReceive> _logger)
     : IResponseReceive<TelegramBotConfigModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -21,9 +21,6 @@ public class SetWebConfigReceive(TelegramBotConfigModel webConfig, ILogger<SetWe
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramBotConfigModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
 
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
 

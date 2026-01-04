@@ -23,9 +23,9 @@ public class SendTextMessageTelegramReceive(ITelegramBotService tgRepo, ILogger<
         ArgumentNullException.ThrowIfNull(message);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name);
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+        TResponseModel<MessageComplexIdsModel> res = await tgRepo.SendTextMessageTelegramAsync(message, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
 
-        _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(message)}");
-        return await tgRepo.SendTextMessageTelegramAsync(message, token);
+        return res;
     }
 }

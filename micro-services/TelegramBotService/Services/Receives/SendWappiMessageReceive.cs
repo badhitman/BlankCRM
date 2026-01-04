@@ -25,9 +25,8 @@ public class SendWappiMessageReceive(
     public async Task<TResponseModel<SendMessageResponseModel?>?> ResponseHandleActionAsync(EntryAltExtModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        
+
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
 
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
         TResponseModel<SendMessageResponseModel?> res = new();
@@ -82,6 +81,8 @@ public class SendWappiMessageReceive(
             res.Response = JsonConvert.DeserializeObject<SendMessageResponseModel>(rj);
             res.AddSuccess($"Сообщение успешно отправлено: {res.Response?.Status}");
         }
+
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
 
         return res;
     }

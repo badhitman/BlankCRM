@@ -25,7 +25,9 @@ public class ForwardMessageTelegramReceive(ILogger<ForwardMessageTelegramReceive
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, message.GetType().Name, JsonConvert.SerializeObject(message));
         await indexingRepo.SaveTraceForReceiverAsync(trace, token);
 
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(message)}");
-        return await tgRepo.ForwardMessageTelegramAsync(message, token);
+        TResponseModel<MessageComplexIdsModel> res = await tgRepo.ForwardMessageTelegramAsync(message, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+
+        return res;
     }
 }
