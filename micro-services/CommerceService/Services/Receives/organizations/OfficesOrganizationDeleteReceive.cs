@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// OfficesOrganizationDeleteReceive
 /// </summary>
-public class OfficesOrganizationDeleteReceive(ICommerceService commerceRepo, ILogger<OfficesOrganizationDeleteReceive> loggerRepo, IFilesIndexing indexingRepo) 
+public class OfficesOrganizationDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<int, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -20,7 +20,9 @@ public class OfficesOrganizationDeleteReceive(ICommerceService commerceRepo, ILo
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int req, CancellationToken token = default)
     {
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req.ToString());
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commerceRepo.OfficeOrganizationDeleteAsync(req, token);
     }
 }

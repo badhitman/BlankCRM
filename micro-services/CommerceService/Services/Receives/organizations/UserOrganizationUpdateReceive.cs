@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// UserOrganizationUpdateReceive
 /// </summary>
-public class UserOrganizationUpdateReceive(ICommerceService commerceRepo, ILogger<UserOrganizationUpdateReceive> loggerRepo, IFilesIndexing indexingRepo) 
+public class UserOrganizationUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo) 
     : IResponseReceive<TAuthRequestModel<UserOrganizationModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,10 @@ public class UserOrganizationUpdateReceive(ICommerceService commerceRepo, ILogge
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<UserOrganizationModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commerceRepo.UserOrganizationUpdateAsync(req, token);
     }
 }

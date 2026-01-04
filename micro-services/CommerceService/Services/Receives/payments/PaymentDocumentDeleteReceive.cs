@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// PaymentDocumentDeleteReceive
 /// </summary>
-public class PaymentDocumentDeleteReceive(ICommerceService commerceRepo, ILogger<PaymentDocumentDeleteReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class PaymentDocumentDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,10 @@ public class PaymentDocumentDeleteReceive(ICommerceService commerceRepo, ILogger
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commerceRepo.PaymentDocumentDeleteAsync(req, token);
     }
 }

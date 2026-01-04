@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// OfficeOrganizationUpdateReceive
 /// </summary>
-public class OfficeOrganizationUpdateReceive(ICommerceService commerceRepo, ILogger<OfficeOrganizationUpdateReceive> loggerRepo, IFilesIndexing indexingRepo) 
+public class OfficeOrganizationUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<AddressOrganizationBaseModel?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,10 @@ public class OfficeOrganizationUpdateReceive(ICommerceService commerceRepo, ILog
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(AddressOrganizationBaseModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commerceRepo.OfficeOrganizationUpdateAsync(req, token);
     }
 }

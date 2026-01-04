@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// IncomingMerchantPaymentTBankReceive
 /// </summary>
-public class IncomingMerchantPaymentTBankReceive(ICommerceService commerceRepo, ILogger<IncomingMerchantPaymentTBankReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class IncomingMerchantPaymentTBankReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<IncomingMerchantPaymentTBankNotifyModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,10 @@ public class IncomingMerchantPaymentTBankReceive(ICommerceService commerceRepo, 
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(IncomingMerchantPaymentTBankNotifyModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commerceRepo.IncomingMerchantPaymentTBankAsync(req, token);
     }
 }

@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Обновление номенклатуры
 /// </summary>
-public class NomenclatureUpdateReceive(ICommerceService commerceRepo, ILogger<NomenclatureUpdateReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class NomenclatureUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<NomenclatureModelDB?, TResponseModel<int>?>
 {
     /// <summary>

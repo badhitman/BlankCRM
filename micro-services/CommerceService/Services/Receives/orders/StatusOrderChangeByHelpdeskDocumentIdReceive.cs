@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// StatusOrderChangeByHelpDeskDocumentIdReceive
 /// </summary>
-public class StatusOrderChangeByHelpDeskDocumentIdReceive(ICommerceService commRepo, ILogger<StatusOrderChangeByHelpDeskDocumentIdReceive> LoggerRepo, IFilesIndexing indexingRepo)
+public class StatusOrderChangeByHelpDeskDocumentIdReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>

@@ -10,7 +10,7 @@ namespace Transmission.Receives.bank;
 /// <summary>
 /// IncomingMerchantPaymentsSelectTBankReceive
 /// </summary>
-public class IncomingMerchantPaymentsSelectTBankReceive(IMerchantService merchantRepo)
+public class IncomingMerchantPaymentsSelectTBankReceive(IMerchantService merchantRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TPaginationRequestStandardModel<SelectIncomingMerchantPaymentsTBankRequestModel>?, TPaginationResponseModel<IncomingMerchantPaymentTBankModelDB>?>
 {
     /// <inheritdoc/>
@@ -20,6 +20,10 @@ public class IncomingMerchantPaymentsSelectTBankReceive(IMerchantService merchan
     public async Task<TPaginationResponseModel<IncomingMerchantPaymentTBankModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectIncomingMerchantPaymentsTBankRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req.ToString());
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await merchantRepo.IncomingMerchantPaymentsSelectTBankAsync(req, token);
     }
 }

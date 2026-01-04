@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// OfferUpdateReceive
 /// </summary>
-public class OfferUpdateReceive(ICommerceService commerceRepo, ILogger<OfferUpdateReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class OfferUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestModel<OfferModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

@@ -12,7 +12,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// AttendanceRecordsCreateReceive
 /// </summary>
-public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, ILogger<AttendanceRecordsCreateReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestModel<CreateAttendanceRequestModel>?, ResponseBaseModel?>
 {
     /// <summary>

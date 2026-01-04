@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Удалить оффер
 /// </summary>
-public class OfferDeleteReceive(ICommerceService commerceRepo, ILogger<OfferDeleteReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class OfferDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestModel<int>?, ResponseBaseModel?>
 {
     /// <summary>

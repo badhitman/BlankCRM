@@ -10,7 +10,7 @@ namespace Transmission.Receives.bank;
 /// <summary>
 /// BankAccountCheckReceive
 /// </summary>
-public class BankAccountCheckReceive(IBankService bankRepo)
+public class BankAccountCheckReceive(IBankService bankRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<BankAccountCheckRequestModel?, TResponseModel<List<BankTransferModelDB>>?>
 {
     /// <inheritdoc/>
@@ -20,7 +20,10 @@ public class BankAccountCheckReceive(IBankService bankRepo)
     public async Task<TResponseModel<List<BankTransferModelDB>>?> ResponseHandleActionAsync(BankAccountCheckRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        // loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req.ToString());
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await bankRepo.BankAccountCheckAsync(req, token);
     }
 }

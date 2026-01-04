@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Rows for warehouse document delete
 /// </summary>
-public class RowsForWarehouseDocumentDeleteReceive(ICommerceService commRepo, ILogger<RowsForWarehouseDocumentDeleteReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class RowsForWarehouseDocumentDeleteReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<int[]?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>

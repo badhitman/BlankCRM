@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -20,6 +21,10 @@ public class UpdatePaymentOrderLinkDocumentReceive(IRetailService commRepo, IFil
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(PaymentOrderRetailLinkModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await commRepo.UpdatePaymentOrderLinkDocumentAsync(req, token);
     }
 }

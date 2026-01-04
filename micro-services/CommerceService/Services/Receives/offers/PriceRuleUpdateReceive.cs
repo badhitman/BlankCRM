@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// PriceRuleUpdateReceive
 /// </summary>
-public class PriceRuleUpdateReceive(ICommerceService commerceRepo, ILogger<PriceRuleUpdateReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class PriceRuleUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestModel<PriceRuleForOfferModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// UploadOffersReceive
 /// </summary>
-public class UploadOffersReceive(ICommerceService commerceRepo, ILogger<OfferDeleteReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class UploadOffersReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<List<NomenclatureScopeModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>

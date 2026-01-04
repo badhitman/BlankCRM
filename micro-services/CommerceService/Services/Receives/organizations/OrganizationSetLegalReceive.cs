@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DocumentFormat.OpenXml.Drawing;
 using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
@@ -18,10 +19,13 @@ public class OrganizationSetLegalReceive(ICommerceService commerceRepo, ILogger<
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrganizationSetLegalCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(OrganizationLegalModel? org, CancellationToken token = default)
+    public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(OrganizationLegalModel? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(org);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(org)}");
-        return await commerceRepo.OrganizationSetLegalAsync(org, token);
+        ArgumentNullException.ThrowIfNull(req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
+        return await commerceRepo.OrganizationSetLegalAsync(req, token);
     }
 }

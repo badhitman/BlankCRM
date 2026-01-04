@@ -11,7 +11,7 @@ namespace Transmission.Receives.bank;
 /// <summary>
 /// BankTransferCreateOrUpdateReceive
 /// </summary>
-public class BankTransferCreateOrUpdateReceive(IBankService bankRepo, ILogger<BankTransferCreateOrUpdateReceive> loggerRepo) 
+public class BankTransferCreateOrUpdateReceive(IBankService bankRepo, IFilesIndexing indexingRepo) 
     : IResponseReceive<BankTransferModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,10 @@ public class BankTransferCreateOrUpdateReceive(IBankService bankRepo, ILogger<Ba
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(BankTransferModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req.ToString());
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+
         return await bankRepo.BankTransferCreateOrUpdateAsync(req, token);
     }
 }

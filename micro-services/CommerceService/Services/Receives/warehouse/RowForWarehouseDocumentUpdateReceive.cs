@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// RowForWarehouseDocumentUpdate
 /// </summary>
-public class RowForWarehouseDocumentUpdateReceive(ICommerceService commRepo, ILogger<RowForWarehouseDocumentUpdateReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class RowForWarehouseDocumentUpdateReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<RowOfWarehouseDocumentModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// PriceRuleDeleteReceive
 /// </summary>
-public class PriceRuleDeleteReceive(ICommerceService commerceRepo, ILogger<PriceRuleDeleteReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class PriceRuleDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
