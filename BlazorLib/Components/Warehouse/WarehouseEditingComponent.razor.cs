@@ -132,7 +132,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             return;
 
         await SetBusyAsync();
-        TResponseModel<WarehouseDocumentModelDB[]> res = await CommRepo.WarehousesReadAsync([Id]);
+        TResponseModel<WarehouseDocumentModelDB[]> res = await CommRepo.WarehousesDocumentsReadAsync([Id]);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success() && res.Response is not null)
             CurrentDocument = res.Response.First();

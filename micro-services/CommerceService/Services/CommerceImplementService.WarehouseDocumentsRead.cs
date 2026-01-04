@@ -14,7 +14,7 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<WarehouseDocumentModelDB[]>> WarehouseDocumentsReadAsync(int[] req, CancellationToken token = default)
+    public async Task<TResponseModel<WarehouseDocumentModelDB[]>> WarehousesDocumentsReadAsync(int[] req, CancellationToken token = default)
     {
         TResponseModel<WarehouseDocumentModelDB[]> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);

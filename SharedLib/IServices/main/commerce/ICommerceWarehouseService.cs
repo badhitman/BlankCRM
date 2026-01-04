@@ -30,11 +30,6 @@ public partial interface ICommerceService
     public Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);
 
     /// <summary>
-    /// WarehouseDocuments read
-    /// </summary>
-    public Task<TResponseModel<WarehouseDocumentModelDB[]>> WarehouseDocumentsReadAsync(int[] req, CancellationToken token = default);
-
-    /// <summary>
     /// Registers select
     /// </summary>
     public Task<TPaginationResponseModel<OfferAvailabilityModelDB>> RegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default);

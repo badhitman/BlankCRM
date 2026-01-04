@@ -101,6 +101,7 @@ builder.Services
 builder.Services.AddSingleton<WebConfigModel>();
 builder.Services.AddOptions();
 string connectionString = builder.Configuration.GetConnectionString($"CommerceConnection{_modePrefix}") ?? throw new InvalidOperationException($"Connection string 'CommerceConnection{_modePrefix}' not found.");
+logger.Info($"connection db: {connectionString}");
 builder.Services.AddDbContextFactory<CommerceContext>(opt =>
 {
     opt.UseNpgsql(connectionString);

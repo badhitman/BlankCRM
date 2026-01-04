@@ -22,7 +22,7 @@ public partial class CommerceTransmission
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.RowForWarehouseDocumentUpdateCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<WarehouseDocumentModelDB[]>> WarehousesReadAsync(int[] ids, CancellationToken token = default)
+    public async Task<TResponseModel<WarehouseDocumentModelDB[]>> WarehousesDocumentsReadAsync(int[] ids, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<WarehouseDocumentModelDB[]>>(TransmissionQueues.WarehousesDocumentsReadCommerceReceive, ids, token: token) ?? new();
 
     /// <inheritdoc/>

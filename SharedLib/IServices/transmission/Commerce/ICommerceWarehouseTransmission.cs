@@ -22,11 +22,6 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     public Task<TResponseModel<int>> RowForWarehouseUpdateAsync(RowOfWarehouseDocumentModelDB row, CancellationToken token = default);
 
     /// <summary>
-    /// WarehousesRead
-    /// </summary>
-    public Task<TResponseModel<WarehouseDocumentModelDB[]>> WarehousesReadAsync(int[] ids, CancellationToken token = default);
-
-    /// <summary>
     /// WarehouseUpdate
     /// </summary>
     public Task<TResponseModel<int>> WarehouseDocumentUpdateAsync(WarehouseDocumentModelDB document, CancellationToken token = default);

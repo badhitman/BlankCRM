@@ -13,6 +13,11 @@ public interface ICommerceServiceBase
     public Task<FileAttachModel> PriceFullFileGetExcelAsync(CancellationToken token = default);
 
     /// <summary>
+    /// WarehouseDocuments read
+    /// </summary>
+    public Task<TResponseModel<WarehouseDocumentModelDB[]>> WarehousesDocumentsReadAsync(int[] req, CancellationToken token = default);
+
+    /// <summary>
     /// Price Full - file get
     /// </summary>
     public Task<FileAttachModel> PriceFullFileGetJsonAsync(CancellationToken token = default);
