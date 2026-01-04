@@ -21,7 +21,7 @@
             DateTime ddt = context.DeliveryDate.GetCustomTime();
         }
         <MudTd DataLabel="Примечание">
-            <a href="/nomenclature/warehouse/editing/@(context.Id)" class="@(context.IsDisabled ? "text-decoration-line-through" : "")">@context.Name</a>
+            <MudLink Href="@($"/nomenclature/warehouse/editing/{context.Id}")">@context.Name</MudLink>
         </MudTd>
         <MudTd DataLabel="Доставка">
             <span class="@(context.IsDisabled ? "text-decoration-line-through" : "")">

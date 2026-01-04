@@ -77,14 +77,18 @@ public partial class RetailService : IRetailService
         req.Description = req.Description?.Trim();
         req.DeliveryCode = req.DeliveryCode?.Trim();
 
+        loggerRepo.LogInformation($"{nameof(req)}: {JsonConvert.SerializeObject(req)}");
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        DeliveryDocumentRetailModelDB? documentDb = await context.DeliveryDocumentsRetail
+        DeliveryDocumentRetailModelDB documentDb = await context.DeliveryDocumentsRetail
             .Include(x => x.Rows)
             .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
 
         if (documentDb.Version != req.Version)
             return ResponseBaseModel.CreateError($"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить");
+
+        loggerRepo.LogInformation($"{nameof(documentDb)}: {JsonConvert.SerializeObject(documentDb)}");
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         string msg;

@@ -37,7 +37,7 @@ public partial class CommerceImplementService : ICommerceService
             res.AddError($"{msg}. Измените или удалите склад списания");
             return res;
         }
-
+        loggerRepo.LogInformation($"{nameof(req)}: {JsonConvert.SerializeObject(req)}");
         req.DeliveryDate = req.DeliveryDate.SetKindUtc();
         if (req.Name is not null)
             req.Name = req.Name.Trim();
@@ -72,7 +72,7 @@ public partial class CommerceImplementService : ICommerceService
             res.AddError($"{msg}. Перед редактированием обновите страницу (F5), что бы загрузить актуальную версию документа");
             return res;
         }
-
+        loggerRepo.LogInformation($"{nameof(warehouseDocumentDb)}:{JsonConvert.SerializeObject(warehouseDocumentDb)}");
         if (warehouseDocumentDb.Rows is null || warehouseDocumentDb.Rows.Count == 0)
         {
             res.Response = await context.WarehouseDocuments
@@ -360,7 +360,7 @@ public partial class CommerceImplementService : ICommerceService
 
                         registerOffer.Quantity += rowOfDocument.Quantity;
                     }
-                    else
+                    else if(req.WritingOffWarehouseId > 0)
                         await context.OffersAvailability.AddAsync(new()
                         {
                             WarehouseId = req.WritingOffWarehouseId,
@@ -437,7 +437,7 @@ public partial class CommerceImplementService : ICommerceService
 
                         registerOffer.Quantity += rowOfDocument.Quantity;
                     }
-                    else
+                    else if(req.WritingOffWarehouseId > 0)
                         await context.OffersAvailability.AddAsync(new()
                         {
                             WarehouseId = req.WritingOffWarehouseId,

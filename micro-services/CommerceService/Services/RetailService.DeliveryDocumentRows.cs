@@ -112,19 +112,19 @@ public partial class RetailService : IRetailService
         req.Offer = null;
         req.Document = null;
         req.Comment = req.Comment?.Trim();
-
+        loggerRepo.LogInformation($"{nameof(req)}: {JsonConvert.SerializeObject(req)}");
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        DeliveryDocumentRetailModelDB docDb = await context.DeliveryDocumentsRetail.FirstAsync(x => x.Id == req.DocumentId, cancellationToken: token);
-
-        RowOfDeliveryRetailDocumentModelDB rowDb = await context.RowsDeliveryDocumentsRetail
+        DeliveryDocumentRetailModelDB deliveryDocumentDb = await context.DeliveryDocumentsRetail.FirstAsync(x => x.Id == req.DocumentId, cancellationToken: token);
+        loggerRepo.LogInformation($"{nameof(deliveryDocumentDb)}: {JsonConvert.SerializeObject(deliveryDocumentDb)}");
+        RowOfDeliveryRetailDocumentModelDB rowOfDeliveryRetailDocument = await context.RowsDeliveryDocumentsRetail
             .Include(x => x.Offer!)
             .ThenInclude(x => x.Nomenclature)
             .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
-
-        if (rowDb.Version != req.Version)
+        loggerRepo.LogInformation($"{nameof(rowOfDeliveryRetailDocument)}: {JsonConvert.SerializeObject(rowOfDeliveryRetailDocument)}");
+        if (rowOfDeliveryRetailDocument.Version != req.Version)
             return ResponseBaseModel.CreateError($"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова");
 
-        if (offDeliveriesStatuses.Contains(docDb.DeliveryStatus))
+        if (offDeliveriesStatuses.Contains(deliveryDocumentDb.DeliveryStatus))
         {
             await context.RowsDeliveryDocumentsRetail
             .Where(x => x.Id == req.Id)
@@ -150,15 +150,15 @@ public partial class RetailService : IRetailService
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = req.OfferId,
-                LockerAreaId = docDb.WarehouseId,
+                LockerAreaId = deliveryDocumentDb.WarehouseId,
                 Marker = nameof(UpdateRowOfDeliveryDocumentAsync),
             }];
-        if (rowDb.OfferId != req.OfferId)
+        if (rowOfDeliveryRetailDocument.OfferId != req.OfferId)
             lockers.Add(new()
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
-                LockerId = rowDb.OfferId,
-                LockerAreaId = docDb.WarehouseId,
+                LockerId = rowOfDeliveryRetailDocument.OfferId,
+                LockerAreaId = deliveryDocumentDb.WarehouseId,
                 Marker = nameof(UpdateRowOfDeliveryDocumentAsync),
             });
 
@@ -178,23 +178,23 @@ public partial class RetailService : IRetailService
 
         List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
             .OffersAvailability
-            .Where(x => x.OfferId == req.OfferId || x.OfferId == rowDb.OfferId)
+            .Where(x => x.OfferId == req.OfferId || x.OfferId == rowOfDeliveryRetailDocument.OfferId)
             .ToListAsync(cancellationToken: token);
 
         OfferAvailabilityModelDB? regOfferAv;
-        if (rowDb.OfferId != req.OfferId)
+        if (rowOfDeliveryRetailDocument.OfferId != req.OfferId)
         {
             regOfferAv = offerAvailabilityDB
-                .FirstOrDefault(x => x.OfferId == rowDb.OfferId && x.WarehouseId == docDb.WarehouseId);
+                .FirstOrDefault(x => x.OfferId == rowOfDeliveryRetailDocument.OfferId && x.WarehouseId == deliveryDocumentDb.WarehouseId);
 
             if (regOfferAv is null)
             {
                 await context.OffersAvailability.AddAsync(new()
                 {
-                    OfferId = rowDb.OfferId,
-                    NomenclatureId = rowDb.NomenclatureId,
-                    WarehouseId = docDb.WarehouseId,
-                    Quantity = rowDb.Quantity,
+                    OfferId = rowOfDeliveryRetailDocument.OfferId,
+                    NomenclatureId = rowOfDeliveryRetailDocument.NomenclatureId,
+                    WarehouseId = deliveryDocumentDb.WarehouseId,
+                    Quantity = rowOfDeliveryRetailDocument.Quantity,
                 }, token);
             }
             else
@@ -202,17 +202,17 @@ public partial class RetailService : IRetailService
                 await context.OffersAvailability
                     .Where(x => x.Id == regOfferAv.Id)
                     .ExecuteUpdateAsync(set => set
-                       .SetProperty(p => p.Quantity, p => p.Quantity + rowDb.Quantity), cancellationToken: token);
+                       .SetProperty(p => p.Quantity, p => p.Quantity + rowOfDeliveryRetailDocument.Quantity), cancellationToken: token);
             }
         }
 
         regOfferAv = offerAvailabilityDB
-            .Where(x => x.OfferId == req.OfferId && x.WarehouseId == docDb.WarehouseId)
+            .Where(x => x.OfferId == req.OfferId && x.WarehouseId == deliveryDocumentDb.WarehouseId)
             .FirstOrDefault();
 
-        decimal _quantity = rowDb.OfferId != req.OfferId
+        decimal _quantity = rowOfDeliveryRetailDocument.OfferId != req.OfferId
             ? req.Quantity
-            : req.Quantity - rowDb.Quantity;
+            : req.Quantity - rowOfDeliveryRetailDocument.Quantity;
 
 
         if (_quantity < 0)
@@ -228,9 +228,9 @@ public partial class RetailService : IRetailService
             {
                 regOfferAv = new()
                 {
-                    NomenclatureId = rowDb.NomenclatureId,
-                    WarehouseId = docDb.WarehouseId,
-                    OfferId = rowDb.OfferId,
+                    NomenclatureId = rowOfDeliveryRetailDocument.NomenclatureId,
+                    WarehouseId = deliveryDocumentDb.WarehouseId,
+                    OfferId = rowOfDeliveryRetailDocument.OfferId,
                     Quantity = -_quantity,
                 };
                 await context.OffersAvailability.AddAsync(regOfferAv, token);
@@ -241,7 +241,7 @@ public partial class RetailService : IRetailService
             if (regOfferAv is null)
             {
                 await transaction.RollbackAsync(token);
-                msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{req.OfferId}";
+                msg = $"На складе #{deliveryDocumentDb.WarehouseId} отсутствует офер #{req.OfferId}";
                 loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
                 return ResponseBaseModel.CreateError(msg);
@@ -249,7 +249,7 @@ public partial class RetailService : IRetailService
             else if (regOfferAv.Quantity < _quantity)
             {
                 await transaction.RollbackAsync(token);
-                msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
+                msg = $"На складе #{deliveryDocumentDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
                 loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
                 return ResponseBaseModel.CreateError(msg);
@@ -293,9 +293,9 @@ public partial class RetailService : IRetailService
            .Include(x => x.Document)
            .FirstAsync(x => x.Id == rowId, cancellationToken: token);
 
-        DeliveryDocumentRetailModelDB docDb = rowDb.Document!;
-
-        if (offDeliveriesStatuses.Contains(docDb.DeliveryStatus))
+        DeliveryDocumentRetailModelDB deliveryDocumentRetailDb = rowDb.Document!;
+        loggerRepo.LogInformation($"{nameof(deliveryDocumentRetailDb)}: {JsonConvert.SerializeObject(deliveryDocumentRetailDb)}");
+        if (offDeliveriesStatuses.Contains(deliveryDocumentRetailDb.DeliveryStatus))
         {
             await context.RowsDeliveryDocumentsRetail
             .Where(x => x.Id == rowDb.Id)
@@ -321,7 +321,7 @@ public partial class RetailService : IRetailService
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = rowDb.OfferId,
-                LockerAreaId = docDb.WarehouseId,
+                LockerAreaId = deliveryDocumentRetailDb.WarehouseId,
                 Marker = nameof(DeleteRowOfDeliveryDocumentAsync),
             }];
 
@@ -342,13 +342,13 @@ public partial class RetailService : IRetailService
         OfferAvailabilityModelDB? regOfferAv = await context
             .OffersAvailability
             .Where(x => x.OfferId == rowDb.OfferId)
-            .FirstOrDefaultAsync(x => x.OfferId == rowDb.OfferId && x.WarehouseId == docDb.WarehouseId, cancellationToken: token);
+            .FirstOrDefaultAsync(x => x.OfferId == rowDb.OfferId && x.WarehouseId == deliveryDocumentRetailDb.WarehouseId, cancellationToken: token);
 
         if (regOfferAv is null)
         {
             regOfferAv = new()
             {
-                WarehouseId = docDb.WarehouseId,
+                WarehouseId = deliveryDocumentRetailDb.WarehouseId,
                 Quantity = rowDb.Quantity,
                 OfferId = rowDb.OfferId,
                 NomenclatureId = rowDb.NomenclatureId,

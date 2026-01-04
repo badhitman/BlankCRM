@@ -122,26 +122,27 @@ public partial class RetailService : IRetailService
     {
         if (req.WarehouseId <= 0)
             return ResponseBaseModel.CreateError("Не указан склад");
-
+        loggerRepo.LogInformation($"{req}: {req}");
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         string msg;
         req.ExternalDocumentId = req.ExternalDocumentId?.Trim();
         if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.OrdersRetail.AnyAsync(x => x.Id != req.Id && x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
             return ResponseBaseModel.CreateError($"Документ [ext #:{req.ExternalDocumentId}] уже существует");
 
-        DocumentRetailModelDB documentDb = await context.OrdersRetail
+        DocumentRetailModelDB retailOrderDb = await context.OrdersRetail
             .Include(x => x.Rows)
             .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
+        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb)}");
 
-        if (documentDb.Version != req.Version)
+        if (retailOrderDb.Version != req.Version)
             return ResponseBaseModel.CreateError($"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить");
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
-        if (!offOrdersStatuses.Contains(documentDb.StatusDocument) && documentDb.WarehouseId != req.WarehouseId)
+        if (!offOrdersStatuses.Contains(retailOrderDb.StatusDocument) && retailOrderDb.WarehouseId != req.WarehouseId)
         {
             List<LockTransactionModelDB> offersLocked = [];
-            foreach (RowOfRetailOrderDocumentModelDB rowDoc in documentDb.Rows!)
+            foreach (RowOfRetailOrderDocumentModelDB rowDoc in retailOrderDb.Rows!)
             {
                 offersLocked.AddRange(new LockTransactionModelDB()
                 {
@@ -153,7 +154,7 @@ public partial class RetailService : IRetailService
                 new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
-                    LockerAreaId = documentDb.WarehouseId,
+                    LockerAreaId = retailOrderDb.WarehouseId,
                     LockerId = rowDoc.OfferId,
                     Marker = nameof(UpdateRetailDocumentAsync),
                 });
@@ -175,7 +176,7 @@ public partial class RetailService : IRetailService
             }
 
             ResponseBaseModel res = new();
-            int[] _offersIds = [.. documentDb.Rows.Select(x => x.OfferId).Distinct()];
+            int[] _offersIds = [.. retailOrderDb.Rows.Select(x => x.OfferId).Distinct()];
             List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
                 .Where(x => _offersIds.Any(y => y == x.OfferId))
                 .Include(x => x.Offer)
@@ -185,11 +186,11 @@ public partial class RetailService : IRetailService
             TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo
                 .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
 
-            foreach (RowOfRetailOrderDocumentModelDB rowOfDocument in documentDb.Rows)
+            foreach (RowOfRetailOrderDocumentModelDB rowOfDocument in retailOrderDb.Rows)
             {
                 OfferAvailabilityModelDB?
                     registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId),
-                    registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == documentDb.WarehouseId);
+                    registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == retailOrderDb.WarehouseId);
 
                 if (res_WarehouseReserveForRetailOrder.Response == true)
                 {
@@ -197,7 +198,7 @@ public partial class RetailService : IRetailService
                     {
                         registerOfferWriteOff = new()
                         {
-                            WarehouseId = documentDb.WarehouseId,
+                            WarehouseId = retailOrderDb.WarehouseId,
                             NomenclatureId = rowOfDocument.NomenclatureId,
                             OfferId = rowOfDocument.OfferId,
                             Quantity = rowOfDocument.Quantity,
@@ -230,7 +231,7 @@ public partial class RetailService : IRetailService
 
                         registerOfferWriteOff.Quantity -= rowOfDocument.Quantity;
                     }
-                    else if (documentDb.WarehouseId > 0)
+                    else if (retailOrderDb.WarehouseId > 0)
                     {
                         msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
                         loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");

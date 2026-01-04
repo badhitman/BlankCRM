@@ -294,12 +294,13 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    async Task<ResponseBaseModel> DoIt(CommerceContext context, IDbContextTransaction transaction, List<RowOfRetailOrderDocumentModelDB> rows, bool reserveForRetailOrder, bool isEnableDocument, List<OfferAvailabilityModelDB> offerAvailabilityDB, DocumentRetailModelDB orderDb, CancellationToken token = default)
+    async Task<ResponseBaseModel> DoIt(CommerceContext context, IDbContextTransaction transaction, List<RowOfRetailOrderDocumentModelDB> rows, bool reserveForRetailOrder, bool isEnableDocument, List<OfferAvailabilityModelDB> offerAvailabilityDB, DocumentRetailModelDB retailOrderDb, CancellationToken token = default)
     {
+        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb)}");
         foreach (RowOfRetailOrderDocumentModelDB row in rows)
         {
             OfferAvailabilityModelDB? regOfferAv = offerAvailabilityDB
-                .FirstOrDefault(x => x.OfferId == row.OfferId && x.WarehouseId == orderDb.WarehouseId);
+                .FirstOrDefault(x => x.OfferId == row.OfferId && x.WarehouseId == retailOrderDb.WarehouseId);
             string msg;
             if (isEnableDocument) // (ON) включение
             {
@@ -309,7 +310,7 @@ public partial class RetailService : IRetailService
                     {
                         regOfferAv = new()
                         {
-                            WarehouseId = orderDb.WarehouseId,
+                            WarehouseId = retailOrderDb.WarehouseId,
                             NomenclatureId = row.NomenclatureId,
                             OfferId = row.OfferId,
                             Quantity = row.Quantity,
@@ -330,7 +331,7 @@ public partial class RetailService : IRetailService
                     if (regOfferAv is null)
                     {
                         await transaction.RollbackAsync(token);
-                        msg = $"На складе #{orderDb.WarehouseId} отсутствует офер #{row.OfferId}";
+                        msg = $"На складе #{retailOrderDb.WarehouseId} отсутствует офер #{row.OfferId}";
                         loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
                         return ResponseBaseModel.CreateError(msg);
@@ -338,7 +339,7 @@ public partial class RetailService : IRetailService
                     else if (regOfferAv.Quantity < row.Quantity)
                     {
                         await transaction.RollbackAsync(token);
-                        msg = $"На складе #{orderDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
+                        msg = $"На складе #{retailOrderDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
                         loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
                         return ResponseBaseModel.CreateError(msg);
@@ -357,7 +358,7 @@ public partial class RetailService : IRetailService
                     if (regOfferAv is null)
                     {
                         await transaction.RollbackAsync(token);
-                        msg = $"На складе #{orderDb.WarehouseId} отсутствует офер #{row.OfferId}";
+                        msg = $"На складе #{retailOrderDb.WarehouseId} отсутствует офер #{row.OfferId}";
                         loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
                         return ResponseBaseModel.CreateError(msg);
@@ -365,7 +366,7 @@ public partial class RetailService : IRetailService
                     else if (regOfferAv.Quantity < row.Quantity)
                     {
                         await transaction.RollbackAsync(token);
-                        msg = $"На складе #{orderDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
+                        msg = $"На складе #{retailOrderDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
                         loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
                         return ResponseBaseModel.CreateError(msg);
@@ -382,7 +383,7 @@ public partial class RetailService : IRetailService
                     {
                         regOfferAv = new()
                         {
-                            WarehouseId = orderDb.WarehouseId,
+                            WarehouseId = retailOrderDb.WarehouseId,
                             NomenclatureId = row.NomenclatureId,
                             OfferId = row.OfferId,
                             Quantity = row.Quantity,
