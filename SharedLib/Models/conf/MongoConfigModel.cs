@@ -30,7 +30,7 @@ public class MongoConfigModel : HostConfigModel
     /// <summary>
     /// BusTracesSystemName
     /// </summary>
-    public string BusTracesSystemName { get; set; } = "bus-traces";
+    public string BusTracesSystemName { get; set; } = "receivers-traces-db";
 
     /// <inheritdoc/>
     public override string ToString()
