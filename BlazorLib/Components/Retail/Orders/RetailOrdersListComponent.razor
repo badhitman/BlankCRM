@@ -153,9 +153,11 @@
             <OrderRowsAboutComponent Rows="@context.Rows" />
         </MudTd>
         <MudTd DataLabel="Отгрузка">
-            <OrderDeliveriesAboutComponent DeliveriesDocuments="@context.Deliveries" />
+            @if (context.Deliveries is not null && context.Deliveries.Count != 0)
+            {
+                <OrderDeliveriesAboutComponent DeliveriesDocuments="@([..DeliveriesLinksCache.Where(x => context.Deliveries.Any(y => y.Id == x.Id))])" />
+            }
         </MudTd>
-
         <MudTd DataLabel="Информация">@context.Name @context.Description</MudTd>
     </RowTemplate>
     <NoRecordsContent>

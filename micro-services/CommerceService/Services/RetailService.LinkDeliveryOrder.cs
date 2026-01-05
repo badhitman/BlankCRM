@@ -107,6 +107,20 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
+    public async Task<TResponseModel<RetailOrderDeliveryLinkModelDB[]>> DeliveriesOrdersLinksDocumentsReadAsync(int[] req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        return new()
+        {
+            Response = await context.OrdersDeliveriesLinks
+             .Where(x => req.Contains(x.Id))
+             .Include(x => x.DeliveryDocument)
+             .Include(x => x.OrderDocument)
+             .ToArrayAsync(cancellationToken: token),
+        };
+    }
+
+    /// <inheritdoc/>
     public async Task<TResponseModel<decimal>> TotalWeightOrdersDocumentsLinksAsync(TotalWeightDeliveriesOrdersLinksDocumentsRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);

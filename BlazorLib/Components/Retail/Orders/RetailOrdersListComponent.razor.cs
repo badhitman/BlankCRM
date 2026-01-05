@@ -80,6 +80,10 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     /// PaymentsLinksCache
     /// </summary>
     protected PaymentOrderRetailLinkModelDB[] PaymentsLinksCache = [];
+    /// <summary>
+    /// DeliveriesLinksCache
+    /// </summary>
+    protected RetailOrderDeliveryLinkModelDB[] DeliveriesLinksCache = [];
 
     MudTable<DocumentRetailModelDB>? tableRef;
     bool _visibleCreateNewOrder;
@@ -220,7 +224,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
             List<Task> tasks = [
                 Task.Run(async () => { await CacheUsersUpdate([.._usersIds],token); }, token),
                 Task.Run(async () => { await CacheRubricsUpdate([.. res.Response.Select(x => x.WarehouseId).Distinct()], token); }, token),
-                Task.Run(async () => { await PaymentsOrdersLinksUpdate(res.Response.SelectMany(x => x.Payments!.Select(y => y.Id)).Distinct(), token); }, token),
+                Task.Run(async () => { await OrdersLinksUpdate(res.Response.SelectMany(x => x.Payments!.Select(y => y.Id)).Distinct(),res.Response.SelectMany(x => x.Deliveries!.Select(y => y.Id)).Distinct(), token); }, token),
             ];
 
             await Task.WhenAll(tasks);
@@ -230,10 +234,23 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         return new TableData<DocumentRetailModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 
-    async Task PaymentsOrdersLinksUpdate(IEnumerable<int> paymentsLinksIds, CancellationToken token)
+    async Task OrdersLinksUpdate(IEnumerable<int> paymentsLinksIds, IEnumerable<int> deliveriesLinksIds, CancellationToken token)
     {
-        TResponseModel<PaymentOrderRetailLinkModelDB[]> res = await RetailRepo.PaymentsOrdersDocumentsLinksGetAsync([.. paymentsLinksIds]);
-        PaymentsLinksCache = res.Response ?? [];
+        if (paymentsLinksIds.Any())
+        {
+            TResponseModel<PaymentOrderRetailLinkModelDB[]> resPayments = await RetailRepo.PaymentsOrdersDocumentsLinksGetAsync([.. paymentsLinksIds], token);
+            PaymentsLinksCache = resPayments.Response ?? [];
+        }
+        else
+            PaymentsLinksCache = [];
+
+        if (deliveriesLinksIds.Any())
+        {
+            TResponseModel<RetailOrderDeliveryLinkModelDB[]> resDeliveries = await RetailRepo.DeliveriesOrdersLinksDocumentsReadAsync([.. deliveriesLinksIds], token);
+            DeliveriesLinksCache = resDeliveries.Response ?? [];
+        }
+        else
+            DeliveriesLinksCache = [];
     }
 
     async void OnSearch(string text)
