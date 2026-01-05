@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
+using Newtonsoft.Json;
 using SharedLib;
 
 namespace FileIndexingService;
@@ -24,16 +25,38 @@ public class IndexingFilesImpl(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SaveTraceForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default)
     {
+        if (req.RequestBody is not null)
+            req.RequestBody = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.RequestBody));
+
+        if (req.ResponseBody is not null)
+            req.ResponseBody = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.ResponseBody));
+
+
         IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
         IMongoCollection<TraceReceiverRecord> traceReceiverRecords = mongoFs.GetCollection<TraceReceiverRecord>(nameof(TraceReceiverRecord));
 
-        IndexKeysDefinitionBuilder<TraceReceiverRecord> notificationLogBuilder = Builders<TraceReceiverRecord>.IndexKeys;
-        var indexModel = new CreateIndexModel<TraceReceiverRecord>(notificationLogBuilder.Ascending(x => x.ReceiverName).Ascending(x=>x.RequestKey));
-        //await IMongoCollection.Indexes
-        //                      .CreateOneAsync(indexModel, cancellationToken: cancellationToken)
+        CreateIndexOptions indexOptions = new();
+        IndexKeysDefinition<TraceReceiverRecord> indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.ReceiverName);
+        CreateIndexModel<TraceReceiverRecord> indexModel = new(indexKeys, indexOptions);
+        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
+
+        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.RequestTypeName);
+        indexModel = new(indexKeys, indexOptions);
+        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
+
+        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.RequestKey);
+        indexModel = new(indexKeys, indexOptions);
+        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
+
+        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.ResponseTypeName);
+        indexModel = new(indexKeys, indexOptions);
+        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
+
+        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.ResponseKey);
+        indexModel = new(indexKeys, indexOptions);
+        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
         await traceReceiverRecords.InsertOneAsync(req, cancellationToken: token);
-
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
