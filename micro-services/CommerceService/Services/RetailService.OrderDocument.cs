@@ -376,10 +376,10 @@ public partial class RetailService : IRetailService
                 .ThenInclude(x => x.Offer)
 
                 .Include(x => x.Deliveries!)
-                .ThenInclude(x => x.DeliveryDocument)
+                //.ThenInclude(x => x.DeliveryDocument)
 
                 .Include(x => x.Conversions!)
-                .ThenInclude(x => x.ConversionDocument)
+                //.ThenInclude(x => x.ConversionDocument)
 
                 .Include(x => x.Payments!)
                 //.ThenInclude(x => x.PaymentDocument)
