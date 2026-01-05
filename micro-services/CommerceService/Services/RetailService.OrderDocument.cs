@@ -132,7 +132,7 @@ public partial class RetailService : IRetailService
         DocumentRetailModelDB retailOrderDb = await context.OrdersRetail
             .Include(x => x.Rows)
             .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
-        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb)}");
+        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         if (retailOrderDb.Version != req.Version)
             return ResponseBaseModel.CreateError($"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить");

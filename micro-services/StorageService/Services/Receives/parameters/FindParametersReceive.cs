@@ -22,7 +22,7 @@ public class FindParametersReceive(IParametersStorage serializeStorageRepo, ILog
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await serializeStorageRepo.FindRawAsync(req, token);
     }
 }

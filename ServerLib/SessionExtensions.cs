@@ -4,6 +4,7 @@
 
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using SharedLib;
 using System.Text;
 
 namespace ServerLib;
@@ -22,7 +23,7 @@ public static class SessionExtensions
     /// <param name="value">Значение параметра</param>
     public static void Set<T>(this ISession session, string key, T value)
     {
-        session.SetString(key, JsonConvert.SerializeObject(value));
+        session.SetString(key, JsonConvert.SerializeObject(value, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings));
     }
 
     /// <summary>

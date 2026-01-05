@@ -30,7 +30,7 @@ public partial class RetailService : IRetailService
 
         DocumentRetailModelDB retailOrderDb = await context.OrdersRetail
             .FirstAsync(x => x.Id == req.OrderId, cancellationToken: token);
-        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb)}");
+        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         LockTransactionModelDB locker = new()
@@ -147,7 +147,7 @@ public partial class RetailService : IRetailService
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         DocumentRetailModelDB retailOrderDb = await context.OrdersRetail
             .FirstAsync(x => x.Id == req.OrderId, cancellationToken: token);
-        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb)}");
+        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         RowOfRetailOrderDocumentModelDB? rowDb = await context.RowsOrdersRetails
             .Include(x => x.Offer!)
             .ThenInclude(x => x.Nomenclature)
@@ -412,9 +412,9 @@ public partial class RetailService : IRetailService
             .FirstAsync(x => x.Id == req.RowId, cancellationToken: token);
 
         DocumentRetailModelDB retailOrderDb = rowOfRetailDb.Order!;
-        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb)}");
+        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         rowOfRetailDb.Order = null;
-        loggerRepo.LogInformation($"{nameof(rowOfRetailDb)}: {JsonConvert.SerializeObject(rowOfRetailDb)}");
+        loggerRepo.LogInformation($"{nameof(rowOfRetailDb)}: {JsonConvert.SerializeObject(rowOfRetailDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         if (!offOrdersStatuses.Contains(retailOrderDb.StatusDocument))

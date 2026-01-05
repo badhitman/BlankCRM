@@ -4,6 +4,7 @@
 
 using HtmlGenerator.html5;
 using Newtonsoft.Json;
+using SharedLib;
 
 namespace CodegeneratorLib;
 
@@ -173,7 +174,7 @@ public abstract class BaseMethodBuilder : IBaseMethodBuilder
         if (db_inc)
             Payload!.Insert(0, "using LayerContext _db_context = appDbFactory.CreateDbContext();");
 
-        string json_raw = JsonConvert.SerializeObject(this);
+        string json_raw = JsonConvert.SerializeObject(this, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
 
         Payload?.Clear();
         Parameters?.Clear();

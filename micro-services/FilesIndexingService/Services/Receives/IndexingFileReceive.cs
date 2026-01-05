@@ -21,7 +21,7 @@ public class IndexingFileReceive(ILogger<IndexingFileReceive> LoggerRepo, IFiles
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(StorageFileMiddleModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await indexingFileRepo.IndexingFileAsync(req, token);
     }
 }

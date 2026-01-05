@@ -51,7 +51,7 @@ public abstract class FieldFormBaseConstructorModel : FieldFormBaseLowConstructo
         lock (locker)
         {
             dd.Remove(prop_index);
-            MetadataValueType = JsonConvert.SerializeObject(dd);
+            MetadataValueType = JsonConvert.SerializeObject(dd, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
         }
     }
 
@@ -65,7 +65,7 @@ public abstract class FieldFormBaseConstructorModel : FieldFormBaseLowConstructo
         {
             if (!dd.TryAdd(prop_index, prop_value))
                 dd[prop_index] = prop_value;
-            MetadataValueType = JsonConvert.SerializeObject(dd);
+            MetadataValueType = JsonConvert.SerializeObject(dd, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
         }
     }
 

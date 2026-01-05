@@ -129,7 +129,7 @@ public class LdapService : ILdapService, IDisposable
         string msg = "Не удачная попытка создать пользователя в AD: ";
         if (!MailAddress.TryCreate(user.Email, out _) || string.IsNullOrWhiteSpace(user.FirstName) || string.IsNullOrWhiteSpace(user.Login))
         {
-            msg = $"{msg}не корректные данные (email, firs_name и login обязательные поля) - `{JsonConvert.SerializeObject(user)}`";
+            msg = $"{msg}не корректные данные (email, firs_name и login обязательные поля) - `{JsonConvert.SerializeObject(user, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}`";
             _logger.LogError(msg);
             return ResponseBaseModel.CreateError(msg);
         }
@@ -162,7 +162,7 @@ public class LdapService : ILdapService, IDisposable
         IQueryable<string> q = find_ou.Where(x => x.Equals(user.OU, StringComparison.OrdinalIgnoreCase)).AsQueryable();
         if (q.Count() != 1)
         {
-            msg = $"{msg}ошибка в имени 'OU' ({user.OU}). Результат поиска - {JsonConvert.SerializeObject(q.ToArray())}";
+            msg = $"{msg}ошибка в имени 'OU' ({user.OU}). Результат поиска - {JsonConvert.SerializeObject(q.ToArray(), Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}";
             _logger.LogError(msg);
             return ResponseBaseModel.CreateError(msg);
         }
@@ -173,7 +173,7 @@ public class LdapService : ILdapService, IDisposable
         LdapMemberViewModel? find_user = (await FindMembersViewDataByQueryAsync([user.Login], [$"{findMembersPrefix}{BasePath}"], token)).FirstOrDefault(x => x.SAMAccountName.Equals(user.Login, StringComparison.OrdinalIgnoreCase));
         if (find_user is not null)
         {
-            msg = $"{msg} TelegramId уже используется - {JsonConvert.SerializeObject(find_user)}";
+            msg = $"{msg} TelegramId уже используется - {JsonConvert.SerializeObject(find_user, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}";
             _logger.LogError(msg);
             return ResponseBaseModel.CreateError(msg);
         }
@@ -190,7 +190,7 @@ public class LdapService : ILdapService, IDisposable
             List<LdapMemberViewModel> chk_tg_user = await GetMembersViewDataByTelegramIdsAsync([user.TelegramId], token: token);
             if (chk_tg_user.Count != 0)
             {
-                msg = $"{msg}ошибка в имени 'OU' ({user.OU}). Результат поиска - {JsonConvert.SerializeObject(chk_tg_user)}";
+                msg = $"{msg}ошибка в имени 'OU' ({user.OU}). Результат поиска - {JsonConvert.SerializeObject(chk_tg_user, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}";
                 _logger.LogError(msg);
                 return ResponseBaseModel.CreateError(msg);
 
@@ -216,7 +216,7 @@ public class LdapService : ILdapService, IDisposable
         try
         {
             await ldap_conn!.AddAsync(new(dn, attributeSet), token);
-            msg = $"В ad создана учётная запись `{user.Login}` ({JsonConvert.SerializeObject(new { name, dn })})";
+            msg = $"В ad создана учётная запись `{user.Login}` ({JsonConvert.SerializeObject(new { name, dn }, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)})";
             _logger.LogWarning(msg);
         }
         catch (LdapException ex)
@@ -1317,7 +1317,7 @@ public class LdapService : ILdapService, IDisposable
         string msg;
         if (check.GroupData is null || check.UserData is null)
         {
-            msg = $"Ошибка удаления пользователя [{user_dn}] из группы {group_dn} {{9C1FC82B-1225-43EF-8F93-335BF4D270E4}}: пользователь и/или группа не найдены - {JsonConvert.SerializeObject(check)}";
+            msg = $"Ошибка удаления пользователя [{user_dn}] из группы {group_dn} {{9C1FC82B-1225-43EF-8F93-335BF4D270E4}}: пользователь и/или группа не найдены - {JsonConvert.SerializeObject(check, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}";
             _logger.LogError(msg);
             res.AddError(msg);
             return res;

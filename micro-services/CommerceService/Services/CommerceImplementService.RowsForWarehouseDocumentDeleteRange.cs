@@ -102,7 +102,7 @@ public partial class CommerceImplementService : ICommerceService
 
         foreach (var rowOfDocumentElement in _allRowsOfDocuments.Where(x => !x.IsDisabled))
         {
-            loggerRepo.LogInformation($"{nameof(rowOfDocumentElement)}: {JsonConvert.SerializeObject(rowOfDocumentElement)}");
+            loggerRepo.LogInformation($"{nameof(rowOfDocumentElement)}: {JsonConvert.SerializeObject(rowOfDocumentElement, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             OfferAvailabilityModelDB?
                 offerRegister = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocumentElement.OfferId && x.WarehouseId == rowOfDocumentElement.WarehouseId),
                 offerRegisterWritingOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocumentElement.OfferId && x.WarehouseId == rowOfDocumentElement.WritingOffWarehouseId);

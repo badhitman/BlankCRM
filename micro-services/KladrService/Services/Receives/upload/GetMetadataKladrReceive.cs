@@ -19,7 +19,7 @@ public class GetMetadataKladrReceive(ILogger<GetMetadataKladrReceive> loggerRepo
     public async Task<MetadataKladrModel?> ResponseHandleActionAsync(GetMetadataKladrRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await kladrRepo.GetMetadataKladrAsync(req, token);
     }
 }

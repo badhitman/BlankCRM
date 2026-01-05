@@ -201,7 +201,7 @@ public class ParametersStorage(
             ApplicationName = set.ApplicationName,
             PropertyName = set.PropertyName,
             TypeName = typeof(T).FullName ?? throw new Exception(),
-            SerializedDataJson = JsonConvert.SerializeObject(obj),
+            SerializedDataJson = JsonConvert.SerializeObject(obj, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings),
             OwnerPrimaryKey = set.OwnerPrimaryKey,
             PrefixPropertyName = set.PrefixPropertyName,
         };
@@ -376,7 +376,7 @@ public class ParametersStorage(
         res.Response = [.. prop_db
             .Select(x => new FoundParameterModel()
             {
-                SerializedDataJson = JsonConvert.SerializeObject(x),
+                SerializedDataJson = JsonConvert.SerializeObject(x, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings),
                 CreatedAt = DateTime.UtcNow,
                 OwnerPrimaryKey = x.OwnerPrimaryKey,
                 PrefixPropertyName = x.PrefixPropertyName,

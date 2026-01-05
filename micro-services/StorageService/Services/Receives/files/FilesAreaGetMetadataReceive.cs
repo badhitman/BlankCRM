@@ -30,10 +30,10 @@ public class FilesAreaGetMetadataReceive(ILogger<FilesSelectReceive> loggerRepo,
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings));
         await indexingRepo.SaveTraceForReceiverAsync(trace, token);
 
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await serializeStorageRepo.FilesAreaGetMetadataAsync(req, token);
     }
 }

@@ -22,7 +22,7 @@ public class GetDirectoryInfoReceive(ILogger<FilesSelectReceive> loggerRepo, IFi
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await serializeStorageRepo.GetDirectoryInfoAsync(req, token);
     }
 }

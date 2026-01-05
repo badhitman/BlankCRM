@@ -285,7 +285,7 @@ public partial class RetailService : IRetailService
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DoIt(CommerceContext context, IDbContextTransaction transaction, List<RowOfDeliveryRetailDocumentModelDB> rows, bool isEnableDocument, List<OfferAvailabilityModelDB> offerAvailabilityDB, DeliveryDocumentRetailModelDB deliveryDocDb, CancellationToken token = default)
     {
-        loggerRepo.LogInformation($"{nameof(deliveryDocDb)}: {JsonConvert.SerializeObject(deliveryDocDb)}");
+        loggerRepo.LogInformation($"{nameof(deliveryDocDb)}: {JsonConvert.SerializeObject(deliveryDocDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         foreach (RowOfDeliveryRetailDocumentModelDB row in rows)
         {
             OfferAvailabilityModelDB? regOfferAv = offerAvailabilityDB

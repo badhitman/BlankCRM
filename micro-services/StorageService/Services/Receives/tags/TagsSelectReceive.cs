@@ -21,7 +21,7 @@ public class TagsSelectReceive(ILogger<TagsSelectReceive> loggerRepo, IParameter
     public async Task<TPaginationResponseModel<TagViewModel>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await serializeStorageRepo.TagsSelectAsync(req, token);
     }
 }

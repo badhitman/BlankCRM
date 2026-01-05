@@ -21,7 +21,7 @@ public class RubricMoveReceive(IRubricsService hdRepo, ILogger<RubricMoveReceive
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<RowMoveModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await hdRepo.RubricMoveAsync(req, token);
     }
 }

@@ -22,7 +22,7 @@ public class ReadFileReceive(ILogger<ReadFileReceive> LoggerRepo, IFilesStorage 
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await serializeStorageRepo.ReadFileAsync(req, token);
     }
 }

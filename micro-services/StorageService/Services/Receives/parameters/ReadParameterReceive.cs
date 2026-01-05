@@ -22,7 +22,7 @@ public class ReadParameterReceive(IParametersStorage serializeStorageRepo, ILogg
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await serializeStorageRepo.ReadParameterAsync(req, token);
     }
 }

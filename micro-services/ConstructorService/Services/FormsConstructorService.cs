@@ -3208,7 +3208,7 @@ public partial class FormsConstructorService(
             string[] een = session_json.EmailsNotifications.SplitToList().Where(x => !MailAddress.TryCreate(x, out _)).ToArray();
             if (een.Length != 0)
             {
-                res.AddError($"Не корректные адреса получателей. {JsonConvert.SerializeObject(een)}. error AFDDD9DE-F36E-4FB0-9C10-ACDAF48409A8");
+                res.AddError($"Не корректные адреса получателей. {JsonConvert.SerializeObject(een, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}. error AFDDD9DE-F36E-4FB0-9C10-ACDAF48409A8");
                 return res;
             }
         }

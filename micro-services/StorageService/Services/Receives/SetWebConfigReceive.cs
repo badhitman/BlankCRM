@@ -22,7 +22,7 @@ public class SetWebConfigReceive(WebConfigModel webConfig, ILogger<SetWebConfigR
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
 #pragma warning disable CS8619 // Допустимость значения NULL для ссылочных типов в значении не соответствует целевому типу.
         if (!Uri.TryCreate(req.BaseUri, UriKind.Absolute, out _))

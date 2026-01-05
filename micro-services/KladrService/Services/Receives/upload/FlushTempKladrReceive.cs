@@ -19,7 +19,7 @@ public class FlushTempKladrReceive(ILogger<FlushTempKladrReceive> LoggerRepo, IK
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(object? req, CancellationToken token = default)
     {
         // ArgumentNullException.ThrowIfNull(req);
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await kladrRepo.FlushTempKladrAsync(token);
     }
 }

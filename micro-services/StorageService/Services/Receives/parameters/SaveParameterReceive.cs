@@ -24,7 +24,7 @@ public class SaveParameterReceive(IParametersStorage serializeStorageRepo, ILogg
         ArgumentNullException.ThrowIfNull(req);
 
         req.Normalize();
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         Regex rx = new(@"\s+", RegexOptions.Compiled);
         StorageCloudParameterModelDB store_db = new()
         {

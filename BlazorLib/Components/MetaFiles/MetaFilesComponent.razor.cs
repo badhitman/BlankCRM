@@ -46,16 +46,16 @@ public partial class MetaFilesComponent : BlazorBusyComponentBaseAuthModel
     {
         if (!firstRender)
         {
-            string reqKey = reqNamesApps is null ? "" : JsonConvert.SerializeObject(reqNamesApps);
+            string reqKey = reqNamesApps is null ? "" : JsonConvert.SerializeObject(reqNamesApps, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
             if (reqKey != _reqKey && reqNamesApps is not null && reqNamesApps.Count != 0)
-                NavRepo.NavigateTo($"/meta-files/home/{JsonConvert.SerializeObject(reqNamesApps)}");
+                NavRepo.NavigateTo($"/meta-files/home/{JsonConvert.SerializeObject(reqNamesApps, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         }
     }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        _reqKey = SelectedAreas is null || SelectedAreas.Length == 0 ? null : JsonConvert.SerializeObject(SelectedAreas);
+        _reqKey = SelectedAreas is null || SelectedAreas.Length == 0 ? null : JsonConvert.SerializeObject(SelectedAreas, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
         await SetBusyAsync();
         await ReadCurrentUser();
         TResponseModel<FilesAreaMetadataModel[]> res = await FilesRepo.FilesAreaGetMetadataAsync(new());

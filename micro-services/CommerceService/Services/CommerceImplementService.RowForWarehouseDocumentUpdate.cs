@@ -56,7 +56,7 @@ public partial class CommerceImplementService : ICommerceService
 
         if (req.NomenclatureId < 1)
             req.NomenclatureId = await context.Offers.Where(x => x.Id == req.OfferId).Select(x => x.NomenclatureId).FirstAsync(cancellationToken: token);
-        loggerRepo.LogInformation($"{nameof(warehouseDocDB)}: {JsonConvert.SerializeObject(warehouseDocDB)}");
+        loggerRepo.LogInformation($"{nameof(warehouseDocDB)}: {JsonConvert.SerializeObject(warehouseDocDB, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         RowOfWarehouseDocumentModelDB? rowDb = req.Id > 0
             ? await context.RowsWarehouses.FirstAsync(x => x.Id == req.Id, cancellationToken: token)
             : null;

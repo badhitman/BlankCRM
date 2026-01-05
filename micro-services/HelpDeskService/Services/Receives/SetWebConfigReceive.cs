@@ -21,7 +21,7 @@ public class SetWebConfigReceive(IHelpDeskService hdRepo, ILogger<SetWebConfigRe
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(HelpDeskConfigModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload)}");
+        _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await hdRepo.SetWebConfigAsync(payload, token);
     }
 }

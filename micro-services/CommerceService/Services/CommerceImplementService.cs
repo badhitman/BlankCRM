@@ -986,7 +986,7 @@ public partial class CommerceImplementService(
             res.AddError($"Количество не может быть нулевым");
             return res;
         }
-        loggerRepo.LogInformation($"{nameof(req)}:{JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogInformation($"{nameof(req)}:{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<OrderRowsQueryRecord> queryDocumentDb = from r in context.RowsOrders
@@ -1006,7 +1006,7 @@ public partial class CommerceImplementService(
             })
             .FirstAsync(cancellationToken: token);
 
-        loggerRepo.LogInformation($"{nameof(orderRowRecordDb)}: {JsonConvert.SerializeObject(orderRowRecordDb)}");
+        loggerRepo.LogInformation($"{nameof(orderRowRecordDb)}: {JsonConvert.SerializeObject(orderRowRecordDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         bool conflict = await context.RowsOrders
             .AnyAsync(x => x.Id != req.Id && x.OfficeOrderTabId == req.OfficeOrderTabId && x.OfferId == req.OfferId, cancellationToken: token);
@@ -1083,7 +1083,7 @@ public partial class CommerceImplementService(
         OfferAvailabilityModelDB? regOfferAvStorno = null;
         if (rowOfOrderDb is not null && rowOfOrderDb.OfferId != req.OfferId)
         {
-            loggerRepo.LogInformation($"{nameof(rowOfOrderDb)}: {JsonConvert.SerializeObject(rowOfOrderDb)}");
+            loggerRepo.LogInformation($"{nameof(rowOfOrderDb)}: {JsonConvert.SerializeObject(rowOfOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             regOfferAvStorno = regsOfferAv.FirstOrDefault(x => x.OfferId == rowOfOrderDb.OfferId && x.WarehouseId == orderRowRecordDb.WarehouseId);
 
             if (regOfferAvStorno is null)
@@ -1254,7 +1254,7 @@ public partial class CommerceImplementService(
         foreach (RowOrderDocumentRecord rowOfOrderElementRecord in _allOffersOfDocuments.Where(x => x.DocumentStatus != StatusesDocumentsEnum.Canceled))
         {
             OfferAvailabilityModelDB? offerRegister = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfOrderElementRecord.OfferId && x.WarehouseId == rowOfOrderElementRecord.WarehouseId);
-            loggerRepo.LogInformation($"{nameof(rowOfOrderElementRecord)}: {JsonConvert.SerializeObject(rowOfOrderElementRecord)}");
+            loggerRepo.LogInformation($"{nameof(rowOfOrderElementRecord)}: {JsonConvert.SerializeObject(rowOfOrderElementRecord, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             if (offerRegister is not null)
             {
                 offerRegister.Quantity += rowOfOrderElementRecord.Quantity;
@@ -1361,7 +1361,7 @@ public partial class CommerceImplementService(
 
         foreach (WarehouseRowDocumentRecord rowOfWarehouseDocumentElement in _allRowsOfDocuments)
         {
-            loggerRepo.LogInformation($"{nameof(rowOfWarehouseDocumentElement)}: {JsonConvert.SerializeObject(rowOfWarehouseDocumentElement)}");
+            loggerRepo.LogInformation($"{nameof(rowOfWarehouseDocumentElement)}: {JsonConvert.SerializeObject(rowOfWarehouseDocumentElement, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             int _i = registersOffersDb.FindIndex(y => y.WarehouseId == rowOfWarehouseDocumentElement.WarehouseId && y.OfferId == rowOfWarehouseDocumentElement.Row.OfferId);
 
             if (req.Payload.Step == StatusesDocumentsEnum.Canceled)
@@ -1638,7 +1638,7 @@ public partial class CommerceImplementService(
             _catalogData.Add(_nom);
         }
 
-        string inputString = JsonConvert.SerializeObject(_catalogData);
+        string inputString = JsonConvert.SerializeObject(_catalogData, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
 
         try
         {

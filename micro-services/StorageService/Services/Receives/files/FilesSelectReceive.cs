@@ -22,7 +22,7 @@ public class FilesSelectReceive(ILogger<FilesSelectReceive> loggerRepo, IFilesSt
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await serializeStorageRepo.FilesSelectAsync(req, token);
     }
 }

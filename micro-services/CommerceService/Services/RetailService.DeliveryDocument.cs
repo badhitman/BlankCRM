@@ -77,7 +77,7 @@ public partial class RetailService : IRetailService
         req.Description = req.Description?.Trim();
         req.DeliveryCode = req.DeliveryCode?.Trim();
 
-        loggerRepo.LogInformation($"{nameof(req)}: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogInformation($"{nameof(req)}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -88,7 +88,7 @@ public partial class RetailService : IRetailService
         if (documentDb.Version != req.Version)
             return ResponseBaseModel.CreateError($"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить");
 
-        loggerRepo.LogInformation($"{nameof(documentDb)}: {JsonConvert.SerializeObject(documentDb)}");
+        loggerRepo.LogInformation($"{nameof(documentDb)}: {JsonConvert.SerializeObject(documentDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         string msg;

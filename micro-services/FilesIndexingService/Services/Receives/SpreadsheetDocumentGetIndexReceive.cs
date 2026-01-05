@@ -21,7 +21,7 @@ public class SpreadsheetDocumentGetIndexReceive(ILogger<SpreadsheetDocumentGetIn
     public async Task<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await indexingFileRepo.SpreadsheetDocumentGetIndexAsync(req, token);
     }
 }

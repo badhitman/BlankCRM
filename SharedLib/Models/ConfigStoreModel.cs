@@ -49,7 +49,7 @@ public class ConfigStoreModel
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return JsonConvert.SerializeObject(this).GetHashCode();
+        return JsonConvert.SerializeObject(this, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings).GetHashCode();
     }
 
     /// <inheritdoc/>

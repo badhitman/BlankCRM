@@ -112,15 +112,15 @@ public partial class RetailService : IRetailService
         req.Offer = null;
         req.Document = null;
         req.Comment = req.Comment?.Trim();
-        loggerRepo.LogInformation($"{nameof(req)}: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogInformation($"{nameof(req)}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         DeliveryDocumentRetailModelDB deliveryDocumentDb = await context.DeliveryDocumentsRetail.FirstAsync(x => x.Id == req.DocumentId, cancellationToken: token);
-        loggerRepo.LogInformation($"{nameof(deliveryDocumentDb)}: {JsonConvert.SerializeObject(deliveryDocumentDb)}");
+        loggerRepo.LogInformation($"{nameof(deliveryDocumentDb)}: {JsonConvert.SerializeObject(deliveryDocumentDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         RowOfDeliveryRetailDocumentModelDB rowOfDeliveryRetailDocument = await context.RowsDeliveryDocumentsRetail
             .Include(x => x.Offer!)
             .ThenInclude(x => x.Nomenclature)
             .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
-        loggerRepo.LogInformation($"{nameof(rowOfDeliveryRetailDocument)}: {JsonConvert.SerializeObject(rowOfDeliveryRetailDocument)}");
+        loggerRepo.LogInformation($"{nameof(rowOfDeliveryRetailDocument)}: {JsonConvert.SerializeObject(rowOfDeliveryRetailDocument, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         if (rowOfDeliveryRetailDocument.Version != req.Version)
             return ResponseBaseModel.CreateError($"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова");
 
@@ -294,7 +294,7 @@ public partial class RetailService : IRetailService
            .FirstAsync(x => x.Id == rowId, cancellationToken: token);
 
         DeliveryDocumentRetailModelDB deliveryDocumentRetailDb = rowDb.Document!;
-        loggerRepo.LogInformation($"{nameof(deliveryDocumentRetailDb)}: {JsonConvert.SerializeObject(deliveryDocumentRetailDb)}");
+        loggerRepo.LogInformation($"{nameof(deliveryDocumentRetailDb)}: {JsonConvert.SerializeObject(deliveryDocumentRetailDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         if (offDeliveriesStatuses.Contains(deliveryDocumentRetailDb.DeliveryStatus))
         {
             await context.RowsDeliveryDocumentsRetail

@@ -21,7 +21,7 @@ public class WordprocessingDocumentGetIndexReceive(ILogger<WordprocessingDocumen
     public async Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await indexingFileRepo.WordprocessingDocumentGetIndexAsync(req, token);
     }
 }

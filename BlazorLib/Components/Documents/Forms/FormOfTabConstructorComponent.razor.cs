@@ -215,7 +215,7 @@ public partial class FormOfTabConstructorComponent : FormBaseModel
             _value_field = new()
             {
                 Name = e.Name,
-                Value = value?.Length < 1 ? null : JsonConvert.SerializeObject(value),
+                Value = value?.Length < 1 ? null : JsonConvert.SerializeObject(value, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings),
                 RowNum = 0,
                 OwnerId = Session.Id,
                 JoinFormToTabId = Join.Id
@@ -223,7 +223,7 @@ public partial class FormOfTabConstructorComponent : FormBaseModel
             SessionValues.Add(_value_field);
         }
         else
-            _value_field.Value = value?.Length < 1 ? null : JsonConvert.SerializeObject(value);
+            _value_field.Value = value?.Length < 1 ? null : JsonConvert.SerializeObject(value, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
 
         FormChangeAction(this);
     }

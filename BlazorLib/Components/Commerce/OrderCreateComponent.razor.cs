@@ -203,7 +203,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
         if (GroupingRows.Any(x => x.Any(y => y.Offer is null)))
             return;
 
-        string json_dump_discounts_before = JsonConvert.SerializeObject(DiscountsDetected);
+        string json_dump_discounts_before = JsonConvert.SerializeObject(DiscountsDetected, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
         DiscountsDetected.Clear();
         foreach (IGrouping<int, RowOfOrderDocumentModelDB> node in GroupingRows)
         {
@@ -227,7 +227,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
                 DiscountsDetected.Remove(node.Key);
         }
 
-        string json_dump_discounts_after = JsonConvert.SerializeObject(DiscountsDetected);
+        string json_dump_discounts_after = JsonConvert.SerializeObject(DiscountsDetected, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
         if (json_dump_discounts_before != json_dump_discounts_after)
             StateHasChanged();
     }

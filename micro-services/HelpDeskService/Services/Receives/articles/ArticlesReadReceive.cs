@@ -20,7 +20,7 @@ public class ArticlesReadReceive(IArticlesService artRepo, ILogger<ArticlesReadR
     public async Task<TResponseModel<ArticleModelDB[]>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await artRepo.ArticlesReadAsync(req, token);
     }
 }

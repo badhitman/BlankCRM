@@ -21,7 +21,7 @@ public class RubricCreateOrUpdateReceive(IRubricsService hdRepo, ILogger<RubricC
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(RubricStandardModel? rubric, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(rubric);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(rubric)}");
+        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(rubric, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await hdRepo.RubricCreateOrUpdateAsync(rubric, token);
     }
 }

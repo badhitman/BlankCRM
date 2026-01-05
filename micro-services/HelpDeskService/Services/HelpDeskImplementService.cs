@@ -83,7 +83,7 @@ public class HelpDeskImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default)
     {
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         TResponseModel<int?> res = new();
 
@@ -403,7 +403,7 @@ public class HelpDeskImplementService(
             return res;
         }
 
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         TResponseModel<UserInfoModel[]> rest = req.SenderActionUserId == GlobalStaticConstantsRoles.Roles.System
             ? new() { Response = [UserInfoModel.BuildSystem()] }
             : await IdentityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
@@ -659,7 +659,7 @@ public class HelpDeskImplementService(
             }
             catch (Exception ex)
             {
-                loggerRepo.LogError(ex, JsonConvert.SerializeObject(req));
+                loggerRepo.LogError(ex, JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings));
             }
 
             if (string.IsNullOrWhiteSpace(cacheToken))
@@ -724,7 +724,7 @@ public class HelpDeskImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>> ExecuterUpdateAsync(TAuthRequestModel<UserIssueModel> req, CancellationToken token = default)
     {
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         TResponseModel<bool> res = new();
 
         if (req.Payload is null)
@@ -899,7 +899,7 @@ public class HelpDeskImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> IssueCreateOrUpdateAsync(TAuthRequestModel<UniversalUpdateRequestModel> issue_upd, CancellationToken token = default)
     {
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(issue_upd)}");
+        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(issue_upd, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         TResponseModel<int> res = new();
 
         if (string.IsNullOrWhiteSpace(issue_upd.SenderActionUserId))
@@ -1196,7 +1196,7 @@ public class HelpDeskImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>> IssueStatusChangeAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         TResponseModel<bool> res = new()
         {
             Response = false,
@@ -1439,7 +1439,7 @@ public class HelpDeskImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<bool?>> SubscribeUpdateAsync(TAuthRequestModel<SubscribeUpdateRequestModel> req, CancellationToken token = default)
     {
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         TResponseModel<bool?> res = new() { Response = false };
 
         if (req.Payload is null)
@@ -1602,7 +1602,7 @@ public class HelpDeskImplementService(
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>> PulsePushAsync(PulseRequestModel req, CancellationToken token = default)
     {
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         TResponseModel<bool> res = new()
         {
             Response = false,
@@ -1713,7 +1713,7 @@ public class HelpDeskImplementService(
 
         UserInfoModel actor = rest.Response[0];
 
-        loggerRepo.LogDebug($"Запрос журнала активности пользователем: {JsonConvert.SerializeObject(actor)}");
+        loggerRepo.LogDebug($"Запрос журнала активности пользователем: {JsonConvert.SerializeObject(actor, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
         {

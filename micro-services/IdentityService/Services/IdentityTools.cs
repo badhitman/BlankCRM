@@ -1955,7 +1955,7 @@ public class IdentityTools(
 
         if (roles_that_need_add_in_db.Length != 0)
         {
-            loggerRepo.LogWarning($"Созданы новые роли: {JsonConvert.SerializeObject(roles_that_need_add_in_db)}");
+            loggerRepo.LogWarning($"Созданы новые роли: {JsonConvert.SerializeObject(roles_that_need_add_in_db, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             await identityContext
                 .AddRangeAsync(roles_that_need_add_in_db.Select(r => new ApplicationRole() { Name = r, Title = r, NormalizedName = userManager.NormalizeName(r) }), token);
             await identityContext.SaveChangesAsync(token);
@@ -1968,7 +1968,7 @@ public class IdentityTools(
 
         if (roles_that_need_add_in_db.Length != 0)
         { // добавляем пользователю ролей
-            loggerRepo.LogWarning($"Добавление ролей пользователю `{req.UserId}`: {JsonConvert.SerializeObject(roles_that_need_add_in_db)}");
+            loggerRepo.LogWarning($"Добавление ролей пользователю `{req.UserId}`: {JsonConvert.SerializeObject(roles_that_need_add_in_db, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             roles_that_need_add_in_db = await identityContext
                 .Roles
                 .Where(x => roles_that_need_add_in_db.Contains(x.NormalizedName))

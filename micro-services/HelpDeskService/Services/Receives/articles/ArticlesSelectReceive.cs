@@ -20,7 +20,7 @@ public class ArticlesSelectReceive(IArticlesService artRepo, ILogger<ArticlesSel
     public async Task<TPaginationResponseModel<ArticleModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectArticlesRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await artRepo.ArticlesSelectAsync(req, token);
     }
 }

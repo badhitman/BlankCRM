@@ -21,7 +21,7 @@ public class SaveTraceForReceiverHandle(ILogger<SaveTraceForReceiverHandle> Logg
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TraceReceiverRecord? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await indexingFileRepo.SaveTraceForReceiverAsync(req, token);
     }
 }

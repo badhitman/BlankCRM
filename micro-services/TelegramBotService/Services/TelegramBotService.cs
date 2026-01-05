@@ -429,7 +429,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
                 ReplyToMessageId = message.ReplyToMessageId,
                 ParseModeName = message.ParseModeName,
                 SignFrom = message.From,
-                Message = $"{ex.Message}\n\n{JsonConvert.SerializeObject(message)}",
+                Message = $"{ex.Message}\n\n{JsonConvert.SerializeObject(message, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}",
                 ExceptionTypeName = ex.GetType().FullName,
                 ErrorCode = errorCode
             }, token);

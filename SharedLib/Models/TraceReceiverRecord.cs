@@ -63,7 +63,7 @@ public class TraceReceiverRecord
     public TraceReceiverRecord SetResponse(object sender)
     {
         UTCTimestampFinalReceive = DateTime.UtcNow;
-        ResponseBodyJson = JsonConvert.SerializeObject(sender);
+        ResponseBodyJson = JsonConvert.SerializeObject(sender, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
         ResponseTypeName = sender.GetType().Name;
 
         return this;

@@ -22,7 +22,7 @@ public class SetWebConfigReceive(TelegramBotConfigModel webConfig, ILogger<SetWe
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
+        _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         ResponseBaseModel upd = webConfig.Update(req);
 

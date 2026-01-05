@@ -63,7 +63,7 @@ public partial class CommerceImplementService : ICommerceService
             }
             catch (Exception ex)
             {
-                string msg = $"Ошибка создания контракта [{JsonConvert.SerializeObject(req)}]";
+                string msg = $"Ошибка создания контракта [{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}]";
                 loggerRepo.LogError(ex, msg);
                 return new()
                 {

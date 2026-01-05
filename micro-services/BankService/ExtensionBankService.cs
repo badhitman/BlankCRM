@@ -110,13 +110,13 @@ public static class ExtensionBankService
             OperatorName = span.OperatorName,
 
             Phones = span.Phones,
-            PhonesJsonSource = JsonConvert.SerializeObject(span.Phones),
+            PhonesJsonSource = JsonConvert.SerializeObject(span.Phones, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings),
 
             ReceiverPhones = span.ReceiverPhones,
-            ReceiverPhonesJsonSource = JsonConvert.SerializeObject(span.ReceiverPhones),
+            ReceiverPhonesJsonSource = JsonConvert.SerializeObject(span.ReceiverPhones, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings),
 
             TransferPhones = span.TransferPhones,
-            TransferPhonesJsonSource = JsonConvert.SerializeObject(span.TransferPhones),
+            TransferPhonesJsonSource = JsonConvert.SerializeObject(span.TransferPhones, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings),
         };
 
         return res;
@@ -133,7 +133,7 @@ public static class ExtensionBankService
             Name = span.Name,
 
             Phones = span.Phones,
-            PhonesJsonSource = JsonConvert.SerializeObject(span.Phones),
+            PhonesJsonSource = JsonConvert.SerializeObject(span.Phones, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings),
         };
 
         return res;
