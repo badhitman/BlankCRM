@@ -76,6 +76,10 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     /// UsersCache
     /// </summary>
     protected List<UserInfoModel> UsersCache = [];
+    /// <summary>
+    /// PaymentsLinksCache
+    /// </summary>
+    protected PaymentOrderRetailLinkModelDB[] PaymentsLinksCache = [];
 
     MudTable<DocumentRetailModelDB>? tableRef;
     bool _visibleCreateNewOrder;
@@ -213,11 +217,10 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
                 .Union(res.Response.Select(x => x.BuyerIdentityUserId))
                 .Distinct();
 
-            IEnumerable<int> _rubricsIds = res.Response.Select(x => x.WarehouseId).Distinct();
-
             List<Task> tasks = [
                 Task.Run(async () => { await CacheUsersUpdate([.._usersIds],token); }, token),
-                Task.Run(async () => { await CacheRubricsUpdate([.. _rubricsIds], token); }, token),
+                Task.Run(async () => { await CacheRubricsUpdate([.. res.Response.Select(x => x.WarehouseId).Distinct()], token); }, token),
+                Task.Run(async () => { await PaymentsOrdersLinksUpdate(res.Response.SelectMany(x => x.Payments!.Select(y => y.Id)).Distinct(), token); }, token),
             ];
 
             await Task.WhenAll(tasks);
@@ -225,6 +228,12 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
 
         await SetBusyAsync(false, token: token);
         return new TableData<DocumentRetailModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
+    }
+
+    async Task PaymentsOrdersLinksUpdate(IEnumerable<int> paymentsLinksIds, CancellationToken token)
+    {
+        TResponseModel<PaymentOrderRetailLinkModelDB[]> res = await RetailRepo.PaymentsOrdersDocumentsLinksGetAsync([.. paymentsLinksIds]);
+        PaymentsLinksCache = res.Response ?? [];
     }
 
     async void OnSearch(string text)

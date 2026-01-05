@@ -146,7 +146,7 @@
             }
             @if (context.Payments is not null && context.Payments.Count != 0)
             {
-                <OrderPaymentsAboutComponent PaymentsDocuments="@context.Payments" />
+                <OrderPaymentsAboutComponent PaymentsDocuments="@([..PaymentsLinksCache.Where(x => context.Payments.Any(y => y.Id == x.Id))])" />
             }
         </MudTd>
         <MudTd DataLabel="Номенклатура">

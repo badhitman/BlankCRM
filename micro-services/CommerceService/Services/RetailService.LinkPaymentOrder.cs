@@ -107,6 +107,20 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
+    public async Task<TResponseModel<PaymentOrderRetailLinkModelDB[]>> PaymentsOrdersDocumentsLinksGetAsync(int[] req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        return new()
+        {
+            Response = await context.PaymentsOrdersLinks
+                .Include(x => x.OrderDocument)
+                .Include(x => x.PaymentDocument)
+                .Where(x => req.Contains(x.Id))
+                .ToArrayAsync(cancellationToken: token)
+        };
+    }
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(DeletePaymentOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);

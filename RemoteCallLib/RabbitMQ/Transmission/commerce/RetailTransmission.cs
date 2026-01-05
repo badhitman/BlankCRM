@@ -180,6 +180,10 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
     /// <inheritdoc/>
     public async Task<TPaginationResponseModel<PaymentOrderRetailLinkModelDB>> SelectPaymentsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectPaymentsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<PaymentOrderRetailLinkModelDB>>(TransmissionQueues.SelectPaymentsOrdersDocumentsLinksRetailReceive, req, token: token) ?? new();
+    
+    /// <inheritdoc/>
+    public async Task<TResponseModel<PaymentOrderRetailLinkModelDB[]>> PaymentsOrdersDocumentsLinksGetAsync(int[] req, CancellationToken token = default)
+       => await rabbitClient.MqRemoteCallAsync<TResponseModel<PaymentOrderRetailLinkModelDB[]>>(TransmissionQueues.PaymentsOrdersDocumentsLinksGetReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(DeletePaymentOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)

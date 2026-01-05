@@ -382,7 +382,7 @@ public partial class RetailService : IRetailService
                 .ThenInclude(x => x.ConversionDocument)
 
                 .Include(x => x.Payments!)
-                .ThenInclude(x => x.PaymentDocument)
+                //.ThenInclude(x => x.PaymentDocument)
 
                 .ToListAsync(cancellationToken: token);
 

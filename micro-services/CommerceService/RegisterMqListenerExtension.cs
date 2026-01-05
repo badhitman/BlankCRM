@@ -64,6 +64,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<WalletsTypesGetReceive, int[], TResponseModel<WalletRetailTypeViewModel[]>>()
             .RegisterMqListener<SelectRetailDocumentsReceive, TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel>, TPaginationResponseModel<DocumentRetailModelDB>>()
             .RegisterMqListener<SelectPaymentsOrdersDocumentsLinksReceive, TPaginationRequestStandardModel<SelectPaymentsOrdersLinksRetailDocumentsRequestModel>, TPaginationResponseModel<PaymentOrderRetailLinkModelDB>>()
+            .RegisterMqListener<PaymentsOrdersDocumentsLinksGetReceive, int[], TResponseModel<PaymentOrderRetailLinkModelDB[]>>()
             .RegisterMqListener<SelectOrderDocumentStatusesReceive, TPaginationRequestStandardModel<SelectOrderStatusesRetailDocumentsRequestModel>, TPaginationResponseModel<OrderStatusRetailDocumentModelDB>>()
             .RegisterMqListener<CreateRetailDocumentReceive, CreateDocumentRetailRequestModel, TResponseModel<int>>()
             .RegisterMqListener<CreateDeliveryOrderLinkDocumentReceive, RetailOrderDeliveryLinkModelDB, TResponseModel<int>>()
