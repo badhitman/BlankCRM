@@ -110,7 +110,8 @@ public class RabbitMqListenerService<TQueue, TRequest, TResponse>
             {
                 try
                 {
-                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, body: Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)), cancellationToken: stoppingToken);
+                    string jsonRawAnswer = JsonConvert.SerializeObject(answer, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
+                    await _channel.BasicPublishAsync(exchange: "", routingKey: ea.BasicProperties.ReplyTo, mandatory: true, body: Encoding.UTF8.GetBytes(jsonRawAnswer), cancellationToken: stoppingToken);
                 }
                 catch (Exception ex)
                 {
