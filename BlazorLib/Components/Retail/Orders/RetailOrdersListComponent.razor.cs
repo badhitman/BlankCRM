@@ -76,6 +76,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     /// UsersCache
     /// </summary>
     protected List<UserInfoModel> UsersCache = [];
+
     /// <summary>
     /// PaymentsLinksCache
     /// </summary>
@@ -84,6 +85,10 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     /// DeliveriesLinksCache
     /// </summary>
     protected RetailOrderDeliveryLinkModelDB[] DeliveriesLinksCache = [];
+    /// <summary>
+    /// ConversionsLinksCache
+    /// </summary>
+    protected ConversionOrderRetailLinkModelDB[] ConversionsLinksCache = [];
 
     MudTable<DocumentRetailModelDB>? tableRef;
     bool _visibleCreateNewOrder;
@@ -224,7 +229,10 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
             List<Task> tasks = [
                 Task.Run(async () => { await CacheUsersUpdate([.._usersIds],token); }, token),
                 Task.Run(async () => { await CacheRubricsUpdate([.. res.Response.Select(x => x.WarehouseId).Distinct()], token); }, token),
-                Task.Run(async () => { await OrdersLinksUpdate(res.Response.SelectMany(x => x.Payments!.Select(y => y.Id)).Distinct(),res.Response.SelectMany(x => x.Deliveries!.Select(y => y.Id)).Distinct(), token); }, token),
+                Task.Run(async () => { await OrdersLinksUpdate(
+                    res.Response.SelectMany(x => x.Payments!.Select(y => y.Id)).Distinct(),
+                    res.Response.SelectMany(x => x.Deliveries!.Select(y => y.Id)).Distinct(),
+                    res.Response.SelectMany(x => x.Conversions!.Select(y => y.Id)).Distinct(), token); }, token),
             ];
 
             await Task.WhenAll(tasks);
@@ -234,7 +242,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         return new TableData<DocumentRetailModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 
-    async Task OrdersLinksUpdate(IEnumerable<int> paymentsLinksIds, IEnumerable<int> deliveriesLinksIds, CancellationToken token)
+    async Task OrdersLinksUpdate(IEnumerable<int> paymentsLinksIds, IEnumerable<int> deliveriesLinksIds, IEnumerable<int> conversionsLinksIds, CancellationToken token)
     {
         if (paymentsLinksIds.Any())
         {
@@ -251,6 +259,14 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         }
         else
             DeliveriesLinksCache = [];
+
+        if (conversionsLinksIds.Any())
+        {
+            TResponseModel<ConversionOrderRetailLinkModelDB[]> resConversions = await RetailRepo.ConversionsOrdersDocumentsLinksReadRetailAsync([.. conversionsLinksIds], token);
+            ConversionsLinksCache = resConversions.Response ?? [];
+        }
+        else
+            ConversionsLinksCache = [];
     }
 
     async void OnSearch(string text)

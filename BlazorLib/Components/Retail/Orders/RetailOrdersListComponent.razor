@@ -142,7 +142,7 @@
         <MudTd DataLabel="Финансы">
             @if (context.Conversions is not null && context.Conversions.Count != 0)
             {
-                <OrderConversionsAboutComponent ConversionsDocuments="@context.Conversions" />
+                <OrderConversionsAboutComponent ConversionsDocuments="@([..ConversionsLinksCache.Where(x => context.Conversions.Any(y => y.Id == x.Id))])" />
             }
             @if (context.Payments is not null && context.Payments.Count != 0)
             {

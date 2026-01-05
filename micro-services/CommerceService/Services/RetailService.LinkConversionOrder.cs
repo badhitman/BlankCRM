@@ -123,6 +123,20 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
+    public async Task<TResponseModel<ConversionOrderRetailLinkModelDB[]>> ConversionsOrdersDocumentsLinksReadRetailAsync(int[] req, CancellationToken token = default)
+    {
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        return new()
+        {
+            Response = await context.ConversionsOrdersLinksRetail
+             .Where(x => req.Contains(x.Id))
+             .Include(x => x.OrderDocument)
+             .Include(x => x.ConversionDocument)
+             .ToArrayAsync(cancellationToken: token),
+        };
+    }
+
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentRetailAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
