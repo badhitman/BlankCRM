@@ -1121,6 +1121,9 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string SpreadsheetDocumentGetIndexFileReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.INDEXING_CONTROLLER_NAME, Routes.FILE_CONTROLLER_NAME, $"{Routes.SPREADSHEET_CONTROLLER_NAME}-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
+        public readonly static string TracesSelectReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.INDEXING_CONTROLLER_NAME, Routes.TRACES_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+
+        /// <inheritdoc/>
         public readonly static string WordprocessingDocumentGetIndexFileReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.INDEXING_CONTROLLER_NAME, Routes.FILE_CONTROLLER_NAME, $"{Routes.WORDPROCESSING_CONTROLLER_NAME}-{Routes.DOCUMENT_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>

@@ -61,10 +61,33 @@ public class IndexingFilesImpl(
         indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
-
-
         await traceReceiverRecords.InsertOneAsync(req, cancellationToken: token);
         return ResponseBaseModel.CreateSuccess("Ok");
+    }
+
+    /// <inheritdoc/>
+    public async Task<TPaginationResponseStandardModel<TraceReceiverRecord>> TracesSelectAsync(TPaginationRequestStandardModel<SelectTraceReceivesRequestModel> req, CancellationToken token = default)
+    {
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
+        IMongoCollection<TraceReceiverRecord> traceReceiverRecords = mongoFs.GetCollection<TraceReceiverRecord>(nameof(TraceReceiverRecord));
+
+        IQueryable<TraceReceiverRecord> query = traceReceiverRecords
+            .AsQueryable()
+            .Where(x => req.Payload == null || req.Payload.ReceiversNames == null || req.Payload.ReceiversNames.Contains(x.ReceiverName));
+
+        Task<int> totalTask = query.CountAsync(cancellationToken: token);
+        Task<List<TraceReceiverRecord>> itemsTask = query.Skip(0).Take(10).ToListAsync(cancellationToken: token);
+        await Task.WhenAll(totalTask, itemsTask);
+
+        return new()
+        {
+            PageNum = req.PageNum,
+            PageSize = req.PageSize,
+            TotalRowsCount = totalTask.Result,
+            Response = itemsTask.Result,
+            SortBy = req.SortBy,
+            SortingDirection = req.SortingDirection,
+        };
     }
 
     /// <inheritdoc/>

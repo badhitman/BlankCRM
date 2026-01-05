@@ -612,6 +612,11 @@ public static partial class GlobalStaticConstantsRoutes
         public const string INDEXING_CONTROLLER_NAME = "indexing";
 
         /// <summary>
+        /// Traces
+        /// </summary>
+        public const string TRACES_CONTROLLER_NAME = "traces";
+
+        /// <summary>
         /// Receiver
         /// </summary>
         public const string RECEIVER_CONTROLLER_NAME = "receiver";
