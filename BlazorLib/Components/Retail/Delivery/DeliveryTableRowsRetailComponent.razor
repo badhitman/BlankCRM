@@ -27,7 +27,7 @@
                                                 ShowRegistersOffersQuantity
                                                 @ref="AddingDomRef"
                                                 WarehouseId="Document.WarehouseId"
-                                                AllOffers="allOffers"
+                                                AllOffers="@([..Document.Rows!.Select(x=>x.Offer)])"
                                                 CurrentRows="Document.Rows!.Select(x => x.OfferId).ToList()"
                                                 AddingOfferHandler="AddingOfferAction" />
             </div>
