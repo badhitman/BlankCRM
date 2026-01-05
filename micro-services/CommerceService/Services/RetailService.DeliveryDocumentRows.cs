@@ -214,7 +214,6 @@ public partial class RetailService : IRetailService
             ? req.Quantity
             : req.Quantity - rowOfDeliveryRetailDocument.Quantity;
 
-
         if (_quantity < 0)
         {
             if (regOfferAv is not null)

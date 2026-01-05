@@ -21,4 +21,10 @@ public class OfferAvailabilityModelDB : RowOfSimpleDocumentModel
     /// Количество
     /// </summary>
     public decimal Quantity { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{base.ToString()} ({nameof(Quantity)}:{Quantity})";
+    }
 }

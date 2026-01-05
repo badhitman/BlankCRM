@@ -131,6 +131,10 @@ public partial class CommerceImplementService : ICommerceService
         List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
             .OffersAvailability
             .Where(x => x.OfferId == req.OfferId || (rowDb != null && x.OfferId == rowDb.OfferId))
+#if DEBUG
+            .Include(x => x.Offer)
+            .Include(x => x.Nomenclature)
+#endif
             .ToListAsync(cancellationToken: token);
 
         if (!warehouseDocDB.IsDisabled)
@@ -262,11 +266,9 @@ public partial class CommerceImplementService : ICommerceService
                 }
             }
 
-            _quantity = -_quantity;
-
             if (regOfferAv is null)
             {
-                if (_quantity < 0)
+                if (_quantity > 0)
                 {
                     if (warehouseNegativeBalanceAllowed.Response != true)
                     {
@@ -283,17 +285,17 @@ public partial class CommerceImplementService : ICommerceService
                             WarehouseId = warehouseDocDB.WarehouseId,
                             OfferId = req.OfferId,
                             NomenclatureId = req.NomenclatureId,
-                            Quantity = _quantity,
+                            Quantity = -_quantity,
                         };
                     }
                 }
-                else if (_quantity > 0)
+                else if (_quantity < 0)
                     await context.OffersAvailability.AddAsync(new()
                     {
                         OfferId = req.OfferId,
                         NomenclatureId = req.NomenclatureId,
                         WarehouseId = warehouseDocDB.WarehouseId,
-                        Quantity = _quantity,
+                        Quantity = -_quantity,
                     }, token);
             }
             else
