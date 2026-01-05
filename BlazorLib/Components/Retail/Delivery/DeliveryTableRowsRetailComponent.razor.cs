@@ -117,6 +117,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
+        await CacheRegistersUpdate(_offers: [.. Document.Rows!.Select(x => x.OfferId)], _goods: [], Document.WarehouseId, true);
         List<Task> tasks = [
                 Task.Run(base.OnInitializedAsync),
                 Task.Run(GetOrdersOffers),
@@ -124,7 +125,6 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             ];
 
         await Task.WhenAll(tasks);
-        await CacheRegistersUpdate(_offers: [.. Document.Rows!.Select(x => x.OfferId)], _goods: [], Document.WarehouseId, true);
         await SetBusyAsync(false);
     }
 
