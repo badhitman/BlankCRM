@@ -21,13 +21,10 @@ public class GetFileTelegramReceive(ITelegramBotService tgRepo, IFilesIndexing i
     public async Task<TResponseModel<byte[]>?> ResponseHandleActionAsync(string? fileId, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(fileId);
-
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, fileId.GetType().Name, JsonConvert.SerializeObject(fileId));
         await indexingRepo.SaveTraceForReceiverAsync(trace, token);
         TResponseModel<byte[]> res = await tgRepo.GetFileTelegramAsync(fileId, token);
-
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
-
         return res;
     }
 }

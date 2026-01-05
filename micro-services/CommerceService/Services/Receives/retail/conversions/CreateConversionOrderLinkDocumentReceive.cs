@@ -23,8 +23,8 @@ public class CreateConversionOrderLinkDocumentReceive(IRetailService commRepo, I
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commRepo.CreateConversionOrderLinkDocumentRetailAsync(req, token);
+        TResponseModel<int> res = await commRepo.CreateConversionOrderLinkDocumentRetailAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

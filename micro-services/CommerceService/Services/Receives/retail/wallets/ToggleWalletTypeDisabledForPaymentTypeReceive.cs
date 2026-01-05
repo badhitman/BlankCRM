@@ -23,8 +23,8 @@ public class ToggleWalletTypeDisabledForPaymentTypeReceive(IRetailService commRe
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commRepo.ToggleWalletTypeDisabledForPaymentTypeAsync(req, token);
+        ResponseBaseModel res = await commRepo.ToggleWalletTypeDisabledForPaymentTypeAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

@@ -22,10 +22,9 @@ public class AddRowToTableReceive(IConstructorService conService, IFilesIndexing
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(FieldSessionDocumentDataBaseModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await conService.AddRowToTableAsync(req, token);
+        TResponseModel<int> res = await conService.AddRowToTableAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

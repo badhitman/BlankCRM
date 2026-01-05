@@ -21,10 +21,9 @@ public class WarehouseDocumentUpdateReceive(ICommerceService commRepo, IFilesInd
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(WarehouseDocumentModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commRepo.WarehouseDocumentUpdateAsync(req, token);
+        TResponseModel<int> res = await commRepo.WarehouseDocumentUpdateAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

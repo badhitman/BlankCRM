@@ -10,7 +10,8 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// GetMembersOfProjectReceive
 /// </summary>
-public class GetMembersOfProjectReceive(IConstructorService conService) : IResponseReceive<int, TResponseModel<EntryAltModel[]>?>
+public class GetMembersOfProjectReceive(IConstructorService conService) 
+    : IResponseReceive<int, TResponseModel<EntryAltModel[]>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetMembersOfProjectReceive;

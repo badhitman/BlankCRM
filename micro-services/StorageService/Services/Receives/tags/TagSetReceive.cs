@@ -24,9 +24,8 @@ public class TagSetReceive(ILogger<TagSetReceive> loggerRepo, IParametersStorage
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req)}");
-        return await serializeStorageRepo.TagSetAsync(req, token);
+        ResponseBaseModel res = await serializeStorageRepo.TagSetAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

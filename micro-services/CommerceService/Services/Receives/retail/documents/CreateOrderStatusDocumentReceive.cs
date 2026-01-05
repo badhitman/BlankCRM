@@ -23,8 +23,8 @@ public class CreateOrderStatusDocumentReceive(IRetailService commRepo, IFilesInd
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commRepo.CreateOrderStatusDocumentAsync(req, token);
+        TResponseModel<int> res = await commRepo.CreateOrderStatusDocumentAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

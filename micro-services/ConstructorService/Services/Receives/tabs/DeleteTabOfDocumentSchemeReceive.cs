@@ -21,10 +21,9 @@ public class DeleteTabOfDocumentSchemeReceive(IConstructorService conService, IF
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await conService.DeleteTabOfDocumentSchemeAsync(req, token);
+        ResponseBaseModel res = await conService.DeleteTabOfDocumentSchemeAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

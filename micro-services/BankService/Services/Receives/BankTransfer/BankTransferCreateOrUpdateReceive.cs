@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -23,8 +22,8 @@ public class BankTransferCreateOrUpdateReceive(IBankService bankRepo, IFilesInde
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req.ToString());
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await bankRepo.BankTransferCreateOrUpdateAsync(req, token);
+        TResponseModel<int> res = await bankRepo.BankTransferCreateOrUpdateAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

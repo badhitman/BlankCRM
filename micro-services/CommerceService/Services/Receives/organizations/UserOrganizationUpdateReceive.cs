@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// UserOrganizationUpdateReceive
 /// </summary>
-public class UserOrganizationUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo) 
+public class UserOrganizationUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestModel<UserOrganizationModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
@@ -23,8 +23,8 @@ public class UserOrganizationUpdateReceive(ICommerceService commerceRepo, IFiles
         ArgumentNullException.ThrowIfNull(req?.Payload);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commerceRepo.UserOrganizationUpdateAsync(req, token);
+        TResponseModel<int> res = await commerceRepo.UserOrganizationUpdateAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

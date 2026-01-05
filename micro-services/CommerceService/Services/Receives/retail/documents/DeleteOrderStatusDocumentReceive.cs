@@ -23,8 +23,8 @@ public class DeleteOrderStatusDocumentReceive(IRetailService commRepo, IFilesInd
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commRepo.DeleteOrderStatusDocumentAsync(req.Value, token);
+        ResponseBaseModel res = await commRepo.DeleteOrderStatusDocumentAsync(req.Value, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

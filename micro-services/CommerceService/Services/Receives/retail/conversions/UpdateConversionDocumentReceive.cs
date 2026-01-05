@@ -23,8 +23,8 @@ public class UpdateConversionDocumentReceive(IRetailService commRepo, IFilesInde
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commRepo.UpdateConversionDocumentRetailAsync(req, token);
+        ResponseBaseModel res = await commRepo.UpdateConversionDocumentRetailAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

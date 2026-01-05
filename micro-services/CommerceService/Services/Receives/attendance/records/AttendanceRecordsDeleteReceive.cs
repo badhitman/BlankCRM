@@ -28,8 +28,8 @@ public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IFile
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commerceRepo.RecordAttendanceDeleteAsync(req, token);
+        ResponseBaseModel res = await commerceRepo.RecordAttendanceDeleteAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

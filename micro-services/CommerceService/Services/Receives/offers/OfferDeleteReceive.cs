@@ -27,8 +27,8 @@ public class OfferDeleteReceive(ICommerceService commerceRepo, IFilesIndexing in
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commerceRepo.OfferDeleteAsync(req, token);
+        ResponseBaseModel res = await commerceRepo.OfferDeleteAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

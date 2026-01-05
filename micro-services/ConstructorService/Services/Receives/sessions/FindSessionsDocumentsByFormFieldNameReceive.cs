@@ -10,7 +10,8 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Найти порцию сессий по имени поля (с пагинацией)
 /// </summary>
-public class FindSessionsDocumentsByFormFieldNameReceive(IConstructorService conService) : IResponseReceive<FormFieldModel?, TResponseModel<EntryDictModel[]>?>
+public class FindSessionsDocumentsByFormFieldNameReceive(IConstructorService conService) 
+    : IResponseReceive<FormFieldModel?, TResponseModel<EntryDictModel[]>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindSessionsDocumentsByFormFieldNameReceive;

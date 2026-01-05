@@ -23,8 +23,8 @@ public class UpdateWalletTypeReceive(IRetailService commRepo, IFilesIndexing ind
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commRepo.UpdateWalletTypeAsync(req, token);
+        ResponseBaseModel res = await commRepo.UpdateWalletTypeAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

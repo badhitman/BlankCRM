@@ -10,7 +10,8 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Получить страницу анкеты/опроса
 /// </summary>
-public class GetTabOfDocumentSchemeReceive(IConstructorService conService) : IResponseReceive<int, TResponseModel<TabOfDocumentSchemeConstructorModelDB?>?>
+public class GetTabOfDocumentSchemeReceive(IConstructorService conService)
+    : IResponseReceive<int, TResponseModel<TabOfDocumentSchemeConstructorModelDB?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetTabOfDocumentSchemeReceive;

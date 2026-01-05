@@ -23,8 +23,8 @@ public class IncomingMerchantPaymentTBankReceive(ICommerceService commerceRepo, 
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commerceRepo.IncomingMerchantPaymentTBankAsync(req, token);
+        var res = await commerceRepo.IncomingMerchantPaymentTBankAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

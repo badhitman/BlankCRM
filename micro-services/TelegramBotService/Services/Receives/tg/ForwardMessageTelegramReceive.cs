@@ -21,13 +21,10 @@ public class ForwardMessageTelegramReceive(ILogger<ForwardMessageTelegramReceive
     public async Task<TResponseModel<MessageComplexIdsModel>?> ResponseHandleActionAsync(ForwardMessageTelegramBotModel? message, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(message);
-
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, message.GetType().Name, JsonConvert.SerializeObject(message));
         await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
         TResponseModel<MessageComplexIdsModel> res = await tgRepo.ForwardMessageTelegramAsync(message, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
-
         return res;
     }
 }

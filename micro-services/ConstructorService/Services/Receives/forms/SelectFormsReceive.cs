@@ -10,7 +10,8 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Подобрать формы
 /// </summary>
-public class SelectFormsReceive(IConstructorService conService) : IResponseReceive<SelectFormsModel?, TPaginationResponseModel<FormConstructorModelDB>?>
+public class SelectFormsReceive(IConstructorService conService) 
+    : IResponseReceive<SelectFormsModel?, TPaginationResponseModel<FormConstructorModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SelectFormsReceive;

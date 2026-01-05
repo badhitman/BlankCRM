@@ -21,8 +21,8 @@ public class OfficesOrganizationDeleteReceive(ICommerceService commerceRepo, IFi
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int req, CancellationToken token = default)
     {
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req.ToString());
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commerceRepo.OfficeOrganizationDeleteAsync(req, token);
+        ResponseBaseModel res = await commerceRepo.OfficeOrganizationDeleteAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

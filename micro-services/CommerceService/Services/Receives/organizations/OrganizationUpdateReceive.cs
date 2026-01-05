@@ -23,8 +23,8 @@ public class OrganizationUpdateReceive(ICommerceService commerceRepo, IFilesInde
         ArgumentNullException.ThrowIfNull(req?.Payload);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commerceRepo.OrganizationUpdateAsync(req, token);
+        TResponseModel<int> res = await commerceRepo.OrganizationUpdateAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

@@ -23,8 +23,8 @@ public class CreateElementForDirectoryReceive(IConstructorService conService, IF
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await conService.CreateElementForDirectoryAsync(req, token);
+        TResponseModel<int> res = await conService.CreateElementForDirectoryAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

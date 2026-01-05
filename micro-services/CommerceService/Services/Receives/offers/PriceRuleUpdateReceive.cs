@@ -23,8 +23,8 @@ public class PriceRuleUpdateReceive(ICommerceService commerceRepo, IFilesIndexin
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commerceRepo.PriceRuleUpdateAsync(req, token);
+        TResponseModel<int> res = await commerceRepo.PriceRuleUpdateAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

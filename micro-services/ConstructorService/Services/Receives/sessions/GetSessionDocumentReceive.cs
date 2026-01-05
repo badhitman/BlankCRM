@@ -10,7 +10,8 @@ namespace Transmission.Receives.constructor;
 /// <summary>
 /// Получить сессию
 /// </summary>
-public class GetSessionDocumentReceive(IConstructorService conService) : IResponseReceive<SessionGetModel?, TResponseModel<SessionOfDocumentDataModelDB?>?>
+public class GetSessionDocumentReceive(IConstructorService conService) 
+    : IResponseReceive<SessionGetModel?, TResponseModel<SessionOfDocumentDataModelDB?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetSessionDocumentReceive;

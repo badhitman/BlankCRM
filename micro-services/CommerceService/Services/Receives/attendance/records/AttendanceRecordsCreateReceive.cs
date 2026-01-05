@@ -28,8 +28,8 @@ public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, IFile
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commerceRepo.RecordsAttendanceCreateAsync(req, token);
+        ResponseBaseModel res = await commerceRepo.RecordsAttendanceCreateAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

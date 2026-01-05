@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DocumentFormat.OpenXml.Drawing;
 using RemoteCallLib;
 using SharedLib;
 
@@ -21,8 +20,8 @@ public class DeleteSessionDocumentReceive(IConstructorService conService, IFiles
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
     {
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, payload.GetType().Name, payload.ToString());
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await conService.DeleteSessionDocumentAsync(payload, token);
+        ResponseBaseModel res = await conService.DeleteSessionDocumentAsync(payload, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

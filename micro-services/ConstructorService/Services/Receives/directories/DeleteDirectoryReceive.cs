@@ -23,8 +23,8 @@ public class DeleteDirectoryReceive(IConstructorService conService, IFilesIndexi
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await conService.DeleteDirectoryAsync(req, token);
+        ResponseBaseModel res = await conService.DeleteDirectoryAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

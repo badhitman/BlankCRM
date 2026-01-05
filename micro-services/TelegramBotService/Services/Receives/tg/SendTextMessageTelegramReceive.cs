@@ -11,7 +11,7 @@ namespace Transmission.Receives.telegram;
 /// <summary>
 /// Отправить сообщение пользователю через TelegramBot SendTextMessageTelegramBotModel
 /// </summary>
-public class SendTextMessageTelegramReceive(ITelegramBotService tgRepo, ILogger<SendTextMessageTelegramReceive> _logger, IFilesIndexing indexingRepo)
+public class SendTextMessageTelegramReceive(ITelegramBotService tgRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<SendTextMessageTelegramBotModel?, TResponseModel<MessageComplexIdsModel>?>
 {
     /// <inheritdoc/>

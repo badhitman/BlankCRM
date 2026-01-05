@@ -23,8 +23,8 @@ public class BankConnectionCreateOrUpdateReceive(IBankService bankRepo, IFilesIn
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req.ToString());
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await bankRepo.BankConnectionCreateOrUpdateAsync(req, token);
+        TResponseModel<int> res = await bankRepo.BankConnectionCreateOrUpdateAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

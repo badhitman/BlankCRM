@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Organization offer-contract update (toggle)
 /// </summary>
-public class OrganizationOfferContractUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo) 
+public class OrganizationOfferContractUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestModel<OrganizationOfferToggleModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
@@ -23,8 +23,8 @@ public class OrganizationOfferContractUpdateReceive(ICommerceService commerceRep
         ArgumentNullException.ThrowIfNull(req?.Payload);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commerceRepo.OrganizationOfferContractUpdateAsync(req, token);
+        TResponseModel<bool> res = await commerceRepo.OrganizationOfferContractUpdateAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

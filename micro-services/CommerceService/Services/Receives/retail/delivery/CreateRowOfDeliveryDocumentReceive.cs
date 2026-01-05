@@ -23,8 +23,8 @@ public class CreateRowOfDeliveryDocumentReceive(IRetailService commRepo, IFilesI
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
-        return await commRepo.CreateRowOfDeliveryDocumentAsync(req, token);
+        TResponseModel<int> res = await commRepo.CreateRowOfDeliveryDocumentAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }
