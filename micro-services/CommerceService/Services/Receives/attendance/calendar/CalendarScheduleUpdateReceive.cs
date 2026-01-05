@@ -24,10 +24,12 @@ public class CalendarScheduleUpdateReceive(ICommerceService commerceRepo, IFiles
     /// </summary>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<CalendarScheduleModelDB>? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(req);
+        ArgumentNullException.ThrowIfNull(req?.Payload);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req), req.Payload.Id);
         TResponseModel<int> res = await commerceRepo.CalendarScheduleUpdateAsync(req, token);
+        if (trace.RequestKey <= 0)
+            trace.RequestKey = res.Response;
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

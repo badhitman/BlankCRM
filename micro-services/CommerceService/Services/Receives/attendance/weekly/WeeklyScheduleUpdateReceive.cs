@@ -26,7 +26,7 @@ public class WeeklyScheduleUpdateReceive(ICommerceService commerceRepo, IFilesIn
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req));
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req), req.Id);
         TResponseModel<int> res = await commerceRepo.WeeklyScheduleUpdateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

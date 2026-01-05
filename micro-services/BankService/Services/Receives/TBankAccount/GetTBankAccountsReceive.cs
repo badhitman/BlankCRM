@@ -21,7 +21,7 @@ public class GetTBankAccountsReceive(IBankService bankRepo, IFilesIndexing index
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req.ToString());
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req.ToString(), req.BankConnectionId);
         await indexingRepo.SaveTraceForReceiverAsync(trace, token);
 
         return await bankRepo.GetTBankAccountsAsync(req, token);

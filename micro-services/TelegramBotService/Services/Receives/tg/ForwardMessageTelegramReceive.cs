@@ -11,7 +11,7 @@ namespace Transmission.Receives.telegram;
 /// <summary>
 /// Переслать сообщение пользователю через TelegramBot ForwardMessageTelegramReceive
 /// </summary>
-public class ForwardMessageTelegramReceive(ILogger<ForwardMessageTelegramReceive> loggerRepo, ITelegramBotService tgRepo, IFilesIndexing indexingRepo)
+public class ForwardMessageTelegramReceive(ITelegramBotService tgRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<ForwardMessageTelegramBotModel?, TResponseModel<MessageComplexIdsModel>?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,7 @@ public class ForwardMessageTelegramReceive(ILogger<ForwardMessageTelegramReceive
     public async Task<TResponseModel<MessageComplexIdsModel>?> ResponseHandleActionAsync(ForwardMessageTelegramBotModel? message, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(message);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, message.GetType().Name, JsonConvert.SerializeObject(message));
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, message.GetType().Name, JsonConvert.SerializeObject(message), _requestKey: message.SourceMessageId);
         await indexingRepo.SaveTraceForReceiverAsync(trace, token);
         TResponseModel<MessageComplexIdsModel> res = await tgRepo.ForwardMessageTelegramAsync(message, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);

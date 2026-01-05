@@ -11,7 +11,7 @@ namespace Transmission.Receives.bank;
 /// <summary>
 /// TBankAccountCreateOrUpdateReceive
 /// </summary>
-public class AccountTBankCreateOrUpdateReceive(IBankService bankRepo, IFilesIndexing indexingRepo) 
+public class AccountTBankCreateOrUpdateReceive(IBankService bankRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TBankAccountModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
@@ -22,8 +22,10 @@ public class AccountTBankCreateOrUpdateReceive(IBankService bankRepo, IFilesInde
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req.ToString());
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req.ToString(), req.Id);
         TResponseModel<int> res = await bankRepo.AccountTBankCreateOrUpdateAsync(req, token);
+        if (req.Id <= 0)
+            trace.RequestKey = req.Id;
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
