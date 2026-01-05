@@ -12,13 +12,13 @@ namespace Transmission.Receives.constructor;
 /// Обновить/создать схему документа
 /// </summary>
 public class UpdateOrCreateDocumentSchemeReceive(IConstructorService conService, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<EntryConstructedModel>?, TResponseModel<DocumentSchemeConstructorModelDB?>?>
+    : IResponseReceive<TAuthRequestStandardModel<EntryConstructedModel>?, TResponseModel<DocumentSchemeConstructorModelDB?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateOrCreateDocumentSchemeReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DocumentSchemeConstructorModelDB?>?> ResponseHandleActionAsync(TAuthRequestModel<EntryConstructedModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<DocumentSchemeConstructorModelDB?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<EntryConstructedModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);

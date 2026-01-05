@@ -2,15 +2,15 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DbcLib;
 using DocumentFormat.OpenXml.Packaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using Newtonsoft.Json;
+using MongoDB.Driver;
+using MongoDB.Bson;
 using SharedLib;
+using DbcLib;
 
 namespace FileIndexingService;
 
@@ -79,9 +79,9 @@ public class IndexingFilesImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>> SpreadsheetDocumentGetIndexAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>> SpreadsheetDocumentGetIndexAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
-        TAuthRequestModel<RequestFileReadModel> fileReq = new()
+        TAuthRequestStandardModel<RequestFileReadModel> fileReq = new()
         {
             SenderActionUserId = req.SenderActionUserId,
             Payload = new()
@@ -111,9 +111,9 @@ public class IndexingFilesImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>> WordprocessingDocumentGetIndexAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>> WordprocessingDocumentGetIndexAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
-        TAuthRequestModel<RequestFileReadModel> fileReq = new()
+        TAuthRequestStandardModel<RequestFileReadModel> fileReq = new()
         {
             SenderActionUserId = req.SenderActionUserId,
             Payload = new()

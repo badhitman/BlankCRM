@@ -47,7 +47,7 @@ public partial class MessagesTableTelegramComponent : BlazorBusyComponentBaseMod
                 ChatId = ChatId
             }
         };
-        TPaginationResponseModel<MessageTelegramViewModel> data = await TelegramRepo.MessagesSelectTelegramAsync(req, token);
+        TPaginationResponseStandardModel<MessageTelegramViewModel> data = await TelegramRepo.MessagesSelectTelegramAsync(req, token);
 
         // Return the data
         return new TableData<MessageTelegramViewModel>() { TotalItems = data.TotalRowsCount, Items = data.Response };

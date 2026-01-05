@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// FinancialsReportRetail
 /// </summary>
 public class FinancialsReportRetailReceive(IRetailService commRepo)
-    : IResponseReceive<TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel>?, TPaginationResponseModel<WalletRetailReportRowModel>?>
+    : IResponseReceive<TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel>?, TPaginationResponseStandardModel<WalletRetailReportRowModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FinancialsReportRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WalletRetailReportRowModel>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<WalletRetailReportRowModel>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commRepo.FinancialsReportRetailAsync(req, token);

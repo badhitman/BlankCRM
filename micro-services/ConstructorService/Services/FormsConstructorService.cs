@@ -922,7 +922,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> UpdateOrCreateDirectoryAsync(TAuthRequestModel<EntryConstructedModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<int>> UpdateOrCreateDirectoryAsync(TAuthRequestStandardModel<EntryConstructedModel> req, CancellationToken cancellationToken = default)
     {
         if (req.Payload is null)
             return new()
@@ -1021,7 +1021,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteDirectoryAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteDirectoryAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
@@ -1088,7 +1088,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateElementForDirectoryAsync(TAuthRequestModel<OwnedNameModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<int>> CreateElementForDirectoryAsync(TAuthRequestStandardModel<OwnedNameModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<int> res = new();
 
@@ -1173,7 +1173,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateElementOfDirectoryAsync(TAuthRequestModel<EntryDescriptionModel> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> UpdateElementOfDirectoryAsync(TAuthRequestStandardModel<EntryDescriptionModel> req, CancellationToken cancellationToken = default)
     {
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");
@@ -1237,7 +1237,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteElementFromDirectoryAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteElementFromDirectoryAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
@@ -1267,7 +1267,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpMoveElementOfDirectoryAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> UpMoveElementOfDirectoryAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
@@ -1307,7 +1307,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DownMoveElementOfDirectoryAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DownMoveElementOfDirectoryAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
@@ -1384,7 +1384,7 @@ public partial class FormsConstructorService(
     // Тип данных для полей форм может быть любой из перечня доступных: перечисление (созданное вами же), строка, число, булево, дата и т.д.
     #region формы
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<FormConstructorModelDB>> SelectFormsAsync(SelectFormsModel req, CancellationToken cancellationToken = default)
+    public async Task<TPaginationResponseStandardModel<FormConstructorModelDB>> SelectFormsAsync(SelectFormsModel req, CancellationToken cancellationToken = default)
     {
         using ConstructorContext context_forms = await mainDbFactory.CreateDbContextAsync(cancellationToken);
 
@@ -1478,7 +1478,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FormConstructorModelDB>> FormUpdateOrCreateAsync(TAuthRequestModel<FormBaseConstructorModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<FormConstructorModelDB>> FormUpdateOrCreateAsync(TAuthRequestStandardModel<FormBaseConstructorModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<FormConstructorModelDB> res = new();
 
@@ -1583,7 +1583,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FormDeleteAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> FormDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
@@ -1611,7 +1611,7 @@ public partial class FormsConstructorService(
     #endregion
     #region поля форм
     /// <inheritdoc/>
-    public async Task<TResponseModel<FormConstructorModelDB>> FieldFormMoveAsync(TAuthRequestModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<FormConstructorModelDB>> FieldFormMoveAsync(TAuthRequestStandardModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<FormConstructorModelDB> res = new();
 
@@ -1699,7 +1699,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FormConstructorModelDB>> FieldDirectoryFormMoveAsync(TAuthRequestModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<FormConstructorModelDB>> FieldDirectoryFormMoveAsync(TAuthRequestStandardModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<FormConstructorModelDB> res = new();
 
@@ -1787,7 +1787,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FormFieldUpdateOrCreateAsync(TAuthRequestModel<FieldFormConstructorModelDB> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> FormFieldUpdateOrCreateAsync(TAuthRequestStandardModel<FieldFormConstructorModelDB> req, CancellationToken cancellationToken = default)
     {
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");
@@ -1965,7 +1965,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FormFieldDirectoryUpdateOrCreateAsync(TAuthRequestModel<FieldFormAkaDirectoryConstructorModelDB> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> FormFieldDirectoryUpdateOrCreateAsync(TAuthRequestStandardModel<FieldFormAkaDirectoryConstructorModelDB> req, CancellationToken cancellationToken = default)
     {
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");
@@ -2150,7 +2150,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FormFieldDeleteAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> FormFieldDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
@@ -2188,7 +2188,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> FormFieldDirectoryDeleteAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> FormFieldDirectoryDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
@@ -2287,7 +2287,7 @@ public partial class FormsConstructorService(
     // Пользователь при добавлении/редактировании строк таблицы будет видеть форму, которую вы настроили для этого, а внутри таба это будет выглядеть как обычная многострочная таблица с колонками, равными полям формы
     #region схема документа
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<DocumentSchemeConstructorModelDB>> RequestDocumentsSchemesAsync(RequestDocumentsSchemesModel req, CancellationToken cancellationToken)
+    public async Task<TPaginationResponseStandardModel<DocumentSchemeConstructorModelDB>> RequestDocumentsSchemesAsync(RequestDocumentsSchemesModel req, CancellationToken cancellationToken)
     {
         if (req.RequestPayload.PageSize < 1)
             req.RequestPayload.PageSize = 10;
@@ -2354,7 +2354,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DocumentSchemeConstructorModelDB?>> UpdateOrCreateDocumentSchemeAsync(TAuthRequestModel<EntryConstructedModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<DocumentSchemeConstructorModelDB?>> UpdateOrCreateDocumentSchemeAsync(TAuthRequestStandardModel<EntryConstructedModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<DocumentSchemeConstructorModelDB?> res = new();
 
@@ -2456,7 +2456,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteDocumentSchemeAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteDocumentSchemeAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
@@ -2515,7 +2515,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DocumentSchemeConstructorModelDB>> MoveTabOfDocumentSchemeAsync(TAuthRequestModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<DocumentSchemeConstructorModelDB>> MoveTabOfDocumentSchemeAsync(TAuthRequestStandardModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<DocumentSchemeConstructorModelDB> res = new();
 
@@ -2614,7 +2614,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> CreateOrUpdateTabOfDocumentSchemeAsync(TAuthRequestModel<EntryDescriptionOwnedModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> CreateOrUpdateTabOfDocumentSchemeAsync(TAuthRequestStandardModel<EntryDescriptionOwnedModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> res = new();
 
@@ -2728,7 +2728,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteTabOfDocumentSchemeAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteTabOfDocumentSchemeAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
@@ -2787,7 +2787,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> MoveTabDocumentSchemeJoinFormAsync(TAuthRequestModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
+    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>> MoveTabDocumentSchemeJoinFormAsync(TAuthRequestStandardModel<MoveObjectModel> req, CancellationToken cancellationToken = default)
     {
         TResponseModel<TabOfDocumentSchemeConstructorModelDB> res = new();
 
@@ -2890,7 +2890,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> CreateOrUpdateTabDocumentSchemeJoinFormAsync(TAuthRequestModel<FormToTabJoinConstructorModelDB> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> CreateOrUpdateTabDocumentSchemeJoinFormAsync(TAuthRequestStandardModel<FormToTabJoinConstructorModelDB> req, CancellationToken cancellationToken = default)
     {
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");
@@ -3003,7 +3003,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteTabDocumentSchemeJoinFormAsync(TAuthRequestModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<ResponseBaseModel> DeleteTabDocumentSchemeJoinFormAsync(TAuthRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
@@ -3317,7 +3317,7 @@ public partial class FormsConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<SessionOfDocumentDataModelDB>> RequestSessionsDocumentsAsync(RequestSessionsDocumentsRequestPaginationModel req, CancellationToken cancellationToken = default)
+    public async Task<TPaginationResponseStandardModel<SessionOfDocumentDataModelDB>> RequestSessionsDocumentsAsync(RequestSessionsDocumentsRequestPaginationModel req, CancellationToken cancellationToken = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;

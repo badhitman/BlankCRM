@@ -12,7 +12,7 @@ namespace Transmission.Receives.commerce;
 /// Обновление расписания на конкретную дату
 /// </summary>
 public class CalendarScheduleUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<CalendarScheduleModelDB>?, TResponseModel<int>?>
+    : IResponseReceive<TAuthRequestStandardModel<CalendarScheduleModelDB>?, TResponseModel<int>?>
 {
     /// <summary>
     /// Обновление WorkScheduleCalendar
@@ -22,7 +22,7 @@ public class CalendarScheduleUpdateReceive(ICommerceService commerceRepo, IFiles
     /// <summary>
     /// Обновление WorkScheduleCalendar
     /// </summary>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<CalendarScheduleModelDB>? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<CalendarScheduleModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
 

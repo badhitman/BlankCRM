@@ -33,7 +33,7 @@ public partial class WorksSchedulersOrganizationsComponent : BlazorBusyComponent
         if (IsBusyProgress || CurrentUserSession is null)
             return;
 
-        TAuthRequestModel<OrganizationOfferToggleModel> req = new()
+        TAuthRequestStandardModel<OrganizationOfferToggleModel> req = new()
         {
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = new()
@@ -142,7 +142,7 @@ public partial class WorksSchedulersOrganizationsComponent : BlazorBusyComponent
             SortingDirection = state.SortDirection.Convert(),
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<OrganizationModelDB> res = await CommerceRepo.OrganizationsSelectAsync(req, token);
+        TPaginationResponseStandardModel<OrganizationModelDB> res = await CommerceRepo.OrganizationsSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
 
         if (res.Response is null)

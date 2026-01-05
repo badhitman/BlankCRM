@@ -47,7 +47,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         return res;
     }
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<BankConnectionModelDB>> ConnectionsBanksSelectAsync(TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<BankConnectionModelDB>> ConnectionsBanksSelectAsync(TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel> req, CancellationToken token = default)
     {
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         IQueryable<BankConnectionModelDB> q = ctx.ConnectionsBanks.AsQueryable();
@@ -114,7 +114,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         return res;
     }
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TBankAccountModelDB>> AccountsTBankSelectAsync(TPaginationRequestStandardModel<SelectAccountsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<TBankAccountModelDB>> AccountsTBankSelectAsync(TPaginationRequestStandardModel<SelectAccountsRequestModel> req, CancellationToken token = default)
     {
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         IQueryable<TBankAccountModelDB> q = ctx.AccountsTBank.AsQueryable();
@@ -179,7 +179,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         return res;
     }
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<CustomerBankIdModelDB>> CustomersBanksSelectAsync(TPaginationRequestStandardModel<SelectCustomersBanksIdsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<CustomerBankIdModelDB>> CustomersBanksSelectAsync(TPaginationRequestStandardModel<SelectCustomersBanksIdsRequestModel> req, CancellationToken token = default)
     {
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         IQueryable<CustomerBankIdModelDB> q = ctx.CustomersBanksIds.AsQueryable();
@@ -233,7 +233,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         return res;
     }
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<BankTransferModelDB>> BanksTransfersSelectAsync(TPaginationRequestStandardModel<SelectTransfersBanksRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<BankTransferModelDB>> BanksTransfersSelectAsync(TPaginationRequestStandardModel<SelectTransfersBanksRequestModel> req, CancellationToken token = default)
     {
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         IQueryable<BankTransferModelDB> q = ctx.TransfersBanks.AsQueryable();

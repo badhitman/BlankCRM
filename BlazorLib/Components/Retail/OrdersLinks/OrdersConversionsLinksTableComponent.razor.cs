@@ -193,7 +193,7 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
             req.Payload.ConversionsIds = [ConversionId];
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<ConversionOrderRetailLinkModelDB> res = await RetailRepo.SelectConversionsOrdersDocumentsLinksRetailAsync(req, token);
+        TPaginationResponseStandardModel<ConversionOrderRetailLinkModelDB> res = await RetailRepo.SelectConversionsOrdersDocumentsLinksRetailAsync(req, token);
 
         if (res.Response is not null && res.Response.Count != 0)
             await CacheUsersUpdate([.. res.Response.Select(x => x.ConversionDocument!.FromWallet!.UserIdentityId).Union(res.Response.Select(x => x.ConversionDocument!.ToWallet!.UserIdentityId))]);

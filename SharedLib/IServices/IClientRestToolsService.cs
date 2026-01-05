@@ -12,7 +12,7 @@ public interface IClientRestToolsService : IServerToolsService, IKladrService
     /// <summary>
     /// GetMe
     /// </summary>
-    public Task<TResponseModel<ExpressProfileResponseModel>> GetMeAsync(CancellationToken cancellationToken = default);
+    public Task<TResponseModel<ExpressProfileResponseStandardModel>> GetMeAsync(CancellationToken cancellationToken = default);
 
     #region files (ext)
     /// <summary>

@@ -22,5 +22,5 @@ public partial interface IJournalUniversalService
     /// <summary>
     /// Получить порцию документов
     /// </summary>
-    public Task<TPaginationResponseModel<KeyValuePair<int, Dictionary<string, object>>>> SelectJournalPartAsync(SelectJournalPartRequestModel req, int? projectId, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<KeyValuePair<int, Dictionary<string, object>>>> SelectJournalPartAsync(SelectJournalPartRequestModel req, int? projectId, CancellationToken token = default);
 }

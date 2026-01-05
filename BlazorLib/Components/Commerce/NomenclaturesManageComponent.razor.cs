@@ -84,7 +84,7 @@ public partial class NomenclaturesManageComponent : BlazorRegistersComponent
             SortingDirection = state.SortDirection.Convert(),
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<NomenclatureModelDB> res = await CommerceRepo.NomenclaturesSelectAsync(req, token);
+        TPaginationResponseStandardModel<NomenclatureModelDB> res = await CommerceRepo.NomenclaturesSelectAsync(req, token);
 
         if (res.Response is not null)
         {

@@ -39,9 +39,9 @@ public abstract partial class FeedsHaierProffRuLayerContext : DbContext
     /// <summary>
     /// ProductsSelect
     /// </summary>
-    public async Task<TPaginationResponseModel<ProductHaierModelDB>> ProductsSelectAsync(HaierRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ProductHaierModelDB>> ProductsSelectAsync(HaierRequestModel req, CancellationToken token = default)
     {
-        TPaginationResponseModel<ProductHaierModelDB> res = new(req);
+        TPaginationResponseStandardModel<ProductHaierModelDB> res = new(req);
 
         IQueryable<ProductHaierModelDB> q = from po in ProductsFeedsRss
                                             where EF.Functions.ILike(po.Name!, $"%{req.FindQuery}%") ||

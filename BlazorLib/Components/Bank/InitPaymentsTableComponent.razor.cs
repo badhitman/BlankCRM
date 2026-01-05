@@ -33,7 +33,7 @@ public partial class InitPaymentsTableComponent : BlazorBusyComponentBaseAuthMod
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert(),
         };
-        TPaginationResponseModel<PaymentInitTBankResultModelDB> res = await MerchRepo.PaymentsInitSelectTBankAsync(req, token);
+        TPaginationResponseStandardModel<PaymentInitTBankResultModelDB> res = await MerchRepo.PaymentsInitSelectTBankAsync(req, token);
         return new TableData<PaymentInitTBankResultModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 

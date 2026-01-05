@@ -31,7 +31,7 @@ public partial class ProductsBreezTableComponent : BlazorBusyComponentBaseModel
         };
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<ProductViewBreezRuModeld> res = await breezTrans.ProductsSelectAsync(req, token);
+        TPaginationResponseStandardModel<ProductViewBreezRuModeld> res = await breezTrans.ProductsSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
         return new TableData<ProductViewBreezRuModeld>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

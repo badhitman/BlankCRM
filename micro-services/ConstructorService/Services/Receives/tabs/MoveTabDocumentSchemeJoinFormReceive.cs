@@ -11,13 +11,13 @@ namespace Transmission.Receives.constructor;
 /// Сдвинуть связь [таба/вкладки схемы документа] с [формой] (изменение сортировки/последовательности)
 /// </summary>
 public class MoveTabDocumentSchemeJoinFormReceive(IConstructorService conService) 
-    : IResponseReceive<TAuthRequestModel<MoveObjectModel>?, TResponseModel<TabOfDocumentSchemeConstructorModelDB>?>
+    : IResponseReceive<TAuthRequestStandardModel<MoveObjectModel>?, TResponseModel<TabOfDocumentSchemeConstructorModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MoveTabDocumentSchemeJoinFormReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)
+    public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<MoveObjectModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.MoveTabDocumentSchemeJoinFormAsync(payload, token);

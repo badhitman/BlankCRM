@@ -56,7 +56,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WalletRetailModelDB>> SelectWalletsAsync(TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<WalletRetailModelDB>> SelectWalletsAsync(TPaginationRequestStandardModel<SelectWalletsRetailsRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()

@@ -87,7 +87,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
         if (CurrentUserSession is null)
             return new TableData<OrderDocumentModelDB>() { TotalItems = 0, Items = [] };
 
-        TPaginationRequestStandardModel<TAuthRequestModel<OrdersSelectRequestModel>> req = new()
+        TPaginationRequestStandardModel<TAuthRequestStandardModel<OrdersSelectRequestModel>> req = new()
         {
             PageNum = state.Page,
             PageSize = state.PageSize,
@@ -109,7 +109,7 @@ public partial class OrdersJournalComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusyAsync(token: token);
 
-        TPaginationResponseModel<OrderDocumentModelDB> res = await CommerceRepo.OrdersSelectAsync(req, token);
+        TPaginationResponseStandardModel<OrderDocumentModelDB> res = await CommerceRepo.OrdersSelectAsync(req, token);
 
         if (res.Response is null)
         {

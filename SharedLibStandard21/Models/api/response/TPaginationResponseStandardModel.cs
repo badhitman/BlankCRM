@@ -7,12 +7,12 @@ using System.Collections.Generic;
 namespace SharedLib;
 
 /// <inheritdoc/>
-public class TPaginationResponseModel<T> : PaginationResponseModel
+public class TPaginationResponseStandardModel<T> : PaginationResponseStandardModel
 {
     /// <inheritdoc/>
-    public TPaginationResponseModel() { }
+    public TPaginationResponseStandardModel() { }
     /// <inheritdoc/>
-    public TPaginationResponseModel(PaginationRequestModel req)
+    public TPaginationResponseStandardModel(PaginationRequestStandardModel req)
     {
         PageNum = req.PageNum;
         PageSize = req.PageSize;

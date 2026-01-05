@@ -35,7 +35,7 @@ public class IdentityTools(
     IDbContextFactory<IdentityAppDbContext> identityDbFactory) : IIdentityTools
 {
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestModel<string> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestStandardModel<string> req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
 
@@ -74,7 +74,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<ChangePhoneUserRequestModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestStandardModel<ChangePhoneUserRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("Ошибка запроса: Payload is null");
@@ -504,7 +504,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
         {
@@ -930,7 +930,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<UserInfoModel>> FindUsersAsync(FindWithOwnedRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<UserInfoModel>> FindUsersAsync(FindWithOwnedRequestModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         IQueryable<ApplicationUser> q = identityContext.Users
@@ -1306,7 +1306,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestModel<UserInfoBaseModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestStandardModel<UserInfoBaseModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Ошибка запроса: Payload is null" }] };
@@ -1659,7 +1659,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(SimplePaginationRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<TelegramUserViewModel>> FindUsersTelegramAsync(SimplePaginationRequestStandardModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         IQueryable<TelegramUserModelDb> query = identityContext.TelegramUsers
@@ -2057,7 +2057,7 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<RoleInfoModel>> FindRolesAsync(FindWithOwnedRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<RoleInfoModel>> FindRolesAsync(FindWithOwnedRequestModel req, CancellationToken token = default)
     {
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
         IQueryable<ApplicationRole> q = identityContext.Roles

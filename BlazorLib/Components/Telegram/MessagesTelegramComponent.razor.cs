@@ -58,7 +58,7 @@ public partial class MessagesTelegramComponent : BlazorBusyComponentBaseModel
     private async Task<TableData<MessageTelegramModelDB>> ServerReload(TableState state, CancellationToken token)
     {
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<MessageTelegramModelDB> rest_message = await TelegramRepo
+        TPaginationResponseStandardModel<MessageTelegramModelDB> rest_message = await TelegramRepo
             .MessagesTelegramSelectAsync(new TPaginationRequestStandardModel<SearchMessagesChatModel>()
             {
                 Payload = new() { ChatId = ChatId, SearchQuery = SearchStringQuery },

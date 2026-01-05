@@ -26,7 +26,7 @@ public class LogsService(ApiRestConfigModelDB _conf, IHttpClientFactory HttpClie
     };
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken cancellationToken = default)
+    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken cancellationToken = default)
     {
         using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
@@ -37,11 +37,11 @@ public class LogsService(ApiRestConfigModelDB _conf, IHttpClientFactory HttpClie
 
         string rj = await response.Content.ReadAsStringAsync(cancellationToken);
 
-        return JsonConvert.DeserializeObject<TPaginationResponseModel<NLogRecordModelDB>>(rj)!;
+        return JsonConvert.DeserializeObject<TPaginationResponseStandardModel<NLogRecordModelDB>>(rj)!;
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken cancellationToken = default)
+    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken cancellationToken = default)
     {
         using HttpClient _client = HttpClientFactory.CreateClient(HttpClientsNamesEnum.Kladr.ToString());
 
@@ -51,7 +51,7 @@ public class LogsService(ApiRestConfigModelDB _conf, IHttpClientFactory HttpClie
         using HttpResponseMessage response = await _client.PostAsync(new Uri($"{_conf.AddressBaseUri.NormalizedUriEnd()}{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.SELECT_ACTION_NAME}"), content, cancellationToken);
         string rj = await response.Content.ReadAsStringAsync(cancellationToken);
 
-        return JsonConvert.DeserializeObject<TPaginationResponseModel<NLogRecordModelDB>>(rj)!;
+        return JsonConvert.DeserializeObject<TPaginationResponseStandardModel<NLogRecordModelDB>>(rj)!;
     }
 
     /// <inheritdoc/>

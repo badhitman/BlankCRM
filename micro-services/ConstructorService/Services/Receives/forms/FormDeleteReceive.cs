@@ -12,13 +12,13 @@ namespace Transmission.Receives.constructor;
 /// Удалить форму
 /// </summary>
 public class FormDeleteReceive(IConstructorService conService, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<int>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FormDeleteReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);

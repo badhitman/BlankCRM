@@ -37,7 +37,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
     /// Роли: <see cref="ExpressApiRolesEnum.OrganizationsReadCommerce"/>, <see cref="ExpressApiRolesEnum.OrganizationsWriteCommerce"/>
     /// </remarks>
     [HttpPut($"/api/{Routes.ORGANIZATIONS_CONTROLLER_NAME}/{Routes.SELECT_ACTION_NAME}")]
-    public async Task<TPaginationResponseModel<OrganizationModelDB>> OrganizationsSelect(TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req)
+    public async Task<TPaginationResponseStandardModel<OrganizationModelDB>> OrganizationsSelect(TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req)
         => await commRepo.OrganizationsSelectAsync(req);
 
     /// <summary>

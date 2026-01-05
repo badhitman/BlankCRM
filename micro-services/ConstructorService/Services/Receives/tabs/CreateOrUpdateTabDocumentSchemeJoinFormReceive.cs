@@ -12,13 +12,13 @@ namespace Transmission.Receives.constructor;
 /// Обновить/создать связь [таба/вкладки схемы документа] с [формой]
 /// </summary>
 public class CreateOrUpdateTabDocumentSchemeJoinFormReceive(IConstructorService conService, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<FormToTabJoinConstructorModelDB>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<FormToTabJoinConstructorModelDB>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CreateOrUpdateTabDocumentSchemeJoinFormReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<FormToTabJoinConstructorModelDB>? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<FormToTabJoinConstructorModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);

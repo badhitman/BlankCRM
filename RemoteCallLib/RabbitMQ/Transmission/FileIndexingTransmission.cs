@@ -18,11 +18,11 @@ public class FileIndexingTransmission(IRabbitClient rabbitClient) : IFilesIndexi
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SaveTraceForReceiverReceive, req, waitResponse: false, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>> SpreadsheetDocumentGetIndexAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>> SpreadsheetDocumentGetIndexAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.SpreadsheetDocumentGetIndexFileReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>> WordprocessingDocumentGetIndexAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>> WordprocessingDocumentGetIndexAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
      => await rabbitClient.MqRemoteCallAsync<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.WordprocessingDocumentGetIndexFileReceive, req, token: token) ?? new();
 
 }

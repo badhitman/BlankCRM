@@ -64,7 +64,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
             SortingDirection = state.SortDirection.Convert(),
         };
         await SetBusyAsync(token: token);
-        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId }, token);
+        TResponseModel<TPaginationResponseStandardModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId }, token);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (res.Response?.Response is not null)
@@ -84,7 +84,7 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
                 SortingDirection = state.SortDirection.Convert(),
             };
 
-            TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq, token);
+            TPaginationResponseStandardModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq, token);
 
             if (recordsSelect.TotalRowsCount > recReq.PageSize)
                 SnackBarRepo.Error($"Записей больше: {recordsSelect.TotalRowsCount}");

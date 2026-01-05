@@ -11,13 +11,13 @@ namespace Transmission.Receives.bank;
 /// ConnectionsBanksSelectReceive
 /// </summary>
 public class ConnectionsBanksSelectReceive(IBankService bankRepo) 
-    : IResponseReceive<TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel>?, TPaginationResponseModel<BankConnectionModelDB>?>
+    : IResponseReceive<TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel>?, TPaginationResponseStandardModel<BankConnectionModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ConnectionsBanksSelectReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<BankConnectionModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<BankConnectionModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await bankRepo.ConnectionsBanksSelectAsync(req, token);

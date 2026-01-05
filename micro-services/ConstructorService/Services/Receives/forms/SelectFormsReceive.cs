@@ -11,13 +11,13 @@ namespace Transmission.Receives.constructor;
 /// Подобрать формы
 /// </summary>
 public class SelectFormsReceive(IConstructorService conService) 
-    : IResponseReceive<SelectFormsModel?, TPaginationResponseModel<FormConstructorModelDB>?>
+    : IResponseReceive<SelectFormsModel?, TPaginationResponseStandardModel<FormConstructorModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SelectFormsReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(SelectFormsModel? payload, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<FormConstructorModelDB>?> ResponseHandleActionAsync(SelectFormsModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.SelectFormsAsync(payload, token);

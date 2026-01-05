@@ -149,7 +149,7 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert()
         };
-        TPaginationResponseModel<CustomerBankIdModelDB> res = await BankRepo.CustomersBanksSelectAsync(req, token);
+        TPaginationResponseStandardModel<CustomerBankIdModelDB> res = await BankRepo.CustomersBanksSelectAsync(req, token);
         await CacheUsersUpdate([..res.Response!.Select(x => x.UserIdentityId).Distinct()]);
         return new TableData<CustomerBankIdModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

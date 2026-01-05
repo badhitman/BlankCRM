@@ -130,7 +130,7 @@ public partial class OffersOfOrdersRetailReportComponent : BlazorBusyComponentBa
         }
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<OffersRetailReportRowModel> res = await RetailRepo.OffersOfOrdersReportRetailAsync(req, token);
+        TPaginationResponseStandardModel<OffersRetailReportRowModel> res = await RetailRepo.OffersOfOrdersReportRetailAsync(req, token);
         await SetBusyAsync(false, token);
 
         if (res.Response is null)

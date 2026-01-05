@@ -69,7 +69,7 @@ public class StorageFilesImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
         {
@@ -106,7 +106,7 @@ public class StorageFilesImpl(
           : q.OrderByDescending(x => x.CreatedAt).Skip(req.PageNum * req.PageSize).Take(req.PageSize);
 
         int trc = await q.CountAsync(cancellationToken: token);
-        TPaginationResponseModel<StorageFileModelDB> res = new()
+        TPaginationResponseStandardModel<StorageFileModelDB> res = new()
         {
             PageNum = req.PageNum,
             PageSize = req.PageSize,
@@ -158,7 +158,7 @@ public class StorageFilesImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FileContentModel>> ReadFileAsync(TAuthRequestModel<RequestFileReadModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<FileContentModel>> ReadFileAsync(TAuthRequestStandardModel<RequestFileReadModel> req, CancellationToken token = default)
     {
         TResponseModel<FileContentModel> res = new();
 
@@ -218,7 +218,7 @@ public class StorageFilesImpl(
                 issues_rules.ForEach(x => { if (int.TryParse(x, out int issue_id)) { issues_ids.Add(issue_id); } });
                 if (issues_ids.Count > 0)
                 {
-                    TAuthRequestModel<IssuesReadRequestModel> reqIssues = new()
+                    TAuthRequestStandardModel<IssuesReadRequestModel> reqIssues = new()
                     {
                         SenderActionUserId = req.SenderActionUserId,
                         Payload = new()
@@ -264,7 +264,7 @@ public class StorageFilesImpl(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageFileMetadataModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestStandardModel<StorageFileMetadataModel> req, CancellationToken token = default)
     {
         TResponseModel<StorageFileModelDB> res = new();
 

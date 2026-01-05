@@ -76,7 +76,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
-        TAuthRequestModel<SubscribeUpdateRequestModel> req = new()
+        TAuthRequestStandardModel<SubscribeUpdateRequestModel> req = new()
         {
             Payload = new()
             {
@@ -99,7 +99,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
             return;
         }
 
-        TResponseModel<List<SubscriberIssueHelpDeskModelDB>> res = await HelpDeskRepo.SubscribesListAsync(new TAuthRequestModel<int>() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<List<SubscriberIssueHelpDeskModelDB>> res = await HelpDeskRepo.SubscribesListAsync(new TAuthRequestStandardModel<int>() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession.UserId });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         Issue.Subscribers = res.Response;
         await SetBusyAsync(false);
@@ -110,7 +110,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
-        TAuthRequestModel<SubscribeUpdateRequestModel> req = new()
+        TAuthRequestStandardModel<SubscribeUpdateRequestModel> req = new()
         {
             Payload = new()
             {
@@ -131,7 +131,7 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
             await SetBusyAsync(false);
             return;
         }
-        TResponseModel<List<SubscriberIssueHelpDeskModelDB>> res = await HelpDeskRepo.SubscribesListAsync(new TAuthRequestModel<int>() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<List<SubscriberIssueHelpDeskModelDB>> res = await HelpDeskRepo.SubscribesListAsync(new TAuthRequestStandardModel<int>() { Payload = Issue.Id, SenderActionUserId = CurrentUserSession.UserId });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         Issue.Subscribers = res.Response;
         await SetBusyAsync(false);

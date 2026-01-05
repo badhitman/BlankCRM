@@ -72,7 +72,7 @@ public partial class JournalUniversalComponent : BlazorBusyComponentBaseModel
             throw new Exception();
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<KeyValuePair<int, Dictionary<string, object>>> res = await JournalRepo
+        TPaginationResponseStandardModel<KeyValuePair<int, Dictionary<string, object>>> res = await JournalRepo
             .SelectJournalPartAsync(new SelectJournalPartRequestModel()
             {
                 SearchString = searchString,

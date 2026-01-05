@@ -12,13 +12,13 @@ namespace Transmission.Receives.storage;
 /// FilesSelectReceive
 /// </summary>
 public class FilesSelectReceive(ILogger<FilesSelectReceive> loggerRepo, IFilesStorage serializeStorageRepo) 
-    : IResponseReceive<TPaginationRequestStandardModel<SelectMetadataRequestModel>?, TPaginationResponseModel<StorageFileModelDB>?>
+    : IResponseReceive<TPaginationRequestStandardModel<SelectMetadataRequestModel>?, TPaginationResponseStandardModel<StorageFileModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FilesSelectReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<StorageFileModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<StorageFileModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
 

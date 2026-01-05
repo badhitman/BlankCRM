@@ -70,7 +70,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
             return;
         }
 
-        TAuthRequestModel<UserOrganizationModelDB> req = new()
+        TAuthRequestStandardModel<UserOrganizationModelDB> req = new()
         {
             Payload = new()
             {
@@ -125,7 +125,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
 
         UserOrganizationModelDB sender = (UserOrganizationModelDB)element;
         await SetBusyAsync();
-        TResponseModel<int> res = await CommerceRepo.UserOrganizationUpdateAsync(new TAuthRequestModel<UserOrganizationModelDB>() { Payload = sender, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> res = await CommerceRepo.UserOrganizationUpdateAsync(new TAuthRequestStandardModel<UserOrganizationModelDB>() { Payload = sender, SenderActionUserId = CurrentUserSession.UserId });
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await tableRef.ReloadServerData();
@@ -173,7 +173,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
             req.Payload.OrganizationsFilter = [Organization.Id];
 
         await SetBusyAsync(token: token);
-        TResponseModel<TPaginationResponseModel<UserOrganizationModelDB>> res = await CommerceRepo.UsersOrganizationsSelectAsync(req, token);
+        TResponseModel<TPaginationResponseStandardModel<UserOrganizationModelDB>> res = await CommerceRepo.UsersOrganizationsSelectAsync(req, token);
         await SetBusyAsync(false, token);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success() || res.Response?.Response is null)

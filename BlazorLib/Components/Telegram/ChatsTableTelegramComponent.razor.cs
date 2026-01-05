@@ -36,7 +36,7 @@ public partial class ChatsTableTelegramComponent : BlazorBusyComponentBaseModel
             PageSize = state.PageSize,
             SortingDirection = DirectionsEnum.Down,
         };
-        TPaginationResponseModel<ChatTelegramViewModel> data = await TelegramRepo.ChatsSelectTelegramAsync(req, token);
+        TPaginationResponseStandardModel<ChatTelegramViewModel> data = await TelegramRepo.ChatsSelectTelegramAsync(req, token);
 
         // Return the data
         return new TableData<ChatTelegramViewModel>() { TotalItems = data.TotalRowsCount, Items = data.Response };

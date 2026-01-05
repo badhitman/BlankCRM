@@ -51,7 +51,7 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
             return;
 
         await SetBusyAsync();
-        TResponseModel<string> res = await IdentityRepo.CreateUserManualAsync(new TAuthRequestModel<UserInfoBaseModel>
+        TResponseModel<string> res = await IdentityRepo.CreateUserManualAsync(new TAuthRequestStandardModel<UserInfoBaseModel>
         {
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = newUser
@@ -80,7 +80,7 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
     {
         await SetBusyAsync(token: token);
 
-        TPaginationResponseModel<UserInfoModel> res = await IdentityRepo.FindUsersAsync(new()
+        TPaginationResponseStandardModel<UserInfoModel> res = await IdentityRepo.FindUsersAsync(new()
         {
             FindQuery = searchString,
             PageNum = state.Page,
@@ -115,7 +115,7 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
                 AutoGenerationWallets = true,
             }
         };
-        TPaginationResponseModel<WalletRetailModelDB> res = await RetailRepo.SelectWalletsAsync(reqWallets, token);
+        TPaginationResponseStandardModel<WalletRetailModelDB> res = await RetailRepo.SelectWalletsAsync(reqWallets, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
 
         if (res.Response is not null && res.Response.Count != 0)

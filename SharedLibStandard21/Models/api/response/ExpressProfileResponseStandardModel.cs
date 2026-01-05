@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Текущее состояние экспресс авторизации
 /// </summary>
-public class ExpressProfileResponseModel
+public class ExpressProfileResponseStandardModel
 {
     /// <summary>
     /// Имя в системе, закреплённое за токеном доступа

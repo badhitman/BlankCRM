@@ -134,7 +134,7 @@ public partial class RubricInputComponent : BlazorBusyComponentBaseModel
     public async Task SetRubric(int rubricId)
     {
         SelectSource.Clear();
-        SelectSource.Add((0, await RubricsRepo.RubricsChildListAsync(new RubricsListRequestModel() { ContextName = ContextName, Request = 0 })));
+        SelectSource.Add((0, await RubricsRepo.RubricsChildListAsync(new RubricsListRequestStandardModel() { ContextName = ContextName, Request = 0 })));
         SelectedRubricId = null;
         if (rubricId < 1)
         {
@@ -168,7 +168,7 @@ public partial class RubricInputComponent : BlazorBusyComponentBaseModel
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
-        SelectSource.Add((0, await RubricsRepo.RubricsChildListAsync(new RubricsListRequestModel() { ContextName = ContextName, Request = 0 })));
+        SelectSource.Add((0, await RubricsRepo.RubricsChildListAsync(new RubricsListRequestStandardModel() { ContextName = ContextName, Request = 0 })));
 
         if (RubricInitial != 0)
             await Actualize(RubricInitial);

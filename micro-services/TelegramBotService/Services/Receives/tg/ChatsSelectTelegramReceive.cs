@@ -12,13 +12,13 @@ namespace Transmission.Receives.telegram;
 /// Получить чаты
 /// </summary>
 public class ChatsSelectTelegramReceive(ITelegramBotService tgRepo)
-    : IResponseReceive<TPaginationRequestStandardModel<string?>?, TPaginationResponseModel<ChatTelegramModelDB>?>
+    : IResponseReceive<TPaginationRequestStandardModel<string?>?, TPaginationResponseStandardModel<ChatTelegramModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ChatsSelectTelegramReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ChatTelegramModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<string?>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ChatTelegramModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<string?>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
 

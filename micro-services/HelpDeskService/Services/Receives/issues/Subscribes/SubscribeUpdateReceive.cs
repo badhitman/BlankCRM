@@ -12,13 +12,13 @@ namespace Transmission.Receives.helpdesk;
 /// Subscribe update - of context user
 /// </summary>
 public class SubscribeUpdateReceive(IHelpDeskService hdRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<SubscribeUpdateRequestModel>?, TResponseModel<bool?>?>
+    : IResponseReceive<TAuthRequestStandardModel<SubscribeUpdateRequestModel>?, TResponseModel<bool?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SubscribeIssueUpdateHelpDeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestModel<SubscribeUpdateRequestModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<SubscribeUpdateRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);

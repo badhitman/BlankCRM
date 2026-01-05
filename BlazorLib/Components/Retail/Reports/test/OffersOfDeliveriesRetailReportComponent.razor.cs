@@ -126,7 +126,7 @@ public partial class OffersOfDeliveriesRetailReportComponent : BlazorBusyCompone
             req.Payload.EqualsSumFilter = true;
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<OffersRetailReportRowModel> res = await RetailRepo.OffersOfDeliveriesReportRetailAsync(req, token);
+        TPaginationResponseStandardModel<OffersRetailReportRowModel> res = await RetailRepo.OffersOfDeliveriesReportRetailAsync(req, token);
         await SetBusyAsync(false, token);
 
         if (res.Response is null)

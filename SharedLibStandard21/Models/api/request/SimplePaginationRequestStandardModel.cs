@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Простой запрос (с пагинацией)  SimplePaginationRequestModel
 /// </summary>
-public class SimplePaginationRequestModel : PaginationRequestModel
+public class SimplePaginationRequestStandardModel : PaginationRequestStandardModel
 {
     /// <summary>
     /// Строка запроса
@@ -15,7 +15,7 @@ public class SimplePaginationRequestModel : PaginationRequestModel
     public string? FindQuery { get; set; }
 
     /// <inheritdoc/>
-    public static SimplePaginationRequestModel Build(string? searchString, int pageSize, int page)
+    public static SimplePaginationRequestStandardModel Build(string? searchString, int pageSize, int page)
     {
         return new()
         {

@@ -11,7 +11,7 @@ namespace Transmission.Receives.helpdesk;
 /// Получить сообщения для инцидента
 /// </summary>
 public class MessagesListReceive(IHelpDeskService hdRepo)
-    : IResponseReceive<TAuthRequestModel<int>?, TResponseModel<IssueMessageHelpDeskModelDB[]>?>
+    : IResponseReceive<TAuthRequestStandardModel<int>?, TResponseModel<IssueMessageHelpDeskModelDB[]>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MessagesOfIssueListHelpDeskReceive;
@@ -19,7 +19,7 @@ public class MessagesListReceive(IHelpDeskService hdRepo)
     /// <summary>
     /// Получить сообщения для инцидента
     /// </summary>
-    public async Task<TResponseModel<IssueMessageHelpDeskModelDB[]>?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
+    public async Task<TResponseModel<IssueMessageHelpDeskModelDB[]>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await hdRepo.MessagesListAsync(req, token);

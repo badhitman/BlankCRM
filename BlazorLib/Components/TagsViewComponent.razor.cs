@@ -97,7 +97,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
             SortingDirection = DirectionsEnum.Down,
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<TagViewModel> res = await TagsRepo.TagsSelectAsync(req, token);
+        TPaginationResponseStandardModel<TagViewModel> res = await TagsRepo.TagsSelectAsync(req, token);
 
         if (res.TotalRowsCount > req.PageSize)
             SnackBarRepo.Error($"Записей больше: {res.TotalRowsCount}");
@@ -128,7 +128,7 @@ public partial class TagsViewComponent : MetaPropertyBaseComponent
             SortingDirection = DirectionsEnum.Down,
         };
 
-        TPaginationResponseModel<TagViewModel> res = await TagsRepo.TagsSelectAsync(req);
+        TPaginationResponseStandardModel<TagViewModel> res = await TagsRepo.TagsSelectAsync(req);
 
         if (res.TotalRowsCount > req.PageSize)
             SnackBarRepo.Error($"Записей больше: {res.TotalRowsCount}");

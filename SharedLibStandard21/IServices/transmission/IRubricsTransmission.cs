@@ -21,7 +21,7 @@ public interface IRubricsTransmission : IRubricsBaseService
     /// <summary>
     /// Сдвинуть рубрику
     /// </summary>
-    public Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestModel<RowMoveModel> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestStandardModel<RowMoveModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Получить рубрики

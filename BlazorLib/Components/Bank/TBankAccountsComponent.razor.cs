@@ -41,7 +41,7 @@ public partial class TBankAccountsComponent
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert()
         };
-        TPaginationResponseModel<TBankAccountModelDB> res = await BankRepo.AccountsTBankSelectAsync(req, token);
+        TPaginationResponseStandardModel<TBankAccountModelDB> res = await BankRepo.AccountsTBankSelectAsync(req, token);
         return new TableData<TBankAccountModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 }

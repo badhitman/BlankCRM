@@ -24,17 +24,17 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<FindParametersReceive, FindStorageBaseModel, TResponseModel<FoundParameterModel[]>>()
 
             .RegisterMqListener<TagSetReceive, TagSetModel, ResponseBaseModel>()
-            .RegisterMqListener<TagsSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseModel<TagViewModel>>()
+            .RegisterMqListener<TagsSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseStandardModel<TagViewModel>>()
 
-            .RegisterMqListener<GoToPageForRowReceive, TPaginationRequestStandardModel<int>, TPaginationResponseModel<NLogRecordModelDB>>()
+            .RegisterMqListener<GoToPageForRowReceive, TPaginationRequestStandardModel<int>, TPaginationResponseStandardModel<NLogRecordModelDB>>()
             .RegisterMqListener<MetadataLogsReceive, PeriodDatesTimesModel, TResponseModel<LogsMetadataResponseModel>>()
-            .RegisterMqListener<LogsSelectReceive, TPaginationRequestStandardModel<LogsSelectRequestModel>, TPaginationResponseModel<NLogRecordModelDB>>()
+            .RegisterMqListener<LogsSelectReceive, TPaginationRequestStandardModel<LogsSelectRequestModel>, TPaginationResponseStandardModel<NLogRecordModelDB>>()
             .RegisterMqListener<SetWebConfigReceive, WebConfigModel, ResponseBaseModel>()
 
-            .RegisterMqListener<SaveFileReceive, TAuthRequestModel<StorageFileMetadataModel>, TResponseModel<StorageFileModelDB>>()
-            .RegisterMqListener<ReadFileReceive, TAuthRequestModel<RequestFileReadModel>, TResponseModel<FileContentModel>>()
+            .RegisterMqListener<SaveFileReceive, TAuthRequestStandardModel<StorageFileMetadataModel>, TResponseModel<StorageFileModelDB>>()
+            .RegisterMqListener<ReadFileReceive, TAuthRequestStandardModel<RequestFileReadModel>, TResponseModel<FileContentModel>>()
             .RegisterMqListener<FilesAreaGetMetadataReceive, FilesAreaMetadataRequestModel, TResponseModel<FilesAreaMetadataModel[]>>()
-            .RegisterMqListener<FilesSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseModel<StorageFileModelDB>>()
+            .RegisterMqListener<FilesSelectReceive, TPaginationRequestStandardModel<SelectMetadataRequestModel>, TPaginationResponseStandardModel<StorageFileModelDB>>()
             .RegisterMqListener<GetDirectoryInfoReceive, DirectoryReadRequestModel, TResponseModel<DirectoryReadResponseModel>>()
 
             ;

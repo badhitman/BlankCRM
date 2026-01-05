@@ -12,13 +12,13 @@ namespace Transmission.Receives.indexing;
 /// SpreadsheetDocumentGetIndexReceive
 /// </summary>
 public class SpreadsheetDocumentGetIndexReceive(ILogger<SpreadsheetDocumentGetIndexReceive> LoggerRepo, IFilesIndexing indexingFileRepo)
-    : IResponseReceive<TAuthRequestModel<int>?, TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>?>
+    : IResponseReceive<TAuthRequestStandardModel<int>?, TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SpreadsheetDocumentGetIndexFileReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
+    public async Task<TResponseModel<SpreadsheetDocumentIndexingFileResponseModel>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");

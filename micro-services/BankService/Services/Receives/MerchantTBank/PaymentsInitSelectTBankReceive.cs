@@ -11,13 +11,13 @@ namespace Transmission.Receives.bank;
 /// PaymentsInitSelectTBankReceive
 /// </summary>
 public class PaymentsInitSelectTBankReceive(IMerchantService merchantRepo)
-    : IResponseReceive<TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel>?, TPaginationResponseModel<PaymentInitTBankResultModelDB>?>
+    : IResponseReceive<TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel>?, TPaginationResponseStandardModel<PaymentInitTBankResultModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PaymentsInitSelectTBankReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<PaymentInitTBankResultModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<PaymentInitTBankResultModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await merchantRepo.PaymentsInitSelectTBankAsync(req, token);

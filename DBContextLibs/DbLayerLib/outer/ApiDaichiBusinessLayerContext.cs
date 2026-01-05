@@ -39,9 +39,9 @@ public abstract partial class ApiDaichiBusinessLayerContext : DbContext
     /// <summary>
     /// ProductsSelect
     /// </summary>
-    public async Task<TPaginationResponseModel<ProductDaichiModelDB>> ProductsSelect(DaichiRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ProductDaichiModelDB>> ProductsSelect(DaichiRequestModel req, CancellationToken token = default)
     {
-        TPaginationResponseModel<ProductDaichiModelDB> res = new(req);
+        TPaginationResponseStandardModel<ProductDaichiModelDB> res = new(req);
 
         IQueryable<ProductDaichiModelDB> q = from po in Products
                                              where EF.Functions.ILike(po.NAME, $"%{req.FindQuery}%") ||

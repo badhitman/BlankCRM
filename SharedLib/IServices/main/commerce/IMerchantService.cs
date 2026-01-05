@@ -32,10 +32,10 @@ public partial interface IMerchantService
     /// <summary>
     /// TBank: Подбор
     /// </summary>
-    public Task<TPaginationResponseModel<PaymentInitTBankResultModelDB>> PaymentsInitSelectTBankAsync(TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<PaymentInitTBankResultModelDB>> PaymentsInitSelectTBankAsync(TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// TBank: Подбор
     /// </summary>
-    public Task<TPaginationResponseModel<IncomingMerchantPaymentTBankModelDB>> IncomingMerchantPaymentsSelectTBankAsync(TPaginationRequestStandardModel<SelectIncomingMerchantPaymentsTBankRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<IncomingMerchantPaymentTBankModelDB>> IncomingMerchantPaymentsSelectTBankAsync(TPaginationRequestStandardModel<SelectIncomingMerchantPaymentsTBankRequestModel> req, CancellationToken token = default);
 }

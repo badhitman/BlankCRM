@@ -27,7 +27,7 @@ public partial class RetailService(IIdentityTransmission identityRepo,
     static readonly DeliveryStatusesEnum?[] offDeliveriesStatuses = [null, DeliveryStatusesEnum.Canceled];
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<OffersRetailReportRowModel>> OffersOfOrdersReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfOrdersRetailReportRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<DocumentRetailModelDB> q = context.OrdersRetail.AsQueryable();
@@ -155,7 +155,7 @@ public partial class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WalletRetailReportRowModel>> FinancialsReportRetailAsync(TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<WalletRetailReportRowModel>> FinancialsReportRetailAsync(TPaginationRequestStandardModel<SelectPaymentsRetailReportRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         //IQueryable<PaymentOrderRetailLinkModelDB> qp = context.PaymentsOrdersLinks
@@ -269,7 +269,7 @@ public partial class RetailService(IIdentityTransmission identityRepo,
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OffersRetailReportRowModel>> OffersOfDeliveriesReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfDeliveriesRetailReportRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<OffersRetailReportRowModel>> OffersOfDeliveriesReportRetailAsync(TPaginationRequestStandardModel<SelectOffersOfDeliveriesRetailReportRequestModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<DeliveryDocumentRetailModelDB> q = context.DeliveryDocumentsRetail.AsQueryable();

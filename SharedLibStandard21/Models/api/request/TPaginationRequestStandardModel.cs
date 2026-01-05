@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Запрос с пагинацией
 /// </summary>
-public class TPaginationRequestStandardModel<T> : SimplePaginationRequestModel
+public class TPaginationRequestStandardModel<T> : SimplePaginationRequestStandardModel
 {
     /// <summary>
     /// Payload

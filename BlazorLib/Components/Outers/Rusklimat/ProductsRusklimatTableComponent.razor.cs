@@ -31,7 +31,7 @@ public partial class ProductsRusklimatTableComponent : BlazorBusyComponentBaseMo
         };
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<ProductRusklimatModelDB> res = await rusklimatTrans.ProductsSelectAsync(req, token);
+        TPaginationResponseStandardModel<ProductRusklimatModelDB> res = await rusklimatTrans.ProductsSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
         return new TableData<ProductRusklimatModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

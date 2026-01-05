@@ -23,7 +23,7 @@ public partial class FilesIndexingDOCX : FilesIndexingViewBase
             throw new Exception("string.IsNullOrWhiteSpace(CurrentUserSession?.UserId)");
 
         await SetBusyAsync();
-        TAuthRequestModel<int> _req = new()
+        TAuthRequestStandardModel<int> _req = new()
         {
             Payload = FileId,
             SenderActionUserId = CurrentUserSession.UserId

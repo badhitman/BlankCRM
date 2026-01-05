@@ -14,7 +14,7 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
         {

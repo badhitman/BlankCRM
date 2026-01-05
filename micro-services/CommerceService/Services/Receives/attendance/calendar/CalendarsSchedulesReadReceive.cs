@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// CalendarsSchedulesReadReceive
 /// </summary>
 public class CalendarsSchedulesReadReceive(ICommerceService commerceRepo)
-    : IResponseReceive<TAuthRequestModel<int[]>?, TResponseModel<List<CalendarScheduleModelDB>>?>
+    : IResponseReceive<TAuthRequestStandardModel<int[]>?, TResponseModel<List<CalendarScheduleModelDB>>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CalendarsSchedulesReadCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<CalendarScheduleModelDB>>?> ResponseHandleActionAsync(TAuthRequestModel<int[]>? payload, CancellationToken token = default)
+    public async Task<TResponseModel<List<CalendarScheduleModelDB>>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int[]>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await commerceRepo.CalendarSchedulesReadAsync(payload, token);

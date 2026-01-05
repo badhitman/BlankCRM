@@ -48,7 +48,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
             SortingDirection = state.SortDirection.Convert(),
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<NomenclatureModelDB> resNomenclatures = await CommerceRepo.NomenclaturesSelectAsync(req, token);
+        TPaginationResponseStandardModel<NomenclatureModelDB> resNomenclatures = await CommerceRepo.NomenclaturesSelectAsync(req, token);
 
         if (resNomenclatures.Response is null)
         {
@@ -70,7 +70,7 @@ public partial class AttendancesCatalogComponent : BlazorBusyComponentBaseAuthMo
             SortingDirection = state.SortDirection.Convert(),
         };
 
-        TPaginationResponseModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq, token);
+        TPaginationResponseStandardModel<RecordsAttendanceModelDB> recordsSelect = await CommerceRepo.RecordsAttendancesSelectAsync(recReq, token);
 
 
         if (recordsSelect.TotalRowsCount > recReq.PageSize)

@@ -11,13 +11,13 @@ namespace Transmission.Receives.constructor;
 /// Сдвинуть поле формы (простой тип)
 /// </summary>
 public class FieldFormMoveReceive(IConstructorService conService) 
-    : IResponseReceive<TAuthRequestModel<MoveObjectModel>?, TResponseModel<FormConstructorModelDB>?>
+    : IResponseReceive<TAuthRequestStandardModel<MoveObjectModel>?, TResponseModel<FormConstructorModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FieldFormMoveReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)
+    public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<MoveObjectModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.FieldFormMoveAsync(payload, token);

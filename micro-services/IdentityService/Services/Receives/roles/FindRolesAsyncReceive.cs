@@ -12,7 +12,7 @@ namespace Transmission.Receives.Identity;
 /// Роли. Если указан 'OwnerId', то поиск ограничивается ролями данного пользователя
 /// </summary>
 public class FindRolesAsyncReceive(IIdentityTools idRepo, ILogger<FindRolesAsyncReceive> loggerRepo)
-    : IResponseReceive<FindWithOwnedRequestModel?, TPaginationResponseModel<RoleInfoModel>?>
+    : IResponseReceive<FindWithOwnedRequestModel?, TPaginationResponseStandardModel<RoleInfoModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindRolesAsyncReceive;
@@ -20,7 +20,7 @@ public class FindRolesAsyncReceive(IIdentityTools idRepo, ILogger<FindRolesAsync
     /// <summary>
     /// Роли. Если указан 'OwnerId', то поиск ограничивается ролями данного пользователя
     /// </summary>
-    public async Task<TPaginationResponseModel<RoleInfoModel>?> ResponseHandleActionAsync(FindWithOwnedRequestModel? req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<RoleInfoModel>?> ResponseHandleActionAsync(FindWithOwnedRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

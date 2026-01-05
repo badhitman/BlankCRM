@@ -42,7 +42,7 @@ public partial class TransfersBanksTableComponent
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert()
         };
-        TPaginationResponseModel<BankTransferModelDB> res = await BankRepo.BanksTransfersSelectAsync(req, token);
+        TPaginationResponseStandardModel<BankTransferModelDB> res = await BankRepo.BanksTransfersSelectAsync(req, token);
         return new TableData<BankTransferModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 }

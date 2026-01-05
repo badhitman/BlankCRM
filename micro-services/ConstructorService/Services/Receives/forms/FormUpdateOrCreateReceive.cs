@@ -12,13 +12,13 @@ namespace Transmission.Receives.constructor;
 /// Обновить/создать форму (имя, описание, `признак таблицы`)
 /// </summary>
 public class FormUpdateOrCreateReceive(IConstructorService conService, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<FormBaseConstructorModel>?, TResponseModel<FormConstructorModelDB>?>
+    : IResponseReceive<TAuthRequestStandardModel<FormBaseConstructorModel>?, TResponseModel<FormConstructorModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FormUpdateOrCreateReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<FormBaseConstructorModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<FormBaseConstructorModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);

@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// SelectRetailDocuments
 /// </summary>
 public class SelectRetailDocumentsReceive(IRetailService commRepo)
-    : IResponseReceive<TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel>?, TPaginationResponseModel<DocumentRetailModelDB>?>
+    : IResponseReceive<TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel>?, TPaginationResponseStandardModel<DocumentRetailModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SelectDocumentsRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<DocumentRetailModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel>? req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<DocumentRetailModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectRetailDocumentsRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commRepo.SelectRetailDocumentsAsync(req, token);

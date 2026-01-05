@@ -31,7 +31,7 @@ public partial class ProductsHaierTableComponent : BlazorBusyComponentBaseModel
         };
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<ProductHaierModelDB> res = await haierTrans.ProductsSelectAsync(req, token);
+        TPaginationResponseStandardModel<ProductHaierModelDB> res = await haierTrans.ProductsSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
         return new TableData<ProductHaierModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

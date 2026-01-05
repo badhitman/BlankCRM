@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// Пользователи
 /// </summary>
 public class FindUsersReceive(IIdentityTools idRepo)
-    : IResponseReceive<FindWithOwnedRequestModel?, TPaginationResponseModel<UserInfoModel>?>
+    : IResponseReceive<FindWithOwnedRequestModel?, TPaginationResponseStandardModel<UserInfoModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindUsersReceive;
@@ -19,7 +19,7 @@ public class FindUsersReceive(IIdentityTools idRepo)
     /// <summary>
     /// Пользователи
     /// </summary>
-    public async Task<TPaginationResponseModel<UserInfoModel>?> ResponseHandleActionAsync(FindWithOwnedRequestModel? req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<UserInfoModel>?> ResponseHandleActionAsync(FindWithOwnedRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await idRepo.FindUsersAsync(req, token);

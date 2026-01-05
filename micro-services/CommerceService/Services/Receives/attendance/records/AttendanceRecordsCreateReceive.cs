@@ -13,7 +13,7 @@ namespace Transmission.Receives.commerce;
 /// AttendanceRecordsCreateReceive
 /// </summary>
 public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<CreateAttendanceRequestModel>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<CreateAttendanceRequestModel>?, ResponseBaseModel?>
 {
     /// <summary>
     /// Обновление WorkScheduleCalendar
@@ -23,7 +23,7 @@ public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, IFile
     /// <summary>
     /// Обновление WorkScheduleCalendar
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<CreateAttendanceRequestModel>? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
 

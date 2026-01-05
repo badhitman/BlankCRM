@@ -118,7 +118,7 @@ public partial class PaymentsManageComponent : BlazorBusyComponentUsersCachedMod
         if (ExcludeOrder is not null && ExcludeOrder.Id > 0)
             req.Payload.ExcludeOrderId = ExcludeOrder.Id;
 
-        TPaginationResponseModel<PaymentRetailDocumentModelDB>? res = await RetailRepo.SelectPaymentsDocumentsAsync(req, token);
+        TPaginationResponseStandardModel<PaymentRetailDocumentModelDB>? res = await RetailRepo.SelectPaymentsDocumentsAsync(req, token);
         await SetBusyAsync(false, token: token);
 
         if (res.Response is not null)

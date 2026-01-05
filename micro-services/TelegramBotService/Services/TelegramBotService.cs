@@ -51,7 +51,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ChatTelegramModelDB>> ChatsSelectTelegramAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ChatTelegramModelDB>> ChatsSelectTelegramAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
@@ -104,7 +104,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestStandardModel<long[]> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ErrorSendingMessageTelegramBotModelDB>> ErrorsForChatsSelectTelegramAsync(TPaginationRequestStandardModel<long[]> req, CancellationToken token = default)
     {
         if (req.PageSize < 5)
             req.PageSize = 5;
@@ -238,7 +238,7 @@ public class TelegramBotServiceImplement(ILogger<TelegramBotServiceImplement> _l
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<MessageTelegramModelDB>> MessagesSelectTelegramAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<MessageTelegramModelDB>> MessagesSelectTelegramAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
         {

@@ -37,8 +37,8 @@ public class RusklimatComTransmission(IRabbitClient rabbitClient) : IRusklimatCo
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<RabbitMqManagementResponseModel>>>(TransmissionQueues.HealthCheckRusklimatReceive, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<ProductRusklimatModelDB>> ProductsSelectAsync(RusklimatRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<ProductRusklimatModelDB>>(TransmissionQueues.ProductsSelectRusklimatReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseStandardModel<ProductRusklimatModelDB>> ProductsSelectAsync(RusklimatRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<ProductRusklimatModelDB>>(TransmissionQueues.ProductsSelectRusklimatReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateProductAsync(ProductRusklimatModelDB req, CancellationToken token = default)

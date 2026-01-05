@@ -66,7 +66,7 @@ public partial class IndexPage : BlazorBusyComponentBaseAuthModel
             throw new Exception("CurrentUserSession is null");
 
         await SetBusyAsync();
-        ResponseBaseModel res = await IdentityRepo.InitChangePhoneUserAsync(new TAuthRequestModel<string>() { SenderActionUserId = CurrentUserSession.UserId, Payload = _editPhone });
+        ResponseBaseModel res = await IdentityRepo.InitChangePhoneUserAsync(new TAuthRequestStandardModel<string>() { SenderActionUserId = CurrentUserSession.UserId, Payload = _editPhone });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (!res.Success())

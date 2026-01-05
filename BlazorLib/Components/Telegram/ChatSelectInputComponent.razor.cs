@@ -29,7 +29,7 @@ public partial class ChatSelectInputComponent : LazySelectorComponent<ChatTelegr
     public override async Task LoadPartData()
     {
         await SetBusyAsync();
-        TPaginationResponseModel<ChatTelegramModelDB> rest = await TelegramRepo
+        TPaginationResponseStandardModel<ChatTelegramModelDB> rest = await TelegramRepo
             .ChatsSelectAsync(new()
             {
                 Payload = _selectedValueText,

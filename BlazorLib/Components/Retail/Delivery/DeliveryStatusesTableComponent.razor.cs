@@ -174,7 +174,7 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
             }
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<DeliveryStatusRetailDocumentModelDB> res = await RetailRepo.SelectDeliveryStatusesDocumentsAsync(req, token);
+        TPaginationResponseStandardModel<DeliveryStatusRetailDocumentModelDB> res = await RetailRepo.SelectDeliveryStatusesDocumentsAsync(req, token);
         await SetBusyAsync(false, token);
         return new TableData<DeliveryStatusRetailDocumentModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

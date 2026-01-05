@@ -192,7 +192,7 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
             req.Payload.PaymentsIds = [PaymentId];
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<PaymentOrderRetailLinkModelDB> res = await RetailRepo.SelectPaymentsOrdersDocumentsLinksAsync(req, token);
+        TPaginationResponseStandardModel<PaymentOrderRetailLinkModelDB> res = await RetailRepo.SelectPaymentsOrdersDocumentsLinksAsync(req, token);
 
         if (res.Response is not null && res.Response.Count != 0)
             await CacheUsersUpdate([.. res.Response.Select(x => x.PaymentDocument!.Wallet!.UserIdentityId).Union(res.Response.Select(x => x.PaymentDocument!.Wallet!.UserIdentityId))]);

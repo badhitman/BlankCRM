@@ -11,13 +11,13 @@ namespace Transmission.Receives.constructor;
 /// Перемещение страницы опроса/анкеты (сортировка страниц внутри опроса/анкеты)
 /// </summary>
 public class MoveTabOfDocumentSchemeReceive(IConstructorService conService) 
-    : IResponseReceive<TAuthRequestModel<MoveObjectModel>?, TResponseModel<DocumentSchemeConstructorModelDB>?>
+    : IResponseReceive<TAuthRequestStandardModel<MoveObjectModel>?, TResponseModel<DocumentSchemeConstructorModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MoveTabOfDocumentSchemeReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<MoveObjectModel>? payload, CancellationToken token = default)
+    public async Task<TResponseModel<DocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<MoveObjectModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.MoveTabOfDocumentSchemeAsync(payload, token);

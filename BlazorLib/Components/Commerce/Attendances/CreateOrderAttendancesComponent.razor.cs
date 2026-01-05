@@ -77,7 +77,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
         if (SelectedOffer is null)
             throw new Exception("Offer не выбран");
 
-        TAuthRequestModel<CreateAttendanceRequestModel> req = new()
+        TAuthRequestStandardModel<CreateAttendanceRequestModel> req = new()
         {
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = new()
@@ -176,7 +176,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
             }
         };
         await SetBusyAsync();
-        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession?.UserId });
+        TResponseModel<TPaginationResponseStandardModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession?.UserId });
         await SetBusyAsync(false);
         if (res.Response?.Response is not null && res.Response.Response.Count != 0)
         {

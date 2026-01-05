@@ -107,7 +107,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             }
         };
         await SetBusyAsync();
-        TPaginationResponseModel<RowOfRetailOrderDocumentModelDB> res = await RetailRepo.SelectRowsRetailDocumentsAsync(req);
+        TPaginationResponseStandardModel<RowOfRetailOrderDocumentModelDB> res = await RetailRepo.SelectRowsRetailDocumentsAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
         if (res.Response is not null)
         {

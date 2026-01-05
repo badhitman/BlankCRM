@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// HaierRequestModel
 /// </summary>
-public class HaierRequestModel : SimplePaginationRequestModel
+public class HaierRequestModel : SimplePaginationRequestStandardModel
 {
 
 }

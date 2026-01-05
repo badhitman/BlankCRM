@@ -42,7 +42,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
     /// </summary>
     protected string? searchString = null;
 
-    TPaginationResponseModel<FormConstructorModelDB>? rest_data;
+    TPaginationResponseStandardModel<FormConstructorModelDB>? rest_data;
 
     /// <summary>
     /// Открыть форму
@@ -82,7 +82,7 @@ public partial class FormsViewComponent : BlazorBusyComponentBaseModel
 
         await SetBusyAsync();
 
-        rest_data = await ConstructorRepo.SelectFormsAsync(new() { Request = SimplePaginationRequestModel.Build(searchString, _table_state?.PageSize ?? 10, _table_state?.Page ?? 0), ProjectId = ParentFormsPage.MainProject.Id });
+        rest_data = await ConstructorRepo.SelectFormsAsync(new() { Request = SimplePaginationRequestStandardModel.Build(searchString, _table_state?.PageSize ?? 10, _table_state?.Page ?? 0), ProjectId = ParentFormsPage.MainProject.Id });
         await SetBusyAsync(false);
     }
 

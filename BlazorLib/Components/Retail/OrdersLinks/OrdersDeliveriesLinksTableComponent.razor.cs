@@ -139,7 +139,7 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         }
 
         await SetBusyAsync();
-        TPaginationResponseModel<RowOfRetailOrderDocumentModelDB> rowsForOrder = await RetailRepo.SelectRowsRetailDocumentsAsync(new TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel>()
+        TPaginationResponseStandardModel<RowOfRetailOrderDocumentModelDB> rowsForOrder = await RetailRepo.SelectRowsRetailDocumentsAsync(new TPaginationRequestStandardModel<SelectRowsRetailDocumentsRequestModel>()
         {
             Payload = new()
             {
@@ -219,7 +219,7 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
             req.Payload.DeliveriesIds = [DeliveryId];
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<RetailOrderDeliveryLinkModelDB> res = await RetailRepo.SelectDeliveriesOrdersLinksDocumentsAsync(req, token);
+        TPaginationResponseStandardModel<RetailOrderDeliveryLinkModelDB> res = await RetailRepo.SelectDeliveriesOrdersLinksDocumentsAsync(req, token);
         //fullWeight = res.Response is null || res.Response.Count == 0 ? 0 : res.Response.Sum(x => x.WeightShipping);
 
         if (res.Response is not null && OrderParent is not null && OrderParent.Id > 0)

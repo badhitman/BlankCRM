@@ -148,7 +148,7 @@ public partial class KladrSelectDialogComponent : BlazorBusyComponentBaseModel
         };
         await SetBusyAsync(token: token);
         
-        TPaginationResponseModel<KladrResponseModel> res = await KladrRepo.ObjectsFindAsync(req, token);
+        TPaginationResponseStandardModel<KladrResponseModel> res = await KladrRepo.ObjectsFindAsync(req, token);
         partData = res.Response;
         await SetBusyAsync(false, token: token);
         // Return the data

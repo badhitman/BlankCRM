@@ -12,13 +12,13 @@ namespace Transmission.Receives.commerce;
 /// UserOrganizationUpdateReceive
 /// </summary>
 public class UserOrganizationUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<UserOrganizationModelDB>?, TResponseModel<int>?>
+    : IResponseReceive<TAuthRequestStandardModel<UserOrganizationModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrganizationUserUpdateOrCreateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<UserOrganizationModelDB>? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<UserOrganizationModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
 

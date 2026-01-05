@@ -12,13 +12,13 @@ namespace Transmission.Receives.helpdesk;
 /// MessageVote Receive
 /// </summary>
 public class MessageVoteReceive(IHelpDeskService hdRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<VoteIssueRequestModel>?, TResponseModel<bool?>?>
+    : IResponseReceive<TAuthRequestStandardModel<VoteIssueRequestModel>?, TResponseModel<bool?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MessageOfIssueVoteHelpDeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestModel<VoteIssueRequestModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<VoteIssueRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);

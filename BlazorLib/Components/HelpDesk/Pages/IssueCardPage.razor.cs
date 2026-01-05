@@ -109,7 +109,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
-        TAuthRequestModel<IssuesReadRequestModel> req = new()
+        TAuthRequestStandardModel<IssuesReadRequestModel> req = new()
         {
             Payload = new() { IssuesIds = [Id] },
             SenderActionUserId = CurrentUserSession.UserId

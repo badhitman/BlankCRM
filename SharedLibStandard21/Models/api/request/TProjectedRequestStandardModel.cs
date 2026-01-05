@@ -5,12 +5,17 @@
 namespace SharedLib;
 
 /// <summary>
-/// Авторизованный запрос (от имени пользователя)
+/// Projected Request
 /// </summary>
-public class TRequestModel<T>
+public class TProjectedRequestStandardModel<T>
 {
     /// <summary>
-    /// Request
+    /// Project id
     /// </summary>
-    public T? Payload { get; set; }
+    public int ProjectId { get; set; }
+
+    /// <summary>
+    /// T - Request
+    /// </summary>
+    public T? Request { get; set; }
 }

@@ -30,12 +30,12 @@ public interface ICommerceServiceBase
     /// <summary>
     /// Подбор сотрудников (связи пользователей с компаниями)
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<UserOrganizationModelDB>>> UsersOrganizationsSelectAsync(TPaginationRequestAuthModel<UsersOrganizationsStatusesRequestModel> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseStandardModel<UserOrganizationModelDB>>> UsersOrganizationsSelectAsync(TPaginationRequestAuthModel<UsersOrganizationsStatusesRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// UserOrganizationUpdate
     /// </summary>
-    public Task<TResponseModel<int>> UserOrganizationUpdateAsync(TAuthRequestModel<UserOrganizationModelDB> req, CancellationToken token = default);
+    public Task<TResponseModel<int>> UserOrganizationUpdateAsync(TAuthRequestStandardModel<UserOrganizationModelDB> req, CancellationToken token = default);
 
     /// <summary>
     /// UsersOrganizationsRead
@@ -45,12 +45,12 @@ public interface ICommerceServiceBase
     /// <summary>
     /// Обновление параметров организации. Юридические параметры не меняются, а формируется запрос на изменение, которое должна подтвердить сторонняя система
     /// </summary>
-    public Task<TResponseModel<int>> OrganizationUpdateAsync(TAuthRequestModel<OrganizationModelDB> req, CancellationToken token = default);
+    public Task<TResponseModel<int>> OrganizationUpdateAsync(TAuthRequestStandardModel<OrganizationModelDB> req, CancellationToken token = default);
 
     /// <summary>
     /// Подбор организаций с параметрами запроса
     /// </summary>
-    public Task<TPaginationResponseModel<OrganizationModelDB>> OrganizationsSelectAsync(TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<OrganizationModelDB>> OrganizationsSelectAsync(TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Прочитать данные организаций по их идентификаторам
@@ -83,10 +83,10 @@ public interface ICommerceServiceBase
     /// <summary>
     /// Обновить/создать банковские реквизиты
     /// </summary>
-    public Task<TResponseModel<int>> BankDetailsUpdateAsync(TAuthRequestModel<BankDetailsModelDB> req, CancellationToken token = default);
+    public Task<TResponseModel<int>> BankDetailsUpdateAsync(TAuthRequestStandardModel<BankDetailsModelDB> req, CancellationToken token = default);
 
     /// <summary>
     /// Удалить банковские реквизиты
     /// </summary>
-    public Task<ResponseBaseModel> BankDetailsDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> BankDetailsDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
 }

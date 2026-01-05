@@ -12,13 +12,13 @@ namespace Transmission.Receives.helpdesk;
 /// StatusChangeReceive
 /// </summary>
 public class StatusChangeReceive(IHelpDeskService hdRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
+    : IResponseReceive<TAuthRequestStandardModel<StatusChangeRequestModel>?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.StatusChangeIssueHelpDeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestModel<StatusChangeRequestModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestStandardModel<StatusChangeRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);

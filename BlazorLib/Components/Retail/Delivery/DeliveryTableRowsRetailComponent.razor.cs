@@ -94,7 +94,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             }
         };
         await SetBusyAsync();
-        TPaginationResponseModel<RetailOrderDeliveryLinkModelDB> res = await RetailRepo.SelectDeliveriesOrdersLinksDocumentsAsync(req);
+        TPaginationResponseStandardModel<RetailOrderDeliveryLinkModelDB> res = await RetailRepo.SelectDeliveriesOrdersLinksDocumentsAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
         if (res.Response is not null && res.Response.Count != 0)
         {
@@ -139,7 +139,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             PageSize = int.MaxValue,
         };
         await SetBusyAsync();
-        TPaginationResponseModel<RowOfDeliveryRetailDocumentModelDB> res = await RetailRepo.SelectRowsOfDeliveryDocumentsAsync(req);
+        TPaginationResponseStandardModel<RowOfDeliveryRetailDocumentModelDB> res = await RetailRepo.SelectRowsOfDeliveryDocumentsAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
 
         Document.Rows!.Clear();

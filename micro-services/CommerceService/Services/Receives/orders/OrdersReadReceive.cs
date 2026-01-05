@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// OrdersReadReceive
 /// </summary>
 public class OrdersReadReceive(ICommerceService commRepo)
-    : IResponseReceive<TAuthRequestModel<int[]>?, TResponseModel<OrderDocumentModelDB[]>?>
+    : IResponseReceive<TAuthRequestStandardModel<int[]>?, TResponseModel<OrderDocumentModelDB[]>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrdersReadCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<OrderDocumentModelDB[]>?> ResponseHandleActionAsync(TAuthRequestModel<int[]>? req, CancellationToken token = default)
+    public async Task<TResponseModel<OrderDocumentModelDB[]>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commRepo.OrdersReadAsync(req, token);

@@ -29,7 +29,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> OrganizationOfferContractUpdateAsync(TAuthRequestModel<OrganizationOfferToggleModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> OrganizationOfferContractUpdateAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -231,7 +231,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OrganizationModelDB>> OrganizationsSelectAsync(TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<OrganizationModelDB>> OrganizationsSelectAsync(TPaginationRequestAuthModel<OrganizationsSelectRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<UserInfoModel[]> res = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId], token);
         if (!res.Success() || res.Response?.Length != 1)
@@ -278,7 +278,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> OrganizationUpdateAsync(TAuthRequestModel<OrganizationModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> OrganizationUpdateAsync(TAuthRequestStandardModel<OrganizationModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         if (req.Payload is null)
@@ -425,7 +425,7 @@ public partial class CommerceImplementService : ICommerceService
 
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> UserOrganizationUpdateAsync(TAuthRequestModel<UserOrganizationModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> UserOrganizationUpdateAsync(TAuthRequestStandardModel<UserOrganizationModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
 
@@ -481,7 +481,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<UserOrganizationModelDB>>> UsersOrganizationsSelectAsync(TPaginationRequestAuthModel<UsersOrganizationsStatusesRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseStandardModel<UserOrganizationModelDB>>> UsersOrganizationsSelectAsync(TPaginationRequestAuthModel<UsersOrganizationsStatusesRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -532,7 +532,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> BankDetailsUpdateAsync(TAuthRequestModel<BankDetailsModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> BankDetailsUpdateAsync(TAuthRequestStandardModel<BankDetailsModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
 
@@ -607,7 +607,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> BankDetailsDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> BankDetailsDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");

@@ -33,7 +33,7 @@ public class ToolsController(
     /// Перейти к странице логов с искомой строкой
     /// </summary>
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.PAGE_CONTROLLER_NAME}/{Routes.GOTO_ACTION_NAME}-for-{Routes.RECORD_CONTROLLER_NAME}"), LoggerNolog]
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestStandardModel<int> req)
+    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRow(TPaginationRequestStandardModel<int> req)
     {
         return await storeRepo.GoToPageForRowAsync(req);
     }
@@ -42,7 +42,7 @@ public class ToolsController(
     /// Чтение логов
     /// </summary>
     [HttpPost($"/{Routes.API_CONTROLLER_NAME}/{Routes.TOOLS_CONTROLLER_NAME}/{Routes.LOGS_ACTION_NAME}-{Routes.SELECT_ACTION_NAME}"), LoggerNolog]
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelect(TPaginationRequestStandardModel<LogsSelectRequestModel> req)
+    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> LogsSelect(TPaginationRequestStandardModel<LogsSelectRequestModel> req)
     {
         return await storeRepo.LogsSelectAsync(req);
     }

@@ -100,7 +100,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 1.1 города в регионе
     /// </summary>
-    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> CitiesInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ObjectKLADRModelDB>> CitiesInRegion(CodeKladrModel codeMd, PaginationRequestStandardModel req, CancellationToken token = default)
     {
         IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"));
@@ -115,7 +115,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 1.2 нас. пункты в регионе
     /// </summary>
-    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> PopPointsInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ObjectKLADRModelDB>> PopPointsInRegion(CodeKladrModel codeMd, PaginationRequestStandardModel req, CancellationToken token = default)
     {
         IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000%") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"));
@@ -130,7 +130,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 1.3 районы в регионе
     /// </summary>
-    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> AreasInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ObjectKLADRModelDB>> AreasInRegion(CodeKladrModel codeMd, PaginationRequestStandardModel req, CancellationToken token = default)
     {
         IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000________"));
@@ -145,7 +145,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 1.4 street`s в регионе
     /// </summary>
-    public async Task<TPaginationResponseModel<StreetKLADRModelDB>> StreetsInRegion(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<StreetKLADRModelDB>> StreetsInRegion(CodeKladrModel codeMd, PaginationRequestStandardModel req, CancellationToken token = default)
     {
         IQueryable<StreetKLADRModelDB> q = StreetsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}000000000______"));
@@ -162,7 +162,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 2.1 города в районах
     /// </summary>
-    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> CitiesInArea(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ObjectKLADRModelDB>> CitiesInArea(CodeKladrModel codeMd, PaginationRequestStandardModel req, CancellationToken token = default)
     {
         IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}___000__") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}___000_____"));
@@ -177,7 +177,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 2.2 нас. пункты в районах
     /// </summary>
-    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> PopPointsInArea(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ObjectKLADRModelDB>> PopPointsInArea(CodeKladrModel codeMd, PaginationRequestStandardModel req, CancellationToken token = default)
     {
         IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}000_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"));
@@ -194,7 +194,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 3.1 нас. пункты в городах
     /// </summary>
-    public async Task<TPaginationResponseModel<ObjectKLADRModelDB>> PopPointsInCity(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ObjectKLADRModelDB>> PopPointsInCity(CodeKladrModel codeMd, PaginationRequestStandardModel req, CancellationToken token = default)
     {
         IQueryable<ObjectKLADRModelDB> q = ObjectsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_____") && !EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}______000__"));
@@ -209,7 +209,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 3.2 улицы в городах
     /// </summary>
-    public async Task<TPaginationResponseModel<StreetKLADRModelDB>> StreetsInCity(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<StreetKLADRModelDB>> StreetsInCity(CodeKladrModel codeMd, PaginationRequestStandardModel req, CancellationToken token = default)
     {
         IQueryable<StreetKLADRModelDB> q = StreetsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}_________"));
@@ -226,7 +226,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 4.1 улицы в городах StreetKLADRModelDB
     /// </summary>
-    public async Task<TPaginationResponseModel<StreetKLADRModelDB>> StreetsInPopPoint(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<StreetKLADRModelDB>> StreetsInPopPoint(CodeKladrModel codeMd, PaginationRequestStandardModel req, CancellationToken token = default)
     {
         IQueryable<StreetKLADRModelDB> q = StreetsKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}______"));
@@ -243,7 +243,7 @@ public abstract partial class KladrLayerContext : DbContext
     /// <summary>
     /// 5.1 дома на улицах
     /// </summary>
-    public async Task<TPaginationResponseModel<HouseKLADRModelDB>> HousesInStrit(CodeKladrModel codeMd, PaginationRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<HouseKLADRModelDB>> HousesInStrit(CodeKladrModel codeMd, PaginationRequestStandardModel req, CancellationToken token = default)
     {
         IQueryable<HouseKLADRModelDB> q = HousesKLADR
             .Where(x => EF.Functions.Like(x.CODE, $"{codeMd.RegionCode}{codeMd.AreaCode}{codeMd.CityCode}{codeMd.PopPointCode}{codeMd.StreetCode}____"));

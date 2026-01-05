@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// RusklimatRequestModel
 /// </summary>
-public class RusklimatRequestModel : SimplePaginationRequestModel
+public class RusklimatRequestModel : SimplePaginationRequestStandardModel
 {
 
 }

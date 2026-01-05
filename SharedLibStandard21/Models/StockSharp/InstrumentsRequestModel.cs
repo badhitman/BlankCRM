@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// InstrumentsRequestModel
 /// </summary>
-public class InstrumentsRequestModel : SimplePaginationRequestModel
+public class InstrumentsRequestModel : SimplePaginationRequestStandardModel
 {
     /// <summary>
     /// StateFilter

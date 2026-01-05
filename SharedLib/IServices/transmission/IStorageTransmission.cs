@@ -12,7 +12,7 @@ public interface IStorageTransmission : IFilesStorage
     /// <summary>
     /// GoToPageForRow
     /// </summary>
-    public Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// Metadata Logs
@@ -22,5 +22,5 @@ public interface IStorageTransmission : IFilesStorage
     /// <summary>
     /// Чтение логов
     /// </summary>
-    public Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default);
 }

@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Запрос поиска с указанием владельца
 /// </summary>
-public class FindWithOwnedRequestModel : SimplePaginationRequestModel
+public class FindWithOwnedRequestModel : SimplePaginationRequestStandardModel
 {
     /// <summary>
     /// Идентификатор владельца

@@ -39,9 +39,9 @@ public abstract partial class ApiBreezRuLayerContext : DbContext
     /// <summary>
     /// ProductsSelect
     /// </summary>
-    public async Task<TPaginationResponseModel<ProductViewBreezRuModeld>> ProductsSelect(BreezRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ProductViewBreezRuModeld>> ProductsSelect(BreezRequestModel req, CancellationToken token = default)
     {
-        TPaginationResponseModel<ProductViewBreezRuModeld> res = new(req);
+        TPaginationResponseStandardModel<ProductViewBreezRuModeld> res = new(req);
 
         var q = from po in Products.Include(x => x.Images)
                 where (po.Manual != null && EF.Functions.ILike(po.Manual, $"%{req.FindQuery}%")) ||

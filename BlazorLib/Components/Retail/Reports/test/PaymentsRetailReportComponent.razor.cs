@@ -115,7 +115,7 @@ public partial class PaymentsRetailReportComponent : BlazorBusyComponentBaseMode
         }
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<WalletRetailReportRowModel> res = await RetailRepo.FinancialsReportRetailAsync(req, token);
+        TPaginationResponseStandardModel<WalletRetailReportRowModel> res = await RetailRepo.FinancialsReportRetailAsync(req, token);
         await SetBusyAsync(false, token);
 
         if (res.Response is null)

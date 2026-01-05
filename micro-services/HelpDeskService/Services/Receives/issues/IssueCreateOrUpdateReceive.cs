@@ -12,13 +12,13 @@ namespace Transmission.Receives.helpdesk;
 /// Create (or update) Issue: Рубрика, тема и описание
 /// </summary>
 public class IssueCreateOrUpdateReceive(IHelpDeskService hdRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<UniversalUpdateRequestModel>?, TResponseModel<int>?>
+    : IResponseReceive<TAuthRequestStandardModel<UniversalUpdateRequestModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.IssueUpdateHelpDeskReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<UniversalUpdateRequestModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<UniversalUpdateRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);

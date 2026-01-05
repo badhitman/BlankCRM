@@ -12,13 +12,13 @@ namespace Transmission.Receives.storage;
 /// Save file
 /// </summary>
 public class SaveFileReceive(ILogger<SaveFileReceive> LoggerRepo, IFilesStorage serializeStorageRepo)
-    : IResponseReceive<TAuthRequestModel<StorageFileMetadataModel>?, TResponseModel<StorageFileModelDB>?>
+    : IResponseReceive<TAuthRequestStandardModel<StorageFileMetadataModel>?, TResponseModel<StorageFileModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SaveFileReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<StorageFileModelDB>?> ResponseHandleActionAsync(TAuthRequestModel<StorageFileMetadataModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<StorageFileModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<StorageFileMetadataModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
 

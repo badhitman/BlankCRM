@@ -45,7 +45,7 @@ public partial class AdaptersManageComponent : BlazorBusyComponentBaseModel
                 OnlineOnly = OfflineFilter,
             }
         };
-        TPaginationResponseModel<FixMessageAdapterModelDB> res = await SsRepo.AdaptersSelectAsync(req, token);
+        TPaginationResponseStandardModel<FixMessageAdapterModelDB> res = await SsRepo.AdaptersSelectAsync(req, token);
         return new TableData<FixMessageAdapterModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 }

@@ -195,32 +195,32 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
 
         CodeKladrModel codeMd = CodeKladrModel.Build(req.Code);
         ConcurrentDictionary<KladrChainTypesEnum, JObject[]> dataResponse = [];
-        PaginationRequestModel _sq = new() { PageNum = 0, PageSize = 100 };
+        PaginationRequestStandardModel _sq = new() { PageNum = 0, PageSize = 100 };
 
         if (codeMd.Level == KladrTypesObjectsEnum.RootRegion) // регионы
         {
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                TPaginationResponseModel<ObjectKLADRModelDB> data = await context.CitiesInRegion(codeMd, _sq);
+                TPaginationResponseStandardModel<ObjectKLADRModelDB> data = await context.CitiesInRegion(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.CitiesInRegion, data.Response is null ? [] : [.. data.Response.Select(JObject.FromObject)]);
             }, token));
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                TPaginationResponseModel<ObjectKLADRModelDB> data = await context.PopPointsInRegion(codeMd, _sq);
+                TPaginationResponseStandardModel<ObjectKLADRModelDB> data = await context.PopPointsInRegion(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.PopPointsInRegion, data.Response is null ? [] : [.. data.Response.Select(JObject.FromObject)]);
             }, token));
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                TPaginationResponseModel<ObjectKLADRModelDB> data = await context.AreasInRegion(codeMd, _sq);
+                TPaginationResponseStandardModel<ObjectKLADRModelDB> data = await context.AreasInRegion(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.AreasInRegion, data.Response is null ? [] : [.. data.Response.Select(JObject.FromObject)]);
             }, token));
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                TPaginationResponseModel<StreetKLADRModelDB> data = await context.StreetsInRegion(codeMd, _sq);
+                TPaginationResponseStandardModel<StreetKLADRModelDB> data = await context.StreetsInRegion(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.StreetsInRegion, data.Response is null ? [] : [.. data.Response.Select(JObject.FromObject)]);
             }, token));
         }
@@ -229,13 +229,13 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                TPaginationResponseModel<ObjectKLADRModelDB> data = await context.CitiesInArea(codeMd, _sq);
+                TPaginationResponseStandardModel<ObjectKLADRModelDB> data = await context.CitiesInArea(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.CitiesInArea, data.Response is null ? [] : [.. data.Response.Select(JObject.FromObject)]);
             }, token));
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                TPaginationResponseModel<ObjectKLADRModelDB> data = await context.PopPointsInArea(codeMd, _sq);
+                TPaginationResponseStandardModel<ObjectKLADRModelDB> data = await context.PopPointsInArea(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.PopPointsInArea, data.Response is null ? [] : [.. data.Response.Select(JObject.FromObject)]);
             }, token));
         }
@@ -244,13 +244,13 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                TPaginationResponseModel<ObjectKLADRModelDB> data = await context.PopPointsInCity(codeMd, _sq);
+                TPaginationResponseStandardModel<ObjectKLADRModelDB> data = await context.PopPointsInCity(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.PopPointsInCity, data.Response is null ? [] : [.. data.Response.Select(JObject.FromObject)]);
             }, token));
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                TPaginationResponseModel<StreetKLADRModelDB> data = await context.StreetsInCity(codeMd, _sq);
+                TPaginationResponseStandardModel<StreetKLADRModelDB> data = await context.StreetsInCity(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.StreetsInCity, data.Response is null ? [] : [.. data.Response.Select(JObject.FromObject)]);
             }, token));
         }
@@ -259,7 +259,7 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
             tasks.Add(Task.Run(async () =>
             {
                 using KladrContext context = await kladrDbFactory.CreateDbContextAsync();
-                TPaginationResponseModel<StreetKLADRModelDB> data = await context.StreetsInPopPoint(codeMd, _sq);
+                TPaginationResponseStandardModel<StreetKLADRModelDB> data = await context.StreetsInPopPoint(codeMd, _sq);
                 dataResponse.TryAdd(KladrChainTypesEnum.StreetsInPopPoint, data.Response is null ? [] : [.. data.Response.Select(JObject.FromObject)]);
             }, token));
         }
@@ -281,9 +281,9 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelectAsync(KladrSelectRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<KladrResponseModel>> ObjectsSelectAsync(KladrSelectRequestModel req, CancellationToken token = default)
     {
-        TPaginationResponseModel<KladrResponseModel> response = new(req) { Response = [] };
+        TPaginationResponseStandardModel<KladrResponseModel> response = new(req) { Response = [] };
 
         SocrbaseKLADRModelDB[] socrbases = default!;
         List<ObjectKLADRModelDB> dataDb = default!;
@@ -439,9 +439,9 @@ public class KladrNavigationServiceImpl(IDbContextFactory<KladrContext> kladrDbF
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFindAsync(KladrFindRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<KladrResponseModel>> ObjectsFindAsync(KladrFindRequestModel req, CancellationToken token = default)
     {
-        TPaginationResponseModel<KladrResponseModel> response = new(req) { Response = [] };
+        TPaginationResponseStandardModel<KladrResponseModel> response = new(req) { Response = [] };
 
         if (string.IsNullOrWhiteSpace(req.FindText) && (req.CodeLikeFilter == null || req.CodeLikeFilter.Length == 0))
             return response;

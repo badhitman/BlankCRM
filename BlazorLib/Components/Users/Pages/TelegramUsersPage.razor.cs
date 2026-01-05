@@ -18,7 +18,7 @@ public partial class TelegramUsersPage
 
 
     [SupplyParameterFromForm]
-    SimplePaginationRequestModel? Input { get; set; }
+    SimplePaginationRequestStandardModel? Input { get; set; }
 
     PaginationState pagination = new() { ItemsPerPage = 15 };
     string? nameFilter;
@@ -34,7 +34,7 @@ public partial class TelegramUsersPage
         Input ??= new() { FindQuery = "" };
         foodRecallProvider = async req =>
         {
-            TPaginationResponseModel<TelegramUserViewModel> res = await IdentityRepo.FindUsersTelegramAsync(new SimplePaginationRequestModel()
+            TPaginationResponseStandardModel<TelegramUserViewModel> res = await IdentityRepo.FindUsersTelegramAsync(new SimplePaginationRequestStandardModel()
             {
                 FindQuery = Input.FindQuery,
                 PageNum = pagination.CurrentPageIndex,

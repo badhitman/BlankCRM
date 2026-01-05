@@ -12,7 +12,7 @@ namespace Transmission.Receives.commerce;
 /// Подбор записей (актуальных)
 /// </summary>
 public class RecordsAttendancesSelectReceive(ICommerceService commerceRepo)
-    : IResponseReceive<TPaginationRequestAuthModel<RecordsAttendancesRequestModel>?, TPaginationResponseModel<RecordsAttendanceModelDB>?>
+    : IResponseReceive<TPaginationRequestAuthModel<RecordsAttendancesRequestModel>?, TPaginationResponseStandardModel<RecordsAttendanceModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RecordsAttendancesSelectCommerceReceive;
@@ -20,7 +20,7 @@ public class RecordsAttendancesSelectReceive(ICommerceService commerceRepo)
     /// <summary>
     /// Подбор записей (актуальных)
     /// </summary>
-    public async Task<TPaginationResponseModel<RecordsAttendanceModelDB>?> ResponseHandleActionAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel>? payload, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<RecordsAttendanceModelDB>?> ResponseHandleActionAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await commerceRepo.RecordsAttendancesSelectAsync(payload, token);

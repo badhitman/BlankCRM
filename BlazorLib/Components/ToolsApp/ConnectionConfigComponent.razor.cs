@@ -103,7 +103,7 @@ public partial class ConnectionConfigComponent : BlazorBusyComponentBaseModel
     /// <summary>
     /// getMe
     /// </summary>
-    public TResponseModel<ExpressProfileResponseModel>? GetMe { get; set; }
+    public TResponseModel<ExpressProfileResponseStandardModel>? GetMe { get; set; }
 
     CancellationTokenSource cancelTokenSource = new();
     CancellationToken? token;

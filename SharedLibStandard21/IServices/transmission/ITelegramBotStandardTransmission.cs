@@ -23,7 +23,7 @@ public interface ITelegramBotStandardTransmission : ITelegramBotStandardService
     public Task<List<ChatTelegramViewModel>> ChatsReadTelegramAsync(long[] req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseModel<ChatTelegramViewModel>> ChatsSelectTelegramAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<ChatTelegramViewModel>> ChatsSelectTelegramAsync(TPaginationRequestStandardModel<string?> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<ChatTelegramViewModel> ChatTelegramReadAsync(int chatId, CancellationToken token = default);
@@ -35,7 +35,7 @@ public interface ITelegramBotStandardTransmission : ITelegramBotStandardService
     public Task<TResponseModel<byte[]>> GetFileTelegramAsync(string req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<TPaginationResponseModel<MessageTelegramViewModel>> MessagesSelectTelegramAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<MessageTelegramViewModel>> MessagesSelectTelegramAsync(TPaginationRequestStandardModel<SearchMessagesChatModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<List<UserTelegramViewModel>> UsersReadTelegramAsync(int[] req, CancellationToken token = default);

@@ -17,47 +17,47 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     /// <summary>
     /// Order report get
     /// </summary>
-    public Task<TResponseModel<FileAttachModel>> OrderReportGetAsync(TAuthRequestModel<int> req, CancellationToken token = default);
+    public Task<TResponseModel<FileAttachModel>> OrderReportGetAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// Status order change
     /// </summary>
-    public Task<TResponseModel<bool>> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
+    public Task<TResponseModel<bool>> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
     /// Удалить ценообразование
     /// </summary>
-    public Task<ResponseBaseModel> PriceRuleDeleteAsync(TAuthRequestModel<int> id, CancellationToken token = default);
+    public Task<ResponseBaseModel> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> id, CancellationToken token = default);
 
     /// <summary>
     /// Обновить/создать правило ценообразования
     /// </summary>
-    public Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestModel<PriceRuleForOfferModelDB> price_rule, CancellationToken token = default);
+    public Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> price_rule, CancellationToken token = default);
 
     /// <summary>
     /// Обновить/создать платёжный документ
     /// </summary>
-    public Task<TResponseModel<int>> PaymentDocumentUpdateAsync(TAuthRequestModel<PaymentDocumentBaseModel> payment, CancellationToken token = default);
+    public Task<TResponseModel<int>> PaymentDocumentUpdateAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel> payment, CancellationToken token = default);
 
     /// <summary>
     /// PricesRulesGetForOffers
     /// </summary>
-    public Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PricesRulesGetForOffersAsync(TAuthRequestModel<int[]> ids, CancellationToken token = default);
+    public Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PricesRulesGetForOffersAsync(TAuthRequestStandardModel<int[]> ids, CancellationToken token = default);
 
     /// <summary>
     /// OffersRead
     /// </summary>
-    public Task<TResponseModel<OfferModelDB[]>> OffersReadAsync(TAuthRequestModel<int[]> ids, CancellationToken token = default);
+    public Task<TResponseModel<OfferModelDB[]>> OffersReadAsync(TAuthRequestStandardModel<int[]> ids, CancellationToken token = default);
 
     /// <summary>
     /// NomenclaturesRead
     /// </summary>
-    public Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesReadAsync(TAuthRequestModel<int[]> ids, CancellationToken token = default);
+    public Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesReadAsync(TAuthRequestStandardModel<int[]> ids, CancellationToken token = default);
 
     /// <summary>
     /// Удалить платёжный документ
     /// </summary>
-    public Task<ResponseBaseModel> PaymentDocumentDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> PaymentDocumentDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// Удалить строку заказа
@@ -72,7 +72,7 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     /// <summary>
     /// OrdersRead
     /// </summary>
-    public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersReadAsync(TAuthRequestModel<int[]> orders_ids, CancellationToken token = default);
+    public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersReadAsync(TAuthRequestStandardModel<int[]> orders_ids, CancellationToken token = default);
 
     /// <summary>
     /// OrderUpdate
@@ -82,7 +82,7 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     /// <summary>
     /// Подбор заказов (поиск по параметрам)
     /// </summary>
-    public Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestModel<OrdersSelectRequestModel>> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestStandardModel<OrdersSelectRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// Получить заказы (по заявкам)
@@ -92,22 +92,22 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     /// <summary>
     /// Удалить Offer
     /// </summary>
-    public Task<ResponseBaseModel> OfferDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> OfferDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// OffersSelect
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default);
+    public Task<TResponseModel<TPaginationResponseStandardModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
     /// NomenclaturesSelect
     /// </summary>
-    public Task<TPaginationResponseModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// OrganizationUpdate
     /// </summary>
-    public Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestModel<OfferModelDB> offer, CancellationToken token = default);
+    public Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestStandardModel<OfferModelDB> offer, CancellationToken token = default);
 
     /// <summary>
     /// Обновить/Создать товар

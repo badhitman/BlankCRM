@@ -117,7 +117,7 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
             req.Payload.ExcludeOrderId = ExcludeOrder.Id;
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<WalletConversionRetailDocumentModelDB> res = await RetailRepo.SelectConversionsDocumentsRetailAsync(req, token);
+        TPaginationResponseStandardModel<WalletConversionRetailDocumentModelDB> res = await RetailRepo.SelectConversionsDocumentsRetailAsync(req, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
 
         if (res.Response is not null && res.Response.Count != 0)

@@ -22,7 +22,7 @@ public class RubricsService(
     static readonly TimeSpan _ts = TimeSpan.FromSeconds(5);
 
     /// <inheritdoc/>
-    public async Task<List<UniversalBaseModel>> RubricsChildListAsync(RubricsListRequestModel req, CancellationToken token = default)
+    public async Task<List<UniversalBaseModel>> RubricsChildListAsync(RubricsListRequestStandardModel req, CancellationToken token = default)
     {
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         IQueryable<UniversalBaseModel> q = context
@@ -103,7 +103,7 @@ public class RubricsService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RubricMoveAsync(TRequestModel<RowMoveModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RubricMoveAsync(TRequestStandardModel<RowMoveModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");

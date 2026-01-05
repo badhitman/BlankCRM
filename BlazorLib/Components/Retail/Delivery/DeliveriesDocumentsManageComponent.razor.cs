@@ -182,7 +182,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
             SortBy = state.SortLabel,
         };
 
-        TPaginationResponseModel<DeliveryDocumentRetailModelDB>? res = await RetailRepo.SelectDeliveryDocumentsAsync(req, token);
+        TPaginationResponseStandardModel<DeliveryDocumentRetailModelDB>? res = await RetailRepo.SelectDeliveryDocumentsAsync(req, token);
         SnackBarRepo.ShowMessagesResponse(res.Status.Messages);
         if (res.Response is not null)
             await CacheUsersUpdate([.. res.Response.Select(x => x.RecipientIdentityUserId)]);

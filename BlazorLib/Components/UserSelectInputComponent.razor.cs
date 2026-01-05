@@ -35,7 +35,7 @@ public partial class UserSelectInputComponent : LazySelectorComponent<UserInfoMo
     public override async Task LoadPartData()
     {
         await SetBusyAsync();
-        TPaginationResponseModel<UserInfoModel> rest = await IdentityRepo
+        TPaginationResponseStandardModel<UserInfoModel> rest = await IdentityRepo
             .SelectUsersOfIdentityAsync(new()
             {
                 Payload = new() { SearchQuery = _selectedValueText },

@@ -24,9 +24,9 @@ public class InfoController : ControllerBase
     /// </summary>
     /// <returns>Информация по текущему пользователю (имя и роли)</returns>
     [HttpGet($"/{Routes.API_CONTROLLER_NAME}/{Routes.INFO_CONTROLLER_NAME}/{Routes.MY_CONTROLLER_NAME}"), TypeFilter(typeof(RolesAuthorizationFilter))]
-    public ExpressProfileResponseModel GetMyProfile([FromServices] ExpressUserPermissionModel userPerm)
+    public ExpressProfileResponseStandardModel GetMyProfile([FromServices] ExpressUserPermissionModel userPerm)
     {
-        ExpressProfileResponseModel res = new()
+        ExpressProfileResponseStandardModel res = new()
         {
             UserName = userPerm.User,
             Roles = userPerm.Roles?.Select(x => x.ToString()),

@@ -12,13 +12,13 @@ namespace Transmission.Receives.indexing;
 /// WordprocessingDocumentGetIndexReceive
 /// </summary>
 public class WordprocessingDocumentGetIndexReceive(ILogger<WordprocessingDocumentGetIndexReceive> LoggerRepo, IFilesIndexing indexingFileRepo)
-    : IResponseReceive<TAuthRequestModel<int>?, TResponseModel<WordprocessingDocumentIndexingFileResponseModel>?>
+    : IResponseReceive<TAuthRequestStandardModel<int>?, TResponseModel<WordprocessingDocumentIndexingFileResponseModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.WordprocessingDocumentGetIndexFileReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
+    public async Task<TResponseModel<WordprocessingDocumentIndexingFileResponseModel>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");

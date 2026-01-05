@@ -21,14 +21,14 @@ public class KladrNavigationServiceTransmission(IRabbitClient rabbitClient) : IK
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<KladrResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.KladrNavigationGetObjectReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFindAsync(KladrFindRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<KladrResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.KladrNavigationFindReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseStandardModel<KladrResponseModel>> ObjectsFindAsync(KladrFindRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<KladrResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.KladrNavigationFindReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<Dictionary<KladrChainTypesEnum, JObject[]>> ObjectsListForParentAsync(KladrsRequestBaseModel req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<Dictionary<KladrChainTypesEnum, JObject[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.KladrNavigationListReceive, req, token: token) ?? [];
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelectAsync(KladrSelectRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<KladrResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.KladrNavigationSelectReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseStandardModel<KladrResponseModel>> ObjectsSelectAsync(KladrSelectRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<KladrResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.KladrNavigationSelectReceive, req, token: token) ?? new();
 }

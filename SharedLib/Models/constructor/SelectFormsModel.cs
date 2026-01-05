@@ -12,7 +12,7 @@ public class SelectFormsModel
     /// <summary>
     /// Request
     /// </summary>
-    public required SimplePaginationRequestModel Request { get; set; }
+    public required SimplePaginationRequestStandardModel Request { get; set; }
 
     /// <summary>
     /// ProjectId

@@ -88,7 +88,7 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
             return;
         }
 
-        TAuthRequestModel<ChangePhoneUserRequestModel> req = new()
+        TAuthRequestStandardModel<ChangePhoneUserRequestModel> req = new()
         {
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = new()
@@ -174,7 +174,7 @@ public partial class ClientAboutComponent : BlazorBusyComponentBaseAuthModel
                 AutoGenerationWallets = true,
             }
         };
-        TPaginationResponseModel<WalletRetailModelDB>? resWallets = await RetailRepo.SelectWalletsAsync(reqWallets);
+        TPaginationResponseStandardModel<WalletRetailModelDB>? resWallets = await RetailRepo.SelectWalletsAsync(reqWallets);
         WalletsForUser = resWallets.Response;
 
         await SetBusyAsync(false);

@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// DaichiRequestModel
 /// </summary>
-public class DaichiRequestModel : SimplePaginationRequestModel
+public class DaichiRequestModel : SimplePaginationRequestStandardModel
 {
 
 }

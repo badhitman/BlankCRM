@@ -12,7 +12,7 @@ namespace Transmission.Receives.web;
 /// Все пользователи, которые когда либо писали что либо в бота - сохраняются/кэшируются в БД.
 /// </summary>
 public class FindUsersTelegramReceive(IIdentityTools identityRepo)
-    : IResponseReceive<SimplePaginationRequestModel?, TPaginationResponseModel<TelegramUserViewModel>?>
+    : IResponseReceive<SimplePaginationRequestStandardModel?, TPaginationResponseStandardModel<TelegramUserViewModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindUsersTelegramReceive;
@@ -21,7 +21,7 @@ public class FindUsersTelegramReceive(IIdentityTools identityRepo)
     /// Telegram пользователи (сохранённые).
     /// Все пользователи, которые когда либо писали что либо в бота - сохраняются/кэшируются в БД.
     /// </summary>
-    public async Task<TPaginationResponseModel<TelegramUserViewModel>?> ResponseHandleActionAsync(SimplePaginationRequestModel? payload, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<TelegramUserViewModel>?> ResponseHandleActionAsync(SimplePaginationRequestStandardModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await identityRepo.FindUsersTelegramAsync(payload, token);

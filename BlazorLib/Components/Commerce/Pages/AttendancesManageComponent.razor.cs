@@ -80,7 +80,7 @@ public partial class AttendancesManageComponent : BlazorBusyComponentBaseAuthMod
             }
         };
         await SetBusyAsync();
-        TResponseModel<TPaginationResponseModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<TPaginationResponseStandardModel<OfferModelDB>> res = await CommerceRepo.OffersSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
 
         if (res.Response?.Response is not null && res.Response.Response.Count != 0)
         {

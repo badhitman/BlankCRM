@@ -12,7 +12,7 @@ public class RequestDocumentsSchemesModel
     /// <summary>
     /// RequestPayload
     /// </summary>
-    public required SimplePaginationRequestModel RequestPayload { get; set; }
+    public required SimplePaginationRequestStandardModel RequestPayload { get; set; }
 
     /// <summary>
     /// ProjectId

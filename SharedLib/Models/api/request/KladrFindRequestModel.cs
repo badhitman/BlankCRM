@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// KladrFindRequestModel
 /// </summary>
-public class KladrFindRequestModel : PaginationRequestModel
+public class KladrFindRequestModel : PaginationRequestStandardModel
 {
     /// <summary>
     /// Применение фильтра к коду (SQL Inject as LIKE operator)

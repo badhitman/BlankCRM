@@ -145,7 +145,7 @@ public partial class WalletSelectInputComponent : BlazorBusyComponentBaseModel
                 AutoGenerationWallets = true,
             }
         };
-        TPaginationResponseModel<WalletRetailModelDB> getWallets = await RetailRepo.SelectWalletsAsync(reqW);
+        TPaginationResponseStandardModel<WalletRetailModelDB> getWallets = await RetailRepo.SelectWalletsAsync(reqW);
         SnackBarRepo.ShowMessagesResponse(getWallets.Status.Messages);
 
         if (getWallets.Response is null || getWallets.Response.Count == 0)

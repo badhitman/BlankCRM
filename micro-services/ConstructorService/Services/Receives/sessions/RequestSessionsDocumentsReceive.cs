@@ -11,13 +11,13 @@ namespace Transmission.Receives.constructor;
 /// Запросить порцию сессий (с пагинацией)
 /// </summary>
 public class RequestSessionsDocumentsReceive(IConstructorService conService) 
-    : IResponseReceive<RequestSessionsDocumentsRequestPaginationModel?, TPaginationResponseModel<SessionOfDocumentDataModelDB>?>
+    : IResponseReceive<RequestSessionsDocumentsRequestPaginationModel?, TPaginationResponseStandardModel<SessionOfDocumentDataModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RequestSessionsDocumentsReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<SessionOfDocumentDataModelDB>?> ResponseHandleActionAsync(RequestSessionsDocumentsRequestPaginationModel? payload, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<SessionOfDocumentDataModelDB>?> ResponseHandleActionAsync(RequestSessionsDocumentsRequestPaginationModel? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.RequestSessionsDocumentsAsync(payload, token);

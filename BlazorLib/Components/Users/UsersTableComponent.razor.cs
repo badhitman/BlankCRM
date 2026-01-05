@@ -196,7 +196,7 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
 
         foodRecallProvider = async req =>
         {
-            TPaginationResponseModel<UserInfoModel> res = await IdentityRepo.FindUsersAsync(new FindWithOwnedRequestModel()
+            TPaginationResponseStandardModel<UserInfoModel> res = await IdentityRepo.FindUsersAsync(new FindWithOwnedRequestModel()
             {
                 FindQuery = string.Empty,
                 PageNum = pagination.CurrentPageIndex,

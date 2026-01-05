@@ -54,7 +54,7 @@ public partial class KladrFindTableResultComponent : BlazorBusyComponentBaseMode
         };
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<KladrResponseModel> res = await kladrRepo.ObjectsFindAsync(req, token);
+        TPaginationResponseStandardModel<KladrResponseModel> res = await kladrRepo.ObjectsFindAsync(req, token);
         await SetBusyAsync(false, token: token);
         PartData = res.Response ?? [];
         return new TableData<KladrResponseModel>()

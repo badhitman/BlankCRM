@@ -27,10 +27,10 @@ public partial interface ICommerceService
     /// <summary>
     /// WarehouseDocuments select
     /// </summary>
-    public Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Registers select
     /// </summary>
-    public Task<TPaginationResponseModel<OfferAvailabilityModelDB>> RegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<OfferAvailabilityModelDB>> RegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default);
 }

@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Запрос порции строк журнала
 /// </summary>
-public class SelectJournalPartRequestModel : PaginationRequestModel
+public class SelectJournalPartRequestModel : PaginationRequestStandardModel
 {
     /// <summary>
     /// Номер или имя документа

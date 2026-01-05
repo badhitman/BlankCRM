@@ -14,7 +14,7 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>> RegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<OfferAvailabilityModelDB>> RegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
         {

@@ -5,12 +5,12 @@
 namespace SharedLib;
 
 /// <inheritdoc/>
-public class TPaginationStrictResponseModel<T> : PaginationResponseModel
+public class TPaginationStrictResponseModel<T> : PaginationResponseStandardModel
 {
     /// <inheritdoc/>
     public TPaginationStrictResponseModel() { }
     /// <inheritdoc/>
-    public TPaginationStrictResponseModel(PaginationRequestModel req)
+    public TPaginationStrictResponseModel(PaginationRequestStandardModel req)
     {
         PageNum = req.PageNum;
         PageSize = req.PageSize;

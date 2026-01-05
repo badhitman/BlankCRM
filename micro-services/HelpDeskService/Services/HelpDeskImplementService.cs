@@ -35,7 +35,7 @@ public class HelpDeskImplementService(
 
     #region messages
     /// <inheritdoc/>
-    public async Task<TResponseModel<IssueMessageHelpDeskModelDB[]>> MessagesListAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<IssueMessageHelpDeskModelDB[]>> MessagesListAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         TResponseModel<IssueMessageHelpDeskModelDB[]> res = new();
 
@@ -51,7 +51,7 @@ public class HelpDeskImplementService(
 
         UserInfoModel actor = rest.Response[0];
 
-        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestStandardModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload], IncludeSubscribersOnly = true },
@@ -81,7 +81,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<int?>> MessageUpdateOrCreateAsync(TAuthRequestStandardModel<IssueMessageHelpDeskBaseModel> req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
@@ -106,7 +106,7 @@ public class HelpDeskImplementService(
         }
         req.Payload.MessageText = req.Payload.MessageText.Trim();
 
-        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestStandardModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = req.SenderActionUserId,
             Payload = new() { IssuesIds = [req.Payload.IssueId], IncludeSubscribersOnly = true },
@@ -387,7 +387,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>> MessageVoteAsync(TAuthRequestModel<VoteIssueRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>> MessageVoteAsync(TAuthRequestStandardModel<VoteIssueRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<bool?> res = new();
 
@@ -416,7 +416,7 @@ public class HelpDeskImplementService(
         using HelpDeskContext context = await helpdeskDbFactory.CreateDbContextAsync(token);
         IssueMessageHelpDeskModelDB msg_db = await context.IssuesMessages.FirstAsync(x => x.Id == req.Payload.MessageId, cancellationToken: token);
 
-        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestStandardModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [msg_db.IssueId], IncludeSubscribersOnly = true },
@@ -518,7 +518,7 @@ public class HelpDeskImplementService(
 
     #region issues
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<SubscriberIssueHelpDeskModelDB>>> SubscribesListAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<SubscriberIssueHelpDeskModelDB>>> SubscribesListAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
             return new()
@@ -532,7 +532,7 @@ public class HelpDeskImplementService(
 
         UserInfoModel actor = rest.Response[0];
 
-        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestStandardModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload], IncludeSubscribersOnly = true },
@@ -545,7 +545,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseStandardModel<IssueHelpDeskModel>>> IssuesSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req, CancellationToken token = default)
     {
         if (req.Payload?.Payload?.IdentityUsersIds is null)
             return new()
@@ -635,7 +635,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<IssueHelpDeskModel>> ConsoleIssuesSelectAsync(TPaginationRequestStandardModel<ConsoleIssuesRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
         {
@@ -671,7 +671,7 @@ public class HelpDeskImplementService(
 
         if (!string.IsNullOrWhiteSpace(cacheToken))
         {
-            TPaginationResponseModel<IssueHelpDeskModel>? _fr = await cacheRepo.GetObjectAsync<TPaginationResponseModel<IssueHelpDeskModel>>(cacheToken, token);
+            TPaginationResponseStandardModel<IssueHelpDeskModel>? _fr = await cacheRepo.GetObjectAsync<TPaginationResponseStandardModel<IssueHelpDeskModel>>(cacheToken, token);
             if (_fr is not null)
                 return _fr;
         }
@@ -705,7 +705,7 @@ public class HelpDeskImplementService(
             .Include(x => x.RubricIssue)
             .ToListAsync(cancellationToken: token);
 
-        TPaginationResponseModel<IssueHelpDeskModel> res = new()
+        TPaginationResponseStandardModel<IssueHelpDeskModel> res = new()
         {
             PageNum = req.PageNum,
             PageSize = req.PageSize,
@@ -722,7 +722,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> ExecuterUpdateAsync(TAuthRequestModel<UserIssueModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> ExecuterUpdateAsync(TAuthRequestStandardModel<UserIssueModel> req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         TResponseModel<bool> res = new();
@@ -739,7 +739,7 @@ public class HelpDeskImplementService(
             return res;
         }
 
-        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestStandardModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = req.SenderActionUserId,
             Payload = new IssuesReadRequestModel()
@@ -897,7 +897,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> IssueCreateOrUpdateAsync(TAuthRequestModel<UniversalUpdateRequestModel> issue_upd, CancellationToken token = default)
+    public async Task<TResponseModel<int>> IssueCreateOrUpdateAsync(TAuthRequestStandardModel<UniversalUpdateRequestModel> issue_upd, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(issue_upd, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         TResponseModel<int> res = new();
@@ -1126,7 +1126,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<IssueHelpDeskModelDB[]>> IssuesReadAsync(TAuthRequestModel<IssuesReadRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<IssueHelpDeskModelDB[]>> IssuesReadAsync(TAuthRequestStandardModel<IssuesReadRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<IssueHelpDeskModelDB[]> res = new();
 
@@ -1194,7 +1194,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> IssueStatusChangeAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> IssueStatusChangeAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         TResponseModel<bool> res = new()
@@ -1220,7 +1220,7 @@ public class HelpDeskImplementService(
 
         UserInfoModel actor = req.SenderActionUserId == GlobalStaticConstantsRoles.Roles.System ? UserInfoModel.BuildSystem() : rest.Response![0];
 
-        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestStandardModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload.DocumentId], IncludeSubscribersOnly = true },
@@ -1437,7 +1437,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool?>> SubscribeUpdateAsync(TAuthRequestModel<SubscribeUpdateRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool?>> SubscribeUpdateAsync(TAuthRequestStandardModel<SubscribeUpdateRequestModel> req, CancellationToken token = default)
     {
         loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         TResponseModel<bool?> res = new() { Response = false };
@@ -1465,7 +1465,7 @@ public class HelpDeskImplementService(
             actor = rest.Response.First(x => x.UserId == req.SenderActionUserId),
             requested_user = rest.Response.First(x => x.UserId == req.Payload.UserId);
 
-        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestStandardModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new IssuesReadRequestModel()
@@ -1620,7 +1620,7 @@ public class HelpDeskImplementService(
             return res;
         }
 
-        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestStandardModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
             Payload = new() { IssuesIds = [req.Payload.Payload.IssueId], IncludeSubscribersOnly = true },
@@ -1696,7 +1696,7 @@ public class HelpDeskImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<PulseViewModel>>> PulseJournalSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<UserIssueModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseStandardModel<PulseViewModel>>> PulseJournalSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<UserIssueModel>> req, CancellationToken token = default)
     {
         if (req.Payload?.Payload is null)
             return new()
@@ -1715,7 +1715,7 @@ public class HelpDeskImplementService(
 
         loggerRepo.LogDebug($"Запрос журнала активности пользователем: {JsonConvert.SerializeObject(actor, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
-        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+        TResponseModel<IssueHelpDeskModelDB[]> issues_data = await IssuesReadAsync(new TAuthRequestStandardModel<IssuesReadRequestModel>()
         {
             SenderActionUserId = actor.UserId,
             Payload = new() { IssuesIds = [req.Payload.Payload.IssueId], IncludeSubscribersOnly = true },

@@ -39,9 +39,9 @@ public abstract partial class ApiRusklimatComLayerContext : DbContext
     /// <summary>
     /// ProductsSelect
     /// </summary>
-    public async Task<TPaginationResponseModel<ProductRusklimatModelDB>> ProductsSelect(RusklimatRequestModel req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<ProductRusklimatModelDB>> ProductsSelect(RusklimatRequestModel req, CancellationToken token = default)
     {
-        TPaginationResponseModel<ProductRusklimatModelDB> res = new(req);
+        TPaginationResponseStandardModel<ProductRusklimatModelDB> res = new(req);
 
         IQueryable<ProductRusklimatModelDB> q = from po in Products
                                                 where EF.Functions.ILike(po.Name!, $"%{req.FindQuery}%") ||

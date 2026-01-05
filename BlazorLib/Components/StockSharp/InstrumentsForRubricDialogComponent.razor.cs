@@ -68,7 +68,7 @@ public partial class InstrumentsForRubricDialogComponent : BlazorBusyComponentBa
             SortingDirection = state.SortDirection.Convert(),
         };
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
+        TPaginationResponseStandardModel<InstrumentTradeStockSharpViewModel> res = await SsRepo.InstrumentsSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
         return new TableData<InstrumentTradeStockSharpViewModel>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

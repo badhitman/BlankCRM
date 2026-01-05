@@ -83,7 +83,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
         };
         await SetBusyAsync(token: token);
         await Task.Delay(1, token);
-        TPaginationResponseModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.RequestSessionsDocumentsAsync(req, token);
+        TPaginationResponseStandardModel<SessionOfDocumentDataModelDB> rest = await ConstructorRepo.RequestSessionsDocumentsAsync(req, token);
 
         if (rest.Response is null)
         {
@@ -216,7 +216,7 @@ public partial class SessionsViewComponent : BlazorBusyComponentBaseAuthModel
 
         await SetBusyAsync();
 
-        TPaginationResponseModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = new() { PageNum = 0, PageSize = 1000 }, ProjectId = ParentFormsPage.MainProject.Id });
+        TPaginationResponseStandardModel<DocumentSchemeConstructorModelDB> rest = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = new() { PageNum = 0, PageSize = 1000 }, ProjectId = ParentFormsPage.MainProject.Id });
 
         if (rest.Response is null)
         {

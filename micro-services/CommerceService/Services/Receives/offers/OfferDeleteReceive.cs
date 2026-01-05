@@ -12,7 +12,7 @@ namespace Transmission.Receives.commerce;
 /// Удалить оффер
 /// </summary>
 public class OfferDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<int>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
 {
     /// <summary>
     /// Удалить оффер
@@ -22,7 +22,7 @@ public class OfferDeleteReceive(ICommerceService commerceRepo, IFilesIndexing in
     /// <summary>
     /// Удалить оффер
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
 

@@ -18,7 +18,7 @@ public partial class CommerceImplementService : ICommerceService
 {
     #region records
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<RecordsAttendanceModelDB>> RecordsAttendancesSelectAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<RecordsAttendanceModelDB>> RecordsAttendancesSelectAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -66,7 +66,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RecordsAttendanceCreateAsync(TAuthRequestModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RecordsAttendanceCreateAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default)
     {
         if (workSchedules.Payload is null)
             return ResponseBaseModel.CreateError("workSchedules.Payload is null");
@@ -209,7 +209,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        TAuthRequestModel<UniversalUpdateRequestModel> issue_new = new()
+        TAuthRequestStandardModel<UniversalUpdateRequestModel> issue_new = new()
         {
             SenderActionUserId = workSchedules.SenderActionUserId,
             Payload = new()
@@ -300,7 +300,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RecordAttendanceDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RecordAttendanceDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         if (string.IsNullOrEmpty(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrEmpty(req.SenderActionUserId)");
@@ -365,7 +365,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> RecordsAttendancesStatusesChangeByHelpDeskIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> RecordsAttendancesStatusesChangeByHelpDeskIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<bool> res = new();
 
@@ -531,7 +531,7 @@ public partial class CommerceImplementService : ICommerceService
     #endregion
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> paginationWorkSchedulesRequest, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> paginationWorkSchedulesRequest, CancellationToken token = default)
     {
         if (paginationWorkSchedulesRequest.Payload is null)
         {
@@ -725,7 +725,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CalendarScheduleUpdateAsync(TAuthRequestModel<CalendarScheduleModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CalendarScheduleUpdateAsync(TAuthRequestStandardModel<CalendarScheduleModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
 
@@ -791,7 +791,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<CalendarScheduleModelDB>>> CalendarSchedulesSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseStandardModel<CalendarScheduleModelDB>>> CalendarSchedulesSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default)
     {
         if (req.Payload?.Payload is null)
         {
@@ -852,7 +852,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarSchedulesReadAsync(TAuthRequestModel<int[]> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarSchedulesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         TResponseModel<List<CalendarScheduleModelDB>> res = new();
         if (req.Payload is null)

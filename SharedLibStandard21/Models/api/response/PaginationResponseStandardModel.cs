@@ -9,7 +9,7 @@ namespace SharedLib;
 /// <summary>
 /// Базовая модель ответа с поддержкой пагинации
 /// </summary>
-public class PaginationResponseModel : PaginationRequestModel
+public class PaginationResponseStandardModel : PaginationRequestStandardModel
 {
     /// <summary>
     /// 

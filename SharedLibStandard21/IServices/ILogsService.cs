@@ -15,12 +15,12 @@ public interface ILogsService
     /// <summary>
     /// Определить номер страницы для строки
     /// </summary>
-    public Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// LogsSelect
     /// </summary>
-    public Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// MetadataLogs

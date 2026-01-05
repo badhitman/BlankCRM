@@ -85,7 +85,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
         TinkoffPaymentClient clientApi = new(settings.Value.TerminalKey, settings.Value.Password);
         Receipt rec = req.Receipt.GetTBankReceipt();
 
-        TAuthRequestModel<int[]> _findUser = new()
+        TAuthRequestStandardModel<int[]> _findUser = new()
         {
             SenderActionUserId = Roles.System,
             Payload = [req.OrderId]
@@ -243,7 +243,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
 
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<PaymentInitTBankResultModelDB>> PaymentsInitSelectTBankAsync(TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<PaymentInitTBankResultModelDB>> PaymentsInitSelectTBankAsync(TPaginationRequestStandardModel<SelectInitPaymentsTBankRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -268,7 +268,7 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<IncomingMerchantPaymentTBankModelDB>> IncomingMerchantPaymentsSelectTBankAsync(TPaginationRequestStandardModel<SelectIncomingMerchantPaymentsTBankRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<IncomingMerchantPaymentTBankModelDB>> IncomingMerchantPaymentsSelectTBankAsync(TPaginationRequestStandardModel<SelectIncomingMerchantPaymentsTBankRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;

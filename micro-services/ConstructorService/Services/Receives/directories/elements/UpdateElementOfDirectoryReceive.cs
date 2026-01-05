@@ -12,13 +12,13 @@ namespace Transmission.Receives.constructor;
 /// Обновить элемент справочника
 /// </summary>
 public class UpdateElementOfDirectoryReceive(IConstructorService conService, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<EntryDescriptionModel>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<EntryDescriptionModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateElementOfDirectoryReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<EntryDescriptionModel>? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<EntryDescriptionModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
 

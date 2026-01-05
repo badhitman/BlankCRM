@@ -34,7 +34,7 @@ public partial class CommerceImplementService(
 {
     #region payment-document
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> PaymentDocumentUpdateAsync(TAuthRequestModel<PaymentDocumentBaseModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> PaymentDocumentUpdateAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
 
@@ -101,7 +101,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> PaymentDocumentDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> PaymentDocumentDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         DateTime dtu = DateTime.UtcNow;
@@ -115,7 +115,7 @@ public partial class CommerceImplementService(
 
     #region price-rule
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PricesRulesGetForOffersAsync(TAuthRequestModel<int[]> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PricesRulesGetForOffersAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         TResponseModel<List<PriceRuleForOfferModelDB>> res = new();
 
@@ -136,7 +136,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestModel<PriceRuleForOfferModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
@@ -187,7 +187,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> PriceRuleDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -282,7 +282,7 @@ public partial class CommerceImplementService(
         return ResponseBaseModel.CreateSuccess("Ok");
     }
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestModel<OfferModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestStandardModel<OfferModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
 
@@ -351,7 +351,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseStandardModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default)
     {
         if (req.Payload?.Payload is null)
         {
@@ -395,7 +395,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<OfferModelDB[]>> OffersReadAsync(TAuthRequestModel<int[]> req, CancellationToken token = default)
+    public async Task<TResponseModel<OfferModelDB[]>> OffersReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         TResponseModel<OfferModelDB[]> res = new();
         if (req.Payload is null)
@@ -422,7 +422,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> OfferDeleteAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> OfferDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         ResponseBaseModel res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
@@ -522,7 +522,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesReadAsync(TAuthRequestModel<int[]> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         if (req.Payload is null || req.Payload.Length == 0)
             return new()
@@ -542,7 +542,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
         {
@@ -614,7 +614,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<OrderDocumentModelDB[]>> OrdersReadAsync(TAuthRequestModel<int[]> req, CancellationToken token = default)
+    public async Task<TResponseModel<OrderDocumentModelDB[]>> OrdersReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         TResponseModel<OrderDocumentModelDB[]> res = new();
         if (req.Payload is null)
@@ -642,7 +642,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestModel<OrdersSelectRequestModel>> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestStandardModel<OrdersSelectRequestModel>> req, CancellationToken token = default)
     {
         if (req.Payload?.Payload is null)
         {
@@ -879,7 +879,7 @@ public partial class CommerceImplementService(
                 }
             }
 
-            TAuthRequestModel<UniversalUpdateRequestModel> issue_new = new()
+            TAuthRequestStandardModel<UniversalUpdateRequestModel> issue_new = new()
             {
                 SenderActionUserId = req.AuthorIdentityUserId,
                 Payload = new()
@@ -1286,7 +1286,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> StatusesOrdersChangeByHelpDeskDocumentIdAsync(TAuthRequestModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> StatusesOrdersChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         string msg;
         TResponseModel<bool> res = new();
@@ -1428,7 +1428,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<FileAttachModel>> GetOrderReportFileAsync(TAuthRequestModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<FileAttachModel>> GetOrderReportFileAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         if (string.IsNullOrEmpty(req.SenderActionUserId))
             return new() { Messages = [new() { Text = "string.IsNullOrEmpty(req.SenderActionUserId)", TypeMessage = MessagesTypesEnum.Error }] };
@@ -1458,7 +1458,7 @@ public partial class CommerceImplementService(
         bool allowed = actor.IsAdmin || orderDb.AuthorIdentityUserId == actor.UserId || actor.UserId == GlobalStaticConstantsRoles.Roles.System;
         if (!allowed && orderDb.HelpDeskId.HasValue && orderDb.HelpDeskId.Value > 0)
         {
-            TResponseModel<IssueHelpDeskModelDB[]> issueData = await HelpDeskRepo.IssuesReadAsync(new TAuthRequestModel<IssuesReadRequestModel>()
+            TResponseModel<IssueHelpDeskModelDB[]> issueData = await HelpDeskRepo.IssuesReadAsync(new TAuthRequestStandardModel<IssuesReadRequestModel>()
             {
                 SenderActionUserId = req.SenderActionUserId,
                 Payload = new()

@@ -10,8 +10,8 @@ namespace RemoteCallLib;
 public partial class CommerceTransmission
 {
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<OfferAvailabilityModelDB>> OffersRegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<OfferAvailabilityModelDB>>(TransmissionQueues.OffersRegistersSelectCommerceReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseStandardModel<OfferAvailabilityModelDB>> OffersRegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<OfferAvailabilityModelDB>>(TransmissionQueues.OffersRegistersSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<bool>> RowsForWarehouseDeleteAsync(int[] req, CancellationToken token = default)
@@ -33,6 +33,6 @@ public partial class CommerceTransmission
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<WarehouseDocumentModelDB>>(TransmissionQueues.WarehousesSelectCommerceReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseStandardModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<WarehouseDocumentModelDB>>(TransmissionQueues.WarehousesSelectCommerceReceive, req, token: token) ?? new();
 }

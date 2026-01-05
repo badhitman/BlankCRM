@@ -12,7 +12,7 @@ public class PulseRequestModel
     /// <summary>
     /// Payload
     /// </summary>
-    public required TAuthRequestModel<PulseIssueBaseModel> Payload { get; set; }
+    public required TAuthRequestStandardModel<PulseIssueBaseModel> Payload { get; set; }
 
     /// <summary>
     /// IsMuteEmail

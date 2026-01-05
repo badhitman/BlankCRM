@@ -63,7 +63,7 @@ public partial class TabsOfDocumentsSchemesViewComponent : BlazorBusyComponentBa
             Request = AltSimplePaginationRequestModel.Build(null, 100, 0, true)
         };
         await SetBusyAsync();
-        TPaginationResponseModel<FormConstructorModelDB> rest = await ConstructorRepo.SelectFormsAsync(reqForms);
+        TPaginationResponseStandardModel<FormConstructorModelDB> rest = await ConstructorRepo.SelectFormsAsync(reqForms);
         
         if (rest.TotalRowsCount > rest.PageSize)
             SnackBarRepo.Error($"Записей больше: {rest.TotalRowsCount}");

@@ -31,7 +31,7 @@ public partial class ProductsDaichiTableComponent : BlazorBusyComponentBaseModel
         };
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<ProductDaichiModelDB> res = await daichiTrans.ProductsSelectAsync(req, token);
+        TPaginationResponseStandardModel<ProductDaichiModelDB> res = await daichiTrans.ProductsSelectAsync(req, token);
         await SetBusyAsync(false, token: token);
         return new TableData<ProductDaichiModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }

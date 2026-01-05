@@ -7,10 +7,10 @@ namespace SharedLib;
 /// <summary>
 /// Базовая модель запроса с поддержкой пагинации
 /// </summary>
-public class PaginationRequestModel
+public class PaginationRequestStandardModel
 {
     /// <inheritdoc/>
-    public static PaginationRequestModel Build(PaginationRequestModel init_object)
+    public static PaginationRequestStandardModel Build(PaginationRequestStandardModel init_object)
     {
         return new()
         {

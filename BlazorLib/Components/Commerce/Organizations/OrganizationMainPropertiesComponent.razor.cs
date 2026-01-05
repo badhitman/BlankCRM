@@ -70,7 +70,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
         editOrg = GlobalTools.CreateDeepCopy(CurrentOrganization);
 
-        TAuthRequestModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession.UserId };
+        TAuthRequestStandardModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession.UserId };
         await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
@@ -118,7 +118,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         if (editOrg is null || editOrg.Equals(CurrentOrganization))
             throw new ArgumentNullException(nameof(editOrg));
 
-        TAuthRequestModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession.UserId };
+        TAuthRequestStandardModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession.UserId };
         await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);

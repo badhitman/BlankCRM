@@ -217,7 +217,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
             req.Payload.EqualsSumFilter = true;
 
         await SetBusyAsync(token: token);
-        TPaginationResponseModel<DocumentRetailModelDB> res = await RetailRepo.SelectRetailDocumentsAsync(req, token);
+        TPaginationResponseStandardModel<DocumentRetailModelDB> res = await RetailRepo.SelectRetailDocumentsAsync(req, token);
 
         if (res.Response is not null)
         {

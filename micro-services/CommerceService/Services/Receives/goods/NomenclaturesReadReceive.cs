@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// NomenclaturesReadReceive
 /// </summary>
 public class NomenclaturesReadReceive(ICommerceService commerceRepo)
-    : IResponseReceive<TAuthRequestModel<int[]>?, TResponseModel<List<NomenclatureModelDB>>?>
+    : IResponseReceive<TAuthRequestStandardModel<int[]>?, TResponseModel<List<NomenclatureModelDB>>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.NomenclaturesReadCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<NomenclatureModelDB>>?> ResponseHandleActionAsync(TAuthRequestModel<int[]>? req, CancellationToken token = default)
+    public async Task<TResponseModel<List<NomenclatureModelDB>>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await commerceRepo.NomenclaturesReadAsync(req, token);

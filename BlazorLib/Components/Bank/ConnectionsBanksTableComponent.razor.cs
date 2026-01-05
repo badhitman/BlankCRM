@@ -103,7 +103,7 @@ public partial class ConnectionsBanksTableComponent : BlazorBusyComponentBaseMod
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert()
         };
-        TPaginationResponseModel<BankConnectionModelDB> res = await BankRepo.ConnectionsBanksSelectAsync(req, token);
+        TPaginationResponseStandardModel<BankConnectionModelDB> res = await BankRepo.ConnectionsBanksSelectAsync(req, token);
         return new TableData<BankConnectionModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 

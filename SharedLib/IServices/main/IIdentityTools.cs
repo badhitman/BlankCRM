@@ -124,7 +124,7 @@ public interface IIdentityTools
     /// <summary>
     /// SelectUsersOfIdentity
     /// </summary>
-    public Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Обновляет адрес Email, если токен действительный для пользователя.
@@ -146,7 +146,7 @@ public interface IIdentityTools
     /// <summary>
     /// Пользователи
     /// </summary>
-    public Task<TPaginationResponseModel<UserInfoModel>> FindUsersAsync(FindWithOwnedRequestModel req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<UserInfoModel>> FindUsersAsync(FindWithOwnedRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// Сбрасывает пароль на указанный
@@ -228,7 +228,7 @@ public interface IIdentityTools
     /// <summary>
     /// Роли. Если указан 'OwnerId', то поиск ограничивается ролями данного пользователя
     /// </summary>
-    public Task<TPaginationResponseModel<RoleInfoModel>> FindRolesAsync(FindWithOwnedRequestModel req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<RoleInfoModel>> FindRolesAsync(FindWithOwnedRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// Создать новую роль
@@ -274,7 +274,7 @@ public interface IIdentityTools
     /// Telegram пользователи (сохранённые).
     /// Все пользователи, которые когда либо писали что либо в бота - сохраняются/кэшируются в БД.
     /// </summary>
-    public Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(SimplePaginationRequestModel req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<TelegramUserViewModel>> FindUsersTelegramAsync(SimplePaginationRequestStandardModel req, CancellationToken token = default);
 
     /// <summary>
     /// Telegram: Подтверждение токена
@@ -317,15 +317,15 @@ public interface IIdentityTools
     /// <summary>
     /// InitChangePhoneUserAsync
     /// </summary>
-    public Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestModel<string> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestStandardModel<string> req, CancellationToken token = default);
 
     /// <summary>
     /// Подтвердить номер телефона
     /// </summary>
-    public Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<ChangePhoneUserRequestModel> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestStandardModel<ChangePhoneUserRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Создать пользователя вручную
     /// </summary>
-    public Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestModel<UserInfoBaseModel> user, CancellationToken token = default);
+    public Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestStandardModel<UserInfoBaseModel> user, CancellationToken token = default);
 }

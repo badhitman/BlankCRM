@@ -54,7 +54,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
     async Task OrderReport()
     {
         ArgumentNullException.ThrowIfNull(CurrentUserSession);
-        TAuthRequestModel<int> req = new()
+        TAuthRequestStandardModel<int> req = new()
         {
             Payload = Document.Id,
             SenderActionUserId = CurrentUserSession.UserId
@@ -122,7 +122,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
         if (CurrentUserSession is null)
             throw new Exception("CurrentUserSession is null");
 
-        TAuthRequestModel<StatusChangeRequestModel> req = new()
+        TAuthRequestStandardModel<StatusChangeRequestModel> req = new()
         {
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = new()

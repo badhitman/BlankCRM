@@ -34,7 +34,7 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
     {
         await SetBusyAsync();
         await base.OnInitializedAsync();
-        RubricsListRequestModel req = new()
+        RubricsListRequestStandardModel req = new()
         {
             ContextName = Routes.WAREHOUSE_CONTROLLER_NAME,
         };
@@ -73,7 +73,7 @@ public partial class OfferRegistersComponent : BlazorBusyComponentRubricsCachedM
             req.Payload.WarehousesFilter = [.. SelectedWarehouses];
         }
 
-        TPaginationResponseModel<OfferAvailabilityModelDB> rest = await CommerceRepo.OffersRegistersSelectAsync(req, token);
+        TPaginationResponseStandardModel<OfferAvailabilityModelDB> rest = await CommerceRepo.OffersRegistersSelectAsync(req, token);
 
         if (rest.Response is not null)
         {

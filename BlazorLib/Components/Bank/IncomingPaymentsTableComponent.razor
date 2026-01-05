@@ -67,7 +67,7 @@
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert(),
         };
-        TPaginationResponseModel<IncomingMerchantPaymentTBankModelDB> res = await MerchRepo.IncomingMerchantPaymentsSelectTBankAsync(req, token);
+        TPaginationResponseStandardModel<IncomingMerchantPaymentTBankModelDB> res = await MerchRepo.IncomingMerchantPaymentsSelectTBankAsync(req, token);
         return new TableData<IncomingMerchantPaymentTBankModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 

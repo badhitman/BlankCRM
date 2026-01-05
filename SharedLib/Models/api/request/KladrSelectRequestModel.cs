@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// KladrSelectRequestModel
 /// </summary>
-public class KladrSelectRequestModel : PaginationRequestModel
+public class KladrSelectRequestModel : PaginationRequestStandardModel
 {
     /// <summary>
     /// Применение фильтра к коду

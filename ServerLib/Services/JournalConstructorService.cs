@@ -98,7 +98,7 @@ public partial class JournalConstructorService(
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KeyValuePair<int, Dictionary<string, object>>>> SelectJournalPartAsync(SelectJournalPartRequestModel req, int? projectId, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<KeyValuePair<int, Dictionary<string, object>>>> SelectJournalPartAsync(SelectJournalPartRequestModel req, int? projectId, CancellationToken token = default)
     {
         TResponseModel<DocumentSchemeConstructorModelDB[]?> find_doc = await FindDocumentSchemes(req.DocumentNameOrId, projectId, token);
         if (!find_doc.Success() || find_doc.Response is null || find_doc.Response.Length == 0 || find_doc.Response.Length > 1)

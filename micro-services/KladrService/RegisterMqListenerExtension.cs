@@ -26,8 +26,8 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<FlushTempKladrReceive, object, ResponseBaseModel>()
             .RegisterMqListener<ChildsContainsReceive, string, ResponseBaseModel>()
             .RegisterMqListener<ObjectGetReceive, KladrsRequestBaseModel, TResponseModel<KladrResponseModel>>()
-            .RegisterMqListener<KladrSelectReceive, KladrSelectRequestModel, TPaginationResponseModel<KladrResponseModel>>()
-            .RegisterMqListener<KladrFindReceive, KladrFindRequestModel, TPaginationResponseModel<KladrResponseModel>>()
+            .RegisterMqListener<KladrSelectReceive, KladrSelectRequestModel, TPaginationResponseStandardModel<KladrResponseModel>>()
+            .RegisterMqListener<KladrFindReceive, KladrFindRequestModel, TPaginationResponseStandardModel<KladrResponseModel>>()
             ;
     }
 }

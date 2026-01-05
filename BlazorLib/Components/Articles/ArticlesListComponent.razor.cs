@@ -58,7 +58,7 @@ public partial class ArticlesListComponent : BlazorBusyComponentBaseAuthModel
             SortingDirection = state.SortDirection.Convert(),
         };
 
-        TPaginationResponseModel<ArticleModelDB> rest = await HelpDeskRepo
+        TPaginationResponseStandardModel<ArticleModelDB> rest = await HelpDeskRepo
             .ArticlesSelectAsync(req, token);
 
         await SetBusyAsync(false, token: token);

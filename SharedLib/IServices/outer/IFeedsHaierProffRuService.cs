@@ -17,5 +17,5 @@ public interface IFeedsHaierProffRuService : IOuterApiService
     /// <summary>
     /// ProductsSelect
     /// </summary>
-    public Task<TPaginationResponseModel<ProductHaierModelDB>> ProductsSelectAsync(HaierRequestModel req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<ProductHaierModelDB>> ProductsSelectAsync(HaierRequestModel req, CancellationToken token = default);
 }

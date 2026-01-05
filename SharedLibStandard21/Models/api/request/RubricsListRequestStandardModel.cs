@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// RubricsListRequestModel
 /// </summary>
-public class RubricsListRequestModel : TProjectedRequestModel<int>
+public class RubricsListRequestStandardModel : TProjectedRequestStandardModel<int>
 {
     /// <summary>
     /// Имя контекста для разделения различных селекторов независимо друг от друга

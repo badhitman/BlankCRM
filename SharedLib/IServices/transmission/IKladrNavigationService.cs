@@ -24,12 +24,12 @@ public interface IKladrNavigationService
     /// <summary>
     /// Select objects
     /// </summary>
-    public Task<TPaginationResponseModel<KladrResponseModel>> ObjectsSelectAsync(KladrSelectRequestModel req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<KladrResponseModel>> ObjectsSelectAsync(KladrSelectRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// Find objects
     /// </summary>
-    public Task<TPaginationResponseModel<KladrResponseModel>> ObjectsFindAsync(KladrFindRequestModel req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<KladrResponseModel>> ObjectsFindAsync(KladrFindRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// Наличие предков, соответствующих шаблону кода

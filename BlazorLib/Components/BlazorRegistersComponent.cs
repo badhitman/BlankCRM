@@ -71,7 +71,7 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
             SortingDirection = DirectionsEnum.Up,
         };
         await SetBusyAsync();
-        TPaginationResponseModel<OfferAvailabilityModelDB> offersRegisters = await CommerceRepo.OffersRegistersSelectAsync(reqData);
+        TPaginationResponseStandardModel<OfferAvailabilityModelDB> offersRegisters = await CommerceRepo.OffersRegistersSelectAsync(reqData);
 
         if (offersRegisters.TotalRowsCount > offersRegisters.PageSize)
             SnackBarRepo.Error($"Записей больше: {offersRegisters.TotalRowsCount}");

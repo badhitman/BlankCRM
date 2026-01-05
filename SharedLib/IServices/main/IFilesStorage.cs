@@ -20,17 +20,17 @@ public interface IFilesStorage
     /// <summary>
     /// FilesSelect
     /// </summary>
-    public Task<TPaginationResponseModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default);
+    public Task<TPaginationResponseStandardModel<StorageFileModelDB>> FilesSelectAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// ReadFile
     /// </summary>
-    public Task<TResponseModel<FileContentModel>> ReadFileAsync(TAuthRequestModel<RequestFileReadModel> req, CancellationToken token = default);
+    public Task<TResponseModel<FileContentModel>> ReadFileAsync(TAuthRequestStandardModel<RequestFileReadModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Save file into storage
     /// </summary>
-    public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestModel<StorageFileMetadataModel> req, CancellationToken token = default);
+    public Task<TResponseModel<StorageFileModelDB>> SaveFileAsync(TAuthRequestStandardModel<StorageFileMetadataModel> req, CancellationToken token = default);
 
     /// <summary>
     /// GetDirectoryInfo

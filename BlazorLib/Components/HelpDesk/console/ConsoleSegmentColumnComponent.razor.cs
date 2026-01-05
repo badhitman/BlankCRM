@@ -64,7 +64,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
     async Task LoadData()
     {
         await SetBusyAsync();
-        TPaginationResponseModel<IssueHelpDeskModel> res = await HelpDeskRepo.ConsoleIssuesSelectAsync(new TPaginationRequestStandardModel<ConsoleIssuesRequestModel>
+        TPaginationResponseStandardModel<IssueHelpDeskModel> res = await HelpDeskRepo.ConsoleIssuesSelectAsync(new TPaginationRequestStandardModel<ConsoleIssuesRequestModel>
         {
             PageNum = pageNum,
             PageSize = 5,

@@ -20,7 +20,7 @@ public class CommerceController(ICommerceTransmission commRepo) : ControllerBase
     /// Подбор номенклатуры (поиск по параметрам)
     /// </summary>
     [HttpPut($"/api/{Routes.COMMERCE_CONTROLLER_NAME}/{Routes.NOMENCLATURES_CONTROLLER_NAME}-{Routes.SELECT_ACTION_NAME}")]
-    public async Task<TPaginationResponseModel<NomenclatureModelDB>> NomenclaturesSelect(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req)
+    public async Task<TPaginationResponseStandardModel<NomenclatureModelDB>> NomenclaturesSelect(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req)
         => await commRepo.NomenclaturesSelectAsync(req);
 
     /// <summary>

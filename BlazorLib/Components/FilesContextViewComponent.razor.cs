@@ -138,7 +138,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
         if (_selectedFile is null || CurrentUserSession is null)
             return;
 
-        TResponseModel<FileContentModel> downloadSource = await FilesRepo.ReadFileAsync(new TAuthRequestModel<RequestFileReadModel>() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { FileId = _selectedFile.Id } });
+        TResponseModel<FileContentModel> downloadSource = await FilesRepo.ReadFileAsync(new TAuthRequestStandardModel<RequestFileReadModel>() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { FileId = _selectedFile.Id } });
 
         if (downloadSource.Success() && downloadSource.Response?.Payload is not null)
         {
@@ -168,7 +168,7 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
             SortingDirection = state.SortDirection.Convert(),
         };
 
-        TPaginationResponseModel<StorageFileModelDB> rest = await FilesRepo
+        TPaginationResponseStandardModel<StorageFileModelDB> rest = await FilesRepo
             .FilesSelectAsync(req, token);
 
         List<StorageFileModelDB>? data = rest.Response;

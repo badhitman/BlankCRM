@@ -12,13 +12,13 @@ namespace Transmission.Receives.commerce;
 /// PaymentDocumentUpdateReceive
 /// </summary>
 public class PaymentDocumentUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<PaymentDocumentBaseModel>?, TResponseModel<int>?>
+    : IResponseReceive<TAuthRequestStandardModel<PaymentDocumentBaseModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PaymentDocumentUpdateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<PaymentDocumentBaseModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
 

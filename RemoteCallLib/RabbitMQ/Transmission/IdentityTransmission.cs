@@ -13,15 +13,15 @@ namespace RemoteCallLib;
 public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmission
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestModel<UserInfoBaseModel> user, CancellationToken token = default)
+    public async Task<TResponseModel<string>> CreateUserManualAsync(TAuthRequestStandardModel<UserInfoBaseModel> user, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<TResponseModel<string>>(GlobalStaticConstantsTransmission.TransmissionQueues.CreateManualUserReceive, user, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestModel<string> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> InitChangePhoneUserAsync(TAuthRequestStandardModel<string> req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.InitChangePhoneUserReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestModel<ChangePhoneUserRequestModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ConfirmChangePhoneUserAsync(TAuthRequestStandardModel<ChangePhoneUserRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.ConfirmChangePhoneUserReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -129,8 +129,8 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SetLockUserReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<UserInfoModel>> FindUsersAsync(FindWithOwnedRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<UserInfoModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.FindUsersReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseStandardModel<UserInfoModel>> FindUsersAsync(FindWithOwnedRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<UserInfoModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.FindUsersReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> ResetPasswordAsync(IdentityPasswordTokenModel req, CancellationToken token = default)
@@ -161,8 +161,8 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SendEmailReceive, req, waitResponse, token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<UserInfoModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.SelectUsersOfIdentityReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseStandardModel<UserInfoModel>> SelectUsersOfIdentityAsync(TPaginationRequestStandardModel<SimpleBaseRequestModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<UserInfoModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.SelectUsersOfIdentityReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<UserInfoModel[]>> GetUsersOfIdentityAsync(string[] ids_users, CancellationToken token = default)
@@ -198,8 +198,8 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<TelegramJoinAccountModelDb>>(GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountCreateReceive, userId, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<TelegramUserViewModel>> FindUsersTelegramAsync(SimplePaginationRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<TelegramUserViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.FindUsersTelegramReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseStandardModel<TelegramUserViewModel>> FindUsersTelegramAsync(SimplePaginationRequestStandardModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<TelegramUserViewModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.FindUsersTelegramReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> TelegramJoinAccountConfirmTokenFromTelegramAsync(TelegramJoinAccountConfirmModel req, bool waitResponse = true, CancellationToken token = default)
@@ -236,8 +236,8 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<RoleInfoModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetRoleReceive, roleName, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<RoleInfoModel>> FindRolesAsync(FindWithOwnedRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseModel<RoleInfoModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.FindRolesAsyncReceive, req, token: token) ?? new();
+    public async Task<TPaginationResponseStandardModel<RoleInfoModel>> FindRolesAsync(FindWithOwnedRequestModel req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<RoleInfoModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.FindRolesAsyncReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> CreateNewRoleAsync(string roleName, CancellationToken token = default)

@@ -12,7 +12,7 @@ namespace Transmission.Receives.Identity;
 /// InitChangePhoneUser
 /// </summary>
 public class InitChangePhoneUserReceive(IIdentityTools idRepo, ILogger<InitChangePhoneUserReceive> loggerRepo)
-    : IResponseReceive<TAuthRequestModel<string>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<string>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.InitChangePhoneUserReceive;
@@ -21,7 +21,7 @@ public class InitChangePhoneUserReceive(IIdentityTools idRepo, ILogger<InitChang
     /// Добавляет password к указанному userId, только если у пользователя еще нет пароля.
     /// Если userId не указан, то команда выполняется для текущего пользователя (запрос/сессия)
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<string>? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<string>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));

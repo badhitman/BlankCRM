@@ -101,7 +101,7 @@ public partial class HelpDeskJournalComponent : BlazorBusyComponentBaseAuthModel
             SortingDirection = state.SortDirection.Convert(),
         };
 
-        TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>> rest = await HelpDeskRepo
+        TResponseModel<TPaginationResponseStandardModel<IssueHelpDeskModel>> rest = await HelpDeskRepo
              .IssuesSelectAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId }, token);
 
         await SetBusyAsync(false, token);

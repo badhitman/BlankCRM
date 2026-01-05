@@ -39,7 +39,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
             SortBy = state.SortLabel,
             SortingDirection = state.SortDirection.Convert(),
         };
-        TPaginationResponseModel<ChatTelegramModelDB> rest = await TgRepo.ChatsSelectAsync(req, token);
+        TPaginationResponseStandardModel<ChatTelegramModelDB> rest = await TgRepo.ChatsSelectAsync(req, token);
 
         if (rest.Response is null)
             return new TableData<ChatTelegramModelDB>() { TotalItems = 0, Items = pagedData };
@@ -75,7 +75,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
         UsersCache.AddRange(users_res.Response);
 
         string[] users_ids_identity = [.. users_res.Response.Select(x => x.UserId)];
-        TAuthRequestModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req = new()
+        TAuthRequestStandardModel<TPaginationRequestStandardModel<SelectIssuesRequestModel>> req = new()
         {
             Payload = new()
             {
@@ -93,7 +93,7 @@ public partial class TelegramChatsTableComponent : BlazorBusyComponentBaseAuthMo
             SenderActionUserId = CurrentUserSession.UserId
         };
         await SetBusyAsync();
-        TResponseModel<TPaginationResponseModel<IssueHelpDeskModel>> issues_users_res = await HelpDeskRepo
+        TResponseModel<TPaginationResponseStandardModel<IssueHelpDeskModel>> issues_users_res = await HelpDeskRepo
                      .IssuesSelectAsync(req);
 
         if (issues_users_res.Response?.Response is null || issues_users_res.Response.Response.Count == 0)

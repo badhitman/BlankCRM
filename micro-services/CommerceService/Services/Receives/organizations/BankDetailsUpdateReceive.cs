@@ -12,13 +12,13 @@ namespace Transmission.Receives.commerce;
 /// BankDetailsUpdateReceive
 /// </summary>
 public class BankDetailsUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<BankDetailsModelDB>?, TResponseModel<int>?>
+    : IResponseReceive<TAuthRequestStandardModel<BankDetailsModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.BankDetailsUpdateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<BankDetailsModelDB>? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<BankDetailsModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
 

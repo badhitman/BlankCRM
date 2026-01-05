@@ -12,13 +12,13 @@ namespace Transmission.Receives.commerce;
 /// PriceRuleUpdateReceive
 /// </summary>
 public class PriceRuleUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<PriceRuleForOfferModelDB>?, TResponseModel<int>?>
+    : IResponseReceive<TAuthRequestStandardModel<PriceRuleForOfferModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PriceRuleUpdateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestModel<PriceRuleForOfferModelDB>? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
 

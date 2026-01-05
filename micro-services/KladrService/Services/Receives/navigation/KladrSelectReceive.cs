@@ -9,13 +9,13 @@ namespace Transmission.Receives.kladr;
 
 /// <inheritdoc/>
 public class KladrSelectReceive(IKladrNavigationService kladrRepo)
-    : IResponseReceive<KladrSelectRequestModel?, TPaginationResponseModel<KladrResponseModel>?>
+    : IResponseReceive<KladrSelectRequestModel?, TPaginationResponseStandardModel<KladrResponseModel>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.KladrNavigationSelectReceive;
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<KladrResponseModel>?> ResponseHandleActionAsync(KladrSelectRequestModel? req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<KladrResponseModel>?> ResponseHandleActionAsync(KladrSelectRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         return await kladrRepo.ObjectsSelectAsync(req, token);

@@ -11,13 +11,13 @@ namespace Transmission.Receives.constructor;
 /// Сдвинуть выше элемент справочника/списка
 /// </summary>
 public class UpMoveElementOfDirectoryReceive(IConstructorService conService) 
-    : IResponseReceive<TAuthRequestModel<int>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpMoveElementOfDirectoryReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<int>? payload, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
         return await conService.UpMoveElementOfDirectoryAsync(payload, token);

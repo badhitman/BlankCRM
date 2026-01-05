@@ -206,7 +206,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
         return "";
     }
 
-    TPaginationResponseModel<NLogRecordModelDB>? DirectPage;
+    TPaginationResponseStandardModel<NLogRecordModelDB>? DirectPage;
 
     string[]? ApplicationsFilter
     {
@@ -275,7 +275,7 @@ public partial class LogsComponent : BlazorBusyComponentBaseModel
             }
         }
 
-        TPaginationResponseModel<NLogRecordModelDB> selector = default!;
+        TPaginationResponseStandardModel<NLogRecordModelDB> selector = default!;
         TResponseModel<LogsMetadataResponseModel> md = default!;
 
         await Task.WhenAll([

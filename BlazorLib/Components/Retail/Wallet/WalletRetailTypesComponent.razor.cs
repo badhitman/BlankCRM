@@ -32,7 +32,7 @@ public partial class WalletRetailTypesComponent : BlazorBusyComponentBaseModel
         }
 
         creatingNewWallet = new();
-        TPaginationResponseModel<WalletRetailTypeViewModel>? res = await RetailRepo.SelectWalletsTypesAsync(new TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>() { PageSize = int.MaxValue });
+        TPaginationResponseStandardModel<WalletRetailTypeViewModel>? res = await RetailRepo.SelectWalletsTypesAsync(new TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>() { PageSize = int.MaxValue });
         WalletsTypesList = res.Response;
         await SetBusyAsync(false);
     }
@@ -42,7 +42,7 @@ public partial class WalletRetailTypesComponent : BlazorBusyComponentBaseModel
     {
         await base.OnInitializedAsync();
         await SetBusyAsync();
-        TPaginationResponseModel<WalletRetailTypeViewModel>? res = await RetailRepo.SelectWalletsTypesAsync(new TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>() { PageSize = int.MaxValue });
+        TPaginationResponseStandardModel<WalletRetailTypeViewModel>? res = await RetailRepo.SelectWalletsTypesAsync(new TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>() { PageSize = int.MaxValue });
         WalletsTypesList = res.Response;
         await SetBusyAsync(false);
     }

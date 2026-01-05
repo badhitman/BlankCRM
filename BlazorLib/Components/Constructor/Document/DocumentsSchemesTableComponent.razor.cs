@@ -31,7 +31,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
 
     /// <inheritdoc/>
     protected string? searchString;
-    TPaginationResponseModel<DocumentSchemeConstructorModelDB> data = new() { Response = [] };
+    TPaginationResponseStandardModel<DocumentSchemeConstructorModelDB> data = new() { Response = [] };
 
     /// <inheritdoc/>
     protected static MarkupString Descr(string? html) => (MarkupString)(html ?? "");
@@ -72,7 +72,7 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
         if (ParentFormsPage.MainProject is null)
             throw new Exception("No main/used project selected");
 
-        SimplePaginationRequestModel req = new();
+        SimplePaginationRequestStandardModel req = new();
         await SetBusyAsync(token: token);
 
         data = await ConstructorRepo.RequestDocumentsSchemesAsync(new() { RequestPayload = req, ProjectId = ParentFormsPage.MainProject.Id }, token);

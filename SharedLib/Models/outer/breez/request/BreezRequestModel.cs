@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// BreezRequestModel
 /// </summary>
-public class BreezRequestModel : SimplePaginationRequestModel
+public class BreezRequestModel : SimplePaginationRequestStandardModel
 {
 
 }

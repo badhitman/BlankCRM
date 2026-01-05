@@ -14,7 +14,7 @@ namespace StorageService;
 public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) : ILogsService
 {
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> GoToPageForRowAsync(TPaginationRequestStandardModel<int> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;
@@ -22,7 +22,7 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
         using NLogsContext ctx = await logsDbFactory.CreateDbContextAsync(token);
         IQueryable<NLogRecordModelDB> q = ctx.Logs.AsQueryable();
 
-        TPaginationResponseModel<NLogRecordModelDB> res = new()
+        TPaginationResponseStandardModel<NLogRecordModelDB> res = new()
         {
             TotalRowsCount = await q.CountAsync(cancellationToken: token),
             PageSize = req.PageSize,
@@ -123,7 +123,7 @@ public class LogsNavigationImpl(IDbContextFactory<NLogsContext> logsDbFactory) :
     }
 
     /// <inheritdoc/>
-    public async Task<TPaginationResponseModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default)
+    public async Task<TPaginationResponseStandardModel<NLogRecordModelDB>> LogsSelectAsync(TPaginationRequestStandardModel<LogsSelectRequestModel> req, CancellationToken token = default)
     {
         if (req.PageSize < 10)
             req.PageSize = 10;

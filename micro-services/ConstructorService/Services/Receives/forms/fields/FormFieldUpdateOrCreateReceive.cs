@@ -12,13 +12,13 @@ namespace Transmission.Receives.constructor;
 /// Обновить/создать поле формы (простой тип)
 /// </summary>
 public class FormFieldUpdateOrCreateReceive(IConstructorService conService, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestModel<FieldFormConstructorModelDB>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<FieldFormConstructorModelDB>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FormFieldUpdateOrCreateReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestModel<FieldFormConstructorModelDB>? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<FieldFormConstructorModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
 
