@@ -11,7 +11,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// Создать/обновить статью
 /// </summary>
-public class ArticleCreateOrUpdateReceive(IArticlesService artRepo, ILogger<ArticleCreateOrUpdateReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class ArticleCreateOrUpdateReceive(IArticlesService artRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<ArticleModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
@@ -23,7 +23,7 @@ public class ArticleCreateOrUpdateReceive(IArticlesService artRepo, ILogger<Arti
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(ArticleModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings));
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);
         TResponseModel<int> res = await artRepo.ArticleCreateOrUpdateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

@@ -31,14 +31,14 @@ public class TraceReceiverRecord
     /// <summary>
     /// Тело входящего запроса
     /// </summary>
-    public string? RequestBodyJson { get; set; }
+    public object? RequestBody { get; set; }
     /// <inheritdoc/>
     public string? RequestTypeName { get; set; }
     /// <inheritdoc/>
     public int? RequestKey { get; set; }
 
     /// <inheritdoc/>
-    public string? ResponseBodyJson { get; set; }
+    public object? ResponseBody { get; set; }
     /// <inheritdoc/>
     public string? ResponseTypeName { get; set; }
     /// <inheritdoc/>
@@ -47,13 +47,13 @@ public class TraceReceiverRecord
     /// <summary>
     /// TraceReceiverRecord
     /// </summary>
-    public static TraceReceiverRecord Build(string _receiverName, string? _requestTypeName = null, string? _requestBodyJson = null, int? _requestKey = null)
+    public static TraceReceiverRecord Build(string _receiverName, string? _requestTypeName = null, object? _requestBody = null, int? _requestKey = null)
     {
         return new()
         {
             UTCTimestampInitReceive = DateTime.UtcNow,
             RequestTypeName = _requestTypeName,
-            RequestBodyJson = _requestBodyJson,
+            RequestBody = _requestBody,
             ReceiverName = _receiverName,
             RequestKey = _requestKey,
         };
@@ -63,7 +63,7 @@ public class TraceReceiverRecord
     public TraceReceiverRecord SetResponse(object sender)
     {
         UTCTimestampFinalReceive = DateTime.UtcNow;
-        ResponseBodyJson = JsonConvert.SerializeObject(sender, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings);
+        ResponseBody = sender;
         ResponseTypeName = sender.GetType().Name;
 
         return this;

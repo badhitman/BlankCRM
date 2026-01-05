@@ -12,10 +12,26 @@ namespace SharedLib;
 /// </summary>
 public static partial class GlobalStaticConstantsTransmission
 {
+    const string _TransmissionQueueNamePrefix = "Transmission.Receives";
     /// <summary>
     /// Префикс имени MQ очереди
     /// </summary>
-    public static string TransmissionQueueNamePrefix { get; set; } = "Transmission.Receives";
+    public static string TransmissionQueueNamePrefix { get; set; } = _TransmissionQueueNamePrefix;
+
+    static string? _getModePrefix;
+    /// <inheritdoc/>
+    public static string GetModePrefix
+    {
+        get
+        {
+            _getModePrefix ??= TransmissionQueueNamePrefix.Length == _TransmissionQueueNamePrefix.Length
+                                    ? ""
+                                    : TransmissionQueueNamePrefix[_TransmissionQueueNamePrefix.Length..];
+
+            return _getModePrefix;
+        }
+    }
+
     /// <summary>
     /// Префикс имени MQ очереди
     /// </summary>

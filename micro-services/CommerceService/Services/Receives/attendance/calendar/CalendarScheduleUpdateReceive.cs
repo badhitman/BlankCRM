@@ -26,7 +26,7 @@ public class CalendarScheduleUpdateReceive(ICommerceService commerceRepo, IFiles
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings), req.Payload.Id);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req, req.Payload.Id);
         TResponseModel<int> res = await commerceRepo.CalendarScheduleUpdateAsync(req, token);
         if (trace.RequestKey <= 0)
             trace.RequestKey = res.Response;

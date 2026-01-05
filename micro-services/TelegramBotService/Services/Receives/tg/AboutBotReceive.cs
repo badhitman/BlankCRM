@@ -18,8 +18,7 @@ public class AboutBotReceive(ITelegramBotService tgRepo)
 
     /// <inheritdoc/>
     public async Task<TResponseModel<UserTelegramBaseModel>?> ResponseHandleActionAsync(object? payload = null, CancellationToken token = default)
-    {
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name);        
+    {       
         return await tgRepo.AboutBotAsync(token);
     }
 }

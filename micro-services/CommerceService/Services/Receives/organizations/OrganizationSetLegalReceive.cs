@@ -12,7 +12,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Organization set legal
 /// </summary>
-public class OrganizationSetLegalReceive(ICommerceService commerceRepo, ILogger<OrganizationSetLegalReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class OrganizationSetLegalReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<OrganizationLegalModel?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
@@ -23,7 +23,7 @@ public class OrganizationSetLegalReceive(ICommerceService commerceRepo, ILogger<
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings));
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);
         TResponseModel<bool> res = await commerceRepo.OrganizationSetLegalAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

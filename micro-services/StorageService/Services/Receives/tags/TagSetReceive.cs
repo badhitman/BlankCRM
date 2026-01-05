@@ -12,7 +12,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// TagSetReceive
 /// </summary>
-public class TagSetReceive(ILogger<TagSetReceive> loggerRepo, IParametersStorage serializeStorageRepo, IFilesIndexing indexingRepo)
+public class TagSetReceive(IParametersStorage serializeStorageRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TagSetModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -23,7 +23,7 @@ public class TagSetReceive(ILogger<TagSetReceive> loggerRepo, IParametersStorage
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings));
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);
         ResponseBaseModel res = await serializeStorageRepo.TagSetAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

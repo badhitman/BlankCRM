@@ -24,8 +24,13 @@ public class IndexingFilesImpl(
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SaveTraceForReceiverAsync(TraceReceiverRecord req, CancellationToken token = default)
     {
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase(mongoConf.Value.BusTracesSystemName);
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
         IMongoCollection<TraceReceiverRecord> traceReceiverRecords = mongoFs.GetCollection<TraceReceiverRecord>(nameof(TraceReceiverRecord));
+
+        IndexKeysDefinitionBuilder<TraceReceiverRecord> notificationLogBuilder = Builders<TraceReceiverRecord>.IndexKeys;
+        var indexModel = new CreateIndexModel<TraceReceiverRecord>(notificationLogBuilder.Ascending(x => x.ReceiverName).Ascending(x=>x.RequestKey));
+        //await IMongoCollection.Indexes
+        //                      .CreateOneAsync(indexModel, cancellationToken: cancellationToken)
 
         await traceReceiverRecords.InsertOneAsync(req, cancellationToken: token);
 
