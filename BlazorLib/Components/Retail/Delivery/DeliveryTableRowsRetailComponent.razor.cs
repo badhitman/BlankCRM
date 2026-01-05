@@ -124,6 +124,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             ];
 
         await Task.WhenAll(tasks);
+        await CacheRegistersUpdate(_offers: [.. Document.Rows!.Select(x => x.OfferId)], _goods: [], Document.WarehouseId, true);
         await SetBusyAsync(false);
     }
 
