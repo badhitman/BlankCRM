@@ -56,6 +56,13 @@ public class IndexingFilesImpl(
         indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
+
+        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.UTCTimestampInitReceive);
+        indexModel = new(indexKeys, indexOptions);
+        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
+
+
+
         await traceReceiverRecords.InsertOneAsync(req, cancellationToken: token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
