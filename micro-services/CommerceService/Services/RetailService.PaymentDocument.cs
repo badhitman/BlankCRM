@@ -100,18 +100,18 @@ public partial class RetailService : IRetailService
         if (paymentDb.Wallet?.WalletType?.IgnoreBalanceChanges == true)
         {
             await context.PaymentsRetailDocuments
-            .Where(x => x.Id == req.Id)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.Description, req.Description)
-                .SetProperty(p => p.WalletId, req.WalletId)
-                .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.TypePayment, req.TypePayment)
-                .SetProperty(p => p.StatusPayment, req.StatusPayment)
-                .SetProperty(p => p.PaymentSource, req.PaymentSource)
-                .SetProperty(p => p.DatePayment, req.DatePayment)
-                .SetProperty(p => p.Amount, req.Amount)
-                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
+                .Where(x => x.Id == req.Id)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Name, req.Name)
+                    .SetProperty(p => p.Description, req.Description)
+                    .SetProperty(p => p.WalletId, req.WalletId)
+                    .SetProperty(p => p.Version, Guid.NewGuid())
+                    .SetProperty(p => p.TypePayment, req.TypePayment)
+                    .SetProperty(p => p.StatusPayment, req.StatusPayment)
+                    .SetProperty(p => p.PaymentSource, req.PaymentSource)
+                    .SetProperty(p => p.DatePayment, req.DatePayment)
+                    .SetProperty(p => p.Amount, req.Amount)
+                    .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
             await transaction.CommitAsync(token);
             return ResponseBaseModel.CreateSuccess("Ok");
