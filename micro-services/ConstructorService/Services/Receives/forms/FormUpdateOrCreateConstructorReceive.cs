@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -20,9 +19,12 @@ public class FormUpdateOrCreateConstructorReceive(IConstructorService conService
     /// <inheritdoc/>
     public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<FormBaseConstructorModel>? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        ArgumentNullException.ThrowIfNull(req?.Payload);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Id);
         TResponseModel<FormConstructorModelDB> res = await conService.FormUpdateOrCreateAsync(req, token);
+        if (req.Payload.Id == 0 && res.Response is not null)
+            trace.TraceReceiverRecordId = res.Response.Id;
+        
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

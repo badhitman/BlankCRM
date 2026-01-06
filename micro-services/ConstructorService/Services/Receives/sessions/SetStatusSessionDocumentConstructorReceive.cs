@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -21,7 +20,7 @@ public class SetStatusSessionDocumentConstructorReceive(IConstructorService conS
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SessionStatusModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Id);
         ResponseBaseModel res = await conService.SetStatusSessionDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

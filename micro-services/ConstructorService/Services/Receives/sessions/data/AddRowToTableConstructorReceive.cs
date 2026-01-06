@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -22,7 +21,7 @@ public class AddRowToTableConstructorReceive(IConstructorService conService, IFi
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(FieldSessionDocumentDataBaseModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.SessionId);
         TResponseModel<int> res = await conService.AddRowToTableAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -15,13 +14,13 @@ public class DeleteMembersFromProjectConstructorReceive(IConstructorService conS
     : IResponseReceive<UsersProjectModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteMembersFromProjectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteMembersFromProjectConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UsersProjectModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.ProjectId);
         ResponseBaseModel res = await conService.DeleteMembersFromProjectAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

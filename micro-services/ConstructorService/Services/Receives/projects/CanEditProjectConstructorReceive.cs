@@ -14,7 +14,7 @@ public class CanEditProjectConstructorReceive(IConstructorService conService)
     : IResponseReceive<UserProjectModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CanEditProjectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CanEditProjectConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UserProjectModel? req, CancellationToken token = default)

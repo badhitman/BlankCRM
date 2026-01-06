@@ -13,7 +13,7 @@ namespace Transmission.Receives.constructor;
 public class ProjectsReadConstructorReceive(IConstructorService conService) : IResponseReceive<int[]?, List<ProjectModelDb>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProjectsReadReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProjectsReadConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<List<ProjectModelDb>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)

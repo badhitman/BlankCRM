@@ -36,19 +36,19 @@ public class ConstructorTransmission(IRabbitClient rabbitClient) : IConstructorT
     #region projects
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> AddMembersToProjectAsync(UsersProjectModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.AddMembersToProjectReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.AddMembersToProjectConstructorReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<ProjectViewModel[]>> GetProjectsForUserAsync(GetProjectsForUserRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<ProjectViewModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.ProjectsForUserReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<ProjectViewModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.ProjectsForUserConstructorReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<List<ProjectModelDb>> ProjectsReadAsync(int[] ids, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<List<ProjectModelDb>>(GlobalStaticConstantsTransmission.TransmissionQueues.ProjectsReadReceive, ids, token: token) ?? [];
+        => await rabbitClient.MqRemoteCallAsync<List<ProjectModelDb>>(GlobalStaticConstantsTransmission.TransmissionQueues.ProjectsReadConstructorReceive, ids, token: token) ?? [];
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> SetMarkerDeleteProjectAsync(SetMarkerProjectRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SetMarkerDeleteProjectReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.SetMarkerDeleteProjectConstructorReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdateProjectAsync(ProjectViewModel req, CancellationToken token = default)
@@ -64,19 +64,19 @@ public class ConstructorTransmission(IRabbitClient rabbitClient) : IConstructorT
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreateProjectAsync(CreateProjectRequestModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.ProjectCreateReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.ProjectCreateConstructorReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryAltModel[]>> GetMembersOfProjectAsync(int req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<EntryAltModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetMembersOfProjectReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<EntryAltModel[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.GetMembersOfProjectConstructorReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteMembersFromProjectAsync(UsersProjectModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteMembersFromProjectReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteMembersFromProjectConstructorReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> CanEditProjectAsync(UserProjectModel req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.CanEditProjectReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.CanEditProjectConstructorReceive, req, token: token) ?? new();
     #endregion
 
     #region directories

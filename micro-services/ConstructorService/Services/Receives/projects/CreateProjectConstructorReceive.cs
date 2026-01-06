@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -15,7 +14,7 @@ public class CreateProjectConstructorReceive(IConstructorService conService, IFi
     : IResponseReceive<CreateProjectRequestModel?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProjectCreateReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProjectCreateConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(CreateProjectRequestModel? req, CancellationToken token = default)
@@ -23,6 +22,7 @@ public class CreateProjectConstructorReceive(IConstructorService conService, IFi
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<int> res = await conService.CreateProjectAsync(req, token);
+        trace.TraceReceiverRecordId = res.Response;
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

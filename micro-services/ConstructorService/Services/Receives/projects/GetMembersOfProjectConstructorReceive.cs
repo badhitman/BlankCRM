@@ -14,7 +14,7 @@ public class GetMembersOfProjectConstructorReceive(IConstructorService conServic
     : IResponseReceive<int, TResponseModel<EntryAltModel[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetMembersOfProjectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetMembersOfProjectConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryAltModel[]>?> ResponseHandleActionAsync(int req, CancellationToken token = default)

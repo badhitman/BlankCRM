@@ -14,7 +14,7 @@ public class GetProjectsForUserConstructorReceive(IConstructorService conService
     : IResponseReceive<GetProjectsForUserRequestModel?, TResponseModel<ProjectViewModel[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProjectsForUserReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ProjectsForUserConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<ProjectViewModel[]>?> ResponseHandleActionAsync(GetProjectsForUserRequestModel? req, CancellationToken token = default)
