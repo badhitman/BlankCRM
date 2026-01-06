@@ -24,6 +24,7 @@ public class CreateRetailDocumentReceive(IRetailService commRepo, IFilesIndexing
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<int> res = await commRepo.CreateRetailDocumentAsync(req, token);
+        trace.TraceReceiverRecordId = res.Response;
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

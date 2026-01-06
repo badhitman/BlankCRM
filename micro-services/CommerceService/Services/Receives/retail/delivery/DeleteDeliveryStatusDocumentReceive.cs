@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -23,7 +22,7 @@ public class DeleteDeliveryStatusDocumentReceive(IRetailService commRepo, IFiles
         ArgumentNullException.ThrowIfNull(req);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
-        var res = await commRepo.DeleteDeliveryStatusDocumentAsync(req.Value, token);
+        ResponseBaseModel res = await commRepo.DeleteDeliveryStatusDocumentAsync(req.Value, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

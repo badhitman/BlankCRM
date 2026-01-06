@@ -15,7 +15,7 @@ public class UpdateOrCreateDirectoryReceive(IConstructorService conService, IFil
     : IResponseReceive<TAuthRequestStandardModel<EntryConstructedModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateOrCreateDirectoryReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateOrCreateDirectoryConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<EntryConstructedModel>? req, CancellationToken token = default)

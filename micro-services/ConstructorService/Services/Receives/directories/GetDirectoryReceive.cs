@@ -14,7 +14,7 @@ public class GetDirectoryReceive(IConstructorService conService)
     : IResponseReceive<int, TResponseModel<EntryDescriptionModel>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetDirectoryReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetDirectoryConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryDescriptionModel>?> ResponseHandleActionAsync(int payload, CancellationToken token = default)

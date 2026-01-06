@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -22,8 +21,10 @@ public class OfficeOrganizationUpdateReceive(ICommerceService commerceRepo, IFil
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Id);
         TResponseModel<int> res = await commerceRepo.OfficeOrganizationUpdateAsync(req, token);
+        if (trace.TraceReceiverRecordId is null || trace.TraceReceiverRecordId == 0)
+            trace.TraceReceiverRecordId = res.Response;
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

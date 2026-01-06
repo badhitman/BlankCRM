@@ -15,7 +15,7 @@ public class UpdateProjectReceive(IConstructorService conService, IFilesIndexing
     : IResponseReceive<ProjectViewModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateProjectReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateProjectConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ProjectViewModel? req, CancellationToken token = default)

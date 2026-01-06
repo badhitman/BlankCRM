@@ -15,7 +15,7 @@ public class DeleteTabDocumentSchemeJoinFormReceive(IConstructorService conServi
     : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteTabDocumentSchemeJoinFormReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteTabDocumentSchemeJoinFormConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)

@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -22,7 +21,7 @@ public class ToggleWalletTypeDisabledForPaymentTypeReceive(IRetailService commRe
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.WalletTypeId);
         ResponseBaseModel res = await commRepo.ToggleWalletTypeDisabledForPaymentTypeAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

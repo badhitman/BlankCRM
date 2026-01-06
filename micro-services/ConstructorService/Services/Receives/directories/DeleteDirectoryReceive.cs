@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -15,7 +14,7 @@ public class DeleteDirectoryReceive(IConstructorService conService, IFilesIndexi
     : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDirectoryReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDirectoryConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)

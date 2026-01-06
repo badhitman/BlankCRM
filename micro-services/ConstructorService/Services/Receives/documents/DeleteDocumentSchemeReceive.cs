@@ -15,7 +15,7 @@ public class DeleteDocumentSchemeReceive(IConstructorService conService, IFilesI
     : IResponseReceive<TAuthRequestStandardModel<int>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDocumentSchemeReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteDocumentSchemeConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<int>? req, CancellationToken token = default)

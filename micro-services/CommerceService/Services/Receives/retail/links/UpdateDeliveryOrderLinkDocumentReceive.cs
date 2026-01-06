@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -21,10 +20,11 @@ public class UpdateDeliveryOrderLinkDocumentReceive(IRetailService commRepo, IFi
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(RetailOrderDeliveryLinkModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.DeliveryDocumentId);
         ResponseBaseModel res = await commRepo.UpdateDeliveryOrderLinkDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        trace.TraceReceiverRecordId = req.OrderDocumentId;
+        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
         return res;
     }
 }

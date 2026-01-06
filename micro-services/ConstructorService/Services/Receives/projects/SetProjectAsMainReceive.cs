@@ -15,7 +15,7 @@ public class SetProjectAsMainReceive(IConstructorService conService, IFilesIndex
     : IResponseReceive<UserProjectModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetProjectAsMainReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetProjectAsMainConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UserProjectModel? req, CancellationToken token = default)

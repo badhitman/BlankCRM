@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -24,6 +23,7 @@ public class CreatePaymentDocumentReceive(IRetailService commRepo, IFilesIndexin
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<int> res = await commRepo.CreatePaymentDocumentAsync(req, token);
+        trace.TraceReceiverRecordId = res.Response;
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

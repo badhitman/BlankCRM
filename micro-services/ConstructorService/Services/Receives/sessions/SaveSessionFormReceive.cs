@@ -15,7 +15,7 @@ public class SaveSessionFormReceive(IConstructorService conService, IFilesIndexi
     : IResponseReceive<SaveConstructorSessionRequestModel?, TResponseModel<ValueDataForSessionOfDocumentModelDB[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SaveSessionFormReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SaveSessionFormConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<ValueDataForSessionOfDocumentModelDB[]>?> ResponseHandleActionAsync(SaveConstructorSessionRequestModel? req, CancellationToken token = default)

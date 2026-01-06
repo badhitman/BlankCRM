@@ -14,7 +14,7 @@ public class CheckAndNormalizeSortIndexForElementsOfDirectoryReceive(IConstructo
     : IResponseReceive<int, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CheckAndNormalizeSortIndexForElementsOfDirectoryReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CheckAndNormalizeSortIndexForElementsOfDirectoryConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int payload, CancellationToken token = default)

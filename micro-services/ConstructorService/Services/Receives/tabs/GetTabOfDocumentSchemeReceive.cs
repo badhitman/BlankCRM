@@ -14,7 +14,7 @@ public class GetTabOfDocumentSchemeReceive(IConstructorService conService)
     : IResponseReceive<int, TResponseModel<TabOfDocumentSchemeConstructorModelDB?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetTabOfDocumentSchemeReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetTabOfDocumentSchemeConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB?>?> ResponseHandleActionAsync(int payload, CancellationToken token = default)

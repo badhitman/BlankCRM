@@ -399,164 +399,164 @@ public static partial class GlobalStaticConstantsTransmission
 
         /// <inheritdoc/>
         public readonly static string AddMembersToProjectReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.PROJECT_CONTROLLER_NAME, Routes.MEMBERS_CONTROLLER_NAME, Routes.ADD_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string SetProjectAsMainConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.PROJECT_CONTROLLER_NAME, Routes.USER_CONTROLLER_NAME, Routes.MAIN_CONTROLLER_NAME, Routes.SET_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string GetCurrentMainProjectConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.PROJECT_CONTROLLER_NAME, Routes.MAIN_CONTROLLER_NAME, Routes.USER_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpdateProjectConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.PROJECT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
         #endregion
 
         #region directories
         /// <inheritdoc/>
-        public readonly static string ReadDirectoriesReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORIES_CONTROLLER_NAME, Routes.READ_ACTION_NAME);
+        public readonly static string ReadDirectoriesConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORIES_CONTROLLER_NAME, Routes.READ_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string UpdateOrCreateDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORY_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+        public readonly static string UpdateOrCreateDirectoryConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORY_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string GetDirectoriesReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORIES_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+        public readonly static string GetDirectoriesConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORIES_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string DeleteDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORY_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
+        public readonly static string DeleteDirectoryConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORY_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string GetElementsOfDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENTS_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+        public readonly static string GetElementsOfDirectoryConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENTS_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string CreateElementForDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+        public readonly static string GetDirectoryConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORY_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string CreateElementForDirectoryConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpdateElementOfDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string GetElementOfDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string DeleteElementFromDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string UpMoveElementOfDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.MOVE_ACTION_NAME, Routes.UP_ACTION_NAME);
+
+        /// <inheritdoc/>
+        public readonly static string DownMoveElementOfDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.MOVE_ACTION_NAME, Routes.DOWN_ACTION_NAME);
         #endregion
 
         #region forms
         /// <inheritdoc/>
-        public readonly static string SelectFormsReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FORMS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
+        public readonly static string SelectFormsReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.FORMS_CONTROLLER_NAME, Routes.SELECT_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string GetFormReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FORM_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+        public readonly static string GetFormReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.FORM_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string FormUpdateOrCreateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FORM_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+        public readonly static string FormUpdateOrCreateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.FORM_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string FormDeleteReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FORM_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
+        public readonly static string FormDeleteReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.FORM_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string FieldFormMoveReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FORM_CONTROLLER_NAME, Routes.FIELD_CONTROLLER_NAME, Routes.MOVE_ACTION_NAME);
+        public readonly static string FieldFormMoveReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.FORM_CONTROLLER_NAME, Routes.FIELD_CONTROLLER_NAME, Routes.MOVE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string FieldDirectoryFormMoveReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FORM_CONTROLLER_NAME, $"{Routes.FIELD_CONTROLLER_NAME}_{Routes.DIRECTORY_CONTROLLER_NAME}", Routes.MOVE_ACTION_NAME);
+        public readonly static string FieldDirectoryFormMoveReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.FORM_CONTROLLER_NAME, $"{Routes.FIELD_CONTROLLER_NAME}_{Routes.DIRECTORY_CONTROLLER_NAME}", Routes.MOVE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string FormFieldUpdateOrCreateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FORM_CONTROLLER_NAME, Routes.FIELD_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+        public readonly static string FormFieldUpdateOrCreateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.FORM_CONTROLLER_NAME, Routes.FIELD_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string FormFieldDeleteReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FORM_CONTROLLER_NAME, Routes.FIELD_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
+        public readonly static string FormFieldDeleteReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.FORM_CONTROLLER_NAME, Routes.FIELD_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string FormFieldDirectoryUpdateOrCreateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FORM_CONTROLLER_NAME, $"{Routes.FIELD_CONTROLLER_NAME}_{Routes.DIRECTORY_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
+        public readonly static string FormFieldDirectoryUpdateOrCreateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.FORM_CONTROLLER_NAME, $"{Routes.FIELD_CONTROLLER_NAME}_{Routes.DIRECTORY_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string FormFieldDirectoryDeleteReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.FORM_CONTROLLER_NAME, $"{Routes.FIELD_CONTROLLER_NAME}_{Routes.DIRECTORY_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
+        public readonly static string FormFieldDirectoryDeleteReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.FORM_CONTROLLER_NAME, $"{Routes.FIELD_CONTROLLER_NAME}_{Routes.DIRECTORY_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
         #endregion
 
         /// <inheritdoc/>
-        public readonly static string GetSessionDocumentDataReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.DATA_CONTROLLER_NAME}_{Routes.GET_ACTION_NAME}");
+        public readonly static string GetSessionDocumentDataConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.DATA_CONTROLLER_NAME}_{Routes.GET_ACTION_NAME}");
 
         /// <inheritdoc/>
-        public readonly static string SetValueFieldSessionDocumentDataReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.DATA_CONTROLLER_NAME, Routes.VALUE_CONTROLLER_NAME, Routes.FIELD_CONTROLLER_NAME, Routes.SET_ACTION_NAME);
+        public readonly static string SetValueFieldSessionDocumentDataConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.DATA_CONTROLLER_NAME, Routes.VALUE_CONTROLLER_NAME, Routes.FIELD_CONTROLLER_NAME, Routes.SET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string SetDoneSessionDocumentDataReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.DATA_CONTROLLER_NAME, Routes.STATUS_CONTROLLER_NAME, Routes.DONE_ACTION_NAME, Routes.SET_ACTION_NAME);
+        public readonly static string SetDoneSessionDocumentDataConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.DATA_CONTROLLER_NAME, Routes.STATUS_CONTROLLER_NAME, Routes.DONE_ACTION_NAME, Routes.SET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string DeleteValuesFieldsByGroupSessionDocumentDataByRowNumReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.DATA_CONTROLLER_NAME, Routes.ROW_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
+        public readonly static string DeleteValuesFieldsByGroupSessionDocumentDataByRowNumConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.DATA_CONTROLLER_NAME, Routes.ROW_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string CheckAndNormalizeSortIndexForElementsOfDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORY_CONTROLLER_NAME, Routes.CHECK_ACTION_NAME, Routes.NORMALIZE_ACTION_NAME, Routes.SORT_ACTION_NAME, Routes.INDEX_CONTROLLER_NAME, Routes.ELEMENTS_CONTROLLER_NAME);
+        public readonly static string CheckAndNormalizeSortIndexForElementsOfDirectoryConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DIRECTORY_CONTROLLER_NAME, Routes.CHECK_ACTION_NAME, Routes.NORMALIZE_ACTION_NAME, Routes.SORT_ACTION_NAME, Routes.INDEX_CONTROLLER_NAME, Routes.ELEMENTS_CONTROLLER_NAME);
 
         /// <inheritdoc/>
-        public readonly static string UpdateOrCreateDocumentSchemeReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENT_CONTROLLER_NAME, Routes.SCHEME_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+        public readonly static string UpdateOrCreateDocumentSchemeConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.SCHEME_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string RequestDocumentsSchemesReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.SCHEMES_CONTROLLER_NAME, Routes.REQUEST_ACTION_NAME);
+        public readonly static string RequestDocumentsSchemesConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.SCHEMES_CONTROLLER_NAME, Routes.REQUEST_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string GetDocumentSchemeReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.SCHEMES_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+        public readonly static string GetDocumentSchemeConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.SCHEMES_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string DeleteDocumentSchemeReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENT_CONTROLLER_NAME, Routes.SCHEME_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
+        public readonly static string DeleteDocumentSchemeConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.SCHEME_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string CreateOrUpdateTabOfDocumentSchemeReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
+        public readonly static string CreateOrUpdateTabOfDocumentSchemeConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string MoveTabOfDocumentSchemeReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.MOVE_ACTION_NAME);
+        public readonly static string MoveTabOfDocumentSchemeConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.MOVE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string GetTabOfDocumentSchemeReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
+        public readonly static string GetTabOfDocumentSchemeConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string DeleteTabOfDocumentSchemeReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
+        public readonly static string DeleteTabOfDocumentSchemeConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string GetTabDocumentSchemeJoinFormReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.JOIN_ACTION_NAME, Routes.FORM_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+        public readonly static string GetTabDocumentSchemeJoinFormConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.JOIN_ACTION_NAME, Routes.FORM_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string CreateOrUpdateTabDocumentSchemeJoinFormReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.JOIN_ACTION_NAME, Routes.FORM_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+        public readonly static string CreateOrUpdateTabDocumentSchemeJoinFormConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.JOIN_ACTION_NAME, Routes.FORM_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string MoveTabDocumentSchemeJoinFormReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.JOIN_ACTION_NAME, Routes.FORM_CONTROLLER_NAME, Routes.MOVE_ACTION_NAME);
+        public readonly static string MoveTabDocumentSchemeJoinFormConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.JOIN_ACTION_NAME, Routes.FORM_CONTROLLER_NAME, Routes.MOVE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string DeleteTabDocumentSchemeJoinFormReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.JOIN_ACTION_NAME, Routes.FORM_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
+        public readonly static string DeleteTabDocumentSchemeJoinFormConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, $"{Routes.SCHEME_CONTROLLER_NAME}_{Routes.TAB_CONTROLLER_NAME}", Routes.JOIN_ACTION_NAME, Routes.FORM_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string SaveSessionFormReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSION_CONTROLLER_NAME, $"{Routes.DOCUMENT_CONTROLLER_NAME}_{Routes.FORM_CONTROLLER_NAME}", Routes.SAVE_ACTION_NAME);
+        public readonly static string SaveSessionFormConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME, $"{Routes.DOCUMENT_CONTROLLER_NAME}_{Routes.FORM_CONTROLLER_NAME}", Routes.SAVE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string SetStatusSessionDocumentReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.STATUS_CONTROLLER_NAME, Routes.SET_ACTION_NAME);
+        public readonly static string SetStatusSessionDocumentConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.STATUS_CONTROLLER_NAME, Routes.SET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string GetSessionDocumentReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
+        public readonly static string GetSessionDocumentConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string AddRowToTableReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.ROW_CONTROLLER_NAME, Routes.ADD_ACTION_NAME);
+        public readonly static string AddRowToTableConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.ROW_CONTROLLER_NAME, Routes.ADD_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string UpdateOrCreateSessionDocumentReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+        public readonly static string UpdateOrCreateSessionDocumentConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string RequestSessionsDocumentsReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSIONS_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.REQUEST_ACTION_NAME);
+        public readonly static string RequestSessionsDocumentsConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSIONS_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.REQUEST_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string FindSessionsDocumentsByFormFieldNameReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSIONS_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.FIND_ACTION_NAME);
+        public readonly static string FindSessionsDocumentsByFormFieldNameConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSIONS_CONTROLLER_NAME, Routes.DOCUMENTS_CONTROLLER_NAME, Routes.FIND_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string ClearValuesForFieldNameReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.FIELDS_CONTROLLER_NAME, Routes.NAME_CONTROLLER_NAME, Routes.VALUES_CONTROLLER_NAME, Routes.CLEAR_ACTION_NAME);
+        public readonly static string ClearValuesForFieldNameConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.FIELDS_CONTROLLER_NAME, Routes.NAME_CONTROLLER_NAME, Routes.VALUES_CONTROLLER_NAME, Routes.CLEAR_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string DeleteSessionDocumentReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
-
-        /// <inheritdoc/>
-        public readonly static string UpdateElementOfDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
-
-        /// <inheritdoc/>
-        public readonly static string GetElementOfDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
-
-        /// <inheritdoc/>
-        public readonly static string DeleteElementFromDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
-
-        /// <inheritdoc/>
-        public readonly static string UpMoveElementOfDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.MOVE_ACTION_NAME, Routes.UP_ACTION_NAME);
-
-        /// <inheritdoc/>
-        public readonly static string DownMoveElementOfDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORY_CONTROLLER_NAME, Routes.ELEMENT_CONTROLLER_NAME, Routes.MOVE_ACTION_NAME, Routes.DOWN_ACTION_NAME);
-
-        /// <inheritdoc/>
-        public readonly static string GetDirectoryReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.DIRECTORY_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
-
-        /// <inheritdoc/>
-        public readonly static string SetProjectAsMainReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.PROJECT_CONTROLLER_NAME, Routes.USER_CONTROLLER_NAME, Routes.MAIN_CONTROLLER_NAME, Routes.SET_ACTION_NAME);
-
-        /// <inheritdoc/>
-        public readonly static string GetCurrentMainProjectReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.PROJECT_CONTROLLER_NAME, Routes.MAIN_CONTROLLER_NAME, Routes.USER_CONTROLLER_NAME, Routes.GET_ACTION_NAME);
-
-        /// <inheritdoc/>
-        public readonly static string UpdateProjectReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.PROJECT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+        public readonly static string DeleteSessionDocumentConstructorReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.CONSTRUCTOR_CONTROLLER_NAME, Routes.SESSION_CONTROLLER_NAME, Routes.DOCUMENT_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
         #endregion
 
         #region Commerce

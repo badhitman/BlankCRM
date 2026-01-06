@@ -14,7 +14,7 @@ public class MoveTabDocumentSchemeJoinFormReceive(IConstructorService conService
     : IResponseReceive<TAuthRequestStandardModel<MoveObjectModel>?, TResponseModel<TabOfDocumentSchemeConstructorModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MoveTabDocumentSchemeJoinFormReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.MoveTabDocumentSchemeJoinFormConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<MoveObjectModel>? payload, CancellationToken token = default)

@@ -14,7 +14,7 @@ public class FindSessionsDocumentsByFormFieldNameReceive(IConstructorService con
     : IResponseReceive<FormFieldModel?, TResponseModel<EntryDictModel[]>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindSessionsDocumentsByFormFieldNameReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.FindSessionsDocumentsByFormFieldNameConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<EntryDictModel[]>?> ResponseHandleActionAsync(FormFieldModel? payload, CancellationToken token = default)

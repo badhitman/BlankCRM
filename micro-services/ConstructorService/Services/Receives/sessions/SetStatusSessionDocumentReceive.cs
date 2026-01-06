@@ -15,7 +15,7 @@ public class SetStatusSessionDocumentReceive(IConstructorService conService, IFi
     : IResponseReceive<SessionStatusModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetStatusSessionDocumentReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetStatusSessionDocumentConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SessionStatusModel? req, CancellationToken token = default)

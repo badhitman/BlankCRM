@@ -15,7 +15,7 @@ public class CreateOrUpdateTabDocumentSchemeJoinFormReceive(IConstructorService 
     : IResponseReceive<TAuthRequestStandardModel<FormToTabJoinConstructorModelDB>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CreateOrUpdateTabDocumentSchemeJoinFormReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CreateOrUpdateTabDocumentSchemeJoinFormConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<FormToTabJoinConstructorModelDB>? req, CancellationToken token = default)

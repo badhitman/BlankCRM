@@ -15,7 +15,7 @@ public class UpdateOrCreateSessionDocumentReceive(IConstructorService conService
     : IResponseReceive<SessionOfDocumentDataModelDB?, TResponseModel<SessionOfDocumentDataModelDB?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateOrCreateSessionDocumentReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateOrCreateSessionDocumentConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<SessionOfDocumentDataModelDB?>?> ResponseHandleActionAsync(SessionOfDocumentDataModelDB? req, CancellationToken token = default)

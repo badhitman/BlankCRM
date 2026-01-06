@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -21,10 +20,13 @@ public class CreateWalletTypeReceive(IRetailService commRepo, IFilesIndexing ind
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(WalletRetailTypeModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<int> res = await commRepo.CreateWalletTypeAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        if (res.Response > 0)
+        {
+            trace.TraceReceiverRecordId = res.Response;
+            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        }
         return res;
     }
 }

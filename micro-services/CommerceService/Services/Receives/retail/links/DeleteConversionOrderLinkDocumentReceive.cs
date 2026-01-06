@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -21,10 +20,22 @@ public class DeleteConversionOrderLinkDocumentReceive(IRetailService commRepo, I
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+        ResponseBaseModel res = await commRepo.DeleteConversionOrderLinkDocumentRetailAsync(req, token);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
-        ResponseBaseModel res = await commRepo.DeleteConversionOrderLinkDocumentRetailAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+
+        if (req.OrderId > 0)
+        {
+            trace.TraceReceiverRecordId = req.OrderId;
+            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        }
+
+        if (req.ConversionId > 0)
+        {
+            trace.TraceReceiverRecordId = req.ConversionId;
+            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        }
+
         return res;
     }
 }

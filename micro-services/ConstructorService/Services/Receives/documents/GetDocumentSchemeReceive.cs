@@ -14,7 +14,7 @@ public class GetDocumentSchemeReceive(IConstructorService conService)
     : IResponseReceive<int, TResponseModel<DocumentSchemeConstructorModelDB?>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetDocumentSchemeReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.GetDocumentSchemeConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<DocumentSchemeConstructorModelDB?>?> ResponseHandleActionAsync(int payload, CancellationToken token = default)

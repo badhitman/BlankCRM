@@ -15,7 +15,7 @@ public class CreateOrUpdateTabOfDocumentSchemeReceive(IConstructorService conSer
     : IResponseReceive<TAuthRequestStandardModel<EntryDescriptionOwnedModel>?, TResponseModel<TabOfDocumentSchemeConstructorModelDB>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CreateOrUpdateTabOfDocumentSchemeReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CreateOrUpdateTabOfDocumentSchemeConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<TabOfDocumentSchemeConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<EntryDescriptionOwnedModel>? req, CancellationToken token = default)

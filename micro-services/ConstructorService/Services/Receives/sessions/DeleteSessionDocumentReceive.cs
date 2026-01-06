@@ -14,7 +14,7 @@ public class DeleteSessionDocumentReceive(IConstructorService conService, IFiles
     : IResponseReceive<int, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteSessionDocumentReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteSessionDocumentConstructorReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
