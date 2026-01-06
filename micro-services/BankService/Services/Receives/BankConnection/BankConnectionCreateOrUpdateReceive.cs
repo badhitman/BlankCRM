@@ -21,7 +21,6 @@ public class BankConnectionCreateOrUpdateReceive(IBankService bankRepo, IFilesIn
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Id);
-
         TResponseModel<int> res = await bankRepo.BankConnectionCreateOrUpdateAsync(req, token);
         if (trace.TraceReceiverRecordId is null || trace.TraceReceiverRecordId == 0)
             trace.TraceReceiverRecordId = res.Response;

@@ -20,11 +20,9 @@ public class CreateDeliveryOrderLinkDocumentReceive(IRetailService commRepo, IFi
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(RetailOrderDeliveryLinkModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TResponseModel<int> res = await commRepo.CreateDeliveryOrderLinkDocumentAsync(req, token);
-
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.DeliveryDocumentId);
+        TResponseModel<int> res = await commRepo.CreateDeliveryOrderLinkDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
-
         trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.OrderDocumentId);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
 

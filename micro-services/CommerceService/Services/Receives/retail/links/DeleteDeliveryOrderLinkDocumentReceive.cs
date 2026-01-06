@@ -20,9 +20,8 @@ public class DeleteDeliveryOrderLinkDocumentReceive(IRetailService commRepo, IFi
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(DeleteDeliveryOrderLinkRetailDocumentsRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        ResponseBaseModel res = await commRepo.DeleteDeliveryOrderLinkDocumentAsync(req, token);
-
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        ResponseBaseModel res = await commRepo.DeleteDeliveryOrderLinkDocumentAsync(req, token);
 
         if (req.OrderId > 0)
         {

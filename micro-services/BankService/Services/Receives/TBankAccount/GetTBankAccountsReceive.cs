@@ -20,7 +20,6 @@ public class GetTBankAccountsReceive(IBankService bankRepo, IFilesIndexing index
     public async Task<TResponseModel<List<TBankAccountModelDB>>?> ResponseHandleActionAsync(GetTBankAccountsRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.BankConnectionId);
         await indexingRepo.SaveTraceForReceiverAsync(trace, token);
 

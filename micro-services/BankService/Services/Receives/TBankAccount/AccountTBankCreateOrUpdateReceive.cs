@@ -20,11 +20,11 @@ public class AccountTBankCreateOrUpdateReceive(IBankService bankRepo, IFilesInde
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TBankAccountModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Id);
         TResponseModel<int> res = await bankRepo.AccountTBankCreateOrUpdateAsync(req, token);
         if (req.Id <= 0)
             trace.TraceReceiverRecordId = res.Response;
+
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

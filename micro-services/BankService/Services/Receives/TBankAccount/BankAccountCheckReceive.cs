@@ -20,10 +20,6 @@ public class BankAccountCheckReceive(IBankService bankRepo)
     public async Task<TResponseModel<List<BankTransferModelDB>>?> ResponseHandleActionAsync(BankAccountCheckRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        //TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.BankConnectionId);
-        //await indexingRepo.SaveTraceForReceiverAsync(trace, token);
-
         return await bankRepo.BankAccountCheckAsync(req, token);
     }
 }
