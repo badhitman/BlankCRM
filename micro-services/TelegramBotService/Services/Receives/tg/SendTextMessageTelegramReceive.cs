@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -11,7 +10,7 @@ namespace Transmission.Receives.telegram;
 /// <summary>
 /// Отправить сообщение пользователю через TelegramBot SendTextMessageTelegramBotModel
 /// </summary>
-public class SendTextMessageTelegramReceive(ITelegramBotService tgRepo, IFilesIndexing indexingRepo)
+public class SendTextMessageTelegramReceive(ITelegramBotService tgRepo)
     : IResponseReceive<SendTextMessageTelegramBotModel?, TResponseModel<MessageComplexIdsModel>?>
 {
     /// <inheritdoc/>
@@ -21,11 +20,7 @@ public class SendTextMessageTelegramReceive(ITelegramBotService tgRepo, IFilesIn
     public async Task<TResponseModel<MessageComplexIdsModel>?> ResponseHandleActionAsync(SendTextMessageTelegramBotModel? message, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(message);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, message.GetType().Name, message);
         TResponseModel<MessageComplexIdsModel> res = await tgRepo.SendTextMessageTelegramAsync(message, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
-
         return res;
     }
 }

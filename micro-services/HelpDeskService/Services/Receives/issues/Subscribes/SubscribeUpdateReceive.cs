@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -20,8 +19,8 @@ public class SubscribeUpdateReceive(IHelpDeskService hdRepo, IFilesIndexing inde
     /// <inheritdoc/>
     public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<SubscribeUpdateRequestModel>? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        ArgumentNullException.ThrowIfNull(req?.Payload);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.IssueId);
         TResponseModel<bool?> res = await hdRepo.SubscribeUpdateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
