@@ -41,12 +41,6 @@ public class WalletRetailTypeModelDB : EntryUpdatedModel
         return false;
     }
 
-    /// <inheritdoc/>
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(IsDisabled, Id, Name, Description);
-    }
-
     /// <summary>
     /// Кошельки
     /// </summary>
@@ -61,4 +55,16 @@ public class WalletRetailTypeModelDB : EntryUpdatedModel
     /// DisabledPaymentsTypes
     /// </summary>
     public List<DisabledPaymentTypeForWalletRetailTypeModelDB>? DisabledPaymentsTypes { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{Name}";
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(IsDisabled, Id, Name, Description);
+    }
 }

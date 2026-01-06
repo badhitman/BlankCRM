@@ -33,7 +33,7 @@ public partial class RetailService : IRetailService
             .FirstAsync(x => x.Id == req.WalletId, cancellationToken: token);
 
         if (walletDb.WalletType!.IsSystem)
-            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Сочисление на системный кошелёк невозможно" }] };
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Зачисление на системный кошелёк невозможно" }] };
 
         req.Version = Guid.NewGuid();
         req.Wallet = null;
@@ -96,6 +96,26 @@ public partial class RetailService : IRetailService
 
         if (paymentDb.Version != req.Version)
             return ResponseBaseModel.CreateError("Документ ранее был кем-то изменён. Обновите документ (F5) перед его редактированием.");
+
+        if (paymentDb.Wallet?.WalletType?.IgnoreBalanceChanges == true)
+        {
+            await context.PaymentsRetailDocuments
+            .Where(x => x.Id == req.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.Name, req.Name)
+                .SetProperty(p => p.Description, req.Description)
+                .SetProperty(p => p.WalletId, req.WalletId)
+                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.TypePayment, req.TypePayment)
+                .SetProperty(p => p.StatusPayment, req.StatusPayment)
+                .SetProperty(p => p.PaymentSource, req.PaymentSource)
+                .SetProperty(p => p.DatePayment, req.DatePayment)
+                .SetProperty(p => p.Amount, req.Amount)
+                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
+
+            await transaction.CommitAsync(token);
+            return ResponseBaseModel.CreateSuccess("Ok");
+        }
 
         if (req.StatusPayment == paymentDb.StatusPayment && req.StatusPayment == PaymentsRetailStatusesEnum.Paid)
         {

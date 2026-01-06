@@ -2,11 +2,14 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Microsoft.EntityFrameworkCore;
+
 namespace SharedLib;
 
 /// <summary>
 /// Строка заказа (документа)
 /// </summary>
+[Index(nameof(DocumentId), nameof(OfferId), IsUnique = true)]
 public class RowOfDeliveryRetailDocumentModelDB : RowOfRetailOrderDocumentBaseModelDB
 {
     /// <summary>
