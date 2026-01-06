@@ -85,7 +85,7 @@
                 <a href="/retail/payment-document/@context.PaymentDocumentId">@context.PaymentDocument?.ToString()</a>
             </MudTd>
         }
-        <MudTd Class="@(context.AmountPayment <= 0 ? "text-bg-danger" : "")" DataLabel="Вес">@context.AmountPayment</MudTd>
+        <MudTd Class="@(context.AmountPayment <= 0 ? "text-bg-danger" : "")" DataLabel="Сумма">@context.AmountPayment</MudTd>
         <MudTd>
             @if (initDeleteRow == context.Id)
             {
