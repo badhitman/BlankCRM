@@ -293,28 +293,23 @@ public partial class RetailService : IRetailService
            .FirstAsync(x => x.Id == rowId, cancellationToken: token);
 
         DeliveryDocumentRetailModelDB deliveryDocumentRetailDb = rowDb.Document!;
-        loggerRepo.LogInformation($"{nameof(deliveryDocumentRetailDb)}: {JsonConvert.SerializeObject(deliveryDocumentRetailDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+        //loggerRepo.LogInformation($"{nameof(deliveryDocumentRetailDb)}: {JsonConvert.SerializeObject(deliveryDocumentRetailDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         if (offDeliveriesStatuses.Contains(deliveryDocumentRetailDb.DeliveryStatus))
         {
             await context.RowsDeliveryDocumentsRetail
-            .Where(x => x.Id == rowDb.Id)
-            .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.OfferId, rowDb.OfferId)
-                .SetProperty(p => p.Quantity, rowDb.Quantity)
-                .SetProperty(p => p.Amount, rowDb.Amount)
-                .SetProperty(p => p.Comment, rowDb.Comment)
-                .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.NomenclatureId, rowDb.NomenclatureId), cancellationToken: token);
+                .Where(x => x.Id == rowId)
+                .ExecuteDeleteAsync(cancellationToken: token);
 
             await context.DeliveryDocumentsRetail
              .Where(x => x.Id == rowDb.DocumentId)
              .ExecuteUpdateAsync(set => set
                  .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
-            return ResponseBaseModel.CreateSuccess("Ok");
+            await transaction.CommitAsync(token);
+            return ResponseBaseModel.CreateSuccess("Элемент удалён");
         }
-
-        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         List<LockTransactionModelDB> lockers = [new()
             {
@@ -366,7 +361,6 @@ public partial class RetailService : IRetailService
             context.RemoveRange(lockers);
 
         await context.SaveChangesAsync(token);
-
 
         await context.RowsDeliveryDocumentsRetail
             .Where(x => x.Id == rowId)
