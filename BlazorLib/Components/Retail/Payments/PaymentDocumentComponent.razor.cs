@@ -57,7 +57,7 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
     {
         get
         {
-            if (currentDoc is null || editDoc?.Wallet is null || editDoc.Amount <= 0 || DatePayment is null || DatePayment == default)
+            if (currentDoc is null || editDoc?.Wallet is null || editDoc.Amount == 0 || DatePayment is null || DatePayment == default)
                 return true;
 
             return

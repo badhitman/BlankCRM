@@ -16,10 +16,10 @@ public partial class RetailService : IRetailService
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> CreatePaymentDocumentAsync(CreatePaymentRetailDocumentRequestModel req, CancellationToken token = default)
     {
-        if (req.Amount <= 0)
+        if (req.Amount == 0)
             return new()
             {
-                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Сумма платежа должна быть больше нуля" }]
+                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Укажите сумму платежа" }]
             };
 
         if (req.WalletId <= 0)
@@ -78,8 +78,8 @@ public partial class RetailService : IRetailService
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> UpdatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default)
     {
-        if (req.Amount <= 0)
-            return ResponseBaseModel.CreateError("Сумма платежа должна быть больше нуля");
+        if (req.Amount == 0)
+            return ResponseBaseModel.CreateError("Укажите сумму платежа");
 
         req.PaymentSource = req.PaymentSource?.Trim();
         req.Name = req.Name.Trim();
