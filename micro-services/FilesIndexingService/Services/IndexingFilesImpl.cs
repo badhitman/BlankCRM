@@ -31,7 +31,6 @@ public class IndexingFilesImpl(
         if (req.ResponseBody is not null)
             req.ResponseBody = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(JsonConvert.SerializeObject(req.ResponseBody));
 
-
         IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.BusTracesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
         IMongoCollection<TraceReceiverRecord> traceReceiverRecords = mongoFs.GetCollection<TraceReceiverRecord>(nameof(TraceReceiverRecord));
 
@@ -40,19 +39,16 @@ public class IndexingFilesImpl(
         CreateIndexModel<TraceReceiverRecord> indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
+        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.TraceReceiverRecordId);
+        indexModel = new(indexKeys, indexOptions);
+        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
+
+
         indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.RequestTypeName);
         indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
-        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.RequestKey);
-        indexModel = new(indexKeys, indexOptions);
-        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
-
         indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.ResponseTypeName);
-        indexModel = new(indexKeys, indexOptions);
-        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
-
-        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.ResponseKey);
         indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 

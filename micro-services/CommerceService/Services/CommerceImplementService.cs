@@ -214,7 +214,7 @@ public partial class CommerceImplementService(
         List<ResultMessage> Messages = [];
         foreach (NomenclatureScopeModel _n in req)
         {
-            if (!Enum.TryParse<UnitsOfMeasurementEnum>(_n.BaseUnit, true, out UnitsOfMeasurementEnum _bu))
+            if (!Enum.TryParse(_n.BaseUnit, true, out UnitsOfMeasurementEnum _bu))
             {
                 Messages.Add(new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Единица измерения `{_n.BaseUnit}` не корректная (не удалось конвертировать)" });
                 continue;
@@ -248,7 +248,6 @@ public partial class CommerceImplementService(
                     continue;
                 }
 
-                // _nameUpper = _off.Name?.ToUpper().Trim();
                 OfferModelDB? readOffer = await context.Offers
                     .FirstOrDefaultAsync(x => x.NomenclatureId == readNomenclature.Id && x.Name == _off.Name, cancellationToken: token);
 

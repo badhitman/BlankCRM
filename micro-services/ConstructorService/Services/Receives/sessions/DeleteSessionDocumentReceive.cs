@@ -19,7 +19,7 @@ public class DeleteSessionDocumentReceive(IConstructorService conService, IFiles
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int payload, CancellationToken token = default)
     {
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, payload.GetType().Name, payload);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, payload.GetType().Name, payload);
         ResponseBaseModel res = await conService.DeleteSessionDocumentAsync(payload, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

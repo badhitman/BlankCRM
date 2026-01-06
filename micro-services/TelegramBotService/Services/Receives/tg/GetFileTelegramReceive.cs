@@ -21,7 +21,7 @@ public class GetFileTelegramReceive(ITelegramBotService tgRepo, IFilesIndexing i
     public async Task<TResponseModel<byte[]>?> ResponseHandleActionAsync(string? fileId, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(fileId);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, fileId.GetType().Name, fileId);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, fileId.GetType().Name, fileId);
         await indexingRepo.SaveTraceForReceiverAsync(trace, token);
         TResponseModel<byte[]> res = await tgRepo.GetFileTelegramAsync(fileId, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);

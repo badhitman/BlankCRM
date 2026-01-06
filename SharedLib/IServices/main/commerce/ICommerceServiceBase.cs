@@ -23,7 +23,7 @@ public interface ICommerceServiceBase
     public Task<FileAttachModel> PriceFullFileGetJsonAsync(CancellationToken token = default);
 
     /// <summary>
-    /// UploadOffersAsync
+    /// Загрузка справочника номенклатуры/офферов
     /// </summary>
     public Task<ResponseBaseModel> UploadOffersAsync(List<NomenclatureScopeModel> req, CancellationToken token = default);
 

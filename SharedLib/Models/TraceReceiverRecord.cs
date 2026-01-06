@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
-
 namespace SharedLib;
 
 /// <summary>
@@ -12,7 +10,7 @@ namespace SharedLib;
 public class TraceReceiverRecord
 {
     /// <inheritdoc/>
-    public int TraceReceiverRecordId { get; set; }
+    public int? TraceReceiverRecordId { get; set; }
 
     /// <summary>
     /// Инициализация обработчика
@@ -34,15 +32,11 @@ public class TraceReceiverRecord
     public object? RequestBody { get; set; }
     /// <inheritdoc/>
     public string? RequestTypeName { get; set; }
-    /// <inheritdoc/>
-    public int? RequestKey { get; set; }
 
     /// <inheritdoc/>
     public object? ResponseBody { get; set; }
     /// <inheritdoc/>
     public string? ResponseTypeName { get; set; }
-    /// <inheritdoc/>
-    public int? ResponseKey { get; set; }
 
     /// <summary>
     /// TraceReceiverRecord
@@ -55,7 +49,7 @@ public class TraceReceiverRecord
             RequestTypeName = _requestTypeName,
             RequestBody = _requestBody,
             ReceiverName = _receiverName,
-            RequestKey = _requestKey,
+            TraceReceiverRecordId = _requestKey,
         };
     }
 

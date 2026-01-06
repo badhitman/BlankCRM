@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -20,10 +19,13 @@ public class PriceRuleUpdateReceive(ICommerceService commerceRepo, IFilesIndexin
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB>? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(req);
+        ArgumentNullException.ThrowIfNull(req?.Payload);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req.Payload.Id);
         TResponseModel<int> res = await commerceRepo.PriceRuleUpdateAsync(req, token);
+        if (trace.TraceReceiverRecordId is null || trace.TraceReceiverRecordId == 0)
+            trace.TraceReceiverRecordId = res.Response;
+
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

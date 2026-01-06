@@ -21,7 +21,7 @@ public class SubscribeUpdateReceive(IHelpDeskService hdRepo, IFilesIndexing inde
     public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<SubscribeUpdateRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<bool?> res = await hdRepo.SubscribeUpdateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

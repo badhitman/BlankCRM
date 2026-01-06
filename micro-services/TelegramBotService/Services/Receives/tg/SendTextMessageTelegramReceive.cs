@@ -22,7 +22,7 @@ public class SendTextMessageTelegramReceive(ITelegramBotService tgRepo, IFilesIn
     {
         ArgumentNullException.ThrowIfNull(message);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, message.GetType().Name, message);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, message.GetType().Name, message);
         TResponseModel<MessageComplexIdsModel> res = await tgRepo.SendTextMessageTelegramAsync(message, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
 

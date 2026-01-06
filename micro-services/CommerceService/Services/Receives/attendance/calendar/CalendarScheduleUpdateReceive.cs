@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -26,10 +25,11 @@ public class CalendarScheduleUpdateReceive(ICommerceService commerceRepo, IFiles
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req, req.Payload.Id);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Id);
         TResponseModel<int> res = await commerceRepo.CalendarScheduleUpdateAsync(req, token);
-        if (trace.RequestKey <= 0)
-            trace.RequestKey = res.Response;
+        if (trace.TraceReceiverRecordId <= 0)
+            trace.TraceReceiverRecordId = res.Response;
+
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

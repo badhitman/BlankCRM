@@ -2,8 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DocumentFormat.OpenXml.Drawing;
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -27,7 +25,7 @@ public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IFile
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload);
         ResponseBaseModel res = await commerceRepo.RecordAttendanceDeleteAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

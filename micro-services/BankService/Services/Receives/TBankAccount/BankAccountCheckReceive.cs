@@ -10,7 +10,7 @@ namespace Transmission.Receives.bank;
 /// <summary>
 /// BankAccountCheckReceive
 /// </summary>
-public class BankAccountCheckReceive(IBankService bankRepo, IFilesIndexing indexingRepo)
+public class BankAccountCheckReceive(IBankService bankRepo)
     : IResponseReceive<BankAccountCheckRequestModel?, TResponseModel<List<BankTransferModelDB>>?>
 {
     /// <inheritdoc/>
@@ -21,8 +21,8 @@ public class BankAccountCheckReceive(IBankService bankRepo, IFilesIndexing index
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(GetType().Name, req.GetType().Name, req, req.BankConnectionId);
-        await indexingRepo.SaveTraceForReceiverAsync(trace, token);
+        //TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.BankConnectionId);
+        //await indexingRepo.SaveTraceForReceiverAsync(trace, token);
 
         return await bankRepo.BankAccountCheckAsync(req, token);
     }
