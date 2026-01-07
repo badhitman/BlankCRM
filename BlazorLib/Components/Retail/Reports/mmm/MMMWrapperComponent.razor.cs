@@ -94,6 +94,8 @@ public partial class MMMWrapperComponent : BlazorBusyComponentBaseModel
             Weeklies.Add(new(numWeekOfYear, dtSY, EndOfDay(dtSY.AddDays(6))));
             dtSY = dtSY.AddDays(7);
         }
+        if (Weeklies.Count != 0)
+            selectedWeek = Weeklies.First();
     }
     /// <summary>
     /// WeekMetadataModel
