@@ -16,10 +16,10 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default)
+    public async Task<RowsForWarehouseDocumentDeleteResponseModel> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default)
     {
         string msg;
-        TResponseModel<bool> res = new() { Response = req.Any(x => x > 0) };
+        RowsForWarehouseDocumentDeleteResponseModel res = new() { Response = req.Any(x => x > 0) };
         if (!res.Response)
         {
             res.AddError($"Пустой запрос > {nameof(RowsForWarehouseDocumentDeleteAsync)}");

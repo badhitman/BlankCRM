@@ -12,7 +12,7 @@ public partial interface ICommerceService
     /// <summary>
     /// Rows for warehouse document delete
     /// </summary>
-    public Task<TResponseModel<bool>> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default);
+    public Task<RowsForWarehouseDocumentDeleteResponseModel> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default);
 
     /// <summary>
     /// Row for warehouse document update

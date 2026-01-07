@@ -14,7 +14,7 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     /// <summary>
     /// Удалить строку складского документа
     /// </summary>
-    public Task<TResponseModel<bool>> RowsForWarehouseDeleteAsync(int[] req, CancellationToken token = default);
+    public Task<RowsForWarehouseDocumentDeleteResponseModel> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default);
 
     /// <summary>
     /// Обновить строку складского документа
