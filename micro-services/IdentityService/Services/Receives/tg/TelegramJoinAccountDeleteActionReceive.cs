@@ -11,7 +11,7 @@ namespace Transmission.Receives.web;
 /// <summary>
 /// Удалить текущую процедуру привязки Telegram аккаунта к учётной записи сайта
 /// </summary>
-public class TelegramJoinAccountDeleteActionReceive(IIdentityTools identityRepo, ILogger<TelegramJoinAccountDeleteActionReceive> _logger)
+public class TelegramJoinAccountDeleteActionReceive(IIdentityTools identityRepo, ILogger<TelegramJoinAccountDeleteActionReceive> _logger, IFilesIndexing indexingRepo)
     : IResponseReceive<string?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -20,10 +20,15 @@ public class TelegramJoinAccountDeleteActionReceive(IIdentityTools identityRepo,
     /// <summary>
     /// Удалить текущую процедуру привязки Telegram аккаунта к учётной записи сайта
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(string? payload, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(payload);
-        _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(payload, GlobalStaticConstants.JsonSerializerSettings)}");
-        return await identityRepo.TelegramJoinAccountDeleteActionAsync(payload, token);
+        ArgumentNullException.ThrowIfNull(req);
+ TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
+        return await identityRepo.TelegramJoinAccountDeleteActionAsync(req, token);
     }
 }
+/*
+        
+await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+ */

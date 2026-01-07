@@ -2,17 +2,16 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
+using System.Net.Mail;
 using RemoteCallLib;
 using SharedLib;
-using System.Net.Mail;
 
 namespace Transmission.Receives.Identity;
 
 /// <summary>
 /// Регистрация нового email/пользователя без пароля (Identity)
 /// </summary>
-public class CreateNewUserReceive(IIdentityTools idRepo, ILogger<CreateNewUserReceive> loggerRepo)
+public class CreateNewUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<string?, RegistrationNewUserResponseModel?>
 {
     /// <inheritdoc/>
@@ -23,8 +22,9 @@ public class CreateNewUserReceive(IIdentityTools idRepo, ILogger<CreateNewUserRe
     {
         if (string.IsNullOrWhiteSpace(req) || !MailAddress.TryCreate(req, out _))
             throw new ArgumentNullException(nameof(req));
-
-        loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.CreateNewUserEmailAsync(req, token);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        RegistrationNewUserResponseModel res = await idRepo.CreateNewUserEmailAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

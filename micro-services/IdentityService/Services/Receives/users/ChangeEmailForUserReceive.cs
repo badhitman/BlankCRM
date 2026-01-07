@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -11,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Обновляет адрес Email, если токен действительный для пользователя.
 /// </summary>
-public class ChangeEmailForUserReceive(IIdentityTools idRepo, ILogger<ChangeEmailForUserReceive> loggerRepo)
+public class ChangeEmailForUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<IdentityEmailTokenModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -24,7 +23,9 @@ public class ChangeEmailForUserReceive(IIdentityTools idRepo, ILogger<ChangeEmai
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(IdentityEmailTokenModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ChangeEmailAsync(req, token);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.UserId);
+        ResponseBaseModel res = await idRepo.ChangeEmailAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

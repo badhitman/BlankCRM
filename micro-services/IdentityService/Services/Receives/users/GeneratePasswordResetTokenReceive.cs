@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// Создает токен сброса пароля для указанного "userId", используя настроенного поставщика токенов сброса пароля.
 /// Если "userId" не указан, то команда выполняется для текущего пользователя (запрос/сессия)
 /// </summary>
-public class GeneratePasswordResetTokenReceive(IIdentityTools idRepo)
+public class GeneratePasswordResetTokenReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<string?, TResponseModel<string?>?>
 {
     /// <inheritdoc/>
@@ -24,6 +24,9 @@ public class GeneratePasswordResetTokenReceive(IIdentityTools idRepo)
     public async Task<TResponseModel<string?>?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await idRepo.GeneratePasswordResetTokenAsync(req, token);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req);
+        TResponseModel<string?> res = await idRepo.GeneratePasswordResetTokenAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

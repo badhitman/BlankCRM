@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -12,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// Пытается удалить предоставленную внешнюю информацию для входа из указанного userId
 /// и возвращает флаг, указывающий, удалось ли удаление или нет
 /// </summary>
-public class RemoveLoginReceive(IIdentityTools idRepo, ILogger<RemoveLoginReceive> loggerRepo)
+public class RemoveLoginReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<RemoveLoginRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -25,7 +24,9 @@ public class RemoveLoginReceive(IIdentityTools idRepo, ILogger<RemoveLoginReceiv
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(RemoveLoginRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.RemoveLoginForUserAsync(req, token);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        ResponseBaseModel res = await idRepo.RemoveLoginForUserAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

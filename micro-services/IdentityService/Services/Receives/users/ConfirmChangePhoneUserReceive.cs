@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -11,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// ConfirmChangePhoneUser
 /// </summary>
-public class ConfirmChangePhoneUserReceive(IIdentityTools idRepo, ILogger<ConfirmChangePhoneUserReceive> loggerRepo)
+public class ConfirmChangePhoneUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<ChangePhoneUserRequestModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -20,8 +19,10 @@ public class ConfirmChangePhoneUserReceive(IIdentityTools idRepo, ILogger<Confir
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<ChangePhoneUserRequestModel>? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.ConfirmChangePhoneUserAsync(req, token);
+        ArgumentNullException.ThrowIfNull(req?.Payload);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.UserId);
+        ResponseBaseModel res = await idRepo.ConfirmChangePhoneUserAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

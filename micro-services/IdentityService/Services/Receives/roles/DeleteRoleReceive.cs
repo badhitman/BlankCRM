@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Удалить роль (если у роли нет пользователей).
 /// </summary>
-public class DeleteRoleReceive(IIdentityTools idRepo, ILogger<DeleteRoleReceive> loggerRepo)
+public class DeleteRoleReceive(IIdentityTools idRepo, ILogger<DeleteRoleReceive> loggerRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<string?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -20,12 +20,17 @@ public class DeleteRoleReceive(IIdentityTools idRepo, ILogger<DeleteRoleReceive>
     /// <summary>
     /// Добавить роль пользователю (включить пользователя в роль)
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(string? roleName, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
-        if(string.IsNullOrWhiteSpace(roleName))
-            throw new ArgumentNullException(nameof(roleName));
+        if(string.IsNullOrWhiteSpace(req))
+            throw new ArgumentNullException(nameof(req));
+ TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         
-        loggerRepo.LogWarning(JsonConvert.SerializeObject(roleName, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.DeleteRoleAsync(roleName, token);
+        loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
+        return await idRepo.DeleteRoleAsync(req, token);
     }
 }
+/*
+        
+await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+ */

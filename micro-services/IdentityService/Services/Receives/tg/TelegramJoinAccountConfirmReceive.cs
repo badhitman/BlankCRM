@@ -11,21 +11,22 @@ namespace Transmission.Receives.web;
 /// <summary>
 /// TelegramJoinAccountConfirm receive
 /// </summary>
-public class TelegramJoinAccountConfirmReceive(IIdentityTools identityRepo, ILogger<TelegramJoinAccountConfirmReceive> _logger) 
+public class TelegramJoinAccountConfirmReceive(IIdentityTools identityRepo, ILogger<TelegramJoinAccountConfirmReceive> _logger, IFilesIndexing indexingRepo) 
     : IResponseReceive<TelegramJoinAccountConfirmModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TelegramJoinAccountConfirmReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramJoinAccountConfirmModel? confirm, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramJoinAccountConfirmModel? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(confirm);
+        ArgumentNullException.ThrowIfNull(req);
+ TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
 
         TResponseModel<object?> res = new();
-        _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(confirm, GlobalStaticConstants.JsonSerializerSettings)}");
+        _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
         string msg;
-        if (confirm is null)
+        if (req is null)
         {
             msg = $"remote call [payload] is null: error {{2AB259FB-AA62-4182-B463-9DE20110FDE9}}";
             res.AddError(msg);
@@ -33,6 +34,10 @@ public class TelegramJoinAccountConfirmReceive(IIdentityTools identityRepo, ILog
             return res;
         }
 
-        return await identityRepo.TelegramJoinAccountConfirmTokenFromTelegramAsync(confirm, token: token);
+        return await identityRepo.TelegramJoinAccountConfirmTokenFromTelegramAsync(req, token: token);
     }
 }
+/*
+        
+await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+ */

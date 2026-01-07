@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -11,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Вкл/Выкл двухфакторную аутентификацию для указанного userId
 /// </summary>
-public class SetTwoFactorEnabledReceive(IIdentityTools idRepo, ILogger<SetTwoFactorEnabledReceive> loggerRepo)
+public class SetTwoFactorEnabledReceive(IIdentityTools idRepo, ILogger<SetTwoFactorEnabledReceive> loggerRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<SetTwoFactorEnabledRequestModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -23,7 +22,9 @@ public class SetTwoFactorEnabledReceive(IIdentityTools idRepo, ILogger<SetTwoFac
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SetTwoFactorEnabledRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.SetTwoFactorEnabledAsync(req, token);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        ResponseBaseModel res = await idRepo.SetTwoFactorEnabledAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }

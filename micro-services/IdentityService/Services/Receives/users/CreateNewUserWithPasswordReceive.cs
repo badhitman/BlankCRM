@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -21,7 +20,7 @@ public class CreateNewUserWithPasswordReceive(IIdentityTools idRepo)
     public async Task<RegistrationNewUserResponseModel?> ResponseHandleActionAsync(RegisterNewUserPasswordModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        //loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.CreateNewUserWithPasswordAsync(req, token);
+        RegistrationNewUserResponseModel res = await idRepo.CreateNewUserWithPasswordAsync(req, token);
+        return res;
     }
 }

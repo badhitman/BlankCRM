@@ -12,9 +12,9 @@ namespace Transmission.Receives.Identity;
 /// </summary>
 /// <remarks>
 /// Этот API поддерживает инфраструктуру ASP.NET Core Identity и не предназначен для использования в качестве абстракции электронной почты общего назначения.
-/// Он должен быть реализован в приложении, чтобы  Identityинфраструктура могла отправлять электронные письма с подтверждением.
+/// Он должен быть реализован в приложении, чтобы  Identity инфраструктура могла отправлять электронные письма с подтверждением.
 /// </remarks>
-public class GenerateEmailConfirmationIdentityReceive(IIdentityTools IdentityRepo)
+public class GenerateEmailConfirmationIdentityReceive(IIdentityTools IdentityRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<SimpleUserIdentityModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -25,11 +25,14 @@ public class GenerateEmailConfirmationIdentityReceive(IIdentityTools IdentityRep
     /// </summary>
     /// <remarks>
     /// Этот API поддерживает инфраструктуру ASP.NET Core Identity и не предназначен для использования в качестве абстракции электронной почты общего назначения.
-    /// Он должен быть реализован в приложении, чтобы  Identityинфраструктура могла отправлять электронные письма с подтверждением.
+    /// Он должен быть реализован в приложении, чтобы  Identity инфраструктура могла отправлять электронные письма с подтверждением.
     /// </remarks>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SimpleUserIdentityModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await IdentityRepo.GenerateEmailConfirmationAsync(req, token);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Email);
+        ResponseBaseModel res = await IdentityRepo.GenerateEmailConfirmationAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }
