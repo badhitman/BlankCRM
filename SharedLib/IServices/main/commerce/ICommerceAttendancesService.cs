@@ -63,7 +63,7 @@ public partial interface ICommerceService
     /// <summary>
     /// Расписание на дату создать/обновить
     /// </summary>
-    public Task<TResponseModel<int>> CalendarScheduleUpdateAsync(TAuthRequestStandardModel<CalendarScheduleModelDB> work, CancellationToken token = default);
+    public Task<TResponseModel<int>> CalendarScheduleUpdateOrCreateAsync(TAuthRequestStandardModel<CalendarScheduleModelDB> work, CancellationToken token = default);
 
     /// <summary>
     /// Подбор расписаний для дат

@@ -101,7 +101,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<WeeklyScheduleUpdateReceive, WeeklyScheduleModelDB, TResponseModel<int>>()
             .RegisterMqListener<WeeklySchedulesSelectReceive, TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel>, TPaginationResponseStandardModel<WeeklyScheduleModelDB>>()
             .RegisterMqListener<WeeklySchedulesReadReceive, int[], List<WeeklyScheduleModelDB>>()
-            .RegisterMqListener<CalendarScheduleUpdateReceive, TAuthRequestStandardModel<CalendarScheduleModelDB>, TResponseModel<int>>()
+            .RegisterMqListener<CalendarScheduleUpdateOrCreateReceive, TAuthRequestStandardModel<CalendarScheduleModelDB>, TResponseModel<int>>()
             .RegisterMqListener<CalendarsSchedulesSelectReceive, TAuthRequestStandardModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>>, TResponseModel<TPaginationResponseStandardModel<CalendarScheduleModelDB>>>()
             .RegisterMqListener<CalendarsSchedulesReadReceive, TAuthRequestStandardModel<int[]>, TResponseModel<List<CalendarScheduleModelDB>>>()
             .RegisterMqListener<PriceFullFileGetExcelReceive, object, FileAttachModel>()
