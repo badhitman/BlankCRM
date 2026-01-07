@@ -5,7 +5,6 @@
 using static SharedLib.GlobalStaticConstantsRoutes;
 using BlazorLib.Components.Commerce;
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 using MudBlazor;
 
@@ -224,11 +223,14 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         }
 
         await SetBusyAsync();
-        TResponseModel<bool> res = await CommRepo.RowsForWarehouseDocumentDeleteAsync([currentRow.Id]);
+        RowsForWarehouseDocumentDeleteResponseModel res = await CommRepo.RowsForWarehouseDocumentDeleteAsync([currentRow.Id]);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
-        if (!res.Success())
+        if (!res.Success() || res.DocumentsUpdated is null || res.DocumentsUpdated.Count == 0)
             return;
+
+        editDocument.Version = res.DocumentsUpdated.First().Value.VersionDocument;
+        CurrentDocument.Version = editDocument.Version;
 
         await ReadDocument();
         addingDomRef?.StateHasChangedCall();

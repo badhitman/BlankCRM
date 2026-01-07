@@ -31,7 +31,13 @@ public partial class CommerceImplementService : ICommerceService
 
         req = [.. req.Distinct()];
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RowOfWarehouseDocumentModelDB> mainQuery = context.RowsWarehouses.Where(x => req.Any(y => y == x.Id));
+        List<RowOfWarehouseDocumentModelDB> mainQuery = await context
+            .RowsWarehouses
+            .Where(x => req.Any(y => y == x.Id))
+            .Include(x => x.Offer)
+            .Include(x => x.Nomenclature)
+            .ToListAsync(cancellationToken: token);
+
         var q = from r in mainQuery
                 join d in context.WarehouseDocuments on r.WarehouseDocumentId equals d.Id
                 select new
@@ -45,8 +51,8 @@ public partial class CommerceImplementService : ICommerceService
                     r.Quantity
                 };
 
-        var _allRowsOfDocuments = await q
-           .ToArrayAsync(cancellationToken: token);
+        var _allRowsOfDocuments = q
+           .ToArray();
 
         if (_allRowsOfDocuments.Length == 0)
         {
@@ -109,9 +115,9 @@ public partial class CommerceImplementService : ICommerceService
 
             if (offerRegisterWritingOff is not null)
             {
-                await context.OffersAvailability.Where(y => y.Id == offerRegisterWritingOff.Id)
-                    .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.Quantity, p => p.Quantity + rowOfDocumentElement.Quantity), cancellationToken: token);
+                //await context.OffersAvailability.Where(y => y.Id == offerRegisterWritingOff.Id)
+                //    .ExecuteUpdateAsync(set => set
+                //        .SetProperty(p => p.Quantity, p => p.Quantity + rowOfDocumentElement.Quantity), cancellationToken: token);
             }
             else if (rowOfDocumentElement.WritingOffWarehouseId > 0)
             {
@@ -159,17 +165,33 @@ public partial class CommerceImplementService : ICommerceService
             }
             else
             {
-                await context.OffersAvailability.Where(y => y.Id == offerRegister.Id)
-                    .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocumentElement.Quantity), cancellationToken: token);
+                //await context.OffersAvailability.Where(y => y.Id == offerRegister.Id)
+                //    .ExecuteUpdateAsync(set => set
+                //    .SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocumentElement.Quantity), cancellationToken: token);
             }
         }
 
         if (offersLocked.Count != 0)
             context.RemoveRange(offersLocked);
 
-        res.Response = await context.RowsWarehouses.Where(x => req.Any(y => y == x.Id)).ExecuteDeleteAsync(cancellationToken: token) != 0;
-        await context.SaveChangesAsync(token);
+        res.DocumentsUpdated = [];
+        foreach (var v in _allRowsOfDocuments.GroupBy(x => x.DocumentId))
+        {
+            Guid docVer = Guid.NewGuid();
+            await context.WarehouseDocuments
+                .Where(x => v.Key == x.Id)
+                .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Version, docVer), cancellationToken: token);
+
+            //res.DocumentsUpdated.Add(v.Key, new([.. v.Select(y => y.OfferId)], docVer));
+        }
+
+
+
+        res.Response = await context.RowsWarehouses
+            .Where(x => req.Any(y => y == x.Id))
+            .ExecuteDeleteAsync(cancellationToken: token) != 0;
+
         await transaction.CommitAsync(token);
 
         res.AddSuccess("Команда удаления выполнена");

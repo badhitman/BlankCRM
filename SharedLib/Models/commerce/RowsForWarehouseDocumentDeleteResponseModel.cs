@@ -10,5 +10,10 @@ namespace SharedLib;
 public class RowsForWarehouseDocumentDeleteResponseModel : TResponseModel<bool>
 {
     /// <inheritdoc/>
-    public Dictionary<int, int[]>? DocumentsUpdated { get; set; }
+    public Dictionary<int, DeliveryDocumentMetadataRecord>? DocumentsUpdated { get; set; }
 }
+
+/// <summary>
+/// DeliveryDocumentMetadataRecord
+/// </summary>
+public record struct DeliveryDocumentMetadataRecord(RowOfWarehouseDocumentModelDB[] Rows, Guid VersionDocument);
