@@ -423,10 +423,9 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         MainReportRequestModel req = new();
 
         if (Owner is not null && Owner.SelectedWeek.HasValue)
-        {
             req.NumWeekOfYear = Owner.SelectedWeek.Value.NumWeekOfYear;
-        }
-        else if (DateRangeProp is not null)
+
+        if (DateRangeProp is not null)
         {
             req.Start = DateRangeProp.Start;
             req.End = DateRangeProp.End;
