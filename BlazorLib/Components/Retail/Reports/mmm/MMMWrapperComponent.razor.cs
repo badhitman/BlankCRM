@@ -19,7 +19,7 @@ public partial class MMMWrapperComponent : BlazorBusyComponentBaseModel
 
     PeriodBaseModel? aboutPeriod;
     readonly List<int> Years = [];
-    MMMReportsComponent? monthSelect_ref;
+    MMMReportsComponent? mmmSelect_ref;
     readonly GregorianCalendar cal = new();
     readonly List<WeekMetadataModel> Weeklies = [];
 
@@ -48,7 +48,7 @@ public partial class MMMWrapperComponent : BlazorBusyComponentBaseModel
         {
             _selectedYear = value;
             WeekliesUpdate();
-            monthSelect_ref?.StateHasChangedCall();
+            mmmSelect_ref?.StateHasChangedCall();
         }
     }
 
@@ -62,8 +62,8 @@ public partial class MMMWrapperComponent : BlazorBusyComponentBaseModel
         private set
         {
             selectedWeek = value;
-            if (monthSelect_ref is not null)
-                InvokeAsync(monthSelect_ref.Reload);
+            if (mmmSelect_ref is not null)
+                InvokeAsync(mmmSelect_ref.Reload);
         }
     }
 
