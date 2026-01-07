@@ -20,6 +20,9 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     [Inject]
     IJSRuntime JsRuntimeRepo { get; set; } = default!;
 
+    [Inject]
+    IParametersStorageTransmission StorageRepo { get; set; } = default!;
+
 
     /// <inheritdoc/>
     [CascadingParameter(Name = "ClientId")]
@@ -160,7 +163,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     async Task DownloadFullPrice()
     {
         await SetBusyAsync();
-        FileAttachModel res = await RetailRepo.GetDeliveriesJournalFileAsync(getRequestPayload());
+        FileAttachModel res = await RetailRepo.GetDeliveriesJournalFileAsync(GetRequestPayload());
         await SetBusyAsync(false);
         if (res.Data.Length != 0)
         {
@@ -175,7 +178,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         await SetBusyAsync(token: token);
         TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req = new()
         {
-            Payload = getRequestPayload(),
+            Payload = GetRequestPayload(),
             PageNum = state.Page,
             PageSize = state.PageSize,
             SortingDirection = state.SortDirection.Convert(),
@@ -191,7 +194,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         return new TableData<DeliveryDocumentRetailModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 
-    SelectDeliveryDocumentsRetailRequestModel getRequestPayload()
+    SelectDeliveryDocumentsRetailRequestModel GetRequestPayload()
     {
         SelectDeliveryDocumentsRetailRequestModel req = new();
 

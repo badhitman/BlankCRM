@@ -1,5 +1,5 @@
 ﻿@using MudBlazor
-@inherits BlazorBusyComponentBaseModel
+@inherits BlazorBusyComponentBaseAuthModel
 
 
 <MudStack AlignItems="AlignItems.Center" Row>
@@ -16,7 +16,7 @@
                 <MudChip Value="@sd" Text="@sd.DescriptionInfo()" />
             }
         </MudChipSet>
-        <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
+        <MudChip T="string" Icon="@(includeUnsetStatus? @Icons.Material.Filled.Check : "")" Selected=includeUnsetStatus OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
     }
     else
     {

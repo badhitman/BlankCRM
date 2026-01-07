@@ -62,8 +62,14 @@ public abstract class BlazorBusyComponentBaseModel : ComponentBase, IDisposable
             // LoggerRepo.LogWarning($"{GetType().Name} [{_deepBusyCount}] - {_isBusyProgress}\n\t{Environment.StackTrace}");
         }
 
-        await Task.Delay(1, token);
-        await InvokeAsync(StateHasChanged);
+        try
+        {
+            await Task.Delay(1, token);
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     /// <summary>

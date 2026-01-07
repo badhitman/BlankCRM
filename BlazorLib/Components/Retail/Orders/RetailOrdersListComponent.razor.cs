@@ -11,7 +11,7 @@ namespace BlazorLib.Components.Retail.Orders;
 /// <summary>
 /// RetailOrdersListComponent
 /// </summary>
-public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
+public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
@@ -20,7 +20,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     IRubricsTransmission HelpDeskRepo { get; set; } = default!;
 
     [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
+    IParametersStorageTransmission StorageRepo { get; set; } = default!;
 
 
     /// <inheritdoc/>
@@ -54,7 +54,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
     public List<StatusesDocumentsEnum?>? PresetStatusesDocuments { get; set; }
 
 
-    bool includeUnset;
+    bool includeUnsetStatus;
 
     bool _equalSumFilter;
     bool EqualSumFilter
@@ -113,9 +113,10 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
 
     async Task OnChipClicked()
     {
-        includeUnset = !includeUnset;
+        includeUnsetStatus = !includeUnsetStatus;
         if (tableRef is not null)
             await tableRef.ReloadServerData();
+        await SaveFilters();
     }
 
     IReadOnlyCollection<StatusesDocumentsEnum> _selectedStatuses = [];
@@ -127,7 +128,50 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
             _selectedStatuses = value;
             if (tableRef is not null)
                 InvokeAsync(tableRef.ReloadServerData);
+
+            InvokeAsync(SaveFilters);
         }
+    }
+
+    async Task SaveFilters()
+    {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+        List<StatusesDocumentsEnum?> _storeStatuses = [.. SelectedStatuses];
+        if (includeUnsetStatus)
+            _storeStatuses.Add(null);
+        await StorageRepo.SaveParameterAsync<StatusesDocumentsEnum?[]?>([.. _storeStatuses], GlobalStaticCloudStorageMetadata.RetailOrdersJournalByStatusesFilters(CurrentUserSession.UserId), true, false);
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        if (PresetStatusesDocuments is null || PresetStatusesDocuments.Count == 0)
+        {
+            TResponseModel<StatusesDocumentsEnum?[]?> _readMarkersFilter = await StorageRepo.ReadParameterAsync<StatusesDocumentsEnum?[]?>(GlobalStaticCloudStorageMetadata.RetailOrdersJournalByStatusesFilters(CurrentUserSession.UserId));
+            if (_readMarkersFilter.Success() && _readMarkersFilter.Response is not null)
+            {
+                List<StatusesDocumentsEnum> _markers = [];
+                includeUnsetStatus = _readMarkersFilter.Response.Any(x => x is null);
+                foreach (StatusesDocumentsEnum _sd in _readMarkersFilter.Response.Where(x => x is not null)!)
+                    _markers.Add(_sd);
+
+                _selectedStatuses = [.. _markers];
+                if (tableRef is not null)
+                    await tableRef.ReloadServerData();
+            }
+        }
+
     }
 
     void CreateNewOrderOpenDialog()
@@ -198,7 +242,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseModel
         else if (SelectedStatuses.Count != 0)
             req.Payload.StatusesFilter = [.. SelectedStatuses];
 
-        if (includeUnset)
+        if (includeUnsetStatus)
         {
             req.Payload.StatusesFilter ??= [];
             req.Payload.StatusesFilter.Add(null);
