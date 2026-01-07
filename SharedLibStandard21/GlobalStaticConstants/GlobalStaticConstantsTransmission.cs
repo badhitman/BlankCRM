@@ -242,7 +242,7 @@ public static partial class GlobalStaticConstantsTransmission
         /// <summary>
         /// CateNewRoleReceive
         /// </summary>
-        public readonly static string CateNewRoleReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, Routes.ROLE_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
+        public readonly static string CreateNewRoleReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.IDENTITY_CONTROLLER_NAME, Routes.ROLE_CONTROLLER_NAME, Routes.CREATE_ACTION_NAME);
 
         /// <summary>
         /// DeleteRoleReceive

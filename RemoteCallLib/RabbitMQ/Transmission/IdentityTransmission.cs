@@ -241,7 +241,7 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> CreateNewRoleAsync(string roleName, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.CateNewRoleReceive, roleName, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.CreateNewRoleReceive, roleName, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> DeleteRoleAsync(string roleName, CancellationToken token = default)

@@ -22,7 +22,7 @@ public class TryAddRolesToUserReceive(IIdentityTools idRepo, IFilesIndexing inde
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UserRolesModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.UserId);
         ResponseBaseModel res = await idRepo.TryAddRolesToUserAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

@@ -10,11 +10,11 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Создать новую роль
 /// </summary>
-public class CateNewRoleReceive(IIdentityTools idRepo)
+public class CreateNewRoleReceive(IIdentityTools idRepo)
     : IResponseReceive<string?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CateNewRoleReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CreateNewRoleReceive;
 
     /// <summary>
     /// Создать новую роль

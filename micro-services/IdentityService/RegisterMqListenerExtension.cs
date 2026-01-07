@@ -63,7 +63,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<SetLockUserReceive, IdentityBooleanModel, ResponseBaseModel>()
             .RegisterMqListener<FindUsersReceive, FindWithOwnedRequestModel, TPaginationResponseStandardModel<UserInfoModel>>()
             .RegisterMqListener<FindRolesAsyncReceive, FindWithOwnedRequestModel, TPaginationResponseStandardModel<RoleInfoModel>>()
-            .RegisterMqListener<CateNewRoleReceive, string, ResponseBaseModel>()
+            .RegisterMqListener<CreateNewRoleReceive, string, ResponseBaseModel>()
             .RegisterMqListener<TelegramJoinAccountConfirmReceive, TelegramJoinAccountConfirmModel, ResponseBaseModel>()
             .RegisterMqListener<TelegramJoinAccountDeleteReceive, TelegramAccountRemoveJoinRequestTelegramModel, ResponseBaseModel>()
             .RegisterMqListener<UpdateTelegramMainUserMessageReceive, MainUserMessageModel, ResponseBaseModel>()
