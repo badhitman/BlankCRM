@@ -56,7 +56,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         }
     }
 
-    bool CanSave => Id < 1 || !CurrentDocument.Equals(editDocument);
+    bool CantSave => Id > 0 && CurrentDocument.Equals(editDocument);
 
     void IncomingRubricSelectAction(UniversalBaseModel? selectedRubric)
     {

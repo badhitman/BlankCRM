@@ -19,12 +19,6 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
     public required int WarehouseId { get; set; }
 
     /// <summary>
-    /// Все офферы
-    /// </summary>
-    [Parameter, EditorRequired]
-    public required List<OfferModelDB> AllOffers { get; set; }
-
-    /// <summary>
     /// Текущие/выбранные строки
     /// </summary>
     [Parameter, EditorRequired]
@@ -76,7 +70,7 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
         set
         {
             _selectedOfferId = value;
-            SelectedOffer = AllOffers.FirstOrDefault(x => x.Id == value);
+            SelectedOffer = ActualOffers.FirstOrDefault(x => x.Id == value);
 
             System.Collections.Immutable.ImmutableList<decimal>? _qv = SelectedOffer?.QuantitiesValues;
             if (_qv is not null && _qv.Count != 0 && !ForceAdding)
@@ -111,7 +105,7 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
         return !ForceAdding && (SelectedOffer is null || GetMaxValue() == 0);
     }
 
-    IEnumerable<OfferModelDB> ActualOffers => AllOffers.Where(x => !CurrentRows!.Contains(x.Id));
+    IEnumerable<OfferModelDB> ActualOffers => RegistersCache.Select(x => x.Offer!).Where(x => !CurrentRows!.Contains(x.Id));
 
     bool IsShowAddingOffer;
     decimal QuantityValue { get; set; }

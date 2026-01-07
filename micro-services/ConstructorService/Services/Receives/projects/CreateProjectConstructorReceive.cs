@@ -22,7 +22,7 @@ public class CreateProjectConstructorReceive(IConstructorService conService, IFi
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<int> res = await conService.CreateProjectAsync(req, token);
-        trace.TraceReceiverRecordId = res.Response;
+        trace.TraceReceiverRecordId = res.Response.ToString();
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

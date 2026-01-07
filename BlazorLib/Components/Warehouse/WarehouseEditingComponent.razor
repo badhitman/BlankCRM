@@ -52,7 +52,7 @@ else
         }
 
         <div class="d-grid gap-2 my-2">
-            <button @onclick="SaveDocument" disabled="@(!CanSave)" class="btn btn-primary" type="button">@(Id < 1 ? "Создать документ" : "Сохранить")</button>
+            <button @onclick="SaveDocument" disabled="@CantSave" class="btn btn-primary" type="button">@(Id < 1 ? "Создать документ" : "Сохранить")</button>
         </div>
     </div>
     @if (Id > 0)
@@ -84,7 +84,6 @@ else
                                 <AddRowToOrderDocumentComponent @ref="addingDomRef"
                                                                 ShowRegistersOffersQuantity ForceAdding
                                                                 WarehouseId="editDocument.WarehouseId"
-                                                                AllOffers="allOffers"
                                                                 CurrentRows="CurrentDocument.Rows!.Select(x => x.OfferId).ToList()"
                                                                 AddingOfferHandler="AddingOfferAction" />
                             </div>
