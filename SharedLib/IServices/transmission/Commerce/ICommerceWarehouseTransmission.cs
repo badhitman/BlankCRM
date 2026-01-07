@@ -24,7 +24,7 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     /// <summary>
     /// WarehouseUpdate
     /// </summary>
-    public Task<TResponseModel<int>> WarehouseDocumentUpdateAsync(WarehouseDocumentModelDB document, CancellationToken token = default);
+    public Task<TResponseModel<int>> WarehouseDocumentUpdateOrCreateAsync(WarehouseDocumentModelDB document, CancellationToken token = default);
 
     /// <summary>
     /// Подбор складских документов (поиск по параметрам)

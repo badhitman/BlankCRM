@@ -85,7 +85,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     async Task SaveDocument()
     {
         await SetBusyAsync();
-        TResponseModel<int> res = await CommRepo.WarehouseDocumentUpdateAsync(editDocument);
+        TResponseModel<int> res = await CommRepo.WarehouseDocumentUpdateOrCreateAsync(editDocument);
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (editDocument.Id < 1 && res.Response > 0)

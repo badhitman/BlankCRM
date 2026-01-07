@@ -22,7 +22,7 @@ public partial interface ICommerceService
     /// <summary>
     /// WarehouseDocument update
     /// </summary>
-    public Task<TResponseModel<int>> WarehouseDocumentUpdateAsync(WarehouseDocumentModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> WarehouseDocumentUpdateOrCreateAsync(WarehouseDocumentModelDB req, CancellationToken token = default);
 
     /// <summary>
     /// WarehouseDocuments select

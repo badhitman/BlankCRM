@@ -16,7 +16,7 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> WarehouseDocumentUpdateAsync(WarehouseDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> WarehouseDocumentUpdateOrCreateAsync(WarehouseDocumentModelDB req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
@@ -99,7 +99,7 @@ public partial class CommerceImplementService : ICommerceService
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerAreaId = req.WarehouseId,
                 LockerId = rowDoc.OfferId,
-                Marker = nameof(WarehouseDocumentUpdateAsync),
+                Marker = nameof(WarehouseDocumentUpdateOrCreateAsync),
             });
             if (req.WritingOffWarehouseId > 0)
                 offersLocked.Add(new LockTransactionModelDB()
@@ -107,7 +107,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = req.WritingOffWarehouseId,
                     LockerId = rowDoc.OfferId,
-                    Marker = nameof(WarehouseDocumentUpdateAsync),
+                    Marker = nameof(WarehouseDocumentUpdateOrCreateAsync),
                 });
 
             if (warehouseDocumentDb.WritingOffWarehouseId != req.WritingOffWarehouseId && warehouseDocumentDb.WritingOffWarehouseId > 0)
@@ -116,7 +116,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = warehouseDocumentDb.WritingOffWarehouseId,
                     LockerId = rowDoc.OfferId,
-                    Marker = nameof(WarehouseDocumentUpdateAsync),
+                    Marker = nameof(WarehouseDocumentUpdateOrCreateAsync),
                 });
 
             if (warehouseDocumentDb.WarehouseId != req.WarehouseId)
@@ -125,7 +125,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerAreaId = warehouseDocumentDb.WarehouseId,
                     LockerId = rowDoc.OfferId,
-                    Marker = nameof(WarehouseDocumentUpdateAsync),
+                    Marker = nameof(WarehouseDocumentUpdateOrCreateAsync),
                 });
         }
         offersLocked = [.. offersLocked.DistinctBy(x => x.LockerAreaId)];
@@ -142,7 +142,7 @@ public partial class CommerceImplementService : ICommerceService
             catch (Exception ex)
             {
                 await transaction.RollbackAsync(token);
-                msg = $"Не удалось выполнить команду блокировки регистров остатков {nameof(WarehouseDocumentUpdateAsync)}: ";
+                msg = $"Не удалось выполнить команду блокировки регистров остатков {nameof(WarehouseDocumentUpdateOrCreateAsync)}: ";
                 loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError($"{msg}{ex.Message}");
                 return res;

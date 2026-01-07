@@ -74,7 +74,7 @@ public partial class CommerceImplementService : ICommerceService
         catch (Exception ex)
         {
             await transaction.RollbackAsync(token);
-            msg = $"Не удалось выполнить команду блокировки БД {nameof(WarehouseDocumentUpdateAsync)}: ";
+            msg = $"Не удалось выполнить команду блокировки БД {nameof(WarehouseDocumentUpdateOrCreateAsync)}: ";
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError($"{msg}{ex.Message}");
             return res;
