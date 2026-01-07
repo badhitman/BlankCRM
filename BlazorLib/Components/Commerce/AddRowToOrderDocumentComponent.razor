@@ -13,7 +13,7 @@
     }
     else
     {
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnExpandAddingOffer">Добавить</MudButton>
+        <MudButton Disabled="@(!ActualOffers.Any())" Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnExpandAddingOffer">Добавить</MudButton>
     }
 }
 else
@@ -37,9 +37,9 @@ else
         </select>
 
         @{
-            var _alowedValues = SelectedOffer?.QuantitiesValues;
+            var _allowedValues = SelectedOffer?.QuantitiesValues;
         }
-        @if (_alowedValues is null || _alowedValues.Count == 0 || ForceAdding)
+        @if (_allowedValues is null || _allowedValues.Count == 0 || ForceAdding)
         {
             <MudNumericField Disabled="IsBusyProgress || CantAdd()" @bind-Value="QuantityValue" Variant="Variant.Text" Min="1" Max="GetMaxValue()" />
         }
@@ -47,7 +47,7 @@ else
         {
             bool overLimit = false;
             <MudSelect T="decimal" Required @bind-Value="QuantityValue">
-                @foreach (decimal ql in _alowedValues)
+                @foreach (decimal ql in _allowedValues)
                 {
                     overLimit = overLimit || ql > GetMaxValue();
                     <MudSelectItem Disabled="overLimit" Value="@ql" />

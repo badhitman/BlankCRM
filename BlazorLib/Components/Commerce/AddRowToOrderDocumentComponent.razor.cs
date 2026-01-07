@@ -178,8 +178,8 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
     {
         await SetBusyAsync();
         SelectedOfferId = ActualOffers.FirstOrDefault()?.Id;
-        if (SelectedOffer is not null && !ForceAdding)
-            await CacheRegistersUpdate(_offers: [SelectedOffer.Id], _goods: [], WarehouseId, true);
+        //if (SelectedOffer is not null && !ForceAdding)
+        await CacheRegistersUpdate(_offers: [], _goods: [], WarehouseId, true);
 
         cacheId = SelectedOfferId;
         await SetBusyAsync(false);
