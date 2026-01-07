@@ -284,11 +284,11 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.p($""));
         HtmlGenerator.html5.tables.table my_table = new() { css_style = "border: 1px solid black; width: 100%; border-collapse: collapse;" };
 
-        my_table.TBody.AddRow(["Оплачено \"На сайте\"", $"[x {ReportData.PaidOnSitePaymentsCount} шт.] {ReportData.PaidOnSitePaymentsSumAmount:C} ({Math.Round((ReportData.PaidOnSitePaymentsSumAmount / 120), 2)})"]);
-        my_table.TBody.AddRow(["Другое", $"[x {ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount} шт.] {ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount:C} ({Math.Round((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
-        my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Платежи", $"[x {ReportData.PaidNoSitePaymentsCount} шт.] {ReportData.PaidNoSitePaymentsSumAmount:C} ({Math.Round(ReportData.PaidNoSitePaymentsSumAmount / 120, 2)})"]);
-        my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Перевод/конвертация (поступило)", $"[x {ReportData.ConversionsCount} шт.] {ReportData.ConversionsSumAmount:C} ({(Math.Round((ReportData.ConversionsSumAmount / 120), 2))})"]);
-        my_table.TBody.AddRow(["Итого:", $"{Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2):C} ({Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
+        my_table.TBody.AddRow(["Оплачено \"На сайте\"", $"{ReportData.PaidOnSitePaymentsSumAmount:C} [x {ReportData.PaidOnSitePaymentsCount} шт.] ({Math.Round((ReportData.PaidOnSitePaymentsSumAmount / 120), 2)})"]);
+        my_table.TBody.AddRow(["Другое", $"{ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount:C} [x {ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount} шт.] ({Math.Round((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
+        my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Платежи", $"{ReportData.PaidNoSitePaymentsSumAmount:C} [x {ReportData.PaidNoSitePaymentsCount} шт.] ({Math.Round(ReportData.PaidNoSitePaymentsSumAmount / 120, 2)})"]);
+        my_table.TBody.AddRow(["&nbsp;&nbsp;&nbsp;&nbsp;Перевод/конвертация (поступило)", $"{ReportData.ConversionsSumAmount:C} [x {ReportData.ConversionsCount} шт.] ({Math.Round(ReportData.ConversionsSumAmount / 120, 2)})"]);
+        my_table.TBody.AddRow(["Итого:", $"{Math.Round(ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount, 2):C} [x {ReportData.PaidOnSitePaymentsCount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount} шт.] ({Math.Round((ReportData.PaidOnSitePaymentsSumAmount + ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120, 2)})"]);
         wrapDiv.AddDomNode(my_table);
         wrapDiv.AddDomNode(new HtmlGenerator.html5.textual.p(""));
 
