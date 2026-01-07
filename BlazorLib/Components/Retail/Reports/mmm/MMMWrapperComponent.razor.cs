@@ -48,7 +48,8 @@ public partial class MMMWrapperComponent : BlazorBusyComponentBaseModel
         {
             _selectedYear = value;
             WeekliesUpdate();
-            mmmSelect_ref?.StateHasChangedCall();
+            if (mmmSelect_ref is not null)
+                InvokeAsync(mmmSelect_ref.Reload);
         }
     }
 
