@@ -8,6 +8,7 @@
             <MudChipSet @bind-SelectedValues="SelectedTypes"
                         SelectionMode="SelectionMode.MultiSelection"
                         CheckMark Variant="Variant.Text"
+                        SelectedColor="Color.Primary"
                         Color="Color.Info">
                 @foreach (DeliveryTypesEnum dt in Enum.GetValues(typeof(DeliveryTypesEnum)))
                 {
@@ -24,13 +25,19 @@
                     <MudChipSet @bind-SelectedValues="SelectedStatuses"
                                 SelectionMode="SelectionMode.MultiSelection"
                                 CheckMark Variant="Variant.Text"
+                                SelectedColor="Color.Primary"
                                 Color="Color.Surface">
                         @foreach (DeliveryStatusesEnum ds in Enum.GetValues<DeliveryStatusesEnum>())
                         {
                             <MudChip Value="@ds" Text="@ds.DescriptionInfo()" />
                         }
                     </MudChipSet>
-                    <MudChip T="string" Icon="@(includeUnset? @Icons.Material.Filled.Check : "")" Selected=includeUnset OnClick="OnChipClicked" Color="Color.Default">Не обработанные</MudChip>
+                    <MudChip T="string"
+                             Icon="@(includeUnsetStatus? @Icons.Material.Filled.Check : "")"
+                             Selected=includeUnsetStatus
+                             OnClick="OnChipClicked"
+                             SelectedColor="Color.Primary"
+                             Color="Color.Default">Не обработанные</MudChip>
                 }
                 else
                 {

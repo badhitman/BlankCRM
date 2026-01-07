@@ -498,6 +498,28 @@ public static partial class GlobalStaticCloudStorageMetadata
         };
 
     /// <summary>
+    /// Настройки фильтрации в журнале отгрузки/доставки (розница)
+    /// </summary>
+    public static StorageMetadataModel RetailDeliveriesJournalByStatusesFilters(string user_id)
+        => new()
+        {
+            ApplicationName = Path.Combine(Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERIES_CONTROLLER_NAME, Routes.JOURNAL_CONTROLLER_NAME),
+            PropertyName = Path.Combine(Routes.FILTER_CONTROLLER_NAME, Routes.STATUSES_CONTROLLER_NAME),
+            PrefixPropertyName = user_id,
+        };
+
+    /// <summary>
+    /// Настройки фильтрации в журнале отгрузки/доставки (розница)
+    /// </summary>
+    public static StorageMetadataModel RetailDeliveriesJournalByTypesFilters(string user_id)
+        => new()
+        {
+            ApplicationName = Path.Combine(Routes.RETAIL_CONTROLLER_NAME, Routes.DELIVERIES_CONTROLLER_NAME, Routes.JOURNAL_CONTROLLER_NAME),
+            PropertyName = Path.Combine(Routes.FILTER_CONTROLLER_NAME, Routes.TYPES_CONTROLLER_NAME),
+            PrefixPropertyName = user_id,
+        };
+
+    /// <summary>
     /// Уведомления в Telegram пользователю о событиях в его документах
     /// </summary>
     public static StorageMetadataModel NotificationTelegramForIssueUser(string user_id)

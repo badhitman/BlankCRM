@@ -143,6 +143,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
         List<StatusesDocumentsEnum?> _storeStatuses = [.. SelectedStatuses];
         if (includeUnsetStatus)
             _storeStatuses.Add(null);
+
         await StorageRepo.SaveParameterAsync<StatusesDocumentsEnum?[]?>([.. _storeStatuses], GlobalStaticCloudStorageMetadata.RetailOrdersJournalByStatusesFilters(CurrentUserSession.UserId), true, false);
     }
 
@@ -158,12 +159,12 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
 
         if (PresetStatusesDocuments is null || PresetStatusesDocuments.Count == 0)
         {
-            TResponseModel<StatusesDocumentsEnum?[]?> _readMarkersFilter = await StorageRepo.ReadParameterAsync<StatusesDocumentsEnum?[]?>(GlobalStaticCloudStorageMetadata.RetailOrdersJournalByStatusesFilters(CurrentUserSession.UserId));
-            if (_readMarkersFilter.Success() && _readMarkersFilter.Response is not null)
+            TResponseModel<StatusesDocumentsEnum?[]?> _readStatusesFilter = await StorageRepo.ReadParameterAsync<StatusesDocumentsEnum?[]?>(GlobalStaticCloudStorageMetadata.RetailOrdersJournalByStatusesFilters(CurrentUserSession.UserId));
+            if (_readStatusesFilter.Success() && _readStatusesFilter.Response is not null)
             {
                 List<StatusesDocumentsEnum> _markers = [];
-                includeUnsetStatus = _readMarkersFilter.Response.Any(x => x is null);
-                foreach (StatusesDocumentsEnum _sd in _readMarkersFilter.Response.Where(x => x is not null)!)
+                includeUnsetStatus = _readStatusesFilter.Response.Any(x => x is null);
+                foreach (StatusesDocumentsEnum _sd in _readStatusesFilter.Response.Where(x => x is not null)!)
                     _markers.Add(_sd);
 
                 _selectedStatuses = [.. _markers];
@@ -171,7 +172,6 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
                     await tableRef.ReloadServerData();
             }
         }
-
     }
 
     void CreateNewOrderOpenDialog()

@@ -62,7 +62,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         }
     }
 
-    bool includeUnset;
+    bool includeUnsetStatus;
 
     IReadOnlyCollection<DeliveryStatusesEnum> _selectedStatuses = [];
     IReadOnlyCollection<DeliveryStatusesEnum> SelectedStatuses
@@ -73,6 +73,8 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
             _selectedStatuses = value;
             if (tableRef is not null)
                 InvokeAsync(tableRef.ReloadServerData);
+
+            InvokeAsync(SaveFilters);
         }
     }
 
@@ -85,6 +87,8 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
             _selectedTypes = value;
             if (tableRef is not null)
                 InvokeAsync(tableRef.ReloadServerData);
+
+            InvokeAsync(SaveFilters);
         }
     }
     MudTable<DeliveryDocumentRetailModelDB>? tableRef;
@@ -135,6 +139,71 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         await SetBusyAsync(false);
     }
 
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+        bool _needReload = false;
+        await Task.WhenAll([
+                Task.Run(async () => {
+                    TResponseModel<DeliveryTypesEnum?[]?> _readTypesFilter = await StorageRepo.ReadParameterAsync<DeliveryTypesEnum?[]?>(GlobalStaticCloudStorageMetadata.RetailDeliveriesJournalByTypesFilters(CurrentUserSession.UserId));
+                    if (_readTypesFilter.Success() && _readTypesFilter.Response is not null)
+                    {
+                        List<DeliveryTypesEnum> _markers = [];
+                        includeUnsetStatus = _readTypesFilter.Response.Any(x => x is null);
+                        foreach (DeliveryTypesEnum _sd in _readTypesFilter.Response.Where(x => x is not null)!)
+                            _markers.Add(_sd);
+
+                        _selectedTypes = [.. _markers];
+                        _needReload = true;
+                    }
+                 }),
+                 Task.Run(async () => {
+                    if (PresetStatusesDocuments is null || PresetStatusesDocuments.Count == 0)
+                    {
+                        TResponseModel<DeliveryStatusesEnum?[]?> _readStatusesFilter = await StorageRepo.ReadParameterAsync<DeliveryStatusesEnum?[]?>(GlobalStaticCloudStorageMetadata.RetailDeliveriesJournalByStatusesFilters(CurrentUserSession.UserId));
+                        if (_readStatusesFilter.Success() && _readStatusesFilter.Response is not null)
+                        {
+                            List<DeliveryStatusesEnum> _markers = [];
+                            includeUnsetStatus = _readStatusesFilter.Response.Any(x => x is null);
+                            foreach (DeliveryStatusesEnum _sd in _readStatusesFilter.Response.Where(x => x is not null)!)
+                                _markers.Add(_sd);
+
+                            _selectedStatuses = [.. _markers];
+                        _needReload = true;
+                        }
+                    }
+                 })
+           ]);
+
+        if (_needReload && tableRef is not null)
+            await tableRef.ReloadServerData();
+    }
+
+    async Task SaveFilters()
+    {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
+        List<DeliveryStatusesEnum?> _storeStatuses = [.. SelectedStatuses];
+        if (includeUnsetStatus)
+            _storeStatuses.Add(null);
+
+        await Task.WhenAll([
+                 Task.Run(async () => { await StorageRepo.SaveParameterAsync<DeliveryStatusesEnum?[]>([.. _storeStatuses], GlobalStaticCloudStorageMetadata.RetailDeliveriesJournalByStatusesFilters(CurrentUserSession.UserId), true, false); }),
+                 Task.Run(async () => { await StorageRepo.SaveParameterAsync<DeliveryTypesEnum[]>([.. _selectedTypes], GlobalStaticCloudStorageMetadata.RetailDeliveriesJournalByTypesFilters(CurrentUserSession.UserId), true, false); })
+            ]);
+    }
+
     void OnSearch(string text)
     {
         searchString = text;
@@ -144,9 +213,11 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
 
     async Task OnChipClicked()
     {
-        includeUnset = !includeUnset;
+        includeUnsetStatus = !includeUnsetStatus;
         if (tableRef is not null)
             await tableRef.ReloadServerData();
+
+        await SaveFilters();
     }
 
     void CreateNewDeliveryOpenDialog()
@@ -215,7 +286,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         else if (SelectedStatuses.Count != 0)
             req.StatusesFilter = [.. SelectedStatuses];
 
-        if (includeUnset)
+        if (includeUnsetStatus)
         {
             req.StatusesFilter ??= [];
             req.StatusesFilter.Add(null);
