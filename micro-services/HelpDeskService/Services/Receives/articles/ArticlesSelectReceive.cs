@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -11,7 +10,8 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// ArticlesSelectReceive
 /// </summary>
-public class ArticlesSelectReceive(IArticlesService artRepo, ILogger<ArticlesSelectReceive> loggerRepo) : IResponseReceive<TPaginationRequestStandardModel<SelectArticlesRequestModel>?, TPaginationResponseStandardModel<ArticleModelDB>?>
+public class ArticlesSelectReceive(IArticlesService artRepo)
+    : IResponseReceive<TPaginationRequestStandardModel<SelectArticlesRequestModel>?, TPaginationResponseStandardModel<ArticleModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ArticlesSelectHelpDeskReceive;
@@ -20,7 +20,6 @@ public class ArticlesSelectReceive(IArticlesService artRepo, ILogger<ArticlesSel
     public async Task<TPaginationResponseStandardModel<ArticleModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectArticlesRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await artRepo.ArticlesSelectAsync(req, token);
     }
 }

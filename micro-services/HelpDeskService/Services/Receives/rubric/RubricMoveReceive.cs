@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -11,7 +10,7 @@ namespace Transmission.Receives.helpdesk;
 /// <summary>
 /// Сдвинуть рубрику
 /// </summary>
-public class RubricMoveReceive(IRubricsService hdRepo, ILogger<RubricMoveReceive> loggerRepo)
+public class RubricMoveReceive(IRubricsService hdRepo)
     : IResponseReceive<TAuthRequestStandardModel<RowMoveModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -21,7 +20,6 @@ public class RubricMoveReceive(IRubricsService hdRepo, ILogger<RubricMoveReceive
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<RowMoveModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await hdRepo.RubricMoveAsync(req, token);
     }
 }
