@@ -21,9 +21,9 @@ public class RowsForWarehouseDocumentDeleteReceive(ICommerceService commRepo, IF
     {
         ArgumentNullException.ThrowIfNull(req);
         RowsForWarehouseDocumentDeleteResponseModel res = await commRepo.RowsForWarehouseDocumentDeleteAsync(req, token);
-        List<Task> tasks = [];
         if (res.Success() && res.DocumentsUpdated is not null && res.DocumentsUpdated.Count != 0)
         {
+            List<Task> tasks = [];
             foreach (KeyValuePair<int, DeliveryDocumentMetadataRecord> node in res.DocumentsUpdated)
             {
                 tasks.Add(Task.Run(async () =>
