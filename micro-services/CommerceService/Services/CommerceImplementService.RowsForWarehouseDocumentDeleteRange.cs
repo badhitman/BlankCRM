@@ -31,52 +31,36 @@ public partial class CommerceImplementService : ICommerceService
 
         req = [.. req.Distinct()];
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        List<RowOfWarehouseDocumentModelDB> mainQuery = await context
+        List<RowOfWarehouseDocumentModelDB> rowsDB = await context
             .RowsWarehouses
             .Where(x => req.Any(y => y == x.Id))
             .Include(x => x.Offer)
             .Include(x => x.Nomenclature)
             .ToListAsync(cancellationToken: token);
 
-        var q = from r in mainQuery
-                join d in context.WarehouseDocuments on r.WarehouseDocumentId equals d.Id
-                select new
-                {
-                    DocumentId = d.Id,
-                    d.IsDisabled,
-                    d.WarehouseId,
-                    d.WritingOffWarehouseId,
-                    r.OfferId,
-                    r.NomenclatureId,
-                    r.Quantity
-                };
-
-        var _allRowsOfDocuments = q
-           .ToArray();
-
-        if (_allRowsOfDocuments.Length == 0)
+        if (rowsDB.Count == 0)
         {
             res.AddWarning($"Данные не найдены. Метод удаления [{nameof(RowsForWarehouseDocumentDeleteAsync)}] не может выполнить команду.");
             return res;
         }
         List<LockTransactionModelDB> offersLocked = [];
-        foreach (var x in _allRowsOfDocuments)
+        foreach (var x in rowsDB)
         {
-            if (!offersLocked.Any(y => y.LockerId == x.OfferId && y.LockerAreaId == x.WarehouseId))
+            if (!offersLocked.Any(y => y.LockerId == x.OfferId && y.LockerAreaId == x.WarehouseDocument!.WarehouseId))
                 offersLocked.Add(new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerId = x.OfferId,
-                    LockerAreaId = x.WarehouseId,
+                    LockerAreaId = x.WarehouseDocument!.WarehouseId,
                     Marker = nameof(RowsForWarehouseDocumentDeleteAsync),
                 });
 
-            if (!offersLocked.Any(y => y.LockerId == x.OfferId && y.LockerAreaId == x.WritingOffWarehouseId))
+            if (!offersLocked.Any(y => y.LockerId == x.OfferId && y.LockerAreaId == x.WarehouseDocument!.WritingOffWarehouseId))
                 offersLocked.Add(new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerId = x.OfferId,
-                    LockerAreaId = x.WritingOffWarehouseId,
+                    LockerAreaId = x.WarehouseDocument!.WritingOffWarehouseId,
                     Marker = nameof(RowsForWarehouseDocumentDeleteAsync),
                 });
         }
@@ -96,34 +80,34 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        int[] _offersIds = [.. _allRowsOfDocuments.Select(x => x.OfferId).Distinct()];
+        int[] _offersIds = [.. rowsDB.Select(x => x.OfferId).Distinct()];
         List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
            .Where(x => _offersIds.Any(y => y == x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        foreach (int doc_id in _allRowsOfDocuments.Select(x => x.DocumentId).Distinct())
+        foreach (int doc_id in rowsDB.Select(x => x.WarehouseDocument!.Id).Distinct())
             await context.WarehouseDocuments.Where(x => x.Id == doc_id).ExecuteUpdateAsync(set => set
             .SetProperty(p => p.Version, Guid.NewGuid())
             .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
-        foreach (var rowOfDocumentElement in _allRowsOfDocuments.Where(x => !x.IsDisabled))
+        foreach (var rowOfDocumentElement in rowsDB.Where(x => !x.WarehouseDocument!.IsDisabled))
         {
             loggerRepo.LogInformation($"{nameof(rowOfDocumentElement)}: {JsonConvert.SerializeObject(rowOfDocumentElement, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             OfferAvailabilityModelDB?
-                offerRegister = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocumentElement.OfferId && x.WarehouseId == rowOfDocumentElement.WarehouseId),
-                offerRegisterWritingOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocumentElement.OfferId && x.WarehouseId == rowOfDocumentElement.WritingOffWarehouseId);
+                offerRegister = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocumentElement.OfferId && x.WarehouseId == rowOfDocumentElement.WarehouseDocument!.WarehouseId),
+                offerRegisterWritingOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocumentElement.OfferId && x.WarehouseId == rowOfDocumentElement.WarehouseDocument!.WritingOffWarehouseId);
 
             if (offerRegisterWritingOff is not null)
             {
-                //await context.OffersAvailability.Where(y => y.Id == offerRegisterWritingOff.Id)
-                //    .ExecuteUpdateAsync(set => set
-                //        .SetProperty(p => p.Quantity, p => p.Quantity + rowOfDocumentElement.Quantity), cancellationToken: token);
+                await context.OffersAvailability.Where(y => y.Id == offerRegisterWritingOff.Id)
+                    .ExecuteUpdateAsync(set => set
+                        .SetProperty(p => p.Quantity, p => p.Quantity + rowOfDocumentElement.Quantity), cancellationToken: token);
             }
-            else if (rowOfDocumentElement.WritingOffWarehouseId > 0)
+            else if (rowOfDocumentElement.WarehouseDocument!.WritingOffWarehouseId > 0)
             {
                 await context.OffersAvailability.AddAsync(new OfferAvailabilityModelDB()
                 {
-                    WarehouseId = rowOfDocumentElement.WritingOffWarehouseId,
+                    WarehouseId = rowOfDocumentElement.WarehouseDocument!.WritingOffWarehouseId,
                     Quantity = rowOfDocumentElement.Quantity,
                     NomenclatureId = rowOfDocumentElement.NomenclatureId,
                     OfferId = rowOfDocumentElement.OfferId,
@@ -135,7 +119,7 @@ public partial class CommerceImplementService : ICommerceService
                 if (warehouseNegativeBalanceAllowed.Response != true)
                 {
                     await transaction.RollbackAsync(token);
-                    msg = $"Остаток оффера #{rowOfDocumentElement.OfferId} на складе #{rowOfDocumentElement.WarehouseId} не достаточный";
+                    msg = $"Остаток оффера #{rowOfDocumentElement.OfferId} на складе #{rowOfDocumentElement.WarehouseDocument!.WarehouseId} не достаточный";
                     loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                     res.AddError(msg);
                     return res;
@@ -145,7 +129,7 @@ public partial class CommerceImplementService : ICommerceService
                     offerRegister = new()
                     {
                         NomenclatureId = rowOfDocumentElement.NomenclatureId,
-                        WarehouseId = rowOfDocumentElement.WarehouseId,
+                        WarehouseId = rowOfDocumentElement.WarehouseDocument!.WarehouseId,
                         Quantity = -rowOfDocumentElement.Quantity,
                         OfferId = rowOfDocumentElement.OfferId,
                     };
@@ -158,16 +142,16 @@ public partial class CommerceImplementService : ICommerceService
             else if (offerRegister.Quantity < rowOfDocumentElement.Quantity && warehouseNegativeBalanceAllowed.Response != true)
             {
                 await transaction.RollbackAsync(token);
-                msg = $"Остаток оффера #{rowOfDocumentElement.OfferId} на складе #{rowOfDocumentElement.WarehouseId} не достаточный";
+                msg = $"Остаток оффера #{rowOfDocumentElement.OfferId} на складе #{rowOfDocumentElement.WarehouseDocument!.WarehouseId} не достаточный";
                 loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError(msg);
                 return res;
             }
             else
             {
-                //await context.OffersAvailability.Where(y => y.Id == offerRegister.Id)
-                //    .ExecuteUpdateAsync(set => set
-                //    .SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocumentElement.Quantity), cancellationToken: token);
+                await context.OffersAvailability.Where(y => y.Id == offerRegister.Id)
+                    .ExecuteUpdateAsync(set => set
+                    .SetProperty(p => p.Quantity, p => p.Quantity - rowOfDocumentElement.Quantity), cancellationToken: token);
             }
         }
 
@@ -175,7 +159,7 @@ public partial class CommerceImplementService : ICommerceService
             context.RemoveRange(offersLocked);
 
         res.DocumentsUpdated = [];
-        foreach (var v in _allRowsOfDocuments.GroupBy(x => x.DocumentId))
+        foreach (var v in rowsDB.GroupBy(x => x.WarehouseDocumentId))
         {
             Guid docVer = Guid.NewGuid();
             await context.WarehouseDocuments
@@ -183,10 +167,8 @@ public partial class CommerceImplementService : ICommerceService
                 .ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.Version, docVer), cancellationToken: token);
 
-            //res.DocumentsUpdated.Add(v.Key, new([.. v.Select(y => y.OfferId)], docVer));
+            res.DocumentsUpdated.Add(v.Key, new([.. v], docVer));
         }
-
-
 
         res.Response = await context.RowsWarehouses
             .Where(x => req.Any(y => y == x.Id))

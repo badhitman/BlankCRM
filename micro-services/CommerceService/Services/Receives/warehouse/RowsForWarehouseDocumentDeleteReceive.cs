@@ -21,13 +21,19 @@ public class RowsForWarehouseDocumentDeleteReceive(ICommerceService commRepo, IF
     {
         ArgumentNullException.ThrowIfNull(req);
         RowsForWarehouseDocumentDeleteResponseModel res = await commRepo.RowsForWarehouseDocumentDeleteAsync(req, token);
+        List<Task> tasks = [];
         if (res.Success() && res.DocumentsUpdated is not null && res.DocumentsUpdated.Count != 0)
         {
             foreach (KeyValuePair<int, DeliveryDocumentMetadataRecord> node in res.DocumentsUpdated)
             {
-                TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, typeof(int[]).Name, req, node.Key.ToString());
-                await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+                tasks.Add(Task.Run(async () =>
+                {
+                    TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, typeof(int[]).Name, req, node.Key.ToString());
+                    await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(node.Value.Rows), token);
+                }, token));
             }
+            if (tasks.Count != 0)
+                await Task.WhenAll(tasks);
         }
         return res;
     }
