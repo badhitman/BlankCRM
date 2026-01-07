@@ -31,7 +31,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
 
 
     /// <inheritdoc/>
-    public AddRowToOrderDocumentComponent? AddingDomRef { get; private set; }
+    public AddRowOfferToDocumentComponent? AddingDomRef { get; private set; }
     MudTable<RowOfDeliveryRetailDocumentModelDB>? tableRef;
     RowOfDeliveryRetailDocumentModelDB? elementBeforeEdit;
 

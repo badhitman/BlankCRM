@@ -19,7 +19,6 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
     protected ICommerceTransmission CommerceRepo { get; set; } = default!;
 
 
-
     /// <summary>
     /// RegistersCache
     /// </summary>

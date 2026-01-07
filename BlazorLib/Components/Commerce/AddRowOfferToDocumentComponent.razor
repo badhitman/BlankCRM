@@ -13,7 +13,7 @@
     }
     else
     {
-        <MudButton Disabled="@(!ActualOffers.Any())" Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnExpandAddingOffer">Добавить</MudButton>
+        <MudButton Disabled="@(!ForceAdding && !ActualOffers.Any())" Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnExpandAddingOffer">Добавить</MudButton>
     }
 }
 else

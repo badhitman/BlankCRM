@@ -39,7 +39,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     WarehouseDocumentModelDB CurrentDocument = new() { DeliveryDate = DateTime.Now, Name = "Новый", NormalizedUpperName = "НОВЫЙ", Rows = [] };
     WarehouseDocumentModelDB editDocument = new() { DeliveryDate = DateTime.Now, Name = "Новый", NormalizedUpperName = "НОВЫЙ", Rows = [] };
 
-    AddRowToOrderDocumentComponent? addingDomRef;
+    AddRowOfferToDocumentComponent? addingDomRef;
     RowOfWarehouseDocumentModelDB? elementBeforeEdit;
 
     MudNumericField<decimal>? _mudQuantityRef;
@@ -124,6 +124,10 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         await ReadDocument();
         _shouldRender = true;
         await SetBusyAsync(false);
+
+        if (addingDomRef is not null)
+            await addingDomRef.CacheRegistersUpdate([], [], editDocument.WarehouseId);
+
     }
 
     async Task ReadDocument()

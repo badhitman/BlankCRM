@@ -8,10 +8,14 @@ using SharedLib;
 namespace BlazorLib.Components.Commerce;
 
 /// <summary>
-/// AddRowToOrderDocumentComponent
+/// AddRowOfferToDocumentComponent
 /// </summary>
-public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
+public partial class AddRowOfferToDocumentComponent : BlazorRegistersComponent
 {
+    [Inject]
+    ICommerceTransmission CommRepo { get; set; } = default!;
+
+
     /// <summary>
     /// Склад
     /// </summary>
@@ -57,6 +61,11 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
     [Parameter]
     public Action<OfferModelDB?>? SelectOfferHandler { get; set; }
 
+
+    /// <summary>
+    /// Все офферы (для выбора)
+    /// </summary>
+    IEnumerable<OfferModelDB> AllOffers { get; set; } = [];
 
     OfferModelDB? SelectedOffer { get; set; }
 
@@ -105,7 +114,7 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
         return !ForceAdding && (SelectedOffer is null || GetMaxValue() == 0);
     }
 
-    IEnumerable<OfferModelDB> ActualOffers => RegistersCache.Select(x => x.Offer!).Where(x => !CurrentRows!.Contains(x.Id));
+    IEnumerable<OfferModelDB> ActualOffers => AllOffers.Where(x => !CurrentRows!.Contains(x.Id));
 
     bool IsShowAddingOffer;
     decimal QuantityValue { get; set; }
@@ -176,8 +185,32 @@ public partial class AddRowToOrderDocumentComponent : BlazorRegistersComponent
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         await SetBusyAsync();
+
         SelectedOfferId = ActualOffers.FirstOrDefault()?.Id;
+        TResponseModel<TPaginationResponseStandardModel<OfferModelDB>> getOffersRes = await CommerceRepo.OffersSelectAsync(new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                PageSize = int.MaxValue,
+                Payload = new()
+                {
+                    ContextName = null
+                }
+            },
+        });
+
+        if (getOffersRes.Success() && getOffersRes.Response?.Response is not null)
+            AllOffers = getOffersRes.Response.Response;
+
         //if (SelectedOffer is not null && !ForceAdding)
         await CacheRegistersUpdate(_offers: [], _goods: [], WarehouseId, true);
 

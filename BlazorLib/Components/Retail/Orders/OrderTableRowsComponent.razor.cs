@@ -37,7 +37,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     bool _warehouseReserveForRetailOrder;
 
     /// <inheritdoc/>
-    public AddRowToOrderDocumentComponent? AddingDomRef { get; private set; }
+    public AddRowOfferToDocumentComponent? AddingDomRef { get; private set; }
 
     int? _problemDeleteRow;
     /// <inheritdoc/>

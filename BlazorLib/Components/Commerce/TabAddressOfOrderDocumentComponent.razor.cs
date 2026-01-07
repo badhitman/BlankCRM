@@ -33,7 +33,7 @@ public partial class TabAddressOfOrderDocumentComponent : OffersTableBaseCompone
     public bool ForceAdding { get; set; }
 
 
-    AddRowToOrderDocumentComponent? addingDomRef;
+    AddRowOfferToDocumentComponent? addingDomRef;
     RowOfOrderDocumentModelDB? elementBeforeEdit;
     bool _showingPriceSelectorOrder;
 

@@ -81,7 +81,7 @@ else
                         @if (!ReadOnly)
                         {
                             <div class="ms-3" title="остаток отображается для склада поступления">
-                                <AddRowToOrderDocumentComponent @ref="addingDomRef"
+                                <AddRowOfferToDocumentComponent @ref="addingDomRef"
                                                                 ShowRegistersOffersQuantity ForceAdding
                                                                 WarehouseId="editDocument.WarehouseId"
                                                                 CurrentRows="CurrentDocument.Rows!.Select(x => x.OfferId).ToList()"
