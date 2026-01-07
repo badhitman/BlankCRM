@@ -19,6 +19,7 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
     protected ICommerceTransmission CommerceRepo { get; set; } = default!;
 
 
+
     /// <summary>
     /// RegistersCache
     /// </summary>
@@ -39,8 +40,11 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
     /// <summary>
     /// CacheRegistersUpdate
     /// </summary>
-    public async Task CacheRegistersUpdate(int[] _offers, int[] _goods, int _warehouseId = 0, bool clearCache = false)
+    public async Task CacheRegistersUpdate(int[] _offers, int[] _goods, int? _warehouseId = null, bool clearCache = false)
     {
+        if (_warehouseId.HasValue)
+            warehouseId = _warehouseId.Value;
+
         if (clearCache)
         {
             lock (this)
@@ -52,7 +56,7 @@ public abstract class BlazorRegistersComponent : BlazorBusyComponentBaseAuthMode
         offers = [.. _offers.Where(x => x > 0 && !RegistersCache.Any(y => y.Id == x)).Distinct()];
         goods = [.. _goods.Where(x => x > 0 && !RegistersCache.Any(y => y.Id == x)).Distinct()];
 
-        if (goods.Length == 0 && offers.Length == 0 && warehouseId < 1)
+        if (goods.Length == 0 && offers.Length == 0 && warehouseId == 0)
         {
             StateHasChanged();
             return;

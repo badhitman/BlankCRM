@@ -126,6 +126,8 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
 
         await Task.WhenAll(tasks);
         await SetBusyAsync(false);
+        if (AddingDomRef is not null)
+            await AddingDomRef.CacheRegistersUpdate([], [], _warehouseId: Document.WarehouseId);
     }
 
     async Task ElementsReload()
