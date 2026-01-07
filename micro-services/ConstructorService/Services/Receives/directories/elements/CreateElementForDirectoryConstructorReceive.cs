@@ -21,9 +21,9 @@ public class CreateElementForDirectoryConstructorReceive(IConstructorService con
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.OwnerId);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.OwnerId.ToString());
         TResponseModel<int> res = await conService.CreateElementForDirectoryAsync(req, token);
-        trace.TraceReceiverRecordId = res.Response;
+        trace.TraceReceiverRecordId = res.Response.ToString();
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

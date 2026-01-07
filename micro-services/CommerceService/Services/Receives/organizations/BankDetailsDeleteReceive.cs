@@ -21,7 +21,7 @@ public class BankDetailsDeleteReceive(ICommerceService commerceRepo, IFilesIndex
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.ToString());
         ResponseBaseModel res = await commerceRepo.BankDetailsDeleteAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

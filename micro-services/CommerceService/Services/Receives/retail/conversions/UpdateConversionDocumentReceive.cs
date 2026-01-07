@@ -21,7 +21,7 @@ public class UpdateConversionDocumentReceive(IRetailService commRepo, IFilesInde
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Id);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Id.ToString());
         ResponseBaseModel res = await commRepo.UpdateConversionDocumentRetailAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

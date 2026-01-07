@@ -23,7 +23,7 @@ public class CreatePaymentDocumentReceive(IRetailService commRepo, IFilesIndexin
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<int> res = await commRepo.CreatePaymentDocumentAsync(req, token);
-        trace.TraceReceiverRecordId = res.Response;
+        trace.TraceReceiverRecordId = res.Response.ToString();
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

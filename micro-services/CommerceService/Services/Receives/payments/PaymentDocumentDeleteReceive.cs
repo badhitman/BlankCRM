@@ -21,7 +21,7 @@ public class PaymentDocumentDeleteReceive(ICommerceService commerceRepo, IFilesI
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.ToString());
         ResponseBaseModel res = await commerceRepo.PaymentDocumentDeleteAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

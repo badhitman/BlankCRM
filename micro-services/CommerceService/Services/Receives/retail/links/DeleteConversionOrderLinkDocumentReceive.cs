@@ -25,13 +25,13 @@ public class DeleteConversionOrderLinkDocumentReceive(IRetailService commRepo, I
 
         if (req.OrderId > 0)
         {
-            trace.TraceReceiverRecordId = req.OrderId;
+            trace.TraceReceiverRecordId = req.OrderId.ToString();
             await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         }
 
         if (req.ConversionId > 0)
         {
-            trace.TraceReceiverRecordId = req.ConversionId;
+            trace.TraceReceiverRecordId = req.ConversionId.ToString();
             await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         }
 

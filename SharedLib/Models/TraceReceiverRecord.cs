@@ -10,7 +10,7 @@ namespace SharedLib;
 public class TraceReceiverRecord
 {
     /// <inheritdoc/>
-    public int? TraceReceiverRecordId { get; set; }
+    public string? TraceReceiverRecordId { get; set; }
 
     /// <summary>
     /// Инициализация обработчика
@@ -41,7 +41,7 @@ public class TraceReceiverRecord
     /// <summary>
     /// TraceReceiverRecord
     /// </summary>
-    public static TraceReceiverRecord Build(string _receiverName, string? _requestTypeName = null, object? _requestBody = null, int? _requestKey = null)
+    public static TraceReceiverRecord Build(string _receiverName, string? _requestTypeName = null, object? _requestBody = null, string? _requestKey = null)
     {
         return new()
         {

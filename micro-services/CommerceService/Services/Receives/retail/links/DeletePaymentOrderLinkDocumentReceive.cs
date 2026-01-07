@@ -25,13 +25,13 @@ public class DeletePaymentOrderLinkDocumentReceive(IRetailService commRepo, IFil
 
         if (req.OrderId > 0)
         {
-            trace.TraceReceiverRecordId = req.OrderId;
+            trace.TraceReceiverRecordId = req.OrderId.ToString();
             await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         }
 
         if (req.PaymentId > 0)
         {
-            trace.TraceReceiverRecordId = req.PaymentId;
+            trace.TraceReceiverRecordId = req.PaymentId.ToString();
             await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         }
 

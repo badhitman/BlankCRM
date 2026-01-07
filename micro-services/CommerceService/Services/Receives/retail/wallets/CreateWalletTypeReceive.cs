@@ -24,7 +24,7 @@ public class CreateWalletTypeReceive(IRetailService commRepo, IFilesIndexing ind
         TResponseModel<int> res = await commRepo.CreateWalletTypeAsync(req, token);
         if (res.Response > 0)
         {
-            trace.TraceReceiverRecordId = res.Response;
+            trace.TraceReceiverRecordId = res.Response.ToString();
             await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         }
         return res;

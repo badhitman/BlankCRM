@@ -21,7 +21,7 @@ public class RowForOrderUpdateReceive(ICommerceService commRepo, IFilesIndexing 
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.OrderId);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.OrderId.ToString());
         TResponseModel<int> res = await commRepo.RowForOrderUpdateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

@@ -21,7 +21,7 @@ public class UpdateRowRetailDocumentReceive(IRetailService commRepo, IFilesIndex
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.OrderId);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.OrderId.ToString());
         TResponseModel<Guid?> res = await commRepo.UpdateRowRetailDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

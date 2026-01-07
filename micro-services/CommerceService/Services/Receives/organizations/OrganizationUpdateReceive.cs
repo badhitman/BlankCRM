@@ -21,10 +21,10 @@ public class OrganizationUpdateReceive(ICommerceService commerceRepo, IFilesInde
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Id);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Id.ToString());
         TResponseModel<int> res = await commerceRepo.OrganizationUpdateAsync(req, token);
-        if (trace.TraceReceiverRecordId is null || trace.TraceReceiverRecordId == 0)
-            trace.TraceReceiverRecordId = res.Response;
+        if (trace.TraceReceiverRecordId is null || string.IsNullOrWhiteSpace(trace.TraceReceiverRecordId))
+            trace.TraceReceiverRecordId = res.Response.ToString();
 
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

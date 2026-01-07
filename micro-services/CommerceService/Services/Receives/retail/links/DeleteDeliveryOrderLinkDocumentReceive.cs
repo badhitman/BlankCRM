@@ -25,13 +25,13 @@ public class DeleteDeliveryOrderLinkDocumentReceive(IRetailService commRepo, IFi
 
         if (req.OrderId > 0)
         {
-            trace.TraceReceiverRecordId = req.OrderId;
+            trace.TraceReceiverRecordId = req.OrderId.ToString();
             await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         }
 
         if (req.DeliveryId > 0)
         {
-            trace.TraceReceiverRecordId = req.DeliveryId;
+            trace.TraceReceiverRecordId = req.DeliveryId.ToString();
             await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         }
 

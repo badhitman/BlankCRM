@@ -20,10 +20,10 @@ public class FormUpdateOrCreateConstructorReceive(IConstructorService conService
     public async Task<TResponseModel<FormConstructorModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<FormBaseConstructorModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Id);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Id.ToString());
         TResponseModel<FormConstructorModelDB> res = await conService.FormUpdateOrCreateAsync(req, token);
         if (req.Payload.Id == 0 && res.Response is not null)
-            trace.TraceReceiverRecordId = res.Response.Id;
+            trace.TraceReceiverRecordId = res.Response.Id.ToString();
         
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

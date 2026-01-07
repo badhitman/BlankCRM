@@ -20,10 +20,10 @@ public class UpdateOrCreateDirectoryConstructorReceive(IConstructorService conSe
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<EntryConstructedModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Id);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Id.ToString());
         TResponseModel<int> res = await conService.UpdateOrCreateDirectoryAsync(req, token);
-        if (trace.TraceReceiverRecordId is null || trace.TraceReceiverRecordId < 1)
-            trace.TraceReceiverRecordId = res.Response;
+        if (trace.TraceReceiverRecordId is null || string.IsNullOrWhiteSpace(trace.TraceReceiverRecordId))
+            trace.TraceReceiverRecordId = res.Response.ToString();
 
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

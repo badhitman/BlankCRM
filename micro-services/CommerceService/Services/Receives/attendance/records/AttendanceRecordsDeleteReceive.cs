@@ -25,7 +25,7 @@ public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IFile
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
 
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         ResponseBaseModel res = await commerceRepo.RecordAttendanceDeleteAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

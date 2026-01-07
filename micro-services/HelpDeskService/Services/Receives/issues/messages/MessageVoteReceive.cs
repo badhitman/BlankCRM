@@ -20,7 +20,7 @@ public class MessageVoteReceive(IHelpDeskService hdRepo, IFilesIndexing indexing
     public async Task<TResponseModel<bool?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<VoteIssueRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.MessageId);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.MessageId.ToString());
         TResponseModel<bool?> res = await hdRepo.MessageVoteAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

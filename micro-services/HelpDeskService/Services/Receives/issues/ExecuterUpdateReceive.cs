@@ -20,7 +20,7 @@ public class ExecuterUpdateReceive(IHelpDeskService hdRepo, IFilesIndexing index
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(TAuthRequestStandardModel<UserIssueModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.IssueId);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.IssueId.ToString());
         TResponseModel<bool> res = await hdRepo.ExecuterUpdateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
