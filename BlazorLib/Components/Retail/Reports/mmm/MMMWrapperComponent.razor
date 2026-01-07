@@ -13,7 +13,9 @@ else
         <div class="btn-group me-2" role="group" aria-label="First group">
             @foreach (int _year in Years)
             {
-                <button type="button" class="btn btn-@(SelectedYear == _year ? "" : "-outline")primary">@_year</button>
+                <button @onclick="() => SelectedYear = _year" type="button" class="btn btn-@(SelectedYear == _year ? "" : "-outline")primary">
+                    @_year
+                </button>
             }
         </div>
     </div>
