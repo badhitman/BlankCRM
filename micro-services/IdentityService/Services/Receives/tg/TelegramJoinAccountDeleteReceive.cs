@@ -21,7 +21,6 @@ public class TelegramJoinAccountDeleteReceive(IIdentityTools identityRepo, ILogg
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramAccountRemoveJoinRequestTelegramModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         _logger.LogInformation($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings)}");
         string msg;
         if (req.TelegramId == 0)
@@ -30,11 +29,9 @@ public class TelegramJoinAccountDeleteReceive(IIdentityTools identityRepo, ILogg
             _logger.LogError(msg);
             return ResponseBaseModel.CreateError(msg);
         }
-
-        return await identityRepo.TelegramAccountRemoveTelegramJoinAsync(req, token);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        ResponseBaseModel res = await identityRepo.TelegramAccountRemoveTelegramJoinAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }
-/*
-        
-await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
- */

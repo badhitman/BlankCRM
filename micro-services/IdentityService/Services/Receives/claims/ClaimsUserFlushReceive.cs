@@ -10,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Установить пользователю Claim`s[TelegramId, FirstName, LastName, PhoneNum]
 /// </summary>
-public class ClaimsUserFlushReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
+public class ClaimsUserFlushReceive(IIdentityTools idRepo)
     : IResponseReceive<string?, TResponseModel<bool>?>
 {
     /// <inheritdoc/>
@@ -23,12 +23,7 @@ public class ClaimsUserFlushReceive(IIdentityTools idRepo, IFilesIndexing indexi
     {
         if (string.IsNullOrWhiteSpace(req))
             throw new ArgumentNullException(nameof(req));
- TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
 
         return await idRepo.ClaimsUserFlushAsync(req, token);
     }
 }
-/*
-        
-await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
- */

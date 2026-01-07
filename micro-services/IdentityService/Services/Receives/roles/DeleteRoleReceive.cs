@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -11,7 +10,7 @@ namespace Transmission.Receives.Identity;
 /// <summary>
 /// Удалить роль (если у роли нет пользователей).
 /// </summary>
-public class DeleteRoleReceive(IIdentityTools idRepo, ILogger<DeleteRoleReceive> loggerRepo, IFilesIndexing indexingRepo)
+public class DeleteRoleReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<string?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -22,15 +21,11 @@ public class DeleteRoleReceive(IIdentityTools idRepo, ILogger<DeleteRoleReceive>
     /// </summary>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(string? req, CancellationToken token = default)
     {
-        if(string.IsNullOrWhiteSpace(req))
+        if (string.IsNullOrWhiteSpace(req))
             throw new ArgumentNullException(nameof(req));
- TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
-        
-        loggerRepo.LogWarning(JsonConvert.SerializeObject(req, GlobalStaticConstants.JsonSerializerSettings));
-        return await idRepo.DeleteRoleAsync(req, token);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        ResponseBaseModel res = await idRepo.DeleteRoleAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        return res;
     }
 }
-/*
-        
-await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
- */
