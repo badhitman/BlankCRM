@@ -33,28 +33,28 @@ else
                     <tr>
                         <th scope="row">Оплачено "На сайте"</th>
                         <td>
-                            [x @ReportData.PaidOnSitePaymentsCount шт.] @ReportData.PaidOnSitePaymentsSumAmount.ToString("C")
+                            [<code>x @ReportData.PaidOnSitePaymentsCount шт.</code>] @ReportData.PaidOnSitePaymentsSumAmount.ToString("C")
                             <span class="ms-2">(@(Math.Round((ReportData.PaidOnSitePaymentsSumAmount / 120), 2)))</span>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Другое</th>
                         <td>
-                            [x @(ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт.] @((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount).ToString("C"))
+                            [<code>x @(ReportData.PaidNoSitePaymentsCount + ReportData.ConversionsCount) шт.</code>] @((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount).ToString("C"))
                             <span class="ms-2">(@(Math.Round(((ReportData.PaidNoSitePaymentsSumAmount + ReportData.ConversionsSumAmount) / 120), 2)))</span>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Платежи</th>
                         <td>
-                            [x @ReportData.PaidNoSitePaymentsCount шт.] @ReportData.PaidNoSitePaymentsSumAmount.ToString("C")
+                            [<code>x @ReportData.PaidNoSitePaymentsCount шт.</code>] @ReportData.PaidNoSitePaymentsSumAmount.ToString("C")
                             <span class="ms-2">(@(Math.Round((ReportData.PaidNoSitePaymentsSumAmount / 120), 2)))</span>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Перевод/конвертация (поступило)</th>
                         <td>
-                            [x @ReportData.ConversionsCount шт.] @ReportData.ConversionsSumAmount.ToString("C")
+                            [<code>x @ReportData.ConversionsCount шт.</code>] @ReportData.ConversionsSumAmount.ToString("C")
                             <span class="ms-2">(@(Math.Round((ReportData.ConversionsSumAmount / 120), 2)))</span>
                         </td>
                     </tr>
