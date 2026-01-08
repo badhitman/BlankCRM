@@ -90,7 +90,7 @@
                                placeholder="Phone"
                                aria-label="Phone" />
                         <button @onclick="() => SetPhone(editClientCopy.PhoneNumber)"
-                                class="btn btn-outline-secondary"
+                                class="btn btn-outline-@(CannotSaveUserPhone ? "secondary" : "success")"
                                 type="button"
                                 disabled="@CannotSaveUserPhone">
                             Save phone
