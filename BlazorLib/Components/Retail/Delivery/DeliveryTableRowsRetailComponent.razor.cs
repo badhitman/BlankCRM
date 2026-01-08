@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// В© https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
 using BlazorLib.Components.Commerce;
@@ -24,8 +24,8 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
 
 
     /// <summary>
-    /// Если true - тогда можно добавлять офферы, которых нет в остатках.
-    /// Если false - тогда для добавления доступны только офферы на остатках
+    /// Р•СЃР»Рё true - С‚РѕРіРґР° РјРѕР¶РЅРѕ РґРѕР±Р°РІР»СЏС‚СЊ РѕС„С„РµСЂС‹, РєРѕС‚РѕСЂС‹С… РЅРµС‚ РІ РѕСЃС‚Р°С‚РєР°С….
+    /// Р•СЃР»Рё false - С‚РѕРіРґР° РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РґРѕСЃС‚СѓРїРЅС‹ С‚РѕР»СЊРєРѕ РѕС„С„РµСЂС‹ РЅР° РѕСЃС‚Р°С‚РєР°С…
     /// </summary>
     [Parameter]
     public bool ForceAdding { get; set; }
@@ -52,7 +52,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     {
         if (Document.Rows is null || Document.Rows.Count == 0)
         {
-            SnackBarRepo.Warn("Таблица номенклатуры пуста");
+            SnackBarRepo.Warn("РўР°Р±Р»РёС†Р° РЅРѕРјРµРЅРєР»Р°С‚СѓСЂС‹ РїСѓСЃС‚Р°");
             return;
         }
         string res = "";
@@ -60,7 +60,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
         res = res.Trim();
         res = res[..^1];
         await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", res);
-        SnackBarRepo.Info($"Номенклатура [{res}] скопирована в буфер обмена");
+        SnackBarRepo.Info($"РќРѕРјРµРЅРєР»Р°С‚СѓСЂР° [{res}] СЃРєРѕРїРёСЂРѕРІР°РЅР° РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°");
     }
 
     async Task AddOfferToDeliveryDocument(KeyValuePair<OfferModelDB, (decimal Quantity, decimal Amount)> offerForAddElement)

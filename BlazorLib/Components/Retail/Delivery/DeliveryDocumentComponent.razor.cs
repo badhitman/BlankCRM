@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// Â© https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
 using static SharedLib.GlobalStaticConstantsRoutes;

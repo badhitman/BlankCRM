@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// В© https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
@@ -29,13 +29,13 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     public string? ClientId { get; set; }
 
     /// <summary>
-    /// Вывод документов доставки только для указанного заказа
+    /// Р’С‹РІРѕРґ РґРѕРєСѓРјРµРЅС‚РѕРІ РґРѕСЃС‚Р°РІРєРё С‚РѕР»СЊРєРѕ РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ Р·Р°РєР°Р·Р°
     /// </summary>
     [Parameter]
     public int? FilterOrderId { get; set; }
 
     /// <summary>
-    /// Исключить из вывода документы доставки по номеру заказа
+    /// РСЃРєР»СЋС‡РёС‚СЊ РёР· РІС‹РІРѕРґР° РґРѕРєСѓРјРµРЅС‚С‹ РґРѕСЃС‚Р°РІРєРё РїРѕ РЅРѕРјРµСЂСѓ Р·Р°РєР°Р·Р°
     /// </summary>
     [Parameter]
     public DocumentRetailModelDB? ExcludeOrder { get; set; }
@@ -124,7 +124,7 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
 
         if (!FilterOrderId.HasValue || FilterOrderId <= 0)
         {
-            SnackBarRepo.Error("Не определён контекст заказа (розница)");
+            SnackBarRepo.Error("РќРµ РѕРїСЂРµРґРµР»С‘РЅ РєРѕРЅС‚РµРєСЃС‚ Р·Р°РєР°Р·Р° (СЂРѕР·РЅРёС†Р°)");
             StateHasChanged();
             return;
         }
