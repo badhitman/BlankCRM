@@ -139,6 +139,12 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         await SetBusyAsync(false);
     }
 
+    static MarkupString NoteGet(string? _html)
+    {
+        _html ??= "";
+        return (MarkupString)_html;
+    }
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {

@@ -147,6 +147,12 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
         await StorageRepo.SaveParameterAsync<StatusesDocumentsEnum?[]?>([.. _storeStatuses], GlobalStaticCloudStorageMetadata.RetailOrdersJournalByStatusesFilters(CurrentUserSession.UserId), true, false);
     }
 
+    static MarkupString NoteGet(string? _html)
+    {
+        _html ??= "";
+        return (MarkupString)_html;
+    }
+
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {

@@ -158,7 +158,15 @@
                 <OrderDeliveriesAboutComponent DeliveriesDocuments="@([..DeliveriesLinksCache.Where(x => context.Deliveries.Any(y => y.Id == x.Id))])" />
             }
         </MudTd>
-        <MudTd DataLabel="Информация">@context.Name @context.Description</MudTd>
+        <MudTd DataLabel="Информация">
+            @context.Name
+            @if (!string.IsNullOrWhiteSpace(context.Description))
+            {
+                <p>
+                    @NoteGet(context.Description)
+                </p>
+            }
+        </MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>Соответствующих записей не найдено</MudText>

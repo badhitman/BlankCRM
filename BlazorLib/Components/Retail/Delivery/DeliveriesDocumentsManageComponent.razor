@@ -119,6 +119,10 @@
             {
                 <span class="badge text-bg-info ms-2">@(context.DeliveryStatus.DescriptionInfo())</span>
             }
+            @if (context.DeliveryPaymentUponReceipt)
+            {
+                <sup class="ms-2">[оплата при получении]</sup>
+            }
         </MudTd>
         <MudTd DataLabel="Дата">
             @if (RowClickEventHandler is null)
@@ -191,11 +195,13 @@
         <MudTd DataLabel="Стоимость доставки">@context.ShippingCost</MudTd>
         <MudTd DataLabel="Адрес">@context.KladrTitle @context.AddressUserComment</MudTd>
         <MudTd DataLabel="Трэк/Код">@context.DeliveryCode</MudTd>
-        <MudTd DataLabel="Name">
+        <MudTd DataLabel="Примечание">
             <span>@context.Name</span>
-            @if (context.DeliveryPaymentUponReceipt)
+            @if (!string.IsNullOrWhiteSpace(context.Description))
             {
-                <sup class="ms-2">[оплата при получении]</sup>
+                <p>
+                    @NoteGet(context.Description)
+                </p>
             }
         </MudTd>
     </RowTemplate>
