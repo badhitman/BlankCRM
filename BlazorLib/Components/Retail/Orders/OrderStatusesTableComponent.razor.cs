@@ -31,6 +31,10 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseModel
     MudTable<OrderStatusRetailDocumentModelDB>? tableRef;
     OrderStatusRetailDocumentModelDB? elementBeforeEdit;
 
+    bool WithoutStatus => newStatus is null;
+
+    bool CannotAdding => newStatus is null || createdDate is null || IsBusyProgress;
+
     int? initDeleteRowStatusId;
     async Task DeleteRow(int rowStatusId)
     {

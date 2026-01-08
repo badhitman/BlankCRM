@@ -1,9 +1,11 @@
 ﻿@using MudBlazor
+
 @inherits BlazorBusyComponentBaseModel
+
 <div class="input-group mb-3">
     <input disabled="@IsBusyProgress" type="date" class="form-control" id="inputDate" @bind="createdDate">
     <select disabled="@IsBusyProgress" class="form-select" aria-label="Default select example" @bind=newStatus>
-        <option selected="@(newStatus is null)" value="@((StatusesDocumentsEnum?)null)"></option>
+        <option selected="@WithoutStatus" value="@((StatusesDocumentsEnum?)null)"></option>
         @foreach (StatusesDocumentsEnum _st in Enum.GetValues<StatusesDocumentsEnum>())
         {
             <option value="@_st">@_st.DescriptionInfo()</option>
@@ -13,7 +15,7 @@
     <button @onclick="AddNewStatus"
             type="button"
             class="btn btn-primary"
-            disabled="@(newStatus is null || createdDate is null || IsBusyProgress)">
+            disabled="@CannotAdding">
         Новый статус
     </button>
 </div>
@@ -93,4 +95,3 @@
         <MudTablePager />
     </PagerContent>
 </MudTable>
-
