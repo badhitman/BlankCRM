@@ -9,7 +9,7 @@ using SharedLib;
 namespace Transmission.Receives.bank;
 
 /// <summary>
-/// ConnectionsBanksSelectReceive
+/// IncomingTBankMerchantPayment
 /// </summary>
 public class IncomingTBankMerchantPaymentReceive(IMerchantService merchantRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<JObject?, ResponseBaseModel?>

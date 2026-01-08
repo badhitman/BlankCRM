@@ -8,7 +8,7 @@ using SharedLib;
 namespace Transmission.Receives.bank;
 
 /// <summary>
-/// BankCustomerCreateOrUpdateReceive
+/// CustomerBankCreateOrUpdate
 /// </summary>
 public class CustomerBankCreateOrUpdateReceive(IBankService bankRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<CustomerBankIdModelDB?, TResponseModel<int>?>

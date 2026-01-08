@@ -949,7 +949,7 @@ public static partial class GlobalStaticConstantsTransmission
 
         #region Bank`s
         /// <inheritdoc/>
-        public readonly static string BankConnectionCreateOrUpdateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+        public readonly static string BankConnectionCreateOrUpdateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.BANK_CONTROLLER_NAME, Routes.CONNECTION_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 
         /// <inheritdoc/>
         public readonly static string AccountTBankCreateOrUpdateReceive = Path.Combine(TransmissionQueueNamePrefix, $"T-{Routes.BANK_CONTROLLER_NAME}", Routes.ACCOUNT_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);

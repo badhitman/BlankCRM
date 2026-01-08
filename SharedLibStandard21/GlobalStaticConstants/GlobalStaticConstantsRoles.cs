@@ -29,6 +29,11 @@ namespace SharedLib
             /// </summary>
             public const string System = "system";
 
+            /// <summary>
+            /// GoodsManage
+            /// </summary>
+            public const string GoodsManage = "GoodsManage";
+
             #region retail
             /// <summary>
             /// RetailManage

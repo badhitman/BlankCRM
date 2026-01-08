@@ -6,7 +6,7 @@
 @using static SharedLib.GlobalStaticConstantsRoutes
 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
-@attribute [Authorize]
+@attribute [Authorize(Roles = $"{GlobalStaticConstantsRoles.Roles.Admin},{GlobalStaticConstantsRoles.Roles.Debug},{GlobalStaticConstantsRoles.Roles.GoodsManage}")]
 <PageTitle>Товары</PageTitle>
 
 <MudTabs Elevation="2" Rounded ApplyEffectsToContainer PanelClass="pa-2">

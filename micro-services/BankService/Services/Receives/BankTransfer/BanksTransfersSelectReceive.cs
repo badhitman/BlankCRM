@@ -8,7 +8,7 @@ using SharedLib;
 namespace Transmission.Receives.bank;
 
 /// <summary>
-/// BanksTransfersSelectReceive
+/// BanksTransfersSelect
 /// </summary>
 public class BanksTransfersSelectReceive(IBankService bankRepo)
     : IResponseReceive<TPaginationRequestStandardModel<SelectTransfersBanksRequestModel>?, TPaginationResponseStandardModel<BankTransferModelDB>?>
