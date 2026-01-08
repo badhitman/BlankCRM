@@ -29,7 +29,10 @@
           @ref=tableRef>
     <ToolBarContent>
         <MudText Typo="Typo.h6">
-            Статусы заказа (розница) @Document.StatusDocument?.DescriptionInfo()
+            Статусы заказа (розница)
+            <strong class="ms-2">
+                @(Document.StatusDocument is null ? "не обработан" : Document.StatusDocument.DescriptionInfo())
+            </strong>
         </MudText>
         <MudSpacer />
     </ToolBarContent>
