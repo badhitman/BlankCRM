@@ -1,9 +1,9 @@
-﻿@using BlazorLib.Components.Kladr.control.input
-@using BlazorLib.Components.Retail.Orders
+﻿@using static SharedLib.GlobalStaticConstantsRoutes
+@using BlazorLib.Components.Kladr.control.input
 @using BlazorLib.Components.Retail.OrdersLinks
+@using BlazorLib.Components.Retail.Orders
 @using BlazorLib.Components.Telegram
 @using MudBlazor
-@using static SharedLib.GlobalStaticConstantsRoutes
 
 @inherits BlazorBusyComponentBaseAuthModel
 
@@ -24,16 +24,22 @@
                 </div>
             }
             <MudGrid>
-                <MudItem xs="3">
+                <MudItem xs="2">
                     <div class="mb-3">
                         <label for="exampleInputWeightShipping" class="form-label">Вес отправления (кг)</label>
                         <input type="number" class="form-control" id="exampleInputWeightShipping" @bind-value="editDoc.WeightShipping" @bind-value:event="oninput">
                     </div>
                 </MudItem>
-                <MudItem xs="3">
+                <MudItem xs="1">
                     <div class="mb-3">
                         <label for="exampleInputShippingCost" class="form-label">Стоимость доставки</label>
                         <input type="number" class="form-control" id="exampleInputShippingCost" @bind-value="editDoc.ShippingCost" @bind-value:event="oninput">
+                    </div>
+                </MudItem>
+                <MudItem xs="3">
+                    <div class="mb-3">
+                        <label for="exampleInputPackageSize" class="form-label">Габариты</label>
+                        <input type="text" class="form-control" id="exampleInputPackageSize" @bind-value="editDoc.PackageSize" @bind-value:event="oninput">
                     </div>
                 </MudItem>
                 <MudItem xs="3">
@@ -46,6 +52,12 @@
                     <div class="mb-3">
                         <label for="exampleInputName" class="form-label">Примечание</label>
                         <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
+                    </div>
+                </MudItem>
+                <MudItem xs="12" md=6>
+                    <div class="mb-3">
+                        <label for="exampleInputNotes" class="form-label">Описание</label>
+                        <input type="text" class="form-control" id="exampleInputNotes" @bind-value="editDoc.Notes" @bind-value:event="oninput">
                     </div>
                 </MudItem>
                 <MudItem xs="12" md=6 Class="mb-3">

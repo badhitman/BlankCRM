@@ -2,8 +2,9 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.AspNetCore.Components;
 using BlazorLib.Components.Commerce;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
 
@@ -16,6 +17,10 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
+
+    /// <inheritdoc/>
+    [Inject]
+    protected IJSRuntime JsRuntimeRepo { get; set; } = default!;
 
 
     /// <summary>
@@ -42,6 +47,21 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
 
     readonly Dictionary<OfferModelDB, (decimal Quantity, decimal Amount)> offersOfOrders = [];
 
+
+    async Task CopyOffers()
+    {
+        if (Document.Rows is null || Document.Rows.Count == 0)
+        {
+            SnackBarRepo.Warn("Таблица номенклатуры пуста");
+            return;
+        }
+        string res = "";
+        Document.Rows.ForEach(r => { res += $"{r.Offer?.Name} {r.Quantity}, "; });
+        res = res.Trim();
+        res = res[..^1];
+        await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", res);
+        SnackBarRepo.Info($"Номенклатура [{res}] скопирована в буфер обмена");
+    }
 
     async Task AddOfferToDeliveryDocument(KeyValuePair<OfferModelDB, (decimal Quantity, decimal Amount)> offerForAddElement)
     {

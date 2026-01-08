@@ -62,6 +62,8 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
 
             return
                 currentDoc.Id > 0 &&
+                currentDoc.Notes == editDoc.Notes &&
+                currentDoc.PackageSize == editDoc.PackageSize &&
                 currentDoc.DeliveryType == editDoc.DeliveryType &&
                 currentDoc.RecipientIdentityUserId == editDoc.RecipientIdentityUserId &&
                 currentDoc.ShippingCost == editDoc.ShippingCost &&

@@ -51,6 +51,16 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
     public decimal WeightShipping { get; set; }
 
     /// <summary>
+    /// Размер упаковки
+    /// </summary>
+    public string? PackageSize { get; set; }
+
+    /// <summary>
+    /// Примечание
+    /// </summary>
+    public string? Notes { get; set; }
+
+    /// <summary>
     /// Склад списания
     /// </summary>
     public int WarehouseId { get; set; }
@@ -120,6 +130,8 @@ public class DeliveryDocumentRetailModelDB : EntryUpdatedModel
             DeliveryType = other.DeliveryType,
             Description = other.Description,
             Id = other.Id,
+            Notes = other.Notes,
+            PackageSize = other.PackageSize,
             Version = other.Version,
             KladrCode = other.KladrCode,
             KladrTitle = other.KladrTitle,
