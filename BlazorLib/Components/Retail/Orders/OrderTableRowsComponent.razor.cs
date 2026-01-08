@@ -197,7 +197,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
                 OfferId = off.Id,
                 Quantity = off.Quantity,
                 Amount = off.Quantity * off.Price,
-                WeightOffer = off.Weight * off.Quantity,
+                WeightOffer = off.Weight,
             };
             if (Document.Id == 0)
                 Document.Rows.Add(newOrderElement);
