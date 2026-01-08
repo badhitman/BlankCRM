@@ -30,4 +30,10 @@ public class OrderStatusRetailDocumentModelDB : EntryUpdatedLiteModel
     /// OrderDocument
     /// </summary>
     public int OrderDocumentId { get; set; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"#{Id} '{DateOperation:R}'";
+    }
 }

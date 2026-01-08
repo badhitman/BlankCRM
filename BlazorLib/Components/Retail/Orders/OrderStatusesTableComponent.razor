@@ -44,7 +44,7 @@
         <MudTh>Примечание</MudTh>
         <MudTh></MudTh>
     </HeaderContent>
-    <RowTemplate>
+    <RowTemplate title="@context.ToString()">
         <MudTd DataLabel="Дата">@context.DateOperation.ToString("d", GlobalStaticConstants.RU)</MudTd>
         <MudTd DataLabel="Статус">@context.StatusDocument.DescriptionInfo()</MudTd>
         <MudTd DataLabel="Примечание">@context.Name</MudTd>
