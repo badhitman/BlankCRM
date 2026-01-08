@@ -56,9 +56,9 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             return;
         }
         string res = "";
-        Document.Rows.ForEach(r => { res += $"{r.Offer?.Name} {r.Quantity}, "; });
+        Document.Rows.ForEach(r => { res += $"{r.Offer?.Name} {r.Quantity}; "; });
         res = res.Trim();
-        res = res[..^1];
+        //res = res[..^1];
         await JsRuntimeRepo.InvokeVoidAsync("clipboardCopy.copyText", res);
         SnackBarRepo.Info($"Номенклатура [{res}] скопирована в буфер обмена");
     }
