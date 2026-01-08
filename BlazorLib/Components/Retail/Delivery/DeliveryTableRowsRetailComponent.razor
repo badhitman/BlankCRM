@@ -18,7 +18,7 @@
           EditTrigger="@EditTrigger">
     <ToolBarContent>
         <MudText Typo="Typo.h6">
-            Номенклатура отгрузки (розница) <sup style="cursor-pointer" class="text-success" title="копировать названия + количество" @onclick="CopyOffers">copy</sup>
+            Номенклатура отгрузки (розница) <sup class="text-success cursor-pointer" title="копировать названия + количество" @onclick="CopyOffers">copy</sup>
         </MudText>
         <MudSpacer />
         @if (!ReadOnly && Document is not null)
