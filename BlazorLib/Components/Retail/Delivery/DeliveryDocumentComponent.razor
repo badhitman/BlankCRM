@@ -26,13 +26,13 @@
             <MudGrid>
                 <MudItem xs="2">
                     <div class="mb-3">
-                        <label for="exampleInputWeightShipping" class="form-label">Вес отправления (кг)</label>
+                        <label for="exampleInputWeightShipping" class="form-label">Вес (кг)</label>
                         <input type="number" class="form-control" id="exampleInputWeightShipping" @bind-value="editDoc.WeightShipping" @bind-value:event="oninput">
                     </div>
                 </MudItem>
                 <MudItem xs="1">
                     <div class="mb-3">
-                        <label for="exampleInputShippingCost" class="form-label">Стоимость доставки</label>
+                        <label for="exampleInputShippingCost" class="form-label">Стоимость</label>
                         <input type="number" class="form-control" id="exampleInputShippingCost" @bind-value="editDoc.ShippingCost" @bind-value:event="oninput">
                     </div>
                 </MudItem>
@@ -54,7 +54,7 @@
                         <input type="text" class="form-control" id="exampleInputName" @bind-value="editDoc.Name" @bind-value:event="oninput">
                     </div>
                 </MudItem>
-                <MudItem xs="12" md=6>
+                <MudItem xs="12">
                     <div class="mb-3">
                         <label for="exampleInputNotes" class="form-label">Описание</label>
                         <input type="text" class="form-control" id="exampleInputNotes" @bind-value="editDoc.Notes" @bind-value:event="oninput">
