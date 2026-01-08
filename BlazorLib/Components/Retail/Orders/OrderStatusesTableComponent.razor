@@ -28,7 +28,9 @@
           Dense Hover CanCancelEdit
           @ref=tableRef>
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Статусы заказа (розница)</MudText>
+        <MudText Typo="Typo.h6">
+            Статусы заказа (розница) @Document.StatusDocument?.DescriptionInfo()
+        </MudText>
         <MudSpacer />
     </ToolBarContent>
     <ColGroup>
