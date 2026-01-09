@@ -154,9 +154,6 @@ public partial class RetailService(IIdentityTransmission identityRepo,
             ConversionsCount = await qco.CountAsync(token),
         };
 
-        loggerRepo.LogInformation(JsonConvert.SerializeObject(req));
-        loggerRepo.LogInformation(JsonConvert.SerializeObject(res));
-
         return res;
     }
 

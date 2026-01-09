@@ -78,8 +78,9 @@ public partial class MMMWrapperComponent : BlazorBusyComponentBaseModel
         selectedWeek = null;
         Weeklies.Clear();
         DateTime dtSY = new(SelectedYear, 1, 1);
-        int numWeekOfYear;
-        numWeekOfYear = cal.GetWeekOfYear(dtSY, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday);
+        int numWeekOfYear = cal.GetWeekOfYear(dtSY, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday);
+        DayOfWeek _dow = cal.GetDayOfWeek(dtSY);
+
         while (numWeekOfYear < 1)
         {
             dtSY = dtSY.AddDays(1);
