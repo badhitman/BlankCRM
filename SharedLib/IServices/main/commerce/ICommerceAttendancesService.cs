@@ -37,6 +37,9 @@ public partial interface ICommerceService
     /// <summary>
     /// Создать пакет записей/броней
     /// </summary>
+    /// <remarks>
+    /// Бронирует свободные слоты
+    /// </remarks>
     public Task<ResponseBaseModel> RecordsAttendanceCreateAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default);
     #endregion
 

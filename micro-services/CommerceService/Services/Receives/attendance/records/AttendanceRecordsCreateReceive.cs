@@ -8,24 +8,32 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// AttendanceRecordsCreate
+/// Создать пакет записей/броней
 /// </summary>
+/// <remarks>
+/// Бронирует свободные слоты
+/// </remarks>
 public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<CreateAttendanceRequestModel>?, ResponseBaseModel?>
 {
     /// <summary>
     /// Обновление WorkScheduleCalendar
     /// </summary>
+    /// <remarks>
+    /// Бронирует свободные слоты
+    /// </remarks>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CreateAttendanceRecordsCommerceReceive;
 
     /// <summary>
-    /// Обновление WorkScheduleCalendar
+    /// Создать пакет записей/броней
     /// </summary>
+    /// <remarks>
+    /// Бронирует свободные слоты
+    /// </remarks>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel>? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(req);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        ArgumentNullException.ThrowIfNull(req?.Payload?.Offer);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Offer.Id.ToString());
         ResponseBaseModel res = await commerceRepo.RecordsAttendanceCreateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;

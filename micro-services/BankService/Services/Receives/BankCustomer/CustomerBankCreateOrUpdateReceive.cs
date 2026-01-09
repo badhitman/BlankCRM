@@ -22,7 +22,7 @@ public class CustomerBankCreateOrUpdateReceive(IBankService bankRepo, IFilesInde
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Id.ToString());
         TResponseModel<int> res = await bankRepo.CustomerBankCreateOrUpdateAsync(req, token);
-        if (string.IsNullOrWhiteSpace(trace.TraceReceiverRecordId))
+        if (req.Id < 1)
             trace.TraceReceiverRecordId = res.Response.ToString();
 
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);

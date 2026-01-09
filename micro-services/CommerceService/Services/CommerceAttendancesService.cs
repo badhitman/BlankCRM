@@ -154,8 +154,6 @@ public partial class CommerceImplementService : ICommerceService
         TResponseModel<int?> res_RubricIssueForCreateOrder = default!;
         TResponseModel<string?>? CommerceNewOrderSubjectNotification = null, CommerceNewOrderBodyNotification = null, CommerceNewOrderBodyNotificationTelegram = null;
 
-
-
         List<Task> tasks = [
                 Task.Run(async () => { CommerceNewOrderSubjectNotification = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewOrderSubjectNotification); }, token),
                 Task.Run(async () => { CommerceNewOrderBodyNotification = await StorageTransmissionRepo.ReadParameterAsync<string?>(GlobalStaticCloudStorageMetadata.CommerceNewOrderBodyNotification); }, token),
@@ -230,7 +228,7 @@ public partial class CommerceImplementService : ICommerceService
 
         recordsForAdd.ForEach(x => x.HelpDeskId = issue.Response);
 
-        await context.AddRangeAsync(recordsForAdd, token);
+        await context.AttendancesReg.AddRangeAsync(recordsForAdd, token);
         await context.SaveChangesAsync(token);
 
         PulseRequestModel reqPulse = new()
