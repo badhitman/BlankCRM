@@ -9,11 +9,6 @@ namespace SharedLib;
 /// </summary>
 public partial interface ICommerceService : ICommerceServiceBase
 {
-    /// <summary>
-    /// PaymentDocumentDelete
-    /// </summary>
-    public Task<ResponseBaseModel> PaymentDocumentDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-    
     #region price-rule
     /// <summary>
     /// PricesRulesGetForOffers

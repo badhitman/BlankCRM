@@ -45,11 +45,6 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     public Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesReadAsync(TAuthRequestStandardModel<int[]> ids, CancellationToken token = default);
 
     /// <summary>
-    /// Удалить платёжный документ
-    /// </summary>
-    public Task<ResponseBaseModel> PaymentDocumentDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-
-    /// <summary>
     /// Удалить строку заказа
     /// </summary>
     public Task<TResponseModel<bool>> RowsForOrderDeleteAsync(int[] req, CancellationToken token = default);
