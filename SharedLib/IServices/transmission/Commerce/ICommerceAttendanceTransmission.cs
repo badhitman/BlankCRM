@@ -20,11 +20,6 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     public Task<WorksFindResponseModel> WorksSchedulesFindAsync(WorkFindRequestModel req, CancellationToken token = default);
 
     /// <summary>
-    /// WorkScheduleUpdate
-    /// </summary>
-    public Task<TResponseModel<int>> WeeklyScheduleUpdateAsync(WeeklyScheduleModelDB work, CancellationToken token = default);
-
-    /// <summary>
     /// WorkSchedulesSelect select
     /// </summary>
     public Task<TPaginationResponseStandardModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default);

@@ -34,6 +34,11 @@ public interface ICommerceServiceCore
     /// OrganizationOfferContractUpdate
     /// </summary>
     public Task<TResponseModel<bool>> OrganizationOfferContractUpdateAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default);
+
+    /// <summary>
+    /// Недельное расписание обновить/создать
+    /// </summary>
+    public Task<TResponseModel<int>> WeeklyScheduleUpdateAsync(WeeklyScheduleModelDB work, CancellationToken token = default);
 }
 
 
