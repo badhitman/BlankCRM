@@ -60,7 +60,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
             SenderActionUserId = CurrentUserSession.UserId
         };
         await SetBusyAsync();
-        TResponseModel<FileAttachModel> res = await CommRepo.OrderReportGetAsync(req);
+        TResponseModel<FileAttachModel> res = await CommRepo.GetOrderReportFileAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         if (res.Success() && res.Response is not null && res.Response.Data.Length != 0)

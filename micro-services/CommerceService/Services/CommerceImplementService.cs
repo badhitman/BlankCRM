@@ -1285,7 +1285,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> StatusesOrdersChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<bool>> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         string msg;
         TResponseModel<bool> res = new();
@@ -1334,7 +1334,7 @@ public partial class CommerceImplementService(
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.Row.OfferId,
                 LockerAreaId = x.WarehouseId,
-                Marker  = nameof(StatusesOrdersChangeByHelpDeskDocumentIdAsync),
+                Marker  = nameof(StatusOrderChangeByHelpDeskDocumentIdAsync),
             })];
 
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
@@ -1346,7 +1346,7 @@ public partial class CommerceImplementService(
         catch (Exception ex)
         {
             await transaction.RollbackAsync(token);
-            msg = $"Не удалось выполнить команду блокировки БД {nameof(StatusesOrdersChangeByHelpDeskDocumentIdAsync)}: ";
+            msg = $"Не удалось выполнить команду блокировки БД {nameof(StatusOrderChangeByHelpDeskDocumentIdAsync)}: ";
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError($"{msg}{ex.Message}");
             return res;

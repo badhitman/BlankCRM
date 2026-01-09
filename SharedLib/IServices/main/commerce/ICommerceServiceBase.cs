@@ -8,6 +8,35 @@ namespace SharedLib;
 public interface ICommerceServiceBase
 {
     /// <summary>
+    /// Get order report file Excel (*.xlsx)
+    /// </summary>
+    public Task<TResponseModel<FileAttachModel>> GetOrderReportFileAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
+
+    /// <summary>
+    /// Обновить/Создать товар
+    /// </summary>
+    public Task<TResponseModel<int>> NomenclatureUpdateAsync(NomenclatureModelDB req, CancellationToken token = default);
+
+    /// <summary>
+    /// OfferUpdate
+    /// </summary>
+    public Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestStandardModel<OfferModelDB> req, CancellationToken token = default);
+    /// <summary>
+    /// NomenclaturesSelect
+    /// </summary>
+    public Task<TPaginationResponseStandardModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default);
+
+    /// <summary>
+    /// OffersSelect
+    /// </summary>
+    public Task<TResponseModel<TPaginationResponseStandardModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default);
+
+    /// <summary>
+    /// Удалить Offer
+    /// </summary>
+    public Task<ResponseBaseModel> OfferDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
+
+    /// <summary>
     /// Получить заказы (по заявкам)
     /// </summary>
     public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);

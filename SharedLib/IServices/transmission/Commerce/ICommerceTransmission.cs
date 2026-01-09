@@ -5,42 +5,25 @@
 namespace SharedLib;
 
 /// <summary>
-/// E-Commerce Remote Transmission Service
+/// ICommerceTransmission
 /// </summary>
 public partial interface ICommerceTransmission : ICommerceServiceBase
-{
-    /// <summary>
-    /// Order report get
-    /// </summary>
-    public Task<TResponseModel<FileAttachModel>> OrderReportGetAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Status order change
-    /// </summary>
+{/// <summary>
+ /// Смена статуса заказу по идентификатору HelpDesk документа
+ /// </summary>
+ /// <remarks>
+ /// В запросе нельзя указывать идентификатор заказа: только идентификатор HelpDesk документа.
+ /// Допускается ситуация, когда под одним идентификатором HelpDesk документа могут существовать несколько заказов (объединённые заказы).
+ /// </remarks>
     public Task<TResponseModel<bool>> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
-    /// Удалить Offer
+    /// Смена статуса заявки (бронь)
     /// </summary>
-    public Task<ResponseBaseModel> OfferDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
+    public Task<TResponseModel<bool>> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
-    /// OffersSelect
+    /// WorkSchedulesFind
     /// </summary>
-    public Task<TResponseModel<TPaginationResponseStandardModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default);
-
-    /// <summary>
-    /// NomenclaturesSelect
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// OrganizationUpdate
-    /// </summary>
-    public Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestStandardModel<OfferModelDB> offer, CancellationToken token = default);
-
-    /// <summary>
-    /// Обновить/Создать товар
-    /// </summary>
-    public Task<TResponseModel<int>> NomenclatureUpdateAsync(NomenclatureModelDB req, CancellationToken token = default);
+    public Task<WorksFindResponseModel> WorksSchedulesFindAsync(WorkFindRequestModel req, CancellationToken token = default);
 }
