@@ -7,20 +7,13 @@ namespace SharedLib;
 /// <summary>
 /// Orders
 /// </summary>
-public partial interface ICommerceService
+public partial interface ICommerceService : ICommerceServiceBase
 {
-    #region payment-document
-    /// <summary>
-    /// PaymentDocumentUpdate
-    /// </summary>
-    public Task<TResponseModel<int>> PaymentDocumentUpdateAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel> req, CancellationToken token = default);
-
     /// <summary>
     /// PaymentDocumentDelete
     /// </summary>
     public Task<ResponseBaseModel> PaymentDocumentDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-    #endregion
-
+    
     #region price-rule
     /// <summary>
     /// PricesRulesGetForOffers
@@ -118,11 +111,6 @@ public partial interface ICommerceService
     public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
     #endregion
 
-
-    /// <summary>
-    /// IncomingMerchantPaymentTBankAsync
-    /// </summary>
-    public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default);
 
     /// <summary>
     /// Get order report file Excel (*.xlsx)

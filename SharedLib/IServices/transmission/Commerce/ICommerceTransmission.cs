@@ -10,11 +10,6 @@ namespace SharedLib;
 public partial interface ICommerceTransmission : ICommerceServiceBase
 {
     /// <summary>
-    /// IncomingMerchantPaymentTBankAsync
-    /// </summary>
-    public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default);
-
-    /// <summary>
     /// Order report get
     /// </summary>
     public Task<TResponseModel<FileAttachModel>> OrderReportGetAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
@@ -33,11 +28,6 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     /// Обновить/создать правило ценообразования
     /// </summary>
     public Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> price_rule, CancellationToken token = default);
-
-    /// <summary>
-    /// Обновить/создать платёжный документ
-    /// </summary>
-    public Task<TResponseModel<int>> PaymentDocumentUpdateAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel> payment, CancellationToken token = default);
 
     /// <summary>
     /// PricesRulesGetForOffers

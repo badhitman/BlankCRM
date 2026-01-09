@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Бронь/Запись (услуги/аренда)
 /// </summary>
-public partial interface ICommerceService : ICommerceServiceCore
+public partial interface ICommerceService : ICommerceServiceBase
 {
     /// <summary>
     /// Смена статуса записи/брони по идентификатору HelpDesk документа

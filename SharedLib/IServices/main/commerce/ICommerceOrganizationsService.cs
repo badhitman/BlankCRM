@@ -9,8 +9,6 @@ namespace SharedLib;
 /// </summary>
 public partial interface ICommerceService : ICommerceServiceBase
 {
-    
-
     /// <summary>
     /// ContractorsOrganizationsFind
     /// </summary>

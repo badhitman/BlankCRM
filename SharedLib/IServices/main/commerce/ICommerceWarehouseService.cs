@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// Warehouse
 /// </summary>
-public partial interface ICommerceService
+public partial interface ICommerceService : ICommerceServiceBase
 {
     /// <summary>
     /// Rows for warehouse document delete

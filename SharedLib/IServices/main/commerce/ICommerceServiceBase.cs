@@ -5,8 +5,13 @@
 namespace SharedLib;
 
 /// <inheritdoc/>
-public interface ICommerceServiceCore
+public interface ICommerceServiceBase
 {
+    /// <summary>
+    /// IncomingMerchantPaymentTBankAsync
+    /// </summary>
+    public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default);
+
     /// <summary>
     /// Подбор записей (актуальных)
     /// </summary>
@@ -65,12 +70,12 @@ public interface ICommerceServiceCore
     /// Расписания для дат прочитать по их идентификаторам
     /// </summary>
     public Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarsSchedulesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
-}
 
+    /// <summary>
+    /// Обновить/создать платёжный документ
+    /// </summary>
+    public Task<TResponseModel<int>> PaymentDocumentUpdateAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel> payment, CancellationToken token = default);
 
-/// <inheritdoc/>
-public interface ICommerceServiceBase : ICommerceServiceCore
-{
     /// <summary>
     /// Price Full - file get
     /// </summary>
