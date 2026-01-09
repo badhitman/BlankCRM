@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// MainReportRequestModel
 /// </summary>
-public class MainReportRequestModel: PeriodBaseModel
+public class MainReportRequestModel : PeriodBaseModel
 {
     /// <inheritdoc/>
     public int NumWeekOfYear { get; set; }

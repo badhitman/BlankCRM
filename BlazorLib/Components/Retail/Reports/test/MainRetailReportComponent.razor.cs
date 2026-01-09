@@ -6,7 +6,6 @@ using BlazorLib.Components.Retail.Reports.mmm;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
-using Newtonsoft.Json;
 using SharedLib;
 
 namespace BlazorLib.Components.Retail.Reports.test;
@@ -431,9 +430,9 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
             req.Start = DateRangeProp.Start;
             req.End = DateRangeProp.End;
         }
-        SnackBarRepo.Info(JsonConvert.SerializeObject(req));
+        //SnackBarRepo.Info(JsonConvert.SerializeObject(req));
         ReportData = await RetailRepo.GetMainReportAsync(req);
-        SnackBarRepo.Info(JsonConvert.SerializeObject(ReportData));
+        //SnackBarRepo.Info(JsonConvert.SerializeObject(ReportData));
         await SetBusyAsync(false);
     }
 }

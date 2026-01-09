@@ -5,6 +5,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharedLib;
 using DbcLib;
+using Newtonsoft.Json;
 
 namespace CommerceService;
 
@@ -123,14 +124,14 @@ public partial class RetailService(IIdentityTransmission identityRepo,
         if (req.NumWeekOfYear > 0)
             q = q.Where(x => x.NumWeekOfYear == req.NumWeekOfYear);
 
-        if (req.Start is not null && req.Start != default)
-            q = q.Where(x => x.DateDocument >= req.Start.SetKindUtc());
+        //if (req.Start is not null && req.Start != default)
+        //    q = q.Where(x => x.DateDocument >= req.Start.SetKindUtc());
 
-        if (req.End is not null && req.End != default)
-        {
-            req.End = req.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
-            q = q.Where(x => x.DateDocument <= req.End);
-        }
+        //if (req.End is not null && req.End != default)
+        //{
+        //    req.End = req.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+        //    q = q.Where(x => x.DateDocument <= req.End);
+        //}
 
         IQueryable<PaymentOrderRetailLinkModelDB> qpo = context.PaymentsOrdersLinks
             .Where(x => x.PaymentDocument!.StatusPayment == PaymentsRetailStatusesEnum.Paid && q.Any(y => y.Id == x.OrderDocumentId));
@@ -138,7 +139,7 @@ public partial class RetailService(IIdentityTransmission identityRepo,
         IQueryable<ConversionOrderRetailLinkModelDB> qco = context.ConversionsOrdersLinksRetail
             .Where(x => !x.ConversionDocument!.IsDisabled && q.Any(y => y.Id == x.OrderDocumentId));
 
-        return new()
+        MainReportResponseModel res = new()
         {
             DoneOrdersCount = await q.CountAsync(cancellationToken: token),
             DoneOrdersSumAmount = await context.RowsOrdersRetails.Where(x => q.Any(y => y.Id == x.OrderId)).SumAsync(x => x.Amount, cancellationToken: token),
@@ -152,6 +153,11 @@ public partial class RetailService(IIdentityTransmission identityRepo,
             ConversionsSumAmount = await qco.SumAsync(x => x.AmountPayment, cancellationToken: token),
             ConversionsCount = await qco.CountAsync(token),
         };
+
+        loggerRepo.LogInformation(JsonConvert.SerializeObject(req));
+        loggerRepo.LogInformation(JsonConvert.SerializeObject(res));
+
+        return res;
     }
 
     /// <inheritdoc/>
