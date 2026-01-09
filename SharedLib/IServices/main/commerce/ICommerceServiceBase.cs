@@ -18,23 +18,9 @@ public partial interface ICommerceServiceBase
     public Task<TResponseModel<int>> NomenclatureUpdateAsync(NomenclatureModelDB req, CancellationToken token = default);
 
     /// <summary>
-    /// OfferUpdate
-    /// </summary>
-    public Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestStandardModel<OfferModelDB> req, CancellationToken token = default);
-    /// <summary>
     /// NomenclaturesSelect
     /// </summary>
     public Task<TPaginationResponseStandardModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// OffersSelect
-    /// </summary>
-    public Task<TResponseModel<TPaginationResponseStandardModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Удалить Offer
-    /// </summary>
-    public Task<ResponseBaseModel> OfferDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
 
     /// <summary>
     /// Получить заказы (по заявкам)
@@ -72,19 +58,9 @@ public partial interface ICommerceServiceBase
     public Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
 
     /// <summary>
-    /// OffersRead
-    /// </summary>
-    public Task<TResponseModel<OfferModelDB[]>> OffersReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
-
-    /// <summary>
     /// Удалить ценообразование
     /// </summary>
     public Task<ResponseBaseModel> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> id, CancellationToken token = default);
-
-    /// <summary>
-    /// PricesRulesGetForOffers
-    /// </summary>
-    public Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PricesRulesGetForOffersAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
 
     /// <summary>
     /// Обновить/создать правило ценообразования
@@ -110,11 +86,6 @@ public partial interface ICommerceServiceBase
     /// Удалить строку складского документа
     /// </summary>
     public Task<RowsForWarehouseDocumentDeleteResponseModel> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить остатки
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<OfferAvailabilityModelDB>> OffersRegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default);
 
     /// <summary>
     /// PaymentDocumentDelete
@@ -199,9 +170,4 @@ public partial interface ICommerceServiceBase
     /// Price Full - file get
     /// </summary>
     public Task<FileAttachModel> PriceFullFileGetJsonAsync(CancellationToken token = default);
-
-    /// <summary>
-    /// Загрузка справочника номенклатуры/офферов
-    /// </summary>
-    public Task<ResponseBaseModel> UploadOffersAsync(List<NomenclatureScopeModel> req, CancellationToken token = default);
 }
