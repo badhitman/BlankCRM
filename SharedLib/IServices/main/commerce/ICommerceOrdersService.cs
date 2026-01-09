@@ -47,11 +47,6 @@ public partial interface ICommerceService : ICommerceServiceBase
     /// Допускается ситуация, когда под одним идентификатором HelpDesk документа могут существовать несколько заказов (объединённые заказы).
     /// </remarks>
     public Task<TResponseModel<bool>> StatusesOrdersChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Orders by issues get
-    /// </summary>
-    public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
     #endregion
 
 

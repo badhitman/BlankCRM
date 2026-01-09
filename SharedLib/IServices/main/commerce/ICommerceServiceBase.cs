@@ -8,6 +8,11 @@ namespace SharedLib;
 public interface ICommerceServiceBase
 {
     /// <summary>
+    /// Получить заказы (по заявкам)
+    /// </summary>
+    public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
+
+    /// <summary>
     /// Подбор заказов (поиск по параметрам)
     /// </summary>
     public Task<TPaginationResponseStandardModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestStandardModel<OrdersSelectRequestModel>> req, CancellationToken token = default);
