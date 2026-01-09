@@ -8,6 +8,11 @@ namespace SharedLib;
 public interface ICommerceServiceBase
 {
     /// <summary>
+    /// Получить остатки
+    /// </summary>
+    public Task<TPaginationResponseStandardModel<OfferAvailabilityModelDB>> OffersRegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default);
+
+    /// <summary>
     /// PaymentDocumentDelete
     /// </summary>
     public Task<ResponseBaseModel> PaymentDocumentDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);

@@ -7,11 +7,6 @@ namespace SharedLib;
 public partial interface ICommerceTransmission : ICommerceServiceBase
 {
     /// <summary>
-    /// Получить остатки
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<OfferAvailabilityModelDB>> OffersRegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default);
-
-    /// <summary>
     /// Удалить строку складского документа
     /// </summary>
     public Task<RowsForWarehouseDocumentDeleteResponseModel> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default);

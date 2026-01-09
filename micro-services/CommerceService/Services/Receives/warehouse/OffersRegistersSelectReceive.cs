@@ -20,6 +20,6 @@ public class OffersRegistersSelectReceive(ICommerceService commRepo)
     public async Task<TPaginationResponseStandardModel<OfferAvailabilityModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        return await commRepo.RegistersSelectAsync(req, token);
+        return await commRepo.OffersRegistersSelectAsync(req, token);
     }
 }

@@ -28,9 +28,4 @@ public partial interface ICommerceService : ICommerceServiceBase
     /// WarehouseDocuments select
     /// </summary>
     public Task<TPaginationResponseStandardModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Registers select
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<OfferAvailabilityModelDB>> RegistersSelectAsync(TPaginationRequestStandardModel<RegistersSelectRequestBaseModel> req, CancellationToken token = default);
 }
