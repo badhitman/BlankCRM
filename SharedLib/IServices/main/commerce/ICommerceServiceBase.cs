@@ -13,16 +13,6 @@ public partial interface ICommerceServiceBase
     public Task<TResponseModel<FileAttachModel>> GetOrderReportFileAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
 
     /// <summary>
-    /// Обновить/Создать товар
-    /// </summary>
-    public Task<TResponseModel<int>> NomenclatureUpdateAsync(NomenclatureModelDB req, CancellationToken token = default);
-
-    /// <summary>
-    /// NomenclaturesSelect
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<NomenclatureModelDB>> NomenclaturesSelectAsync(TPaginationRequestStandardModel<NomenclaturesSelectRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
     /// Получить заказы (по заявкам)
     /// </summary>
     public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
@@ -51,11 +41,6 @@ public partial interface ICommerceServiceBase
     /// Удалить строку заказа
     /// </summary>
     public Task<TResponseModel<bool>> RowsForOrderDeleteAsync(int[] req, CancellationToken token = default);
-
-    /// <summary>
-    /// NomenclaturesRead
-    /// </summary>
-    public Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
 
     /// <summary>
     /// Удалить ценообразование
@@ -96,29 +81,6 @@ public partial interface ICommerceServiceBase
     /// IncomingMerchantPaymentTBankAsync
     /// </summary>
     public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Подбор записей (актуальных)
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<RecordsAttendanceModelDB>> RecordsAttendancesSelectAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Удалить запись/бронь
-    /// </summary>
-    public Task<ResponseBaseModel> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int> orderId, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить заказы (по заявкам)
-    /// </summary>
-    public Task<TResponseModel<RecordsAttendanceModelDB[]>> RecordsAttendancesByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Создать пакет записей/броней
-    /// </summary>
-    /// <remarks>
-    /// Бронирует свободные слоты
-    /// </remarks>
-    public Task<ResponseBaseModel> CreateAttendanceRecordsAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default);
 
     /// <summary>
     /// Недельное расписание обновить/создать
