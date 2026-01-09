@@ -54,6 +54,17 @@ public interface ICommerceServiceCore
     /// Расписание на дату создать/обновить
     /// </summary>
     public Task<TResponseModel<int>> CalendarScheduleUpdateOrCreateAsync(TAuthRequestStandardModel<CalendarScheduleModelDB> work, CancellationToken token = default);
+
+    /// <summary>
+    /// Подбор расписаний для дат
+    /// </summary>
+    public Task<TResponseModel<TPaginationResponseStandardModel<CalendarScheduleModelDB>>> CalendarsSchedulesSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default);
+
+
+    /// <summary>
+    /// Расписания для дат прочитать по их идентификаторам
+    /// </summary>
+    public Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarsSchedulesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
 }
 
 

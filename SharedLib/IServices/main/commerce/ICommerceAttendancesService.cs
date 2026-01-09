@@ -9,7 +9,6 @@ namespace SharedLib;
 /// </summary>
 public partial interface ICommerceService : ICommerceServiceCore
 {
-    #region records
     /// <summary>
     /// Смена статуса записи/брони по идентификатору HelpDesk документа
     /// </summary>
@@ -18,20 +17,9 @@ public partial interface ICommerceService : ICommerceServiceCore
     /// Допускается ситуация, когда под одним идентификатором HelpDesk документа могут существовать несколько заказов (объединённые заказы).
     /// </remarks>
     public Task<TResponseModel<bool>> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default);
-#endregion
 
     /// <summary>
     /// Поиск доступных услуг/броней
     /// </summary>
-    public Task<WorksFindResponseModel> WorkSchedulesFindAsync(WorkFindRequestModel req, int[]? organizationsFilter = null, CancellationToken token = default);
-
-    /// <summary>
-    /// Подбор расписаний для дат
-    /// </summary>
-    public Task<TResponseModel<TPaginationResponseStandardModel<CalendarScheduleModelDB>>> CalendarsSchedulesSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Расписания для дат прочитать по их идентификаторам
-    /// </summary>
-    public Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarSchedulesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
+    public Task<WorksFindResponseModel> WorksSchedulesFindAsync(WorkFindRequestModel req, int[]? organizationsFilter = null, CancellationToken token = default);
 }

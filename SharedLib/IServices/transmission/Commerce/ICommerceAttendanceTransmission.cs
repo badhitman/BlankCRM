@@ -18,14 +18,4 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     /// WorkSchedulesFind
     /// </summary>
     public Task<WorksFindResponseModel> WorksSchedulesFindAsync(WorkFindRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// WorkScheduleCalendarsSelect
-    /// </summary>
-    public Task<TResponseModel<TPaginationResponseStandardModel<CalendarScheduleModelDB>>> CalendarsSchedulesSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>> req, CancellationToken token = default);
-
-    /// <summary>
-    /// WorkScheduleCalendarsRead
-    /// </summary>
-    public Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarsSchedulesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
 }

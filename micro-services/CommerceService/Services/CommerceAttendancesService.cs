@@ -163,7 +163,7 @@ public partial class CommerceImplementService : ICommerceService
                 Task.Run(async () => { res_RubricIssueForCreateOrder = await StorageTransmissionRepo.ReadParameterAsync<int?>(GlobalStaticCloudStorageMetadata.RubricIssueForCreateAttendanceOrder); }, token),
                 Task.Run(async () =>
                 {
-                    WorksFindResponseModel get_balance = await WorkSchedulesFindAsync(req, [.. recordsForAdd.Select(x => x.OrganizationId).Distinct()]);
+                    WorksFindResponseModel get_balance = await WorksSchedulesFindAsync(req, [.. recordsForAdd.Select(x => x.OrganizationId).Distinct()]);
                     WorksSchedulesViews = get_balance.WorksSchedulesViews;
                 }, token)
             ];
@@ -453,7 +453,7 @@ public partial class CommerceImplementService : ICommerceService
                 StartDate = ordersDb.Min(x => x.DateExecute),
                 EndDate = ordersDb.Max(x => x.DateExecute),
             };
-            WorksFindResponseModel get_balance = await WorkSchedulesFindAsync(get_balance_req, ordersDb.Select(x => x.OrganizationId).Distinct().ToArray(), token);
+            WorksFindResponseModel get_balance = await WorksSchedulesFindAsync(get_balance_req, ordersDb.Select(x => x.OrganizationId).Distinct().ToArray(), token);
 
             foreach (IGrouping<int, WorkScheduleModel> rec in ordersDb.GroupBy(x => x.OrganizationId))
             {
@@ -585,7 +585,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<WorksFindResponseModel> WorkSchedulesFindAsync(WorkFindRequestModel req, int[]? organizationsFilter = null, CancellationToken token = default)
+    public async Task<WorksFindResponseModel> WorksSchedulesFindAsync(WorkFindRequestModel req, int[]? organizationsFilter = null, CancellationToken token = default)
     {
         List<DayOfWeek> weeks = [];
         List<DateOnly> dates = [];
@@ -852,7 +852,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarSchedulesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<CalendarScheduleModelDB>>> CalendarsSchedulesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         TResponseModel<List<CalendarScheduleModelDB>> res = new();
         if (req.Payload is null)

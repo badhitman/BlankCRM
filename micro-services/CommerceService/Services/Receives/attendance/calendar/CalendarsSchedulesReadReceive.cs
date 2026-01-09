@@ -20,6 +20,6 @@ public class CalendarsSchedulesReadReceive(ICommerceService commerceRepo)
     public async Task<TResponseModel<List<CalendarScheduleModelDB>>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int[]>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);
-        return await commerceRepo.CalendarSchedulesReadAsync(payload, token);
+        return await commerceRepo.CalendarsSchedulesReadAsync(payload, token);
     }
 }
