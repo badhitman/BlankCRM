@@ -5,7 +5,7 @@
 namespace SharedLib;
 
 /// <inheritdoc/>
-public interface ICommerceServiceBase
+public partial interface ICommerceServiceBase
 {
     /// <summary>
     /// Get order report file Excel (*.xlsx)
@@ -262,14 +262,4 @@ public interface ICommerceServiceBase
     /// Удалить офис/филиал организации
     /// </summary>
     public Task<ResponseBaseModel> OfficeOrganizationDeleteAsync(int req, CancellationToken token = default);
-
-    /// <summary>
-    /// Обновить/создать банковские реквизиты
-    /// </summary>
-    public Task<TResponseModel<int>> BankDetailsUpdateAsync(TAuthRequestStandardModel<BankDetailsModelDB> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Удалить банковские реквизиты
-    /// </summary>
-    public Task<ResponseBaseModel> BankDetailsDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
 }
