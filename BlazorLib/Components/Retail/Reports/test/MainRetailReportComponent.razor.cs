@@ -420,19 +420,13 @@ public partial class MainRetailReportComponent : BlazorBusyComponentBaseModel
         getString = await StorageTransmissionRepo.ReadParameterAsync<string>(TransferToCompanyBankAccountFootNoteStorageMetadata);
         _transferToCompanyBankAccountFootNote = getString.Response;
 
-        MainReportRequestModel req = new();
-
-        if (Owner is not null && Owner.SelectedWeek.HasValue)
-            req.NumWeekOfYear = Owner.SelectedWeek.Value.NumWeekOfYear;
-
-        if (DateRangeProp is not null)
+        MainReportRequestModel req = new()
         {
-            req.Start = DateRangeProp.Start;
-            req.End = DateRangeProp.End;
-        }
-        //SnackBarRepo.Info(JsonConvert.SerializeObject(req));
+            NumWeekOfYear = Owner.SelectedWeek.Value.NumWeekOfYear,
+            SelectedYear = Owner.SelectedYear,
+        };
+
         ReportData = await RetailRepo.GetMainReportAsync(req);
-        //SnackBarRepo.Info(JsonConvert.SerializeObject(ReportData));
         await SetBusyAsync(false);
     }
 }

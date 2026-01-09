@@ -11,4 +11,7 @@ public class MainReportRequestModel : PeriodBaseModel
 {
     /// <inheritdoc/>
     public int NumWeekOfYear { get; set; }
+
+    /// <inheritdoc/>
+    public int SelectedYear { get; set; }
 }

@@ -121,17 +121,21 @@ public partial class RetailService(IIdentityTransmission identityRepo,
             .Where(x => x.StatusDocument == StatusesDocumentsEnum.Done)
             .AsQueryable();
 
+        if (req.SelectedYear > 0)
+            q = q.Where(x => x.DateDocument.Year == req.SelectedYear);
+
         if (req.NumWeekOfYear > 0)
             q = q.Where(x => x.NumWeekOfYear == req.NumWeekOfYear);
 
-        //if (req.Start is not null && req.Start != default)
-        //    q = q.Where(x => x.DateDocument >= req.Start.SetKindUtc());
 
-        //if (req.End is not null && req.End != default)
-        //{
-        //    req.End = req.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
-        //    q = q.Where(x => x.DateDocument <= req.End);
-        //}
+        if (req.Start is not null && req.Start != default)
+            q = q.Where(x => x.DateDocument >= req.Start.SetKindUtc());
+
+        if (req.End is not null && req.End != default)
+        {
+            req.End = req.End.Value.AddHours(23).AddMinutes(59).AddSeconds(59).SetKindUtc();
+            q = q.Where(x => x.DateDocument <= req.End);
+        }
 
         IQueryable<PaymentOrderRetailLinkModelDB> qpo = context.PaymentsOrdersLinks
             .Where(x => x.PaymentDocument!.StatusPayment == PaymentsRetailStatusesEnum.Paid && q.Any(y => y.Id == x.OrderDocumentId));

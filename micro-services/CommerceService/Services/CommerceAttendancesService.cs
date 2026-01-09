@@ -300,7 +300,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RecordAttendanceDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         if (string.IsNullOrEmpty(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrEmpty(req.SenderActionUserId)");

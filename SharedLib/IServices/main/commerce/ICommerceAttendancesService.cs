@@ -18,7 +18,7 @@ public partial interface ICommerceService
     /// <summary>
     /// Удалить запись/бронь
     /// </summary>
-    public Task<ResponseBaseModel> RecordAttendanceDeleteAsync(TAuthRequestStandardModel<int> orderId, CancellationToken token = default);
+    public Task<ResponseBaseModel> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int> orderId, CancellationToken token = default);
 
     /// <summary>
     /// Смена статуса записи/брони по идентификатору HelpDesk документа
