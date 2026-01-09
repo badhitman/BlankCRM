@@ -113,7 +113,7 @@ else
                         </tr>
                         <tr>
                             <td>минус [офисные при оплате на складе]</td>
-                            <td>@(((decimal)(_bonusAmount * (decimal)0.1) * ((Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount)) * (decimal)0.1) / 120), 2))</td>
+                            <td>@(((decimal)(_bonusAmount * (decimal)0.1) * ((Math.Round((ReportData.DoneOrdersSumAmount - ReportData.PaidOnSitePaymentsSumAmount), 2) * (decimal)0.1) / 120)))</td>
                         </tr>
                         <tr>
                             <td>минус [офисные за онлайн контракты]</td>
