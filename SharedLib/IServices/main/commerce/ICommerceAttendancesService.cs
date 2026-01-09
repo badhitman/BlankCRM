@@ -26,11 +26,6 @@ public partial interface ICommerceService : ICommerceServiceCore
     public Task<WorksFindResponseModel> WorkSchedulesFindAsync(WorkFindRequestModel req, int[]? organizationsFilter = null, CancellationToken token = default);
 
     /// <summary>
-    /// Подбор недельных расписаний
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
     /// Прочитать недельные расписания (по идентификаторам)
     /// </summary>
     public Task<List<WeeklyScheduleModelDB>> WeeklySchedulesReadAsync(int[] req, CancellationToken token = default);

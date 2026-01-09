@@ -39,6 +39,11 @@ public interface ICommerceServiceCore
     /// Недельное расписание обновить/создать
     /// </summary>
     public Task<TResponseModel<int>> WeeklyScheduleUpdateAsync(WeeklyScheduleModelDB work, CancellationToken token = default);
+
+    /// <summary>
+    /// Подбор недельных расписаний
+    /// </summary>
+    public Task<TPaginationResponseStandardModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default);
 }
 
 
