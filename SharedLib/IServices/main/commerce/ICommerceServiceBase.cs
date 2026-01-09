@@ -8,6 +8,31 @@ namespace SharedLib;
 public interface ICommerceServiceBase
 {
     /// <summary>
+    /// Обновить строку заказа
+    /// </summary>
+    public Task<TResponseModel<int>> RowForOrderUpdateAsync(RowOfOrderDocumentModelDB row, CancellationToken token = default);
+
+    /// <summary>
+    /// Удалить строку заказа
+    /// </summary>
+    public Task<TResponseModel<bool>> RowsForOrderDeleteAsync(int[] req, CancellationToken token = default);
+
+    /// <summary>
+    /// NomenclaturesRead
+    /// </summary>
+    public Task<TResponseModel<List<NomenclatureModelDB>>> NomenclaturesReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
+
+    /// <summary>
+    /// OffersRead
+    /// </summary>
+    public Task<TResponseModel<OfferModelDB[]>> OffersReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
+
+    /// <summary>
+    /// Удалить ценообразование
+    /// </summary>
+    public Task<ResponseBaseModel> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> id, CancellationToken token = default);
+
+    /// <summary>
     /// PricesRulesGetForOffers
     /// </summary>
     public Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PricesRulesGetForOffersAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
