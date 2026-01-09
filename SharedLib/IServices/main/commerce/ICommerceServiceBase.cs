@@ -16,7 +16,7 @@ public interface ICommerceServiceCore
     /// Удалить запись/бронь
     /// </summary>
     public Task<ResponseBaseModel> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int> orderId, CancellationToken token = default);
-    
+
     /// <summary>
     /// Получить заказы (по заявкам)
     /// </summary>
@@ -29,7 +29,7 @@ public interface ICommerceServiceCore
     /// Бронирует свободные слоты
     /// </remarks>
     public Task<ResponseBaseModel> CreateAttendanceRecordsAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default);
-    
+
     /// <summary>
     /// OrganizationOfferContractUpdate
     /// </summary>
@@ -44,6 +44,11 @@ public interface ICommerceServiceCore
     /// Подбор недельных расписаний
     /// </summary>
     public Task<TPaginationResponseStandardModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default);
+
+    /// <summary>
+    /// Прочитать недельные расписания (по идентификаторам)
+    /// </summary>
+    public Task<List<WeeklyScheduleModelDB>> WeeklySchedulesReadAsync(int[] req, CancellationToken token = default);
 }
 
 
