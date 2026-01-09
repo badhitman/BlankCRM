@@ -8,6 +8,11 @@ namespace SharedLib;
 public interface ICommerceServiceBase
 {
     /// <summary>
+    /// Обновить/создать правило ценообразования
+    /// </summary>
+    public Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> price_rule, CancellationToken token = default);
+
+    /// <summary>
     /// Подбор складских документов (поиск по параметрам)
     /// </summary>
     public Task<TPaginationResponseStandardModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);

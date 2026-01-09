@@ -16,11 +16,6 @@ public partial interface ICommerceService : ICommerceServiceBase
     public Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PricesRulesGetForOffersAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
 
     /// <summary>
-    /// PriceRuleUpdate
-    /// </summary>
-    public Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> req, CancellationToken token = default);
-
-    /// <summary>
     /// PriceRuleDelete
     /// </summary>
     public Task<ResponseBaseModel> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
