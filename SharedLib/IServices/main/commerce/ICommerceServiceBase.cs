@@ -49,6 +49,11 @@ public interface ICommerceServiceCore
     /// Прочитать недельные расписания (по идентификаторам)
     /// </summary>
     public Task<List<WeeklyScheduleModelDB>> WeeklySchedulesReadAsync(int[] req, CancellationToken token = default);
+
+    /// <summary>
+    /// Расписание на дату создать/обновить
+    /// </summary>
+    public Task<TResponseModel<int>> CalendarScheduleUpdateOrCreateAsync(TAuthRequestStandardModel<CalendarScheduleModelDB> work, CancellationToken token = default);
 }
 
 
