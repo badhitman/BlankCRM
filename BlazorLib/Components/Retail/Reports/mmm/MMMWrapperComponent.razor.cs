@@ -86,13 +86,23 @@ public partial class MMMWrapperComponent : BlazorBusyComponentBaseModel
             dtSY = dtSY.AddDays(1);
             numWeekOfYear = cal.GetWeekOfYear(dtSY, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday);
         }
-        Weeklies.Add(new(numWeekOfYear, dtSY, EndOfDay(dtSY.AddDays(6))));
-        dtSY = dtSY.AddDays(7);
+
+        DateTime _ep = dtSY;
+        while (cal.GetWeekOfYear(_ep.AddDays(1), CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday) == numWeekOfYear)
+            _ep = _ep.AddDays(1);
+
+        Weeklies.Add(new(numWeekOfYear, dtSY, EndOfDay(_ep)));
+        dtSY = _ep.AddDays(1);
 
         while (dtSY.Year == SelectedYear)
         {
             numWeekOfYear = cal.GetWeekOfYear(dtSY, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday);
-            Weeklies.Add(new(numWeekOfYear, dtSY, EndOfDay(dtSY.AddDays(6))));
+
+            _ep = dtSY;
+            while (cal.GetWeekOfYear(_ep.AddDays(1), CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday) == numWeekOfYear)
+                _ep = _ep.AddDays(1);
+
+            Weeklies.Add(new(numWeekOfYear, dtSY, EndOfDay(_ep)));
             dtSY = dtSY.AddDays(7);
         }
         if (Weeklies.Count != 0)
@@ -127,13 +137,8 @@ public partial class MMMWrapperComponent : BlazorBusyComponentBaseModel
         while (Years.Max() < aboutPeriod!.End!.Value.Year);
         WeekliesUpdate();
         int numWeekOfYear = cal.GetWeekOfYear(_cdt, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Wednesday);
-        DayOfWeek dayOfWeek = _cdt.DayOfWeek;
-        while (dayOfWeek > DayOfWeek.Wednesday)
-        {
-            _cdt = _cdt.AddDays(-1);
-            dayOfWeek = _cdt.DayOfWeek;
-        }
-        selectedWeek = new(numWeekOfYear, _cdt, EndOfDay(_cdt.AddDays(7)));
+
+        selectedWeek = Weeklies.First(x => x.NumWeekOfYear == numWeekOfYear);
         await SetBusyAsync(false);
     }
 
