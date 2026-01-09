@@ -1071,7 +1071,7 @@ public class HelpDeskImplementService(
 
                 await Task.WhenAll([
                     Task.Run(async () => { comm_res = await commRepo.OrdersByIssuesAsync(req_comm); }, token),
-                    Task.Run(async () => { attendance_res = await commRepo.OrdersAttendancesByIssuesAsync(req_comm); }, token),
+                    Task.Run(async () => { attendance_res = await commRepo.RecordsAttendancesByIssuesGetAsync(req_comm); }, token),
                     Task.Run(async () => { wc = await webTransmissionRepo.GetWebConfigAsync(); }, token)]);
 
                 msg = $"Документ (#{issue_upd.Payload.Id}) обновлён.";
@@ -1359,7 +1359,7 @@ public class HelpDeskImplementService(
 
         await Task.WhenAll([
                 Task.Run(async () => find_orders = await commRepo.OrdersByIssuesAsync(req_docs)),
-                Task.Run(async () => find_orders_attendances = await commRepo.OrdersAttendancesByIssuesAsync(req_docs))
+                Task.Run(async () => find_orders_attendances = await commRepo.RecordsAttendancesByIssuesGetAsync(req_docs))
             ]);
 
         bool order_exist = find_orders.Success() && find_orders.Response is not null && find_orders.Response.Length != 0;

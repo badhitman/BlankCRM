@@ -130,7 +130,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
                     IssueIds = issues_attendance_ids,
                     IncludeExternalData = true
                 };
-                TResponseModel<RecordsAttendanceModelDB[]> restAttendance = await commRepo.OrdersAttendancesByIssuesAsync(req);
+                TResponseModel<RecordsAttendanceModelDB[]> restAttendance = await commRepo.RecordsAttendancesByIssuesGetAsync(req);
                 if (restAttendance.Success() && restAttendance.Response is not null && restAttendance.Response.Length != 0)
                 {
                     lock(OrdersAttendancesCache)

@@ -5,7 +5,40 @@
 namespace SharedLib;
 
 /// <inheritdoc/>
-public interface ICommerceServiceBase
+public interface ICommerceServiceCore
+{
+    /// <summary>
+    /// Подбор записей (актуальных)
+    /// </summary>
+    public Task<TPaginationResponseStandardModel<RecordsAttendanceModelDB>> RecordsAttendancesSelectAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default);
+
+    /// <summary>
+    /// Удалить запись/бронь
+    /// </summary>
+    public Task<ResponseBaseModel> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int> orderId, CancellationToken token = default);
+    
+    /// <summary>
+    /// Получить заказы (по заявкам)
+    /// </summary>
+    public Task<TResponseModel<RecordsAttendanceModelDB[]>> RecordsAttendancesByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// Создать пакет записей/броней
+    /// </summary>
+    /// <remarks>
+    /// Бронирует свободные слоты
+    /// </remarks>
+    public Task<ResponseBaseModel> CreateAttendanceRecordsAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default);
+    
+    /// <summary>
+    /// OrganizationOfferContractUpdate
+    /// </summary>
+    public Task<TResponseModel<bool>> OrganizationOfferContractUpdateAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default);
+}
+
+
+/// <inheritdoc/>
+public interface ICommerceServiceBase : ICommerceServiceCore
 {
     /// <summary>
     /// Price Full - file get

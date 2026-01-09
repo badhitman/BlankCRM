@@ -9,10 +9,7 @@ namespace SharedLib;
 /// </summary>
 public partial interface ICommerceService : ICommerceServiceBase
 {
-    /// <summary>
-    /// OrganizationOfferContractUpdate
-    /// </summary>
-    public Task<TResponseModel<bool>> OrganizationOfferContractUpdateAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default);
+    
 
     /// <summary>
     /// ContractorsOrganizationsFind

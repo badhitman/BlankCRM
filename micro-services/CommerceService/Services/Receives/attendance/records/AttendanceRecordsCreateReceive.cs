@@ -34,7 +34,7 @@ public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, IFile
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.OfferId.ToString());
-        ResponseBaseModel res = await commerceRepo.RecordsAttendanceCreateAsync(req, token);
+        ResponseBaseModel res = await commerceRepo.CreateAttendanceRecordsAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

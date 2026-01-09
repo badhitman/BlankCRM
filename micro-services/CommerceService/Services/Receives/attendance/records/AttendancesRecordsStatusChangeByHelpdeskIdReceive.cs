@@ -22,7 +22,7 @@ public class AttendancesRecordsStatusChangeByHelpDeskIdReceive(ICommerceService 
         ArgumentNullException.ThrowIfNull(req?.Payload);
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.DocumentId.ToString());
-        TResponseModel<bool> res = await commRepo.RecordsAttendancesStatusesChangeByHelpDeskIdAsync(req, token);
+        TResponseModel<bool> res = await commRepo.StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

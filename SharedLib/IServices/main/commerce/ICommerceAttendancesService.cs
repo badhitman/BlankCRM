@@ -7,19 +7,9 @@ namespace SharedLib;
 /// <summary>
 /// Бронь/Запись (услуги/аренда)
 /// </summary>
-public partial interface ICommerceService
+public partial interface ICommerceService : ICommerceServiceCore
 {
     #region records
-    /// <summary>
-    /// Подбор записей (актуальных)
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<RecordsAttendanceModelDB>> RecordsAttendancesSelectAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Удалить запись/бронь
-    /// </summary>
-    public Task<ResponseBaseModel> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int> orderId, CancellationToken token = default);
-
     /// <summary>
     /// Смена статуса записи/брони по идентификатору HelpDesk документа
     /// </summary>
@@ -27,21 +17,8 @@ public partial interface ICommerceService
     /// В запросе нельзя указывать идентификатор заказа: только идентификатор HelpDesk документа.
     /// Допускается ситуация, когда под одним идентификатором HelpDesk документа могут существовать несколько заказов (объединённые заказы).
     /// </remarks>
-    public Task<TResponseModel<bool>> RecordsAttendancesStatusesChangeByHelpDeskIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить брони/записи по HelpDesk
-    /// </summary>
-    public Task<TResponseModel<RecordsAttendanceModelDB[]>> RecordsAttendancesByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Создать пакет записей/броней
-    /// </summary>
-    /// <remarks>
-    /// Бронирует свободные слоты
-    /// </remarks>
-    public Task<ResponseBaseModel> RecordsAttendanceCreateAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default);
-    #endregion
+    public Task<TResponseModel<bool>> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default);
+#endregion
 
     /// <summary>
     /// Поиск доступных услуг/броней

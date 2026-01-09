@@ -10,34 +10,9 @@ namespace SharedLib;
 public partial interface ICommerceTransmission : ICommerceServiceBase
 {
     /// <summary>
-    /// Подбор записей (актуальных)
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<RecordsAttendanceModelDB>> RecordsAttendancesSelectAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// AttendanceRecordsDelete
-    /// </summary>
-    public Task<ResponseBaseModel> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-
-    /// <summary>
     /// Смена статуса заявки (бронь)
     /// </summary>
     public Task<TResponseModel<bool>> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить заказы (по заявкам)
-    /// </summary>
-    public Task<TResponseModel<RecordsAttendanceModelDB[]>> OrdersAttendancesByIssuesAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Create attendance records
-    /// </summary>
-    public Task<ResponseBaseModel> CreateAttendanceRecordsAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default);
-
-    /// <summary>
-    /// OrganizationOfferContractUpdate
-    /// </summary>
-    public Task<TResponseModel<bool>> OrganizationOfferContractUpdateAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default);
 
     /// <summary>
     /// WorkSchedulesFind
