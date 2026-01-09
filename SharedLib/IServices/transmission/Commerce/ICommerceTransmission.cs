@@ -20,19 +20,9 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     public Task<TResponseModel<bool>> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
-    /// OrderUpdate
-    /// </summary>
-    public Task<TResponseModel<int>> OrderUpdateAsync(OrderDocumentModelDB order, CancellationToken token = default);
-
-    /// <summary>
-    /// Подбор заказов (поиск по параметрам)
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestStandardModel<OrdersSelectRequestModel>> req, CancellationToken token = default);
-
-    /// <summary>
     /// Получить заказы (по заявкам)
     /// </summary>
-    public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
 
     /// <summary>
     /// Удалить Offer

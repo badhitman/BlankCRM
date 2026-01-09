@@ -109,7 +109,7 @@ public partial class ConsoleSegmentColumnComponent : BlazorBusyComponentBaseMode
                     IncludeExternalData = true
                 };
 
-                TResponseModel<OrderDocumentModelDB[]> rest = await commRepo.OrdersByIssuesAsync(req);
+                TResponseModel<OrderDocumentModelDB[]> rest = await commRepo.OrdersByIssuesGetAsync(req);
                 if (rest.Success() && rest.Response is not null && rest.Response.Length != 0)
                 {
                     lock(OrdersCache)

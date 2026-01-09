@@ -80,7 +80,7 @@ public partial class IssueCardPage : BlazorBusyComponentBaseAuthModel
             IssueIds = [Id],
         };
 
-        TResponseModel<OrderDocumentModelDB[]> res = await CommRepo.OrdersByIssuesAsync(req);
+        TResponseModel<OrderDocumentModelDB[]> res = await CommRepo.OrdersByIssuesGetAsync(req);
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         OrdersJournal = res.Response is null

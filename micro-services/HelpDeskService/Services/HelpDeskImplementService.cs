@@ -247,7 +247,7 @@ public class HelpDeskImplementService(
                 msg = $"<p>{_about_document}: Пользователь `{actor.UserName}` добавил комментарий.</p>";
                 string tg_message = msg.Replace("<p>", "\n").Replace("</p>", "");
 
-                tasks.Add(Task.Run(async () => { find_orders = await commRepo.OrdersByIssuesAsync(req_docs); }, token));
+                tasks.Add(Task.Run(async () => { find_orders = await commRepo.OrdersByIssuesGetAsync(req_docs); }, token));
                 tasks.Add(Task.Run(async () => { wc = await webTransmissionRepo.GetWebConfigAsync(); }, token));
                 tasks.Add(Task.Run(async () =>
                 {
@@ -1070,7 +1070,7 @@ public class HelpDeskImplementService(
                 TResponseModel<RecordsAttendanceModelDB[]> attendance_res = default!;
 
                 await Task.WhenAll([
-                    Task.Run(async () => { comm_res = await commRepo.OrdersByIssuesAsync(req_comm); }, token),
+                    Task.Run(async () => { comm_res = await commRepo.OrdersByIssuesGetAsync(req_comm); }, token),
                     Task.Run(async () => { attendance_res = await commRepo.RecordsAttendancesByIssuesGetAsync(req_comm); }, token),
                     Task.Run(async () => { wc = await webTransmissionRepo.GetWebConfigAsync(); }, token)]);
 
@@ -1358,7 +1358,7 @@ public class HelpDeskImplementService(
         TResponseModel<RecordsAttendanceModelDB[]> find_orders_attendances = default!;
 
         await Task.WhenAll([
-                Task.Run(async () => find_orders = await commRepo.OrdersByIssuesAsync(req_docs)),
+                Task.Run(async () => find_orders = await commRepo.OrdersByIssuesGetAsync(req_docs)),
                 Task.Run(async () => find_orders_attendances = await commRepo.RecordsAttendancesByIssuesGetAsync(req_docs))
             ]);
 
