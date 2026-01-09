@@ -17,5 +17,5 @@ public class CreateAttendanceRequestModel
     /// <summary>
     /// Торговое предложение
     /// </summary>
-    public required OfferModelDB Offer { get; set; }
+    public required int OfferId { get; set; }
 }

@@ -100,6 +100,9 @@ public partial class CommerceImplementService : ICommerceService
 
         UserInfoModel actor = actorRes.Response[0];
 
+        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        int nomenclatureId = await context.Offers.Where(x => x.Id == workSchedules.Payload.OfferId).Select(x => x.NomenclatureId).FirstAsync(cancellationToken: token);
+
         List<RecordsAttendanceModelDB> recordsForAdd = [.. records.Select(x => new RecordsAttendanceModelDB()
         {
             AuthorIdentityUserId = workSchedules.SenderActionUserId,
@@ -109,15 +112,14 @@ public partial class CommerceImplementService : ICommerceService
             EndPart = TimeOnly.FromTimeSpan(x.EndPart),
             CreatedAtUTC = DateTime.UtcNow,
             LastUpdatedAtUTC = DateTime.UtcNow,
-            OfferId = workSchedules.Payload.Offer.Id,
-            NomenclatureId = workSchedules.Payload.Offer.NomenclatureId,
+            OfferId = workSchedules.Payload.OfferId,
+            NomenclatureId = nomenclatureId,
             OrganizationId = x.Organization.Id,
             Version = Guid.NewGuid(),
             StatusDocument = StatusesDocumentsEnum.Created,
             Name = "Новая запись"
         })];
 
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         LockTransactionModelDB[] offersLocked = [.. recordsForAdd
             .Select(x => new LockTransactionModelDB()
             {
@@ -144,7 +146,7 @@ public partial class CommerceImplementService : ICommerceService
 
         WorkFindRequestModel req = new()
         {
-            OffersFilter = [workSchedules.Payload.Offer.Id],
+            OffersFilter = [workSchedules.Payload.OfferId],
             ContextName = Routes.ATTENDANCES_CONTROLLER_NAME,
             StartDate = records.Min(x => x.Date),
             EndDate = records.Max(x => x.Date),

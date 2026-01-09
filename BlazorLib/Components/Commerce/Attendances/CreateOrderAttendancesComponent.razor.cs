@@ -82,7 +82,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = new()
             {
-                Offer = SelectedOffer,
+                OfferId = SelectedOffer.Id,
                 Records = _selectedSlots
             }
         };
