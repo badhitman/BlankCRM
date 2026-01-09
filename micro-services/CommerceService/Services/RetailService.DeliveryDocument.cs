@@ -216,6 +216,8 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.Description, req.Description)
                 .SetProperty(p => p.WeightShipping, req.WeightShipping)
                 .SetProperty(p => p.ShippingCost, req.ShippingCost)
+                .SetProperty(p => p.PackageSize, req.PackageSize)
+                .SetProperty(p => p.Notes, req.Notes)
                 .SetProperty(p => p.RecipientIdentityUserId, req.RecipientIdentityUserId)
                 .SetProperty(p => p.KladrTitle, req.KladrTitle)
                 .SetProperty(p => p.KladrCode, req.KladrCode)
