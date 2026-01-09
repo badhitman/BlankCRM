@@ -20,11 +20,6 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     public Task<TResponseModel<bool>> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
-    /// OrdersRead
-    /// </summary>
-    public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersReadAsync(TAuthRequestStandardModel<int[]> orders_ids, CancellationToken token = default);
-
-    /// <summary>
     /// OrderUpdate
     /// </summary>
     public Task<TResponseModel<int>> OrderUpdateAsync(OrderDocumentModelDB order, CancellationToken token = default);

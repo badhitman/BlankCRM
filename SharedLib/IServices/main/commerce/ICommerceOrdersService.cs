@@ -59,11 +59,6 @@ public partial interface ICommerceService : ICommerceServiceBase
     public Task<TPaginationResponseStandardModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestStandardModel<OrdersSelectRequestModel>> req, CancellationToken token = default);
 
     /// <summary>
-    /// Orders read
-    /// </summary>
-    public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
-
-    /// <summary>
     /// Orders by issues get
     /// </summary>
     public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);

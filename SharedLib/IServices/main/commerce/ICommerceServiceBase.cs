@@ -8,6 +8,11 @@ namespace SharedLib;
 public interface ICommerceServiceBase
 {
     /// <summary>
+    /// Orders read
+    /// </summary>
+    public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
+
+    /// <summary>
     /// Обновить строку заказа
     /// </summary>
     public Task<TResponseModel<int>> RowForOrderUpdateAsync(RowOfOrderDocumentModelDB row, CancellationToken token = default);
