@@ -11,11 +11,6 @@ public partial interface ICommerceService : ICommerceServiceBase
 {
     #region price-rule
     /// <summary>
-    /// PricesRulesGetForOffers
-    /// </summary>
-    public Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PricesRulesGetForOffersAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
-
-    /// <summary>
     /// PriceRuleDelete
     /// </summary>
     public Task<ResponseBaseModel> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
