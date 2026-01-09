@@ -74,7 +74,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     {
         if (element is RowOfWarehouseDocumentModelDB _el)
         {
-            TResponseModel<int> res = await CommRepo.RowForWarehouseUpdateAsync(_el);
+            TResponseModel<int> res = await CommRepo.RowForWarehouseDocumentUpdateAsync(_el);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
         }
         await ReadDocument();
@@ -164,7 +164,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             };
 
             await SetBusyAsync();
-            res = await CommRepo.RowForWarehouseUpdateAsync(_newRow);
+            res = await CommRepo.RowForWarehouseDocumentUpdateAsync(_newRow);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             await SetBusyAsync(false);
             if (!res.Success())
@@ -178,7 +178,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         {
             CurrentDocument.Rows[exist_row].Quantity = +off.Quantity;
             await SetBusyAsync();
-            res = await CommRepo.RowForWarehouseUpdateAsync(CurrentDocument.Rows[exist_row]);
+            res = await CommRepo.RowForWarehouseDocumentUpdateAsync(CurrentDocument.Rows[exist_row]);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             await SetBusyAsync(false);
         }

@@ -8,6 +8,11 @@ namespace SharedLib;
 public interface ICommerceServiceBase
 {
     /// <summary>
+    /// Обновить строку складского документа
+    /// </summary>
+    public Task<TResponseModel<int>> RowForWarehouseDocumentUpdateAsync(RowOfWarehouseDocumentModelDB row, CancellationToken token = default);
+
+    /// <summary>
     /// Удалить строку складского документа
     /// </summary>
     public Task<RowsForWarehouseDocumentDeleteResponseModel> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default);

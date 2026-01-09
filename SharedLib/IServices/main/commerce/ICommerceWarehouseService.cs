@@ -10,11 +10,6 @@ namespace SharedLib;
 public partial interface ICommerceService : ICommerceServiceBase
 {
     /// <summary>
-    /// Row for warehouse document update
-    /// </summary>
-    public Task<TResponseModel<int>> RowForWarehouseDocumentUpdateAsync(RowOfWarehouseDocumentModelDB req, CancellationToken token = default);
-
-    /// <summary>
     /// WarehouseDocument update
     /// </summary>
     public Task<TResponseModel<int>> WarehouseDocumentUpdateOrCreateAsync(WarehouseDocumentModelDB req, CancellationToken token = default);

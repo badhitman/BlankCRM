@@ -7,11 +7,6 @@ namespace SharedLib;
 public partial interface ICommerceTransmission : ICommerceServiceBase
 {
     /// <summary>
-    /// Обновить строку складского документа
-    /// </summary>
-    public Task<TResponseModel<int>> RowForWarehouseUpdateAsync(RowOfWarehouseDocumentModelDB row, CancellationToken token = default);
-
-    /// <summary>
     /// WarehouseUpdate
     /// </summary>
     public Task<TResponseModel<int>> WarehouseDocumentUpdateOrCreateAsync(WarehouseDocumentModelDB document, CancellationToken token = default);
