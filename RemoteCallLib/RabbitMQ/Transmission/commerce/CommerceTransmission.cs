@@ -84,8 +84,8 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.RowForOrderUpdateCommerceReceive, row, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> RowsForOrderDeleteAsync(int[] req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<bool>>(GlobalStaticConstantsTransmission.TransmissionQueues.RowsDeleteFromOrderCommerceReceive, req, token: token) ?? new();
+    public async Task<TResponseModel<RowOrderDocumentRecord[]>> RowsForOrderDeleteAsync(int[] req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<RowOrderDocumentRecord[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.RowsDeleteFromOrderCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<OfficeOrganizationModelDB[]>> OfficesOrganizationsReadAsync(int[] ids, CancellationToken token = default)

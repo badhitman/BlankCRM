@@ -1145,12 +1145,12 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> RowsForOrderDeleteAsync(int[] req, CancellationToken token = default)
+    public async Task<TResponseModel<RowOrderDocumentRecord[]>> RowsForOrderDeleteAsync(int[] req, CancellationToken token = default)
     {
         string msg;
         req = [.. req.Distinct()];
-        TResponseModel<bool> res = new() { Response = req.Any(x => x > 0) };
-        if (!res.Response)
+        TResponseModel<RowOrderDocumentRecord[]> res = new();
+        if (!req.Any(x => x > 0))
         {
             res.AddError($"Пустой запрос > {nameof(RowsForOrderDeleteAsync)}");
             return res;
@@ -1169,17 +1169,17 @@ public partial class CommerceImplementService(
                                                    r.Quantity,
                                                    t.WarehouseId
                                                );
-        RowOrderDocumentRecord[] _allOffersOfDocuments = await q
+        res.Response = await q
            .ToArrayAsync(cancellationToken: token);
 
-        if (_allOffersOfDocuments.Length == 0)
+        if (res.Response.Length == 0)
         {
             res.AddError($"Данные документа не найдены");
             return res;
         }
 
         DateTime dtu = DateTime.UtcNow;
-        LockTransactionModelDB[] offersLocked = [.. _allOffersOfDocuments
+        LockTransactionModelDB[] offersLocked = [.. res.Response
             .DistinctBy(x => new { x.OfferId, x.WarehouseId })
             .Select(x => new LockTransactionModelDB()
             {
@@ -1205,16 +1205,16 @@ public partial class CommerceImplementService(
             return res;
         }
 
-        int[] _offersIds = [.. _allOffersOfDocuments.Select(x => x.OfferId).Distinct()];
+        int[] _offersIds = [.. res.Response.Select(x => x.OfferId).Distinct()];
 
         List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
            .Where(x => _offersIds.Any(y => y == x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        int[] documents_ids = [.. _allOffersOfDocuments.Select(x => x.DocumentId).Distinct()];
+        int[] documents_ids = [.. res.Response.Select(x => x.DocumentId).Distinct()];
         await context.OrdersB2B.Where(x => documents_ids.Any(y => y == x.Id)).ExecuteUpdateAsync(set => set.SetProperty(p => p.Version, Guid.NewGuid()).SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
-        foreach (RowOrderDocumentRecord rowOfOrderElementRecord in _allOffersOfDocuments.Where(x => x.DocumentStatus != StatusesDocumentsEnum.Canceled))
+        foreach (RowOrderDocumentRecord rowOfOrderElementRecord in res.Response.Where(x => x.DocumentStatus != StatusesDocumentsEnum.Canceled))
         {
             OfferAvailabilityModelDB? offerRegister = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfOrderElementRecord.OfferId && x.WarehouseId == rowOfOrderElementRecord.WarehouseId);
             loggerRepo.LogInformation($"{nameof(rowOfOrderElementRecord)}: {JsonConvert.SerializeObject(rowOfOrderElementRecord, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
@@ -1241,7 +1241,8 @@ public partial class CommerceImplementService(
             context.RemoveRange(offersLocked);
 
         await context.SaveChangesAsync(token);
-        res.Response = await context.RowsOrders.Where(x => req.Any(y => y == x.Id)).ExecuteDeleteAsync(cancellationToken: token) != 0;
+        if (await context.RowsOrders.Where(x => req.Any(y => y == x.Id)).ExecuteDeleteAsync(cancellationToken: token) != 0)
+            res.AddSuccess("Изменения успешно выполнены");
 
         await transaction.CommitAsync(token);
         res.AddSuccess("Команда удаления выполнена");
