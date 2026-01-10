@@ -6,42 +6,7 @@ namespace SharedLib;
 
 /// <inheritdoc/>
 public partial interface ICommerceServiceBase
-{
-    /// <summary>
-    /// Get order report file Excel (*.xlsx)
-    /// </summary>
-    public Task<TResponseModel<FileAttachModel>> GetOrderReportFileAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить заказы (по заявкам)
-    /// </summary>
-    public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default);
-
-    /// <summary>
-    /// Подбор заказов (поиск по параметрам)
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<OrderDocumentModelDB>> OrdersSelectAsync(TPaginationRequestStandardModel<TAuthRequestStandardModel<OrdersSelectRequestModel>> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Order update
-    /// </summary>
-    public Task<TResponseModel<int>> OrderUpdateAsync(OrderDocumentModelDB req, CancellationToken token = default);
-
-    /// <summary>
-    /// Orders read
-    /// </summary>
-    public Task<TResponseModel<OrderDocumentModelDB[]>> OrdersReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Обновить строку заказа
-    /// </summary>
-    public Task<TResponseModel<int>> RowForOrderUpdateAsync(RowOfOrderDocumentModelDB row, CancellationToken token = default);
-
-    /// <summary>
-    /// Удалить строку заказа
-    /// </summary>
-    public Task<TResponseModel<bool>> RowsForOrderDeleteAsync(int[] req, CancellationToken token = default);
-
+{   
     /// <summary>
     /// Удалить ценообразование
     /// </summary>
@@ -51,26 +16,6 @@ public partial interface ICommerceServiceBase
     /// Обновить/создать правило ценообразования
     /// </summary>
     public Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> price_rule, CancellationToken token = default);
-
-    /// <summary>
-    /// Подбор складских документов (поиск по параметрам)
-    /// </summary>
-    public Task<TPaginationResponseStandardModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// WarehouseDocument update
-    /// </summary>
-    public Task<TResponseModel<int>> WarehouseDocumentUpdateOrCreateAsync(WarehouseDocumentModelDB req, CancellationToken token = default);
-
-    /// <summary>
-    /// Обновить строку складского документа
-    /// </summary>
-    public Task<TResponseModel<int>> RowForWarehouseDocumentUpdateAsync(RowOfWarehouseDocumentModelDB row, CancellationToken token = default);
-
-    /// <summary>
-    /// Удалить строку складского документа
-    /// </summary>
-    public Task<RowsForWarehouseDocumentDeleteResponseModel> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default);
 
     /// <summary>
     /// PaymentDocumentDelete
@@ -122,11 +67,6 @@ public partial interface ICommerceServiceBase
     /// Price Full - file get
     /// </summary>
     public Task<FileAttachModel> PriceFullFileGetExcelAsync(CancellationToken token = default);
-
-    /// <summary>
-    /// WarehouseDocuments read
-    /// </summary>
-    public Task<TResponseModel<WarehouseDocumentModelDB[]>> WarehousesDocumentsReadAsync(int[] req, CancellationToken token = default);
 
     /// <summary>
     /// Price Full - file get
