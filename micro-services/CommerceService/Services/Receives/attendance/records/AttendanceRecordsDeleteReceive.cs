@@ -26,27 +26,20 @@ public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IFile
         ArgumentNullException.ThrowIfNull(req?.Payload);
 
         TResponseModel<RecordsAttendanceModelDB[]> res = await commerceRepo.AttendanceRecordsDeleteAsync(req, token);
-        List<Task> tasks = [];
+        TraceReceiverRecord trace;
         if (res.Response is null || res.Response.Length == 0 || !res.Success())
-            tasks.Add(Task.Run(async () =>
-            {
-                TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
-                await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
-            }, token));
+        {
+            trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        }
         else
         {
             foreach (IGrouping<int, RecordsAttendanceModelDB> offerChange in res.Response.GroupBy(x => x.OfferId))
             {
-                tasks.Add(Task.Run(async () =>
-                {
-                    TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, offerChange.Key.ToString());
-                    await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(offerChange), token);
-                }, token));
+                trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, offerChange.Key.ToString());
+                await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(offerChange.ToArray()), token);
             }
         }
-
-        if (tasks.Count != 0)
-            await Task.WhenAll(tasks);
 
         return res;
     }
