@@ -40,7 +40,7 @@ public partial class WorkScheduleForWeekdayComponent : BlazorBusyComponentBaseMo
     async Task SaveSchedule()
     {
         await SetBusyAsync();
-        TResponseModel<int> res = await CommerceRepo.WeeklyScheduleUpdateAsync(WorkScheduleEdit);
+        TResponseModel<int> res = await CommerceRepo.WeeklyScheduleCreateOrUpdateAsync(WorkScheduleEdit);
         if (res.Success())
         {
             WorkScheduleEdit.LastUpdatedAtUTC = DateTime.UtcNow;

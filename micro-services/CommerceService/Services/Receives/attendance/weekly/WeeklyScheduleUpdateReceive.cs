@@ -16,7 +16,7 @@ public class WeeklyScheduleUpdateReceive(ICommerceService commerceRepo, IFilesIn
     /// <summary>
     /// Обновление WorkSchedule
     /// </summary>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.WeeklyScheduleUpdateCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.WeeklyScheduleCreateUpdateCommerceReceive;
 
     /// <summary>
     /// Обновление WorkSchedule
@@ -25,7 +25,7 @@ public class WeeklyScheduleUpdateReceive(ICommerceService commerceRepo, IFilesIn
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        TResponseModel<int> res = await commerceRepo.WeeklyScheduleUpdateAsync(req, token);
+        TResponseModel<int> res = await commerceRepo.WeeklyScheduleCreateOrUpdateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

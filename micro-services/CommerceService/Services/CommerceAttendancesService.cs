@@ -658,7 +658,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> WeeklyScheduleUpdateAsync(WeeklyScheduleModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> WeeklyScheduleCreateOrUpdateAsync(WeeklyScheduleModelDB req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         ValidateReportModel ck = GlobalTools.ValidateObject(req);

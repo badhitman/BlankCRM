@@ -10,7 +10,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// WorkScheduleReadReceive
 /// </summary>
-public class WeeklySchedulesReadReceive(ICommerceService commerceRepo) : IResponseReceive<int[]?, List<WeeklyScheduleModelDB>?>
+public class WeeklySchedulesReadReceive(ICommerceService commerceRepo)
+    : IResponseReceive<int[]?, List<WeeklyScheduleModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.WeeklySchedulesReadCommerceReceive;

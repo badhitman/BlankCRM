@@ -71,7 +71,7 @@ public partial class WorkScheduleWeekdayAddingComponent : BlazorBusyComponentBas
         };
 
         await SetBusyAsync();
-        TResponseModel<int> res = await CommerceRepo.WeeklyScheduleUpdateAsync(ws);
+        TResponseModel<int> res = await CommerceRepo.WeeklyScheduleCreateOrUpdateAsync(ws);
         ws.Id = res.Response;
         if (res.Success() && ws.Id != 0 && AddingWorkScheduleHandle is not null)
         {

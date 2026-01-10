@@ -10,7 +10,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// WeeklySchedulesSelectReceive
 /// </summary>
-public class WeeklySchedulesSelectReceive(ICommerceService commerceRepo) : IResponseReceive<TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel>?, TPaginationResponseStandardModel<WeeklyScheduleModelDB>?>
+public class WeeklySchedulesSelectReceive(ICommerceService commerceRepo)
+    : IResponseReceive<TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel>?, TPaginationResponseStandardModel<WeeklyScheduleModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.WeeklySchedulesSelectCommerceReceive;
