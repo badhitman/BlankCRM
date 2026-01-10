@@ -2,13 +2,13 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
-using static SharedLib.GlobalStaticConstantsRoutes;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace CommerceService;
 
@@ -301,7 +301,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<RecordsAttendanceModelDB[]>>> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
+    public async Task<TResponseModel<RecordsAttendanceModelDB[]>> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         if (string.IsNullOrEmpty(req.SenderActionUserId))
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "string.IsNullOrEmpty(req.SenderActionUserId)" }] };
@@ -310,8 +310,8 @@ public partial class CommerceImplementService : ICommerceService
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null || req.Payload.Length == 0" }] };
 
         UserInfoModel actor = default!;
-        RecordsAttendanceModelDB[] ordersAttendancesDB = [];
-        TResponseModel<List<RecordsAttendanceModelDB[]>> res = new();
+        //RecordsAttendanceModelDB[] ordersAttendancesDB = [];
+        TResponseModel<RecordsAttendanceModelDB[]> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IIncludableQueryable<RecordsAttendanceModelDB, OfferModelDB> qr = context.AttendancesReg
@@ -320,7 +320,7 @@ public partial class CommerceImplementService : ICommerceService
             .Include(x => x.Offer!);
 
         await Task.WhenAll([
-            Task.Run(async () => { ordersAttendancesDB = await qr.ToArrayAsync(token); }, token),
+            Task.Run(async () => { res.Response = await qr.ToArrayAsync(token); }, token),
             Task.Run(async () => {
                 TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId]);
                 if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length != 1)
@@ -332,11 +332,10 @@ public partial class CommerceImplementService : ICommerceService
                     actor = actorRes.Response[0];
              }, token)]);
 
-        if (!res.Success())
+        if (!res.Success() || res.Response is null || res.Response.Length == 0)
             return res;
 
-        res.Response = [];
-        foreach (RecordsAttendanceModelDB orderAttendanceDB in ordersAttendancesDB)
+        foreach (RecordsAttendanceModelDB orderAttendanceDB in res.Response)
         {
             if (orderAttendanceDB.AuthorIdentityUserId == req.SenderActionUserId || actor.IsAdmin || actor.Roles?.Contains(GlobalStaticConstantsRoles.Roles.System) == true)
             {

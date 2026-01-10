@@ -8,10 +8,10 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// AttendanceRecordsDeleteReceive
+/// AttendanceRecordsDelete
 /// </summary>
 public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<int[]>?, TResponseModel<List<RecordsAttendanceModelDB[]>>?>
+    : IResponseReceive<TAuthRequestStandardModel<int[]>?, TResponseModel<RecordsAttendanceModelDB[]>?>
 {
     /// <summary>
     /// Обновление WorkScheduleCalendar
@@ -21,12 +21,33 @@ public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IFile
     /// <summary>
     /// Обновление WorkScheduleCalendar
     /// </summary>
-    public async Task<TResponseModel<List<RecordsAttendanceModelDB[]>>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int[]>? req, CancellationToken token = default)
+    public async Task<TResponseModel<RecordsAttendanceModelDB[]>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
-        TResponseModel<List<RecordsAttendanceModelDB[]>> res = await commerceRepo.AttendanceRecordsDeleteAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+
+        TResponseModel<RecordsAttendanceModelDB[]> res = await commerceRepo.AttendanceRecordsDeleteAsync(req, token);
+        List<Task> tasks = [];
+        if (res.Response is null || res.Response.Length == 0 || !res.Success())
+            tasks.Add(Task.Run(async () =>
+            {
+                TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+                await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+            }, token));
+        else
+        {
+            foreach (IGrouping<int, RecordsAttendanceModelDB> offerChange in res.Response.GroupBy(x => x.OfferId))
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, offerChange.Key.ToString());
+                    await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(offerChange), token);
+                }, token));
+            }
+        }
+
+        if (tasks.Count != 0)
+            await Task.WhenAll(tasks);
+
         return res;
     }
 }

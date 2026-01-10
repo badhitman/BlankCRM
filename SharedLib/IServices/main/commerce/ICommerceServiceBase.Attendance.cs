@@ -23,7 +23,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Удалить запись/бронь
     /// </summary>
-    public Task<TResponseModel<List<RecordsAttendanceModelDB[]>>> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> orderId, CancellationToken token = default);
+    public Task<TResponseModel<RecordsAttendanceModelDB[]>> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> orderId, CancellationToken token = default);
 
     /// <summary>
     /// Подбор записей (актуальных)
