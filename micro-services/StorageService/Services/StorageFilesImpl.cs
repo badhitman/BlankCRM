@@ -270,13 +270,13 @@ public class StorageFilesImpl(
             {
                 ApplicationName = file_db.ApplicationName,
                 AuthorIdentityId = file_db.AuthorIdentityId,
-                FileName = file_db.FileName,
+                FileName = "file_not_found-grid_fs",
                 PropertyName = file_db.PropertyName,
                 CreatedAt = file_db.CreatedAt,
                 OwnerPrimaryKey = file_db.OwnerPrimaryKey,
                 PointId = file_db.PointId,
                 PrefixPropertyName = file_db.PrefixPropertyName,
-                Payload = Encoding.UTF8.GetBytes($"file not found (grid fs)\n\n{ex.Message}"),
+                Payload = Encoding.UTF8.GetBytes(ex.Message),
                 ContentType = "text/plain;charset=UTF-8",
             };
         }
