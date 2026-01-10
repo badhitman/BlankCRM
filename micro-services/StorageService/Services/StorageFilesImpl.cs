@@ -10,6 +10,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using SharedLib;
+using System.Text;
 using System.Text.RegularExpressions;
 using static SharedLib.GlobalStaticConstantsRoutes;
 
@@ -243,23 +244,42 @@ public class StorageFilesImpl(
         using MemoryStream stream = new();
         IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.FilesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
         GridFSBucket gridFS = new(mongoFs);
-        await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);
 
-        res.Response = new()
+        try
         {
-            ApplicationName = file_db.ApplicationName,
-            AuthorIdentityId = file_db.AuthorIdentityId,
-            FileName = file_db.FileName,
-            PropertyName = file_db.PropertyName,
-            CreatedAt = file_db.CreatedAt,
-            OwnerPrimaryKey = file_db.OwnerPrimaryKey,
-            PointId = file_db.PointId,
-            PrefixPropertyName = file_db.PrefixPropertyName,
-            Payload = stream.ToArray(),
-            Id = file_db.Id,
-            ContentType = file_db.ContentType,
-        };
+            await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);
 
+            res.Response = new()
+            {
+                ApplicationName = file_db.ApplicationName,
+                AuthorIdentityId = file_db.AuthorIdentityId,
+                FileName = file_db.FileName,
+                PropertyName = file_db.PropertyName,
+                CreatedAt = file_db.CreatedAt,
+                OwnerPrimaryKey = file_db.OwnerPrimaryKey,
+                PointId = file_db.PointId,
+                PrefixPropertyName = file_db.PrefixPropertyName,
+                Payload = stream.ToArray(),
+                Id = file_db.Id,
+                ContentType = file_db.ContentType,
+            };
+        }
+        catch (Exception ex)
+        {
+            res.Response = new()
+            {
+                ApplicationName = file_db.ApplicationName,
+                AuthorIdentityId = file_db.AuthorIdentityId,
+                FileName = file_db.FileName,
+                PropertyName = file_db.PropertyName,
+                CreatedAt = file_db.CreatedAt,
+                OwnerPrimaryKey = file_db.OwnerPrimaryKey,
+                PointId = file_db.PointId,
+                PrefixPropertyName = file_db.PrefixPropertyName,
+                Payload = Encoding.UTF8.GetBytes($"file not found (grid fs)\n\n{ex.Message}"),
+                ContentType = "text/plain;charset=UTF-8",
+            };
+        }
         return res;
     }
 
