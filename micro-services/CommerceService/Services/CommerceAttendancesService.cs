@@ -310,7 +310,7 @@ public partial class CommerceImplementService : ICommerceService
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null || req.Payload.Length == 0" }] };
 
         UserInfoModel actor = default!;
-        //RecordsAttendanceModelDB[] ordersAttendancesDB = [];
+        
         TResponseModel<RecordsAttendanceModelDB[]> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
