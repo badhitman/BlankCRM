@@ -10,7 +10,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// NomenclaturesSelectReceive
 /// </summary>
-public class NomenclaturesSelectReceive(ICommerceService commerceRepo) : IResponseReceive<TPaginationRequestStandardModel<NomenclaturesSelectRequestModel>?, TPaginationResponseStandardModel<NomenclatureModelDB>?>
+public class NomenclaturesSelectReceive(ICommerceService commerceRepo)
+    : IResponseReceive<TPaginationRequestStandardModel<NomenclaturesSelectRequestModel>?, TPaginationResponseStandardModel<NomenclatureModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.NomenclaturesSelectCommerceReceive;

@@ -670,7 +670,7 @@ public static partial class GlobalStaticConstantsTransmission
         /// <summary>
         /// Обновление номенклатуры
         /// </summary>
-        public readonly static string NomenclatureUpdateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.NOMENCLATURE_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+        public readonly static string NomenclatureUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.NOMENCLATURE_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 
         /// <inheritdoc/>
         public readonly static string CalendarScheduleUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.WORKSCHEDULE_CONTROLLER_NAME}-{Routes.CALENDAR_CONTROLLER_NAME}", $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
@@ -694,7 +694,7 @@ public static partial class GlobalStaticConstantsTransmission
         /// <summary>
         /// WorkSchedule Update
         /// </summary>
-        public readonly static string WeeklyScheduleCreateUpdateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.WORKSCHEDULES_CONTROLLER_NAME}-{Routes.WEEKLY_CONTROLLER_NAME}", $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
+        public readonly static string WeeklyScheduleCreateOrUpdateReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.WORKSCHEDULES_CONTROLLER_NAME}-{Routes.WEEKLY_CONTROLLER_NAME}", $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 
         /// <inheritdoc/>
         public readonly static string OrderUpdateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);

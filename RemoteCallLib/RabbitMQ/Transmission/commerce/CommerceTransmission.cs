@@ -44,8 +44,8 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.OfficeOrganizationUpdateCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> NomenclatureUpdateAsync(NomenclatureModelDB req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.NomenclatureUpdateCommerceReceive, req, token: token) ?? new();
+    public async Task<TResponseModel<int>> NomenclatureUpdateOrCreateAsync(NomenclatureModelDB req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.NomenclatureUpdateOrCreateCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel> OfferDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
@@ -149,7 +149,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> WeeklyScheduleCreateOrUpdateAsync(WeeklyScheduleModelDB work, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.WeeklyScheduleCreateUpdateCommerceReceive, work, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.WeeklyScheduleCreateOrUpdateReceive, work, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<WeeklyScheduleModelDB>> WeeklySchedulesSelectAsync(TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel> req, CancellationToken token = default)

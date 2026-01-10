@@ -8,15 +8,15 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// Обновление номенклатуры
+/// Обновление/создание номенклатуры
 /// </summary>
-public class NomenclatureUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class NomenclatureUpdateOrCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<NomenclatureModelDB?, TResponseModel<int>?>
 {
     /// <summary>
     /// Обновление номенклатуры
     /// </summary>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.NomenclatureUpdateCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.NomenclatureUpdateOrCreateCommerceReceive;
 
     /// <summary>
     /// Обновление номенклатуры
@@ -25,7 +25,7 @@ public class NomenclatureUpdateReceive(ICommerceService commerceRepo, IFilesInde
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        TResponseModel<int> res = await commerceRepo.NomenclatureUpdateAsync(req, token);
+        TResponseModel<int> res = await commerceRepo.NomenclatureUpdateOrCreateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

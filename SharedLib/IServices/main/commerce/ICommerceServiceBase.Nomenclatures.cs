@@ -10,7 +10,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Обновить/Создать товар
     /// </summary>
-    public Task<TResponseModel<int>> NomenclatureUpdateAsync(NomenclatureModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> NomenclatureUpdateOrCreateAsync(NomenclatureModelDB req, CancellationToken token = default);
 
     /// <summary>
     /// NomenclaturesSelect

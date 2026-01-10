@@ -71,7 +71,7 @@ public partial class NomenclatureEditComponent : BlazorBusyComponentBaseAuthMode
 
         await SetBusyAsync();
 
-        TResponseModel<int> res = await CommerceRepo.NomenclatureUpdateAsync(editNomenclature);
+        TResponseModel<int> res = await CommerceRepo.NomenclatureUpdateOrCreateAsync(editNomenclature);
         
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success())

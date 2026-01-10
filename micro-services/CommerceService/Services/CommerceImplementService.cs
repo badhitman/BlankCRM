@@ -459,7 +459,7 @@ public partial class CommerceImplementService(
 
     #region nomenclatures
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> NomenclatureUpdateAsync(NomenclatureModelDB nom, CancellationToken token = default)
+    public async Task<TResponseModel<int>> NomenclatureUpdateOrCreateAsync(NomenclatureModelDB nom, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         if (string.IsNullOrWhiteSpace(nom.Name))
