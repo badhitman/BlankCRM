@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using DocumentFormat.OpenXml.EMMA;
 using RemoteCallLib;
 using SharedLib;
 
@@ -23,11 +22,7 @@ public class RowsForWarehouseDocumentDeleteReceive(ICommerceService commRepo, IF
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         RowsForWarehouseDocumentDeleteResponseModel res = await commRepo.RowsForWarehouseDocumentDeleteAsync(req, token);
-        if (res.Success() && res.DocumentsUpdated is not null && res.DocumentsUpdated.Count != 0)
-        {
-            foreach (KeyValuePair<int, DeliveryDocumentMetadataRecord> node in res.DocumentsUpdated)
-                await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(node.Value.Rows), token);
-        }
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

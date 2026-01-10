@@ -21,7 +21,6 @@ public class ChatsSelectTelegramReceive(ITelegramBotService tgRepo)
     public async Task<TPaginationResponseStandardModel<ChatTelegramModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<string?>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
         return await tgRepo.ChatsSelectTelegramAsync(req, token);
     }
 }

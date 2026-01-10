@@ -2,14 +2,13 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
 namespace Transmission.Receives.kladr;
 
 /// <inheritdoc/>
-public class UploadPartTempKladrReceive(ILogger<UploadPartTempKladrReceive> LoggerRepo, IKladrService kladrRepo)
+public class UploadPartTempKladrReceive(IKladrService kladrRepo)
     : IResponseReceive<UploadPartTableDataModel?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
@@ -19,8 +18,6 @@ public class UploadPartTempKladrReceive(ILogger<UploadPartTempKladrReceive> Logg
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UploadPartTableDataModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await kladrRepo.UploadPartTempKladrAsync(req, token);
     }
 }

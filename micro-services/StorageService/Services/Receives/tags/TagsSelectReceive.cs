@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -11,7 +10,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// TagsSelectReceive
 /// </summary>
-public class TagsSelectReceive(ILogger<TagsSelectReceive> loggerRepo, IParametersStorage serializeStorageRepo) 
+public class TagsSelectReceive(IParametersStorage serializeStorageRepo) 
     : IResponseReceive<TPaginationRequestStandardModel<SelectMetadataRequestModel>?, TPaginationResponseStandardModel<TagViewModel>?>
 {
     /// <inheritdoc/>
@@ -21,7 +20,6 @@ public class TagsSelectReceive(ILogger<TagsSelectReceive> loggerRepo, IParameter
     public async Task<TPaginationResponseStandardModel<TagViewModel>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await serializeStorageRepo.TagsSelectAsync(req, token);
     }
 }

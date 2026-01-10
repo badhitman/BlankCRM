@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -11,7 +10,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// GetDirectoryInfo
 /// </summary>
-public class GetDirectoryInfoReceive(ILogger<FilesSelectReceive> loggerRepo, IFilesStorage serializeStorageRepo)
+public class GetDirectoryInfoReceive(IFilesStorage serializeStorageRepo)
     : IResponseReceive<DirectoryReadRequestModel?, TResponseModel<DirectoryReadResponseModel>?>
 {
     /// <inheritdoc/>
@@ -21,8 +20,6 @@ public class GetDirectoryInfoReceive(ILogger<FilesSelectReceive> loggerRepo, IFi
     public async Task<TResponseModel<DirectoryReadResponseModel>?> ResponseHandleActionAsync(DirectoryReadRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await serializeStorageRepo.GetDirectoryInfoAsync(req, token);
     }
 }

@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -11,7 +10,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// FilesSelectReceive
 /// </summary>
-public class FilesSelectReceive(ILogger<FilesSelectReceive> loggerRepo, IFilesStorage serializeStorageRepo) 
+public class FilesSelectReceive(IFilesStorage serializeStorageRepo) 
     : IResponseReceive<TPaginationRequestStandardModel<SelectMetadataRequestModel>?, TPaginationResponseStandardModel<StorageFileModelDB>?>
 {
     /// <inheritdoc/>
@@ -21,8 +20,6 @@ public class FilesSelectReceive(ILogger<FilesSelectReceive> loggerRepo, IFilesSt
     public async Task<TPaginationResponseStandardModel<StorageFileModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectMetadataRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await serializeStorageRepo.FilesSelectAsync(req, token);
     }
 }

@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -21,7 +20,6 @@ public class ChatsReadTelegramReceive(ITelegramBotService tgRepo)
     public async Task<List<ChatTelegramModelDB>?> ResponseHandleActionAsync(long[]? chats_ids, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(chats_ids);
-
         return await tgRepo.ChatsReadTelegramAsync(chats_ids, token);
     }
 }

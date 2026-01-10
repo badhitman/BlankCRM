@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -11,7 +10,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// Save file
 /// </summary>
-public class SaveFileReceive(ILogger<SaveFileReceive> LoggerRepo, IFilesStorage serializeStorageRepo)
+public class SaveFileReceive(IFilesStorage serializeStorageRepo)
     : IResponseReceive<TAuthRequestStandardModel<StorageFileMetadataModel>?, TResponseModel<StorageFileModelDB>?>
 {
     /// <inheritdoc/>
@@ -21,8 +20,6 @@ public class SaveFileReceive(ILogger<SaveFileReceive> LoggerRepo, IFilesStorage 
     public async Task<TResponseModel<StorageFileModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<StorageFileMetadataModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await serializeStorageRepo.SaveFileAsync(req, token);
     }
 }

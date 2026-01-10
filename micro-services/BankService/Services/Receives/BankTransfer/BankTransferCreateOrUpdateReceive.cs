@@ -22,7 +22,6 @@ public class BankTransferCreateOrUpdateReceive(IBankService bankRepo, IFilesInde
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         TResponseModel<int> res = await bankRepo.BankTransferCreateOrUpdateAsync(req, token);
-
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

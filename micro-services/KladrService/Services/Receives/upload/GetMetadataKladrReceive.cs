@@ -2,14 +2,13 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
 namespace Transmission.Receives.kladr;
 
 /// <inheritdoc/>
-public class GetMetadataKladrReceive(ILogger<GetMetadataKladrReceive> loggerRepo, IKladrService kladrRepo)
+public class GetMetadataKladrReceive(IKladrService kladrRepo)
     : IResponseReceive<GetMetadataKladrRequestModel?, MetadataKladrModel?>
 {
     /// <inheritdoc/>
@@ -19,7 +18,6 @@ public class GetMetadataKladrReceive(ILogger<GetMetadataKladrReceive> loggerRepo
     public async Task<MetadataKladrModel?> ResponseHandleActionAsync(GetMetadataKladrRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        loggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         return await kladrRepo.GetMetadataKladrAsync(req, token);
     }
 }

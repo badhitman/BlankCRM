@@ -20,7 +20,6 @@ public class IncomingMerchantPaymentsSelectTBankReceive(IMerchantService merchan
     public async Task<TPaginationResponseStandardModel<IncomingMerchantPaymentTBankModelDB>?> ResponseHandleActionAsync(TPaginationRequestStandardModel<SelectIncomingMerchantPaymentsTBankRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
         return await merchantRepo.IncomingMerchantPaymentsSelectTBankAsync(req, token);
     }
 }

@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using System.Text.RegularExpressions;
-using Newtonsoft.Json;
 using RemoteCallLib;
 using SharedLib;
 
@@ -12,7 +11,7 @@ namespace Transmission.Receives.storage;
 /// <summary>
 /// Save parameter
 /// </summary>
-public class SaveParameterReceive(IParametersStorage serializeStorageRepo, ILogger<SaveParameterReceive> LoggerRepo) 
+public class SaveParameterReceive(IParametersStorage serializeStorageRepo)
     : IResponseReceive<StorageCloudParameterPayloadModel?, TResponseModel<int?>?>
 {
     /// <inheritdoc/>
@@ -24,11 +23,10 @@ public class SaveParameterReceive(IParametersStorage serializeStorageRepo, ILogg
         ArgumentNullException.ThrowIfNull(req);
 
         req.Normalize();
-        LoggerRepo.LogDebug($"call `{GetType().Name}`: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         Regex rx = new(@"\s+", RegexOptions.Compiled);
         StorageCloudParameterModelDB store_db = new()
         {
-            ApplicationName = req.ApplicationName is null? null : rx.Replace(req.ApplicationName.Trim(), " "),
+            ApplicationName = req.ApplicationName is null ? null : rx.Replace(req.ApplicationName.Trim(), " "),
             PropertyName = req.PropertyName,
             SerializedDataJson = req.SerializedDataJson,
             PrefixPropertyName = req.PrefixPropertyName is null ? null : rx.Replace(req.PrefixPropertyName.Trim(), " "),
