@@ -300,17 +300,17 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         if (string.IsNullOrEmpty(req.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrEmpty(req.SenderActionUserId)");
 
         UserInfoModel actor = default!;
-        RecordsAttendanceModelDB? orderAttendanceDB = null;
+        RecordsAttendanceModelDB[] ordersAttendancesDB = [];
         ResponseBaseModel res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         await Task.WhenAll([
-            Task.Run(async () => { orderAttendanceDB = await context.AttendancesReg.FirstOrDefaultAsync(x => x.Id == req.Payload); }, token),
+            Task.Run(async () => { ordersAttendancesDB = await context.AttendancesReg.Where(x => req.Payload.Contains(x.Id)).ToArrayAsync(token); }, token),
             Task.Run(async () => {
                 TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId]);
                 if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length != 1)
@@ -325,39 +325,42 @@ public partial class CommerceImplementService : ICommerceService
         if (!res.Success())
             return res;
 
-        if (orderAttendanceDB is null)
-            res.AddInfo("Запись отсутствует");
-        else
+        foreach (RecordsAttendanceModelDB orderAttendanceDB in ordersAttendancesDB)
         {
-            if (orderAttendanceDB.AuthorIdentityUserId == req.SenderActionUserId || actor.IsAdmin || actor.Roles?.Contains(GlobalStaticConstantsRoles.Roles.System) == true)
+            if (orderAttendanceDB is null)
+                res.AddInfo("Запись отсутствует");
+            else
             {
-                context.Remove(orderAttendanceDB);
-                await context.SaveChangesAsync(token);
-                res.AddSuccess("Запись успешно удалена");
-
-                if (orderAttendanceDB.HelpDeskId.HasValue)
+                if (orderAttendanceDB.AuthorIdentityUserId == req.SenderActionUserId || actor.IsAdmin || actor.Roles?.Contains(GlobalStaticConstantsRoles.Roles.System) == true)
                 {
-                    PulseRequestModel reqPulse = new()
+                    context.Remove(orderAttendanceDB);
+                    await context.SaveChangesAsync(token);
+                    res.AddSuccess("Запись успешно удалена");
+
+                    if (orderAttendanceDB.HelpDeskId.HasValue)
                     {
-                        Payload = new()
+                        PulseRequestModel reqPulse = new()
                         {
                             Payload = new()
                             {
-                                Description = $"Запись удалена - {orderAttendanceDB}",
-                                IssueId = orderAttendanceDB.HelpDeskId.Value,
-                                PulseType = PulseIssuesTypesEnum.OrderAttendance,
-                                Tag = Routes.DELETE_ACTION_NAME,
-                            },
-                            SenderActionUserId = req.SenderActionUserId,
-                        }
-                    };
+                                Payload = new()
+                                {
+                                    Description = $"Запись удалена - {orderAttendanceDB}",
+                                    IssueId = orderAttendanceDB.HelpDeskId.Value,
+                                    PulseType = PulseIssuesTypesEnum.OrderAttendance,
+                                    Tag = Routes.DELETE_ACTION_NAME,
+                                },
+                                SenderActionUserId = req.SenderActionUserId,
+                            }
+                        };
 
-                    await HelpDeskRepo.PulsePushAsync(reqPulse, false, token);
+                        await HelpDeskRepo.PulsePushAsync(reqPulse, false, token);
+                    }
                 }
-            }
-            else
-            {
-                res.AddError("У вас недостаточно прав");
+                else
+                {
+                    res.AddError("У вас недостаточно прав");
+                }
             }
         }
 
