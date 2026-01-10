@@ -310,7 +310,7 @@ public partial class CommerceImplementService : ICommerceService
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null || req.Payload.Length == 0" }] };
 
         UserInfoModel actor = default!;
-        
+
         TResponseModel<RecordsAttendanceModelDB[]> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -371,9 +371,9 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
-        TResponseModel<bool> res = new();
+        ResponseBaseModel res = new();
 
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId) || req.Payload is null)
         {
@@ -492,16 +492,16 @@ public partial class CommerceImplementService : ICommerceService
         await HelpDeskRepo.PulsePushAsync(reqPulse, false, token);
         context.RemoveRange(offersLocked);
         await context.SaveChangesAsync(token);
-        res.Response = await context
+        int _rc = await context
                             .AttendancesReg
                             .Where(x => x.HelpDeskId == req.Payload.DocumentId)
                             .ExecuteUpdateAsync(set => set
                             .SetProperty(p => p.StatusDocument, req.Payload.Step)
                             .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
-                            .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token) != 0;
+                            .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        res.AddSuccess("Запрос смены статуса заказа услуг выполнен успешно");
+        res.AddSuccess($"Запрос смены статуса заказа услуг {(_rc == 0 ? "[не требуется]" : "[выполнен успешно]")}");
 
         return res;
     }

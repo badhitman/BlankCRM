@@ -13,7 +13,7 @@ public partial interface ICommerceService : ICommerceServiceBase
     /// ContractorsOrganizationsFind
     /// </summary>
     public Task<OrganizationContractorModel[]> ContractorsOrganizationsFindAsync(ContractorsOrganizationsRequestModel req, CancellationToken token = default);
-    
+
     /// <summary>
     /// Смена статуса заказу по идентификатору HelpDesk документа
     /// </summary>
@@ -30,7 +30,7 @@ public partial interface ICommerceService : ICommerceServiceBase
     /// В запросе нельзя указывать идентификатор заказа: только идентификатор HelpDesk документа.
     /// Допускается ситуация, когда под одним идентификатором HelpDesk документа могут существовать несколько заказов (объединённые заказы).
     /// </remarks>
-    public Task<TResponseModel<bool>> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Поиск доступных услуг/броней
