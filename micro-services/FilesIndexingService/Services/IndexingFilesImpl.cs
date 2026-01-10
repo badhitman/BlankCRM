@@ -153,7 +153,7 @@ public class IndexingFilesImpl(
         if (await context.SheetsExcelIndexesFiles.AnyAsync(x => x.StoreFileId == file_db.Id, cancellationToken: token))
             return ResponseBaseModel.CreateInfo("the file is already indexed");
 
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase(mongoConf.Value.FilesSystemName);
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.FilesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
         using MemoryStream stream = new();
         GridFSBucket gridFS = new(mongoFs);
         await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);
@@ -245,7 +245,7 @@ public class IndexingFilesImpl(
         if (await context.TablesWordIndexesFiles.AnyAsync(x => x.StoreFileId == file_db.Id, cancellationToken: token) || await context.ParagraphsWordIndexesFiles.AnyAsync(x => x.StoreFileId == file_db.Id, cancellationToken: token))
             return ResponseBaseModel.CreateInfo("the file is already indexed");
 
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase(mongoConf.Value.FilesSystemName);
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.FilesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
         using MemoryStream stream = new();
         GridFSBucket gridFS = new(mongoFs);
         await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);

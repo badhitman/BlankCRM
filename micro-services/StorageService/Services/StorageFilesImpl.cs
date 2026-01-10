@@ -16,7 +16,7 @@ using static SharedLib.GlobalStaticConstantsRoutes;
 namespace StorageService;
 
 /// <summary>
-/// Хранилище файлов приложений IMongoDatabase mongoFs = mongoCli.GetDatabase("");
+/// Хранилище файлов приложений IMongoDatabase mongoFs
 /// </summary>
 public class StorageFilesImpl(
     IDbContextFactory<StorageContext> cloudParametersDbFactory,
@@ -241,7 +241,7 @@ public class StorageFilesImpl(
         }
 
         using MemoryStream stream = new();
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase(mongoConf.Value.FilesSystemName);
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.FilesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
         GridFSBucket gridFS = new(mongoFs);
         await gridFS.DownloadToStreamAsync(new ObjectId(file_db.PointId), stream, cancellationToken: token);
 
@@ -280,7 +280,7 @@ public class StorageFilesImpl(
         }
 
         req.Payload.FileName ??= "";
-        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase(mongoConf.Value.FilesSystemName);
+        IMongoDatabase mongoFs = new MongoClient(mongoConf.Value.ToString()).GetDatabase($"{mongoConf.Value.FilesSystemName}{GlobalStaticConstantsTransmission.GetModePrefix}");
         GridFSBucket gridFS = new(mongoFs);
         Regex rx = new(@"\s+", RegexOptions.Compiled);
         string _file_name = rx.Replace(req.Payload.FileName.Trim(), " ");
