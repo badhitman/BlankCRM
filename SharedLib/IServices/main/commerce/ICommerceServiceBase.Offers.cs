@@ -23,11 +23,6 @@ public partial interface ICommerceServiceBase
     public Task<TResponseModel<OfferModelDB[]>> OffersReadAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
 
     /// <summary>
-    /// Удалить Offer
-    /// </summary>
-    public Task<ResponseBaseModel> OfferDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-
-    /// <summary>
     /// OffersSelect
     /// </summary>
     public Task<TResponseModel<TPaginationResponseStandardModel<OfferModelDB>>> OffersSelectAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<OffersSelectRequestModel>> req, CancellationToken token = default);

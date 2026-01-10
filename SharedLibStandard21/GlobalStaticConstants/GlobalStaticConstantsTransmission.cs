@@ -746,11 +746,6 @@ public static partial class GlobalStaticConstantsTransmission
         /// <inheritdoc/>
         public readonly static string OfficeOrganizationDeleteCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ORGANIZATIONS_CONTROLLER_NAME, Routes.OFFICE_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
 
-        /// <summary>
-        /// Удалить оффер
-        /// </summary>
-        public readonly static string OfferDeleteCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.OFFER_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
-
         /// <inheritdoc/>
         public readonly static string PriceRuleDeleteCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.PRICE_CONTROLLER_NAME, Routes.OFFER_CONTROLLER_NAME, Routes.DELETE_ACTION_NAME);
         #endregion

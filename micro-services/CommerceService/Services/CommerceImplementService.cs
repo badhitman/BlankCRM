@@ -419,42 +419,6 @@ public partial class CommerceImplementService(
 
         return res;
     }
-
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> OfferDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
-    {
-        ResponseBaseModel res = new();
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        int lc = await context
-            .OrdersB2B
-            .Where(x => context.RowsOrders.Any(y => y.OrderId == x.Id && y.OfferId == req.Payload))
-            .CountAsync(cancellationToken: token);
-
-        string msg;
-        if (lc != 0)
-        {
-            msg = $"Оффер не может быть удалён т.к. используется в заказах: {lc} шт.";
-            res.AddError(msg);
-            loggerRepo.LogError(msg);
-            return res;
-        }
-
-        if (await context.Offers.Where(x => x.Id == req.Payload).ExecuteDeleteAsync(cancellationToken: token) > 0)
-        {
-            msg = $"Оффер #{req.Payload} успешно удалён";
-            loggerRepo.LogInformation(msg);
-            res.AddSuccess(msg);
-        }
-        else
-        {
-            msg = $"Оффер #{req.Payload} отсутствует в БД. Возможно, он был удалён ранее";
-            res.AddInfo(msg);
-            loggerRepo.LogWarning($"{msg}. Оффер #{req} удалён");
-        }
-
-        return res;
-    }
     #endregion
 
     #region nomenclatures
