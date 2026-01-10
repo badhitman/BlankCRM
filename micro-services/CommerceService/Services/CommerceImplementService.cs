@@ -1285,10 +1285,10 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         string msg;
-        TResponseModel<bool> res = new();
+        ResponseBaseModel res = new();
 
         if (req.Payload is null)
         {
@@ -1318,12 +1318,12 @@ public partial class CommerceImplementService(
 
         if (_allRowsOfDocuments.Count == 0)
         {
-            res.Response = await context
+            int _cr = await context
                     .OrdersB2B
                     .Where(x => x.HelpDeskId == req.Payload.DocumentId)
-                    .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token) != 0;
+                    .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
-            res.AddSuccess("Запрос смены статуса заказа выполнен вхолостую (строки в документе отсутствуют)");
+            res.AddSuccess($"Запрос смены статуса заказа выполнен {(_cr == 0 ? "вхолостую (строки в документе отсутствуют)" : "успешно")}");
             return res;
         }
 
@@ -1375,7 +1375,7 @@ public partial class CommerceImplementService(
                         Quantity = rowOfWarehouseDocumentElement.Row.Quantity,
                     };
                     registersOffersDb.Add(_newReg);
-                    await context.AddAsync(_newReg);
+                    await context.AddAsync(_newReg, token);
                 }
                 else
                     registersOffersDb[_i].Quantity += rowOfWarehouseDocumentElement.Row.Quantity;
@@ -1405,16 +1405,16 @@ public partial class CommerceImplementService(
             context.RemoveRange(offersLocked);
 
         await context.SaveChangesAsync(token);
-        res.Response = await context
+        int _rc = await context
                             .OrdersB2B
                             .Where(x => x.HelpDeskId == req.Payload.DocumentId)
                             .ExecuteUpdateAsync(set => set
                             .SetProperty(p => p.StatusDocument, req.Payload.Step)
                             .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
-                            .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token) != 0;
+                            .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        res.AddSuccess("Запрос смены статуса заказа выполнен успешно");
+        res.AddSuccess($"Запрос смены статуса заказа {(_rc == 0 ? "[не требуется]" : $"[выполнен успешно] - изменений: {_rc}")}");
         return res;
     }
     #endregion
