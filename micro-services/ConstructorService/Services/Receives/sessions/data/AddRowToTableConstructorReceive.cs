@@ -23,7 +23,7 @@ public class AddRowToTableConstructorReceive(IConstructorService conService, IFi
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.SessionId.ToString());
         TResponseModel<int> res = await conService.AddRowToTableAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int>)), token);
         return res;
     }
 }

@@ -23,7 +23,7 @@ public class DeleteDocumentSchemeConstructorReceive(IConstructorService conServi
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         ResponseBaseModel res = await conService.DeleteDocumentSchemeAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

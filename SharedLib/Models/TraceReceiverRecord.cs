@@ -54,11 +54,11 @@ public class TraceReceiverRecord
     }
 
     /// <inheritdoc/>
-    public TraceReceiverRecord SetResponse(object sender)
+    public TraceReceiverRecord SetResponse(object responseBody, string _responseTypeName)
     {
         UTCTimestampFinalReceive = DateTime.UtcNow;
-        ResponseBody = sender;
-        ResponseTypeName = sender.GetType().Name;
+        ResponseBody = responseBody;
+        ResponseTypeName = _responseTypeName;
 
         return this;
     }

@@ -23,7 +23,7 @@ public class UpdateRowOfDeliveryDocumentReceive(IRetailService commRepo, IFilesI
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.DocumentId.ToString());
         ResponseBaseModel res = await commRepo.UpdateRowOfDeliveryDocumentAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

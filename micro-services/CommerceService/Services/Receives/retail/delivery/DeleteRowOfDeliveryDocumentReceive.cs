@@ -23,7 +23,7 @@ public class DeleteRowOfDeliveryDocumentReceive(IRetailService commRepo, IFilesI
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         ResponseBaseModel res = await commRepo.DeleteRowOfDeliveryDocumentAsync(req.Value, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

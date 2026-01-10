@@ -22,7 +22,7 @@ public class ClearValuesForFieldNameConstructorReceive(IConstructorService conSe
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.SessionId.ToString());
         ResponseBaseModel res = await conService.ClearValuesForFieldNameAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

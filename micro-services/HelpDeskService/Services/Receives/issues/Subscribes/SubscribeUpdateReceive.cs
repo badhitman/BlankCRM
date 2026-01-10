@@ -22,7 +22,7 @@ public class SubscribeUpdateReceive(IHelpDeskService hdRepo, IFilesIndexing inde
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.IssueId.ToString());
         TResponseModel<bool?> res = await hdRepo.SubscribeUpdateAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<bool?>)), token);
         return res;
     }
 }

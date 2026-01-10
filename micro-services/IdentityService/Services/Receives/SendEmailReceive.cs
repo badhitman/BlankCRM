@@ -22,7 +22,7 @@ public class SendEmailReceive(IMailProviderService mailRepo, IFilesIndexing inde
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         ResponseBaseModel res = await mailRepo.SendEmailAsync(req.Email, req.Subject, req.TextMessage, req.MimeType, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

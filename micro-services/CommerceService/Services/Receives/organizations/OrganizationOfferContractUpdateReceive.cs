@@ -23,10 +23,10 @@ public class OrganizationOfferContractUpdateReceive(ICommerceService commerceRep
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.OrganizationId.ToString());
         TResponseModel<bool> res = await commerceRepo.OrganizationOfferContractUpdateAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<bool>)), token);
 
         trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.OfferId.ToString());
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<bool>)), token);
 
         return res;
     }

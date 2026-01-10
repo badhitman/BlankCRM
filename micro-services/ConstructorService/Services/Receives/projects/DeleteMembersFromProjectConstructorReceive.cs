@@ -22,7 +22,7 @@ public class DeleteMembersFromProjectConstructorReceive(IConstructorService conS
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.ProjectId.ToString());
         ResponseBaseModel res = await conService.DeleteMembersFromProjectAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

@@ -31,7 +31,7 @@ public class CalendarScheduleUpdateOrCreateReceive(ICommerceService commerceRepo
             ? res.Response.ToString() 
             : req.Payload.Id.ToString();
 
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int>)), token);
         return res;
     }
 }

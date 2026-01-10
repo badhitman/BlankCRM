@@ -23,8 +23,8 @@ public class ClaimUpdateOrCreateReceive(IIdentityTools idRepo, IFilesIndexing in
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
-        ResponseBaseModel? res = await idRepo.ClaimUpdateOrCreateAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        ResponseBaseModel res = await idRepo.ClaimUpdateOrCreateAsync(req, token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

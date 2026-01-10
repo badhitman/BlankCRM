@@ -23,7 +23,7 @@ public class FormFieldUpdateOrCreateConstructorReceive(IConstructorService conSe
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Id.ToString());
         ResponseBaseModel res = await conService.FormFieldUpdateOrCreateAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

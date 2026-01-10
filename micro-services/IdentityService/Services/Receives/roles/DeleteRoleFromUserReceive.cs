@@ -24,7 +24,7 @@ public class DeleteRoleFromUserReceive(IIdentityTools idRepo, IFilesIndexing ind
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Email);
         ResponseBaseModel res = await idRepo.DeleteRoleFromUserAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

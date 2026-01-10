@@ -25,7 +25,7 @@ public class CreateUserManualReceive(IIdentityTools idRepo, IFilesIndexing index
         if (res.Success())
             trace.TraceReceiverRecordId = res.Response;
 
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<string>)), token);
         return res;
     }
 }

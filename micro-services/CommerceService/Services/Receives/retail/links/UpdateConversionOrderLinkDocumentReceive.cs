@@ -22,7 +22,7 @@ public class UpdateConversionOrderLinkDocumentReceive(IRetailService commRepo, I
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.ConversionDocumentId.ToString());
         ResponseBaseModel res = await commRepo.UpdateConversionOrderLinkDocumentRetailAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         trace.TraceReceiverRecordId = req.OrderDocumentId.ToString();
         await indexingRepo.SaveTraceForReceiverAsync(trace, token);
         return res;

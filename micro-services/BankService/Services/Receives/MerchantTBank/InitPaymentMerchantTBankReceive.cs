@@ -23,7 +23,7 @@ public class InitPaymentMerchantTBankReceive(IMerchantService merchantRepo, IFil
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<PaymentInitTBankResultModelDB> res = await merchantRepo.InitPaymentMerchantTBankAsync(req, token);
         trace.TraceReceiverRecordId = res.Response?.Id.ToString();
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<PaymentInitTBankResultModelDB>)), token);
         return res;
     }
 }

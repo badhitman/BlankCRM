@@ -23,7 +23,7 @@ public class UpdateOrderStatusDocumentReceive(IRetailService commRepo, IFilesInd
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.OrderDocumentId.ToString());
         ResponseBaseModel res = await commRepo.UpdateOrderStatusDocumentAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

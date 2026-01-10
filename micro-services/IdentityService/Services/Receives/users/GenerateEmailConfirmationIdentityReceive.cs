@@ -32,7 +32,7 @@ public class GenerateEmailConfirmationIdentityReceive(IIdentityTools IdentityRep
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Email);
         ResponseBaseModel res = await IdentityRepo.GenerateEmailConfirmationAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

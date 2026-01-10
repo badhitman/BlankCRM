@@ -28,13 +28,13 @@ public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IFile
         TResponseModel<RecordsAttendanceModelDB[]> res = await commerceRepo.AttendanceRecordsDeleteAsync(req, token);
 
         if (res.Response is null || res.Response.Length == 0 || !res.Success())
-            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<RecordsAttendanceModelDB[]>)), token);
         else
         {
             foreach (IGrouping<int, RecordsAttendanceModelDB> offerChange in res.Response.GroupBy(x => x.OfferId))
             {
                 trace.TraceReceiverRecordId = offerChange.Key.ToString();
-                await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(offerChange.ToArray()), token);
+                await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(offerChange.ToArray(), nameof(IGrouping<int, RecordsAttendanceModelDB>)), token);
             }
         }
 

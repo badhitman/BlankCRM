@@ -23,7 +23,7 @@ public class OrganizationSetLegalReceive(ICommerceService commerceRepo, IFilesIn
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Id.ToString());
         TResponseModel<bool> res = await commerceRepo.OrganizationSetLegalAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<bool>)), token);
         return res;
     }
 }

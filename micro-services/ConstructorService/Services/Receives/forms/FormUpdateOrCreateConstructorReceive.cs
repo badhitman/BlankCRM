@@ -25,7 +25,7 @@ public class FormUpdateOrCreateConstructorReceive(IConstructorService conService
         if (req.Payload.Id == 0 && res.Response is not null)
             trace.TraceReceiverRecordId = res.Response.Id.ToString();
         
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<FormConstructorModelDB>)), token);
         return res;
     }
 }

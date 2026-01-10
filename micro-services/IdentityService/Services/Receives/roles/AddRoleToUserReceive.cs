@@ -24,7 +24,7 @@ public class AddRoleToUserReceive(IIdentityTools idRepo, IFilesIndexing indexing
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Email);
         ResponseBaseModel res = await idRepo.AddRoleToUserAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

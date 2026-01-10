@@ -24,7 +24,7 @@ public class MessageUpdateOrCreateReceive(IHelpDeskService hdRepo, IFilesIndexin
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.IssueId.ToString());
         TResponseModel<int?> res = await hdRepo.MessageUpdateOrCreateAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int?>)), token);
         return res;
     }
 }

@@ -22,7 +22,7 @@ public class TelegramJoinAccountConfirmReceive(IIdentityTools identityRepo, IFil
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         ResponseBaseModel res = await identityRepo.TelegramJoinAccountConfirmTokenFromTelegramAsync(req, token: token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

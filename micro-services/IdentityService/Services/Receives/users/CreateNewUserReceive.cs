@@ -24,7 +24,7 @@ public class CreateNewUserReceive(IIdentityTools idRepo, IFilesIndexing indexing
             throw new ArgumentNullException(nameof(req));
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         RegistrationNewUserResponseModel res = await idRepo.CreateNewUserEmailAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

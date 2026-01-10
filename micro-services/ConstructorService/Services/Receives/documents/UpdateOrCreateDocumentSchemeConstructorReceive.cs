@@ -22,7 +22,7 @@ public class UpdateOrCreateDocumentSchemeConstructorReceive(IConstructorService 
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.ProjectId.ToString());
         TResponseModel<DocumentSchemeConstructorModelDB?> res = await conService.UpdateOrCreateDocumentSchemeAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<DocumentSchemeConstructorModelDB?>)), token);
         return res;
     }
 }

@@ -28,7 +28,7 @@ public class RowsForWarehouseDocumentDeleteReceive(ICommerceService commRepo, IF
             foreach (KeyValuePair<int, DeliveryDocumentMetadataRecord> node in res.DocumentsUpdated)
             {
                 trace.TraceReceiverRecordId = node.Key.ToString();
-                await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(node.Value.Rows), token);
+                await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(node.Value.Rows, nameof(KeyValuePair<int, DeliveryDocumentMetadataRecord>)), token);
             }
         }
         return res;

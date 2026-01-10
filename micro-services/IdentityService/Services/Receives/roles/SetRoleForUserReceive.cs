@@ -22,7 +22,7 @@ public class SetRoleForUserReceive(IIdentityTools identityRepo, IFilesIndexing i
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.UserIdentityId);
         TResponseModel<string[]> res = await identityRepo.SetRoleForUserAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<string[]>)), token);
         return res;
     }
 }

@@ -24,7 +24,7 @@ public class CreateConversionDocumentReceive(IRetailService commRepo, IFilesInde
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<int> res = await commRepo.CreateConversionDocumentRetailAsync(req, token);
         trace.TraceReceiverRecordId = res.Response.ToString();
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int>)), token);
         return res;
     }
 }

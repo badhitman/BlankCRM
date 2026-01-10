@@ -25,7 +25,7 @@ public class InitChangePhoneUserReceive(IIdentityTools idRepo, IFilesIndexing in
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.SenderActionUserId);
         ResponseBaseModel res = await idRepo.InitChangePhoneUserAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

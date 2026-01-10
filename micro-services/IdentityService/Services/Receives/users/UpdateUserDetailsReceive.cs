@@ -24,7 +24,7 @@ public class UpdateUserDetailsReceive(IIdentityTools idRepo, IFilesIndexing inde
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.UserId);
         ResponseBaseModel res = await idRepo.UpdateUserDetailsAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

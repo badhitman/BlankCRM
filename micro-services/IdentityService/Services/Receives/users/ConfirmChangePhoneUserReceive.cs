@@ -22,7 +22,7 @@ public class ConfirmChangePhoneUserReceive(IIdentityTools idRepo, IFilesIndexing
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.UserId);
         ResponseBaseModel res = await idRepo.ConfirmChangePhoneUserAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

@@ -22,7 +22,7 @@ public class StatusIssueChangeReceive(IHelpDeskService hdRepo, IFilesIndexing in
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.DocumentId.ToString());
         TResponseModel<bool> res = await hdRepo.IssueStatusChangeAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<bool>)), token);
         return res;
     }
 }

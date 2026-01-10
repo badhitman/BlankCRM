@@ -31,7 +31,7 @@ public class TelegramJoinAccountDeleteReceive(IIdentityTools identityRepo, ILogg
         }
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.TelegramId.ToString());
         ResponseBaseModel res = await identityRepo.TelegramAccountRemoveTelegramJoinAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         return res;
     }
 }

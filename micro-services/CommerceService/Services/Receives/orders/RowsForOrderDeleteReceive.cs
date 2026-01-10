@@ -23,7 +23,7 @@ public class RowsForOrderDeleteReceive(ICommerceService commRepo, IFilesIndexing
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<bool> res = await commRepo.RowsForOrderDeleteAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<bool>)), token);
         return res;
     }
 }

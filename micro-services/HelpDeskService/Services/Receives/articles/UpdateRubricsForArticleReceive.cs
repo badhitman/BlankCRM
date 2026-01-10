@@ -22,7 +22,7 @@ public class UpdateRubricsForArticleReceive(IArticlesService artRepo, IFilesInde
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<bool> res = await artRepo.UpdateRubricsForArticleAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<bool>)), token);
         return res;
     }
 }

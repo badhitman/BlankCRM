@@ -23,7 +23,7 @@ public class RowForWarehouseDocumentUpdateReceive(ICommerceService commRepo, IFi
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.WarehouseDocumentId.ToString());
         TResponseModel<int> res = await commRepo.RowForWarehouseDocumentUpdateAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int>)), token);
         return res;
     }
 }

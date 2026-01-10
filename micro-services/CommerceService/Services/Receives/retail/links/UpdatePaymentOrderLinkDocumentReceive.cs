@@ -23,7 +23,7 @@ public class UpdatePaymentOrderLinkDocumentReceive(IRetailService commRepo, IFil
 
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.PaymentDocumentId.ToString());
         ResponseBaseModel res = await commRepo.UpdatePaymentOrderLinkDocumentAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
         trace.TraceReceiverRecordId = req.OrderDocumentId.ToString();
         await indexingRepo.SaveTraceForReceiverAsync(trace, token);
         return res;

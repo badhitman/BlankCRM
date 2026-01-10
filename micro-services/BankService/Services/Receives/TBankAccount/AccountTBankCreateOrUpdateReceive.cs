@@ -25,7 +25,7 @@ public class AccountTBankCreateOrUpdateReceive(IBankService bankRepo, IFilesInde
         if (req.Id <= 0)
             trace.TraceReceiverRecordId = res.Response.ToString();
 
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int>)), token);
         return res;
     }
 }
