@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
 using static SharedLib.GlobalStaticConstantsRoutes;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace CommerceService;
 
@@ -300,17 +301,26 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
+    public async Task<TResponseModel<AttendanceRecordsDeleteResponseModel>> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         if (string.IsNullOrEmpty(req.SenderActionUserId))
-            return ResponseBaseModel.CreateError("string.IsNullOrEmpty(req.SenderActionUserId)");
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "string.IsNullOrEmpty(req.SenderActionUserId)" }] };
+
+        if (req.Payload is null || req.Payload.Length == 0)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null || req.Payload.Length == 0" }] };
 
         UserInfoModel actor = default!;
         RecordsAttendanceModelDB[] ordersAttendancesDB = [];
-        ResponseBaseModel res = new();
+        TResponseModel<AttendanceRecordsDeleteResponseModel> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+
+        IIncludableQueryable<RecordsAttendanceModelDB, OfferModelDB> qr = context.AttendancesReg
+            .Where(x => req.Payload.Contains(x.Id))
+            .Include(x => x.Organization!)
+            .Include(x => x.Offer!);
+
         await Task.WhenAll([
-            Task.Run(async () => { ordersAttendancesDB = await context.AttendancesReg.Where(x => req.Payload.Contains(x.Id)).ToArrayAsync(token); }, token),
+            Task.Run(async () => { ordersAttendancesDB = await qr.ToArrayAsync(token); }, token),
             Task.Run(async () => {
                 TResponseModel<UserInfoModel[]> actorRes = await identityRepo.GetUsersOfIdentityAsync([req.SenderActionUserId]);
                 if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length != 1)

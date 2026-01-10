@@ -188,8 +188,8 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<RecordsAttendanceModelDB[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrdersAttendancesByIssuesGetReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.AttendanceRecordDeleteCommerceReceive, req, token: token) ?? new();
+    public async Task<TResponseModel<AttendanceRecordsDeleteResponseModel>> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<AttendanceRecordsDeleteResponseModel>>(GlobalStaticConstantsTransmission.TransmissionQueues.AttendanceRecordDeleteCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> BankDetailsUpdateAsync(TAuthRequestStandardModel<BankDetailsModelDB> req, CancellationToken token = default)

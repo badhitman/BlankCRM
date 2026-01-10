@@ -11,7 +11,7 @@ namespace Transmission.Receives.commerce;
 /// AttendanceRecordsDeleteReceive
 /// </summary>
 public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<int[]>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<int[]>?, TResponseModel<AttendanceRecordsDeleteResponseModel>?>
 {
     /// <summary>
     /// Обновление WorkScheduleCalendar
@@ -21,11 +21,11 @@ public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IFile
     /// <summary>
     /// Обновление WorkScheduleCalendar
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<int[]>? req, CancellationToken token = default)
+    public async Task<TResponseModel<AttendanceRecordsDeleteResponseModel>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
-        ResponseBaseModel res = await commerceRepo.AttendanceRecordsDeleteAsync(req, token);
+        TResponseModel<AttendanceRecordsDeleteResponseModel> res = await commerceRepo.AttendanceRecordsDeleteAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
