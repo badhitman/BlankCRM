@@ -8,7 +8,7 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// WarehouseDocumentUpdateReceive
+/// <see cref="WarehouseDocumentUpdateReceive"/>
 /// </summary>
 public class WarehouseDocumentUpdateReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<WarehouseDocumentModelDB?, TResponseModel<int>?>
