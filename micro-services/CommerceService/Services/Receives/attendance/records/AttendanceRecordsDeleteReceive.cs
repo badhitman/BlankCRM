@@ -24,19 +24,16 @@ public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IFile
     public async Task<TResponseModel<RecordsAttendanceModelDB[]>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
         TResponseModel<RecordsAttendanceModelDB[]> res = await commerceRepo.AttendanceRecordsDeleteAsync(req, token);
-        TraceReceiverRecord trace;
+
         if (res.Response is null || res.Response.Length == 0 || !res.Success())
-        {
-            trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
             await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
-        }
         else
         {
             foreach (IGrouping<int, RecordsAttendanceModelDB> offerChange in res.Response.GroupBy(x => x.OfferId))
             {
-                trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, offerChange.Key.ToString());
+                trace.TraceReceiverRecordId = offerChange.Key.ToString();
                 await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(offerChange.ToArray()), token);
             }
         }

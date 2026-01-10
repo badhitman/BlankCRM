@@ -2,6 +2,7 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using DocumentFormat.OpenXml.EMMA;
 using RemoteCallLib;
 using SharedLib;
 
@@ -20,20 +21,15 @@ public class RowsForWarehouseDocumentDeleteReceive(ICommerceService commRepo, IF
     public async Task<RowsForWarehouseDocumentDeleteResponseModel?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, typeof(int[]).Name, req);
         RowsForWarehouseDocumentDeleteResponseModel res = await commRepo.RowsForWarehouseDocumentDeleteAsync(req, token);
         if (res.Success() && res.DocumentsUpdated is not null && res.DocumentsUpdated.Count != 0)
         {
-            List<Task> tasks = [];
             foreach (KeyValuePair<int, DeliveryDocumentMetadataRecord> node in res.DocumentsUpdated)
             {
-                tasks.Add(Task.Run(async () =>
-                {
-                    TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, typeof(int[]).Name, req, node.Key.ToString());
-                    await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(node.Value.Rows), token);
-                }, token));
+                trace.TraceReceiverRecordId = node.Key.ToString();
+                await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(node.Value.Rows), token);
             }
-            if (tasks.Count != 0)
-                await Task.WhenAll(tasks);
         }
         return res;
     }
