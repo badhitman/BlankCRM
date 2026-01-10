@@ -20,21 +20,9 @@ public class DeleteConversionOrderLinkDocumentReceive(IRetailService commRepo, I
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         ResponseBaseModel res = await commRepo.DeleteConversionOrderLinkDocumentRetailAsync(req, token);
-
-        if (req.OrderId > 0)
-        {
-            trace.TraceReceiverRecordId = req.OrderId.ToString();
-            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
-        }
-
-        if (req.ConversionId > 0)
-        {
-            trace.TraceReceiverRecordId = req.ConversionId.ToString();
-            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
-        }
-
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

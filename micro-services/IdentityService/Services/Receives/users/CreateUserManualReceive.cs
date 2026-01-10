@@ -20,12 +20,9 @@ public class CreateUserManualReceive(IIdentityTools idRepo, IFilesIndexing index
     public async Task<TResponseModel<string>?> ResponseHandleActionAsync(TAuthRequestStandardModel<UserInfoBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         TResponseModel<string> res = await idRepo.CreateUserManualAsync(req, token);
-        if (res.Success())
-            trace.TraceReceiverRecordId = res.Response;
-
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<string>)), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

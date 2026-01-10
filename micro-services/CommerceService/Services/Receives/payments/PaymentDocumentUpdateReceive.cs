@@ -20,10 +20,9 @@ public class PaymentDocumentUpdateReceive(ICommerceService commerceRepo, IFilesI
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Id.ToString());
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         TResponseModel<int> res = await commerceRepo.PaymentDocumentUpdateAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int>)), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

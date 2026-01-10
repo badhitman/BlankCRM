@@ -20,10 +20,9 @@ public class RowForWarehouseDocumentUpdateReceive(ICommerceService commRepo, IFi
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(RowOfWarehouseDocumentModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.WarehouseDocumentId.ToString());
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         TResponseModel<int> res = await commRepo.RowForWarehouseDocumentUpdateAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int>)), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

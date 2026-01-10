@@ -23,9 +23,9 @@ public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, IFile
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.OfferId.ToString());
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         ResponseBaseModel res = await commerceRepo.CreateAttendanceRecordsAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

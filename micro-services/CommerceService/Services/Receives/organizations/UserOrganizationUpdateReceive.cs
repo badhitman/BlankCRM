@@ -20,13 +20,9 @@ public class UserOrganizationUpdateReceive(ICommerceService commerceRepo, IFiles
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<UserOrganizationModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.Id.ToString());
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         TResponseModel<int> res = await commerceRepo.UserOrganizationUpdateAsync(req, token);
-        if (trace.TraceReceiverRecordId is null || string.IsNullOrWhiteSpace(trace.TraceReceiverRecordId))
-            trace.TraceReceiverRecordId = res.Response.ToString();
-
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int>)), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

@@ -20,10 +20,9 @@ public class UpdateDeliveryDocumentReceive(IRetailService commRepo, IFilesIndexi
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(DeliveryDocumentRetailModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Id.ToString());
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         ResponseBaseModel res = await commRepo.UpdateDeliveryDocumentAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

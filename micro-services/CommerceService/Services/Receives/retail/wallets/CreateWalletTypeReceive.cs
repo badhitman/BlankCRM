@@ -20,13 +20,9 @@ public class CreateWalletTypeReceive(IRetailService commRepo, IFilesIndexing ind
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(WalletRetailTypeModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         TResponseModel<int> res = await commRepo.CreateWalletTypeAsync(req, token);
-        if (res.Response > 0)
-        {
-            trace.TraceReceiverRecordId = res.Response.ToString();
-            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int>)), token);
-        }
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

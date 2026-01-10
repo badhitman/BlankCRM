@@ -39,20 +39,6 @@ public class IndexingFilesImpl(
         CreateIndexModel<TraceReceiverRecord> indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
 
-        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.TraceReceiverRecordId);
-        indexModel = new(indexKeys, indexOptions);
-        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
-
-
-        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.RequestTypeName);
-        indexModel = new(indexKeys, indexOptions);
-        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
-
-        indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.ResponseTypeName);
-        indexModel = new(indexKeys, indexOptions);
-        await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);
-
-
         indexKeys = Builders<TraceReceiverRecord>.IndexKeys.Ascending(x => x.UTCTimestampInitReceive);
         indexModel = new(indexKeys, indexOptions);
         await traceReceiverRecords.Indexes.CreateOneAsync(indexModel, cancellationToken: token);

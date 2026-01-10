@@ -20,9 +20,9 @@ public class SetProjectAsMainConstructorReceive(IConstructorService conService, 
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(UserProjectModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.ProjectId.ToString());
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         ResponseBaseModel res = await conService.SetProjectAsMainAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

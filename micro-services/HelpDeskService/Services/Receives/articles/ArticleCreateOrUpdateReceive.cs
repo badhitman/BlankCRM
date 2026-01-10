@@ -22,12 +22,9 @@ public class ArticleCreateOrUpdateReceive(IArticlesService artRepo, IFilesIndexi
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(ArticleModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Id.ToString());
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         TResponseModel<int> res = await artRepo.ArticleCreateOrUpdateAsync(req, token);
-        if (req.Id < 1)
-            trace.TraceReceiverRecordId = res.Response.ToString();
-
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int>)), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

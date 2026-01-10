@@ -9,9 +9,6 @@ namespace SharedLib;
 /// </summary>
 public class TraceReceiverRecord
 {
-    /// <inheritdoc/>
-    public string? TraceReceiverRecordId { get; set; }
-
     /// <summary>
     /// Инициализация обработчика
     /// </summary>
@@ -30,35 +27,28 @@ public class TraceReceiverRecord
     /// Тело входящего запроса
     /// </summary>
     public object? RequestBody { get; set; }
-    /// <inheritdoc/>
-    public string? RequestTypeName { get; set; }
 
     /// <inheritdoc/>
     public object? ResponseBody { get; set; }
-    /// <inheritdoc/>
-    public string? ResponseTypeName { get; set; }
 
     /// <summary>
     /// TraceReceiverRecord
     /// </summary>
-    public static TraceReceiverRecord Build(string _receiverName, string? _requestTypeName = null, object? _requestBody = null, string? _requestKey = null)
+    public static TraceReceiverRecord Build(string _receiverName, object? _requestBody = null)
     {
         return new()
         {
             UTCTimestampInitReceive = DateTime.UtcNow,
-            RequestTypeName = _requestTypeName,
             RequestBody = _requestBody,
             ReceiverName = _receiverName,
-            TraceReceiverRecordId = _requestKey,
         };
     }
 
     /// <inheritdoc/>
-    public TraceReceiverRecord SetResponse(object responseBody, string _responseTypeName)
+    public TraceReceiverRecord SetResponse(object responseBody)
     {
         UTCTimestampFinalReceive = DateTime.UtcNow;
         ResponseBody = responseBody;
-        ResponseTypeName = _responseTypeName;
 
         return this;
     }

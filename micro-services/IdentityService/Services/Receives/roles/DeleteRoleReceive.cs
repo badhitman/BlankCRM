@@ -23,9 +23,10 @@ public class DeleteRoleReceive(IIdentityTools idRepo, IFilesIndexing indexingRep
     {
         if (string.IsNullOrWhiteSpace(req))
             throw new ArgumentNullException(nameof(req));
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         ResponseBaseModel res = await idRepo.DeleteRoleAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

@@ -24,14 +24,9 @@ public class CalendarScheduleUpdateOrCreateReceive(ICommerceService commerceRepo
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<CalendarScheduleModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         TResponseModel<int> res = await commerceRepo.CalendarScheduleUpdateOrCreateAsync(req, token);
-
-        trace.TraceReceiverRecordId = req.Payload.Id < 1 
-            ? res.Response.ToString() 
-            : req.Payload.Id.ToString();
-
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<int>)), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

@@ -20,21 +20,9 @@ public class DeletePaymentOrderLinkDocumentReceive(IRetailService commRepo, IFil
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(DeletePaymentOrderLinkRetailDocumentsRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         ResponseBaseModel res = await commRepo.DeletePaymentOrderLinkDocumentAsync(req, token);
-
-        if (req.OrderId > 0)
-        {
-            trace.TraceReceiverRecordId = req.OrderId.ToString();
-            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
-        }
-
-        if (req.PaymentId > 0)
-        {
-            trace.TraceReceiverRecordId = req.PaymentId.ToString();
-            await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
-        }
-
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

@@ -20,10 +20,9 @@ public class OrganizationSetLegalReceive(ICommerceService commerceRepo, IFilesIn
     public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(OrganizationLegalModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Id.ToString());
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         TResponseModel<bool> res = await commerceRepo.OrganizationSetLegalAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, nameof(TResponseModel<bool>)), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

@@ -20,9 +20,9 @@ public class ConfirmChangePhoneUserReceive(IIdentityTools idRepo, IFilesIndexing
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<ChangePhoneUserRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req, req.Payload.UserId);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         ResponseBaseModel res = await idRepo.ConfirmChangePhoneUserAsync(req, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }

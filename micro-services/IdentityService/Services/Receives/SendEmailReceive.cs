@@ -20,9 +20,9 @@ public class SendEmailReceive(IMailProviderService mailRepo, IFilesIndexing inde
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(SendEmailRequestModel? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
-        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req.GetType().Name, req);
+        TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
         ResponseBaseModel res = await mailRepo.SendEmailAsync(req.Email, req.Subject, req.TextMessage, req.MimeType, token);
-        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res, res.GetType().Name), token);
+        await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
 }
