@@ -11,25 +11,15 @@ namespace Transmission.Receives.commerce;
 /// Создать пакет записей/броней
 /// </summary>
 /// <remarks>
-/// Бронирует свободные слоты
+/// Бронирует слоты (свободные)
 /// </remarks>
 public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<CreateAttendanceRequestModel>?, ResponseBaseModel?>
 {
-    /// <summary>
-    /// Обновление WorkScheduleCalendar
-    /// </summary>
-    /// <remarks>
-    /// Бронирует свободные слоты
-    /// </remarks>
+    /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CreateAttendanceRecordsCommerceReceive;
 
-    /// <summary>
-    /// Создать пакет записей/броней
-    /// </summary>
-    /// <remarks>
-    /// Бронирует свободные слоты
-    /// </remarks>
+    /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);

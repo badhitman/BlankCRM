@@ -83,7 +83,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
             Payload = new()
             {
                 OfferId = SelectedOffer.Id,
-                Records = _selectedSlots
+                Records = [.. _selectedSlots.Select(WorkScheduleBaseModel.Build)]
             }
         };
 

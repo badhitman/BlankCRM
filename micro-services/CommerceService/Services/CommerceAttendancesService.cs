@@ -74,7 +74,7 @@ public partial class CommerceImplementService : ICommerceService
         if (string.IsNullOrWhiteSpace(workSchedules.SenderActionUserId))
             return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(workSchedules.SenderActionUserId)");
 
-        List<WorkScheduleModel> records = workSchedules.Payload.Records;
+        List<WorkScheduleBaseModel> records = workSchedules.Payload.Records;
         ResponseBaseModel res = new();
         records.ForEach(x =>
         {

@@ -9,32 +9,8 @@ namespace SharedLib;
 /// <summary>
 /// WorkSchedule view model
 /// </summary>
-public class WorkScheduleModel
+public class WorkScheduleModel : WorkScheduleBaseModel
 {
-    /// <summary>
-    /// Организация
-    /// </summary>
-    [Required]
-    public required OrganizationModelDB Organization { get; set; }
-
-    /// <summary>
-    /// Date
-    /// </summary>
-    [Required]
-    public required DateOnly Date { get; set; }
-
-    /// <summary>
-    /// StartPart
-    /// </summary>
-    [Required]
-    public required TimeSpan StartPart { get; set; }
-
-    /// <summary>
-    /// EndPart
-    /// </summary>
-    [Required]
-    public required TimeSpan EndPart { get; set; }
-
     /// <summary>
     /// Ёмкость очереди (0 - безлимитное)
     /// </summary>
@@ -84,5 +60,80 @@ public class WorkScheduleModel
     public override int GetHashCode()
     {
         return $"{Date}{StartPart}{EndPart}{Organization.Id}".GetHashCode();
+    }
+}
+
+/// <summary>
+/// WorkSchedule (base view) model
+/// </summary>
+public class WorkScheduleBaseModel
+{
+    /// <summary>
+    /// Организация
+    /// </summary>
+    [Required]
+    public required OrganizationModelDB Organization { get; set; }
+
+    /// <summary>
+    /// Date
+    /// </summary>
+    [Required]
+    public required DateOnly Date { get; set; }
+
+    /// <summary>
+    /// StartPart
+    /// </summary>
+    [Required]
+    public required TimeSpan StartPart { get; set; }
+
+    /// <summary>
+    /// EndPart
+    /// </summary>
+    [Required]
+    public required TimeSpan EndPart { get; set; }
+
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return $"{Date}: {StartPart}-{EndPart} [{Organization.Name}]";
+    }
+
+    /// <inheritdoc/>
+    public static bool operator ==(WorkScheduleBaseModel e1, WorkScheduleBaseModel e2)
+        => (e1 is null && e2 is null) || e1?.Equals(e2) == true;
+
+    /// <inheritdoc/>
+    public static bool operator !=(WorkScheduleBaseModel e1, WorkScheduleBaseModel e2)
+        => !(e1 is null && e2 is null) && e1?.Equals(e2) != true;
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+
+        if (obj is WorkScheduleBaseModel other)
+            return Date == other.Date && StartPart == other.StartPart && EndPart == other.EndPart && Organization.Id == other.Organization.Id;
+
+        return base.Equals(obj);
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return $"{Date}{StartPart}{EndPart}{Organization.Id}".GetHashCode();
+    }
+
+    /// <inheritdoc/>
+    public static WorkScheduleBaseModel Build(WorkScheduleModel x)
+    {
+        return new()
+        {
+            Organization = x.Organization,
+            StartPart = x.StartPart,
+            EndPart = x.EndPart,
+            Date = x.Date,
+        };
     }
 }

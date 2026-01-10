@@ -17,9 +17,9 @@ public class CalendarsSchedulesSelectReceive(ICommerceService commerceRepo)
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CalendarsSchedulesSelectCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<TPaginationResponseStandardModel<CalendarScheduleModelDB>>?> ResponseHandleActionAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>>? payload, CancellationToken token = default)
+    public async Task<TResponseModel<TPaginationResponseStandardModel<CalendarScheduleModelDB>>?> ResponseHandleActionAsync(TAuthRequestStandardModel<TPaginationRequestStandardModel<WorkScheduleCalendarsSelectRequestModel>>? req, CancellationToken token = default)
     {
-        ArgumentNullException.ThrowIfNull(payload);
-        return await commerceRepo.CalendarsSchedulesSelectAsync(payload, token);
+        ArgumentNullException.ThrowIfNull(req);
+        return await commerceRepo.CalendarsSchedulesSelectAsync(req, token);
     }
 }

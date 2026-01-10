@@ -11,7 +11,7 @@ public partial interface ICommerceServiceBase
     /// Создать пакет записей/броней
     /// </summary>
     /// <remarks>
-    /// Бронирует свободные слоты
+    /// Бронирует слоты (свободные)
     /// </remarks>
     public Task<ResponseBaseModel> CreateAttendanceRecordsAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default);
 
