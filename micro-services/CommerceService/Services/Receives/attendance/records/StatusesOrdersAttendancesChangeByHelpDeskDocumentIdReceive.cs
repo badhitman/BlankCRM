@@ -8,13 +8,13 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// AttendancesRecordsStatusChangeByHelpDeskIdReceive
+/// StatusesOrdersAttendancesChangeByHelpDeskDocumentId
 /// </summary>
-public class AttendancesRecordsStatusChangeByHelpDeskIdReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
+public class StatusesOrdersAttendancesChangeByHelpDeskDocumentIdReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<StatusChangeRequestModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrdersAttendancesStatusesChangeByHelpDeskDocumentIdReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.StatusesOrdersAttendancesChangeByHelpDeskDocumentIdReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<StatusChangeRequestModel>? req, CancellationToken token = default)
