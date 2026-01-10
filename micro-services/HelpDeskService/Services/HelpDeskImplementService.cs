@@ -1371,7 +1371,15 @@ public class HelpDeskImplementService(
                 await commRepo.StatusOrderChangeByHelpDeskDocumentIdAsync(new() { Payload = new() { DocumentId = issue_data.Id, Step = nextStatus, }, SenderActionUserId = req.SenderActionUserId }, false, token);
 
             if (order_attendance_exist)
-                await commRepo.StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(new() { SenderActionUserId = req.SenderActionUserId, Payload = new() { DocumentId = issue_data.Id, Step = nextStatus, } }, false, token);
+                await commRepo.StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(new()
+                {
+                    SenderActionUserId = req.SenderActionUserId,
+                    Payload = new()
+                    {
+                        DocumentId = issue_data.Id,
+                        Step = nextStatus,
+                    }
+                }, false, token);
 
             OrderDocumentModelDB? order_obj = find_orders.Response?.FirstOrDefault();
             RecordsAttendanceModelDB? order_attendance = find_orders_attendances.Response?.FirstOrDefault();
@@ -1404,7 +1412,7 @@ public class HelpDeskImplementService(
                 tg_message = IHelpDeskService.ReplaceTags(_docName, cdd, _hdDocId, nextStatus, CommerceStatusChangeOrderBodyNotificationTelegram.Response, wc.ClearBaseUri, _about_document);
         }
 
-        TResponseModel<UserInfoModel[]> users_notify = await IdentityRepo.GetUsersOfIdentityAsync([..users_ids], token);
+        TResponseModel<UserInfoModel[]> users_notify = await IdentityRepo.GetUsersOfIdentityAsync([.. users_ids], token);
         if (users_notify?.Success() == true && users_notify.Response is not null && users_notify.Response.Length != 0)
         {
             foreach (UserInfoModel u in users_notify.Response)

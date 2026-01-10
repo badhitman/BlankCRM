@@ -20,7 +20,7 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
     /// <summary>
     /// Смена статуса заявки (бронь)
     /// </summary>
-    public Task<ResponseBaseModel> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
+    public Task<TResponseModel<List<RecordsAttendanceModelDB>>> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
     /// WorkSchedulesFind

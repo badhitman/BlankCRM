@@ -371,9 +371,9 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<RecordsAttendanceModelDB>>> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
-        ResponseBaseModel res = new();
+        TResponseModel<List<RecordsAttendanceModelDB>> res = new();
 
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId) || req.Payload is null)
         {
@@ -390,12 +390,12 @@ public partial class CommerceImplementService : ICommerceService
         UserInfoModel actor = actorRes.Response[0];
         string msg;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        List<RecordsAttendanceModelDB> ordersDb = await context
+        res.Response = await context
             .AttendancesReg
             .Where(x => x.HelpDeskId == req.Payload.DocumentId && x.StatusDocument != req.Payload.Step)
             .ToListAsync(cancellationToken: token);
 
-        if (ordersDb.Count == 0)
+        if (res.Response.Count == 0)
         {
             msg = "Изменение не требуется (документы для обновления отсутствуют)";
             loggerRepo.LogInformation($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
@@ -403,7 +403,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        LockTransactionModelDB[] offersLocked = [.. ordersDb
+        LockTransactionModelDB[] offersLocked = [.. res.Response
            .Select(x => new LockTransactionModelDB()
            {
                LockerName = $"{nameof(RecordsAttendanceModelDB)} /{x.DateExecute}: {x.StartPart}-{x.EndPart}",
@@ -444,24 +444,24 @@ public partial class CommerceImplementService : ICommerceService
 
         if (req.Payload.Step == StatusesDocumentsEnum.Canceled)
         {
-            ordersDb.ForEach(x => x.StatusDocument = StatusesDocumentsEnum.Canceled);
-            context.UpdateRange(ordersDb);
+            res.Response.ForEach(x => x.StatusDocument = StatusesDocumentsEnum.Canceled);
+            context.UpdateRange(res.Response);
             //
-            reqPulse.Payload.Payload.Description += $"Отмена брони: {string.Join(";", ordersDb.Select(x => x.ToString()))};";
+            reqPulse.Payload.Payload.Description += $"Отмена брони: {string.Join(";", res.Response.Select(x => x.ToString()))};";
             reqPulse.Payload.Payload.Tag = Routes.CANCEL_ACTION_NAME;
         }
         else
         {
             WorkFindRequestModel get_balance_req = new()
             {
-                OffersFilter = ordersDb.Select(x => x.OfferId).Distinct().ToArray(),
+                OffersFilter = res.Response.Select(x => x.OfferId).Distinct().ToArray(),
                 ContextName = Routes.ATTENDANCES_CONTROLLER_NAME,
-                StartDate = ordersDb.Min(x => x.DateExecute),
-                EndDate = ordersDb.Max(x => x.DateExecute),
+                StartDate = res.Response.Min(x => x.DateExecute),
+                EndDate = res.Response.Max(x => x.DateExecute),
             };
-            WorksFindResponseModel get_balance = await WorksSchedulesFindAsync(get_balance_req, ordersDb.Select(x => x.OrganizationId).Distinct().ToArray(), token);
+            WorksFindResponseModel get_balance = await WorksSchedulesFindAsync(get_balance_req, res.Response.Select(x => x.OrganizationId).Distinct().ToArray(), token);
 
-            foreach (IGrouping<int, WorkScheduleModel> rec in ordersDb.GroupBy(x => x.OrganizationId))
+            foreach (IGrouping<int, WorkScheduleModel> rec in res.Response.GroupBy(x => x.OrganizationId))
             {
                 List<WorkScheduleModel> b_crop_list = [.. get_balance.WorksSchedulesViews.Where(x => x.Organization.Id == rec.Key)];
 
@@ -486,7 +486,7 @@ public partial class CommerceImplementService : ICommerceService
                 return res;
             }
 
-            reqPulse.Payload.Payload.Description += $"Восстановление записей/брони: {string.Join(";", ordersDb.Select(x => x.ToString()))};";
+            reqPulse.Payload.Payload.Description += $"Восстановление записей/брони: {string.Join(";", res.Response.Select(x => x.ToString()))};";
             reqPulse.Payload.Payload.Tag = Routes.SET_ACTION_NAME;
         }
         await HelpDeskRepo.PulsePushAsync(reqPulse, false, token);
