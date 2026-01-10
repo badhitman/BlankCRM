@@ -301,7 +301,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<AttendanceRecordsDeleteResponseModel>> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<RecordsAttendanceModelDB[]>>> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         if (string.IsNullOrEmpty(req.SenderActionUserId))
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "string.IsNullOrEmpty(req.SenderActionUserId)" }] };
@@ -311,7 +311,7 @@ public partial class CommerceImplementService : ICommerceService
 
         UserInfoModel actor = default!;
         RecordsAttendanceModelDB[] ordersAttendancesDB = [];
-        TResponseModel<AttendanceRecordsDeleteResponseModel> res = new();
+        TResponseModel<List<RecordsAttendanceModelDB[]>> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IIncludableQueryable<RecordsAttendanceModelDB, OfferModelDB> qr = context.AttendancesReg
@@ -326,7 +326,7 @@ public partial class CommerceImplementService : ICommerceService
                 if (!actorRes.Success() || actorRes.Response is null || actorRes.Response.Length != 1)
                 {
                     res.AddRangeMessages(actorRes.Messages);
-                    res.AddError("Пользователь не найден в БД");
+                    res.AddError($"Пользователь `{req.SenderActionUserId}` не найден в БД");
                 }
                 else
                     actor = actorRes.Response[0];
@@ -335,43 +335,37 @@ public partial class CommerceImplementService : ICommerceService
         if (!res.Success())
             return res;
 
+        res.Response = [];
         foreach (RecordsAttendanceModelDB orderAttendanceDB in ordersAttendancesDB)
         {
-            if (orderAttendanceDB is null)
-                res.AddInfo("Запись отсутствует");
-            else
+            if (orderAttendanceDB.AuthorIdentityUserId == req.SenderActionUserId || actor.IsAdmin || actor.Roles?.Contains(GlobalStaticConstantsRoles.Roles.System) == true)
             {
-                if (orderAttendanceDB.AuthorIdentityUserId == req.SenderActionUserId || actor.IsAdmin || actor.Roles?.Contains(GlobalStaticConstantsRoles.Roles.System) == true)
-                {
-                    context.Remove(orderAttendanceDB);
-                    await context.SaveChangesAsync(token);
-                    res.AddSuccess("Запись успешно удалена");
+                context.Remove(orderAttendanceDB);
+                await context.SaveChangesAsync(token);
+                res.AddSuccess("Запись успешно удалена");
 
-                    if (orderAttendanceDB.HelpDeskId.HasValue)
+                if (orderAttendanceDB.HelpDeskId.HasValue)
+                {
+                    PulseRequestModel reqPulse = new()
                     {
-                        PulseRequestModel reqPulse = new()
+                        Payload = new()
                         {
                             Payload = new()
                             {
-                                Payload = new()
-                                {
-                                    Description = $"Запись удалена - {orderAttendanceDB}",
-                                    IssueId = orderAttendanceDB.HelpDeskId.Value,
-                                    PulseType = PulseIssuesTypesEnum.OrderAttendance,
-                                    Tag = Routes.DELETE_ACTION_NAME,
-                                },
-                                SenderActionUserId = req.SenderActionUserId,
-                            }
-                        };
+                                Description = $"Запись удалена - {orderAttendanceDB}",
+                                IssueId = orderAttendanceDB.HelpDeskId.Value,
+                                PulseType = PulseIssuesTypesEnum.OrderAttendance,
+                                Tag = Routes.DELETE_ACTION_NAME,
+                            },
+                            SenderActionUserId = req.SenderActionUserId,
+                        }
+                    };
 
-                        await HelpDeskRepo.PulsePushAsync(reqPulse, false, token);
-                    }
-                }
-                else
-                {
-                    res.AddError("У вас недостаточно прав");
+                    await HelpDeskRepo.PulsePushAsync(reqPulse, false, token);
                 }
             }
+            else
+                res.AddError($"Недостаточно прав для удаления `{orderAttendanceDB}`");
         }
 
         return res;
