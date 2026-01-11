@@ -102,7 +102,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     [HttpDelete($"/api/{Routes.ORDERS_CONTROLLER_NAME}/{Routes.ROW_CONTROLLER_NAME}-{Routes.DELETE_ACTION_NAME}")]
     public async Task<TResponseModel<RowOrderDocumentRecord[]>> RowForOrderDelete([FromBody] int[] rows_ids)
-        => await commRepo.RowsForOrderDeleteAsync(rows_ids);
+        => await commRepo.RowsDeleteFromOrderAsync(rows_ids);
 
     /// <summary>
     /// Установить статус заказа

@@ -8,9 +8,9 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// RowsForOrderDeleteReceive
+/// RowsDeleteFromOrder
 /// </summary>
-public class RowsForOrderDeleteReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
+public class RowsDeleteFromOrderReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<int[]?, TResponseModel<RowOrderDocumentRecord[]>?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,7 @@ public class RowsForOrderDeleteReceive(ICommerceService commRepo, IFilesIndexing
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        TResponseModel<RowOrderDocumentRecord[]> res = await commRepo.RowsForOrderDeleteAsync(req, token);
+        TResponseModel<RowOrderDocumentRecord[]> res = await commRepo.RowsDeleteFromOrderAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

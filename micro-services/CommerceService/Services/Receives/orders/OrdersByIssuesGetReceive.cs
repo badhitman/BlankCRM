@@ -10,7 +10,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// OrdersByIssuesGetReceive
 /// </summary>
-public class OrdersByIssuesGetReceive(ICommerceService commRepo) : IResponseReceive<OrdersByIssuesSelectRequestModel?, TResponseModel<OrderDocumentModelDB[]>?>
+public class OrdersByIssuesGetReceive(ICommerceService commRepo)
+    : IResponseReceive<OrdersByIssuesSelectRequestModel?, TResponseModel<OrderDocumentModelDB[]>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrdersByIssuesGetReceive;

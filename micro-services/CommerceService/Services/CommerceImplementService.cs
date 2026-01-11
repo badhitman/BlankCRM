@@ -1148,14 +1148,14 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<RowOrderDocumentRecord[]>> RowsForOrderDeleteAsync(int[] req, CancellationToken token = default)
+    public async Task<TResponseModel<RowOrderDocumentRecord[]>> RowsDeleteFromOrderAsync(int[] req, CancellationToken token = default)
     {
         string msg;
         req = [.. req.Distinct()];
         TResponseModel<RowOrderDocumentRecord[]> res = new();
         if (!req.Any(x => x > 0))
         {
-            res.AddError($"Пустой запрос > {nameof(RowsForOrderDeleteAsync)}");
+            res.AddError($"Пустой запрос > {nameof(RowsDeleteFromOrderAsync)}");
             return res;
         }
 
@@ -1189,7 +1189,7 @@ public partial class CommerceImplementService(
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.OfferId,
                 LockerAreaId = x.WarehouseId,
-                Marker = nameof(RowsForOrderDeleteAsync)
+                Marker = nameof(RowsDeleteFromOrderAsync)
             })];
 
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken: token);
@@ -1202,7 +1202,7 @@ public partial class CommerceImplementService(
         catch (Exception ex)
         {
             await transaction.RollbackAsync(token);
-            msg = $"Не удалось выполнить команду блокировки БД {nameof(RowsForOrderDeleteAsync)}: ";
+            msg = $"Не удалось выполнить команду блокировки БД {nameof(RowsDeleteFromOrderAsync)}: ";
             res.AddError($"{msg}{ex.Message}");
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             return res;
