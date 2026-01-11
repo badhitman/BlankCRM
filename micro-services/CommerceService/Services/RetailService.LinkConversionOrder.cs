@@ -14,27 +14,25 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateConversionOrderLinkDocumentRetailAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateConversionOrderLinkDocumentRetailAsync(OrderConversionAmountModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         if (await context.ConversionsOrdersLinksRetail.AnyAsync(x => x.ConversionDocumentId == req.ConversionDocumentId && x.OrderDocumentId == req.OrderDocumentId, cancellationToken: token))
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Warning, Text = "Документ уже добавлен" }] };
 
-        req.OrderDocument = null;
-        req.ConversionDocument = null;
-
-        await context.ConversionsOrdersLinksRetail.AddAsync(req, token);
+        ConversionOrderRetailLinkModelDB linkDb = ConversionOrderRetailLinkModelDB.Build(req);
+        await context.ConversionsOrdersLinksRetail.AddAsync(linkDb, token);
         await context.SaveChangesAsync(token);
-        return new() { Response = req.Id };
+        return new() { Response = linkDb.Id };
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentRetailAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentRetailAsync(OrderConversionAmountModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         await context.ConversionsOrdersLinksRetail
-            .Where(x => x.Id == req.Id || (req.OrderDocumentId == x.OrderDocumentId && req.ConversionDocumentId == x.ConversionDocumentId))
+            .Where(x => req.OrderDocumentId == x.OrderDocumentId && req.ConversionDocumentId == x.ConversionDocumentId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.AmountPayment, req.AmountPayment), cancellationToken: token);
 

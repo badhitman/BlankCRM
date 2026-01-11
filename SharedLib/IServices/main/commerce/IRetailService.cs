@@ -211,10 +211,10 @@ public interface IRetailService
 
     #region Conversions orders link`s
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateConversionOrderLinkDocumentRetailAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateConversionOrderLinkDocumentRetailAsync(OrderConversionAmountModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentRetailAsync(ConversionOrderRetailLinkModelDB req, CancellationToken token = default);
+    public Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentRetailAsync(OrderConversionAmountModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TPaginationResponseStandardModel<ConversionOrderRetailLinkModelDB>> SelectConversionsOrdersDocumentsLinksRetailAsync(TPaginationRequestStandardModel<SelectConversionsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default);

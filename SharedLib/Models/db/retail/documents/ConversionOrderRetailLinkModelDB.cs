@@ -22,7 +22,18 @@ public class ConversionOrderRetailLinkModelDB : OrderConversionAmountModel
     /// <inheritdoc/>
     public DocumentRetailModelDB? OrderDocument { get; set; }
 
-
     /// <inheritdoc/>
     public WalletConversionRetailDocumentModelDB? ConversionDocument { get; set; }
+
+
+    /// <inheritdoc/>
+    public static ConversionOrderRetailLinkModelDB Build(OrderConversionAmountModel req)
+    {
+        return new()
+        {
+            AmountPayment = req.AmountPayment,
+            ConversionDocumentId = req.ConversionDocumentId,
+            OrderDocumentId = req.OrderDocumentId,
+        };
+    }
 }
