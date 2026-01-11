@@ -34,5 +34,5 @@ public partial class CommerceTransmission
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<WarehouseDocumentModelDB>> WarehouseDocumentsSelectAsync(TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<WarehouseDocumentModelDB>>(TransmissionQueues.WarehousesSelectCommerceReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<WarehouseDocumentModelDB>>(TransmissionQueues.WarehouseDocumentsSelectCommerceReceive, req, token: token) ?? new();
 }

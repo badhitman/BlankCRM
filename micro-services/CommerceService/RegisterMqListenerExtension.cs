@@ -108,7 +108,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<PriceFullFileGetJsonReceive, object, FileAttachModel>()
             .RegisterMqListener<OrderReportGetReceive, TAuthRequestStandardModel<int>, TResponseModel<FileAttachModel>>()
             .RegisterMqListener<OffersRegistersSelectReceive, TPaginationRequestStandardModel<RegistersSelectRequestBaseModel>, TPaginationResponseStandardModel<OfferAvailabilityModelDB>>()
-            .RegisterMqListener<WarehousesSelectReceive, TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel>, TPaginationResponseStandardModel<WarehouseDocumentModelDB>>()
+            .RegisterMqListener<WarehouseDocumentsSelectReceive, TPaginationRequestStandardModel<WarehouseDocumentsSelectRequestModel>, TPaginationResponseStandardModel<WarehouseDocumentModelDB>>()
             .RegisterMqListener<WarehousesDocumentsReadReceive, int[], TResponseModel<WarehouseDocumentModelDB[]>>()
             .RegisterMqListener<WarehouseDocumentUpdateReceive, WarehouseDocumentModelDB, TResponseModel<int>>()
             .RegisterMqListener<RowsForWarehouseDocumentDeleteReceive, int[], RowsForWarehouseDocumentDeleteResponseModel>()
