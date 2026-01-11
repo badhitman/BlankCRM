@@ -68,7 +68,7 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
 
         await SetBusyAsync();
 
-        TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdateAsync(new AddressOrganizationBaseModel()
+        TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdateOrCreateAsync(new AddressOrganizationBaseModel()
         {
             AddressUserComment = addingAddress ?? "",
             Name = addingName!,

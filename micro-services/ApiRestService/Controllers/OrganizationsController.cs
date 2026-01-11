@@ -95,5 +95,5 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
 [Authorize(Roles = nameof(ExpressApiRolesEnum.OrganizationsWriteCommerce))]
 #endif
     public async Task<TResponseModel<int>> OfficeOrganizationUpdate(AddressOrganizationBaseModel req)
-        => await commRepo.OfficeOrganizationUpdateAsync(req);
+        => await commRepo.OfficeOrganizationUpdateOrCreateAsync(req);
 }
