@@ -8,9 +8,9 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// <see cref="WarehouseDocumentUpdateReceive"/>
+/// <see cref="WarehouseDocumentUpdateOrCreateReceive"/>
 /// </summary>
-public class WarehouseDocumentUpdateReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
+public class WarehouseDocumentUpdateOrCreateReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<WarehouseDocumentModelDB?, TResponseModel<int>?>
 {
     /// <inheritdoc/>

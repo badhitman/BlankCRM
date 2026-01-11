@@ -16,14 +16,14 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<RowsForWarehouseDocumentDeleteResponseModel> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default)
+    public async Task<RowsForWarehouseDocumentDeleteResponseModel> RowsDeleteFromWarehouseDocumentAsync(int[] req, CancellationToken token = default)
     {
         string msg;
         RowsForWarehouseDocumentDeleteResponseModel res = new();
         req = [.. req.Where(x => x > 0)];
         if (!req.Any(x => x > 0))
         {
-            res.AddError($"Пустой запрос > {nameof(RowsForWarehouseDocumentDeleteAsync)}");
+            res.AddError($"Пустой запрос > {nameof(RowsDeleteFromWarehouseDocumentAsync)}");
             return res;
         }
 
@@ -41,7 +41,7 @@ public partial class CommerceImplementService : ICommerceService
 
         if (rowsDB.Count == 0)
         {
-            res.AddWarning($"Данные не найдены. Метод удаления [{nameof(RowsForWarehouseDocumentDeleteAsync)}] не может выполнить команду.");
+            res.AddWarning($"Данные не найдены. Метод удаления [{nameof(RowsDeleteFromWarehouseDocumentAsync)}] не может выполнить команду.");
             return res;
         }
         List<LockTransactionModelDB> offersLocked = [];
@@ -53,7 +53,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerId = x.OfferId,
                     LockerAreaId = x.WarehouseDocument!.WarehouseId,
-                    Marker = nameof(RowsForWarehouseDocumentDeleteAsync),
+                    Marker = nameof(RowsDeleteFromWarehouseDocumentAsync),
                 });
 
             if (!offersLocked.Any(y => y.LockerId == x.OfferId && y.LockerAreaId == x.WarehouseDocument!.WritingOffWarehouseId))
@@ -62,7 +62,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerId = x.OfferId,
                     LockerAreaId = x.WarehouseDocument!.WritingOffWarehouseId,
-                    Marker = nameof(RowsForWarehouseDocumentDeleteAsync),
+                    Marker = nameof(RowsDeleteFromWarehouseDocumentAsync),
                 });
         }
 

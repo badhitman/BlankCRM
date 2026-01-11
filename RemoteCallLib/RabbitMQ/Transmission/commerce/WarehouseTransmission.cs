@@ -14,7 +14,7 @@ public partial class CommerceTransmission
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<OfferAvailabilityModelDB>>(TransmissionQueues.OffersRegistersSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<RowsForWarehouseDocumentDeleteResponseModel> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default)
+    public async Task<RowsForWarehouseDocumentDeleteResponseModel> RowsDeleteFromWarehouseDocumentAsync(int[] req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<RowsForWarehouseDocumentDeleteResponseModel>(TransmissionQueues.RowsDeleteFromWarehouseDocumentCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

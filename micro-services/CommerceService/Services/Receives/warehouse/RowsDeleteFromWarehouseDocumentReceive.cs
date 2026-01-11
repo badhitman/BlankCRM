@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Rows for warehouse document delete
 /// </summary>
-public class RowsForWarehouseDocumentDeleteReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
+public class RowsDeleteFromWarehouseDocumentReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<int[]?, RowsForWarehouseDocumentDeleteResponseModel?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,7 @@ public class RowsForWarehouseDocumentDeleteReceive(ICommerceService commRepo, IF
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        RowsForWarehouseDocumentDeleteResponseModel res = await commRepo.RowsForWarehouseDocumentDeleteAsync(req, token);
+        RowsForWarehouseDocumentDeleteResponseModel res = await commRepo.RowsDeleteFromWarehouseDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

@@ -223,7 +223,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         }
 
         await SetBusyAsync();
-        RowsForWarehouseDocumentDeleteResponseModel res = await CommRepo.RowsForWarehouseDocumentDeleteAsync([currentRow.Id]);
+        RowsForWarehouseDocumentDeleteResponseModel res = await CommRepo.RowsDeleteFromWarehouseDocumentAsync([currentRow.Id]);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         if (!res.Success() || res.DocumentsUpdated is null || res.DocumentsUpdated.Count == 0)

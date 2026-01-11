@@ -2,10 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace SharedLib;
 
@@ -40,13 +38,17 @@ public class ProductsDaichiBusinessResultModel
 
             try
             {
-                _getProducts = [.. tokens.Select(GetProduct).Where(x => x is not null)];
+                List<ProductDaichiModel> _pr = [];
+
+                foreach (ProductDaichiModel v in tokens.Select(GetProduct).Where(x => x is not null)!)
+                    _pr.Add(v);
+
+                _getProducts = _pr;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
-
 
             return _getProducts;
         }
