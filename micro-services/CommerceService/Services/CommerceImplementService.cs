@@ -99,18 +99,6 @@ public partial class CommerceImplementService(
         res.AddSuccess($"Обновление `{GetType().Name}` выполнено");
         return res;
     }
-
-    /// <inheritdoc/>
-    public async Task<ResponseBaseModel> PaymentDocumentDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
-    {
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        DateTime dtu = DateTime.UtcNow;
-        await context.OrdersB2B
-                .Where(x => context.PaymentsB2B.Any(y => y.Id == req.Payload && y.OrderId == x.Id))
-                .ExecuteUpdateAsync(set => set.SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
-
-        return ResponseBaseModel.CreateInfo($"Изменений бд: {await context.PaymentsB2B.Where(x => x.Id == req.Payload).ExecuteDeleteAsync(cancellationToken: token)}");
-    }
     #endregion
 
     #region price-rule

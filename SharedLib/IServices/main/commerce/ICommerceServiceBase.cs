@@ -18,11 +18,6 @@ public partial interface ICommerceServiceBase
     public Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> price_rule, CancellationToken token = default);
 
     /// <summary>
-    /// PaymentDocumentDelete
-    /// </summary>
-    public Task<ResponseBaseModel> PaymentDocumentDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
-
-    /// <summary>
     /// IncomingMerchantPaymentTBankAsync
     /// </summary>
     public Task<ResponseBaseModel> IncomingMerchantPaymentTBankAsync(IncomingMerchantPaymentTBankNotifyModel req, CancellationToken token = default);

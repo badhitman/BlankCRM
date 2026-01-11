@@ -25,15 +25,4 @@ public class PaymentsController(ICommerceTransmission commRepo) : ControllerBase
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.PaymentsWriteCommerce)}"])]
     public async Task<TResponseModel<int>> PaymentDocumentUpdate(PaymentDocumentBaseModel payment)
         => await commRepo.PaymentDocumentUpdateAsync(new() { Payload = payment, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
-
-    /// <summary>
-    /// Удалить платёжный документ
-    /// </summary>
-    /// <remarks>
-    /// Роль: <see cref="ExpressApiRolesEnum.PaymentsWriteCommerce"/>
-    /// </remarks>
-    [HttpDelete($"/{Routes.API_CONTROLLER_NAME}/{Routes.PAYMENT_CONTROLLER_NAME}/{Routes.DELETE_ACTION_NAME}/{{payment_id}}"), LoggerLog]
-    [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.PaymentsWriteCommerce)}"])]
-    public async Task<ResponseBaseModel> PaymentDocumentDelete([FromRoute] int payment_id)
-        => await commRepo.PaymentDocumentDeleteAsync(new() { Payload = payment_id, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
 }
