@@ -11,16 +11,16 @@ namespace Transmission.Receives.commerce;
 /// OfficeOrganizationDelete
 /// </summary>
 public class OfficeOrganizationDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<int, ResponseBaseModel?>
+    : IResponseReceive<int, TResponseModel<OfficeOrganizationModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OfficeOrganizationDeleteCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(int req, CancellationToken token = default)
+    public async Task<TResponseModel<OfficeOrganizationModelDB>?> ResponseHandleActionAsync(int req, CancellationToken token = default)
     {
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        ResponseBaseModel res = await commerceRepo.OfficeOrganizationDeleteAsync(req, token);
+        TResponseModel<OfficeOrganizationModelDB> res = await commerceRepo.OfficeOrganizationDeleteAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

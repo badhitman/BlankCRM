@@ -112,10 +112,9 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> OfficeOrganizationDeleteAsync(int address_id, CancellationToken token = default)
+    public async Task<TResponseModel<OfficeOrganizationModelDB>> OfficeOrganizationDeleteAsync(int address_id, CancellationToken token = default)
     {
-        ResponseBaseModel res = new();
-
+        TResponseModel<OfficeOrganizationModelDB> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         int count = await context
@@ -123,14 +122,15 @@ public partial class CommerceImplementService : ICommerceService
             .CountAsync(x => context.OfficesForOrders.Any(y => y.OrderId == x.Id && y.OfficeId == address_id), cancellationToken: token);
 
         if (count != 0)
+        {
             res.AddError($"Адрес используется в заказах: {count} шт.");
-
-        if (!res.Success())
             return res;
+        }
 
-        await context.Offices.Where(x => x.Id == address_id).ExecuteDeleteAsync(cancellationToken: token);
+        IQueryable<OfficeOrganizationModelDB> q = context.Offices.Where(x => x.Id == address_id);
+        res.Response = await q.Include(x => x.Organization).FirstAsync(cancellationToken: token);
+        await q.ExecuteDeleteAsync(cancellationToken: token);
         res.AddSuccess("Команда успешно выполнена");
-
         return res;
     }
 
