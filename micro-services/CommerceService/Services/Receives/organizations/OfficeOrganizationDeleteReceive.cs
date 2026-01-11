@@ -8,9 +8,9 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// OfficesOrganizationDeleteReceive
+/// OfficeOrganizationDelete
 /// </summary>
-public class OfficesOrganizationDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class OfficeOrganizationDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<int, ResponseBaseModel?>
 {
     /// <inheritdoc/>
