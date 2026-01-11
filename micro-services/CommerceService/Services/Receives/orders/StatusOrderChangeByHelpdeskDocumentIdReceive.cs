@@ -14,7 +14,7 @@ public class StatusOrderChangeByHelpDeskDocumentIdReceive(ICommerceService commR
     : IResponseReceive<TAuthRequestStandardModel<StatusChangeRequestModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.StatusChangeOrderByHelpDeskDocumentIdReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.StatusOrderChangeByHelpDeskDocumentIdReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<StatusChangeRequestModel>? req, CancellationToken token = default)
