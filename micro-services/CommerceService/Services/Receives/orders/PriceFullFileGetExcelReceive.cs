@@ -10,7 +10,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// PriceFullFileGetExcel
 /// </summary>
-public class PriceFullFileGetExcelReceive(ICommerceService commRepo) : IResponseReceive<object?, FileAttachModel?>
+public class PriceFullFileGetExcelReceive(ICommerceService commRepo)
+    : IResponseReceive<object?, FileAttachModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PriceFullFileGetExcelCommerceReceive;

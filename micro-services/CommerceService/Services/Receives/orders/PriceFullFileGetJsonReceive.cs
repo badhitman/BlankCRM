@@ -10,7 +10,8 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// PriceFullFileGetJson
 /// </summary>
-public class PriceFullFileGetJsonReceive(ICommerceService commRepo) : IResponseReceive<object?, FileAttachModel?>
+public class PriceFullFileGetJsonReceive(ICommerceService commRepo)
+    : IResponseReceive<object?, FileAttachModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PriceFullFileGetJsonCommerceReceive;

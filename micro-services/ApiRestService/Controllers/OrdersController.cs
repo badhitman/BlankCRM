@@ -90,7 +90,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
     [HttpPost($"/api/{Routes.ORDER_CONTROLLER_NAME}/{Routes.ROW_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}")]
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     public async Task<TResponseModel<int>> RowForOrderUpdate(RowOfOrderDocumentModelDB row)
-        => await commRepo.RowForOrderUpdateAsync(row);
+        => await commRepo.RowForOrderUpdateOrCreateAsync(row);
 
     /// <summary>
     /// Удалить строки из заказа

@@ -944,7 +944,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> RowForOrderUpdateAsync(RowOfOrderDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> RowForOrderUpdateOrCreateAsync(RowOfOrderDocumentModelDB req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         if (req.Quantity == 0)
@@ -997,7 +997,7 @@ public partial class CommerceImplementService(
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = req.OfferId,
             LockerAreaId = orderRowRecordDb.WarehouseId,
-            Marker = nameof(RowForOrderUpdateAsync),
+            Marker = nameof(RowForOrderUpdateOrCreateAsync),
         }];
 
         if (rowOfOrderDb is not null && rowOfOrderDb.OfferId != req.OfferId)
@@ -1007,7 +1007,7 @@ public partial class CommerceImplementService(
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = rowOfOrderDb.OfferId,
                 LockerAreaId = orderRowRecordDb.WarehouseId,
-                Marker = nameof(RowForOrderUpdateAsync),
+                Marker = nameof(RowForOrderUpdateOrCreateAsync),
             });
         }
 
