@@ -675,7 +675,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> OrderUpdateAsync(OrderDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> OrderUpdateOrCreateAsync(OrderDocumentModelDB req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
@@ -761,7 +761,7 @@ public partial class CommerceImplementService(
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = x.Row.OfferId,
                 LockerAreaId = x.WarehouseId,
-                Marker = nameof(OrderUpdateAsync),
+                Marker = nameof(OrderUpdateOrCreateAsync),
             })];
 
             try
@@ -772,7 +772,7 @@ public partial class CommerceImplementService(
             catch (Exception ex)
             {
                 await transaction.RollbackAsync(token);
-                msg = $"Не удалось выполнить команду блокировки БД {nameof(OrderUpdateAsync)}: ";
+                msg = $"Не удалось выполнить команду блокировки БД {nameof(OrderUpdateOrCreateAsync)}: ";
                 loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError($"{msg}{ex.Message}");
                 return res;
@@ -1399,8 +1399,6 @@ public partial class CommerceImplementService(
     {
         if (string.IsNullOrEmpty(req.SenderActionUserId))
             return new() { Messages = [new() { Text = "string.IsNullOrEmpty(req.SenderActionUserId)", TypeMessage = MessagesTypesEnum.Error }] };
-
-        using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         TResponseModel<UserInfoModel[]> rest = default!;
         TResponseModel<OrderDocumentModelDB[]> orderData = default!;
