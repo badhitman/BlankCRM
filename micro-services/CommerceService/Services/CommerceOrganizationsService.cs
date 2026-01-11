@@ -532,7 +532,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> BankDetailsUpdateAsync(TAuthRequestStandardModel<BankDetailsModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> BankDetailsUpdateOrCreateAsync(TAuthRequestStandardModel<BankDetailsModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
 

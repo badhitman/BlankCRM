@@ -97,7 +97,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<UsersOrganizationsReadReceive, int[], TResponseModel<UserOrganizationModelDB[]>>()
             .RegisterMqListener<UsersOrganizationsSelectReceive, TPaginationRequestAuthModel<UsersOrganizationsStatusesRequestModel>, TResponseModel<TPaginationResponseStandardModel<UserOrganizationModelDB>>>()
             .RegisterMqListener<BankDetailsForOrganizationDeleteReceive, TAuthRequestStandardModel<int>, TResponseModel<BankDetailsModelDB>>()
-            .RegisterMqListener<BankDetailsUpdateReceive, TAuthRequestStandardModel<BankDetailsModelDB>, TResponseModel<int>>()
+            .RegisterMqListener<BankDetailsUpdateOrCreateReceive, TAuthRequestStandardModel<BankDetailsModelDB>, TResponseModel<int>>()
             .RegisterMqListener<WeeklyScheduleCreateOrUpdateReceive, WeeklyScheduleModelDB, TResponseModel<int>>()
             .RegisterMqListener<WeeklySchedulesSelectReceive, TPaginationRequestStandardModel<WorkSchedulesSelectRequestModel>, TPaginationResponseStandardModel<WeeklyScheduleModelDB>>()
             .RegisterMqListener<WeeklySchedulesReadReceive, int[], List<WeeklyScheduleModelDB>>()

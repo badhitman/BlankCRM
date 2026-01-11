@@ -10,7 +10,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Обновить/создать банковские реквизиты
     /// </summary>
-    public Task<TResponseModel<int>> BankDetailsUpdateAsync(TAuthRequestStandardModel<BankDetailsModelDB> req, CancellationToken token = default);
+    public Task<TResponseModel<int>> BankDetailsUpdateOrCreateAsync(TAuthRequestStandardModel<BankDetailsModelDB> req, CancellationToken token = default);
 
     /// <summary>
     /// Удалить банковские реквизиты

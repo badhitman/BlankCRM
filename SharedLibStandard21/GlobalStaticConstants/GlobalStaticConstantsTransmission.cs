@@ -629,7 +629,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string OrganizationsUsersSelectCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATIONS_CONTROLLER_NAME}-{Routes.USERS_CONTROLLER_NAME}", Routes.SELECT_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string BankDetailsUpdateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATIONS_CONTROLLER_NAME}-{Routes.BANK_CONTROLLER_NAME}-{Routes.DETAILS_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
+        public readonly static string BankDetailsUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATIONS_CONTROLLER_NAME}-{Routes.BANK_CONTROLLER_NAME}-{Routes.DETAILS_CONTROLLER_NAME}", $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 
         /// <inheritdoc/>
         public readonly static string BankDetailsForOrganizationDeleteCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATIONS_CONTROLLER_NAME}-{Routes.BANK_CONTROLLER_NAME}-{Routes.DETAILS_CONTROLLER_NAME}", Routes.DELETE_ACTION_NAME);
