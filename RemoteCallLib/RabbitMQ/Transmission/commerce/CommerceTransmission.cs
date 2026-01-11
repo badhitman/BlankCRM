@@ -24,8 +24,8 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<RecordsAttendanceModelDB>>>(GlobalStaticConstantsTransmission.TransmissionQueues.StatusesOrdersAttendancesChangeByHelpDeskDocumentIdReceive, req, waitResponse, token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> OrganizationOfferContractUpdateAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.OrganizationOfferContractUpdateOrCreateCommerceReceive, req, token: token) ?? new();
+    public async Task<ResponseBaseModel> OrganizationOfferContractSetAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.OrganizationOfferContractSetCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<WorksFindResponseModel> WorksSchedulesFindAsync(WorkFindRequestModel req, CancellationToken token = default)

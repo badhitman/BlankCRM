@@ -29,12 +29,12 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> OrganizationOfferContractUpdateAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> OrganizationOfferContractSetAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         if (req.Payload is null)
-            return ResponseBaseModel.CreateError($"{nameof(OrganizationOfferContractUpdateAsync)}: not set for payload");
+            return ResponseBaseModel.CreateError($"{nameof(OrganizationOfferContractSetAsync)}: not set for payload");
 
         if (req.Payload.OfferId < 1)
             req.Payload.OfferId = null;

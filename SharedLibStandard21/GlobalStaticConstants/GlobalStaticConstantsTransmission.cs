@@ -656,7 +656,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string OrganizationUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ORGANIZATION_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
 
         /// <inheritdoc/>
-        public readonly static string OrganizationOfferContractUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATION_CONTROLLER_NAME}-{Routes.OFFER_CONTROLLER_NAME}-{Routes.CONTRACT_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);
+        public readonly static string OrganizationOfferContractSetCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATION_CONTROLLER_NAME}-{Routes.OFFER_CONTROLLER_NAME}-{Routes.CONTRACT_CONTROLLER_NAME}", Routes.SET_ACTION_NAME);
 
         /// <inheritdoc/>
         public readonly static string OrganizationUserUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, $"{Routes.ORGANIZATION_CONTROLLER_NAME}-{Routes.USER_CONTROLLER_NAME}", Routes.UPDATE_ACTION_NAME);

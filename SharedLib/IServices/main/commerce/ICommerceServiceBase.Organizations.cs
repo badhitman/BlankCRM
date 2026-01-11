@@ -10,7 +10,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// OrganizationOfferContractUpdate
     /// </summary>
-    public Task<ResponseBaseModel> OrganizationOfferContractUpdateAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> OrganizationOfferContractSetAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Подбор сотрудников (связи пользователей с компаниями)
