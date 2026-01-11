@@ -187,13 +187,16 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
+        IQueryable<PriceRuleForOfferModelDB> q = context.PricesRules.Where(x => x.Id == req.Payload);
+        TResponseModel<List<PriceRuleForOfferModelDB>> res = new()
+        {
+            Response = await q.Include(x => x.Offer).ToListAsync(cancellationToken: token)
+        };
 
-        ResponseBaseModel res = new();
-
-        if (await context.PricesRules.Where(x => x.Id == req.Payload).ExecuteDeleteAsync(cancellationToken: token) > 0)
+        if (await q.ExecuteDeleteAsync(cancellationToken: token) > 0)
             res.AddSuccess("Правило ценообразования успешно удалено");
         else
             res.AddInfo("Правило отсутствует");

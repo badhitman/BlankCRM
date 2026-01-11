@@ -10,7 +10,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Удалить ценообразование
     /// </summary>
-    public Task<ResponseBaseModel> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> id, CancellationToken token = default);
+    public Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> id, CancellationToken token = default);
 
     /// <summary>
     /// Обновить/создать правило ценообразования

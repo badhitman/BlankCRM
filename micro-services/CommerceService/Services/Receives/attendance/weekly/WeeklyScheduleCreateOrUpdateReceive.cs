@@ -8,9 +8,9 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// Обновление WeeklyScheduleUpdateReceive
+/// WeeklyScheduleCreateOrUpdate
 /// </summary>
-public class WeeklyScheduleUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class WeeklyScheduleCreateOrUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<WeeklyScheduleModelDB?, TResponseModel<int>?>
 {
     /// <summary>
