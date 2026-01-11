@@ -607,13 +607,13 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> BankDetailsForOrganizationDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<BankDetailsModelDB>> BankDetailsForOrganizationDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(req.SenderActionUserId))
-            return ResponseBaseModel.CreateError("string.IsNullOrWhiteSpace(req.SenderActionUserId)");
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "string.IsNullOrWhiteSpace(req.SenderActionUserId)" }] };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        BankDetailsModelDB? bankDb = default;
+        TResponseModel<BankDetailsModelDB> res = new();
         UserInfoModel? actor = default;
 
         await Task.WhenAll([
@@ -624,20 +624,26 @@ public partial class CommerceImplementService : ICommerceService
                 }, token),
             Task.Run(async () =>
             {
-                bankDb = await context.BanksDetails
+                res.Response = await context.BanksDetails
                 .Include(x => x.Organization)
                 .FirstAsync(x => x.Id == req.Payload );
 
             }, token)
         ]);
 
-        if (actor is null || bankDb is null)
-            return ResponseBaseModel.CreateError("Отказано в доступе");
+        if (actor is null)
+        {
+            res.AddError("Отказано в доступе");
+            return res;
+        }
 
         await context.Organizations
             .Where(x => x.BankMainAccount == req.Payload)
-            .ExecuteUpdateAsync(set => set.SetProperty(p => p.BankMainAccount, 0), cancellationToken: token);
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.BankMainAccount, 0), cancellationToken: token);
 
-        return ResponseBaseModel.CreateInfo($"Удалено: {await context.BanksDetails.Where(x => x.Id == req.Payload).ExecuteDeleteAsync(cancellationToken: token)}");
+        res.AddInfo($"Удалено: {await context.BanksDetails.Where(x => x.Id == req.Payload).ExecuteDeleteAsync(cancellationToken: token)}");
+
+        return res;
     }
 }
