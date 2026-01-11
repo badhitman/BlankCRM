@@ -29,18 +29,12 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> OrganizationOfferContractUpdateAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> OrganizationOfferContractUpdateAsync(TAuthRequestStandardModel<OrganizationOfferToggleModel> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         if (req.Payload is null)
-        {
-            return new()
-            {
-                Messages = [new() { Text = $"{nameof(OrganizationOfferToggleModel)}: not set for payload", TypeMessage = MessagesTypesEnum.Error }],
-                Response = false,
-            };
-        }
+            return ResponseBaseModel.CreateError($"{nameof(OrganizationOfferContractUpdateAsync)}: not set for payload");
 
         if (req.Payload.OfferId < 1)
             req.Payload.OfferId = null;
@@ -48,13 +42,8 @@ public partial class CommerceImplementService : ICommerceService
         if (req.Payload.SetValue)
         {
             if (await context.Contractors.AnyAsync(x => x.OrganizationId == req.Payload.OrganizationId && x.OfferId == req.Payload.OfferId, cancellationToken: token))
-            {
-                return new()
-                {
-                    Messages = [new() { Text = "Контракт уже установлен", TypeMessage = MessagesTypesEnum.Info }],
-                    Response = false,
-                };
-            }
+                return ResponseBaseModel.CreateInfo("Контракт уже установлен");
+
             await context.Contractors.AddAsync(new() { OfferId = req.Payload.OfferId, OrganizationId = req.Payload.OrganizationId }, token);
 
             try
@@ -65,34 +54,17 @@ public partial class CommerceImplementService : ICommerceService
             {
                 string msg = $"Ошибка создания контракта [{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}]";
                 loggerRepo.LogError(ex, msg);
-                return new()
-                {
-                    Messages = [new() { Text = $"{msg}: {ex.Message}", TypeMessage = MessagesTypesEnum.Error }],
-                    Response = false,
-                };
+                return ResponseBaseModel.CreateError($"{msg}: {ex.Message}");
             }
 
-            return new()
-            {
-                Messages = [new() { Text = "Контракт создан", TypeMessage = MessagesTypesEnum.Success }],
-                Response = true,
-            };
+            return ResponseBaseModel.CreateSuccess("Контракт создан");
         }
         else
         {
             if (!await context.Contractors.AnyAsync(x => x.OrganizationId == req.Payload.OrganizationId && x.OfferId == req.Payload.OfferId, cancellationToken: token))
-            {
-                return new()
-                {
-                    Messages = [new() { Text = "Контракта нет", TypeMessage = MessagesTypesEnum.Info }],
-                    Response = false,
-                };
-            }
-            return new()
-            {
-                Messages = [new() { Text = "Контракт удалён", TypeMessage = MessagesTypesEnum.Success }],
-                Response = await context.Contractors.Where(x => x.OrganizationId == req.Payload.OrganizationId && x.OfferId == req.Payload.OfferId).ExecuteDeleteAsync(cancellationToken: token) > 0,
-            };
+                return ResponseBaseModel.CreateInfo("Контракта нет");
+
+            return ResponseBaseModel.CreateSuccess($"Контрактов удалено: {await context.Contractors.Where(x => x.OrganizationId == req.Payload.OrganizationId && x.OfferId == req.Payload.OfferId).ExecuteDeleteAsync(cancellationToken: token)}");
         }
     }
 

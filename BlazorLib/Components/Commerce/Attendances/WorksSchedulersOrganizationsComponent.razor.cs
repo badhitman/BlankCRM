@@ -49,7 +49,7 @@ public partial class WorksSchedulersOrganizationsComponent : BlazorBusyComponent
         else
             req.Payload.SetValue = org.Contractors?.Any(x => x.OrganizationId == org.Id && x.OfferId.HasValue && x.OfferId == Offer.Id) != true;
 
-        TResponseModel<bool> res = await CommerceRepo.OrganizationOfferContractUpdateAsync(req);
+        ResponseBaseModel res = await CommerceRepo.OrganizationOfferContractUpdateAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         if (table is not null)
