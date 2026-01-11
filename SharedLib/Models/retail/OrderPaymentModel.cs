@@ -5,13 +5,10 @@
 namespace SharedLib;
 
 /// <summary>
-/// DeletePaymentOrderLinkRetailDocumentsRequestModel
+/// OrderPaymentModel
 /// </summary>
-public class DeletePaymentOrderLinkRetailDocumentsRequestModel
+public class OrderPaymentModel
 {
-    /// <inheritdoc/>
-    public int OrderPaymentLinkId { get; set; }
-
     /// <inheritdoc/>
     public int OrderId { get; set; }
 

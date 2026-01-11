@@ -71,7 +71,7 @@ public interface IRetailService
     public Task<TResponseModel<decimal>> TotalWeightOrdersDocumentsLinksAsync(TotalWeightDeliveriesOrdersLinksDocumentsRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeleteDeliveryOrderLinkDocumentAsync(DeleteDeliveryOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> DeleteDeliveryOrderLinkDocumentAsync(OrderDeliveryModel req, CancellationToken token = default);
     #endregion
 
     #region Payments orders link`s
@@ -88,7 +88,7 @@ public interface IRetailService
     public Task<TResponseModel<PaymentOrderRetailLinkModelDB[]>> PaymentsOrdersDocumentsLinksGetAsync(int[] req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(DeletePaymentOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(OrderPaymentModel req, CancellationToken token = default);
     #endregion
 
     #region Payment Document
@@ -223,7 +223,7 @@ public interface IRetailService
     public Task<TResponseModel<ConversionOrderRetailLinkModelDB[]>> ConversionsOrdersDocumentsLinksReadRetailAsync(int[] req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentRetailAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentRetailAsync(OrderConversionModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TResponseModel<decimal>> GetSumConversionsOrdersAmountsAsync(GetSumConversionsOrdersAmountsRequestModel req, CancellationToken token = default);

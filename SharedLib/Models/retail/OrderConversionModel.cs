@@ -2,7 +2,6 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-
 namespace SharedLib;
 
 /// <summary>
@@ -11,8 +10,8 @@ namespace SharedLib;
 public class OrderConversionModel
 {
     /// <inheritdoc/>
-    public int ConversionDocumentId { get; set; }
+    public int OrderDocumentId { get; set; }
 
     /// <inheritdoc/>
-    public int OrderDocumentId { get; set; }
+    public int ConversionDocumentId { get; set; }
 }

@@ -121,12 +121,12 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(DeletePaymentOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(OrderPaymentModel req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         int res = await context.PaymentsOrdersLinks
-             .Where(x => x.Id == req.OrderPaymentLinkId || (x.OrderDocumentId == req.OrderId && x.PaymentDocumentId == req.PaymentId))
+             .Where(x => x.OrderDocumentId == req.OrderId && x.PaymentDocumentId == req.PaymentId)
              .ExecuteDeleteAsync(cancellationToken: token);
 
         return res == 0

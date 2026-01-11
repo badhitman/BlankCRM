@@ -70,14 +70,16 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         await SetBusyAsync(false);
     }
 
-    async Task DeleteRow(int rowLinkId)
+    async Task DeleteRow((int orderId, int otherDocId) rowLinkId)
     {
         if (!CanDeleteRow(rowLinkId))
             return;
 
-        DeleteDeliveryOrderLinkRetailDocumentsRequestModel req = new()
+        OrderDeliveryModel req = new()
         {
-            OrderDeliveryLinkId = initDeleteRow
+            OrderId = initDeleteRow!.Value.orderId,
+            DeliveryId = initDeleteRow.Value.otherDocId,
+
         };
         await SetBusyAsync();
 
@@ -111,7 +113,7 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
 
     void ResetItemToOriginalValues(object element)
     {
-        initDeleteRow = 0;
+        initDeleteRow = null;
         if (elementBeforeEdit is null)
             return;
 

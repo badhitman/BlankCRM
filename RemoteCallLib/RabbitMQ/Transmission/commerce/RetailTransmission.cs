@@ -146,7 +146,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
        => await rabbitClient.MqRemoteCallAsync<TResponseModel<RetailOrderDeliveryLinkModelDB[]>>(TransmissionQueues.DeliveriesOrdersLinksDocumentsReadRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteDeliveryOrderLinkDocumentAsync(DeleteDeliveryOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteDeliveryOrderLinkDocumentAsync(OrderDeliveryModel req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.DeleteDeliveryOrderLinkDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -190,7 +190,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
        => await rabbitClient.MqRemoteCallAsync<TResponseModel<PaymentOrderRetailLinkModelDB[]>>(TransmissionQueues.PaymentsOrdersDocumentsLinksGetReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(DeletePaymentOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(OrderPaymentModel req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.DeletePaymentOrderLinkDocumentReceive, req, token: token) ?? new();
     #endregion
 
@@ -270,7 +270,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
        => await rabbitClient.MqRemoteCallAsync<TResponseModel<ConversionOrderRetailLinkModelDB[]>>(TransmissionQueues.ConversionsOrdersDocumentsLinksRetailReadReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentRetailAsync(DeleteConversionOrderLinkRetailDocumentsRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentRetailAsync(OrderConversionModel req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.DeleteConversionOrderLinkDocumentRetailReceive, req, token: token) ?? new();
     #endregion
 

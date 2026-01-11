@@ -65,7 +65,7 @@
             <col />
         }
         <col />
-        <col style="@(initDeleteRow > 0 ? "width:250px;" : "width:50px;")" />
+        <col style="@(initDeleteRow.HasValue ? "width:250px;" : "width:50px;")" />
         <col style="width:50px;" />
     </ColGroup>
     <HeaderContent>
@@ -107,14 +107,14 @@
             @context.WeightShipping
         </MudTd>
         <MudTd>
-            @if (initDeleteRow == context.Id)
+            @if (initDeleteRow?.orderId == context.OrderDocumentId && initDeleteRow?.otherDocId == context.DeliveryDocumentId)
             {
-                <span title="кликните для подтверждения удаления" class="me-2 badge text-bg-danger cursor-pointer" @onclick="() => DeleteRow(context.Id)">Подтвердить удаление</span>
-                <span title="кликните для отмены удаления" class="text-bg-secondary cursor-pointer badge" @onclick="() => initDeleteRow = 0">отмена</span>
+                <span title="кликните для подтверждения удаления" class="me-2 badge text-bg-danger cursor-pointer" @onclick="() => DeleteRow((context.OrderDocumentId, context.DeliveryDocumentId))">Подтвердить удаление</span>
+                <span title="кликните для отмены удаления" class="text-bg-secondary cursor-pointer badge" @onclick="() => initDeleteRow = null">отмена</span>
             }
             else
             {
-                <MudIconButton OnClick="() => DeleteRow(context.Id)" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+                <MudIconButton OnClick="() => DeleteRow((context.OrderDocumentId, context.DeliveryDocumentId))" title="Удалить строку" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
             }
         </MudTd>
     </RowTemplate>

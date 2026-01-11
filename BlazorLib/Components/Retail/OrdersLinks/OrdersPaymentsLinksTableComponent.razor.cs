@@ -28,14 +28,15 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
         _visibleCreateNewPayment;
 
 
-    async Task DeleteRow(int rowLinkId)
+    async Task DeleteRow((int orderId, int otherDocId) rowLinkId)
     {
         if (!CanDeleteRow(rowLinkId))
             return;
 
-        DeletePaymentOrderLinkRetailDocumentsRequestModel req = new()
+        OrderPaymentModel req = new()
         {
-            OrderPaymentLinkId = initDeleteRow
+            OrderId = initDeleteRow!.Value.orderId,
+            PaymentId = initDeleteRow.Value.otherDocId,
         };
         await SetBusyAsync();
 
@@ -69,7 +70,7 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
 
     void ResetItemToOriginalValues(object element)
     {
-        initDeleteRow = 0;
+        initDeleteRow = null;
         if (elementBeforeEdit is null)
             return;
 

@@ -53,7 +53,7 @@ public class OrderLinkBaseComponent<T> : BlazorBusyComponentBaseModel
     };
 
     /// <inheritdoc/>
-    protected int initDeleteRow;
+    protected (int orderId, int otherDocId)? initDeleteRow;
 
 
     /// <inheritdoc/>
@@ -62,7 +62,7 @@ public class OrderLinkBaseComponent<T> : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected async Task ItemHasBeenCommittedFinalize()
     {
-        initDeleteRow = 0;
+        initDeleteRow = null;
 
         if (tableRef is not null)
             await tableRef.ReloadServerData();
@@ -75,7 +75,7 @@ public class OrderLinkBaseComponent<T> : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected async Task DeleteRowFinalize()
     {
-        initDeleteRow = 0;
+        initDeleteRow = null;
         if (tableRef is not null)
             await tableRef.ReloadServerData();
 
@@ -88,22 +88,22 @@ public class OrderLinkBaseComponent<T> : BlazorBusyComponentBaseModel
     /// <inheritdoc/>
     protected void BackupItem(object element)
     {
-        initDeleteRow = 0;
+        initDeleteRow = null;
         if (element is T other)
             elementBeforeEdit = GlobalTools.CreateDeepCopy(other)!;
     }
 
     /// <inheritdoc/>
-    protected bool CanDeleteRow(int rowLinkId)
+    protected bool CanDeleteRow((int orderId, int otherDocId) rowLinkId)
     {
-        if (initDeleteRow == 0)
+        if (!initDeleteRow.HasValue)
         {
             initDeleteRow = rowLinkId;
             return false;
         }
-        if (initDeleteRow != rowLinkId)
+        if (initDeleteRow.Value.orderId != rowLinkId.orderId || initDeleteRow.Value.otherDocId != rowLinkId.otherDocId)
         {
-            initDeleteRow = 0;
+            initDeleteRow = rowLinkId;
             return false;
         }
 
