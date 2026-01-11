@@ -88,28 +88,46 @@
             ? (rubrics.Min(x => x.SortIndex), rubrics.Where(x => x.SortIndex != uint.MaxValue).Max(x => x.SortIndex))
             : (0, 0);
 
-        return [.. rubrics.Select(x => {
-                MoveRowStatesEnum mhp;
-            if(x.SortIndex == min && x.SortIndex == max)
+        IEnumerable<TreeItemDataRubricModel> _src = rubrics.Select(x =>
+        {
+            MoveRowStatesEnum mhp;
+            if (x.SortIndex == min && x.SortIndex == max)
                 mhp = MoveRowStatesEnum.Singleton;
-            else if(x.SortIndex == min)
+            else if (x.SortIndex == min)
                 mhp = MoveRowStatesEnum.Start;
-            else if(x.SortIndex == max)
+            else if (x.SortIndex == max)
                 mhp = MoveRowStatesEnum.End;
             else
                 mhp = MoveRowStatesEnum.Between;
 
-            TreeItemDataRubricModel _ri = new (x, x.Id == 0 ? Icons.Material.Filled.PlaylistAdd : SelectedValuesChanged is null ? Icons.Material.Filled.CropFree : Icons.Custom.Uncategorized.Folder )
-                {
-                    MoveRowState = mhp,
-                    Selected = SelectedValuesChanged?.SelectedNodes.Contains(x.Id) == true
-                };
+            TreeItemDataRubricModel _ri = new(x, x.Id == 0 ? Icons.Material.Filled.PlaylistAdd : SelectedValuesChanged is null ? Icons.Material.Filled.CropFree : Icons.Custom.Uncategorized.Folder)
+            {
+                MoveRowState = mhp,
+                Selected = SelectedValuesChanged?.SelectedNodes.Contains(x.Id) == true
+            };
 
-            if(SingleLevelMode)
+            if (SingleLevelMode)
                 _ri.Expandable = false;
 
             return _ri;
-        })];
+        });
+
+        List<TreeItemData<UniversalBaseModel>> convert(IEnumerable<TreeItemDataRubricModel> sender)
+        {
+            return [.. sender.Select(x => new TreeItemData<UniversalBaseModel>()
+            {
+                Visible = x.Visible,
+                Value = x.Value,
+                Text = x.Text,
+                Selected = x.Selected,
+                Icon = x.Icon,
+                Expanded = x.Expanded,
+                Expandable = x.Expandable,
+                Children = x.Children!
+            })];
+        }
+
+        return convert(_src);
     }
 
     void ItemUpdAction(UniversalBaseModel sender)
