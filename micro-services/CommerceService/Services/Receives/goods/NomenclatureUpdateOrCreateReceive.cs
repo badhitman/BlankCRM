@@ -13,14 +13,10 @@ namespace Transmission.Receives.commerce;
 public class NomenclatureUpdateOrCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<NomenclatureModelDB?, TResponseModel<int>?>
 {
-    /// <summary>
-    /// Обновление номенклатуры
-    /// </summary>
+    /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.NomenclatureUpdateOrCreateCommerceReceive;
 
-    /// <summary>
-    /// Обновление номенклатуры
-    /// </summary>
+    /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(NomenclatureModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);

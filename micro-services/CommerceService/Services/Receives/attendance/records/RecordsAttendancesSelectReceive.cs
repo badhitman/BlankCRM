@@ -16,9 +16,7 @@ public class RecordsAttendancesSelectReceive(ICommerceService commerceRepo)
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RecordsAttendancesSelectCommerceReceive;
 
-    /// <summary>
-    /// Подбор записей (актуальных)
-    /// </summary>
+    /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<RecordsAttendanceModelDB>?> ResponseHandleActionAsync(TPaginationRequestAuthModel<RecordsAttendancesRequestModel>? payload, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(payload);

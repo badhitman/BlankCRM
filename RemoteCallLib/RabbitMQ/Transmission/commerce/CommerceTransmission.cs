@@ -16,8 +16,8 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<RecordsAttendanceModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.RecordsAttendancesSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> CreateAttendanceRecordsAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.CreateAttendanceRecordsCommerceReceive, req, token: token) ?? new();
+    public async Task<ResponseBaseModel> AttendanceRecordsCreateAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.AttendanceRecordsCreateCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<List<RecordsAttendanceModelDB>>> StatusesOrdersAttendancesChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default)
@@ -185,7 +185,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
 
     /// <inheritdoc/>
     public async Task<TResponseModel<RecordsAttendanceModelDB[]>> AttendanceRecordsDeleteAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<RecordsAttendanceModelDB[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.AttendanceRecordDeleteCommerceReceive, req, token: token) ?? new();
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<RecordsAttendanceModelDB[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.AttendanceRecordsDeleteCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> BankDetailsUpdateOrCreateAsync(TAuthRequestStandardModel<BankDetailsModelDB> req, CancellationToken token = default)

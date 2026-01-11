@@ -67,7 +67,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> CreateAttendanceRecordsAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default)
+    public async Task<ResponseBaseModel> AttendanceRecordsCreateAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default)
     {
         if (workSchedules.Payload is null)
             return ResponseBaseModel.CreateError("workSchedules.Payload is null");
@@ -127,7 +127,7 @@ public partial class CommerceImplementService : ICommerceService
                 LockerName = $"{nameof(RecordsAttendanceModelDB)} /{x.DateExecute}: {x.StartPart}-{x.EndPart}",
                 LockerId = x.OfferId,
                 LockerAreaId = x.OrganizationId,
-                 Marker = nameof(CreateAttendanceRecordsAsync),
+                 Marker = nameof(AttendanceRecordsCreateAsync),
             })];
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
 
@@ -139,7 +139,7 @@ public partial class CommerceImplementService : ICommerceService
         catch (Exception ex)
         {
             await transaction.RollbackAsync(token);
-            msg = $"Не удалось выполнить команду блокировки БД {nameof(CreateAttendanceRecordsAsync)}: ";
+            msg = $"Не удалось выполнить команду блокировки БД {nameof(AttendanceRecordsCreateAsync)}: ";
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(workSchedules, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError(msg);
             return res;

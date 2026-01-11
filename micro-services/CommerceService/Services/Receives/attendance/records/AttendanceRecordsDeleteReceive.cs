@@ -13,14 +13,10 @@ namespace Transmission.Receives.commerce;
 public class AttendanceRecordsDeleteReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<int[]>?, TResponseModel<RecordsAttendanceModelDB[]>?>
 {
-    /// <summary>
-    /// Обновление WorkScheduleCalendar
-    /// </summary>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.AttendanceRecordDeleteCommerceReceive;
+    /// <inheritdoc/>
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.AttendanceRecordsDeleteCommerceReceive;
 
-    /// <summary>
-    /// Обновление WorkScheduleCalendar
-    /// </summary>
+    /// <inheritdoc/>
     public async Task<TResponseModel<RecordsAttendanceModelDB[]>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);

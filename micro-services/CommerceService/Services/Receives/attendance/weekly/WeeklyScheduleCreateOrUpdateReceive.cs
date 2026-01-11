@@ -13,14 +13,10 @@ namespace Transmission.Receives.commerce;
 public class WeeklyScheduleCreateOrUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<WeeklyScheduleModelDB?, TResponseModel<int>?>
 {
-    /// <summary>
-    /// Обновление WorkSchedule
-    /// </summary>
+    /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.WeeklyScheduleCreateOrUpdateReceive;
 
-    /// <summary>
-    /// Обновление WorkSchedule
-    /// </summary>
+    /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(WeeklyScheduleModelDB? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);

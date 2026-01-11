@@ -88,7 +88,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
         };
 
         await SetBusyAsync();
-        ResponseBaseModel res = await CommerceRepo.CreateAttendanceRecordsAsync(req);
+        ResponseBaseModel res = await CommerceRepo.AttendanceRecordsCreateAsync(req);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (res.Success())

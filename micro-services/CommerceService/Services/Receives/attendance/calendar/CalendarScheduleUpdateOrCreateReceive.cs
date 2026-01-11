@@ -13,14 +13,10 @@ namespace Transmission.Receives.commerce;
 public class CalendarScheduleUpdateOrCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<CalendarScheduleModelDB>?, TResponseModel<int>?>
 {
-    /// <summary>
-    /// Обновление WorkScheduleCalendar
-    /// </summary>
+    /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CalendarScheduleUpdateOrCreateCommerceReceive;
 
-    /// <summary>
-    /// Обновление WorkScheduleCalendar
-    /// </summary>
+    /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<CalendarScheduleModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);

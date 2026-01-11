@@ -13,7 +13,7 @@ public partial interface ICommerceServiceBase
     /// <remarks>
     /// Бронирует слоты (свободные)
     /// </remarks>
-    public Task<ResponseBaseModel> CreateAttendanceRecordsAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default);
+    public Task<ResponseBaseModel> AttendanceRecordsCreateAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel> workSchedules, CancellationToken token = default);
 
     /// <summary>
     /// Получить заказы (по заявкам)

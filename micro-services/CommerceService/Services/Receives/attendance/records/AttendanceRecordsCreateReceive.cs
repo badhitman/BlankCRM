@@ -17,14 +17,14 @@ public class AttendanceRecordsCreateReceive(ICommerceService commerceRepo, IFile
     : IResponseReceive<TAuthRequestStandardModel<CreateAttendanceRequestModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CreateAttendanceRecordsCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.AttendanceRecordsCreateCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<CreateAttendanceRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        ResponseBaseModel res = await commerceRepo.CreateAttendanceRecordsAsync(req, token);
+        ResponseBaseModel res = await commerceRepo.AttendanceRecordsCreateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
