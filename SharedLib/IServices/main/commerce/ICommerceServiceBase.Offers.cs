@@ -30,7 +30,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// OfferUpdate
     /// </summary>
-    public Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestStandardModel<OfferModelDB> req, CancellationToken token = default);
+    public Task<TResponseModel<int>> OfferUpdateOrCreateAsync(TAuthRequestStandardModel<OfferModelDB> req, CancellationToken token = default);
 
     /// <summary>
     /// Загрузка справочника номенклатуры/офферов

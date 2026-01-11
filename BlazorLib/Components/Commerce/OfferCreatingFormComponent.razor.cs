@@ -60,7 +60,7 @@ public partial class OfferCreatingFormComponent : BlazorBusyComponentBaseAuthMod
         };
         await SetBusyAsync();
 
-        TResponseModel<int> res = await CommerceRepo.OfferUpdateAsync(new()
+        TResponseModel<int> res = await CommerceRepo.OfferUpdateOrCreateAsync(new()
         {
             Payload = off,
             SenderActionUserId = CurrentUserSession.UserId

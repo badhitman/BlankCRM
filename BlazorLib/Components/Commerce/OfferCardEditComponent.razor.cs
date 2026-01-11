@@ -49,7 +49,7 @@ public partial class OfferCardEditComponent : BlazorBusyComponentBaseAuthModel
             return;
 
         await SetBusyAsync();
-        TResponseModel<int> res = await CommerceRepo.OfferUpdateAsync(new() { Payload = editOffer, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> res = await CommerceRepo.OfferUpdateOrCreateAsync(new() { Payload = editOffer, SenderActionUserId = CurrentUserSession.UserId });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (res.Success() && res.Response > 0)
             CurrentOffer = GlobalTools.CreateDeepCopy(editOffer)!;

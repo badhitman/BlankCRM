@@ -284,7 +284,7 @@ public partial class CommerceImplementService(
         return ResponseBaseModel.CreateSuccess("Ok");
     }
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> OfferUpdateAsync(TAuthRequestStandardModel<OfferModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> OfferUpdateOrCreateAsync(TAuthRequestStandardModel<OfferModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
 
