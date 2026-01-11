@@ -19,8 +19,9 @@ public partial class CommerceImplementService : ICommerceService
     public async Task<RowsForWarehouseDocumentDeleteResponseModel> RowsForWarehouseDocumentDeleteAsync(int[] req, CancellationToken token = default)
     {
         string msg;
-        RowsForWarehouseDocumentDeleteResponseModel res = new() { Response = req.Any(x => x > 0) };
-        if (!res.Response)
+        RowsForWarehouseDocumentDeleteResponseModel res = new();
+        req = [.. req.Where(x => x > 0)];
+        if (!req.Any(x => x > 0))
         {
             res.AddError($"Пустой запрос > {nameof(RowsForWarehouseDocumentDeleteAsync)}");
             return res;
@@ -170,9 +171,9 @@ public partial class CommerceImplementService : ICommerceService
             res.DocumentsUpdated.Add(v.Key, new([.. v], docVer));
         }
 
-        res.Response = await context.RowsWarehouses
-            .Where(x => req.Any(y => y == x.Id))
-            .ExecuteDeleteAsync(cancellationToken: token) != 0;
+        await context.RowsWarehouses
+           .Where(x => req.Any(y => y == x.Id))
+           .ExecuteDeleteAsync(cancellationToken: token);
 
         await transaction.CommitAsync(token);
 

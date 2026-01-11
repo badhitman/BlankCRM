@@ -7,7 +7,7 @@ namespace SharedLib;
 /// <summary>
 /// RowsForWarehouseDocumentDeleteResponseModel
 /// </summary>
-public class RowsForWarehouseDocumentDeleteResponseModel : TResponseModel<bool>
+public class RowsForWarehouseDocumentDeleteResponseModel : ResponseBaseModel
 {
     /// <inheritdoc/>
     public Dictionary<int, DeliveryDocumentMetadataRecord>? DocumentsUpdated { get; set; }
