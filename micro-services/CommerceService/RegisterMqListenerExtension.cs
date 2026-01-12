@@ -117,7 +117,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<PriceRuleDeleteReceive, TAuthRequestStandardModel<int>, TResponseModel<List<PriceRuleForOfferModelDB>>>()
             .RegisterMqListener<AttendancesRecordsByIssuesGetReceive, OrdersByIssuesSelectRequestModel, TResponseModel<RecordsAttendanceModelDB[]>>()
             .RegisterMqListener<WorksFindReceive, WorkFindRequestModel, WorksFindResponseModel>()
-            .RegisterMqListener<PriceRuleUpdateReceive, TAuthRequestStandardModel<PriceRuleForOfferModelDB>, TResponseModel<int>>()
+            .RegisterMqListener<PriceRuleUpdateOrCreateReceive, TAuthRequestStandardModel<PriceRuleForOfferModelDB>, TResponseModel<int>>()
             .RegisterMqListener<PricesRulesGetForOffersReceive, TAuthRequestStandardModel<int[]>, TResponseModel<List<PriceRuleForOfferModelDB>>>()
             .RegisterMqListener<PaymentDocumentUpdateReceive, TAuthRequestStandardModel<PaymentDocumentBaseModel>, TResponseModel<int>>()
             .RegisterMqListener<OrderUpdateOrCreateReceive, OrderDocumentModelDB, TResponseModel<int>>()

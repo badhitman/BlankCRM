@@ -124,7 +124,7 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> PriceRuleUpdateOrCreateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);

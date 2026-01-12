@@ -15,7 +15,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Обновить/создать правило ценообразования
     /// </summary>
-    public Task<TResponseModel<int>> PriceRuleUpdateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> price_rule, CancellationToken token = default);
+    public Task<TResponseModel<int>> PriceRuleUpdateOrCreateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> price_rule, CancellationToken token = default);
 
     /// <summary>
     /// IncomingMerchantPaymentTBankAsync
