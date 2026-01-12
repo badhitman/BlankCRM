@@ -36,11 +36,14 @@ public class TraceReceiverRecord
     /// </summary>
     public static TraceReceiverRecord Build(string _receiverName, object? _requestBody = null)
     {
+        if (_receiverName.StartsWith(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))
+            _receiverName = _receiverName.Substring(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.Length);
+
         return new()
         {
             UTCTimestampInitReceive = DateTime.UtcNow,
             RequestBody = _requestBody,
-            ReceiverName = _receiverName.Replace(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix, ""),
+            ReceiverName = _receiverName,
         };
     }
 
