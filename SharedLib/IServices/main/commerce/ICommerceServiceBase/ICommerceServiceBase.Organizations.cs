@@ -63,5 +63,5 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Удалить офис/филиал организации
     /// </summary>
-    public Task<TResponseModel<OfficeOrganizationModelDB>> OfficeOrganizationDeleteAsync(int req, CancellationToken token = default);
+    public Task<TResponseModel<OfficeOrganizationModelDB>> OfficeOrganizationDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default);
 }

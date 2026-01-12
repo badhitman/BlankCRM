@@ -84,14 +84,20 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<OfficeOrganizationModelDB>> OfficeOrganizationDeleteAsync(int address_id, CancellationToken token = default)
+    public async Task<TResponseModel<OfficeOrganizationModelDB>> OfficeOrganizationDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         TResponseModel<OfficeOrganizationModelDB> res = new();
+        int addressOfficeId = req.Payload;
+        if (addressOfficeId <= 0)
+        {
+            res.AddError("addressOfficeId <= 0");
+            return res;
+        }
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         int count = await context
             .OrdersB2B
-            .CountAsync(x => context.OfficesForOrders.Any(y => y.OrderId == x.Id && y.OfficeId == address_id), cancellationToken: token);
+            .CountAsync(x => context.OfficesForOrders.Any(y => y.OrderId == x.Id && y.OfficeId == addressOfficeId), cancellationToken: token);
 
         if (count != 0)
         {
@@ -99,7 +105,7 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        IQueryable<OfficeOrganizationModelDB> q = context.Offices.Where(x => x.Id == address_id);
+        IQueryable<OfficeOrganizationModelDB> q = context.Offices.Where(x => x.Id == addressOfficeId);
         res.Response = await q.Include(x => x.Organization).FirstAsync(cancellationToken: token);
         await q.ExecuteDeleteAsync(cancellationToken: token);
         res.AddSuccess("Команда успешно выполнена");
