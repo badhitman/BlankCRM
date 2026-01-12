@@ -15,9 +15,6 @@ namespace BlazorLib.Components.Commerce.Attendances;
 public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
-    IStorageTransmission StorageTransmissionRepo { get; set; } = default!;
-
-    [Inject]
     ICommerceTransmission CommerceRepo { get; set; } = default!;
 
 
@@ -45,11 +42,8 @@ public partial class OffersAttendancesListComponent : BlazorBusyComponentBaseAut
     /// </summary>
     private async Task<TableData<OfferModelDB>> ServerReload(TableState state, CancellationToken token)
     {
-        if (!readyLoadTable)
+        if (!readyLoadTable || CurrentUserSession is null)
             return new TableData<OfferModelDB>() { TotalItems = 0, Items = [] };
-
-        if (CurrentUserSession is null)
-            throw new ArgumentNullException(nameof(CurrentUserSession));
 
         TPaginationRequestStandardModel<OffersSelectRequestModel> req = new()
         {

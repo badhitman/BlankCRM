@@ -151,7 +151,7 @@ public partial class CreateOrderAttendancesComponent : BlazorBusyComponentBaseAu
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await Task.WhenAll([LoadOffers(0), ReadCurrentUser()]);
+        await Task.WhenAll([LoadOffers(0), OnInitializedAsync()]);
         await ServerReload();
         SelectedOfferId = AllOffers.FirstOrDefault()?.Id;
     }

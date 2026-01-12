@@ -16,9 +16,6 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseAuthM
     [Inject]
     IBankService BankRepo { get; set; } = default!;
 
-    [Inject]
-    IIdentityTransmission identityRepo { get; set; } = default!;
-
 
     MudTable<CustomerBankIdModelDB>? table;
     string? searchString;
@@ -46,7 +43,7 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseAuthM
             return;
 
         await SetBusyAsync();
-        TResponseModel<UserInfoModel[]> users = await identityRepo.GetUsersOfIdentityAsync(usersIds);
+        TResponseModel<UserInfoModel[]> users = await IdentityRepo.GetUsersOfIdentityAsync(usersIds);
         SnackBarRepo.ShowMessagesResponse(users.Messages);
         if (users.Success() && users.Response is not null && users.Response.Length != 0)
             lock (UsersCache)

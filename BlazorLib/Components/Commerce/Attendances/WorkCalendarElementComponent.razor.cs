@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Commerce.Attendances;
@@ -32,6 +31,7 @@ public partial class WorkCalendarElementComponent : BlazorBusyComponentBaseAuthM
     [Parameter]
     public Action? WorkCalendarReloadDateHandler { get; set; }
 
+
     CalendarScheduleModelDB editWorkScheduleCalendar = default!;
     DateTime WorkScheduleDate
     {
@@ -56,7 +56,12 @@ public partial class WorkCalendarElementComponent : BlazorBusyComponentBaseAuthM
             return;
 
         await SetBusyAsync();
-        TResponseModel<int> res = await CommerceRepo.CalendarScheduleUpdateOrCreateAsync(new() { Payload = editWorkScheduleCalendar, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> res = await CommerceRepo.CalendarScheduleUpdateOrCreateAsync(new()
+        {
+            Payload = editWorkScheduleCalendar,
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
         WorkScheduleCalendar = GlobalTools.CreateDeepCopy(editWorkScheduleCalendar)!;
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);

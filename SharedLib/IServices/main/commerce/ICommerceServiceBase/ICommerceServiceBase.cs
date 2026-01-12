@@ -25,7 +25,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Недельное расписание обновить/создать
     /// </summary>
-    public Task<TResponseModel<int>> WeeklyScheduleCreateOrUpdateAsync(WeeklyScheduleModelDB work, CancellationToken token = default);
+    public Task<TResponseModel<int>> WeeklyScheduleCreateOrUpdateAsync(TAuthRequestStandardModel<WeeklyScheduleModelDB> work, CancellationToken token = default);
 
     /// <summary>
     /// Подбор недельных расписаний

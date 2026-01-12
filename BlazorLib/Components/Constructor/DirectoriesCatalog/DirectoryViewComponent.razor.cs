@@ -78,10 +78,4 @@ public partial class DirectoryViewComponent : BlazorBusyComponentBaseAuthModel
         await elementsListOfDirectoryView_ref.ReloadElements(selectedDirectoryId, true);
         StateHasChanged();
     }
-
-    /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
-    {
-        await ReadCurrentUser();
-    }
 }

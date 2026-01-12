@@ -125,10 +125,9 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
                 .Where(x => value?.Any(y => y.Id == x.OfficeId) != true).ToArray();
 
             // адреса/вкладки, которые можно свободно удалить (без строк)
-            OfficeOrganizationModelDB[] _prev = _qr
+            OfficeOrganizationModelDB[] _prev = [.. _qr
                  .Where(x => x.Rows is null || x.Rows.Count == 0)
-                 .Select(Convert)
-                 .ToArray();
+                 .Select(Convert)];
             if (_prev.Length != 0)
             {
                 CurrentCart.OfficesTabs!.RemoveAll(x => _prev.Any(y => y.Id == x.OfficeId));
@@ -137,10 +136,9 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
             }
 
             // адреса/вкладки, которые имеют строки: требуют подтверждения у пользователя
-            _prev = _qr
+            _prev = [.. _qr
                 .Where(x => x.Rows is not null && x.Rows.Count != 0)
-                .Select(Convert)
-                .ToArray();
+                .Select(Convert)];
 
             if (_prev.Length != 0)
             {
@@ -429,7 +427,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
-        await ReadCurrentUser();
+        await base.OnInitializedAsync();
         await OrganizationReset();
         await UpdateCachePriceRules();
         await ActualityData();

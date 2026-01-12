@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using MudBlazor;
 using SharedLib;
 
@@ -29,7 +28,7 @@ public partial class OrganizationEditComponent : BlazorBusyComponentBaseAuthMode
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await ReadCurrentUser();
+        await base.OnInitializedAsync();
 
         if (OrganizationId == 0)
         {

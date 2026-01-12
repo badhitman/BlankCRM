@@ -205,10 +205,4 @@ public partial class FieldsFormViewComponent : BlazorBusyComponentBaseAuthModel
 
         StateHasChanged();
     }
-
-    /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-    }
 }

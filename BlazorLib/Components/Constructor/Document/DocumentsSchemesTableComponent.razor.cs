@@ -37,12 +37,6 @@ public partial class DocumentsSchemesTableComponent : BlazorBusyComponentBaseAut
     protected static MarkupString Descr(string? html) => (MarkupString)(html ?? "");
 
     /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
-    {
-        await ReadCurrentUser();
-    }
-
-    /// <inheritdoc/>
     protected async Task DeleteDocument(int questionnaire_id)
     {
         if (CurrentUserSession is null)

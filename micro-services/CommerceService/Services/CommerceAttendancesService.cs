@@ -658,9 +658,16 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> WeeklyScheduleCreateOrUpdateAsync(WeeklyScheduleModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> WeeklyScheduleCreateOrUpdateAsync(TAuthRequestStandardModel<WeeklyScheduleModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+        WeeklyScheduleModelDB weklySchedule = req.Payload;
+
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
         if (!ck.IsValid)
         {
@@ -668,18 +675,18 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        req.Name = req.Name.Trim();
-        req.Description = req.Description?.Trim();
-        req.NormalizedNameUpper = req.Name.ToUpper();
-        req.LastUpdatedAtUTC = DateTime.UtcNow;
+        weklySchedule.Name = weklySchedule.Name.Trim();
+        weklySchedule.Description = weklySchedule.Description?.Trim();
+        weklySchedule.NormalizedNameUpper = weklySchedule.Name.ToUpper();
+        weklySchedule.LastUpdatedAtUTC = DateTime.UtcNow;
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         WeeklyScheduleModelDB? doubleWeeklySchedule = await context
             .WeeklySchedules
-            .Where(x => x.Id != req.Id && x.OfferId == req.OfferId && x.Weekday == req.Weekday)
-            .Where(x => (req.StartPart > x.StartPart && req.StartPart < x.EndPart) || (req.EndPart > x.StartPart && req.EndPart < x.EndPart) ||
-                                         (x.StartPart > req.StartPart && x.StartPart < req.EndPart) || (x.EndPart > req.StartPart && x.EndPart < req.EndPart))
+            .Where(x => x.Id != weklySchedule.Id && x.OfferId == weklySchedule.OfferId && x.Weekday == weklySchedule.Weekday)
+            .Where(x => (weklySchedule.StartPart > x.StartPart && weklySchedule.StartPart < x.EndPart) || (weklySchedule.EndPart > x.StartPart && weklySchedule.EndPart < x.EndPart) ||
+                                         (x.StartPart > weklySchedule.StartPart && x.StartPart < weklySchedule.EndPart) || (x.EndPart > weklySchedule.StartPart && x.EndPart < weklySchedule.EndPart))
             .FirstOrDefaultAsync(cancellationToken: token);
 
         if (doubleWeeklySchedule is not null)
@@ -688,28 +695,28 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        if (req.Id < 1)
+        if (weklySchedule.Id < 1)
         {
-            req.IsDisabled = true;
-            req.Id = 0;
-            req.CreatedAtUTC = DateTime.UtcNow;
-            await context.WeeklySchedules.AddAsync(req, token);
+            weklySchedule.IsDisabled = true;
+            weklySchedule.Id = 0;
+            weklySchedule.CreatedAtUTC = DateTime.UtcNow;
+            await context.WeeklySchedules.AddAsync(weklySchedule, token);
             await context.SaveChangesAsync(token);
-            res.Response = req.Id;
+            res.Response = weklySchedule.Id;
         }
         else
         {
             res.Response = await context.WeeklySchedules
-                .Where(w => w.Id == req.Id)
+                .Where(w => w.Id == weklySchedule.Id)
                 .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.NormalizedNameUpper, req.NormalizedNameUpper)
+                .SetProperty(p => p.NormalizedNameUpper, weklySchedule.NormalizedNameUpper)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
-                .SetProperty(p => p.Description, req.Description)
-                .SetProperty(p => p.IsDisabled, req.IsDisabled)
-                .SetProperty(p => p.StartPart, req.StartPart)
-                .SetProperty(p => p.EndPart, req.EndPart)
-                .SetProperty(p => p.QueueCapacity, req.QueueCapacity)
-                .SetProperty(p => p.Name, req.Name), cancellationToken: token);
+                .SetProperty(p => p.Description, weklySchedule.Description)
+                .SetProperty(p => p.IsDisabled, weklySchedule.IsDisabled)
+                .SetProperty(p => p.StartPart, weklySchedule.StartPart)
+                .SetProperty(p => p.EndPart, weklySchedule.EndPart)
+                .SetProperty(p => p.QueueCapacity, weklySchedule.QueueCapacity)
+                .SetProperty(p => p.Name, weklySchedule.Name), cancellationToken: token);
         }
 
         return res;
@@ -740,7 +747,7 @@ public partial class CommerceImplementService : ICommerceService
             res.AddError("req.Payload is null");
             return res;
         }
-
+        CalendarScheduleModelDB calendarSchedule = req.Payload;
         ValidateReportModel ck = GlobalTools.ValidateObject(req);
         if (!ck.IsValid)
         {
@@ -748,16 +755,16 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        req.Payload.Name = req.Payload.Name.Trim();
-        req.Payload.Description = req.Payload.Description?.Trim();
-        req.Payload.NormalizedNameUpper = req.Payload.Name.ToUpper();
+        calendarSchedule.Name = calendarSchedule.Name.Trim();
+        calendarSchedule.Description = calendarSchedule.Description?.Trim();
+        calendarSchedule.NormalizedNameUpper = calendarSchedule.Name.ToUpper();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         CalendarScheduleModelDB? doubleCalendarSchedule = await context
             .CalendarsSchedules
-            .Where(x => x.Id != req.Payload.Id && x.OfferId == req.Payload.OfferId && x.DateScheduleCalendar == req.Payload.DateScheduleCalendar)
-            .Where(x => (req.Payload.StartPart > x.StartPart && req.Payload.StartPart < x.EndPart) || (req.Payload.EndPart > x.StartPart && req.Payload.EndPart < x.EndPart) ||
-                                         (x.StartPart > req.Payload.StartPart && x.StartPart < req.Payload.EndPart) || (x.EndPart > req.Payload.StartPart && x.EndPart < req.Payload.EndPart))
+            .Where(x => x.Id != calendarSchedule.Id && x.OfferId == calendarSchedule.OfferId && x.DateScheduleCalendar == calendarSchedule.DateScheduleCalendar)
+            .Where(x => (calendarSchedule.StartPart > x.StartPart && calendarSchedule.StartPart < x.EndPart) || (calendarSchedule.EndPart > x.StartPart && calendarSchedule.EndPart < x.EndPart) ||
+                                         (x.StartPart > calendarSchedule.StartPart && x.StartPart < calendarSchedule.EndPart) || (x.EndPart > calendarSchedule.StartPart && x.EndPart < calendarSchedule.EndPart))
             .FirstOrDefaultAsync(cancellationToken: token);
 
         if (doubleCalendarSchedule is not null)
@@ -766,31 +773,31 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
 
-        if (req.Payload.Id < 1)
+        if (calendarSchedule.Id < 1)
         {
-            req.Payload.IsDisabled = true;
-            req.Payload.Id = 0;
-            req.Payload.CreatedAtUTC = DateTime.UtcNow;
-            req.Payload.LastUpdatedAtUTC = DateTime.UtcNow;
+            calendarSchedule.IsDisabled = true;
+            calendarSchedule.Id = 0;
+            calendarSchedule.CreatedAtUTC = DateTime.UtcNow;
+            calendarSchedule.LastUpdatedAtUTC = DateTime.UtcNow;
 
-            await context.CalendarsSchedules.AddAsync(req.Payload, token);
+            await context.CalendarsSchedules.AddAsync(calendarSchedule, token);
             await context.SaveChangesAsync(token);
-            res.Response = req.Payload.Id;
+            res.Response = calendarSchedule.Id;
         }
         else
         {
             res.Response = await context.CalendarsSchedules
-                .Where(x => x.Id == req.Payload.Id)
+                .Where(x => x.Id == calendarSchedule.Id)
                 .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Payload.Name)
-                .SetProperty(p => p.Description, req.Payload.Description)
-                .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled)
-                .SetProperty(p => p.QueueCapacity, req.Payload.QueueCapacity)
-                .SetProperty(p => p.EndPart, req.Payload.EndPart)
-                .SetProperty(p => p.StartPart, req.Payload.StartPart)
-                .SetProperty(p => p.DateScheduleCalendar, req.Payload.DateScheduleCalendar)
+                .SetProperty(p => p.Name, calendarSchedule.Name)
+                .SetProperty(p => p.Description, calendarSchedule.Description)
+                .SetProperty(p => p.IsDisabled, calendarSchedule.IsDisabled)
+                .SetProperty(p => p.QueueCapacity, calendarSchedule.QueueCapacity)
+                .SetProperty(p => p.EndPart, calendarSchedule.EndPart)
+                .SetProperty(p => p.StartPart, calendarSchedule.StartPart)
+                .SetProperty(p => p.DateScheduleCalendar, calendarSchedule.DateScheduleCalendar)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
-                .SetProperty(p => p.NormalizedNameUpper, req.Payload.NormalizedNameUpper), cancellationToken: token);
+                .SetProperty(p => p.NormalizedNameUpper, calendarSchedule.NormalizedNameUpper), cancellationToken: token);
         }
 
         return res;

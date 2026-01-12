@@ -144,7 +144,7 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        await ReadCurrentUser();
+        await base.OnInitializedAsync();
         int[] orderWarehouses = [.. Document.OfficesTabs!.Select(x => x.WarehouseId).Distinct()];
         await SetBusyAsync();
 

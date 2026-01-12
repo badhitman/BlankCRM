@@ -28,10 +28,12 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
     OrganizationModelDB? editOrg;
     BanksListDetailsOrganizationComponent? banksListDetailsRef;
 
+
     /// <inheritdoc/>
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         editOrg = GlobalTools.CreateDeepCopy(CurrentOrganization);
+        await base.OnInitializedAsync();
     }
 
     /// <inheritdoc/>
@@ -74,7 +76,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
-        
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await ReadOrganization();
         await SetBusyAsync(false);
@@ -122,7 +124,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         await SetBusyAsync();
 
         TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
-        
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (CurrentOrganization.Id == 0)

@@ -140,7 +140,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<FileAttachModel>(GlobalStaticConstantsTransmission.TransmissionQueues.PriceFullFileGetJsonCommerceReceive, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> WeeklyScheduleCreateOrUpdateAsync(WeeklyScheduleModelDB work, CancellationToken token = default)
+    public async Task<TResponseModel<int>> WeeklyScheduleCreateOrUpdateAsync(TAuthRequestStandardModel<WeeklyScheduleModelDB> work, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.WeeklyScheduleCreateOrUpdateReceive, work, token: token) ?? new();
 
     /// <inheritdoc/>

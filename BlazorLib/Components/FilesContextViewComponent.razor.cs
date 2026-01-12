@@ -182,10 +182,4 @@ public partial class FilesContextViewComponent : MetaPropertyBaseComponent
         if (TableRef is not null)
             InvokeAsync(TableRef.ReloadServerData);
     }
-
-    /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
-    {
-        await ReadCurrentUser();
-    }
 }

@@ -11,7 +11,7 @@ namespace BlazorLib.Components.Commerce.Attendances;
 /// <summary>
 /// Добавление/Создание WorkSchedule для Weekday
 /// </summary>
-public partial class WorkScheduleWeekdayAddingComponent : BlazorBusyComponentBaseModel
+public partial class WorkScheduleWeekdayAddingComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     ICommerceTransmission CommerceRepo { get; set; } = default!;
@@ -36,7 +36,6 @@ public partial class WorkScheduleWeekdayAddingComponent : BlazorBusyComponentBas
     public required OfferModelDB? Offer { get; set; }
 
 
-
     bool CantSave => EndPart is null || StartPart is null || EndPart < StartPart;
 
     bool IsExpandAdding;
@@ -58,6 +57,12 @@ public partial class WorkScheduleWeekdayAddingComponent : BlazorBusyComponentBas
         if (EndPart is null || StartPart is null)
             return;
 
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         WeeklyScheduleModelDB ws = new()
         {
             Name = "",
@@ -66,12 +71,17 @@ public partial class WorkScheduleWeekdayAddingComponent : BlazorBusyComponentBas
             Weekday = Weekday,
             QueueCapacity = QueueCapacity,
             ContextName = Routes.ATTENDANCES_CONTROLLER_NAME,
-            IsDisabled = true, 
+            IsDisabled = true,
             OfferId = Offer?.Id
         };
 
         await SetBusyAsync();
-        TResponseModel<int> res = await CommerceRepo.WeeklyScheduleCreateOrUpdateAsync(ws);
+        TResponseModel<int> res = await CommerceRepo.WeeklyScheduleCreateOrUpdateAsync(new()
+        {
+            Payload = ws,
+            SenderActionUserId = CurrentUserSession.UserId,
+        });
+
         ws.Id = res.Response;
         if (res.Success() && ws.Id != 0 && AddingWorkScheduleHandle is not null)
         {

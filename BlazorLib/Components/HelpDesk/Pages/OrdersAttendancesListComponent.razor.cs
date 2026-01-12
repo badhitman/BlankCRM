@@ -31,6 +31,7 @@ public partial class OrdersAttendancesListComponent(ICommerceTransmission Commer
     [Parameter, EditorRequired]
     public required Action<RecordsAttendanceModelDB[]> UpdateRecords { get; set; }
 
+
     int? _initDeleteOrder;
 
     bool CanDeleteRecord(RecordsAttendanceModelDB rec) => CurrentUserSession?.IsAdmin == true || rec.AuthorIdentityUserId == CurrentUserSession?.UserId;

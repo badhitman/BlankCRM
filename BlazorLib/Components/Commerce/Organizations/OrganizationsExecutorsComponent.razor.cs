@@ -144,10 +144,12 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
     }
 
     /// <inheritdoc/>
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         foreach (UsersOrganizationsStatusesEnum uos in Enum.GetValues<UsersOrganizationsStatusesEnum>())
             UsersOrganizationsStatuses.Add(uos.DescriptionInfo(), uos);
+
+        await base.OnInitializedAsync();
     }
 
     private async Task<TableData<UserOrganizationModelDB>> ServerReload(TableState state, CancellationToken token)
@@ -179,7 +181,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
         if (!res.Success() || res.Response?.Response is null)
             return new TableData<UserOrganizationModelDB>() { TotalItems = 0, Items = [] };
 
-        await CacheUsersUpdate([..res.Response.Response.Select(x => x.UserPersonIdentityId)]);
+        await CacheUsersUpdate([.. res.Response.Response.Select(x => x.UserPersonIdentityId)]);
 
         // Return the data
         return new TableData<UserOrganizationModelDB>() { TotalItems = res.Response.TotalRowsCount, Items = res.Response.Response };

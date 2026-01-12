@@ -65,12 +65,6 @@ public partial class SubscribersIssueComponent : IssueWrapBaseModel
         await SetBusyAsync(false);
     }
 
-    /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-    }
-
     async Task NotifyBellToggle(SubscriberIssueHelpDeskModelDB p)
     {
         if (CurrentUserSession is null)

@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Commerce.Attendances;
@@ -11,7 +10,7 @@ namespace BlazorLib.Components.Commerce.Attendances;
 /// <summary>
 /// WorkScheduleForWeekdayComponent
 /// </summary>
-public partial class WorkScheduleForWeekdayComponent : BlazorBusyComponentBaseModel
+public partial class WorkScheduleForWeekdayComponent : BlazorBusyComponentBaseAuthModel
 {
     /// <summary>
     /// Commerce
@@ -39,8 +38,19 @@ public partial class WorkScheduleForWeekdayComponent : BlazorBusyComponentBaseMo
 
     async Task SaveSchedule()
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         await SetBusyAsync();
-        TResponseModel<int> res = await CommerceRepo.WeeklyScheduleCreateOrUpdateAsync(WorkScheduleEdit);
+        TResponseModel<int> res = await CommerceRepo.WeeklyScheduleCreateOrUpdateAsync(new()
+        {
+            Payload = WorkScheduleEdit,
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
         if (res.Success())
         {
             WorkScheduleEdit.LastUpdatedAtUTC = DateTime.UtcNow;
@@ -52,8 +62,9 @@ public partial class WorkScheduleForWeekdayComponent : BlazorBusyComponentBaseMo
     }
 
     /// <inheritdoc/>
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         WorkScheduleEdit = GlobalTools.CreateDeepCopy(WorkSchedule)!;
+        await base.OnInitializedAsync();
     }
 }

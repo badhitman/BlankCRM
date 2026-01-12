@@ -41,11 +41,6 @@ public partial class ProjectTableRowComponent : BlazorBusyComponentBaseAuthModel
 
     bool IsMyProject => CurrentUserSession?.UserId.Equals(ProjectRow.OwnerUserId) == true;
 
-    /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
-    {
-        await ReadCurrentUser();
-    }
 
     /// <inheritdoc/>
     protected async Task EditProject()
