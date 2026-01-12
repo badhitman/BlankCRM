@@ -82,10 +82,17 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
 
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> AccountTBankCreateOrUpdateAsync(TBankAccountModelDB acc, CancellationToken token = default)
+    public async Task<TResponseModel<int>> AccountTBankCreateOrUpdateAsync(TAuthRequestStandardModel<TBankAccountModelDB> req, CancellationToken token = default)
     {
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         TResponseModel<int> res = new();
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        TBankAccountModelDB acc = req.Payload;
         ValidateReportModel ck = GlobalTools.ValidateObject(acc);
         if (!ck.IsValid)
         {

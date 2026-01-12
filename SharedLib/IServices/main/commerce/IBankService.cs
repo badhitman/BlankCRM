@@ -32,7 +32,7 @@ public partial interface IBankService
     /// <summary>
     /// Создать/обновить
     /// </summary>
-    public Task<TResponseModel<int>> AccountTBankCreateOrUpdateAsync(TBankAccountModelDB acc, CancellationToken token = default);
+    public Task<TResponseModel<int>> AccountTBankCreateOrUpdateAsync(TAuthRequestStandardModel<TBankAccountModelDB> acc, CancellationToken token = default);
     /// <summary>
     /// Подбор
     /// </summary>
