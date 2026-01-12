@@ -1,8 +1,7 @@
 ////////////////////////////////////////////////
-// © https://github.com/badhitman - @FakeGov 
+// Â© https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using HtmlGenerator.html5.forms;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
@@ -12,7 +11,7 @@ namespace BlazorLib.Components.Bank;
 /// <summary>
 /// CustomersBanksTableComponent
 /// </summary>
-public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
+public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IBankService BankRepo { get; set; } = default!;
@@ -42,7 +41,7 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
     /// </summary>
     protected async Task CacheUsersUpdate(string[] usersIds)
     {
-        usersIds = [..usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct()];
+        usersIds = [.. usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct()];
         if (usersIds.Length == 0)
             return;
 
@@ -65,7 +64,7 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
 
     async void ItemHasBeenCommitted(object element)
     {
-        if(string.IsNullOrWhiteSpace(userIdentityId))
+        if (string.IsNullOrWhiteSpace(userIdentityId))
         {
             SnackBarRepo.Error($"User not set");
             return;
@@ -73,9 +72,15 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
 
         if (element is CustomerBankIdModelDB _re)
         {
+            if (CurrentUserSession is null)
+            {
+                SnackBarRepo.Error("CurrentUserSession is null");
+                return;
+            }
+
             await SetBusyAsync();
             _re.UserIdentityId = userIdentityId;
-            TResponseModel<int> res = await BankRepo.CustomerBankCreateOrUpdateAsync(_re);
+            TResponseModel<int> res = await BankRepo.CustomerBankCreateOrUpdateAsync(new() { Payload = _re, SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
             if (table is not null)
@@ -112,16 +117,26 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
             SnackBarRepo.Error("set name or inn for create customer identity (and choice user!)");
             return;
         }
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
 
         await SetBusyAsync();
 
-        TResponseModel<int> res = await BankRepo.CustomerBankCreateOrUpdateAsync(new CustomerBankIdModelDB()
+        TResponseModel<int> res = await BankRepo.CustomerBankCreateOrUpdateAsync(new()
         {
-            UserIdentityId = userIdentityId,
-            Name = customerName,
-            Inn = customerInn,
-            BankIdentifyType = bankInt
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new CustomerBankIdModelDB()
+            {
+                UserIdentityId = userIdentityId,
+                BankIdentifyType = bankInt,
+                Name = customerName,
+                Inn = customerInn,
+            }
         });
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (table is not null)
@@ -150,7 +165,7 @@ public partial class CustomersBanksTableComponent : BlazorBusyComponentBaseModel
             SortingDirection = state.SortDirection.Convert()
         };
         TPaginationResponseStandardModel<CustomerBankIdModelDB> res = await BankRepo.CustomersBanksSelectAsync(req, token);
-        await CacheUsersUpdate([..res.Response!.Select(x => x.UserIdentityId).Distinct()]);
+        await CacheUsersUpdate([.. res.Response!.Select(x => x.UserIdentityId).Distinct()]);
         return new TableData<CustomerBankIdModelDB>() { TotalItems = res.TotalRowsCount, Items = res.Response };
     }
 

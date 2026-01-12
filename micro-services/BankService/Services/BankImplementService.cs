@@ -22,7 +22,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         TResponseModel<int> res = new();
 
-        if(req.Payload is null)
+        if (req.Payload is null)
         {
             res.AddError("req.Payload is null");
             return res;
@@ -146,10 +146,17 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
 
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CustomerBankCreateOrUpdateAsync(CustomerBankIdModelDB cust, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CustomerBankCreateOrUpdateAsync(TAuthRequestStandardModel<CustomerBankIdModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
-        ValidateReportModel ck = GlobalTools.ValidateObject(cust);
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        CustomerBankIdModelDB customer = req.Payload;
+        ValidateReportModel ck = GlobalTools.ValidateObject(customer);
         if (!ck.IsValid)
         {
             res.Messages.InjectException(ck.ValidationResults);
@@ -159,30 +166,30 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
         BankContext ctx = default!;
         await Task.WhenAll([
             Task.Run(async () => { ctx = await bankDbFactory.CreateDbContextAsync(token); }, token),
-            Task.Run(async () => { TResponseModel<UserInfoModel[]> userGet = await identityRepo.GetUsersOfIdentityAsync([cust.UserIdentityId], token); _userCustomer = userGet.Response?.FirstOrDefault(); }, token)
+            Task.Run(async () => { TResponseModel<UserInfoModel[]> userGet = await identityRepo.GetUsersOfIdentityAsync([customer.UserIdentityId], token); _userCustomer = userGet.Response?.FirstOrDefault(); }, token)
         ]);
 
         if (_userCustomer is null)
         {
-            res.AddError($"User `{cust.UserIdentityId}` not found");
+            res.AddError($"User `{customer.UserIdentityId}` not found");
             return res;
         }
 
-        if (cust.Id == 0)
+        if (customer.Id == 0)
         {
-            await ctx.CustomersBanksIds.AddAsync(cust, token);
+            await ctx.CustomersBanksIds.AddAsync(customer, token);
             await ctx.SaveChangesAsync(token);
-            res.Response = cust.Id;
+            res.Response = customer.Id;
             return res;
         }
-        res.Response = cust.Id;
+        res.Response = customer.Id;
 
         await ctx.CustomersBanksIds
-            .Where(x => x.Id == cust.Id)
+            .Where(x => x.Id == customer.Id)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Inn, cust.Inn)
-                .SetProperty(p => p.UserIdentityId, cust.UserIdentityId)
-                .SetProperty(p => p.Name, cust.Name), cancellationToken: token);
+                .SetProperty(p => p.Inn, customer.Inn)
+                .SetProperty(p => p.UserIdentityId, customer.UserIdentityId)
+                .SetProperty(p => p.Name, customer.Name), cancellationToken: token);
 
         return res;
     }

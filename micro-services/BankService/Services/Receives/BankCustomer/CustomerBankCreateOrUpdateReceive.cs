@@ -11,13 +11,13 @@ namespace Transmission.Receives.bank;
 /// CustomerBankCreateOrUpdate
 /// </summary>
 public class CustomerBankCreateOrUpdateReceive(IBankService bankRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<CustomerBankIdModelDB?, TResponseModel<int>?>
+    : IResponseReceive<TAuthRequestStandardModel<CustomerBankIdModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CustomerBankCreateOrUpdateReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(CustomerBankIdModelDB? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<CustomerBankIdModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
