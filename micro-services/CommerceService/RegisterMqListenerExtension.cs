@@ -114,7 +114,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<RowsDeleteFromWarehouseDocumentReceive, int[], RowsForWarehouseDocumentDeleteResponseModel>()
             .RegisterMqListener<RowForWarehouseDocumentUpdateReceive, RowOfWarehouseDocumentModelDB, TResponseModel<int>>()
             .RegisterMqListener<StatusOrderChangeByHelpDeskDocumentIdReceive, TAuthRequestStandardModel<StatusChangeRequestModel>, ResponseBaseModel>()
-            .RegisterMqListener<PriceRuleDeleteReceive, TAuthRequestStandardModel<int>, TResponseModel<List<PriceRuleForOfferModelDB>>>()
+            .RegisterMqListener<PriceRuleDeleteReceive, TAuthRequestStandardModel<int>, TResponseModel<PriceRuleForOfferModelDB>>()
             .RegisterMqListener<AttendancesRecordsByIssuesGetReceive, OrdersByIssuesSelectRequestModel, TResponseModel<RecordsAttendanceModelDB[]>>()
             .RegisterMqListener<WorksFindReceive, WorkFindRequestModel, WorksFindResponseModel>()
             .RegisterMqListener<PriceRuleUpdateOrCreateReceive, TAuthRequestStandardModel<PriceRuleForOfferModelDB>, TResponseModel<int>>()

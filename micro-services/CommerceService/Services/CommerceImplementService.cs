@@ -175,13 +175,13 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<PriceRuleForOfferModelDB>>> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<PriceRuleForOfferModelDB>> PriceRuleDeleteAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<PriceRuleForOfferModelDB> q = context.PricesRules.Where(x => x.Id == req.Payload);
-        TResponseModel<List<PriceRuleForOfferModelDB>> res = new()
+        TResponseModel<PriceRuleForOfferModelDB> res = new()
         {
-            Response = await q.Include(x => x.Offer).ToListAsync(cancellationToken: token)
+            Response = await q.Include(x => x.Offer).FirstAsync(cancellationToken: token)
         };
 
         if (await q.ExecuteDeleteAsync(cancellationToken: token) > 0)
