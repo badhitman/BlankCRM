@@ -11,13 +11,13 @@ namespace Transmission.Receives.bank;
 /// InitPaymentMerchantTBankReceive
 /// </summary>
 public class InitPaymentMerchantTBankReceive(IMerchantService merchantRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<InitMerchantTBankRequestModel?, TResponseModel<PaymentInitTBankResultModelDB>?>
+    : IResponseReceive<TAuthRequestStandardModel<InitMerchantTBankRequestModel>?, TResponseModel<PaymentInitTBankResultModelDB>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.InitPaymentMerchantTBankReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<PaymentInitTBankResultModelDB>?> ResponseHandleActionAsync(InitMerchantTBankRequestModel? req, CancellationToken token = default)
+    public async Task<TResponseModel<PaymentInitTBankResultModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<InitMerchantTBankRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);

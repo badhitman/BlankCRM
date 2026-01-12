@@ -61,14 +61,20 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(InitMerchantTBankRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(TAuthRequestStandardModel<InitMerchantTBankRequestModel> req, CancellationToken token = default)
     {
-        TResponseModel<PaymentInitTBankResultModelDB> res = new() { Response = req.GetDB() };
+        TResponseModel<PaymentInitTBankResultModelDB> res = new() { Response = req.Payload?.GetDB() };
+        if (req.Payload is null || res.Response is null)
+        {
+            res.AddError("Response is null: Payload?.GetDB()");
+            return res;
+        }
+
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         await ctx.PaymentsInitResultsTBank.AddAsync(res.Response, token);
         await ctx.SaveChangesAsync(token);
 
-        TResponseModel<UserInfoModel[]> userCreator = await identityRepo.GetUsersOfIdentityAsync([req.PayerUserId], token);
+        TResponseModel<UserInfoModel[]> userCreator = await identityRepo.GetUsersOfIdentityAsync([req.Payload.PayerUserId], token);
         if (!userCreator.Success())
         {
             res.AddRangeMessages(userCreator.Messages);
@@ -77,18 +83,18 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
 
         if (userCreator.Response is null || userCreator.Response.Length == 0)
         {
-            res.AddError($"user #{req.PayerUserId} not found");
-            loggerRepo.LogError($"user #{req.PayerUserId} not found");
+            res.AddError($"user #{req.Payload.PayerUserId} not found");
+            loggerRepo.LogError($"user #{req.Payload.PayerUserId} not found");
             return res;
         }
 
         TinkoffPaymentClient clientApi = new(settings.Value.TerminalKey, settings.Value.Password);
-        Receipt rec = req.Receipt.GetTBankReceipt();
+        Receipt rec = req.Payload.Receipt.GetTBankReceipt();
 
         TAuthRequestStandardModel<int[]> _findUser = new()
         {
             SenderActionUserId = Roles.System,
-            Payload = [req.OrderId]
+            Payload = [req.Payload.OrderId]
         };
 
         TResponseModel<OrderDocumentModelDB[]> findOrder = await commerceRepo.OrdersReadAsync(_findUser, token);
@@ -99,24 +105,24 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
         }
         if (findOrder.Response is null || findOrder.Response.Length == 0)
         {
-            res.AddError($"Order not found #{req.OrderId}");
+            res.AddError($"Order not found #{req.Payload.OrderId}");
             return res;
         }
 
-        Init _iReq = new(req.OrderId.ToString(), req.Amount, req.IsRecurrent, req.PayerUserId)
+        Init _iReq = new(req.Payload.OrderId.ToString(), req.Payload.Amount, req.Payload.IsRecurrent, req.Payload.PayerUserId)
         {
-            Receipt = req.Receipt.GetTBankReceipt(),
+            Receipt = req.Payload.Receipt.GetTBankReceipt(),
 
-            Language = req.Language?.Convert(),
-            PayType = req.PayType?.Convert(),
+            Language = req.Payload.Language?.Convert(),
+            PayType = req.Payload.PayType?.Convert(),
 
-            Description = req.Description,
-            FailURL = req.FailURL,
-            Data = req.Data,
-            IP = req.IP,
-            NotificationURL = req.NotificationURL,
-            SuccessURL = req.SuccessURL,
-            RedirectDueDate = req.RedirectDueDate,
+            Description = req.Payload.Description,
+            FailURL = req.Payload.FailURL,
+            Data = req.Payload.Data,
+            IP = req.Payload.IP,
+            NotificationURL = req.Payload.NotificationURL,
+            SuccessURL = req.Payload.SuccessURL,
+            RedirectDueDate = req.Payload.RedirectDueDate,
         };
 
         PaymentResponse resultPayment;
@@ -144,16 +150,16 @@ public partial class MerchantImplementService(IOptions<TBankSettings> settings,
             return res;
         }
 
-        if (req.GenerateQR is not null)
+        if (req.Payload.GenerateQR is not null)
         {
-            PaymentInitTBankQRModelDB qrDb = new() { TypeQR = req.GenerateQR.Value };
+            PaymentInitTBankQRModelDB qrDb = new() { TypeQR = req.Payload.GenerateQR.Value };
             await ctx.QrForInitPaymentTBank.AddAsync(qrDb, token);
             await ctx.SaveChangesAsync(token);
             await q.ExecuteUpdateAsync(set => set.SetProperty(p => p.QRPaymentId, qrDb.Id), cancellationToken: token);
 
             GetQr _gq = new(resultPayment.PaymentId)
             {
-                DataType = req.GenerateQR?.Convert() ?? TinkoffPaymentClientApi.Enums.EDataTypeQR.PAYLOAD,
+                DataType = req.Payload.GenerateQR?.Convert() ?? TinkoffPaymentClientApi.Enums.EDataTypeQR.PAYLOAD,
                 PaymentId = resultPayment.PaymentId,
             };
             QRResponse qrRest;

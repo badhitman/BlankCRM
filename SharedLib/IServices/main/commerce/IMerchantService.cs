@@ -22,7 +22,7 @@ public partial interface IMerchantService
     /// <summary>
     /// TBank: Инициировать платеж
     /// </summary>
-    public Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(InitMerchantTBankRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<PaymentInitTBankResultModelDB>> InitPaymentMerchantTBankAsync(TAuthRequestStandardModel<InitMerchantTBankRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// TBank: Обработка входящего платежа (merchant web-hook)
