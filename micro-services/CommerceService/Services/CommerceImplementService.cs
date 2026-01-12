@@ -1150,19 +1150,26 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<RowOrderDocumentRecord[]>> RowsDeleteFromOrderAsync(int[] req, CancellationToken token = default)
+    public async Task<TResponseModel<RowOrderDocumentRecord[]>> RowsDeleteFromOrderAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         string msg;
-        req = [.. req.Distinct()];
         TResponseModel<RowOrderDocumentRecord[]> res = new();
-        if (!req.Any(x => x > 0))
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+        int[] rowsDel = req.Payload;
+
+        rowsDel = [.. rowsDel.Distinct()];
+        if (!rowsDel.Any(x => x > 0))
         {
             res.AddError($"Пустой запрос > {nameof(RowsDeleteFromOrderAsync)}");
             return res;
         }
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        IQueryable<RowOfOrderDocumentModelDB> mainQuery = context.RowsOrders.Where(x => req.Any(y => y == x.Id));
+        IQueryable<RowOfOrderDocumentModelDB> mainQuery = context.RowsOrders.Where(x => rowsDel.Any(y => y == x.Id));
         IQueryable<RowOrderDocumentRecord> q = from r in mainQuery
                                                join d in context.OrdersB2B on r.OrderId equals d.Id
                                                join t in context.OfficesForOrders on r.OfficeOrderTabId equals t.Id
@@ -1206,7 +1213,7 @@ public partial class CommerceImplementService(
             await transaction.RollbackAsync(token);
             msg = $"Не удалось выполнить команду блокировки БД {nameof(RowsDeleteFromOrderAsync)}: ";
             res.AddError($"{msg}{ex.Message}");
-            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(rowsDel, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             return res;
         }
 
@@ -1246,7 +1253,7 @@ public partial class CommerceImplementService(
             context.RemoveRange(offersLocked);
 
         await context.SaveChangesAsync(token);
-        if (await context.RowsOrders.Where(x => req.Any(y => y == x.Id)).ExecuteDeleteAsync(cancellationToken: token) != 0)
+        if (await context.RowsOrders.Where(x => rowsDel.Contains(x.Id)).ExecuteDeleteAsync(cancellationToken: token) != 0)
             res.AddSuccess("Изменения успешно выполнены");
 
         await transaction.CommitAsync(token);

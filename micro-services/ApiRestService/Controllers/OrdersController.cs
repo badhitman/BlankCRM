@@ -29,7 +29,14 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
     [LoggerNolog]
 #endif
     public async Task<TPaginationResponseStandardModel<OrderDocumentModelDB>> OrdersSelect(TPaginationRequestStandardModel<OrdersSelectRequestModel> req)
-        => await commRepo.OrdersSelectAsync(new TPaginationRequestStandardModel<TAuthRequestStandardModel<OrdersSelectRequestModel>>() { Payload = new TAuthRequestStandardModel<OrdersSelectRequestModel>() { Payload = req.Payload, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System } });
+        => await commRepo.OrdersSelectAsync(new TPaginationRequestStandardModel<TAuthRequestStandardModel<OrdersSelectRequestModel>>()
+        {
+            Payload = new TAuthRequestStandardModel<OrdersSelectRequestModel>()
+            {
+                Payload = req.Payload,
+                SenderActionUserId = Roles.System
+            }
+        });
 
     /// <summary>
     /// Прикрепить файл к заказу (счёт, акт и т.п.). Имя файла должно быть уникальным в контексте заказа. Если файл с таким именем существует, тогда он будет перезаписан новым
@@ -48,7 +55,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
             return response;
         }
 
-        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersReadAsync(new() { Payload = [OrderId], SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
+        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersReadAsync(new() { Payload = [OrderId], SenderActionUserId = Roles.System });
 
         if (!call.Success())
         {
@@ -79,7 +86,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
             Payload = stream.ToArray(),
         };
 
-        return await storageRepo.SaveFileAsync(new() { Payload = reqSave, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
+        return await storageRepo.SaveFileAsync(new() { Payload = reqSave, SenderActionUserId = Roles.System });
     }
 
     /// <summary>
@@ -103,7 +110,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     [HttpDelete($"/api/{Routes.ORDERS_CONTROLLER_NAME}/{Routes.ROW_CONTROLLER_NAME}-{Routes.DELETE_ACTION_NAME}")]
     public async Task<TResponseModel<RowOrderDocumentRecord[]>> RowForOrderDelete([FromBody] int[] rows_ids)
-        => await commRepo.RowsDeleteFromOrderAsync(rows_ids);
+        => await commRepo.RowsDeleteFromOrderAsync(new() { Payload = rows_ids, SenderActionUserId = Roles.System });
 
     /// <summary>
     /// Установить статус заказа
@@ -114,7 +121,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     public async Task<TResponseModel<bool>> OrderStageSet([FromRoute] int OrderId, [FromRoute] StatusesDocumentsEnum Step)
     {
-        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersReadAsync(new() { Payload = [OrderId], SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
+        TResponseModel<OrderDocumentModelDB[]> call = await commRepo.OrdersReadAsync(new() { Payload = [OrderId], SenderActionUserId = Roles.System });
         TResponseModel<bool> response = new() { Response = false };
         if (!call.Success())
         {
@@ -137,7 +144,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
 
         TAuthRequestStandardModel<IssuesReadRequestModel> req_hd = new()
         {
-            SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
+            SenderActionUserId = Roles.System,
             Payload = new()
             {
                 IssuesIds = [order_doc.HelpDeskId.Value]
@@ -157,7 +164,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
         }
         TAuthRequestStandardModel<StatusChangeRequestModel> status_change_req = new()
         {
-            SenderActionUserId = GlobalStaticConstantsRoles.Roles.System,
+            SenderActionUserId = Roles.System,
             Payload = new()
             {
                 DocumentId = hd_obj.Id,

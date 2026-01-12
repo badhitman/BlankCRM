@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// RowsDeleteFromOrder
 /// </summary>
 public class RowsDeleteFromOrderReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<int[]?, TResponseModel<RowOrderDocumentRecord[]>?>
+    : IResponseReceive<TAuthRequestStandardModel<int[]>?, TResponseModel<RowOrderDocumentRecord[]>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RowsDeleteFromOrderCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<RowOrderDocumentRecord[]>?> ResponseHandleActionAsync(int[]? req, CancellationToken token = default)
+    public async Task<TResponseModel<RowOrderDocumentRecord[]>?> ResponseHandleActionAsync(TAuthRequestStandardModel<int[]>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);

@@ -40,5 +40,5 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Удалить строку заказа
     /// </summary>
-    public Task<TResponseModel<RowOrderDocumentRecord[]>> RowsDeleteFromOrderAsync(int[] req, CancellationToken token = default);
+    public Task<TResponseModel<RowOrderDocumentRecord[]>> RowsDeleteFromOrderAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default);
 }
