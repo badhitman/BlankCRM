@@ -15,7 +15,7 @@ public partial interface ICommerceTransmission : ICommerceServiceBase
  /// В запросе нельзя указывать идентификатор заказа: только идентификатор HelpDesk документа.
  /// Допускается ситуация, когда под одним идентификатором HelpDesk документа могут существовать несколько заказов (объединённые заказы).
  /// </remarks>
-    public Task<ResponseBaseModel> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
+    public Task<TResponseModel<OrderDocumentModelDB[]>> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default);
 
     /// <summary>
     /// Смена статуса заявки (бронь)

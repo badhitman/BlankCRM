@@ -120,8 +120,8 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<PriceRuleForOfferModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.PriceRuleDeleteCommerceReceive, id, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.StatusOrderChangeByHelpDeskDocumentIdReceive, req, waitResponse, token) ?? new();
+    public async Task<TResponseModel<OrderDocumentModelDB[]>> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, bool waitResponse = true, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<OrderDocumentModelDB[]>>(GlobalStaticConstantsTransmission.TransmissionQueues.StatusOrderChangeByHelpDeskDocumentIdReceive, req, waitResponse, token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<OrderDocumentModelDB[]>> OrdersByIssuesGetAsync(OrdersByIssuesSelectRequestModel req, CancellationToken token = default)

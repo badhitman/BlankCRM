@@ -1262,10 +1262,10 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<OrderDocumentModelDB[]>> StatusOrderChangeByHelpDeskDocumentIdAsync(TAuthRequestStandardModel<StatusChangeRequestModel> req, CancellationToken token = default)
     {
         string msg;
-        ResponseBaseModel res = new();
+        TResponseModel<OrderDocumentModelDB[]> res = new();
 
         if (req.Payload is null)
         {
@@ -1276,14 +1276,14 @@ public partial class CommerceImplementService(
         }
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        OrderDocumentModelDB[] ordersDb = await context
+        res.Response = await context
             .OrdersB2B
             .Where(x => x.HelpDeskId == req.Payload.DocumentId && x.StatusDocument != req.Payload.Step)
             .Include(x => x.OfficesTabs!)
             .ThenInclude(x => x.Rows)
             .ToArrayAsync(cancellationToken: token);
 
-        if (ordersDb.Length == 0)
+        if (res.Response.Length == 0)
         {
             msg = "Изменение не требуется (документы для обновления отсутствуют)";
             loggerRepo.LogInformation($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
@@ -1291,7 +1291,7 @@ public partial class CommerceImplementService(
             return res;
         }
 
-        List<WarehouseRowDocumentRecord> _allRowsOfDocuments = [.. ordersDb.SelectMany(x => x.OfficesTabs!).SelectMany(x => x.Rows!.Select(y => new WarehouseRowDocumentRecord(x.WarehouseId, y)))];
+        List<WarehouseRowDocumentRecord> _allRowsOfDocuments = [.. res.Response.SelectMany(x => x.OfficesTabs!).SelectMany(x => x.Rows!.Select(y => new WarehouseRowDocumentRecord(x.WarehouseId, y)))];
 
         if (_allRowsOfDocuments.Count == 0)
         {
