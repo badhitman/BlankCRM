@@ -84,8 +84,14 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
 
     async Task SaveDocument()
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         await SetBusyAsync();
-        TResponseModel<int> res = await CommRepo.WarehouseDocumentUpdateOrCreateAsync(editDocument);
+        TResponseModel<int> res = await CommRepo.WarehouseDocumentUpdateOrCreateAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = editDocument });
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (editDocument.Id < 1 && res.Response > 0)

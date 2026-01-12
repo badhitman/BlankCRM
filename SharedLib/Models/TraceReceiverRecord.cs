@@ -40,7 +40,7 @@ public class TraceReceiverRecord
         {
             UTCTimestampInitReceive = DateTime.UtcNow,
             RequestBody = _requestBody,
-            ReceiverName = _receiverName,
+            ReceiverName = _receiverName.Replace(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix, ""),
         };
     }
 

@@ -16,10 +16,15 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> WarehouseDocumentUpdateOrCreateAsync(WarehouseDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> WarehouseDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<WarehouseDocumentModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
-        ValidateReportModel ck = GlobalTools.ValidateObject(req);
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+        ValidateReportModel ck = GlobalTools.ValidateObject(req.Payload);
         if (!ck.IsValid)
         {
             res.Messages.InjectException(ck.ValidationResults);
@@ -30,7 +35,7 @@ public partial class CommerceImplementService : ICommerceService
               .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseNegativeBalanceAllowed, token);
 
         string msg;
-        if (req.WarehouseId == req.WritingOffWarehouseId)
+        if (req.Payload.WarehouseId == req.Payload.WritingOffWarehouseId)
         {
             msg = $"Склад списания и склад поступления не может быть одни и тем же";
             loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
@@ -38,24 +43,24 @@ public partial class CommerceImplementService : ICommerceService
             return res;
         }
         loggerRepo.LogInformation($"{nameof(req)}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-        req.DeliveryDate = req.DeliveryDate.SetKindUtc();
-        if (req.Name is not null)
-            req.Name = req.Name.Trim();
-        req.NormalizedUpperName = req.Name?.ToUpper() ?? "";
+        req.Payload.DeliveryDate = req.Payload.DeliveryDate.SetKindUtc();
+        if (req.Payload.Name is not null)
+            req.Payload.Name = req.Payload.Name.Trim();
+        req.Payload.NormalizedUpperName = req.Payload.Name?.ToUpper() ?? "";
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         DateTime dtu = DateTime.UtcNow;
-        if (req.Id < 1)
+        if (req.Payload.Id < 1)
         {
-            req.Rows?.Clear();
-            req.Id = 0;
-            req.Version = Guid.NewGuid();
-            req.CreatedAtUTC = dtu;
-            req.LastUpdatedAtUTC = dtu;
-            req.IsDisabled = true;
+            req.Payload.Rows?.Clear();
+            req.Payload.Id = 0;
+            req.Payload.Version = Guid.NewGuid();
+            req.Payload.CreatedAtUTC = dtu;
+            req.Payload.LastUpdatedAtUTC = dtu;
+            req.Payload.IsDisabled = true;
             await context.AddAsync(req, token);
             await context.SaveChangesAsync(token);
-            res.Response = req.Id;
+            res.Response = req.Payload.Id;
             res.AddSuccess("Документ создан");
             return res;
         }
@@ -63,9 +68,9 @@ public partial class CommerceImplementService : ICommerceService
         WarehouseDocumentModelDB warehouseDocumentDb = await context
             .WarehouseDocuments
             .Include(x => x.Rows)
-            .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
+            .FirstAsync(x => x.Id == req.Payload.Id, cancellationToken: token);
 
-        if (warehouseDocumentDb.Version != req.Version)
+        if (warehouseDocumentDb.Version != req.Payload.Version)
         {
             msg = $"Документ #{warehouseDocumentDb.Id} был кем-то изменён (version concurrent)";
             loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
@@ -76,14 +81,14 @@ public partial class CommerceImplementService : ICommerceService
         if (warehouseDocumentDb.Rows is null || warehouseDocumentDb.Rows.Count == 0)
         {
             res.Response = await context.WarehouseDocuments
-                .Where(x => x.Id == req.Id)
+                .Where(x => x.Id == req.Payload.Id)
                 .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.Description, req.Description)
-                .SetProperty(p => p.DeliveryDate, req.DeliveryDate)
-                .SetProperty(p => p.IsDisabled, req.IsDisabled)
-                .SetProperty(p => p.WarehouseId, req.WarehouseId)
-                .SetProperty(p => p.WritingOffWarehouseId, req.WritingOffWarehouseId)
+                .SetProperty(p => p.Name, req.Payload.Name)
+                .SetProperty(p => p.Description, req.Payload.Description)
+                .SetProperty(p => p.DeliveryDate, req.Payload.DeliveryDate)
+                .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled)
+                .SetProperty(p => p.WarehouseId, req.Payload.WarehouseId)
+                .SetProperty(p => p.WritingOffWarehouseId, req.Payload.WritingOffWarehouseId)
                 .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
@@ -97,20 +102,20 @@ public partial class CommerceImplementService : ICommerceService
             offersLocked.Add(new LockTransactionModelDB()
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
-                LockerAreaId = req.WarehouseId,
+                LockerAreaId = req.Payload.WarehouseId,
                 LockerId = rowDoc.OfferId,
                 Marker = nameof(WarehouseDocumentUpdateOrCreateAsync),
             });
-            if (req.WritingOffWarehouseId > 0)
+            if (req.Payload.WritingOffWarehouseId > 0)
                 offersLocked.Add(new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
-                    LockerAreaId = req.WritingOffWarehouseId,
+                    LockerAreaId = req.Payload.WritingOffWarehouseId,
                     LockerId = rowDoc.OfferId,
                     Marker = nameof(WarehouseDocumentUpdateOrCreateAsync),
                 });
 
-            if (warehouseDocumentDb.WritingOffWarehouseId != req.WritingOffWarehouseId && warehouseDocumentDb.WritingOffWarehouseId > 0)
+            if (warehouseDocumentDb.WritingOffWarehouseId != req.Payload.WritingOffWarehouseId && warehouseDocumentDb.WritingOffWarehouseId > 0)
                 offersLocked.Add(new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
@@ -119,7 +124,7 @@ public partial class CommerceImplementService : ICommerceService
                     Marker = nameof(WarehouseDocumentUpdateOrCreateAsync),
                 });
 
-            if (warehouseDocumentDb.WarehouseId != req.WarehouseId)
+            if (warehouseDocumentDb.WarehouseId != req.Payload.WarehouseId)
                 offersLocked.Add(new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
@@ -156,9 +161,9 @@ public partial class CommerceImplementService : ICommerceService
             .Include(x => x.Nomenclature)
             .ToListAsync(cancellationToken: token);
 
-        if (warehouseDocumentDb.IsDisabled != req.IsDisabled)
+        if (warehouseDocumentDb.IsDisabled != req.Payload.IsDisabled)
         {
-            if (req.IsDisabled)
+            if (req.Payload.IsDisabled)
             {
                 foreach (RowOfWarehouseDocumentModelDB rowOfDocument in warehouseDocumentDb.Rows)
                 {
@@ -225,8 +230,8 @@ public partial class CommerceImplementService : ICommerceService
                 foreach (RowOfWarehouseDocumentModelDB rowOfDocument in warehouseDocumentDb.Rows)
                 {
                     OfferAvailabilityModelDB?
-                        registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId),
-                        registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WritingOffWarehouseId);
+                        registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.Payload.WarehouseId),
+                        registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.Payload.WritingOffWarehouseId);
 
                     if (registerOfferWriteOff is not null)
                     {
@@ -245,7 +250,7 @@ public partial class CommerceImplementService : ICommerceService
 
                         registerOfferWriteOff.Quantity -= rowOfDocument.Quantity;
                     }
-                    else if (req.WritingOffWarehouseId > 0)
+                    else if (req.Payload.WritingOffWarehouseId > 0)
                     {
                         if (warehouseNegativeBalanceAllowed.Response != true)
                         {
@@ -258,7 +263,7 @@ public partial class CommerceImplementService : ICommerceService
                         {
                             registerOfferWriteOff = new()
                             {
-                                WarehouseId = req.WritingOffWarehouseId,
+                                WarehouseId = req.Payload.WritingOffWarehouseId,
                                 OfferId = rowOfDocument.OfferId,
                                 NomenclatureId = rowOfDocument.NomenclatureId,
                                 Quantity = -rowOfDocument.Quantity,
@@ -282,7 +287,7 @@ public partial class CommerceImplementService : ICommerceService
                     {
                         registerOffer = new OfferAvailabilityModelDB()
                         {
-                            WarehouseId = req.WarehouseId,
+                            WarehouseId = req.Payload.WarehouseId,
                             NomenclatureId = rowOfDocument.NomenclatureId,
                             OfferId = rowOfDocument.OfferId,
                             Quantity = rowOfDocument.Quantity,
@@ -303,12 +308,12 @@ public partial class CommerceImplementService : ICommerceService
         }
         else if (!warehouseDocumentDb.IsDisabled)
         {
-            if (warehouseDocumentDb.WritingOffWarehouseId != req.WritingOffWarehouseId)
+            if (warehouseDocumentDb.WritingOffWarehouseId != req.Payload.WritingOffWarehouseId)
             {
                 foreach (RowOfWarehouseDocumentModelDB rowOfDocument in warehouseDocumentDb.Rows)
                 {
                     OfferAvailabilityModelDB?
-                                            registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WritingOffWarehouseId),
+                                            registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.Payload.WritingOffWarehouseId),
                                             registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == warehouseDocumentDb.WritingOffWarehouseId);
 
                     if (registerOfferWriteOff is not null)
@@ -328,7 +333,7 @@ public partial class CommerceImplementService : ICommerceService
 
                         registerOfferWriteOff.Quantity -= rowOfDocument.Quantity;
                     }
-                    else if (req.WritingOffWarehouseId > 0)
+                    else if (req.Payload.WritingOffWarehouseId > 0)
                     {
                         if (warehouseNegativeBalanceAllowed.Response != true)
                         {
@@ -341,7 +346,7 @@ public partial class CommerceImplementService : ICommerceService
                         {
                             await context.OffersAvailability.AddAsync(new()
                             {
-                                WarehouseId = req.WritingOffWarehouseId,
+                                WarehouseId = req.Payload.WritingOffWarehouseId,
                                 NomenclatureId = rowOfDocument.NomenclatureId,
                                 OfferId = rowOfDocument.OfferId,
                                 Quantity = rowOfDocument.Quantity,
@@ -360,10 +365,10 @@ public partial class CommerceImplementService : ICommerceService
 
                         registerOffer.Quantity += rowOfDocument.Quantity;
                     }
-                    else if(req.WritingOffWarehouseId > 0)
+                    else if (req.Payload.WritingOffWarehouseId > 0)
                         await context.OffersAvailability.AddAsync(new()
                         {
-                            WarehouseId = req.WritingOffWarehouseId,
+                            WarehouseId = req.Payload.WritingOffWarehouseId,
                             NomenclatureId = rowOfDocument.NomenclatureId,
                             OfferId = rowOfDocument.OfferId,
                             Quantity = rowOfDocument.Quantity,
@@ -380,12 +385,12 @@ public partial class CommerceImplementService : ICommerceService
                 }
             }
 
-            if (warehouseDocumentDb.WarehouseId != req.WarehouseId)
+            if (warehouseDocumentDb.WarehouseId != req.Payload.WarehouseId)
             {
                 foreach (RowOfWarehouseDocumentModelDB rowOfDocument in warehouseDocumentDb.Rows)
                 {
                     OfferAvailabilityModelDB?
-                                           registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId),
+                                           registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.Payload.WarehouseId),
                                            registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == warehouseDocumentDb.WarehouseId);
 
                     if (registerOfferWriteOff is not null)
@@ -405,7 +410,7 @@ public partial class CommerceImplementService : ICommerceService
 
                         registerOfferWriteOff.Quantity -= rowOfDocument.Quantity;
                     }
-                    else if (req.WritingOffWarehouseId > 0)
+                    else if (req.Payload.WritingOffWarehouseId > 0)
                     {
                         if (warehouseNegativeBalanceAllowed.Response != true)
                         {
@@ -437,10 +442,10 @@ public partial class CommerceImplementService : ICommerceService
 
                         registerOffer.Quantity += rowOfDocument.Quantity;
                     }
-                    else if(req.WritingOffWarehouseId > 0)
+                    else if (req.Payload.WritingOffWarehouseId > 0)
                         await context.OffersAvailability.AddAsync(new()
                         {
-                            WarehouseId = req.WritingOffWarehouseId,
+                            WarehouseId = req.Payload.WritingOffWarehouseId,
                             NomenclatureId = rowOfDocument.NomenclatureId,
                             OfferId = rowOfDocument.OfferId,
                             Quantity = rowOfDocument.Quantity,
@@ -464,14 +469,14 @@ public partial class CommerceImplementService : ICommerceService
         await context.SaveChangesAsync(token);
 
         res.Response = await context.WarehouseDocuments
-                .Where(x => x.Id == req.Id)
+                .Where(x => x.Id == req.Payload.Id)
                 .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.Description, req.Description)
-                .SetProperty(p => p.DeliveryDate, req.DeliveryDate)
-                .SetProperty(p => p.IsDisabled, req.IsDisabled)
-                .SetProperty(p => p.WarehouseId, req.WarehouseId)
-                .SetProperty(p => p.WritingOffWarehouseId, req.WritingOffWarehouseId)
+                .SetProperty(p => p.Name, req.Payload.Name)
+                .SetProperty(p => p.Description, req.Payload.Description)
+                .SetProperty(p => p.DeliveryDate, req.Payload.DeliveryDate)
+                .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled)
+                .SetProperty(p => p.WarehouseId, req.Payload.WarehouseId)
+                .SetProperty(p => p.WritingOffWarehouseId, req.Payload.WritingOffWarehouseId)
                 .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
