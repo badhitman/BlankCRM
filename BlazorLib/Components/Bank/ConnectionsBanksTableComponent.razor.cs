@@ -11,7 +11,7 @@ namespace BlazorLib.Components.Bank;
 /// <summary>
 /// ConnectionsBanksTableComponent
 /// </summary>
-public partial class ConnectionsBanksTableComponent : BlazorBusyComponentBaseModel
+public partial class ConnectionsBanksTableComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IBankService BankRepo { get; set; } = default!;
@@ -48,9 +48,15 @@ public partial class ConnectionsBanksTableComponent : BlazorBusyComponentBaseMod
     {
         if (element is BankConnectionModelDB _re)
         {
+            if (CurrentUserSession is null)
+            {
+                SnackBarRepo.Error("CurrentUserSession is null");
+                return;
+            }
+
             await SetBusyAsync();
 
-            TResponseModel<int> res = await BankRepo.BankConnectionCreateOrUpdateAsync(_re);
+            TResponseModel<int> res = await BankRepo.BankConnectionCreateOrUpdateAsync(new() { Payload = _re, SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
             if (table is not null)
@@ -76,9 +82,25 @@ public partial class ConnectionsBanksTableComponent : BlazorBusyComponentBaseMod
             return;
         }
 
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         await SetBusyAsync();
 
-        TResponseModel<int> res = await BankRepo.BankConnectionCreateOrUpdateAsync(new BankConnectionModelDB() { Name = bankName, BankInterface = bankInt, Token = bankToken });
+        TResponseModel<int> res = await BankRepo.BankConnectionCreateOrUpdateAsync(new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new BankConnectionModelDB()
+            {
+                Name = bankName,
+                BankInterface = bankInt,
+                Token = bankToken
+            }
+        });
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         if (table is not null)

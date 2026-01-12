@@ -22,7 +22,7 @@ public partial interface IBankService
     /// <summary>
     /// Создать/обновить
     /// </summary>
-    public Task<TResponseModel<int>> BankConnectionCreateOrUpdateAsync(BankConnectionModelDB bank, CancellationToken token = default);
+    public Task<TResponseModel<int>> BankConnectionCreateOrUpdateAsync(TAuthRequestStandardModel<BankConnectionModelDB> bank, CancellationToken token = default);
     /// <summary>
     /// Подбор
     /// </summary>

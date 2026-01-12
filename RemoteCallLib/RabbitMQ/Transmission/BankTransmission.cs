@@ -12,7 +12,7 @@ namespace RemoteCallLib;
 public partial class BankTransmission(IRabbitClient rabbitClient) : IBankService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> BankConnectionCreateOrUpdateAsync(BankConnectionModelDB bank, CancellationToken token = default)
+    public async Task<TResponseModel<int>> BankConnectionCreateOrUpdateAsync(TAuthRequestStandardModel<BankConnectionModelDB> bank, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.BankConnectionCreateOrUpdateReceive, bank, token: token) ?? new();
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<BankConnectionModelDB>> ConnectionsBanksSelectAsync(TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel> req, CancellationToken token = default)

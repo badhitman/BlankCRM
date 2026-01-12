@@ -37,7 +37,7 @@ public class TraceReceiverRecord
     public static TraceReceiverRecord Build(string _receiverName, object? _requestBody = null)
     {
         if (_receiverName.StartsWith(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix))
-            _receiverName = _receiverName.Substring(GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.Length);
+            _receiverName = _receiverName[GlobalStaticConstantsTransmission.TransmissionQueueNamePrefix.Length..];
 
         return new()
         {

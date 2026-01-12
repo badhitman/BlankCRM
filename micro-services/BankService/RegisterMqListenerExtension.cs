@@ -19,7 +19,7 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection BankRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<BankConnectionCreateOrUpdateReceive, BankConnectionModelDB, TResponseModel<int>>()
+            .RegisterMqListener<BankConnectionCreateOrUpdateReceive, TAuthRequestStandardModel<BankConnectionModelDB>, TResponseModel<int>>()
             .RegisterMqListener<ConnectionsBanksSelectReceive, TPaginationRequestStandardModel<SelectConnectionsBanksRequestModel>, TPaginationResponseStandardModel<BankConnectionModelDB>>()
             .RegisterMqListener<CustomerBankCreateOrUpdateReceive, CustomerBankIdModelDB, TResponseModel<int>>()
             .RegisterMqListener<CustomersBanksSelectReceive, TPaginationRequestStandardModel<SelectCustomersBanksIdsRequestModel>, TPaginationResponseStandardModel<CustomerBankIdModelDB>>()

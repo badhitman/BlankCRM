@@ -17,10 +17,18 @@ namespace BankService;
 public partial class BankImplementService(IDbContextFactory<BankContext> bankDbFactory, IIdentityTransmission identityRepo) : IBankService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> BankConnectionCreateOrUpdateAsync(BankConnectionModelDB bank, CancellationToken token = default)
+    public async Task<TResponseModel<int>> BankConnectionCreateOrUpdateAsync(TAuthRequestStandardModel<BankConnectionModelDB> req, CancellationToken token = default)
     {
         BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         TResponseModel<int> res = new();
+
+        if(req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        BankConnectionModelDB bank = req.Payload;
         ValidateReportModel ck = GlobalTools.ValidateObject(bank);
         if (!ck.IsValid)
         {
