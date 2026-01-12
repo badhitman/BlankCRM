@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharedLib;
 using Microsoft.AspNetCore.Http.Extensions;
 using static SharedLib.GlobalStaticConstantsRoutes;
+using static SharedLib.GlobalStaticConstantsRoles;
 
 namespace ApiRestService.Controllers;
 
@@ -90,7 +91,7 @@ public class OrdersController(ICommerceTransmission commRepo, IHelpDeskTransmiss
     [HttpPost($"/api/{Routes.ORDER_CONTROLLER_NAME}/{Routes.ROW_CONTROLLER_NAME}-{Routes.UPDATE_ACTION_NAME}")]
     [TypeFilter(typeof(RolesAuthorizationFilter), Arguments = [$"{nameof(ExpressApiRolesEnum.OrdersWriteCommerce)}"])]
     public async Task<TResponseModel<int>> RowForOrderUpdate(RowOfOrderDocumentModelDB row)
-        => await commRepo.RowForOrderUpdateOrCreateAsync(row);
+        => await commRepo.RowForOrderUpdateOrCreateAsync(new() { Payload = row, SenderActionUserId = Roles.System });
 
     /// <summary>
     /// Удалить строки из заказа

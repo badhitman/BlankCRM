@@ -939,20 +939,27 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> RowForOrderUpdateOrCreateAsync(RowOfOrderDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> RowForOrderUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfOrderDocumentModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
-        if (req.Quantity == 0)
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+        RowOfOrderDocumentModelDB row = req.Payload;
+
+        if (row.Quantity == 0)
         {
             res.AddError($"Количество не может быть нулевым");
             return res;
         }
-        loggerRepo.LogInformation($"{nameof(req)}:{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+        //loggerRepo.LogInformation($"{nameof(row)}:{JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         IQueryable<OrderRowsQueryRecord> queryDocumentDb = from r in context.RowsOrders
-                                                           join d in context.OrdersB2B.Where(x => x.Id == req.OrderId) on r.OrderId equals d.Id
-                                                           join t in context.OfficesForOrders.Where(x => x.Id == req.OfficeOrderTabId) on r.OfficeOrderTabId equals t.Id
+                                                           join d in context.OrdersB2B.Where(x => x.Id == row.OrderId) on r.OrderId equals d.Id
+                                                           join t in context.OfficesForOrders.Where(x => x.Id == row.OfficeOrderTabId) on r.OfficeOrderTabId equals t.Id
                                                            join o in context.Offers on r.OfferId equals o.Id
                                                            join g in context.Nomenclatures on r.NomenclatureId equals g.Id
                                                            select new OrderRowsQueryRecord(d, t, r, o, g);
@@ -970,7 +977,7 @@ public partial class CommerceImplementService(
         loggerRepo.LogInformation($"{nameof(orderRowRecordDb)}: {JsonConvert.SerializeObject(orderRowRecordDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         bool conflict = await context.RowsOrders
-            .AnyAsync(x => x.Id != req.Id && x.OfficeOrderTabId == req.OfficeOrderTabId && x.OfferId == req.OfferId, cancellationToken: token);
+            .AnyAsync(x => x.Id != row.Id && x.OfficeOrderTabId == row.OfficeOrderTabId && x.OfferId == row.OfferId, cancellationToken: token);
 
         if (orderRowRecordDb.WarehouseId == 0)
             res.AddError($"В документе не указан склад: обновление невозможно");
@@ -981,8 +988,8 @@ public partial class CommerceImplementService(
         if (!res.Success())
             return res;
 
-        RowOfOrderDocumentModelDB? rowOfOrderDb = req.Id > 0
-           ? await context.RowsOrders.FirstAsync(x => x.Id == req.Id, cancellationToken: token)
+        RowOfOrderDocumentModelDB? rowOfOrderDb = row.Id > 0
+           ? await context.RowsOrders.FirstAsync(x => x.Id == row.Id, cancellationToken: token)
            : null;
 
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
@@ -990,12 +997,12 @@ public partial class CommerceImplementService(
         List<LockTransactionModelDB> lockers = [new()
         {
             LockerName = nameof(OfferAvailabilityModelDB),
-            LockerId = req.OfferId,
+            LockerId = row.OfferId,
             LockerAreaId = orderRowRecordDb.WarehouseId,
             Marker = nameof(RowForOrderUpdateOrCreateAsync),
         }];
 
-        if (rowOfOrderDb is not null && rowOfOrderDb.OfferId != req.OfferId)
+        if (rowOfOrderDb is not null && rowOfOrderDb.OfferId != row.OfferId)
         {
             lockers.Add(new()
             {
@@ -1016,7 +1023,7 @@ public partial class CommerceImplementService(
         {
             await transaction.RollbackAsync(token);
             msg = $"Не удалось выполнить команду: ";
-            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError($"{msg}{ex.Message}");
             return res;
         }
@@ -1028,21 +1035,21 @@ public partial class CommerceImplementService(
             .ToArrayAsync(cancellationToken: token);
 
         OfferAvailabilityModelDB? regOfferAv = regsOfferAv
-            .FirstOrDefault(x => x.OfferId == req.OfferId && x.WarehouseId == orderRowRecordDb.WarehouseId);
+            .FirstOrDefault(x => x.OfferId == row.OfferId && x.WarehouseId == orderRowRecordDb.WarehouseId);
 
         if (regOfferAv is null && orderRowRecordDb.StatusDocument != StatusesDocumentsEnum.Canceled)
         {
             regOfferAv = new()
             {
-                OfferId = req.OfferId,
-                NomenclatureId = req.NomenclatureId,
+                OfferId = row.OfferId,
+                NomenclatureId = row.NomenclatureId,
                 WarehouseId = orderRowRecordDb.WarehouseId,
             };
             await context.AddAsync(regOfferAv, token);
         }
 
         OfferAvailabilityModelDB? regOfferAvStorno = null;
-        if (rowOfOrderDb is not null && rowOfOrderDb.OfferId != req.OfferId)
+        if (rowOfOrderDb is not null && rowOfOrderDb.OfferId != row.OfferId)
         {
             loggerRepo.LogInformation($"{nameof(rowOfOrderDb)}: {JsonConvert.SerializeObject(rowOfOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             regOfferAvStorno = regsOfferAv.FirstOrDefault(x => x.OfferId == rowOfOrderDb.OfferId && x.WarehouseId == orderRowRecordDb.WarehouseId);
@@ -1061,20 +1068,20 @@ public partial class CommerceImplementService(
 
         DateTime dtu = DateTime.UtcNow;
         await context.OrdersB2B
-                .Where(x => x.Id == req.OrderId)
+                .Where(x => x.Id == row.OrderId)
                 .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
-        if (req.Id < 1)
+        if (row.Id < 1)
         {
             if (regOfferAv is not null && orderRowRecordDb.StatusDocument != StatusesDocumentsEnum.Canceled)
             {
-                if (regOfferAv.Quantity < req.Quantity)
-                    res.AddError($"Количество '{regOfferAv.Offer?.GetName()}' недостаточно: [{regOfferAv.Quantity}] < [{req.Quantity}]");
+                if (regOfferAv.Quantity < row.Quantity)
+                    res.AddError($"Количество '{regOfferAv.Offer?.GetName()}' недостаточно: [{regOfferAv.Quantity}] < [{row.Quantity}]");
                 else
                 {
-                    regOfferAv.Quantity -= req.Quantity;
+                    regOfferAv.Quantity -= row.Quantity;
                     context.OffersAvailability.Update(regOfferAv);
                 }
             }
@@ -1083,29 +1090,29 @@ public partial class CommerceImplementService(
 
             if (regOfferAvStorno is not null)
             {
-                regOfferAvStorno.Quantity += req.Quantity;
+                regOfferAvStorno.Quantity += row.Quantity;
                 if (regOfferAvStorno.Id > 0)
                     context.Update(regOfferAvStorno);
             }
 
-            req.Version = Guid.NewGuid();
-            await context.AddAsync(req, token);
+            row.Version = Guid.NewGuid();
+            await context.AddAsync(row, token);
             await context.SaveChangesAsync(token);
             res.AddSuccess("Товар добавлен к заказу");
-            res.Response = req.Id;
+            res.Response = row.Id;
         }
         else
         {
-            if (rowOfOrderDb!.Version != req.Version)
+            if (rowOfOrderDb!.Version != row.Version)
             {
                 await transaction.RollbackAsync(token);
                 msg = "Строка документа была уже кем-то изменена";
-                loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError($"{msg}. Обновите документ (F5), что бы получить актуальные данные");
                 return res;
             }
 
-            decimal _delta = req.Quantity - rowOfOrderDb.Quantity;
+            decimal _delta = row.Quantity - rowOfOrderDb.Quantity;
             if (_delta == 0)
                 res.AddInfo("Количество не изменилось");
             else if (regOfferAv is not null && orderRowRecordDb.StatusDocument != StatusesDocumentsEnum.Canceled)
@@ -1122,10 +1129,10 @@ public partial class CommerceImplementService(
             }
 
             res.Response = await context.RowsOrders
-              .Where(x => x.Id == req.Id)
+              .Where(x => x.Id == row.Id)
               .ExecuteUpdateAsync(set => set
-              .SetProperty(p => p.Quantity, req.Quantity)
-              .SetProperty(p => p.Amount, req.Amount)
+              .SetProperty(p => p.Quantity, row.Quantity)
+              .SetProperty(p => p.Amount, row.Amount)
               .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
         }
 
