@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// OfficeOrganizationUpdateOrCreate
 /// </summary>
 public class OfficeOrganizationUpdateOrCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<AddressOrganizationBaseModel?, TResponseModel<int>?>
+    : IResponseReceive<TAuthRequestStandardModel<AddressOrganizationBaseModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OfficeOrganizationUpdateOrCreateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(AddressOrganizationBaseModel? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<AddressOrganizationBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);

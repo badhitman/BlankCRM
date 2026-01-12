@@ -113,22 +113,29 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> OfficeOrganizationUpdateOrCreateAsync(AddressOrganizationBaseModel req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> OfficeOrganizationUpdateOrCreateAsync(TAuthRequestStandardModel<AddressOrganizationBaseModel> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        AddressOrganizationBaseModel addressOfficeOrganization = req.Payload;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        if (req.Id < 1)
+        if (addressOfficeOrganization.Id < 1)
         {
             OfficeOrganizationModelDB add = new()
             {
-                AddressUserComment = req.AddressUserComment,
-                Name = req.Name,
-                ParentId = req.ParentId,
-                Contacts = req.Contacts,
-                OrganizationId = req.OrganizationId,
-                KladrCode = req.KladrCode,
-                KladrTitle = req.KladrTitle,
+                AddressUserComment = addressOfficeOrganization.AddressUserComment,
+                Name = addressOfficeOrganization.Name,
+                ParentId = addressOfficeOrganization.ParentId,
+                Contacts = addressOfficeOrganization.Contacts,
+                OrganizationId = addressOfficeOrganization.OrganizationId,
+                KladrCode = addressOfficeOrganization.KladrCode,
+                KladrTitle = addressOfficeOrganization.KladrTitle,
             };
             await context.AddAsync(add, token);
             await context.SaveChangesAsync(token);
@@ -138,14 +145,14 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         res.Response = await context.Offices
-                        .Where(x => x.Id == req.Id)
+                        .Where(x => x.Id == addressOfficeOrganization.Id)
                         .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.AddressUserComment, req.AddressUserComment)
-                        .SetProperty(p => p.Name, req.Name)
-                        .SetProperty(p => p.KladrCode, req.KladrCode)
-                        .SetProperty(p => p.KladrTitle, req.KladrTitle)
-                        .SetProperty(p => p.ParentId, req.ParentId)
-                        .SetProperty(p => p.Contacts, req.Contacts), cancellationToken: token);
+                        .SetProperty(p => p.AddressUserComment, addressOfficeOrganization.AddressUserComment)
+                        .SetProperty(p => p.Name, addressOfficeOrganization.Name)
+                        .SetProperty(p => p.KladrCode, addressOfficeOrganization.KladrCode)
+                        .SetProperty(p => p.KladrTitle, addressOfficeOrganization.KladrTitle)
+                        .SetProperty(p => p.ParentId, addressOfficeOrganization.ParentId)
+                        .SetProperty(p => p.Contacts, addressOfficeOrganization.Contacts), cancellationToken: token);
 
         res.AddSuccess($"Обновление `{GetType().Name}` выполнено");
         return res;

@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 using MudBlazor;
 
@@ -12,7 +11,7 @@ namespace BlazorLib.Components.Commerce;
 /// <summary>
 /// OfficesOrganizationComponent
 /// </summary>
-public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
+public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IRubricsTransmission HelpDeskRepo { get; set; } = default!;
@@ -66,19 +65,29 @@ public partial class OfficesOrganizationComponent : BlazorBusyComponentBaseModel
         if (!CanCreate)
             return;
 
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         await SetBusyAsync();
 
-        TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdateOrCreateAsync(new AddressOrganizationBaseModel()
+        TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdateOrCreateAsync(new()
         {
-            AddressUserComment = addingAddress ?? "",
-            Name = addingName!,
-            ParentId = SelectedRubric?.Id ?? 0,
-            OrganizationId = Organization.Id,
-            Contacts = addingContacts,
-            KladrCode = addingKladrCode!,
-            KladrTitle = addingKladrTitle!,
+            Payload = new AddressOrganizationBaseModel()
+            {
+                AddressUserComment = addingAddress ?? "",
+                Name = addingName!,
+                ParentId = SelectedRubric?.Id ?? 0,
+                OrganizationId = Organization.Id,
+                Contacts = addingContacts,
+                KladrCode = addingKladrCode!,
+                KladrTitle = addingKladrTitle!,
+            },
+            SenderActionUserId = CurrentUserSession.UserId,
         });
-        
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success())
         {

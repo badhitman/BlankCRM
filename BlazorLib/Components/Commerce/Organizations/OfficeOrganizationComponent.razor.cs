@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 using BlazorLib.Components.Rubrics;
 
@@ -12,7 +11,7 @@ namespace BlazorLib.Components.Commerce.Organizations;
 /// <summary>
 /// OfficeOrganizationComponent
 /// </summary>
-public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
+public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IRubricsTransmission HelpDeskRepo { get; set; } = default!;
@@ -63,7 +62,7 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
-
+        await base.OnInitializedAsync();
         TResponseModel<OfficeOrganizationModelDB[]> res_address = await CommerceRepo
             .OfficesOrganizationsReadAsync([AddressForOrganization]);
 
@@ -102,19 +101,29 @@ public partial class OfficeOrganizationComponent : BlazorBusyComponentBaseModel
         if (!CanSave)
             return;
 
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         await SetBusyAsync();
 
-        TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdateOrCreateAsync(new AddressOrganizationBaseModel()
+        TResponseModel<int> res = await CommerceRepo.OfficeOrganizationUpdateOrCreateAsync(new()
         {
-            KladrCode = OfficeEdit!.KladrCode,
-            KladrTitle = OfficeEdit.KladrTitle,
-            AddressUserComment = OfficeEdit.AddressUserComment!,
-            Name = OfficeEdit.Name!,
-            ParentId = SelectedRubric?.Id ?? 0,
-            Contacts = OfficeEdit.Contacts,
-            Id = AddressForOrganization,
+            Payload = new AddressOrganizationBaseModel()
+            {
+                KladrCode = OfficeEdit!.KladrCode,
+                KladrTitle = OfficeEdit.KladrTitle,
+                AddressUserComment = OfficeEdit.AddressUserComment!,
+                Name = OfficeEdit.Name!,
+                ParentId = SelectedRubric?.Id ?? 0,
+                Contacts = OfficeEdit.Contacts,
+                Id = AddressForOrganization,
+            },
+            SenderActionUserId = CurrentUserSession.UserId,
         });
-        
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (!res.Success())
         {

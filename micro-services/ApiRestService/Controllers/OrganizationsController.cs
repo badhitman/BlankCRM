@@ -2,10 +2,11 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using static SharedLib.GlobalStaticConstantsRoutes;
+using static SharedLib.GlobalStaticConstantsRoles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLib;
-using static SharedLib.GlobalStaticConstantsRoutes;
 
 namespace ApiRestService.Controllers;
 
@@ -80,7 +81,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
 [Authorize(Roles = nameof(ExpressApiRolesEnum.OrganizationsWriteCommerce))]
 #endif
     public async Task<TResponseModel<int>> OrganizationUpdate(OrganizationModelDB org)
-        => await commRepo.OrganizationUpdateAsync(new() { Payload = org, SenderActionUserId = GlobalStaticConstantsRoles.Roles.System });
+        => await commRepo.OrganizationUpdateAsync(new() { Payload = org, SenderActionUserId = Roles.System });
 
     /// <summary>
     /// Обновить/Создать адрес организации
@@ -95,5 +96,9 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
 [Authorize(Roles = nameof(ExpressApiRolesEnum.OrganizationsWriteCommerce))]
 #endif
     public async Task<TResponseModel<int>> OfficeOrganizationUpdate(AddressOrganizationBaseModel req)
-        => await commRepo.OfficeOrganizationUpdateOrCreateAsync(req);
+        => await commRepo.OfficeOrganizationUpdateOrCreateAsync(new()
+        {
+            Payload = req,
+            SenderActionUserId = Roles.System,
+        });
 }

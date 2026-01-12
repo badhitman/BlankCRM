@@ -45,7 +45,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Обновить/Создать офис/филиал организации
     /// </summary>
-    public Task<TResponseModel<int>> OfficeOrganizationUpdateOrCreateAsync(AddressOrganizationBaseModel req, CancellationToken token = default);
+    public Task<TResponseModel<int>> OfficeOrganizationUpdateOrCreateAsync(TAuthRequestStandardModel<AddressOrganizationBaseModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Установить реквизиты организации (+ сброс запроса редактирования)
