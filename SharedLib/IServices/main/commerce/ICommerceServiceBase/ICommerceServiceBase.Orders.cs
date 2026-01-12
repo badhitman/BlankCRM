@@ -25,7 +25,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Order update
     /// </summary>
-    public Task<TResponseModel<int>> OrderUpdateOrCreateAsync(OrderDocumentModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> OrderUpdateOrCreateAsync(TAuthRequestStandardModel<OrderDocumentModelDB> req, CancellationToken token = default);
 
     /// <summary>
     /// Orders read

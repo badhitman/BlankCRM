@@ -104,7 +104,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<OrderDocumentModelDB>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrdersSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> OrderUpdateOrCreateAsync(OrderDocumentModelDB order, CancellationToken token = default)
+    public async Task<TResponseModel<int>> OrderUpdateOrCreateAsync(TAuthRequestStandardModel<OrderDocumentModelDB> order, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrderUpdateOrCreateCommerceReceive, order, token: token) ?? new();
 
     /// <inheritdoc/>

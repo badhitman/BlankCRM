@@ -663,19 +663,26 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> OrderUpdateOrCreateAsync(OrderDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> OrderUpdateOrCreateAsync(TAuthRequestStandardModel<OrderDocumentModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
-        ValidateReportModel ck = GlobalTools.ValidateObject(req);
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+        OrderDocumentModelDB order = req.Payload;
+
+
+        ValidateReportModel ck = GlobalTools.ValidateObject(order);
         if (!ck.IsValid)
         {
             res.Messages.InjectException(ck.ValidationResults);
             return res;
         }
+        order.Name = order.Name.Trim();
 
-        req.Name = req.Name.Trim();
-
-        TResponseModel<UserInfoModel[]> actor = await identityRepo.GetUsersOfIdentityAsync([req.AuthorIdentityUserId], token);
+        TResponseModel<UserInfoModel[]> actor = await identityRepo.GetUsersOfIdentityAsync([order.AuthorIdentityUserId], token);
         if (!actor.Success() || actor.Response is null || actor.Response.Length == 0)
         {
             res.AddRangeMessages(actor.Messages);
@@ -684,9 +691,9 @@ public partial class CommerceImplementService(
 
         string msg, waMsg;
         DateTime dtu = DateTime.UtcNow;
-        req.LastUpdatedAtUTC = dtu;
+        order.LastUpdatedAtUTC = dtu;
 
-        OfferModelDB?[] allOffersReq = [.. req.OfficesTabs!
+        OfferModelDB?[] allOffersReq = [.. order.OfficesTabs!
             .SelectMany(x => x.Rows!)
             .Select(x => x.Offer)
             .DistinctBy(x => x!.Id)];
@@ -697,15 +704,15 @@ public partial class CommerceImplementService(
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken: token);
 
-        if (req.Id < 1)
+        if (order.Id < 1)
         {
-            if (req.OfficesTabs is null || req.OfficesTabs.Count == 0)
+            if (order.OfficesTabs is null || order.OfficesTabs.Count == 0)
             {
                 res.AddError($"В заказе отсутствуют адреса доставки");
                 return res;
             }
 
-            req.OfficesTabs.ForEach(x =>
+            order.OfficesTabs.ForEach(x =>
             {
                 if (x.Rows is null || x.Rows.Count == 0)
                     res.AddError($"Для адреса доставки '{x.Office?.Name}' не указана номенклатура");
@@ -720,7 +727,7 @@ public partial class CommerceImplementService(
             if (!res.Success())
                 return res;
 
-            int[] rubricsIds = [.. req.OfficesTabs.Select(x => x.WarehouseId).Distinct()];
+            int[] rubricsIds = [.. order.OfficesTabs.Select(x => x.WarehouseId).Distinct()];
             TResponseModel<List<RubricStandardModel>> getRubrics = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
             if (!getRubrics.Success())
             {
@@ -734,13 +741,13 @@ public partial class CommerceImplementService(
                 return res;
             }
 
-            req.Id = 0;
-            req.CreatedAtUTC = dtu;
-            req.LastUpdatedAtUTC = dtu;
-            req.Version = Guid.NewGuid();
-            req.StatusDocument = StatusesDocumentsEnum.Created;
+            order.Id = 0;
+            order.CreatedAtUTC = dtu;
+            order.LastUpdatedAtUTC = dtu;
+            order.Version = Guid.NewGuid();
+            order.StatusDocument = StatusesDocumentsEnum.Created;
 
-            var _offersOfDocument = req.OfficesTabs
+            var _offersOfDocument = order.OfficesTabs
                            .SelectMany(x => x.Rows!.Select(y => new { x.WarehouseId, Row = y }))
                            .ToArray();
 
@@ -761,7 +768,7 @@ public partial class CommerceImplementService(
             {
                 await transaction.RollbackAsync(token);
                 msg = $"Не удалось выполнить команду блокировки БД {nameof(OrderUpdateOrCreateAsync)}: ";
-                loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(order, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError($"{msg}{ex.Message}");
                 return res;
             }
@@ -796,7 +803,7 @@ public partial class CommerceImplementService(
             await Task.WhenAll(tasks);
             tasks.Clear();
 
-            req.OfficesTabs.ForEach(tabAddr =>
+            order.OfficesTabs.ForEach(tabAddr =>
             {
                 tabAddr.Rows!.ForEach(rowDoc =>
                 {
@@ -815,14 +822,14 @@ public partial class CommerceImplementService(
                 return res;
             }
 
-            req.PrepareForSave();
-            req.CreatedAtUTC = dtu;
+            order.PrepareForSave();
+            order.CreatedAtUTC = dtu;
 
-            await context.AddAsync(req, token);
+            await context.AddAsync(order, token);
             await context.SaveChangesAsync(token);
-            res.Response = req.Id;
+            res.Response = order.Id;
 
-            foreach (TabOfficeForOrderModelDb tabAddr in req.OfficesTabs)
+            foreach (TabOfficeForOrderModelDb tabAddr in order.OfficesTabs)
             {
                 foreach (RowOfOrderDocumentModelDB rowDoc in tabAddr.Rows!)
                 {
@@ -835,12 +842,12 @@ public partial class CommerceImplementService(
 
             TAuthRequestStandardModel<UniversalUpdateRequestModel> issue_new = new()
             {
-                SenderActionUserId = req.AuthorIdentityUserId,
+                SenderActionUserId = order.AuthorIdentityUserId,
                 Payload = new()
                 {
-                    Name = req.Name,
+                    Name = order.Name,
                     ParentId = res_RubricIssueForCreateOrder.Response,
-                    Description = $"Новый заказ.\n{req.Description}".Trim(),
+                    Description = $"Новый заказ.\n{order.Description}".Trim(),
                 },
             };
 
@@ -852,13 +859,13 @@ public partial class CommerceImplementService(
                 return res;
             }
 
-            req.HelpDeskId = issue.Response;
-            context.Update(req);
+            order.HelpDeskId = issue.Response;
+            context.OrdersB2B.Update(order);
 
             string subject_email = "Создан новый заказ";
             DateTime _dt = DateTime.UtcNow.GetCustomTime();
             string _dtAsString = $"{_dt.ToString("d", GlobalStaticConstants.RU)} {_dt.ToString("t", GlobalStaticConstants.RU)}";
-            string _about_order = $"'{req.Name}' {_dtAsString}";
+            string _about_order = $"'{order.Name}' {_dtAsString}";
 
             if (CommerceNewOrderSubjectNotification?.Success() == true && !string.IsNullOrWhiteSpace(CommerceNewOrderSubjectNotification.Response))
                 subject_email = CommerceNewOrderSubjectNotification.Response;
@@ -904,26 +911,26 @@ public partial class CommerceImplementService(
             return res;
         }
 
-        OrderDocumentModelDB order_document = await context.OrdersB2B.FirstAsync(x => x.Id == req.Id, cancellationToken: token);
-        if (order_document.Version != req.Version)
+        OrderDocumentModelDB order_document = await context.OrdersB2B.FirstAsync(x => x.Id == order.Id, cancellationToken: token);
+        if (order_document.Version != order.Version)
         {
             msg = "Документ был кем-то изменён пока был открытым";
-            loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(order, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError($"{msg}. Обновите сначала документ (F5)");
             return res;
         }
 
-        if (order_document.Name == req.Name && order_document.Description == req.Description)
+        if (order_document.Name == order.Name && order_document.Description == order.Description)
         {
-            res.AddInfo($"Документ #{req.Id} не требует обновления");
+            res.AddInfo($"Документ #{order.Id} не требует обновления");
             return res;
         }
 
         res.Response = await context.OrdersB2B
-            .Where(x => x.Id == req.Id)
+            .Where(x => x.Id == order.Id)
             .ExecuteUpdateAsync(set => set
-            .SetProperty(p => p.Name, req.Name)
-            .SetProperty(p => p.Description, req.Description)
+            .SetProperty(p => p.Name, order.Name)
+            .SetProperty(p => p.Description, order.Description)
             .SetProperty(p => p.Version, Guid.NewGuid())
             .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
