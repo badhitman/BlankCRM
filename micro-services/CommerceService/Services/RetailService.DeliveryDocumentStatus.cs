@@ -2,8 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
@@ -119,18 +119,28 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<DeliveryDocumentRetailModelDB>> UpdateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
-            return ResponseBaseModel.CreateError("req.Payload is null");
+            return new()
+            {
+                Messages = [new()
+                {
+                    Text = "req.Payload is null",
+                    TypeMessage = MessagesTypesEnum.Error,
+                }]
+            };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        DeliveryDocumentRetailModelDB docDb = await context.DeliveryDocumentsRetail
-            .Include(x => x.Rows)
-            .FirstAsync(x => x.Id == req.Payload.DeliveryDocumentId, cancellationToken: token);
+        TResponseModel<DeliveryDocumentRetailModelDB> res = new()
+        {
+            Response = await context.DeliveryDocumentsRetail
+                                    .Include(x => x.Rows)
+                                    .FirstAsync(x => x.Id == req.Payload.DeliveryDocumentId, cancellationToken: token)
+        };
 
-        DeliveryStatusesEnum? _oldStatus = docDb.DeliveryStatus;
+        DeliveryStatusesEnum? _oldStatus = res.Response.DeliveryStatus;
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         req.Payload.Name = req.Payload.Name.Trim();
         await context.DeliveriesStatusesDocumentsRetail
@@ -146,10 +156,17 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.Payload.DeliveryDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
 
-        if (docDb.Rows is null || docDb.Rows.Count == 0)
+        if (res.Response.Rows is null || res.Response.Rows.Count == 0)
         {
             await transaction.CommitAsync(token);
-            return ResponseBaseModel.CreateSuccess("Ok");
+            return new()
+            {
+                Messages = [new()
+                {
+                    Text = "Ok",
+                    TypeMessage = MessagesTypesEnum.Success,
+                }]
+            };
         }
 
         DeliveryStatusesEnum _newStatus = await context.DeliveriesStatusesDocumentsRetail
@@ -162,15 +179,22 @@ public partial class RetailService : IRetailService
         if ((offDeliveriesStatuses.Contains(_newStatus) && offDeliveriesStatuses.Contains(_oldStatus)) || (!offDeliveriesStatuses.Contains(_newStatus) && !offDeliveriesStatuses.Contains(_oldStatus)))
         {
             await transaction.CommitAsync(token);
-            return ResponseBaseModel.CreateSuccess("Ok");
+            return new()
+            {
+                Messages = [new()
+                {
+                    Text = "Ok",
+                    TypeMessage = MessagesTypesEnum.Success,
+                }]
+            };
         }
 
-        int[] _offersIds = [.. docDb.Rows.Select(x => x.OfferId)];
+        int[] _offersIds = [.. res.Response.Rows.Select(x => x.OfferId)];
         List<LockTransactionModelDB> lockers = [.._offersIds.Select(x=> new LockTransactionModelDB()
         {
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
-            LockerAreaId = docDb.WarehouseId,
+            LockerAreaId = res.Response.WarehouseId,
             Marker = nameof(UpdateDeliveryStatusDocumentAsync)
         })];
 
@@ -193,11 +217,11 @@ public partial class RetailService : IRetailService
            .Where(x => _offersIds.Contains(x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        ResponseBaseModel res = await DoIt(context, transaction, docDb.Rows, !offDeliveriesStatuses.Contains(_newStatus), offerAvailabilityDB, docDb, token);
-        if (!res.Success())
+        ResponseBaseModel sRes = await DoIt(context, transaction, res.Response.Rows, !offDeliveriesStatuses.Contains(_newStatus), offerAvailabilityDB, res.Response, token);
+        if (!sRes.Success())
         {
             await transaction.RollbackAsync(token);
-            return new() { Messages = res.Messages };
+            return new() { Messages = sRes.Messages };
         }
 
         if (lockers.Count != 0)
@@ -207,7 +231,8 @@ public partial class RetailService : IRetailService
         }
 
         await transaction.CommitAsync(token);
-        return ResponseBaseModel.CreateSuccess("Ok");
+        res.AddSuccess("Ok");
+        return res;
     }
 
     /// <inheritdoc/>
