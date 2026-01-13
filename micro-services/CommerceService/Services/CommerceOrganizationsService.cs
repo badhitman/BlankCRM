@@ -400,7 +400,7 @@ public partial class CommerceImplementService : ICommerceService
 
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> UserOrganizationUpdateAsync(TAuthRequestStandardModel<UserOrganizationModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> OrganizationUserUpdateOrCreateAsync(TAuthRequestStandardModel<UserOrganizationModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
 
@@ -436,7 +436,7 @@ public partial class CommerceImplementService : ICommerceService
                         .SetProperty(p => p.UserStatus, req.Payload.UserStatus)
                         .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
-        res.AddSuccess($"Обновление `{nameof(UserOrganizationUpdateAsync)}` выполнено");
+        res.AddSuccess($"Обновление `{nameof(OrganizationUserUpdateOrCreateAsync)}` выполнено");
         return res;
     }
 

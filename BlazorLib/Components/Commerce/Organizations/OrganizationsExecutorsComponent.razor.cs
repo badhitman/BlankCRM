@@ -80,7 +80,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
             },
             SenderActionUserId = CurrentUserSession.UserId,
         };
-        TResponseModel<int> sr = await CommerceRepo.UserOrganizationUpdateAsync(req);
+        TResponseModel<int> sr = await CommerceRepo.OrganizationUserUpdateOrCreateAsync(req);
         SnackBarRepo.ShowMessagesResponse(sr.Messages);
         AddingUserEmail = "";
 
@@ -125,7 +125,7 @@ public partial class OrganizationsExecutorsComponent : BlazorBusyComponentUsersC
 
         UserOrganizationModelDB sender = (UserOrganizationModelDB)element;
         await SetBusyAsync();
-        TResponseModel<int> res = await CommerceRepo.UserOrganizationUpdateAsync(new TAuthRequestStandardModel<UserOrganizationModelDB>() { Payload = sender, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> res = await CommerceRepo.OrganizationUserUpdateOrCreateAsync(new TAuthRequestStandardModel<UserOrganizationModelDB>() { Payload = sender, SenderActionUserId = CurrentUserSession.UserId });
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await tableRef.ReloadServerData();

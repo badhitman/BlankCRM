@@ -34,7 +34,7 @@ public partial class CommerceImplementService(
 {
     #region payment-document
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> PaymentDocumentUpdateAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> PaymentDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
 

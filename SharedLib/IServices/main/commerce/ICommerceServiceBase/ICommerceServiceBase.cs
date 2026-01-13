@@ -56,7 +56,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Обновить/создать платёжный документ
     /// </summary>
-    public Task<TResponseModel<int>> PaymentDocumentUpdateAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel> payment, CancellationToken token = default);
+    public Task<TResponseModel<int>> PaymentDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel> payment, CancellationToken token = default);
 
     /// <summary>
     /// Price Full - file get

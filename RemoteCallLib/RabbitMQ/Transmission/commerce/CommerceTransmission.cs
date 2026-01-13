@@ -108,8 +108,8 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrderUpdateOrCreateCommerceReceive, order, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> PaymentDocumentUpdateAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel> payment, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.PaymentDocumentUpdateCommerceReceive, payment, token: token) ?? new();
+    public async Task<TResponseModel<int>> PaymentDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel> payment, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.PaymentDocumentUpdateOrCreateCommerceReceive, payment, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>> PriceRuleUpdateOrCreateAsync(TAuthRequestStandardModel<PriceRuleForOfferModelDB> price_rule, CancellationToken token = default)
@@ -168,7 +168,7 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<TPaginationResponseStandardModel<UserOrganizationModelDB>>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrganizationsUsersSelectCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> UserOrganizationUpdateAsync(TAuthRequestStandardModel<UserOrganizationModelDB> org, CancellationToken token = default)
+    public async Task<TResponseModel<int>> OrganizationUserUpdateOrCreateAsync(TAuthRequestStandardModel<UserOrganizationModelDB> org, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrganizationUserUpdateOrCreateCommerceReceive, org, token: token) ?? new();
 
     /// <inheritdoc/>

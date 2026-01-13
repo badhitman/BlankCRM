@@ -20,7 +20,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// UserOrganizationUpdate
     /// </summary>
-    public Task<TResponseModel<int>> UserOrganizationUpdateAsync(TAuthRequestStandardModel<UserOrganizationModelDB> req, CancellationToken token = default);
+    public Task<TResponseModel<int>> OrganizationUserUpdateOrCreateAsync(TAuthRequestStandardModel<UserOrganizationModelDB> req, CancellationToken token = default);
 
     /// <summary>
     /// UsersOrganizationsRead

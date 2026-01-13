@@ -8,20 +8,20 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// PaymentDocumentUpdateReceive
+/// PaymentDocumentUpdateOrCreate
 /// </summary>
-public class PaymentDocumentUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class PaymentDocumentUpdateOrCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<PaymentDocumentBaseModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PaymentDocumentUpdateCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.PaymentDocumentUpdateOrCreateCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<PaymentDocumentBaseModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        TResponseModel<int> res = await commerceRepo.PaymentDocumentUpdateAsync(req, token);
+        TResponseModel<int> res = await commerceRepo.PaymentDocumentUpdateOrCreateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

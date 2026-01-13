@@ -8,9 +8,9 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// UserOrganizationUpdateReceive
+/// OrganizationUserUpdateOrCreate
 /// </summary>
-public class UserOrganizationUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class OrganizationUserUpdateOrCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<UserOrganizationModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,7 @@ public class UserOrganizationUpdateReceive(ICommerceService commerceRepo, IFiles
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        TResponseModel<int> res = await commerceRepo.UserOrganizationUpdateAsync(req, token);
+        TResponseModel<int> res = await commerceRepo.OrganizationUserUpdateOrCreateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }
