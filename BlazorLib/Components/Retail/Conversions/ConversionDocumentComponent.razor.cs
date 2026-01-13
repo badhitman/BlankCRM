@@ -227,7 +227,11 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
         }
         else
         {
-            ResponseBaseModel res = await RetailRepo.UpdateConversionDocumentRetailAsync(editDoc);
+            ResponseBaseModel res = await RetailRepo.UpdateConversionDocumentRetailAsync(new()
+            {
+                Payload = editDoc,
+                SenderActionUserId = CurrentUserSession.UserId,
+            });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
             {
