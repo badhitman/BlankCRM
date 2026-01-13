@@ -74,6 +74,12 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAut
         if (!editDate.HasValue || editDate == default || !editRowId.HasValue)
             return;
 
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         if (element is DeliveryStatusRetailDocumentModelDB other)
         {
             DeliveryStatusRetailDocumentModelDB req = new()
@@ -85,7 +91,12 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAut
                 Id = editRowId.Value,
             };
             await SetBusyAsync();
-            ResponseBaseModel res = await RetailRepo.UpdateDeliveryStatusDocumentAsync(req);
+            ResponseBaseModel res = await RetailRepo.UpdateDeliveryStatusDocumentAsync(new()
+            {
+                Payload = req,
+                SenderActionUserId = CurrentUserSession.UserId
+            });
+
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (!res.Success())
             {

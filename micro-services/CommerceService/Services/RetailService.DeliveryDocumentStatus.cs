@@ -119,29 +119,32 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateDeliveryStatusDocumentAsync(DeliveryStatusRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         DeliveryDocumentRetailModelDB docDb = await context.DeliveryDocumentsRetail
             .Include(x => x.Rows)
-            .FirstAsync(x => x.Id == req.DeliveryDocumentId, cancellationToken: token);
+            .FirstAsync(x => x.Id == req.Payload.DeliveryDocumentId, cancellationToken: token);
 
         DeliveryStatusesEnum? _oldStatus = docDb.DeliveryStatus;
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
-        req.Name = req.Name.Trim();
+        req.Payload.Name = req.Payload.Name.Trim();
         await context.DeliveriesStatusesDocumentsRetail
-            .Where(x => x.Id == req.Id)
+            .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.DeliveryStatus, req.DeliveryStatus)
+                .SetProperty(p => p.Name, req.Payload.Name)
+                .SetProperty(p => p.DeliveryStatus, req.Payload.DeliveryStatus)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await context.DeliveryDocumentsRetail
-            .Where(x => x.Id == req.DeliveryDocumentId)
+            .Where(x => x.Id == req.Payload.DeliveryDocumentId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.DeliveryDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.Payload.DeliveryDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
 
         if (docDb.Rows is null || docDb.Rows.Count == 0)
         {
@@ -150,7 +153,7 @@ public partial class RetailService : IRetailService
         }
 
         DeliveryStatusesEnum _newStatus = await context.DeliveriesStatusesDocumentsRetail
-            .Where(y => y.DeliveryDocumentId == req.DeliveryDocumentId)
+            .Where(y => y.DeliveryDocumentId == req.Payload.DeliveryDocumentId)
             .OrderByDescending(z => z.DateOperation)
             .ThenByDescending(os => os.Id)
             .Select(s => s.DeliveryStatus)
@@ -181,7 +184,7 @@ public partial class RetailService : IRetailService
         {
             await transaction.RollbackAsync(token);
             msg = $"Не удалось выполнить команду: ";
-            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}{ex.Message}" }] };
         }
 
