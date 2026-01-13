@@ -16,10 +16,10 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>>> RowsDeleteFromWarehouseDocumentAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
+    public async Task<TResponseModel<Dictionary<int, DeliveryDocumentMetadataModel>>> RowsDeleteFromWarehouseDocumentAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         string msg;
-        TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>> res = new();
+        TResponseModel<Dictionary<int, DeliveryDocumentMetadataModel>> res = new();
 
         if (req.Payload is null)
         {

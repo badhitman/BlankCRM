@@ -247,7 +247,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         }
 
         await SetBusyAsync();
-        TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>> res = await CommRepo.RowsDeleteFromWarehouseDocumentAsync(new()
+        TResponseModel<Dictionary<int, DeliveryDocumentMetadataModel>> res = await CommRepo.RowsDeleteFromWarehouseDocumentAsync(new()
         {
             Payload = [currentRow.Id],
             SenderActionUserId = CurrentUserSession.UserId

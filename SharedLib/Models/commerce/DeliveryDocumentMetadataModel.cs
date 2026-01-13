@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// DeliveryDocumentMetadataRecord
+/// DeliveryDocumentMetadataModel
 /// </summary>
-public class DeliveryDocumentMetadataRecord
+public class DeliveryDocumentMetadataModel
 {
     /// <inheritdoc/>
     public required RowOfWarehouseDocumentModelDB[] Rows { get; set; }
