@@ -303,8 +303,9 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteToggleConversionRetailAsync(int conversionId, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteToggleConversionRetailAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
+        int conversionId = req.Payload;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<WalletConversionRetailDocumentModelDB> q = context.ConversionsDocumentsWalletsRetail

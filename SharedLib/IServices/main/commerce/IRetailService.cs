@@ -206,7 +206,7 @@ public interface IRetailService
     public Task<TResponseModel<WalletConversionRetailDocumentModelDB[]>> GetConversionsDocumentsRetailAsync(ReadWalletsRetailsConversionDocumentsRequestModel req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeleteToggleConversionRetailAsync(int conversionId, CancellationToken token = default);
+    public Task<ResponseBaseModel> DeleteToggleConversionRetailAsync(TAuthRequestStandardModel<int> conversionId, CancellationToken token = default);
     #endregion
 
     #region Conversions orders link`s

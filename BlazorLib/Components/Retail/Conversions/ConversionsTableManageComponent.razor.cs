@@ -71,9 +71,19 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
 
     async Task DisabledToggle(int conversionId)
     {
-        await SetBusyAsync();
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
 
-        ResponseBaseModel res = await RetailRepo.DeleteToggleConversionRetailAsync(conversionId);
+        await SetBusyAsync();
+        ResponseBaseModel res = await RetailRepo.DeleteToggleConversionRetailAsync(new()
+        {
+            Payload = conversionId,
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         if (tableRef is not null)
             await tableRef.ReloadServerData();
