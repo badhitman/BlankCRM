@@ -78,7 +78,7 @@ public partial class BanksListDetailsOrganizationComponent : BlazorBusyComponent
 
         CurrentOrganization.BankMainAccount = sender.Id;
         await SetBusyAsync();
-        TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(new() { Payload = CurrentOrganization, SenderActionUserId = CurrentUserSession.UserId });
+        TResponseModel<int> res = await CommerceRepo.OrganizationUpdateOrCreateAsync(new() { Payload = CurrentOrganization, SenderActionUserId = CurrentUserSession.UserId });
         await SetBusyAsync(false);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
     }

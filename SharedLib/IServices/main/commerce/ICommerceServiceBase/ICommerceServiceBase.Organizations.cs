@@ -30,7 +30,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Обновление параметров организации. Юридические параметры не меняются, а формируется запрос на изменение, которое должна подтвердить сторонняя система
     /// </summary>
-    public Task<TResponseModel<int>> OrganizationUpdateAsync(TAuthRequestStandardModel<OrganizationModelDB> req, CancellationToken token = default);
+    public Task<TResponseModel<int>> OrganizationUpdateOrCreateAsync(TAuthRequestStandardModel<OrganizationModelDB> req, CancellationToken token = default);
 
     /// <summary>
     /// Подбор организаций с параметрами запроса

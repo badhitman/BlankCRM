@@ -10,7 +10,7 @@ namespace Transmission.Receives.commerce;
 /// <summary>
 /// Organization update or create
 /// </summary>
-public class OrganizationUpdateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
+public class OrganizationUpdateOrCreateReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<OrganizationModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
@@ -21,7 +21,7 @@ public class OrganizationUpdateReceive(ICommerceService commerceRepo, IFilesInde
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        TResponseModel<int> res = await commerceRepo.OrganizationUpdateAsync(req, token);
+        TResponseModel<int> res = await commerceRepo.OrganizationUpdateOrCreateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

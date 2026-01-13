@@ -74,7 +74,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         TAuthRequestStandardModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession.UserId };
         await SetBusyAsync();
 
-        TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
+        TResponseModel<int> res = await CommerceRepo.OrganizationUpdateOrCreateAsync(req);
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await ReadOrganization();
@@ -125,7 +125,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         TAuthRequestStandardModel<OrganizationModelDB> req = new() { Payload = editOrg!, SenderActionUserId = CurrentUserSession.UserId };
         await SetBusyAsync();
 
-        TResponseModel<int> res = await CommerceRepo.OrganizationUpdateAsync(req);
+        TResponseModel<int> res = await CommerceRepo.OrganizationUpdateOrCreateAsync(req);
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 

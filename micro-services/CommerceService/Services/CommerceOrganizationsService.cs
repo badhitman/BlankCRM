@@ -253,7 +253,7 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> OrganizationUpdateAsync(TAuthRequestStandardModel<OrganizationModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> OrganizationUpdateOrCreateAsync(TAuthRequestStandardModel<OrganizationModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
         if (req.Payload is null)

@@ -81,7 +81,7 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
 [Authorize(Roles = nameof(ExpressApiRolesEnum.OrganizationsWriteCommerce))]
 #endif
     public async Task<TResponseModel<int>> OrganizationUpdate(OrganizationModelDB org)
-        => await commRepo.OrganizationUpdateAsync(new() { Payload = org, SenderActionUserId = Roles.System });
+        => await commRepo.OrganizationUpdateOrCreateAsync(new() { Payload = org, SenderActionUserId = Roles.System });
 
     /// <summary>
     /// Обновить/Создать адрес организации
