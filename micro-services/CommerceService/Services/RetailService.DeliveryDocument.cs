@@ -16,51 +16,57 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateDeliveryDocumentAsync(CreateDeliveryDocumentRetailRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateDeliveryDocumentAsync(TAuthRequestStandardModel<CreateDeliveryDocumentRetailRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        TResponseModel<KladrResponseModel> kladrObj = await kladrRepo.ObjectGetAsync(new() { Code = req.KladrCode }, token);
+        TResponseModel<KladrResponseModel> kladrObj = await kladrRepo.ObjectGetAsync(new() { Code = req.Payload.KladrCode }, token);
         if (!kladrObj.Success())
         {
             res.AddRangeMessages(kladrObj.Messages);
             return res;
         }
 
-        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync([req.RecipientIdentityUserId], token);
+        TResponseModel<UserInfoModel[]> user = await identityRepo.GetUsersOfIdentityAsync([req.Payload.RecipientIdentityUserId], token);
         if (!user.Success())
         {
             res.AddRangeMessages(user.Messages);
             return res;
         }
 
-        req.CreatedAtUTC = DateTime.UtcNow;
-        req.OrdersLinks = null;
-        req.Name = req.Name.Trim();
-        req.Description = req.Description?.Trim();
-        req.DeliveryCode = req.DeliveryCode?.Trim();
-        req.Version = Guid.NewGuid();
+        req.Payload.CreatedAtUTC = DateTime.UtcNow;
+        req.Payload.OrdersLinks = null;
+        req.Payload.Name = req.Payload.Name.Trim();
+        req.Payload.Description = req.Payload.Description?.Trim();
+        req.Payload.DeliveryCode = req.Payload.DeliveryCode?.Trim();
+        req.Payload.Version = Guid.NewGuid();
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
-        DeliveryDocumentRetailModelDB docDb = DeliveryDocumentRetailModelDB.Build(req);
+        DeliveryDocumentRetailModelDB docDb = DeliveryDocumentRetailModelDB.Build(req.Payload);
 
         await context.DeliveryDocumentsRetail.AddAsync(docDb, token);
         await context.SaveChangesAsync(token);
         res.Response = docDb.Id;
         res.AddSuccess($"Документ отгрузки/доставки создан #{docDb.Id}");
 
-        if (req.InjectToOrderId > 0)
+        if (req.Payload.InjectToOrderId > 0)
         {
             await context.OrdersDeliveriesLinks.AddAsync(new()
             {
                 DeliveryDocumentId = docDb.Id,
-                OrderDocumentId = req.InjectToOrderId,
-                WeightShipping = req.WeightShipping,
+                OrderDocumentId = req.Payload.InjectToOrderId,
+                WeightShipping = req.Payload.WeightShipping,
             }, token);
             await context.SaveChangesAsync(token);
-            res.AddInfo($"Добавлена связь документа отгрузки/доставки #{docDb.Id} с заказом #{req.InjectToOrderId}");
+            res.AddInfo($"Добавлена связь документа отгрузки/доставки #{docDb.Id} с заказом #{req.Payload.InjectToOrderId}");
         }
 
         await transaction.CommitAsync(token);
