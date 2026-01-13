@@ -228,8 +228,19 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             return;
         }
 
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         await SetBusyAsync();
-        TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>> res = await CommRepo.RowsDeleteFromWarehouseDocumentAsync([currentRow.Id]);
+        TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>> res = await CommRepo.RowsDeleteFromWarehouseDocumentAsync(new()
+        {
+            Payload = [currentRow.Id],
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         if (!res.Success() || res.Response is null || res.Response.Count == 0)

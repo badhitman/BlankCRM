@@ -16,12 +16,19 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>>> RowsDeleteFromWarehouseDocumentAsync(int[] req, CancellationToken token = default)
+    public async Task<TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>>> RowsDeleteFromWarehouseDocumentAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)
     {
         string msg;
         TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>> res = new();
-        req = [.. req.Where(x => x > 0)];
-        if (!req.Any(x => x > 0))
+
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        req.Payload = [.. req.Payload.Where(x => x > 0)];
+        if (!req.Payload.Any(x => x > 0))
         {
             res.AddError($"Пустой запрос > {nameof(RowsDeleteFromWarehouseDocumentAsync)}");
             return res;
@@ -30,11 +37,11 @@ public partial class CommerceImplementService : ICommerceService
         TResponseModel<bool?> warehouseNegativeBalanceAllowed = await StorageTransmissionRepo
               .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseNegativeBalanceAllowed, token);
 
-        req = [.. req.Distinct()];
+        req.Payload = [.. req.Payload.Distinct()];
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         List<RowOfWarehouseDocumentModelDB> rowsDB = await context
             .RowsWarehouses
-            .Where(x => req.Any(y => y == x.Id))
+            .Where(x => req.Payload.Any(y => y == x.Id))
             .Include(x => x.Offer)
             .Include(x => x.Nomenclature)
             .ToListAsync(cancellationToken: token);
@@ -76,7 +83,7 @@ public partial class CommerceImplementService : ICommerceService
         {
             await transaction.RollbackAsync(token);
             msg = $"Не удалось выполнить команду блокировки БД {nameof(WarehouseDocumentUpdateOrCreateAsync)}: ";
-            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             res.AddError($"{msg}{ex.Message}");
             return res;
         }
@@ -121,7 +128,7 @@ public partial class CommerceImplementService : ICommerceService
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"Остаток оффера #{rowOfDocumentElement.OfferId} на складе #{rowOfDocumentElement.WarehouseDocument!.WarehouseId} не достаточный";
-                    loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                    loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                     res.AddError(msg);
                     return res;
                 }
@@ -144,7 +151,7 @@ public partial class CommerceImplementService : ICommerceService
             {
                 await transaction.RollbackAsync(token);
                 msg = $"Остаток оффера #{rowOfDocumentElement.OfferId} на складе #{rowOfDocumentElement.WarehouseDocument!.WarehouseId} не достаточный";
-                loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                loggerRepo.LogWarning($"{msg}: {JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError(msg);
                 return res;
             }
@@ -172,7 +179,7 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         await context.RowsWarehouses
-           .Where(x => req.Any(y => y == x.Id))
+           .Where(x => req.Payload.Any(y => y == x.Id))
            .ExecuteDeleteAsync(cancellationToken: token);
 
         await transaction.CommitAsync(token);
