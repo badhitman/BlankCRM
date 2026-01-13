@@ -18,7 +18,7 @@ public partial class CommerceTransmission
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>>>(TransmissionQueues.RowsDeleteFromWarehouseDocumentCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> RowForWarehouseDocumentUpdateAsync(RowOfWarehouseDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> RowForWarehouseDocumentUpdateAsync(TAuthRequestStandardModel<RowOfWarehouseDocumentModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.RowForWarehouseDocumentUpdateCommerceReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

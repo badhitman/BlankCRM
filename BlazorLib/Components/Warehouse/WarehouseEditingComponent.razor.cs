@@ -74,7 +74,13 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     {
         if (element is RowOfWarehouseDocumentModelDB _el)
         {
-            TResponseModel<int> res = await CommRepo.RowForWarehouseDocumentUpdateAsync(_el);
+            if (CurrentUserSession is null)
+            {
+                SnackBarRepo.Error("CurrentUserSession is null");
+                return;
+            }
+
+            TResponseModel<int> res = await CommRepo.RowForWarehouseDocumentUpdateAsync(new() { Payload = _el, SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
         }
         await ReadDocument();
@@ -156,6 +162,12 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
     /// <inheritdoc/>
     protected override async void AddingOfferAction(OfferActionModel off)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         CurrentDocument.Rows ??= [];
         int exist_row = CurrentDocument.Rows.FindIndex(x => x.OfferId == off.Id);
         TResponseModel<int> res;
@@ -170,7 +182,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             };
 
             await SetBusyAsync();
-            res = await CommRepo.RowForWarehouseDocumentUpdateAsync(_newRow);
+            res = await CommRepo.RowForWarehouseDocumentUpdateAsync(new() { Payload = _newRow, SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             await SetBusyAsync(false);
             if (!res.Success())
@@ -184,7 +196,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         {
             CurrentDocument.Rows[exist_row].Quantity = +off.Quantity;
             await SetBusyAsync();
-            res = await CommRepo.RowForWarehouseDocumentUpdateAsync(CurrentDocument.Rows[exist_row]);
+            res = await CommRepo.RowForWarehouseDocumentUpdateAsync(new() { Payload = CurrentDocument.Rows[exist_row], SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             await SetBusyAsync(false);
         }
