@@ -52,7 +52,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<DeletePaymentOrderLinkDocumentReceive, OrderPaymentModel, ResponseBaseModel>()
             .RegisterMqListener<CreatePaymentOrderLinkDocumentReceive, PaymentOrderRetailLinkModelDB, TResponseModel<int>>()
             .RegisterMqListener<GetPaymentsDocumentsReceive, GetPaymentsRetailOrdersDocumentsRequestModel, TResponseModel<PaymentRetailDocumentModelDB[]>>()
-            .RegisterMqListener<CreateDeliveryStatusDocumentReceive, DeliveryStatusRetailDocumentModelDB, TResponseModel<int>>()
+            .RegisterMqListener<CreateDeliveryStatusDocumentReceive, TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB>, TResponseModel<int>>()
             .RegisterMqListener<CreateDeliveryDocumentReceive, TAuthRequestStandardModel<CreateDeliveryDocumentRetailRequestModel>, TResponseModel<int>>()
             .RegisterMqListener<GetDeliveriesJournalFileReceive, SelectDeliveryDocumentsRetailRequestModel, FileAttachModel>()
             .RegisterMqListener<DeleteRowOfDeliveryDocumentReceive, int?, ResponseBaseModel>()

@@ -11,7 +11,7 @@ namespace BlazorLib.Components.Retail.Delivery;
 /// <summary>
 /// DeliveryStatusesTableComponent
 /// </summary>
-public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseModel
+public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
@@ -133,6 +133,12 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
 
     async Task AddNewStatus()
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         initDeleteRowStatusId = null;
 
         if (!createdDate.HasValue || createdDate == default || !newStatus.HasValue)
@@ -147,7 +153,7 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseMod
             DeliveryDocument = Document
         };
         await SetBusyAsync();
-        TResponseModel<int> res = await RetailRepo.CreateDeliveryStatusDocumentAsync(req);
+        TResponseModel<int> res = await RetailRepo.CreateDeliveryStatusDocumentAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
         if (!res.Success())
         {
             SnackBarRepo.ShowMessagesResponse(res.Messages);
