@@ -136,7 +136,7 @@ public interface IRetailService
     public Task<TResponseModel<WalletRetailTypeViewModel[]>> WalletsTypesGetAsync(int[] reqIds, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> ToggleWalletTypeDisabledForPaymentTypeAsync(ToggleWalletTypeDisabledForPaymentTypeRequestModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> ToggleWalletTypeDisabledForPaymentTypeAsync(TAuthRequestStandardModel<ToggleWalletTypeDisabledForPaymentTypeRequestModel> req, CancellationToken token = default);
     #endregion
 
     #region Wallet`s

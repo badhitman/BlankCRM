@@ -1,5 +1,5 @@
 ﻿@using MudBlazor
-@inherits BlazorBusyComponentBaseModel
+@inherits BlazorBusyComponentBaseAuthModel
 
 @if (IsBusyProgress)
 {
@@ -128,7 +128,7 @@
         else
         {
             <button class="btn btn-outline-primary" type="button" @onclick="CancelEdit" disabled="@IsBusyProgress">Cancel</button>
-            <button class="btn btn-outline-success" type="button" @onclick="Save" disabled="@(!IsEdited || IsBusyProgress)">Save</button>
+            <button class="btn btn-outline-success" type="button" @onclick="Save" disabled="@CannotSave">Save</button>
             @if (IsEdited)
             {
                 <button class="btn btn-outline-info" type="button" @onclick="InitEdit" disabled="@IsBusyProgress">Reset</button>

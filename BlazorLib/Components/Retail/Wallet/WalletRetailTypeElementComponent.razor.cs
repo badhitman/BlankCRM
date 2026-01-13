@@ -10,14 +10,18 @@ namespace BlazorLib.Components.Retail.Wallet;
 /// <summary>
 /// WalletRetailTypeElementComponent
 /// </summary>
-public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseModel
+public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
 
+
     /// <inheritdoc/>
     [Parameter, EditorRequired]
     public required WalletRetailTypeViewModel WalletTypeElement { get; set; }
+
+
+    bool CannotSave => !IsEdited || IsBusyProgress;
 
     WalletRetailTypeViewModel? _walletCopy;
 
@@ -35,8 +39,22 @@ public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseM
 
     async Task ChangeState(PaymentsRetailTypesEnum prt, WalletRetailTypeViewModel walletType)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         await SetBusyAsync();
-        ResponseBaseModel res = await RetailRepo.ToggleWalletTypeDisabledForPaymentTypeAsync(new() { PaymentType = prt, WalletTypeId = walletType.Id });
+        ResponseBaseModel res = await RetailRepo.ToggleWalletTypeDisabledForPaymentTypeAsync(new()
+        {
+            Payload = new()
+            {
+                PaymentType = prt,
+                WalletTypeId = walletType.Id
+            },
+            SenderActionUserId = CurrentUserSession.UserId,
+        });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         TResponseModel<WalletRetailTypeViewModel[]> getWT = await RetailRepo.WalletsTypesGetAsync([walletType.Id]);

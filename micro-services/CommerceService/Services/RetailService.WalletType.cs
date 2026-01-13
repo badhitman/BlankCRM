@@ -154,21 +154,24 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> ToggleWalletTypeDisabledForPaymentTypeAsync(ToggleWalletTypeDisabledForPaymentTypeRequestModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> ToggleWalletTypeDisabledForPaymentTypeAsync(TAuthRequestStandardModel<ToggleWalletTypeDisabledForPaymentTypeRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<DisabledPaymentTypeForWalletRetailTypeModelDB> q = context
             .DisabledPaymentsTypesForWallets
-            .Where(x => x.WalletTypeId == req.WalletTypeId && x.PaymentType == req.PaymentType);
+            .Where(x => x.WalletTypeId == req.Payload.WalletTypeId && x.PaymentType == req.Payload.PaymentType);
 
         if (await q.ExecuteDeleteAsync(cancellationToken: token) == 0)
         {
             await context
             .DisabledPaymentsTypesForWallets.AddAsync(new()
             {
-                PaymentType = req.PaymentType,
-                WalletTypeId = req.WalletTypeId,
+                PaymentType = req.Payload.PaymentType,
+                WalletTypeId = req.Payload.WalletTypeId,
             }, token);
             await context.SaveChangesAsync(token);
         }

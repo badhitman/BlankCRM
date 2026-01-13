@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// ToggleWalletTypeDisabledForPaymentType
 /// </summary>
 public class ToggleWalletTypeDisabledForPaymentTypeReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<ToggleWalletTypeDisabledForPaymentTypeRequestModel?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<ToggleWalletTypeDisabledForPaymentTypeRequestModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.ToggleWalletTypeDisabledForPaymentTypeRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(ToggleWalletTypeDisabledForPaymentTypeRequestModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<ToggleWalletTypeDisabledForPaymentTypeRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
