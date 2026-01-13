@@ -11,17 +11,17 @@ namespace Transmission.Receives.commerce;
 /// Organization set legal
 /// </summary>
 public class OrganizationSetLegalReceive(ICommerceService commerceRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<OrganizationLegalModel?, TResponseModel<bool>?>
+    : IResponseReceive<TAuthRequestStandardModel<OrganizationLegalModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.OrganizationSetLegalCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>?> ResponseHandleActionAsync(OrganizationLegalModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<OrganizationLegalModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        TResponseModel<bool> res = await commerceRepo.OrganizationSetLegalAsync(req, token);
+        ResponseBaseModel res = await commerceRepo.OrganizationSetLegalAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

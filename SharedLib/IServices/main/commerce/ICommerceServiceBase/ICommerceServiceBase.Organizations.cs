@@ -53,7 +53,7 @@ public partial interface ICommerceServiceBase
     /// <remarks>
     /// Если организация находиться в статусе запроса изменения реквизитов - этот признак обнуляется.
     /// </remarks>
-    public Task<TResponseModel<bool>> OrganizationSetLegalAsync(OrganizationLegalModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> OrganizationSetLegalAsync(TAuthRequestStandardModel<OrganizationLegalModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Прочитать данные адресов организаций по их идентификаторам

@@ -65,8 +65,8 @@ public class OrganizationsController(ICommerceTransmission commRepo) : Controlle
 #else
 [Authorize(Roles = nameof(ExpressApiRolesEnum.OrganizationsWriteCommerce))]
 #endif
-    public async Task<TResponseModel<bool>> OrganizationSetLegal(OrganizationLegalModel org)
-        => await commRepo.OrganizationSetLegalAsync(org);
+    public async Task<ResponseBaseModel> OrganizationSetLegal(OrganizationLegalModel org)
+        => await commRepo.OrganizationSetLegalAsync(new() { SenderActionUserId = Roles.System, Payload = org });
 
     /// <summary>
     /// Обновление параметров организации. Юридические параметры не меняются, а формируется запрос на изменение, которое должна подтвердить сторонняя система

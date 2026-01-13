@@ -159,43 +159,33 @@ public partial class CommerceImplementService : ICommerceService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<bool>> OrganizationSetLegalAsync(OrganizationLegalModel org, CancellationToken token = default)
+    public async Task<ResponseBaseModel> OrganizationSetLegalAsync(TAuthRequestStandardModel<OrganizationLegalModel> req, CancellationToken token = default)
     {
-        TResponseModel<bool> res = new() { Response = false };
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
+        OrganizationLegalModel org = req.Payload;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        OrganizationModelDB? org_db = await context.Organizations.FirstOrDefaultAsync(x => x.Id == org.Id, cancellationToken: token);
-        if (org_db is null)
-        {
-            res.AddError("Не найдена организация");
-            return res;
-        }
 
-        org_db.INN = org.INN;
-        org_db.NewINN = null;
+        int _ch = await context.Organizations
+            .Where(x => x.Id == org.Id)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
+                .SetProperty(p => p.IsDisabled, org.IsDisabled)
+                .SetProperty(p => p.Phone, org.Phone)
+                .SetProperty(p => p.Email, org.Email)
+                .SetProperty(p => p.Name, org.Name)
+                .SetProperty(p => p.NewName, (string?)null)
+                .SetProperty(p => p.KPP, org.KPP)
+                .SetProperty(p => p.NewKPP, (string?)null)
+                .SetProperty(p => p.OGRN, org.OGRN)
+                .SetProperty(p => p.NewOGRN, (string?)null)
+                .SetProperty(p => p.LegalAddress, org.LegalAddress)
+                .SetProperty(p => p.NewLegalAddress, (string?)null)
+                .SetProperty(p => p.INN, org.INN)
+                .SetProperty(p => p.NewINN, (string?)null), cancellationToken: token);
 
-        org_db.LegalAddress = org.LegalAddress;
-        org_db.NewLegalAddress = null;
-
-        org_db.OGRN = org.OGRN;
-        org_db.NewOGRN = null;
-
-        org_db.KPP = org.KPP;
-        org_db.NewKPP = null;
-
-        org_db.Name = org.Name;
-        org_db.NewName = null;
-
-        org_db.Email = org.Email;
-        org_db.Phone = org.Phone;
-        org_db.IsDisabled = org.IsDisabled;
-        org_db.LastUpdatedAtUTC = DateTime.UtcNow;
-
-        context.Update(org_db);
-        await context.SaveChangesAsync(token);
-        res.Response = true;
-        res.AddSuccess("Данные успешно сохранены");
-
-        return res;
+        return ResponseBaseModel.CreateSuccess($"Данные успешно сохранены ");
     }
 
     /// <inheritdoc/>

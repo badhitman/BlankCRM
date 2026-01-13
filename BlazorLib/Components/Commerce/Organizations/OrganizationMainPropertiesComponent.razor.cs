@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////
 
 using Microsoft.AspNetCore.Components;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Commerce.Organizations;
@@ -87,6 +86,9 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
         if (editOrg is null)
             throw new ArgumentNullException(nameof(editOrg));
 
+        if (CurrentUserSession is null)
+            throw new ArgumentNullException(nameof(CurrentUserSession));
+
         OrganizationModelDB req = GlobalTools.CreateDeepCopy(editOrg)!;
 
         if (!string.IsNullOrWhiteSpace(editOrg.NewINN))
@@ -106,7 +108,7 @@ public partial class OrganizationMainPropertiesComponent : BlazorBusyComponentBa
 
         await SetBusyAsync();
 
-        TResponseModel<bool> res = await CommerceRepo.OrganizationSetLegalAsync(req);
+        ResponseBaseModel res = await CommerceRepo.OrganizationSetLegalAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
         NavigationRepo.ReloadPage();
