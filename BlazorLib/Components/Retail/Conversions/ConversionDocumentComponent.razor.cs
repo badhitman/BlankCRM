@@ -210,11 +210,17 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
     {
         if (editDoc is null)
             throw new ArgumentNullException(nameof(editDoc));
+        if (CurrentUserSession is null)
+            throw new ArgumentNullException(nameof(CurrentUserSession));
 
         await SetBusyAsync();
         if (editDoc.Id <= 0)
         {
-            TResponseModel<int> res = await RetailRepo.CreateConversionDocumentRetailAsync(CreateWalletConversionRetailDocumentRequestModel.Build(editDoc, InjectToOrder?.Id ?? 0));
+            TResponseModel<int> res = await RetailRepo.CreateConversionDocumentRetailAsync(new()
+            {
+                Payload = CreateWalletConversionRetailDocumentRequestModel.Build(editDoc, InjectToOrder?.Id ?? 0),
+                SenderActionUserId = CurrentUserSession.UserId,
+            });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success() && res.Response > 0)
                 NavRepo.NavigateTo($"/retail/conversion-document/{res.Response}");

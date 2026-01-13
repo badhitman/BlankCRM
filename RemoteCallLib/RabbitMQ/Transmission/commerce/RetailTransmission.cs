@@ -232,7 +232,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 
     #region Conversion`s
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateConversionDocumentRetailAsync(CreateWalletConversionRetailDocumentRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateConversionDocumentRetailAsync(TAuthRequestStandardModel<CreateWalletConversionRetailDocumentRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateConversionDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

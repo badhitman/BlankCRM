@@ -14,9 +14,20 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateConversionDocumentRetailAsync(CreateWalletConversionRetailDocumentRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateConversionDocumentRetailAsync(TAuthRequestStandardModel<CreateWalletConversionRetailDocumentRequestModel> req, CancellationToken token = default)
     {
-        if (req.ToWalletId < 1 || req.ToWalletId < 1)
+        if (req.Payload is null)
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "req.Payload is null"
+                }]
+            };
+        CreateWalletConversionRetailDocumentRequestModel createDoc = req.Payload;
+
+        if (createDoc.ToWalletId < 1 || createDoc.ToWalletId < 1)
             return new()
             {
                 Messages = [new()
@@ -26,7 +37,7 @@ public partial class RetailService : IRetailService
                 }]
             };
 
-        if (req.ToWalletSum <= 0 || req.FromWalletSum <= 0)
+        if (createDoc.ToWalletSum <= 0 || createDoc.FromWalletSum <= 0)
             return new()
             {
                 Messages = [new()
@@ -36,7 +47,7 @@ public partial class RetailService : IRetailService
                 }]
             };
 
-        if (req.ToWalletId == req.FromWalletId)
+        if (createDoc.ToWalletId == createDoc.FromWalletId)
             return new()
             {
                 Messages = [new()
@@ -49,52 +60,52 @@ public partial class RetailService : IRetailService
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         WalletRetailModelDB[] walletsDb = await context.WalletsRetail
-            .Where(x => x.Id == req.FromWalletId || x.Id == req.ToWalletId)
+            .Where(x => x.Id == createDoc.FromWalletId || x.Id == createDoc.ToWalletId)
             .Include(x => x.WalletType)
             .ToArrayAsync(cancellationToken: token);
 
         WalletRetailModelDB
-            walletSender = walletsDb.First(x => x.Id == req.FromWalletId),
-            walletRecipient = walletsDb.First(x => x.Id == req.ToWalletId);
+            walletSender = walletsDb.First(x => x.Id == createDoc.FromWalletId),
+            walletRecipient = walletsDb.First(x => x.Id == createDoc.ToWalletId);
 
-        if (!walletSender.WalletType!.IsSystem && !walletSender.WalletType!.IgnoreBalanceChanges && walletSender.Balance - req.FromWalletSum < 0)
+        if (!walletSender.WalletType!.IsSystem && !walletSender.WalletType!.IgnoreBalanceChanges && walletSender.Balance - createDoc.FromWalletSum < 0)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Баланс не может стать отрицательным в следствии списания" }] };
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         if (!walletSender.WalletType.IgnoreBalanceChanges)
-            await context.WalletsRetail.Where(x => x.Id == req.FromWalletId)
+            await context.WalletsRetail.Where(x => x.Id == createDoc.FromWalletId)
                 .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.Balance, p => p.Balance - req.FromWalletSum), cancellationToken: token);
+                    .SetProperty(p => p.Balance, p => p.Balance - createDoc.FromWalletSum), cancellationToken: token);
 
         if (!walletRecipient.WalletType!.IgnoreBalanceChanges)
-            await context.WalletsRetail.Where(x => x.Id == req.ToWalletId)
+            await context.WalletsRetail.Where(x => x.Id == createDoc.ToWalletId)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Balance, p => p.Balance + req.ToWalletSum), cancellationToken: token);
+                .SetProperty(p => p.Balance, p => p.Balance + createDoc.ToWalletSum), cancellationToken: token);
 
-        req.Name = req.Name.Trim();
-        req.Version = Guid.NewGuid();
-        req.ToWallet = null;
-        req.FromWallet = null;
-        req.CreatedAtUTC = DateTime.UtcNow;
-        req.DateDocument = req.DateDocument.SetKindUtc();
+        createDoc.Name = createDoc.Name.Trim();
+        createDoc.Version = Guid.NewGuid();
+        createDoc.ToWallet = null;
+        createDoc.FromWallet = null;
+        createDoc.CreatedAtUTC = DateTime.UtcNow;
+        createDoc.DateDocument = createDoc.DateDocument.SetKindUtc();
 
-        WalletConversionRetailDocumentModelDB docDb = WalletConversionRetailDocumentModelDB.Build(req);
+        WalletConversionRetailDocumentModelDB docDb = WalletConversionRetailDocumentModelDB.Build(createDoc);
 
         await context.ConversionsDocumentsWalletsRetail.AddAsync(docDb, token);
         await context.SaveChangesAsync(token);
         res.AddSuccess($"Документ перевода/конвертации создан #{docDb.Id}");
 
-        if (req.InjectToOrderId > 0)
+        if (createDoc.InjectToOrderId > 0)
         {
             await context.ConversionsOrdersLinksRetail.AddAsync(new()
             {
                 ConversionDocumentId = docDb.Id,
-                OrderDocumentId = req.InjectToOrderId,
-                AmountPayment = req.ToWalletSum,
+                OrderDocumentId = createDoc.InjectToOrderId,
+                AmountPayment = createDoc.ToWalletSum,
             }, token);
             await context.SaveChangesAsync(token);
-            res.AddInfo($"Добавлена связь документа перевода/конвертации #{docDb.Id} с заказом #{req.InjectToOrderId}");
+            res.AddInfo($"Добавлена связь документа перевода/конвертации #{docDb.Id} с заказом #{createDoc.InjectToOrderId}");
         }
 
         await transaction.CommitAsync(token);
