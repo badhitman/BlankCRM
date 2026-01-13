@@ -3,9 +3,9 @@
 ////////////////////////////////////////////////
 
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SharedLib;
 using DbcLib;
-using Newtonsoft.Json;
 
 namespace CommerceService;
 
@@ -15,10 +15,20 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateRowOfDeliveryDocumentAsync(RowOfDeliveryRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return new()
+            {
+                Messages = [new()
+                 {
+                      TypeMessage = MessagesTypesEnum.Error,
+                       Text = "req.Payload is null"
+                 }]
+            };
+        RowOfDeliveryRetailDocumentModelDB row = req.Payload;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        DeliveryDocumentRetailModelDB docDb = await context.DeliveryDocumentsRetail.FirstAsync(x => x.Id == req.DocumentId, cancellationToken: token);
+        DeliveryDocumentRetailModelDB docDb = await context.DeliveryDocumentsRetail.FirstAsync(x => x.Id == row.DocumentId, cancellationToken: token);
 
         TResponseModel<int> res = new();
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
@@ -30,7 +40,7 @@ public partial class RetailService : IRetailService
             LockTransactionModelDB locker = new()
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
-                LockerId = req.OfferId,
+                LockerId = row.OfferId,
                 LockerAreaId = docDb.WarehouseId,
                 Marker = nameof(CreateRowOfDeliveryDocumentAsync),
             };
@@ -44,30 +54,30 @@ public partial class RetailService : IRetailService
                 await transaction.RollbackAsync(token);
                 msg = $"Не удалось выполнить команду: ";
                 res.AddError($"{msg}{ex.Message}");
-                loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 return res;
             }
 
             List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
                .OffersAvailability
-               .Where(x => x.OfferId == req.OfferId)
+               .Where(x => x.OfferId == row.OfferId)
                .ToListAsync(cancellationToken: token);
 
             OfferAvailabilityModelDB? regOfferAv = offerAvailabilityDB
-                .Where(x => x.OfferId == req.OfferId && x.WarehouseId == docDb.WarehouseId)
+                .Where(x => x.OfferId == row.OfferId && x.WarehouseId == docDb.WarehouseId)
                 .FirstOrDefault();
 
             if (regOfferAv is null)
             {
-                msg = $"Количество [offer: #{req.OfferId} '{req.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
-                loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                msg = $"Количество [offer: #{row.OfferId} '{row.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
+                loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError($"{msg}. Баланс не может быть отрицательным");
                 return res;
             }
-            else if (regOfferAv.Quantity < req.Quantity)
+            else if (regOfferAv.Quantity < row.Quantity)
             {
-                msg = $"Количество [offer: #{req.OfferId} '{req.Offer?.GetName()}'] не может быть списано (остаток {regOfferAv.Quantity})";
-                loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                msg = $"Количество [offer: #{row.OfferId} '{row.Offer?.GetName()}'] не может быть списано (остаток {regOfferAv.Quantity})";
+                loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError($"{msg}. Баланс не может быть отрицательным");
                 return res;
             }
@@ -75,21 +85,21 @@ public partial class RetailService : IRetailService
             await context.OffersAvailability
                    .Where(x => x.Id == regOfferAv.Id)
                        .ExecuteUpdateAsync(set => set
-                           .SetProperty(p => p.Quantity, p => p.Quantity - req.Quantity), cancellationToken: token);
+                           .SetProperty(p => p.Quantity, p => p.Quantity - row.Quantity), cancellationToken: token);
 
             await context.LockTransactions
                .Where(x => x.Id == locker.Id)
                .ExecuteDeleteAsync(cancellationToken: token);
         }
 
-        req.Offer = null;
-        req.Nomenclature = null;
-        req.Offer = null;
-        req.Document = null;
-        req.Comment = req.Comment?.Trim();
-        req.Version = Guid.NewGuid();
+        row.Offer = null;
+        row.Nomenclature = null;
+        row.Offer = null;
+        row.Document = null;
+        row.Comment = row.Comment?.Trim();
+        row.Version = Guid.NewGuid();
 
-        await context.RowsDeliveryDocumentsRetail.AddAsync(req, token);
+        await context.RowsDeliveryDocumentsRetail.AddAsync(row, token);
         await context.SaveChangesAsync(token);
 
         await context.DeliveryDocumentsRetail
@@ -98,7 +108,7 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        return new() { Response = req.Id };
+        return new() { Response = row.Id };
     }
 
     /// <inheritdoc/>

@@ -90,7 +90,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 
     #region Row Of Delivery Document
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateRowOfDeliveryDocumentAsync(RowOfDeliveryRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateRowOfDeliveryDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

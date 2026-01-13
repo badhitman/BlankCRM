@@ -65,6 +65,12 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
 
     async Task AddOfferToDeliveryDocument(KeyValuePair<OfferModelDB, (decimal Quantity, decimal Amount)> offerForAddElement)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         Document.Rows ??= [];
         int exist_row = Document.Rows.FindIndex(x => x.OfferId == offerForAddElement.Key.Id);
         if (exist_row < 0)
@@ -81,7 +87,11 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                 Amount = offerForAddElement.Value.Amount,
             };
             await SetBusyAsync();
-            TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(req);
+            TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(new()
+            {
+                Payload = req,
+                SenderActionUserId = CurrentUserSession.UserId,
+            });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
 
             await ElementsReload();
@@ -199,6 +209,12 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     /// <inheritdoc/>
     protected override async void AddingOfferAction(OfferActionModel off)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         Document.Rows ??= [];
         await SetBusyAsync();
         int exist_row = Document.Rows.FindIndex(x => x.OfferId == off.Id);
@@ -232,7 +248,11 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                     Amount = off.Quantity * off.Price,
                 };
                 await SetBusyAsync();
-                TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(req);
+                TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(new()
+                {
+                    SenderActionUserId = CurrentUserSession.UserId,
+                    Payload = req,
+                });
                 SnackBarRepo.ShowMessagesResponse(res.Messages);
 
                 await ElementsReload();
@@ -295,6 +315,12 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     /// <inheritdoc/>
     protected override async void RowEditCommitHandler(object element)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         if (element is RowOfDeliveryRetailDocumentModelDB off)
         {
             int exist_row = Document.Rows!.FindIndex(x => x.OfferId == off.Id);
@@ -307,7 +333,11 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                 else
                 {
                     await SetBusyAsync();
-                    TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(off);
+                    TResponseModel<int> res = await RetailRepo.CreateRowOfDeliveryDocumentAsync(new()
+                    {
+                        Payload = off,
+                        SenderActionUserId = CurrentUserSession.UserId,
+                    });
                     SnackBarRepo.ShowMessagesResponse(res.Messages);
                     await ElementsReload();
                     if (tableRef is not null)

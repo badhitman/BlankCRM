@@ -28,7 +28,7 @@ public interface IRetailService
 
     #region Row Of Delivery Document
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateRowOfDeliveryDocumentAsync(RowOfDeliveryRetailDocumentModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> UpdateRowOfDeliveryDocumentAsync(RowOfDeliveryRetailDocumentModelDB req, CancellationToken token = default);
