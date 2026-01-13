@@ -45,9 +45,20 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAut
             return;
         }
 
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         await SetBusyAsync();
 
-        ResponseBaseModel res = await RetailRepo.DeleteDeliveryStatusDocumentAsync(initDeleteRowStatusId.Value);
+        ResponseBaseModel res = await RetailRepo.DeleteDeliveryStatusDocumentAsync(new()
+        {
+            Payload = initDeleteRowStatusId.Value,
+            SenderActionUserId = CurrentUserSession.UserId
+        });
+
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         initDeleteRowStatusId = null;
         if (tableRef is not null)
