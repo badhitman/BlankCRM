@@ -139,10 +139,8 @@ public partial class CommerceImplementService : ICommerceService
         List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
             .OffersAvailability
             .Where(x => x.OfferId == req.Payload.OfferId || (rowDb != null && x.OfferId == rowDb.OfferId))
-#if DEBUG
             .Include(x => x.Offer)
             .Include(x => x.Nomenclature)
-#endif
             .ToListAsync(cancellationToken: token);
 
         if (!warehouseDocDB.IsDisabled)
@@ -172,13 +170,13 @@ public partial class CommerceImplementService : ICommerceService
                     else
                     {
                         await context.OffersAvailability.Where(y => y.Id == regOfferAvWritingOff.Id)
-                                                   .ExecuteUpdateAsync(set => set
-                                                      .SetProperty(p => p.Quantity, p => p.Quantity + rowDb.Quantity), cancellationToken: token);
+                            .ExecuteUpdateAsync(set => set
+                                .SetProperty(p => p.Quantity, p => p.Quantity + rowDb.Quantity), cancellationToken: token);
 
                         regOfferAvWritingOff.Quantity += rowDb.Quantity;
                     }
                 }
-                //
+                
                 if (regOfferAvWritingOff is null)
                 {
                     if (warehouseNegativeBalanceAllowed.Response == true)
@@ -215,8 +213,8 @@ public partial class CommerceImplementService : ICommerceService
                 else
                 {
                     await context.OffersAvailability.Where(y => y.Id == regOfferAvWritingOff.Id)
-                                               .ExecuteUpdateAsync(set => set
-                                                  .SetProperty(p => p.Quantity, p => p.Quantity - rowDb.Quantity), cancellationToken: token);
+                        .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.Quantity, p => p.Quantity - rowDb.Quantity), cancellationToken: token);
 
                     regOfferAvWritingOff.Quantity -= rowDb.Quantity;
                 }
@@ -224,8 +222,7 @@ public partial class CommerceImplementService : ICommerceService
 
             regOfferAv = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == req.Payload.OfferId && x.WarehouseId == warehouseDocDB.WarehouseId);
             regOfferAvWritingOff = offerAvailabilityDB.FirstOrDefault(x => x.OfferId == req.Payload.OfferId && x.WarehouseId == warehouseDocDB.WritingOffWarehouseId);
-            // 
-
+            //
             decimal _quantity = rowDb is null
                    ? -req.Payload.Quantity
                    : -(rowDb.Quantity - req.Payload.Quantity);
@@ -267,8 +264,8 @@ public partial class CommerceImplementService : ICommerceService
                 else
                 {
                     await context.OffersAvailability.Where(y => y.Id == regOfferAvWritingOff.Id)
-                            .ExecuteUpdateAsync(set => set
-                               .SetProperty(p => p.Quantity, p => p.Quantity + _quantity), cancellationToken: token);
+                        .ExecuteUpdateAsync(set => set
+                            .SetProperty(p => p.Quantity, p => p.Quantity + _quantity), cancellationToken: token);
 
                     regOfferAvWritingOff.Quantity += _quantity;
                 }
