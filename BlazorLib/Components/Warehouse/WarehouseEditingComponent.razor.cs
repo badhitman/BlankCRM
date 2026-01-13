@@ -229,13 +229,13 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         }
 
         await SetBusyAsync();
-        RowsForWarehouseDocumentDeleteResponseModel res = await CommRepo.RowsDeleteFromWarehouseDocumentAsync([currentRow.Id]);
+        TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>> res = await CommRepo.RowsDeleteFromWarehouseDocumentAsync([currentRow.Id]);
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
-        if (!res.Success() || res.DocumentsUpdated is null || res.DocumentsUpdated.Count == 0)
+        if (!res.Success() || res.Response is null || res.Response.Count == 0)
             return;
 
-        editDocument.Version = res.DocumentsUpdated.First().Value.VersionDocument;
+        editDocument.Version = res.Response.First().Value.VersionDocument;
         CurrentDocument.Version = editDocument.Version;
 
         await ReadDocument();

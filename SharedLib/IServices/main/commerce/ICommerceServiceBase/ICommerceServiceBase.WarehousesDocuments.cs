@@ -30,5 +30,5 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Удалить строку складского документа
     /// </summary>
-    public Task<RowsForWarehouseDocumentDeleteResponseModel> RowsDeleteFromWarehouseDocumentAsync(int[] req, CancellationToken token = default);
+    public Task<TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>>> RowsDeleteFromWarehouseDocumentAsync(int[] req, CancellationToken token = default);
 }

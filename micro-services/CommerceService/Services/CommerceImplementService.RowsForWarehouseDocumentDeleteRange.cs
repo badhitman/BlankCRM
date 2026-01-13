@@ -16,10 +16,10 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<RowsForWarehouseDocumentDeleteResponseModel> RowsDeleteFromWarehouseDocumentAsync(int[] req, CancellationToken token = default)
+    public async Task<TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>>> RowsDeleteFromWarehouseDocumentAsync(int[] req, CancellationToken token = default)
     {
         string msg;
-        RowsForWarehouseDocumentDeleteResponseModel res = new();
+        TResponseModel<Dictionary<int, DeliveryDocumentMetadataRecord>> res = new();
         req = [.. req.Where(x => x > 0)];
         if (!req.Any(x => x > 0))
         {
@@ -159,7 +159,7 @@ public partial class CommerceImplementService : ICommerceService
         if (offersLocked.Count != 0)
             context.RemoveRange(offersLocked);
 
-        res.DocumentsUpdated = [];
+        res.Response = [];
         foreach (var v in rowsDB.GroupBy(x => x.WarehouseDocumentId))
         {
             Guid docVer = Guid.NewGuid();
@@ -168,7 +168,7 @@ public partial class CommerceImplementService : ICommerceService
                 .ExecuteUpdateAsync(set => set
                     .SetProperty(p => p.Version, docVer), cancellationToken: token);
 
-            res.DocumentsUpdated.Add(v.Key, new([.. v], docVer));
+            res.Response.Add(v.Key, new() { Rows = [.. v], VersionDocument = docVer });
         }
 
         await context.RowsWarehouses
