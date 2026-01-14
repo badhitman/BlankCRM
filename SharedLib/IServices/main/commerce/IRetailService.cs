@@ -93,7 +93,7 @@ public interface IRetailService
 
     #region Payment Document
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreatePaymentDocumentAsync(CreatePaymentRetailDocumentRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreatePaymentDocumentAsync(TAuthRequestStandardModel<CreatePaymentRetailDocumentRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<ResponseBaseModel> UpdatePaymentDocumentAsync(TAuthRequestStandardModel<PaymentRetailDocumentModelDB> req, CancellationToken token = default);

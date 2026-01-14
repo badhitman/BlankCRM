@@ -14,15 +14,21 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreatePaymentDocumentAsync(CreatePaymentRetailDocumentRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreatePaymentDocumentAsync(TAuthRequestStandardModel<CreatePaymentRetailDocumentRequestModel> req, CancellationToken token = default)
     {
-        if (req.Amount == 0)
+        if (req.Payload is null)
+            return new()
+            {
+                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }]
+            };
+
+        if (req.Payload.Amount == 0)
             return new()
             {
                 Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Укажите сумму платежа" }]
             };
 
-        if (req.WalletId <= 0)
+        if (req.Payload.WalletId <= 0)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Не указан кошелёк" }] };
 
         TResponseModel<int> res = new();
@@ -30,45 +36,45 @@ public partial class RetailService : IRetailService
 
         WalletRetailModelDB walletDb = await context.WalletsRetail
             .Include(x => x.WalletType)
-            .FirstAsync(x => x.Id == req.WalletId, cancellationToken: token);
+            .FirstAsync(x => x.Id == req.Payload.WalletId, cancellationToken: token);
 
         if (walletDb.WalletType!.IsSystem)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Зачисление на системный кошелёк невозможно" }] };
 
-        req.Version = Guid.NewGuid();
-        req.Wallet = null;
-        req.PaymentSource = req.PaymentSource?.Trim();
-        req.Name = req.Name.Trim();
-        req.Description = req.Description?.Trim();
-        req.DatePayment = req.DatePayment.SetKindUtc();
-        req.CreatedAtUTC = DateTime.UtcNow;
+        req.Payload.Version = Guid.NewGuid();
+        req.Payload.Wallet = null;
+        req.Payload.PaymentSource = req.Payload.PaymentSource?.Trim();
+        req.Payload.Name = req.Payload.Name.Trim();
+        req.Payload.Description = req.Payload.Description?.Trim();
+        req.Payload.DatePayment = req.Payload.DatePayment.SetKindUtc();
+        req.Payload.CreatedAtUTC = DateTime.UtcNow;
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
-        PaymentRetailDocumentModelDB docDb = PaymentRetailDocumentModelDB.Build(req);
+        PaymentRetailDocumentModelDB docDb = PaymentRetailDocumentModelDB.Build(req.Payload);
 
         await context.PaymentsRetailDocuments.AddAsync(docDb, token);
         await context.SaveChangesAsync(token);
         res.Response = docDb.Id;
         res.AddSuccess($"Документ платежа/оплаты создан #{docDb.Id}");
 
-        if (req.InjectToOrderId > 0)
+        if (req.Payload.InjectToOrderId > 0)
         {
             await context.PaymentsOrdersLinks.AddAsync(new()
             {
-                OrderDocumentId = req.InjectToOrderId,
+                OrderDocumentId = req.Payload.InjectToOrderId,
                 PaymentDocumentId = docDb.Id,
                 AmountPayment = docDb.Amount
             }, token);
             await context.SaveChangesAsync(token);
-            res.AddInfo($"Добавлена связь оплаты/платежа #{docDb.Id} с заказом #{req.InjectToOrderId}");
+            res.AddInfo($"Добавлена связь оплаты/платежа #{docDb.Id} с заказом #{req.Payload.InjectToOrderId}");
         }
 
-        if (req.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+        if (req.Payload.StatusPayment == PaymentsRetailStatusesEnum.Paid)
         {
             await context.WalletsRetail
-             .Where(x => x.Id == req.WalletId)
+             .Where(x => x.Id == req.Payload.WalletId)
              .ExecuteUpdateAsync(set => set
-                 .SetProperty(p => p.Balance, p => p.Balance + req.Amount), cancellationToken: token);
+                 .SetProperty(p => p.Balance, p => p.Balance + req.Payload.Amount), cancellationToken: token);
         }
 
         await transaction.CommitAsync(token);

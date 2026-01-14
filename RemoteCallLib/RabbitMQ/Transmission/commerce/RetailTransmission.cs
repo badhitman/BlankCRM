@@ -156,7 +156,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 
     #region Payment Document
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreatePaymentDocumentAsync(CreatePaymentRetailDocumentRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreatePaymentDocumentAsync(TAuthRequestStandardModel<CreatePaymentRetailDocumentRequestModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreatePaymentDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
