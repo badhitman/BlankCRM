@@ -16,39 +16,45 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateOrderStatusDocumentAsync(OrderStatusRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return new()
+            {
+                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }]
+            };
+
         TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         DocumentRetailModelDB docDb = await context.OrdersRetail
             .Include(x => x.Rows)
-            .FirstAsync(x => x.Id == req.OrderDocumentId, cancellationToken: token);
+            .FirstAsync(x => x.Id == req.Payload.OrderDocumentId, cancellationToken: token);
 
         StatusesDocumentsEnum? _oldStatus = docDb.StatusDocument;
 
-        req.DateOperation = req.DateOperation.SetKindUtc();
-        req.OrderDocument = null;
-        req.Name = req.Name.Trim();
-        req.CreatedAtUTC = DateTime.UtcNow;
+        req.Payload.DateOperation = req.Payload.DateOperation.SetKindUtc();
+        req.Payload.OrderDocument = null;
+        req.Payload.Name = req.Payload.Name.Trim();
+        req.Payload.CreatedAtUTC = DateTime.UtcNow;
 
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
-        await context.OrdersStatusesRetails.AddAsync(req, token);
+        await context.OrdersStatusesRetails.AddAsync(req.Payload, token);
         await context.SaveChangesAsync(token);
-        loggerRepo.LogInformation($"Для заказа (розница) #{req.OrderDocumentId} добавлен статус: [{req.DateOperation}] {req.StatusDocument}");
+        loggerRepo.LogInformation($"Для заказа (розница) #{req.Payload.OrderDocumentId} добавлен статус: [{req.Payload.DateOperation}] {req.Payload.StatusDocument}");
 
         await context.OrdersRetail
-            .Where(x => x.Id == req.OrderDocumentId)
+            .Where(x => x.Id == req.Payload.OrderDocumentId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.Payload.OrderDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
         if (docDb.Rows is null || docDb.Rows.Count == 0)
         {
             await transaction.CommitAsync(token);
-            return new() { Response = req.Id };
+            return new() { Response = req.Payload.Id };
         }
 
         int[] _offersIds = [.. docDb.Rows.Select(x => x.OfferId)];
@@ -70,12 +76,12 @@ public partial class RetailService : IRetailService
         {
             await transaction.RollbackAsync(token);
             msg = $"Не удалось выполнить команду: ";
-            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}{ex.Message}" }] };
         }
 
         StatusesDocumentsEnum _newStatus = await context.OrdersStatusesRetails
-            .Where(y => y.OrderDocumentId == req.OrderDocumentId)
+            .Where(y => y.OrderDocumentId == req.Payload.OrderDocumentId)
             .OrderByDescending(z => z.DateOperation)
             .ThenByDescending(os => os.Id)
             .Select(s => s.StatusDocument)
@@ -89,7 +95,7 @@ public partial class RetailService : IRetailService
                 await context.SaveChangesAsync(token);
             }
             await transaction.CommitAsync(token);
-            return new() { Response = req.Id };
+            return new() { Response = req.Payload.Id };
         }
 
         List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
@@ -111,37 +117,40 @@ public partial class RetailService : IRetailService
         }
 
         await transaction.CommitAsync(token);
-        return new() { Response = req.Id, Messages = [new() { TypeMessage = MessagesTypesEnum.Success, Text = (_oldStatus == _newStatus ? "конечный статус документа без изменений" : "статус документа изменён") }] };
+        return new() { Response = req.Payload.Id, Messages = [new() { TypeMessage = MessagesTypesEnum.Success, Text = (_oldStatus == _newStatus ? "конечный статус документа без изменений" : "статус документа изменён") }] };
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateOrderStatusDocumentAsync(OrderStatusRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         DocumentRetailModelDB orderDb = await context.OrdersRetail
             .Include(x => x.Rows)
-            .FirstAsync(x => x.Id == req.OrderDocumentId, cancellationToken: token);
+            .FirstAsync(x => x.Id == req.Payload.OrderDocumentId, cancellationToken: token);
         StatusesDocumentsEnum? _oldStatus = orderDb.StatusDocument;
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
-        req.Name = req.Name.Trim();
+        req.Payload.Name = req.Payload.Name.Trim();
         await context.OrdersStatusesRetails
-            .Where(x => x.Id == req.Id)
+            .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.StatusDocument, req.StatusDocument)
+                .SetProperty(p => p.Name, req.Payload.Name)
+                .SetProperty(p => p.StatusDocument, req.Payload.StatusDocument)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
-        loggerRepo.LogInformation($"Для заказа (розница) #{req.OrderDocumentId} обновлён статус: [{req.DateOperation}] {req.StatusDocument}");
+        loggerRepo.LogInformation($"Для заказа (розница) #{req.Payload.OrderDocumentId} обновлён статус: [{req.Payload.DateOperation}] {req.Payload.StatusDocument}");
 
         await context.OrdersRetail
-            .Where(x => x.Id == req.OrderDocumentId)
+            .Where(x => x.Id == req.Payload.OrderDocumentId)
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.OrderDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
+                .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.Payload.OrderDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
         if (orderDb.Rows is null || orderDb.Rows.Count == 0)
         {
@@ -150,7 +159,7 @@ public partial class RetailService : IRetailService
         }
 
         StatusesDocumentsEnum _newStatus = await context.OrdersStatusesRetails
-            .Where(y => y.OrderDocumentId == req.OrderDocumentId)
+            .Where(y => y.OrderDocumentId == req.Payload.OrderDocumentId)
             .OrderByDescending(z => z.DateOperation)
             .ThenByDescending(os => os.Id)
             .Select(s => s.StatusDocument)
@@ -181,7 +190,7 @@ public partial class RetailService : IRetailService
         {
             await transaction.RollbackAsync(token);
             msg = $"Не удалось выполнить команду: ";
-            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}{ex.Message}" }] };
         }
 
@@ -208,8 +217,9 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteOrderStatusDocumentAsync(int statusId, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
+        int statusId = req.Payload;
         TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);

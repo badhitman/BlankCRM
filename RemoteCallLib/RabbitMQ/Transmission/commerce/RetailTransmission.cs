@@ -51,11 +51,11 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 
     #region Statuses (of order`s document)
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateOrderStatusDocumentAsync(OrderStatusRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateOrderStatusDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateOrderStatusDocumentAsync(OrderStatusRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.UpdateOrderStatusDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
@@ -63,7 +63,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<OrderStatusRetailDocumentModelDB>>(TransmissionQueues.SelectOrderDocumentStatusesRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteOrderStatusDocumentAsync(int statusId, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteOrderStatusDocumentAsync(TAuthRequestStandardModel<int> statusId, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.DeleteOrderStatusDocumentRetailReceive, statusId, token: token) ?? new();
     #endregion
 

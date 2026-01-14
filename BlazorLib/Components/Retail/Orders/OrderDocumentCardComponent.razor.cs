@@ -137,10 +137,14 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             {
                 TResponseModel<int> setStatus = await RetailRepo.CreateOrderStatusDocumentAsync(new()
                 {
-                    DateOperation = DateTime.Now.Date,
-                    CreatedAtUTC = DateTime.Now,
-                    OrderDocumentId = res.Response,
-                    StatusDocument = StatusesDocumentsEnum.Created,
+                    SenderActionUserId = CurrentUserSession.UserId,
+                    Payload = new()
+                    {
+                        DateOperation = DateTime.Now.Date,
+                        CreatedAtUTC = DateTime.Now,
+                        OrderDocumentId = res.Response,
+                        StatusDocument = StatusesDocumentsEnum.Created,
+                    }
                 });
                 SnackBarRepo.ShowMessagesResponse(setStatus.Messages);
                 NavRepo.NavigateTo($"/retail/order-document/{res.Response}");

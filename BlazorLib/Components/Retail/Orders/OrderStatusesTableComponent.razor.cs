@@ -11,7 +11,7 @@ namespace BlazorLib.Components.Retail.Orders;
 /// <summary>
 /// OrderStatusesTableComponent
 /// </summary>
-public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseModel
+public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
@@ -48,10 +48,15 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseModel
             initDeleteRowStatusId = null;
             return;
         }
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
 
         await SetBusyAsync();
 
-        ResponseBaseModel res = await RetailRepo.DeleteOrderStatusDocumentAsync(initDeleteRowStatusId.Value);
+        ResponseBaseModel res = await RetailRepo.DeleteOrderStatusDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = initDeleteRowStatusId.Value });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         initDeleteRowStatusId = null;
         if (tableRef is not null)
@@ -62,6 +67,11 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseModel
 
     async void ItemHasBeenCommitted(object element)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
         initDeleteRowStatusId = null;
 
         if (!editDate.HasValue || editDate == default || !editRowId.HasValue)
@@ -78,7 +88,7 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseModel
                 Id = editRowId.Value,
             };
             await SetBusyAsync();
-            ResponseBaseModel res = await RetailRepo.UpdateOrderStatusDocumentAsync(req);
+            ResponseBaseModel res = await RetailRepo.UpdateOrderStatusDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = req });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (!res.Success())
             {
@@ -137,6 +147,11 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseModel
 
     async Task AddNewStatus()
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
         initDeleteRowStatusId = null;
 
         if (!createdDate.HasValue || createdDate == default || !newStatus.HasValue)
@@ -151,7 +166,7 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseModel
             OrderDocument = Document
         };
         await SetBusyAsync();
-        TResponseModel<int> res = await RetailRepo.CreateOrderStatusDocumentAsync(req);
+        TResponseModel<int> res = await RetailRepo.CreateOrderStatusDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = req });
         if (!res.Success())
         {
             SnackBarRepo.ShowMessagesResponse(res.Messages);
