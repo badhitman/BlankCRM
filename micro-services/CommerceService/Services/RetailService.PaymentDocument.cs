@@ -82,13 +82,20 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdatePaymentDocumentAsync(TAuthRequestStandardModel<PaymentRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdatePaymentDocumentAsync(TAuthRequestStandardModel<PaymentRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
-            return ResponseBaseModel.CreateError("req.Payload is null");
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "req.Payload is null"
+                }]
+            };
 
         if (req.Payload.Amount == 0)
-            return ResponseBaseModel.CreateError("Укажите сумму платежа");
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Укажите сумму платежа" }] };
 
         req.Payload.PaymentSource = req.Payload.PaymentSource?.Trim();
         req.Payload.Name = req.Payload.Name.Trim();
@@ -96,7 +103,6 @@ public partial class RetailService : IRetailService
         req.Payload.DatePayment = req.Payload.DatePayment.SetKindUtc();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         PaymentRetailDocumentModelDB paymentDb = await context.PaymentsRetailDocuments
             .Include(x => x.Wallet!)
@@ -104,8 +110,17 @@ public partial class RetailService : IRetailService
             .FirstAsync(x => x.Id == req.Payload.Id, cancellationToken: token);
 
         if (paymentDb.Version != req.Payload.Version)
-            return ResponseBaseModel.CreateError("Документ ранее был кем-то изменён. Обновите документ (F5) перед его редактированием.");
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "Документ ранее был кем-то изменён. Обновите документ (F5) перед его редактированием.",
+                }]
+            };
+        using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
+        Guid _ng = Guid.NewGuid();
         if (paymentDb.Wallet?.WalletType?.IgnoreBalanceChanges == true)
         {
             await context.PaymentsRetailDocuments
@@ -114,7 +129,7 @@ public partial class RetailService : IRetailService
                     .SetProperty(p => p.Name, req.Payload.Name)
                     .SetProperty(p => p.Description, req.Payload.Description)
                     .SetProperty(p => p.WalletId, req.Payload.WalletId)
-                    .SetProperty(p => p.Version, Guid.NewGuid())
+                    .SetProperty(p => p.Version, _ng)
                     .SetProperty(p => p.TypePayment, req.Payload.TypePayment)
                     .SetProperty(p => p.StatusPayment, req.Payload.StatusPayment)
                     .SetProperty(p => p.PaymentSource, req.Payload.PaymentSource)
@@ -123,7 +138,14 @@ public partial class RetailService : IRetailService
                     .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
             await transaction.CommitAsync(token);
-            return ResponseBaseModel.CreateSuccess("Ok");
+            return new()
+            {
+                Response = _ng,
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Success,
+                    Text = "Ok" }]
+            };
         }
 
         if (req.Payload.StatusPayment == paymentDb.StatusPayment && req.Payload.StatusPayment == PaymentsRetailStatusesEnum.Paid)
@@ -132,7 +154,16 @@ public partial class RetailService : IRetailService
             {
                 decimal _deltaChange = req.Payload.Amount - paymentDb.Amount;
                 if (_deltaChange < 0 && paymentDb.Wallet!.Balance < -_deltaChange)
-                    return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
+                {
+                    await transaction.RollbackAsync(token);
+                    return new()
+                    {
+                        Messages = [new()
+                        {
+                            Text = $"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной",
+                            TypeMessage = MessagesTypesEnum.Error }]
+                    };
+                }
 
                 if (_deltaChange != 0)
                 {
@@ -145,7 +176,15 @@ public partial class RetailService : IRetailService
             }
             else if (paymentDb.Wallet!.Balance < paymentDb.Amount)
             {
-                return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
+                await transaction.RollbackAsync(token);
+                return new()
+                {
+                    Messages = [new()
+                     {
+                         TypeMessage = MessagesTypesEnum.Error,
+                         Text = $"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной"
+                     }]
+                };
             }
             else
             {
@@ -172,8 +211,17 @@ public partial class RetailService : IRetailService
             else if (paymentDb.StatusPayment == PaymentsRetailStatusesEnum.Paid)
             {
                 if (paymentDb.Wallet!.Balance < req.Payload.Amount)
-                    return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
-
+                {
+                    await transaction.RollbackAsync(token);
+                    return new()
+                    {
+                        Messages = [new()
+                        {
+                            Text = $"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной",
+                            TypeMessage = MessagesTypesEnum.Error,
+                        }]
+                    };
+                }
                 await context.WalletsRetail
                     .Where(x => x.Id == paymentDb.WalletId)
                     .ExecuteUpdateAsync(set => set
@@ -187,7 +235,7 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.Name, req.Payload.Name)
                 .SetProperty(p => p.Description, req.Payload.Description)
                 .SetProperty(p => p.WalletId, req.Payload.WalletId)
-                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.Version, _ng)
                 .SetProperty(p => p.TypePayment, req.Payload.TypePayment)
                 .SetProperty(p => p.StatusPayment, req.Payload.StatusPayment)
                 .SetProperty(p => p.PaymentSource, req.Payload.PaymentSource)
@@ -196,7 +244,15 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        return ResponseBaseModel.CreateSuccess("Ok");
+        return new()
+        {
+            Response = _ng,
+            Messages = [new()
+            {
+                Text = "Ok",
+                TypeMessage = MessagesTypesEnum.Success,
+            }]
+        };
     }
 
     /// <inheritdoc/>

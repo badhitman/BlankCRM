@@ -11,17 +11,17 @@ namespace Transmission.Receives.commerce;
 /// UpdatePaymentDocument
 /// </summary>
 public class UpdatePaymentDocumentReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<PaymentRetailDocumentModelDB>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<PaymentRetailDocumentModelDB>?, TResponseModel<Guid?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdatePaymentDocumentRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<PaymentRetailDocumentModelDB>? req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<PaymentRetailDocumentModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        ResponseBaseModel res = await commRepo.UpdatePaymentDocumentAsync(req, token);
+        TResponseModel<Guid?> res = await commRepo.UpdatePaymentDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

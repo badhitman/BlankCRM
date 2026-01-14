@@ -22,7 +22,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<ToggleWalletTypeDisabledForPaymentTypeReceive, TAuthRequestStandardModel<ToggleWalletTypeDisabledForPaymentTypeRequestModel>, ResponseBaseModel>()
             .RegisterMqListener<UpdateWalletReceive, WalletRetailModelDB, ResponseBaseModel>()
             .RegisterMqListener<UpdateRowOfDeliveryDocumentReceive, TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB>, TResponseModel<DeliveryDocumentRetailModelDB>>()
-            .RegisterMqListener<UpdatePaymentDocumentReceive, TAuthRequestStandardModel<PaymentRetailDocumentModelDB>, ResponseBaseModel>()
+            .RegisterMqListener<UpdatePaymentDocumentReceive, TAuthRequestStandardModel<PaymentRetailDocumentModelDB>, TResponseModel<Guid?>>()
             .RegisterMqListener<UpdatePaymentOrderLinkDocumentReceive, TAuthRequestStandardModel<PaymentOrderRetailLinkModelDB>, ResponseBaseModel>()
             .RegisterMqListener<UpdateDeliveryStatusDocumentReceive, TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB>, TResponseModel<DeliveryDocumentRetailModelDB>>()
             .RegisterMqListener<UpdateDeliveryDocumentReceive, TAuthRequestStandardModel<DeliveryDocumentRetailModelDB>, TResponseModel<Guid?>>()
