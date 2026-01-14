@@ -41,7 +41,7 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
         };
         await SetBusyAsync();
 
-        ResponseBaseModel res = await RetailRepo.DeleteConversionOrderLinkDocumentRetailAsync(req);
+        ResponseBaseModel res = await RetailRepo.DeleteConversionOrderLinkDocumentRetailAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = req });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         await DeleteRowFinalize();

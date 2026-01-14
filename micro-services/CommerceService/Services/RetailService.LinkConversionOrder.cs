@@ -144,12 +144,15 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentRetailAsync(OrderConversionModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteConversionOrderLinkDocumentRetailAsync(TAuthRequestStandardModel<OrderConversionModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         int res = await context.ConversionsOrdersLinksRetail
-             .Where(x => x.OrderDocumentId == req.OrderDocumentId && x.ConversionDocumentId == req.ConversionDocumentId)
+             .Where(x => x.OrderDocumentId == req.Payload.OrderDocumentId && x.ConversionDocumentId == req.Payload.ConversionDocumentId)
              .ExecuteDeleteAsync(cancellationToken: token);
 
         return res == 0
