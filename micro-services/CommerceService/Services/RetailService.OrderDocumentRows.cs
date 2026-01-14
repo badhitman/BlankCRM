@@ -427,7 +427,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> DeleteRowRetailDocumentAsync(TAuthRequestStandardModel<DeleteRowRetailDocumentRequestModel> req, CancellationToken token = default)
+    public async Task<TResponseModel<RowOfRetailOrderDocumentModelDB?>> DeleteRowRetailDocumentAsync(TAuthRequestStandardModel<DeleteRowRetailDocumentRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -560,9 +560,10 @@ public partial class RetailService : IRetailService
             .SetProperty(p => p.Version, _orderGuid), cancellationToken: token);
 
         await transaction.CommitAsync(token);
+        rowOfRetailDb.Order!.Version = _orderGuid;
         return new()
         {
-            Response = _orderGuid,
+            Response = rowOfRetailDb,
             Messages = [new() { TypeMessage = MessagesTypesEnum.Info, Text = "Строка документа удалена" }]
         };
     }
