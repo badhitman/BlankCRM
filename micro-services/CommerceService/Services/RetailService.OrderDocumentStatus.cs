@@ -16,7 +16,7 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<DocumentRetailModelDB>> CreateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -54,7 +54,7 @@ public partial class RetailService : IRetailService
         if (docDb.Rows is null || docDb.Rows.Count == 0)
         {
             await transaction.CommitAsync(token);
-            return new() { Response = req.Payload.Id };
+            return new() { Response = docDb };
         }
 
         int[] _offersIds = [.. docDb.Rows.Select(x => x.OfferId)];
@@ -95,7 +95,7 @@ public partial class RetailService : IRetailService
                 await context.SaveChangesAsync(token);
             }
             await transaction.CommitAsync(token);
-            return new() { Response = req.Payload.Id };
+            return new() { Response = docDb };
         }
 
         List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
@@ -117,7 +117,16 @@ public partial class RetailService : IRetailService
         }
 
         await transaction.CommitAsync(token);
-        return new() { Response = req.Payload.Id, Messages = [new() { TypeMessage = MessagesTypesEnum.Success, Text = (_oldStatus == _newStatus ? "конечный статус документа без изменений" : "статус документа изменён") }] };
+        return new()
+        {
+            Response = await context.OrdersRetail
+                .Include(x => x.Rows)
+                .Include(x => x.Statuses)
+                .FirstAsync(x => x.Id == req.Payload.OrderDocumentId, cancellationToken: token),
+            Messages = [new() {
+                TypeMessage = MessagesTypesEnum.Success,
+                Text = _oldStatus == _newStatus ? "конечный статус документа без изменений" : "статус документа изменён" }]
+        };
     }
 
     /// <inheritdoc/>

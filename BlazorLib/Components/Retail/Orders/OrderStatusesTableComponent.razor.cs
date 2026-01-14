@@ -174,7 +174,7 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseAuthMo
             OrderDocument = Document
         };
         await SetBusyAsync();
-        TResponseModel<int> res = await RetailRepo.CreateOrderStatusDocumentAsync(new()
+        TResponseModel<DocumentRetailModelDB> res = await RetailRepo.CreateOrderStatusDocumentAsync(new()
         {
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = req

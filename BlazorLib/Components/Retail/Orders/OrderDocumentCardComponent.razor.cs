@@ -140,7 +140,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success() && res.Response > 0)
             {
-                TResponseModel<int> setStatus = await RetailRepo.CreateOrderStatusDocumentAsync(new()
+                TResponseModel<DocumentRetailModelDB> setStatus = await RetailRepo.CreateOrderStatusDocumentAsync(new()
                 {
                     SenderActionUserId = CurrentUserSession.UserId,
                     Payload = new()
