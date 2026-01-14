@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// UpdateDeliveryOrderLinkDocument
 /// </summary>
 public class UpdateDeliveryOrderLinkDocumentReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<RetailOrderDeliveryLinkModelDB?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<RetailOrderDeliveryLinkModelDB>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryOrderLinkDocumentRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(RetailOrderDeliveryLinkModelDB? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<RetailOrderDeliveryLinkModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);

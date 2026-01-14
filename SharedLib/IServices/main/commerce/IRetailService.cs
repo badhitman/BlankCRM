@@ -56,10 +56,10 @@ public interface IRetailService
 
     #region Deliveries orders link`s    
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateDeliveryOrderLinkDocumentAsync(RetailOrderDeliveryLinkModelDB req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateDeliveryOrderLinkDocumentAsync(TAuthRequestStandardModel<RetailOrderDeliveryLinkModelDB> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdateDeliveryOrderLinkDocumentAsync(RetailOrderDeliveryLinkModelDB req, CancellationToken token = default);
+    public Task<ResponseBaseModel> UpdateDeliveryOrderLinkDocumentAsync(TAuthRequestStandardModel<RetailOrderDeliveryLinkModelDB> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TPaginationResponseStandardModel<RetailOrderDeliveryLinkModelDB>> SelectDeliveriesOrdersLinksDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default);
@@ -211,10 +211,10 @@ public interface IRetailService
 
     #region Conversions orders link`s
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateConversionOrderLinkDocumentRetailAsync(OrderConversionAmountModel req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateConversionOrderLinkDocumentRetailAsync(TAuthRequestStandardModel<OrderConversionAmountModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentRetailAsync(OrderConversionAmountModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> UpdateConversionOrderLinkDocumentRetailAsync(TAuthRequestStandardModel<OrderConversionAmountModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TPaginationResponseStandardModel<ConversionOrderRetailLinkModelDB>> SelectConversionsOrdersDocumentsLinksRetailAsync(TPaginationRequestStandardModel<SelectConversionsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default);

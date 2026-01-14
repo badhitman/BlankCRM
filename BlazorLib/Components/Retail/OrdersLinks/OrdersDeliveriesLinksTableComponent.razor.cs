@@ -80,7 +80,7 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
                 Id = other.Id,
             };
             await SetBusyAsync();
-            ResponseBaseModel res = await RetailRepo.UpdateDeliveryOrderLinkDocumentAsync(req);
+            ResponseBaseModel res = await RetailRepo.UpdateDeliveryOrderLinkDocumentAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (!res.Success())
             {
@@ -106,6 +106,11 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
 
     async void SelectOrderRowAction(TableRowClickEventArgs<DocumentRetailModelDB> tableRow)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
         _visibleIncludeOrder = false;
 
         if (tableRow.Item is null)
@@ -132,11 +137,15 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
         });
         TResponseModel<int> res = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new()
         {
-            DeliveryDocumentId = DeliveryId,
-            OrderDocumentId = tableRow.Item.Id,
-            WeightShipping = rowsForOrder.Response is null || rowsForOrder.Response.Count == 0
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                DeliveryDocumentId = DeliveryId,
+                OrderDocumentId = tableRow.Item.Id,
+                WeightShipping = rowsForOrder.Response is null || rowsForOrder.Response.Count == 0
                 ? 0
                 : rowsForOrder.Response.Sum(x => x.Quantity * x.Offer!.Weight)
+            }
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -149,6 +158,11 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
 
     async void SelectDeliveryRowAction(TableRowClickEventArgs<DeliveryDocumentRetailModelDB> tableRow)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
         _visibleIncludeExistDelivery = false;
 
         if (tableRow.Item is null)
@@ -168,11 +182,15 @@ public partial class OrdersDeliveriesLinksTableComponent : OrderLinkBaseComponen
 
         TResponseModel<int> res = await RetailRepo.CreateDeliveryOrderLinkDocumentAsync(new()
         {
-            DeliveryDocumentId = tableRow.Item.Id,
-            OrderDocumentId = OrderParent.Id,
-            WeightShipping = tableRow.Item.Rows is null || tableRow.Item.Rows.Count == 0
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                DeliveryDocumentId = tableRow.Item.Id,
+                OrderDocumentId = OrderParent.Id,
+                WeightShipping = tableRow.Item.Rows is null || tableRow.Item.Rows.Count == 0
                 ? 0
                 : tableRow.Item.Rows.Sum(x => x.Quantity * x.Offer!.Weight)
+            }
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);

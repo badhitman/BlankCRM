@@ -63,7 +63,12 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
                 Id = other.Id,
             };
             await SetBusyAsync();
-            ResponseBaseModel res = await RetailRepo.UpdateConversionOrderLinkDocumentRetailAsync(req);
+            ResponseBaseModel res = await RetailRepo.UpdateConversionOrderLinkDocumentRetailAsync(new()
+            {
+                Payload = req,
+                SenderActionUserId = CurrentUserSession.UserId
+            });
+
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (!res.Success())
             {
@@ -89,6 +94,12 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
 
     async void SelectOrderRowAction(TableRowClickEventArgs<DocumentRetailModelDB> tableRow)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         _visibleIncludeOrder = false;
 
         if (tableRow.Item is null)
@@ -108,11 +119,15 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
 
         TResponseModel<int> res = await RetailRepo.CreateConversionOrderLinkDocumentRetailAsync(new()
         {
-            ConversionDocumentId = ConversionId,
-            OrderDocumentId = tableRow.Item.Id,
-            AmountPayment = tableRow.Item.Rows is null || tableRow.Item.Rows.Count == 0
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                ConversionDocumentId = ConversionId,
+                OrderDocumentId = tableRow.Item.Id,
+                AmountPayment = tableRow.Item.Rows is null || tableRow.Item.Rows.Count == 0
                  ? 0
                  : tableRow.Item.Rows.Sum(x => x.Amount)
+            }
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -125,6 +140,12 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
 
     async void SelectConversionRowAction(TableRowClickEventArgs<WalletConversionRetailDocumentModelDB> tableRow)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         _visibleIncludeExistConversion = false;
 
         if (tableRow.Item is null)
@@ -144,9 +165,13 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
 
         TResponseModel<int> res = await RetailRepo.CreateConversionOrderLinkDocumentRetailAsync(new()
         {
-            ConversionDocumentId = tableRow.Item.Id,
-            OrderDocumentId = OrderParent.Id,
-            AmountPayment = tableRow.Item.ToWalletSum,
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                ConversionDocumentId = tableRow.Item.Id,
+                OrderDocumentId = OrderParent.Id,
+                AmountPayment = tableRow.Item.ToWalletSum,
+            }
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);

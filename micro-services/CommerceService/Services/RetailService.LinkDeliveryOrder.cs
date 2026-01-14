@@ -14,29 +14,38 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateDeliveryOrderLinkDocumentAsync(RetailOrderDeliveryLinkModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateDeliveryOrderLinkDocumentAsync(TAuthRequestStandardModel<RetailOrderDeliveryLinkModelDB> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return new()
+            {
+                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }]
+            };
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        if (await context.OrdersDeliveriesLinks.AnyAsync(x => x.DeliveryDocumentId == req.DeliveryDocumentId && x.OrderDocumentId == req.OrderDocumentId, cancellationToken: token))
+        if (await context.OrdersDeliveriesLinks.AnyAsync(x => x.DeliveryDocumentId == req.Payload.DeliveryDocumentId && x.OrderDocumentId == req.Payload.OrderDocumentId, cancellationToken: token))
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Warning, Text = "Документ уже добавлен" }] };
 
-        req.OrderDocument = null;
-        req.DeliveryDocument = null;
+        req.Payload.OrderDocument = null;
+        req.Payload.DeliveryDocument = null;
 
-        await context.OrdersDeliveriesLinks.AddAsync(req, token);
+        await context.OrdersDeliveriesLinks.AddAsync(req.Payload, token);
         await context.SaveChangesAsync(token);
-        return new() { Response = req.Id };
+        return new() { Response = req.Payload.Id };
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateDeliveryOrderLinkDocumentAsync(RetailOrderDeliveryLinkModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateDeliveryOrderLinkDocumentAsync(TAuthRequestStandardModel<RetailOrderDeliveryLinkModelDB> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         await context.OrdersDeliveriesLinks
-            .Where(x => x.Id == req.Id || (req.OrderDocumentId == x.OrderDocumentId && req.DeliveryDocumentId == x.DeliveryDocumentId))
+            .Where(x => x.Id == req.Payload.Id || (req.Payload.OrderDocumentId == x.OrderDocumentId && req.Payload.DeliveryDocumentId == x.DeliveryDocumentId))
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.WeightShipping, req.WeightShipping), cancellationToken: token);
+                .SetProperty(p => p.WeightShipping, req.Payload.WeightShipping), cancellationToken: token);
         await context.SaveChangesAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }
