@@ -447,6 +447,7 @@ public partial class RetailService : IRetailService
 
         DocumentRetailModelDB retailOrderDb = rowOfRetailDb.Order!;
         loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+        DocumentRetailModelDB _order = rowOfRetailDb.Order!;
         rowOfRetailDb.Order = null;
         loggerRepo.LogInformation($"{nameof(rowOfRetailDb)}: {JsonConvert.SerializeObject(rowOfRetailDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
@@ -552,15 +553,16 @@ public partial class RetailService : IRetailService
             .Where(x => x.Id == req.Payload.RowId)
             .ExecuteDeleteAsync(cancellationToken: token);
 
-        Guid _orderGuid = Guid.NewGuid();
+        _order.Version = Guid.NewGuid();
 
         await context.OrdersRetail
             .Where(x => x.Id == retailOrderDb.Id)
             .ExecuteUpdateAsync(set => set
-            .SetProperty(p => p.Version, _orderGuid), cancellationToken: token);
+            .SetProperty(p => p.Version, _order.Version), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        rowOfRetailDb.Order!.Version = _orderGuid;
+
+        rowOfRetailDb.Order = _order;
         return new()
         {
             Response = rowOfRetailDb,

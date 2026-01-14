@@ -121,19 +121,24 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<DocumentRetailModelDB>> UpdateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
-            return ResponseBaseModel.CreateError("req.Payload is null");
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
 
-        TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
+        TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo
+            .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        DocumentRetailModelDB orderDb = await context.OrdersRetail
+        TResponseModel<DocumentRetailModelDB> res = new()
+        {
+            Response = await context.OrdersRetail
             .Include(x => x.Rows)
-            .FirstAsync(x => x.Id == req.Payload.OrderDocumentId, cancellationToken: token);
-        StatusesDocumentsEnum? _oldStatus = orderDb.StatusDocument;
+            .FirstAsync(x => x.Id == req.Payload.OrderDocumentId, cancellationToken: token)
+        };
+
+        StatusesDocumentsEnum? _oldStatus = res.Response.StatusDocument;
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         req.Payload.Name = req.Payload.Name.Trim();
@@ -152,10 +157,11 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.Version, Guid.NewGuid())
                 .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.Payload.OrderDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
-        if (orderDb.Rows is null || orderDb.Rows.Count == 0)
+        if (res.Response.Rows is null || res.Response.Rows.Count == 0)
         {
             await transaction.CommitAsync(token);
-            return ResponseBaseModel.CreateSuccess("Ok");
+            res.AddSuccess("Ok");
+            return res;
         }
 
         StatusesDocumentsEnum _newStatus = await context.OrdersStatusesRetails
@@ -168,15 +174,16 @@ public partial class RetailService : IRetailService
         if ((offOrdersStatuses.Contains(_newStatus) && offOrdersStatuses.Contains(_oldStatus)) || (!offOrdersStatuses.Contains(_newStatus) && !offOrdersStatuses.Contains(_oldStatus)))
         {
             await transaction.CommitAsync(token);
-            return ResponseBaseModel.CreateSuccess("Ok");
+            res.AddSuccess("Ok");
+            return res;
         }
 
-        int[] _offersIds = [.. orderDb.Rows.Select(x => x.OfferId)];
+        int[] _offersIds = [.. res.Response.Rows.Select(x => x.OfferId)];
         List<LockTransactionModelDB> lockers = [.._offersIds.Select(x=> new LockTransactionModelDB()
         {
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
-            LockerAreaId = orderDb.WarehouseId,
+            LockerAreaId = res.Response.WarehouseId,
             Marker = nameof(UpdateOrderStatusDocumentAsync)
         })];
 
@@ -199,11 +206,12 @@ public partial class RetailService : IRetailService
            .Where(x => _offersIds.Contains(x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        ResponseBaseModel res = await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offOrdersStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
-        if (!res.Success())
+        ResponseBaseModel sRes = await DoIt(context, transaction, res.Response.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offOrdersStatuses.Contains(_newStatus), offerAvailabilityDB, res.Response, token);
+        if (!sRes.Success())
         {
             await transaction.RollbackAsync(token);
-            return new() { Messages = res.Messages };
+            res.AddRangeMessages(sRes.Messages);
+            return res;
         }
 
         if (lockers.Count != 0)
@@ -213,7 +221,8 @@ public partial class RetailService : IRetailService
         }
 
         await transaction.CommitAsync(token);
-        return ResponseBaseModel.CreateSuccess("Ok");
+        res.AddSuccess("Ok");
+        return res;
     }
 
     /// <inheritdoc/>

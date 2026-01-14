@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
+using System.Reflection.Metadata;
 
 namespace BlazorLib.Components.Retail.Orders;
 
@@ -88,7 +89,14 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseAuthMo
                 Id = editRowId.Value,
             };
             await SetBusyAsync();
-            ResponseBaseModel res = await RetailRepo.UpdateOrderStatusDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = req });
+            TResponseModel<DocumentRetailModelDB> res = await RetailRepo.UpdateOrderStatusDocumentAsync(new()
+            {
+                SenderActionUserId = CurrentUserSession.UserId,
+                Payload = req
+            });
+            if (res.Response is not null)
+                Document.Version = res.Response.Version;
+
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (!res.Success())
             {
@@ -166,7 +174,12 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseAuthMo
             OrderDocument = Document
         };
         await SetBusyAsync();
-        TResponseModel<int> res = await RetailRepo.CreateOrderStatusDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = req });
+        TResponseModel<int> res = await RetailRepo.CreateOrderStatusDocumentAsync(new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = req
+        });
+
         if (!res.Success())
         {
             SnackBarRepo.ShowMessagesResponse(res.Messages);
