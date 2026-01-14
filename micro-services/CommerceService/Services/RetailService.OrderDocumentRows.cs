@@ -142,9 +142,9 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> UpdateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<DocumentRetailModelDB>> UpdateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default)
     {
-        TResponseModel<Guid?> res = new();
+        TResponseModel<DocumentRetailModelDB> res = new();
         if (req.Payload is null)
         {
             res.AddError("req.Payload is null");
@@ -178,7 +178,7 @@ public partial class RetailService : IRetailService
                     TypeMessage = MessagesTypesEnum.Error,
                     Text = $"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова" }]
             };
-        Guid _orderGuid;
+        
         if (offOrdersStatuses.Contains(retailOrderDb.StatusDocument))
         {
             await context.RowsOrdersRetails
@@ -190,15 +190,15 @@ public partial class RetailService : IRetailService
                     .SetProperty(p => p.Version, Guid.NewGuid())
                     .SetProperty(p => p.Amount, req.Payload.Amount), cancellationToken: token);
 
-            _orderGuid = Guid.NewGuid();
+            retailOrderDb.Version = Guid.NewGuid();
             await context.OrdersRetail
               .Where(x => x.Id == req.Payload.OrderId)
               .ExecuteUpdateAsync(set => set
-                  .SetProperty(p => p.Version, _orderGuid), cancellationToken: token);
+                  .SetProperty(p => p.Version, retailOrderDb.Version), cancellationToken: token);
 
             return new()
             {
-                Response = _orderGuid,
+                Response = retailOrderDb,
                 Messages = [new() {
                     Text = "Ok",
                     TypeMessage = MessagesTypesEnum.Success }]
@@ -410,16 +410,16 @@ public partial class RetailService : IRetailService
               .SetProperty(p => p.Version, Guid.NewGuid())
               .SetProperty(p => p.Amount, req.Payload.Amount), cancellationToken: token);
 
-        _orderGuid = Guid.NewGuid();
+        retailOrderDb.Version = Guid.NewGuid();
         await context.OrdersRetail
           .Where(x => x.Id == req.Payload.OrderId)
           .ExecuteUpdateAsync(set => set
-              .SetProperty(p => p.Version, _orderGuid), cancellationToken: token);
+              .SetProperty(p => p.Version, retailOrderDb.Version), cancellationToken: token);
 
         await transaction.CommitAsync(token);
         return new()
         {
-            Response = _orderGuid,
+            Response = retailOrderDb,
             Messages = [new() {
                 TypeMessage = MessagesTypesEnum.Info,
                 Text = "Ok" }]

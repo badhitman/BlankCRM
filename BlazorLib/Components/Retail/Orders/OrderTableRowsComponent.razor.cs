@@ -177,11 +177,11 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
                 if (Document.Id > 0)
                 {
                     await SetBusyAsync();
-                    TResponseModel<Guid?>? resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = Document.Rows[exist_row] });
+                    TResponseModel<DocumentRetailModelDB> resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = Document.Rows[exist_row] });
                     SnackBarRepo.ShowMessagesResponse(resUpdateRow.Messages);
 
                     if (resUpdateRow.Success() && resUpdateRow.Response is not null)
-                        Document.Version = resUpdateRow.Response.Value;
+                        Document.Version = resUpdateRow.Response.Version;
 
                     await ReloadTableItems();
                     await SetBusyAsync(false);
@@ -241,11 +241,11 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             if (Document.Id > 0)
             {
                 await SetBusyAsync();
-                TResponseModel<Guid?> resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = Document.Rows[exist_row] });
+                TResponseModel<DocumentRetailModelDB> resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = Document.Rows[exist_row] });
                 SnackBarRepo.ShowMessagesResponse(resUpdateRow.Messages);
 
                 if (resUpdateRow.Success() && resUpdateRow.Response is not null)
-                    Document.Version = resUpdateRow.Response.Value;
+                    Document.Version = resUpdateRow.Response.Version;
 
                 await ReloadTableItems();
                 await SetBusyAsync(false);
