@@ -76,15 +76,18 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdatePaymentDocumentAsync(PaymentRetailDocumentModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdatePaymentDocumentAsync(TAuthRequestStandardModel<PaymentRetailDocumentModelDB> req, CancellationToken token = default)
     {
-        if (req.Amount == 0)
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
+        if (req.Payload.Amount == 0)
             return ResponseBaseModel.CreateError("Укажите сумму платежа");
 
-        req.PaymentSource = req.PaymentSource?.Trim();
-        req.Name = req.Name.Trim();
-        req.Description = req.Description?.Trim();
-        req.DatePayment = req.DatePayment.SetKindUtc();
+        req.Payload.PaymentSource = req.Payload.PaymentSource?.Trim();
+        req.Payload.Name = req.Payload.Name.Trim();
+        req.Payload.Description = req.Payload.Description?.Trim();
+        req.Payload.DatePayment = req.Payload.DatePayment.SetKindUtc();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
@@ -92,36 +95,36 @@ public partial class RetailService : IRetailService
         PaymentRetailDocumentModelDB paymentDb = await context.PaymentsRetailDocuments
             .Include(x => x.Wallet!)
             .ThenInclude(x => x.WalletType)
-            .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
+            .FirstAsync(x => x.Id == req.Payload.Id, cancellationToken: token);
 
-        if (paymentDb.Version != req.Version)
+        if (paymentDb.Version != req.Payload.Version)
             return ResponseBaseModel.CreateError("Документ ранее был кем-то изменён. Обновите документ (F5) перед его редактированием.");
 
         if (paymentDb.Wallet?.WalletType?.IgnoreBalanceChanges == true)
         {
             await context.PaymentsRetailDocuments
-                .Where(x => x.Id == req.Id)
+                .Where(x => x.Id == req.Payload.Id)
                 .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.Name, req.Name)
-                    .SetProperty(p => p.Description, req.Description)
-                    .SetProperty(p => p.WalletId, req.WalletId)
+                    .SetProperty(p => p.Name, req.Payload.Name)
+                    .SetProperty(p => p.Description, req.Payload.Description)
+                    .SetProperty(p => p.WalletId, req.Payload.WalletId)
                     .SetProperty(p => p.Version, Guid.NewGuid())
-                    .SetProperty(p => p.TypePayment, req.TypePayment)
-                    .SetProperty(p => p.StatusPayment, req.StatusPayment)
-                    .SetProperty(p => p.PaymentSource, req.PaymentSource)
-                    .SetProperty(p => p.DatePayment, req.DatePayment)
-                    .SetProperty(p => p.Amount, req.Amount)
+                    .SetProperty(p => p.TypePayment, req.Payload.TypePayment)
+                    .SetProperty(p => p.StatusPayment, req.Payload.StatusPayment)
+                    .SetProperty(p => p.PaymentSource, req.Payload.PaymentSource)
+                    .SetProperty(p => p.DatePayment, req.Payload.DatePayment)
+                    .SetProperty(p => p.Amount, req.Payload.Amount)
                     .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
             await transaction.CommitAsync(token);
             return ResponseBaseModel.CreateSuccess("Ok");
         }
 
-        if (req.StatusPayment == paymentDb.StatusPayment && req.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+        if (req.Payload.StatusPayment == paymentDb.StatusPayment && req.Payload.StatusPayment == PaymentsRetailStatusesEnum.Paid)
         {
-            if (req.WalletId == paymentDb.WalletId)
+            if (req.Payload.WalletId == paymentDb.WalletId)
             {
-                decimal _deltaChange = req.Amount - paymentDb.Amount;
+                decimal _deltaChange = req.Payload.Amount - paymentDb.Amount;
                 if (_deltaChange < 0 && paymentDb.Wallet!.Balance < -_deltaChange)
                     return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
 
@@ -141,9 +144,9 @@ public partial class RetailService : IRetailService
             else
             {
                 await context.WalletsRetail
-                    .Where(x => x.Id == req.WalletId)
+                    .Where(x => x.Id == req.Payload.WalletId)
                     .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.Balance, p => p.Balance + req.Amount), cancellationToken: token);
+                        .SetProperty(p => p.Balance, p => p.Balance + req.Payload.Amount), cancellationToken: token);
 
                 await context.WalletsRetail
                     .Where(x => x.Id == paymentDb.WalletId)
@@ -151,39 +154,39 @@ public partial class RetailService : IRetailService
                         .SetProperty(p => p.Balance, p => p.Balance - paymentDb.Amount), cancellationToken: token);
             }
         }
-        else if (req.StatusPayment != paymentDb.StatusPayment)
+        else if (req.Payload.StatusPayment != paymentDb.StatusPayment)
         {
-            if (req.StatusPayment == PaymentsRetailStatusesEnum.Paid)
+            if (req.Payload.StatusPayment == PaymentsRetailStatusesEnum.Paid)
             {
                 await context.WalletsRetail
-                    .Where(x => x.Id == req.WalletId)
+                    .Where(x => x.Id == req.Payload.WalletId)
                     .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.Balance, p => p.Balance + req.Amount), cancellationToken: token);
+                        .SetProperty(p => p.Balance, p => p.Balance + req.Payload.Amount), cancellationToken: token);
             }
             else if (paymentDb.StatusPayment == PaymentsRetailStatusesEnum.Paid)
             {
-                if (paymentDb.Wallet!.Balance < req.Amount)
+                if (paymentDb.Wallet!.Balance < req.Payload.Amount)
                     return ResponseBaseModel.CreateError($"В следствии изменения документа - сумма баланса [wallet:{paymentDb.Wallet.WalletType}] станет отрицательной");
 
                 await context.WalletsRetail
                     .Where(x => x.Id == paymentDb.WalletId)
                     .ExecuteUpdateAsync(set => set
-                        .SetProperty(p => p.Balance, p => p.Balance - req.Amount), cancellationToken: token);
+                        .SetProperty(p => p.Balance, p => p.Balance - req.Payload.Amount), cancellationToken: token);
             }
         }
 
         await context.PaymentsRetailDocuments
-            .Where(x => x.Id == req.Id)
+            .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.Description, req.Description)
-                .SetProperty(p => p.WalletId, req.WalletId)
+                .SetProperty(p => p.Name, req.Payload.Name)
+                .SetProperty(p => p.Description, req.Payload.Description)
+                .SetProperty(p => p.WalletId, req.Payload.WalletId)
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.TypePayment, req.TypePayment)
-                .SetProperty(p => p.StatusPayment, req.StatusPayment)
-                .SetProperty(p => p.PaymentSource, req.PaymentSource)
-                .SetProperty(p => p.DatePayment, req.DatePayment)
-                .SetProperty(p => p.Amount, req.Amount)
+                .SetProperty(p => p.TypePayment, req.Payload.TypePayment)
+                .SetProperty(p => p.StatusPayment, req.Payload.StatusPayment)
+                .SetProperty(p => p.PaymentSource, req.Payload.PaymentSource)
+                .SetProperty(p => p.DatePayment, req.Payload.DatePayment)
+                .SetProperty(p => p.Amount, req.Payload.Amount)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);

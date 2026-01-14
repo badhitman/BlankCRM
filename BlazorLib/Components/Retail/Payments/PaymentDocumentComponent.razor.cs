@@ -109,6 +109,8 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
     {
         if (editDoc is null)
             throw new ArgumentNullException(nameof(editDoc));
+        if (CurrentUserSession is null)
+            throw new ArgumentNullException(nameof(CurrentUserSession));
 
         await SetBusyAsync();
         if (editDoc.Id <= 0)
@@ -125,7 +127,11 @@ public partial class PaymentDocumentComponent : BlazorBusyComponentBaseAuthModel
         }
         else
         {
-            ResponseBaseModel res = await RetailRepo.UpdatePaymentDocumentAsync(editDoc);
+            ResponseBaseModel res = await RetailRepo.UpdatePaymentDocumentAsync(new()
+            {
+                Payload = editDoc,
+                SenderActionUserId = CurrentUserSession.UserId
+            });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
             {
