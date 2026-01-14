@@ -75,7 +75,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid>> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
@@ -97,7 +97,7 @@ public partial class RetailService : IRetailService
 
         loggerRepo.LogInformation($"{nameof(documentDb)}: {JsonConvert.SerializeObject(documentDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
-        TResponseModel<Guid> res = new();
+        TResponseModel<Guid?> res = new();
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         string msg;
         if (!offDeliveriesStatuses.Contains(documentDb.DeliveryStatus) && documentDb.WarehouseId != req.Payload.WarehouseId)
