@@ -196,11 +196,11 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 
     #region Wallet Type
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateWalletTypeAsync(WalletRetailTypeModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateWalletTypeAsync(TAuthRequestStandardModel<WalletRetailTypeModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateWalletTypeRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateWalletTypeAsync(WalletRetailTypeModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateWalletTypeAsync(TAuthRequestStandardModel<WalletRetailTypeModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.UpdateWalletTypeRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

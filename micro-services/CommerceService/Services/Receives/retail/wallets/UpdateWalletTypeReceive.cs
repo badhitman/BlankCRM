@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// UpdateWalletType
 /// </summary>
 public class UpdateWalletTypeReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<WalletRetailTypeModelDB?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<WalletRetailTypeModelDB>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateWalletTypeRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(WalletRetailTypeModelDB? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<WalletRetailTypeModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);

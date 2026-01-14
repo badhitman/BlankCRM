@@ -10,7 +10,7 @@ namespace BlazorLib.Components.Retail.Wallet;
 /// <summary>
 /// WalletRetailTypesComponent
 /// </summary>
-public partial class WalletRetailTypesComponent : BlazorBusyComponentBaseModel
+public partial class WalletRetailTypesComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IRetailService RetailRepo { get; set; } = default!;
@@ -20,11 +20,25 @@ public partial class WalletRetailTypesComponent : BlazorBusyComponentBaseModel
 
     WalletRetailTypeViewModel creatingNewWallet = new();
 
+    bool CannotCreateNew => string.IsNullOrWhiteSpace(creatingNewWallet.Name);
+
+
     async Task CreateNew()
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         await SetBusyAsync();
-        TResponseModel<int>? resCreate = await RetailRepo.CreateWalletTypeAsync(creatingNewWallet);
-        if(!resCreate.Success())
+        TResponseModel<int>? resCreate = await RetailRepo.CreateWalletTypeAsync(new()
+        {
+            Payload = creatingNewWallet,
+            SenderActionUserId = CurrentUserSession.UserId,
+        });
+
+        if (!resCreate.Success())
         {
             SnackBarRepo.ShowMessagesResponse(resCreate.Messages);
             await SetBusyAsync(false);

@@ -14,59 +14,65 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateWalletTypeAsync(WalletRetailTypeModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateWalletTypeAsync(TAuthRequestStandardModel<WalletRetailTypeModelDB> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
-        if (string.IsNullOrWhiteSpace(req.Name))
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        if (string.IsNullOrWhiteSpace(req.Payload.Name))
         {
             res.AddError("Укажите имя");
             return res;
         }
 
-        req.Name = req.Name.Trim();
+        req.Payload.Name = req.Payload.Name.Trim();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        if (await context.WalletsRetailTypes.AnyAsync(x => x.Name == req.Name, cancellationToken: token))
+        if (await context.WalletsRetailTypes.AnyAsync(x => x.Name == req.Payload.Name, cancellationToken: token))
         {
             res.AddError("Тип кошелька с таким именем уже существует");
             return res;
         }
 
-        req.Description = req.Description?.Trim();
-        req.CreatedAtUTC = DateTime.UtcNow;
+        req.Payload.Description = req.Payload.Description?.Trim();
+        req.Payload.CreatedAtUTC = DateTime.UtcNow;
 
-        await context.WalletsRetailTypes.AddAsync(req, token);
+        await context.WalletsRetailTypes.AddAsync(req.Payload, token);
+
+        if (await context.WalletsRetailTypes.AnyAsync(x => x.Id != req.Payload.Id, cancellationToken: token))
+            req.Payload.SortIndex = await context.WalletsRetailTypes.MaxAsync(x => x.SortIndex, cancellationToken: token) + 1;
+        else
+            req.Payload.SortIndex = 1;
+
+        context.WalletsRetailTypes.Update(req.Payload);
         await context.SaveChangesAsync(token);
 
-        if (await context.WalletsRetailTypes.AnyAsync(x => x.Id != req.Id, cancellationToken: token))
-        {
-            req.SortIndex = await context.WalletsRetailTypes.MaxAsync(x => x.SortIndex, cancellationToken: token);
-            req.SortIndex++;
-            context.WalletsRetailTypes.Update(req);
-            await context.SaveChangesAsync(token);
-        }
-        else
-            req.SortIndex = 1;
-
-        return new() { Response = req.Id };
+        return new() { Response = req.Payload.Id };
     }
 
     /// <inheritdoc/> 
-    public async Task<ResponseBaseModel> UpdateWalletTypeAsync(WalletRetailTypeModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateWalletTypeAsync(TAuthRequestStandardModel<WalletRetailTypeModelDB> req, CancellationToken token = default)
     {
-        req.Description = req.Description?.Trim();
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
+        req.Payload.Description = req.Payload.Description?.Trim();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         await context.WalletsRetailTypes
-            .Where(x => x.Id == req.Id)
+            .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name.Trim())
-                .SetProperty(p => p.Description, req.Description)
-                .SetProperty(p => p.IsDisabled, req.IsDisabled)
-                .SetProperty(p => p.IsSystem, req.IsSystem)
-                .SetProperty(p => p.IgnoreBalanceChanges, req.IgnoreBalanceChanges)
+                .SetProperty(p => p.Name, req.Payload.Name.Trim())
+                .SetProperty(p => p.Description, req.Payload.Description)
+                .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled)
+                .SetProperty(p => p.IsSystem, req.Payload.IsSystem)
+                .SetProperty(p => p.IgnoreBalanceChanges, req.Payload.IgnoreBalanceChanges)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         return ResponseBaseModel.CreateSuccess("Ok");

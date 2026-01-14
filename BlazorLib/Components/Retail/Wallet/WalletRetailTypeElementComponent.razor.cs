@@ -70,9 +70,14 @@ public partial class WalletRetailTypeElementComponent : BlazorBusyComponentBaseA
             SnackBarRepo.Error("_walletCopy is null");
             return;
         }
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("_walletCopy is null");
+            return;
+        }
 
         await SetBusyAsync();
-        ResponseBaseModel resUpd = await RetailRepo.UpdateWalletTypeAsync(_walletCopy);
+        ResponseBaseModel resUpd = await RetailRepo.UpdateWalletTypeAsync(new() { Payload = _walletCopy, SenderActionUserId = CurrentUserSession.UserId });
         if (!resUpd.Success())
         {
             await SetBusyAsync(false);

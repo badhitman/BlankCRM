@@ -18,7 +18,7 @@ public static class RegisterMqListenerExtension
     public static IServiceCollection CommerceRegisterMqListeners(this IServiceCollection services)
     {
         return services
-            .RegisterMqListener<UpdateWalletTypeReceive, WalletRetailTypeModelDB, ResponseBaseModel>()
+            .RegisterMqListener<UpdateWalletTypeReceive, TAuthRequestStandardModel<WalletRetailTypeModelDB>, ResponseBaseModel>()
             .RegisterMqListener<ToggleWalletTypeDisabledForPaymentTypeReceive, TAuthRequestStandardModel<ToggleWalletTypeDisabledForPaymentTypeRequestModel>, ResponseBaseModel>()
             .RegisterMqListener<UpdateWalletReceive, WalletRetailModelDB, ResponseBaseModel>()
             .RegisterMqListener<UpdateRowOfDeliveryDocumentReceive, RowOfDeliveryRetailDocumentModelDB, ResponseBaseModel>()
@@ -40,7 +40,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<SelectConversionsDocumentsReceive, TPaginationRequestStandardModel<SelectWalletsRetailsConversionDocumentsRequestModel>, TPaginationResponseStandardModel<WalletConversionRetailDocumentModelDB>>()
             .RegisterMqListener<SelectConversionsOrdersDocumentsLinksReceive, TPaginationRequestStandardModel<SelectConversionsOrdersLinksRetailDocumentsRequestModel>, TPaginationResponseStandardModel<ConversionOrderRetailLinkModelDB>>()
             .RegisterMqListener<ConversionsOrdersDocumentsLinksReadRetailReceive, int[], TResponseModel<ConversionOrderRetailLinkModelDB[]>>()
-            .RegisterMqListener<CreateWalletTypeReceive, WalletRetailTypeModelDB, TResponseModel<int>>()
+            .RegisterMqListener<CreateWalletTypeReceive, TAuthRequestStandardModel<WalletRetailTypeModelDB>, TResponseModel<int>>()
             .RegisterMqListener<CreateWalletReceive, WalletRetailModelDB, TResponseModel<int>>()
             .RegisterMqListener<CreateRowOfDeliveryDocumentReceive, TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB>, TResponseModel<int>>()
             .RegisterMqListener<CreatePaymentDocumentReceive, CreatePaymentRetailDocumentRequestModel, TResponseModel<int>>()
