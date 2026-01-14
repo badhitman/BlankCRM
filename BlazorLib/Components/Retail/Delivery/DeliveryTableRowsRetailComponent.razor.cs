@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using SharedLib;
+using System.Reflection.Metadata;
 
 namespace BlazorLib.Components.Retail.Delivery;
 
@@ -269,9 +270,10 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             if (Document.Id > 0)
             {
                 await SetBusyAsync();
-                ResponseBaseModel res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(Document.Rows[exist_row]);
+                TResponseModel<DeliveryDocumentRetailModelDB> res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = Document.Rows[exist_row] });
                 SnackBarRepo.ShowMessagesResponse(res.Messages);
-
+                if (res.Response is not null)
+                    Document.Version = res.Response.Version;
                 await ElementsReload();
                 if (tableRef is not null)
                     await tableRef.ReloadServerData();
@@ -351,8 +353,10 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                 if (Document.Id > 0)
                 {
                     await SetBusyAsync();
-                    ResponseBaseModel res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(off);
+                    TResponseModel<DeliveryDocumentRetailModelDB> res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = off });
                     SnackBarRepo.ShowMessagesResponse(res.Messages);
+                    if (res.Response is not null)
+                        Document.Version = res.Response.Version;
 
                     await ElementsReload();
                     if (tableRef is not null)
