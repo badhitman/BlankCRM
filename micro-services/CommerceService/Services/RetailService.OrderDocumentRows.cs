@@ -15,10 +15,10 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<KeyValuePair<int, Guid>?>> CreateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<KeyValuePair<int, DocumentRetailModelDB>?>> CreateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default)
     {
         string msg;
-        TResponseModel<KeyValuePair<int, Guid>?> res = new();
+        TResponseModel<KeyValuePair<int, DocumentRetailModelDB>?> res = new();
 
         if (req.Payload is null)
         {
@@ -36,7 +36,7 @@ public partial class RetailService : IRetailService
 
         DocumentRetailModelDB retailOrderDb = await context.OrdersRetail
             .FirstAsync(x => x.Id == req.Payload.OrderId, cancellationToken: token);
-        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         LockTransactionModelDB locker = new()
@@ -138,7 +138,7 @@ public partial class RetailService : IRetailService
               .SetProperty(p => p.Version, _orderGuid), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        return new() { Response = new(req.Payload.Id, _orderGuid) };
+        return new() { Response = new(req.Payload.Id, retailOrderDb) };//_orderGuid
     }
 
     /// <inheritdoc/>
