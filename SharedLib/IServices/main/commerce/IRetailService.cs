@@ -14,7 +14,7 @@ public interface IRetailService
     public Task<TResponseModel<int>> CreateDeliveryDocumentAsync(TAuthRequestStandardModel<CreateDeliveryDocumentRetailRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default);
+    public Task<TResponseModel<Guid>> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TPaginationResponseStandardModel<DeliveryDocumentRetailModelDB>> SelectDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req, CancellationToken token = default);

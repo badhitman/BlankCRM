@@ -75,10 +75,10 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid>> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
-            return ResponseBaseModel.CreateError("req.Payload is null");
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
 
         req.Payload.CreatedAtUTC = DateTime.UtcNow;
         req.Payload.OrdersLinks = null;
@@ -93,10 +93,11 @@ public partial class RetailService : IRetailService
             .FirstAsync(x => x.Id == req.Payload.Id, cancellationToken: token);
 
         if (documentDb.Version != req.Payload.Version)
-            return ResponseBaseModel.CreateError($"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить");
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить" }] };
 
         loggerRepo.LogInformation($"{nameof(documentDb)}: {JsonConvert.SerializeObject(documentDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
+        TResponseModel<Guid> res = new();
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         string msg;
         if (!offDeliveriesStatuses.Contains(documentDb.DeliveryStatus) && documentDb.WarehouseId != req.Payload.WarehouseId)
@@ -131,11 +132,10 @@ public partial class RetailService : IRetailService
                     await transaction.RollbackAsync(token);
                     msg = $"Не удалось выполнить команду блокировки регистров остатков {nameof(UpdateRetailDocumentAsync)}: ";
                     loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-                    return ResponseBaseModel.CreateError($"{msg}{ex.Message}");
+                    return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}{ex.Message}" }] };
                 }
             }
 
-            ResponseBaseModel res = new();
             int[] _offersIds = [.. documentDb.Rows.Select(x => x.OfferId).Distinct()];
             List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
                 .Where(x => _offersIds.Any(y => y == x.OfferId))
@@ -215,7 +215,7 @@ public partial class RetailService : IRetailService
                 await context.SaveChangesAsync(token);
             }
         }
-
+        res.Response = Guid.NewGuid();
         await context.DeliveryDocumentsRetail
             .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set
@@ -231,13 +231,14 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.DeliveryType, req.Payload.DeliveryType)
                 .SetProperty(p => p.DeliveryPaymentUponReceipt, req.Payload.DeliveryPaymentUponReceipt)
                 .SetProperty(p => p.DeliveryCode, req.Payload.DeliveryCode)
-                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.Version, res.Response)
                 .SetProperty(p => p.AddressUserComment, req.Payload.AddressUserComment)
                 .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.Payload.Id).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.DeliveryStatus).FirstOrDefault())
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        return ResponseBaseModel.CreateSuccess("Ok");
+        res.AddSuccess("Ok");
+        return res;
     }
 
     /// <inheritdoc/>

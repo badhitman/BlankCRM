@@ -73,8 +73,8 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(TransmissionQueues.CreateDeliveryDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.UpdateDeliveryDocumentRetailReceive, req, token: token) ?? new();
+    public async Task<TResponseModel<Guid>> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<Guid>>(TransmissionQueues.UpdateDeliveryDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<DeliveryDocumentRetailModelDB>> SelectDeliveryDocumentsAsync(TPaginationRequestStandardModel<SelectDeliveryDocumentsRetailRequestModel> req, CancellationToken token = default)
