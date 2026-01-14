@@ -295,6 +295,11 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
     /// <inheritdoc/>
     protected override async void DeleteRow(int offerId, bool forceDelete = false)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
         if (Document.Id <= 0)
         {
             Document.Rows ??= [];
@@ -303,7 +308,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
         else
         {
             RowOfDeliveryRetailDocumentModelDB rowOfDocument = Document.Rows!.First(x => x.OfferId == offerId);
-            ResponseBaseModel res = await RetailRepo.DeleteRowOfDeliveryDocumentAsync(rowOfDocument.Id);
+            ResponseBaseModel res = await RetailRepo.DeleteRowOfDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = rowOfDocument.Id });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
         }
         await ElementsReload();
