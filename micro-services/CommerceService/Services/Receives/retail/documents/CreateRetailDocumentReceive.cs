@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// CreateRetailDocument
 /// </summary>
 public class CreateRetailDocumentReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<CreateDocumentRetailRequestModel?, TResponseModel<int>?>
+    : IResponseReceive<TAuthRequestStandardModel<CreateDocumentRetailRequestModel>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.CreateDocumentRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(CreateDocumentRetailRequestModel? req, CancellationToken token = default)
+    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<CreateDocumentRetailRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);

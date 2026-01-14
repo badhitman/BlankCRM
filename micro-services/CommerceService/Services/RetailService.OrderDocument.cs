@@ -16,96 +16,101 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreateRetailDocumentAsync(CreateDocumentRetailRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreateRetailDocumentAsync(TAuthRequestStandardModel<CreateDocumentRetailRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<int> res = new();
+        if(req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
 
-        if (req.WarehouseId <= 0)
+        if (req.Payload.WarehouseId <= 0)
         {
             res.AddError("Не указан склад");
             return res;
         }
 
-        if (string.IsNullOrWhiteSpace(req.AuthorIdentityUserId))
+        if (string.IsNullOrWhiteSpace(req.Payload.AuthorIdentityUserId))
         {
             res.AddError("Не указан автор/создатель документа");
             return res;
         }
 
-        if (string.IsNullOrWhiteSpace(req.BuyerIdentityUserId))
+        if (string.IsNullOrWhiteSpace(req.Payload.BuyerIdentityUserId))
         {
             res.AddError("Не указан покупатель");
             return res;
         }
-        req.ExternalDocumentId = string.IsNullOrWhiteSpace(req.ExternalDocumentId)
+        req.Payload.ExternalDocumentId = string.IsNullOrWhiteSpace(req.Payload.ExternalDocumentId)
             ? null
-            : Regex.Replace(req.ExternalDocumentId, @"\s+", "");
+            : Regex.Replace(req.Payload.ExternalDocumentId, @"\s+", "");
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.OrdersRetail.AnyAsync(x => x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
-            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Документ [ext #:{req.ExternalDocumentId}] уже существует" }] };
+        if (!string.IsNullOrWhiteSpace(req.Payload.ExternalDocumentId) && await context.OrdersRetail.AnyAsync(x => x.ExternalDocumentId == req.Payload.ExternalDocumentId, cancellationToken: token))
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Документ [ext #:{req.Payload.ExternalDocumentId}] уже существует" }] };
 
-        TResponseModel<UserInfoModel[]> getUsers = await identityRepo.GetUsersOfIdentityAsync([req.AuthorIdentityUserId, req.BuyerIdentityUserId], token);
+        TResponseModel<UserInfoModel[]> getUsers = await identityRepo.GetUsersOfIdentityAsync([req.Payload.AuthorIdentityUserId, req.Payload.BuyerIdentityUserId], token);
         if (!getUsers.Success())
         {
             res.AddRangeMessages(getUsers.Messages);
             return res;
         }
         List<RowOfRetailOrderDocumentModelDB> rowsDump = [];
-        if (req.Rows is not null && req.Rows.Count != 0)
+        if (req.Payload.Rows is not null && req.Payload.Rows.Count != 0)
         {
-            rowsDump = GlobalTools.CreateDeepCopy(req.Rows)!;
-            req.Rows.ForEach(r =>
+            rowsDump = GlobalTools.CreateDeepCopy(req.Payload.Rows)!;
+            req.Payload.Rows.ForEach(r =>
             {
-                r.Order = req;
+                r.Order = req.Payload;
                 r.Offer = null;
                 r.Nomenclature = null;
             });
         }
 
-        req.Version = Guid.NewGuid();
-        req.Name = req.Name.Trim();
-        req.Description = req.Description?.Trim();
-        req.CreatedAtUTC = DateTime.UtcNow;
-        req.DateDocument = req.DateDocument.SetKindUtc();
+        req.Payload.Version = Guid.NewGuid();
+        req.Payload.Name = req.Payload.Name.Trim();
+        req.Payload.Description = req.Payload.Description?.Trim();
+        req.Payload.CreatedAtUTC = DateTime.UtcNow;
+        req.Payload.DateDocument = req.Payload.DateDocument.SetKindUtc();
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
-        DocumentRetailModelDB docDb = DocumentRetailModelDB.Build(req);
+        DocumentRetailModelDB docDb = DocumentRetailModelDB.Build(req.Payload);
 
         await context.OrdersRetail.AddAsync(docDb, token);
         await context.SaveChangesAsync(token);
         res.AddSuccess($"Заказ успешно создан #{docDb.Id}");
         res.Response = docDb.Id;
 
-        if (req.InjectToPaymentId > 0)
+        if (req.Payload.InjectToPaymentId > 0)
         {
             await context.PaymentsOrdersLinks.AddAsync(new()
             {
-                OrderDocumentId = req.Id,
-                PaymentDocumentId = req.InjectToPaymentId,
-                AmountPayment = req.Rows is null || req.Rows.Count == 0
+                OrderDocumentId = req.Payload.Id,
+                PaymentDocumentId = req.Payload.InjectToPaymentId,
+                AmountPayment = req.Payload.Rows is null || req.Payload.Rows.Count == 0
                     ? 0
-                    : req.Rows.Sum(x => x.Amount)
+                    : req.Payload.Rows.Sum(x => x.Amount)
             }, token);
             await context.SaveChangesAsync(token);
             res.AddInfo("Создана связь заказа с платежом");
         }
 
-        if (req.InjectToConversionId > 0)
+        if (req.Payload.InjectToConversionId > 0)
         {
-            await context.ConversionsOrdersLinksRetail.AddAsync(new() { OrderDocumentId = req.Id, ConversionDocumentId = req.InjectToConversionId }, token);
+            await context.ConversionsOrdersLinksRetail.AddAsync(new() { OrderDocumentId = req.Payload.Id, ConversionDocumentId = req.Payload.InjectToConversionId }, token);
             await context.SaveChangesAsync(token);
             res.AddInfo("Создана связь заказа с переводом/конвертацией");
         }
 
-        if (req.InjectToDeliveryId > 0)
+        if (req.Payload.InjectToDeliveryId > 0)
         {
             await context.OrdersDeliveriesLinks.AddAsync(new()
             {
-                OrderDocumentId = req.Id,
-                DeliveryDocumentId = req.InjectToDeliveryId,
+                OrderDocumentId = req.Payload.Id,
+                DeliveryDocumentId = req.Payload.InjectToDeliveryId,
                 WeightShipping = rowsDump.Count == 0 ? 0 : rowsDump.Sum(x => x.WeightOffer)
             }, token);
             await context.SaveChangesAsync(token);

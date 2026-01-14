@@ -152,7 +152,7 @@ public interface IRetailService
 
     #region Order`s (document retail)
     /// <inheritdoc/>
-    public Task<TResponseModel<int>> CreateRetailDocumentAsync(CreateDocumentRetailRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<int>> CreateRetailDocumentAsync(TAuthRequestStandardModel<CreateDocumentRetailRequestModel> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TResponseModel<Guid>> UpdateRetailDocumentAsync(TAuthRequestStandardModel<DocumentRetailModelDB> req, CancellationToken token = default);
