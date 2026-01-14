@@ -115,6 +115,12 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
     int? initDeleteOrderFromDelivery;
     async Task DeleteDeliveryLink(int deliveryDocumentId)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         if (initDeleteOrderFromDelivery is null)
         {
             initDeleteOrderFromDelivery = deliveryDocumentId;
@@ -132,8 +138,12 @@ public partial class DeliveriesDocumentsManageComponent : BlazorBusyComponentUse
         await SetBusyAsync();
         ResponseBaseModel res = await RetailRepo.DeleteDeliveryOrderLinkDocumentAsync(new()
         {
-            DeliveryId = deliveryDocumentId,
-            OrderId = FilterOrderId.Value,
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                DeliveryId = deliveryDocumentId,
+                OrderId = FilterOrderId.Value,
+            }
         });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         await SetBusyAsync(false);
