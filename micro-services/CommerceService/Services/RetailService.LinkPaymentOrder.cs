@@ -14,30 +14,41 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> CreatePaymentOrderLinkDocumentAsync(PaymentOrderRetailLinkModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> CreatePaymentOrderLinkDocumentAsync(TAuthRequestStandardModel<PaymentOrderRetailLinkModelDB> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return new()
+            {
+                Messages = [new() {
+                     TypeMessage = MessagesTypesEnum.Error,
+                     Text = "req.Payload is null" }]
+            };
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
-        req.OrderDocument = null;
-        req.PaymentDocument = null;
-        req.Name = req.Name?.Trim();
+        req.Payload.OrderDocument = null;
+        req.Payload.PaymentDocument = null;
+        req.Payload.Name = req.Payload.Name?.Trim();
 
-        await context.PaymentsOrdersLinks.AddAsync(req, token);
+        await context.PaymentsOrdersLinks.AddAsync(req.Payload, token);
         await context.SaveChangesAsync(token);
 
-        return new() { Response = req.Id };
+        return new() { Response = req.Payload.Id };
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdatePaymentOrderLinkDocumentAsync(PaymentOrderRetailLinkModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdatePaymentOrderLinkDocumentAsync(TAuthRequestStandardModel<PaymentOrderRetailLinkModelDB> req, CancellationToken token = default)
     {
-        req.Name = req.Name?.Trim();
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
+        req.Payload.Name = req.Payload.Name?.Trim();
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         await context.PaymentsOrdersLinks
-            .Where(x => x.Id == req.Id || (req.OrderDocumentId == x.OrderDocumentId && req.PaymentDocumentId == x.PaymentDocumentId))
+            .Where(x => x.Id == req.Payload.Id || (req.Payload.OrderDocumentId == x.OrderDocumentId && req.Payload.PaymentDocumentId == x.PaymentDocumentId))
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.AmountPayment, req.AmountPayment), cancellationToken: token);
+                .SetProperty(p => p.Name, req.Payload.Name)
+                .SetProperty(p => p.AmountPayment, req.Payload.AmountPayment), cancellationToken: token);
         await context.SaveChangesAsync(token);
         return ResponseBaseModel.CreateSuccess("Ok");
     }

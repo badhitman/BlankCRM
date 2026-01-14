@@ -11,7 +11,7 @@ namespace BlazorLib;
 /// <summary>
 /// OrderLinkBaseComponent
 /// </summary>
-public class OrderLinkBaseComponent<T> : BlazorBusyComponentBaseModel
+public class OrderLinkBaseComponent<T> : BlazorBusyComponentUsersCachedModel
 {
     /// <inheritdoc/>
     [Inject]

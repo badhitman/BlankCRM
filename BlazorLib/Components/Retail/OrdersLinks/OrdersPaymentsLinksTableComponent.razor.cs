@@ -14,11 +14,6 @@ namespace BlazorLib.Components.Retail.OrdersLinks;
 public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<PaymentOrderRetailLinkModelDB>
 {
     /// <inheritdoc/>
-    [Inject]
-    protected IIdentityTransmission IdentityRepo { get; set; } = default!;
-
-
-    /// <inheritdoc/>
     [Parameter]
     public int PaymentId { get; set; }
 
@@ -30,6 +25,12 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
 
     async Task DeleteRow((int orderId, int otherDocId) rowLinkId)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         if (!CanDeleteRow(rowLinkId))
             return;
 
@@ -48,6 +49,12 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
 
     async void ItemHasBeenCommitted(object element)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         if (element is PaymentOrderRetailLinkModelDB other)
         {
             PaymentOrderRetailLinkModelDB req = new()
@@ -56,7 +63,7 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
                 Id = other.Id,
             };
             await SetBusyAsync();
-            ResponseBaseModel res = await RetailRepo.UpdatePaymentOrderLinkDocumentAsync(req);
+            ResponseBaseModel res = await RetailRepo.UpdatePaymentOrderLinkDocumentAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (!res.Success())
             {
@@ -79,34 +86,15 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
     }
 
     void IncludeExistPaymentOpenDialog() => _visibleIncludeExistPayment = true;
-    /// <summary>
-    /// UsersCache
-    /// </summary>
-    protected List<UserInfoModel> UsersCache = [];
 
-
-    /// <summary>
-    /// CacheUsersUpdate
-    /// </summary>
-    protected async Task CacheUsersUpdate(string[] usersIds)
-    {
-        usersIds = [.. usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct()];
-        if (usersIds.Length == 0)
-            return;
-
-        await SetBusyAsync();
-        TResponseModel<UserInfoModel[]> users = await IdentityRepo.GetUsersOfIdentityAsync(usersIds);
-        SnackBarRepo.ShowMessagesResponse(users.Messages);
-        if (users.Success() && users.Response is not null && users.Response.Length != 0)
-            lock (UsersCache)
-            {
-                UsersCache.AddRange(users.Response.Where(x => !UsersCache.Any(y => y.UserId == x.UserId)));
-            }
-
-        await SetBusyAsync(false);
-    }
     async void SelectOrderRowAction(TableRowClickEventArgs<DocumentRetailModelDB> tableRow)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         _visibleIncludeOrder = false;
 
         if (tableRow.Item is null)
@@ -126,11 +114,15 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
 
         TResponseModel<int> res = await RetailRepo.CreatePaymentOrderLinkDocumentAsync(new()
         {
-            PaymentDocumentId = PaymentId,
-            OrderDocumentId = tableRow.Item.Id,
-            AmountPayment = tableRow.Item.Rows is null || tableRow.Item.Rows.Count == 0
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                PaymentDocumentId = PaymentId,
+                OrderDocumentId = tableRow.Item.Id,
+                AmountPayment = tableRow.Item.Rows is null || tableRow.Item.Rows.Count == 0
                 ? 0
                 : tableRow.Item.Rows.Sum(x => x.Amount)
+            }
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
@@ -144,6 +136,12 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
 
     async void SelectPaymentRowAction(TableRowClickEventArgs<PaymentRetailDocumentModelDB> tableRow)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         _visibleIncludeExistPayment = false;
 
         if (tableRow.Item is null)
@@ -163,9 +161,13 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
 
         TResponseModel<int> res = await RetailRepo.CreatePaymentOrderLinkDocumentAsync(new()
         {
-            PaymentDocumentId = tableRow.Item.Id,
-            OrderDocumentId = OrderParent.Id,
-            AmountPayment = tableRow.Item.Amount,
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new()
+            {
+                PaymentDocumentId = tableRow.Item.Id,
+                OrderDocumentId = OrderParent.Id,
+                AmountPayment = tableRow.Item.Amount,
+            }
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);

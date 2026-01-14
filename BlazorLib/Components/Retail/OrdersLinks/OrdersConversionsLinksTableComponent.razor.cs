@@ -14,11 +14,6 @@ namespace BlazorLib.Components.Retail.OrdersLinks;
 public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseComponent<ConversionOrderRetailLinkModelDB>
 {
     /// <inheritdoc/>
-    [Inject]
-    protected IIdentityTransmission IdentityRepo { get; set; } = default!;
-
-
-    /// <inheritdoc/>
     [Parameter]
     public int ConversionId { get; set; }
 
@@ -27,35 +22,15 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
         _visibleIncludeExistConversion,
         _visibleCreateNewConversion;
 
-    /// <summary>
-    /// UsersCache
-    /// </summary>
-    protected List<UserInfoModel> UsersCache = [];
-
-
-    /// <summary>
-    /// CacheUsersUpdate
-    /// </summary>
-    protected async Task CacheUsersUpdate(string[] usersIds)
-    {
-        usersIds = [.. usersIds.Where(x => !string.IsNullOrWhiteSpace(x) && !UsersCache.Any(y => y.UserId == x)).Distinct()];
-        if (usersIds.Length == 0)
-            return;
-
-        await SetBusyAsync();
-        TResponseModel<UserInfoModel[]> users = await IdentityRepo.GetUsersOfIdentityAsync(usersIds);
-        SnackBarRepo.ShowMessagesResponse(users.Messages);
-        if (users.Success() && users.Response is not null && users.Response.Length != 0)
-            lock (UsersCache)
-            {
-                UsersCache.AddRange(users.Response.Where(x => !UsersCache.Any(y => y.UserId == x.UserId)));
-            }
-
-        await SetBusyAsync(false);
-    }
 
     async Task DeleteRow((int orderId, int otherDocId) rowLinkId)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         if (!CanDeleteRow(rowLinkId))
             return;
 
@@ -74,6 +49,12 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
 
     async void ItemHasBeenCommitted(object element)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         if (element is ConversionOrderRetailLinkModelDB other)
         {
             ConversionOrderRetailLinkModelDB req = new()
@@ -141,7 +122,6 @@ public partial class OrdersConversionsLinksTableComponent : OrderLinkBaseCompone
 
         await SetBusyAsync(false);
     }
-
 
     async void SelectConversionRowAction(TableRowClickEventArgs<WalletConversionRetailDocumentModelDB> tableRow)
     {
