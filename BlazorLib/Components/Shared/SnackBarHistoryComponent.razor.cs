@@ -19,6 +19,7 @@ public partial class SnackBarHistoryComponent
     [Inject]
     public ISnackbar SnackBarRepo { get; set; } = default!;
 
+
     string searchString1 = "";
 
     IEnumerable<MessageViewModel> Elements = [];
