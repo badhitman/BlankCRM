@@ -20,7 +20,7 @@ public partial class RetailService : IRetailService
         string msg;
         TResponseModel<KeyValuePair<int, Guid>?> res = new();
 
-        if(req.Payload is null)
+        if (req.Payload is null)
         {
             res.AddError("req.Payload is null");
             return res;
@@ -151,9 +151,13 @@ public partial class RetailService : IRetailService
             return res;
         }
 
-
         if (req.Payload.Quantity <= 0)
-            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Количество должно быть больше нуля" }] };
+            return new()
+            {
+                Messages = [new() {
+                TypeMessage = MessagesTypesEnum.Error,
+                Text = "Количество должно быть больше нуля" }]
+            };
 
         TResponseModel<bool?> res_WarehouseReserveForRetailOrder = await StorageTransmissionRepo
             .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
@@ -170,7 +174,9 @@ public partial class RetailService : IRetailService
         if (rowDb.Version != req.Payload.Version)
             return new()
             {
-                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова" }]
+                Messages = [new() {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = $"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова" }]
             };
         Guid _orderGuid;
         if (offOrdersStatuses.Contains(retailOrderDb.StatusDocument))
@@ -193,7 +199,9 @@ public partial class RetailService : IRetailService
             return new()
             {
                 Response = _orderGuid,
-                Messages = [new() { Text = "Ok", TypeMessage = MessagesTypesEnum.Success }]
+                Messages = [new() {
+                    Text = "Ok",
+                    TypeMessage = MessagesTypesEnum.Success }]
             };
         }
 
@@ -412,18 +420,30 @@ public partial class RetailService : IRetailService
         return new()
         {
             Response = _orderGuid,
-            Messages = [new() { TypeMessage = MessagesTypesEnum.Info, Text = "Ok" }]
+            Messages = [new() {
+                TypeMessage = MessagesTypesEnum.Info,
+                Text = "Ok" }]
         };
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> DeleteRowRetailDocumentAsync(DeleteRowRetailDocumentRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> DeleteRowRetailDocumentAsync(TAuthRequestStandardModel<DeleteRowRetailDocumentRequestModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "req.Payload is null",
+                }]
+            };
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         RowOfRetailOrderDocumentModelDB rowOfRetailDb = await context.RowsOrdersRetails
             .Include(x => x.Order)
-            .FirstAsync(x => x.Id == req.RowId, cancellationToken: token);
+            .FirstAsync(x => x.Id == req.Payload.RowId, cancellationToken: token);
 
         DocumentRetailModelDB retailOrderDb = rowOfRetailDb.Order!;
         loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
@@ -454,7 +474,7 @@ public partial class RetailService : IRetailService
             {
                 await transaction.RollbackAsync(token);
                 msg = $"Не удалось выполнить команду: ";
-                loggerRepo.LogError(ex, $"{msg} #{req.RowId}");
+                loggerRepo.LogError(ex, $"{msg} #{req.Payload.RowId}");
                 return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}{ex.Message}" }] };
             }
 
@@ -467,7 +487,7 @@ public partial class RetailService : IRetailService
             {
                 if (regOfferAv is null)
                 {
-                    if (req.ForceDelete)
+                    if (req.Payload.ForceDelete)
                     {
                         regOfferAv = new()
                         {
@@ -487,7 +507,7 @@ public partial class RetailService : IRetailService
                         return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = msg }] };
                     }
                 }
-                else if (regOfferAv.Quantity < rowOfRetailDb.Quantity && !req.ForceDelete)
+                else if (regOfferAv.Quantity < rowOfRetailDb.Quantity && !req.Payload.ForceDelete)
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"На складе #{retailOrderDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
@@ -529,7 +549,7 @@ public partial class RetailService : IRetailService
         }
 
         await context.RowsOrdersRetails
-            .Where(x => x.Id == req.RowId)
+            .Where(x => x.Id == req.Payload.RowId)
             .ExecuteDeleteAsync(cancellationToken: token);
 
         Guid _orderGuid = Guid.NewGuid();

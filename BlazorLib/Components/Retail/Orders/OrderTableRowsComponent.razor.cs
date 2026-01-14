@@ -43,6 +43,12 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     /// <inheritdoc/>
     protected override async void DeleteRow(int offerId, bool forceDelete = false)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         Document.Rows ??= [];
         if (Document.Id <= 0)
             Document.Rows.RemoveAll(x => x.OfferId == offerId);
@@ -65,7 +71,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
 
                 _problemDeleteRow = null;
                 await SetBusyAsync();
-                TResponseModel<Guid?> resDelRow = await RetailRepo.DeleteRowRetailDocumentAsync(_reqDel);
+                TResponseModel<Guid?> resDelRow = await RetailRepo.DeleteRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = _reqDel });
                 SnackBarRepo.ShowMessagesResponse(resDelRow.Messages);
 
                 if (resDelRow.Success() && resDelRow.Response is not null)
