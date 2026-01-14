@@ -33,11 +33,11 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
 
     #region Rows for retail order (document)
     /// <inheritdoc/>
-    public async Task<TResponseModel<KeyValuePair<int, Guid>?>> CreateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<KeyValuePair<int, Guid>?>> CreateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<KeyValuePair<int, Guid>?>>(TransmissionQueues.CreateRowDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<Guid?>> UpdateRowRetailDocumentAsync(RowOfRetailOrderDocumentModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<Guid?>>(TransmissionQueues.UpdateRowDocumentRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>

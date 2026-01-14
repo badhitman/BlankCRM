@@ -151,6 +151,12 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     /// <inheritdoc/>
     protected override async void RowEditCommitHandler(object element)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         Document.Rows ??= [];
 
         if (element is RowOfRetailOrderDocumentModelDB rowOrder)
@@ -165,7 +171,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
                 if (Document.Id > 0)
                 {
                     await SetBusyAsync();
-                    TResponseModel<Guid?>? resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(Document.Rows[exist_row]);
+                    TResponseModel<Guid?>? resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = Document.Rows[exist_row] });
                     SnackBarRepo.ShowMessagesResponse(resUpdateRow.Messages);
 
                     if (resUpdateRow.Success() && resUpdateRow.Response is not null)
@@ -182,6 +188,12 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
     /// <inheritdoc/>
     protected override async void AddingOfferAction(OfferActionModel off)
     {
+        if (CurrentUserSession is null)
+        {
+            SnackBarRepo.Error("CurrentUserSession is null");
+            return;
+        }
+
         Document.Rows ??= [];
         await SetBusyAsync();
         int exist_row = Document.Rows.FindIndex(x => x.OfferId == off.Id);
@@ -204,7 +216,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             else
             {
                 await SetBusyAsync();
-                TResponseModel<KeyValuePair<int, Guid>?> resAddingRow = await RetailRepo.CreateRowRetailDocumentAsync(newOrderElement);
+                TResponseModel<KeyValuePair<int, Guid>?> resAddingRow = await RetailRepo.CreateRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = newOrderElement });
                 SnackBarRepo.ShowMessagesResponse(resAddingRow.Messages);
 
                 if (resAddingRow.Success() && resAddingRow.Response is not null)
@@ -223,7 +235,7 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             if (Document.Id > 0)
             {
                 await SetBusyAsync();
-                TResponseModel<Guid?> resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(Document.Rows[exist_row]);
+                TResponseModel<Guid?> resUpdateRow = await RetailRepo.UpdateRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = Document.Rows[exist_row] });
                 SnackBarRepo.ShowMessagesResponse(resUpdateRow.Messages);
 
                 if (resUpdateRow.Success() && resUpdateRow.Response is not null)
