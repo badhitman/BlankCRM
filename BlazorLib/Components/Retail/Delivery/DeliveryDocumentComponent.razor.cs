@@ -196,7 +196,7 @@ public partial class DeliveryDocumentComponent : BlazorBusyComponentBaseAuthMode
         }
         else
         {
-            ResponseBaseModel res = await RetailRepo.UpdateDeliveryDocumentAsync(editDoc);
+            ResponseBaseModel res = await RetailRepo.UpdateDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = editDoc });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
             {

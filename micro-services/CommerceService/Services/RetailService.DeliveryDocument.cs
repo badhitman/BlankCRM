@@ -75,30 +75,31 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateDeliveryDocumentAsync(DeliveryDocumentRetailModelDB req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> UpdateDeliveryDocumentAsync(TAuthRequestStandardModel<DeliveryDocumentRetailModelDB> req, CancellationToken token = default)
     {
-        req.CreatedAtUTC = DateTime.UtcNow;
-        req.OrdersLinks = null;
-        req.Name = req.Name.Trim();
-        req.Description = req.Description?.Trim();
-        req.DeliveryCode = req.DeliveryCode?.Trim();
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
 
-        loggerRepo.LogInformation($"{nameof(req)}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+        req.Payload.CreatedAtUTC = DateTime.UtcNow;
+        req.Payload.OrdersLinks = null;
+        req.Payload.Name = req.Payload.Name.Trim();
+        req.Payload.Description = req.Payload.Description?.Trim();
+        req.Payload.DeliveryCode = req.Payload.DeliveryCode?.Trim();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         DeliveryDocumentRetailModelDB documentDb = await context.DeliveryDocumentsRetail
             .Include(x => x.Rows)
-            .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
+            .FirstAsync(x => x.Id == req.Payload.Id, cancellationToken: token);
 
-        if (documentDb.Version != req.Version)
+        if (documentDb.Version != req.Payload.Version)
             return ResponseBaseModel.CreateError($"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить");
 
         loggerRepo.LogInformation($"{nameof(documentDb)}: {JsonConvert.SerializeObject(documentDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         string msg;
-        if (!offDeliveriesStatuses.Contains(documentDb.DeliveryStatus) && documentDb.WarehouseId != req.WarehouseId)
+        if (!offDeliveriesStatuses.Contains(documentDb.DeliveryStatus) && documentDb.WarehouseId != req.Payload.WarehouseId)
         {
             List<LockTransactionModelDB> offersLocked = [];
             foreach (RowOfDeliveryRetailDocumentModelDB rowDoc in documentDb.Rows!)
@@ -106,7 +107,7 @@ public partial class RetailService : IRetailService
                 offersLocked.AddRange(new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
-                    LockerAreaId = req.WarehouseId,
+                    LockerAreaId = req.Payload.WarehouseId,
                     LockerId = rowDoc.OfferId,
                     Marker = nameof(UpdateDeliveryDocumentAsync),
                 },
@@ -129,7 +130,7 @@ public partial class RetailService : IRetailService
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"Не удалось выполнить команду блокировки регистров остатков {nameof(UpdateRetailDocumentAsync)}: ";
-                    loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                    loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                     return ResponseBaseModel.CreateError($"{msg}{ex.Message}");
                 }
             }
@@ -145,7 +146,7 @@ public partial class RetailService : IRetailService
             foreach (RowOfDeliveryRetailDocumentModelDB rowOfDocument in documentDb.Rows)
             {
                 OfferAvailabilityModelDB?
-                    registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId),
+                    registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.Payload.WarehouseId),
                     registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == documentDb.WarehouseId);
 
                 if (registerOfferWriteOff is not null)
@@ -154,7 +155,7 @@ public partial class RetailService : IRetailService
                     {
                         await transaction.RollbackAsync(token);
                         msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
-                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                         res.AddError($"{msg}. Баланс не может быть отрицательным");
                         break;
                     }
@@ -170,7 +171,7 @@ public partial class RetailService : IRetailService
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
-                    loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                    loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                     res.AddError($"{msg}. Баланс не может быть отрицательным");
                     break;
                 }
@@ -188,7 +189,7 @@ public partial class RetailService : IRetailService
                 {
                     registerOffer = new OfferAvailabilityModelDB()
                     {
-                        WarehouseId = req.WarehouseId,
+                        WarehouseId = req.Payload.WarehouseId,
                         NomenclatureId = rowOfDocument.NomenclatureId,
                         OfferId = rowOfDocument.OfferId,
                         Quantity = rowOfDocument.Quantity,
@@ -203,7 +204,7 @@ public partial class RetailService : IRetailService
             {
                 await transaction.RollbackAsync(token);
                 msg = $"Не удалось обновить складской документ: ";
-                loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError(msg);
                 return res;
             }
@@ -216,23 +217,23 @@ public partial class RetailService : IRetailService
         }
 
         await context.DeliveryDocumentsRetail
-            .Where(x => x.Id == req.Id)
+            .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Name, req.Name)
-                .SetProperty(p => p.Description, req.Description)
-                .SetProperty(p => p.WeightShipping, req.WeightShipping)
-                .SetProperty(p => p.ShippingCost, req.ShippingCost)
-                .SetProperty(p => p.PackageSize, req.PackageSize)
-                .SetProperty(p => p.Notes, req.Notes)
-                .SetProperty(p => p.RecipientIdentityUserId, req.RecipientIdentityUserId)
-                .SetProperty(p => p.KladrTitle, req.KladrTitle)
-                .SetProperty(p => p.KladrCode, req.KladrCode)
-                .SetProperty(p => p.DeliveryType, req.DeliveryType)
-                .SetProperty(p => p.DeliveryPaymentUponReceipt, req.DeliveryPaymentUponReceipt)
-                .SetProperty(p => p.DeliveryCode, req.DeliveryCode)
+                .SetProperty(p => p.Name, req.Payload.Name)
+                .SetProperty(p => p.Description, req.Payload.Description)
+                .SetProperty(p => p.WeightShipping, req.Payload.WeightShipping)
+                .SetProperty(p => p.ShippingCost, req.Payload.ShippingCost)
+                .SetProperty(p => p.PackageSize, req.Payload.PackageSize)
+                .SetProperty(p => p.Notes, req.Payload.Notes)
+                .SetProperty(p => p.RecipientIdentityUserId, req.Payload.RecipientIdentityUserId)
+                .SetProperty(p => p.KladrTitle, req.Payload.KladrTitle)
+                .SetProperty(p => p.KladrCode, req.Payload.KladrCode)
+                .SetProperty(p => p.DeliveryType, req.Payload.DeliveryType)
+                .SetProperty(p => p.DeliveryPaymentUponReceipt, req.Payload.DeliveryPaymentUponReceipt)
+                .SetProperty(p => p.DeliveryCode, req.Payload.DeliveryCode)
                 .SetProperty(p => p.Version, Guid.NewGuid())
-                .SetProperty(p => p.AddressUserComment, req.AddressUserComment)
-                .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.Id).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.DeliveryStatus).FirstOrDefault())
+                .SetProperty(p => p.AddressUserComment, req.Payload.AddressUserComment)
+                .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.Payload.Id).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.DeliveryStatus).FirstOrDefault())
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
