@@ -118,28 +118,30 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateRetailDocumentAsync(DocumentRetailModelDB req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid>> UpdateRetailDocumentAsync(TAuthRequestStandardModel<DocumentRetailModelDB> req, CancellationToken token = default)
     {
-        if (req.WarehouseId <= 0)
-            return ResponseBaseModel.CreateError("Не указан склад");
-        loggerRepo.LogInformation($"{req}: {req}");
+        if (req.Payload is null)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
+
+        if (req.Payload.WarehouseId <= 0)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Не указан склад" }] };
+
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         string msg;
-        req.ExternalDocumentId = req.ExternalDocumentId?.Trim();
-        if (!string.IsNullOrWhiteSpace(req.ExternalDocumentId) && await context.OrdersRetail.AnyAsync(x => x.Id != req.Id && x.ExternalDocumentId == req.ExternalDocumentId, cancellationToken: token))
-            return ResponseBaseModel.CreateError($"Документ [ext #:{req.ExternalDocumentId}] уже существует");
+        req.Payload.ExternalDocumentId = req.Payload.ExternalDocumentId?.Trim();
+        if (!string.IsNullOrWhiteSpace(req.Payload.ExternalDocumentId) && await context.OrdersRetail.AnyAsync(x => x.Id != req.Payload.Id && x.ExternalDocumentId == req.Payload.ExternalDocumentId, cancellationToken: token))
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Документ [ext #:{req.Payload.ExternalDocumentId}] уже существует" }] };
 
         DocumentRetailModelDB retailOrderDb = await context.OrdersRetail
             .Include(x => x.Rows)
-            .FirstAsync(x => x.Id == req.Id, cancellationToken: token);
-        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+            .FirstAsync(x => x.Id == req.Payload.Id, cancellationToken: token);
 
-        if (retailOrderDb.Version != req.Version)
-            return ResponseBaseModel.CreateError($"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить");
+        if (retailOrderDb.Version != req.Payload.Version)
+            return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"Документ уже был кем-то изменён. Обновите документ и попробуйте снова его изменить" }] };
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
-        if (!offOrdersStatuses.Contains(retailOrderDb.StatusDocument) && retailOrderDb.WarehouseId != req.WarehouseId)
+        if (!offOrdersStatuses.Contains(retailOrderDb.StatusDocument) && retailOrderDb.WarehouseId != req.Payload.WarehouseId)
         {
             List<LockTransactionModelDB> offersLocked = [];
             foreach (RowOfRetailOrderDocumentModelDB rowDoc in retailOrderDb.Rows!)
@@ -147,7 +149,7 @@ public partial class RetailService : IRetailService
                 offersLocked.AddRange(new LockTransactionModelDB()
                 {
                     LockerName = nameof(OfferAvailabilityModelDB),
-                    LockerAreaId = req.WarehouseId,
+                    LockerAreaId = req.Payload.WarehouseId,
                     LockerId = rowDoc.OfferId,
                     Marker = nameof(UpdateRetailDocumentAsync),
                 },
@@ -170,12 +172,12 @@ public partial class RetailService : IRetailService
                 {
                     await transaction.RollbackAsync(token);
                     msg = $"Не удалось выполнить команду блокировки регистров остатков {nameof(UpdateRetailDocumentAsync)}: ";
-                    loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-                    return ResponseBaseModel.CreateError($"{msg}{ex.Message}");
+                    loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                    return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = $"{msg}{ex.Message}" }] };
                 }
             }
 
-            ResponseBaseModel res = new();
+            TResponseModel<Guid> res = new();
             int[] _offersIds = [.. retailOrderDb.Rows.Select(x => x.OfferId).Distinct()];
             List<OfferAvailabilityModelDB> registersOffersDb = await context.OffersAvailability
                 .Where(x => _offersIds.Any(y => y == x.OfferId))
@@ -189,7 +191,7 @@ public partial class RetailService : IRetailService
             foreach (RowOfRetailOrderDocumentModelDB rowOfDocument in retailOrderDb.Rows)
             {
                 OfferAvailabilityModelDB?
-                    registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.WarehouseId),
+                    registerOffer = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == req.Payload.WarehouseId),
                     registerOfferWriteOff = registersOffersDb.FirstOrDefault(x => x.OfferId == rowOfDocument.OfferId && x.WarehouseId == retailOrderDb.WarehouseId);
 
                 if (res_WarehouseReserveForRetailOrder.Response == true)
@@ -219,7 +221,7 @@ public partial class RetailService : IRetailService
                         if (registerOfferWriteOff.Quantity < rowOfDocument.Quantity)
                         {
                             msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток {registerOfferWriteOff.Quantity})";
-                            loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                            loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                             res.AddError($"{msg}. Баланс не может быть отрицательным");
                             break;
                         }
@@ -234,7 +236,7 @@ public partial class RetailService : IRetailService
                     else if (retailOrderDb.WarehouseId > 0)
                     {
                         msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
-                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                         res.AddError($"{msg}. Баланс не может быть отрицательным");
                         break;
                     }
@@ -245,14 +247,14 @@ public partial class RetailService : IRetailService
                     if (registerOffer is null)
                     {
                         msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток отсутствует)";
-                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                         res.AddError($"{msg}. Баланс не может быть отрицательным");
                         return res;
                     }
                     else if (registerOffer.Quantity < rowOfDocument.Quantity)
                     {
                         msg = $"Количество [offer: #{rowOfDocument.OfferId} '{rowOfDocument.Offer?.GetName()}'] не может быть списано (остаток {registerOffer.Quantity})";
-                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                        loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                         res.AddError($"{msg}. Баланс не может быть отрицательным");
                         return res;
                     }
@@ -277,7 +279,7 @@ public partial class RetailService : IRetailService
                     {
                         registerOffer = new OfferAvailabilityModelDB()
                         {
-                            WarehouseId = req.WarehouseId,
+                            WarehouseId = req.Payload.WarehouseId,
                             NomenclatureId = rowOfDocument.NomenclatureId,
                             OfferId = rowOfDocument.OfferId,
                             Quantity = rowOfDocument.Quantity,
@@ -291,7 +293,7 @@ public partial class RetailService : IRetailService
             {
                 await transaction.RollbackAsync(token);
                 msg = $"Не удалось обновить складской документ: ";
-                loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+                loggerRepo.LogWarning($"{msg}{JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError(msg);
                 return res;
             }
@@ -303,22 +305,23 @@ public partial class RetailService : IRetailService
             }
         }
 
+        Guid _ver = Guid.NewGuid();
         await context.OrdersRetail
-              .Where(x => x.Id == req.Id)
+              .Where(x => x.Id == req.Payload.Id)
               .ExecuteUpdateAsync(set => set
-                  .SetProperty(p => p.Name, req.Name.Trim())
-                  .SetProperty(p => p.NumWeekOfYear, req.NumWeekOfYear)
-                  .SetProperty(p => p.DateDocument, req.DateDocument.SetKindUtc())
-                  .SetProperty(p => p.BuyerIdentityUserId, req.BuyerIdentityUserId)
-                  .SetProperty(p => p.Version, Guid.NewGuid())
-                  .SetProperty(p => p.Description, req.Description)
-                  .SetProperty(p => p.WarehouseId, req.WarehouseId)
-                  .SetProperty(p => p.ExternalDocumentId, req.ExternalDocumentId)
+                  .SetProperty(p => p.Name, req.Payload.Name.Trim())
+                  .SetProperty(p => p.NumWeekOfYear, req.Payload.NumWeekOfYear)
+                  .SetProperty(p => p.DateDocument, req.Payload.DateDocument.SetKindUtc())
+                  .SetProperty(p => p.BuyerIdentityUserId, req.Payload.BuyerIdentityUserId)
+                  .SetProperty(p => p.Version, _ver)
+                  .SetProperty(p => p.Description, req.Payload.Description)
+                  .SetProperty(p => p.WarehouseId, req.Payload.WarehouseId)
+                  .SetProperty(p => p.ExternalDocumentId, req.Payload.ExternalDocumentId)
                   .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
 
-        return ResponseBaseModel.CreateSuccess("Документ/заказ обновлён");
+        return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Документ/заказ обновлён" }] };
     }
 
     /// <inheritdoc/>

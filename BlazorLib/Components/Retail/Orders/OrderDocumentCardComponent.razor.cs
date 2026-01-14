@@ -125,6 +125,8 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
     {
         if (editDocument is null)
             throw new ArgumentNullException(nameof(editDocument));
+        if (CurrentUserSession is null)
+            throw new ArgumentNullException(nameof(CurrentUserSession));
 
         await SetBusyAsync();
         if (OrderId < 1)
@@ -146,7 +148,7 @@ public partial class OrderDocumentCardComponent : BlazorBusyComponentBaseAuthMod
         }
         else
         {
-            ResponseBaseModel res = await RetailRepo.UpdateRetailDocumentAsync(editDocument);
+            ResponseBaseModel res = await RetailRepo.UpdateRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = editDocument });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Success())
                 NavRepo.NavigateTo($"/retail/order-document/{OrderId}", true);
