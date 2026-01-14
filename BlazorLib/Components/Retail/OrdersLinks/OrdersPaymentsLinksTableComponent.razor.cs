@@ -41,7 +41,11 @@ public partial class OrdersPaymentsLinksTableComponent : OrderLinkBaseComponent<
         };
         await SetBusyAsync();
 
-        ResponseBaseModel res = await RetailRepo.DeletePaymentOrderLinkDocumentAsync(req);
+        ResponseBaseModel res = await RetailRepo.DeletePaymentOrderLinkDocumentAsync(new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = req
+        });
         SnackBarRepo.ShowMessagesResponse(res.Messages);
 
         await DeleteRowFinalize();

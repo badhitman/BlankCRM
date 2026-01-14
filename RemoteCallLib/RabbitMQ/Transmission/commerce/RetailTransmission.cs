@@ -184,13 +184,13 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<PaymentOrderRetailLinkModelDB>> SelectPaymentsOrdersDocumentsLinksAsync(TPaginationRequestStandardModel<SelectPaymentsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<PaymentOrderRetailLinkModelDB>>(TransmissionQueues.SelectPaymentsOrdersDocumentsLinksRetailReceive, req, token: token) ?? new();
-    
+
     /// <inheritdoc/>
     public async Task<TResponseModel<PaymentOrderRetailLinkModelDB[]>> PaymentsOrdersDocumentsLinksGetAsync(int[] req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<TResponseModel<PaymentOrderRetailLinkModelDB[]>>(TransmissionQueues.PaymentsOrdersDocumentsLinksGetReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(OrderPaymentModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(TAuthRequestStandardModel<OrderPaymentModel> req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.DeletePaymentOrderLinkDocumentReceive, req, token: token) ?? new();
     #endregion
 
@@ -264,7 +264,7 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
     /// <inheritdoc/>
     public async Task<TPaginationResponseStandardModel<ConversionOrderRetailLinkModelDB>> SelectConversionsOrdersDocumentsLinksRetailAsync(TPaginationRequestStandardModel<SelectConversionsOrdersLinksRetailDocumentsRequestModel> req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<ConversionOrderRetailLinkModelDB>>(TransmissionQueues.SelectConversionsOrdersDocumentsLinksRetailReceive, req, token: token) ?? new();
-    
+
     /// <inheritdoc/>
     public async Task<TResponseModel<ConversionOrderRetailLinkModelDB[]>> ConversionsOrdersDocumentsLinksReadRetailAsync(int[] req, CancellationToken token = default)
        => await rabbitClient.MqRemoteCallAsync<TResponseModel<ConversionOrderRetailLinkModelDB[]>>(TransmissionQueues.ConversionsOrdersDocumentsLinksRetailReadReceive, req, token: token) ?? new();

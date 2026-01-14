@@ -88,7 +88,7 @@ public interface IRetailService
     public Task<TResponseModel<PaymentOrderRetailLinkModelDB[]>> PaymentsOrdersDocumentsLinksGetAsync(int[] req, CancellationToken token = default);
 
     /// <inheritdoc/>
-    public Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(OrderPaymentModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> DeletePaymentOrderLinkDocumentAsync(TAuthRequestStandardModel<OrderPaymentModel> req, CancellationToken token = default);
     #endregion
 
     #region Payment Document
