@@ -329,11 +329,11 @@ public partial class RetailService : IRetailService
             await context.RowsDeliveryDocumentsRetail
                 .Where(x => x.Id == rowId)
                 .ExecuteDeleteAsync(cancellationToken: token);
-
+            res.Response.Document!.Version = Guid.NewGuid();
             await context.DeliveryDocumentsRetail
              .Where(x => x.Id == res.Response.DocumentId)
              .ExecuteUpdateAsync(set => set
-                 .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+                 .SetProperty(p => p.Version, res.Response.Document.Version), cancellationToken: token);
 
             await transaction.CommitAsync(token);
             res.AddSuccess("Элемент удалён");

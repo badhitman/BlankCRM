@@ -125,7 +125,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DeliveryDocumentRetailModelDB>> UpdateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -138,15 +138,16 @@ public partial class RetailService : IRetailService
             };
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        TResponseModel<DeliveryDocumentRetailModelDB> res = new()
-        {
-            Response = await context.DeliveryDocumentsRetail
+        DeliveryDocumentRetailModelDB docDb = await context.DeliveryDocumentsRetail
                                     .Include(x => x.Rows)
-                                    .FirstAsync(x => x.Id == req.Payload.DeliveryDocumentId, cancellationToken: token)
+                                    .FirstAsync(x => x.Id == req.Payload.DeliveryDocumentId, cancellationToken: token);
+
+        TResponseModel<Guid?> res = new()
+        {
+            Response = Guid.NewGuid()
         };
 
-        DeliveryStatusesEnum? _oldStatus = res.Response.DeliveryStatus;
+        DeliveryStatusesEnum? _oldStatus = docDb.DeliveryStatus;
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         req.Payload.Name = req.Payload.Name.Trim();
         await context.DeliveriesStatusesDocumentsRetail
@@ -159,10 +160,10 @@ public partial class RetailService : IRetailService
         await context.DeliveryDocumentsRetail
             .Where(x => x.Id == req.Payload.DeliveryDocumentId)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.Version, res.Response)
                 .SetProperty(p => p.DeliveryStatus, context.DeliveriesStatusesDocumentsRetail.Where(y => y.DeliveryDocumentId == req.Payload.DeliveryDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.DeliveryStatus).FirstOrDefault()), cancellationToken: token);
 
-        if (res.Response.Rows is null || res.Response.Rows.Count == 0)
+        if (docDb.Rows is null || docDb.Rows.Count == 0)
         {
             await transaction.CommitAsync(token);
             return new()
@@ -195,12 +196,12 @@ public partial class RetailService : IRetailService
             };
         }
 
-        int[] _offersIds = [.. res.Response.Rows.Select(x => x.OfferId)];
+        int[] _offersIds = [.. docDb.Rows.Select(x => x.OfferId)];
         List<LockTransactionModelDB> lockers = [.._offersIds.Select(x=> new LockTransactionModelDB()
         {
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
-            LockerAreaId = res.Response.WarehouseId,
+            LockerAreaId = docDb.WarehouseId,
             Marker = nameof(UpdateDeliveryStatusDocumentAsync)
         })];
 
@@ -223,7 +224,7 @@ public partial class RetailService : IRetailService
            .Where(x => _offersIds.Contains(x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        ResponseBaseModel sRes = await DoIt(context, transaction, res.Response.Rows, !offDeliveriesStatuses.Contains(_newStatus), offerAvailabilityDB, res.Response, token);
+        ResponseBaseModel sRes = await DoIt(context, transaction, docDb.Rows, !offDeliveriesStatuses.Contains(_newStatus), offerAvailabilityDB, docDb, token);
         if (!sRes.Success())
         {
             await transaction.RollbackAsync(token);

@@ -11,17 +11,17 @@ namespace Transmission.Receives.commerce;
 /// UpdateDeliveryStatusDocument
 /// </summary>
 public class UpdateDeliveryStatusDocumentReceive(IRetailService commRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB>?, TResponseModel<DeliveryDocumentRetailModelDB>?>
+    : IResponseReceive<TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB>?, TResponseModel<Guid?>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.UpdateDeliveryStatusDocumentRetailReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DeliveryDocumentRetailModelDB>?> ResponseHandleActionAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB>? req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>?> ResponseHandleActionAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        TResponseModel<DeliveryDocumentRetailModelDB> res = await commRepo.UpdateDeliveryStatusDocumentAsync(req, token);
+        TResponseModel<Guid?> res = await commRepo.UpdateDeliveryStatusDocumentAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

@@ -32,7 +32,7 @@ public partial class App
 
 
     static bool _isLoaded = false;
-    static bool _includeTelegramBotWeAppScript = false;
+    static bool _includeTelegramBotWebAppScript = false;
     Uri? _uri;
 
     bool FilterLocalPathsForInject(string[]? localPathsForInject)
@@ -65,7 +65,7 @@ public partial class App
         {
             List<Task> _tasks = [Task.Run(async () => {
                 TResponseModel<bool> tgWebAppInclude = await StoreRepo.ReadParameterAsync<bool>(GlobalStaticCloudStorageMetadata.ParameterIncludeTelegramBotWebApp);
-                _includeTelegramBotWeAppScript = tgWebAppInclude.Success() && tgWebAppInclude.Response == true;
+                _includeTelegramBotWebAppScript = tgWebAppInclude.Success() && tgWebAppInclude.Response == true;
             })];
             _isLoaded = true;
             if (ServiceProviderExtensions.SetRemoteConf?.Success() != true)
