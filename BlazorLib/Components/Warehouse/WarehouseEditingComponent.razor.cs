@@ -80,7 +80,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
                 return;
             }
 
-            TResponseModel<int> res = await CommRepo.RowForWarehouseDocumentUpdateAsync(new() { Payload = _el, SenderActionUserId = CurrentUserSession.UserId });
+            TResponseModel<int> res = await CommRepo.RowForWarehouseDocumentUpdateOrCreateAsync(new() { Payload = _el, SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
         }
         await ReadDocument();
@@ -182,7 +182,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
             };
 
             await SetBusyAsync();
-            res = await CommRepo.RowForWarehouseDocumentUpdateAsync(new() { Payload = _newRow, SenderActionUserId = CurrentUserSession.UserId });
+            res = await CommRepo.RowForWarehouseDocumentUpdateOrCreateAsync(new() { Payload = _newRow, SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             await SetBusyAsync(false);
             if (!res.Success())
@@ -196,7 +196,7 @@ public partial class WarehouseEditingComponent : OffersTableBaseComponent
         {
             CurrentDocument.Rows[exist_row].Quantity = +off.Quantity;
             await SetBusyAsync();
-            res = await CommRepo.RowForWarehouseDocumentUpdateAsync(new() { Payload = CurrentDocument.Rows[exist_row], SenderActionUserId = CurrentUserSession.UserId });
+            res = await CommRepo.RowForWarehouseDocumentUpdateOrCreateAsync(new() { Payload = CurrentDocument.Rows[exist_row], SenderActionUserId = CurrentUserSession.UserId });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             await SetBusyAsync(false);
         }

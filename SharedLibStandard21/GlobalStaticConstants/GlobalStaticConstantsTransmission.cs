@@ -714,7 +714,7 @@ public static partial class GlobalStaticConstantsTransmission
         public readonly static string RowForOrderUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.ROW_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 
         /// <inheritdoc/>
-        public readonly static string RowForWarehouseDocumentUpdateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.WAREHOUSE_CONTROLLER_NAME, Routes.ROW_CONTROLLER_NAME, Routes.UPDATE_ACTION_NAME);
+        public readonly static string RowForWarehouseDocumentUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.WAREHOUSE_CONTROLLER_NAME, Routes.ROW_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");
 
         /// <inheritdoc/>
         public readonly static string PaymentDocumentUpdateOrCreateCommerceReceive = Path.Combine(TransmissionQueueNamePrefix, Routes.COMMERCE_CONTROLLER_NAME, Routes.ORDER_CONTROLLER_NAME, Routes.PAYMENT_CONTROLLER_NAME, $"{Routes.UPDATE_ACTION_NAME}-or-{Routes.CREATE_ACTION_NAME}");

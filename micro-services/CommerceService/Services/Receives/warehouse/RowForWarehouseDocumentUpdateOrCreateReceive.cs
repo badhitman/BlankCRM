@@ -8,20 +8,20 @@ using SharedLib;
 namespace Transmission.Receives.commerce;
 
 /// <summary>
-/// RowForWarehouseDocumentUpdate
+/// RowForWarehouseDocumentUpdateOrCreate
 /// </summary>
-public class RowForWarehouseDocumentUpdateReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
+public class RowForWarehouseDocumentUpdateOrCreateReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
     : IResponseReceive<TAuthRequestStandardModel<RowOfWarehouseDocumentModelDB>?, TResponseModel<int>?>
 {
     /// <inheritdoc/>
-    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RowForWarehouseDocumentUpdateCommerceReceive;
+    public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.RowForWarehouseDocumentUpdateOrCreateCommerceReceive;
 
     /// <inheritdoc/>
     public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<RowOfWarehouseDocumentModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        TResponseModel<int> res = await commRepo.RowForWarehouseDocumentUpdateAsync(req, token);
+        TResponseModel<int> res = await commRepo.RowForWarehouseDocumentUpdateOrCreateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

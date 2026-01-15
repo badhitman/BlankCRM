@@ -16,7 +16,7 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> RowForWarehouseDocumentUpdateAsync(TAuthRequestStandardModel<RowOfWarehouseDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<int>> RowForWarehouseDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfWarehouseDocumentModelDB> req, CancellationToken token = default)
     {
         string msg;
         TResponseModel<int> res = new();
@@ -88,7 +88,7 @@ public partial class CommerceImplementService : ICommerceService
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = req.Payload.OfferId,
             LockerAreaId = warehouseDocDB.WarehouseId,
-            Marker = nameof(RowForWarehouseDocumentUpdateAsync),
+            Marker = nameof(RowForWarehouseDocumentUpdateOrCreateAsync),
         }];
 
         if (warehouseDocDB.WritingOffWarehouseId > 0)
@@ -98,7 +98,7 @@ public partial class CommerceImplementService : ICommerceService
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = req.Payload.OfferId,
                 LockerAreaId = warehouseDocDB.WritingOffWarehouseId,
-                Marker = nameof(RowForWarehouseDocumentUpdateAsync),
+                Marker = nameof(RowForWarehouseDocumentUpdateOrCreateAsync),
             });
         }
 
@@ -109,7 +109,7 @@ public partial class CommerceImplementService : ICommerceService
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = rowDb.OfferId,
                 LockerAreaId = warehouseDocDB.WarehouseId,
-                Marker = nameof(RowForWarehouseDocumentUpdateAsync),
+                Marker = nameof(RowForWarehouseDocumentUpdateOrCreateAsync),
             });
 
             if (warehouseDocDB.WritingOffWarehouseId > 0)
@@ -118,7 +118,7 @@ public partial class CommerceImplementService : ICommerceService
                     LockerName = nameof(OfferAvailabilityModelDB),
                     LockerId = rowDb.OfferId,
                     LockerAreaId = warehouseDocDB.WritingOffWarehouseId,
-                    Marker = nameof(RowForWarehouseDocumentUpdateAsync),
+                    Marker = nameof(RowForWarehouseDocumentUpdateOrCreateAsync),
                 });
         }
 
