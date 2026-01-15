@@ -11,13 +11,13 @@ namespace Transmission.Receives.commerce;
 /// StatusesOrdersAttendancesChangeByHelpDeskDocumentId
 /// </summary>
 public class StatusesOrdersAttendancesChangeByHelpDeskDocumentIdReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<StatusChangeRequestModel>?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<StatusChangeRequestModel>?, TResponseModel<List<RecordsAttendanceModelDB>>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.StatusesOrdersAttendancesChangeByHelpDeskDocumentIdReceive;
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<StatusChangeRequestModel>? req, CancellationToken token = default)
+    public async Task<TResponseModel<List<RecordsAttendanceModelDB>>?> ResponseHandleActionAsync(TAuthRequestStandardModel<StatusChangeRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req?.Payload);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
