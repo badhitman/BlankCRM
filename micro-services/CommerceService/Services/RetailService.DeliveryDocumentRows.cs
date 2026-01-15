@@ -307,17 +307,17 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<RowOfDeliveryRetailDocumentModelDB>> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         int rowId = req.Payload;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        RowOfDeliveryRetailDocumentModelDB rowDb = await context.RowsDeliveryDocumentsRetail
+        TResponseModel<RowOfDeliveryRetailDocumentModelDB> res = new()
+        {
+            Response = await context.RowsDeliveryDocumentsRetail
            .Include(x => x.Document)
-           .FirstAsync(x => x.Id == rowId, cancellationToken: token);
-
-        DeliveryDocumentRetailModelDB deliveryDocumentRetailDb = rowDb.Document!;
-        //loggerRepo.LogInformation($"{nameof(deliveryDocumentRetailDb)}: {JsonConvert.SerializeObject(deliveryDocumentRetailDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+           .FirstAsync(x => x.Id == rowId, cancellationToken: token)
+        };
+        DeliveryDocumentRetailModelDB deliveryDocumentRetailDb = res.Response.Document!;
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         if (offDeliveriesStatuses.Contains(deliveryDocumentRetailDb.DeliveryStatus))
@@ -327,18 +327,19 @@ public partial class RetailService : IRetailService
                 .ExecuteDeleteAsync(cancellationToken: token);
 
             await context.DeliveryDocumentsRetail
-             .Where(x => x.Id == rowDb.DocumentId)
+             .Where(x => x.Id == res.Response.DocumentId)
              .ExecuteUpdateAsync(set => set
                  .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
             await transaction.CommitAsync(token);
-            return ResponseBaseModel.CreateSuccess("Элемент удалён");
+            res.AddSuccess("Элемент удалён");
+            return res;
         }
 
         List<LockTransactionModelDB> lockers = [new()
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
-                LockerId = rowDb.OfferId,
+                LockerId = res.Response.OfferId,
                 LockerAreaId = deliveryDocumentRetailDb.WarehouseId,
                 Marker = nameof(DeleteRowOfDeliveryDocumentAsync),
             }];
@@ -352,24 +353,26 @@ public partial class RetailService : IRetailService
         catch (Exception ex)
         {
             await transaction.RollbackAsync(token);
-            msg = $"Не удалось выполнить команду: ";
+            msg = $"Не удалось выполнить {nameof(DeleteRowOfDeliveryDocumentAsync)}: ";
             loggerRepo.LogError(ex, $"{msg} #{rowId}");
-            return ResponseBaseModel.CreateError($"{msg}{ex.Message}"); ;
+            res.Messages.InjectException(ex);
+            res.AddError(msg);
+            return res;
         }
 
         OfferAvailabilityModelDB? regOfferAv = await context
             .OffersAvailability
-            .Where(x => x.OfferId == rowDb.OfferId)
-            .FirstOrDefaultAsync(x => x.OfferId == rowDb.OfferId && x.WarehouseId == deliveryDocumentRetailDb.WarehouseId, cancellationToken: token);
+            .Where(x => x.OfferId == res.Response.OfferId)
+            .FirstOrDefaultAsync(x => x.OfferId == res.Response.OfferId && x.WarehouseId == deliveryDocumentRetailDb.WarehouseId, cancellationToken: token);
 
         if (regOfferAv is null)
         {
             regOfferAv = new()
             {
                 WarehouseId = deliveryDocumentRetailDb.WarehouseId,
-                Quantity = rowDb.Quantity,
-                OfferId = rowDb.OfferId,
-                NomenclatureId = rowDb.NomenclatureId,
+                Quantity = res.Response.Quantity,
+                OfferId = res.Response.OfferId,
+                NomenclatureId = res.Response.NomenclatureId,
             };
             await context.OffersAvailability.AddAsync(regOfferAv, token);
         }
@@ -378,25 +381,27 @@ public partial class RetailService : IRetailService
             await context.OffersAvailability
                 .Where(x => x.Id == regOfferAv.Id)
                 .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.Quantity, p => p.Quantity + rowDb.Quantity), cancellationToken: token);
+                    .SetProperty(p => p.Quantity, p => p.Quantity + res.Response.Quantity), cancellationToken: token);
         }
+
+        await context.RowsDeliveryDocumentsRetail
+            .Where(x => x.Id == rowId)
+            .ExecuteDeleteAsync(cancellationToken: token);
+
+        res.Response.Document!.Version = Guid.NewGuid();
+        await context.DeliveryDocumentsRetail
+         .Where(x => x.Id == res.Response.DocumentId)
+         .ExecuteUpdateAsync(set => set
+             .SetProperty(p => p.Version, res.Response.Document.Version), cancellationToken: token);
 
         if (lockers.Count != 0)
             context.RemoveRange(lockers);
 
         await context.SaveChangesAsync(token);
 
-        await context.RowsDeliveryDocumentsRetail
-            .Where(x => x.Id == rowId)
-            .ExecuteDeleteAsync(cancellationToken: token);
-
-        await context.DeliveryDocumentsRetail
-         .Where(x => x.Id == rowDb.DocumentId)
-         .ExecuteUpdateAsync(set => set
-             .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
-
         await transaction.CommitAsync(token);
-        return ResponseBaseModel.CreateSuccess("Элемент удалён");
+        res.AddSuccess("Элемент удалён");
+        return res;
     }
 
     /// <inheritdoc/>

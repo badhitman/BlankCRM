@@ -32,6 +32,11 @@ public class LockTransactionModelDB
     /// <inheritdoc/>
     public required int LockerAreaId { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Метка для определения инициатора блокировки
+    /// </summary>
+    /// <remarks>
+    /// Для тех случаев если блокировка не удалится автоматически. Маркер поможет понять где была создана эта блокировка.
+    /// </remarks>
     public required string Marker { get; set; }
 }

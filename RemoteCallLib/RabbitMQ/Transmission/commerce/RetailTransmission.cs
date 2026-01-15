@@ -102,8 +102,8 @@ public class RetailTransmission(IRabbitClient rabbitClient) : IRetailService
         => await rabbitClient.MqRemoteCallAsync<TPaginationResponseStandardModel<RowOfDeliveryRetailDocumentModelDB>>(TransmissionQueues.SelectRowsOfDeliveryDocumentsRetailReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<int> rowId, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(TransmissionQueues.DeleteRowOfDeliveryDocumentRetailReceive, rowId, token: token) ?? new();
+    public async Task<TResponseModel<RowOfDeliveryRetailDocumentModelDB>> DeleteRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<int> rowId, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<TResponseModel<RowOfDeliveryRetailDocumentModelDB>>(TransmissionQueues.DeleteRowOfDeliveryDocumentRetailReceive, rowId, token: token) ?? new();
     #endregion
 
     #region Statuses (of delivery document)
