@@ -16,7 +16,7 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<KeyValuePair<int, DocumentRetailModelDB>>> CreateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> CreateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -44,17 +44,21 @@ public partial class RetailService : IRetailService
         await context.OrdersStatusesRetails.AddAsync(req.Payload, token);
         await context.SaveChangesAsync(token);
         loggerRepo.LogInformation($"Для заказа (розница) #{req.Payload.OrderDocumentId} добавлен статус: [{req.Payload.DateOperation}] {req.Payload.StatusDocument}");
-
+        Guid _nv = Guid.NewGuid();
         await context.OrdersRetail
             .Where(x => x.Id == req.Payload.OrderDocumentId)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.Version, _nv)
                 .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.Payload.OrderDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
         if (docDb.Rows is null || docDb.Rows.Count == 0)
         {
             await transaction.CommitAsync(token);
-            return new() { Response = new(req.Payload.Id, docDb) };
+            return new()
+            {
+                Response = req.Payload.Id,
+                DocumentNewVersion = _nv,
+            };
         }
 
         int[] _offersIds = [.. docDb.Rows.Select(x => x.OfferId)];
@@ -95,7 +99,11 @@ public partial class RetailService : IRetailService
                 await context.SaveChangesAsync(token);
             }
             await transaction.CommitAsync(token);
-            return new() { Response = new(req.Payload.Id, docDb) };
+            return new()
+            {
+
+            };
+            //return new() { Response = new(req.Payload.Id, docDb) };
         }
 
         List<OfferAvailabilityModelDB> offerAvailabilityDB = await context
@@ -124,10 +132,11 @@ public partial class RetailService : IRetailService
 
         return new()
         {
-            Response = new(req.Payload.Id, docDb),
+            Response = req.Payload.Id,
+            DocumentNewVersion = _nv,
             Messages = [new() {
-                TypeMessage = MessagesTypesEnum.Success,
-                Text = _oldStatus == _newStatus ? "конечный статус документа без изменений" : "статус документа изменён" }]
+                     TypeMessage = MessagesTypesEnum.Success,
+                     Text = _oldStatus == _newStatus ? "конечный статус документа без изменений" : "статус документа изменён" }]
         };
     }
 

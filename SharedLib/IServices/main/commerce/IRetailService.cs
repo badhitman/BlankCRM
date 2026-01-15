@@ -166,7 +166,7 @@ public interface IRetailService
 
     #region Statuses (of order`s document)
     /// <inheritdoc/>
-    public Task<TResponseModel<KeyValuePair<int, DocumentRetailModelDB>>> CreateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default);
+    public Task<DocumentNewVersionResponseModel> CreateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TResponseModel<DocumentRetailModelDB>> UpdateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default);

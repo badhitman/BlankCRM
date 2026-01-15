@@ -174,7 +174,7 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseAuthMo
             OrderDocument = Document
         };
         await SetBusyAsync();
-        TResponseModel<KeyValuePair<int, DocumentRetailModelDB>> res = await RetailRepo.CreateOrderStatusDocumentAsync(new()
+        DocumentNewVersionResponseModel res = await RetailRepo.CreateOrderStatusDocumentAsync(new()
         {
             SenderActionUserId = CurrentUserSession.UserId,
             Payload = req
@@ -186,6 +186,8 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseAuthMo
             await SetBusyAsync(false);
             return;
         }
+        else
+            Document.Version = res.DocumentNewVersion;
 
         if (tableRef is not null)
             await tableRef.ReloadServerData();
