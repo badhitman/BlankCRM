@@ -108,7 +108,7 @@
             return;
 
         await SetBusyAsync();
-        ResponseBaseModel res = await RubricsRepo.RubricMoveAsync(new() { Payload = new() { Direction = dir, ObjectId = rubric.Value!.Id, ContextName = ContextName } });
+        ResponseBaseModel res = await RubricsRepo.RubricMoveAsync(new() { Payload = new() { Direction = dir, RowObjectId = rubric.Value!.Id, ContextName = ContextName } });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
         ReloadNodeHandle(ItemModel.ParentId ?? 0);

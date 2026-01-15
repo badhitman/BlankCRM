@@ -112,9 +112,9 @@ public class RubricsService(
 
         var data = await context
         .Rubrics
-        .Where(x => x.Id == req.Payload.ObjectId)
+        .Where(x => x.Id == req.Payload.RowObjectId)
         .Select(x => new { x.Id, x.ParentId, x.Name })
-        .FirstAsync(x => x.Id == req.Payload.ObjectId, cancellationToken: token);
+        .FirstAsync(x => x.Id == req.Payload.RowObjectId, cancellationToken: token);
 
         using IDbContextTransaction transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
         LockUniqueTokenModelDB locker = new() { Token = $"rubric-sort-upd-{data.ParentId}" };

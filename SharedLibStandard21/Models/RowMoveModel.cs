@@ -5,19 +5,22 @@
 namespace SharedLib;
 
 /// <summary>
-/// Row Move
+/// Сдвинут/переместить строку (на один шаг)
 /// </summary>
 public class RowMoveModel
 {
     /// <summary>
-    /// Direction
+    /// Object Id (row primary key)
     /// </summary>
-    public DirectionsEnum Direction { get; set; }
+    /// <remarks>
+    /// Идентификатор строки
+    /// </remarks>
+    public int RowObjectId { get; set; }
 
     /// <summary>
-    /// Object Id
+    /// Направление сдвига/перемещения
     /// </summary>
-    public int ObjectId { get; set; }
+    public DirectionsEnum Direction { get; set; }
 
     /// <summary>
     /// ContextName

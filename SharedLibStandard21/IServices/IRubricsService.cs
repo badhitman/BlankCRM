@@ -9,7 +9,7 @@ using System.Threading;
 namespace SharedLib;
 
 /// <summary>
-/// IRubricsBaseService
+/// IRubricsService
 /// </summary>
 public interface IRubricsService
 {
