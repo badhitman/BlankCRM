@@ -5,6 +5,7 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using SharedLib;
+using System.Reflection.Metadata;
 
 namespace BlazorLib.Components.Retail.Delivery;
 
@@ -53,13 +54,15 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAut
 
         await SetBusyAsync();
 
-        ResponseBaseModel res = await RetailRepo.DeleteDeliveryStatusDocumentAsync(new()
+        DeleteDeliveryStatusDocumentResponseModel res = await RetailRepo.DeleteDeliveryStatusDocumentAsync(new()
         {
             Payload = initDeleteRowStatusId.Value,
             SenderActionUserId = CurrentUserSession.UserId
         });
 
         SnackBarRepo.ShowMessagesResponse(res.Messages);
+        Document.Version = res.DocumentNewVersion;
+
         initDeleteRowStatusId = null;
         if (tableRef is not null)
             await tableRef.ReloadServerData();
