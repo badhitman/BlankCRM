@@ -25,7 +25,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Обновить (или создать) строку складского документа
     /// </summary>
-    public Task<TResponseModel<int>> RowForWarehouseDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfWarehouseDocumentModelDB> row, CancellationToken token = default);
+    public Task<DocumentNewVersionResponseModel> RowForWarehouseDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfWarehouseDocumentModelDB> row, CancellationToken token = default);
 
     /// <summary>
     /// Удалить строку складского документа

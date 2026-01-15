@@ -16,10 +16,10 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> RowForWarehouseDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfWarehouseDocumentModelDB> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> RowForWarehouseDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfWarehouseDocumentModelDB> req, CancellationToken token = default)
     {
         string msg;
-        TResponseModel<int> res = new();
+        DocumentNewVersionResponseModel res = new();
 
         if (req.Payload is null)
         {
@@ -78,10 +78,10 @@ public partial class CommerceImplementService : ICommerceService
         }
 
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken: token);
-
+        res.DocumentNewVersion = Guid.NewGuid();
         await queryDocumentDb.ExecuteUpdateAsync(set => set
              .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow)
-             .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+             .SetProperty(p => p.Version, res.DocumentNewVersion), cancellationToken: token);
 
         List<LockTransactionModelDB> lockers = [new()
         {
@@ -176,7 +176,7 @@ public partial class CommerceImplementService : ICommerceService
                         regOfferAvWritingOff.Quantity += rowDb.Quantity;
                     }
                 }
-                
+
                 if (regOfferAvWritingOff is null)
                 {
                     if (warehouseNegativeBalanceAllowed.Response == true)
@@ -334,7 +334,6 @@ public partial class CommerceImplementService : ICommerceService
         }
         else
         {
-
             res.Response = await context.RowsWarehouses
                    .Where(x => x.Id == req.Payload.Id)
                    .ExecuteUpdateAsync(set => set
@@ -348,7 +347,6 @@ public partial class CommerceImplementService : ICommerceService
             context.RemoveRange(lockers);
 
         await context.SaveChangesAsync(token);
-
         await transaction.CommitAsync(token);
 
         res.AddSuccess($"Обновление `строки складского документа` выполнено");

@@ -254,7 +254,7 @@ public static partial class GlobalStaticCloudStorageMetadata
     };
 
     /// <summary>
-    /// WarehouseNegativeBalanceAllowed
+    /// Разрешение отрицательного баланса на складах при проведении складских документов
     /// </summary>
     public static StorageContextMetadataModel WarehouseNegativeBalanceAllowed => new()
     {
