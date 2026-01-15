@@ -187,7 +187,7 @@ public partial class RubricInputComponent : BlazorBusyComponentBaseModel
 
         if (_idsParents.Any())
         {
-            TResponseModel<List<RubricStandardModel>> res = await RubricsRepo.RubricsGetAsync(_idsParents);
+            TResponseModel<List<RubricStandardModel>> res = await RubricsRepo.RubricsGetAsync([.. _idsParents]);
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (res.Response is null)
             {

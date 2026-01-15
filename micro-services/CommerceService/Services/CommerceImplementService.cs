@@ -728,17 +728,21 @@ public partial class CommerceImplementService(
                 return res;
 
             int[] rubricsIds = [.. order.OfficesTabs.Select(x => x.WarehouseId).Distinct()];
-            TResponseModel<List<RubricStandardModel>> getRubrics = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
-            if (!getRubrics.Success())
+            TResponseModel<List<RubricStandardModel>> getRubrics = new();
+            if (rubricsIds.Length != 0)
             {
-                res.AddRangeMessages(getRubrics.Messages);
-                return res;
-            }
+                getRubrics = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
+                if (!getRubrics.Success())
+                {
+                    res.AddRangeMessages(getRubrics.Messages);
+                    return res;
+                }
 
-            if (getRubrics.Response is null || getRubrics.Response.Count != rubricsIds.Length)
-            {
-                res.AddError($"Некоторые склады (rubric`s) не найдены");
-                return res;
+                if (getRubrics.Response is null || getRubrics.Response.Count != rubricsIds.Length)
+                {
+                    res.AddError($"Некоторые склады (rubric`s) не найдены");
+                    return res;
+                }
             }
 
             order.Id = 0;
@@ -811,9 +815,9 @@ public partial class CommerceImplementService(
                     OfferModelDB offerInfo = allOffersReq.First(x => x?.Id == rowDoc.OfferId)!;
 
                     if (rowReg is null)
-                        res.AddError($"'{offerInfo.Name}' (склад: `{getRubrics.Response.First(x => x.Id == tabAddr.WarehouseId).Name}`) нет в наличии");
+                        res.AddError($"'{offerInfo.Name}' (склад: `{getRubrics.Response?.First(x => x.Id == tabAddr.WarehouseId).Name}`) нет в наличии");
                     else if (rowReg.Quantity < rowDoc.Quantity)
-                        res.AddError($"'{offerInfo.Name}' (склад: `{getRubrics.Response.First(x => x.Id == tabAddr.WarehouseId).Name}`) не достаточно. Текущий остаток: {rowReg.Quantity}");
+                        res.AddError($"'{offerInfo.Name}' (склад: `{getRubrics.Response?.First(x => x.Id == tabAddr.WarehouseId).Name}`) не достаточно. Текущий остаток: {rowReg.Quantity}");
                 });
             });
             if (!res.Success())
@@ -1534,7 +1538,15 @@ public partial class CommerceImplementService(
             };
         }
 
-        int[] rubricsIds = offersAll.SelectMany(x => x.Registers!).Select(x => x.WarehouseId).Distinct().ToArray();
+        int[] rubricsIds = [.. offersAll.SelectMany(x => x.Registers!).Select(x => x.WarehouseId).Distinct()];
+        if (rubricsIds.Length == 0)
+            return new()
+            {
+                Data = Encoding.UTF8.GetBytes("Warehouse not any"),
+                ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("html")).Key,
+                Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.html",
+            };
+
         TResponseModel<List<RubricStandardModel>> rubricsDb = await RubricsRepo.RubricsGetAsync(rubricsIds, token);
         List<IGrouping<NomenclatureModelDB?, OfferModelDB>> gof = offersAll.GroupBy(x => x.Nomenclature).Where(x => x.Any(y => y.Registers!.Any(z => z.Quantity > 0))).ToList();
         try
@@ -1551,7 +1563,7 @@ public partial class CommerceImplementService(
             loggerRepo.LogError(ex, $"Ошибка создания Excel документа: {docName}");
             return new()
             {
-                Data = [],
+                Data = Encoding.UTF8.GetBytes(ex.Message),
                 ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("html")).Key,
                 Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.html",
             };
@@ -1573,7 +1585,7 @@ public partial class CommerceImplementService(
             loggerRepo.LogWarning($"Пустой прайс: {docName}");
             return new()
             {
-                Data = [],
+                Data = Encoding.UTF8.GetBytes("Пустой прайс"),
                 ContentType = GlobalTools.ContentTypes.First(x => x.Value.Contains("html")).Key,
                 Name = $"{docName.Replace(":", "-").Replace(" ", "_")}.html",
             };

@@ -218,7 +218,7 @@ public partial class RetailOrdersListComponent : BlazorBusyComponentBaseAuthMode
         if (!rubricsIds.Any())
             return;
 
-        TResponseModel<List<RubricStandardModel>> rubrics = await HelpDeskRepo.RubricsGetAsync(rubricsIds, token);
+        TResponseModel<List<RubricStandardModel>> rubrics = await HelpDeskRepo.RubricsGetAsync([.. rubricsIds], token);
         SnackBarRepo.ShowMessagesResponse(rubrics.Messages);
         if (rubrics.Success() && rubrics.Response is not null && rubrics.Response.Count != 0)
             lock (RubricsCache)

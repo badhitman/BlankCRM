@@ -10,7 +10,7 @@ namespace RemoteCallLib;
 public class RubricsTransmission(IRabbitClient rabbitClient) : IRubricsTransmission
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(IEnumerable<int> rubricsIds, CancellationToken token = default)
+    public async Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<List<RubricStandardModel>>>(GlobalStaticConstantsTransmission.TransmissionQueues.RubricsForIssuesGetHelpDeskReceive, rubricsIds, token: token) ?? new();
 
     /// <inheritdoc/>

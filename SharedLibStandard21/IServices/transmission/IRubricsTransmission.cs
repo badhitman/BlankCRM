@@ -26,5 +26,5 @@ public interface IRubricsTransmission : IRubricsBaseService
     /// <summary>
     /// Получить рубрики
     /// </summary>
-    public Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(IEnumerable<int> rubricsIds, CancellationToken token = default);
+    public Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default);
 }

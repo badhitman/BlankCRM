@@ -146,11 +146,14 @@ public partial class OrderDocumentObjectComponent : BlazorBusyComponentBaseAuthM
     {
         await base.OnInitializedAsync();
         int[] orderWarehouses = [.. Document.OfficesTabs!.Select(x => x.WarehouseId).Distinct()];
-        await SetBusyAsync();
 
-        TResponseModel<List<RubricStandardModel>> getWarehouses = await RubricsRepo.RubricsGetAsync(orderWarehouses);
-        SnackBarRepo.ShowMessagesResponse(getWarehouses.Messages);
-        currentWarehouses = getWarehouses.Response ?? [];
+        await SetBusyAsync();
+        if (orderWarehouses.Length != 0)
+        {
+            TResponseModel<List<RubricStandardModel>> getWarehouses = await RubricsRepo.RubricsGetAsync(orderWarehouses);
+            SnackBarRepo.ShowMessagesResponse(getWarehouses.Messages);
+            currentWarehouses = getWarehouses.Response ?? [];
+        }
 
         TResponseModel<bool?> res = await StorageRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ShowingAttachmentsOrderArea);
         if (!res.Success())
