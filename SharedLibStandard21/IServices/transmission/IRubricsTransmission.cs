@@ -11,20 +11,7 @@ namespace SharedLib;
 /// <summary>
 /// IRubricsTransmission
 /// </summary>
-public interface IRubricsTransmission : IRubricsBaseService
+public interface IRubricsTransmission : IRubricsService
 {
-    /// <summary>
-    /// Создать тему для обращений
-    /// </summary>
-    public Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricStandardModel issueTheme, CancellationToken token = default);
-
-    /// <summary>
-    /// Сдвинуть рубрику
-    /// </summary>
-    public Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestStandardModel<RowMoveModel> req, CancellationToken token = default);
-
-    /// <summary>
-    /// Получить рубрики
-    /// </summary>
-    public Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default);
+    
 }

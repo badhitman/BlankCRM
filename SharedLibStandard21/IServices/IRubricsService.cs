@@ -3,28 +3,38 @@
 ////////////////////////////////////////////////
 
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace SharedLib;
 
 /// <summary>
-/// HelpDesk (service)
+/// IRubricsBaseService
 /// </summary>
-public interface IRubricsService : IRubricsBaseService
+public interface IRubricsService
 {
     /// <summary>
     /// RubricMove
     /// </summary>
-    public Task<ResponseBaseModel> RubricMoveAsync(TRequestStandardModel<RowMoveModel> req, CancellationToken token = default);
+    public Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestStandardModel<RowMoveModel> req, CancellationToken token = default);
 
     /// <summary>
-    /// Rubric create (or update)
+    /// Создать или обновить
     /// </summary>
-    public Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricStandardModel req, CancellationToken token = default);
+    public Task<TResponseModel<int>> RubricCreateOrUpdateAsync(RubricStandardModel issueTheme, CancellationToken token = default);
 
     /// <summary>
-    /// Rubrics get
+    /// Получить под-рубрики (вложенные в рубрику). Если не указано, то root перечень
+    /// </summary>
+    public Task<List<UniversalBaseModel>> RubricsChildListAsync(RubricsListRequestStandardModel req, CancellationToken token = default);
+
+    /// <summary>
+    /// Rubric read with parents hierarchy
+    /// </summary>
+    public Task<TResponseModel<List<RubricStandardModel>>> RubricReadWithParentsHierarchyAsync(int rubricId, CancellationToken token = default);
+
+    /// <summary>
+    /// Получить рубрики
     /// </summary>
     public Task<TResponseModel<List<RubricStandardModel>>> RubricsGetAsync(int[] rubricsIds, CancellationToken token = default);
 }

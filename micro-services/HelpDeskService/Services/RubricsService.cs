@@ -103,7 +103,7 @@ public class RubricsService(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> RubricMoveAsync(TRequestStandardModel<RowMoveModel> req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> RubricMoveAsync(TAuthRequestStandardModel<RowMoveModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return ResponseBaseModel.CreateError("req.Payload is null");
