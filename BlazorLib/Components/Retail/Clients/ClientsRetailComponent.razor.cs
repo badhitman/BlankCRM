@@ -17,7 +17,7 @@ public partial class ClientsRetailComponent : BlazorBusyComponentBaseAuthModel
     IRetailService RetailRepo { get; set; } = default!;
 
 
-    List<WalletRetailModelDB> WalletsCache = [];
+    readonly List<WalletRetailModelDB> WalletsCache = [];
     MudExpansionPanels? newUserRef;
     string? searchString;
     bool expandNewUserForm = false;
