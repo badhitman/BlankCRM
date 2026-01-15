@@ -270,10 +270,11 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             if (Document.Id > 0)
             {
                 await SetBusyAsync();
-                TResponseModel<DeliveryDocumentRetailModelDB> res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = Document.Rows[exist_row] });
+                TResponseModel<Guid?> res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = Document.Rows[exist_row] });
                 SnackBarRepo.ShowMessagesResponse(res.Messages);
                 if (res.Response is not null)
-                    Document.Version = res.Response.Version;
+                    Document.Version = res.Response.Value;
+
                 await ElementsReload();
                 if (tableRef is not null)
                     await tableRef.ReloadServerData();
@@ -310,7 +311,7 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
             RowOfDeliveryRetailDocumentModelDB rowOfDocument = Document.Rows!.First(x => x.OfferId == offerId);
             TResponseModel<RowOfDeliveryRetailDocumentModelDB> res = await RetailRepo.DeleteRowOfDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = rowOfDocument.Id });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
-            if(res.Response?.Document is not null)
+            if (res.Response?.Document is not null)
                 Document.Version = res.Response.Document.Version;
         }
         await ElementsReload();
@@ -360,10 +361,10 @@ public partial class DeliveryTableRowsRetailComponent : OffersTableBaseComponent
                 if (Document.Id > 0)
                 {
                     await SetBusyAsync();
-                    TResponseModel<DeliveryDocumentRetailModelDB> res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = off });
+                    TResponseModel<Guid?> res = await RetailRepo.UpdateRowOfDeliveryDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = off });
                     SnackBarRepo.ShowMessagesResponse(res.Messages);
                     if (res.Response is not null)
-                        Document.Version = res.Response.Version;
+                        Document.Version = res.Response.Value;
 
                     await ElementsReload();
                     if (tableRef is not null)

@@ -116,7 +116,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DeliveryDocumentRetailModelDB>> UpdateRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
@@ -131,24 +131,24 @@ public partial class RetailService : IRetailService
         req.Payload.Comment = req.Payload.Comment?.Trim();
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-        TResponseModel<DeliveryDocumentRetailModelDB> res = new()
-        {
-            Response = await context.DeliveryDocumentsRetail.FirstAsync(x => x.Id == req.Payload.DocumentId, cancellationToken: token)
-        };
+
+        TResponseModel<Guid?> res = new() { Response = Guid.NewGuid() };
 
         RowOfDeliveryRetailDocumentModelDB rowOfDeliveryRetailDocument = await context.RowsDeliveryDocumentsRetail
+            .Include(x => x.Document)
             .Include(x => x.Offer!)
             .ThenInclude(x => x.Nomenclature)
             .FirstAsync(x => x.Id == req.Payload.Id, cancellationToken: token);
 
-        loggerRepo.LogInformation($"{nameof(rowOfDeliveryRetailDocument)}: {JsonConvert.SerializeObject(rowOfDeliveryRetailDocument, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+        DeliveryDocumentRetailModelDB docDb = rowOfDeliveryRetailDocument.Document!;
+
         if (rowOfDeliveryRetailDocument.Version != req.Payload.Version)
         {
             res.AddError($"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова");
             return res;
         }
 
-        if (offDeliveriesStatuses.Contains(res.Response.DeliveryStatus))
+        if (offDeliveriesStatuses.Contains(docDb.DeliveryStatus))
         {
             await context.RowsDeliveryDocumentsRetail
             .Where(x => x.Id == req.Payload.Id)
@@ -163,7 +163,7 @@ public partial class RetailService : IRetailService
             await context.DeliveryDocumentsRetail
              .Where(x => x.Id == req.Payload.DocumentId)
              .ExecuteUpdateAsync(set => set
-                 .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+                 .SetProperty(p => p.Version, res.Response), cancellationToken: token);
 
             res.AddSuccess("Ok");
             return res;
@@ -175,7 +175,7 @@ public partial class RetailService : IRetailService
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = req.Payload.OfferId,
-                LockerAreaId = res.Response.WarehouseId,
+                LockerAreaId = docDb.WarehouseId,
                 Marker = nameof(UpdateRowOfDeliveryDocumentAsync),
             }];
         if (rowOfDeliveryRetailDocument.OfferId != req.Payload.OfferId)
@@ -183,7 +183,7 @@ public partial class RetailService : IRetailService
             {
                 LockerName = nameof(OfferAvailabilityModelDB),
                 LockerId = rowOfDeliveryRetailDocument.OfferId,
-                LockerAreaId = res.Response.WarehouseId,
+                LockerAreaId = docDb.WarehouseId,
                 Marker = nameof(UpdateRowOfDeliveryDocumentAsync),
             });
 
@@ -211,7 +211,7 @@ public partial class RetailService : IRetailService
         if (rowOfDeliveryRetailDocument.OfferId != req.Payload.OfferId)
         {
             regOfferAv = offerAvailabilityDB
-                .FirstOrDefault(x => x.OfferId == rowOfDeliveryRetailDocument.OfferId && x.WarehouseId == res.Response.WarehouseId);
+                .FirstOrDefault(x => x.OfferId == rowOfDeliveryRetailDocument.OfferId && x.WarehouseId == docDb.WarehouseId);
 
             if (regOfferAv is null)
             {
@@ -219,7 +219,7 @@ public partial class RetailService : IRetailService
                 {
                     OfferId = rowOfDeliveryRetailDocument.OfferId,
                     NomenclatureId = rowOfDeliveryRetailDocument.NomenclatureId,
-                    WarehouseId = res.Response.WarehouseId,
+                    WarehouseId = docDb.WarehouseId,
                     Quantity = rowOfDeliveryRetailDocument.Quantity,
                 }, token);
             }
@@ -233,7 +233,7 @@ public partial class RetailService : IRetailService
         }
 
         regOfferAv = offerAvailabilityDB
-            .Where(x => x.OfferId == req.Payload.OfferId && x.WarehouseId == res.Response.WarehouseId)
+            .Where(x => x.OfferId == req.Payload.OfferId && x.WarehouseId == docDb.WarehouseId)
             .FirstOrDefault();
 
         decimal _quantity = rowOfDeliveryRetailDocument.OfferId != req.Payload.OfferId
@@ -254,7 +254,7 @@ public partial class RetailService : IRetailService
                 regOfferAv = new()
                 {
                     NomenclatureId = rowOfDeliveryRetailDocument.NomenclatureId,
-                    WarehouseId = res.Response.WarehouseId,
+                    WarehouseId = docDb.WarehouseId,
                     OfferId = rowOfDeliveryRetailDocument.OfferId,
                     Quantity = -_quantity,
                 };
@@ -266,7 +266,7 @@ public partial class RetailService : IRetailService
             if (regOfferAv is null)
             {
                 await transaction.RollbackAsync(token);
-                msg = $"На складе #{res.Response.WarehouseId} отсутствует офер #{req.Payload.OfferId}";
+                msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{req.Payload.OfferId}";
                 loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError(msg);
                 return res;
@@ -274,7 +274,7 @@ public partial class RetailService : IRetailService
             else if (regOfferAv.Quantity < _quantity)
             {
                 await transaction.RollbackAsync(token);
-                msg = $"На складе #{res.Response.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
+                msg = $"На складе #{docDb.WarehouseId} отсутствует офер #{regOfferAv.OfferId}";
                 loggerRepo.LogError($"{msg}: {JsonConvert.SerializeObject(req.Payload, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
                 res.AddError(msg);
             }
@@ -294,7 +294,7 @@ public partial class RetailService : IRetailService
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
 
-        res.Response.Version = Guid.NewGuid();
+        res.Response = Guid.NewGuid();
         await context.RowsDeliveryDocumentsRetail
             .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set
@@ -302,7 +302,7 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.Quantity, req.Payload.Quantity)
                 .SetProperty(p => p.Amount, req.Payload.Amount)
                 .SetProperty(p => p.Comment, req.Payload.Comment)
-                .SetProperty(p => p.Version, res.Response.Version)
+                .SetProperty(p => p.Version, res.Response)
                 .SetProperty(p => p.NomenclatureId, req.Payload.NomenclatureId), cancellationToken: token);
 
         await transaction.CommitAsync(token);
