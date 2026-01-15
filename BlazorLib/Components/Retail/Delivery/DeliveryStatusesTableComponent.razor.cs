@@ -178,7 +178,7 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAut
             DeliveryDocument = Document
         };
         await SetBusyAsync();
-        CreateDeliveryStatusDocumentResponseModel res = await RetailRepo.CreateDeliveryStatusDocumentAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
+        DocumentNewVersionResponseModel res = await RetailRepo.CreateDeliveryStatusDocumentAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
         if (!res.Success())
         {
             SnackBarRepo.ShowMessagesResponse(res.Messages);

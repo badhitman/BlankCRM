@@ -16,7 +16,7 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<CreateDeliveryStatusDocumentResponseModel> CreateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> CreateDeliveryStatusDocumentAsync(TAuthRequestStandardModel<DeliveryStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -41,7 +41,7 @@ public partial class RetailService : IRetailService
 
         await context.DeliveriesStatusesDocumentsRetail.AddAsync(req.Payload, token);
         await context.SaveChangesAsync(token);
-        CreateDeliveryStatusDocumentResponseModel res = new()
+        DocumentNewVersionResponseModel res = new()
         {
             DocumentNewVersion = Guid.NewGuid(),
             Response = req.Payload.Id,

@@ -5,9 +5,9 @@
 namespace SharedLib;
 
 /// <summary>
-/// CreateDeliveryStatusDocumentResponseModel
+/// DocumentNewVersionResponseModel
 /// </summary>
-public class CreateDeliveryStatusDocumentResponseModel : TResponseModel<int>
+public class DocumentNewVersionResponseModel : TResponseModel<int>
 {
     /// <inheritdoc/>
     public Guid DocumentNewVersion { get; set; }

@@ -15,7 +15,7 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<CreateRowOfDeliveryDocumentResponseModel> CreateRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> CreateRowOfDeliveryDocumentAsync(TAuthRequestStandardModel<RowOfDeliveryRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -31,7 +31,7 @@ public partial class RetailService : IRetailService
         DeliveryDocumentRetailModelDB docDb = await context.DeliveryDocumentsRetail
             .FirstAsync(x => x.Id == req.Payload.DocumentId, cancellationToken: token);
 
-        CreateRowOfDeliveryDocumentResponseModel res = new();
+        DocumentNewVersionResponseModel res = new();
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         string msg;
