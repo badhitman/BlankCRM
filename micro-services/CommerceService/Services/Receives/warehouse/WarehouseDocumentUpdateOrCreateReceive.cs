@@ -11,17 +11,17 @@ namespace Transmission.Receives.commerce;
 /// <see cref="WarehouseDocumentUpdateOrCreateReceive"/>
 /// </summary>
 public class WarehouseDocumentUpdateOrCreateReceive(ICommerceService commRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TAuthRequestStandardModel<WarehouseDocumentModelDB>?, TResponseModel<int>?>
+    : IResponseReceive<TAuthRequestStandardModel<WarehouseDocumentModelDB>?, DocumentNewVersionResponseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.WarehouseDocumentUpdateOrCreateCommerceReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>?> ResponseHandleActionAsync(TAuthRequestStandardModel<WarehouseDocumentModelDB>? req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<WarehouseDocumentModelDB>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
-        TResponseModel<int> res = await commRepo.WarehouseDocumentUpdateOrCreateAsync(req, token);
+        DocumentNewVersionResponseModel res = await commRepo.WarehouseDocumentUpdateOrCreateAsync(req, token);
         await indexingRepo.SaveTraceForReceiverAsync(trace.SetResponse(res), token);
         return res;
     }

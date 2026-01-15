@@ -16,9 +16,9 @@ namespace CommerceService;
 public partial class CommerceImplementService : ICommerceService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> WarehouseDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<WarehouseDocumentModelDB> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> WarehouseDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<WarehouseDocumentModelDB> req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new();
+        DocumentNewVersionResponseModel res = new();
         if (req.Payload is null)
         {
             res.AddError("req.Payload is null");
@@ -42,7 +42,7 @@ public partial class CommerceImplementService : ICommerceService
             res.AddError($"{msg}. Измените или удалите склад списания");
             return res;
         }
-        loggerRepo.LogInformation($"{nameof(req)}: {JsonConvert.SerializeObject(req, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
+
         req.Payload.DeliveryDate = req.Payload.DeliveryDate.SetKindUtc();
         if (req.Payload.Name is not null)
             req.Payload.Name = req.Payload.Name.Trim();
@@ -50,11 +50,14 @@ public partial class CommerceImplementService : ICommerceService
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
         DateTime dtu = DateTime.UtcNow;
+
         if (req.Payload.Id < 1)
         {
+            res.DocumentNewVersion = Guid.NewGuid();
+
             req.Payload.Rows?.Clear();
             req.Payload.Id = 0;
-            req.Payload.Version = Guid.NewGuid();
+            req.Payload.Version = res.DocumentNewVersion;
             req.Payload.CreatedAtUTC = dtu;
             req.Payload.LastUpdatedAtUTC = dtu;
             req.Payload.IsDisabled = true;
@@ -80,6 +83,8 @@ public partial class CommerceImplementService : ICommerceService
         loggerRepo.LogInformation($"{nameof(warehouseDocumentDb)}:{JsonConvert.SerializeObject(warehouseDocumentDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         if (warehouseDocumentDb.Rows is null || warehouseDocumentDb.Rows.Count == 0)
         {
+            res.DocumentNewVersion = Guid.NewGuid();
+
             res.Response = await context.WarehouseDocuments
                 .Where(x => x.Id == req.Payload.Id)
                 .ExecuteUpdateAsync(set => set
@@ -89,7 +94,7 @@ public partial class CommerceImplementService : ICommerceService
                 .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled)
                 .SetProperty(p => p.WarehouseId, req.Payload.WarehouseId)
                 .SetProperty(p => p.WritingOffWarehouseId, req.Payload.WritingOffWarehouseId)
-                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.Version, res.DocumentNewVersion)
                 .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
             res.AddSuccess("Складской документ обновлён");
@@ -467,7 +472,7 @@ public partial class CommerceImplementService : ICommerceService
             context.RemoveRange(offersLocked);
 
         await context.SaveChangesAsync(token);
-
+        res.DocumentNewVersion = Guid.NewGuid();
         res.Response = await context.WarehouseDocuments
                 .Where(x => x.Id == req.Payload.Id)
                 .ExecuteUpdateAsync(set => set
@@ -477,7 +482,7 @@ public partial class CommerceImplementService : ICommerceService
                 .SetProperty(p => p.IsDisabled, req.Payload.IsDisabled)
                 .SetProperty(p => p.WarehouseId, req.Payload.WarehouseId)
                 .SetProperty(p => p.WritingOffWarehouseId, req.Payload.WritingOffWarehouseId)
-                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.Version, res.DocumentNewVersion)
                 .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
         res.AddSuccess("Складской документ обновлён");

@@ -20,7 +20,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// WarehouseDocument update
     /// </summary>
-    public Task<TResponseModel<int>> WarehouseDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<WarehouseDocumentModelDB> req, CancellationToken token = default);
+    public Task<DocumentNewVersionResponseModel> WarehouseDocumentUpdateOrCreateAsync(TAuthRequestStandardModel<WarehouseDocumentModelDB> req, CancellationToken token = default);
 
     /// <summary>
     /// Обновить строку складского документа
