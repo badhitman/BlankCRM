@@ -72,7 +72,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<CreateDeliveryOrderLinkDocumentReceive, TAuthRequestStandardModel<RetailOrderDeliveryLinkModelDB>, TResponseModel<int>>()
             .RegisterMqListener<CreateOrderStatusDocumentReceive, TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB>, DocumentNewVersionResponseModel>()
             .RegisterMqListener<DeleteDeliveryOrderLinkDocumentReceive, TAuthRequestStandardModel<OrderDeliveryModel>, ResponseBaseModel>()
-            .RegisterMqListener<DeleteRowRetailDocumentReceive, TAuthRequestStandardModel<DeleteRowRetailDocumentRequestModel>, TResponseModel<RowOfRetailOrderDocumentModelDB?>>()
+            .RegisterMqListener<DeleteRowRetailDocumentReceive, TAuthRequestStandardModel<DeleteRowRetailDocumentRequestModel>, DeleteRowRetailDocumentResponseModel>()
             .RegisterMqListener<DeleteOrderStatusDocumentReceive, TAuthRequestStandardModel<int>, TResponseModel<DocumentRetailModelDB>>()
             .RegisterMqListener<UpdateDeliveryOrderLinkDocumentReceive, TAuthRequestStandardModel<RetailOrderDeliveryLinkModelDB>, ResponseBaseModel>()
             .RegisterMqListener<SelectDeliveriesOrdersLinksDocumentsReceive, TPaginationRequestStandardModel<SelectDeliveriesOrdersLinksRetailDocumentsRequestModel>, TPaginationResponseStandardModel<RetailOrderDeliveryLinkModelDB>>()

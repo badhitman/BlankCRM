@@ -178,7 +178,7 @@ public partial class RetailService : IRetailService
                     TypeMessage = MessagesTypesEnum.Error,
                     Text = $"Строку документа уже кто-то изменил. Обновите документ и попробуйте изменить его снова" }]
             };
-        
+
         if (offOrdersStatuses.Contains(retailOrderDb.StatusDocument))
         {
             await context.RowsOrdersRetails
@@ -427,7 +427,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<RowOfRetailOrderDocumentModelDB?>> DeleteRowRetailDocumentAsync(TAuthRequestStandardModel<DeleteRowRetailDocumentRequestModel> req, CancellationToken token = default)
+    public async Task<DeleteRowRetailDocumentResponseModel> DeleteRowRetailDocumentAsync(TAuthRequestStandardModel<DeleteRowRetailDocumentRequestModel> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -446,10 +446,8 @@ public partial class RetailService : IRetailService
             .FirstAsync(x => x.Id == req.Payload.RowId, cancellationToken: token);
 
         DocumentRetailModelDB retailOrderDb = rowOfRetailDb.Order!;
-        loggerRepo.LogInformation($"{nameof(retailOrderDb)}: {JsonConvert.SerializeObject(retailOrderDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
         DocumentRetailModelDB _order = rowOfRetailDb.Order!;
         rowOfRetailDb.Order = null;
-        loggerRepo.LogInformation($"{nameof(rowOfRetailDb)}: {JsonConvert.SerializeObject(rowOfRetailDb, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
         if (!offOrdersStatuses.Contains(retailOrderDb.StatusDocument))
@@ -553,19 +551,18 @@ public partial class RetailService : IRetailService
             .Where(x => x.Id == req.Payload.RowId)
             .ExecuteDeleteAsync(cancellationToken: token);
 
-        _order.Version = Guid.NewGuid();
-
+        Guid _nv = Guid.NewGuid();
         await context.OrdersRetail
             .Where(x => x.Id == retailOrderDb.Id)
             .ExecuteUpdateAsync(set => set
-            .SetProperty(p => p.Version, _order.Version), cancellationToken: token);
+            .SetProperty(p => p.Version, _nv), cancellationToken: token);
 
         await transaction.CommitAsync(token);
 
-        rowOfRetailDb.Order = _order;
         return new()
         {
             Response = rowOfRetailDb,
+            DocumentNewVersion = _nv,
             Messages = [new() { TypeMessage = MessagesTypesEnum.Info, Text = "Строка документа удалена" }]
         };
     }

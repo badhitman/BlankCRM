@@ -71,11 +71,11 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
 
                 _problemDeleteRow = null;
                 await SetBusyAsync();
-                TResponseModel<RowOfRetailOrderDocumentModelDB?> resDelRow = await RetailRepo.DeleteRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = _reqDel });
+                DeleteRowRetailDocumentResponseModel resDelRow = await RetailRepo.DeleteRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = _reqDel });
                 SnackBarRepo.ShowMessagesResponse(resDelRow.Messages);
 
-                if (resDelRow.Success() && resDelRow.Response is not null)
-                    Document.Version = resDelRow.Response.Order!.Version;
+                if (resDelRow.Success())
+                    Document.Version = resDelRow.DocumentNewVersion;
                 else
                     _problemDeleteRow = offerId;
 

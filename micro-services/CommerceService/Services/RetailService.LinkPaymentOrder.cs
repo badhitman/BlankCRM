@@ -49,7 +49,7 @@ public partial class RetailService : IRetailService
             .ExecuteUpdateAsync(set => set
                 .SetProperty(p => p.Name, req.Payload.Name)
                 .SetProperty(p => p.AmountPayment, req.Payload.AmountPayment), cancellationToken: token);
-        await context.SaveChangesAsync(token);
+        
         return ResponseBaseModel.CreateSuccess("Ok");
     }
 
