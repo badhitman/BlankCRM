@@ -35,7 +35,7 @@ public partial interface ICommerceServiceBase
     /// <summary>
     /// Обновить строку заказа
     /// </summary>
-    public Task<TResponseModel<int>> RowForOrderUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfOrderDocumentModelDB> row, CancellationToken token = default);
+    public Task<DocumentNewVersionResponseModel> RowForOrderUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfOrderDocumentModelDB> row, CancellationToken token = default);
 
     /// <summary>
     /// Удалить строку заказа

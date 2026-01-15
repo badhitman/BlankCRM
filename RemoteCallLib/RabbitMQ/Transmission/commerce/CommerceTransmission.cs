@@ -76,8 +76,8 @@ public partial class CommerceTransmission(IRabbitClient rabbitClient) : ICommerc
         => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.OrganizationUpdateOrCreateCommerceReceive, org, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> RowForOrderUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfOrderDocumentModelDB> row, CancellationToken token = default)
-        => await rabbitClient.MqRemoteCallAsync<TResponseModel<int>>(GlobalStaticConstantsTransmission.TransmissionQueues.RowForOrderUpdateOrCreateCommerceReceive, row, token: token) ?? new();
+    public async Task<DocumentNewVersionResponseModel> RowForOrderUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfOrderDocumentModelDB> row, CancellationToken token = default)
+        => await rabbitClient.MqRemoteCallAsync<DocumentNewVersionResponseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.RowForOrderUpdateOrCreateCommerceReceive, row, token: token) ?? new();
 
     /// <inheritdoc/>
     public async Task<TResponseModel<RowOrderDocumentRecord[]>> RowsDeleteFromOrderAsync(TAuthRequestStandardModel<int[]> req, CancellationToken token = default)

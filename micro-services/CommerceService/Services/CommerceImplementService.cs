@@ -943,9 +943,9 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> RowForOrderUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfOrderDocumentModelDB> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> RowForOrderUpdateOrCreateAsync(TAuthRequestStandardModel<RowOfOrderDocumentModelDB> req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new();
+        DocumentNewVersionResponseModel res = new();
         if (req.Payload is null)
         {
             res.AddError("req.Payload is null");
@@ -1026,9 +1026,10 @@ public partial class CommerceImplementService(
         catch (Exception ex)
         {
             await transaction.RollbackAsync(token);
-            msg = $"Не удалось выполнить команду: ";
+            msg = $"Не удалось выполнить {nameof(RowForOrderUpdateOrCreateAsync)} ";
             loggerRepo.LogError(ex, $"{msg}{JsonConvert.SerializeObject(row, Formatting.Indented, GlobalStaticConstants.JsonSerializerSettings)}");
-            res.AddError($"{msg}{ex.Message}");
+            res.AddError(msg);
+            res.Messages.InjectException(ex);
             return res;
         }
         int[] _offersIds = [.. lockers.Select(x => x.LockerId).Distinct()];
@@ -1069,12 +1070,12 @@ public partial class CommerceImplementService(
                 await context.AddAsync(regOfferAvStorno, token);
             }
         }
-
+        res.DocumentNewVersion = Guid.NewGuid();
         DateTime dtu = DateTime.UtcNow;
         await context.OrdersB2B
                 .Where(x => x.Id == row.OrderId)
                 .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.Version, res.DocumentNewVersion)
                 .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
         if (row.Id < 1)
@@ -1097,6 +1098,12 @@ public partial class CommerceImplementService(
                 regOfferAvStorno.Quantity += row.Quantity;
                 if (regOfferAvStorno.Id > 0)
                     context.Update(regOfferAvStorno);
+            }
+
+            if (!res.Success())
+            {
+                await transaction.RollbackAsync(token);
+                return res;
             }
 
             row.Version = Guid.NewGuid();
