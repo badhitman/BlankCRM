@@ -178,13 +178,15 @@ public partial class DeliveryStatusesTableComponent : BlazorBusyComponentBaseAut
             DeliveryDocument = Document
         };
         await SetBusyAsync();
-        TResponseModel<int> res = await RetailRepo.CreateDeliveryStatusDocumentAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
+        CreateDeliveryStatusDocumentResponseModel res = await RetailRepo.CreateDeliveryStatusDocumentAsync(new() { Payload = req, SenderActionUserId = CurrentUserSession.UserId });
         if (!res.Success())
         {
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             await SetBusyAsync(false);
             return;
         }
+
+        Document.Version = res.DocumentNewVersion;
 
         if (tableRef is not null)
             await tableRef.ReloadServerData();
