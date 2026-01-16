@@ -225,10 +225,16 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
 
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> BankTransferCreateOrUpdateAsync(BankTransferModelDB trans, CancellationToken token = default)
+    public async Task<TResponseModel<int>> BankTransferCreateOrUpdateAsync(TAuthRequestStandardModel<BankTransferModelDB> req, CancellationToken token = default)
     {
-        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         TResponseModel<int> res = new();
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
+        BankTransferModelDB trans = req.Payload;
         ValidateReportModel ck = GlobalTools.ValidateObject(trans);
         if (!ck.IsValid)
         {
@@ -236,6 +242,7 @@ public partial class BankImplementService(IDbContextFactory<BankContext> bankDbF
             return res;
         }
 
+        BankContext ctx = await bankDbFactory.CreateDbContextAsync(token);
         if (trans.Id == 0)
         {
             await ctx.TransfersBanks.AddAsync(trans, token);

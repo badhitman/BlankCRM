@@ -24,7 +24,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<CustomerBankCreateOrUpdateReceive, TAuthRequestStandardModel<CustomerBankIdModelDB>, TResponseModel<int>>()
             .RegisterMqListener<CustomersBanksSelectReceive, TPaginationRequestStandardModel<SelectCustomersBanksIdsRequestModel>, TPaginationResponseStandardModel<CustomerBankIdModelDB>>()
             .RegisterMqListener<BanksTransfersSelectReceive, TPaginationRequestStandardModel<SelectTransfersBanksRequestModel>, TPaginationResponseStandardModel<BankTransferModelDB>>()
-            .RegisterMqListener<BankTransferCreateOrUpdateReceive, BankTransferModelDB, TResponseModel<int>>()
+            .RegisterMqListener<BankTransferCreateOrUpdateReceive, TAuthRequestStandardModel<BankTransferModelDB>, TResponseModel<int>>()
             .RegisterMqListener<AccountsTBankSelectReceive, TPaginationRequestStandardModel<SelectAccountsRequestModel>, TPaginationResponseStandardModel<TBankAccountModelDB>>()
             .RegisterMqListener<AccountTBankCreateOrUpdateReceive, TAuthRequestStandardModel<TBankAccountModelDB>, TResponseModel<int>>()
             .RegisterMqListener<GetTBankAccountsReceive, GetTBankAccountsRequestModel, TResponseModel<List<TBankAccountModelDB>>>()
