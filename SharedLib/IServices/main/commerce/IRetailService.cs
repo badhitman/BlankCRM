@@ -180,7 +180,7 @@ public interface IRetailService
 
     #region Rows for retail order (document)
     /// <inheritdoc/>
-    public Task<TResponseModel<KeyValuePair<int, DocumentRetailModelDB>?>> CreateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default);
+    public Task<DocumentNewVersionResponseModel> CreateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default);
 
     /// <inheritdoc/>
     public Task<TResponseModel<Guid?>> UpdateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default);

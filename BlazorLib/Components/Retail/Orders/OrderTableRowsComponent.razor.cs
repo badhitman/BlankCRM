@@ -222,11 +222,11 @@ public partial class OrderTableRowsComponent : OffersTableBaseComponent
             else
             {
                 await SetBusyAsync();
-                TResponseModel<KeyValuePair<int, DocumentRetailModelDB>?> resAddingRow = await RetailRepo.CreateRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = newOrderElement });
+                DocumentNewVersionResponseModel resAddingRow = await RetailRepo.CreateRowRetailDocumentAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = newOrderElement });
                 SnackBarRepo.ShowMessagesResponse(resAddingRow.Messages);
 
-                if (resAddingRow.Success() && resAddingRow.Response is not null)
-                    Document.Version = resAddingRow.Response.Value.Value.Version;
+                if (resAddingRow.Success())
+                    Document.Version = resAddingRow.DocumentNewVersion;
 
                 await ReloadTableItems();
                 await SetBusyAsync(false);

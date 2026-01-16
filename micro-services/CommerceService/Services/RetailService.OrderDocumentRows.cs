@@ -15,10 +15,10 @@ namespace CommerceService;
 public partial class RetailService : IRetailService
 {
     /// <inheritdoc/>
-    public async Task<TResponseModel<KeyValuePair<int, DocumentRetailModelDB>?>> CreateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> CreateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default)
     {
         string msg;
-        TResponseModel<KeyValuePair<int, DocumentRetailModelDB>?> res = new();
+        DocumentNewVersionResponseModel res = new();
 
         if (req.Payload is null)
         {
@@ -27,10 +27,10 @@ public partial class RetailService : IRetailService
         }
 
         if (req.Payload.Quantity <= 0)
-            return new()
-            {
-                Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Количество должно быть больше нуля" }]
-            };
+        {
+            res.AddError("Количество должно быть больше нуля");
+            return res;
+        }
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
@@ -126,19 +126,19 @@ public partial class RetailService : IRetailService
 
         await context.RowsOrdersRetails.AddAsync(req.Payload, token);
         await context.SaveChangesAsync(token);
-
+        res.Response = req.Payload.Id;
         await context.LockTransactions
             .Where(x => x.Id == locker.Id)
             .ExecuteDeleteAsync(cancellationToken: token);
 
-        Guid _orderGuid = Guid.NewGuid();
+        res.DocumentNewVersion = Guid.NewGuid();
         await context.OrdersRetail
           .Where(x => x.Id == req.Payload.OrderId)
           .ExecuteUpdateAsync(set => set
-              .SetProperty(p => p.Version, _orderGuid), cancellationToken: token);
+              .SetProperty(p => p.Version, res.DocumentNewVersion), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        return new() { Response = new(req.Payload.Id, retailOrderDb) };//_orderGuid
+        return res;
     }
 
     /// <inheritdoc/>
