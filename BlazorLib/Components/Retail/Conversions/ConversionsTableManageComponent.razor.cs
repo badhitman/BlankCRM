@@ -78,7 +78,7 @@ public partial class ConversionsTableManageComponent : BlazorBusyComponentUsersC
         }
 
         await SetBusyAsync();
-        TResponseModel<WalletConversionRetailDocumentModelDB> res = await RetailRepo.DeleteToggleConversionRetailAsync(new()
+        TResponseModel<Guid?> res = await RetailRepo.DeleteToggleConversionRetailAsync(new()
         {
             Payload = conversionId,
             SenderActionUserId = CurrentUserSession.UserId

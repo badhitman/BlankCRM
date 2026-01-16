@@ -328,65 +328,65 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<WalletConversionRetailDocumentModelDB>> DeleteToggleConversionRetailAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> DeleteToggleConversionRetailAsync(TAuthRequestStandardModel<int> req, CancellationToken token = default)
     {
         int conversionId = req.Payload;
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
 
         IQueryable<WalletConversionRetailDocumentModelDB> q = context.ConversionsDocumentsWalletsRetail
             .Where(x => x.Id == conversionId);
-        TResponseModel<WalletConversionRetailDocumentModelDB> res = new()
-        {
-            Response = await q
+
+        WalletConversionRetailDocumentModelDB docDb = await q
             .Include(x => x.ToWallet!).ThenInclude(x => x.WalletType)
             .Include(x => x.FromWallet!).ThenInclude(x => x.WalletType)
-            .FirstAsync(x => x.Id == conversionId, cancellationToken: token)
-        };
+            .FirstAsync(x => x.Id == conversionId, cancellationToken: token);
 
-        if (res.Response.ToWalletId < 1 || res.Response.ToWalletId < 1)
+        TResponseModel<Guid?> res = new();
+
+        if (docDb.ToWalletId < 1 || docDb.ToWalletId < 1)
         {
             res.AddError("Укажите кошельки списания и зачисления!");
             return res;
         }
 
-        if (res.Response.ToWalletSum <= 0 || res.Response.FromWalletSum <= 0)
+        if (docDb.ToWalletSum <= 0 || docDb.FromWalletSum <= 0)
         {
             res.AddError("Укажите сумму списания и зачисления!");
             return res;
         }
 
-        if (res.Response.ToWalletId == res.Response.FromWalletId)
+        if (docDb.ToWalletId == docDb.FromWalletId)
         {
             res.AddError("Счёт списания не может совпадать со счётом зачисления");
             return res;
         }
 
-        res.Response.IsDisabled = !res.Response.IsDisabled;
+        docDb.IsDisabled = !docDb.IsDisabled;
 
         using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
-        if (!res.Response.FromWallet!.WalletType!.IsSystem && !res.Response.FromWallet.WalletType!.IgnoreBalanceChanges && res.Response.FromWallet.Balance < res.Response.FromWalletSum)
+        if (!docDb.FromWallet!.WalletType!.IsSystem && !docDb.FromWallet.WalletType!.IgnoreBalanceChanges && docDb.FromWallet.Balance < docDb.FromWalletSum)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "Баланс не может стать отрицательным в следствии списания" }] };
 
         await context.WalletsRetail
-                .Where(x => x.Id == res.Response.FromWalletId)
+                .Where(x => x.Id == docDb.FromWalletId)
                 .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.Balance, b => b.Balance - res.Response.FromWalletSum), cancellationToken: token);
+                    .SetProperty(p => p.Balance, b => b.Balance - docDb.FromWalletSum), cancellationToken: token);
 
-        if (!res.Response.ToWallet!.WalletType!.IgnoreBalanceChanges)
+        if (!docDb.ToWallet!.WalletType!.IgnoreBalanceChanges)
         {
             await context.WalletsRetail
-                .Where(x => x.Id == res.Response.ToWalletId)
+                .Where(x => x.Id == docDb.ToWalletId)
                 .ExecuteUpdateAsync(set => set
-                    .SetProperty(p => p.Balance, b => b.Balance + res.Response.ToWalletSum), cancellationToken: token);
+                    .SetProperty(p => p.Balance, b => b.Balance + docDb.ToWalletSum), cancellationToken: token);
         }
-
+        res.Response = Guid.NewGuid();
         int rc = await q.ExecuteUpdateAsync(set => set
-                     .SetProperty(p => p.IsDisabled, res.Response.IsDisabled)
-                     .SetProperty(p => p.Version, Guid.NewGuid()), cancellationToken: token);
+                     .SetProperty(p => p.IsDisabled, docDb.IsDisabled)
+                     .SetProperty(p => p.Version, res.Response), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        res.AddSuccess($"Документ: успешно {(res.Response.IsDisabled ? "выключен" : "включён")}");
+        res.AddSuccess($"Документ: успешно {(docDb.IsDisabled ? "выключен" : "включён")}");
         return res;
     }
 }

@@ -28,7 +28,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<UpdateDeliveryDocumentReceive, TAuthRequestStandardModel<DeliveryDocumentRetailModelDB>, TResponseModel<Guid?>>()
             .RegisterMqListener<UpdateConversionDocumentReceive, TAuthRequestStandardModel<WalletConversionRetailDocumentModelDB>, TResponseModel<Guid?>>()
             .RegisterMqListener<DeleteConversionOrderLinkDocumentReceive, TAuthRequestStandardModel<OrderConversionModel>, ResponseBaseModel>()
-            .RegisterMqListener<DeleteToggleConversionReceive, TAuthRequestStandardModel<int>, TResponseModel<WalletConversionRetailDocumentModelDB>>()
+            .RegisterMqListener<DeleteToggleConversionReceive, TAuthRequestStandardModel<int>, TResponseModel<Guid?>>()
             .RegisterMqListener<UpdateConversionOrderLinkDocumentReceive, TAuthRequestStandardModel<OrderConversionAmountModel>, ResponseBaseModel>()
             .RegisterMqListener<StatusesOrdersAttendancesChangeByHelpDeskDocumentIdReceive, TAuthRequestStandardModel<StatusChangeRequestModel>, TResponseModel<List<RecordsAttendanceModelDB>>>()
             .RegisterMqListener<SelectWalletsTypesReceive, TPaginationRequestStandardModel<SelectWalletsRetailsTypesRequestModel>, TPaginationResponseStandardModel<WalletRetailTypeViewModel>>()
