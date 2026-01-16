@@ -89,13 +89,13 @@ public partial class OrderStatusesTableComponent : BlazorBusyComponentBaseAuthMo
                 Id = editRowId.Value,
             };
             await SetBusyAsync();
-            TResponseModel<DocumentRetailModelDB> res = await RetailRepo.UpdateOrderStatusDocumentAsync(new()
+            TResponseModel<Guid?> res = await RetailRepo.UpdateOrderStatusDocumentAsync(new()
             {
                 SenderActionUserId = CurrentUserSession.UserId,
                 Payload = req
             });
             if (res.Response is not null)
-                Document.Version = res.Response.Version;
+                Document.Version = res.Response.Value;
 
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (!res.Success())

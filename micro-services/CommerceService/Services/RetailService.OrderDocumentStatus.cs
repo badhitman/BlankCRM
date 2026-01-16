@@ -141,7 +141,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DocumentRetailModelDB>> UpdateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateOrderStatusDocumentAsync(TAuthRequestStandardModel<OrderStatusRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new() { Messages = [new() { TypeMessage = MessagesTypesEnum.Error, Text = "req.Payload is null" }] };
@@ -150,15 +150,16 @@ public partial class RetailService : IRetailService
             .ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.WarehouseReserveForRetailOrder, token);
 
         using CommerceContext context = await commerceDbFactory.CreateDbContextAsync(token);
-
-        TResponseModel<DocumentRetailModelDB> res = new()
-        {
-            Response = await context.OrdersRetail
+        DocumentRetailModelDB orderDb = await context.OrdersRetail
             .Include(x => x.Rows)
-            .FirstAsync(x => x.Id == req.Payload.OrderDocumentId, cancellationToken: token)
+            .FirstAsync(x => x.Id == req.Payload.OrderDocumentId, cancellationToken: token);
+
+        TResponseModel<Guid?> res = new()
+        {
+            Response = Guid.NewGuid(),
         };
 
-        StatusesDocumentsEnum? _oldStatus = res.Response.StatusDocument;
+        StatusesDocumentsEnum? _oldStatus = orderDb.StatusDocument;
         using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token);
 
         req.Payload.Name = req.Payload.Name.Trim();
@@ -174,10 +175,10 @@ public partial class RetailService : IRetailService
         await context.OrdersRetail
             .Where(x => x.Id == req.Payload.OrderDocumentId)
             .ExecuteUpdateAsync(set => set
-                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.Version, res.Response)
                 .SetProperty(p => p.StatusDocument, context.OrdersStatusesRetails.Where(y => y.OrderDocumentId == req.Payload.OrderDocumentId).OrderByDescending(z => z.DateOperation).ThenByDescending(os => os.Id).Select(s => s.StatusDocument).FirstOrDefault()), cancellationToken: token);
 
-        if (res.Response.Rows is null || res.Response.Rows.Count == 0)
+        if (orderDb.Rows is null || orderDb.Rows.Count == 0)
         {
             await transaction.CommitAsync(token);
             res.AddSuccess("Ok");
@@ -198,12 +199,12 @@ public partial class RetailService : IRetailService
             return res;
         }
 
-        int[] _offersIds = [.. res.Response.Rows.Select(x => x.OfferId)];
+        int[] _offersIds = [.. orderDb.Rows.Select(x => x.OfferId)];
         List<LockTransactionModelDB> lockers = [.._offersIds.Select(x=> new LockTransactionModelDB()
         {
             LockerName = nameof(OfferAvailabilityModelDB),
             LockerId = x,
-            LockerAreaId = res.Response.WarehouseId,
+            LockerAreaId = orderDb.WarehouseId,
             Marker = nameof(UpdateOrderStatusDocumentAsync)
         })];
 
@@ -226,7 +227,7 @@ public partial class RetailService : IRetailService
            .Where(x => _offersIds.Contains(x.OfferId))
            .ToListAsync(cancellationToken: token);
 
-        ResponseBaseModel sRes = await DoIt(context, transaction, res.Response.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offOrdersStatuses.Contains(_newStatus), offerAvailabilityDB, res.Response, token);
+        ResponseBaseModel sRes = await DoIt(context, transaction, orderDb.Rows, res_WarehouseReserveForRetailOrder.Response == true, !offOrdersStatuses.Contains(_newStatus), offerAvailabilityDB, orderDb, token);
         if (!sRes.Success())
         {
             await transaction.RollbackAsync(token);
@@ -257,8 +258,8 @@ public partial class RetailService : IRetailService
         TResponseModel<DocumentRetailModelDB> res = new()
         {
             Response = await q
-                .Include(x=>x.OrderDocument!)
-                .ThenInclude(x=>x.Rows)
+                .Include(x => x.OrderDocument!)
+                .ThenInclude(x => x.Rows)
                 .Select(x => x.OrderDocument!)
                 .FirstAsync(cancellationToken: token) ?? throw new Exception($"{nameof(DeleteOrderStatusDocumentAsync)}")
         };
