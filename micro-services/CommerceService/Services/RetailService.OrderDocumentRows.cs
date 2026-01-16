@@ -142,9 +142,9 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<DocumentRetailModelDB>> UpdateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateRowRetailDocumentAsync(TAuthRequestStandardModel<RowOfRetailOrderDocumentModelDB> req, CancellationToken token = default)
     {
-        TResponseModel<DocumentRetailModelDB> res = new();
+        TResponseModel<Guid?> res = new();
         if (req.Payload is null)
         {
             res.AddError("req.Payload is null");
@@ -198,7 +198,7 @@ public partial class RetailService : IRetailService
 
             return new()
             {
-                Response = retailOrderDb,
+                Response = retailOrderDb.Version,
                 Messages = [new() {
                     Text = "Ok",
                     TypeMessage = MessagesTypesEnum.Success }]
@@ -419,7 +419,7 @@ public partial class RetailService : IRetailService
         await transaction.CommitAsync(token);
         return new()
         {
-            Response = retailOrderDb,
+            Response = retailOrderDb.Version,
             Messages = [new() {
                 TypeMessage = MessagesTypesEnum.Info,
                 Text = "Ok" }]
