@@ -2,6 +2,8 @@
 // © https://github.com/badhitman - @FakeGov 
 ////////////////////////////////////////////////
 
+using Newtonsoft.Json.Linq;
+
 namespace SharedLib;
 
 /// <summary>
@@ -42,7 +44,7 @@ public class TraceReceiverRecord
         return new()
         {
             UTCTimestampInitReceive = DateTime.UtcNow,
-            RequestBody = _requestBody,
+            RequestBody = _requestBody is null ? null : JObject.FromObject(_requestBody),
             ReceiverName = _receiverName,
         };
     }

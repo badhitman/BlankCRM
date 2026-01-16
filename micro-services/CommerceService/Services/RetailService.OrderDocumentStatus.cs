@@ -256,8 +256,10 @@ public partial class RetailService : IRetailService
 
         TResponseModel<DocumentRetailModelDB> res = new()
         {
-            Response = await q.Select(x => x.OrderDocument!)
-                .Include(x => x.Rows)
+            Response = await q
+                .Include(x=>x.OrderDocument!)
+                .ThenInclude(x=>x.Rows)
+                .Select(x => x.OrderDocument!)
                 .FirstAsync(cancellationToken: token) ?? throw new Exception($"{nameof(DeleteOrderStatusDocumentAsync)}")
         };
 
