@@ -351,7 +351,7 @@ public partial class OrderCreateComponent : BlazorBusyComponentBaseAuthModel
         }
 
         await SetBusyAsync();
-        TResponseModel<int> rest = await CommerceRepo.OrderUpdateOrCreateAsync(new()
+        DocumentNewVersionResponseModel rest = await CommerceRepo.OrderUpdateOrCreateAsync(new()
         {
             Payload = CurrentCart,
             SenderActionUserId = CurrentUserSession.UserId

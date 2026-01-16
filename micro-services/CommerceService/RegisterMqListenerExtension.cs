@@ -120,7 +120,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<PriceRuleUpdateOrCreateReceive, TAuthRequestStandardModel<PriceRuleForOfferModelDB>, TResponseModel<int>>()
             .RegisterMqListener<PricesRulesGetForOffersReceive, TAuthRequestStandardModel<int[]>, TResponseModel<List<PriceRuleForOfferModelDB>>>()
             .RegisterMqListener<PaymentDocumentUpdateOrCreateReceive, TAuthRequestStandardModel<PaymentDocumentBaseModel>, TResponseModel<int>>()
-            .RegisterMqListener<OrderUpdateOrCreateReceive, TAuthRequestStandardModel<OrderDocumentModelDB>, TResponseModel<int>>()
+            .RegisterMqListener<OrderUpdateOrCreateReceive, TAuthRequestStandardModel<OrderDocumentModelDB>, DocumentNewVersionResponseModel>()
             .RegisterMqListener<OffersReadReceive, TAuthRequestStandardModel<int[]>, TResponseModel<OfferModelDB[]>>()
             .RegisterMqListener<NomenclaturesReadReceive, TAuthRequestStandardModel<int[]>, TResponseModel<List<NomenclatureModelDB>>>()
             .RegisterMqListener<OfficesOrganizationsReadReceive, int[], TResponseModel<OfficeOrganizationModelDB[]>>()

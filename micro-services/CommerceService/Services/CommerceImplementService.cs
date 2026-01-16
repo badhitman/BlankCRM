@@ -663,9 +663,9 @@ public partial class CommerceImplementService(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<int>> OrderUpdateOrCreateAsync(TAuthRequestStandardModel<OrderDocumentModelDB> req, CancellationToken token = default)
+    public async Task<DocumentNewVersionResponseModel> OrderUpdateOrCreateAsync(TAuthRequestStandardModel<OrderDocumentModelDB> req, CancellationToken token = default)
     {
-        TResponseModel<int> res = new();
+        DocumentNewVersionResponseModel res = new();
         if (req.Payload is null)
         {
             res.AddError("req.Payload is null");
@@ -744,11 +744,11 @@ public partial class CommerceImplementService(
                     return res;
                 }
             }
-
+            res.DocumentNewVersion = Guid.NewGuid();
             order.Id = 0;
             order.CreatedAtUTC = dtu;
             order.LastUpdatedAtUTC = dtu;
-            order.Version = Guid.NewGuid();
+            order.Version = res.DocumentNewVersion;
             order.StatusDocument = StatusesDocumentsEnum.Created;
 
             var _offersOfDocument = order.OfficesTabs
@@ -929,13 +929,13 @@ public partial class CommerceImplementService(
             res.AddInfo($"Документ #{order.Id} не требует обновления");
             return res;
         }
-
+        res.DocumentNewVersion = Guid.NewGuid();
         res.Response = await context.OrdersB2B
             .Where(x => x.Id == order.Id)
             .ExecuteUpdateAsync(set => set
             .SetProperty(p => p.Name, order.Name)
             .SetProperty(p => p.Description, order.Description)
-            .SetProperty(p => p.Version, Guid.NewGuid())
+            .SetProperty(p => p.Version, res.DocumentNewVersion)
             .SetProperty(p => p.LastUpdatedAtUTC, dtu), cancellationToken: token);
 
         res.AddSuccess($"Обновление `документа-заказа` выполнено");
