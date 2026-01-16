@@ -227,7 +227,7 @@ public partial class ConversionDocumentComponent : BlazorBusyComponentUsersCache
         }
         else
         {
-            ResponseBaseModel res = await RetailRepo.UpdateConversionDocumentRetailAsync(new()
+            TResponseModel<Guid?> res = await RetailRepo.UpdateConversionDocumentRetailAsync(new()
             {
                 Payload = editDoc,
                 SenderActionUserId = CurrentUserSession.UserId,

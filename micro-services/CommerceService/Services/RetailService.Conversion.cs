@@ -113,7 +113,7 @@ public partial class RetailService : IRetailService
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> UpdateConversionDocumentRetailAsync(TAuthRequestStandardModel<WalletConversionRetailDocumentModelDB> req, CancellationToken token = default)
+    public async Task<TResponseModel<Guid?>> UpdateConversionDocumentRetailAsync(TAuthRequestStandardModel<WalletConversionRetailDocumentModelDB> req, CancellationToken token = default)
     {
         if (req.Payload is null)
             return new()
@@ -171,7 +171,14 @@ public partial class RetailService : IRetailService
             walletRecipient = walletsDb.First(x => x.Id == req.Payload.ToWalletId);
 
         if (_conversionDocDb.Version != req.Payload.Version)
-            return ResponseBaseModel.CreateError("Документ уже кем-то изменён. Обновите страницу с документом и повторите попытку");
+            return new()
+            {
+                Messages = [new()
+                {
+                    TypeMessage = MessagesTypesEnum.Error,
+                    Text = "Документ уже кем-то изменён. Обновите страницу с документом и повторите попытку"
+                }]
+            };
 
         decimal
             _deltaSender = req.Payload.FromWalletSum - _conversionDocDb.FromWalletSum,
@@ -218,7 +225,7 @@ public partial class RetailService : IRetailService
                     .ExecuteUpdateAsync(set => set
                         .SetProperty(p => p.Balance, p => p.Balance + req.Payload.ToWalletSum), cancellationToken: token);
         }
-
+        Guid _ng = Guid.NewGuid();
         await context.ConversionsDocumentsWalletsRetail
             .Where(x => x.Id == req.Payload.Id)
             .ExecuteUpdateAsync(set => set
@@ -227,11 +234,19 @@ public partial class RetailService : IRetailService
                 .SetProperty(p => p.FromWalletSum, req.Payload.FromWalletSum)
                 .SetProperty(p => p.ToWalletId, req.Payload.ToWalletId)
                 .SetProperty(p => p.ToWalletSum, req.Payload.ToWalletSum)
-                .SetProperty(p => p.Version, Guid.NewGuid())
+                .SetProperty(p => p.Version, _ng)
                 .SetProperty(p => p.LastUpdatedAtUTC, DateTime.UtcNow), cancellationToken: token);
 
         await transaction.CommitAsync(token);
-        return ResponseBaseModel.CreateSuccess("Ok");
+        return new()
+        {
+            Response = _ng,
+            Messages = [new()
+            {
+                TypeMessage = MessagesTypesEnum.Success,
+                Text = "Ok"
+            }]
+        };
     }
 
     /// <inheritdoc/> 
