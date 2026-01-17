@@ -100,13 +100,19 @@ public partial class RolesPage : BlazorBusyComponentBaseAuthModel
 
     async Task AddNewRole()
     {
+        if (CurrentUserSession is null)
+        {
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "CurrentUserSession is null" }];
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(added_role_name))
         {
             Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "Не указано имя роли" }];
             return;
         }
         ResponseBaseModel rest = !string.IsNullOrEmpty(UserInfo?.Email)
-        ? await IdentityRepo.AddRoleToUserAsync(new() { Email = UserInfo.Email, RoleName = added_role_name })
+        ? await IdentityRepo.AddRoleToUserAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { Email = UserInfo.Email, RoleName = added_role_name } })
         : await IdentityRepo.CreateNewRoleAsync(added_role_name.Trim());
 
         Messages = rest.Messages;

@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// Добавить роль пользователю (включить пользователя в роль)
 /// </summary>
 public class AddRoleToUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<RoleEmailModel?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<RoleEmailModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.AddRoleToUserReceive;
@@ -19,7 +19,7 @@ public class AddRoleToUserReceive(IIdentityTools idRepo, IFilesIndexing indexing
     /// <summary>
     /// Добавить роль пользователю (включить пользователя в роль)
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(RoleEmailModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<RoleEmailModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);

@@ -142,6 +142,11 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseAuthModel
 
     async Task AddRoleToUser()
     {
+        if (CurrentUserSession is null)
+        {
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "CurrentUserSession is null" }];
+            return;
+        }
         if (!MailAddress.TryCreate(added_user_email, out _))
         {
             Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "email пользователя не корректный" }];
@@ -153,7 +158,7 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseAuthModel
             return;
         }
 
-        ResponseBaseModel rest = await IdentityRepo.AddRoleToUserAsync(new() { Email = added_user_email, RoleName = RoleInfo.Name });
+        ResponseBaseModel rest = await IdentityRepo.AddRoleToUserAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { Email = added_user_email, RoleName = RoleInfo.Name } });
         Messages = rest.Messages;
         if (!rest.Success())
             return;

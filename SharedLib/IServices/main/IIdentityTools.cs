@@ -248,7 +248,7 @@ public interface IIdentityTools
     /// <summary>
     /// Добавить роль пользователю (включить пользователя в роль)
     /// </summary>
-    public Task<ResponseBaseModel> AddRoleToUserAsync(RoleEmailModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> AddRoleToUserAsync(TAuthRequestStandardModel<RoleEmailModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Find user identity by telegram - receive

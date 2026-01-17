@@ -70,7 +70,7 @@ public static class RegisterMqListenerExtension
             .RegisterMqListener<GetTelegramUserReceive, long, TResponseModel<TelegramUserBaseModel?>>()
             .RegisterMqListener<DeleteRoleReceive, string, ResponseBaseModel>()
             .RegisterMqListener<DeleteRoleFromUserReceive, TAuthRequestStandardModel<RoleEmailModel>, ResponseBaseModel>()
-            .RegisterMqListener<AddRoleToUserReceive, RoleEmailModel, ResponseBaseModel>()
+            .RegisterMqListener<AddRoleToUserReceive, TAuthRequestStandardModel<RoleEmailModel>, ResponseBaseModel>()
             .RegisterMqListener<ResetPasswordReceive, IdentityPasswordTokenModel, ResponseBaseModel>()
             .RegisterMqListener<FindUserByEmailReceive, string, TResponseModel<UserInfoModel>>()
             .RegisterMqListener<CreateNewUserReceive, string, RegistrationNewUserResponseModel>()
