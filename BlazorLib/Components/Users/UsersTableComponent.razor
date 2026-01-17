@@ -1,7 +1,8 @@
 ﻿@using System.Net.Mail
 @using BlazorLib.Components.Telegram
 @using Microsoft.AspNetCore.Components.QuickGrid
-@inherits BlazorBusyComponentBaseModel
+
+@inherits BlazorBusyComponentBaseAuthModel
 
 <h3>Пользователи @(RoleInfo is null ? "" : $"в роли: {RoleInfo.Name}")</h3>
 
@@ -10,7 +11,7 @@
     <div class="input-group input-group-sm mb-3">
         <span class="input-group-text">Добавить пользователя</span>
         <input @bind-value="added_user_email" @bind-value:event="oninput" type="text" class="form-control" aria-label="Имя создаваемой роли">
-        <button disabled="@(string.IsNullOrWhiteSpace(added_user_email))" @onclick="AddRoleToUser" class="btn btn-outline-secondary" type="button">
+        <button disabled="@string.IsNullOrWhiteSpace(added_user_email)" @onclick="AddRoleToUser" class="btn btn-outline-secondary" type="button">
             Включить пользователя в роль
         </button>
     </div>
@@ -83,15 +84,15 @@
         PushRowGuid(_gd);
         <TemplateColumn Title="Claims" Align="Align.Right">
             <iframe id="@($"frame:{_gd}")" srcdoc="@($"<html lang=\"ru\" data-bs-theme=\"dark\"><head>" +
-                "<meta charset=\"utf-8\">" +
-                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
-                "<link href=\"_content/MudBlazor/MudBlazor.min.css\" rel=\"stylesheet\">" +
-                $"<link rel=\"stylesheet\" href=\"/lib/bootstrap-icons/font/bootstrap-icons.min.css?version={GlobalStaticConstants.InitSalt}\">" +
-                $"<link rel=\"stylesheet\" href=\"/lib/jqueryui/jquery-ui.min.css?version={GlobalStaticConstants.InitSalt}\">" +
-                $"<link rel='stylesheet' href='/lib/bootstrap/css/bootstrap.min.css?version={GlobalStaticConstants.InitSalt}'>" +
-                $"</head><body id='{_gd}'><div class='body-wrap-area'>{ClaimsHtml(context)}</div>" +
-                @* $"<script src=\"/lib/jquery/jquery.min.js?version={GlobalStaticConstants.InitSalt}\"></script>" + *@
-                "</body></html>")" />
+                                                           "<meta charset=\"utf-8\">" +
+                                                           "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                                                           "<link href=\"_content/MudBlazor/MudBlazor.min.css\" rel=\"stylesheet\">" +
+                                                           $"<link rel=\"stylesheet\" href=\"/lib/bootstrap-icons/font/bootstrap-icons.min.css?version={GlobalStaticConstants.InitSalt}\">" +
+                                                           $"<link rel=\"stylesheet\" href=\"/lib/jqueryui/jquery-ui.min.css?version={GlobalStaticConstants.InitSalt}\">" +
+                                                           $"<link rel='stylesheet' href='/lib/bootstrap/css/bootstrap.min.css?version={GlobalStaticConstants.InitSalt}'>" +
+                                                           $"</head><body id='{_gd}'><div class='body-wrap-area'>{ClaimsHtml(context)}</div>" +
+                                    @* $"<script src=\"/lib/jquery/jquery.min.js?version={GlobalStaticConstants.InitSalt}\"></script>" + *@
+                                                           "</body></html>")" />
             @* @context.ClaimsAsString(";") *@
         </TemplateColumn>
     }

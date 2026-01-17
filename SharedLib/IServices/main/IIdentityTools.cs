@@ -243,7 +243,7 @@ public interface IIdentityTools
     /// <summary>
     /// Исключить пользователя из роли (лишить пользователя роли)
     /// </summary>
-    public Task<ResponseBaseModel> DeleteRoleFromUserAsync(RoleEmailModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> DeleteRoleFromUserAsync(TAuthRequestStandardModel<RoleEmailModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Добавить роль пользователю (включить пользователя в роль)

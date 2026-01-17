@@ -11,13 +11,10 @@ namespace BlazorLib.Components.Users.Pages;
 /// <summary>
 /// RolesPage
 /// </summary>
-public partial class RolesPage
+public partial class RolesPage : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IUsersProfilesService UsersManageRepo { get; set; } = default!;
-
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
 
     /// <summary>
     /// OwnerUserId
@@ -37,6 +34,7 @@ public partial class RolesPage
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         if (!string.IsNullOrWhiteSpace(OwnerUserId))
         {
             TResponseModel<UserInfoModel[]> findUsers = await IdentityRepo.GetUsersOfIdentityAsync([OwnerUserId]);
@@ -75,6 +73,12 @@ public partial class RolesPage
 
     async Task DeleteRole(string? roleName)
     {
+        if (CurrentUserSession is null)
+        {
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "CurrentUserSession is null" }];
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(roleName))
         {
             Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "удаление роли без имени" }];
@@ -82,7 +86,7 @@ public partial class RolesPage
         }
 
         ResponseBaseModel rest = !string.IsNullOrEmpty(UserInfo?.Email)
-        ? await IdentityRepo.DeleteRoleFromUserAsync(new() { RoleName = roleName, Email = UserInfo.Email })
+        ? await IdentityRepo.DeleteRoleFromUserAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = new() { RoleName = roleName, Email = UserInfo.Email } })
         : await IdentityRepo.DeleteRoleAsync(roleName.Trim());
 
         Messages = rest.Messages;

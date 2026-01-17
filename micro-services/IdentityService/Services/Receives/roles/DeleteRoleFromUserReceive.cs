@@ -11,7 +11,7 @@ namespace Transmission.Receives.Identity;
 /// Исключить пользователя из роли (лишить пользователя роли)
 /// </summary>
 public class DeleteRoleFromUserReceive(IIdentityTools idRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<RoleEmailModel?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<RoleEmailModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.DeleteRoleFromUserReceive;
@@ -19,7 +19,7 @@ public class DeleteRoleFromUserReceive(IIdentityTools idRepo, IFilesIndexing ind
     /// <summary>
     /// Исключить пользователя из роли (лишить пользователя роли)
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(RoleEmailModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<RoleEmailModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);

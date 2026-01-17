@@ -2156,26 +2156,29 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteRoleFromUserAsync(RoleEmailModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteRoleFromUserAsync(TAuthRequestStandardModel<RoleEmailModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         using RoleManager<ApplicationRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-        ApplicationRole? role_db = await roleManager.FindByNameAsync(req.RoleName);
+        ApplicationRole? role_db = await roleManager.FindByNameAsync(req.Payload.RoleName);
         if (role_db is null)
-            return ResponseBaseModel.CreateError($"Роль с именем '{req.RoleName}' не найдена в БД");
+            return ResponseBaseModel.CreateError($"Роль с именем '{req.Payload.RoleName}' не найдена в БД");
 
         using UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        ApplicationUser? user_db = await userManager.FindByEmailAsync(req.Email);
+        ApplicationUser? user_db = await userManager.FindByEmailAsync(req.Payload.Email);
         if (user_db is null)
-            return ResponseBaseModel.CreateError($"Пользователь `{req.Email}` не найден в БД");
+            return ResponseBaseModel.CreateError($"Пользователь `{req.Payload.Email}` не найден в БД");
 
-        if (!await userManager.IsInRoleAsync(user_db, req.RoleName))
-            return ResponseBaseModel.CreateWarning($"Роль '{req.RoleName}' у пользователя '{req.Email}' отсутствует.");
+        if (!await userManager.IsInRoleAsync(user_db, req.Payload.RoleName))
+            return ResponseBaseModel.CreateWarning($"Роль '{req.Payload.RoleName}' у пользователя '{req.Payload.Email}' отсутствует.");
 
-        IdentityResult ir = await userManager.RemoveFromRoleAsync(user_db, req.RoleName);
+        IdentityResult ir = await userManager.RemoveFromRoleAsync(user_db, req.Payload.RoleName);
 
         if (ir.Succeeded)
-            return ResponseBaseModel.CreateSuccess($"Пользователь '{req.Email}' исключён из роли '{req.RoleName}'");
+            return ResponseBaseModel.CreateSuccess($"Пользователь '{req.Payload.Email}' исключён из роли '{req.Payload.RoleName}'");
 
         return new()
         {

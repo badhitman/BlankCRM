@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Components.QuickGrid;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Net.Mail;
-using BlazorLib;
 using SharedLib;
 
 namespace BlazorLib.Components.Users;
@@ -14,7 +13,7 @@ namespace BlazorLib.Components.Users;
 /// <summary>
 /// UsersTableComponent
 /// </summary>
-public partial class UsersTableComponent : BlazorBusyComponentBaseModel
+public partial class UsersTableComponent : BlazorBusyComponentBaseAuthModel
 {
     [Inject]
     IParametersStorageTransmission SerializeStorageRepo { get; set; } = default!;
@@ -24,9 +23,6 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
     /// </summary>
     [Inject]
     protected IJSRuntime JS { get; set; } = default!;
-
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
 
     /// <summary>
     /// OwnerRoleId
@@ -96,16 +92,6 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
         }
     }
 
-    //string? PopRowGuid()
-    //{
-    //    lock (RowsStack)
-    //    {
-    //        if (RowsStack.Count == 0)
-    //            return null;
-    //        return RowsStack.Pop();
-    //    }
-    //}
-
     static string LinkCssClass(UserInfoModel user)
     {
         return user.LockoutEnabled && user.LockoutEnd.GetValueOrDefault(DateTimeOffset.MinValue) > DateTimeOffset.UtcNow ? "text-decoration-line-through" : "";
@@ -121,6 +107,12 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
 
     async Task DeleteUser(string user_email)
     {
+        if (CurrentUserSession is null)
+        {
+            Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "CurrentUserSession is null" }];
+            return;
+        }
+
         if (string.IsNullOrEmpty(RoleInfo?.Name))
         {
             Messages = [new ResultMessage() { TypeMessage = MessagesTypesEnum.Error, Text = "пустое имя роли. error {062C0753-24D3-4F84-A635-514832D978D0}" }];
@@ -133,7 +125,11 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
             return;
         }
 
-        ResponseBaseModel rest = await IdentityRepo.DeleteRoleFromUserAsync(new() { Email = user_email, RoleName = RoleInfo.Name });
+        ResponseBaseModel rest = await IdentityRepo.DeleteRoleFromUserAsync(new()
+        {
+            SenderActionUserId = CurrentUserSession.UserId,
+            Payload = new() { Email = user_email, RoleName = RoleInfo.Name },
+        });
 
         Messages = rest.Messages;
         if (!rest.Success())
@@ -182,6 +178,7 @@ public partial class UsersTableComponent : BlazorBusyComponentBaseModel
     protected override async Task OnInitializedAsync()
     {
         await SetBusyAsync();
+        await base.OnInitializedAsync();
         TResponseModel<bool?> res_ShowClaimsUsers = await SerializeStorageRepo.ReadParameterAsync<bool?>(GlobalStaticCloudStorageMetadata.ShowClaimsUser);
         showClaimsUsers = res_ShowClaimsUsers.Response == true;
 

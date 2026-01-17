@@ -248,7 +248,7 @@ public class IdentityTransmission(IRabbitClient rabbitClient) : IIdentityTransmi
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteRoleReceive, roleName, token: token) ?? new();
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> DeleteRoleFromUserAsync(RoleEmailModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> DeleteRoleFromUserAsync(TAuthRequestStandardModel<RoleEmailModel> req, CancellationToken token = default)
         => await rabbitClient.MqRemoteCallAsync<ResponseBaseModel>(GlobalStaticConstantsTransmission.TransmissionQueues.DeleteRoleFromUserReceive, req, token: token) ?? new();
 
     /// <inheritdoc/>
