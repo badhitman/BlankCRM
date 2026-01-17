@@ -10,12 +10,8 @@ namespace BlazorLib.Components.Users;
 /// <summary>
 /// RolesManageKitComponent
 /// </summary>
-public partial class RolesManageKitComponent : BlazorBusyComponentBaseModel
+public partial class RolesManageKitComponent : BlazorBusyComponentBaseAuthModel
 {
-    [Inject]
-    IIdentityTransmission IdentityRepo { get; set; } = default!;
-
-
     /// <summary>
     /// RolesManageKit
     /// </summary>
@@ -67,7 +63,13 @@ public partial class RolesManageKitComponent : BlazorBusyComponentBaseModel
 
         async Task Act()
         {
-            TResponseModel<string[]> res = await IdentityRepo.SetRoleForUserAsync(req);
+            if (CurrentUserSession is null)
+            {
+                SnackBarRepo.Error("CurrentUserSession is null");
+                return;
+            }
+
+            TResponseModel<string[]> res = await IdentityRepo.SetRoleForUserAsync(new() { SenderActionUserId = CurrentUserSession.UserId, Payload = req });
             SnackBarRepo.ShowMessagesResponse(res.Messages);
             if (!res.Success() || res.Response is null)
                 return;

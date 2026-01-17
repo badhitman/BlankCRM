@@ -218,7 +218,7 @@ public interface IIdentityTools
     /// <summary>
     /// SetRoleForUser
     /// </summary>
-    public Task<TResponseModel<string[]>> SetRoleForUserAsync(SetRoleForUserRequestModel req, CancellationToken token = default);
+    public Task<TResponseModel<string[]>> SetRoleForUserAsync(TAuthRequestStandardModel<SetRoleForUserRequestModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Get Role (by id)

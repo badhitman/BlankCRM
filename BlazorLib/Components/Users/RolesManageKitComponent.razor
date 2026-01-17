@@ -1,4 +1,4 @@
-﻿@inherits BlazorBusyComponentBaseModel
+﻿@inherits BlazorBusyComponentBaseAuthModel
 
 <span @onclick="() => IsShow = !IsShow" style="cursor:pointer;" class="badge rounded-pill text-bg-primary">Роли/Права</span>
 
@@ -15,7 +15,7 @@
                 {
                     <li class="list-group-item">
                         <div class="form-check form-switch">
-                            <input @onchange="(e) => ChangeUserRole(e, role)" checked="@(IsChecked(role))" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                            <input @onchange="(e) => ChangeUserRole(e, role)" checked="@IsChecked(role)" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                             <label class="form-check-label" for="flexSwitchCheckDefault">@RoleDescription(role)</label>
                         </div>
                     </li>

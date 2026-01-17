@@ -1985,14 +1985,20 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string[]>> SetRoleForUserAsync(SetRoleForUserRequestModel req, CancellationToken token = default)
+    public async Task<TResponseModel<string[]>> SetRoleForUserAsync(TAuthRequestStandardModel<SetRoleForUserRequestModel> req, CancellationToken token = default)
     {
         TResponseModel<string[]> res = new();
+        if (req.Payload is null)
+        {
+            res.AddError("req.Payload is null");
+            return res;
+        }
+
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
 
         IQueryable<ApplicationRole> q = identityContext
             .UserRoles
-            .Where(x => x.UserId == req.UserIdentityId)
+            .Where(x => x.UserId == req.Payload.UserIdentityId)
             .Join(identityContext.Roles, jr => jr.RoleId, r => r.Id, (jr, r) => r)
             .AsQueryable();
 
@@ -2000,34 +2006,34 @@ public class IdentityTools(
             .ToArrayAsync(cancellationToken: token);
 
         ApplicationRole? role_bd;
-        if (req.Command && !roles.Any(x => x.Name?.Contains(req.RoleName, StringComparison.OrdinalIgnoreCase) == true))
+        if (req.Payload.Command && !roles.Any(x => x.Name?.Contains(req.Payload.RoleName, StringComparison.OrdinalIgnoreCase) == true))
         {
             role_bd = await identityContext
                 .Roles
-                .FirstOrDefaultAsync(x => x.NormalizedName == req.RoleName.ToUpper(), cancellationToken: token);
+                .FirstOrDefaultAsync(x => x.NormalizedName == req.Payload.RoleName.ToUpper(), cancellationToken: token);
 
             if (role_bd is null)
             {
                 role_bd = new ApplicationRole()
                 {
-                    NormalizedName = req.RoleName.ToUpper(),
-                    Name = req.RoleName,
+                    NormalizedName = req.Payload.RoleName.ToUpper(),
+                    Name = req.Payload.RoleName,
                 };
                 await identityContext.AddAsync(role_bd, token);
                 await identityContext.SaveChangesAsync(token);
             }
-            await identityContext.AddAsync(new IdentityUserRole<string>() { RoleId = role_bd.Id, UserId = req.UserIdentityId }, token);
+            await identityContext.AddAsync(new IdentityUserRole<string>() { RoleId = role_bd.Id, UserId = req.Payload.UserIdentityId }, token);
             await identityContext.SaveChangesAsync(token);
-            res.Response = [.. roles.Select(x => x.Name).Union([req.RoleName]).Where(x => !string.IsNullOrWhiteSpace(x))!];
+            res.Response = [.. roles.Select(x => x.Name).Union([req.Payload.RoleName]).Where(x => !string.IsNullOrWhiteSpace(x))!];
             res.AddSuccess($"Включён в роль: {role_bd.Name}");
         }
-        else if (!req.Command && roles.Any(x => x.Name?.Contains(req.RoleName, StringComparison.OrdinalIgnoreCase) == true))
+        else if (!req.Payload.Command && roles.Any(x => x.Name?.Contains(req.Payload.RoleName, StringComparison.OrdinalIgnoreCase) == true))
         {
-            role_bd = roles.First(x => x.Name?.Contains(req.RoleName, StringComparison.OrdinalIgnoreCase) == true);
+            role_bd = roles.First(x => x.Name?.Contains(req.Payload.RoleName, StringComparison.OrdinalIgnoreCase) == true);
             identityContext.Remove(role_bd);
             await identityContext.SaveChangesAsync(token);
-            res.Response = [.. roles.Select(x => x.Name).Where(x => !string.IsNullOrWhiteSpace(x) && !x.Equals(req.RoleName, StringComparison.OrdinalIgnoreCase))!];
-            res.AddSuccess($"Исключён из роли: {req.RoleName}");
+            res.Response = [.. roles.Select(x => x.Name).Where(x => !string.IsNullOrWhiteSpace(x) && !x.Equals(req.Payload.RoleName, StringComparison.OrdinalIgnoreCase))!];
+            res.AddSuccess($"Исключён из роли: {req.Payload.RoleName}");
         }
         else
         {

@@ -8,16 +8,16 @@ using SharedLib;
 namespace Transmission.Receives.Identity;
 
 /// <summary>
-/// SetRoleForUserReceive
+/// SetRoleForUser
 /// </summary>
 public class SetRoleForUserReceive(IIdentityTools identityRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<SetRoleForUserRequestModel?, TResponseModel<string[]>?>
+    : IResponseReceive<TAuthRequestStandardModel<SetRoleForUserRequestModel>?, TResponseModel<string[]>?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.SetRoleForUserOfIdentityReceive;
 
     /// <inheritdoc/>
-    public async Task<TResponseModel<string[]>?> ResponseHandleActionAsync(SetRoleForUserRequestModel? req, CancellationToken token = default)
+    public async Task<TResponseModel<string[]>?> ResponseHandleActionAsync(TAuthRequestStandardModel<SetRoleForUserRequestModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);
