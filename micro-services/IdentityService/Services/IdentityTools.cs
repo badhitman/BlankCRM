@@ -1539,10 +1539,13 @@ public class IdentityTools(
     }
 
     /// <inheritdoc/>
-    public async Task<ResponseBaseModel> TelegramAccountRemoveIdentityJoinAsync(TelegramAccountRemoveJoinRequestIdentityModel req, CancellationToken token = default)
+    public async Task<ResponseBaseModel> TelegramAccountRemoveIdentityJoinAsync(TAuthRequestStandardModel<TelegramAccountRemoveJoinRequestIdentityModel> req, CancellationToken token = default)
     {
+        if (req.Payload is null)
+            return ResponseBaseModel.CreateError("req.Payload is null");
+
         using IdentityAppDbContext identityContext = await identityDbFactory.CreateDbContextAsync(token);
-        ApplicationUser user = identityContext.Users.First(x => x.Id == req.UserId);
+        ApplicationUser user = identityContext.Users.First(x => x.Id == req.Payload.UserId);
         long? tg_user_dump = user.ChatTelegramId;
         user.ChatTelegramId = null;
         identityContext.Update(user);
@@ -1552,7 +1555,7 @@ public class IdentityTools(
 
         TResponseModel<MessageComplexIdsModel> tgCall = await tgRemoteRepo.SendTextMessageTelegramAsync(new SendTextMessageTelegramBotModel()
         {
-            Message = $"Ваш Telegram аккаунт отключён от учётной записи {user.Email} с сайта {req.ClearBaseUri}",
+            Message = $"Ваш Telegram аккаунт отключён от учётной записи {user.Email} с сайта {req.Payload.ClearBaseUri}",
             UserTelegramId = (await identityContext.TelegramUsers.FirstAsync(x => x.TelegramId == tg_user_dump, cancellationToken: token)).TelegramId,
             From = "уведомление",
         }, token: token);

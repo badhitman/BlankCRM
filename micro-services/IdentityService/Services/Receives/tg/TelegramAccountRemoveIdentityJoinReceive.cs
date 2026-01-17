@@ -11,7 +11,7 @@ namespace Transmission.Receives.web;
 /// Удалить связь Telegram аккаунта с учётной записью сайта
 /// </summary>
 public class TelegramAccountRemoveIdentityJoinReceive(IIdentityTools identityRepo, IFilesIndexing indexingRepo)
-    : IResponseReceive<TelegramAccountRemoveJoinRequestIdentityModel?, ResponseBaseModel?>
+    : IResponseReceive<TAuthRequestStandardModel<TelegramAccountRemoveJoinRequestIdentityModel>?, ResponseBaseModel?>
 {
     /// <inheritdoc/>
     public static string QueueName => GlobalStaticConstantsTransmission.TransmissionQueues.TelegramAccountRemoveIdentityJoinReceive;
@@ -19,7 +19,7 @@ public class TelegramAccountRemoveIdentityJoinReceive(IIdentityTools identityRep
     /// <summary>
     /// Удалить связь Telegram аккаунта с учётной записью сайта
     /// </summary>
-    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TelegramAccountRemoveJoinRequestIdentityModel? req, CancellationToken token = default)
+    public async Task<ResponseBaseModel?> ResponseHandleActionAsync(TAuthRequestStandardModel<TelegramAccountRemoveJoinRequestIdentityModel>? req, CancellationToken token = default)
     {
         ArgumentNullException.ThrowIfNull(req);
         TraceReceiverRecord trace = TraceReceiverRecord.Build(QueueName, req);

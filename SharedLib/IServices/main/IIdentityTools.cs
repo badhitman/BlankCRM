@@ -263,7 +263,7 @@ public interface IIdentityTools
     /// <summary>
     /// Удалить связь Telegram аккаунта с учётной записью сайта
     /// </summary>
-    public Task<ResponseBaseModel> TelegramAccountRemoveIdentityJoinAsync(TelegramAccountRemoveJoinRequestIdentityModel req, CancellationToken token = default);
+    public Task<ResponseBaseModel> TelegramAccountRemoveIdentityJoinAsync(TAuthRequestStandardModel<TelegramAccountRemoveJoinRequestIdentityModel> req, CancellationToken token = default);
 
     /// <summary>
     /// Удалить текущую процедуру привязки Telegram аккаунта к учётной записи сайта
